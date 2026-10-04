@@ -94,18 +94,22 @@ export function selectTrainingFocus(
   return chosen;
 }
 
+interface ExecuteTrainingAttemptArgs {
+  w: Warrior;
+  chosen: keyof Attributes;
+  stable: RivalStableData;
+  season: Season | undefined;
+  seasonalGrowth: SeasonalGrowth[];
+  rng: IRNGService;
+  healingBonus: number;
+}
+
 /**
  * Execute a single training attempt: state adapter + processAttributeTraining + injury roll + stat recompute.
  */
-function executeTrainingAttempt(
-  w: Warrior,
-  chosen: keyof Attributes,
-  stable: RivalStableData,
-  season: Season | undefined,
-  seasonalGrowth: SeasonalGrowth[],
-  rng: IRNGService,
-  healingBonus: number
-): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
+function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
+  const { w, chosen, stable, season, seasonalGrowth } = args;
+  const { rng, healingBonus } = args;
   const stateAdapter = {
     season: season ?? 'Spring',
     trainers: stable.trainers ?? [],
@@ -128,15 +132,22 @@ function executeTrainingAttempt(
   return { warrior, seasonalGrowth: nextSeasonalGrowth };
 }
 
+/**
+ *
+ */
+export interface PerformAITrainingArgs {
+  w: Warrior;
+  stable: RivalStableData;
+  season: Season | undefined;
+  seasonalGrowth: SeasonalGrowth[];
+  rng: IRNGService;
+  healingBonus?: number;
+}
+
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
-export function performAITraining(
-  w: Warrior,
-  stable: RivalStableData,
-  season: Season | undefined,
-  seasonalGrowth: SeasonalGrowth[],
-  rng: IRNGService,
-  healingBonus: number = 0
-): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
+export function performAITraining(args: PerformAITrainingArgs): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
+  const { w, stable, season, seasonalGrowth, rng } = args;
+  const { healingBonus = 0 } = args;
   if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
 
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
@@ -153,13 +164,7 @@ export function performAITraining(
   if (!chosen) return { warrior: w, seasonalGrowth };
 
   const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt(
-    w,
-    chosen,
-    stable,
-    season,
-    seasonalGrowth,
-    rng,
-    healingBonus
+    { w: w, chosen: chosen, stable: stable, season: season, seasonalGrowth: seasonalGrowth, rng: rng, healingBonus: healingBonus }
   );
 
   return { warrior, seasonalGrowth: nextGrowth, chosen };

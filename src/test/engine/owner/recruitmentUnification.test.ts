@@ -58,12 +58,7 @@ describe('recruitment unification', () => {
       },
     ];
     const { updatedRival } = processRecruitment(
-      thin,
-      pool as never,
-      5,
-      new SeededRNGService(3),
-      false,
-      undefined
+      { rival: thin, pool: pool as never, week: 5, rng: new SeededRNGService(3), isMajorDraftWeek: false, meta: undefined }
     );
     expect(updatedRival.roster.length).toBe(2);
     expect(updatedRival.needsRecruit).toBe(false);
@@ -76,12 +71,7 @@ describe('recruitment unification', () => {
       needsRecruit: true,
     });
     const { updatedRival } = processRecruitment(
-      broke,
-      [],
-      5,
-      new SeededRNGService(5),
-      false,
-      undefined
+      { rival: broke, pool: [], week: 5, rng: new SeededRNGService(5), isMajorDraftWeek: false, meta: undefined }
     );
     // checkBudget refuses — reserve floor exceeds treasury
     expect(updatedRival.roster.length).toBe(1);
@@ -94,12 +84,7 @@ describe('recruitment unification', () => {
       needsRecruit: true,
     });
     const { updatedRival } = processRecruitment(
-      funded,
-      [],
-      5,
-      new SeededRNGService(7),
-      false,
-      undefined
+      { rival: funded, pool: [], week: 5, rng: new SeededRNGService(7), isMajorDraftWeek: false, meta: undefined }
     );
     expect(updatedRival.roster.length).toBe(2);
     expect(updatedRival.needsRecruit).toBe(false);

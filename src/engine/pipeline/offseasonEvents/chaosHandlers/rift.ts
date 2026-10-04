@@ -18,7 +18,7 @@ export function handleChaosRift(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const xpGained = 25;
     const fameGained = 15;
     const goldGained = 150;
@@ -46,7 +46,7 @@ export function handleChaosRift(
       },
       announce: { xp: xpGained, fame: fameGained },
     };
-  });
+  } });
 }
 
 /** Handler for the Chaotic Spells offseason event — random magical effects on active warriors. */
@@ -57,7 +57,7 @@ export function handleChaoticSpells(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.33) {
@@ -88,5 +88,5 @@ export function handleChaoticSpells(
       fame: Math.max(0, (chosen.fame || 0) - fameLost),
     });
     return `They were temporarily turned an embarrassing shade of purple. (-${fameLost} Fame)`;
-  });
+  } });
 }

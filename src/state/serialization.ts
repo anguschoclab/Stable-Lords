@@ -57,6 +57,8 @@ type GameStateValues = {
   roster: GameState['roster'];
   graveyard: GameState['graveyard'];
   retired: GameState['retired'];
+  deadWarriorIds: GameState['deadWarriorIds'];
+  killEvents: GameState['killEvents'];
   recruitPool: GameState['recruitPool'];
   insightTokens: GameState['insightTokens'];
   arenaHistory: GameState['arenaHistory'];
@@ -131,6 +133,8 @@ function collectStoreValues(store: GameStore): GameStateValues {
     roster: store.roster,
     graveyard: store.graveyard,
     retired: store.retired,
+    deadWarriorIds: store.deadWarriorIds,
+    killEvents: store.killEvents,
     recruitPool: store.recruitPool,
     insightTokens: store.insightTokens,
     arenaHistory: store.arenaHistory,

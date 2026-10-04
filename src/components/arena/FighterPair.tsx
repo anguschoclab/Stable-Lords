@@ -29,24 +29,11 @@ interface FighterPairProps {
  * Renders both arena fighters with their stats and status.
  * Extracts duplicate ArenaFighter prop assembly from ArenaView.
  */
-export default function FighterPair({
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  fighterA,
-  fighterD,
-  hpA,
-  hpD,
-  fpA,
-  fpD,
-  maxHpA,
-  maxHpD,
-  isWinnerA,
-  isWinnerD,
-  isDeadA,
-  isDeadD,
-}: FighterPairProps) {
+export default function FighterPair(props: FighterPairProps) {
+  const { nameA, nameD, styleA, styleD, fighterA } = props;
+  const { fighterD, hpA, hpD, fpA, fpD } = props;
+  const { maxHpA, maxHpD, isWinnerA, isWinnerD, isDeadA } = props;
+  const { isDeadD } = props;
   return (
     <>
       {/* Fighter A */}

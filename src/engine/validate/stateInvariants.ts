@@ -96,6 +96,152 @@ function checkGraveyardCoherence(state: GameState, out: InvariantViolation[]): v
   }
 }
 
+/**
+ * Dead-registry coverage: `deadWarriorIds` is the never-truncated liveness
+ * authority. Any registered-dead (or graveyard-listed) id found inside an
+ * active store — rosters, recruit pools, founder queue — is a resurrection:
+ * it will be bookable, draftable, and re-killable. Participants stamped
+ * 'Dead' are the legal exception — a self-describing historical record.
+ */
+function checkDeadIdCoverage(state: GameState, out: InvariantViolation[]): void {
+  const deadIds = new Set<string>([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id as string),
+  ]);
+  if (deadIds.size === 0) return;
+
+  for (const w of state.roster ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({
+        id: 'dead-id-in-active-store',
+        message: `dead warrior ${w.id} on player roster`,
+      });
+    }
+  }
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster ?? []) {
+      if (deadIds.has(w.id)) {
+        out.push({
+          id: 'dead-id-in-active-store',
+          message: `dead warrior ${w.id} on rival ${r.id} roster`,
+        });
+      }
+    }
+  }
+  for (const w of state.freeAgents ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({ id: 'dead-id-in-active-store', message: `dead warrior ${w.id} in freeAgents` });
+    }
+  }
+  for (const w of state.recruitPool ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({ id: 'dead-id-in-active-store', message: `dead warrior ${w.id} in recruitPool` });
+    }
+  }
+  for (const w of state.retired ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({ id: 'dead-id-in-active-store', message: `dead warrior ${w.id} in retired pool` });
+    }
+  }
+  for (const w of state.legacyFounderQueue ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({
+        id: 'dead-id-in-active-store',
+        message: `dead warrior ${w.id} in legacyFounderQueue`,
+      });
+    }
+  }
+  // Participant snapshots are legitimate historical records once stamped
+  // 'Dead' — only an unstamped (still-'Active') dead id is corruption.
+  for (const t of state.tournaments ?? []) {
+    for (const p of t.participants ?? []) {
+      if (deadIds.has(p.id) && p.status !== 'Dead' && !p.isDead) {
+        out.push({
+          id: 'dead-id-in-active-store',
+          message: `dead warrior ${p.id} live in tournament ${t.id} participants`,
+        });
+      }
+    }
+  }
+}
+
+/** The graveyard is a set of unique deaths — never a log. */
+function checkGraveyardUniqueness(state: GameState, out: InvariantViolation[]): void {
+  const seen = new Set<string>();
+  for (const w of state.graveyard ?? []) {
+    if (seen.has(w.id)) {
+      out.push({
+        id: 'graveyard-unique-ids',
+        message: `duplicate graveyard entry for warrior ${w.id}`,
+      });
+    }
+    seen.add(w.id);
+  }
+}
+
+/** Dead is terminal — a warrior can't be both in the graveyard and retired. */
+function checkDeadRetiredDisjoint(state: GameState, out: InvariantViolation[]): void {
+  const deadIds = new Set<string>([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id as string),
+  ]);
+  if (deadIds.size === 0) return;
+  for (const w of state.retired ?? []) {
+    if (deadIds.has(w.id)) {
+      out.push({
+        id: 'dead-retired-overlap',
+        message: `warrior ${w.id} is both dead and retired`,
+      });
+    }
+  }
+}
+
+/**
+ * Signed offers must reference living, present warriors — an offer that can
+ * never resolve is bookkeeping drift (never pays out, never penalizes).
+ */
+function checkStaleSignedOffers(state: GameState, out: InvariantViolation[]): void {
+  const offers = state.boutOffers ? Object.values(state.boutOffers) : [];
+  if (offers.length === 0) return;
+
+  const deadIds = new Set<string>([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id as string),
+  ]);
+  const retiredIds = new Set<string>((state.retired ?? []).map((w) => w.id as string));
+  const liveIds = new Set<string>();
+  for (const w of state.roster ?? []) liveIds.add(w.id);
+  for (const r of state.rivals ?? []) for (const w of r.roster ?? []) liveIds.add(w.id);
+  for (const w of state.freeAgents ?? []) liveIds.add(w.id);
+  for (const w of state.recruitPool ?? []) liveIds.add(w.id);
+  // Tournament-only warriors (emergency freelancers) live in participants.
+  for (const t of state.tournaments ?? [])
+    for (const p of t.participants ?? []) if (!deadIds.has(p.id)) liveIds.add(p.id);
+
+  for (const offer of offers) {
+    if (offer.status !== 'Signed') continue;
+    for (const wId of offer.warriorIds ?? []) {
+      if (!wId) continue;
+      if (deadIds.has(wId)) {
+        out.push({
+          id: 'stale-signed-offer',
+          message: `signed offer ${offer.id} references dead warrior ${wId}`,
+        });
+      } else if (retiredIds.has(wId)) {
+        out.push({
+          id: 'stale-signed-offer',
+          message: `signed offer ${offer.id} references retired warrior ${wId}`,
+        });
+      } else if (!liveIds.has(wId)) {
+        out.push({
+          id: 'stale-signed-offer',
+          message: `signed offer ${offer.id} references missing warrior ${wId}`,
+        });
+      }
+    }
+  }
+}
+
 /** Treasury / ledger sanity. */
 function checkFinances(state: GameState, out: InvariantViolation[]): void {
   if (typeof state.treasury === 'number' && Number.isNaN(state.treasury)) {
@@ -164,6 +310,10 @@ export function validateStateInvariants(state: GameState): InvariantViolation[] 
 
   checkRosterIntegrity(state, out);
   checkGraveyardCoherence(state, out);
+  checkDeadIdCoverage(state, out);
+  checkGraveyardUniqueness(state, out);
+  checkDeadRetiredDisjoint(state, out);
+  checkStaleSignedOffers(state, out);
   checkFinances(state, out);
   checkCacheCoherence(state, out);
 
@@ -206,7 +356,10 @@ export function validateArenaChampions(state: GameState): InvariantViolation[] {
   const out: InvariantViolation[] = [];
   const push = (message: string) => out.push({ id: 'arena-champions', message });
 
-  const deadIds = new Set((state.graveyard ?? []).map((w) => w.id));
+  const deadIds = new Set([
+    ...(state.deadWarriorIds ?? []),
+    ...(state.graveyard ?? []).map((w) => w.id),
+  ]);
   const retiredIds = new Set((state.retired ?? []).map((w) => w.id));
   const crownsByWarrior = new Map<string, string[]>();
 

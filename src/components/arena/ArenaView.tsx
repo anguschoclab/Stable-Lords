@@ -19,19 +19,7 @@ import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
 
 /** Ambient layers — crowd reactions, audio, particles, weapon trail flash. */
-function AmbientFx({
-  effectsEnabled,
-  arenaTier,
-  crowdState,
-  weather,
-  arenaId,
-  arenaPrefs,
-  lastEventType,
-  isAttackEvent,
-  trailWeaponId,
-  attackerSide,
-  visibleCount,
-}: {
+function AmbientFx(props: {
   effectsEnabled: boolean;
   arenaTier: ArenaTier;
   crowdState: ReturnType<typeof useCrowdState>;
@@ -44,6 +32,9 @@ function AmbientFx({
   attackerSide: 'A' | 'D' | undefined;
   visibleCount: number;
 }) {
+  const { effectsEnabled, arenaTier, crowdState, weather, arenaId } = props;
+  const { arenaPrefs, lastEventType, isAttackEvent, trailWeaponId, attackerSide } = props;
+  const { visibleCount } = props;
   return (
     <>
       {/* Crowd Reactions */}
@@ -123,14 +114,7 @@ interface ArenaViewProps {
 function useArenaScene(p: ArenaViewProps & { isComplete: boolean; weather: WeatherType }) {
   const { log, visibleCount, maxHpA, maxHpD, winner, isComplete, nameA, nameD } = p;
   const anim = useArenaAnimation(
-    log,
-    visibleCount,
-    maxHpA ?? DEFAULT_MAX_HP,
-    maxHpD ?? DEFAULT_MAX_HP,
-    winner,
-    isComplete,
-    nameA,
-    nameD
+    { log: log, visibleCount: visibleCount, maxHpA: maxHpA ?? DEFAULT_MAX_HP, maxHpD: maxHpD ?? DEFAULT_MAX_HP, winner: winner, isComplete: isComplete, fighterNameA: nameA, fighterNameD: nameD }
   );
 
   // Event tracking and crowd state

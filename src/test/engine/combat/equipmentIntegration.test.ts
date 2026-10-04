@@ -14,7 +14,7 @@ import type { EquipmentLoadout } from '@/data/equipment';
 const ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
 function makeWarriorWithLoadout(style: FightingStyle, loadout: EquipmentLoadout) {
-  const w = makeWarrior(undefined, 'A', style, ATTRS, undefined, undefined);
+  const w = makeWarrior({ id: undefined, name: 'A', style: style, attrs: ATTRS, overrides: undefined, rng: undefined });
   return { ...w, equipment: loadout };
 }
 
@@ -111,24 +111,16 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
         helm: 'full_helm',
       };
 
-      const attacker = makeWarrior(undefined, 'A', FightingStyle.StrikingAttack, ATTRS);
+      const attacker = makeWarrior({ id: undefined, name: 'A', style: FightingStyle.StrikingAttack, attrs: ATTRS });
 
       const lightDefender = makeWarriorWithLoadout(FightingStyle.TotalParry, lightLoadout);
       const heavyDefender = makeWarriorWithLoadout(FightingStyle.TotalParry, heavyLoadout);
 
       const lightFight = simulateFight(
-        defaultPlanForWarrior(attacker),
-        defaultPlanForWarrior(lightDefender),
-        attacker,
-        lightDefender,
-        42
+        { planA: defaultPlanForWarrior(attacker), planD: defaultPlanForWarrior(lightDefender), warriorA: attacker, warriorD: lightDefender, providedRng: 42 }
       );
       const heavyFight = simulateFight(
-        defaultPlanForWarrior(attacker),
-        defaultPlanForWarrior(heavyDefender),
-        attacker,
-        heavyDefender,
-        42
+        { planA: defaultPlanForWarrior(attacker), planD: defaultPlanForWarrior(heavyDefender), warriorA: attacker, warriorD: heavyDefender, providedRng: 42 }
       );
 
       // The heavy defender should survive longer (more minutes) or win more
@@ -157,21 +149,13 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
       const lightWarrior = makeWarriorWithLoadout(FightingStyle.StrikingAttack, lightLoadout);
       const heavyWarrior = makeWarriorWithLoadout(FightingStyle.StrikingAttack, heavyLoadout);
 
-      const defender = makeWarrior(undefined, 'D', FightingStyle.TotalParry, ATTRS);
+      const defender = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: ATTRS });
 
       const lightFight = simulateFight(
-        defaultPlanForWarrior(lightWarrior),
-        defaultPlanForWarrior(defender),
-        lightWarrior,
-        defender,
-        99
+        { planA: defaultPlanForWarrior(lightWarrior), planD: defaultPlanForWarrior(defender), warriorA: lightWarrior, warriorD: defender, providedRng: 99 }
       );
       const heavyFight = simulateFight(
-        defaultPlanForWarrior(heavyWarrior),
-        defaultPlanForWarrior(defender),
-        heavyWarrior,
-        defender,
-        99
+        { planA: defaultPlanForWarrior(heavyWarrior), planD: defaultPlanForWarrior(defender), warriorA: heavyWarrior, warriorD: defender, providedRng: 99 }
       );
 
       // The heavy armored attacker should be more likely to exhaust

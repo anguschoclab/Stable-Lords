@@ -161,6 +161,16 @@ function hardGates(warrior: Warrior, weather: WeatherType): BoutEvaluation | nul
   return null;
 }
 
+interface ResolveTitleBoutArgs {
+  offer: BoutOffer;
+  rival: RivalStableData;
+  warrior: Warrior;
+  opponent: Warrior | undefined;
+  state: GameState | undefined;
+  observedDanger: boolean;
+  explain?: { reason?: string };
+}
+
 /**
  * Title-bout resolution — the Arena Commission doesn't negotiate: a crown
  * shot outweighs any purse, so counter/fame-floor logic is skipped. Runs
@@ -169,15 +179,9 @@ function hardGates(warrior: Warrior, weather: WeatherType): BoutEvaluation | nul
  * risk aversion — the unified gate fixes the old double-gate where a
  * RECOVERY champion could quietly refuse defenses into a strip.
  */
-function resolveTitleBout(
-  offer: BoutOffer,
-  rival: RivalStableData,
-  warrior: Warrior,
-  opponent: Warrior | undefined,
-  state: GameState | undefined,
-  observedDanger: boolean,
-  explain?: { reason?: string }
-): BoutEvaluation {
+function resolveTitleBout(args: ResolveTitleBoutArgs): BoutEvaluation {
+  const { offer, rival, warrior, opponent, state } = args;
+  const { observedDanger, explain } = args;
   const arenaId = offer.titleArenaId as string;
   const personality = rival.owner.personality;
   const title = state?.arenaChampions?.[arenaId];
@@ -306,18 +310,22 @@ function matchupSkepticism(
   return null;
 }
 
+interface PurseCounterArgs {
+  offer: BoutOffer;
+  warrior: Warrior;
+  rival: RivalStableData;
+  promoter: { personality?: string } | undefined;
+  playerThreat: PlayerThreatLevel;
+  alreadyCountered: boolean;
+}
+
 /**
  * Purse counter — famous warriors hold out for a purse worthy of their name.
  * One round only; an offer already tagged COUNTERED_* is final.
  */
-function purseCounter(
-  offer: BoutOffer,
-  warrior: Warrior,
-  rival: RivalStableData,
-  promoter: { personality?: string } | undefined,
-  playerThreat: PlayerThreatLevel,
-  alreadyCountered: boolean
-): BoutEvaluation | null {
+function purseCounter(args: PurseCounterArgs): BoutEvaluation | null {
+  const { offer, warrior, rival, promoter, playerThreat } = args;
+  const { alreadyCountered } = args;
   if (
     !alreadyCountered &&
     rival.owner.personality !== 'Aggressive' &&
@@ -365,22 +373,26 @@ function buildThreatContext(
   return { observedDanger, playerThreat };
 }
 
+interface EvaluateNegotiationStageArgs {
+  offer: BoutOffer;
+  rival: RivalStableData;
+  warrior: Warrior;
+  opponent: Warrior | undefined;
+  state: GameState | undefined;
+  promoter: Promoter | undefined;
+  isTournamentHungry: boolean;
+  currentHP: number;
+  playerThreat: PlayerThreatLevel;
+  observedDanger: boolean;
+}
+
 /**
  * Negotiation stage — runs after every gate has passed: matchup skepticism,
  * venue/purse counters, campaign-role accepts, and personality defaults.
  */
-function evaluateNegotiationStage(
-  offer: BoutOffer,
-  rival: RivalStableData,
-  warrior: Warrior,
-  opponent: Warrior | undefined,
-  state: GameState | undefined,
-  promoter: Promoter | undefined,
-  isTournamentHungry: boolean,
-  currentHP: number,
-  playerThreat: PlayerThreatLevel,
-  observedDanger: boolean
-): BoutEvaluation {
+function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvaluation {
+  const { offer, rival, warrior, opponent, state } = args;
+  const { promoter, isTournamentHungry, currentHP, playerThreat, observedDanger } = args;
   // Personality Logic
   const personality = rival.owner.personality;
   const hype = offer.hype;
@@ -427,12 +439,7 @@ function evaluateNegotiationStage(
 
   // Counter logic: famous warriors hold out for a purse worthy of their name.
   const counted = purseCounter(
-    offer,
-    warrior,
-    rival,
-    promoter,
-    playerThreat,
-    alreadyVenueOrPurseCountered
+    { offer: offer, warrior: warrior, rival: rival, promoter: promoter, playerThreat: playerThreat, alreadyCountered: alreadyVenueOrPurseCountered }
   );
   if (counted) return counted;
 
@@ -448,20 +455,27 @@ function evaluateNegotiationStage(
 }
 
 /**
+ *
+ */
+export interface EvaluateBoutOfferArgs {
+  offer: BoutOffer;
+  rival: RivalStableData;
+  warrior: Warrior;
+  currentWeek: number;
+  weather?: WeatherType;
+  opponent?: Warrior;
+  state?: GameState;
+  explain?: { reason?: string };
+}
+
+/**
  * Evaluates a bout offer for a rival stable: hard gates, title-bout
  * resolution, risk refusals, desperation acceptance, survivability gates,
  * then the negotiation stage (skepticism/venue/purse/personality).
  */
-export function evaluateBoutOffer(
-  offer: BoutOffer,
-  rival: RivalStableData,
-  warrior: Warrior,
-  currentWeek: number,
-  weather: WeatherType = 'Clear',
-  opponent?: Warrior,
-  state?: GameState,
-  explain?: { reason?: string }
-): BoutEvaluation {
+export function evaluateBoutOffer(args: EvaluateBoutOfferArgs): BoutEvaluation {
+  const { offer, rival, warrior, currentWeek, weather = 'Clear' } = args;
+  const { opponent, state, explain } = args;
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const { observedDanger, playerThreat } = buildThreatContext(rival, opponent, state);
 
@@ -484,7 +498,7 @@ export function evaluateBoutOffer(
   if (gate) return gate;
 
   if (offer.titleArenaId) {
-    return resolveTitleBout(offer, rival, warrior, opponent, state, observedDanger, explain);
+    return resolveTitleBout({ offer: offer, rival: rival, warrior: warrior, opponent: opponent, state: state, observedDanger: observedDanger, explain: explain });
   }
 
   const promoter = offer.promoterId ? state?.promoters?.[offer.promoterId] : undefined;
@@ -511,15 +525,6 @@ export function evaluateBoutOffer(
   if (survivable) return survivable;
 
   return evaluateNegotiationStage(
-    offer,
-    rival,
-    warrior,
-    opponent,
-    state,
-    promoter,
-    isTournamentHungry,
-    currentHP,
-    playerThreat,
-    observedDanger
+    { offer: offer, rival: rival, warrior: warrior, opponent: opponent, state: state, promoter: promoter, isTournamentHungry: isTournamentHungry, currentHP: currentHP, playerThreat: playerThreat, observedDanger: observedDanger }
   );
 }

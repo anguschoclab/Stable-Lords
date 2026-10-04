@@ -19,9 +19,11 @@ export interface StatBatteryProps {
  * Stat battery.
  */
 export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(function StatBattery(
-  { label, value, max = 100, labelValue, colorClass, className },
+  props,
   ref
 ) {
+  const { label, value, max = 100, labelValue, colorClass } = props;
+  const { className } = props;
   const pct = max > 0 ? clamp((value / max) * 100, 0, 100) : 0;
   const displayValue = labelValue !== undefined ? labelValue : value;
 

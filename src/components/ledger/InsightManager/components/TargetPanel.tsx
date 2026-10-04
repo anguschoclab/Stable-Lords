@@ -21,16 +21,9 @@ interface TargetPanelProps {
  * Right column of the Insight Vault: warrior grid + reveal summary once a
  * token is selected, otherwise the prompt to pick a token.
  */
-export function TargetPanel({
-  tokens,
-  selectedTokenId,
-  roster,
-  selectedWarriorId,
-  onSelectWarrior,
-  selectedWarrior,
-  isRevealing,
-  onReveal,
-}: TargetPanelProps) {
+export function TargetPanel(props: TargetPanelProps) {
+  const { tokens, selectedTokenId, roster, selectedWarriorId, onSelectWarrior } = props;
+  const { selectedWarrior, isRevealing, onReveal } = props;
   const selectedToken = tokens.find((t) => t.id === selectedTokenId);
 
   return (

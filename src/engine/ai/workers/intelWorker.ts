@@ -192,12 +192,7 @@ export function processIntel(
       ? 'the player stable'
       : (targetRival?.owner.stableName ?? 'an unknown stable');
   updatedRival = logAgentAction(
-    updatedRival,
-    'INTEL',
-    `Scouted ${targetName}: suspected OE ${estimate.suspectedOE}, AL ${estimate.suspectedAL}.`,
-    'Low',
-    state.week,
-    'INTEL_UPDATE'
+    { rival: updatedRival, type: 'INTEL', description: `Scouted ${targetName}: suspected OE ${estimate.suspectedOE}, AL ${estimate.suspectedAL}.`, riskTier: 'Low', week: state.week, cause: 'INTEL_UPDATE' }
   );
 
   return { updatedRival, gazetteItems };

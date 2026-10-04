@@ -28,16 +28,9 @@ interface ConditionItemProps {
 /**
  *
  */
-export function ConditionItem({
-  cond,
-  idx,
-  removeCondition,
-  updateTrigger,
-  updateTriggerValue,
-  updateOverrideSlider,
-  updateOverrideTactic,
-  updateCondition,
-}: ConditionItemProps) {
+export function ConditionItem(props: ConditionItemProps) {
+  const { cond, idx, removeCondition, updateTrigger, updateTriggerValue } = props;
+  const { updateOverrideSlider, updateOverrideTactic, updateCondition } = props;
   return (
     <div className="border border-white/10 bg-black/30 p-4 space-y-4">
       <ConditionHeader idx={idx} label={cond.label} onRemove={() => removeCondition(idx)} />

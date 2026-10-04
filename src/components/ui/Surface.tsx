@@ -15,7 +15,9 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement>, Surf
  * Surface.
  */
 const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
-  ({ className, variant, padding, rounded, glow, ...props }, ref) => {
+  (_props, ref) => {
+    const { className, variant, padding, rounded, glow } = _props;
+    const { ...props } = _props;
     return (
       <div
         ref={ref}

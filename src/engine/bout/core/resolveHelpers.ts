@@ -8,12 +8,23 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { generateId } from '@/utils/idUtils';
 
 /**
- * Validate bout combatants.
+ * Validate bout combatants — symmetric: both sides must exist, be Active,
+ * and not be registered dead. The old side-A-only check let dead warriors
+ * in the D slot fight and be re-killed (kill/death divergence).
+ *
  * @param currentW - Current w. (optional)
  * @param currentO - Current o. (optional)
+ * @param deadIds - Persistent death registry (deadWarriorIds ∪ graveyard).
  */
-export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
-  return !!currentW && isActive(currentW) && !!currentO;
+export function validateBoutCombatants(
+  currentW?: Warrior,
+  currentO?: Warrior,
+  deadIds?: ReadonlySet<string>
+): boolean {
+  if (!currentW || !currentO) return false;
+  if (!isActive(currentW) || !isActive(currentO)) return false;
+  if (deadIds && (deadIds.has(currentW.id) || deadIds.has(currentO.id))) return false;
+  return true;
 }
 
 /**
@@ -44,6 +55,17 @@ export function calculateBoutFame(
   };
 }
 
+interface BuildPurseImpactsArgs {
+  state: GameState;
+  contract: BoutOffer;
+  purse: number;
+  showFee: number;
+  winnerId: string | null;
+  currentWId: string;
+  currentOId: string;
+  isRivalBout: boolean;
+}
+
 /**
  * Player-side purse/show-fee impacts.
  *
@@ -53,16 +75,9 @@ export function calculateBoutFame(
  * to balloon into the millions, so when the winner fights for a rival stable
  * these impacts are skipped entirely.
  */
-function buildPurseImpacts(
-  state: GameState,
-  contract: BoutOffer,
-  purse: number,
-  showFee: number,
-  winnerId: string | null,
-  currentWId: string,
-  currentOId: string,
-  isRivalBout: boolean
-): StateImpact[] {
+function buildPurseImpacts(args: BuildPurseImpactsArgs): StateImpact[] {
+  const { state, contract, purse, showFee, winnerId } = args;
+  const { currentWId, currentOId, isRivalBout } = args;
   if (isRivalBout) return [];
   const ledgerEntry = (label: string, amount: number) => ({
     id: generateId(undefined, 'ledger') as LedgerEntryId,
@@ -141,14 +156,7 @@ export function processContractPayouts(
 
   impacts.push(
     ...buildPurseImpacts(
-      state,
-      contract,
-      purse,
-      showFee,
-      winnerId,
-      currentWId,
-      currentOId,
-      rivalA != null
+      { state: state, contract: contract, purse: purse, showFee: showFee, winnerId: winnerId, currentWId: currentWId, currentOId: currentOId, isRivalBout: rivalA != null }
     )
   );
 

@@ -115,23 +115,12 @@ const ChartTooltipContent = React.forwardRef<
   }
 >(
   (
-    {
-      active,
-      payload,
-      className,
-      indicator = 'dot',
-      hideLabel = false,
-      hideIndicator = false,
-      label,
-      labelFormatter,
-      labelClassName,
-      formatter,
-      color,
-      nameKey,
-      labelKey,
-    },
+    props,
     ref
   ) => {
+    const { active, payload, className, indicator = 'dot', hideLabel = false } = props;
+    const { hideIndicator = false, label, labelFormatter, labelClassName, formatter } = props;
+    const { color, nameKey, labelKey } = props;
     const { config } = useChart();
 
     const tooltipLabel = useTooltipLabel({
@@ -186,15 +175,7 @@ ChartTooltipContent.displayName = 'ChartTooltip';
 type TooltipItem = TooltipPayload[number];
 
 /** Resolved tooltip label node: formatter output, config label, or raw label. */
-function useTooltipLabel({
-  hideLabel,
-  payload,
-  labelKey,
-  label,
-  labelFormatter,
-  labelClassName,
-  config,
-}: {
+function useTooltipLabel(props: {
   hideLabel: boolean;
   payload?: TooltipPayload;
   labelKey?: string;
@@ -203,6 +184,8 @@ function useTooltipLabel({
   labelClassName?: string;
   config: ChartConfig;
 }) {
+  const { hideLabel, payload, labelKey, label, labelFormatter } = props;
+  const { labelClassName, config } = props;
   return React.useMemo(() => {
     if (hideLabel || !payload?.length) {
       return null;
@@ -230,19 +213,7 @@ function useTooltipLabel({
 }
 
 /** One row of the tooltip body — indicator swatch + label + value. */
-function ChartTooltipItem({
-  item,
-  index,
-  payload,
-  config,
-  indicator,
-  nestLabel,
-  tooltipLabel,
-  hideIndicator,
-  formatter,
-  color,
-  nameKey,
-}: {
+function ChartTooltipItem(props: {
   item: TooltipItem;
   index: number;
   payload: TooltipItem[];
@@ -261,6 +232,9 @@ function ChartTooltipItem({
   color?: string;
   nameKey?: string;
 }) {
+  const { item, index, payload, config, indicator } = props;
+  const { nestLabel, tooltipLabel, hideIndicator, formatter, color } = props;
+  const { nameKey } = props;
   const key = `${nameKey || item.name || item.dataKey || 'value'}`;
   const itemConfig = getResolvedConfig(config, key);
   const indicatorColor = color || (item.payload?.fill as string | undefined) || item.color;

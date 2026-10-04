@@ -48,29 +48,33 @@ function judgeScore(
   return null;
 }
 
+interface DecisionNarrativeArgs {
+  _winner: 'A' | 'D';
+  _loser: 'A' | 'D';
+  winName: string;
+  loseName: string;
+  fW: FighterState;
+  fL: FighterState;
+  voteType: 'unanimous' | 'split' | 'overtime';
+  dissenter?: string;
+}
+
 /**
  * Generates a narrative summary of a judge's decision.
  *
- * @param _winner -
- * @param _loser -
- * @param winName - The winner's display name
- * @param loseName - The loser's display name
- * @param fW - The winner's fighter state
- * @param fL - The loser's fighter state
- * @param voteType - The type of decision (unanimous, split, or overtime)
- * @param dissenter -
+ * @param args._winner -
+ * @param args._loser -
+ * @param args.winName - The winner's display name
+ * @param args.loseName - The loser's display name
+ * @param args.fW - The winner's fighter state
+ * @param args.fL - The loser's fighter state
+ * @param args.voteType - The type of decision (unanimous, split, or overtime)
+ * @param args.dissenter -
  * * @returns A formatted narrative string describing the decision
  */
-function decisionNarrative(
-  _winner: 'A' | 'D',
-  _loser: 'A' | 'D',
-  winName: string,
-  loseName: string,
-  fW: FighterState,
-  fL: FighterState,
-  voteType: 'unanimous' | 'split' | 'overtime',
-  dissenter?: string
-): string {
+function decisionNarrative(args: DecisionNarrativeArgs): string {
+  const {winName, loseName, fW } = args;
+  const { fL, voteType, dissenter } = args;
   const hitMargin = fW.hitsLanded - fL.hitsLanded;
   const domination = hitMargin >= 5;
   const close = hitMargin <= 2;
@@ -107,6 +111,16 @@ function decisionNarrative(
   return prefix + result;
 }
 
+interface ResolveOvertimeOrTiebreakerArgs {
+  fA: FighterState;
+  fD: FighterState;
+  nameA: string;
+  nameD: string;
+  aVotes: number;
+  dVotes: number;
+  rng?: () => number;
+}
+
 /**
  * Resolves a fight that reached the time limit.
  * Three judges with different archetypes score the bout.
@@ -115,15 +129,9 @@ function decisionNarrative(
 /**
  * Helper to resolve the overtime exchange or HP-based tiebreaker when judges cannot agree.
  */
-function resolveOvertimeOrTiebreaker(
-  fA: FighterState,
-  fD: FighterState,
-  nameA: string,
-  nameD: string,
-  aVotes: number,
-  dVotes: number,
-  rng?: () => number
-): { winner: 'A' | 'D' | null; by: FightOutcome['by']; narrative: string } {
+function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): { winner: 'A' | 'D' | null; by: FightOutcome['by']; narrative: string } {
+  const { fA, fD, nameA, nameD, aVotes } = args;
+  const { dVotes, rng } = args;
   // ── Contested / overtime ──
   if (rng) {
     const hpA = fA.hp / fA.maxHp;
@@ -134,13 +142,13 @@ function resolveOvertimeOrTiebreaker(
         return {
           winner: 'A',
           by: 'Decision',
-          narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'overtime'),
+          narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'overtime' }),
         };
       } else {
         return {
           winner: 'D',
           by: 'Decision',
-          narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'overtime'),
+          narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'overtime' }),
         };
       }
     }
@@ -202,14 +210,14 @@ export function resolveDecision(
     return {
       winner: 'A',
       by: 'Decision',
-      narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'unanimous'),
+      narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'unanimous' }),
     };
   }
   if (dVotes === 3) {
     return {
       winner: 'D',
       by: 'Decision',
-      narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'unanimous'),
+      narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'unanimous' }),
     };
   }
 
@@ -220,7 +228,7 @@ export function resolveDecision(
     return {
       winner: 'A',
       by: 'Decision',
-      narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'split', dissenter),
+      narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'split', dissenter: dissenter }),
     };
   }
   if (dVotes === 2) {
@@ -229,10 +237,10 @@ export function resolveDecision(
     return {
       winner: 'D',
       by: 'Decision',
-      narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'split', dissenter),
+      narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'split', dissenter: dissenter }),
     };
   }
 
   // ── Contested / overtime / HP Tiebreaker ──
-  return resolveOvertimeOrTiebreaker(fA, fD, nameA, nameD, aVotes, dVotes, rng);
+  return resolveOvertimeOrTiebreaker({ fA: fA, fD: fD, nameA: nameA, nameD: nameD, aVotes: aVotes, dVotes: dVotes, rng: rng });
 }

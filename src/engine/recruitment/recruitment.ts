@@ -240,16 +240,23 @@ function pickRecruitName(
   return name;
 }
 
+/**
+ *
+ */
+export interface GenerateRecruitArgs {
+  rng: IRNGService;
+  usedNames: Set<string>;
+  week: number;
+  forceTier?: RecruitTier;
+  meta?: StyleMeta;
+  legacyCandidates?: import('@/types/warrior.types').Warrior[];
+}
+
 // Include new origins/traits in generateRecruit() pools. No manual wiring needed due to dynamic nature.
 /** Generates a recruit: style/lineage, unique name, stats, lore payload. */
-export function generateRecruit(
-  rng: IRNGService,
-  usedNames: Set<string>,
-  week: number,
-  forceTier?: RecruitTier,
-  meta?: StyleMeta,
-  legacyCandidates: import('@/types/warrior.types').Warrior[] = []
-): PoolWarrior {
+export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
+  const { rng, usedNames, week, forceTier, meta } = args;
+  const { legacyCandidates = [] } = args;
   const tier = forceTier ?? rollTier(rng);
   const { style, lineage } = pickStyleAndLineage(rng, meta, legacyCandidates);
 
@@ -302,73 +309,77 @@ export function generateRecruit(
   };
 }
 
+/**
+ *
+ */
+export interface GenerateRecruitPoolArgs {
+  count?: number;
+  week: number;
+  usedNames: Set<string>;
+  rng?: IRNGService;
+  meta?: StyleMeta;
+  legacyCandidates?: import('@/types/warrior.types').Warrior[];
+}
+
 // ─── Pool Management ──────────────────────────────────────────────────────
 
 /**
  * Generates a full pool of recruits.
  *
- * @param count - Number of recruits to generate
- * @param week - Current game week
- * @param usedNames - Set of names already in use
- * @param rng - Optional RNG service
- * @param meta - Optional style meta
- * @param legacyCandidates - Optional list of former warriors
+ * @param args.count - Number of recruits to generate
+ * @param args.week - Current game week
+ * @param args.usedNames - Set of names already in use
+ * @param args.rng - Optional RNG service
+ * @param args.meta - Optional style meta
+ * @param args.legacyCandidates - Optional list of former warriors
  * @returns An array of generated PoolWarriors
  */
-export function generateRecruitPool(
-  count: number = DEFAULT_POOL_SIZE,
-  week: number,
-  usedNames: Set<string>,
-  rng?: IRNGService,
-  meta?: StyleMeta,
-  legacyCandidates: import('@/types/warrior.types').Warrior[] = []
-): PoolWarrior[] {
+export function generateRecruitPool(args: GenerateRecruitPoolArgs): PoolWarrior[] {
+  const { count = DEFAULT_POOL_SIZE, week, usedNames, rng, meta } = args;
+  const { legacyCandidates = [] } = args;
   const rngService = resolveRng(rng, week * 9973 + 42);
   const pool: PoolWarrior[] = [];
 
   // Guarantee at least two Promising+ warriors in a larger pool
   pool.push(
     generateRecruit(
-      rngService,
-      usedNames,
-      week,
-      rngService.next() < 0.3 ? 'Exceptional' : 'Promising',
-      meta,
-      legacyCandidates
+      { rng: rngService, usedNames: usedNames, week: week, forceTier: rngService.next() < 0.3 ? 'Exceptional' : 'Promising', meta: meta, legacyCandidates: legacyCandidates }
     )
   );
   pool.push(
     generateRecruit(
-      rngService,
-      usedNames,
-      week,
-      rngService.next() < 0.1 ? 'Prodigy' : 'Promising',
-      meta,
-      legacyCandidates
+      { rng: rngService, usedNames: usedNames, week: week, forceTier: rngService.next() < 0.1 ? 'Prodigy' : 'Promising', meta: meta, legacyCandidates: legacyCandidates }
     )
   );
 
   while (pool.length < count) {
-    pool.push(generateRecruit(rngService, usedNames, week, undefined, meta, legacyCandidates));
+    pool.push(generateRecruit({ rng: rngService, usedNames: usedNames, week: week, forceTier: undefined, meta: meta, legacyCandidates: legacyCandidates }));
   }
 
   return pool;
 }
 
+/**
+ *
+ */
+export interface PartialRefreshPoolArgs {
+  currentPool: PoolWarrior[];
+  week: number;
+  usedNames: Set<string>;
+  rng?: IRNGService;
+  meta?: StyleMeta;
+  legacyCandidates?: import('@/types/warrior.types').Warrior[];
+  stableCount?: number;
+}
+
 /** Partial weekly refresh — replace the oldest slice, then top up to the
  *  world-scaled target size. */
-export function partialRefreshPool(
-  currentPool: PoolWarrior[],
-  week: number,
-  usedNames: Set<string>,
-  rng?: IRNGService,
-  meta?: StyleMeta,
-  legacyCandidates: import('@/types/warrior.types').Warrior[] = [],
-  stableCount: number = WORLD_RIVAL_FLOOR
-): PoolWarrior[] {
+export function partialRefreshPool(args: PartialRefreshPoolArgs): PoolWarrior[] {
+  const { currentPool, week, usedNames, rng, meta } = args;
+  const { legacyCandidates = [], stableCount = WORLD_RIVAL_FLOOR } = args;
   const targetSize = computeRecruitPoolSize(stableCount);
   if (currentPool.length === 0)
-    return generateRecruitPool(targetSize, week, usedNames, rng, meta, legacyCandidates);
+    return generateRecruitPool({ count: targetSize, week: week, usedNames: usedNames, rng: rng, meta: meta, legacyCandidates: legacyCandidates });
 
   const sorted = [...currentPool].sort((a, b) => a.addedWeek - b.addedWeek);
   // Spec §3.4 cadence: a sixth of the pool turns over each week.
@@ -382,14 +393,14 @@ export function partialRefreshPool(
   const rngService = resolveRng(rng, week * 7919 + 31);
   const newWarriors: PoolWarrior[] = [];
   for (let i = 0; i < removeCount; i++) {
-    newWarriors.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
+    newWarriors.push(generateRecruit({ rng: rngService, usedNames: allUsed, week: week, forceTier: undefined, meta: meta, legacyCandidates: legacyCandidates }));
   }
 
   // Top up to the world-scaled target, then cap so the pool can't grow
   // unbounded when AI drafts are slower than the natural turnover rate.
   const newPool = [...remaining, ...newWarriors];
   while (newPool.length < targetSize) {
-    newPool.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
+    newPool.push(generateRecruit({ rng: rngService, usedNames: allUsed, week: week, forceTier: undefined, meta: meta, legacyCandidates: legacyCandidates }));
   }
   const poolHardCap = computeRecruitPoolHardCap(stableCount);
   if (newPool.length > poolHardCap) {
@@ -414,7 +425,7 @@ export function fullRefreshPool(
   rng?: IRNGService
 ): PoolWarrior[] {
   const rngService = resolveRng(rng, week * 1337 + 7);
-  return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rngService);
+  return generateRecruitPool({ count: DEFAULT_POOL_SIZE, week: week, usedNames: usedNames, rng: rngService });
 }
 
 /**

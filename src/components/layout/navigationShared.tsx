@@ -95,16 +95,9 @@ interface HubSwitcherProps {
 /**
  *
  */
-export function HubSwitcher({
-  activeHubId,
-  alerts,
-  alertLinks,
-  LinkComponent = Link,
-  linkClassName,
-  iconClassName,
-  showChevron = true,
-  onAlertClick,
-}: HubSwitcherProps) {
+export function HubSwitcher(props: HubSwitcherProps) {
+  const { activeHubId, alerts, alertLinks, LinkComponent = Link, linkClassName } = props;
+  const { iconClassName, showChevron = true, onAlertClick } = props;
   const navigate = useNavigate();
 
   return (
@@ -176,15 +169,9 @@ interface SubPageListProps {
 /**
  *
  */
-export function SubPageList({
-  activeHubId,
-  currentPath,
-  LinkComponent = Link,
-  pageLinkClassName,
-  iconClassName,
-  useMotionIndicator = true,
-  animationDuration = 0.3,
-}: SubPageListProps) {
+export function SubPageList(props: SubPageListProps) {
+  const { activeHubId, currentPath, LinkComponent = Link, pageLinkClassName, iconClassName } = props;
+  const { useMotionIndicator = true, animationDuration = 0.3 } = props;
   return (
     <AnimatePresence mode="wait">
       {activeHubId && (

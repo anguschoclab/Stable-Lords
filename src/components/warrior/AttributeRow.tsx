@@ -129,14 +129,7 @@ function rowButtonClass(
 }
 
 /** The assignable row button: label, progress, advisor badge, status, ceiling glow. */
-function RowButton({
-  warriorName,
-  attrKey,
-  state,
-  atCap,
-  isAdvisorRecommended,
-  onAssign,
-}: {
+function RowButton(props: {
   warriorName: string;
   attrKey: keyof Attributes;
   state: ReturnType<typeof getAttributeRowState>;
@@ -144,6 +137,8 @@ function RowButton({
   isAdvisorRecommended?: boolean;
   onAssign: (attr: keyof Attributes) => void;
 }) {
+  const { warriorName, attrKey, state, atCap, isAdvisorRecommended } = props;
+  const { onAssign } = props;
   const {
     val,
     isRevealed,
@@ -206,16 +201,9 @@ function RowButton({
 /**
  *
  */
-export function AttributeRow({
-  warrior,
-  attributeKey: key,
-  assignment,
-  seasonalGains,
-  trainers,
-  atCap,
-  onAssign,
-  isAdvisorRecommended,
-}: AttributeRowProps) {
+export function AttributeRow(props: AttributeRowProps) {
+  const { warrior, attributeKey: key, assignment, seasonalGains, trainers } = props;
+  const { atCap, onAssign, isAdvisorRecommended } = props;
   const state = getAttributeRowState({ warrior, key, assignment, seasonalGains, trainers, atCap });
 
   return (

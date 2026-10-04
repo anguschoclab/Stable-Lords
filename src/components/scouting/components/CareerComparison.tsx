@@ -27,27 +27,21 @@ export function CareerComparison({ warriorA, warriorB }: CareerComparisonProps) 
       <div className="space-y-4">
         <ComparisonBar
           label="WINS"
-          valA={warriorA.career.wins}
-          valB={warriorB.career.wins}
           maxVal={maxWins}
-          colorA="bg-primary"
-          colorB="bg-accent"
+          sideA={{ value: warriorA.career.wins, color: 'bg-primary' }}
+          sideB={{ value: warriorB.career.wins, color: 'bg-accent' }}
         />
         <ComparisonBar
           label="KILLS"
-          valA={warriorA.career.kills}
-          valB={warriorB.career.kills}
           maxVal={maxKills}
-          colorA="bg-primary"
-          colorB="bg-accent"
+          sideA={{ value: warriorA.career.kills, color: 'bg-primary' }}
+          sideB={{ value: warriorB.career.kills, color: 'bg-accent' }}
         />
         <ComparisonBar
           label="FAME"
-          valA={warriorA.career.fame ?? 0}
-          valB={warriorB.career.fame ?? 0}
           maxVal={maxFame}
-          colorA="bg-primary"
-          colorB="bg-accent"
+          sideA={{ value: warriorA.career.fame ?? 0, color: 'bg-primary' }}
+          sideB={{ value: warriorB.career.fame ?? 0, color: 'bg-accent' }}
         />
       </div>
     </Surface>

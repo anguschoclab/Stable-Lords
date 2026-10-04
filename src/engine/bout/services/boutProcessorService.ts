@@ -7,7 +7,7 @@ import { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
-import { generatePairings } from '../core/pairings';
+import { generatePairings, tournamentIdFromContractId } from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildActiveWarriorMap } from '@/utils/roster';
@@ -104,7 +104,8 @@ function voidedOffersImpact(state: GameState, voidedOffers: BoutOffer[]): StateI
         week: state.absoluteWeek,
         title: 'Bout Contract Voided',
         items: voidedOffers.map(
-          (o) => `Contract ${o.id} was voided — a warrior cannot be booked twice in one week.`
+          (o) =>
+            `Contract ${o.id} was voided — a signed bout could not be fought (double-booking, or a combatant missing, retired, or dead).`
         ),
         category: 'news',
       },
@@ -155,10 +156,14 @@ export function processWeekBouts(state: GameState, headless?: boolean): WeekBout
       contract,
       headless,
       isTournamentBout,
+      tournamentId: tournamentIdFromContractId(p.contractId),
     });
     impacts.push(res.impact);
-    results.push(res.result);
-    accumulateWeekStats(summary, res);
+    if (res.voidedOffer) voidedOffers.push(res.voidedOffer);
+    if (res.result) {
+      results.push(res.result);
+      accumulateWeekStats(summary, res);
+    }
   });
 
   finalizeBoutResults(state, results, impacts, voidedOffers);
@@ -203,8 +208,11 @@ export async function processWeekBoutsSharded(
   const summary = createWeekBoutSummary();
   for (const { bout, events } of outputs) {
     impacts.push(bout.impact);
-    results.push(bout.result);
-    accumulateWeekStats(summary, bout);
+    if (bout.voidedOffer) voidedOffers.push(bout.voidedOffer);
+    if (bout.result) {
+      results.push(bout.result);
+      accumulateWeekStats(summary, bout);
+    }
     // Shard workers can't reach this bus — re-emit captured events here,
     // preserving pairing order.
     for (const e of events) engineEventBus.emit(e);

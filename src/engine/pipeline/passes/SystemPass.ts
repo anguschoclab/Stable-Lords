@@ -20,6 +20,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -83,7 +84,8 @@ function applySeasonalChurnMembership(
   // Displaced warriors survive as free agents; the already-retired join the
   // retired roll; the dead stay in the graveyard.
   const displaced = churn.removedRosters.flat();
-  const veterans = displaced.filter((w) => w.status === 'Active');
+  const deadIds = deadIdSet(state);
+  const veterans = displaced.filter((w) => w.status === 'Active' && !deadIds.has(w.id));
   const lateRetirees = displaced.filter((w) => w.status === 'Retired');
   if (veterans.length > 0) {
     const poolRng = new SeededRNGService(seasonSeed + 77);
@@ -227,16 +229,11 @@ function materializeFloorRecruit(
   const style = rng.pick(Object.values(FightingStyle));
   const attrs = generateArchetypeAttrs(style, rng);
   const warrior = makeWarrior(
-    rng.uuid() as WarriorId,
-    generateWarriorName({
+    { id: rng.uuid() as WarriorId, name: generateWarriorName({
       rng,
       archetype: STYLE_ARCHETYPE[style],
       usedNames: collectUsedWarriorNames(state),
-    }),
-    style,
-    attrs,
-    {},
-    rng
+    }), style: style, attrs: attrs, overrides: {}, rng: rng }
   );
   return { warrior };
 }

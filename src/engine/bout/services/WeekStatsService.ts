@@ -25,6 +25,8 @@ export function createWeekBoutSummary(): WeekBoutSummary {
  * Mutates summary for performance (internal accumulator pattern)
  */
 export function accumulateWeekStats(summary: WeekBoutSummary, res: BoutImpact): void {
+  // Skipped bouts (invalid combatants) have no result — they never happened.
+  if (!res.result) return;
   summary.bouts++;
   if (res.stats.death) {
     summary.deaths += res.stats.deathNames.length;

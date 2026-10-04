@@ -63,9 +63,7 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
           continue;
         }
         const handler = impactHandlers[k];
-        if (handler) {
-          handler(state, value as never);
-        }
+        if (handler) handler(state, value as never);
       }
     }
   }
@@ -111,6 +109,8 @@ const MERGE_CONFIG: MergeConfig = {
   newsletterItems: { strategy: 'append', defaultValue: [] },
   ledgerEntries: { strategy: 'append', defaultValue: [] },
   graveyard: { strategy: 'append', defaultValue: [] },
+  deadWarriorIds: { strategy: 'append', defaultValue: [] },
+  killEvents: { strategy: 'append', defaultValue: [] },
   arenaHistory: { strategy: 'append', defaultValue: [] },
   matchHistory: { strategy: 'replace', defaultValue: [] },
   restStates: { strategy: 'append', defaultValue: [] },

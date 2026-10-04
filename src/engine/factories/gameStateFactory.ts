@@ -49,6 +49,8 @@ function baseFreshState(createdAt: string): GameState {
     roster: [],
     graveyard: [],
     retired: [],
+    deadWarriorIds: [],
+    killEvents: [],
     arenaHistory: [],
     newsletter: [],
     gazettes: [],
@@ -184,12 +186,7 @@ function generateInitialRecruitPool(rng: IRNGService): PoolWarrior[] {
       };
 
       const baseWarrior = makeWarrior(
-        rng.uuid() as WarriorId,
-        `Recruit ${i + 1}`,
-        style,
-        attrs,
-        {},
-        rng
+        { id: rng.uuid() as WarriorId, name: `Recruit ${i + 1}`, style: style, attrs: attrs, overrides: {}, rng: rng }
       );
       return {
         ...baseWarrior,

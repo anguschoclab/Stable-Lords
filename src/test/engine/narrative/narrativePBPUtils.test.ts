@@ -221,31 +221,31 @@ describe('narrativePBPUtils', () => {
 
   describe('getStrikeSeverity', () => {
     it('returns "fatal" when isFatal is true', () => {
-      expect(getStrikeSeverity(10, 100, true, false, false, 0)).toBe('fatal');
+      expect(getStrikeSeverity({ damage: 10, maxHp: 100, isFatal: true, isCrit: false, isFavorite: false, fame: 0 })).toBe('fatal');
     });
 
     it('returns "critical_supernatural" for crit with high fame', () => {
-      expect(getStrikeSeverity(30, 100, false, true, false, 100)).toBe('critical_supernatural');
+      expect(getStrikeSeverity({ damage: 30, maxHp: 100, isFatal: false, isCrit: true, isFavorite: false, fame: 100 })).toBe('critical_supernatural');
     });
 
     it('returns "critical_human" for crit with low fame', () => {
-      expect(getStrikeSeverity(30, 100, false, true, false, 50)).toBe('critical_human');
+      expect(getStrikeSeverity({ damage: 30, maxHp: 100, isFatal: false, isCrit: true, isFavorite: false, fame: 50 })).toBe('critical_human');
     });
 
     it('returns "critical_human" for high damage ratio (>= 0.25)', () => {
-      expect(getStrikeSeverity(26, 100, false, false, false, 50)).toBe('critical_human');
+      expect(getStrikeSeverity({ damage: 26, maxHp: 100, isFatal: false, isCrit: false, isFavorite: false, fame: 50 })).toBe('critical_human');
     });
 
     it('returns "mastery" for favorite with moderate damage', () => {
-      expect(getStrikeSeverity(15, 100, false, false, true, 50)).toBe('mastery');
+      expect(getStrikeSeverity({ damage: 15, maxHp: 100, isFatal: false, isCrit: false, isFavorite: true, fame: 50 })).toBe('mastery');
     });
 
     it('returns "solid" for moderate damage ratio (>= 0.1)', () => {
-      expect(getStrikeSeverity(12, 100, false, false, false, 50)).toBe('solid');
+      expect(getStrikeSeverity({ damage: 12, maxHp: 100, isFatal: false, isCrit: false, isFavorite: false, fame: 50 })).toBe('solid');
     });
 
     it('returns "glancing" for low damage ratio', () => {
-      expect(getStrikeSeverity(5, 100, false, false, false, 50)).toBe('glancing');
+      expect(getStrikeSeverity({ damage: 5, maxHp: 100, isFatal: false, isCrit: false, isFavorite: false, fame: 50 })).toBe('glancing');
     });
   });
 });

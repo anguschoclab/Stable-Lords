@@ -16,7 +16,7 @@ export function handleAbyssalBargain(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.6) {
@@ -46,7 +46,7 @@ export function handleAbyssalBargain(
       fame: (chosen.fame || 0) + fameGained,
     });
     return `They bravely refused the shadowed figure! The town applauds their moral fortitude. (+${fameGained} Fame)`;
-  });
+  } });
 }
 
 /** Handler for the Fey Trickster offseason event — random boon or bane from a fey visitor. */
@@ -57,7 +57,7 @@ export function handleFeyTrickster(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.6) {
@@ -92,7 +92,7 @@ export function handleFeyTrickster(
       injuries: [...(chosen.injuries || []), newInjury],
     });
     return `They were made a fool of, suffering minor hexes. (Minor Injury)`;
-  });
+  } });
 }
 
 /** Handler for the Rogue Alchemist offseason event — offers experimental potions with side effects. */
@@ -103,7 +103,7 @@ export function handleRogueAlchemist(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarriorNews(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.5) {
@@ -130,5 +130,5 @@ export function handleRogueAlchemist(
       injuries: [...(chosen.injuries || []), newInjury],
     });
     return `It tasted like battery acid. They are violently ill. (Minor Injury)`;
-  });
+  } });
 }

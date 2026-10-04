@@ -90,7 +90,7 @@ function DossierColumn({
 
 /**
  * Scout intel tab.
- * @param  - {
+ * @param  props - {
   rivals,
   reports,
   selected rival id,
@@ -101,16 +101,9 @@ function DossierColumn({
   on scout,
 }.
  */
-export function ScoutIntelTab({
-  rivals,
-  reports,
-  selectedRivalId,
-  onSelectRival,
-  selectedWarriorId,
-  onSelectWarrior,
-  treasury,
-  onScout,
-}: ScoutIntelTabProps) {
+export function ScoutIntelTab(props: ScoutIntelTabProps) {
+  const { rivals, reports, selectedRivalId, onSelectRival, selectedWarriorId } = props;
+  const { onSelectWarrior, treasury, onScout } = props;
   const rivalMap = useMemo(() => {
     const map = new Map<string, RivalStableData>();
     for (const r of rivals) {

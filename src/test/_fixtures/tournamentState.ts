@@ -90,11 +90,7 @@ export function makeTournamentWarrior(
   overrides: Partial<Warrior> = {}
 ): Warrior {
   return makeWarrior(
-    id as WarriorId,
-    name,
-    style,
-    { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    { stableId, ...overrides }
+    { id: id as WarriorId, name: name, style: style, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { stableId, ...overrides } }
   );
 }
 

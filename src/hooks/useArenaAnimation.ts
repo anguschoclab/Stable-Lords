@@ -25,18 +25,25 @@ export interface UseArenaAnimationReturn extends ArenaState {
 }
 
 /**
+ *
+ */
+export interface UseArenaAnimationArgs {
+  log: MinuteEvent[];
+  visibleCount: number;
+  maxHpA: number;
+  maxHpD: number;
+  winner: 'A' | 'D' | null;
+  isComplete: boolean;
+  fighterNameA?: string;
+  fighterNameD?: string;
+}
+
+/**
  * Hook to manage arena animation state based on bout events
  */
-export function useArenaAnimation(
-  log: MinuteEvent[],
-  visibleCount: number,
-  maxHpA: number,
-  maxHpD: number,
-  winner: 'A' | 'D' | null,
-  isComplete: boolean,
-  fighterNameA: string = '',
-  fighterNameD: string = ''
-): UseArenaAnimationReturn {
+export function useArenaAnimation(args: UseArenaAnimationArgs): UseArenaAnimationReturn {
+  const { log, visibleCount, maxHpA, maxHpD, winner } = args;
+  const { isComplete, fighterNameA = '', fighterNameD = '' } = args;
   const [state, setState] = useState<ArenaState>(() => initialArenaState(maxHpA, maxHpD));
 
   // Process event and update poses

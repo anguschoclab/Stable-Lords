@@ -49,14 +49,7 @@ function formatTrackedDate(iso: string): string {
   return `Tracked ${date.toLocaleDateString()}`;
 }
 
-function BookmarkedEntityRow({
-  type,
-  id,
-  name,
-  subtitle,
-  createdAt,
-  onClick,
-}: {
+function BookmarkedEntityRow(props: {
   type: BookmarkEntityType;
   id: string;
   name: string;
@@ -64,6 +57,8 @@ function BookmarkedEntityRow({
   createdAt?: string;
   onClick?: () => void;
 }) {
+  const { type, id, name, subtitle, createdAt } = props;
+  const { onClick } = props;
   const cfg = ENTITY_CONFIG[type];
   const Icon = cfg.icon;
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03T08:54:01.707Z",
+  "generatedAt": "2026-10-04T13:51:06.171Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -59,6 +59,7 @@
     "src/test/components/dashboard/WeeklyDigestMini.test.tsx",
     "src/test/components/entityLink.perf.test.tsx",
     "src/test/components/equipment/EncumbranceBar.test.tsx",
+    "src/test/components/equipment/GearRow.test.tsx",
     "src/test/components/equipment/SlotSelector.test.tsx",
     "src/test/components/eventLog/EventLog.test.tsx",
     "src/test/components/fallen/KillAnalyticsPanel.test.tsx",
@@ -86,6 +87,7 @@
     "src/test/components/resolutionReveal/ResolutionReveal.test.tsx",
     "src/test/components/run-round/AutosimConsole.test.tsx",
     "src/test/components/run-round/RunRound.test.tsx",
+    "src/test/components/scouting/ComparisonBar.test.tsx",
     "src/test/components/scouting/ComparisonHeader.test.tsx",
     "src/test/components/scouting/DoctrineIntelligenceSection.test.tsx",
     "src/test/components/scouting/RivalListShell.test.tsx",
@@ -151,6 +153,7 @@
     "src/test/engine/metaDrift.test.ts",
     "src/test/engine/owner/ownerGrudges.test.ts",
     "src/test/engine/pipeline/boutSimulationReportLeakage.test.ts",
+    "src/test/engine/pipeline/deadLifecycle.test.ts",
     "src/test/engine/pipeline/opfsArchiverFlush.test.ts",
     "src/test/engine/pipeline/parallelDeterminism.slow.test.ts",
     "src/test/engine/pipeline/passes/PromoterPass.test.ts",
@@ -245,6 +248,7 @@
     "src/test/routes/world-routes.test.tsx",
     "src/test/scripts/dailyBard.test.ts",
     "src/test/scripts/dailyOracleGuard.test.ts",
+    "src/test/scripts/killDeathDivergence.slow.test.ts",
     "src/test/scripts/simulation.slow.test.ts",
     "src/test/state/saveSlots.test.ts",
     "src/test/state/selectors.test.ts",

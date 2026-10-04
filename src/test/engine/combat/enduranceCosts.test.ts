@@ -143,19 +143,7 @@ function run(opts: RunOpts): { fA: FighterState; fD: FighterState; events: Comba
   const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
 
   applyEnduranceCosts(
-    events,
-    ctx,
-    fA,
-    fD,
-    aGoesFirst,
-    curAttOE,
-    curAttAL,
-    curAttWepReq,
-    curDefWepReq,
-    oeD,
-    alD,
-    oeA,
-    alA
+    { events: events, ctx: ctx, fA: fA, fD: fD, aGoesFirst: aGoesFirst, curAttOE: curAttOE, curAttAL: curAttAL, curAttWepReq: curAttWepReq, curDefWepReq: curDefWepReq, OE_D: oeD, AL_D: alD, OE_A: oeA, AL_A: alA }
   );
 
   return { fA, fD, events };

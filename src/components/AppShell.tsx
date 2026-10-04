@@ -86,14 +86,7 @@ function useRouteAwareEventLog(activePath: string) {
 }
 
 /** Central column: results banner, animated page outlet, overlays. */
-function MainColumn({
-  week,
-  isInitialized,
-  results,
-  clearResults,
-  pathname,
-  children,
-}: {
+function MainColumn(props: {
   week: number;
   isInitialized: boolean;
   results: ReturnType<typeof useWeekExecution>['results'];
@@ -101,6 +94,8 @@ function MainColumn({
   pathname: string;
   children: React.ReactNode;
 }) {
+  const { week, isInitialized, results, clearResults, pathname } = props;
+  const { children } = props;
   return (
     <main className="flex-1 flex flex-col relative bg-background overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />

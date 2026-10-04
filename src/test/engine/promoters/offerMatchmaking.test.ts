@@ -300,7 +300,7 @@ describe('createBoutOffer', () => {
     const wa = w('wa');
     const wb = w('wb');
     const promoter = makePromoter({ personality: 'Corporate', tier: 'Local' });
-    const offer = createBoutOffer(wa, wb, promoter, state, new SeededRNG(42), ctx);
+    const offer = createBoutOffer({ warriorA: wa, opponentB: wb, promoter: promoter, state: state, rngService: new SeededRNG(42), ctx: ctx });
 
     expect(offer.status).toBe('Proposed');
     expect(offer.promoterId).toBe('p1');
@@ -317,7 +317,7 @@ describe('createBoutOffer', () => {
     const wa = w('wa');
     const wb = w('wb');
     const promoter = makePromoter({ personality: 'Corporate', tier: 'Local' });
-    const offer = createBoutOffer(wa, wb, promoter, state, new SeededRNG(42), ctx);
+    const offer = createBoutOffer({ warriorA: wa, opponentB: wb, promoter: promoter, state: state, rngService: new SeededRNG(42), ctx: ctx });
 
     const hype = calculateHype(wa, wb, promoter);
     expect(offer.hype).toBe(hype);
@@ -329,8 +329,8 @@ describe('createBoutOffer', () => {
     const wa = w('wa');
     const wb = w('wb');
     const promoter = makePromoter();
-    const o1 = createBoutOffer(wa, wb, promoter, state, new SeededRNG(7), ctx);
-    const o2 = createBoutOffer(wa, wb, promoter, state, new SeededRNG(7), ctx);
+    const o1 = createBoutOffer({ warriorA: wa, opponentB: wb, promoter: promoter, state: state, rngService: new SeededRNG(7), ctx: ctx });
+    const o2 = createBoutOffer({ warriorA: wa, opponentB: wb, promoter: promoter, state: state, rngService: new SeededRNG(7), ctx: ctx });
     expect(o1).toEqual(o2);
   });
 });

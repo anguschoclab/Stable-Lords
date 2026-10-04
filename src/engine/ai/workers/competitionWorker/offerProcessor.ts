@@ -64,20 +64,24 @@ function applyOfferImpact(currentOffers: OfferMap, impact: StateImpact): void {
   }
 }
 
+interface WeatherGateDeclinedArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  trackedOffer: BoutOffer;
+  owningRival: RivalStableData;
+  rivalWarrior: Warrior;
+  opponent: Warrior | undefined;
+}
+
 /**
  * Weather-skepticism pre-gate: verifyBoutAcceptance runs before the full
  * evaluation — title offers are flagged so crown obligations bypass the soft
  * gates. Returns true when the warrior declined (impact applied).
  */
-function weatherGateDeclined(
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  trackedOffer: BoutOffer,
-  owningRival: RivalStableData,
-  rivalWarrior: Warrior,
-  opponent: Warrior | undefined
-): boolean {
+function weatherGateDeclined(args: WeatherGateDeclinedArgs): boolean {
+  const { state, currentOffers, offer, trackedOffer, owningRival } = args;
+  const { rivalWarrior, opponent } = args;
   if (!opponent) return false;
   const acceptance = boutAcceptance.verifyBoutAcceptance(
     owningRival,
@@ -97,21 +101,25 @@ function weatherGateDeclined(
   return true;
 }
 
+interface ApplyCounterResponseArgs {
+  response: 'Countered' | 'CounteredVenue';
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  trackedOffer: BoutOffer;
+  owningRival: RivalStableData;
+  rivalWarrior: Warrior;
+  wId: WarriorId;
+}
+
 /**
  * Applies a counter response (venue first, purse fallback). Always resolves
  * the offer — a venue counter with no target falls through to the purse
  * counter.
  */
-function applyCounterResponse(
-  response: 'Countered' | 'CounteredVenue',
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  trackedOffer: BoutOffer,
-  owningRival: RivalStableData,
-  rivalWarrior: Warrior,
-  wId: WarriorId
-): void {
+function applyCounterResponse(args: ApplyCounterResponseArgs): void {
+  const { response, state, currentOffers, offer, trackedOffer } = args;
+  const { owningRival, rivalWarrior, wId } = args;
   if (response === 'CounteredVenue') {
     // Venue counter: swap the arena, re-pend the other side — the purse
     // is untouched and the counter tag closes the negotiation round.
@@ -143,18 +151,22 @@ function applyCounterResponse(
   applyOfferImpact(currentOffers, impact);
 }
 
+interface RespondForWarriorArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  wId: WarriorId;
+  owningRival: RivalStableData;
+  pickedWarriors: Set<string>;
+}
+
 /**
  * Resolves one warrior's response to one offer within a rival slate.
  * Returns true when the warrior is committed (accepted) this week.
  */
-function respondForWarrior(
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  wId: WarriorId,
-  owningRival: RivalStableData,
-  pickedWarriors: Set<string>
-): void {
+function respondForWarrior(args: RespondForWarriorArgs): void {
+  const { state, currentOffers, offer, wId, owningRival } = args;
+  const { pickedWarriors } = args;
   // Skip if warrior already committed this week
   if (pickedWarriors.has(wId)) return;
 
@@ -175,53 +187,36 @@ function respondForWarrior(
 
   if (
     weatherGateDeclined(
-      state,
-      currentOffers,
-      offer,
-      trackedOffer,
-      owningRival,
-      rivalWarrior,
-      opponent
+      { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, owningRival: owningRival, rivalWarrior: rivalWarrior, opponent: opponent }
     )
   ) {
     return;
   }
 
   resolveEvaluatedResponse(
-    state,
-    currentOffers,
-    offer,
-    trackedOffer,
-    wId,
-    owningRival,
-    rivalWarrior,
-    opponent,
-    pickedWarriors
+    { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, wId: wId, owningRival: owningRival, rivalWarrior: rivalWarrior, opponent: opponent, pickedWarriors: pickedWarriors }
   );
 }
 
+interface ResolveEvaluatedResponseArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  trackedOffer: BoutOffer;
+  wId: WarriorId;
+  owningRival: RivalStableData;
+  rivalWarrior: Warrior;
+  opponent: Warrior | undefined;
+  pickedWarriors: Set<string>;
+}
+
 /** Evaluate the offer and apply the verdict: accept, counter, or respond. */
-function resolveEvaluatedResponse(
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  trackedOffer: BoutOffer,
-  wId: WarriorId,
-  owningRival: RivalStableData,
-  rivalWarrior: Warrior,
-  opponent: Warrior | undefined,
-  pickedWarriors: Set<string>
-): void {
+function resolveEvaluatedResponse(args: ResolveEvaluatedResponseArgs): void {
+  const { state, currentOffers, offer, trackedOffer, wId } = args;
+  const { owningRival, rivalWarrior, opponent, pickedWarriors } = args;
   const explain: { reason?: string } = {};
   const response = boutAcceptance.evaluateBoutOffer(
-    trackedOffer,
-    owningRival,
-    rivalWarrior,
-    state.absoluteWeek,
-    state.weather as WeatherType,
-    opponent,
-    state,
-    explain
+    { offer: trackedOffer, rival: owningRival, warrior: rivalWarrior, currentWeek: state.absoluteWeek, weather: state.weather as WeatherType, opponent: opponent, state: state, explain: explain }
   );
 
   if (response === 'Accepted') {
@@ -230,41 +225,31 @@ function resolveEvaluatedResponse(
 
   if (response === 'Countered' || response === 'CounteredVenue') {
     applyCounterResponse(
-      response,
-      state,
-      currentOffers,
-      offer,
-      trackedOffer,
-      owningRival,
-      rivalWarrior,
-      wId
+      { response: response, state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, owningRival: owningRival, rivalWarrior: rivalWarrior, wId: wId }
     );
     return;
   }
 
   applyWarriorResponse(
-    state,
-    currentOffers,
-    offer,
-    trackedOffer,
-    wId,
-    rivalWarrior,
-    response,
-    explain
+    { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, wId: wId, rivalWarrior: rivalWarrior, response: response, explain: explain }
   );
 }
 
+interface ApplyWarriorResponseArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  trackedOffer: BoutOffer;
+  wId: WarriorId;
+  rivalWarrior: Warrior;
+  response: Parameters<typeof respondToBoutOffer>[3];
+  explain: { reason?: string };
+}
+
 /** Commit one response to the offer map; title bouts persist the verdict reason. */
-function applyWarriorResponse(
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  trackedOffer: BoutOffer,
-  wId: WarriorId,
-  rivalWarrior: Warrior,
-  response: Parameters<typeof respondToBoutOffer>[3],
-  explain: { reason?: string }
-): void {
+function applyWarriorResponse(args: ApplyWarriorResponseArgs): void {
+  const { state, currentOffers, offer, trackedOffer, wId } = args;
+  const { rivalWarrior, response, explain } = args;
   const impact = respondToBoutOffer(
     { ...state, boutOffers: currentOffers },
     offer.id as BoutOfferId,
@@ -315,7 +300,7 @@ function processRivalSlate(
     offer.warriorIds.forEach((wId) => {
       // Skip if warrior not owned by this rival
       if (!owningRosterIds.has(wId)) return;
-      respondForWarrior(state, currentOffers, offer, wId, owningRival, pickedWarriors);
+      respondForWarrior({ state: state, currentOffers: currentOffers, offer: offer, wId: wId, owningRival: owningRival, pickedWarriors: pickedWarriors });
     });
   });
 }
@@ -366,13 +351,7 @@ function resolveCounteredOffers(
         final = 'Declined';
       } else {
         const verdict = boutAcceptance.evaluateBoutOffer(
-          offer,
-          owningRival,
-          pendingWarrior,
-          state.absoluteWeek,
-          state.weather as WeatherType,
-          opponent,
-          state
+          { offer: offer, rival: owningRival, warrior: pendingWarrior, currentWeek: state.absoluteWeek, weather: state.weather as WeatherType, opponent: opponent, state: state }
         );
         // No second counter round — an already-countered offer is take it or leave it.
         final =

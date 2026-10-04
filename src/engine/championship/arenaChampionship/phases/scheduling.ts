@@ -81,7 +81,7 @@ export function scheduleTitleBouts(
         continue;
       }
       delta.newOffers.push(
-        makeTitleOffer(rng, arenaId, reign.warriorId, contender.id, targetWeek, now)
+        makeTitleOffer({ rng: rng, arenaId: arenaId, aId: reign.warriorId, bId: contender.id, targetDisplayWeek: targetWeek, now: now })
       );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       CHAMPIONSHIP_DEBUG.defensesScheduled++;
@@ -99,7 +99,7 @@ export function scheduleTitleBouts(
       const [a, b] = ranked;
       if (!a || !b) continue;
       delta.newOffers.push(
-        makeTitleOffer(rng, arenaId, a.warrior.id, b.warrior.id, targetWeek, now)
+        makeTitleOffer({ rng: rng, arenaId: arenaId, aId: a.warrior.id, bId: b.warrior.id, targetDisplayWeek: targetWeek, now: now })
       );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       liveTitleArenas.add(arenaId);
@@ -110,14 +110,18 @@ export function scheduleTitleBouts(
   }
 }
 
-function makeTitleOffer(
-  rng: IRNGService,
-  arenaId: string,
-  aId: WarriorId,
-  bId: WarriorId,
-  targetDisplayWeek: number,
-  now: number
-): BoutOffer {
+interface MakeTitleOfferArgs {
+  rng: IRNGService;
+  arenaId: string;
+  aId: WarriorId;
+  bId: WarriorId;
+  targetDisplayWeek: number;
+  now: number;
+}
+
+function makeTitleOffer(args: MakeTitleOfferArgs): BoutOffer {
+  const { rng, arenaId, aId, bId, targetDisplayWeek } = args;
+  const { now } = args;
   const purse = Math.round(200 * ARENA_TITLE.PURSE_MULTIPLIER);
   return {
     id: rng.uuid('title-offer') as BoutOfferId,

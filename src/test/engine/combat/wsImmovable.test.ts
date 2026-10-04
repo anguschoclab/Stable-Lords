@@ -35,11 +35,7 @@ describe('WS immovable (integration)', () => {
     const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(ws),
-        defaultPlanForWarrior(lu),
-        ws,
-        lu,
-        i * 7177 + 29
+        { planA: defaultPlanForWarrior(ws), planD: defaultPlanForWarrior(lu), warriorA: ws, warriorD: lu, providedRng: i * 7177 + 29 }
       );
       if (o.winner === 'A') wins++;
     }

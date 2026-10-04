@@ -22,14 +22,9 @@ const variantStyles: Record<StatCardVariant, { label: string; value: string }> =
 /**
  *
  */
-export function StatCard({
-  label,
-  value,
-  variant = 'default',
-  className,
-  labelClassName,
-  valueClassName,
-}: StatCardProps) {
+export function StatCard(props: StatCardProps) {
+  const { label, value, variant = 'default', className, labelClassName } = props;
+  const { valueClassName } = props;
   const styles = variantStyles[variant] ?? variantStyles.default;
   return (
     <div className={cn('flex flex-col gap-1', className)}>

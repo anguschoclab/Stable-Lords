@@ -26,19 +26,10 @@ interface ArenaFighterProps {
 /**
  *
  */
-export default function ArenaFighter({
-  name,
-  pose,
-  stats,
-  style,
-  weaponName = 'Longsword',
-  shieldName,
-  isWinner,
-  isDead,
-  isActive,
-  className,
-  size = 120,
-}: ArenaFighterProps) {
+export default function ArenaFighter(props: ArenaFighterProps) {
+  const { name, pose, stats, style, weaponName = 'Longsword' } = props;
+  const { shieldName, isWinner, isDead, isActive, className } = props;
+  const { size = 120 } = props;
   const weaponCategory = getWeaponCategory(weaponName);
   const shieldInfo = parseShieldInfo(shieldName);
   const hpPercent = calculatePercent(stats.currentHp, stats.maxHp);

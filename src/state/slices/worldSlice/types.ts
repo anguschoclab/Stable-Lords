@@ -18,7 +18,8 @@ import type {
   GrandChampionEntry,
 } from '@/types/state.types';
 import { FightSummary } from '@/types/combat.types';
-import type { WarriorId, StableId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
+import type { WarriorId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
+import type { UpdateWarriorStatusArgs } from './combatActions';
 
 /**
  *
@@ -87,14 +88,7 @@ export interface WorldSlice {
   clearExpiredOffers: () => void;
   updatePromoterHistory: (promoterId: PromoterId, purse: number, boutId: FightId) => void;
   replacePromoter: (oldId: PromoterId, newPromoter: Promoter) => void;
-  updateWarriorStatus: (
-    warriorId: WarriorId,
-    won: boolean,
-    killed: boolean,
-    fameDelta: number,
-    popDelta: number,
-    rivalStableId?: StableId
-  ) => void;
+  updateWarriorStatus: (args: UpdateWarriorStatusArgs) => void;
   renameStable: (newName: string) => void;
   renamePlayer: (newName: string) => void;
   toggleChallenge: (warriorId: string) => void;

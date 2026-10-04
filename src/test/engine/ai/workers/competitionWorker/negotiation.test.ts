@@ -23,7 +23,7 @@ describe('bout negotiation', () => {
     const warrior = makeWarrior({ fame: 400 });
     const rival = richRivalWith(warrior);
     const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 100, hype: 90 });
-    const result = evaluateBoutOffer(offer, rival, warrior, 5, 'Clear');
+    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' });
     expect(result).toBe('Countered');
   });
 
@@ -123,7 +123,7 @@ describe('bout negotiation', () => {
       hype: 90,
       conditions: ['COUNTERED_PURSE'],
     });
-    const result = evaluateBoutOffer(offer, rival, warrior, 5, 'Clear');
+    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' });
     expect(result).not.toBe('Countered');
   });
 });

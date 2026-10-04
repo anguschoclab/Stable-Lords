@@ -95,7 +95,7 @@ export function recordBoutOutcome(
   }
 
   const summary = `Week ${week}: ${wins}W-${losses}L${kills > 0 ? `, ${kills} kill${kills > 1 ? 's' : ''}` : ''}`;
-  let out = logAgentAction(rival, 'BOUT', summary, 'Low', week, 'BOUT_OUTCOME');
+  let out = logAgentAction({ rival: rival, type: 'BOUT', description: summary, riskTier: 'Low', week: week, cause: 'BOUT_OUTCOME' });
 
   if (lossFactors.length > 0 && out.agentMemory) {
     const prior = out.agentMemory.lastLossFactors ?? [];

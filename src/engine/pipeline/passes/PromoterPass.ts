@@ -96,7 +96,7 @@ function generatePromoterOffers(
       matchedIds.add(warriorA.id);
       matchedIds.add(opponentB.id);
 
-      const offer = createBoutOffer(warriorA, opponentB, promoter, state, rngService, offerCtx);
+      const offer = createBoutOffer({ warriorA: warriorA, opponentB: opponentB, promoter: promoter, state: state, rngService: rngService, ctx: offerCtx });
       newOffers[offer.id] = offer;
       generated++;
     }

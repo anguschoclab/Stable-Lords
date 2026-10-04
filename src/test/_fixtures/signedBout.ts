@@ -13,21 +13,11 @@ export function makeSignedBoutState(): GameState {
   const rng = new SeededRNGService(1);
 
   const warriorA = makeWarrior(
-    'warrior-a' as import('@/types/shared.types').WarriorId,
-    'Fighter A',
-    FightingStyle.StrikingAttack,
-    { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    { fame: 10 },
-    rng
+    { id: 'warrior-a' as import('@/types/shared.types').WarriorId, name: 'Fighter A', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 10 }, rng: rng }
   );
 
   const warriorD = makeWarrior(
-    'warrior-d' as import('@/types/shared.types').WarriorId,
-    'Fighter D',
-    FightingStyle.BashingAttack,
-    { ST: 12, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 10 },
-    { fame: 5 },
-    rng
+    { id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Fighter D', style: FightingStyle.BashingAttack, attrs: { ST: 12, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 10 }, overrides: { fame: 5 }, rng: rng }
   );
 
   const promoter: Promoter = {

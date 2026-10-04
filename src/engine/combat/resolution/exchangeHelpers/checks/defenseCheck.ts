@@ -11,25 +11,33 @@ import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 
 /**
+ *
+ */
+export interface PerformDefenseCheckArgs {
+  rng: () => number;
+  def: FighterState;
+  curDefOE: number;
+  matchup: number;
+  fat: number;
+  curDefMods: ReturnType<typeof getDefensiveTacticMods>;
+  curPassD: ReturnType<typeof getStylePassive>;
+  curBiasDef: number;
+  overDef: number;
+  isDodge: boolean;
+  curAntiSynDef: ReturnType<typeof getStyleAntiSynergy>;
+  curOffMods: ReturnType<typeof getOffensiveTacticMods>;
+  ctx?: { weatherEffect?: { riposteMod: number } };
+  attacker?: FighterState;
+  extraDefPenalty?: number;
+}
+
+/**
  * Perform defense check.
  */
-export function performDefenseCheck(
-  rng: () => number,
-  def: FighterState,
-  curDefOE: number,
-  matchup: number,
-  fat: number,
-  curDefMods: ReturnType<typeof getDefensiveTacticMods>,
-  curPassD: ReturnType<typeof getStylePassive>,
-  curBiasDef: number,
-  overDef: number,
-  isDodge: boolean,
-  curAntiSynDef: ReturnType<typeof getStyleAntiSynergy>,
-  curOffMods: ReturnType<typeof getOffensiveTacticMods>,
-  ctx?: { weatherEffect?: { riposteMod: number } },
-  attacker?: FighterState,
-  extraDefPenalty: number = 0
-) {
+export function performDefenseCheck(args: PerformDefenseCheckArgs) {
+  const { rng, def, curDefOE, matchup, fat } = args;
+  const { curDefMods, curPassD, curBiasDef, overDef, isDodge } = args;
+  const { curAntiSynDef, curOffMods, ctx, attacker, extraDefPenalty = 0 } = args;
   // Committed attacker is fully open — defender gets +15 on defense
   const commitPenalty = attacker?.committed ? 15 : 0;
   if (isDodge) {

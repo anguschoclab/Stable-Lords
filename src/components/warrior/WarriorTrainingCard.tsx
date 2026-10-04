@@ -87,17 +87,7 @@ function AssignmentFooter({
 }
 
 /** Per-warrior training card: header, recovery toggle, attribute rows, trait section. */
-export function WarriorTrainingCard({
-  warrior,
-  assignment,
-  seasonalGains,
-  trainers,
-  onAssign,
-  onAssignRecovery,
-  onClear,
-  onAssignTraitTraining,
-  advisorAdvice,
-}: {
+export function WarriorTrainingCard(props: {
   warrior: Warrior;
   assignment?: TrainingAssignment;
   seasonalGains: Partial<Record<keyof Attributes, number>>;
@@ -108,6 +98,8 @@ export function WarriorTrainingCard({
   onAssignTraitTraining?: (trainerId: string) => void;
   advisorAdvice?: WarriorTrainingAdvice;
 }) {
+  const { warrior, assignment, seasonalGains, trainers, onAssign } = props;
+  const { onAssignRecovery, onClear, onAssignTraitTraining, advisorAdvice } = props;
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0);
   const atCap = total >= ATTRIBUTE_TOTAL_CAP;
   const hasInjury = hasInjuries(warrior);
@@ -163,15 +155,7 @@ export function WarriorTrainingCard({
 }
 
 /** The seven assignable attribute rows, advisor-recommendation marked. */
-function AttributeRows({
-  warrior,
-  assignment,
-  seasonalGains,
-  trainers,
-  atCap,
-  onAssign,
-  advisorAdvice,
-}: {
+function AttributeRows(props: {
   warrior: Warrior;
   assignment?: TrainingAssignment;
   seasonalGains: Partial<Record<keyof Attributes, number>>;
@@ -180,6 +164,8 @@ function AttributeRows({
   onAssign: (attr: keyof Attributes) => void;
   advisorAdvice?: WarriorTrainingAdvice;
 }) {
+  const { warrior, assignment, seasonalGains, trainers, atCap } = props;
+  const { onAssign, advisorAdvice } = props;
   return (
     <div className="space-y-1">
       {ATTRIBUTE_KEYS.map((key) => (

@@ -26,9 +26,9 @@ describe('state invariants (slow)', () => {
     setMockIdGenerator(null);
   });
 
-  it('holds over 13 sequential weeks', async () => {
+  it('holds over 30 sequential weeks (covers full tournament brackets incl. bronze)', async () => {
     let state = populateInitialWorld(createFreshState('inv-seq'), 31415);
-    for (let w = 0; w < 13; w++) {
+    for (let w = 0; w < 30; w++) {
       setMockIdGenerator(
         (() => {
           let n = 0;
@@ -38,12 +38,12 @@ describe('state invariants (slow)', () => {
       state = await advanceWeek(state, { headless: true, mutableInput: true });
       validate(state, w + 1);
     }
-  }, 120000);
+  }, 300000);
 
-  it('holds over 13 shard-parallel weeks', async () => {
+  it('holds over 30 shard-parallel weeks', async () => {
     const pool = createEnginePool(4, { spawnShardWorker: fakeShardWorker });
     let state = populateInitialWorld(createFreshState('inv-par'), 31415);
-    for (let w = 0; w < 13; w++) {
+    for (let w = 0; w < 30; w++) {
       setMockIdGenerator(
         (() => {
           let n = 0;
@@ -54,5 +54,5 @@ describe('state invariants (slow)', () => {
       validate(state, w + 1);
     }
     pool.terminate();
-  }, 120000);
+  }, 300000);
 });

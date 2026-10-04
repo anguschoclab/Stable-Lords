@@ -2,7 +2,7 @@
  * Warriors Domain Impacts
  * Handles roster updates, removals, graveyard, and retirement-related state impacts.
  */
-import type { GameState } from '@/types/state.types';
+import type { GameState, KillEvent } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { WarriorEpithetAward } from './types';
@@ -50,10 +50,63 @@ export const rosterAdditions = (state: GameState, value: Warrior[]) => {
 };
 
 /**
- * Apply graveyard additions to state.
+ * Apply graveyard additions to state. Ids are deduplicated — a second Kill
+ * outcome against an already-dead warrior must never create a second
+ * graveyard entry (the graveyard is a set of unique deaths, not a log).
  */
 export const graveyard = (state: GameState, value: Warrior[]) => {
-  state.graveyard = [...(state.graveyard || []), ...value];
+  const seen = new Set<WarriorId>((state.graveyard || []).map((w) => w.id));
+  const fresh = value.filter((w) => {
+    if (seen.has(w.id)) return false;
+    seen.add(w.id);
+    return true;
+  });
+  if (fresh.length > 0) state.graveyard = [...(state.graveyard || []), ...fresh];
+};
+
+/**
+ * Apply dead-warrior registry additions — append-only, id-deduplicated.
+ * Also stamps every matching tournament participant snapshot 'Dead': the
+ * bracket record stays self-describing instead of harbouring a stale
+ * 'Active' copy of a warrior who can never fight again.
+ */
+export const deadWarriorIds = (state: GameState, value: WarriorId[]) => {
+  if (value.length === 0) return;
+  const seen = new Set<WarriorId>(state.deadWarriorIds || []);
+  const fresh = value.filter((id) => {
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+  if (fresh.length > 0) state.deadWarriorIds = [...(state.deadWarriorIds || []), ...fresh];
+
+  const dead = new Set<string>(state.deadWarriorIds ?? []);
+  if (dead.size === 0) return;
+  for (const t of state.tournaments ?? []) {
+    for (const p of t.participants ?? []) {
+      if (dead.has(p.id) && p.status !== 'Dead' && !p.isDead) {
+        p.status = 'Dead';
+        p.isDead = true;
+      }
+    }
+  }
+};
+
+/**
+ * Apply kill-event additions — append-only, deduplicated by event id.
+ * Dedupe is deliberately NOT by victim: a second Kill outcome against an
+ * already-dead warrior is corruption the oracle counts — killOutcomes
+ * exceeding unique deaths is exactly the divergence tripwire.
+ */
+export const killEvents = (state: GameState, value: KillEvent[]) => {
+  if (value.length === 0) return;
+  const seen = new Set<string>((state.killEvents || []).map((e) => e.id));
+  const fresh = value.filter((e) => {
+    if (seen.has(e.id)) return false;
+    seen.add(e.id);
+    return true;
+  });
+  if (fresh.length > 0) state.killEvents = [...(state.killEvents || []), ...fresh];
 };
 
 /**
@@ -92,5 +145,7 @@ export const warriorsHandlers = {
   rosterAdditions,
   graveyard,
   retired,
+  deadWarriorIds,
+  killEvents,
   warriorEpithets,
 };

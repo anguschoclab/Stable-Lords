@@ -17,7 +17,7 @@ describe('prismatic_gale_exposure offseason event', () => {
 
   beforeEach(() => {
     mockRng = new SeededRNGService(12345);
-    const warrior = makeWarrior('w1' as any, 'Test Warrior', FightingStyle.StrikingAttack, {
+    const warrior = makeWarrior({ id: 'w1' as any, name: 'Test Warrior', style: FightingStyle.StrikingAttack, attrs: {
       ST: 10,
       CN: 10,
       SZ: 10,
@@ -25,7 +25,7 @@ describe('prismatic_gale_exposure offseason event', () => {
       WL: 10,
       SP: 10,
       DF: 10,
-    });
+    } });
     warrior.status = 'Active';
     warrior.injuries = [];
     warrior.xp = 10;

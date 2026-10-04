@@ -19,10 +19,33 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { findCurrentRoundBouts } from '../tournament/bracketUtils';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../tournament/tournamentArenaSelection';
+import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
+
+/**
+ * Ids that can never fight again: the persistent death registry, the
+ * (truncating) graveyard, and retirees. Participant snapshots inside
+ * `tournaments[].participants` keep their selection-time 'Active' status
+ * forever — membership in this set is the liveness authority, not the
+ * snapshot's status field.
+ */
+function inactiveIdSet(state: GameState): Set<string> {
+  const ids = deadIdSet(state);
+  for (const w of state.retired ?? []) ids.add(w.id as string);
+  return ids;
+}
 interface BracketWarrior {
   id: WarriorId;
   name: string;
   stableId?: StableId;
+}
+
+interface SimulateTournamentBoutArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  wA: Warrior;
+  wD: Warrior;
+  rng: SeededRNG;
+  headless: boolean | undefined;
 }
 
 /**
@@ -30,14 +53,9 @@ interface BracketWarrior {
  * force a winner via sudden-death overtime on draws (tournament bouts cannot
  * end drawn).
  */
-function simulateTournamentBout(
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  wA: Warrior,
-  wD: Warrior,
-  rng: SeededRNG,
-  headless: boolean | undefined
-): { outcome: FightOutcome; arenaId: string } {
+function simulateTournamentBout(args: SimulateTournamentBoutArgs): { outcome: FightOutcome; arenaId: string } {
+  const { updatedState, resolvedTournament, wA, wD, rng } = args;
+  const { headless } = args;
   const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
   const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
@@ -48,17 +66,7 @@ function simulateTournamentBout(
       ? CHAMPIONS_TOURNEY.ARENA_ID
       : selectArenaForTournamentBout(() => rng.next());
   const outcome = simulateFight(
-    planA,
-    planD,
-    wA,
-    wD,
-    rng.roll(0, 1000000),
-    updatedState.trainers,
-    updatedState.weather ?? 'Clear',
-    arenaId,
-    updatedState.crowdMood,
-    headless,
-    updatedState.houseRules?.deathRateMult
+    { planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: rng.roll(0, 1000000), trainers: updatedState.trainers, weather: updatedState.weather ?? 'Clear', arenaId: arenaId, crowdMood: updatedState.crowdMood, headless: headless, deathRateMult: updatedState.houseRules?.deathRateMult }
   );
 
   // Tournament bouts cannot end in a draw — the bracket needs a winner.
@@ -74,19 +82,23 @@ function simulateTournamentBout(
   return { outcome, arenaId };
 }
 
+interface ResolveBoutArgs {
+  bout: TournamentBout;
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  rng: SeededRNG;
+  headless: boolean | undefined;
+  winners: BracketWarrior[];
+  losers: BracketWarrior[];
+}
+
 /**
  * Resolve one bracket bout: bye/forfeit short-circuits, live simulate with
  * sudden-death overtime for draws, then apply results into state.
  */
-function resolveBout(
-  bout: TournamentBout,
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  rng: SeededRNG,
-  headless: boolean | undefined,
-  winners: BracketWarrior[],
-  losers: BracketWarrior[]
-): GameState {
+function resolveBout(args: ResolveBoutArgs): GameState {
+  const { bout, updatedState, resolvedTournament, rng, headless } = args;
+  const { winners, losers } = args;
   // The third-place playoff is terminal: its winner medals but does not
   // feed the next round's pairings.
   const advancesWinner = !bout.isBronzeMatch;
@@ -106,24 +118,29 @@ function resolveBout(
   const wA = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
   const wD = findWarriorById(updatedState, bout.warriorIdD, resolvedTournament);
 
-  if (!wA || !wD) {
-    bout.winner = wA ? 'A' : 'D';
-    const winnerObj = wA
-      ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-      : wD
-        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
+  // Liveness: a stale 'Active' participant snapshot of a dead/retired
+  // warrior forfeits to the live side instead of being simulated — the kill
+  // that produces a re-kill divergence used to fire exactly here.
+  const inactive = inactiveIdSet(updatedState);
+  const liveA = wA && isActive(wA) && !inactive.has(wA.id) ? wA : undefined;
+  const liveD = wD && isActive(wD) && !inactive.has(wD.id) ? wD : undefined;
+
+  if (!liveA || !liveD) {
+    bout.winner = liveA ? 'A' : 'D';
+    const winnerObj = liveA
+      ? { id: liveA.id, name: liveA.name, stableId: liveA.stableId }
+      : liveD
+        ? { id: liveD.id, name: liveD.name, stableId: liveD.stableId }
         : undefined;
     if (winnerObj && advancesWinner) winners.push(winnerObj);
     return updatedState;
   }
 
+  const cA = liveA;
+  const cD = liveD;
+
   const { outcome, arenaId } = simulateTournamentBout(
-    updatedState,
-    resolvedTournament,
-    wA,
-    wD,
-    rng,
-    headless
+    { updatedState: updatedState, resolvedTournament: resolvedTournament, wA: cA, wD: cD, rng: rng, headless: headless }
   );
 
   bout.winner = outcome.winner;
@@ -131,28 +148,43 @@ function resolveBout(
   bout.fightId = rng.uuid('bout') as FightId;
 
   if (advancesWinner) {
-    winners.push(
-      outcome.winner === 'A'
-        ? { id: wA.id, name: wA.name, stableId: wA.stableId }
-        : { id: wD.id, name: wD.name, stableId: wD.stableId }
-    );
-    losers.push(
-      outcome.winner === 'A'
-        ? { id: wD.id, name: wD.name, stableId: wD.stableId }
-        : { id: wA.id, name: wA.name, stableId: wA.stableId }
-    );
+    recordAdvancement(outcome, cA, cD, winners, losers);
   }
   return applyBoutResults(
-    updatedState,
-    wA,
-    wD,
-    outcome,
-    resolvedTournament.id,
-    resolvedTournament.name,
-    rng,
-    undefined,
-    arenaId
+    { state: updatedState, wA: cA, wD: cD, outcome: outcome, tId: resolvedTournament.id, tName: resolvedTournament.name, rng: rng, skipFatigue: undefined, arenaId: arenaId }
   );
+}
+
+/**
+ * Push the bout's winner/loser onto the next-round seeding lists.
+ */
+function recordAdvancement(
+  outcome: FightOutcome,
+  cA: Warrior,
+  cD: Warrior,
+  winners: BracketWarrior[],
+  losers: BracketWarrior[]
+): void {
+  winners.push(
+    outcome.winner === 'A'
+      ? { id: cA.id, name: cA.name, stableId: cA.stableId }
+      : { id: cD.id, name: cD.name, stableId: cD.stableId }
+  );
+  losers.push(
+    outcome.winner === 'A'
+      ? { id: cD.id, name: cD.name, stableId: cD.stableId }
+      : { id: cA.id, name: cA.name, stableId: cA.stableId }
+  );
+}
+
+interface ResolveRoundBoutsArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  roundBouts: TournamentBout[];
+  rng: SeededRNG;
+  headless: boolean | undefined;
+  winners: BracketWarrior[];
+  losers: BracketWarrior[];
 }
 
 /**
@@ -161,24 +193,13 @@ function resolveBout(
  * tournament bouts cannot end drawn), and results apply into state.
  * Bronze-match winners medal but do not advance.
  */
-function resolveRoundBouts(
-  updatedState: GameState,
-  resolvedTournament: TournamentEntry,
-  roundBouts: TournamentBout[],
-  rng: SeededRNG,
-  headless: boolean | undefined,
-  winners: BracketWarrior[],
-  losers: BracketWarrior[]
-): GameState {
+function resolveRoundBouts(args: ResolveRoundBoutsArgs): GameState {
+  const { resolvedTournament, roundBouts, rng, headless } = args;
+  let { updatedState } = args;
+  const { winners, losers } = args;
   for (const bout of roundBouts) {
     updatedState = resolveBout(
-      bout,
-      updatedState,
-      resolvedTournament,
-      rng,
-      headless,
-      winners,
-      losers
+      { bout: bout, updatedState: updatedState, resolvedTournament: resolvedTournament, rng: rng, headless: headless, winners: winners, losers: losers }
     );
   }
   return updatedState;
@@ -284,13 +305,7 @@ export function resolveRound(
   // re-scanned at every week boundary forever.
   if (currentRound !== null) {
     updatedState = resolveRoundBouts(
-      updatedState,
-      resolvedTournament,
-      roundBouts,
-      rng,
-      headless,
-      winners,
-      losers
+      { updatedState: updatedState, resolvedTournament: resolvedTournament, roundBouts: roundBouts, rng: rng, headless: headless, winners: winners, losers: losers }
     );
 
     seedNextRound(bracket, currentRound, winners, losers);
@@ -308,6 +323,36 @@ export function resolveRound(
     updatedState,
     resolvedTournament
   );
+
+  return finalizeRound(
+    { updatedState: updatedState, resolvedTournament: resolvedTournament, tournamentId: tournamentId, bracket: bracket, isComplete: isComplete, championWarrior: championWarrior }
+  );
+}
+
+interface FinalizeRoundArgs {
+  updatedState: GameState;
+  resolvedTournament: TournamentEntry;
+  tournamentId: string;
+  bracket: TournamentBout[];
+  isComplete: boolean;
+  championWarrior: { name: string; epithet?: string } | undefined;
+}
+
+/**
+ * Seal a resolved round: stamp the bracket/champion onto the tournament
+ * entry, award placement prizes (except the 'Champions' tier, whose
+ * purse/fame/accolade is awarded by ArenaChampionshipPass.recordGrandChampions
+ * — the single award home), and emit the champion banner.
+ */
+function finalizeRound(args: FinalizeRoundArgs): {
+  updatedState: GameState;
+  roundResults: string[];
+  isComplete: boolean;
+  updatedTournament?: TournamentEntry;
+} {
+  const { resolvedTournament, tournamentId, bracket, isComplete } = args;
+  let { updatedState } = args;
+  const { championWarrior } = args;
   const champion = championWarrior?.name;
 
   let updatedTournament: TournamentEntry | undefined;
@@ -320,9 +365,6 @@ export function resolveRound(
     }
   );
 
-  // The 'Champions' tier's purse/fame/accolade is awarded by
-  // ArenaChampionshipPass.recordGrandChampions — the single award home —
-  // so the generic placement machinery skips it here.
   if (isComplete && champion && resolvedTournament.tierId !== CHAMPIONS_TOURNEY.TIER_ID) {
     updatedState = awardTournamentPrizes(updatedTournament ?? resolvedTournament, updatedState);
   }
@@ -449,29 +491,34 @@ export function sweepUnfinishedTournaments(
 }
 
 /**
- * Apply bout results.
- * @param state -
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param tId -
- * @param tName -
- * @param rng -
- * @param skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
+ *
  */
-export function applyBoutResults(
-  state: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  tId: string,
-  tName: string,
-  rng: SeededRNG,
-  /** If true, skip fatigue accrual (tournament bouts during tournament week) */
-  skipFatigue?: boolean,
-  /** The venue the bout was simulated in — recorded on the summary. */
-  arenaId?: string
-): GameState {
+export interface ApplyBoutResultsArgs {
+  state: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  tId: string;
+  tName: string;
+  rng: SeededRNG;
+  skipFatigue?: boolean;
+  arenaId?: string;
+}
+
+/**
+ * Apply bout results.
+ * @param args.state -
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.tId -
+ * @param args.tName -
+ * @param args.rng -
+ * @param args.skipFatigue - If true, skip fatigue accrual (tournament bouts during tournament week)
+ */
+export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
+  const { state, wA, wD, outcome, tId } = args;
+  const { tName, rng, skipFatigue, arenaId } = args;
   const isKill = outcome.by === 'Kill';
   const winnerSide = outcome.winner;
   const updatedState = { ...state };
@@ -488,16 +535,19 @@ export function applyBoutResults(
     rng,
   });
 
-  updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary].slice(-500);
+  // Mid-tick appends never truncate — truncateState owns arenaHistory
+  // retention. The old inline .slice(-500) dropped bout summaries before the
+  // cumulative tracker could see them.
+  updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary];
 
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
   updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
-    updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
+    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
   );
   updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
-    updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
+    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
   );
 
   if (wA.stableId || wD.stableId) {
@@ -505,11 +555,11 @@ export function applyBoutResults(
       let rRoster = r.roster;
       if (r.id === wA.stableId)
         rRoster = updateEntityInList(rRoster, wA.id, (w) =>
-          updateWarriorFromBoutOutcome(w, true, winnerSide, isKill, shouldSkipFatigue, arenaId)
+          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
         );
       if (r.id === wD.stableId)
         rRoster = updateEntityInList(rRoster, wD.id, (w) =>
-          updateWarriorFromBoutOutcome(w, false, winnerSide, isKill, shouldSkipFatigue, arenaId)
+          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
         );
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });
@@ -517,16 +567,62 @@ export function applyBoutResults(
 
   if (isKill) {
     const victim = winnerSide === 'D' ? wA : wD;
-    updatedState.graveyard = [
-      ...(updatedState.graveyard || []),
-      { ...victim, status: 'Dead', deathWeek: state.absoluteWeek ?? state.week },
-    ];
-    updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
-    updatedState.rivals = updatedState.rivals.map((r) => ({
-      ...r,
-      roster: r.roster.filter((w) => w.id !== victim.id),
-    }));
+    const killer = winnerSide === 'D' ? wD : wA;
+    applyTournamentKill(updatedState, victim, killer, tId);
   }
 
   return updatedState;
+}
+
+/**
+ * Record a tournament kill: graveyard + persistent registry (each deduped —
+ * a repeat outcome against an already-dead id never doubles the entry), one
+ * kill event per outcome (the oracle's divergence tripwire sees repeats),
+ * roster purge, and a 'Dead' stamp on the victim's participant snapshot so
+ * the bracket record stays self-describing after the roster entry is gone.
+ */
+function applyTournamentKill(
+  updatedState: GameState,
+  victim: Warrior,
+  killer: Warrior,
+  tId: string
+): void {
+  const week = updatedState.absoluteWeek ?? updatedState.week;
+  const alreadyDead =
+    (updatedState.deadWarriorIds ?? []).includes(victim.id) ||
+    (updatedState.graveyard ?? []).some((g) => g.id === victim.id);
+
+  if (!alreadyDead) {
+    updatedState.graveyard = [
+      ...(updatedState.graveyard || []),
+      { ...victim, status: 'Dead', isDead: true, deathWeek: week },
+    ];
+    updatedState.deadWarriorIds = [...(updatedState.deadWarriorIds ?? []), victim.id];
+  }
+  const killEventId = `kill_${week}_${victim.id}_${tId}`;
+  if (!(updatedState.killEvents ?? []).some((e) => e.id === killEventId)) {
+    updatedState.killEvents = [
+      ...(updatedState.killEvents ?? []),
+      {
+        id: killEventId,
+        victimId: victim.id,
+        killerId: killer.id,
+        week,
+        tournamentId: tId as TournamentId,
+      },
+    ];
+  }
+
+  updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
+  updatedState.rivals = updatedState.rivals.map((r) => ({
+    ...r,
+    roster: r.roster.filter((w) => w.id !== victim.id),
+  }));
+
+  updatedState.tournaments = (updatedState.tournaments || []).map((t) => ({
+    ...t,
+    participants: (t.participants || []).map((p) =>
+      p.id === victim.id && p.status !== 'Dead' ? { ...p, status: 'Dead' as const, isDead: true } : p
+    ),
+  }));
 }

@@ -14,15 +14,9 @@ interface AttributeRowStatusProps {
  * Right-side status indicator for an attribute training row: selected check,
  * lock/max/season-cap badges, or the gain chance with hover arrow.
  */
-export function AttributeRowStatus({
-  isSelected,
-  maxed,
-  ceilingHit,
-  atCap,
-  seasonCapped,
-  disabled,
-  chance,
-}: AttributeRowStatusProps) {
+export function AttributeRowStatus(props: AttributeRowStatusProps) {
+  const { isSelected, maxed, ceilingHit, atCap, seasonCapped } = props;
+  const { disabled, chance } = props;
   return (
     <div className="w-12 text-right">
       {isSelected ? (

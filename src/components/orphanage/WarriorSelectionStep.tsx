@@ -13,7 +13,7 @@ interface WarriorSelectionStepProps {
 
 /**
  * Warrior selection step.
- * @param  - {
+ * @param  props - {
   orphan pool,
   selected,
   on toggle warrior,
@@ -22,14 +22,9 @@ interface WarriorSelectionStepProps {
   on next,
 }.
  */
-export default function WarriorSelectionStep({
-  orphanPool,
-  selected,
-  onToggleWarrior,
-  onRerollPool,
-  onBack,
-  onNext,
-}: WarriorSelectionStepProps) {
+export default function WarriorSelectionStep(props: WarriorSelectionStepProps) {
+  const { orphanPool, selected, onToggleWarrior, onRerollPool, onBack } = props;
+  const { onNext } = props;
   return (
     <div className="space-y-4">
       <div

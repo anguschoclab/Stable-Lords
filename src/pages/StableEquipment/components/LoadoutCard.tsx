@@ -153,7 +153,7 @@ function GearList({
         icon={Swords}
         name={rec.breakdown.weapon.item.name}
         weight={rec.breakdown.weapon.item.weight}
-        error={!!(reqCheck && !reqCheck.met)}
+        status={{ error: !!(reqCheck && !reqCheck.met) }}
         high={isTop}
       />
       <GearRow
@@ -166,7 +166,7 @@ function GearList({
         icon={Shield}
         name={rec.breakdown.shield.item.name}
         weight={rec.breakdown.shield.item.weight}
-        blocked={rec.breakdown.shield.blocked}
+        status={{ blocked: rec.breakdown.shield.blocked }}
         high={isTop}
       />
       <GearRow
@@ -212,14 +212,9 @@ function ApplyFooter({
 /**
  *
  */
-export function LoadoutCard({
-  rec,
-  index,
-  carryCap,
-  targetWarrior,
-  onApply,
-  disabled,
-}: LoadoutCardProps) {
+export function LoadoutCard(props: LoadoutCardProps) {
+  const { rec, index, carryCap, targetWarrior, onApply } = props;
+  const { disabled } = props;
   const isTop = index === 0;
   const reqCheck =
     targetWarrior && rec.loadout.weapon

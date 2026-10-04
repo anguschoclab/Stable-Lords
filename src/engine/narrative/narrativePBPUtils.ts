@@ -83,17 +83,24 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
 }
 
 /**
+ *
+ */
+export interface GetStrikeSeverityArgs {
+  damage: number;
+  maxHp: number;
+  isFatal: boolean;
+  isCrit: boolean;
+  isFavorite: boolean;
+  fame: number;
+}
+
+/**
  * Maps damage/health ratio to mechanical severity categories.
  * Supports the expanded 6-tier Strike system.
  */
-export function getStrikeSeverity(
-  damage: number,
-  maxHp: number,
-  isFatal: boolean,
-  isCrit: boolean,
-  isFavorite: boolean,
-  fame: number
-): 'glancing' | 'solid' | 'mastery' | 'critical_human' | 'critical_supernatural' | 'fatal' {
+export function getStrikeSeverity(args: GetStrikeSeverityArgs): 'glancing' | 'solid' | 'mastery' | 'critical_human' | 'critical_supernatural' | 'fatal' {
+  const { damage, maxHp, isFatal, isCrit, isFavorite } = args;
+  const { fame } = args;
   if (isFatal) return 'fatal';
 
   const ratio = damage / maxHp;

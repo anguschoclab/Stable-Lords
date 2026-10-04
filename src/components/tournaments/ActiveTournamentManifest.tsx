@@ -91,18 +91,9 @@ interface ActiveTournamentManifestProps {
  * Active tournament manifest: header, schedule, bracket, and the
  * EXECUTE NEXT BOUT / OPEN PREPARATION CONSOLE action footer.
  */
-export function ActiveTournamentManifest({
-  tournament,
-  arenaHistory,
-  week,
-  expandedBout,
-  onToggleExpand,
-  isReadyToStart,
-  onExecuteRound,
-  onOpenPrep,
-  seasonIcon,
-  isSimulating,
-}: ActiveTournamentManifestProps) {
+export function ActiveTournamentManifest(props: ActiveTournamentManifestProps) {
+  const { tournament, arenaHistory, week, expandedBout, onToggleExpand } = props;
+  const { isReadyToStart, onExecuteRound, onOpenPrep, seasonIcon, isSimulating } = props;
   const {
     isComplete,
     totalRounds,

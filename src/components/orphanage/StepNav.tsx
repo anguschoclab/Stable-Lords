@@ -13,15 +13,9 @@ interface StepNavProps {
 }
 
 /** Helper. */
-export default function StepNav({
-  onBack,
-  onNext,
-  nextLabel,
-  nextIcon: NextIcon = ArrowRight,
-  nextDisabled,
-  nextSize,
-  className = 'flex gap-3',
-}: StepNavProps) {
+export default function StepNav(props: StepNavProps) {
+  const { onBack, onNext, nextLabel, nextIcon: NextIcon = ArrowRight, nextDisabled } = props;
+  const { nextSize, className = 'flex gap-3' } = props;
   return (
     <div className={className}>
       <Button

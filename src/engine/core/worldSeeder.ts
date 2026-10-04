@@ -37,10 +37,7 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
 
   // 2. Generate Initial Recruit Pool — scaled to the stable count
   const recruitPool = generateRecruitPool(
-    computeRecruitPoolSize(WORLD_RIVAL_FLOOR),
-    1,
-    usedNames,
-    new SeededRNGService(seed + 2)
+    { count: computeRecruitPoolSize(WORLD_RIVAL_FLOOR), week: 1, usedNames: usedNames, rng: new SeededRNGService(seed + 2) }
   );
 
   // 3. Generate Player Roster (4 balanced warriors)
@@ -62,12 +59,7 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
       DF: 8 + Math.floor(rngService.next() * 4),
     };
     const w = makeWarrior(
-      undefined,
-      generateWarriorName({ rng: rngService, archetype: STYLE_ARCHETYPE[style], usedNames }),
-      style,
-      attrs,
-      {},
-      rngService
+      { id: undefined, name: generateWarriorName({ rng: rngService, archetype: STYLE_ARCHETYPE[style], usedNames }), style: style, attrs: attrs, overrides: {}, rng: rngService }
     );
     usedNames.add(w.name);
     return w;

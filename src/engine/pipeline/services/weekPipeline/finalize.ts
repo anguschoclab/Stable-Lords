@@ -4,7 +4,7 @@ import type { StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { deriveAbsoluteWeek, isTournamentWeekOfYear } from '@/engine/core/absoluteWeek';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
-import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
+import { pruneBoutOffers, voidUnresolvableSignedOffers } from '@/engine/bout/offerCleanup';
 import { endReign } from '@/engine/championship/arenaChampionship';
 import { buildWeekCaches } from './caches';
 import type { WeekContext } from './context';
@@ -163,8 +163,26 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
   state.restStates = clearExpiredRest(state.restStates || [], state.absoluteWeek);
 
   // 🧹 Bout offer cleanup — single implementation in offerCleanup.ts, shared
-  // with RivalStrategyPass's pre-bidding purge.
+  // with RivalStrategyPass's pre-bidding purge. Signed contracts whose
+  // combatant died/retired/disappeared this week are voided here (same week,
+  // not at their scheduled bout) so they can never sit as stale ghosts.
   if (state.boutOffers) {
+    const voided = voidUnresolvableSignedOffers(state);
+    if (voided.length > 0) {
+      state.newsletter = [
+        ...(state.newsletter || []),
+        {
+          id: `voided_contracts_${state.absoluteWeek}`,
+          week: state.absoluteWeek,
+          title: 'Bout Contract Voided',
+          items: voided.map(
+            (o) =>
+              `Contract ${o.id} was voided — a signed bout could not be fought (a combatant retired, died, or left the roster).`
+          ),
+          category: 'news' as const,
+        },
+      ];
+    }
     const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
     state.boutOffers = pruneBoutOffers(state.boutOffers, justFinishedWeek);
   }

@@ -31,7 +31,10 @@ describe('world liveness — 104 weeks (Stage H)', () => {
   it('keeps the championship ecosystem dynamic for two full years', async () => {
     const { finalState, pulses } = await runSimulation({
       weeks: WEEKS_PER_YEAR * 2,
-      seed: 20261101,
+      // Seed chosen so the two-year world exercises the refusal→strip path —
+      // strips remain seed-dependent, and post-death-lifecycle fixes dead
+      // champions end reigns as 'died' rather than accruing refusals as ghosts.
+      seed: 31337,
       logFrequency: 1,
       ignoreBankruptcy: true,
     });

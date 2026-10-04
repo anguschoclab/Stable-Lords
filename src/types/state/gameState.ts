@@ -34,6 +34,7 @@ import type {
   AnnualAward,
   DeferredBoutLog,
   HouseRules,
+  KillEvent,
   LifetimeStats,
   ProgressionState,
   SimulationReport,
@@ -91,6 +92,14 @@ export interface GameState {
   roster: Warrior[];
   graveyard: Warrior[];
   retired: Warrior[];
+  /**
+   * Persistent registry of every warrior id that has ever died. Unlike
+   * `graveyard` — which is retention-capped — this never truncates, so
+   * liveness guards never decay over long sims.
+   */
+  deadWarriorIds: WarriorId[];
+  /** Every kill recorded at resolution time (see {@link KillEvent}). */
+  killEvents: KillEvent[];
   arenaHistory: FightSummary[];
   newsletter: NewsletterItem[];
   gazettes: GazetteStory[];

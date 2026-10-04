@@ -378,19 +378,10 @@ function HeaderActions({
 /**
  *
  */
-export function AppHeader({
-  week,
-  day,
-  isTournamentWeek,
-  treasury,
-  fame,
-  crowdMood,
-  weather,
-  isSimulating,
-  lastSavedAt,
-  onResetPrompt,
-  returnToTitle,
-}: AppHeaderProps) {
+export function AppHeader(props: AppHeaderProps) {
+  const { week, day, isTournamentWeek, treasury, fame } = props;
+  const { crowdMood, weather, isSimulating, lastSavedAt, onResetPrompt } = props;
+  const { returnToTitle } = props;
   return (
     <header className="h-16 border-b border-white/5 bg-background/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
       <div className="flex items-center gap-10">

@@ -73,16 +73,23 @@ export function generateFightNarrative(
 }
 
 /**
+ *
+ */
+export interface GenerateGazetteHeadlineArgs {
+  detections: GazetteDetections;
+  fights: FightSummary[];
+  week: number;
+  _mood: CrowdMoodType;
+  rngService: IRNGService;
+  tone: { adjectives: string[] };
+}
+
+/**
  * Generates gazette headline based on detections.
  */
-export function generateGazetteHeadline(
-  detections: GazetteDetections,
-  fights: FightSummary[],
-  week: number,
-  _mood: CrowdMoodType,
-  rngService: IRNGService,
-  tone: { adjectives: string[] }
-): string {
+export function generateGazetteHeadline(args: GenerateGazetteHeadlineArgs): string {
+  const { detections, fights, week, rngService } = args;
+  const { tone } = args;
   const gh = (narrativeContent as NarrativeContent).gazette.headlines;
   const { kills, knockouts } = fights.reduce(
     (acc, f) => {
@@ -242,17 +249,24 @@ function graveyardParagraphs(
 }
 
 /**
+ *
+ */
+export interface GenerateGazetteBodyArgs {
+  detections: GazetteDetections;
+  fights: FightSummary[];
+  mood: CrowdMoodType;
+  week: number;
+  graveyard: Warrior[];
+  rngService: IRNGService;
+  tone: { adjectives: string[]; opener: string[]; closer: string[] };
+}
+
+/**
  * Generates gazette body based on detections.
  */
-export function generateGazetteBody(
-  detections: GazetteDetections,
-  fights: FightSummary[],
-  mood: CrowdMoodType,
-  week: number,
-  graveyard: Warrior[],
-  rngService: IRNGService,
-  tone: { adjectives: string[]; opener: string[]; closer: string[] }
-): string {
+export function generateGazetteBody(args: GenerateGazetteBodyArgs): string {
+  const { detections, fights, mood, week, graveyard } = args;
+  const { rngService, tone } = args;
   const paragraphs: string[] = [rngService.pick(tone.opener)];
   const gf = (narrativeContent as NarrativeContent).gazette.featured;
   const kills = fights.filter((f) => f.by === 'Kill');

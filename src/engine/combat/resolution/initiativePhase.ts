@@ -15,21 +15,26 @@ import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import type { FighterState, ResolutionContext } from './types';
 
+interface SumInitiativeArgs {
+  f: FighterState;
+  AL: number;
+  matchup: number;
+  fat: number;
+  defMods: DefensiveMods;
+  pass: StylePassiveResult;
+  psych: PsychStateMod;
+  dynTraits: DynamicTraitMods;
+  trainerIniMod: number;
+  masteryIni: number;
+  ctx: ResolutionContext;
+  stylePhase: StylePhase;
+}
+
 /** Sum one fighter's initiative: skills + tactics + passives + mods. Pure — no RNG. */
-function sumInitiative(
-  f: FighterState,
-  AL: number,
-  matchup: number,
-  fat: number,
-  defMods: DefensiveMods,
-  pass: StylePassiveResult,
-  psych: PsychStateMod,
-  dynTraits: DynamicTraitMods,
-  trainerIniMod: number,
-  masteryIni: number,
-  ctx: ResolutionContext,
-  stylePhase: StylePhase
-): number {
+function sumInitiative(args: SumInitiativeArgs): number {
+  const { f, AL, matchup, fat, defMods } = args;
+  const { pass, psych, dynTraits, trainerIniMod, masteryIni } = args;
+  const { ctx, stylePhase } = args;
   const styleWeatherMod = getStyleWeatherModifier(f.style, ctx.weather, ctx.arenaConfig.tags);
   return (
     f.skills.INI +
@@ -53,32 +58,41 @@ function sumInitiative(
 }
 
 /**
+ *
+ */
+export interface ResolveInitiativePhaseArgs {
+  ctx: ResolutionContext;
+  fA: FighterState;
+  fD: FighterState;
+  OE_A: number;
+  AL_A: number;
+  OE_D: number;
+  AL_D: number;
+  fatA: number;
+  fatD: number;
+  defModsA: DefensiveMods;
+  defModsD: DefensiveMods;
+  passA: StylePassiveResult;
+  passD: StylePassiveResult;
+  psychA: PsychStateMod;
+  psychD: PsychStateMod;
+  dynTraitsA: DynamicTraitMods;
+  dynTraitsD: DynamicTraitMods;
+}
+
+/**
  * Resolve the initiative phase — determines which fighter attacks first.
  */
-export function resolveInitiativePhase(
-  ctx: ResolutionContext,
-  fA: FighterState,
-  fD: FighterState,
-  OE_A: number,
-  AL_A: number,
-  OE_D: number,
-  AL_D: number,
-  fatA: number,
-  fatD: number,
-  defModsA: DefensiveMods,
-  defModsD: DefensiveMods,
-  passA: StylePassiveResult,
-  passD: StylePassiveResult,
-  psychA: PsychStateMod,
-  psychD: PsychStateMod,
-  dynTraitsA: DynamicTraitMods,
-  dynTraitsD: DynamicTraitMods
-): {
+export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   aGoesFirst: boolean;
   iniA: number;
   iniD: number;
   event: CombatEvent;
 } {
+  const { ctx, fA, fD, OE_A, AL_A } = args;
+  const { OE_D, AL_D, fatA, fatD, defModsA } = args;
+  const { defModsD, passA, passD, psychA, psychD } = args;
+  const { dynTraitsA, dynTraitsD } = args;
   const { rng, phase } = ctx;
   const stylePhase = phase as StylePhase;
 
@@ -86,32 +100,10 @@ export function resolveInitiativePhase(
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
   const iniA = sumInitiative(
-    fA,
-    AL_A,
-    ctx.matchupA,
-    fatA,
-    defModsA,
-    passA,
-    psychA,
-    dynTraitsA,
-    ctx.trainerModsA.iniMod ?? 0,
-    masteryIniA,
-    ctx,
-    stylePhase
+    { f: fA, AL: AL_A, matchup: ctx.matchupA, fat: fatA, defMods: defModsA, pass: passA, psych: psychA, dynTraits: dynTraitsA, trainerIniMod: ctx.trainerModsA.iniMod ?? 0, masteryIni: masteryIniA, ctx: ctx, stylePhase: stylePhase }
   );
   const iniD = sumInitiative(
-    fD,
-    AL_D,
-    ctx.matchupD,
-    fatD,
-    defModsD,
-    passD,
-    psychD,
-    dynTraitsD,
-    ctx.trainerModsD.iniMod ?? 0,
-    masteryIniD,
-    ctx,
-    stylePhase
+    { f: fD, AL: AL_D, matchup: ctx.matchupD, fat: fatD, defMods: defModsD, pass: passD, psych: psychD, dynTraits: dynTraitsD, trainerIniMod: ctx.trainerModsD.iniMod ?? 0, masteryIni: masteryIniD, ctx: ctx, stylePhase: stylePhase }
   );
 
   const aGoesFirst = contestCheck(rng, iniA, iniD);

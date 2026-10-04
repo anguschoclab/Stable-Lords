@@ -155,9 +155,9 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     });
 
     expect(simulateSpy).toHaveBeenCalledOnce();
-    const args = simulateSpy.mock.calls[0]!;
-    const planA = args[0] as any;
-    const planD = args[1] as any;
+    const args = simulateSpy.mock.calls[0]![0] as any;
+    const planA = args.planA as any;
+    const planD = args.planD as any;
 
     // NPC plan should have aiPlanForWarrior features:
     // - phases (only aiPlanForWarrior adds these)
@@ -216,7 +216,7 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     });
 
     expect(simulateSpy).toHaveBeenCalledOnce();
-    const planA = simulateSpy.mock.calls[0]![0] as any;
+    const planA = (simulateSpy.mock.calls[0]![0] as any).planA;
 
     // Player plan should be the custom plan, not defaultPlanForWarrior
     expect(planA.OE).toBe(3);
@@ -248,7 +248,7 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     });
 
     expect(simulateSpy).toHaveBeenCalledOnce();
-    const planA = simulateSpy.mock.calls[0]![0] as any;
+    const planA = (simulateSpy.mock.calls[0]![0] as any).planA;
 
     // Player plan should be defaultPlanForWarrior (no phases, no conditions)
     const expectedDefault = defaultPlanForWarrior(playerWarrior);
@@ -295,7 +295,7 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     });
 
     expect(simulateSpy).toHaveBeenCalledOnce();
-    const npcPlan = simulateSpy.mock.calls[0]![1] as any;
+    const npcPlan = (simulateSpy.mock.calls[0]![0] as any).planD;
 
     // BashingAttack base OE=7, Pragmatic adds OE+0, Opportunist adds OE+0,
     // matchup vs LungingAttack gives oe+2, styleSuitabilityBias gives oe+2 → OE=10 (clamped from 11)

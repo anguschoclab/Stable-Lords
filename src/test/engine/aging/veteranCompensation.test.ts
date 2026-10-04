@@ -65,11 +65,7 @@ describe('Aged INI-style fighter stays viable', () => {
     const N = 150;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(old),
-        defaultPlanForWarrior(prime),
-        old,
-        prime,
-        i * 5381 + 11
+        { planA: defaultPlanForWarrior(old), planD: defaultPlanForWarrior(prime), warriorA: old, warriorD: prime, providedRng: i * 5381 + 11 }
       );
       if (o.winner === 'A') wins++;
     }

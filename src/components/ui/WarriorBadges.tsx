@@ -104,7 +104,7 @@ export function StatBadge({
 
 /**
  * Warrior name tag.
- * @param  - {
+ * @param  props - {
   id,
   name,
   is champion,
@@ -113,15 +113,9 @@ export function StatBadge({
   is dead = false,
 }.
  */
-export function WarriorNameTag({
-  id,
-  name,
-  epithet,
-  isChampion,
-  injuryCount = 0,
-  useCrown = false,
-  isDead = false,
-}: WarriorNameTagProps) {
+export function WarriorNameTag(props: WarriorNameTagProps) {
+  const { id, name, epithet, isChampion, injuryCount = 0 } = props;
+  const { useCrown = false, isDead = false } = props;
   const ChampionIcon = useCrown ? Crown : Trophy;
 
   return (

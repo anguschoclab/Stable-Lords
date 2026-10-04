@@ -135,17 +135,17 @@ describe('narrativeStatus', () => {
   describe('minuteStatusLine', () => {
     it('returns "beating" line when hitsA > hitsD + 3', () => {
       const rng = new SeededRNG(1);
-      expect(minuteStatusLine(rng, 1, 'A', 'D', 10, 5)).toBe('A is beating his opponent!');
+      expect(minuteStatusLine({ rng: rng, _minute: 1, nameA: 'A', nameD: 'D', hitsA: 10, hitsD: 5 })).toBe('A is beating his opponent!');
     });
 
     it('returns "beating" line when hitsD > hitsA + 3', () => {
       const rng = new SeededRNG(1);
-      expect(minuteStatusLine(rng, 1, 'A', 'D', 5, 10)).toBe('D is beating his opponent!');
+      expect(minuteStatusLine({ rng: rng, _minute: 1, nameA: 'A', nameD: 'D', hitsA: 5, hitsD: 10 })).toBe('D is beating his opponent!');
     });
 
     it('returns stalemate line when hits are close', () => {
       const rng = new SeededRNG(1);
-      const result = minuteStatusLine(rng, 1, 'A', 'D', 5, 6);
+      const result = minuteStatusLine({ rng: rng, _minute: 1, nameA: 'A', nameD: 'D', hitsA: 5, hitsD: 6 });
       expect(typeof result).toBe('string');
       expect(noRawTokens(result)).toBe(true);
     });

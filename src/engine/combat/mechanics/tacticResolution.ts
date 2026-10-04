@@ -178,18 +178,25 @@ export function getDefensiveTacticMods(
 }
 
 /**
+ *
+ */
+export interface CalculateFinalOEALArgs {
+  effOE: number;
+  effAL: number;
+  plan: FightPlan;
+  hp: number;
+  maxHp: number;
+  end: number;
+  maxEnd: number;
+  exchange: number;
+}
+
+/**
  * Calculate final oeal.
  */
-export function calculateFinalOEAL(
-  effOE: number,
-  effAL: number,
-  plan: FightPlan,
-  hp: number,
-  maxHp: number,
-  end: number,
-  maxEnd: number,
-  exchange: number
-): [number, number] {
+export function calculateFinalOEAL(args: CalculateFinalOEALArgs): [number, number] {
+  const { effOE, effAL, plan, hp, maxHp } = args;
+  const { end, maxEnd, exchange } = args;
   let openOE = 0,
     openAL = 0;
   if (exchange < 3) {

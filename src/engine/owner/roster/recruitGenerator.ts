@@ -151,16 +151,23 @@ function applyTraitAttrBonuses(
 }
 
 /**
+ *
+ */
+export interface GenerateAIRecruitArgs {
+  rival: RivalStableData;
+  week: number;
+  meta?: StyleMeta;
+  seed?: number;
+  usedNames?: Set<string>;
+  usedIds?: Set<string>;
+}
+
+/**
  * Generates a new warrior for an AI owner's roster.
  */
-export function generateAIRecruit(
-  rival: RivalStableData,
-  week: number,
-  meta?: StyleMeta,
-  seed?: number,
-  usedNames?: Set<string>,
-  usedIds?: Set<string>
-): Warrior | null {
+export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
+  const { rival, week, meta, seed, usedNames } = args;
+  const { usedIds } = args;
   // `owner.id.length` (~constant) made every stable's same-week fallback
   // recruit share one RNG stream — identical streams mint identical warrior
   // ids. Hash the stable id so each stable gets an independent stream.

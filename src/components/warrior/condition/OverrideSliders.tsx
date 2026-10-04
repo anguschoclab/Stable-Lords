@@ -11,15 +11,7 @@ interface OverrideSlidersProps {
 }
 
 /** One OE/AL/KD override cell — label, set/clear toggle, conditional slider. */
-function OverrideCell({
-  cond,
-  key_,
-  label,
-  aria,
-  activeClass,
-  setHoverClass,
-  onSliderChange,
-}: {
+function OverrideCell(props: {
   cond: PlanCondition;
   key_: OverrideKey;
   label: string;
@@ -28,6 +20,8 @@ function OverrideCell({
   setHoverClass: string;
   onSliderChange: (key: OverrideKey, val: number | undefined) => void;
 }) {
+  const { cond, key_, label, aria, activeClass } = props;
+  const { setHoverClass, onSliderChange } = props;
   const id = `override-${key_.toLowerCase()}-${cond.id}`;
   const value = cond.override[key_];
   return (

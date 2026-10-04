@@ -32,7 +32,7 @@ export function handleGrandFeast(
     });
   }
 
-  announceOffseasonEvent(ctx, rng, nextWeek, e, { gold: goldCost });
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold: goldCost } });
 }
 
 /**
@@ -65,19 +65,19 @@ export function handleMidnightFeast(
       fame: (chosen.fame || 0) + fameGained,
     });
 
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
       name: chosen.name,
       xp: xpGained,
       fame: fameGained,
       gold: cost,
-    });
+    } });
   } else {
-    announceOffseasonEvent(ctx, rng, nextWeek, e, {
+    announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
       name: 'Someone',
       xp: 0,
       fame: 0,
       gold: cost,
-    });
+    } });
   }
 }
 
@@ -95,7 +95,7 @@ export function handleStreetPerformance(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const fameGained = 15;
     const goldGained = 50 + Math.floor(rng.next() * 50);
     ctx.treasuryDelta += goldGained;
@@ -116,7 +116,7 @@ export function handleStreetPerformance(
       },
       announce: { fame: fameGained, gold: goldGained },
     };
-  });
+  } });
 }
 
 /**
@@ -133,7 +133,7 @@ export function handleTravelingCircus(
   rng: IRNGService,
   ctx: OffseasonEventContext
 ) {
-  withChosenWarrior(state, nextWeek, e, rng, ctx, (chosen) => {
+  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
     const xpGained = 20 + Math.floor(rng.next() * 21);
     const fameGained = 15 + Math.floor(rng.next() * 11);
     const cost = 25;
@@ -150,7 +150,7 @@ export function handleTravelingCircus(
       },
       announce: { xp: xpGained, fame: fameGained },
     };
-  });
+  } });
 }
 
 /**

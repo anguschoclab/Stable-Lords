@@ -1,5 +1,5 @@
 import type { GameState, NewsletterItem } from '@/types/state.types';
-import type { WarriorId, InjuryId } from '@/types/shared.types';
+import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
@@ -11,6 +11,16 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact } from '@/engine/impacts';
 import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { weekToTimestamp } from '@/constants';
+
+interface ApplySevereInjuryRuleArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  week: number;
+  rivalStableId: string | undefined;
+  rng: IRNGService;
+}
 
 /**
  * Handle death.
@@ -28,15 +38,9 @@ import { weekToTimestamp } from '@/constants';
  * victim survives with a Critical permanent injury; no graveyard entry,
  * no death narrative, no fame-from-death.
  */
-function applySevereInjuryRule(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  week: number,
-  rivalStableId: string | undefined,
-  rng: IRNGService
-) {
+function applySevereInjuryRule(args: ApplySevereInjuryRuleArgs) {
+  const { s, wA, wD, outcome, week } = args;
+  const { rivalStableId, rng } = args;
   const spared = outcome.winner === 'A' ? wD : wA;
   const injury: InjuryData = {
     id: rng.uuid() as InjuryId,
@@ -99,6 +103,17 @@ function deriveCauseBucket(s: GameState, wA: Warrior, wD: Warrior, outcome: Figh
   return isRivalryKill ? 'RIVALRY_FINISH' : (stampedCause ?? 'FATAL_DAMAGE');
 }
 
+interface BuildDeathArtifactsArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  week: number;
+  tags: string[];
+  victim: Warrior;
+  rng: IRNGService;
+}
+
 /**
  * Handle death.
  * @param s -
@@ -114,16 +129,9 @@ function deriveCauseBucket(s: GameState, wA: Warrior, wD: Warrior, outcome: Figh
  * Builds the narrative + memorial event + graveyard entry for a kill — the
  * immutable artifacts recorded before state impact assembly.
  */
-function buildDeathArtifacts(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  week: number,
-  tags: string[],
-  victim: Warrior,
-  rng: IRNGService
-) {
+function buildDeathArtifacts(args: BuildDeathArtifactsArgs) {
+  const { s, wA, wD, outcome, week } = args;
+  const { tags, victim, rng } = args;
   const boutId = rng.uuid();
   const narrative = generateFightNarrative(
     {
@@ -174,69 +182,93 @@ function buildDeathArtifacts(
 }
 
 /**
- * Handle death.
- * @param s -
- * @param wA -
- * @param wD -
- * @param outcome -
- * @param week -
- * @param tags -
- * @param rivalStableId -
- * @param rng -
+ *
  */
-export function handleDeath(
-  s: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  outcome: FightOutcome,
-  week: number,
-  tags: string[],
-  rivalStableId?: string,
-  rng: IRNGService = new SeededRNGService(week * 9973 + 123)
-) {
+export interface HandleDeathArgs {
+  s: GameState;
+  wA: Warrior;
+  wD: Warrior;
+  outcome: FightOutcome;
+  week: number;
+  tags: string[];
+  rivalStableId?: string;
+  rng?: IRNGService;
+  tournamentId?: string;
+}
+
+/**
+ * Handle death.
+ * @param args.s -
+ * @param args.wA -
+ * @param args.wD -
+ * @param args.outcome -
+ * @param args.week -
+ * @param args.tags -
+ * @param args.rivalStableId -
+ * @param args.rng -
+ */
+export function handleDeath(args: HandleDeathArgs) {
+  const { s, wA, wD, outcome, week } = args;
+  const { tags, rivalStableId, rng = new SeededRNGService(week * 9973 + 123), tournamentId } = args;
   if (outcome.by !== 'Kill')
     return { impact: {}, death: false, playerDeath: false, deathNames: [] };
 
   if (s.houseRules?.severeInjuryInsteadOfDeath) {
-    return applySevereInjuryRule(s, wA, wD, outcome, week, rivalStableId, rng);
+    return applySevereInjuryRule({ s: s, wA: wA, wD: wD, outcome: outcome, week: week, rivalStableId: rivalStableId, rng: rng });
+  }
+
+  // A Kill outcome with no winner is malformed — there is no killer and no
+  // victim. Recording it would graveyard the wrong (living) warrior.
+  if (outcome.winner !== 'A' && outcome.winner !== 'D') {
+    return { impact: {}, death: false, playerDeath: false, deathNames: [] };
   }
 
   const victim = outcome.winner === 'A' ? wD : wA;
+  const killer = outcome.winner === 'A' ? wA : wD;
   // Ownership, not side: the victim may sit on either side of the pairing and
   // `rivalStableId` only ever names the D-side stable. AI-vs-AI deaths granted
   // the player +5 fame, and player victims on the D side never flagged.
   const isPlayerVictim = isPlayerOwned(s, victim);
 
   const { narrative, graveyardEntry } = buildDeathArtifacts(
-    s,
-    wA,
-    wD,
-    outcome,
-    week,
-    tags,
-    victim,
-    rng
+    { s: s, wA: wA, wD: wD, outcome: outcome, week: week, tags: tags, victim: victim, rng: rng }
   );
 
-  return assembleDeathImpact(s, victim, isPlayerVictim, graveyardEntry, narrative, week, rng);
+  return assembleDeathImpact(
+    { s: s, victim: victim, killer: killer, isPlayerVictim: isPlayerVictim, graveyardEntry: graveyardEntry, narrative: narrative, week: week, rng: rng, tournamentId: tournamentId }
+  );
+}
+
+interface AssembleDeathImpactArgs {
+  s: GameState;
+  victim: Warrior;
+  killer: Warrior;
+  isPlayerVictim: boolean;
+  graveyardEntry: Warrior;
+  narrative: string;
+  week: number;
+  rng: IRNGService;
+  tournamentId?: string;
 }
 
 /** Assemble the death impact: roster updates, obituary, event, fame delta. */
-function assembleDeathImpact(
-  s: GameState,
-  victim: Warrior,
-  isPlayerVictim: boolean,
-  graveyardEntry: Warrior,
-  narrative: string,
-  week: number,
-  rng: IRNGService
-) {
+function assembleDeathImpact(args: AssembleDeathImpactArgs) {
+  const { s, victim, killer, isPlayerVictim, graveyardEntry } = args;
+  const { narrative, week, rng, tournamentId } = args;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
+  const isOnPlayerRoster = s.roster.some((w) => w.id === victim.id);
 
-  // Remove victim from roster
-  if (s.roster.some((w) => w.id === victim.id)) {
+  // Dead warriors leave the player roster outright — a 'Dead'-marked warrior
+  // kept on state.roster stays in warriorMap, remains pairable, and can be
+  // re-killed (the store-side retireToGraveyard already filters the roster;
+  // the engine must match). The status stamp is kept alongside the removal
+  // so shard-order merges that apply the patch before the removal still end
+  // consistent.
+  const rosterRemovals: WarriorId[] = [];
+  if (isOnPlayerRoster) {
     rosterUpdates.set(victim.id, { status: 'Dead' });
+    rosterRemovals.push(victim.id);
   }
 
   if (isPlayerVictim) {
@@ -261,15 +293,26 @@ function assembleDeathImpact(
   // rivalsUpdates write was clobbered by later bout impacts either way, so
   // killed rival warriors kept fighting ("zombies") and could be re-killed
   // or crowned after death.
-  const rivalRosterRemovals: WarriorId[] = s.roster.some((w) => w.id === victim.id)
-    ? []
-    : [victim.id];
+  const rivalRosterRemovals: WarriorId[] = isOnPlayerRoster ? [] : [victim.id];
 
   const impact: StateImpact = {
     graveyard: [graveyardEntry],
     unacknowledgedDeaths: [victim.id],
     rosterUpdates,
+    rosterRemovals,
     rivalRosterRemovals,
+    // Resolution-time kill accounting: the persistent death registry plus an
+    // audit event, so counting never depends on the capped arenaHistory.
+    deadWarriorIds: [victim.id],
+    killEvents: [
+      {
+        id: `kill_${week}_${victim.id}`,
+        victimId: victim.id,
+        killerId: killer.id,
+        week,
+        tournamentId: (tournamentId ?? null) as TournamentId | null,
+      },
+    ],
     newsletterItems,
     fameDelta: isPlayerVictim ? 5 : 0,
   };

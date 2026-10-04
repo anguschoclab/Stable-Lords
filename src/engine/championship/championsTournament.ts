@@ -70,13 +70,7 @@ export function buildChampionsTournament(
   }
 
   const tournament = TournamentSelectionService.buildTournament(
-    CHAMPIONS_TOURNEY.TIER_ID,
-    CHAMPIONS_TOURNEY.NAME,
-    field,
-    week,
-    state.season,
-    new SeededRNGService(((state.absoluteWeek ?? week - 1) + 1) * 733),
-    state.year ?? 1
+    { tierId: CHAMPIONS_TOURNEY.TIER_ID, tierName: CHAMPIONS_TOURNEY.NAME, warriors: field, week: week, season: state.season, rng: new SeededRNGService(((state.absoluteWeek ?? week - 1) + 1) * 733), year: state.year ?? 1 }
   );
 
   return mergeImpacts([

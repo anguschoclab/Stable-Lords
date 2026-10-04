@@ -9,23 +9,14 @@ import type { Attributes } from '@/types/shared.types';
 function warriorWithWt(wt: number): Warrior {
   const attrs: Attributes = { ST: 15, CN: 15, SZ: 15, WT: wt, WL: 15, SP: 15, DF: 15 };
   return makeWarrior(
-    undefined,
-    'W',
-    FightingStyle.LungingAttack,
-    attrs,
-    undefined,
-    new SeededRNGService(1)
+    { id: undefined, name: 'W', style: FightingStyle.LungingAttack, attrs: attrs, overrides: undefined, rng: new SeededRNGService(1) }
   );
 }
 
 describe('F.3 — WIT-gated condition density (mistake-shaped plans)', () => {
   it('high-WIT warriors keep the full adaptive condition set', () => {
     const plan = aiPlanForWarrior(
-      warriorWithWt(15),
-      'Aggressive',
-      'Expansionist',
-      undefined,
-      'VENDETTA'
+      { w: warriorWithWt(15), personality: 'Aggressive', philosophy: 'Expansionist', opponentStyle: undefined, intent: 'VENDETTA' }
     );
     // universal + base + personality adaptations (Aggressive under kill intent yields ≥2)
     expect(plan.conditions?.length ?? 0).toBeGreaterThanOrEqual(3);
@@ -33,22 +24,14 @@ describe('F.3 — WIT-gated condition density (mistake-shaped plans)', () => {
 
   it('mid-WIT warriors keep only a sparse condition set', () => {
     const plan = aiPlanForWarrior(
-      warriorWithWt(5),
-      'Aggressive',
-      'Expansionist',
-      undefined,
-      'VENDETTA'
+      { w: warriorWithWt(5), personality: 'Aggressive', philosophy: 'Expansionist', opponentStyle: undefined, intent: 'VENDETTA' }
     );
     expect(plan.conditions?.length ?? 0).toBeLessThanOrEqual(2);
   });
 
   it('low-WIT warriors carry only the universal safety condition', () => {
     const plan = aiPlanForWarrior(
-      warriorWithWt(3),
-      'Aggressive',
-      'Expansionist',
-      undefined,
-      'VENDETTA'
+      { w: warriorWithWt(3), personality: 'Aggressive', philosophy: 'Expansionist', opponentStyle: undefined, intent: 'VENDETTA' }
     );
     expect(plan.conditions?.length).toBe(1);
     expect(plan.conditions?.[0]?.trigger.type).toBe('ENDURANCE_BELOW');
@@ -56,7 +39,7 @@ describe('F.3 — WIT-gated condition density (mistake-shaped plans)', () => {
 
   it('density ordering is monotonic in WIT', () => {
     const n = (wt: number) =>
-      aiPlanForWarrior(warriorWithWt(wt), 'Aggressive', 'Expansionist', undefined, 'VENDETTA')
+      aiPlanForWarrior({ w: warriorWithWt(wt), personality: 'Aggressive', philosophy: 'Expansionist', opponentStyle: undefined, intent: 'VENDETTA' })
         .conditions?.length ?? 0;
     expect(n(3)).toBeLessThanOrEqual(n(5));
     expect(n(5)).toBeLessThanOrEqual(n(15));

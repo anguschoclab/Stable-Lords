@@ -32,20 +32,12 @@ describe('personality draft weights', () => {
     const pool = () => [recruit('common', 'Common', 50), recruit('prodigy', 'Prodigy', 500)];
 
     const showman = processRecruitment(
-      makeRivalWithPersonality('Showman'),
-      pool(),
-      5,
-      new SeededRNGService(1),
-      false
+      { rival: makeRivalWithPersonality('Showman'), pool: pool(), week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
     );
     expect(showman.updatedRival.roster[0]?.name).toBe('Recruit prodigy');
 
     const pragmatic = processRecruitment(
-      makeRivalWithPersonality('Pragmatic'),
-      pool(),
-      5,
-      new SeededRNGService(1),
-      false
+      { rival: makeRivalWithPersonality('Pragmatic'), pool: pool(), week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
     );
     expect(pragmatic.updatedRival.roster[0]?.name).toBe('Recruit common');
   });
@@ -67,21 +59,13 @@ describe('personality draft weights', () => {
     (kid as any).age = 17;
 
     const methodical = processRecruitment(
-      makeRivalWithPersonality('Methodical'),
-      [vet, kid],
-      5,
-      new SeededRNGService(1),
-      false
+      { rival: makeRivalWithPersonality('Methodical'), pool: [vet, kid], week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
     );
     expect(methodical.updatedRival.roster[0]?.name).toBe('Recruit kid');
 
     // Aggressive has zero youth bonus — the veteran's career bonus wins.
     const aggressive = processRecruitment(
-      makeRivalWithPersonality('Aggressive'),
-      [vet, kid],
-      5,
-      new SeededRNGService(1),
-      false
+      { rival: makeRivalWithPersonality('Aggressive'), pool: [vet, kid], week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
     );
     expect(aggressive.updatedRival.roster[0]?.name).toBe('Recruit vet');
   });
@@ -103,11 +87,7 @@ describe('personality draft weights', () => {
     let signings = 0;
     for (let week = 1; week <= 6; week++) {
       const res = processRecruitment(
-        rival,
-        remaining,
-        week,
-        new SeededRNGService(week),
-        false
+        { rival: rival, pool: remaining, week: week, rng: new SeededRNGService(week), isMajorDraftWeek: false }
       );
       rival = res.updatedRival;
       remaining = res.updatedPool;

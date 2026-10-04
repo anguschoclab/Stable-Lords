@@ -11,6 +11,7 @@ import type { BoutOfferId } from '@/types/shared.types';
 import type { BoutContext, BoutImpact } from '@/engine/bout/services/boutProcessorTypes';
 import { resolveBout } from '@/engine/bout/services/boutResolution';
 import type { BoutPairing } from '@/engine/bout/core/pairings';
+import { tournamentIdFromContractId } from '@/engine/bout/core/pairings';
 import type { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { collectBoutEvents, type BoutShardOutput } from '@/engine/pool/shardTypes';
 
@@ -71,6 +72,7 @@ export function processBoutShard(input: BoutShardInput, ctx: BoutShardContext): 
     contract,
     headless: ctx.headless,
     isTournamentBout: p.contractId?.startsWith('tour_') ?? false,
+    tournamentId: tournamentIdFromContractId(p.contractId),
   });
 }
 

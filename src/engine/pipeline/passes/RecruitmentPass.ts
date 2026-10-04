@@ -86,13 +86,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
     recruitPool = [...(state.recruitPool ?? [])];
   } else {
     recruitPool = partialRefreshPool(
-      state.recruitPool || [],
-      state.week,
-      usedNames,
-      rng,
-      state.cachedMetaDrift,
-      legacyCandidates,
-      stableCount
+      { currentPool: state.recruitPool || [], week: state.week, usedNames: usedNames, rng: rng, meta: state.cachedMetaDrift, legacyCandidates: legacyCandidates, stableCount: stableCount }
     );
 
     // 2. Post-death pool bonus: each arena death this week draws one extra
@@ -107,12 +101,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
       for (let i = 0; i < bonusCount; i++) {
         recruitPool.push(
           generateRecruit(
-            rng,
-            allUsed,
-            state.week,
-            undefined,
-            state.cachedMetaDrift,
-            legacyCandidates
+            { rng: rng, usedNames: allUsed, week: state.week, forceTier: undefined, meta: state.cachedMetaDrift, legacyCandidates: legacyCandidates }
           )
         );
       }
@@ -125,12 +114,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
       for (let i = 0; i < 3; i++) {
         recruitPool.push(
           generateRecruit(
-            rng,
-            allUsed,
-            state.week,
-            'Exceptional',
-            state.cachedMetaDrift,
-            legacyCandidates
+            { rng: rng, usedNames: allUsed, week: state.week, forceTier: 'Exceptional', meta: state.cachedMetaDrift, legacyCandidates: legacyCandidates }
           )
         );
       }

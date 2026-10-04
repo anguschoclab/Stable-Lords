@@ -114,11 +114,14 @@ export function collectUsedWarriorNames(state: {
 
 /**
  * Collects every warrior id across player roster, rival rosters, graveyard,
- * retired warriors, recruit pool, and tournament participants — the
- * uniqueness domain for generated warrior ids. Ids are minted from seeded
- * streams and CAN collide across generation paths (e.g. a mid-game stable
- * regeneration whose seed lands in another caller's domain re-mints a
- * byte-identical clone); id-keyed systems conflate the two warriors.
+ * retired warriors, recruit pool, tournament participants, AND the
+ * persistent death registry — the uniqueness domain for generated warrior
+ * ids. Ids are minted from seeded streams and CAN collide across generation
+ * paths (e.g. a mid-game stable regeneration whose seed lands in another
+ * caller's domain re-mints a byte-identical clone); id-keyed systems
+ * conflate the two warriors. `deadWarriorIds` matters because the graveyard
+ * is retention-capped — without it, a long-dead id re-minted by a template
+ * collision resurrects onto a fresh stable's roster.
  */
 export function collectUsedWarriorIds(state: {
   roster?: Warrior[];
@@ -128,6 +131,7 @@ export function collectUsedWarriorIds(state: {
   recruitPool?: { id: string }[];
   freeAgents?: { id: string }[];
   tournaments?: { participants?: { id: string }[] }[];
+  deadWarriorIds?: string[];
 }): Set<string> {
   const ids = new Set<string>();
   for (const w of collectAllKnownWarriors({
@@ -143,6 +147,7 @@ export function collectUsedWarriorIds(state: {
   for (const t of state.tournaments ?? []) {
     for (const p of t.participants ?? []) ids.add(p.id);
   }
+  for (const id of state.deadWarriorIds ?? []) ids.add(id);
   return ids;
 }
 

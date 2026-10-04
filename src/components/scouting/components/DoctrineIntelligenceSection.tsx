@@ -19,14 +19,9 @@ interface DoctrineIntelligenceSectionProps {
 /**
  *
  */
-export function DoctrineIntelligenceSection({
-  rivalA,
-  rivalB,
-  modsA,
-  modsB,
-  clashes,
-  grudge,
-}: DoctrineIntelligenceSectionProps) {
+export function DoctrineIntelligenceSection(props: DoctrineIntelligenceSectionProps) {
+  const { rivalA, rivalB, modsA, modsB, clashes } = props;
+  const { grudge } = props;
   const contentPacks = useGameStore((s) => s.contentPacks);
   return (
     <Surface variant="glass" padding="none" className="border-arena-gold/10 overflow-hidden">
@@ -89,14 +84,7 @@ function ModifierRow({ label, value }: { label: string; value: number }) {
   );
 }
 
-function DoctrineCard({
-  rival,
-  mods,
-  color,
-  borderColor,
-  bgColor,
-  contentPacks,
-}: {
+function DoctrineCard(props: {
   rival: RivalStableData;
   mods: Partial<FightPlan>;
   color: string;
@@ -104,6 +92,8 @@ function DoctrineCard({
   bgColor: string;
   contentPacks: ContentPacks;
 }) {
+  const { rival, mods, color, borderColor, bgColor } = props;
+  const { contentPacks } = props;
   return (
     <div className={cn('p-4 border rounded-none', borderColor, bgColor)}>
       <div className={cn('text-[9px] font-black uppercase tracking-widest mb-3 opacity-60', color)}>

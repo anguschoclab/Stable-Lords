@@ -234,13 +234,7 @@ describe('calendar migration through advanceWeek', () => {
 
     const field = ['f1', 'f2', 'f3', 'f4'].map((id, i) => computed(id, `Freelancer ${i}`));
     const inFlight = TournamentSelectionService.buildTournament(
-      'gold',
-      'Legacy Bracket',
-      field,
-      13,
-      state.season,
-      new SeededRNGService(7),
-      1
+      { tierId: 'gold', tierName: 'Legacy Bracket', warriors: field, week: 13, season: state.season, rng: new SeededRNGService(7), year: 1 }
     );
     state.tournaments = [inFlight];
 

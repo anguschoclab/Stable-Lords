@@ -38,46 +38,25 @@ describe('aiPlanForWarrior — planIntel counter-planning', () => {
   const w = () => makeWarrior({ style: FightingStyle.ParryStrike });
 
   it('fresh hot-opponent intel hardens the plan (higher AL)', () => {
-    const base = aiPlanForWarrior(w(), 'Pragmatic', 'Opportunist', FightingStyle.BashingAttack);
+    const base = aiPlanForWarrior({ w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack });
     const scouted = aiPlanForWarrior(
-      w(),
-      'Pragmatic',
-      'Opportunist',
-      FightingStyle.BashingAttack,
-      undefined,
-      0,
-      dossierWithIntel({ suspectedOE: 0.9, suspectedAL: 0.3, lastPlanWeek: 9 }),
-      10
+      { w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack, intent: undefined, grudgeIntensity: 0, dossier: dossierWithIntel({ suspectedOE: 0.9, suspectedAL: 0.3, lastPlanWeek: 9 }), now: 10 }
     );
     expect(scouted.AL).toBeGreaterThan(base.AL!);
   });
 
   it('fresh turtler intel presses the attack (higher OE)', () => {
-    const base = aiPlanForWarrior(w(), 'Pragmatic', 'Opportunist', FightingStyle.BashingAttack);
+    const base = aiPlanForWarrior({ w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack });
     const scouted = aiPlanForWarrior(
-      w(),
-      'Pragmatic',
-      'Opportunist',
-      FightingStyle.BashingAttack,
-      undefined,
-      0,
-      dossierWithIntel({ suspectedOE: 0.4, suspectedAL: 0.85, lastPlanWeek: 9 }),
-      10
+      { w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack, intent: undefined, grudgeIntensity: 0, dossier: dossierWithIntel({ suspectedOE: 0.4, suspectedAL: 0.85, lastPlanWeek: 9 }), now: 10 }
     );
     expect(scouted.OE).toBeGreaterThan(base.OE!);
   });
 
   it('stale intel is ignored — identical to the no-dossier plan', () => {
-    const base = aiPlanForWarrior(w(), 'Pragmatic', 'Opportunist', FightingStyle.BashingAttack);
+    const base = aiPlanForWarrior({ w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack });
     const stale = aiPlanForWarrior(
-      w(),
-      'Pragmatic',
-      'Opportunist',
-      FightingStyle.BashingAttack,
-      undefined,
-      0,
-      dossierWithIntel({ suspectedOE: 0.95, suspectedAL: 0.9, lastPlanWeek: 1 }),
-      20
+      { w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack, intent: undefined, grudgeIntensity: 0, dossier: dossierWithIntel({ suspectedOE: 0.95, suspectedAL: 0.9, lastPlanWeek: 1 }), now: 20 }
     );
     expect(stale.OE).toBe(base.OE);
     expect(stale.AL).toBe(base.AL);
@@ -85,16 +64,9 @@ describe('aiPlanForWarrior — planIntel counter-planning', () => {
   });
 
   it('no planIntel → no counter-planning delta', () => {
-    const base = aiPlanForWarrior(w(), 'Pragmatic', 'Opportunist', FightingStyle.BashingAttack);
+    const base = aiPlanForWarrior({ w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack });
     const plain = aiPlanForWarrior(
-      w(),
-      'Pragmatic',
-      'Opportunist',
-      FightingStyle.BashingAttack,
-      undefined,
-      0,
-      dossierWithIntel(undefined),
-      10
+      { w: w(), personality: 'Pragmatic', philosophy: 'Opportunist', opponentStyle: FightingStyle.BashingAttack, intent: undefined, grudgeIntensity: 0, dossier: dossierWithIntel(undefined), now: 10 }
     );
     expect(plain.OE).toBe(base.OE);
     expect(plain.AL).toBe(base.AL);

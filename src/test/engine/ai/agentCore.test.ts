@@ -252,7 +252,7 @@ describe('agentCore — computePlayerThreatLevel', () => {
 describe('agentCore — logAgentAction', () => {
   it('creates a new AIEvent and prepends it to actionHistory', () => {
     const rival = createMockRival({ actionHistory: [] });
-    const updated = logAgentAction(rival, 'STAFF', 'Hired trainer', 'Low', 5);
+    const updated = logAgentAction({ rival: rival, type: 'STAFF', description: 'Hired trainer', riskTier: 'Low', week: 5 });
     expect(updated.actionHistory).toHaveLength(1);
     expect(updated.actionHistory![0]!.type).toBe('STAFF');
     expect(updated.actionHistory![0]!.description).toBe('Hired trainer');
@@ -269,7 +269,7 @@ describe('agentCore — logAgentAction', () => {
       riskTier: 'Low',
     };
     const rival = createMockRival({ actionHistory: [existingEvent] });
-    const updated = logAgentAction(rival, 'FINANCE', 'New action', 'Medium', 3);
+    const updated = logAgentAction({ rival: rival, type: 'FINANCE', description: 'New action', riskTier: 'Medium', week: 3 });
     expect(updated.actionHistory).toHaveLength(2);
     expect(updated.actionHistory![0]!.description).toBe('New action');
     expect(updated.actionHistory![1]!.description).toBe('Old action');
@@ -284,40 +284,40 @@ describe('agentCore — logAgentAction', () => {
       riskTier: 'Low' as const,
     }));
     const rival = createMockRival({ actionHistory: existingEvents });
-    const updated = logAgentAction(rival, 'STAFF', 'New action', 'Low', 99);
+    const updated = logAgentAction({ rival: rival, type: 'STAFF', description: 'New action', riskTier: 'Low', week: 99 });
     expect(updated.actionHistory).toHaveLength(40);
     expect(updated.actionHistory![0]!.description).toBe('New action');
   });
 
   it('generates deterministic event IDs from same inputs', () => {
     const rival = createMockRival({ actionHistory: [] });
-    const r1 = logAgentAction(rival, 'STAFF', 'Test', 'Low', 5);
-    const r2 = logAgentAction(rival, 'STAFF', 'Test', 'Low', 5);
+    const r1 = logAgentAction({ rival: rival, type: 'STAFF', description: 'Test', riskTier: 'Low', week: 5 });
+    const r2 = logAgentAction({ rival: rival, type: 'STAFF', description: 'Test', riskTier: 'Low', week: 5 });
     expect(r1.actionHistory![0]!.id).toBe(r2.actionHistory![0]!.id);
   });
 
   it('sets currentIntent from a typed cause', () => {
     const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'STRATEGY', 'Targeting a rival', 'High', 5, 'VENDETTA');
+    const updated = logAgentAction({ rival: rival, type: 'STRATEGY', description: 'Targeting a rival', riskTier: 'High', week: 5, cause: 'VENDETTA' });
     expect(updated.agentMemory!.currentIntent).toBe('VENDETTA');
     expect(updated.actionHistory![0]!.cause).toBe('VENDETTA');
   });
 
   it('does not infer intent from description substrings', () => {
     const rival = createMockRival({ agentMemory: { currentIntent: 'CONSOLIDATION' } as any });
-    const updated = logAgentAction(rival, 'FINANCE', 'Decided to hoard gold', 'Low', 5);
+    const updated = logAgentAction({ rival: rival, type: 'FINANCE', description: 'Decided to hoard gold', riskTier: 'Low', week: 5 });
     expect(updated.agentMemory!.currentIntent).toBe('CONSOLIDATION');
   });
 
   it('preserves current intent when cause is not an intent', () => {
     const rival = createMockRival({ agentMemory: { currentIntent: 'VENDETTA' } as any });
-    const updated = logAgentAction(rival, 'STAFF', 'Hired a trainer', 'Low', 5, 'MAINTENANCE');
+    const updated = logAgentAction({ rival: rival, type: 'STAFF', description: 'Hired a trainer', riskTier: 'Low', week: 5, cause: 'MAINTENANCE' });
     expect(updated.agentMemory!.currentIntent).toBe('VENDETTA');
   });
 
   it('defaults to CONSOLIDATION when agentMemory is missing', () => {
     const rival = createMockRival({ agentMemory: undefined });
-    const updated = logAgentAction(rival, 'STAFF', 'Hired a trainer', 'Low', 5);
+    const updated = logAgentAction({ rival: rival, type: 'STAFF', description: 'Hired a trainer', riskTier: 'Low', week: 5 });
     expect(updated.agentMemory!.currentIntent).toBe('CONSOLIDATION');
   });
 });

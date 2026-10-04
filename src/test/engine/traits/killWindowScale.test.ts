@@ -24,18 +24,7 @@ describe('killWindowBonus scale', () => {
       // must not, by itself, reach the 0.04 cap. A limb location keeps the
       // base window small so the bonus term is what decides saturation.
       const threshold = calculateKillWindow(
-        0.45, // defender hurt but not near-death
-        0.55, // winded
-        'right arm',
-        8, // killDesire
-        2, // LATE
-        8, // attOE
-        8, // attAL
-        0, // matchup
-        12, // decSkill
-        0, // momentum
-        bonus,
-        0
+        { hpRatio: 0.45, enduranceRatio: 0.55, location: 'right arm', killDesire: 8, phaseLevel: 2, attOE: 8, attAL: 8, matchupBonus: 0, decSkill: 12, momentum: 0, specialtyBonus: bonus, crowdKillBonus: 0 }
       );
       expect(threshold, `${t.id} killWindowBonus=${bonus} saturates cap`).toBeLessThan(0.04);
     }

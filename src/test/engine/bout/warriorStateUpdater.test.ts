@@ -23,7 +23,7 @@ describe('warriorStateUpdater', () => {
   describe('updateWarriorAfterBout', () => {
     it('updates fame and popularity for winner', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.fame).toBe(15); // 10 + 5
       expect(result.popularity).toBe(8); // 5 + 3
@@ -31,7 +31,7 @@ describe('warriorStateUpdater', () => {
 
     it('updates fame and popularity for loser', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 1, 1, false, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 1, popularityDelta: 1, isWinner: false, wasKilled: false, tags: [] });
 
       expect(result.fame).toBe(11); // 10 + 1
       expect(result.popularity).toBe(6); // 5 + 1
@@ -39,7 +39,7 @@ describe('warriorStateUpdater', () => {
 
     it('updates career stats for winner', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.career.wins).toBe(4); // 3 + 1
       expect(result.career.losses).toBe(2); // unchanged
@@ -47,7 +47,7 @@ describe('warriorStateUpdater', () => {
 
     it('updates career stats for loser', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 0, 0, false, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: false, wasKilled: false, tags: [] });
 
       expect(result.career.wins).toBe(3); // unchanged
       expect(result.career.losses).toBe(3); // 2 + 1
@@ -55,21 +55,21 @@ describe('warriorStateUpdater', () => {
 
     it('updates kills when wasKilled=true', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 10, 5, true, true, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 10, popularityDelta: 5, isWinner: true, wasKilled: true, tags: [] });
 
       expect(result.career.kills).toBe(2); // 1 + 1
     });
 
     it('does not update kills when wasKilled=false', () => {
       const warrior = createMockWarrior();
-      const result = updateWarriorAfterBout(warrior, 10, 5, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 10, popularityDelta: 5, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.career.kills).toBe(1); // unchanged
     });
 
     it('adds Flashy flair when winner has Flashy tag', () => {
       const warrior = createMockWarrior({ flair: ['Veteran'] });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, ['Flashy']);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: ['Flashy'] });
 
       expect(result.flair).toContain('Flashy');
       expect(result.flair).toContain('Veteran');
@@ -77,56 +77,56 @@ describe('warriorStateUpdater', () => {
 
     it('does not duplicate Flashy flair if already present', () => {
       const warrior = createMockWarrior({ flair: ['Veteran', 'Flashy'] });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, ['Flashy']);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: ['Flashy'] });
 
       expect(result.flair.filter((f) => f === 'Flashy').length).toBe(1);
     });
 
     it('increases fatigue by 25 (capped at 100)', () => {
       const warrior = createMockWarrior({ fatigue: 50 });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.fatigue).toBe(75); // 50 + 25
     });
 
     it('caps fatigue at 100', () => {
       const warrior = createMockWarrior({ fatigue: 90 });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.fatigue).toBe(100); // capped, not 115
     });
 
     it('resets fatigue to 0 when wasKilled', () => {
       const warrior = createMockWarrior({ fatigue: 50 });
-      const result = updateWarriorAfterBout(warrior, 0, 0, false, true, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: false, wasKilled: true, tags: [] });
 
       expect(result.fatigue).toBe(0);
     });
 
     it('skips fatigue accrual when skipFatigue=true', () => {
       const warrior = createMockWarrior({ fatigue: 50 });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, [], true);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [], skipFatigue: true });
 
       expect(result.fatigue).toBe(50); // unchanged
     });
 
     it('handles undefined fatigue gracefully', () => {
       const warrior = createMockWarrior({ fatigue: undefined });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.fatigue).toBe(25); // 0 + 25
     });
 
     it('prevents negative fame', () => {
       const warrior = createMockWarrior({ fame: 5 });
-      const result = updateWarriorAfterBout(warrior, -10, 0, false, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: -10, popularityDelta: 0, isWinner: false, wasKilled: false, tags: [] });
 
       expect(result.fame).toBe(0); // clamped, not negative
     });
 
     it('prevents negative popularity', () => {
       const warrior = createMockWarrior({ popularity: 3 });
-      const result = updateWarriorAfterBout(warrior, 0, -10, false, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: -10, isWinner: false, wasKilled: false, tags: [] });
 
       expect(result.popularity).toBe(0); // clamped, not negative
     });
@@ -136,7 +136,7 @@ describe('warriorStateUpdater', () => {
         name: 'Special Name',
         id: 'special-id' as import('@/types/shared.types').WarriorId,
       });
-      const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: false, tags: [] });
 
       expect(result.name).toBe('Special Name');
       expect(result.id).toBe('special-id');
@@ -144,7 +144,7 @@ describe('warriorStateUpdater', () => {
 
     it('awards a kill milestone epithet crossing a threshold', () => {
       const warrior = createMockWarrior({ career: { wins: 3, losses: 2, kills: 2 } });
-      const result = updateWarriorAfterBout(warrior, 10, 5, true, true, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 10, popularityDelta: 5, isWinner: true, wasKilled: true, tags: [] });
       expect(result.career.kills).toBe(3);
       expect(result.epithet).toBeDefined();
       expect(EPITHET_TABLES.kill_3).toContain(result.epithet);
@@ -156,15 +156,15 @@ describe('warriorStateUpdater', () => {
         career: { wins: 3, losses: 2, kills: 2 },
         epithet: EPITHET_TABLES.arena_champion[0]!,
       });
-      const result = updateWarriorAfterBout(warrior, 10, 5, true, true, []);
+      const result = updateWarriorAfterBout({ warrior: warrior, fameDelta: 10, popularityDelta: 5, isWinner: true, wasKilled: true, tags: [] });
       expect(result.epithet).toBe(EPITHET_TABLES.arena_champion[0]);
     });
 
     it('does not epithet losers or sub-threshold careers', () => {
       const loser = createMockWarrior();
-      expect(updateWarriorAfterBout(loser, 0, 0, false, false, []).epithet).toBeUndefined();
+      expect(updateWarriorAfterBout({ warrior: loser, fameDelta: 0, popularityDelta: 0, isWinner: false, wasKilled: false, tags: [] }).epithet).toBeUndefined();
       const winner = createMockWarrior({ career: { wins: 3, losses: 2, kills: 1 } });
-      expect(updateWarriorAfterBout(winner, 5, 3, true, true, []).epithet).toBeUndefined();
+      expect(updateWarriorAfterBout({ warrior: winner, fameDelta: 5, popularityDelta: 3, isWinner: true, wasKilled: true, tags: [] }).epithet).toBeUndefined();
     });
   });
 });

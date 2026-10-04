@@ -14,8 +14,8 @@ const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 describe('AdvisorPage', () => {
   beforeEach(() => {
     const fresh = createFreshState('test-seed');
-    const w1 = makeWarrior('w1' as any, 'Aulus', FightingStyle.AimedBlow, baseAttrs);
-    const w2 = makeWarrior('w2' as any, 'Brutus', FightingStyle.BashingAttack, baseAttrs, {
+    const w1 = makeWarrior({ id: 'w1' as any, name: 'Aulus', style: FightingStyle.AimedBlow, attrs: baseAttrs });
+    const w2 = makeWarrior({ id: 'w2' as any, name: 'Brutus', style: FightingStyle.BashingAttack, attrs: baseAttrs, overrides: {
       injuries: [
         {
           id: 'i1' as any,
@@ -26,7 +26,7 @@ describe('AdvisorPage', () => {
           penalties: {},
         },
       ],
-    });
+    } });
     fresh.roster = [w1, w2];
     fresh.week = 5;
     fresh.absoluteWeek = 5;
@@ -55,7 +55,7 @@ describe('AdvisorPage', () => {
 
   it('renders a solvency warning chip when the treasury cannot cover projected costs', () => {
     const fresh = createFreshState('test-seed-broke');
-    fresh.roster = [makeWarrior('w9' as any, 'Cassian', FightingStyle.AimedBlow, baseAttrs)];
+    fresh.roster = [makeWarrior({ id: 'w9' as any, name: 'Cassian', style: FightingStyle.AimedBlow, attrs: baseAttrs })];
     fresh.week = 5;
     fresh.absoluteWeek = 5;
     fresh.season = 'Spring';

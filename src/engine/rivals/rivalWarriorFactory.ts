@@ -48,17 +48,24 @@ export function biasedAttrs(
 }
 
 /**
+ *
+ */
+export interface CreateRivalWarriorArgs {
+  wId: string;
+  wName: string;
+  style: FightingStyle;
+  attrs: Attributes;
+  stableId: string;
+  fameRange: [number, number];
+  rng: IRNGService;
+}
+
+/**
  * Creates a warrior for a rival stable with proper RNG wrapper.
  */
-export function createRivalWarrior(
-  wId: string,
-  wName: string,
-  style: FightingStyle,
-  attrs: Attributes,
-  stableId: string,
-  fameRange: [number, number],
-  rng: IRNGService
-): Warrior {
+export function createRivalWarrior(args: CreateRivalWarriorArgs): Warrior {
+  const { wId, wName, style, attrs, stableId } = args;
+  const { fameRange, rng } = args;
   // Create a wrapper object compatible with SeededRNG for makeWarrior
   const rngWrapper: IRNGService = {
     next: () => rng.next(),
@@ -97,15 +104,10 @@ export function createRivalWarrior(
   };
 
   return makeWarrior(
-    wId as import('@/types/shared.types').WarriorId,
-    wName,
-    style,
-    attrs,
-    {
+    { id: wId as import('@/types/shared.types').WarriorId, name: wName, style: style, attrs: attrs, overrides: {
       fame: Math.floor(rng.next() * (fameRange[1] - fameRange[0] + 1)) + fameRange[0],
       popularity: Math.floor(rng.next() * 5),
       stableId: stableId as import('@/types/shared.types').StableId,
-    },
-    rngWrapper
+    }, rng: rngWrapper }
   );
 }

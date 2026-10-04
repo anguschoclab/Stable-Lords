@@ -19,15 +19,9 @@ interface ChampionBlockProps {
 }
 
 /** Arena champion panel: reigning crown + the contender eligibility ladder. */
-export function ChampionBlock({
-  state,
-  reign,
-  champWarrior,
-  champStableName,
-  champStableIsPlayer,
-  ladder,
-  onRelinquish,
-}: ChampionBlockProps) {
+export function ChampionBlock(props: ChampionBlockProps) {
+  const { state, reign, champWarrior, champStableName, champStableIsPlayer } = props;
+  const { ladder, onRelinquish } = props;
   return (
     <Surface variant="glass" className="p-5 mb-6 border-l-4 border-l-arena-gold/50">
       <div className="flex flex-wrap items-center justify-between gap-4">

@@ -46,26 +46,21 @@ function buildFTUEWarrior(
   // Use the orphan's pre-generated potential (or regenerate if somehow missing)
   const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
   // Build base plan and merge trait-based modifiers
-  const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
+  const basePlan = defaultPlanForWarrior(makeWarrior({ id: undefined, name: pw.name, style: pw.style, attrs: pw.attrs }));
   const traitData = TRAIT_DATA[pw.trait];
   const traitMods = traitData?.effect.fightPlanMod ?? {};
   // warrior[0] is the plan warrior — apply player's custom plan if provided
   const plan =
     idx === 0 && playerPlan ? { ...playerPlan, ...traitMods } : { ...basePlan, ...traitMods };
   const w = makeWarrior(
-    finishRng.uuid() as import('@/types/shared.types').WarriorId,
-    pw.name,
-    pw.style,
-    pw.attrs,
-    {
+    { id: finishRng.uuid() as import('@/types/shared.types').WarriorId, name: pw.name, style: pw.style, attrs: pw.attrs, overrides: {
       potential,
       age: pw.age,
       plan,
       traits: [pw.trait],
       lore: pw.lore,
       origin: pw.origin,
-    },
-    finishRng
+    }, rng: finishRng }
   );
   if (boutResult) {
     const wasA = pw.name === boutResult.a.name;
@@ -126,10 +121,7 @@ export function buildFTUEInitialState(
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
   const recruitPool = generateRecruitPool(
-    100,
-    1,
-    usedNames,
-    new SeededRNGService(poolSeedValue + 888)
+    { count: 100, week: 1, usedNames: usedNames, rng: new SeededRNGService(poolSeedValue + 888) }
   );
 
   const promotersArray = generatePromoters(30, poolSeedValue + 999);

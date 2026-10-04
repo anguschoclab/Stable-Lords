@@ -28,22 +28,10 @@ interface ConfirmDestructiveDialogProps {
 }
 
 /** Shared destructive-action confirmation dialog (erase save, relinquish crown, reset ledger). */
-export function ConfirmDestructiveDialog({
-  open,
-  onOpenChange,
-  title,
-  description,
-  cancelLabel = 'Cancel',
-  confirmLabel,
-  onConfirm,
-  contentClassName,
-  contentStyle,
-  titleClassName,
-  descriptionClassName,
-  cancelClassName,
-  confirmClassName,
-  descriptionId,
-}: ConfirmDestructiveDialogProps) {
+export function ConfirmDestructiveDialog(props: ConfirmDestructiveDialogProps) {
+  const { open, onOpenChange, title, description, cancelLabel = 'Cancel' } = props;
+  const { confirmLabel, onConfirm, contentClassName, contentStyle, titleClassName } = props;
+  const { descriptionClassName, cancelClassName, confirmClassName, descriptionId } = props;
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent

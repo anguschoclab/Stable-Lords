@@ -102,16 +102,23 @@ export function pickActiveWarrior(
   return rng.pick(pool) ?? undefined;
 }
 
+/**
+ *
+ */
+export interface AnnounceOffseasonEventArgs {
+  ctx: OffseasonEventContext;
+  rng: IRNGService;
+  nextWeek: number;
+  e: OffseasonEventNarrative;
+  data: Record<string, string | number>;
+  category?: NewsletterItem['category'];
+}
+
 /** Append a newsletter entry for an offseason event. */
-export function announceOffseasonEvent(
-  ctx: OffseasonEventContext,
-  rng: IRNGService,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  data: Record<string, string | number>,
-  category?: NewsletterItem['category']
-): void {
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, data, category);
+export function announceOffseasonEvent(args: AnnounceOffseasonEventArgs): void {
+  const { ctx, rng, nextWeek, e, data } = args;
+  const { category } = args;
+  pushNewsletterItem({ target: ctx.newsletterItems, rng: rng, week: nextWeek, title: e.title, templates: e.newsletter, data: data, category: category });
 }
 
 /** Outcome returned by a `withChosenWarrior` apply callback. */
@@ -121,39 +128,53 @@ export interface ChosenWarriorOutcome {
 }
 
 /**
+ *
+ */
+export interface WithChosenWarriorArgs {
+  state: GameState;
+  nextWeek: number;
+  e: OffseasonEventNarrative;
+  rng: IRNGService;
+  ctx: OffseasonEventContext;
+  apply: (chosen: Warrior) => ChosenWarriorOutcome | undefined;
+  healthyOnly?: boolean;
+}
+
+/**
  * Pick a random active warrior, run `apply` for side effects (ledger,
  * treasury, insight tokens) and to produce the outcome, then stamp the
  * roster update and announce the event with the warrior's name.
  */
-export function withChosenWarrior(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext,
-  apply: (chosen: Warrior) => ChosenWarriorOutcome | undefined,
-  healthyOnly = false
-): void {
+export function withChosenWarrior(args: WithChosenWarriorArgs): void {
+  const { state, nextWeek, e, rng, ctx } = args;
+  const { apply, healthyOnly = false } = args;
   const chosen = pickActiveWarrior(state, rng, healthyOnly);
   if (!chosen) return;
   const outcome = apply(chosen);
   if (!outcome) return;
   if (outcome.updates) ctx.rosterUpdates.set(chosen.id, outcome.updates);
-  announceOffseasonEvent(ctx, rng, nextWeek, e, { name: chosen.name, ...outcome.announce });
+  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { name: chosen.name, ...outcome.announce } });
+}
+
+/**
+ *
+ */
+export interface WithChosenWarriorNewsArgs {
+  state: GameState;
+  nextWeek: number;
+  e: OffseasonEventNarrative;
+  rng: IRNGService;
+  ctx: OffseasonEventContext;
+  apply: (chosen: Warrior) => string;
 }
 
 /**
  * Pick a random active warrior, run `apply` for its branch effects (returning
  * the effect message), then push a newsletter item of `baseMsg + effectMsg`.
  */
-export function withChosenWarriorNews(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext,
-  apply: (chosen: Warrior) => string
-): void {
+export function withChosenWarriorNews(args: WithChosenWarriorNewsArgs): void {
+  const { state, nextWeek, e, rng, ctx } = args;
+  const { apply } = args;
   const chosen = pickActiveWarrior(state, rng);
   if (!chosen) return;
   const effectMsg = apply(chosen);

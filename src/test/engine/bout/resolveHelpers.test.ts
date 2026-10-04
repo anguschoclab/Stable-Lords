@@ -75,6 +75,48 @@ describe('resolveHelpers', () => {
 
       expect(result).toBe(false);
     });
+
+    it('returns false when the opponent is dead', () => {
+      // Symmetric liveness: a dead side-D combatant must not pass validation —
+      // dead warriors linger on rosters (status 'Dead') and stay in warriorMap,
+      // and signed offers place the opponent in the D slot.
+      const wA = createMockWarrior({ status: 'Active' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        status: 'Dead',
+      });
+
+      expect(validateBoutCombatants(wA, wD)).toBe(false);
+    });
+
+    it('returns false when the opponent is retired', () => {
+      const wA = createMockWarrior({ status: 'Active' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        status: 'Retired',
+      });
+
+      expect(validateBoutCombatants(wA, wD)).toBe(false);
+    });
+
+    it('returns false when a combatant id is registered dead (stale Active snapshot)', () => {
+      // A stale 'Active' snapshot (e.g. a lingering tournament participant
+      // object) claims to be alive — the dead registry is the authority.
+      const wA = createMockWarrior({ status: 'Active' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        status: 'Active',
+      });
+      const deadIds = new Set(['warrior-d']);
+
+      expect(validateBoutCombatants(wA, wD, deadIds)).toBe(false);
+      // And the same check on side A.
+      const deadIdsA = new Set(['warrior-a']);
+      expect(validateBoutCombatants(wA, wD, deadIdsA)).toBe(false);
+    });
   });
 
   describe('getWinnerId', () => {

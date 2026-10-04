@@ -1,4 +1,4 @@
-import { GameState, RivalStableData } from '@/types/state.types';
+import { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { aiDraftFromPool } from '@/engine/recruitment/draftService';
@@ -27,6 +27,7 @@ import {
   EXPANSION_MINT_ATTEMPTS,
 } from '@/constants/world';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import {
   buildSuccessorIndex,
   runRivalShardChunk,
@@ -72,14 +73,7 @@ function buildWeekOffers(
   }[] = [];
   for (const rival of currentRivals) {
     const { bids } = generateBoutBids(
-      rival,
-      state.absoluteWeek + 1,
-      state.weather ?? 'Clear',
-      state.crowdMood ?? 'Calm',
-      currentRivals,
-      // Player-aware context: vendettas may target the player roster and the
-      // player's challenge/avoid marks steer contact (G1/G4).
-      state
+      { rival: rival, _currentWeek: state.absoluteWeek + 1, weather: state.weather ?? 'Clear', crowdMood: state.crowdMood ?? 'Calm', rivals: currentRivals, state: state }
     );
     for (const bid of bids) {
       allBids.push({ bid, rivalId: rival.id as string });
@@ -152,27 +146,44 @@ function collectFreedRecruits(
   nextWeek: number
 ): PoolWarrior[] {
   const rng = new SeededRNGService(state.absoluteWeek * 31 + 101);
+  const deadIds = deadIdSet(state);
   const freed: PoolWarrior[] = [];
   for (const o of shardOutputs) {
     if (!o.replacesStableId) continue;
     const dissolved = (state.rivals ?? []).find((r) => r.id === o.replacesStableId);
     for (const w of dissolved?.roster ?? []) {
-      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+      if (w.status === 'Active' && !deadIds.has(w.id))
+        freed.push(warriorToPoolWarrior(w, nextWeek, rng));
     }
   }
   return freed;
 }
 
 /** Active warriors of starvation-folded stables re-enter as free agents. */
-function collectStarvedRecruits(folded: RivalStableData[], nextWeek: number): PoolWarrior[] {
+function collectStarvedRecruits(
+  folded: RivalStableData[],
+  nextWeek: number,
+  state: GameState
+): PoolWarrior[] {
   const rng = new SeededRNGService(nextWeek * 131 + 17);
+  const deadIds = deadIdSet(state);
   const freed: PoolWarrior[] = [];
   for (const r of folded) {
     for (const w of r.roster) {
-      if (w.status === 'Active') freed.push(warriorToPoolWarrior(w, nextWeek, rng));
+      if (w.status === 'Active' && !deadIds.has(w.id))
+        freed.push(warriorToPoolWarrior(w, nextWeek, rng));
     }
   }
   return freed;
+}
+
+interface RunRosterManagementArgs {
+  state: GameState;
+  currentRivals: RivalStableData[];
+  nextWeek: number;
+  boutOffersWithWorld: Record<BoutOfferId, BoutOffer>;
+  globalGazetteItems: string[];
+  impacts: StateImpact[];
 }
 
 /**
@@ -182,14 +193,9 @@ function collectStarvedRecruits(folded: RivalStableData[], nextWeek: number): Po
  * without the retired impact they vanish from the world entirely (and the
  * vacancy phase can only guess 'retired').
  */
-function runRosterManagement(
-  state: GameState,
-  currentRivals: RivalStableData[],
-  nextWeek: number,
-  boutOffersWithWorld: Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]>,
-  globalGazetteItems: string[],
-  impacts: StateImpact[]
-): RivalStableData[] {
+function runRosterManagement(args: RunRosterManagementArgs): RivalStableData[] {
+  const { state, currentRivals, nextWeek, boutOffersWithWorld, globalGazetteItems } = args;
+  const { impacts } = args;
   const rosterRng = new SeededRNGService(state.absoluteWeek * 13 + 7);
   const { updatedRivals, gazetteItems, retiredWarriors, legacyFounders } =
     processAIRosterManagement(
@@ -211,6 +217,16 @@ function runRosterManagement(
   return updatedRivals;
 }
 
+interface RunStarvationAndFreeAgentsArgs {
+  currentRivals: RivalStableData[];
+  shardOutputs: RivalShardOutput[];
+  draft: ReturnType<typeof aiDraftFromPool>;
+  state: GameState;
+  nextWeek: number;
+  globalGazetteItems: string[];
+  impacts: StateImpact[];
+}
+
 /**
  * Starvation fold + free-agent reconciliation. A stable that has sat below
  * its roster minimum for STABLE_STARVATION_WEEKS and still can't afford even
@@ -218,15 +234,10 @@ function runRosterManagement(
  * Deltas, never a replace: the system pass's seasonal churn appends displaced
  * veterans in this same stage snapshot.
  */
-function runStarvationAndFreeAgents(
-  currentRivals: RivalStableData[],
-  shardOutputs: RivalShardOutput[],
-  draft: ReturnType<typeof aiDraftFromPool>,
-  state: GameState,
-  nextWeek: number,
-  globalGazetteItems: string[],
-  impacts: StateImpact[]
-): RivalStableData[] {
+function runStarvationAndFreeAgents(args: RunStarvationAndFreeAgentsArgs): RivalStableData[] {
+  const { shardOutputs, draft, state, nextWeek } = args;
+  let { currentRivals } = args;
+  const { globalGazetteItems, impacts } = args;
   const folded: RivalStableData[] = [];
   currentRivals = currentRivals.filter((r) => {
     if ((r.weeksBelowMin ?? 0) < STABLE_STARVATION_WEEKS) return true;
@@ -252,7 +263,7 @@ function runStarvationAndFreeAgents(
   if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
   const freed = [
     ...collectFreedRecruits(shardOutputs, state, nextWeek),
-    ...collectStarvedRecruits(folded, nextWeek),
+    ...collectStarvedRecruits(folded, nextWeek, state),
   ];
   if (freed.length > 0) impacts.push({ freeAgentAdditions: freed });
   return currentRivals;
@@ -342,18 +353,13 @@ function finishRivalPass(
   impacts.push({ boutOffers: boutOffersWithWorld });
 
   currentRivals = runRosterManagement(
-    state,
-    currentRivals,
-    nextWeek,
-    boutOffersWithWorld,
-    globalGazetteItems,
-    impacts
+    { state: state, currentRivals: currentRivals, nextWeek: nextWeek, boutOffersWithWorld: boutOffersWithWorld, globalGazetteItems: globalGazetteItems, impacts: impacts }
   );
 
   // 3. Draft from Recruitment Pool — sole signing path; honors needsRecruit.
   //    Free agents share the draft pool; unsold veterans come back out on
   //    the free-agent shelf.
-  const draft = aiDraftFromPool(state.recruitPool, currentRivals, nextWeek, state);
+  const draft = aiDraftFromPool({ pool: state.recruitPool, rivals: currentRivals, week: nextWeek, state: state });
   globalGazetteItems.push(...draft.gazetteItems);
   currentRivals = draft.updatedRivals;
 
@@ -366,13 +372,7 @@ function finishRivalPass(
 
   // 3.9. Starvation fold + free-agent delta merge.
   currentRivals = runStarvationAndFreeAgents(
-    currentRivals,
-    shardOutputs,
-    draft,
-    state,
-    nextWeek,
-    globalGazetteItems,
-    impacts
+    { currentRivals: currentRivals, shardOutputs: shardOutputs, draft: draft, state: state, nextWeek: nextWeek, globalGazetteItems: globalGazetteItems, impacts: impacts }
   );
 
   // 3.95. World-floor refill — starvation folds above can strand the world

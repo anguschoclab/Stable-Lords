@@ -45,18 +45,9 @@ interface WarriorLeaderboardFiltersProps {
 /**
  *
  */
-export function WarriorLeaderboardFilters({
-  classes,
-  classFilter,
-  setClassFilter,
-  quickFilter,
-  setQuickFilter,
-  myWarriorsOnly,
-  setMyWarriorsOnly,
-  onSort,
-  isFiltered,
-  clearFilters,
-}: WarriorLeaderboardFiltersProps) {
+export function WarriorLeaderboardFilters(props: WarriorLeaderboardFiltersProps) {
+  const { classes, classFilter, setClassFilter, quickFilter, setQuickFilter } = props;
+  const { myWarriorsOnly, setMyWarriorsOnly, onSort, isFiltered, clearFilters } = props;
   return (
     <div className="px-4 py-3 border-b border-white/5 bg-black/20 flex flex-wrap items-center gap-2">
       <FilterToggleButton

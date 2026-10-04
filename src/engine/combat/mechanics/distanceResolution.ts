@@ -142,6 +142,19 @@ export interface DistanceContestResult {
 }
 
 /**
+ *
+ */
+export interface ContestDistanceArgs {
+  rng: () => number;
+  fA: FighterState;
+  fD: FighterState;
+  OE_A: number;
+  OE_D: number;
+  currentRange: DistanceRange;
+  sizeProfile?: ArenaSizeProfile;
+}
+
+/**
  * Contests range control for the current exchange.
  * Winner gains +1 initiative advantage (rangeModA/D = ±1).
  * More importantly, both fighters immediately feel the effect of the current
@@ -149,23 +162,17 @@ export interface DistanceContestResult {
  * Range shifts one step toward the winner's preferred weapon range, capped by
  * the arena's maxRange (a cramped arena never allows Extended range).
  *
- * @param rng -
- * @param fA -
- * @param fD -
- * @param OE_A -
- * @param OE_D -
- * @param currentRange -
- * @param sizeProfile -
+ * @param args.rng -
+ * @param args.fA -
+ * @param args.fD -
+ * @param args.OE_A -
+ * @param args.OE_D -
+ * @param args.currentRange -
+ * @param args.sizeProfile -
  */
-export function contestDistance(
-  rng: () => number,
-  fA: FighterState,
-  fD: FighterState,
-  OE_A: number,
-  OE_D: number,
-  currentRange: DistanceRange,
-  sizeProfile?: ArenaSizeProfile
-): DistanceContestResult {
+export function contestDistance(args: ContestDistanceArgs): DistanceContestResult {
+  const { rng, fA, fD, OE_A, OE_D } = args;
+  const { currentRange, sizeProfile } = args;
   const events: CombatEvent[] = [];
   const profile = sizeProfile ?? ARENA_SIZE_PROFILES['standard'];
 

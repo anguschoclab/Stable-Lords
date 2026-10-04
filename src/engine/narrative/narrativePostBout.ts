@@ -34,22 +34,29 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
 };
 
 /**
- * Narrate bout end.
- * @param rng -
- * @param by -
- * @param winnerName -
- * @param loserName -
- * @param weaponId -
- * @param ctx -
+ *
  */
-export function narrateBoutEnd(
-  rng: IRNGService,
-  by: string,
-  winnerName: string,
-  loserName: string,
-  weaponId?: string,
-  ctx: BoutEndContext = {}
-): string[] {
+export interface NarrateBoutEndArgs {
+  rng: IRNGService;
+  by: string;
+  winnerName: string;
+  loserName: string;
+  weaponId?: string;
+  ctx?: BoutEndContext;
+}
+
+/**
+ * Narrate bout end.
+ * @param args.rng -
+ * @param args.by -
+ * @param args.winnerName -
+ * @param args.loserName -
+ * @param args.weaponId -
+ * @param args.ctx -
+ */
+export function narrateBoutEnd(args: NarrateBoutEndArgs): string[] {
+  const { rng, by, winnerName, loserName, weaponId } = args;
+  const { ctx = {} } = args;
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, ctx.style as FightingStyle | undefined);
 

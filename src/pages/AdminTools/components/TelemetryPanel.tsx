@@ -14,14 +14,9 @@ interface TelemetryPanelProps {
 /**
  *
  */
-export function TelemetryPanel({
-  week,
-  season,
-  treasury,
-  fame,
-  rosterSize,
-  player,
-}: TelemetryPanelProps) {
+export function TelemetryPanel(props: TelemetryPanelProps) {
+  const { week, season, treasury, fame, rosterSize } = props;
+  const { player } = props;
   return (
     <div className="space-y-12">
       <SectionDivider label="Data Visualization" />

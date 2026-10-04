@@ -6,10 +6,10 @@ import { useArenaAnimation } from '@/hooks/useArenaAnimation';
 describe('#10 useArenaAnimation — no module-level mutable state', () => {
   it('two independent instances maintain separate fighter names', () => {
     const { result: instanceA } = renderHook(() =>
-      useArenaAnimation([], 0, 100, 100, null, false, 'Alice', 'Bob')
+      useArenaAnimation({ log: [], visibleCount: 0, maxHpA: 100, maxHpD: 100, winner: null, isComplete: false, fighterNameA: 'Alice', fighterNameD: 'Bob' })
     );
     const { result: instanceB } = renderHook(() =>
-      useArenaAnimation([], 0, 100, 100, null, false, 'Charlie', 'Diana')
+      useArenaAnimation({ log: [], visibleCount: 0, maxHpA: 100, maxHpD: 100, winner: null, isComplete: false, fighterNameA: 'Charlie', fighterNameD: 'Diana' })
     );
 
     // Each instance should have its own state — no shared module-level mutation
@@ -32,10 +32,10 @@ describe('#10 useArenaAnimation — no module-level mutable state', () => {
 
   it('reset on one instance does not affect another', () => {
     const { result: instanceA } = renderHook(() =>
-      useArenaAnimation([], 0, 100, 100, null, false, 'Alice', 'Bob')
+      useArenaAnimation({ log: [], visibleCount: 0, maxHpA: 100, maxHpD: 100, winner: null, isComplete: false, fighterNameA: 'Alice', fighterNameD: 'Bob' })
     );
     const { result: instanceB } = renderHook(() =>
-      useArenaAnimation([], 0, 100, 100, null, false, 'Charlie', 'Diana')
+      useArenaAnimation({ log: [], visibleCount: 0, maxHpA: 100, maxHpD: 100, winner: null, isComplete: false, fighterNameA: 'Charlie', fighterNameD: 'Diana' })
     );
 
     act(() => {

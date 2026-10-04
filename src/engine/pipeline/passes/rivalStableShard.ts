@@ -130,12 +130,7 @@ function applyStrategyUpdate(
   const strategy = updateAIStrategy(rival, state, strategySeed);
   return planIssued
     ? logAgentAction(
-        { ...rival, strategy },
-        'STRATEGY',
-        strategy.reason ?? `Adopted ${strategy.intent}`,
-        'Low',
-        state.week,
-        strategy.intent
+        { rival: { ...rival, strategy }, type: 'STRATEGY', description: strategy.reason ?? `Adopted ${strategy.intent}`, riskTier: 'Low', week: state.week, cause: strategy.intent }
       )
     : { ...rival, strategy };
 }

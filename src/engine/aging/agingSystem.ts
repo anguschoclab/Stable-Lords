@@ -17,6 +17,7 @@ import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { WARRIOR_AGING } from '@/constants/aging';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import { retireWithHonors } from '@/engine/warrior/retirement';
+import { isActive } from '@/engine/warrior/warriorStatus';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import {
   isLegacyFounderCaliber,
@@ -129,18 +130,22 @@ export function buildRetiredWarrior(w: Warrior, currentAge: number, week: number
   };
 }
 
+interface ProcessWarriorAgingArgs {
+  w: Warrior;
+  isPlayer: boolean;
+  _rivalId: string | undefined;
+  state: GameState;
+  rng: IRNGService;
+  isAgeTick: boolean;
+  isChampion?: boolean;
+}
+
 /**
  * Process aging and forced retirement check for a single warrior.
  */
-function processWarriorAging(
-  w: Warrior,
-  isPlayer: boolean,
-  _rivalId: string | undefined,
-  state: GameState,
-  rng: IRNGService,
-  isAgeTick: boolean,
-  isChampion = false
-): AgingResult {
+function processWarriorAging(args: ProcessWarriorAgingArgs): AgingResult {
+  const { w, isPlayer, state, rng } = args;
+  const { isAgeTick, isChampion = false } = args;
   const { currentAge, update, ageEvent: penaltyEvent } = applyAgePenalty(w, isAgeTick, isPlayer);
   const { retired, ageEvent: retireEvent } = checkForcedRetirement(
     currentAge,
@@ -237,15 +242,19 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   const crownedIds = collectCrownedWarriorIds(state);
 
   for (const { w, isPlayer, rivalId } of allWarriors) {
-    const result = processWarriorAging(
+    // Dead warriors do not age and are never "retired" posthumously — a
+    // lingering dead entry would otherwise land in `retired` on top of its
+    // graveyard record (the graveyard∩retired overlap the invariants flag).
+    if (!isActive(w)) continue;
+    const result = processWarriorAging({
       w,
       isPlayer,
-      rivalId,
+      _rivalId: rivalId,
       state,
       rng,
       isAgeTick,
-      championIds.has(w.id)
-    );
+      isChampion: championIds.has(w.id),
+    });
 
     if (result.ageEvent) {
       ageEvents.push(result.ageEvent);

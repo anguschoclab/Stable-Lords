@@ -100,38 +100,28 @@ function resolveOEAL(
   exchange: number
 ): { OE_A: number; AL_A: number; OE_D: number; AL_D: number } {
   const [OE_A, AL_A] = calculateFinalOEAL(
-    fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE,
-    fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL,
-    fA.activePlan,
-    fA.hp,
-    fA.maxHp,
-    fA.endurance,
-    fA.maxEndurance,
-    exchange
+    { effOE: fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE, effAL: fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL, plan: fA.activePlan, hp: fA.hp, maxHp: fA.maxHp, end: fA.endurance, maxEnd: fA.maxEndurance, exchange: exchange }
   );
   const [OE_D, AL_D] = calculateFinalOEAL(
-    fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE,
-    fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL,
-    fD.activePlan,
-    fD.hp,
-    fD.maxHp,
-    fD.endurance,
-    fD.maxEndurance,
-    exchange
+    { effOE: fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE, effAL: fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL, plan: fD.activePlan, hp: fD.hp, maxHp: fD.maxHp, end: fD.endurance, maxEnd: fD.maxEndurance, exchange: exchange }
   );
   return { OE_A, AL_A, OE_D, AL_D };
 }
 
-function resolveStylePassives(
-  rng: () => number,
-  fA: FighterState,
-  fD: FighterState,
-  stylePhase: StylePhase,
-  exchange: number,
-  tactA: ReturnType<typeof resolveEffectiveTactics>,
-  tactD: ReturnType<typeof resolveEffectiveTactics>,
-  events: CombatEvent[]
-): { passA: ReturnType<typeof getStylePassive>; passD: ReturnType<typeof getStylePassive> } {
+interface ResolveStylePassivesArgs {
+  rng: () => number;
+  fA: FighterState;
+  fD: FighterState;
+  stylePhase: StylePhase;
+  exchange: number;
+  tactA: ReturnType<typeof resolveEffectiveTactics>;
+  tactD: ReturnType<typeof resolveEffectiveTactics>;
+  events: CombatEvent[];
+}
+
+function resolveStylePassives(args: ResolveStylePassivesArgs): { passA: ReturnType<typeof getStylePassive>; passD: ReturnType<typeof getStylePassive> } {
+  const { rng, fA, fD, stylePhase, exchange } = args;
+  const { tactA, tactD, events } = args;
   const passA = getStylePassive(fA.style, {
     phase: stylePhase,
     exchange,
@@ -195,19 +185,23 @@ function resolveDynamicTraits(
   };
 }
 
+interface EmitIntentTelemetryArgs {
+  fA: FighterState;
+  fD: FighterState;
+  ctx: ResolutionContext;
+  condResultA: ReturnType<typeof evaluateConditions>;
+  condResultD: ReturnType<typeof evaluateConditions>;
+  events: CombatEvent[];
+}
+
 /**
  * AI intent telemetry (Stage F) — labels which existing plan/state
  * selection is active (condition override / psych / desperate / kill
  * window). Pure annotation: emits on transitions only, touches no math.
  */
-function emitIntentTelemetry(
-  fA: FighterState,
-  fD: FighterState,
-  ctx: ResolutionContext,
-  condResultA: ReturnType<typeof evaluateConditions>,
-  condResultD: ReturnType<typeof evaluateConditions>,
-  events: CombatEvent[]
-): void {
+function emitIntentTelemetry(args: EmitIntentTelemetryArgs): void {
+  const { fA, fD, ctx, condResultA, condResultD } = args;
+  const { events } = args;
   if (!ctx.aiIntentTelemetry) return;
   const intentA = evaluateBoutIntent(fA, fD, ctx);
   if (intentA) events.push(intentA);
@@ -294,21 +288,14 @@ export function prepareExchange(
   // ── Desperate state handling ──
   events.push(...handleDesperateState(fA, fD));
 
-  emitIntentTelemetry(fA, fD, ctx, condResultA, condResultD, events);
+  emitIntentTelemetry({ fA: fA, fD: fD, ctx: ctx, condResultA: condResultA, condResultD: condResultD, events: events });
 
   const tac = resolveTacticsAndBias(fA, fD, phaseKey);
   const oal = resolveOEAL(fA, fD, phaseKey, exchange);
   const { fatA, fatD } = resolveFatigueMods(fA, fD, ctx, psychA, psychD);
 
   const { passA, passD } = resolveStylePassives(
-    rng,
-    fA,
-    fD,
-    stylePhase,
-    exchange,
-    tac.tactA,
-    tac.tactD,
-    events
+    { rng: rng, fA: fA, fD: fD, stylePhase: stylePhase, exchange: exchange, tactA: tac.tactA, tactD: tac.tactD, events: events }
   );
   const { dynTraitsA, dynTraitsD } = resolveDynamicTraits(fA, fD, stylePhase);
 

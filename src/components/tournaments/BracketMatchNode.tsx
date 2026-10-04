@@ -25,17 +25,9 @@ interface BracketMatchNodeProps {
 /**
  *
  */
-export function BracketMatchNode({
-  bout,
-  boutKey,
-  isExpanded,
-  onToggleExpand,
-  fightSummary,
-  rIdx,
-  bIdx: _bIdx,
-  totalRounds,
-  gameState,
-}: BracketMatchNodeProps) {
+export function BracketMatchNode(props: BracketMatchNodeProps) {
+  const { bout, boutKey, isExpanded, onToggleExpand, fightSummary } = props;
+  const { rIdx, bIdx: _bIdx, totalRounds, gameState } = props;
   const hasTranscript = !!(fightSummary?.transcript && fightSummary.transcript.length > 0);
   const isAChosen = bout.winner === 'A';
   const isDChosen = bout.winner === 'D';

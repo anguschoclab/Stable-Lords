@@ -28,7 +28,16 @@ export interface BoutResult {
  */
 export interface BoutImpact {
   impact: StateImpact;
-  result: BoutResult;
+  /**
+   * `null` when the bout could not be fought (invalid/missing/dead
+   * combatant) — the bout is skipped, not recorded as a phantom Draw.
+   */
+  result: BoutResult | null;
+  /**
+   * The contract to cancel when this bout was skipped for invalid
+   * combatants — closes the offer rather than leaving a Signed ghost.
+   */
+  voidedOffer?: BoutOffer;
   stats: {
     death: boolean;
     playerDeath: boolean;
@@ -68,4 +77,6 @@ export interface BoutContext {
   contract?: BoutOffer;
   headless?: boolean;
   isTournamentBout?: boolean;
+  /** Owning tournament id for `tour_*` pairings — stamped on kill events. */
+  tournamentId?: string;
 }

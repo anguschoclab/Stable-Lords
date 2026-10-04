@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -11,7 +11,25 @@ import {
 } from '@/engine/matchmaking/arenaFit';
 import { ARENA_FIT, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 import * as arenasModule from '@/data/arenas';
+import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
+import type { ArenaSizeProfile } from '@/engine/combat/mechanics/distanceResolution';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+
+// Test-only fourth arena size — a "pit" tight enough that even Striking range
+// is unreachable (maxRange=Tight, idx1). No real profile caps below Striking,
+// so overshoot=2 is otherwise impossible for Extended-preference fighters.
+// Added for this file's run and deleted in afterAll so sibling files sharing a
+// worker (isolate:false) never see it.
+beforeAll(() => {
+  (ARENA_SIZE_PROFILES as Record<string, ArenaSizeProfile>).pit = {
+    startRange: 'Tight',
+    maxRange: 'Tight',
+    zoneStepBias: 1,
+  };
+});
+afterAll(() => {
+  delete (ARENA_SIZE_PROFILES as Record<string, ArenaSizeProfile>).pit;
+});
 
 // ─── Factory Helpers ──────────────────────────────────────────────────────────
 
@@ -38,6 +56,12 @@ function makeArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
     startingZone: 'Center',
     ...overrides,
   };
+}
+
+// 'pit' resolves only while this file's beforeAll-installed profile is present
+// (see top of file); without it, ARENA_SIZE_PROFILES['pit'] is undefined.
+function makePitArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
+  return makeArena({ id: 'test_pit', size: 'pit' as any, ...overrides });
 }
 
 function makePlan(overrides: Partial<FightPlan> = {}): FightPlan {
@@ -105,16 +129,11 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
 
   it('overshoot by 2 via plan override → double penalty', () => {
     const w = makeWarrior();
-    const arena = makeArena({ size: 'cramped' });
-    // cramped max=Striking (idx2), plan.rangePreference=Extended (idx3) → overshoot=1
-    // To get overshoot=2, we need maxRange=Tight. Build a custom arena profile by overriding size
-    // ARENA_SIZE_PROFILES is keyed by size, so we use a custom arena with a hacked profile.
-    // Since we can't override ARENA_SIZE_PROFILES, use plan.rangePreference='Extended' in cramped → overshoot=1
-    // For overshoot=2, we'd need maxRange=Tight which doesn't exist in real profiles.
-    // Instead verify the overshoot=1 case with plan override
+    // 'pit' profile caps at Tight (idx1); plan Extended (idx3) → overshoot=2
+    const arena = makePitArena();
     const plan = makePlan({ rangePreference: 'Extended' });
     const score = scoreArenaFitForWarrior(w, arena, plan);
-    expect(score).toBeCloseTo(-ARENA_FIT.RANGE_OVERSHOOT_PENALTY, 5);
+    expect(score).toBeCloseTo(-2 * ARENA_FIT.RANGE_OVERSHOOT_PENALTY, 5);
   });
 
   it('cramped perfect fit → full range score', () => {
@@ -794,6 +813,7 @@ describe('describeArenaFit', () => {
         surfaceMod: { initiativeMod: 0, enduranceMult: 1.05, riposteMod: 0 },
       })
     );
+    arenasModule.registerArena(makePitArena());
   });
 
   it('cursed tag + riposte mod → tests THE_MEAT_GRINDER', () => {
@@ -983,6 +1003,13 @@ describe('describeArenaFit', () => {
     const arena = makeArena({ id: 'test_cramped', size: 'cramped' });
     const plan = makePlan({ rangePreference: 'Extended' });
     expect(describeArenaFit(w, arena.id, plan)).toBe('Cramped — punishes your dagger');
+  });
+
+  it('pit arena + Extended plan → range misfit', () => {
+    const w = makeWarrior(); // no weapon → 'long weapon' label
+    const plan = makePlan({ rangePreference: 'Extended' });
+    // prefIdx=3 > maxIdx=1 → misfit branch (overshoot=2, unreachable in real arenas)
+    expect(describeArenaFit(w, 'test_pit', plan)).toBe('Cramped — punishes your long weapon');
   });
 });
 

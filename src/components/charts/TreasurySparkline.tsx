@@ -85,10 +85,9 @@ interface SparklineSVGProps {
   points: { week: number; value: number }[];
   vp: Viewport;
   isUp: boolean;
-  height: number;
 }
 
-function SparklineSVG({ pathD, areaD, points, vp, isUp, height }: SparklineSVGProps) {
+function SparklineSVG({ pathD, areaD, points, vp, isUp }: SparklineSVGProps) {
   const { H, W } = vp;
   const strokeColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
   const gradientColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
@@ -97,7 +96,7 @@ function SparklineSVG({ pathD, areaD, points, vp, isUp, height }: SparklineSVGPr
     <svg
       viewBox={`0 0 ${W} ${H}`}
       width="100%"
-      height={height}
+      height={H}
       className="overflow-visible"
       preserveAspectRatio="none"
     >
@@ -178,14 +177,7 @@ export function TreasurySparkline({
       {showLabel && <SparklineLabel treasury={treasury} delta={delta} isUp={isUp} />}
 
       {points.length >= 2 && (
-        <SparklineSVG
-          pathD={pathD}
-          areaD={areaD}
-          points={points}
-          vp={vp}
-          isUp={isUp}
-          height={height}
-        />
+        <SparklineSVG pathD={pathD} areaD={areaD} points={points} vp={vp} isUp={isUp} />
       )}
 
       {points.length < 2 && (

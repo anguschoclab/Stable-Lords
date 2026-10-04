@@ -143,16 +143,9 @@ function SortFilter({ sortBy, setSortBy }: Pick<RecruitFiltersProps, 'sortBy' | 
 /**
  *
  */
-export function RecruitFilters({
-  activeTiers,
-  toggleTier,
-  activeStyle,
-  setActiveStyle,
-  sortBy,
-  setSortBy,
-  onRefresh,
-  canRefresh,
-}: RecruitFiltersProps) {
+export function RecruitFilters(props: RecruitFiltersProps) {
+  const { activeTiers, toggleTier, activeStyle, setActiveStyle, sortBy } = props;
+  const { setSortBy, onRefresh, canRefresh } = props;
   return (
     <aside className="space-y-8">
       <SectionDivider label="Filters" />

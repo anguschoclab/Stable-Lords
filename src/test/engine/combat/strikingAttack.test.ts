@@ -71,11 +71,7 @@ describe('ST all-in (integration)', () => {
     const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
-        defaultPlanForWarrior(st),
-        defaultPlanForWarrior(pl),
-        st,
-        pl,
-        i * 9001 + 37
+        { planA: defaultPlanForWarrior(st), planD: defaultPlanForWarrior(pl), warriorA: st, warriorD: pl, providedRng: i * 9001 + 37 }
       );
       if (o.winner === 'A') wins++;
     }

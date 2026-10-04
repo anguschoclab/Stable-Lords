@@ -28,7 +28,7 @@ function winRate(
 ): number {
   let wins = 0;
   for (let i = 0; i < n; i++) {
-    const outcome = simulateFight(planA, planD, wA, wD, i * 7919 + 42);
+    const outcome = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: i * 7919 + 42 });
     if (outcome.winner === 'A') wins++;
   }
   return wins / n;

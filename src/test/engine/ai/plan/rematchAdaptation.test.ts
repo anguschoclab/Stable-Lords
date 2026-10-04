@@ -13,13 +13,13 @@ import { makeWarrior } from '@/test/_fixtures/factories';
 import type { OpponentDossier } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 
-const BASELINE_ARGS = [
-  'Pragmatic',
-  'Opportunist',
-  FightingStyle.BashingAttack,
-  'CONSOLIDATION',
-  0,
-] as const;
+const BASELINE = {
+  personality: 'Pragmatic',
+  philosophy: 'Opportunist',
+  opponentStyle: FightingStyle.BashingAttack,
+  intent: 'CONSOLIDATION',
+  grudgeIntensity: 0,
+} as const;
 
 function losingDossier(): OpponentDossier {
   return {
@@ -33,8 +33,8 @@ function losingDossier(): OpponentDossier {
 describe('rematch adaptation', () => {
   it('a losing record produces a more patient plan than the baseline', () => {
     const w = makeWarrior();
-    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
-    const rematch = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
+    const baseline = aiPlanForWarrior({ w, ...BASELINE });
+    const rematch = aiPlanForWarrior({ w, ...BASELINE, dossier: losingDossier() });
 
     expect(rematch.OE).toBeLessThanOrEqual(baseline.OE!);
     expect(rematch.AL).toBeGreaterThanOrEqual(baseline.AL!);
@@ -44,20 +44,20 @@ describe('rematch adaptation', () => {
 
   it('a kill suffered against the opponent raises killDesire', () => {
     const w = makeWarrior();
-    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
-    const rematch = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
+    const baseline = aiPlanForWarrior({ w, ...BASELINE });
+    const rematch = aiPlanForWarrior({ w, ...BASELINE, dossier: losingDossier() });
     expect(rematch.killDesire!).toBeGreaterThanOrEqual(baseline.killDesire!);
   });
 
   it('a first meeting (no dossier history) matches the baseline plan', () => {
     const w = makeWarrior();
-    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
-    const fresh = aiPlanForWarrior(w, ...BASELINE_ARGS, {
+    const baseline = aiPlanForWarrior({ w, ...BASELINE });
+    const fresh = aiPlanForWarrior({ w, ...BASELINE, dossier: {
       lastSeenWeek: 9,
       knownStyles: [],
       estimatedThreat: 0.5,
       recordVs: { w: 0, l: 0, k: 0 },
-    });
+    }});
     expect(fresh.OE).toBe(baseline.OE);
     expect(fresh.AL).toBe(baseline.AL);
     expect(fresh.killDesire).toBe(baseline.killDesire);
@@ -65,21 +65,21 @@ describe('rematch adaptation', () => {
 
   it('a winning record does not trigger the loss-adaptation deltas', () => {
     const w = makeWarrior();
-    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
-    const winning = aiPlanForWarrior(w, ...BASELINE_ARGS, {
+    const baseline = aiPlanForWarrior({ w, ...BASELINE });
+    const winning = aiPlanForWarrior({ w, ...BASELINE, dossier: {
       lastSeenWeek: 9,
       knownStyles: [FightingStyle.BashingAttack],
       estimatedThreat: 0.3,
       recordVs: { w: 3, l: 0, k: 0 },
-    });
+    }});
     expect(winning.OE).toBe(baseline.OE);
     expect(winning.AL).toBe(baseline.AL);
   });
 
   it('determinism: same inputs produce identical plans', () => {
     const w = makeWarrior();
-    const a = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
-    const b = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
+    const a = aiPlanForWarrior({ w, ...BASELINE, dossier: losingDossier() });
+    const b = aiPlanForWarrior({ w, ...BASELINE, dossier: losingDossier() });
     expect(a).toEqual(b);
   });
 
@@ -87,8 +87,8 @@ describe('rematch adaptation', () => {
     // makeWarrior defaults to BashingAttack: canon Bash/none, advisor
     // Decisiveness/none — a losing rematch must visibly change the gameplan.
     const w = makeWarrior();
-    const baseline = aiPlanForWarrior(w, ...BASELINE_ARGS);
-    const rematch = aiPlanForWarrior(w, ...BASELINE_ARGS, losingDossier());
+    const baseline = aiPlanForWarrior({ w, ...BASELINE });
+    const rematch = aiPlanForWarrior({ w, ...BASELINE, dossier: losingDossier() });
 
     expect(baseline.offensiveTactic).toBe('Bash');
     expect(rematch.offensiveTactic).toBe(getBestOffensiveTactic(w.style));
@@ -97,12 +97,12 @@ describe('rematch adaptation', () => {
 
   it('a winning record keeps the canonical favorite tactics', () => {
     const w = makeWarrior();
-    const winning = aiPlanForWarrior(w, ...BASELINE_ARGS, {
+    const winning = aiPlanForWarrior({ w, ...BASELINE, dossier: {
       lastSeenWeek: 9,
       knownStyles: [FightingStyle.BashingAttack],
       estimatedThreat: 0.3,
       recordVs: { w: 3, l: 0, k: 0 },
-    });
+    }});
     expect(winning.offensiveTactic).toBe('Bash');
     expect(winning.defensiveTactic).toBe('none');
   });

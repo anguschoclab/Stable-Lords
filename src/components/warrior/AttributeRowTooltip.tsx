@@ -20,18 +20,9 @@ interface AttributeRowTooltipProps {
  * Tooltip body for an attribute training row: full attribute name, gain
  * chance badge, contextual lock/guidance copy, and trainer-bonus footer.
  */
-export function AttributeRowTooltip({
-  attributeKey,
-  chance,
-  isSZ,
-  maxed,
-  ceilingHit,
-  atCap,
-  seasonCapped,
-  isSelected,
-  isRevealed,
-  nearCeiling,
-}: AttributeRowTooltipProps) {
+export function AttributeRowTooltip(props: AttributeRowTooltipProps) {
+  const { attributeKey, chance, isSZ, maxed, ceilingHit } = props;
+  const { atCap, seasonCapped, isSelected, isRevealed, nearCeiling } = props;
   return (
     <TooltipContent
       side="top"

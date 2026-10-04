@@ -283,7 +283,7 @@ function buildRoster(
     const attrs = biasedAttrs(() => rng.next(), tmpl.attrBias, catchupStats);
 
     const wId = rng.uuid('warrior');
-    warriors.push(createRivalWarrior(wId, wName, style, attrs, stableId, tmpl.fameRange, rng));
+    warriors.push(createRivalWarrior({ wId: wId, wName: wName, style: style, attrs: attrs, stableId: stableId, fameRange: tmpl.fameRange, rng: rng }));
   }
   return warriors;
 }

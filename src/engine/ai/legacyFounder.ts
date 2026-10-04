@@ -46,6 +46,21 @@ const FAMILY_ORDER: readonly OwnerPersonality[] = [
   'Pragmatic',
 ];
 
+/**
+ * Style → personality lookup, built once from the preference tables.
+ * FAMILY_ORDER first-wins preserves the precedence of the original linear scan
+ * for styles that appear in multiple tables.
+ */
+const STYLE_TO_PERSONALITY: Map<FightingStyle, OwnerPersonality> = (() => {
+  const m = new Map<FightingStyle, OwnerPersonality>();
+  for (const p of FAMILY_ORDER) {
+    for (const s of PERSONALITY_STYLE_PREFS[p] ?? []) {
+      if (!m.has(s)) m.set(s, p);
+    }
+  }
+  return m;
+})();
+
 /** Attribute → trainer focus used when a founder becomes head trainer. */
 const ATTR_FOCUS: Record<keyof Attributes, TrainerFocus> = {
   ST: 'Aggression',
@@ -124,10 +139,7 @@ export function personalityFromCareer(w: Warrior): OwnerPersonality {
 
   if (fights >= LEGACY_FOUNDER_WINS_MIN) return 'Pragmatic';
 
-  for (const p of FAMILY_ORDER) {
-    if ((PERSONALITY_STYLE_PREFS[p] ?? []).includes(w.style)) return p;
-  }
-  return 'Pragmatic';
+  return STYLE_TO_PERSONALITY.get(w.style) ?? 'Pragmatic';
 }
 
 /** The stable a founder opens — named after the legend, always an Academy. */

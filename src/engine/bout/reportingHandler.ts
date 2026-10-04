@@ -20,9 +20,7 @@ export interface HandleReportingArgs {
   fD: number;
   pD: number;
   week: number;
-  _rivalStableId?: string;
   isRivalry?: boolean;
-  _day?: number;
   rng?: IRNGService;
   arenaId?: string;
   weather?: import('@/types/shared.types').WeatherType;
@@ -41,9 +39,7 @@ export interface HandleReportingArgs {
  * @param args.fD -
  * @param args.pD -
  * @param args.week -
- * @param args._rivalStableId -
  * @param args.isRivalry -
- * @param args._day -
  * @param args.rng -
  * @param args.arenaId -
  * @param args.weather -

@@ -344,6 +344,10 @@ const END_REASONS: ReadonlySet<ArenaReignEndReason> = new Set([
   'displaced',
 ]);
 
+/** Numeric title-record fields sanity-checked per reign — module-level so the
+ *  per-title loop doesn't rebuild a literal + entries array each iteration. */
+const TITLE_NUMERIC_FIELDS = ['refusals', 'deferrals', 'noContenderStreak'] as const;
+
 /**
  * Arena-championship invariants. The heavy hitter is the single-crown rule —
  * one warrior may reign over at most one arena — plus vacancy hygiene: after
@@ -367,11 +371,8 @@ export function validateArenaChampions(state: GameState): InvariantViolation[] {
     if (!TITLE_STATUSES.has(title.status)) {
       push(`${arenaId}: invalid title status '${title.status}'`);
     }
-    for (const [field, value] of Object.entries({
-      refusals: title.refusals,
-      deferrals: title.deferrals,
-      noContenderStreak: title.noContenderStreak,
-    })) {
+    for (const field of TITLE_NUMERIC_FIELDS) {
+      const value = title[field];
       if (!Number.isFinite(value) || value < 0) {
         push(`${arenaId}: ${field} is ${value}`);
       }

@@ -1,10 +1,10 @@
 import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
-import { ATTRIBUTE_MAX, type Warrior } from '@/types/warrior.types';
+import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService, hashStr } from '@/utils/random';
 import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
-import { generateTraits, TRAITS } from '@/engine/traits';
+import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
 import { generateWarriorName } from '@/data/names/nameGenerator';
@@ -130,24 +130,6 @@ export function generateRecruitAttrs(
     pool -= add;
   }
   return attrs;
-}
-
-/** Apply personality attrBonus from traits at recruitment time, clamped to
- * ATTRIBUTE_MAX — development elsewhere respects the cap; recruitment must
- * not overflow it either. */
-function applyTraitAttrBonuses(
-  attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number },
-  traits: string[]
-): void {
-  for (const tid of traits) {
-    const traitData = TRAITS[tid];
-    if (traitData?.effect.attrBonus) {
-      for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
-        const k = key as keyof typeof attrs;
-        attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + (bonus as number));
-      }
-    }
-  }
 }
 
 /**

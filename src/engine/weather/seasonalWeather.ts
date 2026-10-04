@@ -164,6 +164,22 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
 const DEFAULT_WEIGHT = 1;
 
 /**
+ * Weather → owning season, built once from the bucket tables. Shared weathers
+ * resolve to 'All' first; a (hypothetical) weather in two exclusive buckets
+ * keeps the SEASONS-order precedence of the original linear scan.
+ */
+const WEATHER_SEASON: Map<WeatherType, Season | 'All'> = (() => {
+  const m = new Map<WeatherType, Season | 'All'>();
+  for (const w of SHARED_WEATHER) m.set(w, 'All');
+  for (const season of SEASONS) {
+    for (const w of SEASON_EXCLUSIVE_WEATHER[season]) {
+      if (!m.has(w)) m.set(w, season);
+    }
+  }
+  return m;
+})();
+
+/**
  * Roll weather using the seasonal bucket system.
  *
  * Builds a cumulative-weight table from {@link SEASONAL_WEATHER} for the given
@@ -194,9 +210,5 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
  * Returns the season a weather type belongs to, or `'All'` for shared weathers.
  */
 export function getWeatherSeason(weather: WeatherType): Season | 'All' {
-  if (SHARED_WEATHER.includes(weather)) return 'All';
-  for (const season of SEASONS) {
-    if (SEASON_EXCLUSIVE_WEATHER[season].includes(weather)) return season;
-  }
-  return 'All';
+  return WEATHER_SEASON.get(weather) ?? 'All';
 }

@@ -2,8 +2,48 @@
  * Trait Combat Mods - static and dynamic skill modifiers from traits.
  * Extracted from traits.ts for SRP separation.
  */
-import type { Warrior } from '@/types/warrior.types';
+import { ATTRIBUTE_MAX, type Warrior } from '@/types/warrior.types';
+import type { Attributes, FightPlan } from '@/types/shared.types';
 import { TRAITS } from './registry';
+
+/**
+ * Per-trait effect entries, precomputed once at module load. TRAITS is a
+ * static registry — rebuilding these entries arrays inside per-recruit /
+ * per-fighter loops allocates the same tuples over and over.
+ * fightPlanMod entries are restricted to numeric fields at build time,
+ * preserving the runtime skip semantics the consumers relied on.
+ */
+const ATTR_BONUS_ENTRIES: Record<string, [keyof Attributes, number][]> = {};
+const FIGHT_PLAN_MOD_ENTRIES: Record<string, [keyof FightPlan, number][]> = {};
+for (const [id, def] of Object.entries(TRAITS)) {
+  if (def.effect.attrBonus) {
+    ATTR_BONUS_ENTRIES[id] = Object.entries(def.effect.attrBonus) as [
+      keyof Attributes,
+      number,
+    ][];
+  }
+  if (def.effect.fightPlanMod) {
+    FIGHT_PLAN_MOD_ENTRIES[id] = Object.entries(def.effect.fightPlanMod).filter(
+      (e): e is [keyof FightPlan, number] => typeof e[1] === 'number'
+    );
+  }
+}
+
+/**
+ * Applies trait attrBonus effects to an attribute block in place, clamped to
+ * ATTRIBUTE_MAX. Intake-time counterpart to the combat mods below — used by
+ * every recruit/orphan generation path so new warriors can't enter the world
+ * over the attribute cap.
+ */
+export function applyTraitAttrBonuses(attrs: Attributes, traitIds: readonly string[]): void {
+  for (const tid of traitIds) {
+    const entries = ATTR_BONUS_ENTRIES[tid];
+    if (!entries) continue;
+    for (const [k, bonus] of entries) {
+      attrs[k] = Math.min(ATTRIBUTE_MAX, attrs[k] + bonus);
+    }
+  }
+}
 
 /**
  * Sums static skill mods from a warrior's traits. Applied once at fighterState build.
@@ -109,21 +149,16 @@ export function getDynamicTraitMods(
  * @param warrior - The warrior whose traits to evaluate
  * @returns Partial FightPlan containing cumulative AI modifiers
  */
-export function getTraitFightPlanMods(
-  warrior?: Warrior
-): Partial<import('@/types/shared.types').FightPlan> {
-  const mods: Partial<import('@/types/shared.types').FightPlan> = {};
+export function getTraitFightPlanMods(warrior?: Warrior): Partial<FightPlan> {
+  const mods: Partial<FightPlan> = {};
   if (!warrior?.traits) return mods;
 
   for (const id of warrior.traits) {
-    const t = TRAITS[id];
-    if (!t?.effect.fightPlanMod) continue;
+    const entries = FIGHT_PLAN_MOD_ENTRIES[id];
+    if (!entries) continue;
 
-    for (const [key, val] of Object.entries(t.effect.fightPlanMod)) {
-      const k = key as keyof import('@/types/shared.types').FightPlan;
-      if (typeof val === 'number') {
-        (mods as Record<string, number>)[k] = ((mods[k] as number) || 0) + val;
-      }
+    for (const [k, val] of entries) {
+      (mods as Record<string, number>)[k] = ((mods[k] as number) || 0) + val;
     }
   }
   return mods;

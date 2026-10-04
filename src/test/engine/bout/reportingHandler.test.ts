@@ -67,7 +67,7 @@ describe('reportingHandler', () => {
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Rival Warrior' });
       const outcome = createMockOutcome();
 
-      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, _rivalStableId: 'rival-1', isRivalry: true });
+      const result = handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, isRivalry: true });
 
       expect(result).toBeDefined();
       expect(result.summary).toBeDefined();
@@ -87,7 +87,7 @@ describe('reportingHandler', () => {
       };
 
       expect(() =>
-        handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, _rivalStableId: undefined, isRivalry: false, _day: 1, rng: rng as any })
+        handleReporting({ wA: wA, wD: wD, outcome: outcome, tags: [], fA: 10, pA: 5, fD: 8, pD: 4, week: 1, isRivalry: false, rng: rng as any })
       ).not.toThrow();
     });
 

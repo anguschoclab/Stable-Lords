@@ -15,9 +15,10 @@ export const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<Riv
     for (const r of state.rivals) {
       const update = value.get(r.id);
       if (!update?.roster) continue;
+      const updatedById = new Map(update.roster.map((x) => [x.id, x] as const));
       for (const w of r.roster) {
         if (w.epithet) {
-          const next = update.roster.find((x) => x.id === w.id);
+          const next = updatedById.get(w.id);
           if (next && !next.epithet)
             console.error(
               `[roster-wipe] wk${state.absoluteWeek} ${r.owner?.stableName}: ${w.name} loses '${w.epithet}'`

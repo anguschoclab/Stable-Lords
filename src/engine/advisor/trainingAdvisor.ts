@@ -74,7 +74,7 @@ function selectTrainerForAdvice(
       return (t.styleBonusStyle === warrior.style ? 10 : 0) + (t.specialty ? 2 : 0);
     }
     if (targetAttribute) {
-      return (FOCUS_ATTR_MAP[t.focus] ?? []).includes(targetAttribute) ? 10 : 0;
+      return FOCUS_ATTR_MAP[t.focus]?.has(targetAttribute) ? 10 : 0;
     }
     return 0;
   };

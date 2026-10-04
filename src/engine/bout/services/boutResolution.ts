@@ -191,7 +191,7 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
   const boutArenaId = resolveBoutArenaId(ctx, boutSeed);
   impacts.push(
     applyRecords(
-      { s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, fameA: fameA, popA: popA, fameD: fameD, popD: popD, _rivalStableId: ctx.rivalStableId, arenaId: boutArenaId }
+      { s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, fameA: fameA, popA: popA, fameD: fameD, popD: popD, arenaId: boutArenaId }
     )
   );
 
@@ -226,10 +226,10 @@ function postResolutionImpacts(args: PostResolutionImpactsArgs): { deathRes: Ret
   const { state, ctx, validCW, validCO, outcome } = args;
   const { tags, rng, boutSeed, impacts } = args;
   const deathRes = handleDeath(
-    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, tags: tags, rivalStableId: ctx.rivalStableId, rng: rng, tournamentId: ctx.tournamentId }
+    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, tags: tags, rng: rng, tournamentId: ctx.tournamentId }
   );
   const injuryRes = handleInjuries(
-    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, _rivalStableId: ctx.rivalStableId, seed: boutSeed }
+    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, seed: boutSeed }
   );
   impacts.push(
     deathRes.impact,
@@ -262,7 +262,7 @@ function reportBout(args: ReportBoutArgs): { summary: FightSummary; announcement
   const { tags, fame, rng, boutSeed, impacts } = args;
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
   const { summary, announcement } = handleReporting(
-    { wA: validCW, wD: validCO, outcome: outcome, tags: tags, fA: fame.fameA, pA: fame.popA, fD: fame.fameD, pD: fame.popD, week: ctx.displayWeek ?? ctx.week, _rivalStableId: ctx.rivalStableId, isRivalry: ctx.isRivalry, _day: 0, rng: rng, arenaId: resolvedArenaId, weather: state.weather, absoluteWeek: ctx.week, contractId: ctx.contract?.id }
+    { wA: validCW, wD: validCO, outcome: outcome, tags: tags, fA: fame.fameA, pA: fame.popA, fD: fame.fameD, pD: fame.popD, week: ctx.displayWeek ?? ctx.week, isRivalry: ctx.isRivalry, rng: rng, arenaId: resolvedArenaId, weather: state.weather, absoluteWeek: ctx.week, contractId: ctx.contract?.id }
   );
   // Stamp the title-bout channel — ArenaChampionshipPass resolves reigns off
   // this flag, and the UI badges the bout as a defense.

@@ -142,8 +142,9 @@ export function collectUnresolvedDirectives(args: CollectUnresolvedDirectivesArg
   }
 
   const unresolvedDirectives: CouncilDirective[] = [];
+  const warriorById = new Map(activeWarriors.map((w) => [w.id, w] as const));
   for (const card of cards) {
-    const warrior = activeWarriors.find((w) => w.id === card.warriorId);
+    const warrior = warriorById.get(card.warriorId);
     if (!warrior) continue;
 
     const offerId = card.actionPayload.boutOfferIdToAccept;

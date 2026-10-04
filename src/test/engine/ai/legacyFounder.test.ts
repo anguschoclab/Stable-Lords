@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   isLegacyFounderCaliber,
   collectCrownedWarriorIds,
+  personalityFromCareer,
 } from '@/engine/ai/legacyFounder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
@@ -98,5 +99,76 @@ describe('collectCrownedWarriorIds', () => {
     const state = createFreshState('test-seed');
     state.arenaChampions = {};
     expect(collectCrownedWarriorIds(state).size).toBe(0);
+  });
+});
+
+const founderOf = (
+  style: FightingStyle,
+  career: { wins: number; losses: number; kills: number },
+  over: { fame?: number; popularity?: number } = {}
+) =>
+  makeWarrior({
+    id: undefined,
+    name: 'Founder',
+    style,
+    attrs: ATTRS_10,
+    overrides: { career, fame: over.fame ?? 10, popularity: over.popularity ?? 10 },
+  });
+
+describe('personalityFromCareer', () => {
+  it('returns Aggressive for kill-heavy careers at the ceiling', () => {
+    const w = founderOf(FightingStyle.StrikingAttack, {
+      wins: 2,
+      losses: 2,
+      kills: LEGACY_FOUNDER_KILLS_MIN,
+    });
+    expect(personalityFromCareer(w)).toBe('Aggressive');
+  });
+
+  it('returns Aggressive for brutal-family styles with a body count', () => {
+    const w = founderOf(FightingStyle.BashingAttack, { wins: 2, losses: 2, kills: 4 });
+    expect(personalityFromCareer(w)).toBe('Aggressive');
+  });
+
+  it('returns Tactician for a winning riposte career, Methodical for a softer one', () => {
+    const winning = founderOf(FightingStyle.ParryRiposte, { wins: 6, losses: 4, kills: 0 });
+    expect(personalityFromCareer(winning)).toBe('Tactician');
+
+    const softer = founderOf(FightingStyle.WallOfSteel, { wins: 4, losses: 6, kills: 0 });
+    expect(personalityFromCareer(softer)).toBe('Methodical');
+  });
+
+  it('returns Showman at hall-of-fame fame or mass popularity', () => {
+    const famous = founderOf(FightingStyle.StrikingAttack, { wins: 2, losses: 2, kills: 0 }, {
+      fame: 150,
+    });
+    expect(personalityFromCareer(famous)).toBe('Showman');
+
+    const popular = founderOf(
+      FightingStyle.StrikingAttack,
+      { wins: 2, losses: 2, kills: 0 },
+      { popularity: LEGACY_FOUNDER_FAME_MIN }
+    );
+    expect(personalityFromCareer(popular)).toBe('Showman');
+  });
+
+  it('returns Pragmatic for a long steady record', () => {
+    const w = founderOf(FightingStyle.StrikingAttack, {
+      wins: LEGACY_FOUNDER_WINS_MIN,
+      losses: 4,
+      kills: 0,
+    });
+    expect(personalityFromCareer(w)).toBe('Pragmatic');
+  });
+
+  it('falls back to the style family honoring FAMILY_ORDER precedence', () => {
+    // StrikingAttack sits in both Aggressive and Pragmatic pref tables —
+    // FAMILY_ORDER puts Aggressive first.
+    const striking = founderOf(FightingStyle.StrikingAttack, { wins: 3, losses: 2, kills: 0 });
+    expect(personalityFromCareer(striking)).toBe('Aggressive');
+
+    // AimedBlow sits in Tactician and Showman pref tables — Tactician first.
+    const aimed = founderOf(FightingStyle.AimedBlow, { wins: 3, losses: 2, kills: 0 });
+    expect(personalityFromCareer(aimed)).toBe('Tactician');
   });
 });

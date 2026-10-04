@@ -211,7 +211,7 @@ describe('injuryHandler', () => {
       };
 
       // Should not throw when seed is provided
-      expect(() => handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, _rivalStableId: undefined, seed: 12345 })).not.toThrow();
+      expect(() => handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, seed: 12345 })).not.toThrow();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { mergeImpacts, resolveImpacts, type StateImpact } from '@/engine/impacts';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -84,5 +84,34 @@ describe('rivalsRemovals — stables leave the world', () => {
     const out = resolveImpacts(state, [merged]);
 
     expect(out.rivals.map((r) => r.id)).toEqual(['b']);
+  });
+});
+
+describe('rivalsUpdates — EPITHET_DEBUG diagnostics', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    delete process.env.EPITHET_DEBUG;
+  });
+
+  it('logs roster-wipe and roster-drop while still applying the update', () => {
+    process.env.EPITHET_DEBUG = '1';
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const wiped = { id: 'w1', name: 'W1', epithet: 'the Bold' } as unknown as Warrior;
+    const dropped = { id: 'w2', name: 'W2', epithet: 'the Grim' } as unknown as Warrior;
+    const quiet = { id: 'w3', name: 'W3' } as unknown as Warrior; // no epithet → no log
+    const r = rival('r', [wiped, dropped, quiet], { owner: { stableName: 'Doom' } });
+    const state = { rivals: [r], absoluteWeek: 7 } as unknown as GameState;
+
+    const rosterUpdate = { roster: [{ id: 'w1' } as unknown as Warrior] };
+    const out = resolveImpacts(state, [
+      { rivalsUpdates: new Map([['r' as StableId, rosterUpdate]]) },
+    ]);
+
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining('roster-wipe'));
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining('roster-drop'));
+    // Diagnostic path must not change the applied result.
+    expect(out.rivals[0]!.roster).toHaveLength(1);
+    expect(out.rivals[0]!.roster[0]!.id).toBe('w1');
   });
 });

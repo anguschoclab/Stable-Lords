@@ -498,6 +498,57 @@ describe('resolveTitleBoutResults', () => {
     expect(title.champion?.warriorId).toBe('w-cont');
     expect(title.history[0]!.endReason).toBe('died');
   });
+
+  it('coronation cancels the new champion\'s open ordinary offers — but not title offers', () => {
+    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const proposed = makeBoutOffer({
+      id: 'o-prop' as BoutOfferId,
+      warriorIds: ['w-cont' as WarriorId, 'w-x' as WarriorId],
+      status: 'Proposed',
+    });
+    const signed = makeBoutOffer({
+      id: 'o-signed' as BoutOfferId,
+      warriorIds: ['w-cont' as WarriorId, 'w-y' as WarriorId],
+      status: 'Signed',
+    });
+    const title = titleOffer('w-cont', 'w-z', arenaId, { id: 'o-title' as BoutOfferId });
+    const unrelated = makeBoutOffer({
+      id: 'o-other' as BoutOfferId,
+      warriorIds: ['w-p' as WarriorId, 'w-q' as WarriorId],
+      status: 'Proposed',
+    });
+    const state = makeGameState({
+      absoluteWeek: 50,
+      week: 50,
+      roster: [champ, cont],
+      boutOffers: {
+        'o-prop': proposed,
+        'o-signed': signed,
+        'o-title': title,
+        'o-other': unrelated,
+      },
+      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
+      arenaHistory: [
+        makeFightSummary({
+          titleArenaId: arenaId,
+          warriorIdA: 'w-champ' as WarriorId,
+          warriorIdD: 'w-cont' as WarriorId,
+          winner: 'D',
+          absoluteWeek: 50,
+        }),
+      ],
+    });
+    const delta = createChampionshipDelta();
+    resolveTitleBoutResults(state, delta);
+    expect(effTitle(state, delta, arenaId)!.champion?.warriorId).toBe('w-cont');
+    // Both Proposed and Signed ordinary offers involving the new champion cancel.
+    expect(delta.canceledOffers['o-prop']!.status).toBe('Canceled');
+    expect(delta.canceledOffers['o-signed']!.status).toBe('Canceled');
+    // Title offers and offers not involving the winner are untouched.
+    expect(delta.canceledOffers['o-title']).toBeUndefined();
+    expect(delta.canceledOffers['o-other']).toBeUndefined();
+  });
 });
 
 // ─── Lifecycle transitions ──────────────────────────────────────────────────

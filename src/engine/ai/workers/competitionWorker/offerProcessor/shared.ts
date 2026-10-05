@@ -1,6 +1,7 @@
 import type { RivalStableData, BoutOffer } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 
+/** Local offer map the processor mutates via applied impacts. */
 export type OfferMap = Record<string, BoutOffer>;
 
 /**
@@ -12,6 +13,9 @@ export type OfferMap = Record<string, BoutOffer>;
  */
 export type FinalizedIndex = Map<string, RivalStableData>;
 
+/**
+ *
+ */
 export function buildFinalizedIndex(rivals: RivalStableData[]): FinalizedIndex {
   const index: FinalizedIndex = new Map();
   for (const rival of rivals) {

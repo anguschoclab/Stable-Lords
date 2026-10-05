@@ -13,7 +13,6 @@ import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { clamp } from '@/utils/math';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
-import { bookable } from './bookable';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 

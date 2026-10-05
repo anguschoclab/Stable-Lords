@@ -1,4 +1,4 @@
-import type { ArenaConfig, WeatherType } from '@/types/shared.types';
+import type { WeatherType } from '@/types/shared.types';
 
 /**
  * WeatherEffect — mechanical modifiers that a weather condition applies to a bout.
@@ -13,7 +13,7 @@ export interface WeatherEffect {
   description: string; // shown in UI tooltips
 }
 
-const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
   'Cosmic Anomaly': {
     staminaMult: 0.9,
     initiativeMod: +5,
@@ -477,38 +477,3 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
       'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
 };
-
-/**
- * Resolves the final mechanical weather condition based on arena type.
- * Indoor arenas negate all weather effects (return 'Clear').
- */
-export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[]): WeatherType {
-  const isIndoor = arenaTags.includes('indoor');
-  return isIndoor ? 'Clear' : weather;
-}
-
-/**
- * Returns the mechanical weather effect modifiers for a given weather type.
- * Falls back to Clear (neutral) for unknown weather.
- */
-export function getWeatherEffect(weather: WeatherType): WeatherEffect {
-  return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];
-}
-
-/**
- * Merge an arena's weather-matched `weatherMods` overrides over its base
- * spatial config. Listed keys replace base values; unlisted keys are kept.
- * Returns the arena unchanged when no entry matches the effective weather.
- */
-export function applyArenaWeatherMods(arena: ArenaConfig, weather: WeatherType): ArenaConfig {
-  const mod = arena.weatherMods?.find((m) => m.weatherType === weather);
-  if (!mod) return arena;
-  return {
-    ...arena,
-    zoneDef: mod.zoneDef ? { ...arena.zoneDef, ...mod.zoneDef } : arena.zoneDef,
-    surfaceMod: mod.surfaceMod ? { ...arena.surfaceMod, ...mod.surfaceMod } : arena.surfaceMod,
-  };
-}
-
-// Re-export opening lines for backward compatibility
-export { weatherOpeningLine } from './weatherOpeningLines';

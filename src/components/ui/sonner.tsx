@@ -14,6 +14,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps['theme']}
       className="toaster group"
+      // Overlays occupy z-50 (ResolutionReveal) and z-[100] (modals);
+      // sonner's default z-index is 999999999, which lets an ambient toast
+      // physically cover an overlay's action button and eat its clicks.
+      // Pin the toaster below every overlay — a toast shown during a modal
+      // can wait for dismissal.
+      style={{ zIndex: 40 }}
       toastOptions={{
         classNames: {
           toast:

@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 /**
- * sonner layering — toasts must never sit above modal overlays. Sonner ships
- * a hardcoded z-index of 999999999 on [data-sonner-toaster]; modals render at
- * z-[100]. On small viewports a toast physically covers a modal's action
- * button (observed: death-notification toasts blocked "MEMORIALIZE &
- * CONTINUE" in e2e), so the toaster is pinned below the modal layer.
+ * sonner layering — toasts must never sit above overlays. Sonner ships a
+ * hardcoded z-index of 999999999 on [data-sonner-toaster]; overlays render at
+ * z-50 (ResolutionReveal) and z-[100] (modals). On small viewports a toast
+ * physically covers an overlay's action button (observed: death-notification
+ * toasts blocked "MEMORIALIZE & CONTINUE" in e2e), so the toaster is pinned
+ * below the overlay floor.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { act, render } from '@testing-library/react';
@@ -28,7 +29,7 @@ beforeAll(() => {
 });
 
 describe('sonner toaster layering', () => {
-  it('stays below the z-[100] modal layer so overlay buttons keep hit-testing priority', async () => {
+  it('stays below the z-50 overlay floor so overlay buttons keep hit-testing priority', async () => {
     render(<Toaster />);
     // The [data-sonner-toaster] <ol> only mounts once a toast exists.
     act(() => {
@@ -40,6 +41,6 @@ describe('sonner toaster layering', () => {
     });
     const ol = document.querySelector('[data-sonner-toaster]') as HTMLElement;
     const z = Number.parseInt(ol.style.zIndex || '999999999', 10);
-    expect(z).toBeLessThan(100);
+    expect(z).toBeLessThan(50);
   });
 });

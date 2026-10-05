@@ -23,7 +23,7 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ES2020",
-    "types": ["vitest/globals", "@testing-library/jest-dom/vitest"],
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom/vitest"],
     "useDefineForClassFields": true
   },
   "include": [
@@ -33,6 +33,13 @@
     "scripts/daily_oracle.ts",
     "scripts/nodeArchiveService.ts",
     "scripts/simulation-harness.ts",
-    "scripts/tournament-dominance.ts"
+    "scripts/tournament-dominance.ts",
+    "scripts/balance-lab.ts",
+    "scripts/lab-overrides.ts",
+    "scripts/liveness-diag.ts",
+    "scripts/roundtrip-check.ts",
+    "scripts/run-fight.ts",
+    "scripts/style-probe.ts",
+    "scripts/world-diag.ts"
   ]
 }

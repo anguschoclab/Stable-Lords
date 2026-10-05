@@ -156,6 +156,71 @@ describe('AI liveness invariants over 104 weeks (I.2)', () => {
   }, 1200000);
 });
 
+describe('slow invariants — competence gradient & intent/objective coherence (F.6)', () => {
+  beforeEach(reset, 120000);
+
+  it('top competence tiers out-earn bottom tiers and objectives steer weekly intents', async () => {
+    // Objective → servicing-intent vocabulary, mirrored from
+    // objectiveServicingIntent. Crisis intents (SURVIVAL/RECOVERY/VENDETTA)
+    // legitimately outrank the plan-of-record, so coherence is ratcheted as
+    // a floor, not a ceiling.
+    const SERVICING: Record<string, ReadonlySet<string>> = {
+      CROWN: new Set(['CROWN_CAMPAIGN']),
+      TREASURY: new Set(['WEALTH_ACCUMULATION']),
+      REBUILD: new Set(['EXPANSION', 'CONSOLIDATION']),
+      TOURNAMENT: new Set(['TOURNAMENT_CAMPAIGN']),
+    };
+    let objWeeks = 0;
+    let coherentWeeks = 0;
+    const { finalState } = await runSimulation({
+      weeks: 104,
+      seed: 11,
+      logFrequency: 4,
+      ignoreBankruptcy: true,
+      onWeek: (state) => {
+        for (const r of state.rivals ?? []) {
+          const obj = r.agentMemory?.seasonObjective;
+          const intent = r.agentMemory?.currentIntent;
+          if (!obj || !intent) continue;
+          objWeeks++;
+          if (SERVICING[obj.kind]?.has(intent)) coherentWeeks++;
+        }
+      },
+    });
+
+    // Competence outcome gradient (Stage B): decision quality compounds in
+    // the treasury. Win-rate stays flat BY DESIGN — competence never
+    // touches combat rolls. Means are whale-skewed (a few 7000g Masters
+    // dominate), so the invariant uses medians. Measured medians (seed 11,
+    // unmocked probe): Novice bottoms at every checkpoint — 767/514/620/629
+    // at wk 26/52/78/104 — vs top-half (Master+Veteran) 783/1359/1636/1455.
+    const med = (xs: number[]) => {
+      const s = [...xs].sort((a, b) => a - b);
+      return s[Math.floor(s.length / 2)] ?? 0;
+    };
+    const byTier = new Map<string, number[]>();
+    for (const r of finalState.rivals) {
+      const tier = r.owner?.competence;
+      if (!tier) continue;
+      (byTier.get(tier) ?? byTier.set(tier, []).get(tier)!).push(r.treasury);
+    }
+    const topTreas = [...(byTier.get('Master') ?? []), ...(byTier.get('Veteran') ?? [])];
+    const noviceTreas = byTier.get('Novice') ?? [];
+    expect(topTreas.length).toBeGreaterThan(10);
+    expect(noviceTreas.length).toBeGreaterThan(10);
+    const gradient = med(topTreas) / Math.max(1, med(noviceTreas));
+    expect(gradient).toBeGreaterThan(1.3); // measured ≥2.3 — ratchet below
+
+    // Intent ↔ objective coherence (Stage C): while a seasonObjective lives,
+    // its servicing intent should fire a meaningful share of weeks. Crisis
+    // and opportunistic intents legitimately override — measured 0.185,
+    // ratcheted at 0.12.
+    expect(objWeeks).toBeGreaterThan(1000);
+    const coherence = coherentWeeks / objWeeks;
+    expect(coherence).toBeGreaterThan(0.12);
+  }, 1200000);
+});
+
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {
   beforeEach(reset, 120000);
 

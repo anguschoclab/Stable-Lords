@@ -60,7 +60,9 @@ function isTestFile(relPath) {
 
 const srcFiles = walk(SRC).filter(isSourceFile);
 const scriptFiles = [
-  ...walk(path.join(ROOT, 'scripts')).filter(isSourceFile),
+  ...walk(path.join(ROOT, 'scripts')).filter(
+    (p) => isSourceFile(p) || /\.[cm]?js$/.test(p)
+  ),
   ...fs
     .readdirSync(ROOT)
     .filter((f) => f.endsWith('.mjs'))
@@ -261,7 +263,7 @@ for (const [abs, relPath] of allFiles) {
   else if (relPath.startsWith('src/routes/')) prodRoots.add(relPath);
   else if (relPath.startsWith('scripts/')) prodRoots.add(relPath);
   else if (relPath.endsWith('.mjs')) prodRoots.add(relPath);
-  else if (relPath === 'src/engine/worker.ts') prodRoots.add(relPath);
+  else if (relPath === 'src/engine/runtime/worker.ts') prodRoots.add(relPath);
   else if (isTestFile(relPath) || relPath.startsWith('e2e/')) testRoots.add(relPath);
 }
 
@@ -332,13 +334,17 @@ for (const [relPath, names] of moduleExports) {
 // ─── State-field index ──────────────────────────────────────────────────────
 
 const AUDITED_INTERFACES = [
-  { name: 'GameState', file: 'src/types/state.types.ts' },
-  { name: 'RivalStableData', file: 'src/types/state.types.ts' },
+  { name: 'GameState', file: 'src/types/state/gameState.ts' },
+  { name: 'RivalStableData', file: 'src/types/state/game.ts' },
   { name: 'Warrior', file: 'src/types/warrior.types.ts' },
-  { name: 'Owner', file: 'src/types/state.types.ts' },
-  { name: 'Trainer', file: 'src/types/state.types.ts' },
-  { name: 'AIAgentMemory', file: 'src/types/ai.types.ts' },
-  { name: 'ProgressionState', file: 'src/types/progression.types.ts' },
+  { name: 'Owner', file: 'src/types/state/owner.ts' },
+  { name: 'Trainer', file: 'src/types/shared/trainer.ts' },
+  { name: 'AIAgentMemory', file: 'src/types/state/game.ts' },
+  { name: 'ProgressionState', file: 'src/types/state/simulation.ts' },
+  { name: 'FightSummary', file: 'src/types/combat.types.ts' },
+  { name: 'BoutOffer', file: 'src/types/state/rankings.ts' },
+  { name: 'TournamentEntry', file: 'src/types/state/game.ts' },
+  { name: 'ArenaConfig', file: 'src/types/shared/spatial.ts' },
 ];
 
 function findInterfaceFile(name, hint) {
@@ -462,7 +468,7 @@ for (const r of routeFiles) {
 // Nav hrefs: literal route-ish strings in nav/shell files
 const navFiles = srcRel.filter(
   (r) =>
-    r === 'src/components/navigationHubs.ts' ||
+    r === 'src/components/layout/navigationHubs.ts' ||
     r === 'src/components/AppShell.tsx' ||
     r.startsWith('src/components/layout/')
 );

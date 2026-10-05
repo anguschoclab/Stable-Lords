@@ -44,6 +44,7 @@
     "scripts/daily_bard.ts",
     "scripts/daily_oracle.ts",
     "scripts/nodeArchiveService.ts",
+    "scripts/probe-grad.ts",
     "scripts/simulation-harness.ts",
     "scripts/tournament-dominance.ts"
   ]

@@ -20,7 +20,7 @@ import type {
   RivalStableData,
 } from '@/types/state.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
-import type { Attributes, FightPlan, Trainer } from '@/types/shared.types';
+import type { ArenaConfig, Attributes, FightPlan, Trainer } from '@/types/shared.types';
 import type { Rivalry, OwnerGrudge } from '@/types/state.types';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 import type { WarriorRow } from '@/types/leaderboard';
@@ -618,4 +618,20 @@ export function makeNamedWarrior(
     champion: false,
     ...over,
   } as Warrior;
+}
+
+/** Schema-valid ArenaConfig with a neutral spatial profile. */
+export function makeArena(over: Partial<ArenaConfig> = {}): ArenaConfig {
+  return {
+    id: 'test_arena',
+    name: 'Test Arena',
+    tags: [],
+    tier: 1,
+    description: 'Test arena',
+    size: 'standard',
+    zoneDef: { Edge: -2, Corner: -4 },
+    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+    startingZone: 'Center',
+    ...over,
+  };
 }

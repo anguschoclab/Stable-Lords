@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ArenaDetail from '@/pages/ArenaDetail';
-import { getAllArenas } from '@/data/arenas';
+import { getAllArenas, getArenaLore } from '@/data/arenas';
 import { makeGameState } from '@/test/_fixtures/factories';
 import { useGameStore } from '@/state/useGameStore';
 import '@/test/_setup/setup';
@@ -58,5 +58,50 @@ describe('ArenaDetail page (region pinning)', () => {
     mockArenaId = arena.id;
     render(<ArenaDetail />);
     expect(screen.getByText('CURSED GROUND')).toBeTruthy();
+  });
+
+  // V2-01 — ARENA_LORE regressed dead when the ArenaLeaderboards surface was
+  // removed; the arena detail page is the canonical venue surface and must
+  // render the venue's lore entries (title + narrative from ARENA_LORE).
+  it('renders ARENA_LORE narrative entries for the venue (V2-01)', () => {
+    mockArenaId = 'mudpit_arena';
+    render(<ArenaDetail />);
+    expect(screen.getByText('The Drowning Grasp')).toBeTruthy();
+  });
+
+  it('renders no lore section for arenas without entries', () => {
+    const arena = getAllArenas().find((a) => a.id !== 'mudpit_arena' && getArenaLore(a.id).length === 0);
+    if (!arena) return; // all arenas carry lore — nothing to assert
+    mockArenaId = arena.id;
+    render(<ArenaDetail />);
+    expect(screen.queryByText('The Drowning Grasp')).toBeNull();
+  });
+
+  // V2-02 — content packs overlay arena lore (G7). The /mods-installed pack
+  // entries must render alongside canonical ARENA_LORE on the venue page.
+  it('renders content-pack arena lore alongside canonical entries (V2-02)', () => {
+    useGameStore.setState(
+      makeGameState({
+        contentPacks: [
+          {
+            id: 'pack_1',
+            name: 'Test Pack',
+            arenaLore: [
+              {
+                id: 'pk_lore_1',
+                arenaId: 'mudpit_arena',
+                type: 'famous_death',
+                title: 'The Silt Reckoning',
+                narrative: 'A pack-supplied legend.',
+              },
+            ],
+          },
+        ],
+      }) as never
+    );
+    mockArenaId = 'mudpit_arena';
+    render(<ArenaDetail />);
+    expect(screen.getByText('The Silt Reckoning')).toBeTruthy();
+    expect(screen.getByText('The Drowning Grasp')).toBeTruthy();
   });
 });

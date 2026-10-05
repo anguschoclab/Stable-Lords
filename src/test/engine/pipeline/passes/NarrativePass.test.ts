@@ -69,6 +69,22 @@ describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {
     const issue = (impact.newsletterItems ?? []).find((i) => i.title === 'Week in Review');
     expect(issue?.items.some((l) => l.includes('style table'))).toBe(true);
   });
+
+  // V2-05 — the announcer `recap` pool + `recapLine` were dead content. The
+  // Week in Review issue must emit a recap line for the headline bout,
+  // interpolated from the announcer recap templates (winner/loser/minutes).
+  it('emits an announcer recap line for the headline bout (V2-05)', () => {
+    const state = makeState([makeFight()]);
+    const impact = runNarrativePass(state, 5, 6, new SeededRNG(42) as never);
+
+    const issue = (impact.newsletterItems ?? []).find((i) => i.title === 'Week in Review');
+    expect(issue).toBeDefined();
+    expect(
+      issue!.items.some((l) =>
+        /defeated|decisive victory|grueling|brutal affair|battle of attrition|masterpiece/i.test(l)
+      )
+    ).toBe(true);
+  });
 });
 
 describe('runNarrativePass — season retrospective (D12 wiring)', () => {

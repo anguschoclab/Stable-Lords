@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T06:34:50.535Z",
+  "generatedAt": "2026-10-05T07:06:51.311Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -215,6 +215,7 @@
     "src/test/megaplan/styleArchives.wired.test.tsx",
     "src/test/megaplan/wiring.wired.test.tsx",
     "src/test/pages/AdminTools.test.tsx",
+    "src/test/pages/AdminTools/components/TelemetryPanel.test.tsx",
     "src/test/pages/Advisor.test.tsx",
     "src/test/pages/ArenaCircuit.test.tsx",
     "src/test/pages/ArenaDetail.test.tsx",

@@ -104,4 +104,20 @@ describe('ArenaDetail page (region pinning)', () => {
     expect(screen.getByText('The Silt Reckoning')).toBeTruthy();
     expect(screen.getByText('The Drowning Grasp')).toBeTruthy();
   });
+
+  // V2-DEFERRED — ARENA_EVENTS: the venue surface must name the hazards that
+  // can actually fire in this arena (from getEventsForArena(tags)), so the
+  // player can scout mechanical venue risk before booking a bout.
+  it('renders hostable arena-event hazards for tagged venues', () => {
+    mockArenaId = 'the_asylum'; // indoor + cramped + cursed
+    render(<ArenaDetail />);
+    expect(screen.getByText(/Shadow Tendrils/)).toBeTruthy();
+    expect(screen.getByText(/Whispers of Madness/)).toBeTruthy();
+  });
+
+  it('renders no hazard lines for arenas hosting no events', () => {
+    mockArenaId = 'standard_arena'; // outdoor + open — no event requires these alone
+    render(<ArenaDetail />);
+    expect(screen.queryByText(/Hazard:/)).toBeNull();
+  });
 });

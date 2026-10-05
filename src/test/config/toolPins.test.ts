@@ -1,19 +1,32 @@
 // @vitest-environment node
 /**
- * toolPins — `bun x`/`bunx` invocations in package.json scripts must target
- * installed dependencies. `bun x <pkg>` with no version fetches @latest into a
- * temp dir; an upstream release with a broken dep tree took the type-check
- * gate down (Cannot find module 'picomatch', V11 pass). Pinning the package in
- * devDependencies makes bunx resolve the local install deterministically.
+ * toolPins — `bun x`/`bunx` invocations in package.json scripts must resolve
+ * locally: the target must be an installed dependency, a node_modules/.bin
+ * binary, or an explicitly versioned fetch (pkg@1.2.3). A bare `bun x <pkg>`
+ * fetches @latest into a temp dir — an upstream release with a broken dep
+ * tree took the type-check gate down (Cannot find module 'picomatch', V11).
  */
 import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const PKG_PATH = path.resolve(__dirname, '../../../package.json');
-const BUNX_RE = /\bbunx?\s+(?:--bun\s+)?(@[\w-]+\/[\w.-]+|[\w-]+)/g;
-/** Tokens that are flags or bun builtins, not package names. */
-const NON_PACKAGES = new Set(['x', 'install', 'run', 'test', '--version']);
+const REPO = path.resolve(__dirname, '../../..');
+const PKG_PATH = path.join(REPO, 'package.json');
+const BIN_DIR = path.join(REPO, 'node_modules', '.bin');
+const BUNX_RE = /\b(?:bunx|bun\s+x)\s+(?:--bun\s+)?(@[\w-]+\/[\w.-]+|[\w.@-]+)/g;
+
+/** Strip an optional @version suffix, preserving the @scope prefix. */
+function packageName(target: string): string {
+  if (target.startsWith('@')) {
+    const at = target.indexOf('@', 1);
+    return at === -1 ? target : target.slice(0, at);
+  }
+  return target.split('@')[0]!;
+}
+
+function hasExplicitVersion(target: string): boolean {
+  return target.startsWith('@') ? target.indexOf('@', 1) !== -1 : target.includes('@');
+}
 
 describe('package.json bunx/bun-x tool pins', () => {
   const pkg = JSON.parse(fs.readFileSync(PKG_PATH, 'utf8')) as {
@@ -25,21 +38,17 @@ describe('package.json bunx/bun-x tool pins', () => {
     ...Object.keys(pkg.dependencies ?? {}),
     ...Object.keys(pkg.devDependencies ?? {}),
   ]);
+  const localBins = new Set(fs.existsSync(BIN_DIR) ? fs.readdirSync(BIN_DIR) : []);
 
-  it('every bunx/bun x target is an installed dependency', () => {
+  it('every bunx/bun x target resolves locally or is version-pinned', () => {
     const violations: string[] = [];
     for (const [scriptName, cmd] of Object.entries(pkg.scripts)) {
       for (const m of cmd.matchAll(BUNX_RE)) {
         const target = m[1]!;
-        if (NON_PACKAGES.has(target)) continue;
-        // `bunx pkg@1.2.3` pins a version ad hoc — allowed but discouraged;
-        // `bunx pkg` unpinned is legal ONLY when pkg is installed locally.
-        const name = target.startsWith('@')
-          ? target.split('@').slice(0, 2).join('@')
-          : target.split('@')[0]!;
-        if (!installed.has(name)) {
-          violations.push(`"${scriptName}": bunx ${target} — '${name}' not in dependencies`);
-        }
+        if (installed.has(packageName(target))) continue;
+        if (localBins.has(target)) continue;
+        if (hasExplicitVersion(target)) continue;
+        violations.push(`"${scriptName}": bunx ${target} — floats to @latest`);
       }
     }
     expect(violations, 'floating bunx tool invocations').toEqual([]);

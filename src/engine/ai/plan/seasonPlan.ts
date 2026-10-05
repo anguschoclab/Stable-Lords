@@ -20,6 +20,21 @@ export const SEASON_OBJECTIVE_WEEKS = 13;
 /** Below this treasury a stable cannot sustain a campaign — it rebuilds. */
 const REBUILD_TREASURY_FLOOR = 400;
 
+/**
+ * Loss-factor labels that mean the stable is being beaten on structure —
+ * skill edges, the style matrix, raw damage — not on luck. Recorded loss
+ * factors hold up to three labels; when two of the last three are
+ * structural, a season of banking beats another doomed campaign.
+ */
+const STRUCTURAL_LOSS_FACTOR = /edge|matchup|damage/i;
+
+/** True when recent losses show a structural pattern (>=2 of the last 3). */
+function lossesAreStructural(rival: RivalStableData): { structural: boolean; top?: string } {
+  const factors = rival.agentMemory?.lastLossFactors ?? [];
+  const hits = factors.filter((f) => STRUCTURAL_LOSS_FACTOR.test(f));
+  return { structural: hits.length >= 2, top: hits[0] };
+}
+
 const objective = (
   kind: SeasonObjective['kind'],
   reason: string,
@@ -49,8 +64,9 @@ export function pickSeasonObjective(
 
   const crown = rival.agentMemory?.crownAssessment;
   const crownWarrior = crown ? rival.roster.find((w) => w.id === crown.warriorId) : undefined;
+  const losses = lossesAreStructural(rival);
   if (crown && crownWarrior && isActive(crownWarrior)) {
-    if (arc !== 'DECLINING') {
+    if (arc !== 'DECLINING' && !losses.structural) {
       return objective(
         'CROWN',
         `Season campaign: ${crown.reason}`,
@@ -60,12 +76,15 @@ export function pickSeasonObjective(
   }
 
   // A declining stable banks what it can; an ascendant one still banks when
-  // no throne is in reach — TREASURY is the honest default program.
+  // no throne is in reach — TREASURY is the honest default program. Recent
+  // structural losses are named in the reason so the re-plan is legible.
   const runway = Math.max(500, projectedWeeklyUpkeep(rival) * 8);
   const treasuryTarget = rival.treasury + runway;
   return objective(
     'TREASURY',
-    `Bank ${runway}g of runway — target ${treasuryTarget}g`,
+    losses.structural
+      ? `Losses keep coming on ${losses.top} — bank ${runway}g of runway before campaigning (target ${treasuryTarget}g)`
+      : `Bank ${runway}g of runway — target ${treasuryTarget}g`,
     { treasuryTarget }
   );
 }

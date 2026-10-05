@@ -105,9 +105,9 @@ export function getPersonalityAdaptations(
   const handler = PERSONALITY_ADAPTATION_MAP[personality];
   const conditions = handler ? handler(plan, bounded, isKillIntent) : [];
 
-  // Intent-driven conditions — a recovering stable weathers enemy tempo
-  // instead of trading with it.
-  if (intent === 'RECOVERY') {
+  // Intent-driven conditions — a recovering or folding stable weathers
+  // enemy tempo instead of trading with it.
+  if (intent === 'RECOVERY' || intent === 'SURVIVAL') {
     conditions.push({
       trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
       override: { OE: bounded(plan.OE, -2), defensiveTactic: 'Parry' },

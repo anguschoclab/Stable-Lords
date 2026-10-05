@@ -67,7 +67,13 @@ interface StaffPass {
 
 /** Hiring stage (Medium/High Risk): pick best affordable trainer, preferring the intel/intent focus. */
 function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
-  if (intent === 'RECOVERY' || pass.trainers.length >= 2 || pass.pool.length === 0) return;
+  if (
+    intent === 'RECOVERY' ||
+    intent === 'SURVIVAL' ||
+    pass.trainers.length >= 2 ||
+    pass.pool.length === 0
+  )
+    return;
 
   const affordable = pass.pool.filter((t) => (HIRE_COST[t.tier] ?? 0) < pass.treasury - 300);
   if (affordable.length === 0) return;
@@ -132,7 +138,10 @@ function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, wee
   const isRainy = state.weather === 'Rainy';
   const underPressure = pass.treasury < 500 && (isSolemn || isRainy);
 
-  if (!(intent === 'RECOVERY' || pass.treasury < 100 || underPressure)) return;
+  if (
+    !(intent === 'RECOVERY' || intent === 'SURVIVAL' || pass.treasury < 100 || underPressure)
+  )
+    return;
   if (pass.trainers.length === 0) return;
 
   const fired = pass.trainers.pop();

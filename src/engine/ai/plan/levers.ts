@@ -41,7 +41,7 @@ export function getAITarget(
   killDesire: number,
   intent?: AIIntent
 ): AttackTarget {
-  if (intent === 'RECOVERY') return 'Any';
+  if (intent === 'RECOVERY' || intent === 'SURVIVAL') return 'Any';
   if (intent === 'VENDETTA' || killDesire >= 8 || style === FightingStyle.AimedBlow) return 'Head';
   if (personality === 'Tactician' || personality === 'Methodical') return 'Right Leg';
   if (personality === 'Aggressive' || AGGRESSIVE_STYLES.has(style)) return 'Chest';
@@ -57,7 +57,7 @@ export function getAIProtect(
   personality: OwnerPersonality,
   intent?: AIIntent
 ): ProtectTarget {
-  if (intent === 'RECOVERY' || DEFENSIVE_STYLES.has(style)) return 'Head';
+  if (intent === 'RECOVERY' || intent === 'SURVIVAL' || DEFENSIVE_STYLES.has(style)) return 'Head';
   if (personality === 'Methodical' || personality === 'Pragmatic') return 'Body';
   return 'Any';
 }
@@ -74,7 +74,8 @@ export function getAIAggressionBias(personality: OwnerPersonality, intent?: AIIn
         : personality === 'Methodical' || personality === 'Tactician'
           ? 4
           : 5;
-  const intentMod = intent === 'VENDETTA' ? 1 : intent === 'RECOVERY' ? -2 : 0;
+  const intentMod =
+    intent === 'VENDETTA' ? 1 : intent === 'RECOVERY' || intent === 'SURVIVAL' ? -2 : 0;
   return clamp(base + intentMod, 0, 10);
 }
 
@@ -141,7 +142,7 @@ export function getAIFallbackCondition(
   style: FightingStyle,
   intent?: AIIntent
 ): 'FLEE' | 'TURTLE' | 'BERZERK' | 'YIELD' | 'None' {
-  if (intent === 'RECOVERY') return 'YIELD';
+  if (intent === 'RECOVERY' || intent === 'SURVIVAL') return 'YIELD';
   if (intent === 'VENDETTA') return 'BERZERK';
   if (personality === 'Aggressive') return 'BERZERK';
   if (personality === 'Methodical' || personality === 'Tactician') return 'TURTLE';

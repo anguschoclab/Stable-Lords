@@ -390,7 +390,8 @@ export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentRes
   if (
     signings === 0 &&
     (needsRecruit || activeCount < minRoster) &&
-    intent !== 'RECOVERY'
+    intent !== 'RECOVERY' &&
+    intent !== 'SURVIVAL'
   ) {
     // signGeneratedRecruit appends directly into `gazetteItems`.
     const signed = signGeneratedRecruit(

@@ -49,6 +49,15 @@ export function verifyBoutAcceptance(
     }
   }
 
+  // Skeptical Check: SURVIVAL agents only take bouts they are favored to
+  // win — the purse upside matters, but a loss buys nothing and a death
+  // ends a stable that cannot afford to replace the body.
+  if (!isTitleBout && intent === 'SURVIVAL') {
+    if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0)) {
+      return { accepted: false, reason: 'Survival — only bouts we are favored to win.' };
+    }
+  }
+
   // Skeptical Check: AGGRESSIVE agents accept most things (unless weather is lethal)
   if (rival.owner.personality === 'Aggressive') {
     if (weather === 'Sweltering' && warrior.attributes.CN < 8) {

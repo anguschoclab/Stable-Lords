@@ -52,6 +52,22 @@ const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
     ...overrides,
   }) as RivalStableData;
 
+const losingMemory = {
+  lastTreasury: 200,
+  burnRate: 480,
+  metaAwareness: {},
+  knownRivals: [],
+  opponentDossiers: {},
+  seasonRecord: {
+    wins: 1,
+    losses: 6,
+    kills: 0,
+    rosterSizeAtSeasonStart: 6,
+    boutsBooked: 7,
+    titles: 0,
+  },
+} as unknown as RivalStableData['agentMemory'];
+
 const makeState = (overrides: Partial<GameState> = {}): GameState =>
   ({
     week: 5,
@@ -71,16 +87,7 @@ describe('pickWeeklyIntent — SURVIVAL', () => {
   it('picks SURVIVAL when the stable cannot cover its burn and is losing', () => {
     const rival = makeRival({
       treasury: 50, // << 480g projected upkeep for six active warriors
-      agentMemory: {
-        seasonRecord: {
-          wins: 1,
-          losses: 6,
-          kills: 0,
-          rosterSizeAtSeasonStart: 6,
-          boutsBooked: 7,
-          titles: 0,
-        },
-      } as RivalStableData['agentMemory'],
+      agentMemory: losingMemory,
     });
     expect(pickWeeklyIntent(rival, makeState())).toBe('SURVIVAL');
   });
@@ -95,16 +102,7 @@ describe('pickWeeklyIntent — SURVIVAL', () => {
   it('picks RECOVERY (not SURVIVAL) when losing but still covering its burn', () => {
     const rival = makeRival({
       treasury: projectedWeeklyUpkeep(makeRival()) + 100, // covers this week
-      agentMemory: {
-        seasonRecord: {
-          wins: 1,
-          losses: 6,
-          kills: 0,
-          rosterSizeAtSeasonStart: 6,
-          boutsBooked: 7,
-          titles: 0,
-        },
-      } as RivalStableData['agentMemory'],
+      agentMemory: losingMemory,
     });
     expect(pickWeeklyIntent(rival, makeState())).toBe('RECOVERY');
   });
@@ -112,16 +110,7 @@ describe('pickWeeklyIntent — SURVIVAL', () => {
   it('lets VENDETTA still outrank SURVIVAL for a live grudge', () => {
     const rival = makeRival({
       treasury: 50,
-      agentMemory: {
-        seasonRecord: {
-          wins: 1,
-          losses: 6,
-          kills: 0,
-          rosterSizeAtSeasonStart: 6,
-          boutsBooked: 7,
-          titles: 0,
-        },
-      } as RivalStableData['agentMemory'],
+      agentMemory: losingMemory,
     });
     const state = makeState({
       grudgeMap: new Map([
@@ -162,16 +151,7 @@ describe('SURVIVAL strategy lifecycle', () => {
   it('keeps a short plan duration like RECOVERY — insolvency resolves fast either way', () => {
     const rival = makeRival({
       treasury: 50,
-      agentMemory: {
-        seasonRecord: {
-          wins: 1,
-          losses: 6,
-          kills: 0,
-          rosterSizeAtSeasonStart: 6,
-          boutsBooked: 7,
-          titles: 0,
-        },
-      } as RivalStableData['agentMemory'],
+      agentMemory: losingMemory,
     });
     const strategy = updateAIStrategy(rival, makeState());
     expect(strategy.intent).toBe('SURVIVAL');
@@ -191,10 +171,9 @@ describe('SURVIVAL downstream behavior', () => {
     });
     const { bids } = generateBoutBids({
       rival,
-      opponents: [makeBidRival({ id: 'rival-2' })],
+      _currentWeek: 5,
+      rivals: [makeBidRival({})],
       state: makeState(),
-      week: 5,
-      rng: { next: () => 0.5, uuid: () => 'u' } as never,
     });
     expect(bids).toHaveLength(0);
   });

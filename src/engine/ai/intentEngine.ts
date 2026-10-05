@@ -9,6 +9,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
 import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
 import { objectiveStillViable } from './plan/seasonPlan';
+import { projectedWeeklyUpkeep } from './workers/budgetWorker';
 
 /**
  * Finds a high-intensity grudge (>= 3) involving the given owner.
@@ -98,6 +99,20 @@ function weatherPivotApplies(ctx: IntentContext): boolean {
   const precisionHeavy =
     ctx.activeRoster.length === 0 || ctx.lungeCount / ctx.activeRoster.length >= 0.5;
   return ctx.isHazardousWeather && precisionHeavy && ctx.personality !== 'Aggressive';
+}
+
+/**
+ * SURVIVAL: the deeper crisis tier below RECOVERY. A stable that cannot
+ * cover its projected weekly burn AND has a proven losing record is past
+ * belt-tightening — it hunkers rather than merely ducking risk.
+ * A young stable with no season record stays in RECOVERY's band.
+ */
+function survivalApplies(ctx: IntentContext): boolean {
+  return (
+    ctx.rival.treasury < projectedWeeklyUpkeep(ctx.rival) &&
+    ctx.seasonWinRate !== null &&
+    ctx.seasonWinRate < 0.5
+  );
 }
 
 /** RECOVERY: high priority if the stable is in crisis or the season is going badly. */
@@ -256,6 +271,10 @@ export function pickWeeklyIntent(
   // otherwise a broke grudge-holder can never answer the grievance (RECOVERY
   // crowds the pick on every cash-strapped week).
   if (vendettaApplies(ctx, rngService)) return 'VENDETTA';
+  // SURVIVAL precedes RECOVERY: insolvency-plus-losses is a deeper crisis
+  // than belt-tightening, and a live grudge (checked just above) still
+  // outranks it — a folding stable answers its feud, then hunkers.
+  if (survivalApplies(ctx)) return 'SURVIVAL';
   if (recoveryApplies(ctx)) return 'RECOVERY';
   // The tournament prep window is a fixed calendar deadline — it must outrank
   // the season plan-of-record, or a TREASURY/REBUILD program buries it every
@@ -285,8 +304,15 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   const personality = rival.owner.personality ?? 'Pragmatic';
 
-  // Skepticism Tier 1: Financial Crisis
-  if (strategy.intent !== 'RECOVERY' && rival.treasury < 150) return true;
+  // Skepticism Tier 1: Financial Crisis — RECOVERY and SURVIVAL are the
+  // crisis intents themselves; holding one while broke is correct, not stale.
+  if (
+    strategy.intent !== 'RECOVERY' &&
+    strategy.intent !== 'SURVIVAL' &&
+    rival.treasury < 150
+  ) {
+    return true;
+  }
 
   // Skepticism Tier 2: Roster Depletion
   const activeCount = rival.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0);
@@ -410,7 +436,9 @@ export function intentStillApplies(
         rival.strategy?.targetStableId === state.player?.id
       );
     case 'SURVIVAL':
-      return rival.treasury < 300;
+      // Hold while the burn still exceeds the bank — with a 25% margin so
+      // a single thin purse doesn't flip the stable back to business-as-usual.
+      return rival.treasury < projectedWeeklyUpkeep(rival) * 1.25;
     case 'EXPANSION': {
       const minSize = personality === 'Aggressive' ? 8 : personality === 'Methodical' ? 5 : 6;
       return activeCount < minSize + 1 && rival.treasury > 200;
@@ -511,7 +539,7 @@ export function updateAIStrategy(
 
     // Determine the duration of this intent
     const duration =
-      intent === 'RECOVERY'
+      intent === 'RECOVERY' || intent === 'SURVIVAL'
         ? 2
         : intent === 'VENDETTA' || intent === 'CROWN_CAMPAIGN'
           ? 6

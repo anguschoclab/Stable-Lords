@@ -256,6 +256,9 @@ function emitWarriorBid(
     };
   }
   if (intent === 'VENDETTA') return null;
+  // SURVIVAL: no proactive bids — a stable that cannot cover its burn
+  // cannot risk a warrior on a bout it does not need.
+  if (intent === 'SURVIVAL') return null;
   if (
     intent === 'CROWN_CAMPAIGN' &&
     rival.strategy?.targetArenaId &&

@@ -81,7 +81,7 @@ function computePlanModifiers(
   let intentAL = 0;
   let intentKD = 0;
 
-  if (intent === 'RECOVERY') {
+  if (intent === 'RECOVERY' || intent === 'SURVIVAL') {
     intentOE = -2; // Defensive to minimize damage
     intentAL = -1;
     intentKD = -2;

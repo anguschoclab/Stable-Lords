@@ -80,12 +80,3 @@ export function evaluateQuests(state: QuestState): QuestStatus[] {
     complete: q.done(state),
   }));
 }
-
-/**
- * Whether the quest widget should surface at all: still showing while any
- * quest is incomplete and the player hasn't dismissed it.
- */
-export function questsVisible(state: QuestState): boolean {
-  if ((state.coachDismissed ?? []).includes(QUESTS_DISMISSED)) return false;
-  return evaluateQuests(state).some((q) => !q.complete);
-}

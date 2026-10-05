@@ -1,21 +1,31 @@
 import { Check, Circle, Compass, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
+import React from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { evaluateQuests, questsVisible, QUESTS_DISMISSED } from '@/engine/onboarding/quests';
+import { ONBOARDING_QUESTS, QUESTS_DISMISSED } from '@/engine/onboarding/quests';
+import { useShallow } from 'zustand/react/shallow';
 
 /**
  * Onboarding quest checklist — early-game milestones derived from GameState.
  * Self-hides once all quests complete or the player dismisses it.
  */
-export function QuestsWidget() {
-  const state = useGameStore((s) => s);
+export const QuestsWidget = React.memo(function QuestsWidget() {
   const setState = useGameStore((s) => s.setState);
 
-  if (!questsVisible(state)) return null;
+  const questCompletions = useGameStore(
+    useShallow((s) => ONBOARDING_QUESTS.map((q) => q.done(s)))
+  );
+  const isDismissed = useGameStore((s) => (s.coachDismissed ?? []).includes(QUESTS_DISMISSED));
 
-  const quests = evaluateQuests(state);
-  const doneCount = quests.filter((q) => q.complete).length;
+  if (isDismissed || questCompletions.every(Boolean)) return null;
+
+  const quests = ONBOARDING_QUESTS.map((q, i) => ({
+    ...q,
+    complete: questCompletions[i],
+  }));
+
+  const doneCount = questCompletions.filter(Boolean).length;
 
   return (
     <Surface variant="glass" className="p-5 flex flex-col gap-4">
@@ -69,4 +79,4 @@ export function QuestsWidget() {
       </ul>
     </Surface>
   );
-}
+});

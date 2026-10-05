@@ -27,7 +27,7 @@ import { deriveFounderTrainer, founderStableName, personalityFromCareer } from '
  *   3. Organic licensing — small conditional growth while the economy is
  *      healthy and the count sits between floor and soft cap.
  */
-export type MintedStableOrigin = 'legacy' | 'floor-refill' | 'organic';
+type MintedStableOrigin = 'legacy' | 'floor-refill' | 'organic';
 
 /** A freshly minted rival stable tagged with the source that produced it. */
 export interface MintedStable {

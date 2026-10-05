@@ -14,28 +14,28 @@ export const trainers = (state: GameState, value: Trainer[]) => {
 /**
  * Apply hiring pool to state.
  */
-export const hiringPool = (state: GameState, value: Trainer[]) => {
+const hiringPool = (state: GameState, value: Trainer[]) => {
   state.hiringPool = value;
 };
 
 /**
  * Apply training assignments to state.
  */
-export const trainingAssignments = (state: GameState, value: TrainingAssignment[]) => {
+const trainingAssignments = (state: GameState, value: TrainingAssignment[]) => {
   state.trainingAssignments = value;
 };
 
 /**
  * Apply rest states to state.
  */
-export const restStates = (state: GameState, value: RestState[]) => {
+const restStates = (state: GameState, value: RestState[]) => {
   state.restStates = [...(state.restStates || []), ...value];
 };
 
 /**
  * Apply coach dismissals to state.
  */
-export const coachDismissed = (state: GameState, value: string[]) => {
+const coachDismissed = (state: GameState, value: string[]) => {
   state.coachDismissed = [...(state.coachDismissed || []), ...value];
 };
 

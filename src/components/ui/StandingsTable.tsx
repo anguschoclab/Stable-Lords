@@ -27,7 +27,7 @@ export interface StandingsColumn<Row> {
 }
 
 /** Style slots for a {@link StandingsTable} — each maps to one element of the skeleton. */
-export interface StandingsTableClasses<Row = unknown> {
+interface StandingsTableClasses<Row = unknown> {
   /** Classes for the <Table> element. */
   root?: string;
   /** Classes for the <TableHeader> band. */
@@ -41,7 +41,7 @@ export interface StandingsTableClasses<Row = unknown> {
 }
 
 /** Props for {@link StandingsTable}. */
-export interface StandingsTableProps<Row> {
+interface StandingsTableProps<Row> {
   columns: StandingsColumn<Row>[];
   rows: Row[];
   /** Key extractor for body rows. */

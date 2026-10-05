@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 /**
  * Particle type type.
  */
-export type ParticleType = 'blood' | 'spark' | 'dust' | 'sweat';
+type ParticleType = 'blood' | 'spark' | 'dust' | 'sweat';
 
 interface Particle {
   id: string;

@@ -16,7 +16,7 @@ import { logger } from '@/utils/logger';
 /**
  * Defines the shape of death notification.
  */
-export interface DeathNotification {
+interface DeathNotification {
   warriorId: string;
   name: string;
 }
@@ -24,7 +24,7 @@ export interface DeathNotification {
 /**
  * Death handler type.
  */
-export type DeathHandler = (n: DeathNotification) => void;
+type DeathHandler = (n: DeathNotification) => void;
 
 const handlers: Set<DeathHandler> = new Set();
 let busSubscription: (() => void) | null = null;

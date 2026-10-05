@@ -133,7 +133,7 @@ export function computeReachScore(
 /**
  * Defines the shape of distance contest result.
  */
-export interface DistanceContestResult {
+interface DistanceContestResult {
   distanceWinner: 'A' | 'D' | null;
   rangeModA: number;
   rangeModD: number;
@@ -144,7 +144,7 @@ export interface DistanceContestResult {
 /**
  *
  */
-export interface ContestDistanceArgs {
+interface ContestDistanceArgs {
   rng: () => number;
   fA: FighterState;
   fD: FighterState;

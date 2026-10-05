@@ -58,7 +58,7 @@ export function initializeRng(providedRng?: IRNGService | number): {
 /**
  *
  */
-export interface InitializeFightersArgs {
+interface InitializeFightersArgs {
   planA: FightPlan;
   planD: FightPlan;
   warriorA?: Warrior;
@@ -95,7 +95,7 @@ export function initializeFighters(args: InitializeFightersArgs): {
 /**
  *
  */
-export interface InitializeResolutionContextArgs {
+interface InitializeResolutionContextArgs {
   planA: FightPlan;
   planD: FightPlan;
   effectiveWeather: WeatherType;

@@ -121,7 +121,7 @@ function EmptyOffers({ title, hint }: { title: string; hint: string }) {
 }
 
 /** Offer grid for one tab — cards flagged with council pick / warning state. */
-export function OfferGrid(props: {
+function OfferGrid(props: {
   offers: BoutOffer[];
   emptyTitle: string;
   emptyHint: string;

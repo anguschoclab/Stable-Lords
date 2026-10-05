@@ -5,7 +5,7 @@ import { interpolateData as t } from './templateHelpers';
 /**
  *
  */
-export interface MakeNewsletterItemArgs {
+interface MakeNewsletterItemArgs {
   rng: IRNGService;
   week: number;
   title: string;
@@ -35,7 +35,7 @@ export function makeNewsletterItem(args: MakeNewsletterItemArgs): NewsletterItem
 /**
  *
  */
-export interface PushNewsletterItemArgs {
+interface PushNewsletterItemArgs {
   target: NewsletterItem[];
   rng: IRNGService;
   week: number;

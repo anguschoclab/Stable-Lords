@@ -8,7 +8,7 @@ import type { Warrior } from '@/types/warrior.types';
 /**
  * Defines the shape of kill analytics.
  */
-export interface KillAnalytics {
+interface KillAnalytics {
   totalFights: number;
   kills: number;
   /** kills / totalFights */

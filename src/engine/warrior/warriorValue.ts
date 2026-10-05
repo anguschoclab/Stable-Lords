@@ -5,7 +5,7 @@ import { clamp } from '@/utils/math';
 /**
  *
  */
-export interface LiabilityResult {
+interface LiabilityResult {
   score: number; // 0–100, higher = more of a liability
   factors: { name: string; weight: number }[];
   recommendation: 'Keep' | 'Monitor' | 'Release';

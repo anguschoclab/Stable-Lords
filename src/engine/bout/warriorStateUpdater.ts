@@ -5,7 +5,7 @@ import { boutSeasonPoints, flashyFlair, nextCareerRecord } from '@/engine/warrio
 /**
  *
  */
-export interface UpdateWarriorAfterBoutArgs {
+interface UpdateWarriorAfterBoutArgs {
   warrior: Warrior;
   fameDelta: number;
   popularityDelta: number;

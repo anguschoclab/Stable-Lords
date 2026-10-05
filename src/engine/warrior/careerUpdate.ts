@@ -79,7 +79,7 @@ export function flashyFlair(
 /**
  * Defines the shape of career update result.
  */
-export interface CareerUpdateResult {
+interface CareerUpdateResult {
   status: WarriorStatus;
   fatigue: number;
   career: CareerRecord;
@@ -184,7 +184,7 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
 /**
  *
  */
-export interface UpdateWarriorAfterBoutArgs {
+interface UpdateWarriorAfterBoutArgs {
   warrior: Warrior;
   fameDelta: number;
   popularityDelta: number;
@@ -220,7 +220,7 @@ export function updateWarriorAfterBout(args: UpdateWarriorAfterBoutArgs): Warrio
 /**
  *
  */
-export interface UpdateWarriorFromBoutOutcomeArgs {
+interface UpdateWarriorFromBoutOutcomeArgs {
   warrior: Warrior;
   isAttacker: boolean;
   winnerSide: 'A' | 'D' | null;

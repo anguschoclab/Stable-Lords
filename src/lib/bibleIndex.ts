@@ -6,7 +6,7 @@
 /**
  * Defines the shape of bible doc.
  */
-export interface BibleDoc {
+interface BibleDoc {
   /** Filename without extension, e.g. "Stable_Lords_Master_Design_Bible_v1.0_..." */
   id: string;
   /** Human title derived from the first heading or filename. */
@@ -17,7 +17,7 @@ export interface BibleDoc {
 /**
  * Defines the shape of bible hit.
  */
-export interface BibleHit {
+interface BibleHit {
   docId: string;
   docTitle: string;
   /** Nearest preceding markdown heading, if any. */

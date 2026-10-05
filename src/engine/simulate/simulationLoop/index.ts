@@ -90,7 +90,7 @@ function runExchange(args: RunExchangeArgs): boolean {
 /**
  *
  */
-export interface RunSimulationLoopArgs {
+interface RunSimulationLoopArgs {
   fA: FighterState;
   fD: FighterState;
   resCtx: ResolutionContext;

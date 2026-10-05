@@ -36,7 +36,7 @@ export interface AutosimResult {
 /**
  * Default stop conditions for autosim — evaluated EVERY week.
  */
-export const DEFAULT_AUTOSIM_STOP_CONDITIONS: SoftStopCondition[] = [
+const DEFAULT_AUTOSIM_STOP_CONDITIONS: SoftStopCondition[] = [
   { type: 'rosterEmpty' },
   { type: 'noPairings' },
 ];

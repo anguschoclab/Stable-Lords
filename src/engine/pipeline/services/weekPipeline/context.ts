@@ -32,7 +32,7 @@ export function prepareWeekContext(state: GameState, headless?: boolean): WeekCo
  * (Maps) — strip them before cloning so the worker path never pays to clone
  * maps that get rebuilt anyway.
  */
-export function stripWeekCaches(state: GameState): GameState {
+function stripWeekCaches(state: GameState): GameState {
   const {
     warriorMap: _wm,
     cachedMetaDrift: _cmd,

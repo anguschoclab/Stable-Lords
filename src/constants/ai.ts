@@ -54,7 +54,7 @@ export const AI_PRESTIGE_CAP_RATE = 0.05;
 // Tactician fills the game plan.
 
 /** Scoring weights a personality applies when drafting recruits. */
-export interface PersonalityDraftWeights {
+interface PersonalityDraftWeights {
   /** Score bonus per recruit tier. */
   tierBonus: Record<string, number>;
   /** Price appetite: score -= cost * priceSensitivity / 100 (higher = thriftier). */

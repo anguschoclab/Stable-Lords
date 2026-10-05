@@ -19,7 +19,7 @@ import { addCapped } from '@/utils/math';
 /**
  *
  */
-export interface ExecuteRiposteArgs {
+interface ExecuteRiposteArgs {
   events: CombatEvent[];
   rng: () => number;
   attacker: FighterState;

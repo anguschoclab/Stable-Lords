@@ -82,7 +82,7 @@ function pickRecruitName(
 /**
  *
  */
-export interface GenerateRecruitArgs {
+interface GenerateRecruitArgs {
   rng: IRNGService;
   usedNames: Set<string>;
   week: number;

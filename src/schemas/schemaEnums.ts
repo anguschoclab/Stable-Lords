@@ -26,8 +26,6 @@ import {
   DEFENSIVE_TACTICS,
   CONDITION_TRIGGERS,
   DISTANCE_RANGES,
-  ARENA_ZONES,
-  ARENA_TAGS,
   SHIELD_SHAPES,
   FIELD_TYPES,
   METAL_COLORS,
@@ -170,14 +168,7 @@ export const DistanceRangeSchema = z.enum(DISTANCE_RANGES);
 /**
  * ArenaZone enum schema
  */
-export const ArenaZoneSchema = z.enum(ARENA_ZONES);
 
-
-
-/**
- * ArenaTag enum schema
- */
-export const ArenaTagSchema = z.enum(ARENA_TAGS);
 
 /**
  * ShieldShape enum schema

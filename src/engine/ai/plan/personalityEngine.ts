@@ -18,7 +18,7 @@ type PersonalityAdaptationFn = (
  * in-bout PlanCondition nudges.  TypeScript will error if a personality is
  * ever added to the union without a corresponding entry here.
  */
-export const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAdaptationFn> = {
+const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAdaptationFn> = {
   Aggressive: (plan, bounded, isKillIntent) => {
     const conditions: PlanCondition[] = [
       {

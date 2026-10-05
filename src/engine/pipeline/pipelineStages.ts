@@ -25,7 +25,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
  */
 
 /** Resolution stage — 'core' settles first, then 'world', then 'content'. */
-export type WeekStage = 'core' | 'world' | 'content';
+type WeekStage = 'core' | 'world' | 'content';
 
 /** Declarative spec for one weekly pipeline pass. */
 export interface WeekPassSpec {
@@ -90,7 +90,7 @@ const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
 const STAGE_ORDER: Record<WeekStage, number> = { core: 0, world: 1, content: 2 };
 
 /** A single pipeline legality violation found by validatePipelinePasses. */
-export interface PipelineValidationIssue {
+interface PipelineValidationIssue {
   kind: 'exclusive-write-collision' | 'ordering' | 'unknown-after';
   message: string;
   passIds: string[];

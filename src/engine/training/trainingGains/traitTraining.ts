@@ -6,7 +6,7 @@ import { TRAITS, type TraitDef, type TraitTier } from '@/engine/traits';
 export const TRAIT_TRAIN_WEEKS = 4;
 export const TRAIT_CAP = 3;
 
-export const CLASS_TRAIT_WEIGHT_BONUS = 5;
+const CLASS_TRAIT_WEIGHT_BONUS = 5;
 
 const CEILING: Record<TrainerTier, TraitTier> = {
   Novice: 'Notable',

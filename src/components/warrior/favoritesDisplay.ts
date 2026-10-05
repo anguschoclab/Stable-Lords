@@ -9,7 +9,7 @@ import { WEAPONS } from '@/data/equipment';
 /**
  *
  */
-export interface FavoritesDisplayInfo {
+interface FavoritesDisplayInfo {
   weapon: string | null;
   weaponHint: string | null;
   rhythm: string | null;

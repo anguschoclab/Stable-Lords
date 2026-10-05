@@ -10,7 +10,7 @@ import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 /**
  * Suitability rating type.
  */
-export type SuitabilityRating = 'WS' | 'S' | 'U';
+type SuitabilityRating = 'WS' | 'S' | 'U';
 
 const OFFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>> = {
   [FightingStyle.AimedBlow]: { Lunge: 'WS', Slash: 'WS', Bash: 'WS', Decisiveness: 'U' },

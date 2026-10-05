@@ -14,7 +14,7 @@ const TIER_RANK: Record<string, number> = {
 /**
  *
  */
-export interface FilteredOffersResult {
+interface FilteredOffersResult {
   thisWeekOffers: BoutOffer[];
   upcomingOffers: BoutOffer[];
   idleWarriors: Warrior[];
@@ -39,7 +39,7 @@ function bestByPromoter(offers: BoutOffer[]): BoutOffer[] {
 /**
  *
  */
-export interface FilterAndSortOffersArgs {
+interface FilterAndSortOffersArgs {
   boutOffers: Record<BoutOfferId, BoutOffer>;
   roster: Warrior[];
   week: number;

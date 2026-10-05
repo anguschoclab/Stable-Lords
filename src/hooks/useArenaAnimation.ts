@@ -13,7 +13,7 @@ import {
 /**
  * Defines the shape of use arena animation return.
  */
-export interface UseArenaAnimationReturn extends ArenaState {
+interface UseArenaAnimationReturn extends ArenaState {
   /** Add a speech bubble */
   addBubble: (bubble: Omit<SpeechBubble, 'id'>) => void;
   /** Remove a speech bubble by id */
@@ -27,7 +27,7 @@ export interface UseArenaAnimationReturn extends ArenaState {
 /**
  *
  */
-export interface UseArenaAnimationArgs {
+interface UseArenaAnimationArgs {
   log: MinuteEvent[];
   visibleCount: number;
   maxHpA: number;

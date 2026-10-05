@@ -14,7 +14,7 @@ import { DEFAULT_LOADOUT } from '@/data/equipment';
 /**
  * Arena configuration type.
  */
-export interface ArenaConfig {
+interface ArenaConfig {
   name: string;
   description: string;
 }
@@ -22,7 +22,7 @@ export interface ArenaConfig {
 /**
  *
  */
-export interface GenerateIntroductionsArgs {
+interface GenerateIntroductionsArgs {
   rng: IRNGService;
   nameA: string;
   nameD: string;

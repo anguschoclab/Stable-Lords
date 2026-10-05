@@ -41,6 +41,4 @@ const shardApi = {
 };
 
 /** The API surface exposed to the pool over Comlink. */
-export type ShardWorkerApi = typeof shardApi;
-
 Comlink.expose(shardApi);

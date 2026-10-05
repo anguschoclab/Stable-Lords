@@ -169,7 +169,7 @@ export function computeDamage(attrs: Attributes): number {
  * @param attrs - The warrior's base attributes
  * @returns Encumbrance capacity value
  */
-export function computeEncumbrance(attrs: Attributes): number {
+function computeEncumbrance(attrs: Attributes): number {
   return computeEncumbranceCapacity(attrs.ST, attrs.CN);
 }
 

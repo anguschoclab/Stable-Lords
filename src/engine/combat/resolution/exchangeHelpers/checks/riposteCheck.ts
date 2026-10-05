@@ -9,7 +9,7 @@ import { getStyleAntiSynergy } from '@/engine/stylePassives';
 /**
  *
  */
-export interface PerformRiposteCheckArgs {
+interface PerformRiposteCheckArgs {
   rng: () => number;
   def: FighterState;
   matchup: number;

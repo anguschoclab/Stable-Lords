@@ -12,7 +12,7 @@ import { removeFromRoster, updateRoster } from '@/utils/roster';
 /**
  * Apply roster updates to state.
  */
-export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
+const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
   if (value.size === 0) return;
 
   // Directly modify the roster without mapping if we only have a few updates
@@ -37,7 +37,7 @@ export const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Wa
 /**
  * Apply roster removals to state.
  */
-export const rosterRemovals = (state: GameState, value: WarriorId[]) => {
+const rosterRemovals = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
   state.roster = removeFromRoster(state.roster, value);
 };
@@ -45,7 +45,7 @@ export const rosterRemovals = (state: GameState, value: WarriorId[]) => {
 /**
  *
  */
-export const rosterAdditions = (state: GameState, value: Warrior[]) => {
+const rosterAdditions = (state: GameState, value: Warrior[]) => {
   state.roster = [...state.roster, ...value];
 };
 
@@ -54,7 +54,7 @@ export const rosterAdditions = (state: GameState, value: Warrior[]) => {
  * outcome against an already-dead warrior must never create a second
  * graveyard entry (the graveyard is a set of unique deaths, not a log).
  */
-export const graveyard = (state: GameState, value: Warrior[]) => {
+const graveyard = (state: GameState, value: Warrior[]) => {
   const seen = new Set<WarriorId>((state.graveyard || []).map((w) => w.id));
   const fresh = value.filter((w) => {
     if (seen.has(w.id)) return false;
@@ -70,7 +70,7 @@ export const graveyard = (state: GameState, value: Warrior[]) => {
  * bracket record stays self-describing instead of harbouring a stale
  * 'Active' copy of a warrior who can never fight again.
  */
-export const deadWarriorIds = (state: GameState, value: WarriorId[]) => {
+const deadWarriorIds = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
   const seen = new Set<WarriorId>(state.deadWarriorIds || []);
   const fresh = value.filter((id) => {
@@ -98,7 +98,7 @@ export const deadWarriorIds = (state: GameState, value: WarriorId[]) => {
  * already-dead warrior is corruption the oracle counts — killOutcomes
  * exceeding unique deaths is exactly the divergence tripwire.
  */
-export const killEvents = (state: GameState, value: KillEvent[]) => {
+const killEvents = (state: GameState, value: KillEvent[]) => {
   if (value.length === 0) return;
   const seen = new Set<string>((state.killEvents || []).map((e) => e.id));
   const fresh = value.filter((e) => {
@@ -112,7 +112,7 @@ export const killEvents = (state: GameState, value: KillEvent[]) => {
 /**
  * Apply retired warriors to state.
  */
-export const retired = (state: GameState, value: Warrior[]) => {
+const retired = (state: GameState, value: Warrior[]) => {
   state.retired = [...(state.retired || []), ...value];
 };
 
@@ -122,7 +122,7 @@ export const retired = (state: GameState, value: Warrior[]) => {
  * live rosters directly (the findWarriorById cache may hold stale objects
  * after same-tick roster replacements).
  */
-export const warriorEpithets = (state: GameState, value: readonly WarriorEpithetAward[]) => {
+const warriorEpithets = (state: GameState, value: readonly WarriorEpithetAward[]) => {
   for (const { warriorId, epithet } of value) {
     const w =
       state.roster.find((x) => x.id === warriorId) ??

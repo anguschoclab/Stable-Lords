@@ -9,7 +9,7 @@ import type { Warrior } from '@/types/warrior.types';
 /**
  * Apply rivals updates to state.
  */
-export const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStableData>>) => {
+const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStableData>>) => {
   if (value.size === 0) return;
   if (process.env.EPITHET_DEBUG) {
     for (const r of state.rivals) {
@@ -50,7 +50,7 @@ function rebuildRivalMap(state: GameState): void {
 /**
  * Apply per-warrior patches to rival-owned warriors, wherever they are rostered.
  */
-export const rivalWarriorPatches = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
+const rivalWarriorPatches = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
   if (value.size === 0) return;
   state.rivals = state.rivals.map((r) => {
     if (!r.roster.some((w) => value.has(w.id))) return r;
@@ -68,7 +68,7 @@ export const rivalWarriorPatches = (state: GameState, value: Map<WarriorId, Part
 /**
  * Remove rival-owned warriors (e.g. killed in a bout) from their rosters.
  */
-export const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
+const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
   const ids = new Set<string>(value);
   state.rivals = state.rivals.map((r) =>
@@ -84,7 +84,7 @@ export const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
  * successor whose id is already live is dropped (the bankrupt stable stays
  * and is retried next tick) rather than duplicating a stable id.
  */
-export const rivalReplacements = (state: GameState, value: Map<StableId, RivalStableData>) => {
+const rivalReplacements = (state: GameState, value: Map<StableId, RivalStableData>) => {
   if (value.size === 0) return;
   const liveIds = new Set<string>(state.rivals.map((r) => r.id));
   state.rivals = state.rivals.map((r) => {
@@ -100,7 +100,7 @@ export const rivalReplacements = (state: GameState, value: Map<StableId, RivalSt
  * Add stables outright (seasonal expansion). Ids already live are skipped —
  * joining the world must never overwrite an existing stable.
  */
-export const rivalsAdditions = (state: GameState, value: RivalStableData[]) => {
+const rivalsAdditions = (state: GameState, value: RivalStableData[]) => {
   if (value.length === 0) return;
   const liveIds = new Set<string>(state.rivals.map((r) => r.id));
   for (const addition of value) {
@@ -115,7 +115,7 @@ export const rivalsAdditions = (state: GameState, value: RivalStableData[]) => {
  * Remove stables outright (seasonal bankruptcy without a successor).
  * Updates keyed to a removed id become no-ops once it is gone.
  */
-export const rivalsRemovals = (state: GameState, value: StableId[]) => {
+const rivalsRemovals = (state: GameState, value: StableId[]) => {
   if (value.length === 0) return;
   const ids = new Set<string>(value);
   state.rivals = state.rivals.filter((r) => !ids.has(r.id));

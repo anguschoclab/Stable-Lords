@@ -16,7 +16,7 @@ export interface FightCard {
 /**
  * Defines the shape of newsletter issue.
  */
-export interface NewsletterIssue {
+interface NewsletterIssue {
   id: string;
   week: number;
   fights: FightCard[];

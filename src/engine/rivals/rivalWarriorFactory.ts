@@ -50,7 +50,7 @@ export function biasedAttrs(
 /**
  *
  */
-export interface CreateRivalWarriorArgs {
+interface CreateRivalWarriorArgs {
   wId: string;
   wName: string;
   style: FightingStyle;

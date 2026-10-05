@@ -58,7 +58,7 @@ function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): Riva
 /**
  *
  */
-export interface AiDraftFromPoolArgs {
+interface AiDraftFromPoolArgs {
   pool: PoolWarrior[];
   rivals: RivalStableData[];
   week: number;

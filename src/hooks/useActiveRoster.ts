@@ -7,7 +7,7 @@ import type { Attributes } from '@/types/shared.types';
 /**
  *
  */
-export interface ActiveRosterItem {
+interface ActiveRosterItem {
   id: string;
   name: string;
   fame: number;

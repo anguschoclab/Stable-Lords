@@ -154,7 +154,7 @@ function ExitButton({ isSimulating, returnToTitle }: ExitButtonProps) {
 /**
  * Header actions props.
  */
-export interface HeaderActionsProps {
+interface HeaderActionsProps {
   isSimulating: boolean;
   lastSavedAt: string | null;
   onResetPrompt: () => void;

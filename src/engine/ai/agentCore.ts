@@ -104,7 +104,7 @@ const isAIIntent = (cause: AIEventCause): cause is AIIntent =>
 /**
  *
  */
-export interface LogAgentActionArgs {
+interface LogAgentActionArgs {
   rival: RivalStableData;
   type: AIEvent['type'];
   description: string;

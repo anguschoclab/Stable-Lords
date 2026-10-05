@@ -27,7 +27,7 @@ export function computeHitDamage(
 /**
  *
  */
-export interface CalculateKillWindowArgs {
+interface CalculateKillWindowArgs {
   hpRatio: number;
   enduranceRatio: number;
   location: HitLocation;

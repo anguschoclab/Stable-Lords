@@ -7,7 +7,7 @@ import type { GameState, AnnualAward } from '@/types/state.types';
 /**
  * Apply awards to state.
  */
-export const awards = (state: GameState, value: AnnualAward[]) => {
+const awards = (state: GameState, value: AnnualAward[]) => {
   state.awards = [...(state.awards || []), ...value];
 };
 

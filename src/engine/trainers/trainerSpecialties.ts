@@ -12,7 +12,7 @@ import {
  * Specialty modifiers that stack on top of the base getTrainingBonus() values.
  * All are additive and default to no-ops (0 / 1.0 multipliers).
  */
-export interface SpecialtyMods {
+interface SpecialtyMods {
   attMod: number;
   defMod: number;
   parMod: number;

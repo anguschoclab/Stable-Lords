@@ -29,7 +29,7 @@ export function tournamentIdFromContractId(contractId?: string): string | undefi
  * Result of pairing generation. `voidedOffers` are Signed contracts that lost
  * the one-bout-per-warrior dedupe — callers must cancel them explicitly.
  */
-export interface PairingsResult {
+interface PairingsResult {
   pairings: BoutPairing[];
   voidedOffers: BoutOffer[];
 }

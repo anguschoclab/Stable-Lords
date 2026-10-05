@@ -129,7 +129,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
 /**
  * Status strip props — the header's readout slice.
  */
-export interface StatusStripProps {
+interface StatusStripProps {
   week: number;
   day: number;
   isTournamentWeek: boolean;

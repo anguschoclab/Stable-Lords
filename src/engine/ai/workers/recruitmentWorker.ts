@@ -327,7 +327,7 @@ function visiblePool(pool: PoolWarrior[], rivalId: string, week: number): PoolWa
 /**
  *
  */
-export interface ProcessRecruitmentArgs {
+interface ProcessRecruitmentArgs {
   rival: RivalStableData;
   pool: PoolWarrior[];
   week: number;

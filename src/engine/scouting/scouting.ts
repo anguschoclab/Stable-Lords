@@ -24,7 +24,7 @@ export type { ScoutQuality };
 /**
  * Defines the shape of scout report.
  */
-export interface ScoutReport {
+interface ScoutReport {
   id: string;
   warriorName: string;
   style: string;

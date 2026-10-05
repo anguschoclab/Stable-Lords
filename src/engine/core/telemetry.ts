@@ -6,7 +6,7 @@
 /**
  * Defines the shape of telemetry provider.
  */
-export interface TelemetryProvider {
+interface TelemetryProvider {
   /** Record timing for an operation */
   timing(name: string, durationMs: number, tags?: Record<string, string>): void;
   /** Increment a counter */
@@ -22,21 +22,7 @@ const noopProvider: TelemetryProvider = {
   gauge: () => {},
 };
 
-let globalProvider: TelemetryProvider = noopProvider;
-
-/**
- * Set the global telemetry provider
- */
-export function setTelemetryProvider(provider: TelemetryProvider): void {
-  globalProvider = provider;
-}
-
-/**
- * Get the current telemetry provider
- */
-export function getTelemetryProvider(): TelemetryProvider {
-  return globalProvider;
-}
+const globalProvider: TelemetryProvider = noopProvider;
 
 /**
  * True when a real provider is installed — callers use this to gate

@@ -12,7 +12,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 /**
  * Defines the shape of coach tip.
  */
-export interface CoachTip {
+interface CoachTip {
   id: string;
   /** Static message or dynamic builder from state + route params */
   message: string | ((state: GameState, context?: CoachContext) => string);

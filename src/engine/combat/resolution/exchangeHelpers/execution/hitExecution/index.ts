@@ -108,7 +108,7 @@ function preHitResolved(args: PreHitResolvedArgs): boolean {
 /**
  *
  */
-export interface ExecuteHitArgs {
+interface ExecuteHitArgs {
   events: CombatEvent[];
   rng: () => number;
   attacker: FighterState;

@@ -74,7 +74,7 @@ export function patchFighterPose(
 /**
  *
  */
-export function getBubbleFromEvent(event: MinuteEvent, index: number): SpeechBubble | null {
+function getBubbleFromEvent(event: MinuteEvent, index: number): SpeechBubble | null {
   const type = classifyEvent(event);
 
   // Check for taunt-worthy events

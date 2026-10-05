@@ -10,9 +10,9 @@ import { canAcquireTrait } from './traitTraining';
  * saturating everyone to the cap. Thresholds are tuned for the [0.4,0.9] range;
  * adjust against the liveness harness, not by feel.
  */
-export const CAPACITY_T1 = 0.52; // below → capacity 0 (never develops)
-export const CAPACITY_T2 = 0.66; // below → capacity 1
-export const CAPACITY_T3 = 0.8; // below → capacity 2, else 3
+const CAPACITY_T1 = 0.52; // below → capacity 0 (never develops)
+const CAPACITY_T2 = 0.66; // below → capacity 1
+const CAPACITY_T3 = 0.8; // below → capacity 2, else 3
 
 /**
  *
@@ -26,8 +26,8 @@ export function traitCapacity(w: Warrior): number {
 }
 
 /** Traits are earned: only warriors with a winning record or real fame develop. */
-export const WINS_FOR_MERIT = 1;
-export const FAME_FOR_MERIT = 5;
+const WINS_FOR_MERIT = 1;
+const FAME_FOR_MERIT = 5;
 
 /**
  *

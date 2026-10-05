@@ -41,7 +41,7 @@ import {
 /**
  *
  */
-export interface ComputePreArmorDamageArgs {
+interface ComputePreArmorDamageArgs {
   rng: () => number;
   attacker: FighterState;
   defender: FighterState;
@@ -137,7 +137,7 @@ export function applyDamageMultipliers(
 /**
  *
  */
-export interface ApplyHitAndCountersArgs {
+interface ApplyHitAndCountersArgs {
   events: CombatEvent[];
   rng: () => number;
   rawDamage: number;

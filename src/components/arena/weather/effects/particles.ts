@@ -7,7 +7,7 @@ import type { CSSProperties } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 
 /** Timing knobs for {@link driftParticleStyle}. */
-export interface DriftParticleTiming {
+interface DriftParticleTiming {
   /** Max random animation delay in seconds (default 3). */
   delayS?: number;
   /** Randomized duration window in seconds — omit for no explicit duration. */

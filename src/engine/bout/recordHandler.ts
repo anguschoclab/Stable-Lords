@@ -17,7 +17,7 @@ function isTournamentParticipant(state: GameState, warriorId: string): boolean {
 /**
  *
  */
-export interface ApplyRecordsArgs {
+interface ApplyRecordsArgs {
   s: GameState;
   wA: Warrior;
   wD: Warrior;

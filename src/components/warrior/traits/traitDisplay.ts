@@ -4,7 +4,7 @@ import { STYLE_DISPLAY_NAMES, type FightingStyle } from '@/types/shared.types';
 /**
  *
  */
-export interface TraitBadgeMeta {
+interface TraitBadgeMeta {
   id: string;
   name: string;
   tier: TraitTier;

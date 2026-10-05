@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 /**
  * Sort dir type.
  */
-export type SortDir = 'asc' | 'desc';
+type SortDir = 'asc' | 'desc';
 
 /**
  * Defines the shape of sort header props.
  */
-export interface SortHeaderProps {
+interface SortHeaderProps {
   label: ReactNode;
   active: boolean;
   dir?: SortDir;

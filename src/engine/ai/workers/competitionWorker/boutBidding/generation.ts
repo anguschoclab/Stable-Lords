@@ -73,7 +73,7 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
 /**
  *
  */
-export interface GenerateBoutBidsArgs {
+interface GenerateBoutBidsArgs {
   rival: RivalStableData;
   _currentWeek: number;
   weather?: WeatherType;

@@ -13,7 +13,7 @@ import { getStyleAntiSynergy } from '@/engine/stylePassives';
 /**
  *
  */
-export interface PerformDefenseCheckArgs {
+interface PerformDefenseCheckArgs {
   rng: () => number;
   def: FighterState;
   curDefOE: number;

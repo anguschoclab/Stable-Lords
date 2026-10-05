@@ -4,7 +4,7 @@ import type { TrainerTier } from '@/types/shared.types';
 /**
  *
  */
-export interface TraitPolicy {
+interface TraitPolicy {
   /** Release a warrior whose liability score (System 4) reaches this. Lower = cuts faster. */
   cutLiabilityThreshold: number;
   /** Per-warrior weekly chance to resolve a trait-training arc. Higher = develops more. */

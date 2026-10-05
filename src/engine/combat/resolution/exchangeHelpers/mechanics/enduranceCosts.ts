@@ -13,7 +13,7 @@ import { getItemById } from '@/data/equipment/equipment.utils';
 /**
  *
  */
-export interface ApplyEnduranceCostsArgs {
+interface ApplyEnduranceCostsArgs {
   events: CombatEvent[];
   ctx: ResolutionContext;
   fA: FighterState;

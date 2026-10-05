@@ -21,7 +21,7 @@ const PHASE_ORDER = { opening: 0, mid: 1, late: 2 } as const;
 type PhaseKey = keyof typeof PHASE_ORDER;
 
 /** True when the bout has reached or passed `untilPhase`. */
-export function phaseReached(phaseKey: PhaseKey, untilPhase: 'mid' | 'late'): boolean {
+function phaseReached(phaseKey: PhaseKey, untilPhase: 'mid' | 'late'): boolean {
   return PHASE_ORDER[phaseKey] >= PHASE_ORDER[untilPhase];
 }
 
@@ -114,7 +114,7 @@ export function resolveDecoyMasks(
  * never mutated in place), so `evaluateConditions` downstream sees the
  * committed curve.
  */
-export function applyPhaseShiftBoundary(
+function applyPhaseShiftBoundary(
   fighter: FighterState,
   opponent: FighterState,
   phaseKey: PhaseKey

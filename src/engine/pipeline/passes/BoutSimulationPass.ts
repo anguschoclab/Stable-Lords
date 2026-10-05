@@ -14,7 +14,7 @@ import { StateImpact } from '@/engine/impacts';
 import { gameYearWeekToTimestamp } from '@/constants';
 
 /** Output of the bout simulation pass. */
-export interface BoutPassOutput {
+interface BoutPassOutput {
   impact: StateImpact;
   results: BoutResult[];
   summary: WeekBoutSummary;

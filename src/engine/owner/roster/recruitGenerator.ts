@@ -135,7 +135,7 @@ export function generateRecruitAttrs(
 /**
  *
  */
-export interface GenerateAIRecruitArgs {
+interface GenerateAIRecruitArgs {
   rival: RivalStableData;
   week: number;
   meta?: StyleMeta;

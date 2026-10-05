@@ -39,7 +39,7 @@ export type ChargeType = 'beast' | 'weapon' | 'symbol' | 'nature' | 'celestial' 
 /**
  * Beast posture type.
  */
-export type BeastPosture = 'rampant' | 'passant' | 'sejant' | 'couchant' | 'statant' | 'forcene';
+type BeastPosture = 'rampant' | 'passant' | 'sejant' | 'couchant' | 'statant' | 'forcene';
 
 /**
  * Defines the shape of crest charge.

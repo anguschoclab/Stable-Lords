@@ -4,7 +4,7 @@ import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import type { PromoterPersonality } from '@/types/state.types';
 
 /** Aggregated totals across all promoters shown in the directory. */
-export interface PromoterDirectoryStats {
+interface PromoterDirectoryStats {
   totalPromoters: number;
   totalPurse: number;
   totalNotableBouts: number;

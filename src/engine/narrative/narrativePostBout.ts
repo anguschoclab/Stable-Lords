@@ -36,7 +36,7 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
 /**
  *
  */
-export interface NarrateBoutEndArgs {
+interface NarrateBoutEndArgs {
   rng: IRNGService;
   by: string;
   winnerName: string;

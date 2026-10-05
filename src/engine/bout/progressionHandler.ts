@@ -45,7 +45,7 @@ function routeUpdate(
 /**
  *
  */
-export interface HandleProgressionsArgs {
+interface HandleProgressionsArgs {
   s: GameState;
   wA: Warrior;
   wD: Warrior;

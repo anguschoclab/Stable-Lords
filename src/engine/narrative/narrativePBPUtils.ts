@@ -85,7 +85,7 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
 /**
  *
  */
-export interface GetStrikeSeverityArgs {
+interface GetStrikeSeverityArgs {
   damage: number;
   maxHp: number;
   isFatal: boolean;

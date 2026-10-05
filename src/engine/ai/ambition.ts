@@ -9,7 +9,7 @@ import type { RivalStableData } from '@/types/state.types';
 import { competenceQuality } from './competence';
 
 /** Lifecycle stage an owner is slotted into by {@link deriveAmbitionArc}. */
-export type AmbitionArc = 'ASCENDANT' | 'PRIME' | 'DECLINING';
+type AmbitionArc = 'ASCENDANT' | 'PRIME' | 'DECLINING';
 
 const ASCENDANT_FLOOR = 1.0;
 const DECLINING_CEILING = 0.45;

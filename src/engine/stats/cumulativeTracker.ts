@@ -25,7 +25,7 @@ export interface CumulativeStats {
 /**
  * Accumulates CumulativeStats from successive weekly states.
  */
-export interface CumulativeTracker {
+interface CumulativeTracker {
   /**
    * Records any bouts, deaths, and retirements present in `state` that have
    * not been seen before. Call once per week after `advanceWeek`, before

@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 /**
  * Global treasury matrix props.
  */
-export interface GlobalTreasuryMatrixProps {
+interface GlobalTreasuryMatrixProps {
   gold: number;
   activeWarriorsCount: number;
   totalWins: number;

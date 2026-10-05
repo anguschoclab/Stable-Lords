@@ -16,7 +16,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 /**
  *
  */
-export interface NarrateAttackArgs {
+interface NarrateAttackArgs {
   rng: IRNGService;
   attackerName: string;
   weaponId?: string;
@@ -270,7 +270,7 @@ export function narrateCounterstrike(
 /**
  *
  */
-export interface NarrateHitArgs {
+interface NarrateHitArgs {
   rng: IRNGService;
   defenderName: string;
   location: string;

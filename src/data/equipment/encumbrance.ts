@@ -21,7 +21,7 @@ export type EncumbranceTier = 'NONE' | 'LIGHT' | 'MEDIUM' | 'HEAVY' | 'OVER';
 /**
  *
  */
-export interface EncumbrancePenalties {
+interface EncumbrancePenalties {
   iniPenalty: number;
   defPenalty: number;
   parPenalty: number;

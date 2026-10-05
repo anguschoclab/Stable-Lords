@@ -8,7 +8,7 @@
  * these before the run starts; combat and weekly code read them per call —
  * a property read on globalThis, cheap enough for hot loops.
  */
-export type AiFeatureFlag = 'AI_COMPETENCE' | 'AI_SEASON_PLANS' | 'AI_READS' | 'AI_DECOY';
+type AiFeatureFlag = 'AI_COMPETENCE' | 'AI_SEASON_PLANS' | 'AI_READS' | 'AI_DECOY';
 
 /** Returns false only when the flag is explicitly set to `false`. */
 export function aiFeature(flag: AiFeatureFlag): boolean {

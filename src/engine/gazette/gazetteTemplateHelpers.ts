@@ -24,7 +24,7 @@ export { MOOD_TONE };
 /**
  * Template data type for substitution.
  */
-export type TemplateData = Record<string, string | number | boolean | undefined>;
+type TemplateData = Record<string, string | number | boolean | undefined>;
 
 /**
  * Gets display name for a fighting style.

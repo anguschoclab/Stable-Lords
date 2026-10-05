@@ -54,7 +54,7 @@ export function createAttributeInsights(
 /**
  *
  */
-export interface CreateTacticInsightArgs {
+interface CreateTacticInsightArgs {
   warrior: Warrior;
   quality: ScoutQuality;
   suspectedOE: string | undefined;
@@ -99,7 +99,7 @@ export function createTraitInsights(
 /**
  *
  */
-export interface GenerateScoutInsightsArgs {
+interface GenerateScoutInsightsArgs {
   warrior: Warrior;
   quality: ScoutQuality;
   week: number;

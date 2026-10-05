@@ -14,7 +14,7 @@ type MatchScoreFn = (warriorA: Warrior, warriorB: Warrior) => number;
  * Strategy map: each PromoterPersonality maps to a function that scores
  * how well a given matchup fits that promoter's preference.
  */
-export const PERSONALITY_MATCH_SCORE: Record<PromoterPersonality, MatchScoreFn> = {
+const PERSONALITY_MATCH_SCORE: Record<PromoterPersonality, MatchScoreFn> = {
   // Prefer skill mismatches (bigger gap = higher score for greedy)
   // Gap is handled separately; this adds a bonus for mismatches.
   Greedy: () => 10,
@@ -61,7 +61,7 @@ type PurseModFn = (warriorA: Warrior, warriorB: Warrior, baseHype: number) => nu
 /**
  * Strategy map: each PromoterPersonality maps to a purse modifier function.
  */
-export const PERSONALITY_PURSE_MOD: Record<PromoterPersonality, PurseModFn> = {
+const PERSONALITY_PURSE_MOD: Record<PromoterPersonality, PurseModFn> = {
   // +15% purse, -10% hype (crowd-pleasing blowouts pay more but generate less organic hype)
   Greedy: () => 1.15,
   // +10% hype (competitive matches draw more interest)

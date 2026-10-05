@@ -42,7 +42,7 @@ export function pickActiveWarrior(
 }
 
 /** Args for {@link announceOffseasonEvent}. */
-export interface AnnounceOffseasonEventArgs {
+interface AnnounceOffseasonEventArgs {
   ctx: OffseasonEventContext;
   rng: IRNGService;
   nextWeek: number;
@@ -59,13 +59,13 @@ export function announceOffseasonEvent(args: AnnounceOffseasonEventArgs): void {
 }
 
 /** Outcome returned by a `withChosenWarrior` apply callback. */
-export interface ChosenWarriorOutcome {
+interface ChosenWarriorOutcome {
   updates?: Partial<Warrior>;
   announce?: Record<string, string | number>;
 }
 
 /** Args for {@link withChosenWarrior} — the run bundle plus the apply callback. */
-export interface WithChosenWarriorArgs extends OffseasonEventRun {
+interface WithChosenWarriorArgs extends OffseasonEventRun {
   apply: (chosen: Warrior) => ChosenWarriorOutcome | undefined;
   healthyOnly?: boolean;
 }
@@ -87,7 +87,7 @@ export function withChosenWarrior(args: WithChosenWarriorArgs): void {
 }
 
 /** Args for {@link withChosenWarriorNews} — the run bundle plus the apply callback. */
-export interface WithChosenWarriorNewsArgs extends OffseasonEventRun {
+interface WithChosenWarriorNewsArgs extends OffseasonEventRun {
   apply: (chosen: Warrior) => string;
 }
 
@@ -110,7 +110,7 @@ export function warriorOutcome(
 }
 
 /** Parameters for {@link grantInsightToken} — warrior identity and week come from `run`/`chosen`. */
-export type OffseasonInsightSpec = Omit<
+type OffseasonInsightSpec = Omit<
   Parameters<typeof makeInsightToken>[1],
   'warriorId' | 'warriorName' | 'discoveredWeek'
 >;

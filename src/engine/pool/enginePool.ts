@@ -114,7 +114,7 @@ export interface EnginePool {
 }
 
 /** Pool construction options. */
-export interface EnginePoolOptions {
+interface EnginePoolOptions {
   /**
    * Worker spawn seam — tests inject a factory returning a shard API that runs
    * the real functions asynchronously in-process (MockWorker cannot execute

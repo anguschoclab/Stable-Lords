@@ -5,7 +5,7 @@ import { getNamesFromTitle } from '@/utils/fightTitle';
 /**
  *
  */
-export interface LeaderboardEntry {
+interface LeaderboardEntry {
   name: string;
   w: number;
   l: number;
@@ -18,7 +18,7 @@ export interface LeaderboardEntry {
 /**
  *
  */
-export interface BestByStyleEntry {
+interface BestByStyleEntry {
   style: string;
   name: string;
   wins: number;
@@ -27,7 +27,7 @@ export interface BestByStyleEntry {
 /**
  *
  */
-export interface RisingStarEntry {
+interface RisingStarEntry {
   name: string;
   wins: number;
   matches: number;

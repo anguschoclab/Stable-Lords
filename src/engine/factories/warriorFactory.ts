@@ -16,7 +16,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 /**
  *
  */
-export interface MakeWarriorArgs {
+interface MakeWarriorArgs {
   id: WarriorId | undefined;
   name: string;
   style: FightingStyle;

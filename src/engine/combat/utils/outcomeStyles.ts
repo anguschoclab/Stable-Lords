@@ -8,7 +8,7 @@ import type { FightOutcomeBy } from '@/types/combat.types';
 /**
  * Defines the shape of outcome style.
  */
-export interface OutcomeStyle {
+interface OutcomeStyle {
   variant: 'gold' | 'blood' | 'parchment' | 'primary';
   icon?: string;
   label: string;

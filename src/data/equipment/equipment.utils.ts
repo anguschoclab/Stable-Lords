@@ -108,10 +108,10 @@ export function getLoadoutWeight(loadout: EquipmentLoadout): number {
 }
 
 /** How a weapon is being held — selects the canonical requirement special-cases. */
-export type WieldMode = 'normal' | 'two_handed' | 'off_hand' | 'dual';
+type WieldMode = 'normal' | 'two_handed' | 'off_hand' | 'dual';
 
 /** Options for {@link checkWeaponRequirements}. */
-export interface WieldOptions {
+interface WieldOptions {
   /** Defaults to 'two_handed' for two-handed weapons, otherwise 'normal'. */
   wield?: WieldMode;
   /** Ambidextrous warriors get eased dual-wield requirements. */

@@ -7,7 +7,7 @@
 import type { GameState } from '@/types/state.types';
 
 /** The state slice the quest evaluator actually reads. */
-export type QuestState = Pick<
+type QuestState = Pick<
   GameState,
   | 'arenaHistory'
   | 'roster'
@@ -18,7 +18,7 @@ export type QuestState = Pick<
 >;
 
 /** A single onboarding quest definition. */
-export interface OnboardingQuest {
+interface OnboardingQuest {
   id: string;
   label: string;
   hint: string;

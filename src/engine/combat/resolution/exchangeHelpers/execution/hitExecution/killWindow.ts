@@ -176,7 +176,7 @@ function gatherKillThreshold(args: GatherKillThresholdArgs): number {
 /**
  *
  */
-export interface AfterHitEventsArgs {
+interface AfterHitEventsArgs {
   events: CombatEvent[];
   rng: () => number;
   attacker: FighterState;

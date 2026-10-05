@@ -24,7 +24,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNG } from '@/utils/random';
 
 /** Which start screen is currently shown. */
-export type Screen = 'title' | 'newGame';
+type Screen = 'title' | 'newGame';
 
 /**
  * Reads a save file, imports it into a fresh slot, then loads it — with toast

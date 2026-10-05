@@ -48,7 +48,7 @@ export function makeExchangeState(): ExchangeState {
 /**
  *
  */
-export interface RunApproachArgs {
+interface RunApproachArgs {
   rng: () => number;
   fA: FighterState;
   fD: FighterState;
@@ -87,7 +87,7 @@ export function runApproach(args: RunApproachArgs): void {
 /**
  * Defines the shape of feint result.
  */
-export interface FeintResult {
+interface FeintResult {
   triggered: boolean;
   succeeded?: boolean;
   feintBonus: number;
@@ -168,7 +168,7 @@ export function runCommit(fighter: FighterState, OE: number): CommitResult {
 /**
  *
  */
-export interface RunRecoveryArgs {
+interface RunRecoveryArgs {
   fA: FighterState;
   fD: FighterState;
   debtToWriteA: number;

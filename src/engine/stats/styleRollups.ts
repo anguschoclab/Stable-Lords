@@ -183,7 +183,7 @@ function saveTour(m: Record<string, Record<string, RollingBucket>>) {
 /**
  * Style record type.
  */
-export type StyleRecord = {
+type StyleRecord = {
   style: string;
   W: number;
   L: number;

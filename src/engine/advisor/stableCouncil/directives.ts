@@ -30,7 +30,7 @@ export function computeCardKpis(cards: WarriorAdvisorCard[]): {
 /**
  *
  */
-export interface BuildStableDirectivesArgs {
+interface BuildStableDirectivesArgs {
   state: GameState;
   cards: WarriorAdvisorCard[];
   kpis: ReturnType<typeof computeCardKpis>;
@@ -113,7 +113,7 @@ export function buildStableDirectives(args: BuildStableDirectivesArgs): string[]
 /**
  *
  */
-export interface CollectUnresolvedDirectivesArgs {
+interface CollectUnresolvedDirectivesArgs {
   state: GameState;
   cards: WarriorAdvisorCard[];
   activeWarriors: GameState['roster'];

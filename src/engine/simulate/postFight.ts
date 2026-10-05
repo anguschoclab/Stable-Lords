@@ -16,7 +16,7 @@ import type {
 /**
  * Generate outcome tags based on fight statistics.
  */
-export function generateOutcomeTags(
+function generateOutcomeTags(
   winner: 'A' | 'D' | null,
   by: FightOutcomeBy | null,
   fA: FighterState,
@@ -45,7 +45,7 @@ export function generateOutcomeTags(
 /**
  *
  */
-export interface BuildPostFightStatsArgs {
+interface BuildPostFightStatsArgs {
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy | null;
   fA: FighterState;
@@ -59,7 +59,7 @@ export interface BuildPostFightStatsArgs {
 /**
  * Build post-fight statistics.
  */
-export function buildPostFightStats(args: BuildPostFightStatsArgs) {
+function buildPostFightStats(args: BuildPostFightStatsArgs) {
   const { winner, by, fA, fD, tags } = args;
   const { causeBucket, fatalHitLocation, fatalExchangeIndex } = args;
   return {
@@ -79,7 +79,7 @@ export function buildPostFightStats(args: BuildPostFightStatsArgs) {
 /**
  *
  */
-export interface HandleTimeLimitArgs {
+interface HandleTimeLimitArgs {
   fA: FighterState;
   fD: FighterState;
   nameA: string;
@@ -92,7 +92,7 @@ export interface HandleTimeLimitArgs {
 /**
  * Handle decision logic if time limit reached.
  */
-export function handleTimeLimit(args: HandleTimeLimitArgs): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
+function handleTimeLimit(args: HandleTimeLimitArgs): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
   const { fA, fD, nameA, nameD, rng } = args;
   const { log, headless } = args;
   const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
@@ -108,7 +108,7 @@ export function handleTimeLimit(args: HandleTimeLimitArgs): { winner: 'A' | 'D' 
 /**
  *
  */
-export interface ProcessPostFightArgs {
+interface ProcessPostFightArgs {
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy | null;
   fA: FighterState;

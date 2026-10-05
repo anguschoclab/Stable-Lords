@@ -13,7 +13,7 @@ export interface SortOption<T> {
 }
 
 /** Options controlling how a `useListShell` list filters, sorts, and windows. */
-export interface ListShellOptions<T> {
+interface ListShellOptions<T> {
   /** Lowercased substrings an item must match against the query. */
   searchText: (item: T) => string[];
   sorts: SortOption<T>[];

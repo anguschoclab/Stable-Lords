@@ -10,7 +10,7 @@ const persona: Persona = uiMeta.persona;
 /**
  * Defines the shape of warrior overview statements.
  */
-export interface WarriorOverviewStatements {
+interface WarriorOverviewStatements {
   initiative: string;
   riposte: string;
   attack: string;

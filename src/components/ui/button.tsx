@@ -8,7 +8,7 @@ import { buttonVariants, type ButtonVariants } from './button-utils';
 /**
  * Defines the shape of button props.
  */
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
   asChild?: boolean;
   tooltip?: React.ReactNode;
   tooltipSide?: 'top' | 'bottom' | 'left' | 'right';

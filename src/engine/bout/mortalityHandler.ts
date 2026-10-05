@@ -180,7 +180,7 @@ function buildDeathArtifacts(args: BuildDeathArtifactsArgs) {
 /**
  *
  */
-export interface HandleDeathArgs {
+interface HandleDeathArgs {
   s: GameState;
   wA: Warrior;
   wD: Warrior;

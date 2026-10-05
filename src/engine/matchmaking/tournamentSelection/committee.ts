@@ -124,7 +124,7 @@ function addStyleChampions(
 /**
  *
  */
-export interface BuildTournamentArgs {
+interface BuildTournamentArgs {
   tierId: string;
   tierName: string;
   warriors: Warrior[];

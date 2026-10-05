@@ -5,7 +5,7 @@ import { FightingStyle } from '@/types/shared.types';
  * fighting styles. Keyed by the enum (not display name) so a new style fails
  * typecheck until its entry is written.
  */
-export interface StyleCompendiumEntry {
+interface StyleCompendiumEntry {
   /** Short archetype label, e.g. "The Surgeon". */
   archetype: string;
   /** Lore-grade description of the style's philosophy. */

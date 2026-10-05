@@ -12,7 +12,7 @@ const DEATH_RATE_OPTIONS = [
   { value: 0, label: 'No-Death Exhibitions' },
 ];
 
-export const MODS_BTN =
+const MODS_BTN =
   'px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border rounded-none transition-colors motion-reduce:transition-none';
 
 /** House rules panel — death-rate multiplier and severe-injury-instead-of-death toggle. */

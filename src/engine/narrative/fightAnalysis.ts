@@ -45,7 +45,7 @@ export interface FightAnalysis {
 /**
  *
  */
-export interface AnalysisWarrior {
+interface AnalysisWarrior {
   id: string;
   name: string;
   style: string;

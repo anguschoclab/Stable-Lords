@@ -13,12 +13,10 @@ import {
  * BudgetWorker: Handles risk-tiered spending checks.
  * Implements "Risk-Tiered Execution" and "Blocking Budgets".
  */
-export type RiskLevel = 'Safe' | 'Speculative' | 'Reckless';
-
 /**
  * Defines the shape of budget report.
  */
-export interface BudgetReport {
+interface BudgetReport {
   isAffordable: boolean;
   riskTier: AIEvent['riskTier'];
   adjustedTreasury: number;
@@ -55,7 +53,7 @@ export function projectedWeeklyUpkeep(rival: RivalStableData): number {
  * this stable is the paying side (or the proposer is unrecorded). Pure —
  * same inputs, same projection, so shards agree.
  */
-export interface CashFlowProjection {
+interface CashFlowProjection {
   weeks: number;
   weeklyUpkeep: number;
   committedPurses: number;

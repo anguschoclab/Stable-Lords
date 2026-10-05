@@ -8,7 +8,7 @@ import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 /**
  *
  */
-export interface DigestSummary {
+interface DigestSummary {
   totalFights: number;
   wins: number;
   losses: number;

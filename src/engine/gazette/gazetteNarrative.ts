@@ -75,7 +75,7 @@ export function generateFightNarrative(
 /**
  *
  */
-export interface GenerateGazetteHeadlineArgs {
+interface GenerateGazetteHeadlineArgs {
   detections: GazetteDetections;
   fights: FightSummary[];
   week: number;
@@ -251,7 +251,7 @@ function graveyardParagraphs(
 /**
  *
  */
-export interface GenerateGazetteBodyArgs {
+interface GenerateGazetteBodyArgs {
   detections: GazetteDetections;
   fights: FightSummary[];
   mood: CrowdMoodType;

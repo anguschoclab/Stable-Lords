@@ -47,7 +47,7 @@ export function checkYieldOutcome(
 /**
  * Bout end result.
  */
-export interface BoutEndResult {
+interface BoutEndResult {
   by: FightOutcomeBy;
   winner: 'A' | 'D' | null;
   causeBucket: DeathCauseBucket | undefined;

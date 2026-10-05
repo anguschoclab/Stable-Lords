@@ -222,7 +222,7 @@ export interface OfferBuildContext {
 /**
  *
  */
-export interface CreateBoutOfferArgs {
+interface CreateBoutOfferArgs {
   warriorA: Warrior;
   opponentB: Warrior;
   promoter: Promoter;

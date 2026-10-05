@@ -4,7 +4,7 @@ import { clamp } from '@/utils/math';
 /**
  *
  */
-export interface FighterHp {
+interface FighterHp {
   hp: number;
   max: number;
   label?: string;

@@ -180,7 +180,7 @@ export function getDefensiveTacticMods(
 /**
  *
  */
-export interface CalculateFinalOEALArgs {
+interface CalculateFinalOEALArgs {
   effOE: number;
   effAL: number;
   plan: FightPlan;

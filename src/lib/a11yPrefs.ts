@@ -9,7 +9,7 @@ export const A11Y_KEY = 'sl.a11y';
 /**
  * Contrast mode type.
  */
-export type ContrastMode = 'standard' | 'high';
+type ContrastMode = 'standard' | 'high';
 
 /**
  * Defines the shape of a11y prefs.
@@ -20,7 +20,7 @@ export interface A11yPrefs {
   textScale: number;
 }
 
-export const DEFAULT_A11Y_PREFS: A11yPrefs = { contrast: 'standard', textScale: 100 };
+const DEFAULT_A11Y_PREFS: A11yPrefs = { contrast: 'standard', textScale: 100 };
 
 export const TEXT_SCALE_OPTIONS = [100, 112, 125, 150] as const;
 

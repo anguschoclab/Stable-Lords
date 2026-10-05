@@ -11,7 +11,7 @@ import type { MetaAdaptation } from '@/types/state.types';
 import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 
 /** Zod schema for a content pack file. */
-export const ContentPackSchema = z.object({
+const ContentPackSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   arenaLore: z

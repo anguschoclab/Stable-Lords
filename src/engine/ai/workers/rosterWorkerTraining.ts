@@ -135,7 +135,7 @@ function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): { warrior: Wa
 /**
  *
  */
-export interface PerformAITrainingArgs {
+interface PerformAITrainingArgs {
   w: Warrior;
   stable: RivalStableData;
   season: Season | undefined;

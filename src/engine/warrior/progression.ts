@@ -31,7 +31,7 @@ const POTENTIAL_REVEAL_CHANCE = 0.15;
 /**
  * Defines the shape of xp gain.
  */
-export interface XPGain {
+interface XPGain {
   warriorId: string;
   warriorName: string;
   xpGained: number;

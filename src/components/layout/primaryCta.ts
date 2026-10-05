@@ -13,7 +13,7 @@ import { create } from 'zustand';
  *  - `navigate` — honest cross-route CTA (Scouting's "sign" sends you to the
  *    contract market).
  */
-export interface PrimaryCtaDef {
+interface PrimaryCtaDef {
   label: string;
   intent: 'advance' | 'page' | 'navigate';
   /** Navigation target for `navigate` intent. */

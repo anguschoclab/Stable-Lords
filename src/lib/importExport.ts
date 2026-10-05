@@ -11,7 +11,7 @@ const PACK_KIND = 'stable-lords-pack';
 const PACK_VERSION = 1;
 
 /** A serialized save pack envelope. */
-export interface StableLordsPack {
+interface StableLordsPack {
   kind: typeof PACK_KIND;
   version: number;
   exportedAt: string;

@@ -5,7 +5,7 @@
 /**
  * Fame and popularity values extracted from fight outcome tags.
  */
-export interface FamePop {
+interface FamePop {
   fame: number;
   pop: number;
   labels: string[];

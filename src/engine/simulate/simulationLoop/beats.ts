@@ -39,7 +39,7 @@ function emitMinuteMarker(c: LoopCtx, fA: FighterState, fD: FighterState, min: n
 /**
  * Emit progress markers args.
  */
-export interface EmitProgressMarkersArgs {
+interface EmitProgressMarkersArgs {
   c: LoopCtx;
   fA: FighterState;
   fD: FighterState;

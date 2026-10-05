@@ -35,7 +35,7 @@ const PERSONALITY_FEINT_MOD: Partial<Record<OwnerPersonality, number>> = {
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
  * Now includes per-style matchup heuristics, global strategic intent, and strategy score validation.
  */
-export interface AiPlanForWarriorArgs {
+interface AiPlanForWarriorArgs {
   w: Warrior;
   personality: OwnerPersonality;
   philosophy: string;

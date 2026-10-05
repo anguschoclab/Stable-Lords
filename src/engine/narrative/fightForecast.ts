@@ -19,7 +19,7 @@ export interface FightForecast {
 }
 
 /** Minimal structural view of a warrior the forecast needs. */
-export interface ForecastWarrior {
+interface ForecastWarrior {
   id: string;
   name: string;
   epithet?: string;

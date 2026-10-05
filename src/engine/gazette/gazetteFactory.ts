@@ -25,7 +25,7 @@ import { generateGazetteHeadline, generateGazetteBody } from './gazetteNarrative
 /**
  *
  */
-export interface GenerateWeeklyGazetteArgs {
+interface GenerateWeeklyGazetteArgs {
   fights: FightSummary[];
   mood: CrowdMoodType;
   week: number;

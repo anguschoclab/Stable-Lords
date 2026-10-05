@@ -10,7 +10,7 @@ import { headToHeadFor, type PairwiseHeadToHead } from './headToHead';
  * challenge/avoid marks — those stay in the `scoreMatchup` wrapper so
  * AI-vs-AI scoring can never see player intent.
  */
-export interface PairwiseMatchupContext {
+interface PairwiseMatchupContext {
   rankings?: GameState['realmRankings'];
   arenaHistory?: GameState['arenaHistory'];
   rivalries?: GameState['rivalries'];

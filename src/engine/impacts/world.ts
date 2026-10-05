@@ -49,7 +49,7 @@ export const recruitPool = (state: GameState, value: PoolWarrior[]) => {
 /**
  * Apply legacy-founder queue to state.
  */
-export const legacyFounderQueue = (
+const legacyFounderQueue = (
   state: GameState,
   value: import('@/types/warrior.types').Warrior[]
 ) => {
@@ -59,12 +59,12 @@ export const legacyFounderQueue = (
 /**
  * Apply free-agent list to state.
  */
-export const freeAgents = (state: GameState, value: PoolWarrior[]) => {
+const freeAgents = (state: GameState, value: PoolWarrior[]) => {
   state.freeAgents = value;
 };
 
 /** Append founder candidates to the persisted queue. */
-export const legacyFounderEnqueue = (
+const legacyFounderEnqueue = (
   state: GameState,
   value: import('@/types/warrior.types').Warrior[]
 ) => {
@@ -87,7 +87,7 @@ export const freeAgentAdditions = (state: GameState, value: PoolWarrior[]) => {
 };
 
 /** Remove signed veterans from the free-agent shelf by id. */
-export const freeAgentRemovals = (state: GameState, value: string[]) => {
+const freeAgentRemovals = (state: GameState, value: string[]) => {
   const gone = new Set(value);
   state.freeAgents = (state.freeAgents ?? []).filter((w) => !gone.has(w.id));
 };

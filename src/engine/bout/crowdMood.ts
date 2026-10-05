@@ -35,7 +35,7 @@ export const MOOD_ICONS: Record<CrowdMood, string> = {
 /**
  * Defines the shape of mood modifiers.
  */
-export interface MoodModifiers {
+interface MoodModifiers {
   fameMultiplier: number;
   popMultiplier: number;
   killChanceBonus: number;

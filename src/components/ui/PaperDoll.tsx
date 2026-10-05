@@ -3,12 +3,12 @@ import { cn } from '@/lib/utils';
 /**
  * Body part type.
  */
-export type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';
+type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';
 
 /**
  * Defines the shape of paper doll props.
  */
-export interface PaperDollProps {
+interface PaperDollProps {
   healthMap: Partial<Record<BodyPart, number>>;
   className?: string;
 }

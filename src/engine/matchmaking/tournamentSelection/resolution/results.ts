@@ -9,7 +9,7 @@ import { updateEntityInList } from '@/utils/stateUtils';
 /**
  *
  */
-export interface ApplyBoutResultsArgs {
+interface ApplyBoutResultsArgs {
   state: GameState;
   wA: Warrior;
   wD: Warrior;

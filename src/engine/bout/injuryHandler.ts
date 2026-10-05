@@ -10,7 +10,7 @@ import { StateImpact } from '@/engine/impacts';
 /**
  *
  */
-export interface HandleInjuriesArgs {
+interface HandleInjuriesArgs {
   s: GameState;
   wA: Warrior;
   wD: Warrior;

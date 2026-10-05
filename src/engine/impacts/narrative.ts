@@ -13,28 +13,28 @@ import type {
 /**
  * Apply gazettes to state.
  */
-export const gazettes = (state: GameState, value: GazetteStory[]) => {
+const gazettes = (state: GameState, value: GazetteStory[]) => {
   state.gazettes = value;
 };
 
 /**
  * Apply scout reports to state.
  */
-export const scoutReports = (state: GameState, value: ScoutReportData[]) => {
+const scoutReports = (state: GameState, value: ScoutReportData[]) => {
   state.scoutReports = [...(state.scoutReports || []), ...value];
 };
 
 /**
  * Apply insight tokens to state.
  */
-export const insightTokens = (state: GameState, value: InsightToken[]) => {
+const insightTokens = (state: GameState, value: InsightToken[]) => {
   state.insightTokens = [...(state.insightTokens || []), ...value];
 };
 
 /**
  * Apply last simulation report to state.
  */
-export const lastSimulationReport = (state: GameState, value: SimulationReport) => {
+const lastSimulationReport = (state: GameState, value: SimulationReport) => {
   state.lastSimulationReport = value;
 };
 

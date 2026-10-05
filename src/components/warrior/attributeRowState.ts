@@ -12,7 +12,7 @@ import type { Trainer } from '@/types/shared.types';
 /**
  * Defines the shape of attribute row input.
  */
-export interface AttributeRowInput {
+interface AttributeRowInput {
   warrior: Warrior;
   key: keyof Attributes;
   assignment?: TrainingAssignment;
@@ -24,7 +24,7 @@ export interface AttributeRowInput {
 /**
  * Defines the shape of attribute row state.
  */
-export interface AttributeRowState {
+interface AttributeRowState {
   val: number;
   isSZ: boolean;
   maxed: boolean;

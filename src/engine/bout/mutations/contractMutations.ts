@@ -24,7 +24,7 @@ export const STABLE_DISSOLVED_REASON = 'stable-dissolved';
  * reasons here (e.g. a future 'roster-departed') so the sweep and tests share
  * one source of truth.
  */
-export const VOID_DECLINE_REASONS: ReadonlySet<string> = new Set([STABLE_DISSOLVED_REASON]);
+const VOID_DECLINE_REASONS: ReadonlySet<string> = new Set([STABLE_DISSOLVED_REASON]);
 
 /** Whether a response note marks the decline as operational/void. */
 export function isVoidDeclineReason(note: string | undefined): boolean {

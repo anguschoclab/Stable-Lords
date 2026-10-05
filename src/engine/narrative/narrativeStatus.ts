@@ -106,7 +106,7 @@ export function crowdReaction(
 /**
  *
  */
-export interface MinuteStatusLineArgs {
+interface MinuteStatusLineArgs {
   rng: IRNGService;
   _minute: number;
   nameA: string;

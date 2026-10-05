@@ -7,7 +7,7 @@ import type { LoopCtx } from './types';
 /**
  * Narrate exchange events args.
  */
-export interface NarrateExchangeEventsArgs {
+interface NarrateExchangeEventsArgs {
   c: LoopCtx;
   fA: FighterState;
   fD: FighterState;

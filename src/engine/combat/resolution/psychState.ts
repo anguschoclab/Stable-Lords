@@ -10,7 +10,7 @@ import type { PsychState } from '@/types/shared.types';
 /**
  * Condition result with psych state.
  */
-export interface ConditionResult {
+interface ConditionResult {
   psychState: PsychState;
 }
 

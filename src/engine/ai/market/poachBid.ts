@@ -12,7 +12,7 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { competenceJitter } from '../competence';
 
 /** A tabled poach bid: the buyer pays `price` to `sellerStableId` for `warriorId`. */
-export interface PoachBid {
+interface PoachBid {
   buyerStableId: StableId;
   sellerStableId: StableId;
   warriorId: WarriorId;
@@ -21,7 +21,7 @@ export interface PoachBid {
 }
 
 /** Outcome of one poaching sweep: updated rival stables plus gazette lines. */
-export interface PoachMarketResult {
+interface PoachMarketResult {
   updatedRivals: RivalStableData[];
   gazetteItems: string[];
 }

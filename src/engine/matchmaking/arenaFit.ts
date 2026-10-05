@@ -207,7 +207,7 @@ function homeVenueOf(warrior: Warrior): { arenaId: string; bouts: number } | und
 // ─── Arena eligibility ─────────────────────────────────────────────────────────
 
 /** Inputs for {@link eligibleArenasFor}. */
-export interface ArenaEligibilityOpts {
+interface ArenaEligibilityOpts {
   weather?: WeatherType;
   /** Venues the warrior is barred from (title-locked bans, sanctions). */
   bannedArenaIds?: readonly string[];
@@ -280,7 +280,7 @@ function underservedWeights(
 // ─── Matchup arena selection ───────────────────────────────────────────────────
 
 /** Optional inputs for {@link selectArenaForMatchup}. */
-export interface MatchupArenaOpts {
+interface MatchupArenaOpts {
   favorWeight?: number;
   planA?: FightPlan;
   planB?: FightPlan;

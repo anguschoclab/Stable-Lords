@@ -21,7 +21,7 @@ export interface CardBuildContext {
  * fight-focused warrior waiting for offers must carry none, or the
  * promoter/challenge pipeline can never book them (autopilot starvation).
  */
-export function buildTrainingAssignment(
+function buildTrainingAssignment(
   warrior: GameState['roster'][number],
   fightAdvice: WarriorAdvisorCard['fightAdvice'],
   trainingAdvice: WarriorAdvisorCard['trainingAdvice'],
@@ -58,7 +58,7 @@ export function buildTrainingAssignment(
  * shared contender index (same ordering rivals campaign against). A
  * reigning champion reports the arena they defend instead.
  */
-export function resolveCrownStanding(
+function resolveCrownStanding(
   warriorId: WarriorId,
   ctx: CardBuildContext
 ): WarriorAdvisorCard['crownStanding'] {
@@ -78,7 +78,7 @@ export function resolveCrownStanding(
 }
 
 /** Synthesize a concise 1-sentence headline summary for the card. */
-export function composeHeadline(
+function composeHeadline(
   fightAdvice: WarriorAdvisorCard['fightAdvice'],
   tournamentAdvice: WarriorAdvisorCard['tournamentAdvice'],
   trainingAdvice: WarriorAdvisorCard['trainingAdvice']

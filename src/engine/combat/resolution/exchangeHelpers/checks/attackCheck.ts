@@ -12,7 +12,7 @@ import { getStyleAntiSynergy } from '@/engine/stylePassives';
 /**
  *
  */
-export interface PerformAttackCheckArgs {
+interface PerformAttackCheckArgs {
   rng: () => number;
   att: FighterState;
   curAttOE: number;

@@ -14,7 +14,7 @@ import { generateRecruit } from './generate';
 /**
  *
  */
-export interface GenerateRecruitPoolArgs {
+interface GenerateRecruitPoolArgs {
   count?: number;
   week: number;
   usedNames: Set<string>;
@@ -62,7 +62,7 @@ export function generateRecruitPool(args: GenerateRecruitPoolArgs): PoolWarrior[
 /**
  *
  */
-export interface PartialRefreshPoolArgs {
+interface PartialRefreshPoolArgs {
   currentPool: PoolWarrior[];
   week: number;
   usedNames: Set<string>;

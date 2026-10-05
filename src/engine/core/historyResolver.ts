@@ -4,12 +4,12 @@ import { GameState, Warrior } from '@/types/state.types';
 /**
  * Warrior minimal type.
  */
-export type WarriorMinimal = Pick<Warrior, 'id' | 'name'>;
+type WarriorMinimal = Pick<Warrior, 'id' | 'name'>;
 
 /**
  * Rival shallow type.
  */
-export type RivalShallow = {
+type RivalShallow = {
   id: string;
   owner: { stableName: string };
   roster?: WarriorMinimal[];

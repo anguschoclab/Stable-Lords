@@ -7,7 +7,7 @@ import type { LedgerEntry } from '@/types/state.types';
 /**
  * Ledger registry props.
  */
-export interface LedgerRegistryProps {
+interface LedgerRegistryProps {
   recentLedger: LedgerEntry[];
   totalLedgerEntries: number;
 }

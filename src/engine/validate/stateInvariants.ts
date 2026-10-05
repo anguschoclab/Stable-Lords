@@ -12,7 +12,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 
 /** A single violated invariant. */
-export interface InvariantViolation {
+interface InvariantViolation {
   /** Stable machine-readable invariant id, e.g. 'roster-id-unique'. */
   id: string;
   message: string;

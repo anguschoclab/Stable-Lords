@@ -12,7 +12,7 @@ import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/co
 /**
  * Warning severity type.
  */
-export type WarningSeverity = 'info' | 'warn' | 'error';
+type WarningSeverity = 'info' | 'warn' | 'error';
 
 /**
  * Defines the shape of strategy warning.

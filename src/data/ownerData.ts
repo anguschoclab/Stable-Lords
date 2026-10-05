@@ -51,7 +51,7 @@ export const META_RECRUIT_QUOTES: Record<MetaAdaptation, string> = {
 };
 
 /** Map philosophy to preferred fighting styles */
-export const PHILOSOPHY_TO_STYLES: Record<string, FightingStyle[]> = {
+const PHILOSOPHY_TO_STYLES: Record<string, FightingStyle[]> = {
   'Brute Force': [
     FightingStyle.BashingAttack,
     FightingStyle.StrikingAttack,

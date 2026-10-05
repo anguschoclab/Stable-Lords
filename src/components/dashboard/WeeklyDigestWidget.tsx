@@ -17,7 +17,7 @@ import { StatBox, AlertBox, EmptyDigestState } from './digest';
 /**
  *
  */
-export interface WeeklyDigestProps {
+interface WeeklyDigestProps {
   week: number;
   season: string;
   arenaHistory: FightSummary[];

@@ -6,7 +6,7 @@ import { clamp } from '@/utils/math';
 /**
  * Defines the shape of stat battery props.
  */
-export interface StatBatteryProps {
+interface StatBatteryProps {
   label: string;
   value: number;
   max?: number;

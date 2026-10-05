@@ -13,7 +13,7 @@ import { weekToTimestamp } from '@/constants';
 /**
  * Defines the shape of fight summary params.
  */
-export interface FightSummaryParams {
+interface FightSummaryParams {
   warriorA: Warrior;
   warriorD: Warrior;
   outcome: FightOutcome;
@@ -102,7 +102,7 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
 /**
  *
  */
-export interface CreateBoutSummaryArgs {
+interface CreateBoutSummaryArgs {
   warriorA: Warrior;
   warriorD: Warrior;
   outcome: FightOutcome;

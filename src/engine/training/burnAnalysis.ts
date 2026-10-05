@@ -7,7 +7,7 @@ import { ATTRIBUTE_TRAINING, ATTRIBUTE_NEAR_CEILING_BUFFER } from '@/constants/t
 /**
  *
  */
-export interface BurnWarning {
+interface BurnWarning {
   attribute: keyof Attributes;
   reason: string;
   severity: 'low' | 'medium' | 'high';

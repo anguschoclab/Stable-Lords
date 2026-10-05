@@ -10,7 +10,7 @@ import { weekToTimestamp } from '@/constants';
 /**
  *
  */
-export interface HandleReportingArgs {
+interface HandleReportingArgs {
   wA: Warrior;
   wD: Warrior;
   outcome: FightOutcome;

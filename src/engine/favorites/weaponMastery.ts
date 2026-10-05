@@ -1,7 +1,7 @@
 import { FightingStyle } from '@/types/game';
 
 /** One point of favorite-weapon mastery, routed to a single identity axis. */
-export interface MasteryBonus {
+interface MasteryBonus {
   att: number;
   dmg: number;
   ini: number;

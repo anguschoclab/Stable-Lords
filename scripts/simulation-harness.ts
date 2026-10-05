@@ -4,6 +4,7 @@ import {
   advanceWeek,
   getLastPipelineProfile,
 } from '@/engine/pipeline/services/weekPipelineService';
+import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { displayWeek } from '@/engine/core/absoluteWeek';
@@ -76,6 +77,13 @@ export interface SimulationConfig {
    * never produce counter-eligible offers. Default off.
    */
   counterBait?: boolean;
+  /**
+   * 'week' (default): each simulated week runs `advanceWeek` once.
+   * 'day': each week is ticked as seven `advanceDay` calls — exercises the
+   * interactive day path (day-by-day tournament resolution + the day-7
+   * weekly pipeline) that the week-mode soak never touches.
+   */
+  advanceMode?: 'week' | 'day';
 }
 
 /**
@@ -269,9 +277,18 @@ async function runWeek(
 
   // B. Advance Week
   // Week 1 may run on a caller-supplied initialState, so it clones; every
-  // later week runs on advanceWeek's own output, which this loop exclusively
-  // owns — skip the per-week full-state structuredClone (mirrors autosim).
-  state = await advanceWeek(state, { mutableInput: w > 1 });
+  // later week runs on the advance path's own output, which this loop
+  // exclusively owns — skip the per-week full-state structuredClone
+  // (mirrors autosim). In 'day' mode the week is ticked as seven advanceDay
+  // calls: days 1–6 resolve tournament rounds / no-op, day 7 runs the
+  // weekly pipeline.
+  if (config.advanceMode === 'day') {
+    for (let d = 0; d < 7; d++) {
+      state = await TickOrchestrator.advanceDay(state, { mutableInput: w > 1 });
+    }
+  } else {
+    state = await advanceWeek(state, { mutableInput: w > 1 });
+  }
 
   if (config.profile) aggregatePassProfile(passAgg);
 

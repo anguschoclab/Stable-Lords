@@ -8,6 +8,9 @@
  *                   scripts/out/baseline.json with aggregated timings.
  *   --invariants N  Validate state invariants every N weeks (default 5;
  *                   0 disables). Violations are printed and fail the run.
+ *   --day-mode      Tick each week as seven advanceDay calls instead of one
+ *                   advanceWeek — exercises the interactive day path
+ *                   (per-day tournament rounds, day-7 weekly pipeline).
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { runSimulation } from './simulation-harness.ts';
@@ -37,6 +40,7 @@ const { finalState, pulses, cumulative, profile } = await runSimulation({
   // Counter-eligible offers: without bait, organic soaks never lowball a
   // famous warrior and counterOfferRate reads 0 forever (audit-v3 §6).
   counterBait: !args.includes('--no-counter-bait'),
+  advanceMode: args.includes('--day-mode') ? 'day' : 'week',
   onWeek: (state, w) => {
     // Weekly counter observability — the standing-bump window (~3-4 wk)
     // outlives pulse sampling, so count every week, not every 5th.

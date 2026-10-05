@@ -62,7 +62,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerCondition: 'heavy_hit',
     triggerValue: ARENA_EVENT_CONSTANTS.COLLAPSING_PILLAR_TRIGGER, // Damage threshold
     narrativeText: 'A nearby pillar cracks and collapses in a cloud of dust!',
-    // mechanicalEffect deferred to v2
+    // narrative-only event — no mechanical effect
   },
 
   falling_debris: {

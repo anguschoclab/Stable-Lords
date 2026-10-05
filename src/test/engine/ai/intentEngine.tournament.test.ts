@@ -22,6 +22,20 @@ describe('TOURNAMENT_CAMPAIGN', () => {
     expect(pickWeeklyIntent(rival, state, 42)).toBe('TOURNAMENT_CAMPAIGN');
   });
 
+  it('still fires inside the window when a season objective is live (calendar deadline outranks plan-of-record)', () => {
+    // Regression: stage-C servicing preempts the weekly cascade, but the
+    // tournament prep window is fixed — a TREASURY program must not bury it.
+    const rival = makeRival({
+      treasury: 900,
+      roster: contenders(),
+      agentMemory: makeAgentMemory({
+        seasonObjective: { kind: 'TREASURY', weeksRemaining: 10, reason: 'bank runway' },
+      }),
+    });
+    const state = makeGameState({ rivals: [rival], week: 8, weather: 'Clear', arenaHistory: [] });
+    expect(pickWeeklyIntent(rival, state, 42)).toBe('TOURNAMENT_CAMPAIGN');
+  });
+
   it('does not fire outside the window', () => {
     const rival = makeRival({ treasury: 900, roster: contenders() });
     const state = makeGameState({ rivals: [rival], week: 3, weather: 'Clear', arenaHistory: [] });

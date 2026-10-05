@@ -210,6 +210,55 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     expect(gazetteItems).toHaveLength(0);
   });
 
+  it('should attribute a kill to the victim stable via the graveyard once the victim left the roster', () => {
+    // 28f26ba5 removed dead warriors from rosters; the victim of a Kill is
+    // only in state.graveyard (stableId preserved) when grudges process.
+    const state: any = {
+      week: 10,
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' }],
+      rivals: [
+        { id: 'r1', owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
+        { id: 'r2', owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [] },
+      ],
+      graveyard: [{ id: 'w2', stableId: 'r2', status: 'Dead' }],
+    };
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(1);
+    expect(grudges[0]!.intensity).toBe(2);
+    expect(gazetteItems[0]).toContain('NEW RIVALRY');
+  });
+
+  it('should not attribute a kill when the dead victim belonged to a defunct stable', () => {
+    const state: any = {
+      week: 10,
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' }],
+      rivals: [
+        { id: 'r1', owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
+        { id: 'r2', owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w3', stableId: 'r2' }] },
+      ],
+      graveyard: [{ id: 'w2', stableId: 'defunct_stable', status: 'Dead' }],
+    };
+    const { grudges } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(0);
+  });
+
+  it('should record a rival kill vs a player warrior who already left the roster', () => {
+    const state: any = {
+      week: 10,
+      player: { id: 'p1' },
+      roster: [],
+      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'wp', winner: 'A', by: 'Kill' }],
+      rivals: [
+        { id: 'r1', owner: { id: 'o1', personality: 'Pragmatic', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
+      ],
+      graveyard: [{ id: 'wp', stableId: 'p1', status: 'Dead' }],
+    };
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(1);
+    expect(grudges[0]!.intensity).toBe(2);
+    expect(gazetteItems[0]).toContain('BLOOD FEUD');
+  });
+
   it('should not create grudge when no cross-fight exists between rival stables', () => {
     // Fight exists but warriors don't belong to the clashing stables
     const state: any = {

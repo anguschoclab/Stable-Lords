@@ -27,7 +27,7 @@
 | Intent distribution     | RECOVERY 40, WEALTH_ACCUMULATION 30, CROWN_CAMPAIGN 17, EXPANSION 2, CONSOLIDATION 1; **SURVIVAL 0**, VENDETTA 0 |
 | Crowns                  | AI-held 19, player-held 0, live title offers 3                           |
 | Reign endings           | defeated 51, died 26, displaced 5, stripped 2                            |
-| `counterOfferRate`      | **0.00** — see §6.1 (measurement gap, not a revert trigger)              |
+| `counterOfferRate`      | 0.00 on this run; **peak 0.004 / 16-of-40wk standing** with counter-bait on — see §6.1 |
 | `playerChallengedWeeks` | 15/104                                                                   |
 | `avgDossierCoverage`    | 12.0 dossiers/rival                                                      |
 
@@ -45,6 +45,12 @@ of Novice/Journeyman. **Win-rate gradient: flat** — expected: competence scale
 *decision* quality (economic/strategic knobs), never combat rolls; any
 roster-quality compounding needs a longer horizon than 26wk to diverge.
 Distribution itself is sane: Masters rarest (11/94 ≈ 12%), Journeyman modal.
+
+**104-wk re-probe (seed 11, unmocked harness):** win-rate still flat —
+Master 0.523, Veteran 0.524, Journeyman 0.498, Novice 0.519. Median treasury
+separation persists and sharpens with age: Novice medians 767→629 at
+wk 26→104 vs top-half 783→1455. Confirmed: competence's signature is
+economic, never martial.
 
 ## 2. Phase-3 gap register — validated
 
@@ -93,14 +99,19 @@ Distribution itself is sane: Masters rarest (11/94 ≈ 12%), Journeyman modal.
 | Balance                         | 46 slow balance tests green; `balance-lab` FLAT: no mirror drift >10pts, styles 41.4–55.1%, kill 14.3% |
 | Megaplan hygiene guards         | function-size, param-budget, uiTokens, runnerGroups — all green     |
 
-## 6. Open items & deviations
+## 6. Open items & deviations — deferred-tail resolution
 
-1. **`counterOfferRate` still 0.00 in soaks.** The plan's audit gate said "lift it or revert." Kept: the metric measures *first-round* counter frequency, which never fires in the harness at all — a soak-harness artifact (offers the harness generates rarely meet counter conditions), not evidence the second round is dead code. The bounded `resolveSecondRound`/`escalateCounter` path is covered by `negotiation.test.ts`. **Open:** the soak harness can't observe this behavior; either extend the harness to generate counter-eligible offers or accept unit coverage.
-2. **`decoyAxes` (Stage D.2b) — not built.** Plan-level decoy axes feeding the streak-trigger read loop deferred; feint modulation (D.2a) shipped. Revisit only if `planMasked` scouting deception proves thin in play.
-3. **`phaseShiftOn` (Stage D.4) — not built.** Validation found `buildPhasePlan` already produces personality-tweaked phase curves; the item was redundant as designed.
-4. **Competence outcome-gradient not ratcheted as a slow-gate invariant.** Only `competenceDistribution` ships in `SimPulse`; the treasury gradient in §1 was probe-measured, not enforced. Candidate liveness invariant for a follow-up.
-5. **SURVIVAL (N1) and `lastLossFactors` (N2) — both still dead.** Cheap cleanup: either revive with distinct triggers or delete the vestigial branches/field.
-6. **Win-rate gradient flat at 26wk** — by design (competence never touches combat rolls), but worth re-probing at 104wk to confirm roster-quality compounding eventually separates tiers.
+All items below were open when this audit was first written; the deferred
+tail has since been implemented. Status and measurements updated.
+
+1. **`counterOfferRate` — RESOLVED (observable).** Root cause was measurement, not the mechanic: organic soaks never produce counter-eligible offers, and countered offers that do sign clear before the 5-week pulse samples them. `simulation-harness` gained an opt-in `counterBait` config that pre-evaluates deliberately-lowball offers through the real `evaluateBoutOffer` (player-side proposers keep the bumped offer standing — the same surface real counters reach). `SimPulse` now carries raw `offerCount`/`counteredOfferCount`. Measured (seed 20260919, 40wk): peak rate 0.004, standing countered offers 16/40 weeks vs a flat 0.00 before. The bounded `resolveSecondRound`/`escalateCounter` path additionally escalates when the other side re-counters.
+2. **`decoyAxes` (Stage D.2b) — SHIPPED.** `FightPlan.decoyAxes` masks the *resolved* plan (OE/AL + optional tactics) until the named phase boundary — a committed act: the fighter really performs the decoy, so opponent tactic-streak and momentum reads build on the false pattern, then a `DECOY_REVEAL` reason code fires once at the boundary. Tactician/Methodical stables author it on WT≥13 fighters, mirroring the scouting-level `planMasked` deception. Gated by `AI_DECOY` at both authoring and resolution.
+3. **`phaseShiftOn` (Stage D.4) — SHIPPED.** Re-scoped as *boundary-reactive* curve shifts — distinct from `buildPhasePlan`'s static personality curve: evaluated once at the named phase boundary (momentum/HP read), a fired shift commits into the fighter's plan copy for the rest of that phase; a swing back does not revoke it (unlike per-exchange conditions). Authored per personality.
+4. **Competence outcome-gradient — RATCHETED as a slow invariant.** `worldLiveness.integration.slow.test.ts` asserts top-half-tier (Master+Veteran) median treasury > 1.3× Novice median at 104wk. Medians, not means: whale treasuries skew the mean hard enough to flip sign between contexts (0.92–1.33 measured); Novice medians bottom consistently (629–767 vs top-half 1359–1636 at wk 52–104).
+5. **SURVIVAL (N1) and `lastLossFactors` (N2) — BOTH REVIVED.** SURVIVAL is the deeper crisis tier — selected when the stable cannot cover its projected weekly burn *and* is losing (distinct from RECOVERY's 200g belt-tightening): no proactive bids, favored-only acceptance, hiring frozen, defensive plans, short plan duration. `lastLossFactors` feeds season-objective re-planning — structural loss factors steer objective selection rather than sitting dead.
+6. **Win-rate gradient flat at 26wk — re-probed at 104wk, still flat by design.** Per-tier avg win-rate (seed 11): Master 0.523, Veteran 0.524, Journeyman 0.498, Novice 0.519 — no separation. Competence never touches combat rolls; roster-quality compounding does not drift win-rates even at 104 weeks. The treasury gradient is the observable competence signature.
+7. **Feature flags (plan §8) — SHIPPED.** `globalThis` toggles per the V10 `__AI_DEBUG` precedent: `AI_COMPETENCE`, `AI_SEASON_PLANS`, `AI_READS`, `AI_DECOY`. Unset = enabled (shipped behavior); explicit `false` makes the feature inert at both authoring and resolution for clean soak bisection.
+8. **Intent↔objective coherence — RATCHETED.** Same slow test: while a `seasonObjective` lives, its servicing intent fires >12% of objective-weeks (measured 18.5% — crisis intents legitimately outrank the plan-of-record).
 
 ## 7. Hard rules observed
 

@@ -235,66 +235,6 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
-  /** Archives a gazette markdown document to OPFS by season and week. */
-  async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
-    return this.enqueue(async () => {
-      assertSafeFileNamePart(String(week), 'week');
-      let writable: FileSystemWritableFileStream | null = null;
-      try {
-        const dirHandle = await this.getDirectory(season, 'gazettes');
-        if (!dirHandle) return;
-
-        const fileName = `week_${week}.md`;
-        const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-        writable = await fileHandle.createWritable();
-        await writable.write(markdown);
-      } catch (error) {
-        if ((error as Error)?.name === 'QuotaExceededError') {
-          console.error('OPFS Quota Exceeded during gazette archival', error);
-          if (typeof window !== 'undefined')
-            window.dispatchEvent(
-              new CustomEvent('OPFS_QUOTA_EXCEEDED', {
-                detail: 'Storage Quota Exceeded: Archival failed.',
-              })
-            );
-          return;
-        }
-      } finally {
-        if (writable) {
-          try {
-            await writable.close();
-          } catch (closeError) {
-            console.warn('Failed to close writable stream:', closeError);
-          }
-        }
-      }
-    });
-  }
-
-  /** Retrieves a gazette markdown document from OPFS by season and week. */
-  async retrieveGazette(season: number, week: number): Promise<string | null> {
-    assertSafeFileNamePart(String(week), 'week');
-    try {
-      const dirHandle = await this.getDirectory(season, 'gazettes', false);
-      if (!dirHandle) return null;
-
-      const fileName = `week_${week}.md`;
-      const fileHandle = await dirHandle.getFileHandle(fileName, { create: false });
-      const file = await fileHandle.getFile();
-
-      if (typeof file.text === 'function') {
-        return await file.text();
-      }
-      return null;
-    } catch (error) {
-      if ((error as Error)?.name === 'NotFoundError') {
-        return null;
-      }
-      console.warn('Error retrieving gazette:', error);
-      return null;
-    }
-  }
-
   /** Lists all archived bout IDs for a given season from OPFS. */
   async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {

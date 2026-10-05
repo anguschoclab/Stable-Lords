@@ -46,13 +46,6 @@ describe('OPFS Archival System', () => {
     });
   });
 
-  describe('Suite 4: Seasonal Gazette Archiving', () => {
-    it('Test 4.1: archiveGazette does not throw', async () => {
-      const service = new OPFSArchiveService();
-      const markdown = '# Weekly Gazette\nIt was a good week.';
-      await expect(service.archiveGazette(1, 1, markdown)).resolves.toBeUndefined();
-    });
-  });
 
   describe('Suite 5: Fallback & Quota Management', () => {
     it('Test 5.1: Graceful degradation on errors', async () => {
@@ -90,10 +83,6 @@ describe('OPFS Archival System', () => {
       );
     });
 
-    it('Test 6.5: archiveGazette still works with valid numeric week', async () => {
-      const service = new OPFSArchiveService();
-      await expect(service.archiveGazette(1, 1, '#')).resolves.toBeUndefined();
-    });
 
     it('Test 6.6: valid IDs are accepted', async () => {
       const service = new OPFSArchiveService();
@@ -151,28 +140,6 @@ describe('OPFS Archival System', () => {
       consoleSpy.mockRestore();
     });
 
-    it('Test 7.3: archiveGazette dispatches OPFS_QUOTA_EXCEEDED and returns gracefully', async () => {
-      const service = new OPFSArchiveService();
-      setMockOPFSError('QuotaExceededError', 'write');
-      const dispatchSpy = vi.fn().mockReturnValue(true);
-      (global as any).window = { dispatchEvent: dispatchSpy };
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-      await expect(service.archiveGazette(1, 1, '# Gazette')).resolves.toBeUndefined();
-      expect(dispatchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'OPFS_QUOTA_EXCEEDED',
-          detail: 'Storage Quota Exceeded: Archival failed.',
-        })
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'OPFS Quota Exceeded during gazette archival',
-        expect.any(Error)
-      );
-
-      delete (global as any).window;
-      consoleSpy.mockRestore();
-    });
   });
 
   describe('Suite 8: NoModificationAllowedError handling', () => {
@@ -203,13 +170,6 @@ describe('OPFS Archival System', () => {
       expect(result).toBeNull();
     });
 
-    it('Test 9.3: retrieveGazette returns null on NotFoundError', async () => {
-      const service = new OPFSArchiveService();
-      setMockOPFSError('NotFoundError', 'getFileHandle');
-
-      const result = await service.retrieveGazette(1, 1);
-      expect(result).toBeNull();
-    });
   });
 
   describe('Suite 10: Generic / permission-level OPFS failures', () => {
@@ -253,17 +213,6 @@ describe('OPFS Archival System', () => {
       consoleSpy.mockRestore();
     });
 
-    it('Test 10.5: retrieveGazette logs warning on generic error', async () => {
-      const service = new OPFSArchiveService();
-      setMockOPFSError('UnknownError', 'getFileHandle');
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      const result = await service.retrieveGazette(1, 1);
-      expect(result).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith('Error retrieving gazette:', expect.any(Error));
-
-      consoleSpy.mockRestore();
-    });
 
     it('Test 10.6: getArchivedBoutIdsForSeason catches generic error', async () => {
       const service = new OPFSArchiveService();
@@ -316,22 +265,6 @@ describe('OPFS Archival System', () => {
       consoleSpy.mockRestore();
     });
 
-    it('Test 11.3: archiveGazette catches and logs close failure without propagating', async () => {
-      const service = new OPFSArchiveService();
-      setMockOPFSError('AbortError', 'close');
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
-      await service.archiveGazette(1, 1, '# Gazette');
-      // Wait for the enqueue queue to empty
-      await vi.waitFor(() => {
-        expect(consoleSpy).toHaveBeenCalledWith(
-          'Failed to close writable stream:',
-          expect.any(Error)
-        );
-      });
-
-      consoleSpy.mockRestore();
-    });
   });
 
   describe('Suite 12: retrieveHotState JSON parse failure', () => {
@@ -457,13 +390,6 @@ describe('OPFS Archival System', () => {
       for (const c of calls) expect(c.opts?.create).toBe(false);
     });
 
-    it('Test 14.3: retrieveGazette uses non-creating directory lookups', async () => {
-      const service = new OPFSArchiveService();
-      await service.retrieveGazette(1, 1);
-      const calls = getMockOPFSDirHandleCalls();
-      expect(calls.length).toBeGreaterThan(0);
-      for (const c of calls) expect(c.opts?.create).toBe(false);
-    });
 
     it('Test 14.4: retrieveHotState uses non-creating directory lookups', async () => {
       const service = new OPFSArchiveService();
@@ -493,13 +419,6 @@ describe('OPFS Archival System', () => {
       for (const c of calls) expect(c.opts?.create).toBe(true);
     });
 
-    it('Test 14.7: archiveGazette still creates directories on the write path', async () => {
-      const service = new OPFSArchiveService();
-      await service.archiveGazette(1, 1, '#');
-      const calls = getMockOPFSDirHandleCalls();
-      expect(calls.length).toBeGreaterThan(0);
-      for (const c of calls) expect(c.opts?.create).toBe(true);
-    });
 
     it('Test 14.8: archiveHotState still creates directories on the write path', async () => {
       const service = new OPFSArchiveService();

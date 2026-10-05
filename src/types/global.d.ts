@@ -21,17 +21,6 @@ declare global {
         boutId: string
       ) => Promise<{ success: boolean; data?: string[]; error?: string }>;
 
-      // Gazette archiving
-      archiveGazette: (
-        season: number,
-        week: number,
-        markdown: string
-      ) => Promise<{ success: boolean; error?: string }>;
-      retrieveGazette: (
-        season: number,
-        week: number
-      ) => Promise<{ success: boolean; data?: string; error?: string }>;
-
       // Simple key-value store
       storeGet: (key: string) => Promise<unknown>;
       storeSet: (key: string, value: unknown) => Promise<{ success: boolean }>;

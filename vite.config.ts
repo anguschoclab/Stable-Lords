@@ -106,9 +106,9 @@ export default defineConfig({
   server: {
     host: '::',
     port: 8080,
-    hmr: {
-      overlay: false,
-    },
+    // VITE_NO_HMR=1 freezes module hot-reload so long e2e soaks survive
+    // concurrent file edits/commits without page reloads resetting state.
+    hmr: process.env.VITE_NO_HMR === '1' ? false : { overlay: false },
   },
   plugins: [
     fixHowler(),

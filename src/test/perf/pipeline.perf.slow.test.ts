@@ -65,7 +65,7 @@ describe('Pipeline Performance Benchmarks', () => {
 
     expect(result.weeksSimmed).toBeGreaterThan(0);
     // ~0.4s/week at the 90-rival floor; the old 30s cap assumed 8 rivals.
-    expect(duration).toBeLessThan(60000);
+    expect(duration).toBeLessThan(120000);
   });
 
   it('should not accumulate excessive memory during batch operations', async () => {

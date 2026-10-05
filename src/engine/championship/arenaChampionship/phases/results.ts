@@ -39,8 +39,11 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
 
     if (champId == null) {
       // Vacant title bout — decisive winner takes the crown.
+      relinquishOtherCrowns(state, delta, arenaId, winnerId, now);
       crown(title, winnerId, now);
       awardEpithet(state, delta, winnerId, 'arena_champion');
+      // Coronation cancels the new champion's unresolved ordinary offers.
+      cancelAllOpenOffersInvolving(state, delta, winnerId);
       news(
         delta,
         state.week,
@@ -96,6 +99,32 @@ function transferCrown(args: TransferCrownArgs): void {
   endReign(state, title, champDied ? 'died' : 'defeated', now);
   // Defensive single-crown enforcement: if the new champion somehow holds
   // another crown, that reign ends as relinquished.
+  relinquishOtherCrowns(state, delta, arenaId, winnerId, now);
+  crown(title, winnerId, now);
+  awardEpithet(state, delta, winnerId, 'arena_champion');
+  // Coronation cancels the new champion's unresolved ordinary offers.
+  cancelAllOpenOffersInvolving(state, delta, winnerId);
+  news(
+    delta,
+    state.week,
+    `Title Changes Hands`,
+    [`${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`],
+    `upset-${arenaId}-${now}`
+  );
+}
+
+/**
+ * Ends any reign `winnerId` holds at arenas other than `arenaId` as
+ * 'relinquished' — single-crown enforcement. Checks delta titles first, then
+ * state titles not already covered by the delta.
+ */
+function relinquishOtherCrowns(
+  state: GameState,
+  delta: ChampionshipDelta,
+  arenaId: string,
+  winnerId: WarriorId,
+  now: number
+): void {
   for (const [otherArena, other] of Object.entries(delta.arenaChampions)) {
     if (otherArena === arenaId) continue;
     if (other.champion?.warriorId === winnerId) {
@@ -109,15 +138,4 @@ function transferCrown(args: TransferCrownArgs): void {
       endReign(state, t, 'relinquished', now);
     }
   }
-  crown(title, winnerId, now);
-  awardEpithet(state, delta, winnerId, 'arena_champion');
-  // Coronation cancels the new champion's unresolved ordinary offers.
-  cancelAllOpenOffersInvolving(state, delta, winnerId);
-  news(
-    delta,
-    state.week,
-    `Title Changes Hands`,
-    [`${findWarriorById(state, winnerId)?.name ?? winnerId} takes the crown.`],
-    `upset-${arenaId}-${now}`
-  );
 }

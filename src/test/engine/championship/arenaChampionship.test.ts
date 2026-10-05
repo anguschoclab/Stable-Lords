@@ -472,6 +472,37 @@ describe('resolveTitleBoutResults', () => {
     expect(effTitle(state, delta, arenaId)!.champion?.warriorId).toBe('w-a');
   });
 
+  it('vacant-title win relinquishes the winner\'s other crown (single crown)', () => {
+    // Regression: a warrior booked into a vacant-title bout who has since
+    // taken another arena's crown must not hold two reigns.
+    const otherArena = 'sky_platform';
+    const a = warriorAtArena('w-a', arenaId, { wins: 5, losses: 0 });
+    const b = warriorAtArena('w-b', arenaId, { wins: 4, losses: 0 });
+    const state = makeGameState({
+      absoluteWeek: 50,
+      roster: [a, b],
+      arenaChampions: {
+        [arenaId]: makeTitleAt(arenaId, null),
+        [otherArena]: makeTitleAt(otherArena, 'w-a'),
+      },
+      arenaHistory: [
+        makeFightSummary({
+          titleArenaId: arenaId,
+          warriorIdA: 'w-a' as WarriorId,
+          warriorIdD: 'w-b' as WarriorId,
+          winner: 'A',
+          absoluteWeek: 50,
+        }),
+      ],
+    });
+    const delta = createChampionshipDelta();
+    resolveTitleBoutResults(state, delta);
+    expect(effTitle(state, delta, arenaId)!.champion?.warriorId).toBe('w-a');
+    const former = effTitle(state, delta, otherArena)!;
+    expect(former.champion).toBeNull();
+    expect(former.history.at(-1)?.endReason).toBe('relinquished');
+  });
+
   it('champion death in a title bout vacates the crown for the killer', () => {
     const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
     const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0, kills: 1 });

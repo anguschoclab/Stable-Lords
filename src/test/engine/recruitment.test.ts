@@ -6,14 +6,14 @@ import {
   generateRecruit,
   DEFAULT_POOL_SIZE,
 } from '@/engine/recruitment/recruitment';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 describe('partialRefreshPool', () => {
   it('returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool', () => {
     const usedNames = new Set<string>();
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const pool = partialRefreshPool({ currentPool: [], week: 1, usedNames: usedNames, rng: rng });
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
     expect(pool.every((w) => w.addedWeek === 1)).toBe(true);
@@ -21,7 +21,7 @@ describe('partialRefreshPool', () => {
 
   it('removes the oldest warriors and replaces them, ensuring DEFAULT_POOL_SIZE', () => {
     const usedNames = new Set<string>();
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const week1Pool = generateRecruitPool({ count: DEFAULT_POOL_SIZE, week: 1, usedNames: usedNames, rng: rng });
 
     // Simulate some time passing and an older pool. Let's make 2 of them older.
@@ -71,7 +71,7 @@ describe('partialRefreshPool', () => {
 
   it('avoids reusing names that are in the remaining pool or previously used', () => {
     const usedNames = new Set<string>();
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const pool = generateRecruitPool({ count: 10, week: 1, usedNames: usedNames, rng: rng });
 
     // Add all names from pool to usedNames, except maybe the ones being removed?
@@ -107,7 +107,7 @@ describe('fullRefreshPool', () => {
 
   it('uses provided RNG when given', () => {
     const usedNames = new Set<string>();
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const pool1 = fullRefreshPool(1, usedNames, rng);
     const pool2 = fullRefreshPool(1, usedNames, rng);
     // Same RNG should produce different results (state advances)
@@ -167,7 +167,7 @@ describe('fullRefreshPool', () => {
 describe('legacy (dynastic) recruit naming', () => {
   /** RNG whose next() is pinned low — every <0.05 legacy roll succeeds. */
   function legacyRng(seed = 5): IRNGService {
-    const inner = new SeededRNGService(seed);
+    const inner = new SeededRNG(seed);
     return {
       next: () => 0.01,
       pick: (arr) => inner.pick(arr),
@@ -195,7 +195,7 @@ describe('legacy (dynastic) recruit naming', () => {
 
   it('keeps generated pool names unique and arena-format', () => {
     const usedNames = new Set<string>();
-    const pool = generateRecruitPool({ count: 30, week: 1, usedNames: usedNames, rng: new SeededRNGService(31) });
+    const pool = generateRecruitPool({ count: 30, week: 1, usedNames: usedNames, rng: new SeededRNG(31) });
     const names = pool.map((w) => w.name);
     expect(new Set(names).size).toBe(names.length);
     for (const n of names) {

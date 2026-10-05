@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -12,7 +12,7 @@ const eventKeys = Object.keys(events);
 const eventCount = eventKeys.length;
 
 function makeMockRng(targetEventKey: string, baseSeed: number) {
-  const rng = new SeededRNGService(baseSeed);
+  const rng = new SeededRNG(baseSeed);
   const originalNext = rng.next.bind(rng);
   let callCount = 0;
   const mockNext = () => {
@@ -124,8 +124,8 @@ describe('offseason determinism characterization', () => {
         { id: 'w-test-b', name: 'Bob' },
       ]);
 
-      const rng1 = new SeededRNGService(seed);
-      const rng2 = new SeededRNGService(seed);
+      const rng1 = new SeededRNG(seed);
+      const rng2 = new SeededRNG(seed);
 
       const impact1 = runSeasonalPass(state as GameState, 1, rng1);
       const impact2 = runSeasonalPass(state as GameState, 1, rng2);
@@ -139,7 +139,7 @@ describe('offseason determinism characterization', () => {
   it('different seeds produce different events (probabilistic)', () => {
     const eventSet = new Set<string>();
     for (let seed = 1; seed <= 200; seed++) {
-      const rng = new SeededRNGService(seed);
+      const rng = new SeededRNG(seed);
       // Capture which event was picked by observing the first rng.next() value
       const firstRoll = rng.next();
       const eventIndex = Math.floor(firstRoll * eventCount);
@@ -151,14 +151,14 @@ describe('offseason determinism characterization', () => {
   });
 
   it('no-op when nextWeek is not 1', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const state = makeState([{ id: 'w-test', name: 'Test' }]);
     const impact = runSeasonalPass(state as GameState, 2, rng);
     expect(impact).toEqual({});
   });
 
   it('no-op when no offseason_events in narrative content', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     // Year 0 with no events — should still work since the guard is on nextWeek
     const impact = runSeasonalPass(
       { year: 0, roster: [], rivals: [], graveyard: [], retired: [] } as unknown as GameState,

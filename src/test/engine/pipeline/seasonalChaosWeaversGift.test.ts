@@ -8,7 +8,7 @@ import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 import { makeSeasonalTestState } from '@/test/_fixtures/seasonalState';
 
@@ -27,7 +27,7 @@ const makeState = (roster: Warrior[] = []): GameState => makeSeasonalTestState(r
 describe('chaos_weavers_gift offseason event', () => {
   it('runSeasonalPass does not throw with empty roster', () => {
     const state = makeState([]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     expect(() => runSeasonalPass(state, 1, rng)).not.toThrow();
   });
@@ -35,7 +35,7 @@ describe('chaos_weavers_gift offseason event', () => {
   it('runSeasonalPass produces impact with active roster', () => {
     const warrior = makeWarrior('TestWarrior');
     const state = makeState([warrior]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const impact = runSeasonalPass(state, 1, rng);
 
@@ -44,7 +44,7 @@ describe('chaos_weavers_gift offseason event', () => {
 
   it('runSeasonalPass returns empty for non-week-1 transitions', () => {
     const state = makeState([makeWarrior('W1')]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const impact = runSeasonalPass(state, 5, rng);
 

@@ -3,7 +3,7 @@ import { rollCompetence } from '@/engine/ai/competence';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { WORLD_DIFFICULTIES } from '@/types/enumSources';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 /**
  * Stage E — WorldDifficulty skew on the minted stablemaster field.
@@ -12,7 +12,7 @@ import { SeededRNGService } from '@/utils/random';
  */
 
 const draws = (difficulty: (typeof WORLD_DIFFICULTIES)[number] | undefined, n = 400) => {
-  const rng = new SeededRNGService(31337);
+  const rng = new SeededRNG(31337);
   const counts: Record<string, number> = {};
   for (let i = 0; i < n; i++) {
     const c = rollCompetence(rng, 'Established', difficulty);
@@ -41,16 +41,16 @@ describe('rollCompetence — world-difficulty skew', () => {
   });
 
   it('Challenger is distribution-neutral (identical draws to omitted difficulty)', () => {
-    const a = new SeededRNGService(7);
-    const b = new SeededRNGService(7);
+    const a = new SeededRNG(7);
+    const b = new SeededRNG(7);
     for (let i = 0; i < 50; i++) {
       expect(rollCompetence(a, 'Established', 'Challenger')).toBe(rollCompetence(b, 'Established'));
     }
   });
 
   it('is deterministic for a given seed + difficulty', () => {
-    const a = new SeededRNGService(55);
-    const b = new SeededRNGService(55);
+    const a = new SeededRNG(55);
+    const b = new SeededRNG(55);
     for (let i = 0; i < 30; i++) {
       expect(rollCompetence(a, 'Established', 'Legend')).toBe(
         rollCompetence(b, 'Established', 'Legend')

@@ -5,7 +5,7 @@ import {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents/types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Bountiful Harvest Offseason Event', () => {
   it('adds 200 gold to treasury and records ledger entry', () => {
@@ -25,7 +25,7 @@ describe('Bountiful Harvest Offseason Event', () => {
       treasuryDelta: 0,
     };
 
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
 
     handleBountifulHarvest(state, 2, narrative, rng, ctx);
 

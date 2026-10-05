@@ -239,7 +239,7 @@ describe('pipeline/health', () => {
       expect(impact.newsletterItems?.[0]?.id).toBe('custom-id-123');
     });
 
-    it('falls back to SeededRNGService(state.week) when no RNG provided', () => {
+    it('falls back to SeededRNG(state.week) when no RNG provided', () => {
       const injury = makeInjury('Bruised Ribs', 1);
       const state = {
         week: 5,

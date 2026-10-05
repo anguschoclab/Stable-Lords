@@ -8,7 +8,7 @@ import {
   TRAIT_TRAIN_WEEKS,
 } from '@/engine/training/trainingGains/traitTraining';
 import { TRAITS } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const trainer = (tier: 'Novice' | 'Seasoned' | 'Master') => ({ id: 't', name: 'T', tier }) as any;
 const warrior = (over: any = {}) =>
@@ -68,7 +68,7 @@ describe('canAcquireTrait', () => {
 
 describe('rollTraitTraining', () => {
   it('a Master trainer + apt warrior mostly succeeds; results are valid traits or flaws', () => {
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     let success = 0,
       botch = 0,
       none = 0;
@@ -93,7 +93,7 @@ describe('rollTraitTraining', () => {
 
 describe('rollTraitTraining surfaces class & Signature traits for a styled warrior', () => {
   it('a WallOfSteel warrior under a Master trainer can earn class-restricted and Signature traits', () => {
-    const rng = new SeededRNGService(777);
+    const rng = new SeededRNG(777);
     const earnedClass = new Set<string>();
     const earnedSignature = new Set<string>();
 

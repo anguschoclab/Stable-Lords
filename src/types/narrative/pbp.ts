@@ -3,7 +3,7 @@ import type { PersonaDescriptor } from './personas';
 /**
  * Defines the shape of hit locations.
  */
-export interface HitLocations {
+interface HitLocations {
   head: string[];
   chest: string[];
   abdomen: string[];
@@ -16,7 +16,7 @@ export interface HitLocations {
 /**
  * Defines the shape of damage severity.
  */
-export interface DamageSeverity {
+interface DamageSeverity {
   deadly: string[];
   terrific: string[];
   powerful: string[];
@@ -26,7 +26,7 @@ export interface DamageSeverity {
 /**
  * Defines the shape of status changes.
  */
-export interface StatusChanges {
+interface StatusChanges {
   severe: string[];
   desperate: string[];
   serious: string[];
@@ -36,7 +36,7 @@ export interface StatusChanges {
 /**
  * Defines the shape of defenses.
  */
-export interface DodgeTiers {
+interface DodgeTiers {
   tier1_low: string[];
   tier2_medium: string[];
   tier3_high: string[];
@@ -50,7 +50,7 @@ export interface DodgeTiers {
 /**
  * Defense narrative strings for counterstrike, dodge, parry, and shield actions.
  */
-export interface Defenses {
+interface Defenses {
   counterstrike: { success: string[] };
   dodge: DodgeTiers;
   parry: {
@@ -67,7 +67,7 @@ export interface Defenses {
 /**
  * Defines the shape of pacing.
  */
-export interface Tempo {
+interface Tempo {
   ahead: string[];
   equal: string[];
   movement: string[];
@@ -76,7 +76,7 @@ export interface Tempo {
 /**
  * Pacing narrative strings for stalemate, trading blows, and pressing phases.
  */
-export interface Pacing {
+interface Pacing {
   stalemate: string[];
   trading_blows: string[];
   pressing: string[];
@@ -86,7 +86,7 @@ export interface Pacing {
 /**
  * Defines the shape of reactions.
  */
-export interface Reactions {
+interface Reactions {
   positive: string[];
   negative: string[];
   encourage: string[];
@@ -98,7 +98,7 @@ export interface Reactions {
 /**
  * Defines the shape of taunts.
  */
-export interface Taunts {
+interface Taunts {
   winner: string[];
   loser: string[];
   rivalry_winner: string[];
@@ -108,7 +108,7 @@ export interface Taunts {
 /**
  * Defines the shape of insights.
  */
-export interface Insights {
+interface Insights {
   ST: string[];
   SP: string[];
   DF: string[];
@@ -120,7 +120,7 @@ export interface Insights {
 /**
  * Defines the shape of pbp narratives.
  */
-export interface Attacks {
+interface Attacks {
   piercing: string[];
   slashing: string[];
   bashing: string[];
@@ -130,7 +130,7 @@ export interface Attacks {
 /**
  * Knockdown narrative strings for fall and recovery.
  */
-export interface Knockdown {
+interface Knockdown {
   fall: string[];
   recovery: string[];
 }
@@ -138,7 +138,7 @@ export interface Knockdown {
 /**
  * Epithet narrative strings by origin, race, and style.
  */
-export interface Epithets {
+interface Epithets {
   origin: string[];
   race: string[];
   style: string[];
@@ -147,14 +147,14 @@ export interface Epithets {
 /**
  * Style matchup narrative strings keyed by style pair.
  */
-export interface StyleMatchups {
+interface StyleMatchups {
   [key: string]: string[];
 }
 
 /**
  * Contextual narrative strings for rivalry and fame-based commentary.
  */
-export interface Context {
+interface Context {
   rivalry: string[];
   fame_great: string[];
   fame_unknown: string[];

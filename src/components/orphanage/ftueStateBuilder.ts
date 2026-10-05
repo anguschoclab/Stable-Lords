@@ -1,4 +1,4 @@
-import { SeededRNG, SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generatePotential } from '@/engine/warrior/potential';
 import { generateRivalStables } from '@/engine/rivals';
@@ -87,7 +87,7 @@ export function buildFTUEInitialState(
   poolSeedValue: number,
   playerPlan?: FightPlan | null
 ) {
-  const finishRng = new SeededRNGService(poolSeedValue + 999);
+  const finishRng = new SeededRNG(poolSeedValue + 999);
 
   const warriors = selectedWarriors.map((pw, idx) =>
     buildFTUEWarrior(pw, idx, boutResult, playerPlan, finishRng)
@@ -121,7 +121,7 @@ export function buildFTUEInitialState(
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
   const recruitPool = generateRecruitPool(
-    { count: 100, week: 1, usedNames: usedNames, rng: new SeededRNGService(poolSeedValue + 888) }
+    { count: 100, week: 1, usedNames: usedNames, rng: new SeededRNG(poolSeedValue + 888) }
   );
 
   const promotersArray = generatePromoters(30, poolSeedValue + 999);

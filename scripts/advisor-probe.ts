@@ -4,7 +4,7 @@ import { applyBackstoryToPlayer, BACKSTORY_IDS } from '@/data/backstories';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
-import { SeededRNGService, hashStr } from '@/utils/random';
+import { SeededRNG, hashStr } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
@@ -13,13 +13,13 @@ import type { WarriorId } from '@/types/shared.types';
 let state = createFreshState('alpha-prime-10');
 state.player.name = 'Probe';
 state.player.stableName = 'Probe Stable';
-applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNGService(42));
+applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNG(42));
 state = resolveImpacts(state, [runRankingsPass(state), runPromoterPass(state)]);
 state.treasury += 5000;
 
 const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool.slice(0, 5)) {
-  const rng = new SeededRNGService(state.week + hashStr(w.name));
+  const rng = new SeededRNG(state.week + hashStr(w.name));
   state.roster.push(
     makeWarrior(
       { id: rng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }

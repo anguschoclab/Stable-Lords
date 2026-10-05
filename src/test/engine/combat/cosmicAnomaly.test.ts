@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { WEATHER_TYPES } from '@/types/enumSources';
-import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
+import { WeatherTypeSchema } from '@/schemas/schemaEnums';
 import { getWeatherEffect, weatherOpeningLine } from '@/engine/combat/mechanics/weatherEffects';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 

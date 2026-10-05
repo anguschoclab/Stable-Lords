@@ -11,7 +11,7 @@ import {
   convertBidsToOffers,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
-import { SeededRNGService, resolveRng } from '@/utils/random';
+import { SeededRNG, resolveRng } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
@@ -145,7 +145,7 @@ function collectFreedRecruits(
   state: GameState,
   nextWeek: number
 ): PoolWarrior[] {
-  const rng = new SeededRNGService(state.absoluteWeek * 31 + 101);
+  const rng = new SeededRNG(state.absoluteWeek * 31 + 101);
   const deadIds = deadIdSet(state);
   const rivalsById = new Map((state.rivals ?? []).map((r) => [r.id, r] as const));
   const freed: PoolWarrior[] = [];
@@ -166,7 +166,7 @@ function collectStarvedRecruits(
   nextWeek: number,
   state: GameState
 ): PoolWarrior[] {
-  const rng = new SeededRNGService(nextWeek * 131 + 17);
+  const rng = new SeededRNG(nextWeek * 131 + 17);
   const deadIds = deadIdSet(state);
   const freed: PoolWarrior[] = [];
   for (const r of folded) {
@@ -197,7 +197,7 @@ interface RunRosterManagementArgs {
 function runRosterManagement(args: RunRosterManagementArgs): RivalStableData[] {
   const { state, currentRivals, nextWeek, boutOffersWithWorld, globalGazetteItems } = args;
   const { impacts } = args;
-  const rosterRng = new SeededRNGService(state.absoluteWeek * 13 + 7);
+  const rosterRng = new SeededRNG(state.absoluteWeek * 13 + 7);
   const { updatedRivals, gazetteItems, retiredWarriors, legacyFounders } =
     processAIRosterManagement(
       {

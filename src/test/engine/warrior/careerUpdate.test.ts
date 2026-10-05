@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/state.types';
 import {
@@ -17,7 +17,7 @@ import {
 import { EPITHET_TABLES } from '@/data/names/epithets';
 
 describe('careerUpdate', () => {
-  const rng = new SeededRNGService(12345);
+  const rng = new SeededRNG(12345);
 
   function createTestWarrior(
     fatigue: number = 0,

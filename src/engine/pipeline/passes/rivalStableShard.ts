@@ -11,7 +11,7 @@ import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
 import { driftCompetence } from '@/engine/ai/competence';
 import { applySeasonPlan } from '@/engine/ai/plan/seasonPlan';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { aiRosterMin } from '@/constants/ai';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 
@@ -163,7 +163,7 @@ export function processRivalStable(
   const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(
     rivalWithStrategy,
     nextWeek,
-    new SeededRNGService(strategySeed + 123),
+    new SeededRNG(strategySeed + 123),
     successorByStable,
     state.absoluteWeek + 1
   );

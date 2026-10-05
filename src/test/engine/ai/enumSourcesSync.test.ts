@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { WEATHER_TYPES } from '@/types/enumSources';
-import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
+import { WeatherTypeSchema } from '@/schemas/schemaEnums';
 import type { WeatherType } from '@/types/shared.types';
 
 describe('enumSources sync with WeatherType', () => {

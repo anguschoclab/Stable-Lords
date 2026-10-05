@@ -4,7 +4,7 @@ import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { MatchScoringService } from './matchmakingServices';
 import { calculateRivalryScore } from '../owner/grudges';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
@@ -32,7 +32,7 @@ function aggregatePairingStats(
 
   for (const f of weekFights) {
     if (!f.stableIdA || !f.stableIdD) continue;
-    const key = getStablePairKey(f.stableIdA, f.stableIdD);
+    const key = getPairKey(f.stableIdA, f.stableIdD);
     const entry = pairs.get(key) ?? {
       stableIdA: f.stableIdA,
       stableIdB: f.stableIdD,
@@ -77,10 +77,10 @@ function processRivalryUpdates(
   rng: IRNGService
 ): void {
   const rivalryMap = new Map(
-    rivalries.map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
+    rivalries.map((rv) => [getPairKey(rv.stableIdA, rv.stableIdB), rv])
   );
   for (const [, data] of pairs.entries()) {
-    const existing = rivalryMap.get(getStablePairKey(data.stableIdA, data.stableIdB));
+    const existing = rivalryMap.get(getPairKey(data.stableIdA, data.stableIdB));
 
     const rawDelta = calculateRivalryScore(data.bouts, data.deaths, data.upsets);
     const intensityDelta =
@@ -118,7 +118,7 @@ function processRivalryUpdates(
         startWeek: week,
       };
       rivalries.push(newRivalry);
-      rivalryMap.set(getStablePairKey(newRivalry.stableIdA, newRivalry.stableIdB), newRivalry);
+      rivalryMap.set(getPairKey(newRivalry.stableIdA, newRivalry.stableIdB), newRivalry);
     }
   }
 }

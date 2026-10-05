@@ -5,7 +5,6 @@ import { z } from 'zod';
 import {
   FightingStyleSchema,
   SeasonSchema,
-  WeatherTypeSchema,
   TrainerTierSchema,
   TrainerFocusSchema,
   TrainerSpecialtySchema,
@@ -15,8 +14,6 @@ import {
   OwnerPersonalitySchema,
   MetaAdaptationSchema,
   OwnerCompetenceSchema,
-  ArenaZoneSchema,
-  ArenaTagSchema,
   ShieldShapeSchema,
   FieldTypeSchema,
   MetalColorSchema,
@@ -29,7 +26,7 @@ import { WarriorSchema } from './warriorSchemas';
 /**
  * CrestCharge schema
  */
-export const CrestChargeSchema = z.object({
+const CrestChargeSchema = z.object({
   type: ChargeTypeSchema,
   name: z.string(),
   posture: BeastPostureSchema.optional(),
@@ -39,7 +36,7 @@ export const CrestChargeSchema = z.object({
 /**
  * CrestData schema
  */
-export const CrestDataSchema = z.object({
+const CrestDataSchema = z.object({
   shieldShape: ShieldShapeSchema,
   fieldType: FieldTypeSchema,
   primaryColor: z.string(),
@@ -171,7 +168,7 @@ const SeasonRecordSchema = z.object({
 /**
  * OpponentDossier schema
  */
-export const OpponentDossierSchema = z.object({
+const OpponentDossierSchema = z.object({
   lastSeenWeek: z.number(),
   knownStyles: z.array(FightingStyleSchema),
   estimatedThreat: z.number().min(0).max(1),
@@ -289,7 +286,7 @@ export const OwnerGrudgeSchema = z.object({
   lastEscalation: z.number(),
 });
 
-export const ProgressionObjectiveSchema = z.object({
+const ProgressionObjectiveSchema = z.object({
   id: z.enum([
     'TOP_10_STABLE',
     'TOP_3_STABLE',
@@ -330,7 +327,7 @@ export const DeferredBoutLogSchema = z.object({
 /**
  * Bookmark schema
  */
-export const BookmarkEntityTypeSchema = z.enum([
+const BookmarkEntityTypeSchema = z.enum([
   'warrior',
   'rival',
   'promoter',
@@ -365,36 +362,3 @@ export const TrainerSchema = z.object({
   specialty: TrainerSpecialtySchema.optional(),
 });
 
-/**
- * SurfaceMod schema
- */
-export const SurfaceModSchema = z.object({
-  initiativeMod: z.number(),
-  enduranceMult: z.number(),
-  riposteMod: z.number(),
-});
-
-/**
- * ArenaWeatherMod schema
- */
-export const ArenaWeatherModSchema = z.object({
-  weatherType: WeatherTypeSchema,
-  zoneDef: z.record(ArenaZoneSchema, z.number()).optional(),
-  surfaceMod: SurfaceModSchema.optional(),
-});
-
-/**
- * ArenaConfig schema
- */
-export const ArenaConfigSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  tags: z.array(ArenaTagSchema),
-  tier: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-  size: z.union([z.literal('cramped'), z.literal('standard'), z.literal('open')]),
-  description: z.string(),
-  zoneDef: z.record(ArenaZoneSchema, z.number()),
-  surfaceMod: SurfaceModSchema,
-  weatherMods: z.array(ArenaWeatherModSchema).optional(),
-  startingZone: ArenaZoneSchema.optional(),
-});

@@ -184,6 +184,3 @@ export function resolveRng(rng: IRNGService | undefined, fallbackSeed: number): 
 export function entropyRng(): IRNGService {
   return new SeededRNG(cryptoRandomInt(0, 0x7fffffff));
 }
-
-/** Backward-compatible alias — callers should migrate to {@link SeededRNG}. */
-export const SeededRNGService = SeededRNG;

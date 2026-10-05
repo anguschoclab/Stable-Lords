@@ -1,7 +1,7 @@
 import { defaultPlanForWarrior } from '../bout/planDefaults';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan, FightOutcome } from '@/types/combat.types';
@@ -52,7 +52,7 @@ function prepareBout(args: PrepareBoutArgs) {
 
   // Narration-only RNG — isolated from combat resolution so flavor
   // draws never shift the mechanical outcome stream.
-  const narRngService = new SeededRNGService(boutSeed ^ 0x5f3759df);
+  const narRngService = new SeededRNG(boutSeed ^ 0x5f3759df);
 
   const nameA = warriorA?.name ?? 'Attacker';
   const nameD = warriorD?.name ?? 'Defender';

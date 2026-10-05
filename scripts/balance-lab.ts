@@ -16,7 +16,7 @@ import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { makeComputedWarrior } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { refitWeapon } from '@/engine/equipment/loadoutFitting';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -141,7 +141,7 @@ if (files.length) {
       e.w.equipment = refitWeapon(e.w.style, e.w.attributes, e.w.equipment);
   }
   const N = Number(process.env.LAB_FIGHTS ?? 30000);
-  const rng = new SeededRNGService(99);
+  const rng = new SeededRNG(99);
   const t = tally();
   for (let i = 0; i < N; i++) {
     const A = pool[Math.floor(rng.next() * pool.length)]!;

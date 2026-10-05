@@ -19,7 +19,7 @@ vi.mock('@/engine/bout/services/boutProcessorService', () => ({
 
 import '@/test/_setup/setup';
 import { runBoutSimulationPass } from '@/engine/pipeline/passes/BoutSimulationPass';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 
 const makeState = (week: number, year: number, prevReport?: any): GameState =>
@@ -35,7 +35,7 @@ const makeState = (week: number, year: number, prevReport?: any): GameState =>
   } as any);
 
 describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
-  const rng = new SeededRNGService(42);
+  const rng = new SeededRNG(42);
 
   it('week 2 report should NOT contain week 1 trainingGains', () => {
     const week1Report = {

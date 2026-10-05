@@ -6,7 +6,7 @@ import {
   pickExposureFlaw,
 } from '@/engine/training/trainingGains/traitCapacity';
 import { TRAITS } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { Warrior } from '@/types/warrior.types';
 
 const w = (over: Partial<Warrior> = {}): Warrior =>
@@ -55,7 +55,7 @@ describe('countFlaws', () => {
 
 describe('pickExposureFlaw', () => {
   it('returns an acquirable Flaw id, or null when none can be added', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const id = pickExposureFlaw(w({ traits: [] }), rng);
     expect(id).not.toBeNull();
     expect(TRAITS[id!]!.tier).toBe('Flaw');

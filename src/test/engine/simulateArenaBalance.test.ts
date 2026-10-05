@@ -3,7 +3,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { THE_FROZEN_LAKE, THE_ACID_BOG } from '@/data/arenas';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Arena Tag Weights Balance', () => {
   it('ensures no single fighting style wins > 60% against the field in new arenas', () => {
@@ -22,7 +22,7 @@ describe('Arena Tag Weights Balance', () => {
           if (styleA === styleB) continue;
 
           for (let i = 0; i < NUM_SIMS; i++) {
-            const rng = new SeededRNGService(seed++);
+            const rng = new SeededRNG(seed++);
             // makeWarrior includes all required attributes
             const warriorA = makeWarrior({
               style: styleA,

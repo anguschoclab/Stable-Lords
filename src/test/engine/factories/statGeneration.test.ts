@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { FightingStyle, ATTRIBUTE_KEYS } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('statGeneration', () => {
   it('generates valid attributes for all archetypes', () => {
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
 
     // Test a sample style for each archetype
     const stylesToTest = [
@@ -32,7 +32,7 @@ describe('statGeneration', () => {
   });
 
   it('verifies that high priority stats get higher values than low priority stats', () => {
-    const rng = new SeededRNGService(999);
+    const rng = new SeededRNG(999);
 
     // Test brutal archetype (high: ST, CN, SZ; low: WT, SP, DF)
     const attrs = generateArchetypeAttrs(FightingStyle.StrikingAttack, rng);
@@ -45,7 +45,7 @@ describe('statGeneration', () => {
 
   it('exhausts point pool appropriately without exceeding caps', () => {
     // Generate many sets to hit edge cases in random distributions
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     for (let i = 0; i < 50; i++) {
       const style = rng.pick(Object.values(FightingStyle));

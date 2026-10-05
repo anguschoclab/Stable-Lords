@@ -6,7 +6,7 @@ import type {
   OwnerGrudge,
 } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';
 
 /**
@@ -41,13 +41,13 @@ export function buildWeekCaches(state: GameState): void {
 
   const rivalryMap = new Map<string, Rivalry>();
   (state.rivalries || []).forEach((rv) =>
-    rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv)
+    rivalryMap.set(getPairKey(rv.stableIdA, rv.stableIdB), rv)
   );
   state.rivalryMap = rivalryMap;
 
   const grudgeMap = new Map<string, OwnerGrudge>();
   (state.ownerGrudges || []).forEach((g) =>
-    grudgeMap.set(getStablePairKey(g.ownerIdA, g.ownerIdB), g)
+    grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g)
   );
   state.grudgeMap = grudgeMap;
 }

@@ -3,7 +3,7 @@ import type { CrowdMoodType } from '../shared.types';
 /**
  * Defines the shape of mood tone record.
  */
-export interface MoodToneRecord {
+interface MoodToneRecord {
   adjectives: string[];
   opener: string[];
   closer: string[];

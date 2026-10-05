@@ -8,7 +8,7 @@
  *   5. Handles edge cases (empty roster, warrior already having 'precise' trait)
  */
 import { describe, it, expect } from 'vitest';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
@@ -70,7 +70,7 @@ describe('unexplained_monolith offseason event', () => {
 
     let monolithTriggered = false;
     for (let seed = 1; seed <= 200; seed++) {
-      const rng = new SeededRNGService(seed);
+      const rng = new SeededRNG(seed);
       const impact = runSeasonalPass(state, 1, rng);
       if (impact.rosterUpdates && impact.rosterUpdates.size > 0) {
         const update = impact.rosterUpdates.get(warrior.id);
@@ -86,7 +86,7 @@ describe('unexplained_monolith offseason event', () => {
   it('handleUnexplainedMonolith grants +15 XP, +10 Fame, precise trait, and Minor injury', () => {
     const warrior = makeWarrior('TestWarrior');
     const state = makeState([warrior]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
@@ -106,7 +106,7 @@ describe('unexplained_monolith offseason event', () => {
   it('handleUnexplainedMonolith pushes a newsletter item', () => {
     const warrior = makeWarrior('TestWarrior');
     const state = makeState([warrior]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
@@ -119,11 +119,11 @@ describe('unexplained_monolith offseason event', () => {
     const warrior = makeWarrior('TestWarrior');
     const state = makeState([warrior]);
 
-    const rng1 = new SeededRNGService(42);
+    const rng1 = new SeededRNG(42);
     const ctx1 = makeCtx();
     handleUnexplainedMonolith(state, 1, monolithEvent, rng1, ctx1);
 
-    const rng2 = new SeededRNGService(42);
+    const rng2 = new SeededRNG(42);
     const ctx2 = makeCtx();
     handleUnexplainedMonolith(state, 1, monolithEvent, rng2, ctx2);
 
@@ -136,7 +136,7 @@ describe('unexplained_monolith offseason event', () => {
   it('handleUnexplainedMonolith does not duplicate precise trait if already present', () => {
     const warrior = makeWarrior('PreciseWarrior', { traits: ['precise'] });
     const state = makeState([warrior]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
@@ -148,7 +148,7 @@ describe('unexplained_monolith offseason event', () => {
 
   it('handleUnexplainedMonolith handles empty roster gracefully', () => {
     const state = makeState([]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     expect(() => handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx)).not.toThrow();
@@ -159,7 +159,7 @@ describe('unexplained_monolith offseason event', () => {
   it('handleUnexplainedMonolith accumulates updates on existing rosterUpdates', () => {
     const warrior = makeWarrior('TestWarrior', { xp: 50, fame: 20 });
     const state = makeState([warrior]);
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     ctx.rosterUpdates.set(warrior.id, { xp: 50, fame: 20 });

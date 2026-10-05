@@ -1,5 +1,5 @@
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   advanceWeek as runWeeklyPipeline,
   type WeekAdvanceOptions,
@@ -69,7 +69,7 @@ export const TickOrchestrator = {
     const nextDay = currentDay + 1;
     // Standardize seed generation
     const seed = tournamentDaySeed(state.year, state.week, nextDay);
-    const rng = new SeededRNGService(seed);
+    const rng = new SeededRNG(seed);
 
     // 1. Weekly Transition (Day 7)
     if (nextDay >= 7) {
@@ -153,7 +153,7 @@ export const TickOrchestrator = {
       currentState.newsletter = [
         ...(currentState.newsletter || []),
         {
-          id: new SeededRNGService(state.week).uuid(),
+          id: new SeededRNG(state.week).uuid(),
           week: state.week,
           title: `Empire News: Tournament Week ${state.week} Recap`,
           items: weeklyNewsItems,

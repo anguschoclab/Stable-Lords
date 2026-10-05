@@ -5,7 +5,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { SeasonalRetirementService } from '@/engine/ai/seasonalRetirementService';
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { EPITHET_TABLES } from '@/data/names/epithets';
 
@@ -17,7 +17,7 @@ describe('SeasonalRetirementService', () => {
     state = createFreshState('test-seed');
     state.week = 52;
     state.season = 'Winter';
-    rng = new SeededRNGService(12345);
+    rng = new SeededRNG(12345);
   });
 
   describe('processSeasonalRetirement', () => {
@@ -37,7 +37,7 @@ describe('SeasonalRetirementService', () => {
         } }),
       ];
 
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       const oldWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Old Warrior');
@@ -51,7 +51,7 @@ describe('SeasonalRetirementService', () => {
         } }),
       ];
 
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       const youngWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Young Warrior');
@@ -75,7 +75,7 @@ describe('SeasonalRetirementService', () => {
         ),
       ];
 
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       // The founder queue may stay empty under the LEGACY_FOUND_CHANCE roll —
@@ -93,7 +93,7 @@ describe('SeasonalRetirementService', () => {
         } }),
       ];
 
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       // Average warriors never reach the founder queue
@@ -106,7 +106,7 @@ describe('SeasonalRetirementService', () => {
         makeWarrior({ id: undefined, name: 'Old Warrior', style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: { age: 45 } }),
       ];
 
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
       const oldWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Old Warrior');
@@ -117,8 +117,8 @@ describe('SeasonalRetirementService', () => {
     });
 
     it('should be deterministic with same seed', () => {
-      const rng1 = new SeededRNGService(12345);
-      const rng2 = new SeededRNGService(12345);
+      const rng1 = new SeededRNG(12345);
+      const rng2 = new SeededRNG(12345);
       const { updatedState: s1 } = SeasonalRetirementService.processSeasonalRetirement(state, rng1);
       const { updatedState: s2 } = SeasonalRetirementService.processSeasonalRetirement(state, rng2);
 

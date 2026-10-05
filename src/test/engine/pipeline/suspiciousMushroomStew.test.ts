@@ -7,7 +7,7 @@ import type {
   OffseasonEventContext,
   OffseasonEventNarrative,
 } from '@/engine/pipeline/offseasonEvents/types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('handleSuspiciousMushroomStew', () => {
   it('grants XP and causes a Stomach Ache injury to a random active warrior', () => {
@@ -38,7 +38,7 @@ describe('handleSuspiciousMushroomStew', () => {
       newsletter: ['{{name}} ate mushroom stew.'],
     };
 
-    const mockRng = new SeededRNGService(123);
+    const mockRng = new SeededRNG(123);
 
     handleSuspiciousMushroomStew(mockState, 1, mockNarrative, mockRng, mockCtx);
 

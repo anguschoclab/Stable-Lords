@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import { narrativeContent } from '@/data/narrative';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { WarriorId } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 
 describe('runSeasonalPass - wandering_mystic', () => {
   it('should trigger wandering_mystic event and give warrior the chaos_touched trait', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const eventCount = Object.keys((narrativeContent as any).offseason_events).length;
     let callCount = 0;
 

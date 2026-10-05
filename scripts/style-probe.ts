@@ -10,7 +10,7 @@ import { simulateFight } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { createFighterState } from '@/engine/bout/fighterState';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { refitWeapon } from '@/engine/equipment/loadoutFitting';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -62,7 +62,7 @@ const S: Record<string, ReturnType<typeof z>> = {};
 for (const s of styles) S[s] = z();
 
 const N = Number(process.env.LAB_FIGHTS ?? 20000);
-const rng = new SeededRNGService(99);
+const rng = new SeededRNG(99);
 for (let i = 0; i < N; i++) {
   const A = pool[Math.floor(rng.next() * pool.length)]!;
   const D = pool[Math.floor(rng.next() * pool.length)]!;

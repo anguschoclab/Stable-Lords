@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { battleOpener } from '@/engine/narrative/narrativeIntro';
 import { narrateFeint, narrateInsightHint } from '@/engine/narrative/narrativePositioning';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 
@@ -63,14 +63,14 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
 
   it('battleOpener interpolates both fighter names (no raw tokens)', () => {
     for (let seed = 1; seed <= 40; seed++) {
-      const line = battleOpener(new SeededRNGService(seed), 'Garath', 'Vellis');
+      const line = battleOpener(new SeededRNG(seed), 'Garath', 'Vellis');
       expect(noRawTokens(line), `seed ${seed}: ${line}`).toBe(true);
     }
   });
 
   it('narrateFeint resolves {{defender}} via the passed opponent name', () => {
     for (let seed = 1; seed <= 40; seed++) {
-      const line = narrateFeint(new SeededRNGService(seed), 'Garath', true, 'Vellis');
+      const line = narrateFeint(new SeededRNG(seed), 'Garath', true, 'Vellis');
       expect(noRawTokens(line), `seed ${seed}: ${line}`).toBe(true);
     }
   });
@@ -79,7 +79,7 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
     const attrs = ['ST', 'SP', 'DF', 'WL', 'CN', 'CT'];
     for (let seed = 1; seed <= 60; seed++) {
       for (const attr of attrs) {
-        const svc = new SeededRNGService(seed);
+        const svc = new SeededRNG(seed);
         const hint = narrateInsightHint(svc, attr, 'Garath', 'Vellis');
         if (hint !== null) {
           expect(noRawTokens(hint), `seed ${seed} attr ${attr}: ${hint}`).toBe(true);

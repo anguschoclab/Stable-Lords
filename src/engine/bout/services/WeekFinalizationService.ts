@@ -10,7 +10,7 @@ import { computeCrowdMood } from '@/engine/bout/crowdMood';
 import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 /**
  * Finalizes week side effects into StateImpact
@@ -49,13 +49,13 @@ export function finalizeWeekSideEffectsToImpact(
   }
 
   const weekFights = getFightsForWeek(state.arenaHistory, state.absoluteWeek);
-  const gazetteRng = new SeededRNGService(state.absoluteWeek * 9973 + 123);
+  const gazetteRng = new SeededRNG(state.absoluteWeek * 9973 + 123);
   impact.gazettes = [
     generateWeeklyGazette(
       { fights: weekFights, mood: newMood, week: state.absoluteWeek, graveyard: state.graveyard, allFights: state.arenaHistory, rng: gazetteRng }
     ),
   ];
-  const rng = new SeededRNGService(state.absoluteWeek * 13);
+  const rng = new SeededRNG(state.absoluteWeek * 13);
   impact.rivalries = updateRivalriesFromBouts(
     state.rivalries || [],
     weekFights,

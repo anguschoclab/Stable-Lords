@@ -4,7 +4,7 @@
  * the earned title on save/load.
  */
 import { describe, it, expect } from 'vitest';
-import { WarriorSchema } from '@/schemas/gameStateSchema';
+import { WarriorSchema } from '@/schemas/warriorSchemas';
 import { makeWarrior } from '@/test/_fixtures/factories';
 
 describe('WarriorSchema — epithet roundtrip', () => {

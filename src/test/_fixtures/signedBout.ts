@@ -1,6 +1,6 @@
 import type { GameState, BoutOffer, Promoter } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { makeGameState } from '@/test/_fixtures/factories';
 
@@ -10,7 +10,7 @@ import { makeGameState } from '@/test/_fixtures/factories';
  * the bout-pipeline integration tests that need a bout to actually run.
  */
 export function makeSignedBoutState(): GameState {
-  const rng = new SeededRNGService(1);
+  const rng = new SeededRNG(1);
 
   const warriorA = makeWarrior(
     { id: 'warrior-a' as import('@/types/shared.types').WarriorId, name: 'Fighter A', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 10 }, rng: rng }

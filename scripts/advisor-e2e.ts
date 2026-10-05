@@ -15,7 +15,7 @@ import { applyBackstoryToPlayer, BACKSTORY_IDS } from '@/data/backstories';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
-import { SeededRNGService, hashStr } from '@/utils/random';
+import { SeededRNG, hashStr } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { computeStableCouncilReport } from '@/engine/advisor/stableCouncilService';
 import { applyCouncilPlan } from '@/engine/advisor/applyCouncilPlan';
@@ -101,7 +101,7 @@ let state = createFreshState('alpha-prime-10');
 state.player.name = 'E2E Lanista';
 state.player.stableName = 'E2E Verification Stable';
 const identitySeed = 'slot_e2e'.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNGService(identitySeed));
+applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNG(identitySeed));
 state = resolveImpacts(state, [runRankingsPass(state), runPromoterPass(state)]);
 console.log(`\n═══ NEW GAME ═══`);
 console.log(
@@ -116,7 +116,7 @@ state.treasury += 5000;
 const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool) {
   if (state.roster.length >= 5 || state.treasury - w.cost < 300) break;
-  const recruitRng = new SeededRNGService(state.week + hashStr(w.name));
+  const recruitRng = new SeededRNG(state.week + hashStr(w.name));
   const warrior = makeWarrior(
     { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
   );

@@ -5,7 +5,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { applyAgePenalty, checkForcedRetirement, buildRetiredWarrior } from '@/engine/aging';
 import type { Warrior, Attributes, WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/game';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 
 const makeWarrior = (id: string, age: number, attrs: Partial<Attributes> = {}): Warrior =>
@@ -99,7 +99,7 @@ describe('applyAgePenalty', () => {
 
 describe('checkForcedRetirement', () => {
   it('returns retired=false for age below FORCED_RETIRE_MIN (25)', () => {
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = checkForcedRetirement(25, true, rng, 'Test');
 
     expect(result.retired).toBe(false);
@@ -107,7 +107,7 @@ describe('checkForcedRetirement', () => {
   });
 
   it('guarantees retirement at FORCED_RETIRE_MAX (32)', () => {
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = checkForcedRetirement(32, true, rng, 'Test');
 
     expect(result.retired).toBe(true);
@@ -115,8 +115,8 @@ describe('checkForcedRetirement', () => {
   });
 
   it('retires with low rng roll at age 29 (chance=0.075, roll=0.01)', () => {
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
-    const rng = new SeededRNGService(1);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNG(1);
     const result = checkForcedRetirement(29, true, rng, 'Test');
 
     expect(result.retired).toBe(true);
@@ -124,15 +124,15 @@ describe('checkForcedRetirement', () => {
   });
 
   it('does not retire with high rng roll at age 29 (roll=0.99)', () => {
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.99);
-    const rng = new SeededRNGService(1);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.99);
+    const rng = new SeededRNG(1);
     const result = checkForcedRetirement(29, true, rng, 'Test');
 
     expect(result.retired).toBe(false);
   });
 
   it('does not produce ageEvent for non-player warriors even when retired', () => {
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = checkForcedRetirement(32, false, rng, 'Test');
 
     expect(result.retired).toBe(true);

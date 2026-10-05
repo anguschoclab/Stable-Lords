@@ -35,7 +35,7 @@ import {
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 
 let idCounter = 0;
 function nextId(prefix: string): string {
@@ -464,13 +464,13 @@ export function makeGameState(over: Partial<GameState> | Record<string, any> = {
 
   const rivalryMap = new Map<string, (typeof state.rivalries)[number]>();
   (state.rivalries || []).forEach((rv) =>
-    rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv)
+    rivalryMap.set(getPairKey(rv.stableIdA, rv.stableIdB), rv)
   );
   state.rivalryMap = rivalryMap;
 
   const grudgeMap = new Map<string, (typeof state.ownerGrudges)[number]>();
   (state.ownerGrudges || []).forEach((g) =>
-    grudgeMap.set(getStablePairKey(g.ownerIdA, g.ownerIdB), g)
+    grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g)
   );
   state.grudgeMap = grudgeMap;
 

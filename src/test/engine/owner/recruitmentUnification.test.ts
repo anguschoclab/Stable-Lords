@@ -10,7 +10,7 @@ import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
 import { aiRosterMax, aiRosterMin } from '@/constants/ai';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('recruitment unification', () => {
   it('roster management flags needsRecruit instead of signing a warrior directly', () => {
@@ -19,7 +19,7 @@ describe('recruitment unification', () => {
       treasury: 5000,
     });
     const state = makeGameState({ rivals: [thin] });
-    const { updatedRivals } = processAIRosterManagement(state, new SeededRNGService(1));
+    const { updatedRivals } = processAIRosterManagement(state, new SeededRNG(1));
     const updated = updatedRivals[0]!;
     expect(updated.needsRecruit).toBe(true);
     // No recruit was conjured — roster size unchanged
@@ -33,7 +33,7 @@ describe('recruitment unification', () => {
       needsRecruit: true,
     });
     const state = makeGameState({ rivals: [full] });
-    const { updatedRivals } = processAIRosterManagement(state, new SeededRNGService(1));
+    const { updatedRivals } = processAIRosterManagement(state, new SeededRNG(1));
     expect(updatedRivals[0]!.needsRecruit).toBe(false);
   });
 
@@ -58,7 +58,7 @@ describe('recruitment unification', () => {
       },
     ];
     const { updatedRival } = processRecruitment(
-      { rival: thin, pool: pool as never, week: 5, rng: new SeededRNGService(3), isMajorDraftWeek: false, meta: undefined }
+      { rival: thin, pool: pool as never, week: 5, rng: new SeededRNG(3), isMajorDraftWeek: false, meta: undefined }
     );
     expect(updatedRival.roster.length).toBe(2);
     expect(updatedRival.needsRecruit).toBe(false);
@@ -71,7 +71,7 @@ describe('recruitment unification', () => {
       needsRecruit: true,
     });
     const { updatedRival } = processRecruitment(
-      { rival: broke, pool: [], week: 5, rng: new SeededRNGService(5), isMajorDraftWeek: false, meta: undefined }
+      { rival: broke, pool: [], week: 5, rng: new SeededRNG(5), isMajorDraftWeek: false, meta: undefined }
     );
     // checkBudget refuses — reserve floor exceeds treasury
     expect(updatedRival.roster.length).toBe(1);
@@ -84,7 +84,7 @@ describe('recruitment unification', () => {
       needsRecruit: true,
     });
     const { updatedRival } = processRecruitment(
-      { rival: funded, pool: [], week: 5, rng: new SeededRNGService(7), isMajorDraftWeek: false, meta: undefined }
+      { rival: funded, pool: [], week: 5, rng: new SeededRNG(7), isMajorDraftWeek: false, meta: undefined }
     );
     expect(updatedRival.roster.length).toBe(2);
     expect(updatedRival.needsRecruit).toBe(false);

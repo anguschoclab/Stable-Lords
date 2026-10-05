@@ -9,7 +9,7 @@ import type { ProgressionSlice } from './slices/progressionSlice';
 /**
  *
  */
-export interface GameStoreState {
+interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
   activeSlotId: string | null;
@@ -25,7 +25,7 @@ export interface GameStoreState {
 /**
  *
  */
-export interface GameStoreActions {
+interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
   setEventLogOpen: (open: boolean) => void;

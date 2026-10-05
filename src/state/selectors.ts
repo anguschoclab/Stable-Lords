@@ -1,40 +1,9 @@
-import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from './useGameStore';
 import { reconstructGameState } from './serialization';
 
 /** --- Fine-Grained Selectors --- */
 export const useWorldState = () => useGameStore(reconstructGameState);
-
-/**
- *
- */
-export const usePlayer = () => useGameStore((s) => s.player);
-
-/**
- *
- */
-export const useRoster = () => useGameStore((s) => s.roster);
-
-/**
- *
- */
-export const useRivals = () => useGameStore((s) => s.rivals);
-
-/**
- *
- */
-export const useTreasury = () => useGameStore((s) => s.treasury);
-
-/**
- *
- */
-export const useWeek = () => useGameStore((s) => s.week);
-
-/**
- *
- */
-export const useIsSimulating = () => useGameStore((s) => s.isSimulating);
 
 /**
  *
@@ -82,35 +51,3 @@ export const useWarriorNameState = () =>
       rivals: s.rivals,
     }))
   );
-
-/** --- Computed Selectors (Derived State) --- */
-interface StyleStatsRow {
-  style: string;
-  wins: number;
-  losses: number;
-  winRate: number;
-}
-
-/**
- *
- */
-export const useStyleStats = (): StyleStatsRow[] => {
-  const roster = useGameStore((s) => s.roster);
-  return useMemo(() => {
-    const map = new Map<string, { wins: number; losses: number }>();
-    for (const w of roster) {
-      const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
-      entry.wins += w.career?.wins ?? 0;
-      entry.losses += w.career?.losses ?? 0;
-      map.set(w.style, entry);
-    }
-    return Array.from(map.entries())
-      .map(([style, { wins, losses }]) => ({
-        style,
-        wins,
-        losses,
-        winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
-      }))
-      .sort((a, b) => b.winRate - a.winRate);
-  }, [roster]);
-};

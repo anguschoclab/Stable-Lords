@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
 import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';
 
@@ -61,7 +61,7 @@ describe('Seasonal Weather Buckets', () => {
   });
 
   it('rollWeather only returns weathers from the current season bucket', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     for (const season of SEASONS) {
       const pool = new Set(SEASONAL_WEATHER[season]);
       for (let i = 0; i < 50; i++) {
@@ -73,7 +73,7 @@ describe('Seasonal Weather Buckets', () => {
 
   it('rollWeather can produce every weather in a season bucket given enough rolls', () => {
     for (const season of SEASONS) {
-      const rng = new SeededRNGService(999 + season.length * 100);
+      const rng = new SeededRNG(999 + season.length * 100);
       const pool = SEASONAL_WEATHER[season];
       const seen = new Set<WeatherType>();
       for (let i = 0; i < 2000; i++) {
@@ -104,7 +104,7 @@ describe('Blood Moon Feature', () => {
   });
 
   it('should roll Blood Moon weather when rng yields high enough value', () => {
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.41);
     const weather = rollWeather(rng, 'Summer');
     expect(weather).toBe('Blood Moon');
@@ -118,7 +118,7 @@ describe('Blood Rain Feature', () => {
   });
 
   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.866);
     const weather = rollWeather(rng, 'Spring');
     expect(weather).toBe('Blood Rain');
@@ -132,7 +132,7 @@ describe('Locust Swarm Feature', () => {
   });
 
   it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.761);
     const weather = rollWeather(rng, 'Summer');
     expect(weather).toBe('Locust Swarm');

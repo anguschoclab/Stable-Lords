@@ -34,13 +34,13 @@ function consumersOf(symbol: string, exclude: string): string[] {
 }
 
 describe('megaplan V11: wiring contracts', () => {
-describe.skip('MEGAPLAN-V14', () => {
+describe('MEGAPLAN-V14', () => {
   it('every export of constants/core/dates.ts is consumed outside the module', () => {
     const file = path.join(SRC, 'constants/core/dates.ts');
     if (!existsSync(file)) return; // deleted-file disposition also satisfies
-    const exports = [...readFileSync(file, 'utf8').matchAll(/export\s+const\s+(\w+)/g)].map(
-      (m) => m[1]
-    );
+    const exports = [...readFileSync(file, 'utf8').matchAll(/export\s+const\s+(\w+)/g)]
+      .map((m) => m[1])
+      .filter((s): s is string => Boolean(s));
     const dead = exports.filter((sym) => consumersOf(sym, file).length === 0);
     expect(
       dead,

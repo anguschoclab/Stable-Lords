@@ -26,7 +26,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { generateRecruit } from '@/engine/recruitment/recruitment';
 
 // ── Test Helpers ────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ const MIRROR_ATTRS = { ST: 12, CN: 12, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 12 };
 const MIRROR_STYLE = FightingStyle.StrikingAttack; // Balanced mid-tier style
 
 function buildWarrior(traits: string[] = [], style = MIRROR_STYLE) {
-  const rng = new SeededRNGService(42);
+  const rng = new SeededRNG(42);
   return makeWarrior(
     { id: rng.uuid() as WarriorId, name: traits.length ? `Traited_${traits[0]}` : 'Baseline', style: style, attrs: { ...MIRROR_ATTRS }, overrides: { traits, age: 20 }, rng: rng }
   );
@@ -252,7 +252,7 @@ describe('Combat Balance: Trait System', () => {
     });
 
     it('recruited warriors have trait IDs that resolve in the combat engine', () => {
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       const usedNames = new Set<string>();
 
       for (let i = 0; i < 50; i++) {
@@ -266,7 +266,7 @@ describe('Combat Balance: Trait System', () => {
     });
 
     it('generateTraits produces valid trait IDs', () => {
-      const rng = new SeededRNGService(99999);
+      const rng = new SeededRNG(99999);
       for (let i = 0; i < 100; i++) {
         const traits = generateTraits(rng, 'brutal');
         for (const tid of traits) {

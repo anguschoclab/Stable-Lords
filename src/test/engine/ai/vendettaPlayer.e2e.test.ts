@@ -3,7 +3,7 @@ import { runRivalStrategyPass } from '@/engine/pipeline/passes/RivalStrategyPass
 import { makeRival, makeWarrior, makeGameState } from '@/test/_fixtures/factories';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import type { OwnerGrudge } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 function playerGrudgeFor(rivalOwnerId: string, playerId: string): OwnerGrudge {
   return {
@@ -41,7 +41,7 @@ describe('G.1 — vendetta → player end-to-end (full RivalStrategyPass)', () =
       ownerGrudges: [playerGrudgeFor(rival.owner.id as string, playerId as string)],
     });
 
-    const impact = runRivalStrategyPass(state, 6, new SeededRNGService(42), true);
+    const impact = runRivalStrategyPass(state, 6, new SeededRNG(42), true);
     const offers = Object.values(impact.boutOffers ?? {});
     const playerOffer = offers.find((o) => o.warriorIds.includes(playerWarrior.id as WarriorId));
     expect(playerOffer).toBeDefined();
@@ -69,7 +69,7 @@ describe('G.1 — vendetta → player end-to-end (full RivalStrategyPass)', () =
         ownerGrudges: [playerGrudgeFor(rival.owner.id as string, playerId as string)],
         absoluteWeek: s,
       });
-      const impact = runRivalStrategyPass(st, 6, new SeededRNGService(7), true);
+      const impact = runRivalStrategyPass(st, 6, new SeededRNG(7), true);
       const rivals = [...(impact.rivalsUpdates?.values() ?? [])] as {
         strategy?: { intent?: string; targetStableId?: unknown };
       }[];
@@ -106,7 +106,7 @@ describe('G.1 — vendetta → player end-to-end (full RivalStrategyPass)', () =
       ownerGrudges: [playerGrudgeFor(rival.owner.id as string, playerId as string)],
     });
 
-    const impact = runRivalStrategyPass(state, 6, new SeededRNGService(11), true);
+    const impact = runRivalStrategyPass(state, 6, new SeededRNG(11), true);
     const offers = Object.values(impact.boutOffers ?? {}) as {
       status: string;
       warriorIds: WarriorId[];

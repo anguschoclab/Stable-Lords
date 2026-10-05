@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest';
 import { getStaticTraitMods } from '@/engine/traits';
 import { conflictsWith } from '@/engine/training/trainingGains/traitTraining';
 import { TRAITS, generateTraits } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const REMOVED_IDS = [
   'shadow_born',
@@ -144,7 +144,7 @@ describe('Trait deduplication', () => {
 
   describe('generateTraits still produces valid results', () => {
     it('all generated traits resolve in TRAITS', () => {
-      const rng = new SeededRNGService(12345);
+      const rng = new SeededRNG(12345);
       for (let i = 0; i < 1000; i++) {
         const traits = generateTraits(rng, 'brutal');
         for (const id of traits) {
@@ -154,7 +154,7 @@ describe('Trait deduplication', () => {
     });
 
     it('still produces varied traits (>= 6 distinct)', () => {
-      const rng = new SeededRNGService(54321);
+      const rng = new SeededRNG(54321);
       const seen = new Set<string>();
       for (let i = 0; i < 2000; i++) {
         for (const id of generateTraits(rng, 'brutal')) seen.add(id);
@@ -165,7 +165,7 @@ describe('Trait deduplication', () => {
 
   describe('generateTraits never produces removed traits', () => {
     it('no removed trait ID appears in 1000 generations', () => {
-      const rng = new SeededRNGService(99999);
+      const rng = new SeededRNG(99999);
       const removedSet = new Set<string>(REMOVED_IDS as readonly string[]);
       for (let i = 0; i < 1000; i++) {
         const traits = generateTraits(rng);

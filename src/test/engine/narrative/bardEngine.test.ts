@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { getFromArchive, interpolateTemplate } from '@/engine/narrative';
 import { blurb, commentatorFor, recapLine } from '@/lore/AnnouncerAI';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 
 describe('Bard Narrative Engine', () => {
-  const rng = new SeededRNGService(12345);
+  const rng = new SeededRNG(12345);
 
   describe('interpolateTemplate', () => {
     it('interpolates %A, %D, %W, %BP tokens', () => {

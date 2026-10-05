@@ -24,7 +24,7 @@ import {
   STABLE_ALT,
 } from '@/data/names';
 import { generateWarriorName } from '@/data/names/nameGenerator';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('isValidWarriorName', () => {
   it('returns true for a valid uppercase name', () => {
@@ -40,7 +40,7 @@ describe('isValidWarriorName', () => {
   });
 
   it('returns true for generated names', () => {
-    const rng = new SeededRNGService(77);
+    const rng = new SeededRNG(77);
     for (let i = 0; i < 50; i++) {
       const n = generateWarriorName({ rng });
       expect(isValidWarriorName(n), `generated name ${n} rejected`).toBe(true);

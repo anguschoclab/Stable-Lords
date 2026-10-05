@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { WORLD_RIVAL_FLOOR, PROMOTERS_PER_STABLE, PROMOTER_COUNT_MIN } from '@/constants/world';
 import { computeRecruitPoolSize } from '@/engine/recruitment/recruitment';
@@ -121,11 +121,11 @@ describe('populateInitialWorld', () => {
   });
 
   it('accepts custom rng parameter', () => {
-    const customRng = new SeededRNGService(12345);
+    const customRng = new SeededRNG(12345);
     const result = populateInitialWorld(baseState, 42, customRng);
     expect(result.roster).toHaveLength(4);
     // With custom RNG, player roster attributes should be deterministic from seed 12345
-    const expected = populateInitialWorld(baseState, 42, new SeededRNGService(12345));
+    const expected = populateInitialWorld(baseState, 42, new SeededRNG(12345));
     expect(result.roster.map((w) => w.attributes)).toEqual(
       expected.roster.map((w) => w.attributes)
     );

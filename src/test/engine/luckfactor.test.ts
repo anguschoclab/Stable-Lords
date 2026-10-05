@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { rollLuckfactor, applyLuckfactor, computeBaseSkills } from '@/engine/warrior/skillCalc';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle, type BaseSkills } from '@/types/shared.types';
 
 const SKILLS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'];
 
 describe('luckfactor', () => {
   it('rolls a delta in [-4, +4] for each of the 6 skills', () => {
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     for (let i = 0; i < 200; i++) {
       const luck = rollLuckfactor(rng);
       for (const s of SKILLS) {
@@ -18,14 +18,14 @@ describe('luckfactor', () => {
   });
 
   it('is deterministic for a given seed', () => {
-    expect(rollLuckfactor(new SeededRNGService(7))).toEqual(
-      rollLuckfactor(new SeededRNGService(7))
+    expect(rollLuckfactor(new SeededRNG(7))).toEqual(
+      rollLuckfactor(new SeededRNG(7))
     );
   });
 
   it('produces variety (two seeds differ)', () => {
-    const a = rollLuckfactor(new SeededRNGService(1));
-    const b = rollLuckfactor(new SeededRNGService(2));
+    const a = rollLuckfactor(new SeededRNG(1));
+    const b = rollLuckfactor(new SeededRNG(2));
     expect(a).not.toEqual(b);
   });
 

@@ -25,7 +25,7 @@ Seeded RNG implementation and helpers.
 
 | Export                           | Signature                      | Purpose                             |
 | -------------------------------- | ------------------------------ | ----------------------------------- |
-| `SeededRNG` / `SeededRNGService` | `class implements IRNGService` | Deterministic RNG with seed         |
+| `SeededRNG` / `SeededRNG` | `class implements IRNGService` | Deterministic RNG with seed         |
 | `randomPick`                     | `(arr, rng) => T`              | Pick a random element from an array |
 | `stringToSeed`                   | `(str) => number`              | Convert a string to a numeric seed  |
 | `hashStr`                        | `(s) => number`                | Hash a string to a number           |
@@ -72,7 +72,7 @@ Key generation for pair lookups.
 
 | Export                                                  | Signature              | Purpose                                            |
 | ------------------------------------------------------- | ---------------------- | -------------------------------------------------- |
-| `getPairKey` / `getStablePairKey` / `getWarriorPairKey` | `(id1, id2) => string` | Generate a deterministic key for an unordered pair |
+| `getPairKey` / `getPairKey` / `getWarriorPairKey` | `(id1, id2) => string` | Generate a deterministic key for an unordered pair |
 
 ### `logger.ts`
 
@@ -142,4 +142,4 @@ HTML escaping utility.
 - Import via the `@/utils/` alias: `import { clamp } from '@/utils/math'`
 - Prefer `clamp()` over inline `Math.max(min, Math.min(max, val))` patterns
 - Prefer `filterActive()` over inline `roster.filter(w => w.status === 'Active')`
-- Use `SeededRNGService` for deterministic game logic; `cryptoRandom` for non-deterministic cases
+- Use `SeededRNG` for deterministic game logic; `cryptoRandom` for non-deterministic cases

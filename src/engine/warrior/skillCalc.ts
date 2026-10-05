@@ -173,19 +173,6 @@ export function computeEncumbrance(attrs: Attributes): number {
   return computeEncumbranceCapacity(attrs.ST, attrs.CN);
 }
 
-// Re-export chart labels for UI
-export {
-  getDamageRating,
-  getHPRating,
-  computeEncumbranceClass,
-  computeEnduranceTier,
-  ENDURANCE_LABELS,
-  type DamageRating,
-  type HPRating,
-  type EnduranceTier,
-  type EncumbranceClass,
-} from '@/data/terrabloodCharts';
-
 /**
  * Damage labels for each damage class index (0-9).
  */

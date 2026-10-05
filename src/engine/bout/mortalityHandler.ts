@@ -5,7 +5,7 @@ import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact } from '@/engine/impacts';
@@ -203,7 +203,7 @@ export interface HandleDeathArgs {
  */
 export function handleDeath(args: HandleDeathArgs) {
   const { s, wA, wD, outcome, week } = args;
-  const { tags, rng = new SeededRNGService(week * 9973 + 123), tournamentId } = args;
+  const { tags, rng = new SeededRNG(week * 9973 + 123), tournamentId } = args;
   if (outcome.by !== 'Kill')
     return { impact: {}, death: false, playerDeath: false, deathNames: [] };
 

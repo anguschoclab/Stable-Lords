@@ -5,7 +5,8 @@
  *
  * SRP split:
  * - schemaEnums.ts: All z.enum() schemas
- * - schemaObjects.ts: All z.object() schemas for sub-entities
+ * - warriorSchemas.ts / fightSchemas.ts / economySchemas.ts / statsSchemas.ts:
+ *   domain z.object() schemas for sub-entities
  * - gameStateSchema.ts: Main GameStateSchema, SaveSlotMetaSchema, and exported types
  */
 import { z } from 'zod';
@@ -16,137 +17,39 @@ import {
   WorldDifficultySchema,
 } from './schemaEnums';
 import {
-  NewsletterItemSchema,
-  LedgerEntrySchema,
   WarriorSchema,
+  RestStateSchema,
+  RivalrySchema,
+  MatchRecordSchema,
+  InsightTokenSchema,
+} from './warriorSchemas';
+import {
+  NewsletterItemSchema,
   FightSummarySchema,
   GazetteStorySchema,
   HallEntrySchema,
   TournamentEntrySchema,
-  TrainerSchema,
-  TrainingAssignmentSchema,
-  SeasonalGrowthSchema,
-  RivalStableDataSchema,
-  ScoutReportDataSchema,
-  RestStateSchema,
-  RivalrySchema,
-  MatchRecordSchema,
-  OwnerGrudgeSchema,
-  InsightTokenSchema,
-  OwnerSchema,
-  PromoterSchema,
   BoutOfferSchema,
   RankingEntrySchema,
   AnnualAwardSchema,
   ArenaTitleSchema,
   GrandChampionEntrySchema,
   SimulationReportSchema,
-  DeferredBoutLogSchema,
-  BookmarkSchema,
-  ProgressionStateSchema,
-} from './schemaObjects';
-
-// Re-export all schemas for backward compatibility
-export {
-  FightingStyleSchema,
-  SeasonSchema,
-  CrowdMoodTypeSchema,
-  WeatherTypeSchema,
-  TrainerTierSchema,
-  TrainerFocusSchema,
-  TrainerSpecialtySchema,
-  ScoutQualitySchema,
-  WarriorStatusSchema,
-  InjurySeveritySchema,
-  InjuryLocationSchema,
-  PromoterPersonalitySchema,
-  PromoterTierSchema,
-  OwnerPersonalitySchema,
-  MetaAdaptationSchema,
-  AttackTargetSchema,
-  ProtectTargetSchema,
-  OffensiveTacticSchema,
-  DefensiveTacticSchema,
-  ConditionTriggerTypeSchema,
-  PsychStateSchema,
-  DistanceRangeSchema,
-  ArenaZoneSchema,
-  CommitLevelSchema,
-  ArenaTagSchema,
-  ShieldShapeSchema,
-  FieldTypeSchema,
-  MetalColorSchema,
-  ChargeTypeSchema,
-  BeastPostureSchema,
-  ArmorWeightSchema,
-  WeaponTypeSchema,
-  EquipmentSlotSchema,
-  BoutOfferStatusSchema,
-  BoutOfferResponseSchema,
-  FightOutcomeBySchema,
-  CombatEventTypeSchema,
-  DeathCauseBucketSchema,
-  AIIntentSchema,
-  AnnualAwardTypeSchema,
-} from './schemaEnums';
-export {
-  AttributesSchema,
-  BaseSkillsSchema,
-  LuckfactorSchema,
-  DerivedStatsSchema,
-  NewsletterItemSchema,
-  InjuryDataSchema,
-  WarriorFavoritesSchema,
-  WarriorLineageSchema,
-  CareerRecordSchema,
-  DeathEventSchema,
-  EquipmentLoadoutSchema,
-  PhaseStrategySchema,
-  DesperatePlanSchema,
-  PlanConditionSchema,
-  FightPlanSchema,
-  WarriorSchema,
-  CrestChargeSchema,
-  CrestDataSchema,
-  OwnerSchema,
-  PromoterSchema,
-  BoutOfferSchema,
-  RankingEntrySchema,
-  TournamentBoutSchema,
-  TournamentEntrySchema,
+} from './fightSchemas';
+import {
+  LedgerEntrySchema,
+  TrainerSchema,
   TrainingAssignmentSchema,
   SeasonalGrowthSchema,
-  LedgerEntrySchema,
-  AIStrategySchema,
-  AIEventSchema,
-  AIAgentMemorySchema,
   RivalStableDataSchema,
   ScoutReportDataSchema,
-  RestStateSchema,
-  RivalrySchema,
-  MatchRecordSchema,
   OwnerGrudgeSchema,
-  GazetteStorySchema,
-  InsightTokenSchema,
-  HallEntrySchema,
-  CombatEventSchema,
-  MinuteEventSchema,
-  ExchangeLogEntrySchema,
-  FightOutcomeSchema,
-  fightAnalysisSchema,
-  FightSummarySchema,
-  SimulationReportSchema,
-  AnnualAwardSchema,
-  ProgressionObjectiveSchema,
-  ProgressionStateSchema,
+  OwnerSchema,
+  PromoterSchema,
   DeferredBoutLogSchema,
-  BookmarkEntityTypeSchema,
   BookmarkSchema,
-  TrainerSchema,
-  SurfaceModSchema,
-  ArenaWeatherModSchema,
-  ArenaConfigSchema,
-} from './schemaObjects';
+  ProgressionStateSchema,
+} from './economySchemas';
 
 // ─── Main GameState Schema ─────────────────────────────────────────────────────
 
@@ -313,9 +216,3 @@ export const SaveSlotMetaSchema = z.object({
   version: z.string(),
 });
 
-/**
- * Export type for inferred GameState type
- */
-export type ValidatedGameState = z.infer<typeof GameStateSchema>;
-/** Inferred type for SaveSlotMeta validation. */
-export type ValidatedSaveSlotMeta = z.infer<typeof SaveSlotMetaSchema>;

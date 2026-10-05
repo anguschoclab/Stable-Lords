@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { runRivalStrategyPass } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 
@@ -11,7 +11,7 @@ describe('NF6: RivalStrategyPass state mutation', () => {
     const originalOffers = { ...(state.boutOffers || {}) };
     const originalOfferCount = Object.keys(originalOffers).length;
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runRivalStrategyPass(state, 2, rng, true);
 
     // The original state.boutOffers should not be mutated by the pass
@@ -38,7 +38,7 @@ describe('NF6: RivalStrategyPass state mutation', () => {
     state.boutOffers = { 'expired-1': expiredOffer } as any;
     state.absoluteWeek = 5;
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runRivalStrategyPass(state, 6, rng, true);
 
     // The impact's boutOffers should not contain the expired offer
@@ -52,7 +52,7 @@ describe('NF6: RivalStrategyPass state mutation', () => {
     const state = createFreshState('rival-strategy-worldbouts-test');
     state.absoluteWeek = 1;
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runRivalStrategyPass(state, 2, rng, true);
 
     // The impact should be a valid StateImpact

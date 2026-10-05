@@ -4,7 +4,7 @@ import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting/scouting';
 import { type ScoutReportData, type Warrior, type RivalStableData } from '@/types/game';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import { toast } from 'sonner';
 
@@ -27,7 +27,7 @@ function purchaseScoutReport(
     return;
   }
 
-  const rng = new SeededRNGService(week + hashStr(activeWarrior.name));
+  const rng = new SeededRNG(week + hashStr(activeWarrior.name));
   const { report } = generateScoutReport(activeWarrior, quality, week, rng, owner);
 
   // Ensure we don't have duplicate reports for the same warrior

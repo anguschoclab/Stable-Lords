@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId, StableId } from '@/types/shared.types';
@@ -62,7 +62,7 @@ describe('planWorldBouts', () => {
   let rng: IRNGService;
 
   beforeEach(() => {
-    rng = new SeededRNGService(42);
+    rng = new SeededRNG(42);
   });
 
   afterEach(() => {
@@ -406,8 +406,8 @@ describe('planWorldBouts', () => {
       makeTestRival('r1', [makeTestWarrior('w1', 100), makeTestWarrior('w2', 200)]),
       makeTestRival('r2', [makeTestWarrior('w3', 150), makeTestWarrior('w4', 250)]),
     ]);
-    const rng1 = new SeededRNGService(12345);
-    const rng2 = new SeededRNGService(12345);
+    const rng1 = new SeededRNG(12345);
+    const rng2 = new SeededRNG(12345);
     const offers1 = planWorldBouts(state, rng1);
     const offers2 = planWorldBouts(state, rng2);
 
@@ -424,7 +424,7 @@ describe('planWorldBouts — eligibility gating', () => {
   let rng: IRNGService;
 
   beforeEach(() => {
-    rng = new SeededRNGService(42);
+    rng = new SeededRNG(42);
   });
 
   it('excludes resting warriors from pairing', () => {

@@ -10,6 +10,7 @@ import {
   makeStrategy,
   makeBoutOffer,
 } from '@/test/_fixtures/factories';
+import type { AIIntent } from '@/types/state/game';
 
 /**
  * V11 characterization spec — pins the public surface of boutAcceptance.ts
@@ -17,7 +18,7 @@ import {
  * current behavior so the extraction must preserve every gate.
  */
 
-const rivalWith = (intent: string, personality = 'Pragmatic', treasury = 5000) =>
+const rivalWith = (intent: AIIntent, personality = 'Pragmatic', treasury = 5000) =>
   makeRival({
     strategy: makeStrategy({ intent }),
     treasury,

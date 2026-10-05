@@ -13,7 +13,7 @@
  * surprises on the player.
  */
 import type { AttributePotential } from '@/types/warrior.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
 
@@ -49,7 +49,7 @@ export function revealRecruitPotential(
     };
   }
 
-  const rng = new SeededRNGService(week * 7919 + hashStr(recruitId));
+  const rng = new SeededRNG(week * 7919 + hashStr(recruitId));
   const count = rng.next() < 0.5 ? 2 : 3;
   const keys: AttrKey[] = [...ATTRIBUTE_KEYS];
   // Deterministic Fisher-Yates shuffle via the seeded rng.

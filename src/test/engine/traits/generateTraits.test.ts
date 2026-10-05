@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { generateTraits, TRAITS } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('generateTraits (sparse, tier-aware)', () => {
   const sample = (n: number) => {
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const out: string[][] = [];
     for (let i = 0; i < n; i++) out.push(generateTraits(rng, 'brutal'));
     return out;
@@ -37,7 +37,7 @@ describe('generateTraits (sparse, tier-aware)', () => {
 
   it('biases the positive pick toward archetype synergy and away from anti-synergy', () => {
     const share = (archetype: 'brutal' | 'agile', pred: (id: string) => boolean) => {
-      const rng = new SeededRNGService(777);
+      const rng = new SeededRNG(777);
       let hit = 0;
       let nonBlank = 0;
       for (let i = 0; i < 4000; i++) {

@@ -6,7 +6,7 @@ import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { escapeHtml } from '@/utils/escapeHtml';
@@ -42,7 +42,7 @@ export function t(template: string | string[], data: TemplateData, rng?: IRNGSer
     ? rng
       ? rng.pick(template)
       : template[
-          Math.floor(new SeededRNGService(cryptoRandomInt(0, 2147483647)).next() * template.length)
+          Math.floor(new SeededRNG(cryptoRandomInt(0, 2147483647)).next() * template.length)
         ] || ''
     : template;
 

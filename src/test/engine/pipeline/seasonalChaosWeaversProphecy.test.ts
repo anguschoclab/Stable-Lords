@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { handleChaosWeaversProphecy } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type {
   OffseasonEventNarrative,
   OffseasonEventContext,
@@ -24,7 +24,7 @@ describe('Seasonal Chaos Weavers Prophecy', () => {
       ],
     } as unknown as GameState;
 
-    const rng = new SeededRNGService(1234);
+    const rng = new SeededRNG(1234);
     const eventData: OffseasonEventNarrative = {
       title: "The Chaos Weaver's Prophecy",
       effectType: 'chaos_weavers_prophecy',

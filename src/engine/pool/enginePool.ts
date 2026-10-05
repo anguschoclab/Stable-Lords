@@ -55,7 +55,7 @@ export interface BoutShardContext {
  * Runs one bout pairing. Shared by the in-line path and shard workers so
  * distributed output is identical by construction.
  */
-export function processBoutShard(input: BoutShardInput, ctx: BoutShardContext): BoutImpact {
+function processBoutShard(input: BoutShardInput, ctx: BoutShardContext): BoutImpact {
   const p = input.pairing;
   const contract = p.contractId ? ctx.state.boutOffers?.[p.contractId as BoutOfferId] : undefined;
   return resolveBout(ctx.state, {

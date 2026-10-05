@@ -14,7 +14,7 @@ import { type PoolWarrior } from '@/engine/recruitment/recruitment';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeWarrior } from './warriorFactory';
 import { generatePotential } from '@/engine/warrior/potential';
@@ -107,7 +107,7 @@ export function createFreshState(
   worldOptions?: WorldOptions
 ): GameState {
   const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const rng = new SeededRNGService(numericSeed);
+  const rng = new SeededRNG(numericSeed);
 
   const state = baseFreshState(createdAt);
   state.worldOptions = worldOptions;

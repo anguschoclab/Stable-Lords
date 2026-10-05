@@ -1,7 +1,7 @@
 /**
  * Defines the shape of gazette fights.
  */
-export interface GazetteFights {
+interface GazetteFights {
   Kill: string[];
   KO: string[];
   Stoppage: string[];
@@ -13,7 +13,7 @@ export interface GazetteFights {
 /**
  * Defines the shape of gazette headlines.
  */
-export interface GazetteHeadlines {
+interface GazetteHeadlines {
   LegendaryStreak: string[];
   HotStreak: string[];
   Streak: string[];
@@ -34,7 +34,7 @@ export interface GazetteHeadlines {
 /**
  * Defines the shape of gazette featured.
  */
-export interface GazetteFeatured {
+interface GazetteFeatured {
   LegendaryStreak: string[];
   HotStreak: string[];
   Streak: string[];
@@ -48,7 +48,7 @@ export interface GazetteFeatured {
 /**
  * Defines the shape of season summary.
  */
-export interface SeasonSummary {
+interface SeasonSummary {
   headline: string;
   body: string[];
 }

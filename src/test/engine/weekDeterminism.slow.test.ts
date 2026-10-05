@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
@@ -49,8 +49,8 @@ describe('Simulation Determinism', () => {
   });
 
   it('should remain deterministic even when branching (recreating RNG)', async () => {
-    const rng1 = new SeededRNGService(12345);
-    const rng2 = new SeededRNGService(12345);
+    const rng1 = new SeededRNG(12345);
+    const rng2 = new SeededRNG(12345);
 
     for (let i = 0; i < 100; i++) {
       expect(rng1.next()).toBe(rng2.next());

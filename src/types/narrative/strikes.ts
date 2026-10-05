@@ -1,7 +1,7 @@
 /**
  * Defines the shape of strike category.
  */
-export interface StrikeCategory {
+interface StrikeCategory {
   glancing: string[];
   solid: string[];
   mastery: string[];

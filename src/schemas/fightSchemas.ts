@@ -10,8 +10,6 @@ import {
   BoutOfferStatusSchema,
   BoutOfferResponseSchema,
   FightOutcomeBySchema,
-  CombatEventTypeSchema,
-  DeathCauseBucketSchema,
   AnnualAwardTypeSchema,
 } from './schemaEnums';
 import { WarriorSchema, DeathEventSchema } from './warriorSchemas';
@@ -63,7 +61,7 @@ export const RankingEntrySchema = z.object({
 /**
  * TournamentBout schema
  */
-export const TournamentBoutSchema = z.object({
+const TournamentBoutSchema = z.object({
   round: z.number(),
   matchIndex: z.number(),
   warriorIdA: z.string(),
@@ -114,82 +112,6 @@ export const HallEntrySchema = z.object({
 });
 
 /**
- * CombatEvent schema
- */
-export const CombatEventSchema = z.object({
-  type: CombatEventTypeSchema,
-  actor: z.enum(['A', 'D']),
-  target: z.enum(['A', 'D']).optional(),
-  value: z.number().optional(),
-  location: z.string().optional(),
-  result: z.union([z.string(), z.boolean()]).optional(),
-  metadata: z.record(z.string(), z.unknown()).optional(),
-});
-
-/**
- * MinuteEvent schema
- */
-export const MinuteEventSchema = z.object({
-  minute: z.number(),
-  text: z.string(),
-  phase: z.enum(['OPENING', 'MID', 'LATE']).optional(),
-  offTacticA: z.string().optional(),
-  defTacticA: z.string().optional(),
-  offTacticD: z.string().optional(),
-  defTacticD: z.string().optional(),
-  protectA: z.string().optional(),
-  protectD: z.string().optional(),
-  events: z.array(CombatEventSchema).optional(),
-});
-
-/**
- * ExchangeLogEntry schema
- */
-export const ExchangeLogEntrySchema = z.object({
-  exchangeIndex: z.number(),
-  minute: z.number(),
-  phase: z.enum(['OPENING', 'MID', 'LATE']).optional(),
-  attackerId: z.string().optional(),
-  defenderId: z.string().optional(),
-  iniWinner: z.enum(['A', 'D']).optional(),
-  attResult: z.enum(['hit', 'miss', 'crit', 'fumble']).optional(),
-  parResult: z.union([z.literal('success'), z.literal('fail'), z.null()]).optional(),
-  defResult: z.union([z.literal('dodge'), z.literal('fail'), z.null()]).optional(),
-  ripResult: z.union([z.literal('hit'), z.literal('miss'), z.null()]).optional(),
-  damage: z.number().optional(),
-  hitLocation: z.string().optional(),
-  endDeltas: z.object({ a: z.number(), d: z.number() }).optional(),
-  killWindow: z.boolean().optional(),
-  executionFlag: z.boolean().optional(),
-  reasonCodes: z.array(z.string()).optional(),
-});
-
-/**
- * FightOutcome schema
- */
-export const FightOutcomeSchema = z.object({
-  winner: z.union([z.literal('A'), z.literal('D'), z.null()]),
-  by: FightOutcomeBySchema,
-  minutes: z.number(),
-  log: z.array(MinuteEventSchema),
-  exchangeLog: z.array(ExchangeLogEntrySchema).optional(),
-  post: z
-    .object({
-      xpA: z.number(),
-      xpD: z.number(),
-      hitsA: z.number().optional(),
-      hitsD: z.number().optional(),
-      gotKillA: z.boolean().optional(),
-      gotKillD: z.boolean().optional(),
-      causeBucket: DeathCauseBucketSchema.optional(),
-      fatalHitLocation: z.string().optional(),
-      fatalExchangeIndex: z.number().optional(),
-      tags: z.array(z.string()).optional(),
-    })
-    .optional(),
-});
-
-/**
  * AnalysisFactor schema
  */
 const analysisFactorSchema = z.object({
@@ -202,7 +124,7 @@ const analysisFactorSchema = z.object({
 /**
  * FightAnalysis schema
  */
-export const fightAnalysisSchema = z.object({
+const fightAnalysisSchema = z.object({
   styleMatchup: z.object({ styleA: z.string(), styleD: z.string(), edge: z.number() }),
   decisiveExchange: z.object({
     index: z.number().nullable(),
@@ -306,9 +228,9 @@ export const AnnualAwardSchema = z.object({
   reason: z.string(),
 });
 
-export const TitleStatusSchema = z.enum(['active', 'pendingReengagement', 'dormant']);
+const TitleStatusSchema = z.enum(['active', 'pendingReengagement', 'dormant']);
 
-export const ArenaReignEndReasonSchema = z.enum([
+const ArenaReignEndReasonSchema = z.enum([
   'defeated',
   'died',
   'retired',
@@ -317,14 +239,14 @@ export const ArenaReignEndReasonSchema = z.enum([
   'displaced',
 ]);
 
-export const ArenaTitleReignSchema = z.object({
+const ArenaTitleReignSchema = z.object({
   warriorId: z.string(),
   startedAbsoluteWeek: z.number(),
   defenses: z.number(),
   lastActivityWeek: z.number(),
 });
 
-export const ArenaReignRecordSchema = z.object({
+const ArenaReignRecordSchema = z.object({
   warriorId: z.string(),
   warriorName: z.string(),
   warriorEpithet: z.string().optional(),

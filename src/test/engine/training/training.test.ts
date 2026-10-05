@@ -14,7 +14,6 @@ import { SeededRNG } from '@/utils/random';
 import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
-import { SeededRNGService } from '@/utils/random';
 import {
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
@@ -172,7 +171,7 @@ describe('Training System', () => {
   describe('computeTrainingImpact (deprecated processTraining equivalent)', () => {
     it('should return state unchanged if no assignments', () => {
       const state = makeState();
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const trainingImpact = computeTrainingImpact(state, rng);
       const { impact: stateImpact } = trainingImpactToStateImpact(state, trainingImpact, rng);
       const newState = resolveImpacts(state, [stateImpact]);
@@ -186,7 +185,7 @@ describe('Training System', () => {
         trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const trainingImpact = computeTrainingImpact(state, rng);
       const { impact: stateImpact } = trainingImpactToStateImpact(state, trainingImpact, rng);
       const newState = resolveImpacts(state, [stateImpact]);
@@ -200,7 +199,7 @@ describe('Training System', () => {
         trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'SZ' }],
       });
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const trainingImpact = computeTrainingImpact(state, rng);
       const { impact: stateImpact } = trainingImpactToStateImpact(state, trainingImpact, rng);
       const newState = resolveImpacts(state, [stateImpact]);
@@ -239,7 +238,7 @@ describe('Training System', () => {
         result: { type: 'injury', warriorId: 'w1', message: 'Ouch' } as any,
       });
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const impact = computeTrainingImpact(state as any, rng);
 
       expect(impact.results.some((r) => r.message === 'Sharpened')).toBe(true);
@@ -269,7 +268,7 @@ describe('Training System', () => {
 
       const injurySpy = vi.spyOn(trainingGains, 'rollForTrainingInjury');
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const impact = computeTrainingImpact(state as any, rng);
 
       expect(injurySpy).not.toHaveBeenCalled();

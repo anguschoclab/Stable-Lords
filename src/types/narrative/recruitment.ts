@@ -1,7 +1,7 @@
 /**
  * Defines the shape of tier config.
  */
-export interface TierConfig {
+interface TierConfig {
   points: number[];
   cost: number;
   stars: number;

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 const noArticleErrors = (s: string) => !/\b a [AEIOUaeiou]/i.test(s);
@@ -12,7 +12,7 @@ describe('PBP full-bout regression — no raw {{token}} leaks', () => {
     const leaks: string[] = [];
 
     for (let seed = 1; seed <= 60; seed++) {
-      const rng = new SeededRNGService(seed * 31 + 7);
+      const rng = new SeededRNG(seed * 31 + 7);
 
       const warriorA = makeWarrior(
         { id: undefined, name: 'Garath', style: FightingStyle.StrikingAttack, attrs: { ST: 14, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 14, DF: 12 }, overrides: { origin: 'Kolact' }, rng: rng }

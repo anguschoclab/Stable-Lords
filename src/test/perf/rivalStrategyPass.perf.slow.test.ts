@@ -15,7 +15,7 @@ vi.mock('@/engine/ai/memory/perceptionSnapshot', async (orig) => {
 import { runRivalStrategyPass } from '@/engine/pipeline/passes/RivalStrategyPass';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { setMockIdGenerator } from '@/utils/idUtils';
 
 describe('RivalStrategyPass perf gate (I.2)', () => {
@@ -27,7 +27,7 @@ describe('RivalStrategyPass perf gate (I.2)', () => {
     perceptionSpy.mockClear();
 
     const start = performance.now();
-    runRivalStrategyPass(state, state.week + 1, new SeededRNGService(1), true);
+    runRivalStrategyPass(state, state.week + 1, new SeededRNG(1), true);
     const elapsed = performance.now() - start;
 
     // B.1 contract: one shared perception context per tick, not per-rival scans.

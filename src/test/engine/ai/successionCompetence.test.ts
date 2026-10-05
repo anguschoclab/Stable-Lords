@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { handleOwnerLifecycle } from '@/engine/pipeline/passes/rivalStableShard';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeRival, makeOwner } from '@/test/_fixtures/factories';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import type { OwnerCompetence } from '@/types/state/owner';
@@ -21,7 +21,7 @@ const TIER_INDEX: Record<OwnerCompetence, number> = {
 /** Force a succession: age ≥ 75 gives retirementChance 0.2 — sweep seeds. */
 function forceSuccession(rival: ReturnType<typeof makeRival>) {
   for (let seed = 0; seed < 200; seed++) {
-    const rng = new SeededRNGService(seed);
+    const rng = new SeededRNG(seed);
     const { updatedRival } = handleOwnerLifecycle(rival, 5, rng, new Map(), 40);
     if (updatedRival.owner.generation !== rival.owner.generation) {
       return updatedRival;
@@ -47,7 +47,7 @@ describe('succession competence drift', () => {
     const rival = makeRival({
       owner: makeOwner({ age: 40, competence: 'Novice' }),
     });
-    const rng = new SeededRNGService(7);
+    const rng = new SeededRNG(7);
     const { updatedRival } = handleOwnerLifecycle(rival, 5, rng, new Map(), 40);
     expect(updatedRival.owner.competence).toBe('Novice');
   });

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { FightSummary, Rivalry } from '@/types/game';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
   it('verifies that rivalry intensity scales correctly with fame outcomes', () => {
@@ -28,7 +28,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const rivalriesAfter1 = updateRivalriesFromBouts(existingRivalries, highFameFights, week, rng);
     const feud = rivalriesAfter1.find(
       (r) => r.stableIdA === 'PlayerStable' && r.stableIdB === 'RivalStable'
@@ -59,7 +59,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng2 = new SeededRNGService(week * 7919 + 1);
+    const rng2 = new SeededRNG(week * 7919 + 1);
     const rivalriesAfter2 = updateRivalriesFromBouts(rivalriesAfter1, lowFameFights, week, rng2);
     const minorRivalry = rivalriesAfter2.find(
       (r) => r.stableIdA === 'NewStable' && r.stableIdB === 'OtherStable'
@@ -90,7 +90,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
         fameD: 98,
         week: w,
       };
-      const rng = new SeededRNGService(w * 7919);
+      const rng = new SeededRNG(w * 7919);
       rivalries = updateRivalriesFromBouts(rivalries, [bout], w, rng);
     }
 
@@ -131,7 +131,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng = new SeededRNGService(999);
+    const rng = new SeededRNG(999);
     const result = updateRivalriesFromBouts(existingRivalries, fights, 2, rng);
 
     expect(result).toHaveLength(1);
@@ -201,7 +201,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng = new SeededRNGService(777);
+    const rng = new SeededRNG(777);
     const result = updateRivalriesFromBouts(existingRivalries, fights, 2, rng);
 
     expect(result).toHaveLength(3);
@@ -235,7 +235,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng1 = new SeededRNGService(111);
+    const rng1 = new SeededRNG(111);
     rivalries = updateRivalriesFromBouts(rivalries, fight1, 1, rng1);
     expect(rivalries).toHaveLength(1);
     const intensityAfterFirst = rivalries[0]!.intensity;
@@ -259,7 +259,7 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
       },
     ];
 
-    const rng2 = new SeededRNGService(222);
+    const rng2 = new SeededRNG(222);
     rivalries = updateRivalriesFromBouts(rivalries, fight2, 2, rng2);
     expect(rivalries).toHaveLength(1);
     expect(rivalries[0]!.intensity).toBeGreaterThanOrEqual(intensityAfterFirst);

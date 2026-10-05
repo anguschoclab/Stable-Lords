@@ -9,8 +9,8 @@ import {
   PromoterTierSchema,
   OffensiveTacticSchema,
   DefensiveTacticSchema,
-  GameStateSchema,
-} from '@/schemas/gameStateSchema';
+} from '@/schemas/schemaEnums';
+import { GameStateSchema } from '@/schemas/gameStateSchema';
 import type { StableId } from '@/types/shared.types';
 
 describe('gameStateSchema — enum schemas', () => {

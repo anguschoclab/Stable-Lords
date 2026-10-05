@@ -26,7 +26,7 @@ describe('determinism audit', () => {
     );
   }
 
-  it('no test file uses Math.random() directly (should use SeededRNGService)', () => {
+  it('no test file uses Math.random() directly (should use SeededRNG)', () => {
     const files = readDirRecursive(testDir, testExts);
     const violations: string[] = [];
     for (const file of files) {
@@ -72,7 +72,7 @@ describe('determinism audit', () => {
       const content = fs.readFileSync(file, 'utf-8');
       // Check if the test uses any form of seeded RNG or mocks or fixtures
       const hasSeed =
-        content.includes('SeededRNGService') ||
+        content.includes('SeededRNG') ||
         content.includes('SeededRNG') ||
         content.includes('hashStr') ||
         content.includes('seed') ||

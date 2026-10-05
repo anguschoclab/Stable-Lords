@@ -1,6 +1,6 @@
 import type { GameState, Season, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService, resolveRng } from '@/utils/random';
+import { SeededRNG, resolveRng } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
@@ -88,7 +88,7 @@ function applySeasonalChurnMembership(
   const veterans = displaced.filter((w) => w.status === 'Active' && !deadIds.has(w.id));
   const lateRetirees = displaced.filter((w) => w.status === 'Retired');
   if (veterans.length > 0) {
-    const poolRng = new SeededRNGService(seasonSeed + 77);
+    const poolRng = new SeededRNG(seasonSeed + 77);
     impact.freeAgentAdditions = [
       ...(impact.freeAgentAdditions ?? []),
       ...veterans.map((w) => warriorToPoolWarrior(w, nextWeek, poolRng)),
@@ -260,7 +260,7 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
   const bankruptcyRemovals = bankruptcyResult.impact.rosterRemovals?.length ?? 0;
   const effectiveRosterSize = state.roster.length - bankruptcyRemovals;
   if (effectiveRosterSize < 1) {
-    const floorRng = new SeededRNGService((state.absoluteWeek ?? state.week) * 6151 + 29);
+    const floorRng = new SeededRNG((state.absoluteWeek ?? state.week) * 6151 + 29);
     const recruit = materializeFloorRecruit(state, floorRng);
     if (recruit) {
       impact.rosterAdditions = [...(impact.rosterAdditions ?? []), recruit.warrior];

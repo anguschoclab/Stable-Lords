@@ -3,14 +3,14 @@ import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import { narrativeContent } from '@/data/narrative';
 const eventCount = Object.keys((narrativeContent as any).offseason_events).length;
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('runSeasonalPass', () => {
   it('should trigger the chaos_rift offseason event, updating XP, Fame, treasury and adding an Insight Token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -41,7 +41,7 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe('The Chaos Rift');
   });
   it('should trigger the wandering_fortune_teller offseason event, deducting gold, adding XP, and adding an Insight Token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -81,7 +81,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the black_market_raid offseason event, deduct gold, and newsletter', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -118,7 +118,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the grand_feast offseason event, deduct gold, award XP to all active', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -171,20 +171,20 @@ describe('runSeasonalPass', () => {
       roster: [{ id: 'w1', name: 'Bob', status: 'Active', injuries: [] } as any],
     };
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runSeasonalPass(state as GameState, 1, rng);
 
     // Impact should have some changes, let's just make sure it doesn't crash
     // and returns a state impact object.
     expect(impact).toBeDefined();
-    // In our SeededRNGService, 42 will pick a specific event, we just want to know it didn't throw.
+    // In our SeededRNG, 42 will pick a specific event, we just want to know it didn't throw.
   });
 
   it('should trigger the tavern_brawl offseason event, award fame, and add a Bruised Ribs injury', () => {
     // Offseason event keys in order: festival_of_blades(0), harsh_winter(1),
     // merchant_blessing(2), offseason_epiphany(3), tavern_brawl(4)
     // To pick index 4 out of 5: Math.floor(x * 5) === 4 → x in [0.8, 1.0)
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -225,7 +225,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should not add a Bruised Ribs injury to an already-injured warrior in tavern_brawl', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -269,7 +269,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger wandering_healer and cure an injury if someone is injured', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -334,7 +334,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger wandering_healer and offer snake oil if no one is injured', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -381,7 +381,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the mystic_vision offseason event, award xp and fame, and add a newsletter item', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -416,7 +416,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the wild_animal_attack offseason event, award fame, and add a Bite Wound injury', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -445,7 +445,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the loyal_stray offseason event, award xp and fame, and deduct gold', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -483,7 +483,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the street_performance offseason event, gaining fame and gold, and adding a tag', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -524,7 +524,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the chaotic_spells offseason event and award xp (roll < 0.33)', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -560,7 +560,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the chaotic_spells offseason event and add injury (roll < 0.66)', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -598,7 +598,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the chaotic_spells offseason event and reduce fame (roll >= 0.66)', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -633,7 +633,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the gladiator_olympics offseason event, award xp and fame, and add a newsletter item', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -670,7 +670,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the meteor_shower offseason event and award xp and fame', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -706,7 +706,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the underground_pit_fight offseason event, award fame and add an injury', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -747,7 +747,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the rogue_alchemist offseason event and award xp (success)', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -787,7 +787,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the rogue_alchemist offseason event and add an injury (failure)', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -824,7 +824,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the dreamweaver_visit offseason event, award xp and insight token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -859,7 +859,7 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe("Dreamweaver's Visit");
   });
   it('should trigger the tavern_brawl_surprise offseason event, updating fame and applying injury', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -912,7 +912,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the chaos_weaver_visit offseason event, granting a random trait and insight token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -949,7 +949,7 @@ describe('runSeasonalPass', () => {
   // ─── Midnight Market (PR #689) ──────────────────────────────────────────────
 
   it('should trigger the midnight_market offseason event, deducting gold, awarding XP, and adding a Tactic insight token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -983,7 +983,7 @@ describe('runSeasonalPass', () => {
   // ─── Moonlight Duel (PR #687) ───────────────────────────────────────────────
 
   it('should trigger the moonlight_duel offseason event, awarding gold and adding a ledger entry and newsletter', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -1016,7 +1016,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the shadow_market_run offseason event, deducting gold, awarding fame, and adding a Style insight token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -1049,7 +1049,7 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe('Shadow Market Run');
   });
   it('should trigger the secret_fight_club offseason event, awarding XP, fame, and applying injury', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -1084,7 +1084,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the temporal_anomaly offseason event, awarding XP, removing a trait, and adding a Style insight token', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -1121,7 +1121,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should trigger the wandering_blacksmith offseason event, awarding XP and deducting gold', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {
@@ -1159,7 +1159,7 @@ describe('runSeasonalPass', () => {
   });
 
   it('should not trigger wandering_blacksmith if treasury is less than 50', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
     const mockNext = () => {

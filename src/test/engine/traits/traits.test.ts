@@ -11,7 +11,7 @@ import {
   getDynamicTraitMods,
   getTraitFightPlanMods,
 } from '@/engine/traits';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { ATTRIBUTE_MAX, type Attributes, type Warrior } from '@/types/warrior.types';
 
 function mockWarrior(traits: string[]): Warrior {
@@ -22,7 +22,7 @@ describe('Warrior Traits', () => {
   describe('generateTraits', () => {
     it('produces 0-2 traits per warrior', () => {
       for (let seed = 1; seed < 100; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         const traits = generateTraits(rng);
         expect(traits.length).toBeGreaterThanOrEqual(0);
         expect(traits.length).toBeLessThanOrEqual(2);
@@ -32,15 +32,15 @@ describe('Warrior Traits', () => {
 
     it('does not pick the same trait twice for one warrior', () => {
       for (let seed = 1; seed < 100; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         const traits = generateTraits(rng);
         expect(new Set(traits).size).toBe(traits.length);
       }
     });
 
     it('is deterministic for a given seed', () => {
-      const a = generateTraits(new SeededRNGService(42));
-      const b = generateTraits(new SeededRNGService(42));
+      const a = generateTraits(new SeededRNG(42));
+      const b = generateTraits(new SeededRNG(42));
       expect(a).toEqual(b);
     });
   });
@@ -248,7 +248,7 @@ describe('Warrior Traits', () => {
 
     it('generated traits have correct tier/sign consistency', () => {
       for (const seed of SEEDS) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         for (const traitId of generateTraits(rng)) {
           const t = TRAITS[traitId];
           if (!t) continue;
@@ -263,7 +263,7 @@ describe('Warrior Traits', () => {
 
     it('getStaticTraitMods produces stable output for same warrior', () => {
       for (const seed of SEEDS) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         const warrior = { traits: generateTraits(rng) } as unknown as Warrior;
 
         expect(getStaticTraitMods(warrior), `seed ${seed} static mods diverged`).toEqual(

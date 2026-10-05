@@ -28,7 +28,7 @@ vi.mock('@/engine/bout/services/boutProcessorService', () => {
 
 import '@/test/_setup/setup';
 import { runBoutSimulationPass } from '@/engine/pipeline/passes/BoutSimulationPass';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 
 const makeState = (week: number, year: number): GameState =>
@@ -44,7 +44,7 @@ const makeState = (week: number, year: number): GameState =>
   } as any);
 
 describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
-  const rng = new SeededRNGService(42);
+  const rng = new SeededRNG(42);
 
   it('createdAt for game year 2, week 1 should be Jan 1, 2025 (not Jan 7)', () => {
     const state = makeState(1, 2);

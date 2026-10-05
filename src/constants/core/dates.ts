@@ -8,34 +8,16 @@ import { WEEKS_PER_YEAR } from './core';
  * The real-world year that maps to game year 1 in the BoutSimulationPass.
  * Game year N starts at Date.UTC(GAME_EPOCH_YEAR + N - 1, 0, 1).
  */
-export const GAME_EPOCH_YEAR = 2024;
+const GAME_EPOCH_YEAR = 2024;
 
 /**
  * The real-world year that maps to absolute week 1 in the reporting/factory layer.
  * Used by reportingHandler, fightSummaryFactory, and worldMatchmaking.
  */
-export const ERA_START_YEAR = 2026;
+const ERA_START_YEAR = 2026;
 
 /** Days per game week */
-export const DAYS_PER_WEEK = 7;
-
-/** Hours per day */
-export const HOURS_PER_DAY = 24;
-
-/** Minutes per hour */
-export const MINUTES_PER_HOUR = 60;
-
-/** Seconds per minute */
-export const SECONDS_PER_MINUTE = 60;
-
-/** Milliseconds per second */
-export const MS_PER_SECOND = 1000;
-
-/** Milliseconds per day: 24 * 60 * 60 * 1000 */
-export const MS_PER_DAY = HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE * MS_PER_SECOND;
-
-/** Milliseconds per game week: 7 * MS_PER_DAY */
-export const MS_PER_WEEK = DAYS_PER_WEEK * MS_PER_DAY;
+const DAYS_PER_WEEK = 7;
 
 // ─── Tournament Calendar ──────────────────────────────────────────────────
 //
@@ -54,9 +36,6 @@ export const CHAMPIONS_TOURNAMENT_WEEK = 52;
  * warriors prep — drives intentEngine narrative hints.
  */
 export const TOURNAMENT_PREP_WEEKS = 4;
-
-/** Legacy 13-week cadence — retained only for the calendar migration. */
-export const LEGACY_TOURNAMENT_WEEKS: readonly number[] = [13, 26, 39, 52] as const;
 
 /**
  * Compute a UTC timestamp (ISO string) for a given absolute week, anchored to ERA_START_YEAR.

@@ -7,7 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateScoutReport } from '@/engine/scouting/scouting';
 import { makeWarrior } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('scout report — masked plan uncertainty', () => {
   it('flags plan tendencies as possibly masked when the target carries a decoy', () => {
@@ -16,7 +16,7 @@ describe('scout report — masked plan uncertainty', () => {
       plan: { OE: 8, AL: 3 } as never,
       lastBoutWeek: 4,
     });
-    const { report } = generateScoutReport(masked, 'Expert', 5, new SeededRNGService(1));
+    const { report } = generateScoutReport(masked, 'Expert', 5, new SeededRNG(1));
     expect(report.possiblyMaskedPlan).toBe(true);
   });
 
@@ -26,13 +26,13 @@ describe('scout report — masked plan uncertainty', () => {
       plan: { OE: 8, AL: 3 } as never,
       lastBoutWeek: 4,
     });
-    const { report } = generateScoutReport(open, 'Expert', 5, new SeededRNGService(1));
+    const { report } = generateScoutReport(open, 'Expert', 5, new SeededRNG(1));
     expect(report.possiblyMaskedPlan).toBeFalsy();
   });
 
   it('a masked target with no committed plan still reads as uncertain on lower qualities', () => {
     const maskedNoPlan = makeWarrior({ planMasked: true });
-    const { report } = generateScoutReport(maskedNoPlan, 'Detailed', 5, new SeededRNGService(1));
+    const { report } = generateScoutReport(maskedNoPlan, 'Detailed', 5, new SeededRNG(1));
     expect(report.possiblyMaskedPlan).toBe(true);
     expect(report.suspectedOE).toBeUndefined();
   });

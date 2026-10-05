@@ -18,7 +18,7 @@ vi.mock('@/pages/Orphanage', () => ({
   default: () => <div data-testid="orphanage">Orphanage</div>,
 }));
 vi.mock('@/lore/HallOfFights', () => ({
-  default: () => <div data-testid="hall-of-fights">HallOfFights</div>,
+  HallOfFights: () => <div data-testid="hall-of-fights">HallOfFights</div>,
 }));
 vi.mock('@/pages/PhysicalsSimulator', () => ({
   default: () => <div data-testid="physicals-simulator">PhysicalsSimulator</div>,

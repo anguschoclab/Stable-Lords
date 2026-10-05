@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan, ExchangeLogEntry } from '@/types/combat.types';
 
@@ -13,10 +13,10 @@ function collectIntentCodes(entries: ExchangeLogEntry[] | undefined): string[] {
 
 function makeFighters(seed: number) {
   const A = makeWarrior(
-    { id: undefined, name: 'A', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(seed) }
+    { id: undefined, name: 'A', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNG(seed) }
   );
   const D = makeWarrior(
-    { id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(seed + 100) }
+    { id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNG(seed + 100) }
   );
   return { A, D };
 }
@@ -84,10 +84,10 @@ describe('AI_INTENT telemetry (Stage F)', () => {
     const union = new Set<string>();
     for (let seed = 1; seed <= 12; seed++) {
       const A = makeWarrior(
-        { id: undefined, name: 'KILLER', style: FightingStyle.LungingAttack, attrs: { ST: 21, CN: 15, SZ: 15, WT: 15, WL: 21, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNGService(3) }
+        { id: undefined, name: 'KILLER', style: FightingStyle.LungingAttack, attrs: { ST: 21, CN: 15, SZ: 15, WT: 15, WL: 21, SP: 15, DF: 15 }, overrides: undefined, rng: new SeededRNG(3) }
       );
       const D = makeWarrior(
-        { id: undefined, name: 'PREY', style: FightingStyle.TotalParry, attrs: { ST: 5, CN: 5, SZ: 5, WT: 5, WL: 5, SP: 5, DF: 5 }, overrides: undefined, rng: new SeededRNGService(4) }
+        { id: undefined, name: 'PREY', style: FightingStyle.TotalParry, attrs: { ST: 5, CN: 5, SZ: 5, WT: 5, WL: 5, SP: 5, DF: 5 }, overrides: undefined, rng: new SeededRNG(4) }
       );
       const planA: FightPlan = { ...defaultPlanForWarrior(A), killDesire: 10 };
       collectIntentCodes(

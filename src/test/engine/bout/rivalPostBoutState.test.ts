@@ -18,7 +18,7 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const warrior = (id: string, stableId: string, extra: Partial<Warrior> = {}): Warrior =>
   makeWarrior({
@@ -149,7 +149,7 @@ describe('rival post-bout state — impact composition', () => {
     const wD = warrior('rd', 's2');
     const s = makeState([rival('s1', [wA]), rival('s2', [wD])]);
 
-    const impact = handleProgressions({ s: s, wA: wA, wD: wD, outcome: winOutcome('A'), tags: [], week: 7, rng: new SeededRNGService(11) });
+    const impact = handleProgressions({ s: s, wA: wA, wD: wD, outcome: winOutcome('A'), tags: [], week: 7, rng: new SeededRNG(11) });
     const out = resolveImpacts(s, [impact]);
 
     const a = out.rivals[0]!.roster.find((w) => w.id === 'ra')!;
@@ -181,7 +181,7 @@ describe('rival post-bout state — impact composition', () => {
     s.houseRules = { severeInjuryInsteadOfDeath: true } as GameState['houseRules'];
 
     const res = handleDeath(
-      { s: s, wA: killer, wD: victim, outcome: killOutcome('A'), week: 7, tags: [], rng: new SeededRNGService(3) }
+      { s: s, wA: killer, wD: victim, outcome: killOutcome('A'), week: 7, tags: [], rng: new SeededRNG(3) }
     );
     expect(res.death).toBe(false);
 

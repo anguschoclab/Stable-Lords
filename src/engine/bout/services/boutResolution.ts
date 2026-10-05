@@ -8,7 +8,7 @@ import { type FightOutcome, type FightPlan, type FightSummary } from '@/types/co
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { selectArenaForTournamentBout } from '@/engine/matchmaking/tournament/tournamentArenaSelection';
 import { ARENA_SELECTION } from '@/constants/arena';
@@ -111,7 +111,7 @@ function isNPCWarrior(state: GameState, w: Warrior): boolean {
  */
 function resolveBoutArenaId(ctx: BoutContext, boutSeed: number): string | undefined {
   if (!ctx.isTournamentBout) return ctx.contract?.arenaId ?? undefined;
-  const arenaRng = new SeededRNGService(boutSeed + ARENA_SELECTION.TOURNAMENT_BOUT_SEED_OFFSET);
+  const arenaRng = new SeededRNG(boutSeed + ARENA_SELECTION.TOURNAMENT_BOUT_SEED_OFFSET);
   return selectArenaForTournamentBout(() => arenaRng.next());
 }
 
@@ -173,7 +173,7 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
   const { state, ctx, validCW, validCO, outcome } = args;
   const { boutSeed } = args;
   const tags = outcome.post?.tags ?? [];
-  const rng = new SeededRNGService(boutSeed);
+  const rng = new SeededRNG(boutSeed);
   const { fameA, popA, fameD, popD } = calculateBoutFame(
     outcome,
     tags,

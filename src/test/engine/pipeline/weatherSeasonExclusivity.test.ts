@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
 import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';
 
@@ -67,7 +67,7 @@ describe('Weather season exclusivity', () => {
   it('rollWeather can produce Rain of Frogs in Fall', () => {
     let found = false;
     for (let seed = 0; seed < 10000 && !found; seed++) {
-      const w = rollWeather(new SeededRNGService(seed * 7 + 1), 'Fall');
+      const w = rollWeather(new SeededRNG(seed * 7 + 1), 'Fall');
       if (w === 'Rain of Frogs') found = true;
     }
     expect(found).toBe(true);
@@ -84,7 +84,7 @@ describe('Weather season exclusivity', () => {
 
   it('rollWeather does NOT produce Rain of Frogs in Spring', () => {
     for (let seed = 0; seed < 10000; seed++) {
-      const w = rollWeather(new SeededRNGService(seed * 7 + 1), 'Spring');
+      const w = rollWeather(new SeededRNG(seed * 7 + 1), 'Spring');
       expect(w).not.toBe('Rain of Frogs');
     }
   });

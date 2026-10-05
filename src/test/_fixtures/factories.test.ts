@@ -16,9 +16,14 @@ import {
   makeGameState,
   resetFixtureIds,
 } from './factories';
-import { WarriorSchema, RivalStableDataSchema } from '@/schemas/gameStateSchema';
+import { WarriorSchema } from '@/schemas/warriorSchemas';
 import { BoutOfferSchema } from '@/schemas/fightSchemas';
-import { AIEventSchema, AIAgentMemorySchema, AIStrategySchema } from '@/schemas/economySchemas';
+import {
+  AIEventSchema,
+  AIAgentMemorySchema,
+  AIStrategySchema,
+  RivalStableDataSchema,
+} from '@/schemas/economySchemas';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 

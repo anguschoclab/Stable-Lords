@@ -8,7 +8,7 @@ import {
   convertBidsToOffers,
   BID_MATCHMAKING_ID,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeGameState } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ describe('convertBidsToOffers', () => {
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -108,7 +108,7 @@ describe('convertBidsToOffers', () => {
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('rival-b');
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -143,7 +143,7 @@ describe('convertBidsToOffers', () => {
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.maxFame).toBe(50);
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB, rivalC], state, rng, new Set());
 
@@ -166,7 +166,7 @@ describe('convertBidsToOffers', () => {
     const state = makeMinimalState([rivalA, rivalB]);
 
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
 
     // warriorA already has an offer — should not be paired again
@@ -188,7 +188,7 @@ describe('convertBidsToOffers', () => {
     const state = makeMinimalState([rivalA, rivalB]);
 
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -224,7 +224,7 @@ describe('convertBidsToOffers', () => {
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -267,7 +267,7 @@ describe('convertBidsToOffers', () => {
       bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
       [rivalA, rivalB],
       state,
-      new SeededRNGService(42),
+      new SeededRNG(42),
       new Set()
     );
 
@@ -304,7 +304,7 @@ describe('convertBidsToOffers', () => {
       bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
       [rivalA, rivalB],
       state,
-      new SeededRNGService(42),
+      new SeededRNG(42),
       new Set()
     );
 
@@ -339,7 +339,7 @@ describe('convertBidsToOffers', () => {
       bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
       [rivalA, rivalB],
       state,
-      new SeededRNGService(42),
+      new SeededRNG(42),
       new Set()
     );
 
@@ -406,7 +406,7 @@ describe('stable notoriety inflates offer hype (F1)', () => {
       bidsK.map((bid) => ({ bid, rivalId: killerStable.id as string })),
       [killerStable, oppStable],
       stateK,
-      new SeededRNGService(42),
+      new SeededRNG(42),
       new Set()
     );
 
@@ -416,7 +416,7 @@ describe('stable notoriety inflates offer hype (F1)', () => {
       bidsC.map((bid) => ({ bid, rivalId: cleanStable.id as string })),
       [cleanStable, oppStable],
       stateC,
-      new SeededRNGService(42),
+      new SeededRNG(42),
       new Set()
     );
 

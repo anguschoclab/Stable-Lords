@@ -6,7 +6,7 @@ import type { Warrior } from '@/types/warrior.types';
 /**
  *
  */
-export interface UseInsightManagerDeps {
+interface UseInsightManagerDeps {
   consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => void;
   insightTokens: InsightToken[];
   roster: Warrior[];

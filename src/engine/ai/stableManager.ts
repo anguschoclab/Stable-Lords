@@ -7,7 +7,7 @@ import { updateSeasonRecord, recordBoutOutcome } from './memory/seasonRecord';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   BANKRUPTCY_THRESHOLD,
   BANKRUPTCY_GRACE_WEEKS,
@@ -75,7 +75,7 @@ function applyWeeklyEconomy(
   updatedRival.treasury += breakdown.net;
 
   // Write ledger entries
-  const rngService = new SeededRNGService(state.week * 31 + updatedRival.id.length);
+  const rngService = new SeededRNG(state.week * 31 + updatedRival.id.length);
   const newEntries: import('@/types/state.types').LedgerEntry[] = [];
   for (const i of breakdown.income) {
     newEntries.push({

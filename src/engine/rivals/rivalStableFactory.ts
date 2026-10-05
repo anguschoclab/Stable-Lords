@@ -17,7 +17,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { StableTemplate } from '@/data/templates';
 import type { StableId } from '@/types/shared.types';
 import { ALL_TEMPLATES } from '@/data/templates';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { generateCrest } from '../crest/crestGenerator';
 import { biasedAttrs, createRivalWarrior } from './rivalWarriorFactory';
@@ -108,7 +108,7 @@ export function generateRivalStables(
   seedNames?: ReadonlySet<string>,
   opts?: { difficulty?: WorldDifficulty }
 ): RivalStableData[] {
-  const rng = new SeededRNGService(seed);
+  const rng = new SeededRNG(seed);
   // Pre-seeded with the world's used names when a mid-game caller passes them —
   // otherwise regenerated stables re-mint names already carried by the living.
   const usedWarriorNames = new Set<string>(seedNames ?? []);

@@ -8,7 +8,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { persistNPCPlans, agentPlanForWarrior } from '@/engine/ai/plan/agentPlan';
 import { getNPCPlan } from '@/engine/bout/services/boutResolution';
 import { generateScoutReport } from '@/engine/scouting/scouting';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   makeWarrior,
   makeRival,
@@ -94,7 +94,7 @@ describe('scouting — decoy visibility', () => {
     const maskedW = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
     const real = agentPlanForWarrior(rival, npcW, oppW, state, oppRival.id as string);
 
-    const { report } = generateScoutReport(maskedW, 'Expert', 5, new SeededRNGService(7));
+    const { report } = generateScoutReport(maskedW, 'Expert', 5, new SeededRNG(7));
     const decoyOE = maskedW.plan!.OE!;
     const decoyBand = decoyOE >= 7 ? 'High' : decoyOE >= 4 ? 'Medium' : 'Low';
     // The scout reads the committed decoy, not the true plan.

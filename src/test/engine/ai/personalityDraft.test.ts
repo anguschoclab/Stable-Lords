@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeRival, makeOwner, makeTestRecruit } from '@/test/_fixtures/factories';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { RivalStableData } from '@/types/state.types';
@@ -32,12 +32,12 @@ describe('personality draft weights', () => {
     const pool = () => [recruit('common', 'Common', 50), recruit('prodigy', 'Prodigy', 500)];
 
     const showman = processRecruitment(
-      { rival: makeRivalWithPersonality('Showman'), pool: pool(), week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
+      { rival: makeRivalWithPersonality('Showman'), pool: pool(), week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
     );
     expect(showman.updatedRival.roster[0]?.name).toBe('Recruit prodigy');
 
     const pragmatic = processRecruitment(
-      { rival: makeRivalWithPersonality('Pragmatic'), pool: pool(), week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
+      { rival: makeRivalWithPersonality('Pragmatic'), pool: pool(), week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
     );
     expect(pragmatic.updatedRival.roster[0]?.name).toBe('Recruit common');
   });
@@ -59,13 +59,13 @@ describe('personality draft weights', () => {
     (kid as any).age = 17;
 
     const methodical = processRecruitment(
-      { rival: makeRivalWithPersonality('Methodical'), pool: [vet, kid], week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
+      { rival: makeRivalWithPersonality('Methodical'), pool: [vet, kid], week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
     );
     expect(methodical.updatedRival.roster[0]?.name).toBe('Recruit kid');
 
     // Aggressive has zero youth bonus — the veteran's career bonus wins.
     const aggressive = processRecruitment(
-      { rival: makeRivalWithPersonality('Aggressive'), pool: [vet, kid], week: 5, rng: new SeededRNGService(1), isMajorDraftWeek: false }
+      { rival: makeRivalWithPersonality('Aggressive'), pool: [vet, kid], week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
     );
     expect(aggressive.updatedRival.roster[0]?.name).toBe('Recruit vet');
   });
@@ -87,7 +87,7 @@ describe('personality draft weights', () => {
     let signings = 0;
     for (let week = 1; week <= 6; week++) {
       const res = processRecruitment(
-        { rival: rival, pool: remaining, week: week, rng: new SeededRNGService(week), isMajorDraftWeek: false }
+        { rival: rival, pool: remaining, week: week, rng: new SeededRNG(week), isMajorDraftWeek: false }
       );
       rival = res.updatedRival;
       remaining = res.updatedPool;

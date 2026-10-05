@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import { makeGameState } from '@/test/_fixtures/factories';
 
@@ -19,7 +19,7 @@ describe('RecruitmentPass — year rollover boundary', () => {
       season: 'Spring',
     } as any as GameState;
 
-    const rngWithoutDeath = new SeededRNGService(42);
+    const rngWithoutDeath = new SeededRNG(42);
     const resultWithoutDeath = runRecruitmentPass(baseState, rngWithoutDeath);
     const poolWithoutDeath = resultWithoutDeath.recruitPool || [];
 
@@ -36,7 +36,7 @@ describe('RecruitmentPass — year rollover boundary', () => {
       ],
     } as any as GameState;
 
-    const rngWithDeath = new SeededRNGService(42);
+    const rngWithDeath = new SeededRNG(42);
     const resultWithDeath = runRecruitmentPass(stateWithDeath, rngWithDeath);
     const poolWithDeath = resultWithDeath.recruitPool || [];
 
@@ -79,7 +79,7 @@ describe('RecruitmentPass — usedNames excludes rival roster names', () => {
       recruitPool: [],
     });
 
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const result = runRecruitmentPass(baseState, rng);
     const pool = result.recruitPool || [];
 
@@ -113,7 +113,7 @@ describe('RecruitmentPass — usedNames excludes rival roster names', () => {
       season: 'Spring',
     } as any as GameState;
 
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const result = runRecruitmentPass(baseState, rng);
     const pool = result.recruitPool || [];
 

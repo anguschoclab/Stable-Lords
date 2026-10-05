@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { aiDraftFromPool } from '@/engine/recruitment/draftService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle, type StableId, type FightId } from '@/types/shared.types';
 import type { RivalStableData, GameState } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
@@ -308,7 +308,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('uses custom RNG service override', () => {
-      const customRng = new SeededRNGService(999);
+      const customRng = new SeededRNG(999);
       const result = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: state, seed: undefined, rng: customRng });
 
       expect(result.updatedRivals.length).toBe(2);

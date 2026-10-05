@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { getArenaById } from '@/data/arenas';
 import { SPECIAL_ARENA_IDS } from '@/constants/arena';
@@ -128,7 +128,7 @@ describe('Promoter Generator', () => {
   });
 
   it('should accept and use a custom provided RNG service', () => {
-    const customRng = new SeededRNGService(999);
+    const customRng = new SeededRNG(999);
     const mockNext = vi.spyOn(customRng, 'next');
 
     // Generating 1 promoter involves multiple RNG calls

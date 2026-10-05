@@ -4,7 +4,7 @@ import { computeAgingImpact } from '@/engine/aging';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior, Attributes, WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/game';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
@@ -46,7 +46,7 @@ describe('computeAgingImpact — basic aging', () => {
   it('increments age by 1 on multiples of 52 weeks', () => {
     const w = makeWarrior('w1', 20);
     const state = makeGameState(52, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -56,7 +56,7 @@ describe('computeAgingImpact — basic aging', () => {
   it('does not increment age on non-multiples of 52 weeks', () => {
     const w = makeWarrior('w1', 20);
     const state = makeGameState(51, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -67,7 +67,7 @@ describe('computeAgingImpact — basic aging', () => {
 describe('computeAgingImpact — aging penalties', () => {
   beforeEach(() => {
     // Default mock to avoid retirement unless requested
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.99);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.99);
   });
 
   afterEach(() => {
@@ -79,7 +79,7 @@ describe('computeAgingImpact — aging penalties', () => {
   it('does not apply penalties to a warrior under the age penalty start limit', () => {
     const w = makeWarrior('w1', 23, { SP: 15, DF: 15 });
     const state = makeGameState(52, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -94,7 +94,7 @@ describe('computeAgingImpact — aging penalties', () => {
     // out by mock returning 0.99 in the parent describe's beforeEach.
     const w = makeWarrior('w1', 27, { SP: 15, DF: 15 });
     const state = makeGameState(52, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -106,7 +106,7 @@ describe('computeAgingImpact — aging penalties', () => {
   it('adds a newsletter event when aging penalties are applied', () => {
     const w = makeWarrior('w1', 27, { SP: 15, DF: 15 });
     const state = makeGameState(52, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -127,7 +127,7 @@ describe('computeAgingImpact — forced retirement', () => {
     // graveyard, corrupting the retired pool and founder succession.
     const w = { ...makeWarrior('ghost', 33), status: 'Dead' as const, isDead: true };
     const state = makeGameState(10, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -140,7 +140,7 @@ describe('computeAgingImpact — forced retirement', () => {
   it('guarantees retirement for a warrior at FORCED_RETIRE_MAX (32+)', () => {
     const w = makeWarrior('w1', 32);
     const state = makeGameState(10, [w]);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -153,8 +153,8 @@ describe('computeAgingImpact — forced retirement', () => {
     const state = makeGameState(12, [w]);
 
     // Retire chance at age 29 = ((29-26)/(32-26)) * 0.15 = 0.075. Mock 0.01 triggers.
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -166,8 +166,8 @@ describe('computeAgingImpact — forced retirement', () => {
     const w = makeWarrior('w1', 29);
     const state = makeGameState(12, [w]);
 
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.99);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.99);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -214,8 +214,8 @@ describe('computeAgingImpact — champion deferral', () => {
     // Age 29, roll 0.01 → a non-champion retires; a reigning champion does not.
     const w = makeWarrior('champ', 29);
     const state = reigningState(w, false);
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -226,8 +226,8 @@ describe('computeAgingImpact — champion deferral', () => {
   it('defers a reigning rival champion through the probabilistic window', () => {
     const w = makeWarrior('rchamp', 29);
     const state = reigningState(w, true);
-    vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.01);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 
@@ -238,7 +238,7 @@ describe('computeAgingImpact — champion deferral', () => {
   it('still forces a reigning champion at FORCED_RETIRE_MAX', () => {
     const w = makeWarrior('oldchamp', 32);
     const state = reigningState(w, true);
-    const rng = new SeededRNGService(state.week * 997 + 3);
+    const rng = new SeededRNG(state.week * 997 + 3);
     const impact = computeAgingImpact(state, rng);
     const newState = resolveImpacts(state, [impact]);
 

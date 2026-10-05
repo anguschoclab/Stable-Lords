@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { runBoutSimulationPass } from '@/engine/pipeline/passes/BoutSimulationPass';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeSignedBoutState } from '@/test/_fixtures/signedBout';
 
 describe('BoutSimulationPass returns display data', () => {
   it('runBoutSimulationPass returns { impact, results, summary }', async () => {
     const state = makeSignedBoutState();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const result = runBoutSimulationPass(state, rng);
 
     expect(result).toHaveProperty('impact');

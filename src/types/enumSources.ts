@@ -120,20 +120,11 @@ export const CONDITION_TRIGGERS = [
   'PSYCH_IS',
 ] as const;
 
-export const PSYCH_STATES = [
-  'Neutral',
-  'InTheZone',
-  'Rattled',
-  'Desperate',
-  'Cruising',
-  'FatiguePanic',
-] as const;
 
 export const DISTANCE_RANGES = ['Grapple', 'Tight', 'Striking', 'Extended'] as const;
 
 export const ARENA_ZONES = ['Center', 'Edge', 'Corner', 'Obstacle'] as const;
 
-export const COMMIT_LEVELS = ['Cautious', 'Standard', 'Full'] as const;
 
 export const ARENA_TAGS = [
   'outdoor',
@@ -189,11 +180,8 @@ export const BEAST_POSTURES = [
   'forcene',
 ] as const;
 
-export const ARMOR_WEIGHTS = ['None', 'Light', 'Medium', 'Heavy', 'Ultra-Heavy'] as const;
 
-export const WEAPON_TYPES = ['slashing', 'bashing', 'piercing', 'fist'] as const;
 
-export const EQUIPMENT_SLOTS = ['weapon', 'armor', 'shield', 'helm'] as const;
 
 export const BOUT_OFFER_STATUSES = [
   'Proposed',

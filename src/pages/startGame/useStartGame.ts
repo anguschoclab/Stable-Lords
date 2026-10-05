@@ -21,7 +21,7 @@ import { applyBackstoryToPlayer, type BackstoryId } from '@/data/backstories';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 /** Which start screen is currently shown. */
 export type Screen = 'title' | 'newGame';
@@ -80,7 +80,7 @@ async function createNewGame(args: CreateNewGameArgs): Promise<void> {
   fresh.player.generation = 0;
   const slotId = newSlotId();
   const identitySeed = slotId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  applyBackstoryToPlayer(fresh, backstoryId, new SeededRNGService(identitySeed));
+  applyBackstoryToPlayer(fresh, backstoryId, new SeededRNG(identitySeed));
   fresh = resolveImpacts(fresh, [runRankingsPass(fresh), runPromoterPass(fresh)]);
   await saveToSlot(slotId, fresh.player.stableName, fresh);
   loadGame(slotId, fresh);

@@ -10,7 +10,7 @@ import { OwnerCompetenceSchema } from '@/schemas/schemaEnums';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { generateRivalStables } from '@/engine/rivals/rivalStableFactory';
 import { rollCompetence } from '@/engine/ai/competence';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const baseOwner = {
   id: 'owner-1',
@@ -54,7 +54,7 @@ describe('OwnerCompetence — enum + schema', () => {
 
 describe('rollCompetence — tier-skewed weights', () => {
   const draws = (tier: string, n = 200) => {
-    const rng = new SeededRNGService(4242);
+    const rng = new SeededRNG(4242);
     const counts: Record<string, number> = {};
     for (let i = 0; i < n; i++) {
       const c = rollCompetence(rng, tier as never);
@@ -76,8 +76,8 @@ describe('rollCompetence — tier-skewed weights', () => {
   });
 
   it('is deterministic for a given seed', () => {
-    const a = new SeededRNGService(99);
-    const b = new SeededRNGService(99);
+    const a = new SeededRNG(99);
+    const b = new SeededRNG(99);
     for (let i = 0; i < 20; i++) {
       expect(rollCompetence(a, 'Major' as never)).toBe(rollCompetence(b, 'Major' as never));
     }

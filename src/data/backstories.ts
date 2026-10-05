@@ -20,7 +20,7 @@ export type BackstoryId =
 /**
  * Economy modifiers applied when selecting a backstory.
  */
-export interface BackstoryEconomy {
+interface BackstoryEconomy {
   treasuryDelta?: number;
   fameDelta?: number;
   renownDelta?: number;
@@ -30,7 +30,7 @@ export interface BackstoryEconomy {
 /**
  * Personality and adaptation weights used to seed an Owner's identity.
  */
-export interface BackstoryIdentitySeed {
+interface BackstoryIdentitySeed {
   personalityWeights: Partial<Record<OwnerPersonality, number>>;
   metaAdaptationWeights: Partial<Record<MetaAdaptation, number>>;
   favoredStyles?: FightingStyle[];
@@ -39,7 +39,7 @@ export interface BackstoryIdentitySeed {
 /**
  * Complete definition of a player backstory including lore, economy, and identity.
  */
-export interface BackstoryDef {
+interface BackstoryDef {
   id: BackstoryId;
   name: string;
   tagline: string;

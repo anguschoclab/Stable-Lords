@@ -4,7 +4,7 @@ import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
 import type { Warrior } from '@/types/state.types';
 import type { ArenaTitle } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 /**
  * A warrior every cull rule wants gone: 0 kills, 8+ fights, age 30, losing
@@ -63,7 +63,7 @@ describe('AI roster culling — champion protection', () => {
         },
       });
       const state = stateWith(rival, titleReigningOn('champ1'));
-      const { updatedRivals } = processAIRosterManagement(state, new SeededRNGService(1));
+      const { updatedRivals } = processAIRosterManagement(state, new SeededRNG(1));
       expect(
         updatedRivals[0]!.roster.map((w) => w.id),
         `personality=${personality} culled a reigning champion`
@@ -86,7 +86,7 @@ describe('AI roster culling — champion protection', () => {
       },
     });
     const state = stateWith(rival, titleReigningOn('someone-else'));
-    const { updatedRivals } = processAIRosterManagement(state, new SeededRNGService(1));
+    const { updatedRivals } = processAIRosterManagement(state, new SeededRNG(1));
     expect(updatedRivals[0]!.roster.map((w) => w.id)).not.toContain('fodder1');
   });
 });
@@ -107,7 +107,7 @@ describe('AI roster culling — retired warriors are preserved', () => {
       },
     });
     const state = stateWith(rival);
-    const { retiredWarriors } = processAIRosterManagement(state, new SeededRNGService(1));
+    const { retiredWarriors } = processAIRosterManagement(state, new SeededRNG(1));
     expect(retiredWarriors.map((w) => w.id)).toContain('gone1');
     expect(retiredWarriors[0]!.status).toBe('Retired');
   });

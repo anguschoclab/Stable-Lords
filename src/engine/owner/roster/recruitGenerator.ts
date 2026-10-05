@@ -2,7 +2,7 @@ import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService, hashStr } from '@/utils/random';
+import { SeededRNG, hashStr } from '@/utils/random';
 import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
@@ -153,7 +153,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
   // `owner.id.length` (~constant) made every stable's same-week fallback
   // recruit share one RNG stream — identical streams mint identical warrior
   // ids. Hash the stable id so each stable gets an independent stream.
-  const rng = new SeededRNGService(seed ?? week * 42 + hashStr(rival.id));
+  const rng = new SeededRNG(seed ?? week * 42 + hashStr(rival.id));
   const philosophy = rival.philosophy ?? 'Balanced';
   const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
   const favoredStyles = rival.owner.favoredStyles ?? [];

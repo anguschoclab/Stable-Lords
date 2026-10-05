@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { FightSummarySchema } from '@/schemas/gameStateSchema';
+import { FightSummarySchema } from '@/schemas/fightSchemas';
 
 describe('FightSummary schema accepts analysis', () => {
   it('parses an arenaHistory entry that carries an analysis object', () => {

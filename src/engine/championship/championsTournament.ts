@@ -16,7 +16,7 @@ import type { WarriorId, TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { mergeImpacts, type StateImpact } from '@/engine/impacts';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { isFightReady } from '@/engine/warrior/warriorStatus';
@@ -70,7 +70,7 @@ export function buildChampionsTournament(
   }
 
   const tournament = TournamentSelectionService.buildTournament(
-    { tierId: CHAMPIONS_TOURNEY.TIER_ID, tierName: CHAMPIONS_TOURNEY.NAME, warriors: field, week: week, season: state.season, rng: new SeededRNGService(((state.absoluteWeek ?? week - 1) + 1) * 733), year: state.year ?? 1 }
+    { tierId: CHAMPIONS_TOURNEY.TIER_ID, tierName: CHAMPIONS_TOURNEY.NAME, warriors: field, week: week, season: state.season, rng: new SeededRNG(((state.absoluteWeek ?? week - 1) + 1) * 733), year: state.year ?? 1 }
   );
 
   return mergeImpacts([

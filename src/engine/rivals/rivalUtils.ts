@@ -3,7 +3,7 @@
  * Extracted from rivals.ts to follow SRP
  */
 import type { RivalStableData, Warrior } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
@@ -27,7 +27,7 @@ export function pickRivalOpponent(
   });
 
   if (allEligible.length === 0) return null;
-  const rng = new SeededRNGService(seed ?? allEligible.length * 101);
+  const rng = new SeededRNG(seed ?? allEligible.length * 101);
   return rng.pick(allEligible);
 }
 
@@ -41,7 +41,7 @@ export function generateRivalryNarrative(
   warriorB: string,
   seed?: number
 ): string {
-  const rng = new SeededRNGService(seed ?? stableA.length * 13);
+  const rng = new SeededRNG(seed ?? stableA.length * 13);
   const templates = [
     `🔥 RIVALRY REPORT: The feud between ${stableA} and ${stableB} rages on — ${warriorA} faced ${warriorB} in a grudge match!`,
     `⚔️ VENDETTA IN THE PITS: ${stableA} vs ${stableB} — ${warriorA} and ${warriorB} settled scores in the arena!`,

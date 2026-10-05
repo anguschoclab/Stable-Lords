@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import { ARENA_SELECTION } from '@/constants/arena';
 import type { WarriorId } from '@/types/shared.types';
@@ -19,7 +19,7 @@ const countPicks = (
   b: ReturnType<typeof withRecord>,
   n = 300
 ) => {
-  const rng = new SeededRNGService(42);
+  const rng = new SeededRNG(42);
   const counts: Record<string, number> = {};
   for (let i = 0; i < n; i++) {
     const pick = selectArenaForMatchup(a, b, rng);

@@ -70,53 +70,9 @@ export function computeHP(cn: number, sz: number, wl: number): number {
   return cn * 2 + szMod + wlMod;
 }
 
-/**
- * Hp rating type.
- */
-export type HPRating =
-  'Very Frail' | 'Cannot Take a Lot' | 'Average' | 'A Lot' | 'Tremendous' | 'Seemingly Unaffected';
-
-/**
- * Get hp rating.
- */
-export function getHPRating(hp: number): HPRating {
-  if (hp >= 54) return 'Seemingly Unaffected';
-  if (hp >= 41) return 'Tremendous';
-  if (hp >= 36) return 'A Lot';
-  if (hp >= 27) return 'Average';
-  if (hp >= 22) return 'Cannot Take a Lot';
-  return 'Very Frail';
-}
-
 // ─── Damage ─────────────────────────────────────────────────────────────────
 // Lookup by ST(3-25) × SZ(3-21). Mode values encoded.
 // L=Little(1), N=Normal(2), G=Good(3), R=Great(4), T=Tremendous(5), A=Awesome(6), D=Devastating(7), S=Superhuman(8), U=Unearthly(9)
-
-/**
- * Damage rating type.
- */
-export type DamageRating =
-  | 'Little'
-  | 'Normal'
-  | 'Good'
-  | 'Great'
-  | 'Tremendous'
-  | 'Awesome'
-  | 'Devastating'
-  | 'Superhuman'
-  | 'Unearthly';
-
-const DMG_LABELS: DamageRating[] = [
-  'Little',
-  'Normal',
-  'Good',
-  'Great',
-  'Tremendous',
-  'Awesome',
-  'Devastating',
-  'Superhuman',
-  'Unearthly',
-];
 
 // Encoded as mode damage class (1-9) indexed by [ST-3][SZ-3], clamped
 // Simplified from the full chart — mode values only (ignoring ± variance)
@@ -156,13 +112,6 @@ export function computeDamageClass(st: number, sz: number): number {
   return DMG_TABLE[stIdx]?.[szIdx] ?? 2;
 }
 
-/**
- * Get damage rating.
- */
-export function getDamageRating(damageClass: number): DamageRating {
-  return DMG_LABELS[clamp(damageClass - 1, 0, 8)] ?? 'Normal';
-}
-
 // ─── Encumbrance ────────────────────────────────────────────────────────────
 // Lookup by ST(3-25) × CN(3-25). Returns class A-F.
 // A=very little(~9), B=cannot carry a lot(~18), C=normal(~27), D=good(~36), E=tremendous(~45), F=limitless(~54)
@@ -170,7 +119,7 @@ export function getDamageRating(damageClass: number): DamageRating {
 /**
  * Encumbrance class type.
  */
-export type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 
 // Each class ≈ 6 weight points of gear capacity
 // Canonical: average warrior (ST12/CN12) = class C = 18 points
@@ -178,7 +127,7 @@ export type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 /**
  * Encumbrance_capacity.
  */
-export const ENCUMBRANCE_CAPACITY: Record<EncumbranceClass, number> = {
+const ENCUMBRANCE_CAPACITY: Record<EncumbranceClass, number> = {
   A: 6,
   B: 12,
   C: 18,
@@ -253,21 +202,9 @@ export function computeEncumbranceCapacity(st: number, cn: number): number {
 /**
  * Endurance tier type.
  */
-export type EnduranceTier = 'L' | 'P' | 'N' | 'G' | 'R' | 'T' | 'A' | 'U';
+type EnduranceTier = 'L' | 'P' | 'N' | 'G' | 'R' | 'T' | 'A' | 'U';
 
-/**
- * Endurance_labels.
- */
-export const ENDURANCE_LABELS: Record<EnduranceTier, string> = {
-  L: 'Very Little',
-  P: 'Poor',
-  N: 'Normal',
-  G: 'Good',
-  R: 'Great',
-  T: 'Tremendous',
-  A: 'Awesome',
-  U: 'Limitless',
-};
+
 
 // Numerical endurance value per tier (for combat calculations)
 const ENDURANCE_VALUES: Record<EnduranceTier, number> = {
@@ -315,7 +252,7 @@ export function computeEnduranceValue(st: number, cn: number, wl: number): numbe
 /**
  * Activity rating type.
  */
-export type ActivityRating =
+type ActivityRating =
   | 'Very Slow & Inactive'
   | 'Very Slow'
   | 'Very Inactive'
@@ -379,7 +316,7 @@ export function computeActivityRating(iniBase: number, ripBase: number): Activit
 /**
  * Coordination rating type.
  */
-export type CoordinationRating =
+type CoordinationRating =
   | 'Clumsy'
   | 'Slightly Uncoordinated'
   | 'Normal'

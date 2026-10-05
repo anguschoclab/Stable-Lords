@@ -14,7 +14,7 @@ import type { Passives } from './passives';
 /**
  * Defines the shape of kill text.
  */
-export interface KillText {
+interface KillText {
   [key: string]: string[] | Record<string, string[]>;
 }
 

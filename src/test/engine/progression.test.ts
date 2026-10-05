@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { calculateXP, applyXP } from '@/engine/warrior/progression';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Warrior Progression', () => {
   describe('calculateXP', () => {
@@ -67,7 +67,7 @@ describe('Warrior Progression', () => {
 
     it('adds XP without leveling up', () => {
       const warrior = mockWarrior();
-      const rng = new SeededRNGService(1); // deterministic RNG
+      const rng = new SeededRNG(1); // deterministic RNG
       const { warrior: updated, gain } = applyXP(warrior, 3, rng);
 
       expect(updated.xp).toBe(3);

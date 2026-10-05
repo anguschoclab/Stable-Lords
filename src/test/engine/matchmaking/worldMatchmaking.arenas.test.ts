@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { eligibleArenasFor } from '@/engine/matchmaking/arenaFit';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior, makeRival, makeGameState } from '@/test/_fixtures/factories';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
@@ -38,7 +38,7 @@ describe('planWorldBouts — arena eligibility', () => {
         .map((a) => a.id)
     );
     for (let seed = 0; seed < 50; seed++) {
-      const offers = planWorldBouts(state, new SeededRNGService(seed * 13 + 5));
+      const offers = planWorldBouts(state, new SeededRNG(seed * 13 + 5));
       for (const o of offers) expect(legal.has(o.arenaId!)).toBe(true);
     }
   });
@@ -48,7 +48,7 @@ describe('planWorldBouts — arena eligibility', () => {
     const rookie = state.rivals[0]!.roster[0]!;
     const rookieLegal = new Set(eligibleArenasFor(rookie).map((a) => a.id));
     for (let seed = 0; seed < 50; seed++) {
-      const offers = planWorldBouts(state, new SeededRNGService(seed * 29 + 11));
+      const offers = planWorldBouts(state, new SeededRNG(seed * 29 + 11));
       for (const o of offers) expect(rookieLegal.has(o.arenaId!)).toBe(true);
     }
   });

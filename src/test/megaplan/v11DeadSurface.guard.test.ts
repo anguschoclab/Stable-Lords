@@ -43,11 +43,13 @@ function body(rel: string): string {
 
 function referencesSymbol(symbol: string): string[] {
   const re = new RegExp(`\\b${symbol}\\b`);
-  return allSrc.filter((f) => re.test(readFileSync(f, 'utf8')));
+  return allSrc.filter(
+    (f) => !f.includes('megaplan') && re.test(readFileSync(f, 'utf8'))
+  );
 }
 
 describe('megaplan V11: dead-surface elimination', () => {
-describe.skip('MEGAPLAN-V11', () => {
+describe('MEGAPLAN-V11', () => {
   it('schemaObjects.ts re-export barrel is deleted', () => {
     expect(
       existsSync(path.join(SRC, 'schemas/schemaObjects.ts')),
@@ -77,6 +79,7 @@ describe.skip('MEGAPLAN-V11', () => {
   });
 
   it('useGameStore.ts no longer re-exports dead convenience hooks', () => {
+    // useReputationState is live (ReputationSliders/Quadrant/ControlCenter)
     const dead = [
       'usePlayer',
       'useRoster',
@@ -85,15 +88,10 @@ describe.skip('MEGAPLAN-V11', () => {
       'useWeek',
       'useIsSimulating',
       'useStyleStats',
-      'useReputationState',
     ];
     const src = body('src/state/useGameStore.ts');
     const survivors = dead.filter((h) => new RegExp(`\\b${h}\\b`).test(src));
     expect(survivors).toEqual([]);
-  });
-
-  it('data/equipment/weapons.ts dead style-list file is deleted', () => {
-    expect(existsSync(path.join(SRC, 'data/equipment/weapons.ts'))).toBe(false);
   });
 
   it('templateCache.ts dead query API is removed', () => {

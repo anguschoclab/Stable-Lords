@@ -14,7 +14,7 @@ import {
   getRecommendedChallenges,
   getMatchupsToAvoid,
 } from '@/engine/matchmaking/schedulingAssistant';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { makeGameState } from '@/test/_fixtures/factories';
@@ -512,7 +512,7 @@ describe('Scheduling Assistant Engine', () => {
         const rivalry = mockRivalry('player1', 'rival1', 5);
 
         const state = mockState([rival], []);
-        (state as any).rivalryMap = new Map([[getStablePairKey('player1', 'rival1'), rivalry]]);
+        (state as any).rivalryMap = new Map([[getPairKey('player1', 'rival1'), rivalry]]);
         const score = scoreMatchup(player, rival, state);
         // Base 100 + (5 * 50) = 350 (rivalryMap used instead of rivalries array)
         expect(score).toBe(350);

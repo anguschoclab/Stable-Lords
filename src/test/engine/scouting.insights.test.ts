@@ -11,7 +11,7 @@ import {
   createTraitInsights,
 } from '@/engine/scouting/scoutInsights';
 import { FightingStyle, type Warrior } from '@/types/game';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/shared.types';
 const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -34,7 +34,7 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
 describe('createStyleInsight', () => {
   it('produces exactly 1 Style insight', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
     const insight = createStyleInsight(warrior, styleName, 10, rng);
 
@@ -47,8 +47,8 @@ describe('createStyleInsight', () => {
 
   it('generates a unique id', () => {
     const warrior = makeWarrior();
-    const rng1 = new SeededRNGService(1);
-    const rng2 = new SeededRNGService(2);
+    const rng1 = new SeededRNG(1);
+    const rng2 = new SeededRNG(2);
     const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
     const i1 = createStyleInsight(warrior, styleName, 1, rng1);
     const i2 = createStyleInsight(warrior, styleName, 1, rng2);
@@ -62,7 +62,7 @@ describe('createStyleInsight', () => {
 describe('createAttributeInsights', () => {
   it('returns 0 insights for Basic quality', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const insights = createAttributeInsights(warrior, 'Basic', 5, rng);
 
     expect(insights).toHaveLength(0);
@@ -70,7 +70,7 @@ describe('createAttributeInsights', () => {
 
   it('returns exactly 2 insights for Detailed quality', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const insights = createAttributeInsights(warrior, 'Detailed', 5, rng);
 
     expect(insights).toHaveLength(2);
@@ -87,7 +87,7 @@ describe('createAttributeInsights', () => {
 
   it('returns exactly 4 insights for Expert quality', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const insights = createAttributeInsights(warrior, 'Expert', 5, rng);
 
     expect(insights).toHaveLength(4);
@@ -103,28 +103,28 @@ describe('createAttributeInsights', () => {
 describe('createTacticInsight', () => {
   it('returns null for Basic quality', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = createTacticInsight({ warrior: warrior, quality: 'Basic', suspectedOE: undefined, suspectedAL: undefined, week: 5, rng: rng });
     expect(result).toBeNull();
   });
 
   it('returns null for Detailed quality', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = createTacticInsight({ warrior: warrior, quality: 'Detailed', suspectedOE: undefined, suspectedAL: undefined, week: 5, rng: rng });
     expect(result).toBeNull();
   });
 
   it('returns null for Expert quality without a plan', () => {
     const warrior = makeWarrior({ plan: undefined });
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = createTacticInsight({ warrior: warrior, quality: 'Expert', suspectedOE: 'High', suspectedAL: 'Low', week: 5, rng: rng });
     expect(result).toBeNull();
   });
 
   it('returns 1 Tactic insight for Expert with plan', () => {
     const warrior = makeWarrior({ plan: { OE: 7, AL: 5, killDesire: 6 } as any });
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const result = createTacticInsight({ warrior: warrior, quality: 'Expert', suspectedOE: 'High', suspectedAL: 'Medium', week: 5, rng: rng });
 
     expect(result).not.toBeNull();
@@ -141,14 +141,14 @@ describe('createTacticInsight', () => {
 describe('createTraitInsights', () => {
   it('returns empty array for empty suspectedTraits', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const insights = createTraitInsights([], warrior, 5, rng);
     expect(insights).toHaveLength(0);
   });
 
   it('returns 1 Trait insight for 1 suspected trait', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const insights = createTraitInsights(['orphan_resilience'], warrior, 5, rng);
 
     expect(insights).toHaveLength(1);
@@ -160,7 +160,7 @@ describe('createTraitInsights', () => {
 
   it('returns 2 Trait insights for 2 suspected traits', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     const insights = createTraitInsights(
       ['orphan_resilience', 'street_rat_cunning'],
       warrior,
@@ -179,7 +179,7 @@ describe('createTraitInsights', () => {
 describe('generateScoutReport — insight token counts', () => {
   it('Basic produces 1 insight (Style only)', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const { newInsights } = generateScoutReport(warrior, 'Basic', 1, rng);
 
     expect(newInsights).toHaveLength(1);
@@ -188,7 +188,7 @@ describe('generateScoutReport — insight token counts', () => {
 
   it('Detailed produces 3 insights (1 Style + 2 Attribute)', () => {
     const warrior = makeWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const { newInsights } = generateScoutReport(warrior, 'Detailed', 1, rng);
 
     const styles = newInsights.filter((i) => i.type === 'Style');
@@ -203,7 +203,7 @@ describe('generateScoutReport — insight token counts', () => {
       traits: ['orphan_resilience', 'street_rat_cunning'],
       plan: { OE: 7, AL: 5, killDesire: 6 } as any,
     });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const { newInsights } = generateScoutReport(warrior, 'Expert', 1, rng);
 
     const styles = newInsights.filter((i) => i.type === 'Style');
@@ -223,7 +223,7 @@ describe('generateScoutReport — insight token counts', () => {
       traits: ['orphan_resilience', 'street_rat_cunning'],
       plan: { OE: 7, AL: 5, killDesire: 6 } as any,
     });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const { newInsights } = generateScoutReport(warrior, 'Expert', 1, rng);
 
     const ids = newInsights.map((i) => i.id);

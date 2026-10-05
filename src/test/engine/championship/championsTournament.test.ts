@@ -16,7 +16,10 @@ import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelec
 import { resolveCompleteTournament } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena/arenaChampionship';
 import { EPITHET_TABLES } from '@/data/names/epithets';
-import { SEASONAL_TOURNAMENT_WEEKS, LEGACY_TOURNAMENT_WEEKS } from '@/constants/core/dates';
+import { SEASONAL_TOURNAMENT_WEEKS } from '@/constants/core/dates';
+
+/** Retired 13-week tournament cadence — kept inline as the historical fixture. */
+const LEGACY_TOURNAMENT_WEEKS = [13, 26, 39, 52] as const;
 import { makeGameState, makeWarrior, makeRival } from '@/test/_fixtures/factories';
 import type { ArenaTitle, GameState, TournamentEntry, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';

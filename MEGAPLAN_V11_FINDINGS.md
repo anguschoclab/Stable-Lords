@@ -75,7 +75,7 @@ export aliases removed. dup-scan confirms: `fightSchemas ↔ gameStateSchema`
 | --- | --- | --- |
 | `constants/core/dates.ts` — all 9 consts (`GAME_EPOCH_YEAR`, `DAYS_PER_WEEK`, `MS_PER_DAY`…) zero non-test consumers | APPROVED dead | DELETE or wire into calendar display; verdict: wire where week/day math hand-rolls, else delete |
 | `data/templates/templateCache.ts` query API — `getTemplatesByTier/Philosophy/Personality/MetaAdaptation/Backstory/Style/FameRange/RosterRange`, `searchTemplates`, `getCacheStats`, `clearTemplateCache`, `TIER_CACHES`: only `ALL_TEMPLATES` consumed (by `backstoryData.ts` → `rivalStableFactory.ts`); no prod file imports the query fns | APPROVED dead API (~180 lines) | DELETE query fns, keep `ALL_TEMPLATES` materialization |
-| `data/equipment/weapons.ts` (25 lines, 8 style-list consts) — zero consumers, 8-line dup with `weapons/items.ts` | APPROVED dead | DELETE file |
+| ~~`data/equipment/weapons.ts` dead~~ | **DISPROVED** — `weaponStats.ts` + 6 test files import `WEAPONS`/`SHIELD_ITEM_IDS`/`SHIELD_COVERAGE` | RETAIN — removed from guard |
 | `useGameStore.ts` hooks `usePlayer`/`useRoster`/`useRivals`/`useTreasury`/`useWeek`/`useIsSimulating`/`useStyleStats`/`useReputationState` | APPROVED dead convenience hooks | DELETE re-export lines |
 | `enginePool.ts:58 processBoutShard` | verify — likely worker entry (comlink) | Phase 3 verdict |
 | `types/narrative/pbp.ts` ~13 unused interfaces + `personas.ts`/`gazette.ts`/`strikes.ts`/`uxMetadata.ts`/`root.ts`/`recruitment.ts` types (~25) | APPROVED dead types (narrative shape types unused after JSON curation passes) | DELETE |

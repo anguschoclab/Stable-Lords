@@ -9,7 +9,7 @@ export interface PersonaDescriptor {
 /**
  * Defines the shape of persona skill.
  */
-export interface PersonaSkill {
+interface PersonaSkill {
   high: PersonaDescriptor[];
   low: PersonaDescriptor[];
 }
@@ -29,7 +29,7 @@ export interface PersonaGood {
 /**
  * Defines the shape of persona bad.
  */
-export interface PersonaBad {
+interface PersonaBad {
   initiative: PersonaSkill;
   attack: PersonaSkill;
 }
@@ -37,7 +37,7 @@ export interface PersonaBad {
 /**
  * Defines the shape of persona descriptors.
  */
-export interface PersonaDescriptors {
+interface PersonaDescriptors {
   coordination: Record<string, string>;
   activity: Record<string, string>;
 }

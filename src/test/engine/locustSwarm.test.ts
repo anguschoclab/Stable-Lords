@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { rollWeather } from '@/engine/weather/seasonalWeather';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Locust Swarm Feature', () => {
   it('should return a 1.2 multiplier for Locust Swarm stamina drain', () => {
@@ -9,7 +9,7 @@ describe('Locust Swarm Feature', () => {
   });
 
   it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.77);
     const weather = rollWeather(rng, 'Summer');
     expect(weather).toBe('Locust Swarm');

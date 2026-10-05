@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { ExpansionService } from '@/engine/ai/expansionService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { ALL_TEMPLATES } from '@/data/templates';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { ATTRS_10 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
@@ -45,7 +45,7 @@ describe('ExpansionService', () => {
     it('returns updated state plus minted stables with origin tags', () => {
       const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345)
+        new SeededRNG(12345)
       );
 
       expect(Array.isArray(updatedState.rivals)).toBe(true);
@@ -58,7 +58,7 @@ describe('ExpansionService', () => {
     it('refills toward the floor, bounded by EXPANSION_MAX_PER_CHURN', () => {
       const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(1)
+        new SeededRNG(1)
       );
 
       expect(minted.length).toBeGreaterThan(0);
@@ -70,7 +70,7 @@ describe('ExpansionService', () => {
     it('does not refill when the world is already at the floor', () => {
       state.rivals = padRivals(state.rivals[0]!, WORLD_RIVAL_FLOOR);
 
-      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNG(12345));
 
       // No floor refill; organic licensing may fire but the count must not
       // exceed floor + batch budget.
@@ -83,7 +83,7 @@ describe('ExpansionService', () => {
 
       const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345)
+        new SeededRNG(12345)
       );
 
       const legacy = minted.filter((m) => m.origin === 'legacy');
@@ -97,7 +97,7 @@ describe('ExpansionService', () => {
       const founder = makeFounder('Legend A');
       state.legacyFounderQueue = [founder];
 
-      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNG(12345));
 
       const legacy = minted.find((m) => m.origin === 'legacy');
       expect(legacy).toBeDefined();
@@ -119,7 +119,7 @@ describe('ExpansionService', () => {
 
       const { updatedState, minted } = ExpansionService.processExpansion(
         state,
-        new SeededRNGService(12345)
+        new SeededRNG(12345)
       );
 
       expect(minted.length).toBe(0);
@@ -138,7 +138,7 @@ describe('ExpansionService', () => {
         roster: [],
       }));
 
-      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNG(12345));
       expect(minted.length).toBeGreaterThan(0);
 
       const takenStable = new Set(ALL_TEMPLATES.map((t) => t.stableName));
@@ -156,7 +156,7 @@ describe('ExpansionService', () => {
     });
 
     it('generated stables have valid structure', () => {
-      const { minted } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted } = ExpansionService.processExpansion(state, new SeededRNG(12345));
 
       minted.forEach(({ stable }) => {
         expect(stable.id).toBeDefined();
@@ -168,8 +168,8 @@ describe('ExpansionService', () => {
     });
 
     it('is deterministic with the same seed', () => {
-      const { minted: m1 } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
-      const { minted: m2 } = ExpansionService.processExpansion(state, new SeededRNGService(12345));
+      const { minted: m1 } = ExpansionService.processExpansion(state, new SeededRNG(12345));
+      const { minted: m2 } = ExpansionService.processExpansion(state, new SeededRNG(12345));
 
       expect(m1.length).toBe(m2.length);
       if (m1.length > 0 && m2.length > 0) {

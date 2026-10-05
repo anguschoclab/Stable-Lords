@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { GameStateSchema, SaveSlotMetaSchema } from '@/schemas/gameStateSchema';
 import {
-  GameStateSchema,
   FightingStyleSchema,
   SeasonSchema,
   WarriorStatusSchema,
@@ -13,14 +13,15 @@ import {
   DeathCauseBucketSchema,
   AIIntentSchema,
   AnnualAwardTypeSchema,
+} from '@/schemas/schemaEnums';
+import {
   AttributesSchema,
   BaseSkillsSchema,
-  NewsletterItemSchema,
   InjuryDataSchema,
-  TrainerSchema,
   InsightTokenSchema,
-  SaveSlotMetaSchema,
-} from '@/schemas/gameStateSchema';
+} from '@/schemas/warriorSchemas';
+import { NewsletterItemSchema } from '@/schemas/fightSchemas';
+import { TrainerSchema } from '@/schemas/economySchemas';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('schema characterization', () => {

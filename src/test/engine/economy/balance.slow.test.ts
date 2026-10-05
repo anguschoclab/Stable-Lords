@@ -16,7 +16,7 @@ import { loadCombatNarrative } from '@/data/narrative';
 import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
 import { generateRecruitAttrs } from '@/engine/owner/roster/recruitGenerator';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { FightPlan } from '@/types/combat.types';
 import {
   findAntisymmetryViolations,
@@ -320,7 +320,7 @@ describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () 
     for (const s of ALL_STYLES) pools[s] = [];
     for (const [pi, philosophy] of PHILOSOPHIES.entries()) {
       for (const [si, style] of ALL_STYLES.entries()) {
-        const rng = new SeededRNGService(1000 + pi * 97 + si);
+        const rng = new SeededRNG(1000 + pi * 97 + si);
         const attrs = generateRecruitAttrs(philosophy, rng, style);
         pools[style]!.push(
           fixtureComputedWarrior(attrs, style, {

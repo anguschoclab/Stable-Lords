@@ -3,9 +3,9 @@ import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorToPoolWarrior } from '@/engine/recruitment/recruitment';
 import { makeWarrior, makePoolWarrior } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
-const rng = () => new SeededRNGService(42);
+const rng = () => new SeededRNG(42);
 
 const veteran = (over: Partial<Warrior> = {}): Warrior =>
   makeWarrior({

@@ -11,7 +11,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
@@ -96,7 +96,7 @@ describe('Gap 10: planWorldBouts considers weather in pairing', () => {
       ],
     });
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const offers = planWorldBouts(state, rng);
 
     // The lunger should either not be paired, or paired with lower priority
@@ -123,7 +123,7 @@ describe('Gap 10: planWorldBouts considers weather in pairing', () => {
       rivals: [makeRival('rival-1', [w1]), makeRival('rival-2', [w2])],
     });
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const offers = planWorldBouts(state, rng);
 
     expect(offers.length).toBeGreaterThan(0);

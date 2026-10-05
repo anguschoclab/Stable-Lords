@@ -11,7 +11,7 @@ import {
   buildLegacyFounderQueueEntry,
   collectCrownedWarriorIds,
 } from '@/engine/ai/legacyFounder';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /** Apply an insight token's effect to a warrior draft. */
@@ -98,7 +98,7 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
     retired: [...state.retired, ret],
   };
 
-  const founderRng = new SeededRNGService(
+  const founderRng = new SeededRNG(
     (state.absoluteWeek ?? state.week) * 977 + state.retired.length
   );
   if (

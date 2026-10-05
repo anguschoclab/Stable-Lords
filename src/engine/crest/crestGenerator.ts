@@ -23,7 +23,7 @@ import {
   DEFAULT_INHERITANCE,
 } from '@/types/crest.types';
 import { getRandomCharge } from './chargePaths';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 // Philosophy color preferences
@@ -274,7 +274,7 @@ function selectCharge(
  */
 export function generateCrest(config: StableCrestConfig): CrestData {
   const { seed, philosophy, tier, parentCrest } = config;
-  const rng = new SeededRNGService(seed);
+  const rng = new SeededRNG(seed);
 
   // Determine generation
   const generation = parentCrest ? parentCrest.generation + 1 : 0;

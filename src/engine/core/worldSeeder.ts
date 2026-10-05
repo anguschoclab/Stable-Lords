@@ -8,7 +8,7 @@ import { generateHiringPool } from '@/engine/trainers/trainers';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService, resolveRng } from '@/utils/random';
+import { SeededRNG, resolveRng } from '@/utils/random';
 
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 import { WORLD_RIVAL_FLOOR, PROMOTERS_PER_STABLE, PROMOTER_COUNT_MIN } from '@/constants/world';
@@ -41,7 +41,7 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
 
   // 2. Generate Initial Recruit Pool — scaled to the stable count
   const recruitPool = generateRecruitPool(
-    { count: computeRecruitPoolSize(WORLD_RIVAL_FLOOR), week: 1, usedNames: usedNames, rng: new SeededRNGService(seed + 2) }
+    { count: computeRecruitPoolSize(WORLD_RIVAL_FLOOR), week: 1, usedNames: usedNames, rng: new SeededRNG(seed + 2) }
   );
 
   // 3. Generate Player Roster (4 balanced warriors)

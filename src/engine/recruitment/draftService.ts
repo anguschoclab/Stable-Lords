@@ -4,7 +4,7 @@ import { resolveRng } from '@/utils/random';
 import { processRecruitment } from '../ai/workers/recruitmentWorker';
 import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
 import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
@@ -21,8 +21,8 @@ function rivalDraftMeta(
   const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
   // Rivalry entries key on stable ids; older fixtures may key on owner ids.
   const rivalry =
-    rivalryMap.get(getStablePairKey(state.player.id, rival.id as string)) ??
-    rivalryMap.get(getStablePairKey(state.player.id, rival.owner.id));
+    rivalryMap.get(getPairKey(state.player.id, rival.id as string)) ??
+    rivalryMap.get(getPairKey(state.player.id, rival.owner.id));
   if (!rivalry || rivalry.intensity < 3 || adaptation === 'Traditionalist') return meta;
   // Player-stable fights are resolved through the stable map — fight
   // summaries carry warrior ids, not the player's stable id.
@@ -99,7 +99,7 @@ export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
 
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
   const rivalryMap = new Map(
-    (state.rivalries || []).map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
+    (state.rivalries || []).map((rv) => [getPairKey(rv.stableIdA, rv.stableIdB), rv])
   );
 
   const sortedRivals = orderRivalsForSnakeDraft(rivals, week);

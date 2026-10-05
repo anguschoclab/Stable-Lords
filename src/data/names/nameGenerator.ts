@@ -12,7 +12,7 @@
  * to `entropyRng()` — see docs/RNG_POLICY.md.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { entropyRng, SeededRNGService } from '@/utils/random';
+import { entropyRng, SeededRNG } from '@/utils/random';
 import {
   CULTURE_SEEDS,
   SYLLABLE_TABLES,
@@ -189,7 +189,7 @@ export function generateDynasticName(originalName: string, seed: number): string
     return 'Legacy of Unknown';
   }
 
-  const rng = new SeededRNGService(seed);
+  const rng = new SeededRNG(seed);
   const roll = rng.next();
 
   if (roll < 0.6) {

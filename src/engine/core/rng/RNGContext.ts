@@ -1,6 +1,6 @@
 import { IRNGContext } from './IRNGContext';
 import { IRNGService } from './IRNGService';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 /**
  * RNG Context Implementation
@@ -17,7 +17,7 @@ export class RNGContext implements IRNGContext {
    * @param seed - Seed. (optional)
    */
   getRNG(seed?: number): IRNGService {
-    return new SeededRNGService(seed ?? this.baseSeed);
+    return new SeededRNG(seed ?? this.baseSeed);
   }
 
   /**

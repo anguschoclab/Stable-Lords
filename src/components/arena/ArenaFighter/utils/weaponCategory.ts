@@ -1,7 +1,7 @@
 /**
  *
  */
-export type WeaponCategory = 'slash' | 'bash' | 'pierce' | 'shield' | 'fist';
+type WeaponCategory = 'slash' | 'bash' | 'pierce' | 'shield' | 'fist';
 
 /**
  *

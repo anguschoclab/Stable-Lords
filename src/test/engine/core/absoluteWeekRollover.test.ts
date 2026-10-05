@@ -3,7 +3,7 @@ import { convertBidsToOffers, generateBoutBids } from '@/engine/ai/workers/compe
 import type { GameState, RivalStableData, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import {
   makeWarrior as fixtureWarrior,
@@ -62,7 +62,7 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 52, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -84,7 +84,7 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 104, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 
@@ -107,7 +107,7 @@ describe('absoluteWeek rollover — generatePairings', () => {
 
     // Generate offers at absoluteWeek=52 → boutOfferAbsoluteWeek = 54
     const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 52, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
 

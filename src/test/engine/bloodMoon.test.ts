@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { rollWeather } from '@/engine/weather/seasonalWeather';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Blood Moon Feature', () => {
   it('should return a 0.9 multiplier for Blood Moon stamina drain', () => {
@@ -9,7 +9,7 @@ describe('Blood Moon Feature', () => {
   });
 
   it('should roll Blood Moon weather when rng yields high enough value', () => {
-    const rng = new SeededRNGService(123);
+    const rng = new SeededRNG(123);
     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.41);
     const weather = rollWeather(rng, 'Summer');
     expect(weather).toBe('Blood Moon');

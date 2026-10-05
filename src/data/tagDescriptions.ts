@@ -10,22 +10,22 @@ const meta = uiMeta.meta;
 /**
  * Flair_descriptions.
  */
-export const FLAIR_DESCRIPTIONS: Record<string, string> = meta.flair;
+const FLAIR_DESCRIPTIONS: Record<string, string> = meta.flair;
 
 /**
  * Title_descriptions.
  */
-export const TITLE_DESCRIPTIONS: Record<string, string> = meta.title;
+const TITLE_DESCRIPTIONS: Record<string, string> = meta.title;
 
 /**
  * Injury_descriptions.
  */
-export const INJURY_DESCRIPTIONS: Record<string, string> = meta.injury;
+const INJURY_DESCRIPTIONS: Record<string, string> = meta.injury;
 
 /**
  * Status_descriptions.
  */
-export const STATUS_DESCRIPTIONS: Record<string, string> = meta.status;
+const STATUS_DESCRIPTIONS: Record<string, string> = meta.status;
 
 /**
  * Get a tooltip description for any warrior tag.

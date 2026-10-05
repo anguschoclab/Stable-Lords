@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const baseAttrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
 
@@ -119,7 +119,7 @@ describe('warriorFactory — makeWarrior (rng-less path)', () => {
 
 describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   it('generates a warrior with seeded rng', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'SeededWarrior', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -128,7 +128,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates luckfactor when rng is provided', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -137,7 +137,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates traits when rng is provided (and no override)', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -146,7 +146,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates trainability in range [0.4, 0.9) when rng is provided', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -155,7 +155,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates age in range [18, 25] when rng is provided', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -164,8 +164,8 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates favorites deterministically with same seed', () => {
-    const rng1 = new SeededRNGService(42);
-    const rng2 = new SeededRNGService(42);
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(42);
     const w1 = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng1 }
     );
@@ -176,8 +176,8 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates different favorites with different seeds', () => {
-    const rng1 = new SeededRNGService(42);
-    const rng2 = new SeededRNGService(999);
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(999);
     const w1 = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng1 }
     );
@@ -190,7 +190,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('generates id via rng.uuid() when id is undefined', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: undefined, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -199,7 +199,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
   });
 
   it('uses provided id even when rng is present', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: 'custom-id' as any, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: undefined, rng: rng }
     );
@@ -209,7 +209,7 @@ describe('warriorFactory — makeWarrior (rng-provided path)', () => {
 
 describe('warriorFactory — overrides', () => {
   it('overrides traits when provided', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const w = makeWarrior(
       { id: 'w1' as any, name: 'Test', style: FightingStyle.StrikingAttack, attrs: baseAttrs, overrides: {
         traits: ['Berserker', 'Patient'],

@@ -2,7 +2,7 @@ import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/s
 import { computeMetaDrift } from '../analytics/metaDrift';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService, resolveRng } from '@/utils/random';
+import { SeededRNG, resolveRng } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
 import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -522,7 +522,7 @@ export function updateAIStrategy(
   // If no strategy, plan expired, or plan is disproved, pick a new one
   if (!current || current.planWeeksRemaining <= 0 || planDisproved) {
     const s = seed ?? state.week * 7919 + rival.owner.id.length * 13;
-    const rng = new SeededRNGService(s);
+    const rng = new SeededRNG(s);
     const picked = pickWeeklyIntent(rival, state, s, rng);
 
     // Hysteresis: a merely-expired (not disproved) plan whose condition still

@@ -11,9 +11,9 @@ import {
 import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 import { WEATHER_TYPES } from '@/types/enumSources';
-import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
+import { WeatherTypeSchema } from '@/schemas/schemaEnums';
 import type { WeatherType } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 const WILD_MAGIC = 'Wild Magic' as WeatherType;
 
@@ -92,7 +92,7 @@ describe('Wild Magic weather', () => {
     it('can produce Wild Magic in Spring with enough rolls', () => {
       const found = new Set<WeatherType>();
       for (let seed = 0; seed < 5000; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         found.add(rollWeather(rng, 'Spring'));
       }
       expect(found.has(WILD_MAGIC)).toBe(true);
@@ -100,21 +100,21 @@ describe('Wild Magic weather', () => {
 
     it('never produces Wild Magic in Summer', () => {
       for (let seed = 0; seed < 1000; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         expect(rollWeather(rng, 'Summer')).not.toBe(WILD_MAGIC);
       }
     });
 
     it('never produces Wild Magic in Fall', () => {
       for (let seed = 0; seed < 1000; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         expect(rollWeather(rng, 'Fall')).not.toBe(WILD_MAGIC);
       }
     });
 
     it('never produces Wild Magic in Winter', () => {
       for (let seed = 0; seed < 1000; seed++) {
-        const rng = new SeededRNGService(seed);
+        const rng = new SeededRNG(seed);
         expect(rollWeather(rng, 'Winter')).not.toBe(WILD_MAGIC);
       }
     });

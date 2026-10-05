@@ -10,7 +10,7 @@ import {
   convertBidsToOffers,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { StableId } from '@/types/shared.types';
 
 function vendettaRivalTargeting(targetId: StableId) {
@@ -41,7 +41,7 @@ describe('player-directed bids', () => {
       bids.map((bid) => ({ bid, rivalId: rival.id as string })),
       [rival],
       state,
-      new SeededRNGService(1),
+      new SeededRNG(1),
       new Set()
     );
     expect(offers.length).toBeGreaterThan(0);
@@ -82,7 +82,7 @@ describe('player-directed bids', () => {
       const { bids } = generateBoutBids({ rival: rival, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: rivals, state: state });
       for (const bid of bids) allBids.push({ bid, rivalId: rival.id as string });
     }
-    const offers = convertBidsToOffers(allBids, rivals, state, new SeededRNGService(7), new Set());
+    const offers = convertBidsToOffers(allBids, rivals, state, new SeededRNG(7), new Set());
     const playerIds = new Set(state.roster.map((w) => w.id as string));
     const playerBound = offers.filter((o) =>
       o.warriorIds.some((id) => playerIds.has(id as string))
@@ -111,7 +111,7 @@ describe('player-directed bids', () => {
       bids.map((bid) => ({ bid, rivalId: rival.id as string })),
       [rival],
       stateWithTraining,
-      new SeededRNGService(3),
+      new SeededRNG(3),
       new Set()
     );
     for (const o of offers) {

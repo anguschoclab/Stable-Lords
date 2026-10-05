@@ -3,7 +3,7 @@ import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from '../injuries';
 import { getMatchupBonus } from '@/constants/combat';
-import { getStablePairKey } from '@/utils/keyUtils';
+import { getPairKey } from '@/utils/keyUtils';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
@@ -89,7 +89,7 @@ export function scorePairwiseMatchup(a: Warrior, b: Warrior, ctx: PairwiseMatchu
 
   if (aStableId && bStableId) {
     const rivalry =
-      ctx.rivalryMap?.get(getStablePairKey(aStableId, bStableId)) ??
+      ctx.rivalryMap?.get(getPairKey(aStableId, bStableId)) ??
       (ctx.rivalries || []).find(
         (r) =>
           (r.stableIdA === aStableId && r.stableIdB === bStableId) ||

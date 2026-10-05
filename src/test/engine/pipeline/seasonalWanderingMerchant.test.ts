@@ -24,7 +24,7 @@ function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {
     ...overrides,
   } as unknown as Warrior;
 }
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 
 describe('seasonal pass - wandering_merchant_strange_brew', () => {
@@ -48,7 +48,7 @@ describe('seasonal pass - wandering_merchant_strange_brew', () => {
       wandering_merchant_strange_brew: originalEvents['wandering_merchant_strange_brew'],
     };
 
-    const rng = new SeededRNGService(12345);
+    const rng = new SeededRNG(12345);
     const impact = runSeasonalPass(state, 1, rng);
 
     // Restore

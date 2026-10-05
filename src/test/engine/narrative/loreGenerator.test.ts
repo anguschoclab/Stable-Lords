@@ -4,32 +4,32 @@
  */
 import { describe, it, expect } from 'vitest';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { LORE_SOURCE, extractStringArray } from './_helpers/loreSource';
 
 describe('loreGenerator', () => {
   it('generateLore returns non-empty string containing the name', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const lore = generateLore('Brutus', rng);
     expect(lore.length).toBeGreaterThan(10);
     expect(lore).toContain('Brutus');
   });
 
   it('generateOrigin returns non-empty string', () => {
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const origin = generateOrigin(rng);
     expect(origin.length).toBeGreaterThan(10);
   });
 
   it('generateLore is deterministic for a given seed', () => {
-    const a = generateLore('Test', new SeededRNGService(99));
-    const b = generateLore('Test', new SeededRNGService(99));
+    const a = generateLore('Test', new SeededRNG(99));
+    const b = generateLore('Test', new SeededRNG(99));
     expect(a).toBe(b);
   });
 
   it('generateOrigin is deterministic for a given seed', () => {
-    const a = generateOrigin(new SeededRNGService(99));
-    const b = generateOrigin(new SeededRNGService(99));
+    const a = generateOrigin(new SeededRNG(99));
+    const b = generateOrigin(new SeededRNG(99));
     expect(a).toBe(b);
   });
 

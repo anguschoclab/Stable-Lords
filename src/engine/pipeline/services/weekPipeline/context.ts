@@ -1,5 +1,5 @@
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { WeekPipelineContext } from '@/engine/pipeline/pipelineStages';
 import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/core/telemetry';
 
@@ -23,7 +23,7 @@ export function prepareWeekContext(state: GameState, headless?: boolean): WeekCo
     nextWeek,
     nextYear,
     headless,
-    rootRng: new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101),
+    rootRng: new SeededRNG(nextYear * 52 + nextWeek * 7919 + 101),
   };
 }
 

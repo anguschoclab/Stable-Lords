@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -57,7 +57,7 @@ const gameEvent: OffseasonEventNarrative = {
 describe('chaos weaver event handlers', () => {
   it('handleSecretFightClub applies +XP, +Fame, and Minor Injury', () => {
     const state = makeTestState();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
     handleSecretFightClub(state, 1, fightClubEvent, rng, ctx);
@@ -76,7 +76,7 @@ describe('chaos weaver event handlers', () => {
   it('handleChaosWeaversGame win path uses newsletter[0] template', () => {
     const state = makeTestState();
     // seed 5: pick consumes 1 next(), then next() > 0.5 → WIN
-    const rng = new SeededRNGService(5);
+    const rng = new SeededRNG(5);
     const ctx = makeCtx();
 
     handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
@@ -90,7 +90,7 @@ describe('chaos weaver event handlers', () => {
   it('handleChaosWeaversGame lose path uses newsletter[1] template', () => {
     const state = makeTestState();
     // seed 0: pick consumes 1 next(), then next() <= 0.5 → LOSE
-    const rng = new SeededRNGService(0);
+    const rng = new SeededRNG(0);
     const ctx = makeCtx();
 
     handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
@@ -103,7 +103,7 @@ describe('chaos weaver event handlers', () => {
 
   it('handleChaosWeaversGame win path grants +25 XP', () => {
     const state = makeTestState();
-    const rng = new SeededRNGService(5);
+    const rng = new SeededRNG(5);
     const ctx = makeCtx();
 
     handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
@@ -117,7 +117,7 @@ describe('chaos weaver event handlers', () => {
 
   it('handleChaosWeaversGame lose path applies Minor Injury', () => {
     const state = makeTestState();
-    const rng = new SeededRNGService(0);
+    const rng = new SeededRNG(0);
     const ctx = makeCtx();
 
     handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
@@ -211,7 +211,7 @@ describe('chaos weaver event handlers', () => {
     ];
     state.year = 1;
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runSeasonalPass(state as GameState, 1, rng);
 
     // If chaotic_weather_experiment was triggered, verify the effects
@@ -225,7 +225,7 @@ describe('chaos weaver event handlers', () => {
     state.roster = [];
     state.year = 1;
 
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
     const impact = runSeasonalPass(state as GameState, 1, rng);
 
     // Pipeline should handle empty roster gracefully

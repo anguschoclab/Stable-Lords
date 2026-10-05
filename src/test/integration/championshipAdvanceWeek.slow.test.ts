@@ -13,7 +13,7 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import { makeComputedWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { ArenaTitle } from '@/types/state.types';
@@ -234,7 +234,7 @@ describe('calendar migration through advanceWeek', () => {
 
     const field = ['f1', 'f2', 'f3', 'f4'].map((id, i) => computed(id, `Freelancer ${i}`));
     const inFlight = TournamentSelectionService.buildTournament(
-      { tierId: 'gold', tierName: 'Legacy Bracket', warriors: field, week: 13, season: state.season, rng: new SeededRNGService(7), year: 1 }
+      { tierId: 'gold', tierName: 'Legacy Bracket', warriors: field, week: 13, season: state.season, rng: new SeededRNG(7), year: 1 }
     );
     state.tournaments = [inFlight];
 

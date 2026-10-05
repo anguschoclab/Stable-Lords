@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { handlePrismaticGaleExposure } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type {
   OffseasonEventNarrative,
   OffseasonEventContext,
@@ -12,11 +12,11 @@ import narrativeContent from '@/data/narrative/offseason.json';
 
 describe('prismatic_gale_exposure offseason event', () => {
   let mockState: GameState;
-  let mockRng: InstanceType<typeof SeededRNGService>;
+  let mockRng: InstanceType<typeof SeededRNG>;
   let mockCtx: OffseasonEventContext;
 
   beforeEach(() => {
-    mockRng = new SeededRNGService(12345);
+    mockRng = new SeededRNG(12345);
     const warrior = makeWarrior({ id: 'w1' as any, name: 'Test Warrior', style: FightingStyle.StrikingAttack, attrs: {
       ST: 10,
       CN: 10,

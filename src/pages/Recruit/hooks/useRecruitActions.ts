@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { SeededRNGService, hashStr } from '@/utils/random';
+import { SeededRNG, hashStr } from '@/utils/random';
 import {
   fullRefreshPool,
   type PoolWarrior,
@@ -34,7 +34,7 @@ interface UseRecruitActionsParams {
  * bonus, pushes to roster, removes from pool, writes the newsletter entry.
  */
 function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, totalCost: number) {
-  const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
+  const recruitRng = new SeededRNG(draft.week + hashStr(w.name));
   const warrior = makeWarrior(
     { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
   );
@@ -89,7 +89,7 @@ function applyCustomCreateDraft(
   data: { name: string; style: FightingStyle; attributes: Attributes },
   navigate: (opts: { to: string }) => void
 ) {
-  const rng = new SeededRNGService(draft.week + hashStr(data.name));
+  const rng = new SeededRNG(draft.week + hashStr(data.name));
   const id = rng.uuid('warrior') as WarriorId;
   const warrior = makeWarrior({ id: id, name: data.name, style: data.style, attrs: data.attributes });
 

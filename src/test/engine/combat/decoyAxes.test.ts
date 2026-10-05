@@ -14,7 +14,7 @@ import { FightPlanSchema } from '@/schemas/warriorSchemas';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { makeWarrior as makeEngineWarrior } from '@/engine/factories/warriorFactory';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import {
@@ -130,7 +130,7 @@ describe('decoyAxes — simulateFight integration', () => {
       style: FightingStyle.ParryLunge,
       attrs: { ST: 13, CN: 17, SZ: 13, WT: 15, WL: 13, SP: 13, DF: 13 },
       overrides: undefined,
-      rng: new SeededRNGService(seed),
+      rng: new SeededRNG(seed),
     });
 
   const codes = (out: ReturnType<typeof simulateFight>) =>

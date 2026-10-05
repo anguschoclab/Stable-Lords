@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
@@ -9,7 +9,7 @@ import type { Attributes } from '@/types/shared.types';
 function warriorWithWt(wt: number): Warrior {
   const attrs: Attributes = { ST: 15, CN: 15, SZ: 15, WT: wt, WL: 15, SP: 15, DF: 15 };
   return makeWarrior(
-    { id: undefined, name: 'W', style: FightingStyle.LungingAttack, attrs: attrs, overrides: undefined, rng: new SeededRNGService(1) }
+    { id: undefined, name: 'W', style: FightingStyle.LungingAttack, attrs: attrs, overrides: undefined, rng: new SeededRNG(1) }
   );
 }
 

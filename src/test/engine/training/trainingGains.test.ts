@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import {
   processAttributeTraining,
   rollForTrainingInjury,
@@ -26,7 +26,7 @@ describe('trainingGains', () => {
   describe('processAttributeTraining', () => {
     it('should block SZ training', () => {
       const warrior = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const res = processAttributeTraining(warrior, 'SZ', {} as GameState, [], rng);
       expect(res.result.type).toBe('blocked');
       expect(res.result.message).toMatch(/cannot train Size/);
@@ -34,7 +34,7 @@ describe('trainingGains', () => {
 
     it('should hard cap training if at ATTRIBUTE_MAX', () => {
       const warrior = makeWarrior({ ST: 20, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const res = processAttributeTraining(warrior, 'ST', {} as GameState, [], rng);
       expect(res.hardCapped).toBe(true);
     });
@@ -49,7 +49,7 @@ describe('trainingGains', () => {
           gains: { ST: SEASONAL_CAP_PER_ATTR } as any,
         },
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const res = processAttributeTraining(warrior, 'ST', state, seasonalGrowth, rng);
       expect(res.result.type).toBe('blocked');
       expect(res.result.message).toMatch(/has reached the seasonal cap/);
@@ -80,7 +80,7 @@ describe('trainingGains', () => {
       const warrior = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
       let gotInjury = false;
       for (let i = 0; i < 100; i++) {
-        const rng = new SeededRNGService(i);
+        const rng = new SeededRNG(i);
         const res = rollForTrainingInjury(warrior, 0, rng);
         if (res.injury) {
           gotInjury = true;
@@ -95,7 +95,7 @@ describe('trainingGains', () => {
       const warrior = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
       let noInjury = false;
       for (let i = 0; i < 100; i++) {
-        const rng = new SeededRNGService(i);
+        const rng = new SeededRNG(i);
         const res = rollForTrainingInjury(warrior, 0, rng);
         if (!res.injury) {
           noInjury = true;
@@ -163,7 +163,7 @@ describe('processAttributeTraining - successful gain', () => {
     const state = { season: 'Spring', trainers: [] } as any;
 
     // Use a seed that succeeds the gain roll
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
 
     const res = processAttributeTraining(warrior, 'ST', state, [], rng);
     // Just verify it processes without error - actual gain depends on RNG
@@ -268,7 +268,7 @@ describe('processAttributeTraining - successful gain', () => {
       }
     );
     const state = { season: 'Spring', trainers: [] } as any;
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
 
     const res = processAttributeTraining(warrior, 'ST', state, [], rng);
     // Just verify it processes without error - actual behavior depends on RNG
@@ -344,7 +344,7 @@ describe('processAttributeTraining - successful gain', () => {
         warrior,
         'Punching' as any,
         {} as any,
-        new SeededRNGService(1)
+        new SeededRNG(1)
       );
       expect(res.hardCapped).toBe(true);
       expect(res.result.type).toBe('blocked');
@@ -381,7 +381,7 @@ describe('processAttributeTraining - successful gain', () => {
   describe('processAttributeTraining - caps and limits', () => {
     it('should hard cap training if TOTAL_CAP is reached', () => {
       const warrior = makeWarrior({ ST: 10, CN: 20, SZ: 20, WT: 20, WL: 20, SP: 20, DF: 10 }); // Total: 120, TOTAL_CAP is 120
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const res = processAttributeTraining(warrior, 'ST', {} as GameState, [], rng);
       expect(res.hardCapped).toBe(true);
     });
@@ -391,7 +391,7 @@ describe('processAttributeTraining - successful gain', () => {
         { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
         { potential: { ST: 12, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 } }
       );
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const res = processAttributeTraining(warrior, 'ST', {} as GameState, [], rng);
       expect(res.hardCapped).toBe(true);
     });

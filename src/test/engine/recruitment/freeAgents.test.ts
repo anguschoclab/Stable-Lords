@@ -6,7 +6,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeFreeAgentCost, warriorToPoolWarrior } from '@/engine/recruitment/recruitment';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { makeWarrior, makePoolWarrior, makeGameState } from '@/test/_fixtures/factories';
 import { FREE_AGENT_SHELF_WEEKS } from '@/constants/world';
 
@@ -31,7 +31,7 @@ describe('computeFreeAgentCost', () => {
 describe('warriorToPoolWarrior', () => {
   it('uses computeFreeAgentCost and stamps a bounded shelf life', () => {
     const w = makeWarrior({ fame: 35, career: { wins: 12, losses: 5, kills: 0 } });
-    const pool = warriorToPoolWarrior(w, 10, new SeededRNGService(1));
+    const pool = warriorToPoolWarrior(w, 10, new SeededRNG(1));
 
     expect(pool.cost).toBe(computeFreeAgentCost(w));
     expect(pool.shelfWeeksRemaining).toBe(FREE_AGENT_SHELF_WEEKS);
@@ -54,7 +54,7 @@ describe('free-agent shelf expiry', () => {
     });
     const state = makeGameState({ freeAgents: [fresh, expiring] });
 
-    const impact = runRecruitmentPass(state, new SeededRNGService(7));
+    const impact = runRecruitmentPass(state, new SeededRNG(7));
     const next = impact.freeAgents ?? [];
 
     expect(next.find((w) => w.id === 'fresh-fa')?.shelfWeeksRemaining).toBe(2);

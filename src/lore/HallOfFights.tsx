@@ -104,5 +104,3 @@ function LifetimeStatsRow({ lifetime }: { lifetime: LifetimeStats }) {
     </div>
   );
 }
-
-export default HallOfFights;

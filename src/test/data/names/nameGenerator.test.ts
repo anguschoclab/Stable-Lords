@@ -3,7 +3,7 @@
  * uniqueness handling, culture influence, and dynastic naming.
  */
 import { describe, it, expect } from 'vitest';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { generateWarriorName, generateDynasticWarriorName } from '@/data/names/nameGenerator';
 import {
   CULTURE_SEEDS,
@@ -50,13 +50,13 @@ describe('cultureForArchetype', () => {
 
 describe('generateWarriorName', () => {
   it('is deterministic for a seeded rng', () => {
-    const a = generateWarriorName({ rng: new SeededRNGService(42) });
-    const b = generateWarriorName({ rng: new SeededRNGService(42) });
+    const a = generateWarriorName({ rng: new SeededRNG(42) });
+    const b = generateWarriorName({ rng: new SeededRNG(42) });
     expect(a).toBe(b);
   });
 
   it('produces uppercase arena-format names (2-20 chars, no " vs ")', () => {
-    const rng = new SeededRNGService(7);
+    const rng = new SeededRNG(7);
     for (let i = 0; i < 500; i++) {
       const name = generateWarriorName({ rng });
       expect(name, `bad format: ${name}`).toMatch(NAME_RE);
@@ -65,7 +65,7 @@ describe('generateWarriorName', () => {
   });
 
   it('honors usedNames and never returns an in-use name', () => {
-    const rng = new SeededRNGService(99);
+    const rng = new SeededRNG(99);
     const usedNames = new Set<string>();
     for (let i = 0; i < 200; i++) {
       const name = generateWarriorName({ rng, usedNames });
@@ -76,7 +76,7 @@ describe('generateWarriorName', () => {
   });
 
   it('still returns a name when the candidate space is exhausted', () => {
-    const rng = new SeededRNGService(1);
+    const rng = new SeededRNG(1);
     // Exhaust the entire common seed pool so every seed draw collides.
     const usedNames = new Set<string>([...CULTURE_SEEDS.common]);
     const name = generateWarriorName({ rng, usedNames, culture: 'common' });
@@ -85,7 +85,7 @@ describe('generateWarriorName', () => {
   });
 
   it('culture influences output — norse draws hit norse seeds/affixes', () => {
-    const rng = new SeededRNGService(11);
+    const rng = new SeededRNG(11);
     const norseish = (n: string) =>
       CULTURE_SEEDS.norse.includes(n) || /SON|GAR|RIK|HEIM|BJORN|ULF/.test(n);
     let hits = 0;
@@ -97,7 +97,7 @@ describe('generateWarriorName', () => {
   });
 
   it('seedPool vocabulary is drawn from (stable theme preservation)', () => {
-    const rng = new SeededRNGService(5);
+    const rng = new SeededRNG(5);
     const seedPool = ['PIKE', 'AEGIS', 'MONOLITH', 'PHALANX'];
     let seeded = 0;
     for (let i = 0; i < 200; i++) {
@@ -107,7 +107,7 @@ describe('generateWarriorName', () => {
   });
 
   it('weighted cultures draw from both inventories', () => {
-    const rng = new SeededRNGService(21);
+    const rng = new SeededRNG(21);
     const seen = new Set<string>();
     const spec = [
       { culture: 'norse' as NamingCulture, weight: 0.5 },
@@ -123,7 +123,7 @@ describe('generateWarriorName', () => {
 
 describe('generateDynasticWarriorName', () => {
   it('derives a successor name referencing the parent', () => {
-    const rng = new SeededRNGService(3);
+    const rng = new SeededRNG(3);
     const forms = new Set<string>();
     for (let i = 0; i < 60; i++) {
       const n = generateDynasticWarriorName('KRAGOS', { rng });
@@ -138,7 +138,7 @@ describe('generateDynasticWarriorName', () => {
   });
 
   it('respects usedNames', () => {
-    const rng = new SeededRNGService(3);
+    const rng = new SeededRNG(3);
     const usedNames = new Set<string>(['KRAGOS II']);
     for (let i = 0; i < 40; i++) {
       const n = generateDynasticWarriorName('KRAGOS', { rng, usedNames });

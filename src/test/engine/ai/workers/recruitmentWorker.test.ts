@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { RivalStableData } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { makeTestRecruit, makeRival, makeOwner } from '@/test/_fixtures/factories';
@@ -29,7 +29,7 @@ describe('processRecruitment — warrior field propagation (Bug 1)', () => {
   it('drafted warrior inherits traits from the pool recruit', () => {
     const rival = makeMinimalRival();
     const recruit = makePoolWarrior({ traits: ['IronWill', 'Relentless'] });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
 
@@ -40,7 +40,7 @@ describe('processRecruitment — warrior field propagation (Bug 1)', () => {
   it('drafted warrior does not have empty traits when recruit had traits', () => {
     const rival = makeMinimalRival();
     const recruit = makePoolWarrior({ traits: ['Brawler'] });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
 
@@ -55,7 +55,7 @@ describe('processRecruitment — warrior field propagation (Bug 1)', () => {
       discovered: { weapon: true, rhythm: true, weaponHints: 2, rhythmHints: 1 },
     };
     const recruit = makePoolWarrior({ favorites });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
 
@@ -65,7 +65,7 @@ describe('processRecruitment — warrior field propagation (Bug 1)', () => {
   it('drafted warrior has favorites defined (not undefined)', () => {
     const rival = makeMinimalRival();
     const recruit = makePoolWarrior();
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
 
@@ -84,7 +84,7 @@ describe('processRecruitment — veteran free agency', () => {
   it('preserves identity, fame, and career when signing a veteran', () => {
     const rival = makeMinimalRival();
     const recruit = makePoolWarrior({ id: 'w-vet', veteran: veteranSnapshot });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
     const signed = updatedRival.roster[0];
@@ -101,7 +101,7 @@ describe('processRecruitment — veteran free agency', () => {
   it('re-mints identity for ordinary pool recruits (control)', () => {
     const rival = makeMinimalRival();
     const recruit = makePoolWarrior({ id: 'pw-ordinary' });
-    const rng = new SeededRNGService(42);
+    const rng = new SeededRNG(42);
 
     const { updatedRival } = processRecruitment({ rival: rival, pool: [recruit], week: 2, rng: rng, isMajorDraftWeek: true });
     const signed = updatedRival.roster[0];

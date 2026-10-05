@@ -3,7 +3,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { MIN_BANKRUPTCY_ROSTER, DEBT_FLOOR, EMERGENCY_LOAN } from '@/constants/economy';
 import { generateId } from '@/utils/idUtils';
@@ -28,7 +28,7 @@ describe('BankruptcyService', () => {
 
   describe('processBankruptcy', () => {
     it('should process bankruptcy for all rival stables', () => {
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(Array.isArray(updatedState.rivals)).toBe(true);
@@ -38,7 +38,7 @@ describe('BankruptcyService', () => {
     it('should remove bankrupt stables', () => {
       state.rivals[0]!.treasury = -600;
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(1);
@@ -50,7 +50,7 @@ describe('BankruptcyService', () => {
       state.rivals[0]!.treasury = 1000;
       state.rivals[1]!.treasury = 500;
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(0);
@@ -60,7 +60,7 @@ describe('BankruptcyService', () => {
     it('should handle empty rivals list', () => {
       state.rivals = [];
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(updatedState.rivals.length).toBe(0);
@@ -70,7 +70,7 @@ describe('BankruptcyService', () => {
     it('should handle stables at bankruptcy threshold', () => {
       state.rivals[0]!.treasury = -500;
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       // Bankruptcy threshold may be different than -500
@@ -81,7 +81,7 @@ describe('BankruptcyService', () => {
     it('should handle stables above bankruptcy threshold', () => {
       state.rivals[0]!.treasury = -499;
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(0);
@@ -91,7 +91,7 @@ describe('BankruptcyService', () => {
       state.rivals[0]!.treasury = -600;
       state.rivals[1]!.treasury = -700;
 
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       bankruptStables.forEach((name) => {
@@ -104,7 +104,7 @@ describe('BankruptcyService', () => {
   describe('processPlayerBankruptcy', () => {
     it('returns not-bankrupt when treasury above threshold', () => {
       state.treasury = 100;
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.bankrupt).toBe(false);
       expect(result.impact).toEqual({});
@@ -117,7 +117,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
         makeTestWarrior({ id: 'w3' as any, name: 'Carol', fame: 5 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.bankrupt).toBe(true);
       expect(result.soldWarrior?.id).toBe('w2');
@@ -131,7 +131,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w1' as any, name: 'Alice', fame: 10 }),
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.bankrupt).toBe(true);
       expect(result.soldWarrior).toBeUndefined();
@@ -144,7 +144,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w1' as any, name: 'Alice', fame: 10 }),
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.bankrupt).toBe(true);
       // needed = -500 - (-900) = 400, capped at EMERGENCY_LOAN=300
@@ -162,7 +162,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w1' as any, name: 'Alice', fame: 10 }),
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.bankrupt).toBe(true);
       // needed = -500 - (-700) = 200, capped at EMERGENCY_LOAN=300 → 200
@@ -177,7 +177,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
         makeTestWarrior({ id: 'w3' as any, name: 'Carol', fame: 5 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.impact.popularityDelta).toBe(-50);
     });
@@ -189,7 +189,7 @@ describe('BankruptcyService', () => {
         makeTestWarrior({ id: 'w2' as any, name: 'Bob', fame: 50 }),
         makeTestWarrior({ id: 'w3' as any, name: 'Carol', fame: 5 }),
       ];
-      const rng = new SeededRNGService(1);
+      const rng = new SeededRNG(1);
       const result = BankruptcyService.processPlayerBankruptcy(state, rng);
       expect(result.impact.newsletterItems).toHaveLength(1);
       expect(result.impact.newsletterItems![0]!.title).toBe('Bankruptcy Crisis');

@@ -25,19 +25,14 @@ import {
   OFFENSIVE_TACTICS,
   DEFENSIVE_TACTICS,
   CONDITION_TRIGGERS,
-  PSYCH_STATES,
   DISTANCE_RANGES,
   ARENA_ZONES,
-  COMMIT_LEVELS,
   ARENA_TAGS,
   SHIELD_SHAPES,
   FIELD_TYPES,
   METAL_COLORS,
   CHARGE_TYPES,
   BEAST_POSTURES,
-  ARMOR_WEIGHTS,
-  WEAPON_TYPES,
-  EQUIPMENT_SLOTS,
   BOUT_OFFER_STATUSES,
   BOUT_OFFER_RESPONSES,
   FIGHT_OUTCOME_BY,
@@ -63,7 +58,7 @@ export const SeasonSchema = z.enum(SEASONS);
 /**
  * Canonical crowd-mood values — engine/constants derive from this tuple.
  */
-export const CROWD_MOOD_VALUES = CROWD_MOODS;
+const CROWD_MOOD_VALUES = CROWD_MOODS;
 
 /**
  * CrowdMoodType enum schema
@@ -165,10 +160,7 @@ export const DefensiveTacticSchema = z.enum(DEFENSIVE_TACTICS);
  */
 export const ConditionTriggerTypeSchema = z.enum(CONDITION_TRIGGERS);
 
-/**
- * PsychState enum schema
- */
-export const PsychStateSchema = z.enum(PSYCH_STATES);
+
 
 /**
  * DistanceRange enum schema
@@ -180,10 +172,7 @@ export const DistanceRangeSchema = z.enum(DISTANCE_RANGES);
  */
 export const ArenaZoneSchema = z.enum(ARENA_ZONES);
 
-/**
- * CommitLevel enum schema
- */
-export const CommitLevelSchema = z.enum(COMMIT_LEVELS);
+
 
 /**
  * ArenaTag enum schema
@@ -215,20 +204,11 @@ export const ChargeTypeSchema = z.enum(CHARGE_TYPES);
  */
 export const BeastPostureSchema = z.enum(BEAST_POSTURES);
 
-/**
- * ArmorWeight enum schema
- */
-export const ArmorWeightSchema = z.enum(ARMOR_WEIGHTS);
 
-/**
- * WeaponType enum schema
- */
-export const WeaponTypeSchema = z.enum(WEAPON_TYPES);
 
-/**
- * EquipmentSlot enum schema
- */
-export const EquipmentSlotSchema = z.enum(EQUIPMENT_SLOTS);
+
+
+
 
 /**
  * BoutOfferStatus enum schema

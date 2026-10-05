@@ -44,7 +44,7 @@ export const BaseSkillsSchema = z.object({
 /**
  * Luckfactor schema (allows negative ±4 deltas)
  */
-export const LuckfactorSchema = z.object({
+const LuckfactorSchema = z.object({
   ATT: z.number(),
   PAR: z.number(),
   DEF: z.number(),
@@ -56,7 +56,7 @@ export const LuckfactorSchema = z.object({
 /**
  * DerivedStats schema
  */
-export const DerivedStatsSchema = z.object({
+const DerivedStatsSchema = z.object({
   hp: z.number(),
   endurance: z.number(),
   damage: z.number(),
@@ -80,7 +80,7 @@ export const InjuryDataSchema = z.object({
 /**
  * WarriorFavorites schema
  */
-export const WarriorFavoritesSchema = z.object({
+const WarriorFavoritesSchema = z.object({
   weaponId: z.string(),
   rhythm: z.object({
     oe: z.number(),
@@ -97,7 +97,7 @@ export const WarriorFavoritesSchema = z.object({
 /**
  * WarriorLineage schema
  */
-export const WarriorLineageSchema = z.object({
+const WarriorLineageSchema = z.object({
   parentId: z.string().optional(),
   stableId: z.string().optional(),
   generation: z.number(),
@@ -108,7 +108,7 @@ export const WarriorLineageSchema = z.object({
 /**
  * CareerRecord schema
  */
-export const CareerRecordSchema = z.object({
+const CareerRecordSchema = z.object({
   wins: z.number(),
   losses: z.number(),
   kills: z.number(),
@@ -138,7 +138,7 @@ export const DeathEventSchema = z.object({
 /**
  * EquipmentLoadout schema
  */
-export const EquipmentLoadoutSchema = z.object({
+const EquipmentLoadoutSchema = z.object({
   weapon: z.string(),
   armor: z.string(),
   shield: z.string(),
@@ -148,7 +148,7 @@ export const EquipmentLoadoutSchema = z.object({
 /**
  * PhaseStrategy schema
  */
-export const PhaseStrategySchema = z.object({
+const PhaseStrategySchema = z.object({
   OE: z.number(),
   AL: z.number(),
   killDesire: z.number(),
@@ -161,7 +161,7 @@ export const PhaseStrategySchema = z.object({
 /**
  * DesperatePlan schema
  */
-export const DesperatePlanSchema = z.object({
+const DesperatePlanSchema = z.object({
   OE: z.number(),
   AL: z.number(),
   killDesire: z.number().optional(),

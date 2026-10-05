@@ -4,10 +4,10 @@
 import { describe, it, expect } from 'vitest';
 import { getWeatherEffect, weatherOpeningLine } from '@/engine/combat/mechanics/weatherEffects';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
-import { WeatherTypeSchema } from '@/schemas/gameStateSchema';
+import { WeatherTypeSchema } from '@/schemas/schemaEnums';
 import { SEASONAL_WEATHER, rollWeather } from '@/engine/weather/seasonalWeather';
 import type { WeatherType } from '@/types/shared.types';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Rain of Frogs weather', () => {
   it('is a valid WeatherType', () => {
@@ -73,7 +73,7 @@ describe('Rain of Frogs weather', () => {
     for (let seed = 0; seed < 10000 && !found; seed++) {
       const seasons = ['Spring', 'Fall'] as const;
       for (const season of seasons) {
-        const w = rollWeather(new SeededRNGService(seed * 7 + 1), season);
+        const w = rollWeather(new SeededRNG(seed * 7 + 1), season);
         if (w === 'Rain of Frogs') {
           found = true;
           break;

@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest';
 import { generateScoutReport } from '@/engine/scouting/scouting';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { makeWarrior, makeRival } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 import type { OwnerCompetence } from '@/types/state.types';
 
 const seeds = [1, 7, 42, 99, 2024];
@@ -21,7 +21,7 @@ describe('scouted competence estimate', () => {
   it('Expert reports name the real tier', () => {
     const w = makeWarrior();
     const owner = rivalWith('Master').owner;
-    const { report } = generateScoutReport(w, 'Expert', 10, new SeededRNGService(1), owner);
+    const { report } = generateScoutReport(w, 'Expert', 10, new SeededRNG(1), owner);
     expect(report.suspectedCompetence).toBe('Master');
   });
 
@@ -31,7 +31,7 @@ describe('scouted competence estimate', () => {
     const idx = OWNER_COMPETENCES.indexOf('Veteran');
     const allowed = [idx - 1, idx, idx + 1].map((i) => OWNER_COMPETENCES[i]).filter(Boolean);
     for (const seed of seeds) {
-      const { report } = generateScoutReport(w, 'Detailed', 10, new SeededRNGService(seed), owner);
+      const { report } = generateScoutReport(w, 'Detailed', 10, new SeededRNG(seed), owner);
       expect(allowed).toContain(report.suspectedCompetence);
     }
   });
@@ -40,14 +40,14 @@ describe('scouted competence estimate', () => {
     const w = makeWarrior();
     const owner = rivalWith('Master').owner;
     for (const seed of seeds) {
-      const { report } = generateScoutReport(w, 'Basic', 10, new SeededRNGService(seed), owner);
+      const { report } = generateScoutReport(w, 'Basic', 10, new SeededRNG(seed), owner);
       expect(report.suspectedCompetence).toBeUndefined();
     }
   });
 
   it('no owner → no estimate (backward-compatible call shape)', () => {
     const w = makeWarrior();
-    const { report } = generateScoutReport(w, 'Expert', 10, new SeededRNGService(1));
+    const { report } = generateScoutReport(w, 'Expert', 10, new SeededRNG(1));
     expect(report.suspectedCompetence).toBeUndefined();
   });
 });

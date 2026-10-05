@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 import { generateScoutReport } from '@/engine/scouting/scouting';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
-import { SeededRNGService } from '@/utils/random';
+import { SeededRNG } from '@/utils/random';
 
 describe('Expert scouting reveals AI plan', () => {
   it('a signed-bout rival warrior yields suspectedOE/AL buckets in an Expert report', () => {
@@ -27,7 +27,7 @@ describe('Expert scouting reveals AI plan', () => {
     const updated = persistNPCPlans([rival, oppRival], [offer], state);
     const scouted = updated.find((r) => r.id === rival.id)!.roster.find((w) => w.id === npcW.id)!;
 
-    const { report } = generateScoutReport(scouted, 'Expert', state.week, new SeededRNGService(1));
+    const { report } = generateScoutReport(scouted, 'Expert', state.week, new SeededRNG(1));
     expect(report.suspectedOE).toBeDefined();
     expect(report.suspectedAL).toBeDefined();
     expect(['Low', 'Medium', 'High']).toContain(report.suspectedOE);
@@ -36,7 +36,7 @@ describe('Expert scouting reveals AI plan', () => {
 
   it('a warrior with no persisted plan yields no plan tendencies', () => {
     const npcW = makeWarrior({ fame: 80 });
-    const { report } = generateScoutReport(npcW, 'Expert', 5, new SeededRNGService(1));
+    const { report } = generateScoutReport(npcW, 'Expert', 5, new SeededRNG(1));
     expect(report.suspectedOE).toBeUndefined();
     expect(report.suspectedAL).toBeUndefined();
   });

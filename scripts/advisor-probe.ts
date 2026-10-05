@@ -13,7 +13,7 @@ import type { WarriorId } from '@/types/shared.types';
 let state = createFreshState('alpha-prime-10');
 state.player.name = 'Probe';
 state.player.stableName = 'Probe Stable';
-applyBackstoryToPlayer(state, BACKSTORY_IDS[0], new SeededRNGService(42));
+applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNGService(42));
 state = resolveImpacts(state, [runRankingsPass(state), runPromoterPass(state)]);
 state.treasury += 5000;
 
@@ -21,10 +21,9 @@ const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool.slice(0, 5)) {
   const rng = new SeededRNGService(state.week + hashStr(w.name));
   state.roster.push(
-    makeWarrior(rng.uuid('warrior') as WarriorId, w.name, w.style, w.attributes, {
-      age: w.age,
-      potential: w.potential,
-    })
+    makeWarrior(
+      { id: rng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
+    )
   );
 }
 const ids = new Set(state.roster.map((w) => w.id));

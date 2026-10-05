@@ -34,7 +34,7 @@ function isJunkParam(line: string): boolean {
   const m = line.match(/^\s*\*\s*@param\s+([A-Za-z0-9_]+)\s*-\s*(.+?)\s*$/);
   if (!m) return false;
   const [, name, desc] = m;
-  return alnum(desc) === alnum(name); // desc is just the name spelled out
+  return alnum(desc!) === alnum(name!); // desc is just the name spelled out
 }
 
 function isJunkReturns(line: string): boolean {

@@ -101,7 +101,7 @@ let state = createFreshState('alpha-prime-10');
 state.player.name = 'E2E Lanista';
 state.player.stableName = 'E2E Verification Stable';
 const identitySeed = 'slot_e2e'.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-applyBackstoryToPlayer(state, BACKSTORY_IDS[0], new SeededRNGService(identitySeed));
+applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNGService(identitySeed));
 state = resolveImpacts(state, [runRankingsPass(state), runPromoterPass(state)]);
 console.log(`\n═══ NEW GAME ═══`);
 console.log(
@@ -118,11 +118,7 @@ for (const w of pool) {
   if (state.roster.length >= 5 || state.treasury - w.cost < 300) break;
   const recruitRng = new SeededRNGService(state.week + hashStr(w.name));
   const warrior = makeWarrior(
-    recruitRng.uuid('warrior') as WarriorId,
-    w.name,
-    w.style,
-    w.attributes,
-    { age: w.age, potential: w.potential }
+    { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
   );
   state.roster.push(warrior);
   state.treasury -= w.cost;
@@ -210,14 +206,12 @@ printCouncil(state, `week ${state.week}, final`);
 
 // ─── 7. Optionally emit an importable save for the UI half of the check ─────
 const saveIdx = process.argv.indexOf('--save');
-if (saveIdx !== -1 && process.argv[saveIdx + 1]) {
+const savePath = saveIdx === -1 ? undefined : process.argv[saveIdx + 1];
+if (savePath) {
   // Mirror exportSlot: truncate for size, strip runtime-only Map caches that
   // GameStateSchema rejects on import.
-  writeFileSync(
-    process.argv[saveIdx + 1],
-    JSON.stringify(stripNonSerializable(truncateState(state)))
-  );
-  console.log(`\nsave written → ${process.argv[saveIdx + 1]}`);
+  writeFileSync(savePath, JSON.stringify(stripNonSerializable(truncateState(state))));
+  console.log(`\nsave written → ${savePath}`);
 }
 
 console.log(`\n✔ Advisor E2E complete`);

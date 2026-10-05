@@ -93,7 +93,7 @@ async function main() {
 
     // keep player alive so the sim doesn't stall (auto-recruit on empty)
     if (state.roster.length === 0 && state.recruitPool.length > 0) {
-      const recruit = state.recruitPool[0];
+      const recruit = state.recruitPool[0]!;
       state.roster.push({
         ...recruit,
         id: recruit.id as Warrior['id'],

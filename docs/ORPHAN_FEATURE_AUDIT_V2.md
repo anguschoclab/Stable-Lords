@@ -159,6 +159,7 @@ Focused validation after each batch: 69 tests across the six touched engine/stat
 | `bun run dead-code` (knip) | pre-existing baseline failure — 7 duplicate exports in untouched files (`skillBreakpoints.ts`, `HallOfFights.tsx`, `keyUtils.ts`, `random.ts`); not introduced by this audit |
 | `bun run dupes` (jscpd) | 114 clones, exit-0 informational — baseline quality signal |
 | Deterministic soak | 40 wk, 0 invariant violations, `newsletterItems: 100` (V2-05 wire live in-loop) |
+| `bun run e2e` | `golden-path` verified chromium + Mobile Safari; `seasonal-tournament` verified chromium (17.6m, events=4 titles + `offseason=true`); full 5-project matrix run aborted per request — firefox/webkit/Mobile-Chrome reruns outstanding |
 
 ### E2E investigation — dispositions
 

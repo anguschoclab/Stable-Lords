@@ -19,7 +19,7 @@ import { SeededRNGService, hashStr } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { computeStableCouncilReport } from '@/engine/advisor/stableCouncilService';
 import { applyCouncilPlan } from '@/engine/advisor/applyCouncilPlan';
-import { runAutosim, type AutosimResult } from '@/engine/autosim';
+import { runAutosim, type AutosimResult } from '@/engine/autosim/autosim';
 import { truncateState } from '@/engine/storage/truncation';
 import { stripNonSerializable } from '@/state/serialization';
 import type { WarriorId } from '@/types/shared.types';

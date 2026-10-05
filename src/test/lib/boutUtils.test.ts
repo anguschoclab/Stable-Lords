@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { classifyEvent } from '@/lib/boutUtils';
 import { MinuteEvent } from '@/types/game';
+import type { CombatEvent } from '@/types/combat.types';
 
 describe('classifyEvent', () => {
   describe('string input', () => {
@@ -207,6 +208,25 @@ describe('classifyEvent', () => {
       expect(classifyEvent('Closes In')).toBe('spatial');
       expect(classifyEvent('STRIKES')).toBe('hit');
       expect(classifyEvent('PARRY')).toBe('miss');
+    });
+  });
+
+  // V2-20 — ARENA_EVENT lines carry their source CombatEvent so the bout log
+  // classifies them spatially (arena phenomena) instead of generic 'status'.
+  describe('arena events', () => {
+    it('classifies a minute carrying an ARENA_EVENT as spatial', () => {
+      const minute: MinuteEvent = {
+        minute: 3,
+        text: 'A hidden geyser erupts, blasting scalding water into the air!',
+        events: [
+          {
+            type: 'ARENA_EVENT',
+            actor: 'A',
+            metadata: { arenaEventId: 'geyser_eruption' },
+          } satisfies CombatEvent,
+        ],
+      };
+      expect(classifyEvent(minute)).toBe('spatial');
     });
   });
 });

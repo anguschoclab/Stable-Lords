@@ -54,6 +54,9 @@ export function classifyEvent(event: MinuteEvent | string): EventClass {
     // Check raw events for metadata first
     const hasCrit = event.events?.some((e) => e.metadata?.critical || e.metadata?.lethal);
     if (hasCrit) return 'crit';
+    // Arena phenomena are spatial by nature — tag-venue hazards narrated
+    // via ARENA_EVENT carry their source CombatEvent for classification.
+    if (event.events?.some((e) => e.type === 'ARENA_EVENT')) return 'spatial';
   }
 
   const t = text.toLowerCase();

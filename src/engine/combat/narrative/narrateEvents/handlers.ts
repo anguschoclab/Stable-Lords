@@ -337,7 +337,9 @@ const narrateFeintSuccessEvent: EventNarrator = (event, h, minute) => [
 
 const narrateArenaEvent: EventNarrator = (event, _h, minute) => {
   const text = event.metadata?.narrativeText;
-  return typeof text === 'string' && text ? [{ minute, text }] : [];
+  return typeof text === 'string' && text
+    ? [{ minute, text, events: [event] }]
+    : [];
 };
 
 const narrateFeintFailEvent: EventNarrator = (event, h, minute) => [

@@ -374,7 +374,10 @@ describe('arena events — narration', () => {
 
     const { log } = narrateEvents(events, createNarrCtx(), 3);
 
-    expect(log.some((l) => l.text.includes('geyser erupts'))).toBe(true);
+    const line = log.find((l) => l.text.includes('geyser erupts'));
+    expect(line).toBeTruthy();
+    // carries the source event so classifyEvent can mark it 'spatial'
+    expect(line?.events?.some((e) => e.type === 'ARENA_EVENT')).toBe(true);
   });
 });
 

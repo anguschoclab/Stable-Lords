@@ -286,19 +286,23 @@ function survivabilityGates(
   return null;
 }
 
+interface MatchupSkepticismArgs {
+  warrior: Warrior;
+  opponent: Warrior | undefined;
+  personality: RivalStableData['owner']['personality'];
+  playerThreat: PlayerThreatLevel;
+  observedDanger: boolean;
+  owner?: Pick<RivalStableData['owner'], 'competence'>;
+}
+
 /**
  * Matchup skepticism — calculating stables decline a strongly unfavorable
  * style matchup when they can afford to (same forecast the player sees).
  * Witnessed high-OE tells tighten the tolerance one notch.
  */
-function matchupSkepticism(
-  warrior: Warrior,
-  opponent: Warrior | undefined,
-  personality: RivalStableData['owner']['personality'],
-  playerThreat: PlayerThreatLevel,
-  observedDanger: boolean,
-  owner?: Pick<RivalStableData['owner'], 'competence'>
-): BoutEvaluation | null {
+function matchupSkepticism(args: MatchupSkepticismArgs): BoutEvaluation | null {
+  const { warrior, opponent, personality, playerThreat, observedDanger } = args;
+  const { owner } = args;
   if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
     const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
     // Methodical camps refuse to feed a dominant player on a coin flip —
@@ -406,14 +410,14 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
     return 'Accepted';
   }
 
-  const skeptical = matchupSkepticism(
-    warrior,
-    opponent,
-    personality,
-    playerThreat,
-    observedDanger,
-    rival.owner
-  );
+  const skeptical = matchupSkepticism({
+    warrior: warrior,
+    opponent: opponent,
+    personality: personality,
+    playerThreat: playerThreat,
+    observedDanger: observedDanger,
+    owner: rival.owner,
+  });
   if (skeptical) return skeptical;
 
   // Venue counter — the arena itself is the sticking point. A CROWN_BID

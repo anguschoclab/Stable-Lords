@@ -307,6 +307,16 @@ function processRivalSlate(
   });
 }
 
+interface EscalateCounterArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  offer: BoutOffer;
+  wId: WarriorId;
+  verdict: 'Countered' | 'CounteredVenue';
+  pendingWarrior: Warrior;
+  owningRival: RivalStableData;
+}
+
 /**
  * Stamp the bounded second-round counter (Stage C): the contract mutations
  * are one-round-only by design, so the escalation edits the live offer
@@ -315,15 +325,8 @@ function processRivalSlate(
  * escalations swap the arena. Returns false when a venue counter has no
  * arena to move to (caller declines instead).
  */
-function escalateCounter(
-  state: GameState,
-  currentOffers: OfferMap,
-  offer: BoutOffer,
-  wId: WarriorId,
-  verdict: 'Countered' | 'CounteredVenue',
-  pendingWarrior: Warrior,
-  owningRival: RivalStableData
-): boolean {
+function escalateCounter(args: EscalateCounterArgs): boolean {
+  const { state, currentOffers, offer, wId, verdict, pendingWarrior, owningRival } = args;
   const live = currentOffers[offer.id];
   if (!live) return false;
 
@@ -402,7 +405,7 @@ function resolveCounteredOffers(
         const outcome = resolveSecondRound(offer, verdict, owningRival);
         if (
           (outcome.final === 'Countered' || outcome.final === 'CounteredVenue') &&
-          escalateCounter(state, currentOffers, offer, wId, outcome.final, pendingWarrior, owningRival)
+          escalateCounter({ state: state, currentOffers: currentOffers, offer: offer, wId: wId, verdict: outcome.final, pendingWarrior: pendingWarrior, owningRival: owningRival })
         ) {
           continue; // offer stays Proposed for the next pass — bounded by round
         }

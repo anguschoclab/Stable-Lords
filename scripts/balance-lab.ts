@@ -111,18 +111,15 @@ const MATRIX = !!process.env.LAB_MATRIX;
       const wD = mk(d, `D_${d}`);
       let aw = 0;
       for (let i = 0; i < 100; i++) {
-        const o = simulateFight(
-          defaultPlanForWarrior(wA),
-          defaultPlanForWarrior(wD),
-          wA,
-          wD,
-          (ia * 10 + id) * 100000 + i * 7919 + 42,
-          undefined,
-          'Clear',
-          undefined,
-          undefined,
-          true
-        );
+        const o = simulateFight({
+          planA: defaultPlanForWarrior(wA),
+          planD: defaultPlanForWarrior(wD),
+          warriorA: wA,
+          warriorD: wD,
+          providedRng: (ia * 10 + id) * 100000 + i * 7919 + 42,
+          weather: 'Clear',
+          headless: true,
+        });
         record(t, a, d, o);
         if (o.winner === 'A') aw++;
       }
@@ -150,13 +147,25 @@ if (files.length) {
     const A = pool[Math.floor(rng.next() * pool.length)]!;
     const D = pool[Math.floor(rng.next() * pool.length)]!;
     if (A === D || A.w.stableId === D.w.stableId) continue;
-    const pA = tweakPlan(aiPlanForWarrior(A.w, A.personality as never, A.philosophy, D.w.style));
-    const pD = tweakPlan(aiPlanForWarrior(D.w, D.personality as never, D.philosophy, A.w.style));
+    const pA = tweakPlan(
+      aiPlanForWarrior({ w: A.w, personality: A.personality as never, philosophy: A.philosophy, opponentStyle: D.w.style })
+    );
+    const pD = tweakPlan(
+      aiPlanForWarrior({ w: D.w, personality: D.personality as never, philosophy: D.philosophy, opponentStyle: A.w.style })
+    );
     record(
       t,
       A.w.style,
       D.w.style,
-      simulateFight(pA, pD, A.w, D.w, i * 7919 + 13, undefined, 'Clear', undefined, undefined, true)
+      simulateFight({
+        planA: pA,
+        planD: pD,
+        warriorA: A.w,
+        warriorD: D.w,
+        providedRng: i * 7919 + 13,
+        weather: 'Clear',
+        headless: true,
+      })
     );
   }
   report('SNAP', t, MATRIX);

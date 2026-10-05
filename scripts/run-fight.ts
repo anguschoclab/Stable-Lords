@@ -36,18 +36,16 @@ const withEquipment = (w: Warrior): Warrior => ({
 const warriorA = withEquipment(makeWarrior('Varrek the Quick', styleA, attrsA));
 const warriorD = withEquipment(makeWarrior('Stonefist Maren', styleD, attrsD));
 
-const outcome = simulateFight(
-  defaultPlanForWarrior(warriorA),
-  defaultPlanForWarrior(warriorD),
+const outcome = simulateFight({
+  planA: defaultPlanForWarrior(warriorA),
+  planD: defaultPlanForWarrior(warriorD),
   warriorA,
   warriorD,
-  seed,
-  undefined,
-  'Clear',
-  'standard_arena',
-  undefined,
-  false
-);
+  providedRng: seed,
+  weather: 'Clear',
+  arenaId: 'standard_arena',
+  headless: false,
+});
 
 console.log(
   `=== ${warriorA.name} (${styleA}) vs ${warriorD.name} (${styleD}) — seed ${seed} ===\n`

@@ -67,20 +67,21 @@ for (let i = 0; i < N; i++) {
   const A = pool[Math.floor(rng.next() * pool.length)]!;
   const D = pool[Math.floor(rng.next() * pool.length)]!;
   if (A === D || A.w.stableId === D.w.stableId) continue;
-  const pA = tweakPlan(aiPlanForWarrior(A.w, A.personality as never, A.philosophy, D.w.style));
-  const pD = tweakPlan(aiPlanForWarrior(D.w, D.personality as never, D.philosophy, A.w.style));
-  const o = simulateFight(
-    pA,
-    pD,
-    A.w,
-    D.w,
-    i * 7919 + 13,
-    undefined,
-    'Clear',
-    undefined,
-    undefined,
-    true
+  const pA = tweakPlan(
+    aiPlanForWarrior({ w: A.w, personality: A.personality as never, philosophy: A.philosophy, opponentStyle: D.w.style })
   );
+  const pD = tweakPlan(
+    aiPlanForWarrior({ w: D.w, personality: D.personality as never, philosophy: D.philosophy, opponentStyle: A.w.style })
+  );
+  const o = simulateFight({
+    planA: pA,
+    planD: pD,
+    warriorA: A.w,
+    warriorD: D.w,
+    providedRng: i * 7919 + 13,
+    weather: 'Clear',
+    headless: true,
+  });
   for (const [side, e, plan] of [
     ['A', A, pA],
     ['D', D, pD],

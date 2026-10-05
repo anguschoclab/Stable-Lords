@@ -162,7 +162,7 @@ Focused validation after each batch: 69 tests across the six touched engine/stat
 | `bun run dupes` (jscpd) | 114 clones, exit-0 informational — baseline quality signal |
 | Deterministic soak | 40 wk, 0 invariant violations, `newsletterItems: 100` (V2-05 wire live in-loop) |
 | Day-mode soak (V2-20 tooling) | `soak.mjs --day-mode`: 40 wk via 7×`advanceDay`/week, 0 invariant violations — exercises the interactive day path previously uncovered |
-| `bun test --isolate` | 8,774 pass / 3 fail — all three dispositioned: basename collision `constants/arenaEvents.test.ts ↔ engine/combat/arenaEvents.test.ts` (fixed: renamed to `arenaEventTick.test.ts`), vendetta e2e timeout (contention; passes in 4.2s clean), ENOENT from mid-run rename |
+| `bun test --isolate` | green — 8,801 pass / 0 fail / 1 skip (155s, clean serial rerun). Earlier run's 3 failures all dispositioned: basename collision `constants/arenaEvents.test.ts ↔ engine/combat/arenaEvents.test.ts` (fixed: renamed to `arenaEventTick.test.ts`), vendetta e2e timeout (contention; passes in 4.2s clean), ENOENT from mid-run rename |
 | `bun run e2e` | `golden-path` verified chromium + Mobile Safari; `seasonal-tournament` verified chromium (17.6m, events=4 titles + `offseason=true`); full 5-project matrix run aborted per request — firefox/webkit/Mobile-Chrome reruns outstanding |
 
 ### E2E investigation — dispositions

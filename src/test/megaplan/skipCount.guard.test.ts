@@ -30,6 +30,10 @@ const REGISTERED_SKIP_TICKETS = new Set([
   'MEGAPLAN-G3', // tournament prep mode
   'MEGAPLAN-L1', // per-route primary CTA
   'MEGAPLAN-L2', // PageFrame/PageHeader conformance
+  'MEGAPLAN-V11', // dead-surface elimination (schema barrels, aliases, dead hooks/files)
+  'MEGAPLAN-V12', // duplicate consolidation (shared helpers + standings primitive)
+  'MEGAPLAN-V13', // monolith restructure budgets (>400-line targets)
+  'MEGAPLAN-V14', // wiring contracts (constants liveness)
 ]);
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;

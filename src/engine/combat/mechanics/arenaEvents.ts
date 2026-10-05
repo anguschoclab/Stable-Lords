@@ -67,7 +67,8 @@ export function tickArenaEvents(
   events: CombatEvent[]
 ): void {
   ctx.arenaEventCandidates ??= getEventsForArena(ctx.arenaConfig.tags);
-  if (ctx.arenaEventCandidates.length === 0) {
+  const boutEnded = events.some((e) => e.type === 'BOUT_END');
+  if (ctx.arenaEventCandidates.length === 0 || boutEnded) {
     ctx.arenaEventMods = { initiativeMod: 0, riposteMod: 0 };
     return;
   }
@@ -95,4 +96,15 @@ export function tickArenaEvents(
   }
 
   ctx.arenaEventMods = pending;
+
+  // Hazard damage incapacitates like any other damage: a fighter dropped to
+  // ≤0 hp cannot continue — emit BOUT_END so the loop doesn't run another
+  // exchange with a downed fighter. Both down = mutual incapacitation draw.
+  if (fA.hp <= 0 && fD.hp <= 0) {
+    events.push({ type: 'BOUT_END', actor: 'A', result: 'Exhaustion', metadata: { cause: 'ARENA_HAZARD' } });
+  } else if (fA.hp <= 0) {
+    events.push({ type: 'BOUT_END', actor: 'D', result: 'KO', metadata: { cause: 'ARENA_HAZARD' } });
+  } else if (fD.hp <= 0) {
+    events.push({ type: 'BOUT_END', actor: 'A', result: 'KO', metadata: { cause: 'ARENA_HAZARD' } });
+  }
 }

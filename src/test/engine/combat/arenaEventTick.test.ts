@@ -234,6 +234,49 @@ describe('tickArenaEvents — mechanical effects', () => {
     expect(fD.hp).toBe(78);
   });
 
+  it('ends the bout when hazard damage drops one fighter to 0 hp', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState({ hp: 100 });
+    const fD = makeFighterState({ label: 'D', hp: 2 }); // crowd_riot dmg 2 → 0
+    const events: CombatEvent[] = [heavyHit(16)];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    const boutEnd = events.find((e) => e.type === 'BOUT_END');
+    expect(boutEnd?.result).toBe('KO');
+    expect(boutEnd?.actor).toBe('A');
+    expect(boutEnd?.metadata?.cause).toBe('ARENA_HAZARD');
+  });
+
+  it('ends in a draw when hazard damage drops both fighters', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState({ hp: 2 });
+    const fD = makeFighterState({ label: 'D', hp: 1 }); // crowd_riot dmg 2 → both ≤0
+    const events: CombatEvent[] = [heavyHit(16)];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    const boutEnd = events.find((e) => e.type === 'BOUT_END');
+    // Mutual incapacitation — Exhaustion maps to winner=null downstream.
+    expect(boutEnd?.result).toBe('Exhaustion');
+    expect(boutEnd?.metadata?.cause).toBe('ARENA_HAZARD');
+  });
+
+  it('does not double-end a bout already decided by a hit', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState({ hp: 100 });
+    const fD = makeFighterState({ label: 'D', hp: 2 });
+    const events: CombatEvent[] = [
+      heavyHit(16),
+      { type: 'BOUT_END', actor: 'A', result: 'Kill', metadata: { cause: 'FATAL_DAMAGE' } },
+    ];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    // Hazard tick must not stack a second BOUT_END after the deciding one.
+    expect(events.filter((e) => e.type === 'BOUT_END')).toHaveLength(1);
+  });
+
   it('applies endurance_drain to both fighters and floors at 0', () => {
     const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['cursed']) });
     const fA = makeFighterState({ endurance: 100 });

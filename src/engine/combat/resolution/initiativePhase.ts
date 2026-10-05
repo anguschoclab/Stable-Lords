@@ -118,6 +118,10 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
     result: true,
     metadata: { isMastery: attMasteryIni > 0 },
   };
+  // Attribute any pending arena-event initiative mod — the narrator echoes
+  // the hazard name so the swing isn't unexplained.
+  const iniSources = ctx.arenaEventModSources?.initiative;
+  if (iniSources?.length) event.metadata = { ...event.metadata, arenaModSources: [...iniSources] };
 
   return { aGoesFirst, iniA, iniD, event };
 }

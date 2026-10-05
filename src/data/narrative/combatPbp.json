@@ -322,7 +322,7 @@
         "PRIMARY ARM",
         "RIGHT HAND",
         "DOMINANT ARM",
-        "RIGHT ARM PART 9"
+        "RIGHT TRICEPS"
       ],
       "left arm": [
         "LEFT SHOULDER",
@@ -334,7 +334,7 @@
         "LEFT WRIST",
         "LEFT HAND",
         "SHIELD ARM",
-        "LEFT ARM PART 9"
+        "LEFT TRICEPS"
       ],
       "right leg": [
         "RIGHT HAMSTRING",
@@ -417,12 +417,12 @@
         "With ruthless efficiency, {{attacker}} extinguishes {{defender}}'s light in a single stroke.",
         "The crowd falls dead silent as {{attacker}}'s strike abruptly ends {{defender}}'s life.",
         "{{defender}}'s eyes widen in shock as {{attacker}}'s {{weapon}} parts flesh and soul.",
-        "There is no recovery from that—{{attacker}} has sent {{defender}} to the ancestors.",
+        "There is no recovery from that\u2014{{attacker}} has sent {{defender}} to the ancestors.",
         "{{attacker}} stands victorious, {{defender}} dead before they even hit the ground.",
         "{{attacker}} executes a flawless, mortal strike, leaving no hope for {{defender}}.",
         "Blood sprays across the sands as {{attacker}} delivers the final, fatal judgment.",
         "A brutal, uncompromising blow by {{attacker}} shatters {{defender}} completely.",
-        "{{attacker}} executes a merciless coup de grâce, ending {{defender}}'s misery.",
+        "{{attacker}} executes a merciless coup de gr\u00e2ce, ending {{defender}}'s misery.",
         "{{attacker}} roars in triumph over the broken, lifeless form of {{defender}}.",
         "A catastrophic hit that instantly fells {{defender}} like a toppled statue.",
         "A devastating blow that shatters bone and splatters blood across the sand.",
@@ -775,7 +775,7 @@
           "With clinical precision, {{defender}} punishes the overextension without hesitation.",
           "{{defender}} wastes no movement, answering the strike with a dark, devastating counter.",
           "{{defender}} coldly intercepts the weapon, immediately exploiting the opening with zero hesitation.",
-          "Not a single wasted motion—{{defender}} parries and strikes back with lethal intent.",
+          "Not a single wasted motion\u2014{{defender}} parries and strikes back with lethal intent.",
           "{{defender}}'s dead eyes betray nothing as they brutally punish the failed attack.",
           "A sickening crunch as {{defender}} blocks and delivers a completely ruthless counter.",
           "{{defender}} absorbs the impact and wordlessly buries their weapon in return.",
@@ -895,7 +895,7 @@
           "A desperate, undignified dive saves {{defender}} from a lethal blow.",
           "{{name}} drops low, narrowly dodging the blow with a panicked gasp!",
           "{{defender}} moves beyond {{attacker}}'s reach.",
-          "{{defender}} blurs aside a heartbeat before the blow lands — preternatural reflexes!"
+          "{{defender}} blurs aside a heartbeat before the blow lands \u2014 preternatural reflexes!"
         ],
         "tier4_supernatural": [
           "{{defender}} blinks out of reality for a fraction of a second, entirely avoiding the blow.",
@@ -1391,7 +1391,7 @@
           "Stoic and silent, {{defender}} shifts just enough to let the strike pass harmlessly by.",
           "{{defender}} shifts an inch to the left; an inch is all it takes to survive.",
           "With brutal economy of motion, {{defender}} steps out of the strike's fatal path.",
-          "No wasted movement—{{defender}} pivots sharply, eyes locked coldly on the attacker.",
+          "No wasted movement\u2014{{defender}} pivots sharply, eyes locked coldly on the attacker.",
           "{{defender}} silently weaves around the blow with brutal efficiency.",
           "Without breaking eye contact, {{defender}} ducks under the attack.",
           "A stony-faced {{defender}} dodges the strike, betraying no emotion.",
@@ -1819,7 +1819,7 @@
           "A heavy, joyless block from {{defender}}, a purely mechanical act of survival.",
           "The weapons clash with a dull clang; {{defender}} doesn't even blink.",
           "{{defender}} absorbs the impact with a stoic, unreadable expression.",
-          "No flair, no panic—just a heavy, joyless parry from {{defender}}.",
+          "No flair, no panic\u2014just a heavy, joyless parry from {{defender}}.",
           "{{defender}} meets the strike with brutal, silent efficiency.",
           "{{defender}} blocks the blow with mechanical, bone-chilling efficiency.",
           "{{defender}} absorbs the impact wordlessly, eyes fixed on their prey.",
@@ -2333,9 +2333,9 @@
           "With a stoic grimace, {{defender}} blocks the blow and pushes a brutal riposte into the fray.",
           "A sickening crunch of steel as {{defender}} parries, followed by a cold, murderous riposte.",
           "{{defender}} swats the attack away like an insect, delivering a cold, heavy counterstrike.",
-          "No wasted movement—{{defender}} parries and strikes back with chilling, silent precision.",
+          "No wasted movement\u2014{{defender}} parries and strikes back with chilling, silent precision.",
           "With ruthless efficiency, {{defender}} turns the strike aside and steps in for the kill.",
-          "No hesitation, no emotion—just a savage, mechanical riposte from {{defender}}.",
+          "No hesitation, no emotion\u2014just a savage, mechanical riposte from {{defender}}.",
           "{{defender}} brutally shoves the blade aside and chops back in stony silence.",
           "A heavy, merciless riposte immediately follows {{defender}}'s rigid block.",
           "{{defender}} absorbs the impact and coldly thrusts back, aiming to maim.",
@@ -2706,7 +2706,7 @@
           "A lightning-fast impact drops {{name}} like a stone.",
           "{{name}} hits the sand with whip-like suddenness.",
           "Before the blow even registers, {{name}} is slammed mercilessly into the dirt.",
-          "The impact is immediate and total—{{name}} hits the sand instantly.",
+          "The impact is immediate and total\u2014{{name}} hits the sand instantly.",
           "{{name}} is instantly flattened, hitting the dirt before the crowd can even gasp.",
           "A blur of motion and {{name}} is slammed mercilessly to the ground.",
           "A sudden crack and {{name}} is on their back, dropped faster than the blink of an eye.",
@@ -2719,7 +2719,7 @@
           "Before anyone can blink, {{name}} is violently introduced to the arena floor!",
           "The bout goes into overdrive as {{name}} is suddenly and brutally flattened!",
           "A blistering, chaotic sequence ends abruptly with {{name}} slammed into the dirt.",
-          "Blink and you missed it—{{name}} hits the deck in a spectacular display of velocity.",
+          "Blink and you missed it\u2014{{name}} hits the deck in a spectacular display of velocity.",
           "The pacing is absolutely frenetic! {{name}} is dropped like a stone in the blink of an eye.",
           "No time to think! The sheer speed of the exchange leaves {{name}} eating sand.",
           "A whirlwind of violence concludes with a sickening, high-speed impact dropping {{name}}.",
@@ -2885,7 +2885,7 @@
           "Before the dust even settles, {{name}} is already standing, weapon ready for blood.",
           "A masterclass in recovery! {{name}} is back on their feet in a heartbeat.",
           "{{name}} turns the fall into a seamless tactical roll, popping up instantly.",
-          "There is zero hesitation—{{name}} refuses to stay down and snaps upright immediately.",
+          "There is zero hesitation\u2014{{name}} refuses to stay down and snaps upright immediately.",
           "The impact barely registers before {{name}} is violently throwing themselves back into the fray.",
           "{{name}} snaps back to attention, recovering their stance with shocking speed.",
           "A quick shake of the head, and {{name}} is instantly back in a fighting crouch.",
@@ -3243,7 +3243,7 @@
       ],
       "SP": [
         "{{defender}} moves with blinding speed, leaving {{attacker}} swinging at shadows.",
-        "{{attacker}}'s attacks find only empty air — {{defender}} is too fast!",
+        "{{attacker}}'s attacks find only empty air \u2014 {{defender}} is too fast!",
         "{{attacker}}'s weapon whistles past as {{defender}} dances away!",
         "{{defender}} is a blur, striking before {{attacker}} can react!",
         "{{attacker}}'s attacks are too slow to catch {{defender}}!",
@@ -3255,11 +3255,11 @@
       ],
       "DF": [
         "{{defender}} clumsily overextends, leaving {{reflexive}} wide open.",
-        "{{defender}} blocks too late — {{pronoun}}'s out of position!",
+        "{{defender}} blocks too late \u2014 {{pronoun}}'s out of position!",
         "{{defender}} leaves {{reflexive}} exposed with every strike!",
         "{{defender}}'s footwork is sloppy and predictable!",
         "{{defender}}'s defenses prove surprisingly porous!",
-        "{{defender}} telegraphs every move — easy to read!",
+        "{{defender}} telegraphs every move \u2014 easy to read!",
         "{{defender}}'s shield drops at crucial moments!",
         "Gaps in {{defender}}'s guard are plain to see!",
         "{{defender}} parries wildly, wasting energy!",
@@ -3331,14 +3331,14 @@
         "{{attacker}} slips inside {{defender}}'s reach and punishes the {{bodyPart}} without mercy.",
         "{{defender}} cannot stop the blow; {{attacker}}'s strike hammers the {{bodyPart}} hard.",
         "A sickening thud echoes as the {{weapon}} connects with {{defender}}'s {{bodyPart}}.",
-        "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} — a telling hit.",
+        "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} \u2014 a telling hit.",
         "{{attacker}} follows through with ruthless precision, scoring the {{bodyPart}}.",
         "A shower of crimson erupts as {{attacker}}'s {{weapon}} sinks into {{defender}}'s {{bodyPart}}.",
         "{{defender}} stumbles slightly as the {{weapon}} bites deep into their {{bodyPart}}.",
         "The crowd roars as {{attacker}}'s strike finds its mark, hammering the {{bodyPart}}.",
         "{{attacker}}'s assault proves overwhelming, punishing {{defender}}'s {{bodyPart}}.",
         "{{defender}} fails to check the assault; {{attacker}}'s {{weapon}} tears into the {{bodyPart}}.",
-        "A brutal connection—{{attacker}}'s {{weapon}} forces {{defender}} back with a hit to the {{bodyPart}}.",
+        "A brutal connection\u2014{{attacker}}'s {{weapon}} forces {{defender}} back with a hit to the {{bodyPart}}.",
         "The {{weapon}} lands with a sickening crunch, meeting its mark.",
         "A devastating strike connects, the impact echoing through the arena.",
         "The blow lands true, biting deep into flesh and bone.",
@@ -3348,7 +3348,7 @@
     },
     "executions": [
       "With a terrifying war-cry, {{attacker}} tackles {{defender}} to the sand, repeatedly battering them with the pommel of their {{weapon}} until the crowd goes silent.",
-      "The final blow is almost gentle — {{attacker}} lowers {{defender}} to the sand before driving the {{weapon}} through their heart with quiet efficiency.",
+      "The final blow is almost gentle \u2014 {{attacker}} lowers {{defender}} to the sand before driving the {{weapon}} through their heart with quiet efficiency.",
       "{{attacker}} hooks their {{weapon}} around {{defender}}'s ankle, ripping them to the dirt before driving a killing blow straight through their visor.",
       "{{defender}} stumbles, and {{attacker}} capitalizes instantly, sweeping their legs out and bringing the {{weapon}} down on their exposed throat.",
       "{{attacker}} drops their stance, letting {{defender}} lunge into empty air, before delivering a brutal execution strike to the back of the neck.",
@@ -3373,7 +3373,7 @@
       "A whirlwind of steel! {{attacker}} delivers a flurry of blows that leaves {{defender}} unrecognizable on the blood-soaked sand.",
       "No mercy! {{attacker}} stands over a broken {{defender}} and delivers a gruesome, theatrical execution for the screaming fans.",
       "{{attacker}} seizes {{defender}}'s weapon arm, twisting it behind their back before driving a killing strike through the ribs.",
-      "With a thunderous overhead strike, {{attacker}} splits {{defender}}'s guard — and their skull — in a single, devastating blow.",
+      "With a thunderous overhead strike, {{attacker}} splits {{defender}}'s guard \u2014 and their skull \u2014 in a single, devastating blow.",
       "{{attacker}} wrenches {{defender}}'s head back by the hair, drawing a blade across their throat in a grim, theatrical finale.",
       "With a savage roar, {{attacker}} hacks into {{defender}}'s collarbone, burying the {{weapon}} deep before wrenching it free.",
       "{{attacker}} parries {{defender}}'s desperate final lunge, redirecting the blade into its owner's heart with cruel irony.",
@@ -3562,7 +3562,254 @@
       "Brushing sand from their battered armor, {{name}} rises, battered but not broken.",
       "{{name}} finds their footing once again, swaying slightly as they regain balance.",
       "Through sheer force of will, {{name}} ignores the pain and struggles back to their feet."
-    ]
+    ],
+    "bleed": [
+      "Blood trickles from {{name}}'s wounds.",
+      "{{name}} is weakening, wounded and losing blood.",
+      "Crimson streaks run down {{name}}'s frame.",
+      "{{name}}'s wounds seep, strength ebbing away.",
+      "A red trail marks {{name}}'s steps across the sand.",
+      "{{name}} staggers, blood loss slowing every move."
+    ],
+    "arena_fx": {
+      "damage": [
+        "The arena itself lashes out at {{name}}!",
+        "{{name}} takes a hit from the venue's hazards!",
+        "Environmental danger catches {{name}} unaware!",
+        "{{name}} staggers as the arena strikes!",
+        "The venue claims its due \u2014 {{name}} suffers!"
+      ],
+      "drain": [
+        "The fighters' limbs grow heavy, sapped by the arena's touch.",
+        "An unnatural weariness settles over the combatants.",
+        "Strength drains away as the arena's power takes hold.",
+        "Both fighters sag, vitality bleeding into the cursed ground."
+      ],
+      "echo": {
+        "initiative": [
+          "The arena's strange influence still hangs over {{name}}.",
+          "{{name}} hesitates under the venue's lingering spell.",
+          "The unnatural aura dulls {{name}}'s first step."
+        ],
+        "riposte": [
+          "The arena's lingering touch slows {{name}}'s counter.",
+          "{{name}}'s riposte labors against the venue's grip."
+        ],
+        "named": [
+          "{{name}} still warps the flow of the bout.",
+          "{{name}}'s influence lingers over the sands.",
+          "The {{name}} hangs heavy over the arena."
+        ]
+      }
+    },
+    "arena_events": {
+      "collapsing_pillar": {
+        "lines": [
+          "A nearby pillar cracks and collapses in a cloud of dust!",
+          "Ancient stonework gives way with a thunderous crash!",
+          "A worn pillar topples, scattering rubble across the floor!"
+        ]
+      },
+      "falling_debris": {
+        "lines": [
+          "Chunks of stone fall from above, forcing both fighters to dodge!",
+          "Debris rains down from the ruined ceiling!",
+          "Loose fragments drop from the heights, peppering the combatants!"
+        ]
+      },
+      "chasm_collapse": {
+        "lines": [
+          "A heavy impact shatters the cursed chasm walls, raining debris!",
+          "The chasm walls groan and shed stone under the assault!",
+          "Cursed rock splits and falls as the bout shakes the chasm!"
+        ],
+        "damage": [
+          "Jagged debris tears into {{name}}!",
+          "Falling stone catches {{name}}!",
+          "Cursed rubble batters {{name}}!"
+        ]
+      },
+      "monolith_pulse": {
+        "lines": [
+          "The floating monolith releases a blinding magical pulse!",
+          "Arcane light floods from the shattered monolith!",
+          "The monolith hums and discharges a wave of raw power!"
+        ]
+      },
+      "shadow_tendrils": {
+        "lines": [
+          "Shadow tendrils lash out from the darkness!",
+          "Living shadows coil around the fighters' limbs!",
+          "Darkness itself reaches for the combatants!"
+        ],
+        "drain": [
+          "The tendrils' touch leeches the fighters' strength.",
+          "Where the shadows grip, vitality bleeds away.",
+          "A cold fatigue spreads through both combatants."
+        ]
+      },
+      "crystal_resonance": {
+        "lines": [
+          "The crystal walls pulse with light, amplifying every strike!",
+          "Resonance builds in the crystal \u2014 every impact rings louder!",
+          "The arena's crystals thrum in sympathy with the blows!"
+        ]
+      },
+      "aether_surge": {
+        "lines": [
+          "Arcane energy crackles through the air, empowering attacks!",
+          "Raw aether surges through the arena floor!",
+          "The air itself shimmers with unleashed magical force!"
+        ]
+      },
+      "blood_moon_amplification": {
+        "lines": [
+          "The blood moon shines brighter here. Violence feels inevitable.",
+          "Crimson light bathes the cursed ground, urging the fighters on.",
+          "Under the blood moon, every wound seems to call for another."
+        ]
+      },
+      "restless_spirits": {
+        "lines": [
+          "Ghostly hands reach from the ground, grasping at the living!",
+          "The dead beneath the arena stir and moan!",
+          "Spectral fingers claw at the fighters' heels!"
+        ]
+      },
+      "thorn_barbs": {
+        "lines": [
+          "Thorny vines whip at the fighters as they move!",
+          "The arena's flora lashes out with barbed tendrils!",
+          "Living thorns rake at any fighter who strays near!"
+        ]
+      },
+      "shifting_roots": {
+        "lines": [
+          "Roots writhe beneath the sand, tangling footwork!",
+          "The ground shifts as buried roots twist and turn!",
+          "Buried roots heave, throwing both fighters off stride!"
+        ]
+      },
+      "unstable_footing": {
+        "lines": [
+          "The uneven ground shifts, throwing off balance!",
+          "Broken flagstones lurch underfoot!",
+          "The treacherous floor betrays a careless step!"
+        ]
+      },
+      "volcanic_eruption": {
+        "lines": [
+          "A vent violently erupts, showering the arena with searing ash!",
+          "The crater coughs up a gout of fire and cinders!",
+          "Molten spray bursts from a fissure beside the fighters!"
+        ]
+      },
+      "whispers_of_madness": {
+        "lines": [
+          "Ghostly screams echo off the walls, fraying the nerves of the fighters!",
+          "Mad whispers coil through the asylum's halls!",
+          "Spectral voices gibber from every shadowed corner!"
+        ]
+      },
+      "crowd_riot": {
+        "lines": [
+          "The crowd riots in a frenzy, throwing debris into the arena!",
+          "Enraged patrons hurl bottles and stones onto the sands!",
+          "The stands erupt \u2014 a riot spills over the arena wall!"
+        ],
+        "damage": [
+          "Debris from the rioting crowd catches {{name}}!",
+          "A hurled stone clips {{name}}!",
+          "Thrown refuse batters {{name}} from the stands!"
+        ]
+      },
+      "blood_moon_lighting": {
+        "lines": [
+          "The blood moon illuminates the cursed ground, driving fighters mad!",
+          "Crimson moonlight sears the arena floor!",
+          "The blood moon's glow burns into the combatants!"
+        ],
+        "damage": [
+          "The blood moon's light sears {{name}}!",
+          "Crimson radiance burns {{name}}!"
+        ]
+      },
+      "geyser_eruption": {
+        "lines": [
+          "A hidden geyser erupts, blasting scalding water into the air!",
+          "Scalding water bursts from a vent beneath the sands!",
+          "The arena floor erupts in a column of boiling spray!",
+          "A geyser roars to life, drenching the combatants!"
+        ]
+      },
+      "deepening_muck": {
+        "lines": [
+          "The waterlogged ground sucks at boots, slowing movement!",
+          "The muck deepens, dragging at every step!",
+          "Knee-deep sludge turns footwork into a slog!"
+        ]
+      },
+      "sands_shift": {
+        "lines": [
+          "The impact causes the sandy ground to collapse momentarily, throwing fighters off balance!",
+          "The dunes shift underfoot, stealing the fighters' footing!",
+          "A wash of sand slides away beneath the combatants!"
+        ]
+      },
+      "swamp_miasma": {
+        "lines": [
+          "A noxious bubble bursts, releasing a choking, cursed miasma into the air!",
+          "Foul gas seeps up from the swamp, stinging eyes and lungs!",
+          "A cursed miasma rolls across the waterlogged floor!"
+        ]
+      },
+      "jagged_peak_avalanche": {
+        "lines": [
+          "The sheer force dislodges rocks from the peak, sending a minor avalanche onto the fighters!",
+          "Stones cascade down the jagged slopes!",
+          "The impact shakes loose a shower of rock from above!"
+        ]
+      },
+      "murky_depths_tide": {
+        "lines": [
+          "A luminous, arcane tide rushes over the floor, momentarily blinding all combatants!",
+          "Glowing water surges through the arena, dazzling the fighters!",
+          "An arcane tide washes over the sands, hiding all in shimmering mist!"
+        ]
+      },
+      "bathhouse_scald": {
+        "lines": [
+          "Scalding steam erupts from the vents, blinding the fighters and burning the skin!",
+          "A vent hisses open, flooding the baths with scorching steam!",
+          "Boiling vapor bursts from the bathhouse pipes!"
+        ]
+      },
+      "heath_apparition": {
+        "lines": [
+          "The heavy blow awakens ghostly apparitions that swarm the fighters!",
+          "Spectral figures rise from the heath, circling the combatants!",
+          "Ghostly shapes gather, drawn by the violence!"
+        ]
+      },
+      "crumbling_spire_fall": {
+        "lines": [
+          "The heavy impact dislodges ancient stonework from the spire!",
+          "Debris tumbles from the crumbling spire above!",
+          "The spire sheds stone with every shuddering impact!"
+        ],
+        "damage": [
+          "Spire debris crashes down on {{name}}!",
+          "Falling masonry strikes {{name}}!"
+        ]
+      },
+      "mist_veil": {
+        "lines": [
+          "A sudden, thick veil of mist obscures the tight quarters!",
+          "Fog rolls in, swallowing the arena in white!",
+          "Dense mist closes around the fighters, hiding every move!"
+        ]
+      }
+    }
   },
   "crowd_reactions": {
     "Bloodthirsty": [

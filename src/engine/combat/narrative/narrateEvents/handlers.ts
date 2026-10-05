@@ -22,6 +22,7 @@ import {
   narrateZoneShift,
 } from '../../../narrative';
 import { narrateKnockdown, narrateRecovery } from '../../../narrative/combatNarrators';
+import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { NarrationContext } from '../types';
 
@@ -51,19 +52,52 @@ type EventNarrator = (
   events: CombatEvent[]
 ) => MinuteEvent[];
 
-const narrateInitiativeEvent: EventNarrator = (event, h, minute) => {
-  if (h.rng.next() >= 0.3) return [];
-  return [
-    {
+/**
+ * Echo lines for arena-event mod sources pending on an exchange — one
+ * hazard-named beat per source plus a fighter-named atmosphere line.
+ */
+function arenaModEcho(
+  sources: readonly string[],
+  channel: 'initiative' | 'riposte',
+  fighterName: string,
+  h: NarrateHelpers,
+  minute: number
+): MinuteEvent[] {
+  const namedPool = peekArchive(['pbp', 'arena_fx', 'echo', 'named']);
+  const channelPool = peekArchive(['pbp', 'arena_fx', 'echo', channel]);
+  const out: MinuteEvent[] = [];
+  for (const src of sources) {
+    if (!namedPool) break;
+    out.push({ minute, text: interpolateTemplate(h.rng.pick(namedPool) ?? '', { name: src }) });
+  }
+  if (channelPool) {
+    out.push({
       minute,
-      text: narrateInitiative(
-        h.rng,
-        h.getName(event.actor),
-        h.rng.next() < 0.3,
-        h.getOpponentName(event.actor)
-      ),
-    },
-  ];
+      text: interpolateTemplate(h.rng.pick(channelPool) ?? '', { name: fighterName }),
+    });
+  }
+  return out;
+}
+
+const narrateInitiativeEvent: EventNarrator = (event, h, minute) => {
+  const out: MinuteEvent[] = [];
+  // Attribution beats must not be swallowed by the 30% flavor gate below —
+  // an unexplained mod swing reads as a bug, not flavor.
+  const sources = event.metadata?.arenaModSources;
+  if (Array.isArray(sources) && sources.length) {
+    out.push(...arenaModEcho(sources, 'initiative', h.getName(event.actor), h, minute));
+  }
+  if (h.rng.next() >= 0.3) return out;
+  out.push({
+    minute,
+    text: narrateInitiative(
+      h.rng,
+      h.getName(event.actor),
+      h.rng.next() < 0.3,
+      h.getOpponentName(event.actor)
+    ),
+  });
+  return out;
 };
 
 const narrateAttackEvent: EventNarrator = (event, h, minute) => {
@@ -127,7 +161,14 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
     ];
   }
   if (event.result === 'RIPOSTE') {
-    return [{ minute, text: narrateCounterstrike(h.rng, actorName, opponentName) }];
+    const out: MinuteEvent[] = [
+      { minute, text: narrateCounterstrike(h.rng, actorName, opponentName) },
+    ];
+    const sources = event.metadata?.arenaModSources;
+    if (Array.isArray(sources) && sources.length) {
+      out.push(...arenaModEcho(sources, 'riposte', actorName, h, minute));
+    }
+    return out;
   }
   return [];
 };
@@ -186,7 +227,76 @@ function hitReactions(
   return out;
 }
 
+/**
+ * Environmental-damage hp-ratio check: state-change line when the hit
+ * carries the victim across a severity threshold (desperate/severe/…).
+ */
+function hazardStateChange(
+  event: CombatEvent,
+  h: NarrateHelpers,
+  minute: number
+): MinuteEvent[] {
+  const target = event.target as Actor;
+  const victimName = h.getName(target);
+  const prevRatio = target === 'A' ? h.ctx.prevHpRatioA : h.ctx.prevHpRatioD;
+  const line = stateChangeLine(h.rng, victimName, h.getPostHitRatio(target, event), prevRatio);
+  return line ? [{ minute, text: line }] : [];
+}
+
+/**
+ * Bleed tick — cause-tagged HIT with location 'Bleed'. Narrates from the
+ * pbp.bleed pool with the victim named; never produces weapon-flavored
+ * "...'s BLEED" text.
+ */
+function narrateBleedTick(event: CombatEvent, h: NarrateHelpers, minute: number): MinuteEvent[] {
+  const pool = peekArchive(['pbp', 'bleed']);
+  const out: MinuteEvent[] = [];
+  if (pool) {
+    out.push({
+      minute,
+      text: interpolateTemplate(h.rng.pick(pool) ?? '', { name: h.getName(event.target as Actor) }),
+      events: [event],
+    });
+  }
+  out.push(...hazardStateChange(event, h, minute));
+  return out;
+}
+
+/**
+ * Arena-hazard damage — cause-tagged HIT carrying the firing event's id.
+ * Narrates from the per-hazard damage pool (falling back to the generic
+ * arena_fx pool) and carries both the hit and its source ARENA_EVENT so the
+ * line classifies spatially in the bout log.
+ */
+function narrateHazardHit(
+  event: CombatEvent,
+  h: NarrateHelpers,
+  minute: number,
+  events: CombatEvent[]
+): MinuteEvent[] {
+  const id = String(event.metadata?.arenaEventId ?? '');
+  const pool =
+    peekArchive(['pbp', 'arena_events', id, 'damage']) ??
+    peekArchive(['pbp', 'arena_fx', 'damage']);
+  const source = events.find(
+    (e) => e.type === 'ARENA_EVENT' && e.metadata?.arenaEventId === id
+  );
+  const out: MinuteEvent[] = [];
+  if (pool) {
+    out.push({
+      minute,
+      text: interpolateTemplate(h.rng.pick(pool) ?? '', { name: h.getName(event.target as Actor) }),
+      events: source ? [event, source] : [event],
+    });
+  }
+  out.push(...hazardStateChange(event, h, minute));
+  return out;
+}
+
 const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
+  const cause = event.metadata?.cause;
+  if (cause === 'BLEED') return narrateBleedTick(event, h, minute);
+  if (cause === 'ARENA_EVENT') return narrateHazardHit(event, h, minute, events);
   if (!event.location) return [];
   const { rng } = h;
   const actorName = h.getName(event.actor);
@@ -335,11 +445,33 @@ const narrateFeintSuccessEvent: EventNarrator = (event, h, minute) => [
   },
 ];
 
-const narrateArenaEvent: EventNarrator = (event, _h, minute) => {
-  const text = event.metadata?.narrativeText;
-  return typeof text === 'string' && text
-    ? [{ minute, text, events: [event] }]
-    : [];
+const narrateArenaEvent: EventNarrator = (event, h, minute) => {
+  const id = String(event.metadata?.arenaEventId ?? '');
+  // Registered hazards announce from their pbp.arena_events.<id>.lines pool;
+  // the registry narrativeText remains the fallback for unregistered ids.
+  const pool = peekArchive(['pbp', 'arena_events', id, 'lines']);
+  const fallback = event.metadata?.narrativeText;
+  const text = pool
+    ? interpolateTemplate(h.rng.pick(pool) ?? '', {})
+    : typeof fallback === 'string'
+      ? fallback
+      : '';
+  if (!text) return [];
+  const out: MinuteEvent[] = [{ minute, text, events: [event] }];
+  // Endurance drains get a follow-up beat describing the fatigue.
+  if (event.metadata?.effect === 'endurance_drain') {
+    const drainPool =
+      peekArchive(['pbp', 'arena_events', id, 'drain']) ??
+      peekArchive(['pbp', 'arena_fx', 'drain']);
+    if (drainPool) {
+      out.push({
+        minute,
+        text: interpolateTemplate(h.rng.pick(drainPool) ?? '', {}),
+        events: [event],
+      });
+    }
+  }
+  return out;
 };
 
 const narrateFeintFailEvent: EventNarrator = (event, h, minute) => [

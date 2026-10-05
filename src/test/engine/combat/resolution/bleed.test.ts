@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { makeStatWarrior } from '@/test/_fixtures/statWarrior';
+import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
 import { accumulateBleed, tickBleed } from '@/engine/combat/resolution/bleed';
+import { resolveExchange } from '@/engine/combat/resolution/resolution';
+import { emitDownedBoutEnd } from '@/engine/combat/mechanics/downedFighterEnd';
 import {
   SL_BLEED_STACKS_PER_HIT,
   SL_BLEED_CAP,
@@ -9,6 +12,7 @@ import {
 } from '@/constants/combat/combat';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/game';
+import type { CombatEvent } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 
 function mk(style: FightingStyle, id: string): Warrior {
@@ -98,5 +102,85 @@ describe('Bleed Mechanics', () => {
     it('prevents next stacks from dropping below zero', () => {
       expect(tickBleed(0).next).toBe(0);
     });
+  });
+});
+
+describe('emitDownedBoutEnd', () => {
+  it('emits a KO with the survivor as actor when one fighter is down', () => {
+    const fA = makeFighterState({ hp: 30 });
+    const fD = makeFighterState({ label: 'D', hp: -2 });
+    const events: CombatEvent[] = [];
+
+    emitDownedBoutEnd(fA, fD, events, 'BLEED');
+
+    const end = events.find((e) => e.type === 'BOUT_END');
+    expect(end?.result).toBe('KO');
+    expect(end?.actor).toBe('A');
+    expect(end?.metadata?.cause).toBe('BLEED');
+  });
+
+  it('emits an Exhaustion draw when both fighters are down', () => {
+    const fA = makeFighterState({ hp: 0 });
+    const fD = makeFighterState({ label: 'D', hp: -1 });
+    const events: CombatEvent[] = [];
+
+    emitDownedBoutEnd(fA, fD, events, 'ARENA_HAZARD');
+
+    const end = events.find((e) => e.type === 'BOUT_END');
+    expect(end?.result).toBe('Exhaustion');
+    expect(end?.metadata?.cause).toBe('ARENA_HAZARD');
+  });
+
+  it('does nothing when both fighters are still standing', () => {
+    const fA = makeFighterState({ hp: 10 });
+    const fD = makeFighterState({ label: 'D', hp: 10 });
+    const events: CombatEvent[] = [];
+
+    emitDownedBoutEnd(fA, fD, events, 'BLEED');
+
+    expect(events).toHaveLength(0);
+  });
+
+  it('does not double-end a bout that already decided', () => {
+    const fA = makeFighterState({ hp: 0 });
+    const fD = makeFighterState({ label: 'D', hp: 30 });
+    const events: CombatEvent[] = [
+      { type: 'BOUT_END', actor: 'A', result: 'Kill', metadata: { cause: 'FATAL_DAMAGE' } },
+    ];
+
+    emitDownedBoutEnd(fA, fD, events, 'BLEED');
+
+    expect(events.filter((e) => e.type === 'BOUT_END')).toHaveLength(1);
+  });
+});
+
+describe('bleed termination', () => {
+  // Sky-high DEF on both fighters guarantees no weapon hit lands, so the
+  // bleed tick is the only thing that can down a low-hp fighter.
+  const wall = { ATT: 10, PAR: 200, DEF: 200, INI: 10, RIP: 10, DEC: 10 };
+
+  it('ends the bout when bleed damage drops a fighter to 0 hp', () => {
+    const ctx = makeResolutionContext();
+    const fA = makeFighterState({ hp: 100, skills: { ...wall } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    const end = events.find((e) => e.type === 'BOUT_END');
+    expect(end?.result).toBe('KO');
+    expect(end?.actor).toBe('A');
+    expect(end?.metadata?.cause).toBe('BLEED');
+  });
+
+  it('declares an Exhaustion draw when bleed drops both fighters', () => {
+    const ctx = makeResolutionContext();
+    const fA = makeFighterState({ hp: 2, bleedStacks: 5, skills: { ...wall } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    const end = events.find((e) => e.type === 'BOUT_END');
+    expect(end?.result).toBe('Exhaustion');
+    expect(end?.metadata?.cause).toBe('BLEED');
   });
 });

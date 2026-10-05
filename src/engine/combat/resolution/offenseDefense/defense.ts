@@ -23,6 +23,22 @@ import { styleRiposteBonus } from '../styleRiposteBonus';
 import { addCapped } from '@/utils/math';
 import type { OffenseDefenseCtx } from './types';
 
+/**
+ * Stamp pending arena-event riposte-mod sources onto the riposte DEFENSE
+ * event just emitted — the narrator echoes the hazard name.
+ */
+function stampRiposteSources(s: OffenseDefenseCtx): void {
+  const sources = s.ctx.arenaEventModSources?.riposte;
+  if (!sources?.length) return;
+  for (let i = s.events.length - 1; i >= 0; i--) {
+    const e = s.events[i];
+    if (e?.type === 'DEFENSE' && e.result === 'RIPOSTE') {
+      e.metadata = { ...e.metadata, arenaModSources: [...sources] };
+      return;
+    }
+  }
+}
+
 /** Per-style conditional riposte bonuses (TP fatigue-exploit, PL momentum pressure, PR riposte master). */
 export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
   const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
@@ -66,6 +82,7 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     executeRiposte(
       { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: 1.0, extraDmg: styleRip.dmgBonus }
     );
+    stampRiposteSources(s);
   }
 }
 
@@ -137,6 +154,7 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
     executeRiposte(
       { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: specRiposteMult, extraDmg: styleRip.dmgBonus }
     );
+    stampRiposteSources(s);
   }
 }
 

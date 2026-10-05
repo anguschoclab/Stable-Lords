@@ -9,18 +9,24 @@
  * effects, and emits ARENA_EVENT CombatEvents that narrate into the bout
  * log.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
 import { tickArenaEvents } from '@/engine/combat/mechanics/arenaEvents';
 import { resolveExchange } from '@/engine/combat/resolution/resolution';
 import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
+import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
+import { loadCombatNarrative } from '@/data/narrative';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 import { getArenaById } from '@/data/arenas';
+
+beforeAll(async () => {
+  await loadCombatNarrative();
+});
 
 const arenaWithTags = (tags: ArenaTag[]): ArenaConfig => ({
   ...getArenaById('standard_arena'),
@@ -277,6 +283,60 @@ describe('tickArenaEvents — mechanical effects', () => {
     expect(events.filter((e) => e.type === 'BOUT_END')).toHaveLength(1);
   });
 
+  it('emits a cause-tagged HIT per fighter when a damage effect fires', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState({ hp: 100 });
+    const fD = makeFighterState({ label: 'D', hp: 80 });
+    const events: CombatEvent[] = [heavyHit(16)];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    const hazardHits = events.filter(
+      (e) => e.type === 'HIT' && e.metadata?.cause === 'ARENA_EVENT'
+    );
+    expect(hazardHits).toHaveLength(2);
+    expect(hazardHits.map((h) => h.target).sort()).toEqual(['A', 'D']);
+    // crowd_riot: damage 2
+    expect(hazardHits.every((h) => h.value === 2)).toBe(true);
+    expect(hazardHits.every((h) => h.metadata?.arenaEventId === 'crowd_riot')).toBe(true);
+    expect(hazardHits.every((h) => h.metadata?.hazardName === 'Crowd Riot')).toBe(true);
+    // No location — hazard damage has no body part and must not pollute
+    // buildExchangeLogEntry.hitLocation.
+    expect(hazardHits.every((h) => h.location === undefined)).toBe(true);
+  });
+
+  it('does not count cause-tagged hits toward heavy_hit triggers', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+    const events: CombatEvent[] = [
+      {
+        type: 'HIT',
+        actor: 'A',
+        target: 'A',
+        value: 50,
+        metadata: { cause: 'ARENA_EVENT', arenaEventId: 'crowd_riot' },
+      },
+    ];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    expect(arenaEventIds(events)).toHaveLength(0);
+  });
+
+  it('names the triggering hitter as the ARENA_EVENT actor on heavy_hit triggers', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+    const events: CombatEvent[] = [{ ...heavyHit(20), actor: 'D', target: 'A' }];
+
+    tickArenaEvents(ctx, fA, fD, events);
+
+    const arenaEvent = events.find((e) => e.type === 'ARENA_EVENT');
+    expect(arenaEvent?.actor).toBe('D');
+    expect(arenaEvent?.metadata?.hazardName).toBe('Crowd Riot');
+  });
+
   it('applies endurance_drain to both fighters and floors at 0', () => {
     const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['cursed']) });
     const fA = makeFighterState({ endurance: 100 });
@@ -345,6 +405,45 @@ describe('tickArenaEvents — mechanical effects', () => {
 
     expect(ctx.arenaEventMods?.riposteMod).toBe(-4);
   });
+
+  it('records firing event names in arenaEventModSources for echo narration', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['magical', 'elevated']),
+      rng: () => 0.01, // below monolith_pulse 0.05
+    });
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+
+    tickArenaEvents(ctx, fA, fD, []);
+
+    expect(ctx.arenaEventModSources?.initiative).toContain('Monolith Pulse');
+  });
+
+  it('records riposte-mod sources and clears them when nothing fires', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    ctx.arenaEventCandidates = [
+      {
+        id: 'synthetic_riposte',
+        name: 'Synthetic',
+        description: 'test',
+        requiredTags: ['premium'],
+        triggerCondition: 'exchange_interval',
+        triggerValue: 3,
+        narrativeText: 'test',
+        mechanicalEffect: { type: 'riposte_mod', value: -4 },
+      },
+    ];
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+
+    ctx.exchange = 3;
+    tickArenaEvents(ctx, fA, fD, []);
+    expect(ctx.arenaEventModSources?.riposte).toContain('Synthetic');
+
+    ctx.exchange = 4;
+    tickArenaEvents(ctx, fA, fD, []);
+    expect(ctx.arenaEventModSources?.riposte ?? []).toHaveLength(0);
+  });
 });
 
 describe('arena events — resolution integration', () => {
@@ -403,13 +502,14 @@ describe('arena events — narration', () => {
     fameD: 10,
   });
 
-  it('narrates ARENA_EVENT via its metadata narrativeText', () => {
+  it('narrates ARENA_EVENT from the arena-events announce pool', () => {
     const events: CombatEvent[] = [
       {
         type: 'ARENA_EVENT',
         actor: 'A',
         metadata: {
           arenaEventId: 'geyser_eruption',
+          hazardName: 'Geyser Eruption',
           narrativeText: 'A hidden geyser erupts, blasting scalding water into the air!',
         },
       },
@@ -417,10 +517,32 @@ describe('arena events — narration', () => {
 
     const { log } = narrateEvents(events, createNarrCtx(), 3);
 
-    const line = log.find((l) => l.text.includes('geyser erupts'));
+    const line = log.find((l) => l.events?.some((e) => e.type === 'ARENA_EVENT'));
     expect(line).toBeTruthy();
-    // carries the source event so classifyEvent can mark it 'spatial'
-    expect(line?.events?.some((e) => e.type === 'ARENA_EVENT')).toBe(true);
+    // Announce text comes from pbp.arena_events.<id>.lines; the registry
+    // narrativeText remains the fallback for unregistered ids.
+    const pool = peekArchive(['pbp', 'arena_events', 'geyser_eruption', 'lines']) ?? [];
+    expect(pool.length).toBeGreaterThanOrEqual(3);
+    expect([...pool, 'A hidden geyser erupts, blasting scalding water into the air!']).toContain(
+      line!.text
+    );
+  });
+
+  it('falls back to metadata narrativeText for unregistered arenaEventIds', () => {
+    const events: CombatEvent[] = [
+      {
+        type: 'ARENA_EVENT',
+        actor: 'A',
+        metadata: {
+          arenaEventId: 'unregistered_event',
+          narrativeText: 'Something inexplicable happens.',
+        },
+      },
+    ];
+
+    const { log } = narrateEvents(events, createNarrCtx(), 3);
+
+    expect(log[0]?.text).toBe('Something inexplicable happens.');
   });
 });
 
@@ -443,8 +565,13 @@ describe('arena events — bout-level integration', () => {
     });
 
     const lines = outcome.log.map((m) => m.text ?? '');
+    expect(lines.some((t) => /blood moon/i.test(t))).toBe(true);
+    // The hazard's damage is narrated — at least one minute carries an
+    // ARENA_EVENT-caused HIT alongside the announce.
     expect(
-      lines.some((t) => t.includes('blood moon illuminates the cursed ground'))
+      outcome.log.some((m) =>
+        m.events?.some((e) => e.type === 'HIT' && e.metadata?.cause === 'ARENA_EVENT')
+      )
     ).toBe(true);
   });
 
@@ -452,7 +579,7 @@ describe('arena events — bout-level integration', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
     const mk = (style: FightingStyle) =>
       makeWarrior({ id: undefined, name: 'W', style, attrs });
-    const run = () => {
+    const run = (headless: boolean) => {
       const wA = mk(FightingStyle.StrikingAttack);
       const wD = mk(FightingStyle.TotalParry);
       return simulateFight({
@@ -463,14 +590,78 @@ describe('arena events — bout-level integration', () => {
         providedRng: 777,
         arenaId: 'the_gallows_tree',
         weather: 'Blood Moon',
-        headless: true,
+        headless,
         deathRateMult: 0,
       });
     };
 
-    const r1 = run();
-    const r2 = run();
+    const r1 = run(true);
+    const r2 = run(true);
     expect(r1.minutes).toBe(r2.minutes);
     expect(r1.winner).toBe(r2.winner);
+
+    // Narrated runs: flavor draws come from the seeded narRng, so the log
+    // text must be identical too.
+    const n1 = run(false);
+    const n2 = run(false);
+    expect(n1.log.map((m) => m.text)).toEqual(n2.log.map((m) => m.text));
+  });
+});
+
+describe('arena events — next-exchange attribution', () => {
+  it('stamps the pending initiative mod source on the INITIATIVE event', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['cramped', 'outdoor']),
+      exchange: 7, // mist_veil fires on the 7s
+    });
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+
+    resolveExchange(ctx, fA, fD); // mist_veil fires → pending mod + source
+    expect(ctx.arenaEventModSources?.initiative).toContain('Mist Veil');
+
+    ctx.exchange = 8;
+    const events = resolveExchange(ctx, fA, fD);
+    const ini = events.find((e) => e.type === 'INITIATIVE');
+    expect(ini?.metadata?.arenaModSources).toContain('Mist Veil');
+  });
+
+  it('stamps the pending riposte mod source on the riposte DEFENSE event', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['premium']),
+      // roll 1 → every skill check succeeds → a riposte fires deterministically
+      rng: () => 0,
+    });
+    ctx.arenaEventMods = { initiativeMod: 0, riposteMod: -4 };
+    ctx.arenaEventModSources = { initiative: [], riposte: ['Synthetic'] };
+    ctx.arenaEventCandidates = []; // keep the tick from clobbering sources
+    const fA = makeFighterState();
+    const fD = makeFighterState({ label: 'D' });
+
+    const events = resolveExchange(ctx, fA, fD);
+    const riposte = events.find((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE');
+    expect(riposte).toBeTruthy();
+    expect(riposte?.metadata?.arenaModSources).toContain('Synthetic');
+  });
+});
+
+describe('bleed termination — hazard attribution', () => {
+  it('attributes a bleed-down to BLEED, not ARENA_HAZARD, even in a tagged arena', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
+    // Sky-high DEF on both fighters guarantees no weapon hit lands, so the
+    // bleed tick is the only thing that can drop fD (hp 3 - stacks 5 × 1).
+    // The end must say BLEED and the arena tick must not stack a second
+    // ARENA_HAZARD end on top.
+    const wall = { ATT: 10, PAR: 200, DEF: 200, INI: 10, RIP: 10, DEC: 10 };
+    const fA = makeFighterState({ hp: 100, skills: { ...wall } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    const boutEnds = events.filter((e) => e.type === 'BOUT_END');
+    expect(boutEnds).toHaveLength(1);
+    expect(boutEnds[0]?.metadata?.cause).toBe('BLEED');
+    expect(boutEnds[0]?.result).toBe('KO');
+    expect(boutEnds[0]?.actor).toBe('A');
   });
 });

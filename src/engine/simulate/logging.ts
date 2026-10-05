@@ -19,8 +19,33 @@ export function buildExchangeLogEntry(
 ): ExchangeLogEntry {
   const entry: ExchangeLogEntry = { exchangeIndex, minute, phase };
   const reasonCodes: string[] = [];
-  for (const e of events) {
-    switch (e.type) {
+  for (const e of events) projectEvent(e, entry, reasonCodes);
+  if (reasonCodes.length) entry.reasonCodes = reasonCodes;
+  return entry;
+}
+
+/**
+ * Stage E: project the first condition fire into a side-attributed
+ * structure — the reasonCode string alone loses the actor.
+ */
+function projectConditionFire(e: CombatEvent, entry: ExchangeLogEntry): void {
+  const fire = /^CONDITION_(\w+?)(@CORNER)?$/.exec(String(e.result ?? ''));
+  if (fire && !entry.conditionFire) {
+    entry.conditionFire = {
+      actor: e.actor,
+      trigger: fire[1] ?? '',
+      corner: fire[2] === '@CORNER',
+    };
+  }
+}
+
+/** Fold one CombatEvent into the log entry / reason-code accumulators. */
+function projectEvent(
+  e: CombatEvent,
+  entry: ExchangeLogEntry,
+  reasonCodes: string[]
+): void {
+  switch (e.type) {
       case 'INITIATIVE':
         entry.iniWinner = e.actor;
         break;
@@ -39,9 +64,14 @@ export function buildExchangeLogEntry(
         } else if (e.result === 'RIPOSTE') entry.ripResult = 'hit';
         break;
       case 'HIT':
-        entry.attResult ??= e.metadata?.crit ? 'crit' : 'hit';
+        // Cause-tagged damage (BLEED ticks, ARENA_EVENT hazards) is
+        // environmental — it sums into damage but never poses as a weapon
+        // result or body location for fightAnalysis.
+        if (!e.metadata?.cause) {
+          entry.attResult ??= e.metadata?.crit ? 'crit' : 'hit';
+          if (e.location) entry.hitLocation = e.location;
+        }
         if (typeof e.value === 'number') entry.damage = (entry.damage ?? 0) + e.value;
-        if (e.location) entry.hitLocation = e.location;
         break;
       case 'BOUT_END':
         if (e.metadata?.cause) reasonCodes.push(`CAUSE_${String(e.metadata.cause)}`);
@@ -57,16 +87,7 @@ export function buildExchangeLogEntry(
         // annotations (CONDITION_*, CONDITION_*@CORNER) are real engine facts
         // — the debug drawer reads them verbatim from reasonCodes.
         if (e.result) reasonCodes.push(String(e.result));
-        // Stage E: project the first condition fire into a side-attributed
-        // structure — the reasonCode string alone loses the actor.
-        const fire = /^CONDITION_(\w+?)(@CORNER)?$/.exec(String(e.result ?? ''));
-        if (fire && !entry.conditionFire) {
-          entry.conditionFire = {
-            actor: e.actor,
-            trigger: fire[1] ?? '',
-            corner: fire[2] === '@CORNER',
-          };
-        }
+        projectConditionFire(e, entry);
         break;
       }
       case 'KNOCKDOWN':
@@ -77,6 +98,13 @@ export function buildExchangeLogEntry(
         // actor is the fighter who recovers (clears knockedDown at start of exchange)
         entry.recovery ??= e.actor;
         break;
+      case 'ARENA_EVENT':
+        // Tag-venue hazards surface as ARENA_<ID> so the debug drawer can
+        // tell a mist-veil exchange from a clean one.
+        if (e.metadata?.arenaEventId) {
+          reasonCodes.push(`ARENA_${String(e.metadata.arenaEventId).toUpperCase()}`);
+        }
+        break;
       case 'MOMENTUM_SHIFT':
         // first shift per exchange wins; subsequent parry/riposte swings in same exchange are noise
         entry.momentumShift ??= {
@@ -86,7 +114,4 @@ export function buildExchangeLogEntry(
         };
         break;
     }
-  }
-  if (reasonCodes.length) entry.reasonCodes = reasonCodes;
-  return entry;
 }

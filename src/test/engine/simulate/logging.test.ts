@@ -44,4 +44,44 @@ describe('buildExchangeLogEntry — telemetry completeness', () => {
     expect(entry.reasonCodes).toContain('AI_INTENT_PRESS');
     expect(entry.reasonCodes).toContain('CONDITION_OPPONENT_HP_BELOW');
   });
+
+  it('does not count cause-tagged hits as attack results, but still sums their damage', () => {
+    const events: CombatEvent[] = [
+      {
+        type: 'HIT',
+        actor: 'D',
+        target: 'D',
+        value: 2,
+        metadata: { cause: 'ARENA_EVENT', arenaEventId: 'crowd_riot' },
+      },
+      {
+        type: 'HIT',
+        actor: 'A',
+        target: 'D',
+        value: 3,
+        location: 'Bleed',
+        metadata: { cause: 'BLEED' },
+      },
+    ];
+    const entry = buildExchangeLogEntry(1, 1, 'MID', events);
+
+    // Cause-tagged damage is environmental — it must not masquerade as a
+    // weapon result ('hit') or a body location ('Bleed') for fightAnalysis.
+    expect(entry.attResult).toBeUndefined();
+    expect(entry.hitLocation).toBeUndefined();
+    expect(entry.damage).toBe(5);
+  });
+
+  it('surfaces arena events as reason codes', () => {
+    const events: CombatEvent[] = [
+      {
+        type: 'ARENA_EVENT',
+        actor: 'A',
+        metadata: { arenaEventId: 'geyser_eruption', hazardName: 'Geyser Eruption' },
+      },
+    ];
+    const entry = buildExchangeLogEntry(2, 1, 'MID', events);
+
+    expect(entry.reasonCodes).toContain('ARENA_GEYSER_ERUPTION');
+  });
 });

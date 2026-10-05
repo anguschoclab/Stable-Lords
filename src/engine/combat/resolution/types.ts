@@ -155,6 +155,13 @@ export interface ResolutionContext {
    * overwritten — mods therefore last exactly one exchange.
    */
   arenaEventMods?: { initiativeMod: number; riposteMod: number };
+  /**
+   * Names of the arena events that produced the pending `arenaEventMods` —
+   * parallel channel so the next exchange's INITIATIVE/riposte events can
+   * echo which hazard is bending the numbers (`metadata.arenaModSources`).
+   * Written alongside the mods by tickArenaEvents; cleared when nothing fires.
+   */
+  arenaEventModSources?: { initiative: string[]; riposte: string[] };
   /** Lazily cached per-fight candidate list (tag-filtered ARENA_EVENTS). */
   arenaEventCandidates?: import('@/constants/arenaEvents').ArenaEventConfig[];
   /** Weather-onset latch: event ids that already fired this fight. */

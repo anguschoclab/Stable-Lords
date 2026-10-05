@@ -228,5 +228,27 @@ describe('classifyEvent', () => {
       };
       expect(classifyEvent(minute)).toBe('spatial');
     });
+
+    it('classifies hazard-damage lines as spatial when they carry the ARENA_EVENT', () => {
+      const minute: MinuteEvent = {
+        minute: 5,
+        text: 'Debris from the rioting crowd catches Lightning across the shoulder.',
+        events: [
+          {
+            type: 'HIT',
+            actor: 'D',
+            target: 'D',
+            value: 2,
+            metadata: { cause: 'ARENA_EVENT', arenaEventId: 'crowd_riot' },
+          } satisfies CombatEvent,
+          {
+            type: 'ARENA_EVENT',
+            actor: 'A',
+            metadata: { arenaEventId: 'crowd_riot' },
+          } satisfies CombatEvent,
+        ],
+      };
+      expect(classifyEvent(minute)).toBe('spatial');
+    });
   });
 });

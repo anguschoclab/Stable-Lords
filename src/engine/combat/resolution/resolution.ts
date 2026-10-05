@@ -16,6 +16,7 @@ import {
   type ExchangeState,
 } from './exchangeSubPhases';
 import { tickBleed } from './bleed';
+import { emitDownedBoutEnd } from '../mechanics/downedFighterEnd';
 import { tickArenaEvents } from '../mechanics/arenaEvents';
 import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
 import { prepareExchange, type ExchangeSetup } from './exchangePrep';
@@ -73,6 +74,9 @@ export function resolveExchange(
 
   updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
   tickBleedOnFighters(fA, fD, events);
+  // Bleed bypasses the weapon kill-window — a bleed-down ends the bout here,
+  // before the arena tick (which must not stack a second end on top).
+  emitDownedBoutEnd(fA, fD, events, 'BLEED');
   tickArenaEvents(ctx, fA, fD, events);
 
   return events;

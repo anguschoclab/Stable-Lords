@@ -149,4 +149,14 @@ export interface ResolutionContext {
   /** When true, prepareExchange emits AI_INTENT transition events (Stage F).
    *  Set by runSimulationLoop: non-headless, or headless + __AI_DEBUG. */
   aiIntentTelemetry?: boolean;
+  /**
+   * Pending arena-event modifiers queued by tickArenaEvents. Set at the end
+   * of exchange N, consumed by initiative/riposte during exchange N+1, then
+   * overwritten — mods therefore last exactly one exchange.
+   */
+  arenaEventMods?: { initiativeMod: number; riposteMod: number };
+  /** Lazily cached per-fight candidate list (tag-filtered ARENA_EVENTS). */
+  arenaEventCandidates?: import('@/constants/arenaEvents').ArenaEventConfig[];
+  /** Weather-onset latch: event ids that already fired this fight. */
+  arenaEventsFired?: Set<string>;
 }

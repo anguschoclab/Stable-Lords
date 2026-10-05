@@ -320,4 +320,5 @@ export const COMBAT_EVENT_TYPES = [
   'KNOCKDOWN',
   'RECOVERY',
   'AI_INTENT',
+  'ARENA_EVENT',
 ] as const;

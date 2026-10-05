@@ -335,6 +335,11 @@ const narrateFeintSuccessEvent: EventNarrator = (event, h, minute) => [
   },
 ];
 
+const narrateArenaEvent: EventNarrator = (event, _h, minute) => {
+  const text = event.metadata?.narrativeText;
+  return typeof text === 'string' && text ? [{ minute, text }] : [];
+};
+
 const narrateFeintFailEvent: EventNarrator = (event, h, minute) => [
   {
     minute,
@@ -365,4 +370,5 @@ export const EVENT_NARRATORS: Partial<Record<CombatEvent['type'], EventNarrator>
   FEINT_SUCCESS: narrateFeintSuccessEvent,
   FEINT_FAIL: narrateFeintFailEvent,
   ZONE_SHIFT: narrateZoneShiftEvent,
+  ARENA_EVENT: narrateArenaEvent,
 };

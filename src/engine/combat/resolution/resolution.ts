@@ -16,6 +16,7 @@ import {
   type ExchangeState,
 } from './exchangeSubPhases';
 import { tickBleed } from './bleed';
+import { tickArenaEvents } from '../mechanics/arenaEvents';
 import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
 import { prepareExchange, type ExchangeSetup } from './exchangePrep';
 import type { FighterState, ResolutionContext } from './types';
@@ -72,6 +73,7 @@ export function resolveExchange(
 
   updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
   tickBleedOnFighters(fA, fD, events);
+  tickArenaEvents(ctx, fA, fD, events);
 
   return events;
 }

@@ -51,6 +51,7 @@ function sumInitiative(args: SumInitiativeArgs): number {
     trainerIniMod +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
+    (ctx.arenaEventMods?.initiativeMod ?? 0) +
     styleWeatherMod.initiativeMod +
     getWeaponInitiativeMod(f.weaponId) +
     dynTraits.iniMod

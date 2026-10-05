@@ -19,9 +19,13 @@ import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
-import type { ArenaConfig } from '@/types/shared.types';
+import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
+import { getArenaById } from '@/data/arenas';
 
-const arenaWithTags = (tags: string[]) => ({ tags }) as unknown as ArenaConfig;
+const arenaWithTags = (tags: ArenaTag[]): ArenaConfig => ({
+  ...getArenaById('standard_arena'),
+  tags,
+});
 
 const arenaEventIds = (events: CombatEvent[]) =>
   events.filter((e) => e.type === 'ARENA_EVENT').map((e) => e.metadata?.arenaEventId);
@@ -315,8 +319,12 @@ describe('arena events — resolution integration', () => {
   });
 
   it('pending initiative_mod shifts the next exchange initiative sum', () => {
-    const base = makeResolutionContext();
-    const modded = makeResolutionContext();
+    const base = makeResolutionContext({
+      arenaConfig: arenaWithTags(['outdoor', 'open']),
+    });
+    const modded = makeResolutionContext({
+      arenaConfig: arenaWithTags(['outdoor', 'open']),
+    });
     modded.arenaEventMods = { initiativeMod: -3, riposteMod: 0 };
     const fA1 = makeFighterState();
     const fD1 = makeFighterState({ label: 'D' });
@@ -373,8 +381,8 @@ describe('arena events — narration', () => {
 describe('arena events — bout-level integration', () => {
   it('a cursed-arena bout under Blood Moon narrates the arena event', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-    const wA = makeWarrior({ style: FightingStyle.StrikingAttack, attrs });
-    const wD = makeWarrior({ style: FightingStyle.TotalParry, attrs });
+    const wA = makeWarrior({ id: undefined, name: 'A', style: FightingStyle.StrikingAttack, attrs });
+    const wD = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs });
 
     const outcome = simulateFight({
       planA: defaultPlanForWarrior(wA),
@@ -382,7 +390,8 @@ describe('arena events — bout-level integration', () => {
       warriorA: wA,
       warriorD: wD,
       providedRng: 4242,
-      arenaId: 'the_asylum', // indoor + cramped + cursed
+      // outdoor + cursed — indoor arenas resolve weather down to Clear
+      arenaId: 'the_gallows_tree',
       weather: 'Blood Moon',
       deathRateMult: 0,
     });
@@ -395,7 +404,8 @@ describe('arena events — bout-level integration', () => {
 
   it('same seed reproduces identical arena-event outcomes (determinism)', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-    const mk = (style: FightingStyle) => makeWarrior({ style, attrs });
+    const mk = (style: FightingStyle) =>
+      makeWarrior({ id: undefined, name: 'W', style, attrs });
     const run = () => {
       const wA = mk(FightingStyle.StrikingAttack);
       const wD = mk(FightingStyle.TotalParry);
@@ -405,7 +415,7 @@ describe('arena events — bout-level integration', () => {
         warriorA: wA,
         warriorD: wD,
         providedRng: 777,
-        arenaId: 'the_asylum',
+        arenaId: 'the_gallows_tree',
         weather: 'Blood Moon',
         headless: true,
         deathRateMult: 0,

@@ -26,7 +26,7 @@ export const ARENA_EVENT_CONSTANTS = {
   CRUMBLING_SPIRE_FALL_TRIGGER: 10,
   MIST_VEIL_TRIGGER: 7,
 } as const;
-import type { ArenaTag } from '@/types/shared.types';
+import type { ArenaTag, WeatherType } from '@/types/shared.types';
 
 /**
  *
@@ -39,6 +39,13 @@ export interface ArenaEventConfig {
   triggerCondition: 'heavy_hit' | 'exchange_interval' | 'weather_combo' | 'random';
   triggerValue: number;
   narrativeText: string;
+  /**
+   * For weather_combo events: the specific weather that arms the trigger.
+   * When omitted, falls back to the legacy union of Mana Surge | Blood Moon.
+   * Weather-onset events fire once per fight (they announce the condition,
+   * not re-announce every exchange).
+   */
+  requiredWeather?: WeatherType;
   mechanicalEffect?: {
     type: 'damage' | 'initiative_mod' | 'riposte_mod' | 'endurance_drain';
     value: number;
@@ -128,6 +135,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['magical'],
     triggerCondition: 'weather_combo',
     triggerValue: 1, // With Mana Surge weather
+    requiredWeather: 'Mana Surge',
     narrativeText: 'Arcane energy crackles through the air, empowering attacks!',
   },
 
@@ -139,6 +147,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['cursed'],
     triggerCondition: 'weather_combo',
     triggerValue: 1, // With Blood Moon weather
+    requiredWeather: 'Blood Moon',
     narrativeText: 'The blood moon shines brighter here. Violence feels inevitable.',
   },
 
@@ -226,6 +235,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['cursed'],
     triggerCondition: 'weather_combo',
     triggerValue: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_TRIGGER, // With Blood Moon
+    requiredWeather: 'Blood Moon',
     narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
     mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE },
   },
@@ -365,7 +375,9 @@ export function shouldTriggerEvent(
       return exchange > 0 && exchange % event.triggerValue === 0;
 
     case 'weather_combo':
-      return weather === 'Mana Surge' || weather === 'Blood Moon';
+      return event.requiredWeather
+        ? weather === event.requiredWeather
+        : weather === 'Mana Surge' || weather === 'Blood Moon';
 
     case 'random':
       return rng() < event.triggerValue;

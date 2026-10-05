@@ -5,6 +5,8 @@
  * doesn't affect a bout.
  */
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
+import type { ArenaEventConfig } from '@/constants/arenaEvents';
+import { getEventsForArena } from '@/constants/arenaEvents';
 import { getArenaById } from '@/data/arenas';
 
 const SIZE_PROSE: Record<ArenaConfig['size'], string> = {
@@ -66,6 +68,19 @@ function surfaceProse(arena: ArenaConfig): string[] {
   return lines;
 }
 
+function triggerHint(event: ArenaEventConfig): string {
+  switch (event.triggerCondition) {
+    case 'heavy_hit':
+      return 'when blows land hard';
+    case 'exchange_interval':
+      return `every ${event.triggerValue} exchanges`;
+    case 'weather_combo':
+      return event.requiredWeather ? `under ${event.requiredWeather}` : 'under volatile weather';
+    case 'random':
+      return 'at random';
+  }
+}
+
 /**
  * Lore-ish prose for an arena card: its name, its description, then every
  * real mechanical effect translated into readable lines.
@@ -113,6 +128,10 @@ export function describeArenaEffects(arenaId: string): string[] {
         `In ${mod.weatherType.toLowerCase()} weather counter-attacks suffer (${s.riposteMod} riposte).`
       );
     }
+  }
+
+  for (const event of getEventsForArena(arena.tags)) {
+    lines.push(`Hazard: ${event.name} — ${event.description} (${triggerHint(event)}).`);
   }
 
   return lines;

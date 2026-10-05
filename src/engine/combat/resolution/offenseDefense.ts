@@ -114,6 +114,7 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
       WHIFF_RIPOSTE_DEF_PENALTY +
       styleRip.ripBonus +
       ctx.weatherEffect.riposteMod +
+      (ctx.arenaEventMods?.riposteMod ?? 0) +
       styleWeatherRipMod, curPass: aGoesFirst ? s.passD : s.passA, curAntiSynDef: curAntiSynDef }
   );
   if (def.style === FightingStyle.ParryRiposte) {
@@ -180,6 +181,7 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
   const ripPostParry = performRiposteCheck(
     { rng: rng, def: def, matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA, fat: aGoesFirst ? s.fatD : s.fatA, penaltyOrBonus: (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
       ctx.weatherEffect.riposteMod +
+      (ctx.arenaEventMods?.riposteMod ?? 0) +
       styleRip.ripBonus +
       styleWeatherRipMod, curPass: aGoesFirst ? s.passD : s.passA, curAntiSynDef: undefined }
   );

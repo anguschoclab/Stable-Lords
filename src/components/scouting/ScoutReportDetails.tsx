@@ -83,6 +83,7 @@ export function ScoutReportDetails({
           suspectedAL={report.suspectedAL}
           knownInjuries={report.knownInjuries}
           possiblyMaskedPlan={report.possiblyMaskedPlan}
+          suspectedCompetence={report.suspectedCompetence}
         />
 
         <ReportNotes notes={report.notes} />

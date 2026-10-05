@@ -1,4 +1,9 @@
-import { OWNER_PERSONALITIES, META_ADAPTATIONS, OWNER_COMPETENCES } from '../enumSources';
+import {
+  OWNER_PERSONALITIES,
+  META_ADAPTATIONS,
+  OWNER_COMPETENCES,
+  WORLD_DIFFICULTIES,
+} from '../enumSources';
 import type { CrestData } from '../crest.types';
 import type { StableId, WarriorId } from '../shared.types';
 import type { FightingStyle } from '../warrior.types';
@@ -18,6 +23,20 @@ export type MetaAdaptation = (typeof META_ADAPTATIONS)[number];
  * term in AI decision scoring; never changes what the stable wants.
  */
 export type OwnerCompetence = (typeof OWNER_COMPETENCES)[number];
+
+/**
+ * World-generation difficulty (Stage E) — picked at world creation, skews
+ * the minted stablemaster competence field.
+ */
+export type WorldDifficulty = (typeof WORLD_DIFFICULTIES)[number];
+
+/**
+ * World-creation options persisted on GameState (Stage E). Read once at
+ * world seeding — mid-game refills ignore it.
+ */
+export interface WorldOptions {
+  difficulty?: WorldDifficulty;
+}
 
 /**
  * Defines the shape of owner.

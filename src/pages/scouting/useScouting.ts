@@ -16,10 +16,11 @@ function purchaseScoutReport(
     treasury: number | undefined;
     week: number;
     scoutReports: ScoutReportData[] | undefined;
+    owner: RivalStableData['owner'] | undefined;
     setState: (fn: (draft: GameStore) => void) => void;
   }
 ): void {
-  const { treasury, week, scoutReports, setState } = deps;
+  const { treasury, week, scoutReports, owner, setState } = deps;
   const cost = getScoutCost(quality);
   if ((treasury ?? 0) < cost) {
     toast.error(`Insufficient funds! Scouting requires ${cost}g.`);
@@ -27,7 +28,7 @@ function purchaseScoutReport(
   }
 
   const rng = new SeededRNGService(week + hashStr(activeWarrior.name));
-  const { report } = generateScoutReport(activeWarrior, quality, week, rng);
+  const { report } = generateScoutReport(activeWarrior, quality, week, rng, owner);
 
   // Ensure we don't have duplicate reports for the same warrior
   const newReports = [
@@ -103,9 +104,15 @@ export function useScouting(showBookmarkedOnly: boolean) {
   const handleScout = useCallback(
     (quality: ScoutQuality) => {
       if (!activeWarrior) return;
-      purchaseScoutReport(activeWarrior, quality, { treasury, week, scoutReports, setState });
+      purchaseScoutReport(activeWarrior, quality, {
+        treasury,
+        week,
+        scoutReports,
+        owner: activeRival?.owner,
+        setState,
+      });
     },
-    [treasury, week, scoutReports, setState, activeWarrior]
+    [treasury, week, scoutReports, setState, activeWarrior, activeRival]
   );
 
   const handleSelectRival = useCallback((id: string) => {

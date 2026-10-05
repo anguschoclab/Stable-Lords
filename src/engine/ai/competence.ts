@@ -12,7 +12,7 @@
  * mean, so a Master of a weaker personality can out-perform a Novice of a
  * stronger one — competence matters as much as temperament).
  */
-import type { Owner, OwnerCompetence } from '@/types/state/owner';
+import type { Owner, OwnerCompetence, WorldDifficulty } from '@/types/state/owner';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { hashStr } from '@/utils/random';
 import { clamp } from '@/utils/math';
@@ -108,13 +108,30 @@ const TIER_COMPETENCE_WEIGHTS: Record<
   Legendary: [0, 15, 45, 40],
 };
 
+/**
+ * World-difficulty skew on the minted stablemaster field (Stage E).
+ * Multipliers applied to the tier weights — 'Contender' mints an easier
+ * field (Novices/Journeymen overrepresented), 'Legend' a harder one.
+ */
+const DIFFICULTY_COMPETENCE_SKEW: Record<
+  WorldDifficulty,
+  [number, number, number, number]
+> = {
+  Contender: [1.8, 1.2, 0.6, 0.25],
+  Challenger: [1, 1, 1, 1],
+  Legend: [0.3, 0.8, 1.4, 2.0],
+};
+
 /** Weighted competence roll for factory minting. */
 export function rollCompetence(
   rng: Pick<IRNGService, 'next'>,
-  tier: 'Minor' | 'Established' | 'Major' | 'Legendary' = 'Established'
+  tier: 'Minor' | 'Established' | 'Major' | 'Legendary' = 'Established',
+  difficulty?: WorldDifficulty
 ): OwnerCompetence {
-  const w = TIER_COMPETENCE_WEIGHTS[tier];
-  const total = w[0] + w[1] + w[2] + w[3];
+  const base = TIER_COMPETENCE_WEIGHTS[tier];
+  const skew = difficulty ? DIFFICULTY_COMPETENCE_SKEW[difficulty] : undefined;
+  const w = skew ? base.map((b, i) => b * (skew[i] ?? 1)) : base;
+  const total = w.reduce((a, b) => a + b, 0);
   let roll = rng.next() * total;
   for (const [i, competence] of OWNER_COMPETENCES.entries()) {
     roll -= w[i] ?? 0;

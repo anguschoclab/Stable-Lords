@@ -19,6 +19,7 @@ import {
   OWNER_PERSONALITIES,
   META_ADAPTATIONS,
   OWNER_COMPETENCES,
+  WORLD_DIFFICULTIES,
   ATTACK_TARGETS,
   PROTECT_TARGETS,
   OFFENSIVE_TACTICS,
@@ -133,6 +134,11 @@ export const MetaAdaptationSchema = z.enum(META_ADAPTATIONS);
  * OwnerCompetence enum schema
  */
 export const OwnerCompetenceSchema = z.enum(OWNER_COMPETENCES);
+
+/**
+ * WorldDifficulty enum schema
+ */
+export const WorldDifficultySchema = z.enum(WORLD_DIFFICULTIES);
 
 /**
  * AttackTarget enum schema

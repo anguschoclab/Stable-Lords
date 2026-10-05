@@ -140,6 +140,10 @@ export interface ExchangeLogEntry {
   executionFlag?: boolean;
   /** Telemetry reason codes e.g. AI_PUSH_FATIGUE, CROWD_BLOODTHIRSTY_LETHAL. */
   reasonCodes?: string[];
+  /** Structured condition-fire projection of the CONDITION_* reason codes
+   *  (Stage E): the code string loses the fighter side — this keeps it so
+   *  the Corner Analysis panel can attribute every plan shift. */
+  conditionFire?: { actor: 'A' | 'D'; trigger: string; corner: boolean };
   /**
    * Which fighter was knocked down during this exchange.
    * NOTE: the matching RECOVERY event fires at the start of the *next* exchange —

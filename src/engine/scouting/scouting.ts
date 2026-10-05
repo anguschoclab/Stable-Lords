@@ -8,9 +8,10 @@
  * - Known injuries
  * - Suspected fight plan tendencies
  */
-import type { InsightToken } from '@/types/state.types';
+import type { InsightToken, Owner, OwnerCompetence } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from '@/types/shared.types';
+import { OWNER_COMPETENCES } from '@/types/enumSources';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { narrativeContent } from '@/data/narrative';
 import type { PersonaDescriptor, PersonaGood } from '@/types/narrative.types';
@@ -40,6 +41,10 @@ export interface ScoutReport {
   /** True when the target stable masks its committed plan — the reported
    *  tendencies may describe a decoy rather than the real fight plan. */
   possiblyMaskedPlan?: boolean;
+  /** Scouted read on the stablemaster's competence (Stage E). Expert
+   *  scouts name the real tier; Detailed may be a tier off; Basic
+   *  reports carry no read at all. */
+  suspectedCompetence?: OwnerCompetence;
   notes: string;
 }
 
@@ -243,12 +248,31 @@ function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGS
   return suspectedTraits;
 }
 
+/**
+ * Scouted read on the stablemaster's competence (Stage E): Expert scouts
+ * name the real tier, Detailed reports land on the real or an adjacent
+ * tier, Basic reports carry no read at all.
+ */
+function suspectCompetence(
+  owner: Owner | undefined,
+  quality: ScoutQuality,
+  rng: IRNGService
+): OwnerCompetence | undefined {
+  const real = owner?.competence;
+  if (!real || quality === 'Basic') return undefined;
+  if (quality === 'Expert') return real;
+  const idx = OWNER_COMPETENCES.indexOf(real);
+  const drift = rng.next() < 0.5 ? 0 : rng.next() < 0.5 ? -1 : 1;
+  return OWNER_COMPETENCES[Math.min(OWNER_COMPETENCES.length - 1, Math.max(0, idx + drift))];
+}
+
 /** Generate a scout report for a warrior */
 export function generateScoutReport(
   warrior: Warrior,
   quality: ScoutQuality,
   week: number,
-  rng: IRNGService
+  rng: IRNGService,
+  owner?: Owner
 ): { report: ScoutReport; newInsights: InsightToken[] } {
   const fuzz = QUALITY_FUZZ[quality];
 
@@ -280,6 +304,7 @@ export function generateScoutReport(
       // A masked target makes every plan tendency in this report suspect —
       // the UI renders this as uncertainty, not confident intel.
       possiblyMaskedPlan: warrior.planMasked === true || undefined,
+      suspectedCompetence: suspectCompetence(owner, quality, rng),
       notes,
     },
     newInsights,

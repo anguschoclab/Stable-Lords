@@ -12,11 +12,11 @@ import { generateRivalStables } from '@/engine/rivals/rivalStableFactory';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { makeGameState } from '@/test/_fixtures/factories';
-import type { OwnerCompetence } from '@/types/state.types';
+import type { OwnerCompetence, WorldDifficulty } from '@/types/state.types';
 
 const SHARE_OF = (tiers: OwnerCompetence[]) => (comp: OwnerCompetence) => tiers.includes(comp);
 
-const strongShare = (seed: number, difficulty?: string) => {
+const strongShare = (seed: number, difficulty?: WorldDifficulty) => {
   const rivals = generateRivalStables(30, seed, 0, undefined, { difficulty });
   const strong = rivals.filter((r) =>
     SHARE_OF(['Veteran', 'Master'])(r.owner.competence ?? 'Journeyman')
@@ -26,7 +26,11 @@ const strongShare = (seed: number, difficulty?: string) => {
 
 describe('worldgen difficulty', () => {
   it('GameState accepts worldOptions.difficulty', () => {
-    const state = makeGameState({ worldOptions: { difficulty: 'Legend' } });
+    // makeGameState carries two legacy-map keys the strict schema rejects —
+    // pre-existing fixture gap; strip them so the assertion isolates worldOptions.
+    const { rivalryMap: _rm, grudgeMap: _gm, ...state } = makeGameState({
+      worldOptions: { difficulty: 'Legend' },
+    } as never) as unknown as Record<string, unknown>;
     const parsed = GameStateSchema.parse(state);
     expect(parsed.worldOptions?.difficulty).toBe('Legend');
   });

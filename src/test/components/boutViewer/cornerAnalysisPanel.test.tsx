@@ -5,7 +5,6 @@
  * the panel renders them honestly — which side shifted plans, on which
  * trigger, and whether a corner forced the re-check at a phase boundary.
  */
-import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';

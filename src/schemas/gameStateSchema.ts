@@ -9,7 +9,12 @@
  * - gameStateSchema.ts: Main GameStateSchema, SaveSlotMetaSchema, and exported types
  */
 import { z } from 'zod';
-import { SeasonSchema, WeatherTypeSchema, CrowdMoodTypeSchema } from './schemaEnums';
+import {
+  SeasonSchema,
+  WeatherTypeSchema,
+  CrowdMoodTypeSchema,
+  WorldDifficultySchema,
+} from './schemaEnums';
 import {
   NewsletterItemSchema,
   LedgerEntrySchema,
@@ -183,6 +188,9 @@ export const GameStateSchema = z
         deathRateMult: z.number().min(0).max(1),
         severeInjuryInsteadOfDeath: z.boolean(),
       })
+      .optional(),
+    worldOptions: z
+      .object({ difficulty: WorldDifficultySchema.optional() })
       .optional(),
     contentPacks: z
       .array(

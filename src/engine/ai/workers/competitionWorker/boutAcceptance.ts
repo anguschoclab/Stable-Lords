@@ -141,22 +141,28 @@ export function venueCounterTarget(
  * the desperation gate — an empty treasury never overrides them (G14).
  * Marginal purses may be 'Countered' once per offer.
  *
- * `explain` is an optional out-param: on title bouts the reason bucket for
- * the verdict is written into `explain.reason` so the offer processor can
- * persist it onto the offer for UI transparency.
+ * `explain` is an optional out-param: the reason bucket for every verdict
+ * is written into `explain.reason` so the offer processor can persist it
+ * onto the offer for UI transparency (Stage E — all offers, not just title).
  */
 /** Hard gates that cannot be bought off by desperation: injury + weather. */
-function hardGates(warrior: Warrior, weather: WeatherType): BoutEvaluation | null {
+function hardGates(
+  warrior: Warrior,
+  weather: WeatherType,
+  explain?: { reason?: string }
+): BoutEvaluation | null {
   // Injury Gate — blocking injuries decline at any treasury
   const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
     (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
   );
   if (hasBlockingInjury) {
+    if (explain) explain.reason = 'blocking-injury';
     return 'Declined';
   }
 
   // Weather Skepticism — consolidated gate (G16)
   if (offerWeatherDecline(warrior, weather)) {
+    if (explain) explain.reason = 'weather-risk';
     return 'Declined';
   }
   return null;
@@ -236,12 +242,14 @@ function riskRefusal(
   warrior: Warrior,
   opponent: Warrior | undefined,
   rival: RivalStableData,
-  promoter: { personality?: string } | undefined
+  promoter: { personality?: string } | undefined,
+  explain?: { reason?: string }
 ): BoutEvaluation | null {
   // RECOVERY risk refusal — killers and severe mismatches are never accepted,
   // even when the treasury is empty.
   if (intent === 'RECOVERY' && opponent) {
     if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
+      if (explain) explain.reason = 'recovery-mismatch';
       return 'Declined';
     }
   }
@@ -259,6 +267,7 @@ function riskRefusal(
     personalityPre !== 'Aggressive' &&
     personalityPre !== 'Showman'
   ) {
+    if (explain) explain.reason = 'sadistic-promoter';
     return 'Declined';
   }
   return null;
@@ -269,11 +278,13 @@ function survivabilityGates(
   warrior: Warrior,
   rival: RivalStableData,
   isDesperateForBout: boolean,
-  currentHP: number
+  currentHP: number,
+  explain?: { reason?: string }
 ): BoutEvaluation | null {
   // Health Guard
   const hpThreshold = isDesperateForBout ? 50 : 70;
   if (currentHP < hpThreshold && rival.owner.personality !== 'Aggressive') {
+    if (explain) explain.reason = 'health-guard';
     return 'Declined';
   }
 
@@ -281,6 +292,7 @@ function survivabilityGates(
   const fatigueThreshold = isDesperateForBout ? 90 : 70;
   const fatigue = warrior.fatigue ?? 0;
   if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
+    if (explain) explain.reason = 'fatigue-guard';
     return 'Declined';
   }
   return null;
@@ -392,6 +404,7 @@ interface EvaluateNegotiationStageArgs {
   currentHP: number;
   playerThreat: PlayerThreatLevel;
   observedDanger: boolean;
+  explain?: { reason?: string };
 }
 
 /**
@@ -400,13 +413,14 @@ interface EvaluateNegotiationStageArgs {
  */
 function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvaluation {
   const { offer, rival, warrior, opponent, state } = args;
-  const { promoter, isTournamentHungry, currentHP, playerThreat, observedDanger } = args;
+  const { promoter, isTournamentHungry, currentHP, playerThreat, observedDanger, explain } = args;
   // Personality Logic
   const personality = rival.owner.personality;
   const hype = offer.hype;
   const purse = offer.purse;
 
   if (isTournamentHungry) {
+    if (explain) explain.reason = 'tournament-hunger';
     return 'Accepted';
   }
 
@@ -418,7 +432,10 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
     observedDanger: observedDanger,
     owner: rival.owner,
   });
-  if (skeptical) return skeptical;
+  if (skeptical) {
+    if (explain) explain.reason = 'matchup-skepticism';
+    return skeptical;
+  }
 
   // Venue counter — the arena itself is the sticking point. A CROWN_BID
   // contender drags the bout onto their ladder arena; any warrior with a
@@ -431,6 +448,7 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
     (offer.conditions?.includes(COUNTERED_PURSE_CONDITION) ?? false);
   if (!alreadyVenueOrPurseCountered && personality !== 'Aggressive') {
     if (venueCounterTarget(offer, warrior, rival, state)) {
+      if (explain) explain.reason = 'venue-counter';
       return 'CounteredVenue';
     }
   }
@@ -439,6 +457,7 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
   // the realm's top stable IS the spectacle, no purse negotiation needed.
   // Runs after the venue counter (a Showman still won't fight on a bad stage).
   if (playerThreat === 'Dominant' && personality === 'Showman') {
+    if (explain) explain.reason = 'upset-spectacle';
     return 'Accepted';
   }
 
@@ -448,6 +467,7 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
   if (warrior.campaignFocus === 'CROWN_BID' && offer.arenaId) {
     const venue = warrior.career?.byArena?.[offer.arenaId];
     if ((venue?.wins ?? 0) + (venue?.losses ?? 0) > 0) {
+      if (explain) explain.reason = 'crown-ladder';
       return 'Accepted';
     }
   }
@@ -456,16 +476,30 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
   const counted = purseCounter(
     { offer: offer, warrior: warrior, rival: rival, promoter: promoter, playerThreat: playerThreat, alreadyCountered: alreadyVenueOrPurseCountered }
   );
-  if (counted) return counted;
+  if (counted) {
+    if (explain) explain.reason = 'purse-counter';
+    return counted;
+  }
 
-  if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
+  if (personality === 'Aggressive' && (hype > 110 || purse > 300)) {
+    if (explain) explain.reason = 'marquee-draw';
+    return 'Accepted';
+  }
   if (personality === 'Methodical' && currentHP < 85) {
+    if (explain) explain.reason = 'methodical-health';
     return 'Declined';
   }
-  if (personality === 'Showman' && hype > 120) return 'Accepted';
-  if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
+  if (personality === 'Showman' && hype > 120) {
+    if (explain) explain.reason = 'spectacle-draw';
+    return 'Accepted';
+  }
+  if (personality === 'Pragmatic' && purse > 250) {
+    if (explain) explain.reason = 'purse-fit';
+    return 'Accepted';
+  }
 
   // Default
+  if (explain) explain.reason = 'open-date';
   return 'Accepted';
 }
 
@@ -501,15 +535,17 @@ export function evaluateBoutOffer(args: EvaluateBoutOfferArgs): BoutEvaluation {
     (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
   );
   if (hasBlockingInjury) {
+    if (explain) explain.reason = 'blocking-injury';
     return 'Declined';
   }
 
   // Weather Skepticism — consolidated gate (G16)
   if (offerWeatherDecline(warrior, weather)) {
+    if (explain) explain.reason = 'weather-risk';
     return 'Declined';
   }
 
-  const gate = hardGates(warrior, weather);
+  const gate = hardGates(warrior, weather, explain);
   if (gate) return gate;
 
   if (offer.titleArenaId) {
@@ -517,11 +553,12 @@ export function evaluateBoutOffer(args: EvaluateBoutOfferArgs): BoutEvaluation {
   }
 
   const promoter = offer.promoterId ? state?.promoters?.[offer.promoterId] : undefined;
-  const refused = riskRefusal(intent, warrior, opponent, rival, promoter);
+  const refused = riskRefusal(intent, warrior, opponent, rival, promoter, explain);
   if (refused) return refused;
 
   // ── Desperation Gate: critically low treasury accepts anything survivable ──
   if (rival.treasury < 500) {
+    if (explain) explain.reason = 'desperate-for-purse';
     return 'Accepted';
   }
 
@@ -536,10 +573,10 @@ export function evaluateBoutOffer(args: EvaluateBoutOfferArgs): BoutEvaluation {
   const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
 
   const currentHP = fightingCondition(warrior);
-  const survivable = survivabilityGates(warrior, rival, isDesperateForBout, currentHP);
+  const survivable = survivabilityGates(warrior, rival, isDesperateForBout, currentHP, explain);
   if (survivable) return survivable;
 
   return evaluateNegotiationStage(
-    { offer: offer, rival: rival, warrior: warrior, opponent: opponent, state: state, promoter: promoter, isTournamentHungry: isTournamentHungry, currentHP: currentHP, playerThreat: playerThreat, observedDanger: observedDanger }
+    { offer: offer, rival: rival, warrior: warrior, opponent: opponent, state: state, promoter: promoter, isTournamentHungry: isTournamentHungry, currentHP: currentHP, playerThreat: playerThreat, observedDanger: observedDanger, explain: explain }
   );
 }

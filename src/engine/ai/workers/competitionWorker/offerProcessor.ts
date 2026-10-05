@@ -248,9 +248,9 @@ interface ApplyWarriorResponseArgs {
   explain: { reason?: string };
 }
 
-/** Commit one response to the offer map; title bouts persist the verdict reason. */
+/** Commit one response to the offer map and persist the verdict reason. */
 function applyWarriorResponse(args: ApplyWarriorResponseArgs): void {
-  const { state, currentOffers, offer, trackedOffer, wId } = args;
+  const { state, currentOffers, offer, wId } = args;
   const { rivalWarrior, response, explain } = args;
   const impact = respondToBoutOffer(
     { ...state, boutOffers: currentOffers },
@@ -259,9 +259,9 @@ function applyWarriorResponse(args: ApplyWarriorResponseArgs): void {
     response
   );
   applyOfferImpact(currentOffers, impact);
-  // Title bouts: persist the verdict reason so the offer card can show
-  // why the rival answered the way they did.
-  if (trackedOffer.titleArenaId && explain.reason) {
+  // Every rival verdict: persist the reason so the offer card can show
+  // why the stable answered the way they did (Stage E — was title-only).
+  if (explain.reason) {
     const updated = currentOffers[offer.id];
     if (updated) {
       updated.responseNotes = {

@@ -22,8 +22,12 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
   const rngService = resolveRng(rng, seed);
   const usedNames = new Set<string>();
 
-  // 1. Generate Rivals — the living-world floor (every arena needs a schedule)
-  const rivals = generateRivalStables(WORLD_RIVAL_FLOOR, seed + 1);
+  // 1. Generate Rivals — the living-world floor (every arena needs a schedule).
+  // Worldgen difficulty skews the minted stablemaster field once — mid-game
+  // refills keep the standard distribution.
+  const rivals = generateRivalStables(WORLD_RIVAL_FLOOR, seed + 1, 0, undefined, {
+    difficulty: state.worldOptions?.difficulty,
+  });
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
   // 1.1 Generate Promoters — scaled to the stable count

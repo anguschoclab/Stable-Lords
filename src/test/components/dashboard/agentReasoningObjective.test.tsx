@@ -5,7 +5,6 @@
  * goal (Stage C); the weekly intent only services it. The widget must show
  * the objective — kind, rationale, remaining weeks — not just the intent.
  */
-import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';

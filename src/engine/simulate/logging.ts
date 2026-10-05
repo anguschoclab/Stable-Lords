@@ -52,12 +52,23 @@ export function buildExchangeLogEntry(
         // Stage F: metadata.cause is already 'AI_INTENT_*' — surface verbatim.
         if (e.metadata?.cause) reasonCodes.push(String(e.metadata.cause));
         break;
-      case 'STATE_CHANGE':
+      case 'STATE_CHANGE': {
         // Psych transitions, desperate-plan activation, and condition-fire
         // annotations (CONDITION_*, CONDITION_*@CORNER) are real engine facts
         // — the debug drawer reads them verbatim from reasonCodes.
         if (e.result) reasonCodes.push(String(e.result));
+        // Stage E: project the first condition fire into a side-attributed
+        // structure — the reasonCode string alone loses the actor.
+        const fire = /^CONDITION_(\w+?)(@CORNER)?$/.exec(String(e.result ?? ''));
+        if (fire && !entry.conditionFire) {
+          entry.conditionFire = {
+            actor: e.actor,
+            trigger: fire[1] ?? '',
+            corner: fire[2] === '@CORNER',
+          };
+        }
         break;
+      }
       case 'KNOCKDOWN':
         // actor is the fighter who was knocked down (defender of the hit)
         entry.knockdown ??= e.actor;

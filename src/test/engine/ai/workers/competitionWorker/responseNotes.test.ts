@@ -77,7 +77,7 @@ describe('responseNotes — every rival verdict leaves a reason', () => {
     const rival = makeRival('r1', [w]);
     const offer = makeOffer('o1', ['w1']); // no titleArenaId — ordinary offer
     const out = offerOut(makeState([offer], [rival]), rival, 'o1');
-    expect(out.responses?.['w1']).toBe('Declined');
+    expect(out.responses?.['w1' as WarriorId]).toBe('Declined');
     expect(out.responseNotes?.['w1' as WarriorId]).toBeTruthy();
     expect(out.responseNotes?.['w1' as WarriorId]).toContain('injur');
   });
@@ -88,7 +88,7 @@ describe('responseNotes — every rival verdict leaves a reason', () => {
     const rival = makeRival('r1', [w], { treasury: 300 });
     const offer = makeOffer('o2', ['w2']);
     const out = offerOut(makeState([offer], [rival]), rival, 'o2');
-    expect(out.responses?.['w2']).toBe('Accepted');
+    expect(out.responses?.['w2' as WarriorId]).toBe('Accepted');
     expect(out.responseNotes?.['w2' as WarriorId]).toBeTruthy();
   });
 });

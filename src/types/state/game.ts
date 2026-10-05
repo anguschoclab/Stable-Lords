@@ -289,6 +289,9 @@ export interface ScoutReportData {
   /** True when the target stable is known to mask its committed plan —
    *  the report's plan section may reflect a decoy. */
   possiblyMaskedPlan?: boolean;
+  /** Scouted read on the stablemaster's competence (Stage E) — absent on
+   *  Basic reports; may be a tier off on Detailed ones. */
+  suspectedCompetence?: import('./owner').OwnerCompetence;
   notes: string;
 }
 

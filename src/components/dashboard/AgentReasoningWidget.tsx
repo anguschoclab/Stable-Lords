@@ -187,6 +187,24 @@ function IntentPanel({
           {rival.agentMemory.seasonRecord.kills} W-L-K
         </div>
       )}
+      {rival.agentMemory?.seasonObjective && (
+        <div
+          data-testid="season-objective"
+          className="pt-2 border-t border-white/5 space-y-1"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[8px] font-black uppercase tracking-widest text-arena-gold/70">
+              Season plan · {rival.agentMemory.seasonObjective.kind}
+            </span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 tabular-nums">
+              {rival.agentMemory.seasonObjective.weeksRemaining}w left
+            </span>
+          </div>
+          <p className="text-[10px] text-foreground/70 leading-relaxed">
+            {rival.agentMemory.seasonObjective.reason}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

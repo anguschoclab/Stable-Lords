@@ -272,6 +272,7 @@ export const ScoutReportDataSchema = z.object({
   suspectedOE: z.string().optional(),
   suspectedAL: z.string().optional(),
   possiblyMaskedPlan: z.boolean().optional(),
+  suspectedCompetence: OwnerCompetenceSchema.optional(),
   notes: z.string(),
 });
 

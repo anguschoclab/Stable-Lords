@@ -9,6 +9,9 @@ interface CombatAnalysisProps {
   /** The target stable is known to mask its committed plan — any reported
    *  plan tendencies may describe a decoy. */
   possiblyMaskedPlan?: boolean;
+  /** Scouted read on the stablemaster's competence — absent on Basic
+   *  reports, may be a tier off on Detailed. */
+  suspectedCompetence?: string;
 }
 
 /**
@@ -19,8 +22,10 @@ export function CombatAnalysis({
   suspectedAL,
   knownInjuries,
   possiblyMaskedPlan,
+  suspectedCompetence,
 }: CombatAnalysisProps) {
-  const hasCombatData = suspectedOE || knownInjuries.length > 0 || possiblyMaskedPlan;
+  const hasCombatData =
+    suspectedOE || knownInjuries.length > 0 || possiblyMaskedPlan || suspectedCompetence;
 
   if (!hasCombatData) return null;
 
@@ -35,6 +40,17 @@ export function CombatAnalysis({
         >
           <AlertTriangle className="h-3 w-3 shrink-0" />
           Plan intel uncertain — this stable may be fighting behind a decoy
+        </div>
+      )}
+
+      {suspectedCompetence && (
+        <div
+          data-testid="competence-estimate"
+          className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/70"
+        >
+          <ShieldAlert className="h-3 w-3 shrink-0 text-arena-fame/70" />
+          Stablemaster reads as{' '}
+          <span className="text-arena-fame">{suspectedCompetence}</span>
         </div>
       )}
 

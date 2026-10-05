@@ -12,7 +12,7 @@
  * startup-state warrior generator.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { RivalStableData, Owner } from '@/types/state.types';
+import type { RivalStableData, Owner, WorldDifficulty } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { StableTemplate } from '@/data/templates';
 import type { StableId } from '@/types/shared.types';
@@ -105,7 +105,8 @@ export function generateRivalStables(
   count: number,
   seed: number,
   week: number = 0,
-  seedNames?: ReadonlySet<string>
+  seedNames?: ReadonlySet<string>,
+  opts?: { difficulty?: WorldDifficulty }
 ): RivalStableData[] {
   const rng = new SeededRNGService(seed);
   // Pre-seeded with the world's used names when a mid-game caller passes them —
@@ -127,7 +128,9 @@ export function generateRivalStables(
   }
 
   for (const item of picked) {
-    rivals.push(buildRivalStable(item.tmpl, item.iteration, week, rng, usedWarriorNames));
+    rivals.push(
+      buildRivalStable(item.tmpl, item.iteration, week, rng, usedWarriorNames, opts?.difficulty)
+    );
   }
   return rivals;
 }
@@ -138,7 +141,8 @@ function buildOwner(
   stableId: StableId,
   iteration: number,
   stableName: string,
-  rng: IRNGService
+  rng: IRNGService,
+  difficulty?: WorldDifficulty
 ): Owner {
   return {
     id: stableId,
@@ -157,7 +161,7 @@ function buildOwner(
           : 0,
     personality: tmpl.personality,
     metaAdaptation: tmpl.metaAdaptation,
-    competence: rollCompetence(rng, tmpl.tier),
+    competence: rollCompetence(rng, tmpl.tier, difficulty),
     favoredStyles: tmpl.preferredStyles,
     backstoryId: tmpl.backstoryId,
   };
@@ -169,14 +173,15 @@ function buildRivalStable(
   iteration: number,
   week: number,
   rng: IRNGService,
-  usedWarriorNames: Set<string>
+  usedWarriorNames: Set<string>,
+  difficulty?: WorldDifficulty
 ): RivalStableData {
   const stableId = rng.uuid() as StableId;
 
   // Procedural name variance for duplicates
   const nameSuffix = iteration > 0 ? ` [${toRomanNumeral(iteration + 1)}]` : '';
   const stableName = `${tmpl.stableName}${nameSuffix}`;
-  const owner = buildOwner(tmpl, stableId, iteration, stableName, rng);
+  const owner = buildOwner(tmpl, stableId, iteration, stableName, rng, difficulty);
 
   const warriors = buildRoster(tmpl, stableId, week, rng, usedWarriorNames);
 

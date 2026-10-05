@@ -13,6 +13,7 @@ import BoutHeader from './bout-viewer/BoutHeader';
 import BoutControls from './bout-viewer/BoutControls';
 import BoutResolution from './bout-viewer/BoutResolution';
 import { FightAnalysisPanel } from './bout-viewer/FightAnalysisPanel';
+import { CornerAnalysisPanel } from './bout-viewer/CornerAnalysisPanel';
 import { AIDebugDrawer } from './bout-viewer/AIDebugDrawer';
 
 interface BoutViewerProps {
@@ -259,6 +260,9 @@ function ResolutionAndPanels(props: Pick<
 
       {/* Fight Analysis Panel */}
       <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
+
+      {/* Corner analysis — real condition-fire telemetry, side-attributed */}
+      <CornerAnalysisPanel exchangeLog={exchangeLog} nameA={nameA} nameD={nameD} />
 
       {/* Dev-only AI telemetry drawer */}
       <AIDebugDrawer

@@ -28,7 +28,7 @@ import type {
   TournamentEntry,
   TrainingAssignment,
 } from './game';
-import type { Owner } from './owner';
+import type { Owner, WorldOptions } from './owner';
 import type { BoutOffer, RankingEntry } from './rankings';
 import type {
   AnnualAward,
@@ -72,6 +72,9 @@ export interface GameState {
    * permadeath is a non-canonical house rule and must be labeled as such in UI.
    */
   houseRules?: HouseRules;
+  /** World-creation options (Stage E) — set at worldgen; read once by the
+   *  seeder, ignored by mid-game refills. */
+  worldOptions?: WorldOptions;
   /** Installed content packs (Design Bible #36) — narrative overlays only. */
   contentPacks?: ContentPack[];
   /** All-time counters immune to array truncation. */

@@ -9,6 +9,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
 import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
 import { objectiveStillViable } from './plan/seasonPlan';
+import { aiFeature } from './featureFlags';
 import { projectedWeeklyUpkeep } from './workers/budgetWorker';
 
 /**
@@ -151,7 +152,7 @@ function vendettaApplies(ctx: IntentContext, rngService: IRNGService): boolean {
  * assessment lives, TREASURY banks, REBUILD recruits.
  */
 function objectiveServicingIntent(ctx: IntentContext): AIIntent | undefined {
-  const obj = ctx.rival.agentMemory?.seasonObjective;
+  const obj = aiFeature('AI_SEASON_PLANS') ? ctx.rival.agentMemory?.seasonObjective : undefined;
   if (!obj || !objectiveStillViable(ctx.rival, ctx.state)) return undefined;
   switch (obj.kind) {
     case 'CROWN':

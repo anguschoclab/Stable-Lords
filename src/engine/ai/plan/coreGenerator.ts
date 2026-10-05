@@ -27,11 +27,46 @@ import {
   getAIOpeningMove,
   getAIRangePreference,
   getAIFallbackCondition,
+  getAITactics,
 } from '@/engine/ai/plan/levers';
 import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
+import { aiFeature } from '@/engine/ai/featureFlags';
+import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
 
 /** Scouted plan tendencies older than this many weeks are ignored. */
 export const PLAN_INTEL_FRESH_WEEKS = 6;
+
+/** WT floor for holding a committed deception script through the masked window. */
+export const DECOY_MIN_WT = 13;
+
+/**
+ * Stage D.4 — boundary-reactive phase shifts, authored per personality.
+ * Deltas are applied to the plan's real axes at authoring time so the
+ * declared shift stays inside validator bounds. `when` reads are evaluated
+ * once at the named phase boundary (see resolution/decoyShift).
+ */
+const PERSONALITY_PHASE_SHIFT: Partial<
+  Record<
+    OwnerPersonality,
+    {
+      at: 'mid' | 'late';
+      when: PhaseShiftDecl['when'];
+      dOE: number;
+      dAL: number;
+      dKillDesire?: number;
+    }
+  >
+> = {
+  // Press the comeback when the script is failing.
+  Tactician: { at: 'mid', when: 'MOMENTUM_BEHIND', dOE: 2, dAL: -1 },
+  // Sit on the lead — Methodical protects, never chases.
+  Methodical: { at: 'late', when: 'MOMENTUM_AHEAD', dOE: -1, dAL: 2 },
+  // Never fight scared — behind at the mid boundary, the gears shift up.
+  Aggressive: { at: 'mid', when: 'MOMENTUM_BEHIND', dOE: 2, dAL: -1, dKillDesire: 1 },
+  // Run up the show when the crowd smells a finish.
+  Showman: { at: 'late', when: 'MOMENTUM_AHEAD', dOE: 2, dAL: -1, dKillDesire: 1 },
+  // Pragmatic authors no reactive shift — the plan is the plan.
+};
 
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
@@ -237,7 +272,7 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
 
   // Dossier-driven counter-conditions: a stable that knows the opponent has
   // killed one of its fighters shells up the moment that opponent seizes tempo.
-  if ((dossier?.recordVs.k ?? 0) > 0) {
+  if (aiFeature('AI_READS') && (dossier?.recordVs.k ?? 0) > 0) {
     adaptations.push({
       trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
       override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
@@ -249,6 +284,7 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   // teach their high-WT fighters to punish a predictable opponent — the
   // plan switches to a counter-posture once the streak counter climbs.
   if (
+    aiFeature('AI_READS') &&
     (personality === 'Tactician' || personality === 'Methodical') &&
     (w.attributes?.WT ?? 10) >= 7
   ) {
@@ -280,6 +316,50 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
     universalConditions.length
   );
   plan.conditions = allConditions.slice(0, conditionCap);
+
+  // Stage D.2b — committed in-bout deception: deceptive stables send smart
+  // fighters out performing a false tempo until the mid boundary. The mask
+  // is a real performance cost — opponent streak/momentum reads build on
+  // the decoy — so it stays gated to deceptive stables on high-WT fighters.
+  if (
+    aiFeature('AI_DECOY') &&
+    (personality === 'Tactician' || personality === 'Methodical') &&
+    wt >= DECOY_MIN_WT
+  ) {
+    const styleTactic = getAITactics(w.style).offTactic;
+    const decoy: DecoyAxes = {
+      untilPhase: 'mid',
+      OE: clamp(11 - plan.OE, 1, 10),
+      AL: clamp(11 - plan.AL, 1, 10),
+    };
+    // Mirror the scouting-level decoy: a fighter off the style stereotype
+    // performs the stereotype to bait counters; a stereotypical plan hides
+    // its hand entirely.
+    if (plan.offensiveTactic && plan.offensiveTactic !== styleTactic && styleTactic) {
+      decoy.offensiveTactic = styleTactic;
+    } else if (plan.offensiveTactic === styleTactic) {
+      decoy.offensiveTactic = 'none';
+    }
+    plan.decoyAxes = decoy;
+  }
+
+  // Stage D.4 — boundary-reactive curve: one committed shift per
+  // personality, evaluated once at the phase boundary. Distinct from
+  // per-exchange conditions — a swing back does not revoke it.
+  const shift = PERSONALITY_PHASE_SHIFT[personality];
+  if (shift) {
+    plan.phaseShiftOn = [
+      {
+        at: shift.at,
+        when: shift.when,
+        OE: clamp(plan.OE + shift.dOE, 1, 10),
+        AL: clamp(plan.AL + shift.dAL, 1, 10),
+        ...(shift.dKillDesire !== undefined
+          ? { killDesire: clamp((plan.killDesire ?? 5) + shift.dKillDesire, 1, 10) }
+          : {}),
+      },
+    ];
+  }
 }
 
 /**

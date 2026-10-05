@@ -10,6 +10,10 @@ import { describe, it, expect } from 'vitest';
 import { prepareExchange } from '@/engine/combat/resolution/exchangePrep';
 import { FightPlanSchema } from '@/schemas/warriorSchemas';
 import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
+import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { makeWarrior as makeEngineWarrior } from '@/engine/factories/warriorFactory';
+import { SeededRNGService } from '@/utils/random';
+import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import {
   makeFighterState,
@@ -113,5 +117,71 @@ describe('decoyAxes — AI authoring', () => {
       now: 10,
     });
     expect(plan.decoyAxes).toBeUndefined();
+  });
+});
+
+describe('decoyAxes — simulateFight integration', () => {
+  const even = (name: string, seed: number) =>
+    makeEngineWarrior({
+      id: undefined,
+      name,
+      style: FightingStyle.ParryLunge,
+      attrs: { ST: 13, CN: 17, SZ: 13, WT: 15, WL: 13, SP: 13, DF: 13 },
+      overrides: undefined,
+      rng: new SeededRNGService(seed),
+    });
+
+  const codes = (out: ReturnType<typeof simulateFight>) =>
+    (out.exchangeLog ?? []).flatMap((e) => e.reasonCodes ?? []);
+
+  it('DECOY_REVEAL lands in bout telemetry — exactly once per fight', () => {
+    // Sweep a fixed seed range — fights may end inside the masked window, so
+    // the union proves the reveal surfaces and never double-emits.
+    let sawReveal = false;
+    for (let seed = 1; seed <= 8; seed++) {
+      const A = even('MASK', seed);
+      const D = even('FOE', seed + 100);
+      const planA = {
+        ...defaultPlanForWarrior(A),
+        killDesire: 1,
+        decoyAxes: { untilPhase: 'mid' as const, OE: 2, AL: 7 },
+      };
+      const out = simulateFight({
+        planA,
+        planD: { ...defaultPlanForWarrior(D), killDesire: 1 },
+        warriorA: A,
+        warriorD: D,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+      });
+      const reveals = codes(out).filter((c) => c === 'DECOY_REVEAL');
+      expect(reveals.length).toBeLessThanOrEqual(1);
+      if (reveals.length === 1) sawReveal = true;
+    }
+    expect(sawReveal).toBe(true);
+  });
+
+  it('is deterministic — identical reason-code sequences for the same seed', () => {
+    const run = () => {
+      const A = even('MASK', 42);
+      const D = even('FOE', 142);
+      return codes(
+        simulateFight({
+          planA: {
+            ...defaultPlanForWarrior(A),
+            killDesire: 1,
+            decoyAxes: { untilPhase: 'mid' as const, OE: 2, AL: 7 },
+          },
+          planD: { ...defaultPlanForWarrior(D), killDesire: 1 },
+          warriorA: A,
+          warriorD: D,
+          providedRng: 42,
+          trainers: undefined,
+          weather: 'Clear',
+        })
+      );
+    };
+    expect(run()).toEqual(run());
   });
 });

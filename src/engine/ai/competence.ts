@@ -17,6 +17,7 @@ import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { hashStr } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { aiFeature } from './featureFlags';
 
 /** Decision-quality by tier — mirrors the SCOUT_QUALITY personality table. */
 export const COMPETENCE_QUALITY: Record<OwnerCompetence, number> = {
@@ -46,6 +47,7 @@ export function blendQuality(
   personalityQuality: number,
   owner?: Pick<Owner, 'competence'> | null
 ): number {
+  if (!aiFeature('AI_COMPETENCE')) return personalityQuality;
   if (owner?.competence == null) return personalityQuality;
   return (personalityQuality + competenceQuality(owner)) / 2;
 }
@@ -65,6 +67,7 @@ export function competenceJitter(
   salt: string,
   baseSpread: number
 ): number {
+  if (!aiFeature('AI_COMPETENCE')) return 0;
   if (owner?.competence == null) return 0;
   const id = owner?.id ?? 'unknown';
   const hashJitter = ((hashStr(`${id}|${salt}`) % 1000) / 1000 - 0.5) * 2;
@@ -77,6 +80,7 @@ export function competenceJitter(
  * is unset.
  */
 export function competenceReserveScale(owner?: Pick<Owner, 'competence'> | null): number {
+  if (!aiFeature('AI_COMPETENCE')) return 1;
   if (owner?.competence == null) return 1;
   return 0.7 + 0.4 * competenceQuality(owner);
 }
@@ -91,6 +95,7 @@ export function competenceConditionCap(
   authored: number,
   floor: number
 ): number {
+  if (!aiFeature('AI_COMPETENCE')) return authored;
   if (owner?.competence == null) return authored;
   return floor + Math.floor((authored - floor) * competenceQuality(owner));
 }

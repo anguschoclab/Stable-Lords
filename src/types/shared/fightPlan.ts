@@ -46,6 +46,39 @@ export interface PhaseStrategy {
 }
 
 /**
+ * In-bout deception (Stage D.2b): the fighter really performs these axes
+ * (and optional tactics) until `untilPhase`, then snaps to the real plan —
+ * a `DECOY_REVEAL` reason code marks the reveal. Unlike `planMasked`
+ * (scouting-level), the decoy costs real performance: the opponent's
+ * tactic-streak and momentum reads build on the decoy pattern.
+ */
+export interface DecoyAxes {
+  /** The phase at which the mask drops: 'mid' masks the opening, 'late' masks opening+mid. */
+  untilPhase: 'mid' | 'late';
+  OE: number;
+  AL: number;
+  killDesire?: number;
+  offensiveTactic?: OffensiveTactic;
+  defensiveTactic?: DefensiveTactic;
+}
+
+/**
+ * Boundary-reactive phase curve (Stage D.4): evaluated once at the named
+ * phase boundary — unlike per-exchange condition overrides, a fired shift
+ * is committed for the rest of that phase even if the read swings back.
+ */
+export interface PhaseShiftDecl {
+  /** The phase boundary at which the read is evaluated and the shift applies. */
+  at: 'mid' | 'late';
+  /** The fight-state read that gates the shift. */
+  when: 'MOMENTUM_BEHIND' | 'MOMENTUM_AHEAD' | 'HP_BEHIND' | 'HP_AHEAD';
+  OE: number;
+  AL: number;
+  killDesire?: number;
+  aggressionBias?: number;
+}
+
+/**
  * Defines the shape of desperate plan.
  */
 export interface DesperatePlan {
@@ -85,6 +118,10 @@ export interface FightPlan {
   conditions?: PlanCondition[];
   /** 0-10 tendency to feint; only triggers when WT ≥ 15 and OE ≥ 4 */
   feintTendency?: number;
+  /** Committed in-bout deception — see {@link DecoyAxes}. */
+  decoyAxes?: DecoyAxes;
+  /** Boundary-reactive phase shifts — see {@link PhaseShiftDecl}. */
+  phaseShiftOn?: PhaseShiftDecl[];
   /** Preferred range — influences Approach roll motivation bonus (+2 when contesting toward this range) */
   rangePreference?: DistanceRange;
   /** Stable owner's personality — drives in-bout adaptation conditions (see ownerAI.ts). Undefined for player-authored plans. */

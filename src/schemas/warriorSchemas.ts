@@ -215,6 +215,28 @@ export const FightPlanSchema = z.object({
     .optional(),
   conditions: z.array(PlanConditionSchema).optional(),
   feintTendency: z.number().optional(),
+  decoyAxes: z
+    .object({
+      untilPhase: z.enum(['mid', 'late']),
+      OE: z.number(),
+      AL: z.number(),
+      killDesire: z.number().optional(),
+      offensiveTactic: OffensiveTacticSchema.optional(),
+      defensiveTactic: DefensiveTacticSchema.optional(),
+    })
+    .optional(),
+  phaseShiftOn: z
+    .array(
+      z.object({
+        at: z.enum(['mid', 'late']),
+        when: z.enum(['MOMENTUM_BEHIND', 'MOMENTUM_AHEAD', 'HP_BEHIND', 'HP_AHEAD']),
+        OE: z.number(),
+        AL: z.number(),
+        killDesire: z.number().optional(),
+        aggressionBias: z.number().optional(),
+      })
+    )
+    .optional(),
   rangePreference: DistanceRangeSchema.optional(),
   ownerPersonality: OwnerPersonalitySchema.optional(),
 });

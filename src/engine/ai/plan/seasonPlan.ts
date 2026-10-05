@@ -13,6 +13,7 @@ import type { GameState, RivalStableData, SeasonObjective } from '@/types/state.
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { projectedWeeklyUpkeep } from '../workers/budgetWorker';
 import { deriveAmbitionArc } from '../ambition';
+import { aiFeature } from '../featureFlags';
 
 /** A season objective gets ~a quarter of runway before re-evaluation. */
 export const SEASON_OBJECTIVE_WEEKS = 13;
@@ -127,6 +128,12 @@ export function applySeasonPlan(rival: RivalStableData, state: GameState): Rival
   const memory = rival.agentMemory;
   if (!memory) return rival;
   const obj = memory.seasonObjective;
+
+  // AI_SEASON_PLANS off: the objective is inert — stripped from memory so
+  // the weekly intent cascade sees no objective layer at all.
+  if (!aiFeature('AI_SEASON_PLANS')) {
+    return obj === undefined ? rival : { ...rival, agentMemory: { ...memory, seasonObjective: undefined } };
+  }
 
   if (obj && obj.weeksRemaining > 1 && objectiveStillViable(rival, state)) {
     return {

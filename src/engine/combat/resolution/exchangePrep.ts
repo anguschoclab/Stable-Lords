@@ -17,6 +17,7 @@ import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './p
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
+import { applyDecoyMask, applyPhaseShiftBoundary, emitDecoyReveal } from './decoyShift';
 import type { FighterState, ResolutionContext } from './types';
 
 /**
@@ -268,6 +269,14 @@ export function prepareExchange(
     events.push({ type: 'RECOVERY', actor: 'D' });
   }
 
+  // ── Boundary-reactive phase shifts (Stage D.4) — evaluated on fighter.plan
+  // BEFORE conditions so the shifted curve lands in this exchange's plan too.
+  // Only at a real phase boundary (cornerAdvice marks the first exchange).
+  if (ctx.cornerAdvice && phaseKey !== 'opening') {
+    applyPhaseShiftBoundary(fA, fD, phaseKey);
+    applyPhaseShiftBoundary(fD, fA, phaseKey);
+  }
+
   // ── Evaluate conditional fight plans (WT-gated) ──
   const wtA = fA.attributes.WT;
   const wtD = fD.attributes.WT;
@@ -275,6 +284,14 @@ export function prepareExchange(
   const condResultD = evaluateConditions(fD, fA, ctx, wtD);
   fA.activePlan = condResultA.newPlan;
   fD.activePlan = condResultD.newPlan;
+
+  // ── Decoy mask (Stage D.2b): reveal first (emits once), then mask the
+  // resolved plan while the window still holds. The decoy is real fight
+  // behavior — resolved tactics and OE/AL read the masked plan.
+  emitDecoyReveal(fA, phaseKey, events);
+  emitDecoyReveal(fD, phaseKey, events);
+  fA.activePlan = applyDecoyMask(fA.activePlan, phaseKey);
+  fD.activePlan = applyDecoyMask(fD.activePlan, phaseKey);
 
   // ── Psych state evaluation ──
   events.push(...evaluatePsychState(fA, fD, ctx, condResultA, condResultD));

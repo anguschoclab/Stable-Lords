@@ -90,6 +90,9 @@ export interface FighterState {
    *  which existing plan/state selection is active; dedups AI_INTENT events
    *  to transitions. Never read by combat math. */
   lastIntent?: BoutIntent;
+  /** Stage D.2b: set when this fighter's decoyAxes mask has dropped —
+   *  ensures DECOY_REVEAL emits exactly once per bout. */
+  decoyRevealed?: boolean;
 }
 
 /**

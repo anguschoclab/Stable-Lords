@@ -12,6 +12,7 @@ import { generateRivalStables } from '@/engine/rivals/rivalStableFactory';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { makeGameState } from '@/test/_fixtures/factories';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { OwnerCompetence, WorldDifficulty } from '@/types/state.types';
 
 const SHARE_OF = (tiers: OwnerCompetence[]) => (comp: OwnerCompetence) => tiers.includes(comp);
@@ -54,5 +55,29 @@ describe('worldgen difficulty', () => {
   it('every generated owner still carries a schema tier', () => {
     const rivals = generateRivalStables(30, 2024, 0, undefined, { difficulty: 'Legend' });
     for (const r of rivals) expect(OWNER_COMPETENCES).toContain(r.owner.competence);
+  });
+});
+
+describe('player worldgen path — createFreshState', () => {
+  const freshShare = (worldOptions?: { difficulty?: WorldDifficulty }) => {
+    const state = createFreshState('audit-seed', '2026-01-01T00:00:00Z', worldOptions);
+    const strong = state.rivals.filter((r) =>
+      SHARE_OF(['Veteran', 'Master'])(r.owner.competence ?? 'Journeyman')
+    ).length;
+    return { share: strong / Math.max(1, state.rivals.length), state };
+  };
+
+  it('initial rivals mint a competence tier (no inert-baseline field)', () => {
+    const state = createFreshState('audit-seed');
+    for (const r of state.rivals) {
+      expect(OWNER_COMPETENCES).toContain(r.owner.competence);
+    }
+  });
+
+  it('persists worldOptions on the state and skews the initial field', () => {
+    const legend = freshShare({ difficulty: 'Legend' });
+    const contender = freshShare({ difficulty: 'Contender' });
+    expect(legend.state.worldOptions?.difficulty).toBe('Legend');
+    expect(legend.share).toBeGreaterThan(contender.share);
   });
 });

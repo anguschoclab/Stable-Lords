@@ -94,6 +94,8 @@ export default function StartGame() {
     setPlayerCrest,
     backstoryId,
     setBackstoryId,
+    difficulty,
+    setDifficulty,
     canCreate,
     handleNewGame,
   } = flow;
@@ -111,6 +113,8 @@ export default function StartGame() {
         setPlayerCrest={setPlayerCrest}
         backstoryId={backstoryId}
         setBackstoryId={setBackstoryId}
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
         onBack={() => setScreen('title')}
         onSubmit={handleNewGame}
         canCreate={canCreate}

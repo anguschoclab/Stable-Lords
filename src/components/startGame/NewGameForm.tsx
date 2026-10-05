@@ -8,6 +8,9 @@ import BackstoryPicker from '@/components/startGame/BackstoryPicker';
 import { BACKSTORY_IDS, type BackstoryId } from '@/data/backstories';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { FormHeader, GoldDivider, NameField, CrestPanel } from './newGameFields';
+import type { WorldDifficulty } from '@/types/state.types';
+import { WORLD_DIFFICULTIES } from '@/types/enumSources';
+import { cn } from '@/lib/utils';
 
 interface NewGameFormProps {
   ownerName: string;
@@ -18,6 +21,8 @@ interface NewGameFormProps {
   setPlayerCrest: (crest: CrestData) => void;
   backstoryId: BackstoryId | null;
   setBackstoryId: (id: BackstoryId) => void;
+  difficulty: WorldDifficulty;
+  setDifficulty: (d: WorldDifficulty) => void;
   onBack: () => void;
   onSubmit: () => void;
   canCreate: boolean;
@@ -146,11 +151,56 @@ function FormShell({ onBack, children }: { onBack: () => void; children: React.R
   );
 }
 
+const DIFFICULTY_COPY: Record<WorldDifficulty, string> = {
+  Contender: 'forgiving stablemasters',
+  Challenger: 'the canonical field',
+  Legend: 'sharp stablemasters',
+};
+
+/** World difficulty picker — skews the minted stablemaster field at worldgen. */
+function DifficultyField({
+  value,
+  onChange,
+}: {
+  value: WorldDifficulty;
+  onChange: (d: WorldDifficulty) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        Realm caliber
+      </div>
+      <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Realm caliber">
+        {WORLD_DIFFICULTIES.map((d) => (
+          <button
+            key={d}
+            type="button"
+            role="radio"
+            aria-checked={value === d}
+            onClick={() => onChange(d)}
+            className={cn(
+              'p-2 border text-left transition-colors duration-150',
+              value === d
+                ? 'border-arena-gold/60 bg-arena-gold/10'
+                : 'border-white/10 hover:border-white/25'
+            )}
+          >
+            <div className="text-[10px] font-black uppercase tracking-widest">{d}</div>
+            <div className="text-[9px] text-muted-foreground/60 leading-snug">
+              {DIFFICULTY_COPY[d]}
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** New-game form: owner/stable identity, crest, and world seed fields. */
 export default function NewGameForm(props: NewGameFormProps) {
   const { ownerName, setOwnerName, stableName, setStableName, playerCrest } = props;
   const { setPlayerCrest, backstoryId, setBackstoryId, onBack, onSubmit } = props;
-  const { canCreate } = props;
+  const { difficulty, setDifficulty, canCreate } = props;
   const { randomizeAll, randomizeCrest, randomizeBackstory } = useRandomizers({
     setOwnerName,
     setStableName,
@@ -189,6 +239,8 @@ export default function NewGameForm(props: NewGameFormProps) {
         onChange={setBackstoryId}
         onRandomize={randomizeBackstory}
       />
+
+      <DifficultyField value={difficulty} onChange={setDifficulty} />
 
       <Button
         onClick={onSubmit}

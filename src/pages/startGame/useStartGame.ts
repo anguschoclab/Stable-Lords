@@ -16,6 +16,7 @@ import {
 } from '@/state/saveSlots';
 import { generateCrest } from '@/engine/crest/crestGenerator';
 import type { CrestData } from '@/types/crest.types';
+import type { WorldDifficulty } from '@/types/state.types';
 import { applyBackstoryToPlayer, type BackstoryId } from '@/data/backstories';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
@@ -66,9 +67,10 @@ async function createNewGame(
   stableName: string,
   playerCrest: CrestData,
   backstoryId: BackstoryId,
+  difficulty: WorldDifficulty,
   loadGame: LoadGame
 ): Promise<void> {
-  let fresh = createFreshState('alpha-prime-10');
+  let fresh = createFreshState('alpha-prime-10', undefined, { difficulty });
   fresh.player.name = ownerName.trim();
   fresh.player.stableName = stableName.trim();
   fresh.player.crest = playerCrest;
@@ -170,6 +172,7 @@ export function useStartGame() {
   );
 
   const [backstoryId, setBackstoryId] = useState<BackstoryId | null>(null);
+  const [difficulty, setDifficulty] = useState<WorldDifficulty>('Challenger');
 
   const canCreate =
     ownerName.trim().length >= 2 && stableName.trim().length >= 2 && backstoryId != null;
@@ -187,8 +190,8 @@ export function useStartGame() {
 
   const handleNewGame = useCallback(async () => {
     if (!backstoryId) return;
-    await createNewGame(ownerName, stableName, playerCrest, backstoryId, loadGame);
-  }, [ownerName, stableName, playerCrest, backstoryId, loadGame]);
+    await createNewGame(ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame);
+  }, [ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame]);
 
   return {
     screen,
@@ -204,6 +207,8 @@ export function useStartGame() {
     setPlayerCrest,
     backstoryId,
     setBackstoryId,
+    difficulty,
+    setDifficulty,
     canCreate,
     mostRecent,
     loadSlot,

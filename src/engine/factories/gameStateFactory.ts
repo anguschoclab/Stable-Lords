@@ -2,7 +2,14 @@
  * Game State Factory - Creates initial game state
  * Extracted from factories.ts to follow SRP
  */
-import type { GameState, OwnerPersonality, RivalStableData } from '@/types/state.types';
+import type {
+  GameState,
+  OwnerPersonality,
+  RivalStableData,
+  WorldDifficulty,
+  WorldOptions,
+} from '@/types/state.types';
+import { rollCompetence } from '@/engine/ai/competence';
 import { type PoolWarrior } from '@/engine/recruitment/recruitment';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
@@ -96,20 +103,25 @@ function baseFreshState(createdAt: string): GameState {
  */
 export function createFreshState(
   seed: string,
-  createdAt: string = new Date().toISOString()
+  createdAt: string = new Date().toISOString(),
+  worldOptions?: WorldOptions
 ): GameState {
   const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const rng = new SeededRNGService(numericSeed);
 
   const state = baseFreshState(createdAt);
-  state.rivals = generateInitialRivals(rng);
+  state.worldOptions = worldOptions;
+  state.rivals = generateInitialRivals(rng, worldOptions?.difficulty);
   state.recruitPool = generateInitialRecruitPool(rng);
 
   return state;
 }
 
 /** Seeded selection of the initial rival stables. */
-function generateInitialRivals(rng: IRNGService): RivalStableData[] {
+function generateInitialRivals(
+  rng: IRNGService,
+  difficulty?: WorldDifficulty
+): RivalStableData[] {
   const RIVAL_NAMES = (narrativeContent as NarrativeContent).recruitment.rival_stable_names;
   // Every seeded owner must map to a trait policy — the canonical list lives
   // in ai/traitPolicy so personalities can never drift out of coverage.
@@ -144,6 +156,7 @@ function generateInitialRivals(rng: IRNGService): RivalStableData[] {
         name: `Lord ${name.split(' ')[0]}`,
         stableName: name,
         personality: PERSONALITIES[personalityIndex],
+        competence: rollCompetence(rng, 'Established', difficulty),
         backstoryId,
         fame: 100,
         renown: 10,

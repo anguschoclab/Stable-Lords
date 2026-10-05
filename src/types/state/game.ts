@@ -171,6 +171,26 @@ export interface OpponentDossier {
 }
 
 /**
+ * A rival stable's season plan-of-record (Stage C): one strategic objective
+ * per ~quarter that the weekly intent cascade services. Picked by
+ * `seasonPlan.pickSeasonObjective`, ticked weekly, re-picked on expiry,
+ * and disproved by `objectiveStillViable` when the world moves on.
+ */
+export interface SeasonObjective {
+  kind: 'CROWN' | 'TOURNAMENT' | 'TREASURY' | 'REBUILD';
+  /** Arena the season's crown campaign targets. */
+  targetArenaId?: string;
+  /** Stable the season's campaign targets (future use). */
+  targetStableId?: string;
+  /** Treasury goal for TREASURY objectives. */
+  treasuryTarget?: number;
+  /** Weeks left before the objective is re-picked. */
+  weeksRemaining: number;
+  /** Human-readable rationale (UI-facing). */
+  reason: string;
+}
+
+/**
  * A rival stable's chosen crown target: which warrior is climbing which
  * arena's title ladder, and why. Refreshed each tick by the crown worker;
  * consumed one tick later by the intent engine (memory is allowed to lag).
@@ -212,6 +232,8 @@ export interface AIAgentMemory {
   /** Arena id whose crown the stable intends to vacate — consumed by the
    *  championship pass (real relinquish happens through its delta). */
   pendingRelinquish?: string;
+  /** Season plan-of-record — the objective the weekly intent services. */
+  seasonObjective?: SeasonObjective;
 }
 
 /**

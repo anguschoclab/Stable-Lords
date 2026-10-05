@@ -19,7 +19,6 @@ import {
   makeWarrior,
   makeGameState,
   makeAgentMemory,
-  makeOwner,
 } from '@/test/_fixtures/factories';
 
 const crownRival = () => {

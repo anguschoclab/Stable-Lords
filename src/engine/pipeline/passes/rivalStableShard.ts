@@ -10,6 +10,7 @@ import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
 import { driftCompetence } from '@/engine/ai/competence';
+import { applySeasonPlan } from '@/engine/ai/plan/seasonPlan';
 import { SeededRNGService } from '@/utils/random';
 import { aiRosterMin } from '@/constants/ai';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
@@ -153,7 +154,10 @@ export function processRivalStable(
   const gazetteItems: string[] = [];
 
   const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
-  const rivalWithStrategy = applyStrategyUpdate(rival, state, strategySeed);
+  // Season plan-of-record (Stage C): tick or re-pick the objective BEFORE
+  // the weekly intent pick so the cascade can service it.
+  const rivalWithObjective = applySeasonPlan(rival, state);
+  const rivalWithStrategy = applyStrategyUpdate(rivalWithObjective, state, strategySeed);
 
   // 🎂 1.0 Hardening: Handle Aging & Succession
   const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(

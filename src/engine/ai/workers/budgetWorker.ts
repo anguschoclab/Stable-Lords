@@ -1,4 +1,4 @@
-import type { RivalStableData, AIEvent } from '@/types/state.types';
+import type { RivalStableData, AIEvent, GameState } from '@/types/state.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { competenceReserveScale } from '../competence';
 import {
@@ -50,12 +50,54 @@ export function projectedWeeklyUpkeep(rival: RivalStableData): number {
 }
 
 /**
- * Check budget.
+ * Multi-week cash-flow forecast (Stage C): recurring upkeep every week of
+ * the horizon plus one-time committed purses from signed bout offers where
+ * this stable is the paying side (or the proposer is unrecorded). Pure —
+ * same inputs, same projection, so shards agree.
+ */
+export interface CashFlowProjection {
+  weeks: number;
+  weeklyUpkeep: number;
+  committedPurses: number;
+  totalOutflow: number;
+  /** Treasury minus the horizon's outflows — negative means insolvency. */
+  projectedFloor: number;
+}
+
+export function projectCashFlow(
+  rival: RivalStableData,
+  state: GameState,
+  weeks: number
+): CashFlowProjection {
+  const weeklyUpkeep = projectedWeeklyUpkeep(rival);
+  const rosterIds = new Set(rival.roster.map((w) => w.id as string));
+  let committedPurses = 0;
+  for (const offer of Object.values(state.boutOffers ?? {})) {
+    if (!offer || offer.status !== 'Signed') continue;
+    if (offer.proposerStableId !== undefined && offer.proposerStableId !== rival.id) continue;
+    if (!offer.warriorIds.some((id) => rosterIds.has(id as string))) continue;
+    committedPurses += offer.purse;
+  }
+  const totalOutflow = weeklyUpkeep * weeks + committedPurses;
+  return {
+    weeks,
+    weeklyUpkeep,
+    committedPurses,
+    totalOutflow,
+    projectedFloor: (rival.treasury || 0) - totalOutflow,
+  };
+}
+
+/**
+ * Check budget. `opts.horizonWeeks` prices the multi-week runway against
+ * `projectCashFlow` — a spend must still clear the reserve after the
+ * horizon's outflows, so big buys are judged on solvency not today's cash.
  */
 export function checkBudget(
   rival: RivalStableData,
   cost: number,
-  _category: 'STAFF' | 'ROSTER' | 'OTHER'
+  _category: 'STAFF' | 'ROSTER' | 'OTHER',
+  opts?: { state?: GameState; horizonWeeks?: number }
 ): BudgetReport {
   const personality = rival.owner.personality ?? 'Pragmatic';
   const burnRate = rival.agentMemory?.burnRate || 0;
@@ -77,7 +119,11 @@ export function checkBudget(
   if (personality === 'Methodical') tolerance = 0.8;
   if (personality === 'Pragmatic') tolerance = 1.0;
 
-  const availableTreasury = (rival.treasury || 0) - (reserve + burnRate);
+  let availableTreasury = (rival.treasury || 0) - (reserve + burnRate);
+  if (opts?.state && (opts.horizonWeeks ?? 0) > 0) {
+    const flow = projectCashFlow(rival, opts.state, opts.horizonWeeks!);
+    availableTreasury = flow.projectedFloor - reserve;
+  }
   const isAffordable = cost <= availableTreasury * tolerance;
 
   return {

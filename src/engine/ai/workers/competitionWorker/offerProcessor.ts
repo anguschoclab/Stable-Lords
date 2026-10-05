@@ -11,10 +11,12 @@ import {
   counterBoutOffer,
   counterBoutVenue,
   STABLE_DISSOLVED_REASON,
+  COUNTER_PURSE_MULTIPLIER,
 } from '@/engine/bout/mutations/contractMutations';
 import { checkBudget } from '../budgetWorker';
 import { StateImpact } from '@/engine/impacts';
 import * as boutAcceptance from './boutAcceptance';
+import { resolveSecondRound } from './negotiation';
 
 type OfferMap = Record<string, BoutOffer>;
 
@@ -306,6 +308,45 @@ function processRivalSlate(
 }
 
 /**
+ * Stamp the bounded second-round counter (Stage C): the contract mutations
+ * are one-round-only by design, so the escalation edits the live offer
+ * directly — counterer marked, other side re-pended, `negotiationRound`
+ * bumped. Purse escalations sweeten by the same multiplier; venue
+ * escalations swap the arena. Returns false when a venue counter has no
+ * arena to move to (caller declines instead).
+ */
+function escalateCounter(
+  state: GameState,
+  currentOffers: OfferMap,
+  offer: BoutOffer,
+  wId: WarriorId,
+  verdict: 'Countered' | 'CounteredVenue',
+  pendingWarrior: Warrior,
+  owningRival: RivalStableData
+): boolean {
+  const live = currentOffers[offer.id];
+  if (!live) return false;
+
+  if (verdict === 'CounteredVenue') {
+    const target = boutAcceptance.venueCounterTarget(offer, pendingWarrior, owningRival, state);
+    if (!target) return false;
+    live.arenaId = target;
+  } else {
+    const newPurse = Math.ceil(live.purse * COUNTER_PURSE_MULTIPLIER);
+    live.counterPurseBump = (live.counterPurseBump ?? 0) + (newPurse - live.purse);
+    live.purse = newPurse;
+  }
+
+  const newResponses: Record<string, string> = {};
+  for (const wid of live.warriorIds) {
+    newResponses[wid as string] = wid === wId ? 'Countered' : 'Pending';
+  }
+  live.responses = newResponses as typeof live.responses;
+  live.negotiationRound = (live.negotiationRound ?? 0) + 1;
+  return true;
+}
+
+/**
  * Negotiation resolution sweep: every offer now carrying a 'Countered'
  * response gets its remaining 'Pending' AI-owned warriors resolved in-pass.
  * The proposer side must afford the purse bump (checkBudget); a pending
@@ -347,20 +388,26 @@ function resolveCounteredOffers(
         (proposerStable !== undefined && checkBudget(proposerStable, bump, 'OTHER').isAffordable);
 
       let final: 'Accepted' | 'Declined';
+      let declineReason: string | undefined;
       if (!affordable) {
         final = 'Declined';
+        declineReason = 'proposer-cant-fund';
       } else {
         const verdict = boutAcceptance.evaluateBoutOffer(
           { offer: offer, rival: owningRival, warrior: pendingWarrior, currentWeek: state.absoluteWeek, weather: state.weather as WeatherType, opponent: opponent, state: state }
         );
-        // No second counter round — an already-countered offer is take it or leave it.
-        final =
-          verdict === 'Declined' || verdict === 'Countered' || verdict === 'CounteredVenue'
-            ? 'Declined'
-            : 'Accepted';
-        if (verdict === 'Accepted') {
-          // mark warrior committed (best effort — pickedWarriors is per-slate)
+        // Stage C: one bounded escalation — a second-round counter may
+        // stand (negotiationRound 0→1) when the stable tolerates haggling;
+        // after that the offer is take-it-or-leave-it.
+        const outcome = resolveSecondRound(offer, verdict, owningRival);
+        if (
+          (outcome.final === 'Countered' || outcome.final === 'CounteredVenue') &&
+          escalateCounter(state, currentOffers, offer, wId, outcome.final, pendingWarrior, owningRival)
+        ) {
+          continue; // offer stays Proposed for the next pass — bounded by round
         }
+        final = outcome.final === 'Accepted' ? 'Accepted' : 'Declined';
+        declineReason = outcome.final === 'Declined' ? outcome.reason : undefined;
       }
 
       const impact = respondToBoutOffer(
@@ -370,6 +417,12 @@ function resolveCounteredOffers(
         final
       );
       applyOfferImpact(currentOffers, impact);
+      if (final === 'Declined' && declineReason) {
+        const updated = currentOffers[offer.id];
+        if (updated) {
+          updated.responseNotes = { ...(updated.responseNotes ?? {}), [wId]: declineReason };
+        }
+      }
     }
   }
 }

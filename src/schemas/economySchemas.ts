@@ -219,6 +219,16 @@ export const AIAgentMemorySchema = z.object({
     })
     .optional(),
   pendingRelinquish: z.string().optional(),
+  seasonObjective: z
+    .object({
+      kind: z.enum(['CROWN', 'TOURNAMENT', 'TREASURY', 'REBUILD']),
+      targetArenaId: z.string().optional(),
+      targetStableId: z.string().optional(),
+      treasuryTarget: z.number().optional(),
+      weeksRemaining: z.number(),
+      reason: z.string(),
+    })
+    .optional(),
 });
 
 /**

@@ -48,6 +48,7 @@ export const BoutOfferSchema = z.object({
   counterPurseBump: z.number().optional(),
   titleArenaId: z.string().optional(),
   responseNotes: z.record(z.string(), z.string()).optional(),
+  negotiationRound: z.number().optional(),
 });
 
 /**

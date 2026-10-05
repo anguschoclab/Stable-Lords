@@ -8,6 +8,7 @@ import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { HAZARDOUS_WEATHER } from './weatherSuitability';
 import { isTournamentPrepWeek } from '@/engine/core/absoluteWeek';
+import { objectiveStillViable } from './plan/seasonPlan';
 
 /**
  * Finds a high-intensity grudge (>= 3) involving the given owner.
@@ -128,6 +129,29 @@ function vendettaApplies(ctx: IntentContext, rngService: IRNGService): boolean {
   return playerThreatVendettaChance > 0 && rngService.next() < playerThreatVendettaChance;
 }
 
+/**
+ * Stage C — the season objective's servicing intent. Crisis picks
+ * (weather/vendetta/recovery) outrank it; below them the plan-of-record
+ * steers the week: CROWN campaigns bypass the 400g crown floor while the
+ * assessment lives, TREASURY banks, REBUILD recruits.
+ */
+function objectiveServicingIntent(ctx: IntentContext): AIIntent | undefined {
+  const obj = ctx.rival.agentMemory?.seasonObjective;
+  if (!obj || !objectiveStillViable(ctx.rival, ctx.state)) return undefined;
+  switch (obj.kind) {
+    case 'CROWN':
+      return ctx.rival.agentMemory?.crownAssessment ? 'CROWN_CAMPAIGN' : undefined;
+    case 'TREASURY':
+      return 'WEALTH_ACCUMULATION';
+    case 'REBUILD': {
+      const minSize = ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
+      return ctx.activeRoster.length < minSize ? 'EXPANSION' : 'CONSOLIDATION';
+    }
+    case 'TOURNAMENT':
+      return isTournamentPrepWeek(ctx.state.week) ? 'TOURNAMENT_CAMPAIGN' : undefined;
+  }
+}
+
 /** TOURNAMENT_CAMPAIGN: healthy stables peak in the tournament run-up (G13). */
 function tournamentCampaignApplies(ctx: IntentContext): boolean {
   return (
@@ -233,6 +257,10 @@ export function pickWeeklyIntent(
   // crowds the pick on every cash-strapped week).
   if (vendettaApplies(ctx, rngService)) return 'VENDETTA';
   if (recoveryApplies(ctx)) return 'RECOVERY';
+  // Stage C: a live season objective is serviced by its intent — a CROWN
+  // plan campaigns even through a lean week the bare cascade would skip.
+  const servicing = objectiveServicingIntent(ctx);
+  if (servicing) return servicing;
   if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
   if (crownCampaignPicked(ctx)) return 'CROWN_CAMPAIGN';
   if (wealthAccumulationApplies(ctx)) return 'WEALTH_ACCUMULATION';
@@ -277,6 +305,12 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   // Skepticism Tier 2.7: a crown campaign ends when the assessment lapses,
   // the campaign warrior is gone, or the throne is already theirs.
   if (strategy.intent === 'CROWN_CAMPAIGN' && !crownCampaignApplies(rival, state)) {
+    return true;
+  }
+
+  // Skepticism Tier 2.8 (Stage C): the season objective is infeasible —
+  // whatever intent it spawned gets re-picked.
+  if (rival.agentMemory?.seasonObjective && !objectiveStillViable(rival, state)) {
     return true;
   }
 

@@ -14,7 +14,7 @@ import {
   makeAgentMemory,
   makeStrategy,
 } from '@/test/_fixtures/factories';
-import type { SeasonObjective } from '@/engine/ai/plan/seasonPlan';
+import type { SeasonObjective } from '@/types/state.types';
 
 const objective = (over: Partial<SeasonObjective> = {}): SeasonObjective => ({
   kind: 'TREASURY',

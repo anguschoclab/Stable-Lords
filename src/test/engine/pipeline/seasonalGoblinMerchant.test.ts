@@ -29,7 +29,7 @@ describe('handleGoblinMerchant', () => {
 
     const ctx = makeOffseasonCtx();
 
-    handleGoblinMerchant(state as GameState, 1, e, mockRng, ctx);
+    handleGoblinMerchant({ state: state as GameState, nextWeek: 1, e, rng: mockRng, ctx });
 
     expect(ctx.treasuryDelta).toBe(-75);
     expect(ctx.ledgerEntries.length).toBe(1);

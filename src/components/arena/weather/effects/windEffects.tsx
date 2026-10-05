@@ -1,6 +1,6 @@
-import type { CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { driftParticleStyle } from './particles';
 
 /** Wind streak effect, configurable intensity. */
 export function WindEffect({ strong }: { strong: boolean }) {
@@ -58,15 +58,11 @@ export function TornadoEffect() {
         <div
           key={`d${i}`}
           className="absolute w-1 h-1 bg-neutral-600/60 rounded-sm animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${30 + cryptoRandom() * 40}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 70}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 70}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 70, (cryptoRandom() - 0.5) * 70),
+            }}
         />
       ))}
     </div>
@@ -125,16 +121,11 @@ export function ChaoticWindsEffect() {
         <div
           key={`d-${i}`}
           className="absolute w-0.5 h-0.5 bg-arena-gold/50 rounded-full animate-chaotic-drift motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 60}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-              animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 100, (cryptoRandom() - 0.5) * 60, { durationS: { base: 2, range: 2 } }),
+            }}
         />
       ))}
     </div>

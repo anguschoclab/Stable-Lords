@@ -1,14 +1,7 @@
 import { useMemo } from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 import {
   Trophy,
   Star,
@@ -34,59 +27,79 @@ interface LeaderboardProps {
 
 type LeaderboardEntry = ReturnType<typeof calculateLeaderboardData>[number];
 
-/** One leaderboard row: rank, name, style, W/L/K, win rate, fame. */
-function LeaderboardRow({ w, rank }: { w: LeaderboardEntry; rank: number }) {
-  return (
-    <TableRow className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none">
-      <TableCell className="pl-8 py-5">
-        <div className="flex items-center gap-4">
-          <span className="text-xs font-mono font-black text-foreground/20">#{rank}</span>
-          <WarriorLink
-            name={w.name}
-            className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none"
-          />
-        </div>
-      </TableCell>
-      <TableCell className="py-5">
-        <Badge
-          variant="outline"
-          className="text-[9px] font-black border-white/5 bg-secondary/20 text-muted-foreground/80 uppercase tracking-widest px-3"
-        >
-          {w.style}
-        </Badge>
-      </TableCell>
-      <TableCell className="text-center py-5">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex items-center justify-center gap-3 text-xs font-mono font-black">
-              <span className="text-arena-pop">{w.w}W</span>
-              <span className="text-foreground/10">/</span>
-              <span className="text-destructive/60">{w.l}L</span>
-              <span className="text-foreground/10">|</span>
-              <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">
-                {w.k}K
-              </span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-            Win / Loss / Kill Efficiency
-          </TooltipContent>
-        </Tooltip>
-      </TableCell>
-      <TableCell className="text-right py-5">
-        <span className="text-xs font-mono font-black text-primary/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
-          {(w.rate * 100).toFixed(1)}%
-        </span>
-      </TableCell>
-      <TableCell className="text-right pr-8 py-5">
-        <div className="flex items-center justify-end gap-2 text-sm font-mono font-black text-foreground drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
-          <span>{w.fame.toLocaleString()}</span>
-          <Star className="h-3.5 w-3.5 text-arena-gold opacity-60" />
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-}
+const LEADERBOARD_COLUMNS: StandingsColumn<LeaderboardEntry>[] = [
+  {
+    header: 'Warrior',
+    headClassName: 'pl-8 py-4',
+    cellClassName: 'pl-8 py-5',
+    render: (w, i) => (
+      <div className="flex items-center gap-4">
+        <span className="text-xs font-mono font-black text-foreground/20">#{i + 1}</span>
+        <WarriorLink
+          name={w.name}
+          className="font-display font-black text-sm uppercase tracking-tight group-hover:text-primary transition-colors motion-reduce:transition-none"
+        />
+      </div>
+    ),
+  },
+  {
+    header: 'Style',
+    headClassName: 'text-muted-foreground/60 py-4',
+    cellClassName: 'py-5',
+    render: (w) => (
+      <Badge
+        variant="outline"
+        className="text-[9px] font-black border-white/5 bg-secondary/20 text-muted-foreground/80 uppercase tracking-widest px-3"
+      >
+        {w.style}
+      </Badge>
+    ),
+  },
+  {
+    header: 'Record',
+    headClassName: 'text-center text-muted-foreground/60 py-4',
+    cellClassName: 'text-center py-5',
+    render: (w) => (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center justify-center gap-3 text-xs font-mono font-black">
+            <span className="text-arena-pop">{w.w}W</span>
+            <span className="text-foreground/10">/</span>
+            <span className="text-destructive/60">{w.l}L</span>
+            <span className="text-foreground/10">|</span>
+            <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">
+              {w.k}K
+            </span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+          Win / Loss / Kill Efficiency
+        </TooltipContent>
+      </Tooltip>
+    ),
+  },
+  {
+    header: 'Win Rate',
+    headClassName: 'text-right text-muted-foreground/60 py-4',
+    cellClassName: 'text-right py-5',
+    render: (w) => (
+      <span className="text-xs font-mono font-black text-primary/80 group-hover:text-primary transition-colors motion-reduce:transition-none">
+        {(w.rate * 100).toFixed(1)}%
+      </span>
+    ),
+  },
+  {
+    header: 'Fame',
+    headClassName: 'text-right pr-8 py-4',
+    cellClassName: 'text-right pr-8 py-5',
+    render: (w) => (
+      <div className="flex items-center justify-end gap-2 text-sm font-mono font-black text-foreground drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
+        <span>{w.fame.toLocaleString()}</span>
+        <Star className="h-3.5 w-3.5 text-arena-gold opacity-60" />
+      </div>
+    ),
+  },
+];
 
 /** Warrior Leaderboard — top performers by fame across arena history. */
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
@@ -125,32 +138,15 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
       </div>
 
       <div className="overflow-x-auto relative z-10">
-        <Table>
-          <TableHeader className="bg-black/20">
-            <TableRow className="hover:bg-transparent border-white/5">
-              <TableHead className="font-black uppercase text-[10px] tracking-widest pl-8 py-4">
-                Warrior
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
-                Style
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
-                Record
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right text-muted-foreground/60 py-4">
-                Win Rate
-              </TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-8 py-4">
-                Fame
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leaderData.map((w, idx) => (
-              <LeaderboardRow key={w.name} w={w} rank={idx + 1} />
-            ))}
-          </TableBody>
-        </Table>
+        <StandingsTable
+          columns={LEADERBOARD_COLUMNS}
+          rows={leaderData}
+          rowKey={(w) => w.name}
+          classes={{
+            head: 'bg-black/20',
+            row: 'border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none',
+          }}
+        />
       </div>
     </Surface>
   );

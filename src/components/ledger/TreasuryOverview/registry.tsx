@@ -1,12 +1,5 @@
 import { Surface } from '@/components/ui/Surface';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 import { Wallet, ArrowDownRight, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { LedgerEntry } from '@/types/state.types';
@@ -59,55 +52,57 @@ function LedgerTable({ recentLedger }: { recentLedger: LedgerEntry[] }) {
       </div>
     );
   }
+  const columns: StandingsColumn<LedgerEntry>[] = [
+    {
+      header: 'INDEX',
+      headClassName: 'w-24 pl-8',
+      cellClassName: 'pl-8 py-4',
+      render: (entry) => (
+        <div className="flex items-center gap-3">
+          <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all motion-reduce:transition-none motion-reduce:transform-none">
+            WK {entry.week.toString().padStart(2, '0')}
+          </span>
+          <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors motion-reduce:transition-none" />
+        </div>
+      ),
+    },
+    {
+      header: 'DESCRIPTION',
+      headClassName: 'text-muted-foreground/60',
+      cellClassName: 'py-4',
+      render: (entry) => (
+        <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none">
+          {entry.label}
+        </span>
+      ),
+    },
+    {
+      header: 'DISBURSEMENT',
+      headClassName: 'text-right pr-8',
+      cellClassName: 'text-right pr-8 py-4',
+      render: (entry) => (
+        <div
+          className={cn(
+            'font-mono text-sm font-black tracking-tighter drop-shadow-[0_0_5px_rgba(0,0,0,0.5)]',
+            entry.amount >= 0 ? 'text-arena-pop' : 'text-destructive'
+          )}
+        >
+          {entry.amount >= 0 ? '+' : ''}
+          {entry.amount.toLocaleString()}G
+        </div>
+      ),
+    },
+  ];
   return (
-    <Table>
-      <TableHeader className="bg-black/20 sticky top-0 z-10 backdrop-blur-md border-b border-white/5">
-        <TableRow className="hover:bg-transparent border-white/5">
-          <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-8">
-            INDEX
-          </TableHead>
-          <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60">
-            DESCRIPTION
-          </TableHead>
-          <TableHead className="text-right font-black uppercase text-[10px] tracking-widest pr-8">
-            DISBURSEMENT
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {recentLedger.map((entry) => (
-          <TableRow
-            key={entry.id}
-            className="border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none"
-          >
-            <TableCell className="pl-8 py-4">
-              <div className="flex items-center gap-3">
-                <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                  WK {entry.week.toString().padStart(2, '0')}
-                </span>
-                <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors motion-reduce:transition-none" />
-              </div>
-            </TableCell>
-            <TableCell className="py-4">
-              <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none">
-                {entry.label}
-              </span>
-            </TableCell>
-            <TableCell className="text-right pr-8 py-4">
-              <div
-                className={cn(
-                  'font-mono text-sm font-black tracking-tighter drop-shadow-[0_0_5px_rgba(0,0,0,0.5)]',
-                  entry.amount >= 0 ? 'text-arena-pop' : 'text-destructive'
-                )}
-              >
-                {entry.amount >= 0 ? '+' : ''}
-                {entry.amount.toLocaleString()}G
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <StandingsTable
+      columns={columns}
+      rows={recentLedger}
+      rowKey={(entry) => entry.id}
+      classes={{
+        head: 'bg-black/20 sticky top-0 z-10 backdrop-blur-md border-b border-white/5',
+        row: 'border-white/5 group hover:bg-white/2 transition-colors motion-reduce:transition-none',
+      }}
+    />
   );
 }
 

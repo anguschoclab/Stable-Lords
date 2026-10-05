@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { driftParticleStyle } from './particles';
 
 /** Aurora Borealis with dancing colored bands and starfield. */
 export function AuroraBorealisEffect() {
@@ -55,16 +55,11 @@ export function GravityAnomalyEffect() {
         <div
           key={`debris-${i}`}
           className="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               bottom: '0%',
-              '--tx': `${(cryptoRandom() - 0.5) * 80}px`,
-              '--ty': `-${100 + cryptoRandom() * 120}px`,
-              animationDelay: `${cryptoRandom() * 4}s`,
-              animationDuration: `${3 + cryptoRandom() * 3}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 80, -(100 + cryptoRandom() * 120), { delayS: 4, durationS: { base: 3, range: 3 } }),
+            }}
         />
       ))}
       {/* Gravitational distortion rings */}
@@ -100,18 +95,13 @@ export function RainbowEffect() {
         <div
           key={`sparkle-${i}`}
           className="absolute w-1 h-1 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 60}%`,
               background: `hsl(${cryptoRandom() * 360}, 80%, 70%)`,
               opacity: '0.4',
-              '--tx': `${(cryptoRandom() - 0.5) * 40}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 40}px`,
-              animationDelay: `${cryptoRandom() * 4}s`,
-              animationDuration: `${3 + cryptoRandom() * 3}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 40, (cryptoRandom() - 0.5) * 40, { delayS: 4, durationS: { base: 3, range: 3 } }),
+            }}
         />
       ))}
       {/* Soft golden glow at the horizon */}

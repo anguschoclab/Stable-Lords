@@ -1,13 +1,6 @@
 import { useGameStore } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Trophy, Landmark, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -85,60 +78,75 @@ function CareerRecordCell({ wins, losses, kills }: CareerRecordCellProps) {
   );
 }
 
-interface RetiredWarriorRowProps {
-  warrior: Warrior;
-}
-
-function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
-  return (
-    <TableRow
-      key={w.id}
-      className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group"
-    >
-      <TableCell className="pl-8 py-5">
-        <div className="flex flex-col">
-          <span>{warriorDisplayName(w)}</span>
-          <div className="flex items-center gap-2 mt-1">
-            <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
-            <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
-              RANK: EMERITUS
-            </span>
-          </div>
-        </div>
-      </TableCell>
-      <TableCell className="py-5">
-        <StatBadge styleName={w.style as FightingStyle} />
-      </TableCell>
-      <TableCell className="py-5 text-center">
-        <MedalDisplay medals={w.career?.medals} />
-      </TableCell>
-      <TableCell className="text-center py-5">
-        <CareerRecordCell wins={w.career.wins} losses={w.career.losses} kills={w.career.kills} />
-      </TableCell>
-      <TableCell className="text-right py-5">
-        <div className="flex flex-col items-end">
-          <div className="flex items-center justify-end gap-1.5 text-sm font-mono font-black text-arena-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.2)]">
-            <span>{w.fame.toLocaleString()}</span>
-            <Trophy className="h-3 w-3 opacity-40" />
-          </div>
-          <span className="text-[8px] font-black text-arena-gold/30 uppercase tracking-widest mt-0.5">
-            LEGACY_FAME
+const RETIRED_COLUMNS: StandingsColumn<Warrior>[] = [
+  {
+    header: 'Warrior',
+    headClassName: 'pl-8 py-4 text-arena-gold/70',
+    cellClassName: 'pl-8 py-5',
+    render: (w) => (
+      <div className="flex flex-col">
+        <span>{warriorDisplayName(w)}</span>
+        <div className="flex items-center gap-2 mt-1">
+          <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
+          <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
+            RANK: EMERITUS
           </span>
         </div>
-      </TableCell>
-      <TableCell className="text-right pr-8 py-5">
-        <div className="flex flex-col items-end">
-          <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors motion-reduce:transition-none">
-            WK_{w.retiredWeek?.toString().padStart(2, '0') ?? '??'}
-          </span>
-          <span className="text-[8px] font-black text-foreground/20 uppercase tracking-widest">
-            Cessation_Week
-          </span>
+      </div>
+    ),
+  },
+  {
+    header: 'Style',
+    headClassName: 'text-arena-gold/50 py-4',
+    cellClassName: 'py-5',
+    render: (w) => <StatBadge styleName={w.style as FightingStyle} />,
+  },
+  {
+    header: 'Medals',
+    headClassName: 'text-center text-arena-gold/50 py-4',
+    cellClassName: 'py-5 text-center',
+    render: (w) => <MedalDisplay medals={w.career?.medals} />,
+  },
+  {
+    header: 'Record',
+    headClassName: 'text-center text-arena-gold/50 py-4',
+    cellClassName: 'text-center py-5',
+    render: (w) => (
+      <CareerRecordCell wins={w.career.wins} losses={w.career.losses} kills={w.career.kills} />
+    ),
+  },
+  {
+    header: 'Fame',
+    headClassName: 'text-right text-arena-gold/50 py-4',
+    cellClassName: 'text-right py-5',
+    render: (w) => (
+      <div className="flex flex-col items-end">
+        <div className="flex items-center justify-end gap-1.5 text-sm font-mono font-black text-arena-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.2)]">
+          <span>{w.fame.toLocaleString()}</span>
+          <Trophy className="h-3 w-3 opacity-40" />
         </div>
-      </TableCell>
-    </TableRow>
-  );
-}
+        <span className="text-[8px] font-black text-arena-gold/30 uppercase tracking-widest mt-0.5">
+          LEGACY_FAME
+        </span>
+      </div>
+    ),
+  },
+  {
+    header: 'Retired',
+    headClassName: 'text-right pr-8 py-4 text-arena-gold/50',
+    cellClassName: 'text-right pr-8 py-5',
+    render: (w) => (
+      <div className="flex flex-col items-end">
+        <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors motion-reduce:transition-none">
+          WK_{w.retiredWeek?.toString().padStart(2, '0') ?? '??'}
+        </span>
+        <span className="text-[8px] font-black text-foreground/20 uppercase tracking-widest">
+          Cessation_Week
+        </span>
+      </div>
+    ),
+  },
+];
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -180,35 +188,16 @@ export function HallOfWarriors() {
             {safeRetired.length === 0 ? (
               <EmptyRegistry />
             ) : (
-              <Table>
-                <TableHeader className="bg-arena-gold/10 sticky top-0 z-10 backdrop-blur-md">
-                  <TableRow className="hover:bg-transparent border-arena-gold/10">
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest pl-8 py-4 text-arena-gold/70">
-                      Warrior
-                    </TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-arena-gold/50 py-4">
-                      Style
-                    </TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-arena-gold/50 py-4">
-                      Medals
-                    </TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-arena-gold/50 py-4">
-                      Record
-                    </TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-right text-arena-gold/50 py-4">
-                      Fame
-                    </TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-8 py-4 text-arena-gold/50">
-                      Retired
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {safeRetired.map((w, i) => (
-                    <RetiredWarriorRow key={`${w.id}-${i}`} warrior={w} />
-                  ))}
-                </TableBody>
-              </Table>
+              <StandingsTable
+                columns={RETIRED_COLUMNS}
+                rows={safeRetired}
+                rowKey={(w, i) => `${w.id}-${i}`}
+                classes={{
+                  head: 'bg-arena-gold/10 sticky top-0 z-10 backdrop-blur-md',
+                  headRow: 'border-arena-gold/10',
+                  row: 'border-arena-gold/5 hover:bg-arena-gold/5 transition-all motion-reduce:transition-none motion-reduce:transform-none group',
+                }}
+              />
             )}
           </div>
         </Surface>

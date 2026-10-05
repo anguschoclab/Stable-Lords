@@ -1,8 +1,7 @@
 import { Link } from '@tanstack/react-router';
-import { useShallow } from 'zustand/react/shallow';
-import { useGameStore } from '@/state/useGameStore';
+import { useArenaCircuitData } from '@/hooks/useArenaCircuitData';
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
-import { ArenaAnalyticsSurface } from './sections';
+import { ArenaAnalyticsSurface, type ArenaAnalyticsProps } from './sections';
 import { Trophy } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
@@ -13,14 +12,7 @@ import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
 import { WeatherWidget } from '@/components/widgets/WeatherWidget';
 
 function CircuitCrownsWidget() {
-  const { arenaChampions, roster, rivals, player } = useGameStore(
-    useShallow((s) => ({
-      arenaChampions: s.arenaChampions,
-      roster: s.roster,
-      rivals: s.rivals,
-      player: s.player,
-    }))
-  );
+  const { arenaChampions, roster, rivals, player } = useArenaCircuitData();
   const state = { arenaChampions, roster, rivals, player } as never;
 
   const held = championsHeldByStable(state, player.id);
@@ -76,15 +68,7 @@ export function CommandColumn() {
 }
 
 /** Right column: conditions, style meta, crowns, analytics. */
-export function ConditionsColumn({
-  renown,
-  lifetimeKills,
-  winRate,
-}: {
-  renown: number;
-  lifetimeKills: number;
-  winRate: number;
-}) {
+export function ConditionsColumn({ renown, lifetimeKills, winRate }: ArenaAnalyticsProps) {
   return (
     <div className="lg:col-span-4 flex flex-col gap-8">
       <SectionDivider label="Arena Conditions" />

@@ -89,7 +89,7 @@ describe('unexplained_monolith offseason event', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx });
 
     expect(ctx.rosterUpdates.size).toBe(1);
     const update = ctx.rosterUpdates.get(warrior.id);
@@ -109,7 +109,7 @@ describe('unexplained_monolith offseason event', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx });
 
     expect(ctx.newsletterItems).toHaveLength(1);
     expect(ctx.newsletterItems[0]).toBeDefined();
@@ -121,11 +121,11 @@ describe('unexplained_monolith offseason event', () => {
 
     const rng1 = new SeededRNG(42);
     const ctx1 = makeCtx();
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng1, ctx1);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng: rng1, ctx: ctx1 });
 
     const rng2 = new SeededRNG(42);
     const ctx2 = makeCtx();
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng2, ctx2);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng: rng2, ctx: ctx2 });
 
     const u1 = ctx1.rosterUpdates.get(warrior.id);
     const u2 = ctx2.rosterUpdates.get(warrior.id);
@@ -139,7 +139,7 @@ describe('unexplained_monolith offseason event', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx });
 
     const update = ctx.rosterUpdates.get(warrior.id);
     expect(update).toBeDefined();
@@ -151,7 +151,7 @@ describe('unexplained_monolith offseason event', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    expect(() => handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx)).not.toThrow();
+    expect(() => handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx })).not.toThrow();
     expect(ctx.rosterUpdates.size).toBe(0);
     expect(ctx.newsletterItems).toHaveLength(0);
   });
@@ -164,7 +164,7 @@ describe('unexplained_monolith offseason event', () => {
 
     ctx.rosterUpdates.set(warrior.id, { xp: 50, fame: 20 });
 
-    handleUnexplainedMonolith(state, 1, monolithEvent, rng, ctx);
+    handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx });
 
     const update = ctx.rosterUpdates.get(warrior.id);
     expect(update).toBeDefined();

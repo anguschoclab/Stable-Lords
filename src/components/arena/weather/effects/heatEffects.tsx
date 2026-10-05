@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { driftParticleStyle } from './particles';
 
 /** Heat shimmer effect overlay. */
 export function HeatEffect() {
@@ -88,16 +88,11 @@ export function MirageEffect() {
         <div
           key={`shimmer-${i}`}
           className="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               bottom: '0%',
-              '--tx': `${(cryptoRandom() - 0.5) * 30}px`,
-              '--ty': `-${80 + cryptoRandom() * 60}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-              animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 30, -(80 + cryptoRandom() * 60), { durationS: { base: 2, range: 2 } }),
+            }}
         />
       ))}
     </div>
@@ -115,19 +110,14 @@ export function WildfireSmokeEffect() {
         <div
           key={`smoke-${i}`}
           className="absolute rounded-full blur-2xl animate-chaotic-drift motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               bottom: '-15%',
               width: `${80 + cryptoRandom() * 60}px`,
               height: `${80 + cryptoRandom() * 60}px`,
               background: `rgba(${60 + cryptoRandom() * 40},${40 + cryptoRandom() * 30},${30 + cryptoRandom() * 20},${0.15 + cryptoRandom() * 0.1})`,
-              '--tx': `${(cryptoRandom() - 0.5) * 60}px`,
-              '--ty': `-${120 + cryptoRandom() * 80}px`,
-              animationDelay: `${cryptoRandom() * 5}s`,
-              animationDuration: `${4 + cryptoRandom() * 4}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 60, -(120 + cryptoRandom() * 80), { delayS: 5, durationS: { base: 4, range: 4 } }),
+            }}
         />
       ))}
       {/* Ember sparks within the smoke */}
@@ -135,16 +125,11 @@ export function WildfireSmokeEffect() {
         <div
           key={`spark-${i}`}
           className="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               bottom: '0%',
-              '--tx': `${(cryptoRandom() - 0.5) * 40}px`,
-              '--ty': `-${80 + cryptoRandom() * 60}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-              animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 40, -(80 + cryptoRandom() * 60), { durationS: { base: 2, range: 2 } }),
+            }}
         />
       ))}
     </div>

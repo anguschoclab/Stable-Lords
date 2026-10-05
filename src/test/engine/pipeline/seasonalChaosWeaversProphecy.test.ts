@@ -41,7 +41,7 @@ describe('Seasonal Chaos Weavers Prophecy', () => {
       treasuryDelta: 0,
     };
 
-    handleChaosWeaversProphecy(state, 1, eventData, rng, ctx);
+    handleChaosWeaversProphecy({ state, nextWeek: 1, e: eventData, rng, ctx });
 
     const update = ctx.rosterUpdates.get('w1' as WarriorId);
     expect(update).toBeDefined();

@@ -4,8 +4,8 @@
 export {
   type OffseasonEventNarrative,
   type OffseasonEventContext,
-  getActiveWarriors,
 } from './types';
+export { type OffseasonEventRun, getActiveWarriors } from './helpers';
 export { handleWinterChill } from './economicHandlers';
 export { handleMerchantBlessing } from './economicHandlers';
 export { handleBlackMarketRaid } from './economicHandlers';

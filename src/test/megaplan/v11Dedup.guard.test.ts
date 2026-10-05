@@ -25,7 +25,7 @@ const REPORT = path.join(REPO, 'scripts/out/dup-scan.json');
 const PROD_CLUSTER_CEILING = 50;
 
 describe('megaplan V11: duplicate consolidation', () => {
-describe.skip('MEGAPLAN-V12', () => {
+describe('MEGAPLAN-V12', () => {
   it('a shared offseason-event runner/helper exists', () => {
     const hits = [
       'src/engine/pipeline/offseasonEvents/runEvent.ts',

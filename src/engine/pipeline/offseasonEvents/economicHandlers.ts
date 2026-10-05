@@ -1,67 +1,46 @@
+import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 /**
  * Economic offseason events — pure treasury/ledger effects, no warrior roster updates.
  */
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  getActiveWarriors,
-  announceOffseasonEvent,
-} from './types';
+
+import { getActiveWarriors, announceOffseasonEvent, type OffseasonEventRun } from './helpers';
 
 /**
  *
  */
-export function handleWinterChill(
-  __state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleWinterChill(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const cost = 150 + Math.floor(rng.next() * 100);
   ctx.treasuryDelta -= cost;
   ctx.ledgerEntries.push(
     makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other')
   );
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold: cost } });
+  announceOffseasonEvent({ ...run, data: { gold: cost } });
 }
 
 /**
  *
  */
-export function handleMerchantBlessing(
-  __state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleMerchantBlessing(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const gold = 200 + Math.floor(rng.next() * 200);
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Offseason Sponsorship', gold, 'other'));
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold } });
+  announceOffseasonEvent({ ...run, data: { gold } });
 }
 
 /**
  *
  */
-export function handleBlackMarketRaid(
-  _state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleBlackMarketRaid(run: OffseasonEventRun) {
+  const { state: _state, nextWeek, rng, ctx } = run;
   const activeWarriors = getActiveWarriors(_state);
   const goldLost = 50 + Math.floor(rng.next() * 101);
   ctx.treasuryDelta -= goldLost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
 
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
+  announceOffseasonEvent({ ...run, data: {
     name: chosen ? chosen.name : 'Someone',
     gold: goldLost,
   } });
@@ -70,13 +49,8 @@ export function handleBlackMarketRaid(
 /**
  *
  */
-export function handleMysteriousPatron(
-  __state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleMysteriousPatron(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const goldGained = 100 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta += goldGained;
 
@@ -84,7 +58,7 @@ export function handleMysteriousPatron(
     makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
   );
 
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
+  announceOffseasonEvent({ ...run, data: {
     gold: goldGained,
   } });
 }
@@ -92,15 +66,10 @@ export function handleMysteriousPatron(
 /**
  *
  */
-export function handleBountifulHarvest(
-  _state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleBountifulHarvest(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const gold = 200;
   ctx.treasuryDelta += gold;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Bountiful Harvest', gold, 'other'));
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { gold } });
+  announceOffseasonEvent({ ...run, data: { gold } });
 }

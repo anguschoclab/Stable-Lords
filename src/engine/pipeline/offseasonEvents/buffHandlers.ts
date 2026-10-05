@@ -1,27 +1,15 @@
 /**
  * Buff offseason events — grant XP, fame, traits, or insights to warriors.
  */
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
+
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarrior,
-} from './types';
+import { withChosenWarrior, type OffseasonEventRun, addStat, warriorOutcome, grantInsightToken } from './helpers';
 
 /**
  *
  */
-export function handleFameBoost(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => ({
+export function handleFameBoost(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => ({
     updates: { fame: (chosen.fame || 0) + 25 },
     announce: { fame: 25 },
   }) });
@@ -30,65 +18,34 @@ export function handleFameBoost(
 /**
  *
  */
-export function handleEpiphany(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Attribute',
-        targetKey: 'ST',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden reserve of strength during offseason meditation.',
-        origin: 'Epiphany',
-        discoveredWeek: nextWeek,
-      })
-    );
-    return {
-      updates: {
-        fame: (chosen.fame || 0) + 10,
-        xp: (chosen.xp || 0) + 15,
-      },
-      announce: {},
-    };
+export function handleEpiphany(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => {
+    grantInsightToken(run, chosen, { type: 'Attribute', targetKey: 'ST', detail: 'Discovered a hidden reserve of strength during offseason meditation.', origin: 'Epiphany' });
+    return warriorOutcome({
+        fame: addStat(chosen.fame, 10),
+        xp: addStat(chosen.xp, 15),
+      });
   } });
 }
 
 /**
  *
  */
-export function handleBardsSong(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleBardsSong(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const fameGained = 15 + Math.floor(rng.next() * 20);
-    return {
-      updates: { fame: (chosen.fame || 0) + fameGained },
-      announce: { fame: fameGained },
-    };
+    return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained)
+      }, { fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleMysticVision(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => ({
+export function handleMysticVision(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => ({
     updates: {
       xp: (chosen.xp || 0) + 15,
       fame: (chosen.fame || 0) + 10,
@@ -100,120 +57,79 @@ export function handleMysticVision(
 /**
  *
  */
-export function handleStrangeDream(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleStrangeDream(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 5 + Math.floor(rng.next() * 11);
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { xp: xpGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { xp: xpGained });
   } });
 }
 
 /**
  *
  */
-export function handleMeteorShower(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleMeteorShower(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 11);
     const fameGained = 10 + Math.floor(rng.next() * 6);
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      },
-      announce: { xp: xpGained, fame: fameGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        fame: addStat(chosen.fame, fameGained),
+      }, { xp: xpGained, fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleGladiatorOlympics(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleGladiatorOlympics(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 11);
     const fameGained = 10 + Math.floor(rng.next() * 11);
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      },
-      announce: { xp: xpGained, fame: fameGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        fame: addStat(chosen.fame, fameGained),
+      }, { xp: xpGained, fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleLoyalStrayDog(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleLoyalStrayDog(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 10;
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: {},
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      });
   } });
 }
 
 /**
  *
  */
-export function handleWanderingMystic(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleWanderingMystic(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const currentTraits = chosen.traits || [];
     const newTraits = currentTraits.includes('chaos_touched')
       ? currentTraits
       : [...currentTraits, 'chaos_touched'];
-    return {
-      updates: { traits: newTraits },
-      announce: {},
-    };
+    return warriorOutcome({
+        traits: newTraits
+      });
   } });
 }
 
 /**
  *
  */
-export function handleChaosSpores(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaosSpores(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 20 + Math.floor(rng.next() * 11);
 
     const currentTraits = chosen.traits || [];
@@ -221,96 +137,57 @@ export function handleChaosSpores(
       ? currentTraits
       : [...currentTraits, 'spore_kissed'];
 
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
         traits: newTraits,
-      },
-      announce: { xp: xpGained },
-    };
+      }, { xp: xpGained });
   } });
 }
 
 /**
  *
  */
-export function handleChaosWeaversGift(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaosWeaversGift(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 30;
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Tactic',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'A chaotic revelation sparked a new combat tactic.',
-        origin: 'Chaos Weaver',
-        discoveredWeek: nextWeek,
-      })
-    );
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { xp: xpGained },
-    };
+    grantInsightToken(run, chosen, { type: 'Tactic', detail: 'A chaotic revelation sparked a new combat tactic.', origin: 'Chaos Weaver' });
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { xp: xpGained });
   } });
 }
 
 /**
  *
  */
-export function handleShadowTraining(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleShadowTraining(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 20 + Math.floor(rng.next() * 11);
     const fameLost = 5 + Math.floor(rng.next() * 6);
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
         fame: Math.max(0, (chosen.fame || 0) - fameLost),
-      },
-      announce: { xp: xpGained, fame: fameLost },
-    };
+      }, { xp: xpGained, fame: fameLost });
   } });
 }
 
 /**
  * Handle Offseason Training Camp
  */
-export function handleOffseasonTrainingCamp(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleOffseasonTrainingCamp(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 40 + Math.floor(rng.next() * 21);
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { xp: xpGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { xp: xpGained });
   } });
 }
 
 /** Handles the Wandering Merchant "Strange Brew" offseason event outcome. */
-export function handleWanderingMerchantStrangeBrew(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => ({
+export function handleWanderingMerchantStrangeBrew(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => ({
     updates: {
       xp: (chosen.xp || 0) + 20,
       fame: (chosen.fame || 0) + 10,
@@ -320,23 +197,17 @@ export function handleWanderingMerchantStrangeBrew(
 }
 
 /** Handles the Wandering Blacksmith offseason event outcome. */
-export function handleWanderingBlacksmith(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleWanderingBlacksmith(run: OffseasonEventRun) {
+  const { state, nextWeek, rng, ctx } = run;
   // If the stable is too poor, the blacksmith passes by.
   if ((state.treasury || 0) + ctx.treasuryDelta < 50) return;
 
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 20 + Math.floor(rng.next() * 11);
     ctx.treasuryDelta -= 50;
     ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Wandering Blacksmith', -50, 'other'));
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { xp: xpGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { xp: xpGained });
   } });
 }

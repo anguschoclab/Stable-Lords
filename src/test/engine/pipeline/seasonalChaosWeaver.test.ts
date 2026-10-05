@@ -60,7 +60,7 @@ describe('chaos weaver event handlers', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    handleSecretFightClub(state, 1, fightClubEvent, rng, ctx);
+    handleSecretFightClub({ state, nextWeek: 1, e: fightClubEvent, rng, ctx });
 
     expect(ctx.rosterUpdates.size).toBe(1);
     const update = ctx.rosterUpdates.get('w-test' as WarriorId);
@@ -79,7 +79,7 @@ describe('chaos weaver event handlers', () => {
     const rng = new SeededRNG(5);
     const ctx = makeCtx();
 
-    handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
+    handleChaosWeaversGame({ state, nextWeek: 1, e: gameEvent, rng, ctx });
 
     expect(ctx.rosterUpdates.size).toBe(1);
     expect(ctx.newsletterItems).toHaveLength(1);
@@ -93,7 +93,7 @@ describe('chaos weaver event handlers', () => {
     const rng = new SeededRNG(0);
     const ctx = makeCtx();
 
-    handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
+    handleChaosWeaversGame({ state, nextWeek: 1, e: gameEvent, rng, ctx });
 
     expect(ctx.rosterUpdates.size).toBe(1);
     expect(ctx.newsletterItems).toHaveLength(1);
@@ -106,7 +106,7 @@ describe('chaos weaver event handlers', () => {
     const rng = new SeededRNG(5);
     const ctx = makeCtx();
 
-    handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
+    handleChaosWeaversGame({ state, nextWeek: 1, e: gameEvent, rng, ctx });
 
     const update = ctx.rosterUpdates.get('w-test' as WarriorId);
     expect(update).toBeDefined();
@@ -120,7 +120,7 @@ describe('chaos weaver event handlers', () => {
     const rng = new SeededRNG(0);
     const ctx = makeCtx();
 
-    handleChaosWeaversGame(state, 1, gameEvent, rng, ctx);
+    handleChaosWeaversGame({ state, nextWeek: 1, e: gameEvent, rng, ctx });
 
     const update = ctx.rosterUpdates.get('w-test' as WarriorId);
     expect(update).toBeDefined();

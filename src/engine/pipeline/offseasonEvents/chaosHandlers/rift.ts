@@ -1,24 +1,12 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
+
 import { makeInjury } from '@/engine/injuries/utils';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarrior,
-  withChosenWarriorNews,
-} from '../types';
+import { withChosenWarrior, withChosenWarriorNews, type OffseasonEventRun, addStat, withAddedInjury, warriorOutcome, grantInsightToken } from '../helpers';
 
 /** Handler for the Chaos Rift offseason event — grants XP, fame, and gold from a chaos crystal. */
-export function handleChaosRift(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaosRift(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 25;
     const fameGained = 15;
     const goldGained = 150;
@@ -28,36 +16,19 @@ export function handleChaosRift(
       makeLedgerEntry(rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other')
     );
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Touched the raw essence of the Chaos Rift.',
-        origin: 'Chaos Rift',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: 'Touched the raw essence of the Chaos Rift.', origin: 'Chaos Rift' });
 
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-      },
-      announce: { xp: xpGained, fame: fameGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        fame: addStat(chosen.fame, fameGained),
+      }, { xp: xpGained, fame: fameGained });
   } });
 }
 
 /** Handler for the Chaotic Spells offseason event — random magical effects on active warriors. */
-export function handleChaoticSpells(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaoticSpells(run: OffseasonEventRun) {
+  const { rng, ctx } = run;
+  withChosenWarriorNews({ ...run, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.33) {
@@ -77,9 +48,7 @@ export function handleChaoticSpells(
         weeksRange: 2,
         penalties: { SP: -1, CN: -1 },
       });
-      ctx.rosterUpdates.set(chosen.id, {
-        injuries: [...(chosen.injuries || []), newInjury],
-      });
+      ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
       return 'They sustained mild arcane burns. (Minor Injury)';
     }
 

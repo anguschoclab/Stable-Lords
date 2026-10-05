@@ -27,7 +27,7 @@ describe('Bountiful Harvest Offseason Event', () => {
 
     const rng = new SeededRNG(123);
 
-    handleBountifulHarvest(state, 2, narrative, rng, ctx);
+    handleBountifulHarvest({ state, nextWeek: 2, e: narrative, rng, ctx });
 
     expect(ctx.treasuryDelta).toBe(200);
     expect(ctx.ledgerEntries).toHaveLength(1);

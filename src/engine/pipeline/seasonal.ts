@@ -14,17 +14,9 @@ import { StateImpact } from '@/engine/impacts';
 import { type WarriorId } from '@/types/shared.types';
 import * as offseason from './offseasonEvents';
 import type { OffseasonEventNarrative, OffseasonEventContext } from './offseasonEvents';
+import type { OffseasonEventRun } from './offseasonEvents/helpers';
 
-const EVENT_HANDLERS: Record<
-  string,
-  (
-    state: GameState,
-    nextWeek: number,
-    e: OffseasonEventNarrative,
-    rng: IRNGService,
-    ctx: OffseasonEventContext
-  ) => void
-> = {
+const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = {
   chaos_rift: offseason.handleChaosRift,
   unexplained_monolith: offseason.handleUnexplainedMonolith,
   chaotic_weather_experiment: offseason.handleChaoticWeatherExperiment,
@@ -131,7 +123,7 @@ export function runSeasonalPass(
 
   const handler = EVENT_HANDLERS[e.effectType];
   if (handler) {
-    handler(state, nextWeek, e, seasonRng, ctx);
+    handler({ state, nextWeek, e, rng: seasonRng, ctx });
   }
 
   const impact: StateImpact = {

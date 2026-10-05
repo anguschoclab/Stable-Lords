@@ -1,26 +1,15 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
+
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { hasInjuries } from '@/engine/injuries/utils';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarrior,
-} from '../types';
+import { withChosenWarrior, type OffseasonEventRun, addStat, warriorOutcome, grantInsightToken } from '../helpers';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /**
  *
  */
-export function handleWanderingHealer(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleWanderingHealer(run: OffseasonEventRun) {
+  const { state, nextWeek, e, rng, ctx } = run;
   const goldCost = 50 + Math.floor(rng.next() * 51);
   ctx.treasuryDelta -= goldCost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep'));
@@ -61,35 +50,20 @@ export function handleWanderingHealer(
 /**
  *
  */
-export function handleWanderingFortuneTeller(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const cost = 30;
   ctx.treasuryDelta -= cost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Fortune Teller Reading', -cost, 'other'));
 
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15;
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden rhythm in their fighting style.',
-        origin: 'Wandering Fortune Teller',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: 'Discovered a hidden rhythm in their fighting style.', origin: 'Wandering Fortune Teller' });
 
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { gold: cost },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { gold: cost });
   } });
 }
 
@@ -100,45 +74,25 @@ export function handleWanderingFortuneTeller(
 /**
  *
  */
-export function handleDreamweaverVisit(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleDreamweaverVisit(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 11);
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Dreamweaver vision revealed hidden stylistic knowledge.',
-        origin: 'Dreamweaver',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: 'Dreamweaver vision revealed hidden stylistic knowledge.', origin: 'Dreamweaver' });
 
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { xp: xpGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { xp: xpGained });
   } });
 }
 
 /** Handles the Goblin Merchant offseason event outcome. */
 
 /** Handles the Goblin Merchant offseason event outcome. */
-export function handleGoblinMerchant(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleGoblinMerchant(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const cost = 50 + Math.floor(rng.next() * 50);
 
     const attrs = chosen.attributes;
@@ -146,15 +100,12 @@ export function handleGoblinMerchant(
     ctx.treasuryDelta -= cost;
     ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Strange Herbs', -cost, 'other'));
 
-    return {
-      updates: {
+    return warriorOutcome({
         attributes: {
-          ...attrs,
-          CN: attrs.CN + 1,
-          WL: attrs.WL + 1,
+        ...attrs,
+        CN: attrs.CN + 1,
+        WL: attrs.WL + 1,
         },
-      },
-      announce: { gold: cost },
-    };
+      }, { gold: cost });
   } });
 }

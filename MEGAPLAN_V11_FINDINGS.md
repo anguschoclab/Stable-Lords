@@ -253,9 +253,42 @@ preamble pairs registered knowingly (same Phase-3 shard-boilerplate class).
 | Bucket | Count | Action |
 | --- | --- | --- |
 | DELETE dead exports/types/files | ~200 knip-verified items (after barrel/schema collapse) | Phase 3 |
-| DEDUPE schema re-export matrix | ~110 aliases → canonical homes | Phase 5 |
-| DEDUPE prod clusters | ~30 real clusters (B1–B3, B5) | Phase 5 |
+| DEDUPE schema re-export matrix | ~110 aliases → canonical homes | **DONE (Phase 3)** — `gameStateSchema` barrel collapsed |
+| DEDUPE prod clusters | ~30 real clusters (B1–B3, B5) | **DONE (Phase 5)** — 77→43 prod↔prod; see below |
 | DISPROVED clusters (hook-mirror) | ~11 page↔hook pairs | no action |
 | RESTRUCTURE monoliths | 17 logic files >400 lines | **DONE (Phase 4)** |
 | WIRE/dormant decisions | dates.ts unused consts (wire-or-delete); ARENA_EVENTS = wired, DOCUMENT stale comments | Phase 6 |
 | FIX hygiene | 5 entries-in-loop, 1 pragma | Phase 5/8 |
+
+---
+
+## Phase 5 outcome — duplicate consolidation (LANDED)
+
+Measured: **77 → 43 prod↔prod dup clusters** (V12 ceiling 50). B1/B2/B3 all eliminated.
+
+- **B1 offseason handlers (13 pairs → 0):** `types.ts` slimmed to pure types;
+  new `offseasonEvents/helpers.ts` hosts `OffseasonEventRun` bundle +
+  `withChosenWarrior`/`withChosenWarriorNews`/`announceOffseasonEvent` runners
+  + `warriorOutcome`/`addStat`/`withAddedInjury`/`grantInsightToken` micro-helpers.
+  All 60 handlers re-signed `(state,nextWeek,e,rng,ctx)` → `(run)`; call sites
+  spread `...run`. `seasonal.ts` dispatch + ~17 test call sites updated. RNG
+  call order preserved (determinism verified by 448 pipeline tests).
+- **B2 standings tables (17 pairs → 0):** new `components/ui/StandingsTable.tsx`
+  — column-driven primitive over `ui/table` with a `classes` style bundle
+  (param-budget-safe). 6 call sites migrated: RecordTable, arenaDetail/sections
+  (TitleHistory), arenaHub/leaderboard, GazetteLeaderboards,
+  TreasuryOverview/registry, HallOfWarriors.
+- **B3 weather effects (4 pairs → 0):** new `effects/particles.ts`
+  `driftParticleStyle` centralizes the `--tx`/`--ty`/delay/duration tail;
+  cryptoRandom call order preserved verbatim.
+- **Selector/props clones:** shared `useArenaCircuitData` hook for the
+  identical zustand `useShallow` selector in ArenaCircuit + arenaHub/columns;
+  `ArenaAnalyticsSurface`/`ConditionsColumn` props type consolidated.
+- **Guard regressions fixed:** `ArenaLeaderboard` cols hoisted to module factory
+  (112→<80 lines); `StandingsTable` props bundled (8→4 destructured).
+- Residual 43 clusters are disproved hook-mirrors (B4), Radix shadcn boilerplate,
+  and parallel-impl pairs (electronArchive↔opfsArchive) — documented no-action.
+
+Full suite: 789/795 files green; the 6 failing files are all dirty-tree user WIP
+(arenaEvent*/bleed/logging/newNarrativeContent) plus a worker-pool flake in
+`retrieveHotStatePlausibility` (passes isolated + in every subset).

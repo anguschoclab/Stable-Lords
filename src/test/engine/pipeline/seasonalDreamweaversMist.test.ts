@@ -30,7 +30,7 @@ describe('handleDreamweaversMist', () => {
 
     const ctx = makeOffseasonCtx();
 
-    handleDreamweaversMist(state as GameState, 5, narrative, mockRng, ctx);
+    handleDreamweaversMist({ state: state as GameState, nextWeek: 5, e: narrative, rng: mockRng, ctx });
 
     const update = ctx.rosterUpdates.get('w-1' as WarriorId);
     expect(update).toBeDefined();

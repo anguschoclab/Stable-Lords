@@ -1,24 +1,13 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+
+
 import { makeInjury } from '@/engine/injuries/utils';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  pickActiveWarrior,
-  withChosenWarrior,
-} from '../types';
+import { pickActiveWarrior, withChosenWarrior, type OffseasonEventRun, withAddedInjury, warriorOutcome, grantInsightToken } from '../helpers';
 
 /** Handler for the Shadow Tournament offseason event — unsanctioned fights with injury risk. */
-export function handleShadowTournament(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleShadowTournament(run: OffseasonEventRun) {
+  const { state, nextWeek, e, rng, ctx } = run;
   const chosen = pickActiveWarrior(state, rng);
   if (chosen) {
     const roll = rng.next();
@@ -61,13 +50,8 @@ export function handleShadowTournament(
 }
 
 /** Handler for the Chaos Weaver's Game offseason event — gambles warrior traits for rewards. */
-export function handleChaosWeaversGame(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleChaosWeaversGame(run: OffseasonEventRun) {
+  const { state, nextWeek, e, rng, ctx } = run;
   const chosen = pickActiveWarrior(state, rng);
   if (chosen) {
     if (rng.next() > 0.5) {
@@ -96,9 +80,7 @@ export function handleChaosWeaversGame(
         weeksRange: 1,
         penalties: { CN: -1 },
       });
-      ctx.rosterUpdates.set(chosen.id, {
-        injuries: [...(chosen.injuries || []), newInjury],
-      });
+      ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
 
       // Manually push the exact narrative line to avoid rng picking the "Win" line
       // We know e.newsletter[1] is the "Lose" line
@@ -114,46 +96,26 @@ export function handleChaosWeaversGame(
 }
 
 /** Handler for the Chaos Weaver Visit offseason event — bestows or removes traits. */
-export function handleChaosWeaverVisit(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaosWeaverVisit(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const positiveTraits = Object.values(TRAITS).filter(
       (td): td is TraitDef => td !== undefined && td.sign === 'positive'
     );
     const grantedTrait = rng.pick(positiveTraits);
     if (!grantedTrait) return;
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
-        origin: 'Chaos Weaver',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`, origin: 'Chaos Weaver' });
 
-    return {
-      updates: { traits: [...(chosen.traits || []), grantedTrait.id] },
-      announce: { trait: grantedTrait.name },
-    };
+    return warriorOutcome({
+        traits: [...(chosen.traits || []), grantedTrait.id]
+      }, { trait: grantedTrait.name });
   } });
 }
 
 /** Handler for the Chaos Weaver's Prophecy offseason event — foretells a warrior's destiny. */
-export function handleChaosWeaversProphecy(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleChaosWeaversProphecy(run: OffseasonEventRun) {
+  const { state, nextWeek, e, rng, ctx } = run;
   const chosen = pickActiveWarrior(state, rng);
   if (chosen) {
     const xpGained = 50;

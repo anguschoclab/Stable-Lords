@@ -1,27 +1,14 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
+
 import { type LedgerEntryId } from '@/types/shared.types';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  pickActiveWarrior,
-  announceOffseasonEvent,
-  withChosenWarrior,
-} from '../types';
+import { pickActiveWarrior, announceOffseasonEvent, withChosenWarrior, type OffseasonEventRun, addStat, warriorOutcome, grantInsightToken } from '../helpers';
 
 /**
  *
  */
-export function handleShadowMarketRun(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleShadowMarketRun(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const cost = 25 + Math.floor(rng.next() * 26);
     ctx.treasuryDelta -= cost;
     ctx.ledgerEntries.push(
@@ -30,21 +17,11 @@ export function handleShadowMarketRun(
 
     const fameGained = 15;
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden technique at the Shadow Market.',
-        origin: 'Shadow Market',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: 'Discovered a hidden technique at the Shadow Market.', origin: 'Shadow Market' });
 
-    return {
-      updates: { fame: (chosen.fame || 0) + fameGained },
-      announce: { gold: cost, fame: fameGained },
-    };
+    return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained)
+      }, { gold: cost, fame: fameGained });
   } });
 }
 
@@ -55,18 +32,13 @@ export function handleShadowMarketRun(
 /**
  *
  */
-export function handleLoyalStray(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleLoyalStray(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
   const cost = 25;
   ctx.treasuryDelta -= cost;
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Dog Food & Treats', -cost, 'other'));
 
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => ({
+  withChosenWarrior({ ...run, apply: (chosen) => ({
     updates: {
       xp: (chosen.xp || 0) + 10,
       fame: (chosen.fame || 0) + 5,
@@ -82,14 +54,9 @@ export function handleLoyalStray(
 /**
  *
  */
-export function handleBountyHunterVisit(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleBountyHunterVisit(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const goldGained = 150 + Math.floor(rng.next() * 101);
     ctx.treasuryDelta += goldGained;
     ctx.ledgerEntries.push(
@@ -98,10 +65,9 @@ export function handleBountyHunterVisit(
 
     const fameGained = 10;
 
-    return {
-      updates: { fame: (chosen.fame || 0) + fameGained },
-      announce: { gold: goldGained, fame: fameGained },
-    };
+    return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained)
+      }, { gold: goldGained, fame: fameGained });
   } });
 }
 
@@ -112,14 +78,9 @@ export function handleBountyHunterVisit(
 /**
  *
  */
-export function handleMidnightMarket(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleMidnightMarket(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const cost = 40;
     ctx.treasuryDelta -= cost;
     ctx.ledgerEntries.push(
@@ -128,21 +89,11 @@ export function handleMidnightMarket(
 
     const xpGained = 20;
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Tactic',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Whispers from the Midnight Market revealed a new tactic.',
-        origin: 'Midnight Market',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Tactic', detail: 'Whispers from the Midnight Market revealed a new tactic.', origin: 'Midnight Market' });
 
-    return {
-      updates: { xp: (chosen.xp || 0) + xpGained },
-      announce: { gold: cost },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained)
+      }, { gold: cost });
   } });
 }
 
@@ -153,19 +104,14 @@ export function handleMidnightMarket(
 /**
  *
  */
-export function handleMoonlightDuel(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleMoonlightDuel(run: OffseasonEventRun) {
+  const { state, nextWeek, rng, ctx } = run;
   const chosen = pickActiveWarrior(state, rng);
   if (chosen) {
     const gold = 150 + Math.floor(rng.next() * 150);
     ctx.treasuryDelta += gold;
 
-    announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: {
+    announceOffseasonEvent({ ...run, data: {
       name: chosen.name,
       gold,
     } });

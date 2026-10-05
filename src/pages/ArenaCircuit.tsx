@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
-import { useShallow } from 'zustand/react/shallow';
-import { useGameStore } from '@/state/useGameStore';
+import { useArenaCircuitData } from '@/hooks/useArenaCircuitData';
 import { getAllArenas } from '@/data/arenas';
 import {
   CHAMPIONSHIP_EXCLUDED_ARENAS,
@@ -121,14 +120,7 @@ function ArenaCard({
  * and a link into the arena card. Titles derive live from arenaChampions.
  */
 export default function ArenaCircuit() {
-  const { arenaChampions, roster, rivals, player } = useGameStore(
-    useShallow((s) => ({
-      arenaChampions: s.arenaChampions,
-      roster: s.roster,
-      rivals: s.rivals,
-      player: s.player,
-    }))
-  );
+  const { arenaChampions, roster, rivals, player } = useArenaCircuitData();
   const state = { arenaChampions, roster, rivals, player } as unknown as GameState;
   const arenas = useMemo(() => getAllArenas(), []);
 

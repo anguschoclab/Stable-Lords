@@ -1,22 +1,12 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+
+
 import { makeInjury } from '@/engine/injuries/utils';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarriorNews,
-} from '../types';
+import { withChosenWarriorNews, type OffseasonEventRun, withAddedInjury, grantInsightToken } from '../helpers';
 
 /** Handler for the Abyssal Bargain offseason event — trades gold for warrior power at a cost. */
-export function handleAbyssalBargain(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleAbyssalBargain(run: OffseasonEventRun) {
+  const { rng, ctx } = run;
+  withChosenWarriorNews({ ...run, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.6) {
@@ -50,14 +40,9 @@ export function handleAbyssalBargain(
 }
 
 /** Handler for the Fey Trickster offseason event — random boon or bane from a fey visitor. */
-export function handleFeyTrickster(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleFeyTrickster(run: OffseasonEventRun) {
+  const { rng, ctx } = run;
+  withChosenWarriorNews({ ...run, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.6) {
@@ -66,16 +51,7 @@ export function handleFeyTrickster(
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,
       });
-      ctx.insightTokens.push(
-        makeInsightToken(rng, {
-          type: 'Style',
-          warriorId: chosen.id,
-          warriorName: chosen.name,
-          detail: 'A fey trickster taught them an impossible maneuver.',
-          origin: 'Fey Trickster',
-          discoveredWeek: nextWeek,
-        })
-      );
+      grantInsightToken(run, chosen, { type: 'Style', detail: 'A fey trickster taught them an impossible maneuver.', origin: 'Fey Trickster' });
       return `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
     }
 
@@ -88,22 +64,15 @@ export function handleFeyTrickster(
       weeksRange: 1,
       penalties: { WL: -1, SP: -1 },
     });
-    ctx.rosterUpdates.set(chosen.id, {
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
+    ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
     return `They were made a fool of, suffering minor hexes. (Minor Injury)`;
   } });
 }
 
 /** Handler for the Rogue Alchemist offseason event — offers experimental potions with side effects. */
-export function handleRogueAlchemist(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarriorNews({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleRogueAlchemist(run: OffseasonEventRun) {
+  const { rng, ctx } = run;
+  withChosenWarriorNews({ ...run, apply: (chosen) => {
     const roll = rng.next();
 
     if (roll < 0.5) {
@@ -126,9 +95,7 @@ export function handleRogueAlchemist(
       weeksRange: 2,
       penalties: { SP: -1, CN: -1 },
     });
-    ctx.rosterUpdates.set(chosen.id, {
-      injuries: [...(chosen.injuries || []), newInjury],
-    });
+    ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
     return `It tasted like battery acid. They are violently ill. (Minor Injury)`;
   } });
 }

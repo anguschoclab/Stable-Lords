@@ -7,14 +7,7 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 
 const END_REASON_LABEL: Record<string, string> = {
   died: 'Died in the arena',
@@ -43,6 +36,48 @@ export function UnknownArena() {
   );
 }
 
+type TitleReignRow = ArenaTitle['history'][number];
+
+const TITLE_HISTORY_COLUMNS: StandingsColumn<TitleReignRow>[] = [
+  {
+    header: 'CHAMPION',
+    headClassName: 'pl-6',
+    cellClassName: 'pl-6',
+    render: (r) => (
+      <WarriorNameTag id={r.warriorId} name={r.warriorName} epithet={r.warriorEpithet} />
+    ),
+  },
+  {
+    header: 'STABLE',
+    cellClassName:
+      'text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic',
+    render: (r) => r.stableName ?? '—',
+  },
+  {
+    header: 'REIGN',
+    headClassName: 'text-center',
+    cellClassName: 'text-center font-mono text-[10px] text-muted-foreground/60',
+    render: (r) => (
+      <>
+        wk {displayWeek(r.startedAbsoluteWeek)} → wk {displayWeek(r.endedAbsoluteWeek)}
+      </>
+    ),
+  },
+  {
+    header: 'DEF',
+    headClassName: 'text-center',
+    cellClassName: 'text-center font-mono text-[10px] font-black text-arena-gold',
+    render: (r) => r.defenses,
+  },
+  {
+    header: 'ENDED',
+    headClassName: 'pr-6 text-right',
+    cellClassName:
+      'pr-6 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground/60',
+    render: (r) => END_REASON_LABEL[r.endReason] ?? r.endReason,
+  },
+];
+
 /** Title history table — past reigns, defenses, and how each ended. */
 export function TitleHistory({ history }: { history: ArenaTitle['history'] }) {
   if (history.length === 0) return null;
@@ -50,55 +85,17 @@ export function TitleHistory({ history }: { history: ArenaTitle['history'] }) {
     <>
       <SectionDivider label="Title History" variant="gold" />
       <Surface variant="glass" className="overflow-hidden p-0">
-        <Table>
-          <TableHeader className="bg-white/[0.03]">
-            <TableRow className="h-10 hover:bg-transparent border-white/5">
-              <TableHead className="pl-6 text-[9px] font-black uppercase tracking-widest">
-                CHAMPION
-              </TableHead>
-              <TableHead className="text-[9px] font-black uppercase tracking-widest">
-                STABLE
-              </TableHead>
-              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
-                REIGN
-              </TableHead>
-              <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
-                DEF
-              </TableHead>
-              <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">
-                ENDED
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {history.map((r, i) => (
-              <TableRow
-                key={`${r.warriorId}-${r.startedAbsoluteWeek}-${i}`}
-                className="h-11 border-white/5"
-              >
-                <TableCell className="pl-6">
-                  <WarriorNameTag
-                    id={r.warriorId}
-                    name={r.warriorName}
-                    epithet={r.warriorEpithet}
-                  />
-                </TableCell>
-                <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
-                  {r.stableName ?? '—'}
-                </TableCell>
-                <TableCell className="text-center font-mono text-[10px] text-muted-foreground/60">
-                  wk {displayWeek(r.startedAbsoluteWeek)} → wk {displayWeek(r.endedAbsoluteWeek)}
-                </TableCell>
-                <TableCell className="text-center font-mono text-[10px] font-black text-arena-gold">
-                  {r.defenses}
-                </TableCell>
-                <TableCell className="pr-6 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                  {END_REASON_LABEL[r.endReason] ?? r.endReason}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <StandingsTable
+          columns={TITLE_HISTORY_COLUMNS}
+          rows={history}
+          rowKey={(r, i) => `${r.warriorId}-${r.startedAbsoluteWeek}-${i}`}
+          classes={{
+            head: 'bg-white/[0.03]',
+            headRow: 'h-10',
+            headCell: 'text-[9px] font-black uppercase tracking-widest',
+            row: 'h-11 border-white/5',
+          }}
+        />
       </Surface>
     </>
   );

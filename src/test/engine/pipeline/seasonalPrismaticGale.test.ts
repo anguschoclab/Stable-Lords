@@ -45,7 +45,7 @@ describe('prismatic_gale_exposure offseason event', () => {
       effectType: 'prismatic_gale_exposure',
       newsletter: ['Test newsletter'],
     };
-    handlePrismaticGaleExposure(mockState, 10, eventDef, mockRng, mockCtx);
+    handlePrismaticGaleExposure({ state: mockState, nextWeek: 10, e: eventDef, rng: mockRng, ctx: mockCtx });
 
     expect(mockCtx.rosterUpdates.has('w1' as WarriorId)).toBe(true);
     const update = mockCtx.rosterUpdates.get('w1' as WarriorId)!;

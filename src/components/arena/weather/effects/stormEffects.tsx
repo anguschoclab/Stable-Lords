@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { driftParticleStyle } from './particles';
 
 /** Thunderstorm with rain, lightning flashes, and darkening. */
 export function ThunderstormEffect() {
@@ -44,15 +44,11 @@ export function ArcaneStormEffect() {
         <div
           key={i}
           className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 140}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 140}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 140, (cryptoRandom() - 0.5) * 140),
+            }}
         />
       ))}
     </div>
@@ -83,16 +79,11 @@ export function AetherStormEffect() {
         <div
           key={i}
           className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 160}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 160}px`,
-              animationDelay: `${cryptoRandom() * 4}s`,
-              animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 160, (cryptoRandom() - 0.5) * 160, { delayS: 4, durationS: { base: 2, range: 2 } }),
+            }}
         />
       ))}
       {/* Violet secondary particles for prismatic effect */}
@@ -100,16 +91,11 @@ export function AetherStormEffect() {
         <div
           key={`v-${i}`}
           className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 120}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 120}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-              animationDuration: `${2.5 + cryptoRandom() * 2}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 120, (cryptoRandom() - 0.5) * 120, { durationS: { base: 2.5, range: 2 } }),
+            }}
         />
       ))}
     </div>

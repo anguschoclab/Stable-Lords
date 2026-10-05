@@ -1,28 +1,18 @@
 /**
  * Injury offseason events — cause injuries to warriors, sometimes with fame/gold side effects.
  */
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+
 import { makeInjury } from '@/engine/injuries/utils';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarrior,
-} from './types';
+import { withChosenWarrior, type OffseasonEventRun, addStat, withAddedInjury, warriorOutcome } from './helpers';
 
 /**
  *
  */
-export function handleTavernBrawl(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleTavernBrawl(run: OffseasonEventRun) {
+  const { rng } = run;
   withChosenWarrior(
-    { state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+    { ...run, apply: (chosen) => {
       const fameGained = 10 + Math.floor(rng.next() * 11);
 
       const newInjury = makeInjury(rng, {
@@ -34,13 +24,10 @@ export function handleTavernBrawl(
         penalties: { CN: -1 },
       });
 
-      return {
-        updates: {
-          fame: (chosen.fame || 0) + fameGained,
-          injuries: [...(chosen.injuries || []), newInjury],
-        },
-        announce: { fame: fameGained },
-      };
+      return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { fame: fameGained });
     }, healthyOnly: true }
   );
 }
@@ -48,15 +35,10 @@ export function handleTavernBrawl(
 /**
  *
  */
-export function handlePlagueOutbreak(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handlePlagueOutbreak(run: OffseasonEventRun) {
+  const { rng } = run;
   withChosenWarrior(
-    { state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+    { ...run, apply: (chosen) => {
       const fameLost = 5 + Math.floor(rng.next() * 10);
 
       const newInjury = makeInjury(rng, {
@@ -68,13 +50,10 @@ export function handlePlagueOutbreak(
         penalties: { CN: -2, ST: -1 },
       });
 
-      return {
-        updates: {
-          fame: Math.max(0, (chosen.fame || 0) - fameLost),
-          injuries: [...(chosen.injuries || []), newInjury],
-        },
-        announce: { fame: fameLost },
-      };
+      return warriorOutcome({
+        fame: Math.max(0, (chosen.fame || 0) - fameLost),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { fame: fameLost });
     }, healthyOnly: true }
   );
 }
@@ -82,15 +61,10 @@ export function handlePlagueOutbreak(
 /**
  *
  */
-export function handleWildAnimalAttack(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
+export function handleWildAnimalAttack(run: OffseasonEventRun) {
+  const { rng } = run;
   withChosenWarrior(
-    { state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+    { ...run, apply: (chosen) => {
       const fameGained = 5 + Math.floor(rng.next() * 6);
 
       const newInjury = makeInjury(rng, {
@@ -102,13 +76,10 @@ export function handleWildAnimalAttack(
         penalties: { CN: -1 },
       });
 
-      return {
-        updates: {
-          fame: (chosen.fame || 0) + fameGained,
-          injuries: [...(chosen.injuries || []), newInjury],
-        },
-        announce: { fame: fameGained },
-      };
+      return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { fame: fameGained });
     }, healthyOnly: true }
   );
 }
@@ -116,14 +87,9 @@ export function handleWildAnimalAttack(
 /**
  *
  */
-export function handleGoblinRaid(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleGoblinRaid(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const goldLost = 20 + Math.floor(rng.next() * 31);
     ctx.treasuryDelta -= goldLost;
     ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other'));
@@ -137,24 +103,18 @@ export function handleGoblinRaid(
       penalties: { CN: -1 },
     });
 
-    return {
-      updates: { injuries: [...(chosen.injuries || []), newInjury] },
-      announce: { gold: goldLost },
-    };
+    return warriorOutcome({
+        injuries: withAddedInjury(chosen, newInjury)
+      }, { gold: goldLost });
   } });
 }
 
 /**
  *
  */
-export function handleUndergroundPitFight(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleUndergroundPitFight(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const fameGained = 15 + Math.floor(rng.next() * 16);
 
     const newInjury = makeInjury(rng, {
@@ -166,27 +126,19 @@ export function handleUndergroundPitFight(
       penalties: { SP: -1, CN: -1 },
     });
 
-    return {
-      updates: {
-        fame: (chosen.fame || 0) + fameGained,
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: { fame: fameGained },
-    };
+    return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleTavernBrawlSurprise(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleTavernBrawlSurprise(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const fameGained = 15 + Math.floor(rng.next() * 11);
 
     const newInjury = makeInjury(rng, {
@@ -198,27 +150,19 @@ export function handleTavernBrawlSurprise(
       penalties: { SP: -1 },
     });
 
-    return {
-      updates: {
-        fame: (chosen.fame || 0) + fameGained,
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: { fame: fameGained },
-    };
+    return warriorOutcome({
+        fame: addStat(chosen.fame, fameGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleSecretFightClub(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleSecretFightClub(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 11);
     const fameGained = 10 + Math.floor(rng.next() * 11);
     const newInjury = makeInjury(rng, {
@@ -229,28 +173,20 @@ export function handleSecretFightClub(
       weeksRange: 2,
       penalties: { SP: -1 },
     });
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        fame: (chosen.fame || 0) + fameGained,
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: { xp: xpGained, fame: fameGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        fame: addStat(chosen.fame, fameGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { xp: xpGained, fame: fameGained });
   } });
 }
 
 /**
  *
  */
-export function handleChaoticWeatherExperiment(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleChaoticWeatherExperiment(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15 + Math.floor(rng.next() * 10);
     const newInjury = makeInjury(rng, {
       name: 'Magic Burns',
@@ -260,12 +196,9 @@ export function handleChaoticWeatherExperiment(
       weeksRange: 1,
       penalties: { SP: -1 },
     });
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: { xp: xpGained },
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { xp: xpGained });
   } });
 }

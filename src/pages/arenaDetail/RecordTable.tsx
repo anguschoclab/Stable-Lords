@@ -1,12 +1,5 @@
 import { Surface } from '@/components/ui/Surface';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 import { cn } from '@/lib/utils';
 
 /** One ranked row on an arena record board. */
@@ -29,6 +22,22 @@ export function RecordTable({
   head: string[];
   rows: RecordRow[];
 }) {
+  const columns: StandingsColumn<RecordRow>[] = [
+    {
+      header: '#',
+      headClassName: 'w-10 pl-6',
+      cellClassName: 'pl-6 font-mono text-[10px] font-black text-muted-foreground',
+      render: (row) => String(row.rank).padStart(2, '0'),
+    },
+    ...head.map(
+      (h, i): StandingsColumn<RecordRow> => ({
+        header: h,
+        headClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
+        cellClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
+        render: (row) => row.cells[i],
+      })
+    ),
+  ];
   return (
     <Surface variant="glass" className="overflow-hidden p-0">
       <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
@@ -42,51 +51,23 @@ export function RecordTable({
           No records yet
         </p>
       ) : (
-        <Table>
-          <TableHeader className="bg-white/[0.03]">
-            <TableRow className="h-10 hover:bg-transparent border-white/5">
-              <TableHead className="w-10 pl-6 text-[9px] font-black uppercase tracking-widest">
-                #
-              </TableHead>
-              {head.map((h, i) => (
-                <TableHead
-                  key={h}
-                  className={cn(
-                    'text-[9px] font-black uppercase tracking-widest',
-                    i === head.length - 1 && 'pr-6 text-right'
-                  )}
-                >
-                  {h}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.key}
-                className={cn(
-                  'h-11 border-white/5 transition-colors motion-reduce:transition-none',
-                  row.isPlayer
-                    ? 'bg-primary/[0.03] border-l-2 border-l-primary'
-                    : 'hover:bg-white/[0.02]'
-                )}
-              >
-                <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
-                  {String(row.rank).padStart(2, '0')}
-                </TableCell>
-                {row.cells.map((c, i) => (
-                  <TableCell
-                    key={i}
-                    className={cn(i === row.cells.length - 1 && 'pr-6 text-right')}
-                  >
-                    {c}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <StandingsTable
+          columns={columns}
+          rows={rows}
+          rowKey={(row) => row.key}
+          classes={{
+            head: 'bg-white/[0.03]',
+            headRow: 'h-10',
+            headCell: 'text-[9px] font-black uppercase tracking-widest',
+            row: (row) =>
+              cn(
+                'h-11 border-white/5 transition-colors motion-reduce:transition-none',
+                row.isPlayer
+                  ? 'bg-primary/[0.03] border-l-2 border-l-primary'
+                  : 'hover:bg-white/[0.02]'
+              ),
+          }}
+        />
       )}
     </Surface>
   );

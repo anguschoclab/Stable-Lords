@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import { driftParticleStyle } from './particles';
 
 /** Sandstorm with sandy haze and multiply blend. */
 export function SandstormEffect() {
@@ -52,15 +52,11 @@ export function ManaSurgeEffect() {
         <div
           key={i}
           className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 100}px`,
-              animationDelay: `${cryptoRandom() * 4}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 100, (cryptoRandom() - 0.5) * 100, { delayS: 4 }),
+            }}
         />
       ))}
     </div>
@@ -76,15 +72,11 @@ export function LocustSwarmEffect() {
         <div
           key={i}
           className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={
-            {
+          style={{
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 100}%`,
-              '--tx': `${(cryptoRandom() - 0.5) * 80}px`,
-              '--ty': `${(cryptoRandom() - 0.5) * 80}px`,
-              animationDelay: `${cryptoRandom() * 3}s`,
-            } as unknown as CSSProperties & Record<string, string>
-          }
+              ...driftParticleStyle((cryptoRandom() - 0.5) * 80, (cryptoRandom() - 0.5) * 80),
+            }}
         />
       ))}
     </div>

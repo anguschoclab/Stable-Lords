@@ -1,23 +1,12 @@
-import type { GameState } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
+
 import { makeInjury } from '@/engine/injuries/utils';
-import { makeInsightToken } from '@/engine/core/eventHelpers';
-import {
-  type OffseasonEventNarrative,
-  type OffseasonEventContext,
-  withChosenWarrior,
-} from '../types';
+import { withChosenWarrior, type OffseasonEventRun, addStat, withAddedInjury, warriorOutcome, grantInsightToken } from '../helpers';
 
 /** Handler for the Temporal Anomaly offseason event — time distortion affecting warrior age and stats. */
-export function handleTemporalAnomaly(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleTemporalAnomaly(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 35;
     const currentTraits = chosen.traits || [];
     const newTraits = [...currentTraits];
@@ -26,36 +15,19 @@ export function handleTemporalAnomaly(
       newTraits.splice(removedTraitIndex, 1);
     }
 
-    ctx.insightTokens.push(
-      makeInsightToken(rng, {
-        type: 'Style',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.',
-        origin: 'Temporal Anomaly',
-        discoveredWeek: nextWeek,
-      })
-    );
+    grantInsightToken(run, chosen, { type: 'Style', detail: 'The temporal anomaly granted a sudden burst of stylistic intuition.', origin: 'Temporal Anomaly' });
 
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
         traits: newTraits,
-      },
-      announce: {},
-    };
+      });
   } });
 }
 
 /** Handler for the Cursed Treasure Discovery offseason event — gold with a curse side effect. */
-export function handleCursedTreasureDiscovery(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleCursedTreasureDiscovery(run: OffseasonEventRun) {
+  const { nextWeek, rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const goldGained = 300 + Math.floor(rng.next() * 201);
     const fameLost = 10 + Math.floor(rng.next() * 11);
 
@@ -73,25 +45,17 @@ export function handleCursedTreasureDiscovery(
       penalties: { WL: -2, CN: -1 },
     });
 
-    return {
-      updates: {
+    return warriorOutcome({
         fame: Math.max(0, (chosen.fame || 0) - fameLost),
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: { gold: goldGained, fame: fameLost },
-    };
+        injuries: withAddedInjury(chosen, newInjury),
+      }, { gold: goldGained, fame: fameLost });
   } });
 }
 
 /** Handler for the Abyssal Tempest Ritual offseason event — storm ritual granting power at injury risk. */
-export function handleAbyssalTempestRitual(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleAbyssalTempestRitual(run: OffseasonEventRun) {
+  const { rng } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 25;
 
     const newInjury = makeInjury(rng, {
@@ -103,25 +67,17 @@ export function handleAbyssalTempestRitual(
       penalties: { SP: -1, CN: -1 },
     });
 
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        injuries: [...(chosen.injuries || []), newInjury],
-      },
-      announce: {},
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        injuries: withAddedInjury(chosen, newInjury),
+      });
   } });
 }
 
 /** Handler for the Unexplained Monolith offseason event — grants XP and fame at injury risk. */
-export function handleUnexplainedMonolith(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleUnexplainedMonolith(run: OffseasonEventRun) {
+  const { rng, ctx } = run;
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 15;
     const fameGained = 10;
 
@@ -145,49 +101,31 @@ export function handleUnexplainedMonolith(
       ? currentTraits
       : [...currentTraits, 'precise'];
 
-    return {
-      updates: {
+    return warriorOutcome({
         ...existingUpdate,
         xp: currentXp + xpGained,
         fame: currentFame + fameGained,
         injuries: [...currentInjuries, newInjury],
         traits: newTraits,
-      },
-      announce: {},
-    };
+      });
   } });
 }
 
 /** Handler for the Shattered Skies Ritual offseason event — grants XP but adds fatigue. */
-export function handleShatteredSkiesRitual(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => {
+export function handleShatteredSkiesRitual(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => {
     const xpGained = 25;
     const fatigueGained = 15;
-    return {
-      updates: {
-        xp: (chosen.xp || 0) + xpGained,
-        fatigue: (chosen.fatigue || 0) + fatigueGained,
-      },
-      announce: {},
-    };
+    return warriorOutcome({
+        xp: addStat(chosen.xp, xpGained),
+        fatigue: addStat(chosen.fatigue, fatigueGained),
+      });
   } });
 }
 
 /** Handler for the Weeping Skies offseason event — grants XP to a random warrior. */
-export function handleWeepingSkies(
-  state: GameState,
-  nextWeek: number,
-  e: OffseasonEventNarrative,
-  rng: IRNGService,
-  ctx: OffseasonEventContext
-) {
-  withChosenWarrior({ state: state, nextWeek: nextWeek, e: e, rng: rng, ctx: ctx, apply: (chosen) => ({
+export function handleWeepingSkies(run: OffseasonEventRun) {
+  withChosenWarrior({ ...run, apply: (chosen) => ({
     updates: { xp: (chosen.xp || 0) + 20 },
     announce: {},
   }) });

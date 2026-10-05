@@ -7,16 +7,15 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
-/** Right-rail Stable Stats block — renown, lifetime kills, win velocity. */
-export function ArenaAnalyticsSurface({
-  renown,
-  lifetimeKills,
-  winRate,
-}: {
+/** Shared props for the arena analytics strip — renown, lifetime kills, win velocity. */
+export interface ArenaAnalyticsProps {
   renown: number;
   lifetimeKills: number;
   winRate: number;
-}) {
+}
+
+/** Right-rail Stable Stats block — renown, lifetime kills, win velocity. */
+export function ArenaAnalyticsSurface({ renown, lifetimeKills, winRate }: ArenaAnalyticsProps) {
   const rowClass =
     'text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors motion-reduce:transition-none';
   const valueClass = 'font-display font-black text-xl tracking-tighter';

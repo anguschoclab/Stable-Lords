@@ -3,95 +3,64 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';
 import { Trophy, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 
-/** Rankings table header. */
-function LeaderboardHead() {
-  return (
-    <TableHeader className="bg-white/[0.03]">
-      <TableRow className="h-10 hover:bg-transparent border-white/5">
-        <TableHead className="w-12 pl-6 text-[9px] font-black uppercase tracking-widest">
-          RANK
-        </TableHead>
-        <TableHead className="text-[9px] font-black uppercase tracking-widest">WARRIOR</TableHead>
-        <TableHead className="text-[9px] font-black uppercase tracking-widest">STABLE</TableHead>
-        <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">
-          W / L / K
-        </TableHead>
-        <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">
-          FAME
-        </TableHead>
-      </TableRow>
-    </TableHeader>
-  );
-}
+type LeaderboardEntry = ReturnType<typeof calculateGlobalFameLeaderboard>[number];
 
-/** One leaderboard row. */
-function LeaderboardRow({
-  entry,
-  rank,
-  championIds,
-}: {
-  entry: {
-    warrior: {
-      id: string;
-      name: string;
-      epithet?: string;
-      career: { wins: number; losses: number; kills: number };
-      fame: number;
-    };
-    isPlayer: boolean;
-    stableName: string;
-  };
-  rank: number;
-  championIds: Set<string>;
-}) {
-  const w = entry.warrior;
-  return (
-    <TableRow
-      className={cn(
-        'h-12 border-white/5 transition-colors motion-reduce:transition-none',
-        entry.isPlayer ? 'bg-primary/[0.03] border-l-2 border-l-primary' : 'hover:bg-white/[0.02]'
-      )}
-    >
-      <TableCell className="pl-6 font-mono text-[10px] font-black text-muted-foreground">
-        {String(rank).padStart(2, '0')}
-      </TableCell>
-      <TableCell>
+/** Column defs for the global power-rankings board. */
+function leaderboardColumns(championIds: Set<string>): StandingsColumn<LeaderboardEntry>[] {
+  return [
+    {
+      header: 'RANK',
+      headClassName: 'w-12 pl-6',
+      cellClassName: 'pl-6 font-mono text-[10px] font-black text-muted-foreground',
+      render: (_entry, i) => String(i + 1).padStart(2, '0'),
+    },
+    {
+      header: 'WARRIOR',
+      render: (entry) => (
         <WarriorNameTag
-          id={w.id}
-          name={w.name}
-          epithet={w.epithet}
-          isChampion={championIds.has(w.id)}
+          id={entry.warrior.id}
+          name={entry.warrior.name}
+          epithet={entry.warrior.epithet}
+          isChampion={championIds.has(entry.warrior.id)}
         />
-      </TableCell>
-      <TableCell className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic">
-        {entry.stableName}
-      </TableCell>
-      <TableCell className="text-center font-mono text-[10px]">
-        <span className="text-primary font-bold">{w.career.wins}</span>
-        <span className="mx-1 opacity-20">/</span>
-        <span className="text-destructive font-bold">{w.career.losses}</span>
-        <span className="mx-1 opacity-20">/</span>
-        <span className="text-arena-blood font-black">{w.career.kills}</span>
-      </TableCell>
-      <TableCell className="pr-6 text-right">
+      ),
+    },
+    {
+      header: 'STABLE',
+      cellClassName:
+        'text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic',
+      render: (entry) => entry.stableName,
+    },
+    {
+      header: 'W / L / K',
+      headClassName: 'text-center',
+      cellClassName: 'text-center font-mono text-[10px]',
+      render: (entry) => (
+        <>
+          <span className="text-primary font-bold">{entry.warrior.career.wins}</span>
+          <span className="mx-1 opacity-20">/</span>
+          <span className="text-destructive font-bold">{entry.warrior.career.losses}</span>
+          <span className="mx-1 opacity-20">/</span>
+          <span className="text-arena-blood font-black">{entry.warrior.career.kills}</span>
+        </>
+      ),
+    },
+    {
+      header: 'FAME',
+      headClassName: 'pr-6 text-right',
+      cellClassName: 'pr-6 text-right',
+      render: (entry) => (
         <span className="font-display font-black text-arena-fame text-lg tracking-tighter">
-          {w.fame}
+          {entry.warrior.fame}
         </span>
-      </TableCell>
-    </TableRow>
-  );
+      ),
+    },
+  ];
 }
 
 /**
@@ -124,6 +93,8 @@ export function ArenaLeaderboard() {
     [arenaChampions]
   );
 
+  const columns = leaderboardColumns(championIds);
+
   return (
     <Surface
       variant="glass"
@@ -140,19 +111,23 @@ export function ArenaLeaderboard() {
           <Activity className="h-3 w-3 text-primary" /> LIVE ARENA FEED
         </div>
       </div>
-      <Table>
-        <LeaderboardHead />
-        <TableBody>
-          {allWarriors.map((entry, i) => (
-            <LeaderboardRow
-              key={entry.warrior.id}
-              entry={entry}
-              rank={i + 1}
-              championIds={championIds}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      <StandingsTable
+        columns={columns}
+        rows={allWarriors}
+        rowKey={(entry) => entry.warrior.id}
+        classes={{
+          head: 'bg-white/[0.03]',
+          headRow: 'h-10',
+          headCell: 'text-[9px] font-black uppercase tracking-widest',
+          row: (entry) =>
+            cn(
+              'h-12 border-white/5 transition-colors motion-reduce:transition-none',
+              entry.isPlayer
+                ? 'bg-primary/[0.03] border-l-2 border-l-primary'
+                : 'hover:bg-white/[0.02]'
+            ),
+        }}
+      />
     </Surface>
   );
 }

@@ -179,5 +179,5 @@ describe('Long-running Simulation Stress Tests', () => {
     // Just verify it completed some weeks without crashing
     expect(result.weeksSimmed).toBeGreaterThan(0);
     expect(result.stopReason).toBeDefined();
-  }, 60000); // 1 minute timeout for stress test
+  }, 180000); // ~31s clean; the slow suite self-contends (104wk/300wk sims share the pool)
 });

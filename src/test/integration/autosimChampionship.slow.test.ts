@@ -189,5 +189,5 @@ describe('championship autosim — week 52+', () => {
     expect(champsT.length).toBeGreaterThan(0);
     expect(champsT.every((t) => t.completed)).toBe(true);
     expect(gc.length).toBeGreaterThan(0);
-  }, 120000);
+  }, 300000); // ~61s clean; the slow suite self-contends (104wk/300wk sims share the pool)
 });

@@ -150,7 +150,7 @@ const fightAnalysisSchema = z.object({
 /**
  * CombatEvent schema
  */
-export const CombatEventSchema = z.object({
+const CombatEventSchema = z.object({
   type: CombatEventTypeSchema,
   actor: z.enum(['A', 'D']),
   target: z.enum(['A', 'D']).optional(),
@@ -166,7 +166,7 @@ const fighterSideSchema = z.enum(['A', 'D']);
 /**
  * MinuteEvent schema
  */
-export const MinuteEventSchema = z.object({
+const MinuteEventSchema = z.object({
   minute: z.number(),
   text: z.string(),
   phase: exchangePhaseSchema.optional(),
@@ -183,7 +183,7 @@ export const MinuteEventSchema = z.object({
 /**
  * ExchangeLogEntry schema
  */
-export const ExchangeLogEntrySchema = z.object({
+const ExchangeLogEntrySchema = z.object({
   exchangeIndex: z.number(),
   minute: z.number(),
   phase: exchangePhaseSchema.optional(),
@@ -213,7 +213,7 @@ export const ExchangeLogEntrySchema = z.object({
 /**
  * FightOutcome schema
  */
-export const FightOutcomeSchema = z.object({
+const FightOutcomeSchema = z.object({
   winner: z.union([fighterSideSchema, z.null()]),
   by: FightOutcomeBySchema,
   minutes: z.number(),

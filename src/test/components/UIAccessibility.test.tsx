@@ -37,7 +37,7 @@ import WarriorCard from '@/components/orphanage/WarriorCard';
 const COMPONENTS_DIR = path.resolve(__dirname, '../../components');
 
 describe('AppHeader accessibility', () => {
-  const appHeaderPath = path.join(COMPONENTS_DIR, 'layout', 'AppHeader.tsx');
+  const appHeaderPath = path.join(COMPONENTS_DIR, 'layout', 'AppHeader', 'actions.tsx');
   const source = fs.readFileSync(appHeaderPath, 'utf-8');
 
   it('SaveButton has aria-label', () => {

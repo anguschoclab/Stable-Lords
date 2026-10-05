@@ -42,7 +42,7 @@ function lineCount(rel: string): number | null {
 }
 
 describe('megaplan V11: monolith restructure budgets', () => {
-describe.skip('MEGAPLAN-V13', () => {
+describe('MEGAPLAN-V13', () => {
   it.each(TARGETS.map((t) => [t] as const))(
     '%s is split to ≤ %d lines (or replaced by a directory)',
     (target) => {

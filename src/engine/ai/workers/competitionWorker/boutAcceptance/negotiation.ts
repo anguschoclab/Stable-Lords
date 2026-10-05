@@ -139,11 +139,11 @@ export function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): Bo
   }
 
   const skeptical = matchupSkepticism({
-    warrior: warrior,
-    opponent: opponent,
-    personality: personality,
-    playerThreat: playerThreat,
-    observedDanger: observedDanger,
+    warrior,
+    opponent,
+    personality,
+    playerThreat,
+    observedDanger,
     owner: rival.owner,
   });
   if (skeptical) {
@@ -188,11 +188,11 @@ export function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): Bo
 
   // Counter logic: famous warriors hold out for a purse worthy of their name.
   const counted = purseCounter({
-    offer: offer,
-    warrior: warrior,
-    rival: rival,
-    promoter: promoter,
-    playerThreat: playerThreat,
+    offer,
+    warrior,
+    rival,
+    promoter,
+    playerThreat,
     alreadyCountered: alreadyVenueOrPurseCountered,
   });
   if (counted) {
@@ -200,11 +200,5 @@ export function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): Bo
     return counted;
   }
 
-  return personalityDefaults({
-    personality: personality,
-    hype: hype,
-    purse: purse,
-    currentHP: currentHP,
-    explain: explain,
-  });
+  return personalityDefaults({ personality, hype, purse, currentHP, explain });
 }

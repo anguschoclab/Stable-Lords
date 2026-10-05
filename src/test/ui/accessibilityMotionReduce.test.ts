@@ -31,7 +31,7 @@ describe('accessibility motion-reduce', () => {
   });
 
   it('AppHeader has motion-reduce classes', () => {
-    const filePath = path.resolve(process.cwd(), 'src/components/layout/AppHeader.tsx');
+    const filePath = path.resolve(process.cwd(), 'src/components/layout/AppHeader/index.tsx');
     const content = readFileSync(filePath, 'utf-8');
     expect(content).toMatch(/motion-reduce/);
   });
@@ -45,7 +45,7 @@ describe('accessibility motion-reduce', () => {
       const content = readFileSync(fullPath, 'utf-8');
       // Flag bg-background/90 used as a blanket replacement (should preserve original opacity)
       // AppHeader.tsx is exempt — it intentionally uses bg-background/90 for sticky header backdrop
-      if (file.replace(/\\/g, '/') === 'layout/AppHeader.tsx') continue;
+      if (file.replace(/\\/g, '/') === 'layout/AppHeader/index.tsx') continue;
       const matches = content.match(/bg-background\/90/g);
       if (matches) {
         violations += matches.length;

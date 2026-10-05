@@ -37,25 +37,25 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/dashboard/BriefingTab.tsx|src/components/gazette/GazetteArticle.tsx',
   'src/components/dashboard/GazetteTab.tsx|src/components/gazette/GazetteArticle.tsx',
   'src/components/gazette/GazetteLeaderboards.tsx|src/components/ledger/HallOfWarriors.tsx',
-  'src/components/gazette/GazetteLeaderboards.tsx|src/components/ledger/TreasuryOverview.tsx',
-  'src/components/gazette/GazetteLeaderboards.tsx|src/pages/ArenaHub.tsx',
+  'src/components/gazette/GazetteLeaderboards.tsx|src/components/ledger/TreasuryOverview/registry.tsx',
+  'src/components/gazette/GazetteLeaderboards.tsx|src/pages/arenaHub/leaderboard.tsx',
   'src/components/gazette/GazetteLeaderboards.tsx|src/pages/arenaDetail/RecordTable.tsx',
   'src/components/gazette/GazetteLeaderboards.tsx|src/pages/arenaDetail/sections.tsx',
   'src/components/layout/ArenaSettings.tsx|src/components/stable/FighterConfigCard.tsx',
   'src/components/layout/LeftNav.tsx|src/components/layout/MobileNav.tsx',
   'src/components/layout/ResetDialog.tsx|src/pages/ArenaDetail.tsx',
   'src/components/layout/ResetDialog.tsx|src/pages/StartGame.tsx',
-  'src/components/ledger/HallOfWarriors.tsx|src/components/ledger/TreasuryOverview.tsx',
-  'src/components/ledger/HallOfWarriors.tsx|src/pages/ArenaHub.tsx',
+  'src/components/ledger/HallOfWarriors.tsx|src/components/ledger/TreasuryOverview/registry.tsx',
+  'src/components/ledger/HallOfWarriors.tsx|src/pages/arenaHub/leaderboard.tsx',
   'src/components/ledger/HallOfWarriors.tsx|src/pages/arenaDetail/RecordTable.tsx',
   'src/components/ledger/HallOfWarriors.tsx|src/pages/arenaDetail/sections.tsx',
   'src/components/ledger/InsightManager/hooks/useInsightManager.ts|src/components/ledger/InsightManager/index.tsx',
-  'src/components/ledger/TreasuryOverview.tsx|src/pages/ArenaHub.tsx',
-  'src/components/ledger/TreasuryOverview.tsx|src/pages/arenaDetail/RecordTable.tsx',
-  'src/components/ledger/TreasuryOverview.tsx|src/pages/arenaDetail/sections.tsx',
-  // ArenaHub↔sections share the stat-row styling idiom extracted during the
-  // J-table decomposition — sanctioned until the stat-row component is shared.
-  'src/pages/ArenaHub.tsx|src/pages/arenaHub/sections.tsx',
+  'src/components/ledger/TreasuryOverview/registry.tsx|src/pages/arenaDetail/RecordTable.tsx',
+  'src/components/ledger/TreasuryOverview/registry.tsx|src/pages/arenaDetail/sections.tsx',
+  'src/components/ledger/TreasuryOverview/registry.tsx|src/pages/arenaHub/leaderboard.tsx',
+  // ArenaHub columns↔sections share the stat-row styling idiom extracted during
+  // the J-table decomposition — sanctioned until the stat-row component is shared.
+  'src/pages/arenaHub/columns.tsx|src/pages/arenaHub/sections.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/IdentityStep.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/PlanStep.tsx',
   'src/components/orphanage/FirstBloodStep.tsx|src/components/orphanage/WarriorSelectionStep.tsx',
@@ -140,15 +140,13 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
   'src/engine/pipeline/offseasonEvents/socialHandlers/street.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
   'src/engine/rivals/rivalNamePool.ts|src/engine/trainers/trainers.ts',
-  'src/engine/simulate/simulateFight.ts|src/engine/simulate/simulationLoop.ts',
   'src/engine/storage/electronArchive.ts|src/engine/storage/opfsArchive/service.ts',
   'src/engine/storage/electronArchive.ts|src/engine/storage/opfsArchive/types.ts',
   'src/engine/storage/opfsArchive/service.ts|src/scripts/nodeArchiveService.ts',
   'src/pages/AdminTools/hooks/useAdminTools.ts|src/pages/AdminTools/index.tsx',
-  'src/pages/ArenaCircuit.tsx|src/pages/ArenaHub.tsx',
+  'src/pages/ArenaCircuit.tsx|src/pages/arenaHub/columns.tsx',
   'src/pages/ArenaDetail.tsx|src/pages/StartGame.tsx',
-  'src/pages/ArenaHub.tsx|src/pages/arenaDetail/RecordTable.tsx',
-  'src/pages/ArenaHub.tsx|src/pages/arenaDetail/sections.tsx',
+  'src/pages/arenaDetail/RecordTable.tsx|src/pages/arenaHub/leaderboard.tsx',
   'src/pages/BookingOffice/components/AssetRegistry.tsx|src/pages/TrainingPlanner/components/WarriorSelector.tsx',
   'src/pages/BookingOffice/hooks/useBookingOffice.ts|src/pages/BookingOffice/index.tsx',
   'src/pages/ControlCenter/components/RankingsBar.tsx|src/pages/ControlCenter/hooks/useControlCenter.ts',
@@ -158,6 +156,7 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/pages/Trainers.tsx|src/pages/Trainers/hooks/useTrainers.ts',
   'src/pages/WarriorDetail.tsx|src/pages/WarriorDetail/hooks/useWarriorDetail.ts',
   'src/pages/arenaDetail/RecordTable.tsx|src/pages/arenaDetail/sections.tsx',
+  'src/pages/arenaDetail/sections.tsx|src/pages/arenaHub/leaderboard.tsx',
   'src/schemas/fightSchemas.ts|src/schemas/gameStateSchema.ts',
   'src/schemas/schemaEnums.ts|src/types/enumSources.ts',
   // Phase-D2 extraction seams — page↔hook/prop destructuring boilerplate shared
@@ -182,6 +181,13 @@ const KNOWN_SRC_PAIRS = new Set([
   // (recruit tier/style vs. rival list sorts), styling, and behavior. Not a
   // behavioral duplicate.
   'src/components/scouting/rivalListShell.tsx|src/pages/Recruit/components/RecruitFilters.tsx',
+  // V11 Phase-4 shard-boundary boilerplate — file→directory splits carry the
+  // same import preamble into orchestrator + sibling shards. Registered
+  // knowingly per the Phase-3 precedent; thin interface overlap only.
+  'src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/index.ts|src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/killWindow.ts',
+  'src/engine/combat/resolution/offenseDefense/index.ts|src/engine/combat/resolution/offenseDefense/prepare.ts',
+  'src/engine/combat/resolution/offenseDefense/prepare.ts|src/engine/combat/resolution/offenseDefense/types.ts',
+  'src/engine/simulate/simulationLoop/index.ts|src/engine/simulate/simulationLoop/types.ts',
 ]);
 
 describe('megaplan: duplication guard', () => {

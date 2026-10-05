@@ -1,17 +1,14 @@
 /**
- * AI Plan Core Generator
- * Main orchestrator for generating personality-, philosophy-, meta-, and matchup-aware fight plans.
+ * Strategic layer — post-validation plan decoration: tactic overrides for
+ * rematch losers, lever application, phase curves, decoy axes, phase shifts,
+ * and WIT/competence-gated condition density.
  */
-import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { OwnerPersonality, AIIntent, OpponentDossier } from '@/types/state.types';
 import type { OwnerCompetence } from '@/types/state/owner';
 import { competenceConditionCap } from '@/engine/ai/competence';
-import { defaultPlanForWarrior } from '@/engine/simulate';
-import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
-import { getStyleMatchupMods, getStyleSuitabilityBias } from '@/engine/ai/matchup/styleMatcher';
 import {
   buildPhasePlan,
   buildDesperatePlan,
@@ -19,7 +16,6 @@ import {
 } from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
 import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
-import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import {
   getAITarget,
   getAIProtect,
@@ -29,12 +25,9 @@ import {
   getAIFallbackCondition,
   getAITactics,
 } from '@/engine/ai/plan/levers';
-import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { aiFeature } from '@/engine/ai/featureFlags';
 import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
-
-/** Scouted plan tendencies older than this many weeks are ignored. */
-export const PLAN_INTEL_FRESH_WEEKS = 6;
+import type { PlanModifiers } from './modifiers';
 
 /** WT floor for holding a committed deception script through the masked window. */
 export const DECOY_MIN_WT = 13;
@@ -67,147 +60,6 @@ const PERSONALITY_PHASE_SHIFT: Partial<
   Showman: { at: 'late', when: 'MOMENTUM_AHEAD', dOE: 2, dAL: -1, dKillDesire: 1 },
   // Pragmatic authors no reactive shift — the plan is the plan.
 };
-
-/**
- * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
- * Now includes per-style matchup heuristics, global strategic intent, and strategy score validation.
- *
- * @param w - The warrior to generate a plan for
- * @param personality - Personality traits of the stable owner
- * @param philosophy - Strategic philosophy of the owner
- * @param opponentStyle - Fighting style of the opponent (optional)
- * @param intent - Current strategic intent (e.g., VENDETTA)
- * @param grudgeIntensity - Intensity of the grudge between owners
- * @param dossier - Optional opponent intel dossier; a losing record drives
- *                  rematch adaptation (G11) through existing plan fields only
- * @param now - Current absolute week; fresh `dossier.planIntel` (scouted
- *              suspected OE/AL) drives counter-planning deltas. Stale intel
- *              older than PLAN_INTEL_FRESH_WEEKS is ignored.
- * @returns A computed fight plan for the warrior/** Axis deltas and adaptation flags computed before plan assembly. */
-interface PlanModifiers {
-  intentOE: number;
-  intentAL: number;
-  intentKD: number;
-  grudgeKD: number;
-  grudgeAL: number;
-  intelOE: number;
-  intelAL: number;
-  intelKD: number;
-  intelHotOpener: boolean;
-  intelFragile: boolean;
-  rematchOE: number;
-  rematchAL: number;
-  rematchKD: number;
-  changeTactics: boolean;
-}
-
-/**
- * Computes the contextual axis modifiers: intent shaping, grudge escalation,
- * scouted-plan counter-deltas, and rematch (G11) adaptation.
- */
-function computePlanModifiers(
-  intent: AIIntent | undefined,
-  grudgeIntensity: number,
-  dossier: OpponentDossier | undefined,
-  now: number | undefined
-): PlanModifiers {
-  // Intent-based modifiers
-  let intentOE = 0;
-  let intentAL = 0;
-  let intentKD = 0;
-
-  if (intent === 'RECOVERY' || intent === 'SURVIVAL') {
-    intentOE = -2; // Defensive to minimize damage
-    intentAL = -1;
-    intentKD = -2;
-  } else if (intent === 'VENDETTA') {
-    intentAL = 2; // Relentless
-    intentKD = 2;
-  }
-
-  // Grudge-based escalation
-  const grudgeKD = grudgeIntensity; // +1 to +5
-  const grudgeAL = Math.floor(grudgeIntensity / 2);
-
-  const intel = intelModifiers(dossier, now);
-  const rematch = rematchModifiers(dossier);
-
-  return {
-    intentOE,
-    intentAL,
-    intentKD,
-    grudgeKD,
-    grudgeAL,
-    intelOE: intel.intelOE,
-    intelAL: intel.intelAL,
-    intelKD: intel.intelKD,
-    intelHotOpener: intel.intelHotOpener,
-    intelFragile: intel.intelFragile,
-    rematchOE: rematch.rematchOE,
-    rematchAL: rematch.rematchAL,
-    rematchKD: rematch.rematchKD,
-    changeTactics: rematch.changeTactics,
-  };
-}
-
-/**
- * Counter-planning off scouted plan tendencies: a fresh dossier estimate of
- * the opponent's OE/AL shifts our axes — cover up against hot openers, press
- * passive shells, raise the kill tempo against brittle defenses.
- */
-function intelModifiers(dossier: OpponentDossier | undefined, now: number | undefined) {
-  let intelOE = 0;
-  let intelAL = 0;
-  let intelKD = 0;
-  let intelHotOpener = false;
-  let intelFragile = false;
-  const planIntel = dossier?.planIntel;
-  if (
-    planIntel &&
-    now !== undefined &&
-    planIntel.lastPlanWeek !== undefined &&
-    now - planIntel.lastPlanWeek <= PLAN_INTEL_FRESH_WEEKS
-  ) {
-    if ((planIntel.suspectedOE ?? 0.5) >= 0.65) {
-      intelAL += 1;
-      intelHotOpener = true;
-    } else if ((planIntel.suspectedOE ?? 0.5) <= 0.35) {
-      intelOE += 1;
-    }
-    if ((planIntel.suspectedAL ?? 0.5) >= 0.65) {
-      intelOE += 1; // break the shell
-    } else if ((planIntel.suspectedAL ?? 0.5) <= 0.35) {
-      intelKD += 1;
-      intelFragile = true;
-    }
-  }
-  return { intelOE, intelAL, intelKD, intelHotOpener, intelFragile };
-}
-
-/**
- * Rematch adaptation (G11): a losing record against this specific opponent
- * makes the stable fight more patiently — patience scales with how lopsided
- * the record is; a kill suffered adds personal edge to killDesire.
- */
-function rematchModifiers(dossier: OpponentDossier | undefined) {
-  let rematchOE = 0;
-  let rematchAL = 0;
-  let rematchKD = 0;
-  let changeTactics = false;
-  if (dossier) {
-    const { w: wins, l: losses, k: kills } = dossier.recordVs;
-    const meetings = wins + losses;
-    if (meetings >= 2 && losses > wins) {
-      rematchOE = -Math.min(2, losses - wins);
-      rematchAL = Math.min(2, losses - wins);
-      if (kills > 0) rematchKD = 1;
-      // The signature gameplan is losing — the stable abandons its canonical
-      // favorite tactics for the suitability-ranked optimal picks.
-      changeTactics = true;
-    }
-  }
-  return { rematchOE, rematchAL, rematchKD, changeTactics };
-}
 
 interface ApplyStrategicLayerArgs {
   plan: FightPlan;
@@ -315,7 +167,7 @@ function applyPhaseShift(plan: FightPlan, personality: OwnerPersonality): void {
  * rematch losers, target/protect/aggression/opening/range levers, phase
  * curves, desperate plan, fallback condition, and WIT-gated conditions.
  */
-function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
+export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   const { plan, w, personality, intent, dossier, competence } = args;
   const { mods } = args;
   // Offensive/defensive tactics come from the base plan (defaultPlanForWarrior →
@@ -388,112 +240,3 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   applyDecoyAxes(plan, w, personality);
   applyPhaseShift(plan, personality);
 }
-
-/**
- * Feint modulation by personality (Stage D, N3): the WT-derived baseline
- * in `defaultPlanForWarrior` is shaped — deceptive stables sharpen it,
- * measured ones blunt it. Only an existing aptitude is touched: WT < 15
- * fighters stay at 0 since `runFeint` can never fire for them.
- */
-const PERSONALITY_FEINT_MOD: Partial<Record<OwnerPersonality, number>> = {
-  Showman: 2,
-  Tactician: 2,
-  Pragmatic: -1,
-  Methodical: -2,
-};
-
-/**
- *
- */
-export interface AiPlanForWarriorArgs {
-  w: Warrior;
-  personality: OwnerPersonality;
-  philosophy: string;
-  opponentStyle?: FightingStyle;
-  intent?: AIIntent;
-  grudgeIntensity?: number;
-  dossier?: OpponentDossier;
-  now?: number;
-  /** Owner competence tier — scales adaptive-condition density (Stage B). */
-  competence?: OwnerCompetence;
-}
-
-/** Generates a full weekly plan for one AI warrior given owner personality. */
-export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
-  const { w, personality, philosophy, opponentStyle, intent } = args;
-  const { grudgeIntensity = 0, dossier, now } = args;
-  const base = defaultPlanForWarrior(w);
-  const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
-  const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
-  const mods = computePlanModifiers(intent, grudgeIntensity, dossier, now);
-
-  // Per-style matchup heuristics
-  const matchup = opponentStyle
-    ? getStyleMatchupMods(w.style, opponentStyle)
-    : { oe: 0, al: 0, kd: 0 };
-
-  // Generate initial plan
-  const plan: FightPlan = {
-    ...base,
-    OE: clamp(
-      (base.OE ?? 5) +
-        (pMod.OE ?? 0) +
-        (phMod.OE ?? 0) +
-        matchup.oe +
-        mods.intentOE +
-        mods.rematchOE +
-        mods.intelOE,
-      1,
-      10
-    ),
-    AL: clamp(
-      (base.AL ?? 5) +
-        (pMod.AL ?? 0) +
-        (phMod.AL ?? 0) +
-        matchup.al +
-        mods.intentAL +
-        mods.grudgeAL +
-        mods.rematchAL +
-        mods.intelAL,
-      1,
-      10
-    ),
-    killDesire: clamp(
-      (base.killDesire ?? 5) +
-        (pMod.killDesire ?? 0) +
-        (phMod.killDesire ?? 0) +
-        matchup.kd +
-        mods.intentKD +
-        mods.grudgeKD +
-        mods.rematchKD +
-        mods.intelKD,
-      1,
-      10
-    ),
-    feintTendency:
-      (base.feintTendency ?? 0) > 0
-        ? clamp((base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0), 0, 10)
-        : 0,
-  };
-
-  // Strategy score validation with retry logic
-  validateAndAdjustPlan(plan, w);
-
-  // Tactic suitability validation - adjust OE/AL based on style compatibility
-  // High OE is more suitable for aggressive styles, high AL for defensive styles
-  const styleSuitabilityBias = getStyleSuitabilityBias(w.style);
-  plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
-  plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
-
-  applyStrategicLayer({ plan: plan, w: w, personality: personality, intent: intent, dossier: dossier, mods: mods, competence: args.competence });
-
-  // Reconcile two-handed weapon + shield conflict
-  if (w.equipment) {
-    reconcileGearTwoHanded(plan, w.equipment);
-  }
-
-  return plan;
-}
-
-// Re-export for backward compatibility
-export { getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';

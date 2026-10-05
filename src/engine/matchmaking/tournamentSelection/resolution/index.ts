@@ -9,7 +9,7 @@ import { awardTournamentPrizes } from '../awards';
 import { resolveRoundBouts, type BracketWarrior } from './bouts';
 import { resolveChampion, seedNextRound } from './seeding';
 
-export { applyBoutResults, type ApplyBoutResultsArgs } from './results';
+export { applyBoutResults } from './results';
 
 /**
  * Resolve round.

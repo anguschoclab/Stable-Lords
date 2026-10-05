@@ -5,7 +5,7 @@
 import type { AIIntent, OpponentDossier } from '@/types/state.types';
 
 /** Scouted plan tendencies older than this many weeks are ignored. */
-export const PLAN_INTEL_FRESH_WEEKS = 6;
+const PLAN_INTEL_FRESH_WEEKS = 6;
 
 /** Axis deltas and adaptation flags computed before plan assembly. */
 export interface PlanModifiers {

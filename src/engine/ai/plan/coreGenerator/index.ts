@@ -16,8 +16,7 @@ import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { computePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
 
-export { PLAN_INTEL_FRESH_WEEKS } from './modifiers';
-export { DECOY_MIN_WT } from './strategicLayer';
+
 
 /**
  * Feint modulation by personality (Stage D, N3): the WT-derived baseline

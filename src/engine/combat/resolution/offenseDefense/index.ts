@@ -7,7 +7,6 @@ import { resolveContestedDefense, resolveWhiffRiposte } from './defense';
 import type { ResolveCombatOffenseDefenseArgs } from './types';
 
 export type {
-  OffenseDefenseArgs,
   OffenseDefenseCtx,
   ResolveCombatOffenseDefenseArgs,
 } from './types';

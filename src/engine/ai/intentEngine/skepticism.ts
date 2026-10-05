@@ -89,7 +89,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
  * CROWN_CAMPAIGN's living condition — shared by the skepticism tier and the
  * hysteresis check so both apply identical "still campaigning" semantics.
  */
-export function crownCampaignApplies(rival: RivalStableData, state: GameState): boolean {
+function crownCampaignApplies(rival: RivalStableData, state: GameState): boolean {
   const target = rival.agentMemory?.crownAssessment;
   if (!target || rival.treasury <= 300) return false;
   const campaignWarrior = rival.roster.find((w) => w.id === target.warriorId);

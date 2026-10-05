@@ -9,16 +9,7 @@ import {
 } from '@/components/ui/table';
 import { Wallet, ArrowDownRight, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-/**
- * Ledger entry.
- */
-export interface LedgerEntry {
-  id: string;
-  week: number;
-  label: string;
-  amount: number;
-}
+import type { LedgerEntry } from '@/types/state.types';
 
 /**
  * Ledger registry props.

@@ -12,10 +12,7 @@ import { NextBoutWidget } from '@/components/widgets/NextBoutWidget';
 import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
 import { WeatherWidget } from '@/components/widgets/WeatherWidget';
 
-/**
- * Circuit crowns widget.
- */
-export function CircuitCrownsWidget() {
+function CircuitCrownsWidget() {
   const { arenaChampions, roster, rivals, player } = useGameStore(
     useShallow((s) => ({
       arenaChampions: s.arenaChampions,

@@ -30,7 +30,7 @@ import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
 import type { PlanModifiers } from './modifiers';
 
 /** WT floor for holding a committed deception script through the masked window. */
-export const DECOY_MIN_WT = 13;
+const DECOY_MIN_WT = 13;
 
 /**
  * Stage D.4 — boundary-reactive phase shifts, authored per personality.

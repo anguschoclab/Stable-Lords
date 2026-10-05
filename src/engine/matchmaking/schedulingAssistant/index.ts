@@ -7,14 +7,9 @@ import {
   type MatchupScore,
 } from './matchups';
 
-export { headToHeadFor, type HeadToHeadRecord, type PairwiseHeadToHead } from './headToHead';
-export { scorePairwiseMatchup, type PairwiseMatchupContext } from './pairwise';
-export {
-  buildMatchupScore,
-  getEligibleRivals,
-  scoreMatchup,
-  type MatchupScore,
-} from './matchups';
+export { type PairwiseHeadToHead } from './headToHead';
+export { scorePairwiseMatchup } from './pairwise';
+export { scoreMatchup, type MatchupScore } from './matchups';
 
 /**
  * Recommends the best potential challenges for a player warrior.

@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
 import { findWarrior } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import BoutViewer from '@/components/BoutViewer';
 import { cn } from '@/lib/utils';
 import { getNamesFromTitle } from '@/utils/fightTitle';
@@ -40,24 +39,14 @@ function buildHeadToHead(fights: FightSummary[], warriorId: string): Map<string,
   return map;
 }
 
-type NameResolutionState = {
-  player: ReturnType<typeof useGameStore.getState>['player'];
-  rivals: ReturnType<typeof useGameStore.getState>['rivals'];
-  roster: ReturnType<typeof useGameStore.getState>['roster'];
-  graveyard: ReturnType<typeof useGameStore.getState>['graveyard'];
-  retired: ReturnType<typeof useGameStore.getState>['retired'];
-};
-
 function FightRow(props: {
   fight: FightSummary;
   warriorId: string;
   record?: H2HRecord;
   isExpanded: boolean;
   onToggle: () => void;
-  nameResolutionState: NameResolutionState;
 }) {
   const { fight, warriorId, record, isExpanded, onToggle } = props;
-  const { nameResolutionState } = props;
   const f = fight;
   const n = getNamesFromTitle(f.title);
   const isA = f.warriorIdA === warriorId;
@@ -105,7 +94,7 @@ function FightRow(props: {
       </button>
 
       {isExpanded && hasTranscript && (
-        <ExpandedBout f={f} n={n} nameResolutionState={nameResolutionState} />
+        <ExpandedBout f={f} n={n} />
       )}
     </Surface>
   );
@@ -127,12 +116,17 @@ function H2HBadge({ record }: { record?: H2HRecord }) {
 function ExpandedBout({
   f,
   n,
-  nameResolutionState,
 }: {
   f: FightSummary;
   n: ReturnType<typeof getNamesFromTitle>;
-  nameResolutionState: NameResolutionState;
 }) {
+  // ⚡ Bolt: Use targeted selectors inside the expanded component instead of passing down
+  // a massive state object from the parent via useShallow. This prevents the entire
+  // fight history list from re-rendering whenever any unrelated warrior state updates,
+  // and allows findWarrior to correctly utilize its WeakMap cache against the raw state.
+  const weaponIdA = useGameStore((state) => findWarrior(state, f.warriorIdA)?.equipment?.weapon);
+  const weaponIdD = useGameStore((state) => findWarrior(state, f.warriorIdD)?.equipment?.weapon);
+
   return (
     <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
       <BoutViewer
@@ -145,8 +139,8 @@ function ExpandedBout({
         by={f.by}
         isRivalry={f.isRivalry}
         analysis={f.analysis}
-        weaponIdA={findWarrior(nameResolutionState, f.warriorIdA)?.equipment?.weapon}
-        weaponIdD={findWarrior(nameResolutionState, f.warriorIdD)?.equipment?.weapon}
+        weaponIdA={weaponIdA}
+        weaponIdD={weaponIdD}
       />
     </div>
   );
@@ -163,15 +157,6 @@ export function WarriorFightHistory({
   arenaHistory: FightSummary[];
 }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const nameResolutionState = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-    }))
-  );
   const fights = getAllFightsForWarrior(arenaHistory, warriorId);
   const h2h = useMemo(() => buildHeadToHead(fights, warriorId), [fights, warriorId]);
 
@@ -203,7 +188,6 @@ export function WarriorFightHistory({
               record={h2h.get(opponent)}
               isExpanded={expandedId === f.id}
               onToggle={() => setExpandedId(expandedId === f.id ? null : f.id)}
-              nameResolutionState={nameResolutionState}
             />
           );
         })}

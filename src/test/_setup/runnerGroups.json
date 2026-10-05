@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T04:18:47.357Z",
+  "generatedAt": "2026-10-05T04:37:11.986Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -119,6 +119,7 @@
     "src/test/components/warrior/TrainingCardHeader.test.tsx",
     "src/test/components/warrior/TraitBadge.test.tsx",
     "src/test/components/warrior/TraitTrainingSection.test.tsx",
+    "src/test/components/warrior/WarriorFightHistory.test.tsx",
     "src/test/components/warrior/WarriorHeroHeader.test.tsx",
     "src/test/components/warrior/WarriorTrainingCard.advisor.test.tsx",
     "src/test/components/warrior/WarriorTrainingCard.heatbar.test.tsx",

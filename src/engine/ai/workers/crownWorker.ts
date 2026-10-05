@@ -28,6 +28,7 @@ import { isReigningChampion, buildContenderIndex } from '@/engine/championship/a
 import { evaluateCampaignFocus } from '@/engine/advisor/campaignFocusEvaluator';
 import { weeksUntilChampionsTournament, boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { logAgentAction, computePlayerThreatLevel } from '../agentCore';
+import { competenceJitter } from '../competence';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import type { ArenaTitle } from '@/types/state/championship';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
@@ -138,7 +139,11 @@ function scoreThrone(
       }
     }
   }
-  return { score: score + ctx.rankBonus, reason };
+  // Competence noise — a Novice reads the throne map noisily and occasionally
+  // campaigns for the wrong arena; a Master nearly always spots the softest
+  // crown (Stage B). Deterministic per (owner, warrior, arena).
+  const jitter = competenceJitter(ctx.rival.owner, `crown|${w.id}|${arenaId}`, 2);
+  return { score: score + ctx.rankBonus + jitter, reason };
 }
 
 /** Scores the rival's best crown-bid opportunity across arenas. */

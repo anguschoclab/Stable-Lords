@@ -37,7 +37,7 @@ export function getAIPlan(
   }
 
   return aiPlanForWarrior(
-    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity }
+    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity, competence: rival.owner.competence }
   );
 }
 

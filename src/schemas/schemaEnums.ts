@@ -18,6 +18,7 @@ import {
   PROMOTER_TIERS,
   OWNER_PERSONALITIES,
   META_ADAPTATIONS,
+  OWNER_COMPETENCES,
   ATTACK_TARGETS,
   PROTECT_TARGETS,
   OFFENSIVE_TACTICS,
@@ -127,6 +128,11 @@ export const OwnerPersonalitySchema = z.enum(OWNER_PERSONALITIES);
  * MetaAdaptation enum schema
  */
 export const MetaAdaptationSchema = z.enum(META_ADAPTATIONS);
+
+/**
+ * OwnerCompetence enum schema
+ */
+export const OwnerCompetenceSchema = z.enum(OWNER_COMPETENCES);
 
 /**
  * AttackTarget enum schema

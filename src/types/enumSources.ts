@@ -285,6 +285,13 @@ export const META_ADAPTATIONS = [
   'Innovator',
 ] as const;
 
+/**
+ * Owner competence — the *quality* axis, orthogonal to personality (what the
+ * owner wants) and metaAdaptation (how they adapt). Scales error/noise in
+ * AI decision scoring, never the choice vocabulary itself.
+ */
+export const OWNER_COMPETENCES = ['Novice', 'Journeyman', 'Veteran', 'Master'] as const;
+
 export const COMBAT_EVENT_TYPES = [
   'INITIATIVE',
   'ATTACK',

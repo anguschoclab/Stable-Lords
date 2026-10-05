@@ -68,6 +68,9 @@ export interface SimPulse {
   avgChampionFatigue: number;
   /** CONDITION_*@CORNER firings across lastWeekBoutDisplay's exchange logs. */
   cornerAdviceEvents: number;
+  // ─── Stage B: owner-competence liveness metrics ───
+  /** Rival count per owner-competence tier this sampled week. */
+  competenceDistribution: Record<string, number>;
 }
 
 /** World-wide trait emergence counts (player roster + every rival roster). */
@@ -123,6 +126,7 @@ function collectTraitMetrics(state: GameState, activeRivals: GameState['rivals']
 /** Stage I AI-behavior metrics: intent distribution, dossier coverage, offers. */
 function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['rivals']) {
   const intentDistribution: Record<string, number> = {};
+  const competenceDistribution: Record<string, number> = {};
   let vendettaCount = 0;
   let totalDossiers = 0;
   for (const r of activeRivals) {
@@ -131,6 +135,8 @@ function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['riv
       intentDistribution[intent] = (intentDistribution[intent] ?? 0) + 1;
       if (intent === 'VENDETTA') vendettaCount++;
     }
+    const tier = r.owner?.competence;
+    if (tier) competenceDistribution[tier] = (competenceDistribution[tier] ?? 0) + 1;
     totalDossiers += Object.keys(r.agentMemory?.opponentDossiers ?? {}).length;
   }
 
@@ -149,6 +155,7 @@ function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['riv
 
   return {
     intentDistribution,
+    competenceDistribution,
     vendettaCount,
     totalDossiers,
     playerChallenged,
@@ -303,6 +310,7 @@ export function collectPulse(state: GameState): SimPulse {
     grandChampCancellations: stageH.grandChampCancellations,
     avgChampionFatigue: stageH.avgChampionFatigue,
     cornerAdviceEvents: stageH.cornerAdviceEvents,
+    competenceDistribution: ai.competenceDistribution,
   };
 }
 

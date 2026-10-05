@@ -1,5 +1,6 @@
 import type { RivalStableData, AIEvent } from '@/types/state.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { competenceReserveScale } from '../competence';
 import {
   WARRIOR_UPKEEP_BASE,
   FAME_UPKEEP_MULTIPLIER,
@@ -59,8 +60,11 @@ export function checkBudget(
   const personality = rival.owner.personality ?? 'Pragmatic';
   const burnRate = rival.agentMemory?.burnRate || 0;
   // Reserve scales with real projected upkeep — a bloated roster must keep
-  // far more cash liquid than the old flat 300 (G15).
-  const reserve = Math.max(BASE_RESERVE, projectedWeeklyUpkeep(rival));
+  // far more cash liquid than the old flat 300 (G15). Competence scales
+  // discipline: Novices under-reserve, Masters over-reserve (Stage B).
+  const reserve =
+    Math.max(BASE_RESERVE, projectedWeeklyUpkeep(rival)) *
+    competenceReserveScale(rival.owner);
 
   // ⚡ Risk-Tiered Classification
   let riskTier: AIEvent['riskTier'] = 'Low';

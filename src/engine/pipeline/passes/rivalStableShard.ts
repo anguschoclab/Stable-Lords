@@ -9,6 +9,7 @@ import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/wa
 import { processIntel } from '@/engine/ai/workers/intelWorker';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import { processCrownPosture, assignCampaignRoles } from '@/engine/ai/workers/crownWorker';
+import { driftCompetence } from '@/engine/ai/competence';
 import { SeededRNGService } from '@/utils/random';
 import { aiRosterMin } from '@/constants/ai';
 import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
@@ -68,6 +69,7 @@ export function handleOwnerLifecycle(
       fame: Math.floor(updatedRival.owner.fame * 0.4), // Fame reset on new leadership
       backstoryId: undefined, // Fresh start
       ageRetired: absoluteWeek ?? nextWeek, // Week the previous owner retired
+      competence: driftCompetence(rival.owner.competence, rng),
     };
 
     gazetteItems.push(

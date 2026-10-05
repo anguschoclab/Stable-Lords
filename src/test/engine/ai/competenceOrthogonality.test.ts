@@ -36,7 +36,7 @@ describe('competence does not change *choices*', () => {
       PERSONALITY_DRAFT_WEIGHTS.Aggressive.priceSensitivity
     );
     expect(PERSONALITY_DRAFT_WEIGHTS.Showman.tierBonus.Prodigy).toBeGreaterThan(
-      PERSONALITY_DRAFT_WEIGHTS.Pragmatic.tierBonus.Prodigy
+      PERSONALITY_DRAFT_WEIGHTS.Pragmatic.tierBonus.Prodigy ?? 0
     );
   });
 });

@@ -42,6 +42,7 @@ const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({
   grandChampCancellations: 0,
   avgChampionFatigue: 0,
   cornerAdviceEvents: 0,
+  competenceDistribution: {},
   ...over,
 });
 

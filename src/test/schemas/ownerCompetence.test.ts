@@ -5,7 +5,8 @@
  * the rival factory with a weighted, Masters-rare distribution.
  */
 import { describe, it, expect } from 'vitest';
-import { OwnerSchema, OwnerCompetenceSchema } from '@/schemas/economySchemas';
+import { OwnerSchema } from '@/schemas/economySchemas';
+import { OwnerCompetenceSchema } from '@/schemas/schemaEnums';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import { generateRivalStables } from '@/engine/rivals/rivalStableFactory';
 import { rollCompetence } from '@/engine/ai/competence';

@@ -9,6 +9,7 @@ import { aiRosterMax, AI_GENERATED_RECRUIT_COST } from '@/constants/ai';
 import { WEEKS_PER_SEASON } from '@/constants/core';
 import { isAIDebugEnabled } from '@/engine/ai/debug';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { competenceJitter } from '../competence';
 
 /** A tabled poach bid: the buyer pays `price` to `sellerStableId` for `warriorId`. */
 export interface PoachBid {
@@ -135,9 +136,15 @@ export function computePoachBid(
   if (!target) return null;
 
   // Price: base recruit cost plus the recoverable trait upside, discounted by
-  // how badly the seller wants rid of the warrior.
+  // how badly the seller wants rid of the warrior — plus competence noise:
+  // a Novice over/underpays by up to ~20g, a Master prices tight (Stage B).
   const price = clampPrice(
-    AI_GENERATED_RECRUIT_COST + target.traitValue - Math.round(target.liabilityScore / 2)
+    AI_GENERATED_RECRUIT_COST +
+      target.traitValue -
+      Math.round(target.liabilityScore / 2) +
+      Math.round(
+        competenceJitter(buyer.owner, `poach|${target.warrior.id}|${seasonIndex}`, 30)
+      )
   );
 
   const budget = checkBudget(buyer, price, 'ROSTER');

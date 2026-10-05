@@ -6,6 +6,8 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { OwnerPersonality, AIIntent, OpponentDossier } from '@/types/state.types';
+import type { OwnerCompetence } from '@/types/state/owner';
+import { competenceConditionCap } from '@/engine/ai/competence';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
@@ -179,6 +181,7 @@ interface ApplyStrategicLayerArgs {
   intent: AIIntent | undefined;
   dossier: OpponentDossier | undefined;
   mods: PlanModifiers;
+  competence?: OwnerCompetence;
 }
 
 /**
@@ -187,7 +190,7 @@ interface ApplyStrategicLayerArgs {
  * curves, desperate plan, fallback condition, and WIT-gated conditions.
  */
 function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
-  const { plan, w, personality, intent, dossier } = args;
+  const { plan, w, personality, intent, dossier, competence } = args;
   const { mods } = args;
   // Offensive/defensive tactics come from the base plan (defaultPlanForWarrior →
   // getAITactics), which assigns each style its canonical Duel II Favorite Tactics.
@@ -248,12 +251,20 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   // conditionEngine (WT>=7 every exchange, 4-6 every 3, <4 every 5).
   // The universal ENDURANCE_BELOW safety is always retained.
   const wt = w.attributes?.WT ?? 10;
-  const conditionCap =
+  const witCap =
     wt >= 7
       ? allConditions.length
       : wt >= 4
         ? universalConditions.length + 1
         : universalConditions.length;
+  // Competence compounds the WIT gate — a Novice front office authors thinner
+  // adaptive plans than a Master for the same fighter (Stage B). The
+  // universal ENDURANCE_BELOW safety floor is always retained.
+  const conditionCap = competenceConditionCap(
+    { competence },
+    witCap,
+    universalConditions.length
+  );
   plan.conditions = allConditions.slice(0, conditionCap);
 }
 
@@ -269,6 +280,8 @@ export interface AiPlanForWarriorArgs {
   grudgeIntensity?: number;
   dossier?: OpponentDossier;
   now?: number;
+  /** Owner competence tier — scales adaptive-condition density (Stage B). */
+  competence?: OwnerCompetence;
 }
 
 /** Generates a full weekly plan for one AI warrior given owner personality. */
@@ -334,7 +347,7 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
 
-  applyStrategicLayer({ plan: plan, w: w, personality: personality, intent: intent, dossier: dossier, mods: mods });
+  applyStrategicLayer({ plan: plan, w: w, personality: personality, intent: intent, dossier: dossier, mods: mods, competence: args.competence });
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {

@@ -33,6 +33,7 @@ const ZERO_AI_FIELDS = {
   grandChampCancellations: 0,
   avgChampionFatigue: 0,
   cornerAdviceEvents: 0,
+  competenceDistribution: {},
 } as const;
 
 describe('simulationMetrics', () => {

@@ -95,7 +95,7 @@ export function getNPCPlan(
   }
 
   return aiPlanForWarrior(
-    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity, dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined, now: week }
+    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity, dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined, now: week, competence: rival.owner.competence }
   );
 }
 

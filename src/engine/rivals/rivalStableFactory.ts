@@ -24,6 +24,7 @@ import { biasedAttrs, createRivalWarrior } from './rivalWarriorFactory';
 import { generateStableTrainers } from './rivalTrainerFactory';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner } from '@/data/names/cultures';
+import { rollCompetence } from '@/engine/ai/competence';
 
 /**
  * Gets stable templates.
@@ -156,6 +157,7 @@ function buildOwner(
           : 0,
     personality: tmpl.personality,
     metaAdaptation: tmpl.metaAdaptation,
+    competence: rollCompetence(rng, tmpl.tier),
     favoredStyles: tmpl.preferredStyles,
     backstoryId: tmpl.backstoryId,
   };

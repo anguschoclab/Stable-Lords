@@ -14,6 +14,7 @@ import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import { logAgentAction } from '../agentCore';
 import { hashStr } from '@/utils/random';
 import { clamp } from '@/utils/math';
+import { blendQuality } from '../competence';
 
 /** Scouting acuity by owner personality — tighter plan estimates. */
 const SCOUT_QUALITY: Record<string, number> = {
@@ -147,7 +148,10 @@ export function processIntel(
   const targetId = pickScoutTarget(rival, state);
   if (!targetId) return { updatedRival: rival, gazetteItems };
 
-  const quality = SCOUT_QUALITY[rival.owner.personality ?? 'Pragmatic'] ?? 0.6;
+  const quality = blendQuality(
+    SCOUT_QUALITY[rival.owner.personality ?? 'Pragmatic'] ?? 0.6,
+    rival.owner
+  );
   const targetRival = (state.rivals ?? []).find(
     (r) => r.id === targetId || r.owner.id === targetId
   );

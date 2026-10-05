@@ -17,6 +17,7 @@ import { computePlayerThreatLevel, type PlayerThreatLevel } from '@/engine/ai/ag
 import type { Promoter } from '@/types/state/championship';
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 import { fightingCondition } from '@/engine/warrior/condition';
+import { competenceQuality } from '@/engine/ai/competence';
 
 /**
  * Pre-evaluation sanity gate. Title bouts bypass the soft refusal gates
@@ -295,14 +296,17 @@ function matchupSkepticism(
   opponent: Warrior | undefined,
   personality: RivalStableData['owner']['personality'],
   playerThreat: PlayerThreatLevel,
-  observedDanger: boolean
+  observedDanger: boolean,
+  owner?: Pick<RivalStableData['owner'], 'competence'>
 ): BoutEvaluation | null {
   if (opponent && (personality === 'Methodical' || personality === 'Pragmatic')) {
     const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
     // Methodical camps refuse to feed a dominant player on a coin flip —
-    // anything short of a clear edge is a pass.
+    // anything short of a clear edge is a pass. Competence loosens the floor:
+    // a Novice stable books matchups a Master would duck (Stage B).
     const skepticismFloor =
-      personality === 'Methodical' && playerThreat === 'Dominant' ? 0 : observedDanger ? -1 : -2;
+      (personality === 'Methodical' && playerThreat === 'Dominant' ? 0 : observedDanger ? -1 : -2) -
+      (owner?.competence == null ? 0 : Math.floor((1 - competenceQuality(owner)) * 3));
     if (edge <= skepticismFloor) {
       return 'Declined';
     }
@@ -402,7 +406,14 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
     return 'Accepted';
   }
 
-  const skeptical = matchupSkepticism(warrior, opponent, personality, playerThreat, observedDanger);
+  const skeptical = matchupSkepticism(
+    warrior,
+    opponent,
+    personality,
+    playerThreat,
+    observedDanger,
+    rival.owner
+  );
   if (skeptical) return skeptical;
 
   // Venue counter — the arena itself is the sticking point. A CROWN_BID

@@ -15,6 +15,7 @@ import {
 import { AI_RECRUITS_PER_WEEK_MAX } from '@/constants/world';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
 import { veteranSigningPatch } from '@/engine/recruitment/recruitment';
+import { competenceJitter } from '../competence';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 import type { FightingStyle } from '@/types/shared.types';
 
@@ -84,6 +85,7 @@ interface ScoreCandidatesArgs {
   week: number;
   meta: StyleMeta | undefined;
   favoredStyles?: FightingStyle[];
+  owner?: Pick<RivalStableData['owner'], 'id' | 'competence'>;
 }
 
 /**
@@ -145,6 +147,11 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
     // Price appetite — thrifty personalities discount expensive recruits.
     score -= (w.cost * weights.priceSensitivity) / 100;
 
+    // Competence noise — a Novice front office misevaluates candidates while
+    // a Master nearly always spots the best value (Stage B). Deterministic
+    // per (owner, candidate, week) so shard order can't change the pick.
+    score += competenceJitter(args.owner, `draft|${w.id}|${week}`, 25);
+
     const weeksAvailable = week - w.addedWeek;
     score += weeksAvailable * 10;
 
@@ -192,7 +199,7 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): { updatedRival: RivalSt
 
   for (let slot = 0; slot < ctx.slotsAvailable; slot++) {
     const { bestIdx, bestScore } = scoreCandidates(
-      { pool: visible, roster: updatedRival.roster, personality: personality, week: week, meta: meta, favoredStyles: favoredStyles }
+      { pool: visible, roster: updatedRival.roster, personality: personality, week: week, meta: meta, favoredStyles: favoredStyles, owner: updatedRival.owner }
     );
     if (bestIdx < 0) break;
     const recruit = visible[bestIdx];

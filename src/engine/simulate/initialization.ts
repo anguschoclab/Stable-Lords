@@ -4,7 +4,11 @@
 import { createFighterState } from '../bout/fighterState';
 import { DEFAULT_LOADOUT, checkWeaponRequirements } from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
-import { getWeatherEffect, resolveEffectiveWeather } from '../combat/mechanics/weatherEffects';
+import {
+  applyArenaWeatherMods,
+  getWeatherEffect,
+  resolveEffectiveWeather,
+} from '../combat/mechanics/weatherEffects';
 import { getArenaById } from '@/data/arenas';
 import { SeededRNGService } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -128,7 +132,7 @@ export function initializeResolutionContext(args: InitializeResolutionContextArg
     warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 }
   );
 
-  const arenaConfig = getArenaById(arenaId);
+  const arenaConfig = applyArenaWeatherMods(getArenaById(arenaId), effectiveWeather);
 
   return {
     rng: () => 0, // Placeholder, will be set by caller

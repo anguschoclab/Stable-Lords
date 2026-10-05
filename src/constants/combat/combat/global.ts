@@ -56,10 +56,6 @@ export const OE_DEF_SCALING = 0.5;
  */
 export const AL_INI_SCALING = 0.7;
 
-/**
- * Alacrity attribute scaling
- */
-export const AL_ATTR_SCALING = 0.5;
 
 /**
  * Defender endurance discount
@@ -154,69 +150,6 @@ export const CRIT_DAMAGE_MULT = 1.7;
  */
 export const DECISION_HIT_MARGIN = 3;
 
-/**
- * Decision scoring thresholds
- */
-export const DECISION_THRESHOLDS = {
-  DOMINATION_MARGIN: 5,
-  CLOSE_MARGIN: 2,
-  WIN_MARGIN: 0.5,
-} as const;
-
-// ─── Effort Thresholds ───────────────────────────────────────────────────
-/**
- * Offensive/Alacrity effort thresholds
- */
-export const EFFORT_THRESHOLDS = {
-  HIGH: 7,
-  MEDIUM: 4,
-  LOW: 3,
-} as const;
-
-// ─── Attribute Thresholds ────────────────────────────────────────────────
-/**
- * Attribute quality thresholds
- */
-export const ATTRIBUTE_THRESHOLDS = {
-  POOR: 10,
-  GOOD: 15,
-  EXCELLENT: 18,
-} as const;
-
-// ─── Total Effort Thresholds ───────────────────────────────────────────────
-/**
- * Total effort (OE + AL) thresholds
- */
-export const TOTAL_EFFORT_THRESHOLDS = {
-  MAX_SAFE: 16,
-  MIN_VIABLE: 6,
-} as const;
-
-// ─── Strategy Score Constants ─────────────────────────────────────────────
-/**
- * Strategy scoring modifiers
- */
-export const STRATEGY_SCORE_CONSTANTS = {
-  BASE_SCORE: 60,
-  SUITABILITY_WS: 15,
-  SUITABILITY_S: 5,
-  SUITABILITY_U: -25,
-  SKILL_PENALTY: -30,
-  ATTRIBUTE_BONUS: 10,
-  ATTRIBUTE_PENALTY: -15,
-  OVER_EXERTION_PENALTY: 8,
-  UNDER_EXERTION_PENALTY: 5,
-  TEMPO_BONUS: 10,
-} as const;
-
-/**
- * Strategy score UI thresholds
- */
-export const STRATEGY_SCORE_THRESHOLDS = {
-  EXCELLENT: 85,
-  GOOD: 70,
-  ADEQUATE: 50,
-} as const;
 
 // ─── Default Max HP ───────────────────────────────────────────────────────
 

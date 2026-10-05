@@ -1,6 +1,8 @@
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Activity } from 'lucide-react';
+import { getEngineEpoch, engineQueueDepth } from '@/engine/runtime/session';
+import { getPendingArchiveRetries } from '@/engine/pipeline/adapters/opfsArchiver';
 
 interface TelemetryPanelProps {
   week: number;
@@ -29,6 +31,11 @@ export function TelemetryPanel(props: TelemetryPanelProps) {
             {JSON.stringify(
               {
                 temporal: { week, season },
+                engine: {
+                  epoch: getEngineEpoch(),
+                  queueDepth: engineQueueDepth(),
+                  archiveRetriesPending: getPendingArchiveRetries().length,
+                },
                 inventory: { treasury, fame },
                 roster: { size: rosterSize },
                 player: player,

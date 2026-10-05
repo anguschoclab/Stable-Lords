@@ -36,6 +36,11 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     match: 'Object.entries(title.declinedContenders',
     why: 'declinedContenders is per-title state — differs every iteration',
   },
+  {
+    file: 'src/engine/narrative/arenaNarrative.ts',
+    match: 'Object.entries(mod.zoneDef ?? {})',
+    why: 'mod.zoneDef is per-weatherMod-entry data — differs every iteration; cold render path',
+  },
 ];
 
 interface EntriesViolation {

@@ -25,7 +25,7 @@ export interface BudgetReport {
 }
 
 /** Minimum liquid reserve regardless of roster size. */
-const BASE_RESERVE = 300;
+export const BASE_RESERVE = 300;
 
 /**
  * Projected weekly upkeep for this stable using the same constants as the

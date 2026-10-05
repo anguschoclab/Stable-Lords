@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { getAllArenas } from '@/data/arenas';
+import { getAllArenas, getArenaLore } from '@/data/arenas';
+import { getPackArenaLore } from '@/lib/contentPacks';
 import { describeArenaEffects } from '@/engine/narrative/arenaNarrative';
 import {
   CHAMPIONSHIP_EXCLUDED_ARENAS,
@@ -66,6 +67,7 @@ function useArenaDetailStore() {
       player: s.player,
       arenaHistory: s.arenaHistory,
       relinquishArenaTitle: s.relinquishArenaTitle,
+      contentPacks: s.contentPacks,
     }))
   );
 }
@@ -84,6 +86,11 @@ export function useArenaDetail(arenaId: string) {
   const isExcluded = CHAMPIONSHIP_EXCLUDED_ARENAS.has(arenaId);
   const badge = statusBadge(title);
   const effects = useMemo(() => (arena ? describeArenaEffects(arenaId) : []), [arena, arenaId]);
+  const lore = useMemo(
+    () =>
+      arena ? [...getArenaLore(arenaId), ...getPackArenaLore(store.contentPacks, arenaId)] : [],
+    [arena, arenaId, store.contentPacks]
+  );
 
   const { lb, styleLeaders, stableStandings } = useArenaBoards(arena, arenaId, store, state);
 
@@ -113,6 +120,7 @@ export function useArenaDetail(arenaId: string) {
     isExcluded,
     badge,
     effects,
+    lore,
     lb,
     styleLeaders,
     stableStandings,

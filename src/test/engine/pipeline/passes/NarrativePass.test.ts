@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { runNarrativePass } from '@/engine/pipeline/passes/NarrativePass';
+import { narrativeContent } from '@/data/narrative';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -79,11 +80,14 @@ describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {
 
     const issue = (impact.newsletterItems ?? []).find((i) => i.title === 'Week in Review');
     expect(issue).toBeDefined();
-    expect(
-      issue!.items.some((l) =>
-        /defeated|decisive victory|grueling|brutal affair|battle of attrition|masterpiece/i.test(l)
-      )
-    ).toBe(true);
+    // The emitted line must be a recap-pool template with its placeholders
+    // interpolated — data-driven so template additions don't break the pin.
+    const recapPatterns = (narrativeContent.recap ?? []).map(
+      (tpl) =>
+        new RegExp('^' + tpl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\\{\\\{\w+\\\}\\\}/g, '.+') + '$')
+    );
+    expect(recapPatterns.length).toBeGreaterThan(0);
+    expect(issue!.items.some((l) => recapPatterns.some((p) => p.test(l)))).toBe(true);
   });
 });
 

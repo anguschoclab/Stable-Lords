@@ -288,6 +288,20 @@ describe('describeArenaEffects', () => {
     const lines = describeArenaEffects('narrow_bridge'); // enduranceMult 1.2
     expect(lines.join(' ').toLowerCase()).toMatch(/endur|stamina|drain|breath/);
   });
+
+  it('surfaces weather-specific overrides as readable effects', () => {
+    const lines = describeArenaEffects('mudpit_arena');
+    const joined = lines.join(' ').toLowerCase();
+    // mudpit declares Rainy + Weeping Skies weatherMods (seed.ts) — the
+    // venue card must tell the player those conditions change the fight.
+    expect(joined).toMatch(/rain|weather/);
+    expect(joined).toContain('-5'); // Rainy Corner override −5 (base −4)
+  });
+
+  it('omits weather lines for arenas without weatherMods', () => {
+    const lines = describeArenaEffects('standard_arena');
+    expect(lines.join(' ').toLowerCase()).not.toMatch(/in (rain|gale|snow|storm)/);
+  });
 });
 
 // ─── Progression objectives ─────────────────────────────────────────────────

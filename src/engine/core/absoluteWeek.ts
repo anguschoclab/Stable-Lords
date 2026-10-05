@@ -80,16 +80,6 @@ export function weeksUntilNextSeasonalTournament(week: number): number {
 }
 
 /**
- * True during the run-up window before the next seasonal tournament —
- * the window is relative to the next seasonal week, not a fixed range.
- * Returns false on a seasonal week itself and inside week-52's season.
- */
-export function isSeasonalTournamentPrepWeek(week: number): boolean {
-  const until = weeksUntilNextSeasonalTournament(week);
-  return until > 0 && until <= TOURNAMENT_PREP_WEEKS;
-}
-
-/**
  * The tournament-campaign window: the three prep weeks before the next
  * seasonal tournament plus the event week itself (until ∈ 0–3). Reproduces
  * the old "last four weeks of each 13-week block" relative to each seasonal —
@@ -97,7 +87,7 @@ export function isSeasonalTournamentPrepWeek(week: number): boolean {
  * a seasonal falls within it (until counts seasonals only).
  */
 export function isTournamentPrepWeek(week: number): boolean {
-  return weeksUntilNextSeasonalTournament(week) <= 3;
+  return weeksUntilNextSeasonalTournament(week) < TOURNAMENT_PREP_WEEKS;
 }
 
 /**

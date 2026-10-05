@@ -31,7 +31,6 @@ import {
   RECRUIT_POOL_PER_STABLE,
   FREE_AGENT_SHELF_WEEKS,
   WORLD_RIVAL_FLOOR,
-  WORLD_RIVAL_HARD_CAP,
 } from '@/constants/world';
 import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 
@@ -153,9 +152,6 @@ export function computeFreeAgentCost(w: Warrior): number {
  * half the free-agent shelf so claims don't hold orphans hostage all season.
  */
 export const ACADEMY_CLAIM_WEEKS = Math.ceil(FREE_AGENT_SHELF_WEEKS / 2);
-
-/** Absolute ceiling on combined pool + free-agent churn — defensive bound. */
-export const POOL_WORLD_CAP = Math.ceil(WORLD_RIVAL_HARD_CAP * RECRUIT_POOL_PER_STABLE * 3);
 
 // Names come from the procedural generator (src/data/names/nameGenerator.ts);
 // the narrative recruitment corpus is folded into the 'common' culture.

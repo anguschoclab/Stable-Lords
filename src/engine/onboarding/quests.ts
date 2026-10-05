@@ -60,23 +60,3 @@ export const ONBOARDING_QUESTS: OnboardingQuest[] = [
     done: (s) => s.absoluteWeek >= 2,
   },
 ];
-
-/** A quest plus its evaluated completion state. */
-export interface QuestStatus {
-  id: string;
-  label: string;
-  hint: string;
-  complete: boolean;
-}
-
-/**
- * Evaluate quests.
- */
-export function evaluateQuests(state: QuestState): QuestStatus[] {
-  return ONBOARDING_QUESTS.map((q) => ({
-    id: q.id,
-    label: q.label,
-    hint: q.hint,
-    complete: q.done(state),
-  }));
-}

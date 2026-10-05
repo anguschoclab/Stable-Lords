@@ -12,9 +12,10 @@ import { ChampionBlock } from './arenaDetail/ChampionBlock';
 import { RecordBoards } from './arenaDetail/RecordBoards';
 import { RecentBouts, TitleHistory, UnknownArena } from './arenaDetail/sections';
 import { useArenaDetail } from './arenaDetail/useArenaDetail';
+import type { ArenaLoreEntry } from '@/data/arenas';
 
 /** Lore + real effects card. */
-function LoreSurface({ effects }: { effects: string[] }) {
+function LoreSurface({ effects, lore }: { effects: string[]; lore: ArenaLoreEntry[] }) {
   return (
     <Surface variant="glass" className="p-5 mb-6">
       <div className="flex items-center gap-2 mb-3">
@@ -30,6 +31,20 @@ function LoreSurface({ effects }: { effects: string[] }) {
           </p>
         ))}
       </div>
+      {lore.length > 0 && (
+        <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+          {lore.map((entry) => (
+            <div key={entry.id}>
+              <div className="text-[10px] font-black uppercase tracking-wider text-foreground/80">
+                {entry.title}
+              </div>
+              <p className="text-[10px] text-muted-foreground/70 leading-relaxed mt-0.5">
+                {entry.narrative}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </Surface>
   );
 }
@@ -116,6 +131,7 @@ export default function ArenaDetail() {
     isExcluded,
     badge,
     effects,
+    lore,
     lb,
     styleLeaders,
     stableStandings,
@@ -146,7 +162,7 @@ export default function ArenaDetail() {
       />
 
       {/* Lore + real effects */}
-      <LoreSurface effects={effects} />
+      <LoreSurface effects={effects} lore={lore} />
 
       {/* Champion block */}
       {!isExcluded && (

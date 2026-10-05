@@ -19,8 +19,8 @@ import { NewsletterFeed } from '@/engine/newsletter/feed';
 import {
   WORLD_RIVAL_FLOOR,
   WORLD_RIVAL_SOFT_CAP,
-  AI_RECRUIT_SIGNING_RESERVE,
 } from '@/constants/world';
+import { BASE_RESERVE } from '@/engine/ai/workers/budgetWorker';
 import { aiRosterMax, aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
@@ -96,7 +96,7 @@ describe('Living rival world — 1000-week seeded run', () => {
   });
 
   it('solvent stables keep rosters at least 95% filled to cap', () => {
-    const solvent = finalState.rivals.filter((r) => r.treasury >= AI_RECRUIT_SIGNING_RESERVE * 10);
+    const solvent = finalState.rivals.filter((r) => r.treasury >= BASE_RESERVE * 10);
     expect(solvent.length).toBeGreaterThan(0);
     const fills = solvent.map(
       (r) =>

@@ -66,7 +66,7 @@ to prodRoots, `.mjs` script roots enabled, extended state-interface coverage.
 | V2-03 | `calculatePerArenaLeaderboards` — dead batch wrapper; live path `calculateArenaLeaderboard` via `arenaDetail/RecordBoards` | APPROVED — superseded | **REMOVE** + trim `leaderboards.test.ts` coverage to singular path | — |
 | V2-04 | `ArenaConfig.weatherMods` (`types/shared/spatial.ts:73`, schema'd `economySchemas.ts:398`) — per-arena, per-weather `zoneDef`/`surfaceMod` overrides, declared + schema'd, zero readers, zero data | APPROVED — spec'd partial integration (`2026-04-15-combat-spatial-system.md`) | **WIRE**: merge weather-matched overrides into effective spatial config in `initializeResolutionContext` (`simulate/initialization.ts`); author `weatherMods` for weather-exposed arenas; surface on `ArenaDetail` | RED: merge test (matching weather applies overrides, other weather no-op), determinism |
 | V2-05 | `announcer.json :: recap` pool + `recapLine` — dead | APPROVED | **WIRE**: `recapLine` for fight-of-the-week in `NarrativePass` "Week in Review" item | RED: newsletter recap-line test |
-| V2-06 | `evaluateQuests` dead; `QuestsWidget` duplicates evaluation inline | APPROVED — duplicate logic | **WIRE**: widget consumes `evaluateQuests` for quest derivation | RED: widget parity test |
+| V2-06 | `evaluateQuests` dead; `QuestsWidget` duplicates evaluation inline | CORRECTED — duplicate API, but the widget's per-quest boolean array is deliberate (`useShallow` subscription narrowing, PR #1024) | **REMOVE**: deleted `evaluateQuests`; `quests.test.ts` re-pinned to `ONBOARDING_QUESTS[i].done` | — |
 | V2-07 | `POOL_WORLD_CAP` — superseded by `computeRecruitPoolHardCap` (live `recruitment.ts:396`) | APPROVED | **REMOVE** | — |
 | V2-08 | `AI_RECRUIT_SIGNING_RESERVE` — superseded by `checkBudget` affordability (`recruitmentWorker.ts`) | APPROVED | **REMOVE** (stale comment too) | — |
 | V2-09 | `AI_DRAFT_ROTATION_SEED` — rotation mechanic superseded by shard-order-invariant scoring (`recruitmentWorker.ts:152` comment) | APPROVED | **REMOVE** | — |
@@ -77,7 +77,7 @@ to prodRoots, `.mjs` script roots enabled, extended state-interface coverage.
 | V2-14 | `getPendingArchiveRetries` — dead | APPROVED | **WIRE**: `TelemetryPanel` storage row | RED: panel renders pending retries |
 | V2-15 | `setTelemetryProvider` / `getTelemetryProvider` — zero refs anywhere | NOTE — V1 D19 reaffirmed extension point | Keep; document in ledger | — |
 | V2-16 | `ArenaFighterData` type — zero refs | APPROVED | **REMOVE** | — |
-| V2-17 | Dead barrels: `components/equipment/index.ts`, `components/warrior/favorites/index.ts`, `components/eventLog/index.ts` | APPROVED | **REMOVE** (A10 precedent) | — |
+| V2-17 | Barrels `components/equipment/index.ts`, `components/warrior/favorites/index.ts`, `components/eventLog/index.ts` | DISPROVED — knip missed same-directory relative imports (`./equipment`, `./eventLog/index`, `./favorites` from sibling components); barrels are live | Keep (restored after trial removal broke type-check — scanner gap noted) | — |
 | V2-18 | `resetArenaRegistry`, `clearHistoryResolverCaches`, `opfsArchive` — test seams (`_setup`, mocks) | NOTE — intentional | Keep | — |
 | V2-19 | `getCrestColor`, `getNPCPlan`, `processPlayerOffers`, `computeFreeAgentCost`, `generateRecruitAttrs`, `DEFAULT_AUTOSIM_STOP_CONDITIONS`, `VOID_DECLINE_REASONS`, `postFight` helpers, `PERSONALITY_ADAPTATION_MAP`, `PLAN_INTEL_FRESH_WEEKS`, `DECOY_MIN_WT`, `getBubbleFromEvent`, `phaseReached`, `changedFields`, `stripWeekCaches`, `tournamentDaySeed`, `TRUNCATION_CAPS`, `decayDossiers`, `agentPlanForWarrior`, `retireChanceFor`, `walkAwayTolerance`, `computePoachBid`, `deriveBoutIntent`, `selectGrandChampionshipField`, `traitTrainingCeiling`, `getTopFameWarriors`, `computeFameScore`, `WEAPON_STYLE_SUITABILITY`, `scoreArenaFitForWarrior`, `getEligibleArenasForTournament`, `lowerBound`/`upperBound`, `defaultSpecialtyMods`, `preferredTrainerFocus`, `projectCashFlow`, `assessCrownOpportunity`, `processPlayerOffers` | DISPROVED — internally live exports (API surface) | No action | — |
 
@@ -114,12 +114,35 @@ Properly removed (V1, still absent): parallel tournament engine (A1),
 
 (authored before any implementation; each fails for the intended reason)
 
-(pending)
+| Finding | Test | RED signal observed |
+| --- | --- | --- |
+| V2-01/02 | `src/test/pages/ArenaDetail.test.tsx` — lore surface + pack overlay | lore not rendered |
+| V2-04 | `src/test/engine/simulate/weatherMods.test.ts` — `initializeResolutionContext` merges weather-matched `zoneDef`/`surfaceMod`; non-matching weather no-op; registry not mutated | `getZonePenalty` returned base `-2` under `Rainy` (expected `-6`) |
+| V2-05 | `src/test/engine/pipeline/passes/NarrativePass.test.ts` — FOTW recap line, no-issue on empty week, style rollup, season retrospective gating | recap/newsletter items absent |
+| V2-13/14 | `src/test/pages/AdminTools/components/TelemetryPanel.test.tsx` — engine epoch, queue depth, archive retries | fields absent from report |
+| V2-04 (surface) | `arenaChampionshipPhase4.test.ts` — `describeArenaEffects` emits weather-override prose; omitted for arenas without `weatherMods` | no weather lines emitted |
+| V2-06 | `src/test/components/dashboard/QuestsWidget.test.tsx` — checklist render/dismiss/complete via narrow selectors | pinned current widget semantics before API removal |
+| V2-12 | `championshipState.test.ts` — prep-window tests repointed to `isTournamentPrepWeek` | removed-symbol compile guard |
 
 ## Phase 4 GREEN — implementation log
 
-(pending)
+- **V2-01/02**: `useArenaDetail` merges `getArenaLore(arenaId)` + `getPackArenaLore(contentPacks, arenaId)`; `LoreSurface` renders both on `ArenaDetail`.
+- **V2-03**: `calculatePerArenaLeaderboards` removed; unique coverage (fought-at-arena filter, sort orders, rival stable-name mapping) ported onto `calculateArenaLeaderboard` in `leaderboards.test.ts`.
+- **V2-04**: `applyArenaWeatherMods` in `weatherEffects.ts` merges weather-matched `zoneDef`/`surfaceMod` over base config; `initializeResolutionContext` applies it so both `ctx.arenaConfig` and `ctx.surfaceMod` see the effective config without mutating the registry. `weatherMods` authored for `mudpit_arena` (Rainy + Weeping Skies), `stormtop_terrace` (Gale), `glacial_rift` (Crimson Snow). `describeArenaEffects` emits per-weather override prose on `ArenaDetail`.
+- **V2-05**: `NarrativePass` emits a `recapLine` for the fight of the week (transcript length stands in for minutes).
+- **V2-06**: `evaluateQuests` + `QuestStatus` removed from `onboarding/quests.ts`; test re-pinned to `ONBOARDING_QUESTS[i].done`.
+- **V2-07**: `POOL_WORLD_CAP` removed (plus now-orphaned `WORLD_RIVAL_HARD_CAP` import).
+- **V2-08**: `AI_RECRUIT_SIGNING_RESERVE` removed; the two slow tests now import the live `BASE_RESERVE` from `budgetWorker` (exported for this purpose).
+- **V2-09**: `AI_DRAFT_ROTATION_SEED` removed.
+- **V2-10**: all seven dead strategy/combat tables removed from `constants/combat/combat/global.ts`.
+- **V2-11**: `CROWD_MOODS` removed from `crowdMood.ts` (schema-canonical `CROWD_MOOD_VALUES` in `enumSources.ts` untouched — different symbol, live).
+- **V2-12**: `isSeasonalTournamentPrepWeek` removed; `TOURNAMENT_PREP_WEEKS` retained as the semantic constant and now drives `isTournamentPrepWeek` directly.
+- **V2-13/14**: `TelemetryPanel` engine block renders `epoch`, `queueDepth`, `archiveRetriesPending` (live `getPendingArchiveRetries()`).
+- **V2-16**: `ArenaFighterData` removed (+ now-unused `FightingStyle` import).
+- **V2-17**: barrels restored — they are live via relative imports; knip false positive.
+
+Focused validation after each batch: 69 tests across the six touched engine/state files green; 233 tests across bout/AdminTools/ArenaDetail/QuestsWidget green; `arenaChampionshipPhase4` 16/16 green; `type-check` green; `lint` green; zero stale references to any removed symbol.
 
 ## Phase 5 — Final validation battery
 
-(pending)
+(in progress — see below)

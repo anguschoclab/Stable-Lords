@@ -87,9 +87,6 @@ export const LEGACY_FOUNDER_TRAINER_CHANCE = 0.1;
 
 // ─── AI recruitment ─────────────────────────────────────────────────────────
 
-/** Liquid reserve a stable keeps when signing recruits. */
-export const AI_RECRUIT_SIGNING_RESERVE = 150;
-
 /** Max recruits a stable may sign per week. */
 export const AI_RECRUITS_PER_WEEK_MAX = 2;
 
@@ -99,9 +96,6 @@ export const AI_GENERATED_RECRUIT_COST = 60;
 
 /** Recruits an academy stable gets first look at per intake. */
 export const AI_ACADEMY_BONUS_RECRUITS = 2;
-
-/** Seed base for the weekly AI draft-order rotation. */
-export const AI_DRAFT_ROTATION_SEED = 7919;
 
 // ─── AI gear policy ─────────────────────────────────────────────────────────
 

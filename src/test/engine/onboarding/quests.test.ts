@@ -1,13 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateQuests, ONBOARDING_QUESTS } from '@/engine/onboarding/quests';
+import { ONBOARDING_QUESTS } from '@/engine/onboarding/quests';
 import { makeGameState, makeFightSummary, makeWarrior } from '@/test/_fixtures/factories';
 
 describe('onboarding quests (G4)', () => {
   it('starts with all quests incomplete on a fresh state', () => {
     const s = makeGameState({});
-    const qs = evaluateQuests(s);
-    expect(qs.length).toBe(ONBOARDING_QUESTS.length);
-    expect(qs.every((q) => !q.complete)).toBe(true);
+    expect(ONBOARDING_QUESTS.every((q) => !q.done(s))).toBe(true);
   });
 
   it('marks quests complete as state advances', () => {
@@ -17,8 +15,7 @@ describe('onboarding quests (G4)', () => {
       scoutReports: [{} as never],
       roster: [makeWarrior({ equipment: { weapon: 'sword', armor: 'a', shield: 's', helm: 'h' } })],
     });
-    const qs = evaluateQuests(s);
-    const byId = Object.fromEntries(qs.map((q) => [q.id, q.complete]));
+    const byId = Object.fromEntries(ONBOARDING_QUESTS.map((q) => [q.id, q.done(s)]));
     expect(byId['first-bout']).toBe(true);
     expect(byId['armed']).toBe(true);
     expect(byId['scouted']).toBe(true);

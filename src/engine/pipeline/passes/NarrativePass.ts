@@ -8,6 +8,45 @@ import { computeNextSeason } from './WorldPass';
 import { WEEKS_PER_SEASON } from '@/constants/core/core';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { NewsletterFeed, type FightCard } from '@/engine/newsletter/feed';
+import { recapLine } from '@/lore/AnnouncerAI';
+import { getNamesFromTitle } from '@/utils/fightTitle';
+
+/** Newsletter items for a resolved week: FOTW + recap, top movers, style table. */
+function weekInReviewItems(
+  weekFights: GameState['arenaHistory'],
+  absoluteWeek: number,
+  rng: IRNGService
+): string[] {
+  const cards: FightCard[] = weekFights.map((f) => ({
+    summary: f,
+    transcript: f.transcript ?? [],
+  }));
+  const issue = NewsletterFeed.generateIssue(absoluteWeek, cards);
+  const items: string[] = [];
+
+  const fotw = issue.fights.find((c) => c.summary.id === issue.highlights.fightOfTheWeekId);
+  if (fotw) {
+    items.push(`⚔️ FIGHT OF THE WEEK: ${fotw.summary.title}`);
+    const { a, d } = getNamesFromTitle(fotw.summary.title);
+    const recapWinner = fotw.summary.winner === 'A' ? a : d;
+    const recapLoser = fotw.summary.winner === 'A' ? d : a;
+    if (recapWinner && recapLoser) {
+      items.push(recapLine(recapWinner, recapLoser, fotw.transcript.length, rng));
+    }
+  }
+
+  for (const m of (issue.highlights.topMovers ?? []).slice(0, 3)) {
+    items.push(`📈 ${m.name} (+${m.fameDelta} fame, +${m.popDelta} popularity)`);
+  }
+
+  const topStyle = Object.entries(issue.styleRollups).sort((a, b) => b[1].pct - a[1].pct)[0];
+  if (topStyle) {
+    const [style, r] = topStyle;
+    items.push(`🏛️ ${style} tops the style table at ${r.pct}% (${r.w}W-${r.l}L-${r.k}K)`);
+  }
+
+  return items;
+}
 
 /**
  * Stable Lords — Narrative Pipeline Pass
@@ -52,25 +91,7 @@ export function runNarrativePass(
   // top movers, style rollups) computed over the same fights via
   // NewsletterFeed.generateIssue (previously orphaned).
   if (weekFights.length > 0) {
-    const cards: FightCard[] = weekFights.map((f) => ({
-      summary: f,
-      transcript: f.transcript ?? [],
-    }));
-    const issue = NewsletterFeed.generateIssue(state.absoluteWeek, cards);
-    const items: string[] = [];
-
-    const fotw = issue.fights.find((c) => c.summary.id === issue.highlights.fightOfTheWeekId);
-    if (fotw) items.push(`⚔️ FIGHT OF THE WEEK: ${fotw.summary.title}`);
-
-    for (const m of (issue.highlights.topMovers ?? []).slice(0, 3)) {
-      items.push(`📈 ${m.name} (+${m.fameDelta} fame, +${m.popDelta} popularity)`);
-    }
-
-    const topStyle = Object.entries(issue.styleRollups).sort((a, b) => b[1].pct - a[1].pct)[0];
-    if (topStyle) {
-      const [style, r] = topStyle;
-      items.push(`🏛️ ${style} tops the style table at ${r.pct}% (${r.w}W-${r.l}L-${r.k}K)`);
-    }
+    const items = weekInReviewItems(weekFights, state.absoluteWeek, rng);
 
     if (items.length > 0) {
       impact.newsletterItems = [

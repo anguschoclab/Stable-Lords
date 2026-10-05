@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import * as arenasModule from '@/data/arenas';
 import { initializeResolutionContext } from '@/engine/simulate/initialization';
 import { getZonePenalty } from '@/engine/combat/mechanics/distanceResolution';
@@ -15,7 +15,9 @@ import { makeArena, makePlan, makeWarrior } from '@/test/_fixtures/factories';
  * leaves the base config untouched.
  */
 describe('arena weatherMods — weather-conditional spatial overrides (V2-04)', () => {
-  beforeAll(() => {
+  // setup.node.ts restores the builtin registry in a global afterEach, so the
+  // fixture arena must be re-registered before every test.
+  beforeEach(() => {
     arenasModule.registerArena(
       makeArena({
         id: 'test_weather_mods',

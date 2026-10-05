@@ -1,7 +1,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { FightingStyle } from '@/types/shared.types';
-import { getAllArenas, getArenaById } from '@/data/arenas';
+import { getArenaById } from '@/data/arenas';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
 
@@ -129,31 +129,6 @@ function buildEntry(
     kills: rec.kills,
     winRate: total > 0 ? rec.wins / total : 0,
   };
-}
-
-/**
- * Builds per-arena top-warrior and top-killer leaderboards from cumulative
- * career.byArena counters (all-time accurate) across the full world roster.
- *
- * Also accepts the rolling arenaHistory for future enhancements (e.g. recent form)
- * but the ranking itself uses career.byArena which is not bounded by history truncation.
- *
- * @param playerRoster  - Player's active warriors
- * @param playerStableName - Display name of the player's stable
- * @param rivals - All rival stables (with their rosters)
- * @param limit - Number of entries per leaderboard (default 10)
- */
-export function calculatePerArenaLeaderboards(
-  playerRoster: Warrior[],
-  playerStableName: string,
-  rivals: RivalStableData[],
-  limit = 10
-): ArenaLeaderboardData[] {
-  const arenas = getAllArenas();
-
-  const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
-
-  return arenas.map((arena) => buildArenaLeaderboard(arena.id, arena.name, allEntries, limit));
 }
 
 function buildArenaLeaderboard(

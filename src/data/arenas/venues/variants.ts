@@ -116,6 +116,14 @@ export const STORMTOP_TERRACE: ArenaConfig = {
     'An open terrace high above the city. The thin air and open space heavily penalize low-endurance fighters.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: 1, enduranceMult: 1.15, riposteMod: 0 },
+  // Gale winds on the exposed terrace steal initiative and punish the edge.
+  weatherMods: [
+    {
+      weatherType: 'Gale',
+      zoneDef: { Edge: -4 },
+      surfaceMod: { initiativeMod: -1, enduranceMult: 1.25 },
+    },
+  ],
   startingZone: 'Center',
 };
 
@@ -128,6 +136,14 @@ export const GLACIAL_RIFT: ArenaConfig = {
   description: 'A frozen, narrow crevasse where footing is treacherous and space is tight.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 1 },
+  // Snow glaze makes the crevasse even slicker.
+  weatherMods: [
+    {
+      weatherType: 'Crimson Snow',
+      zoneDef: { Edge: -4, Corner: -6 },
+      surfaceMod: { initiativeMod: -2, riposteMod: 0 },
+    },
+  ],
   startingZone: 'Center',
 };
 

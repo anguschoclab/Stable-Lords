@@ -81,6 +81,19 @@ export const MUDPIT_ARENA: ArenaConfig = {
   description: 'A sunken, rain-soaked arena. Footing is treacherous.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
+  // Rain turns the pit into a swamp — footing and riposte footing worsen.
+  weatherMods: [
+    {
+      weatherType: 'Rainy',
+      zoneDef: { Edge: -3, Corner: -5 },
+      surfaceMod: { initiativeMod: -3, riposteMod: -2 },
+    },
+    {
+      weatherType: 'Weeping Skies',
+      zoneDef: { Edge: -3, Corner: -5 },
+      surfaceMod: { initiativeMod: -3, riposteMod: -2 },
+    },
+  ],
   startingZone: 'Center',
 };
 

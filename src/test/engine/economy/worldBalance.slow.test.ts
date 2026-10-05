@@ -11,7 +11,8 @@ import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { aiRosterMin } from '@/constants/ai';
-import { WORLD_RIVAL_FLOOR, AI_RECRUIT_SIGNING_RESERVE } from '@/constants/world';
+import { WORLD_RIVAL_FLOOR } from '@/constants/world';
+import { BASE_RESERVE } from '@/engine/ai/workers/budgetWorker';
 import { getAllArenas } from '@/data/arenas';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import type { GameState } from '@/types/state.types';
@@ -67,7 +68,7 @@ describe('world balance — 52 weeks at 90+ stables', () => {
     //    at or above aiRosterMin. (Spiral stables are the designed failure
     //    path — they fold after STABLE_STARVATION_WEEKS and get replaced.)
     const exempt = (r: (typeof s.rivals)[number]) =>
-      (r.weeksBelowMin ?? 0) > 0 || r.treasury < AI_RECRUIT_SIGNING_RESERVE;
+      (r.weeksBelowMin ?? 0) > 0 || r.treasury < BASE_RESERVE;
     const solvent = s.rivals.filter((r) => !exempt(r));
     const filled = solvent.filter(
       (r) => r.roster.filter((w) => !w.isDead).length >= aiRosterMin(r.owner.personality)

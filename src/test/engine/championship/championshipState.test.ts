@@ -9,7 +9,6 @@ import {
   isChampionsTournamentWeek,
   isTournamentWeekOfYear,
   weeksUntilNextSeasonalTournament,
-  isSeasonalTournamentPrepWeek,
   isTournamentPrepWeek,
 } from '@/engine/core/absoluteWeek';
 import { ARENA_TITLE, CHAMPIONS_TOURNEY } from '@/constants/arena';
@@ -179,14 +178,7 @@ describe('Phase 1 — tournament calendar helpers', () => {
     expect(weeksUntilNextSeasonalTournament(52)).toBe(10); // 52 is champions, not seasonal
   });
 
-  it('prep window is relative to the next seasonal week', () => {
-    expect(isSeasonalTournamentPrepWeek(7)).toBe(true);
-    expect(isSeasonalTournamentPrepWeek(9)).toBe(true);
-    expect(isSeasonalTournamentPrepWeek(10)).toBe(false); // tournament week itself
-    expect(isSeasonalTournamentPrepWeek(5)).toBe(false); // outside 4-week window
-    expect(isSeasonalTournamentPrepWeek(39)).toBe(true); // run-up to week 42
-    expect(isSeasonalTournamentPrepWeek(52)).toBe(false); // past week 42 → 10 weeks out
-  });
+
 
   it('campaign window covers the three prep weeks plus the event week', () => {
     expect(isTournamentPrepWeek(7)).toBe(true); // 3 weeks out from week 10

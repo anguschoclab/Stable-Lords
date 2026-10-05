@@ -89,5 +89,31 @@ export function describeArenaEffects(arenaId: string): string[] {
     if (prose) lines.push(prose);
   }
 
+  for (const mod of arena.weatherMods ?? []) {
+    for (const [zone, penalty] of Object.entries(mod.zoneDef ?? {})) {
+      const base = arena.zoneDef[zone as keyof typeof arena.zoneDef];
+      if (typeof penalty === 'number' && penalty !== base) {
+        lines.push(`In ${mod.weatherType.toLowerCase()} weather, ${zonePenaltyProse(zone, penalty)}`);
+      }
+    }
+    const s = mod.surfaceMod;
+    if (!s) continue;
+    if (s.initiativeMod !== undefined && s.initiativeMod !== arena.surfaceMod.initiativeMod) {
+      lines.push(
+        `In ${mod.weatherType.toLowerCase()} weather the footing changes (${s.initiativeMod} initiative).`
+      );
+    }
+    if (s.enduranceMult !== undefined && s.enduranceMult !== arena.surfaceMod.enduranceMult) {
+      lines.push(
+        `In ${mod.weatherType.toLowerCase()} weather the ground turns harsher — endurance drains ${Math.round((s.enduranceMult - 1) * 100)}% faster than normal.`
+      );
+    }
+    if (s.riposteMod !== undefined && s.riposteMod !== arena.surfaceMod.riposteMod) {
+      lines.push(
+        `In ${mod.weatherType.toLowerCase()} weather counter-attacks suffer (${s.riposteMod} riposte).`
+      );
+    }
+  }
+
   return lines;
 }

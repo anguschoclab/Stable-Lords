@@ -1,5 +1,3 @@
-import type { FightingStyle } from './game';
-
 /**
  * Defines the shape of fighter pose.
  */
@@ -56,13 +54,4 @@ export interface FighterStats {
   currentFp: number;
 }
 
-/**
- * Defines the shape of arena fighter data.
- */
-export interface ArenaFighterData {
-  name: string;
-  style: FightingStyle;
-  stats: FighterStats;
-  isWinner: boolean;
-  isDead: boolean;
-}
+

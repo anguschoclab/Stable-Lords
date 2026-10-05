@@ -169,33 +169,37 @@ absent; most are assertion-shape similarity — `DEFERRED` low-value.
 
 ## C. Monolith / long-function targets (function-length scan, verified)
 
-| File | Lines | Split plan |
-| --- | --- | --- |
-| `engine/ai/workers/competitionWorker/boutAcceptance.ts` | 611 | verdict paths → `boutAcceptance/` |
-| `engine/ai/intentEngine.ts` | 573 | intent lifecycle stages |
-| `engine/combat/resolution/offenseDefense.ts` | 565 | phase helpers; combat-balance guardrails |
-| `engine/pipeline/passes/RivalStrategyPass.ts` | 556 | per lifecycle handler |
-| `engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts` | 539 | hit/kill branches; combat-balance guardrails |
-| `engine/traits/defs/classTraits.ts` | 517 | data-only; split only if aids review |
-| `engine/combat/mechanics/weatherEffects.ts` | 515 | per-effect family |
-| `engine/ai/workers/competitionWorker/offerProcessor.ts` | 504 | pipeline stages |
-| `engine/ai/plan/coreGenerator.ts` | 500 | plan-gen stages |
-| `engine/matchmaking/tournamentSelection/resolution.ts` | ~628 | per resolution stage |
-| `engine/ai/workers/competitionWorker/boutBidding.ts` | ~611 | bid scoring/conversion/gates |
-| `engine/recruitment/recruitment.ts` | 478 | pool gen/signing/scoring |
-| `pages/ArenaHub.tsx` | 466 | sections → `pages/arenaHub/` (precedent exists) |
-| `components/ledger/TreasuryOverview.tsx` | 449 | sub-panels (B2 dedupe synergy) |
-| `engine/simulate/simulationLoop.ts` | 438 | tick phases |
-| `engine/matchmaking/schedulingAssistant.ts` | 433 | |
-| `engine/advisor/boutOfferAdvisor.ts` | 431 | |
-| `components/layout/AppHeader.tsx` | 415 | |
-| `constants/arena/weather/config.ts` | 492 | data table — EXEMPT verdict pending |
-| `engine/crest/chargePaths.ts` | 490 | path data — EXEMPT verdict pending |
-| `data/*` corpora (commonCorpus 1222, arenas/lore 850, loreBackfill* 543/149, terrabloodCharts 401) | — | EXEMPT: data files, not logic monoliths |
-| `routeTree.gen.ts` | 829 | EXEMPT: generated, gitignored |
+**PHASE 4 COMPLETE** — all 17 logic targets split into directory modules
+(V13 guard unskipped, green). Splits at `a5bf3c87` + wrap-up `a4d5d597`:
 
-Threshold: files >400 lines of *logic*; functions >60 lines; signatures >5
-params (0 current violations — ratchet already held).
+| File (was) | Lines | Result |
+| --- | --- | --- |
+| `competitionWorker/boutAcceptance.ts` | 611 | `boutAcceptance/` — gates / titleBout / threat / venueCounter / negotiation / index |
+| `ai/intentEngine.ts` | 573 | `intentEngine/` — context / predicates / skepticism / index |
+| `resolution/offenseDefense.ts` | 565 | `offenseDefense/` — types / defense / prepare / index |
+| `passes/RivalStrategyPass.ts` | 556 | `RivalStrategyPass/` — offers / churn / roster / finish / index |
+| `execution/hitExecution.ts` | 539 | `hitExecution/` — damage / killWindow / index |
+| `mechanics/weatherEffects.ts` | 515 | `weatherEffects/` — table (data) / index (logic) |
+| `competitionWorker/offerProcessor.ts` | 504 | `offerProcessor/` — shared / slate / counters / index |
+| `ai/plan/coreGenerator.ts` | 500 | `coreGenerator/` — modifiers / strategicLayer / index |
+| `tournamentSelection/resolution.ts` | ~628 | `resolution/` — bouts / seeding / results / index |
+| `competitionWorker/boutBidding.ts` | ~611 | `boutBidding/` — bookable / generation / conversion / index |
+| `recruitment/recruitment.ts` | 478 | `recruitment/` — types / generate / pool / freeAgents / index |
+| `pages/ArenaHub.tsx` | 466 | widgets → `pages/arenaHub/{crowdMoodWidget,leaderboard,columns}.tsx`; page shell 114 |
+| `ledger/TreasuryOverview.tsx` | 449 | `TreasuryOverview/` — matrix / trajectory / registry / index |
+| `simulate/simulationLoop.ts` | 438 | `simulationLoop/` — types / beats / outcomes / narrate / index |
+| `matchmaking/schedulingAssistant.ts` | 433 | `schedulingAssistant/` — headToHead / pairwise / matchups / index |
+| `advisor/boutOfferAdvisor.ts` | 431 | `boutOfferAdvisor/` — gates / scoring / index |
+| `layout/AppHeader.tsx` | 415 | `AppHeader/` — statusStrip / actions / index |
+| `engine/traits/defs/classTraits.ts` | 517 | data-only registry — EXEMPT (bulk is the point) |
+| `constants/arena/weather/config.ts` | 492 | data table — EXEMPT |
+| `engine/crest/chargePaths.ts` | 490 | path data — EXEMPT |
+| `data/*` corpora, `routeTree.gen.ts` | — | EXEMPT as verdicted |
+
+Post-split evidence: typecheck 0, eslint 0 errors, full suite 8,883 green,
+orphan dead-export count 415 (≤424 ratchet), fn>80 budget back at baseline 2,
+duplication pair-ledger remapped to shard paths + 4 intra-split import-
+preamble pairs registered knowingly (same Phase-3 shard-boilerplate class).
 
 ## D. Wiring / dormancy items
 
@@ -252,6 +256,6 @@ params (0 current violations — ratchet already held).
 | DEDUPE schema re-export matrix | ~110 aliases → canonical homes | Phase 5 |
 | DEDUPE prod clusters | ~30 real clusters (B1–B3, B5) | Phase 5 |
 | DISPROVED clusters (hook-mirror) | ~11 page↔hook pairs | no action |
-| RESTRUCTURE monoliths | ~19 logic files >400 lines | Phase 4 |
+| RESTRUCTURE monoliths | 17 logic files >400 lines | **DONE (Phase 4)** |
 | WIRE/dormant decisions | dates.ts unused consts (wire-or-delete); ARENA_EVENTS = wired, DOCUMENT stale comments | Phase 6 |
 | FIX hygiene | 5 entries-in-loop, 1 pragma | Phase 5/8 |

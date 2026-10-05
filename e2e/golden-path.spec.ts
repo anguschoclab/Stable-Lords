@@ -31,9 +31,19 @@ test('golden path: new game → navigate all pages → fight → advance week', 
     timeout: 15_000,
   });
 
-  // Record initial week from the header
-  const weekText = await page.locator('text=/Week \\d+/').first().textContent();
-  const initialWeek = parseInt(weekText?.match(/Week (\d+)/)?.[1] ?? '1', 10);
+  // Record initial week from the live store — DOM text matching is unreliable:
+  // the "Week N concluded." toast precedes the header in DOM order and on
+  // mobile viewports the header's week display is hidden entirely.
+  const readWeek = (): Promise<number> =>
+    page.evaluate(async () => {
+      // Non-literal specifier: resolved at runtime by vite dev, invisible to tsc.
+      const storeModulePath = '/src/state/useGameStore.ts';
+      const mod = (await import(/* @vite-ignore */ storeModulePath)) as {
+        useGameStore: { getState: () => { week: number } };
+      };
+      return mod.useGameStore.getState().week;
+    });
+  const initialWeek = await readWeek();
 
   // --- Stable Hub pages ---
   const stablePages = [
@@ -130,9 +140,7 @@ test('golden path: new game → navigate all pages → fight → advance week', 
 
   // ── 7. Verify Week Advanced ─────────────────────────────────────────────
   await page.waitForTimeout(1000);
-  const newWeekText = await page.locator('text=/Week \\d+/').first().textContent();
-  const newWeek = parseInt(newWeekText?.match(/Week (\d+)/)?.[1] ?? '1', 10);
-  expect(newWeek).toBeGreaterThan(initialWeek);
+  expect(await readWeek()).toBeGreaterThan(initialWeek);
 
   // Take a final screenshot for verification
   await page.screenshot({ path: 'e2e/screenshots/golden-path-final.png', fullPage: false });

@@ -35,6 +35,7 @@ interface ScanReport {
   unreachableFromProd: string[];
   testOnlyReachable: string[];
   unlinkedPages: string[];
+  deadExports: { file: string; symbol: string }[];
   routes: { path?: string; file: string; navLinked: boolean }[];
 }
 
@@ -66,5 +67,18 @@ describe('megaplan: orphan guard', () => {
       .map((r) => r.path!)
       .filter((p) => !ALLOWED_UNLINKED_ROUTES.has(p));
     expect(novel).toEqual([]);
+  });
+
+  // V2 orphan-audit lock-in: the dead-export surface is a count ratchet, not
+  // a name list — the report mixes live API surface (types, electron entry
+  // points, script utilities) with genuine orphans, so the guard asserts the
+  // src-scoped count never grows past the post-audit level.
+  it('dead-export count does not grow past the V2 audit level', () => {
+    const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
+    expect(
+      srcDead.length,
+      `dead exports grew past the V2 audit level (${srcDead.length} > 424) — ` +
+        `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
+    ).toBeLessThanOrEqual(424);
   });
 });

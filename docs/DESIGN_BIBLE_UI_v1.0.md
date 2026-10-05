@@ -590,6 +590,54 @@ When building new screens or updating existing ones, watch for:
 
 ---
 
+## 15. Data Integrity — No Fabricated Chrome
+
+Every value rendered on screen must map to real game state. The UI is a
+window into the simulation; decorative telemetry is a lie about what the
+engine knows.
+
+### Rules
+
+1. **No fabricated telemetry or decorative chrome.** Strings styled to look
+   like live readouts — "LIVE SECURE", "SECTOR ALPHA-1", blinking "secure"
+   badges, invented coordinates — are forbidden unless every character is
+   bound to real state. If it looks like a measurement, it must be one.
+   (Enforced by `scripts/ui-audit-scan.mjs`, class `fake-chrome`.)
+
+2. **No hardcoded status that ignores state.** Labels like a fixed
+   "MAJOR CHALLENGER" rank or a static "STABLE" status are violations.
+   Derive from store selectors; if the data doesn't exist, the surface
+   doesn't ship.
+
+3. **No SCREAMING_SNAKE_CASE display copy.** Uppercase flavor is a style
+   concern handled by typography, not by embedding `SECTOR_ALPHA` strings
+   in JSX. (Enforced by `ui-audit-scan.mjs`, class `screaming-copy`.)
+
+4. **Metrics must be named for what they measure.** Don't call a cash
+   share "market share". When a metric is derived, its label must reflect
+   the derivation.
+
+5. **Legibility is honesty.** Numbers are never italic; letter-spacing
+   stays under 0.15em on data; glow/blur never obscures a value. Styling
+   that hides information is the same failure as fabricating it.
+
+6. **Every wired surface must be reachable.** A component that renders
+   real state but is unreachable from navigation or any parent is dead
+   code, not a feature. (Enforced by `scripts/orphan-scan.mjs` +
+   `src/test/megaplan/orphanScan.guard.test.ts`.)
+
+### Scanner enforcement
+
+`bun run` targets that back these rules:
+
+| Command | Guard |
+| --- | --- |
+| `node scripts/ui-audit-scan.mjs` | fake-chrome, screaming-copy, token/RNG/motion violations |
+| `node scripts/orphan-scan.mjs` | unreachable modules, test-only files, unlinked pages, dead exports |
+| `bun x vitest run src/test/megaplan` | ratchet guards — orphan scan, entries-in-loop, function/file budgets |
+
+---
+
 _Codex Sanguis Design System — Stable Lords UI/Visual Design Bible v1.0_
 _Reference games: Darkest Dungeon, Crusader Kings III, Hades, Gladiator (2000), Shadow of Rome_
 _Maintained by: Design team. Last updated: April 2026_

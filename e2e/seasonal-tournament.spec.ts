@@ -242,6 +242,9 @@ interface StateSnap {
   coverage: {
     fights: { id: string; week: number; arenaId?: string; by?: string }[];
     newsItems: { id: string; category?: string; title: string }[];
+    /** True when the year-rollover offseason event has announced itself —
+     *  offseason items carry no category, so they're matched by title. */
+    offseasonAnnounced: boolean;
     gazetteHeadlines: { id: string; headline: string }[];
     lifetimeStats?: { bouts: number; kills: number; retirements: number };
     offers: { id: string; promoterId: string; status: string }[];
@@ -339,6 +342,15 @@ async function snapshotState(page: Page): Promise<StateSnap> {
       useGameStore: { getState: () => RawGameState };
     };
     const s = mod.useGameStore.getState();
+    // Offseason rollover announcements are pushed without a category, so
+    // they're identified by title against the offseason content table.
+    const narrativeModulePath = '/src/data/narrative/index.ts';
+    const nmod = (await import(/* @vite-ignore */ narrativeModulePath)) as {
+      narrativeContent: { offseason_events?: Record<string, { title: string }> };
+    };
+    const offseasonTitles = new Set(
+      Object.values(nmod.narrativeContent.offseason_events ?? {}).map((e) => e.title)
+    );
     const snapWarrior = (w: RawWarrior) =>
       [
         w.id,
@@ -413,6 +425,7 @@ async function snapshotState(page: Page): Promise<StateSnap> {
           category: n.category,
           title: n.title,
         })),
+        offseasonAnnounced: (s.newsletter ?? []).some((n) => offseasonTitles.has(n.title)),
         gazetteHeadlines: (s.gazettes ?? []).map((g) => ({
           id: g.id,
           headline: g.headline,
@@ -581,6 +594,7 @@ function makeCoverage() {
     outcomes: new Map<string, number>(),
     eventTitles: new Set<string>(),
     newsTitles: new Set<string>(),
+    offseasonAnnounced: false,
     gazetteHeadlines: new Set<string>(),
     offerIds: new Set<string>(),
     offerPromoters: new Set<string>(),
@@ -621,6 +635,7 @@ function collectCoverage(cov: YearlyCoverage, snap: StateSnap) {
     if (n.category === 'event') cov.eventTitles.add(n.title);
     else cov.newsTitles.add(n.title);
   }
+  if (c.offseasonAnnounced) cov.offseasonAnnounced = true;
   for (const g of c.gazetteHeadlines) cov.gazetteHeadlines.add(g.headline);
   for (const o of c.offers) {
     cov.offerIds.add(o.id);
@@ -998,6 +1013,7 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
       `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]
         .map(([a, n]) => `${a}:${n}`)
         .join(',')} events=${[...cov.eventTitles].join('|')} ` +
+      `offseason=${cov.offseasonAnnounced} ` +
       `offers=${cov.offerIds.size} promoters=${cov.offerPromoters.size} ` +
       `aiTypes=${[...cov.aiEventTypes].join(',')} aiCauses=${[...cov.aiCauses].join(',')} ` +
       `ledgerCats=${[...cov.aiLedgerCategories].join(',')} ` +
@@ -1020,10 +1036,13 @@ test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
   expect(killRate, 'kill rate should stay under 15%').toBeLessThan(0.15);
   expect(cov.graveyardIds.size, 'kills should leave graveyard entries').toBeGreaterThan(0);
 
-  // Events: at least the offseason event fires at year rollover; weekly
-  // EventPass events also surface as 'event' newsletter items.
+  // Events: the year-rollover offseason event always surfaces a newsletter
+  // item (it carries no category, so it's matched by title), and weekly
+  // EventPass rolls add 'event'-category items — which can legitimately be
+  // zero in a year once the roster empties, since 4 of 5 rolls early-return
+  // on an empty roster and only the 5%/week patron roll remains.
   expect(
-    cov.eventTitles.size,
+    cov.eventTitles.size + (cov.offseasonAnnounced ? 1 : 0),
     'seasonal/world events should trigger during the year'
   ).toBeGreaterThanOrEqual(1);
 

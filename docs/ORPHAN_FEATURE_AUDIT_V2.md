@@ -145,4 +145,70 @@ Focused validation after each batch: 69 tests across the six touched engine/stat
 
 ## Phase 5 — Final validation battery
 
-(in progress — see below)
+| Gate | Result |
+| --- | --- |
+| `bun run type-check` | 0 errors (incl. `tsconfig.e2e.json` after spec edits) |
+| `bun run build` | green |
+| `bun run lint` | green |
+| `bun run test` (default) | covered by `test:coverage` below (same suite + instrumentation) |
+| `bun run test:coverage` | green — 787/787 files, 8,816 tests (2 skipped); coverage 86.15 lines / 75.65 branches / 81.48 functions / 87.82 statements — all above thresholds (84/74/78/85.5) |
+| `bun run test:slow` | green — 29 files / 190 tests, serial rerun; earlier parallel-run timeouts were CPU contention (`buildConfigIntegrity` passes cleanly) |
+| `bun run electron:compile` | green |
+| `bun run narrative-validate` | clean |
+| `scripts/orphan-scan.mjs` | clean — 2 ambient `.d.ts`, 0 test-only runtime files, 0 unlinked pages; 478 zero-consumer exports are API-surface/scripts/stubs (baseline) |
+| `bun run dead-code` (knip) | pre-existing baseline failure — 7 duplicate exports in untouched files (`skillBreakpoints.ts`, `HallOfFights.tsx`, `keyUtils.ts`, `random.ts`); not introduced by this audit |
+| `bun run dupes` (jscpd) | 114 clones, exit-0 informational — baseline quality signal |
+| Deterministic soak | 40 wk, 0 invariant violations, `newsletterItems: 100` (V2-05 wire live in-loop) |
+
+### E2E investigation — dispositions
+
+Three distinct failure modes were observed across the initial parallel run
+(all 5 projects) and follow-up solo reruns. None trace to audit changes:
+
+1. **`golden-path` — week-advance assertion (Mobile Safari):** spec bug.
+   `page.locator('text=/Week \\d+/').first()` matched the *toast* "Week 1
+   concluded." (earlier in DOM order) rather than the header showing Week 2 —
+   the week did advance. On mobile viewports the header week display is
+   additionally `hidden xl:flex`. **Fixed:** the spec now reads
+   `useGameStore.getState().week` via the store-evaluate pattern. Verified:
+   golden-path passes on chromium + Mobile Safari.
+
+2. **`seasonal-tournament` — `eventTitles >= 1` coverage:** pre-existing
+   probabilistic flake, **not** a regression. Proof: a 12-seed × 52-week
+   engine probe produced *identical* event counts on `b7bab63d` (pre-GREEN)
+   and the current tree — same 2/12 seeds (1296, 1370) produce zero
+   `category: 'event'` items in a year. Mechanism: 4 of 5 weekly rolls
+   early-return on an empty player roster; only `mysterious_patron` (5%/wk)
+   keeps rolling, so ~1-in-6 worlds can produce zero events. Also, the
+   spec's comment "at least the offseason event fires at year rollover" was
+   wrong — offseason announcements are pushed **without** `category`, so
+   they never counted. **Fixed:** coverage now credits the year-rollover
+   offseason announcement (title-matched against `offseason_events`), which
+   is the near-guaranteed surface the comment intended.
+
+3. **`seasonal-tournament` — `progressedLabel` 'busy' timeouts / purse
+   deltas:** contention + entropy-seeded worlds. The first run ran e2e
+   concurrently with `test:slow` and the soak (5 Playwright workers +
+   vitest + bun sim) — every failure was a click/poll timeout against the
+   undismissed death-memorialization overlay or a timing budget. Worlds are
+   `cryptoRandomInt`-seeded per run, so failure signatures legitimately
+   move between browsers/runs. No engine regression was found (probe above;
+   `EventPass` unchanged and runs before `NarrativePass`; week `rootRng` is
+   reseeded per week, so the V2-05 recap draws cannot starve event rolls).
+
+## Phase 6 — Lock-in
+
+- **Dead-export ratchet** added to `orphanScan.guard.test.ts`: src-scoped
+  dead-export count may not exceed the post-audit level (424). Count-based
+  rather than name-based because the report mixes live API surface with
+  genuine orphans; shrink it as stragglers are resolved.
+- **Entries-in-loop exception** documented in `entriesInLoop.guard.test.ts`
+  for `arenaNarrative.ts` — `mod.zoneDef` differs per `weatherMods` entry
+  and cannot be hoisted.
+- **Intentional seams preserved** (V2-15/18/19): `setTelemetryProvider`,
+  `resetArenaRegistry`, `clearHistoryResolverCaches`, `opfsArchive`, the
+  live barrels (V2-17), and the internal-use API surface.
+- **Scanner-gap lesson recorded**: knip-style dead-export detection misses
+  same-directory relative imports (`./equipment`); V2-17 was nearly a false
+  removal — all future export removals must grep for sibling-relative
+  specifiers, not just `@/` paths.

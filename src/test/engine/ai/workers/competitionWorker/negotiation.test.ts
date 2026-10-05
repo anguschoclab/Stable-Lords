@@ -1,129 +1,73 @@
 /**
- * D.0 — Bout negotiation (counter offers).
- * AI stables counter marginal offers instead of flat-declining; AI-AI counters
- * resolve inside the same pass (gated by checkBudget on the proposer side);
- * player-bound counters surface as a new Proposed offer; only one counter
- * round is allowed.
+ * Stage C — bounded second negotiation round. Today a countered offer is
+ * take-it-or-leave-it (`resolveCounteredOffers` maps a second counter
+ * verdict straight to Declined). The new rule: one escalation is allowed
+ * (`negotiationRound` 0 → 1), gated by personality — walk-away tolerance
+ * is Aggressive < Methodical < Pragmatic/Tactician < Showman. After the
+ * single escalation the offer is final; counter-decline carries a reason
+ * for `responseNotes`.
  */
 import { describe, it, expect } from 'vitest';
 import {
-  evaluateBoutOffer,
-  processAllRivalsBoutOffers,
-} from '@/engine/ai/workers/competitionWorker';
-import { counterBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
-import type { BoutOfferId, WarriorId } from '@/types/shared.types';
+  resolveSecondRound,
+  walkAwayTolerance,
+  type NegotiationOutcome,
+} from '@/engine/ai/workers/competitionWorker/negotiation';
+import { BoutOfferSchema } from '@/schemas/fightSchemas';
+import { makeBoutOffer, makeRival, makeOwner } from '@/test/_fixtures/factories';
+import type { OwnerPersonality } from '@/types/state.types';
 
-function richRivalWith(warrior: ReturnType<typeof makeWarrior>) {
-  return makeRival({ roster: [warrior], treasury: 5000 });
-}
+const rivalWith = (personality: OwnerPersonality) =>
+  makeRival({ owner: makeOwner({ personality }) });
 
-describe('bout negotiation', () => {
-  it('evaluateBoutOffer counters when the purse is far below warrior fame', () => {
-    const warrior = makeWarrior({ fame: 400 });
-    const rival = richRivalWith(warrior);
-    const offer = makeBoutOffer({ warriorIds: [warrior.id], purse: 100, hype: 90 });
-    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' });
-    expect(result).toBe('Countered');
+describe('walkAwayTolerance ordering', () => {
+  it('Aggressive walks earliest, Showman latest', () => {
+    expect(walkAwayTolerance('Aggressive')).toBeLessThan(walkAwayTolerance('Methodical'));
+    expect(walkAwayTolerance('Methodical')).toBeLessThan(walkAwayTolerance('Pragmatic'));
+    expect(walkAwayTolerance('Pragmatic')).toBeLessThanOrEqual(walkAwayTolerance('Tactician'));
+    expect(walkAwayTolerance('Tactician')).toBeLessThan(walkAwayTolerance('Showman'));
+  });
+});
+
+describe('resolveSecondRound', () => {
+  const counterOffer = (round = 0) =>
+    makeBoutOffer({ negotiationRound: round, status: 'Proposed' });
+
+  it('round 0 + counter verdict + tolerant personality → escalation stands', () => {
+    const out: NegotiationOutcome = resolveSecondRound(
+      counterOffer(0),
+      'CounteredVenue',
+      rivalWith('Showman')
+    );
+    expect(out.final).toBe('CounteredVenue');
   });
 
-  it('counterBoutOffer marks the counterer, raises the purse, and re-pends others', () => {
-    const a = makeWarrior();
-    const b = makeWarrior();
-    const offer = makeBoutOffer({
-      warriorIds: [a.id, b.id],
-      purse: 200,
-      responses: { [a.id]: 'Accepted', [b.id]: 'Pending' },
-    });
-    const state = makeGameState({ boutOffers: { [offer.id]: offer } });
-    const impact = counterBoutOffer(state, offer.id, b.id);
-    const updated = impact.boutOffers![offer.id]!;
-    expect(updated.status).toBe('Proposed');
-    expect(updated.responses[b.id]).toBe('Countered');
-    expect(updated.responses[a.id]).toBe('Pending');
-    expect(updated.purse).toBeGreaterThan(200);
-    expect(updated.conditions).toContain('COUNTERED_PURSE');
+  it('round 1 → take it or leave it (the loop is bounded)', () => {
+    const out = resolveSecondRound(counterOffer(1), 'CounteredVenue', rivalWith('Showman'));
+    expect(out.final).not.toBe('CounteredVenue');
+    expect(out.final).not.toBe('Countered');
   });
 
-  it('AI-AI counter resolves in-pass: affordable proposer signs the bout', () => {
-    const proposerW = makeWarrior({ fame: 50 });
-    const countererW = makeWarrior({ fame: 400 });
-    const proposer = richRivalWith(proposerW);
-    const counterer = richRivalWith(countererW);
-    const offer = makeBoutOffer({
-      warriorIds: [proposerW.id, countererW.id],
-      purse: 100,
-      hype: 90,
-      proposerStableId: proposer.id,
-      responses: { [proposerW.id]: 'Accepted', [countererW.id]: 'Pending' },
-    });
-    const state = makeGameState({
-      rivals: [proposer, counterer],
-      boutOffers: { [offer.id]: offer },
-    });
-    const impact = processAllRivalsBoutOffers(state, [proposer, counterer]);
-    const final = impact.boutOffers![offer.id]!;
-    expect(final.status).toBe('Signed');
-    expect(final.purse).toBeGreaterThan(100);
-    expect(final.conditions).toContain('COUNTERED_PURSE');
+  it('Aggressive walks on round 0 where a Showman escalates', () => {
+    expect(
+      resolveSecondRound(counterOffer(0), 'CounteredVenue', rivalWith('Aggressive')).final
+    ).toBe('Declined');
+    expect(
+      resolveSecondRound(counterOffer(0), 'CounteredVenue', rivalWith('Showman')).final
+    ).toBe('CounteredVenue');
   });
 
-  it('AI-AI counter fails when the proposer cannot afford the bump', () => {
-    const proposerW = makeWarrior({ fame: 50 });
-    const countererW = makeWarrior({ fame: 2000 });
-    // Proposer treasury just above the desperation line — cannot fund a large
-    // purse bump (25% of 1200 = 300 > available after reserve).
-    const proposer = makeRival({ roster: [proposerW], treasury: 550 });
-    const counterer = richRivalWith(countererW);
-    const offer = makeBoutOffer({
-      warriorIds: [proposerW.id, countererW.id],
-      purse: 1200,
-      hype: 90,
-      proposerStableId: proposer.id,
-      responses: { [proposerW.id]: 'Accepted', [countererW.id]: 'Pending' },
-    });
-    const state = makeGameState({
-      rivals: [proposer, counterer],
-      boutOffers: { [offer.id]: offer },
-    });
-    const impact = processAllRivalsBoutOffers(state, [proposer, counterer]);
-    const final = impact.boutOffers![offer.id]!;
-    expect(final.status).toBe('Rejected');
+  it('a walk-away decline carries a reason for responseNotes', () => {
+    const out = resolveSecondRound(counterOffer(1), 'Countered', rivalWith('Pragmatic'));
+    expect(out.final).toBe('Declined');
+    expect(out.reason).toBeTruthy();
   });
+});
 
-  it('player-bound counter leaves the offer Proposed for the player to decide', () => {
-    const playerW = makeWarrior({ fame: 60 });
-    const countererW = makeWarrior({ fame: 400 });
-    const counterer = richRivalWith(countererW);
-    const offer = makeBoutOffer({
-      warriorIds: [playerW.id, countererW.id],
-      purse: 100,
-      hype: 90,
-      responses: { [playerW.id]: 'Accepted', [countererW.id]: 'Pending' },
-    });
-    const state = makeGameState({
-      roster: [playerW],
-      rivals: [counterer],
-      boutOffers: { [offer.id]: offer },
-    });
-    const impact = processAllRivalsBoutOffers(state, [counterer]);
-    const final = impact.boutOffers![offer.id as BoutOfferId]!;
-    expect(final.status).toBe('Proposed');
-    expect(final.conditions).toContain('COUNTERED_PURSE');
-    expect(final.responses[playerW.id as WarriorId]).toBe('Pending');
-    expect(final.purse).toBeGreaterThan(100);
-  });
-
-  it('one round only: an already-countered offer cannot be countered again', () => {
-    const warrior = makeWarrior({ fame: 400 });
-    const rival = richRivalWith(warrior);
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id],
-      purse: 100,
-      hype: 90,
-      conditions: ['COUNTERED_PURSE'],
-    });
-    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' });
-    expect(result).not.toBe('Countered');
+describe('negotiationRound schema', () => {
+  it('round-trips through BoutOfferSchema', () => {
+    const offer = makeBoutOffer({ negotiationRound: 1 });
+    const parsed = BoutOfferSchema.parse(offer);
+    expect(parsed.negotiationRound).toBe(1);
   });
 });

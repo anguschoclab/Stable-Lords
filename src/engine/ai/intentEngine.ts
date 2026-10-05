@@ -257,11 +257,14 @@ export function pickWeeklyIntent(
   // crowds the pick on every cash-strapped week).
   if (vendettaApplies(ctx, rngService)) return 'VENDETTA';
   if (recoveryApplies(ctx)) return 'RECOVERY';
+  // The tournament prep window is a fixed calendar deadline — it must outrank
+  // the season plan-of-record, or a TREASURY/REBUILD program buries it every
+  // week and TOURNAMENT_CAMPAIGN can never fire.
+  if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
   // Stage C: a live season objective is serviced by its intent — a CROWN
   // plan campaigns even through a lean week the bare cascade would skip.
   const servicing = objectiveServicingIntent(ctx);
   if (servicing) return servicing;
-  if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
   if (crownCampaignPicked(ctx)) return 'CROWN_CAMPAIGN';
   if (wealthAccumulationApplies(ctx)) return 'WEALTH_ACCUMULATION';
   if (aggressiveExpansionApplies(ctx)) return 'AGGRESSIVE_EXPANSION';

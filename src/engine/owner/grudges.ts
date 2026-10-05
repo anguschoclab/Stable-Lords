@@ -21,12 +21,26 @@ function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): F
   const recentFights = getRecentFights(state.arenaHistory, state.week - 13);
 
   const warriorToRival = new Map<WarriorId, number>();
+  const rivalIdxByStableId = new Map<string, number>();
   rivals.forEach((r, idx) => {
+    rivalIdxByStableId.set(r.id as string, idx);
     for (const w of r.roster) {
       if (!warriorToRival.has(w.id)) warriorToRival.set(w.id, idx);
     }
   });
+  // Kill victims leave their roster before this pass (mortalityHandler removes
+  // them), so attribute dead warriors through the stableId kept on their
+  // graveyard snapshot — otherwise every kill reads as a missing participant.
+  for (const w of state.graveyard ?? []) {
+    if (warriorToRival.has(w.id)) continue;
+    const idx = w.stableId ? rivalIdxByStableId.get(w.stableId as string) : undefined;
+    if (idx !== undefined) warriorToRival.set(w.id, idx);
+  }
   const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
+  const playerStableId = state.player?.id as string | undefined;
+  for (const w of state.graveyard ?? []) {
+    if (w.stableId === playerStableId) playerWarriorIds.add(w.id);
+  }
 
   const pairKey = (i: number, j: number) => (i < j ? `${i}|${j}` : `${j}|${i}`);
   const rivalPairAgg = new Map<string, { hasCrossFight: boolean; hasKill: boolean }>();
@@ -234,8 +248,11 @@ export function processOwnerGrudges(
   }
 
   processRivalPairs({ state: state, rivals: rivals, agg: agg, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems });
+  const deadPlayerCount = (state.graveyard ?? []).filter(
+    (w) => w.stableId === state.player?.id
+  ).length;
   processPlayerPairs(
-    { state: state, rivals: rivals, agg: agg, playerWarriorCount: (state.roster || []).length, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems }
+    { state: state, rivals: rivals, agg: agg, playerWarriorCount: (state.roster || []).length + deadPlayerCount, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems }
   );
 
   // Decay old grudges — after 4 consecutive weeks with no cross-stable fight the

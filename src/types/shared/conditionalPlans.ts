@@ -13,6 +13,7 @@ export type ConditionTriggerType =
   | 'OPPONENT_HP_BELOW'
   | 'OPPONENT_ENDURANCE_BELOW'
   | 'OPPONENT_MOMENTUM_LEAD'
+  | 'OPPONENT_TACTIC_STREAK'
   | 'PSYCH_IS';
 
 /**

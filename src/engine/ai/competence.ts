@@ -116,9 +116,9 @@ export function rollCompetence(
   const w = TIER_COMPETENCE_WEIGHTS[tier];
   const total = w[0] + w[1] + w[2] + w[3];
   let roll = rng.next() * total;
-  for (let i = 0; i < 4; i++) {
-    roll -= w[i]!;
-    if (roll < 0) return OWNER_COMPETENCES[i]!;
+  for (const [i, competence] of OWNER_COMPETENCES.entries()) {
+    roll -= w[i] ?? 0;
+    if (roll < 0) return competence;
   }
   return 'Journeyman';
 }
@@ -135,5 +135,5 @@ export function driftCompetence(
   const idx = OWNER_COMPETENCES.indexOf(prior);
   const roll = rng.next();
   const delta = roll < 0.5 ? 0 : roll < 0.75 ? -1 : 1;
-  return OWNER_COMPETENCES[clamp(idx + delta, 0, OWNER_COMPETENCES.length - 1)]!;
+  return OWNER_COMPETENCES[clamp(idx + delta, 0, OWNER_COMPETENCES.length - 1)] ?? prior;
 }

@@ -19,6 +19,7 @@ export const TRIGGER_OPTIONS: {
   { label: 'Opponent HP Below', type: 'OPPONENT_HP_BELOW', inputType: 'percent' },
   { label: 'Opponent Gassed', type: 'OPPONENT_ENDURANCE_BELOW', inputType: 'percent' },
   { label: 'Opponent Tempo', type: 'OPPONENT_MOMENTUM_LEAD', inputType: 'integer' },
+  { label: 'Opponent Repeats', type: 'OPPONENT_TACTIC_STREAK', inputType: 'integer' },
   { label: 'My State Is', type: 'PSYCH_IS', inputType: 'psych' },
 ];
 

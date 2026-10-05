@@ -120,8 +120,9 @@ export function checkBudget(
   if (personality === 'Pragmatic') tolerance = 1.0;
 
   let availableTreasury = (rival.treasury || 0) - (reserve + burnRate);
-  if (opts?.state && (opts.horizonWeeks ?? 0) > 0) {
-    const flow = projectCashFlow(rival, opts.state, opts.horizonWeeks!);
+  const horizonWeeks = opts?.horizonWeeks ?? 0;
+  if (opts?.state && horizonWeeks > 0) {
+    const flow = projectCashFlow(rival, opts.state, horizonWeeks);
     availableTreasury = flow.projectedFloor - reserve;
   }
   const isAffordable = cost <= availableTreasury * tolerance;

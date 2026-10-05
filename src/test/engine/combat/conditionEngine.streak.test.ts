@@ -47,7 +47,7 @@ describe('OPPONENT_TACTIC_STREAK trigger', () => {
   });
 
   it('fires for side A when tacticStreakD reaches the threshold', () => {
-    const fA = makeFighterState({ label: 'A', plan: streakPlan(3), attributes: { WT: 20 } });
+    const fA = makeFighterState({ label: 'A', plan: streakPlan(3), attributes: { ST: 10, CN: 10, SZ: 10, WT: 20, WL: 10, SP: 10, DF: 10 } });
     const fD = makeFighterState({ label: 'D', plan: makePlan() });
     const res = evaluateConditions(fA, fD, streakCtx(0, 3), 20);
     expect(res.firedTrigger).toBe('OPPONENT_TACTIC_STREAK');
@@ -56,13 +56,13 @@ describe('OPPONENT_TACTIC_STREAK trigger', () => {
 
   it('fires for side D when tacticStreakA reaches the threshold — symmetric', () => {
     const fA = makeFighterState({ label: 'A', plan: makePlan() });
-    const fD = makeFighterState({ label: 'D', plan: streakPlan(3), attributes: { WT: 20 } });
+    const fD = makeFighterState({ label: 'D', plan: streakPlan(3), attributes: { ST: 10, CN: 10, SZ: 10, WT: 20, WL: 10, SP: 10, DF: 10 } });
     const res = evaluateConditions(fD, fA, streakCtx(3, 0), 20);
     expect(res.firedTrigger).toBe('OPPONENT_TACTIC_STREAK');
   });
 
   it('does not fire below the threshold', () => {
-    const fA = makeFighterState({ label: 'A', plan: streakPlan(3), attributes: { WT: 20 } });
+    const fA = makeFighterState({ label: 'A', plan: streakPlan(3), attributes: { ST: 10, CN: 10, SZ: 10, WT: 20, WL: 10, SP: 10, DF: 10 } });
     const fD = makeFighterState({ label: 'D', plan: makePlan() });
     const res = evaluateConditions(fA, fD, streakCtx(0, 2), 20);
     expect(res.firedTrigger).toBeUndefined();
@@ -70,7 +70,7 @@ describe('OPPONENT_TACTIC_STREAK trigger', () => {
   });
 
   it('reads the OPPONENT side — a fighter never triggers on its own streak', () => {
-    const fA = makeFighterState({ label: 'A', plan: streakPlan(2), attributes: { WT: 20 } });
+    const fA = makeFighterState({ label: 'A', plan: streakPlan(2), attributes: { ST: 10, CN: 10, SZ: 10, WT: 20, WL: 10, SP: 10, DF: 10 } });
     const fD = makeFighterState({ label: 'D', plan: makePlan() });
     // A's own streak is hot, D's is cold — nothing should fire.
     const res = evaluateConditions(fA, fD, streakCtx(4, 0), 20);

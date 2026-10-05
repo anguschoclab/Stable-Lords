@@ -22,7 +22,7 @@ export function deriveAmbitionArc(rival: RivalStableData): AmbitionArc {
   const owner = rival.owner;
   const record = rival.agentMemory?.seasonRecord;
   const played = (record?.wins ?? 0) + (record?.losses ?? 0);
-  const winRate = played > 0 ? (record!.wins ?? 0) / played : 0.5;
+  const winRate = played > 0 ? (record?.wins ?? 0) / played : 0.5;
 
   const age = owner.age ?? 40;
   const generation = owner.generation ?? 0;

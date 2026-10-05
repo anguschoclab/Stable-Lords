@@ -36,12 +36,18 @@ const twoConditionPlan = () =>
 
 const slowWitted = (plan = twoConditionPlan()) =>
   // WT 4 → 3-exchange cadence; exchange 1 is OFF cadence.
-  makeFighterState({ label: 'A', plan, attributes: { WT: 4 } });
+  makeFighterState({
+    label: 'A',
+    plan,
+    attributes: { ST: 10, CN: 10, SZ: 10, WT: 4, WL: 10, SP: 10, DF: 10 },
+  });
 
 const opponentAhead = () =>
   makeFighterState({ label: 'D', plan: makePlan(), momentum: 3 });
 
-const boundaryCtx = (trainers?: Parameters<typeof makeResolutionContext>[0]['trainers']) =>
+const boundaryCtx = (
+  trainers?: NonNullable<Parameters<typeof makeResolutionContext>[0]>['trainers']
+) =>
   makeResolutionContext({
     cornerAdvice: true,
     exchange: 1,

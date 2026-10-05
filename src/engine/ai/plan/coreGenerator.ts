@@ -244,6 +244,20 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
       label: 'Scouted: shell up vs the killer',
     });
   }
+
+  // Stage D — repetition read: sharp-eyed stables (Tactician/Methodical)
+  // teach their high-WT fighters to punish a predictable opponent — the
+  // plan switches to a counter-posture once the streak counter climbs.
+  if (
+    (personality === 'Tactician' || personality === 'Methodical') &&
+    (w.attributes?.WT ?? 10) >= 7
+  ) {
+    adaptations.push({
+      trigger: { type: 'OPPONENT_TACTIC_STREAK', value: 3 },
+      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
+      label: 'Read: punish the pattern',
+    });
+  }
   const allConditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
   // WIT-gated condition density (F.3): low-WIT warriors carry sparse,
   // "mistake-shaped" plans — few adaptive branches — mirroring the
@@ -267,6 +281,19 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   );
   plan.conditions = allConditions.slice(0, conditionCap);
 }
+
+/**
+ * Feint modulation by personality (Stage D, N3): the WT-derived baseline
+ * in `defaultPlanForWarrior` is shaped — deceptive stables sharpen it,
+ * measured ones blunt it. Only an existing aptitude is touched: WT < 15
+ * fighters stay at 0 since `runFeint` can never fire for them.
+ */
+const PERSONALITY_FEINT_MOD: Partial<Record<OwnerPersonality, number>> = {
+  Showman: 2,
+  Tactician: 2,
+  Pragmatic: -1,
+  Methodical: -2,
+};
 
 /**
  *
@@ -336,6 +363,10 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
       1,
       10
     ),
+    feintTendency:
+      (base.feintTendency ?? 0) > 0
+        ? clamp((base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0), 0, 10)
+        : 0,
   };
 
   // Strategy score validation with retry logic

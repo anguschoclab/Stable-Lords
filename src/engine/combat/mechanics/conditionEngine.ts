@@ -63,6 +63,12 @@ function conditionMet(
       return opponent.endurance / opponent.maxEndurance < pctThreshold(value);
     case 'OPPONENT_MOMENTUM_LEAD':
       return opponent.momentum >= Number(value);
+    case 'OPPONENT_TACTIC_STREAK': {
+      // Read the opponent's repeated-tactic streak — the counter already
+      // tracked for the overuse penalty becomes a plan-readable signal.
+      const streak = fighter.label === 'A' ? ctx.tacticStreakD : ctx.tacticStreakA;
+      return streak >= Number(value);
+    }
     case 'PSYCH_IS':
       return derivePsychState(fighter, opponent) === value;
     default:
@@ -101,6 +107,20 @@ export function derivePsychState(fighter: FighterState, opponent: FighterState):
 }
 
 /**
+ * How much of a plan the corner can act on at a phase boundary (Stage D —
+ * corner quality): no staff means no off-cadence re-check at all; Novice
+ * corners reach the first condition, Seasoned the first two, a Master's
+ * voice covers the whole plan. On-cadence evaluations are never limited —
+ * the fighter adapts on their own read, not the corner's.
+ */
+function cornerBreadth(ctx: ResolutionContext): number {
+  const trainers = ctx.trainers ?? [];
+  if (trainers.length === 0) return 0;
+  const has = (tier: string) => trainers.some((t) => t.tier === tier);
+  return has('Master') ? Infinity : has('Seasoned') ? 2 : 1;
+}
+
+/**
  * Evaluates the fighter's PlanConditions (WT-gated) and returns the active plan
  * and current psychological state for this exchange.
  */
@@ -113,13 +133,15 @@ export function evaluateConditions(
   const psychState = derivePsychState(fighter, opponent);
 
   // WT gates how frequently conditions are re-evaluated — except at phase
-  // boundaries, when the corner's advice overrides the cadence (any fighter
-  // can hear their corner between rounds).
-  if (!ctx.cornerAdvice && ctx.exchange % evaluationInterval(wt) !== 0) {
+  // boundaries, when a REAL corner's advice overrides the cadence.
+  const onCadence = ctx.exchange % evaluationInterval(wt) === 0;
+  const breadth = cornerBreadth(ctx);
+  if (!onCadence && !(ctx.cornerAdvice && breadth > 0)) {
     return { newPlan: fighter.activePlan, psychState };
   }
 
-  const conditions = fighter.plan.conditions;
+  const allConditions = fighter.plan.conditions;
+  const conditions = onCadence ? allConditions : allConditions?.slice(0, breadth);
   if (conditions && conditions.length > 0) {
     for (const cond of conditions) {
       if (conditionMet(cond.trigger, fighter, opponent, ctx)) {

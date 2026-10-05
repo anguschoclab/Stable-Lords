@@ -11,8 +11,10 @@ import type { OwnerPersonality } from '@/types/state.types';
 
 /** Counter verdicts `evaluateBoutOffer` can return. */
 export type CounterVerdict = 'Countered' | 'CounteredVenue';
+/** Full verdict space `evaluateBoutOffer` may return. */
 export type BoutVerdict = 'Accepted' | 'Declined' | CounterVerdict;
 
+/** Result of an offer evaluation: the verdict plus an optional walk reason. */
 export interface NegotiationOutcome {
   final: BoutVerdict;
   /** Persisted to `responseNotes` when the stable walks. */

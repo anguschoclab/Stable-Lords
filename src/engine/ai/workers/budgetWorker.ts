@@ -64,6 +64,10 @@ export interface CashFlowProjection {
   projectedFloor: number;
 }
 
+/**
+ * Deterministic cash-flow projection over the next `weeks`: recurring
+ * upkeep plus already-committed purses vs treasury and projected income.
+ */
 export function projectCashFlow(
   rival: RivalStableData,
   state: GameState,

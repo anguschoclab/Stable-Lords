@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-04T13:51:06.171Z",
+  "generatedAt": "2026-10-05T04:18:47.357Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -40,6 +40,7 @@
     "src/test/components/bookingOffice/offerCardParts.test.tsx",
     "src/test/components/boutViewer/BoutViewer.test.tsx",
     "src/test/components/boutViewer/aiDebugDrawer.test.tsx",
+    "src/test/components/boutViewer/cornerAnalysisPanel.test.tsx",
     "src/test/components/charts/QuadrantDot.test.tsx",
     "src/test/components/charts/ReputationQuadrant.test.tsx",
     "src/test/components/charts/StyleMeterTable.test.tsx",
@@ -57,6 +58,7 @@
     "src/test/components/dashboard/RivalryWidget.test.tsx",
     "src/test/components/dashboard/SeasonPhaseTicks.test.tsx",
     "src/test/components/dashboard/WeeklyDigestMini.test.tsx",
+    "src/test/components/dashboard/agentReasoningObjective.test.tsx",
     "src/test/components/entityLink.perf.test.tsx",
     "src/test/components/equipment/EncumbranceBar.test.tsx",
     "src/test/components/equipment/GearRow.test.tsx",

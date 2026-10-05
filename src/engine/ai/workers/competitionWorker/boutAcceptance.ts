@@ -236,15 +236,18 @@ function resolveTitleBout(args: ResolveTitleBoutArgs): BoutEvaluation {
   return 'Accepted';
 }
 
+interface RiskRefusalArgs {
+  intent: string;
+  warrior: Warrior;
+  opponent: Warrior | undefined;
+  rival: RivalStableData;
+  promoter: { personality?: string } | undefined;
+  explain?: { reason?: string };
+}
+
 /** RECOVERY risk refusal + sadistic-promoter death-show check. */
-function riskRefusal(
-  intent: string,
-  warrior: Warrior,
-  opponent: Warrior | undefined,
-  rival: RivalStableData,
-  promoter: { personality?: string } | undefined,
-  explain?: { reason?: string }
-): BoutEvaluation | null {
+function riskRefusal(args: RiskRefusalArgs): BoutEvaluation | null {
+  const { intent, warrior, opponent, rival, promoter, explain } = args;
   // RECOVERY risk refusal — killers and severe mismatches are never accepted,
   // even when the treasury is empty.
   if (intent === 'RECOVERY' && opponent) {
@@ -481,6 +484,22 @@ function evaluateNegotiationStage(args: EvaluateNegotiationStageArgs): BoutEvalu
     return counted;
   }
 
+  return personalityDefaults(
+    { personality: personality, hype: hype, purse: purse, currentHP: currentHP, explain: explain }
+  );
+}
+
+interface PersonalityDefaultsArgs {
+  personality: RivalStableData['owner']['personality'];
+  hype: number;
+  purse: number;
+  currentHP: number;
+  explain?: { reason?: string };
+}
+
+/** Personality default verdicts — marquee/spectacle/purse accepts, Methodical health pass. */
+function personalityDefaults(args: PersonalityDefaultsArgs): BoutEvaluation {
+  const { personality, hype, purse, currentHP, explain } = args;
   if (personality === 'Aggressive' && (hype > 110 || purse > 300)) {
     if (explain) explain.reason = 'marquee-draw';
     return 'Accepted';
@@ -553,7 +572,7 @@ export function evaluateBoutOffer(args: EvaluateBoutOfferArgs): BoutEvaluation {
   }
 
   const promoter = offer.promoterId ? state?.promoters?.[offer.promoterId] : undefined;
-  const refused = riskRefusal(intent, warrior, opponent, rival, promoter, explain);
+  const refused = riskRefusal({ intent, warrior, opponent, rival, promoter, explain });
   if (refused) return refused;
 
   // ── Desperation Gate: critically low treasury accepts anything survivable ──

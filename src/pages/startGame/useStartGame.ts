@@ -61,15 +61,18 @@ function importSaveFile(
 
 type LoadGame = ReturnType<typeof useGameStore.getState>['loadGame'];
 
+interface CreateNewGameArgs {
+  ownerName: string;
+  stableName: string;
+  playerCrest: CrestData;
+  backstoryId: BackstoryId;
+  difficulty: WorldDifficulty;
+  loadGame: LoadGame;
+}
+
 /** Build, save, and activate a fresh game state for a new stable. */
-async function createNewGame(
-  ownerName: string,
-  stableName: string,
-  playerCrest: CrestData,
-  backstoryId: BackstoryId,
-  difficulty: WorldDifficulty,
-  loadGame: LoadGame
-): Promise<void> {
+async function createNewGame(args: CreateNewGameArgs): Promise<void> {
+  const { ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame } = args;
   let fresh = createFreshState('alpha-prime-10', undefined, { difficulty });
   fresh.player.name = ownerName.trim();
   fresh.player.stableName = stableName.trim();
@@ -190,7 +193,14 @@ export function useStartGame() {
 
   const handleNewGame = useCallback(async () => {
     if (!backstoryId) return;
-    await createNewGame(ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame);
+    await createNewGame({
+      ownerName,
+      stableName,
+      playerCrest,
+      backstoryId,
+      difficulty,
+      loadGame,
+    });
   }, [ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame]);
 
   return {

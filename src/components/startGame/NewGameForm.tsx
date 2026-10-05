@@ -179,7 +179,7 @@ function DifficultyField({
             aria-checked={value === d}
             onClick={() => onChange(d)}
             className={cn(
-              'p-2 border text-left transition-colors duration-150',
+              'p-2 border text-left transition-colors duration-150 motion-reduce:transition-none',
               value === d
                 ? 'border-arena-gold/60 bg-arena-gold/10'
                 : 'border-white/10 hover:border-white/25'

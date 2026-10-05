@@ -129,21 +129,31 @@ export function generateRivalStables(
 
   for (const item of picked) {
     rivals.push(
-      buildRivalStable(item.tmpl, item.iteration, week, rng, usedWarriorNames, opts?.difficulty)
+      buildRivalStable({
+        tmpl: item.tmpl,
+        iteration: item.iteration,
+        week,
+        rng,
+        usedWarriorNames,
+        difficulty: opts?.difficulty,
+      })
     );
   }
   return rivals;
 }
 
+interface BuildOwnerArgs {
+  tmpl: StableTemplate;
+  stableId: StableId;
+  iteration: number;
+  stableName: string;
+  rng: IRNGService;
+  difficulty?: WorldDifficulty;
+}
+
 /** Build the stable's owner — procedural name/fame/titles for duplicates. */
-function buildOwner(
-  tmpl: StableTemplate,
-  stableId: StableId,
-  iteration: number,
-  stableName: string,
-  rng: IRNGService,
-  difficulty?: WorldDifficulty
-): Owner {
+function buildOwner(args: BuildOwnerArgs): Owner {
+  const { tmpl, stableId, iteration, stableName, rng, difficulty } = args;
   return {
     id: stableId,
     name:
@@ -167,21 +177,24 @@ function buildOwner(
   };
 }
 
+interface BuildRivalStableArgs {
+  tmpl: StableTemplate;
+  iteration: number;
+  week: number;
+  rng: IRNGService;
+  usedWarriorNames: Set<string>;
+  difficulty?: WorldDifficulty;
+}
+
 /** Build one rival stable from a template pick. */
-function buildRivalStable(
-  tmpl: StableTemplate,
-  iteration: number,
-  week: number,
-  rng: IRNGService,
-  usedWarriorNames: Set<string>,
-  difficulty?: WorldDifficulty
-): RivalStableData {
+function buildRivalStable(args: BuildRivalStableArgs): RivalStableData {
+  const { tmpl, iteration, week, rng, usedWarriorNames, difficulty } = args;
   const stableId = rng.uuid() as StableId;
 
   // Procedural name variance for duplicates
   const nameSuffix = iteration > 0 ? ` [${toRomanNumeral(iteration + 1)}]` : '';
   const stableName = `${tmpl.stableName}${nameSuffix}`;
-  const owner = buildOwner(tmpl, stableId, iteration, stableName, rng, difficulty);
+  const owner = buildOwner({ tmpl, stableId, iteration, stableName, rng, difficulty });
 
   const warriors = buildRoster(tmpl, stableId, week, rng, usedWarriorNames);
 

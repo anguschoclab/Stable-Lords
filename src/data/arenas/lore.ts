@@ -813,6 +813,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'During the legendary match of the Obsidian King, the crater erupted in a shower of hot ash, blinding both fighters. The match ended not with a sword strike, but with both combatants stumbling into the magma vents.',
   },
+  {
+    id: 'underpit_arena_echoes_of_the_abyss',
+    arenaId: 'underpit_arena',
+    type: 'architectural_quirk',
+    title: 'Echoes of the Abyss',
+    narrative:
+      'The depth of the pit creates strange acoustic anomalies; a whispered threat on one side sounds like a scream on the other.',
+  },
+  {
+    id: 'charnel_pits_bone_dust',
+    arenaId: 'charnel_pits',
+    type: 'hazard',
+    title: 'The Bone-Dust Wind',
+    narrative:
+      'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

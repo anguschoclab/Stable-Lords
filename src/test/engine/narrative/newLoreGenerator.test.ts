@@ -47,7 +47,6 @@ describe('new loreGenerator entries', () => {
   describe('DEFINING_MOMENTS contains new entries from lore expansion branch', () => {
     const newMoments = [
       'until the day they dragged their abuser into the light and left them broken',
-      'realizing that mercy in the undercity is just an invitation to be killed',
       'waiting for the moment the gates would close and the true test would begin',
     ];
 

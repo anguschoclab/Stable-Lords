@@ -106,7 +106,8 @@ export const SPECIAL_ARENA_IDS: readonly string[] = ['bloodsands_arena', 'the_ir
  *
  * Bump history: t3 14→15 (Acid Bog), total 50→54 + t2 24→25 + t3 15→17
  * (V10 union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
- * Cap revision: total 54→52 + normal 50 + t2 25→21 (arena curation).
+ * Cap revision: total 54→52 + normal 50 (arena curation; normal-pool t2
+ * count is now 21 — TIER_CAPS deliberately unchanged).
  */
 export const ARENA_ROSTER_LIMITS = {
   TOTAL_CAP: 52, // 50 normal + 2 special

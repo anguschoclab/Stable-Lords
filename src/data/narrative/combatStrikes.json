@@ -69,7 +69,12 @@
         "A hurried slash from {{attacker}} scores a minor line across {{defender}}'s {{bodyPart}}.",
         "{{attacker}}'s blade merely grazes {{defender}}'s {{bodyPart}}, doing little more than tearing cloth.",
         "{{defender}} barely leans back in time, letting {{attacker}}'s slash glance harmlessly off their {{bodyPart}}.",
-        "{{attacker}}'s slash is too wide, only catching a superficial scrape on {{defender}}'s {{bodyPart}}."
+        "{{attacker}}'s slash is too wide, only catching a superficial scrape on {{defender}}'s {{bodyPart}}.",
+        "{{attacker}}'s slash barely parts the air near {{defender}}.",
+        "A poorly timed slash from {{attacker}} misses its true mark.",
+        "{{attacker}} swings wide, a grazing cut against {{defender}}.",
+        "{{defender}} easily leans back, turning {{attacker}}'s slash into a graze.",
+        "{{attacker}}'s blade slips, only scratching {{defender}}."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -357,7 +362,12 @@
         "{{attacker}} swings wildly, the blunt force merely clipping {{defender}}'s {{bodyPart}}.",
         "A heavy swing from {{attacker}} connects awkwardly, delivering a weak glancing blow to {{defender}}'s {{bodyPart}}.",
         "{{defender}} sidesteps, forcing {{attacker}}'s bludgeon to slide clumsily off their {{bodyPart}}.",
-        "{{attacker}}'s attack loses momentum, resulting in a dull, harmless thud against {{defender}}."
+        "{{attacker}}'s attack loses momentum, resulting in a dull, harmless thud against {{defender}}.",
+        "{{attacker}} swings wide, a grazing blow against {{defender}}.",
+        "{{attacker}}'s heavy swing loses momentum, merely bumping {{defender}}.",
+        "A clumsy bash from {{attacker}} bounces harmlessly.",
+        "{{attacker}} fails to connect cleanly, delivering a weak glancing bash.",
+        "{{defender}} shrugs off a poorly aimed bash from {{attacker}}."
       ],
       "solid": [
         "{{attacker}} steps into the swing, bringing {{possessive}} {{weapon}} down hard on {{defender}}'s {{bodyPart}}.",
@@ -652,7 +662,12 @@
         "A rapid jab from {{attacker}} barely catches {{defender}}'s {{bodyPart}}.",
         "{{defender}} twists away, turning a fatal stab from {{attacker}} into a minor scrape.",
         "{{attacker}}'s point deflects off {{defender}}'s armor, failing to find purchase.",
-        "The thrust is hurried; {{attacker}}'s weapon merely snags {{defender}}'s gear without biting deep."
+        "The thrust is hurried; {{attacker}}'s weapon merely snags {{defender}}'s gear without biting deep.",
+        "{{attacker}}'s thrust deflects harmlessly off {{defender}}.",
+        "{{attacker}} misjudges the lunge, merely scraping {{defender}}.",
+        "A weak thrust from {{attacker}} fails to find purchase.",
+        "{{attacker}}'s point snags on armor, failing to pierce {{defender}}.",
+        "{{defender}} pivots, turning a deadly thrust into a minor graze."
       ],
       "solid": [
         "With practiced precision, {{attacker}} slips {{possessive}} {{weapon}} past {{defender}}'s defenses, striking the {{bodyPart}}!",
@@ -941,7 +956,12 @@
         "{{attacker}} throws a wild punch that only grazes {{defender}}'s {{bodyPart}}.",
         "A quick jab from {{attacker}} fails to land solidly, brushing past {{defender}}.",
         "{{defender}} slips the punch, letting {{attacker}}'s fist glance off their shoulder.",
-        "{{attacker}}'s strike is poorly aimed, glancing off {{defender}}'s guard with little effect."
+        "{{attacker}}'s strike is poorly aimed, glancing off {{defender}}'s guard with little effect.",
+        "{{attacker}}'s punch lacks weight, barely nudging {{defender}}.",
+        "A wild swing from {{attacker}} merely grazes {{defender}}'s cheek.",
+        "{{attacker}} fails to plant their feet, delivering a weak glancing blow.",
+        "{{defender}} easily slips the punch, reducing it to a glancing strike.",
+        "A grazing knuckle from {{attacker}} leaves {{defender}} unfazed."
       ],
       "solid": [
         "{{attacker}} unleashes a raw, bare-knuckle brawl, overwhelming {{defender}} with relentless strikes.",

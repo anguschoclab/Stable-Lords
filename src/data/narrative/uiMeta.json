@@ -15,13 +15,27 @@
       "steps forth in",
       "is armored in",
       "glimmers in",
-      "is wearing"
+      "is wearing",
+      "is clad in",
+      "bears the weight of",
+      "struts wearing",
+      "shows off in",
+      "is wrapped in",
+      "is shielded by",
+      "marches adorned in"
     ],
     "weapon_intro_verbs": [
       "prepares to fight with %W",
       "clutches their %W",
       "is armed with %W",
-      "draws their %W"
+      "draws their %W",
+      "grips %W with deadly intent",
+      "wields %W like a master",
+      "brandishes %W for the crowd",
+      "hefts %W",
+      "tightens their grip on %W",
+      "readies %W",
+      "twirls %W with a flourish"
     ]
   },
   "meta": {
@@ -849,8 +863,16 @@
   },
   "memorials": {
     "tributes": [
-      "The arena grows colder with the loss of {{name}}.",
-      "A legend has passed into the halls of iron."
+      "Fallen in combat.",
+      "Their watch is ended.",
+      "A brutal end for a brave soul.",
+      "The arena claims another.",
+      "Blood paid in full.",
+      "Rest now, warrior.",
+      "Their legacy ends in the dirt.",
+      "The crowd mourns briefly, then forgets.",
+      "Another name carved into the monolith.",
+      "Silence falls for the fallen."
     ]
   }
 }

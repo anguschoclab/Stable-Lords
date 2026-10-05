@@ -6,8 +6,12 @@
  * drawer must surface, not silently drop.
  */
 // @vitest-environment node
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { buildExchangeLogEntry } from '@/engine/simulate/logging';
+import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { makeWarrior } from '@/test/_fixtures/factories';
+import { loadCombatNarrative } from '@/data/narrative';
+import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 
 describe('buildExchangeLogEntry — telemetry completeness', () => {
@@ -83,5 +87,63 @@ describe('buildExchangeLogEntry — telemetry completeness', () => {
     const entry = buildExchangeLogEntry(2, 1, 'MID', events);
 
     expect(entry.reasonCodes).toContain('ARENA_GEYSER_ERUPTION');
+  });
+});
+
+describe('exchangeLog — endDeltas telemetry', () => {
+  beforeAll(async () => {
+    await loadCombatNarrative();
+  });
+
+  const attributes = { ST: 14, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 10 };
+  const bout = (arenaId?: string, providedRng = 7) => {
+    const wA = makeWarrior({
+      name: 'A',
+      style: FightingStyle.BashingAttack,
+      attributes,
+    });
+    const wD = makeWarrior({
+      name: 'D',
+      style: FightingStyle.TotalParry,
+      attributes,
+    });
+    return simulateFight({
+      planA: defaultPlanForWarrior(wA),
+      planD: defaultPlanForWarrior(wD),
+      warriorA: wA,
+      warriorD: wD,
+      providedRng,
+      arenaId,
+      deathRateMult: 0,
+    });
+  };
+
+  it('records per-exchange endurance deltas — fightAnalysis fatigue input', () => {
+    const outcome = bout();
+    const entries = outcome.exchangeLog ?? [];
+    expect(entries.length).toBeGreaterThan(0);
+
+    // Attack/defense costs drain endurance every fighting exchange — the
+    // field findFatigueCrossover accumulates must actually be populated.
+    const withDeltas = entries.filter((e) => e.endDeltas);
+    expect(withDeltas.length).toBeGreaterThan(0);
+    // Endurance never regenerates mid-fight: every recorded delta is <= 0.
+    for (const e of withDeltas) {
+      expect(e.endDeltas!.a).toBeLessThanOrEqual(0);
+      expect(e.endDeltas!.d).toBeLessThanOrEqual(0);
+    }
+  });
+
+  it("captures an arena endurance_drain in the firing exchange's endDeltas", () => {
+    // the_gallows_tree + seed 14: shadow_tendrils (drain 5 both) fires on
+    // exchange 0 — deterministic, verified via ARENA_SHADOW_TENDRILS.
+    const outcome = bout('the_gallows_tree', 14);
+    const entry = (outcome.exchangeLog ?? []).find((e) =>
+      e.reasonCodes?.includes('ARENA_SHADOW_TENDRILS')
+    );
+    expect(entry).toBeTruthy();
+    // Drain alone is -5; the fighter's own combat costs add on top.
+    expect(entry!.endDeltas!.a).toBeLessThanOrEqual(-5);
+    expect(entry!.endDeltas!.d).toBeLessThanOrEqual(-5);
   });
 });

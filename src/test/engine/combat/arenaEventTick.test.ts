@@ -642,6 +642,42 @@ describe('arena events — next-exchange attribution', () => {
     expect(riposte).toBeTruthy();
     expect(riposte?.metadata?.arenaModSources).toContain('Synthetic');
   });
+
+  it('emits a RIPOSTE_FAILED marker carrying the mod source when a pending riposte_mod suppresses the counter', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['premium']),
+    });
+    ctx.arenaEventMods = { initiativeMod: 0, riposteMod: -4 };
+    ctx.arenaEventModSources = { initiative: [], riposte: ['Mist Veil'] };
+    ctx.arenaEventCandidates = []; // keep the tick from clobbering sources
+    // ATT/RIP floored → the attack whiffs and the whiff-riposte check fails,
+    // so the pending mod's counter is suppressed deterministically.
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    const marker = events.find((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE_FAILED');
+    expect(marker).toBeTruthy();
+    expect(marker?.metadata?.arenaModSources).toContain('Mist Veil');
+  });
+
+  it('emits no RIPOSTE_FAILED marker when no riposte mod source is pending', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['premium']),
+    });
+    ctx.arenaEventMods = { initiativeMod: 0, riposteMod: 0 };
+    ctx.arenaEventModSources = { initiative: [], riposte: [] };
+    ctx.arenaEventCandidates = [];
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    expect(events.every((e) => e.result !== 'RIPOSTE_FAILED')).toBe(true);
+  });
 });
 
 describe('bleed termination — hazard attribution', () => {

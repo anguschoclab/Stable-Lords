@@ -47,6 +47,7 @@ function buildHelpers(ctx: NarrationContext): NarrateHelpers {
     getSpeed,
     displayName,
     getPostHitRatio,
+    stateChangesIssued: new Set(),
   };
 }
 

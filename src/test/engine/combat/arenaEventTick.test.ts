@@ -1,13 +1,12 @@
 /**
- * V2-DEFERRED — ARENA_EVENTS engine wiring.
+ * ARENA_EVENTS engine wiring — contract tests.
  *
  * The arena-event registry (constants/arenaEvents.ts) declares trigger
- * conditions, narrative text, and mechanical effects, but has no production
- * consumer. These tests pin the intended wiring: a per-exchange
- * `tickArenaEvents` pass inside `resolveExchange` that evaluates
- * tag-matched events against the exchange's outcome, applies mechanical
- * effects, and emits ARENA_EVENT CombatEvents that narrate into the bout
- * log.
+ * conditions, narrative text, and mechanical effects. These tests pin the
+ * production wiring: a per-exchange `tickArenaEvents` pass inside
+ * `resolveExchange` that evaluates tag-matched events against the
+ * exchange's outcome, applies mechanical effects, and emits ARENA_EVENT
+ * CombatEvents that narrate into the bout log.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
@@ -648,13 +647,14 @@ describe('arena events — next-exchange attribution', () => {
 describe('bleed termination — hazard attribution', () => {
   it('attributes a bleed-down to BLEED, not ARENA_HAZARD, even in a tagged arena', () => {
     const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
-    // Sky-high DEF on both fighters guarantees no weapon hit lands, so the
-    // bleed tick is the only thing that can drop fD (hp 3 - stacks 5 × 1).
+    // Attack skill floored on both fighters → every attack whiffs and no
+    // riposte can fire, so the bleed tick is the only thing that can drop
+    // fD (hp 3 - stacks 5 × 1).
     // The end must say BLEED and the arena tick must not stack a second
     // ARENA_HAZARD end on top.
-    const wall = { ATT: 10, PAR: 200, DEF: 200, INI: 10, RIP: 10, DEC: 10 };
-    const fA = makeFighterState({ hp: 100, skills: { ...wall } });
-    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ hp: 100, skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...cantHit } });
 
     const events = resolveExchange(ctx, fA, fD);
 

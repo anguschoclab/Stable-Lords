@@ -155,14 +155,14 @@ describe('emitDownedBoutEnd', () => {
 });
 
 describe('bleed termination', () => {
-  // Sky-high DEF on both fighters guarantees no weapon hit lands, so the
-  // bleed tick is the only thing that can down a low-hp fighter.
-  const wall = { ATT: 10, PAR: 200, DEF: 200, INI: 10, RIP: 10, DEC: 10 };
+  // Attack skill floored on both fighters → every attack whiffs and no
+  // riposte can fire, so the bleed tick is the only damage source.
+  const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
 
   it('ends the bout when bleed damage drops a fighter to 0 hp', () => {
     const ctx = makeResolutionContext();
-    const fA = makeFighterState({ hp: 100, skills: { ...wall } });
-    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+    const fA = makeFighterState({ hp: 100, skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...cantHit } });
 
     const events = resolveExchange(ctx, fA, fD);
 
@@ -174,8 +174,8 @@ describe('bleed termination', () => {
 
   it('declares an Exhaustion draw when bleed drops both fighters', () => {
     const ctx = makeResolutionContext();
-    const fA = makeFighterState({ hp: 2, bleedStacks: 5, skills: { ...wall } });
-    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+    const fA = makeFighterState({ hp: 2, bleedStacks: 5, skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...cantHit } });
 
     const events = resolveExchange(ctx, fA, fD);
 

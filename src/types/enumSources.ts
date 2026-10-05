@@ -211,6 +211,10 @@ export const DEATH_CAUSE_BUCKETS = [
   'FATIGUE_COLLAPSE',
   'ARMOR_FAILURE',
   'RIVALRY_FINISH',
+  // Non-weapon termination — stamped by emitDownedBoutEnd when bleed ticks
+  // or arena hazards incapacitate outside the attack kill-window.
+  'ARENA_HAZARD',
+  'BLEED',
 ] as const;
 
 export const AI_INTENTS = [

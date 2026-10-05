@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
+import React from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QuestsWidget } from '@/components/dashboard/QuestsWidget';
 import { useGameStore } from '@/state/useGameStore';
@@ -41,5 +42,49 @@ describe('QuestsWidget (G4)', () => {
     } as never);
     const { container } = render(<QuestsWidget />);
     expect(container.firstChild).toBeNull();
+  });
+
+  // PR #1024 — the widget must subscribe to narrow slices, not the whole
+  // store. A whole-store subscription re-renders on every tick; the narrowed
+  // selectors must only re-render when a value they read actually changes.
+  describe('subscription narrowing', () => {
+    it('does not re-render when unrelated state changes', () => {
+      let commits = 0;
+      render(
+        <React.Profiler
+          id="quests"
+          onRender={() => {
+            commits++;
+          }}
+        >
+          <QuestsWidget />
+        </React.Profiler>
+      );
+      const afterMount = commits;
+      act(() => {
+        useGameStore.setState({ treasury: 987_654 });
+      });
+      expect(commits).toBe(afterMount);
+    });
+
+    it('still re-renders when a quest completion flips', () => {
+      let commits = 0;
+      render(
+        <React.Profiler
+          id="quests"
+          onRender={() => {
+            commits++;
+          }}
+        >
+          <QuestsWidget />
+        </React.Profiler>
+      );
+      const afterMount = commits;
+      act(() => {
+        useGameStore.setState({ absoluteWeek: 2 });
+      });
+      // 'second-week' quest flips to complete — the widget must reflect it.
+      expect(commits).toBeGreaterThan(afterMount);
+    });
   });
 });

@@ -1,0 +1,125 @@
+# Orphan Feature Audit V2 — Stable Lords
+
+> Second-pass audit per `~/.devin/plans/plan-1388510161a36ffc.md`. Baseline @
+> `120dc83f`. Every claim below was verified against source; verdicts:
+> **APPROVED** (confirmed), **REMOVED**, **WIRED**, **NOTE** (intentional),
+> **DISPROVED**.
+>
+> V1 ledger (`ORPHAN_FEATURE_AUDIT.md`, baseline `49802cb2`) re-verified — see
+> §Drift. 361 commits / 1,683 files changed since that baseline.
+
+## Phase 0 — Baseline gates
+
+| Gate | Result |
+| --- | --- |
+| `bun run type-check` | 0 errors |
+| `eslint .` | 0 errors / 0 warnings |
+| `bun run test` (default vitest) | 785 files / 8,805 tests green (2 skipped) |
+| `bun run build` | green (vite 2.41s + PWA precache) |
+| `bun run electron:compile` | green |
+| `bun run narrative-validate` | clean |
+| `scripts/orphan-scan.mjs` | 2,069 files scanned; unreachable: `src/types/global.d.ts`, `src/vite-env.d.ts` (ambient decls — not runtime orphans); 0 test-only runtime files; 0 unlinked pages |
+| `scripts/ui-audit-scan.mjs` | 0 token / RNG / motion / fake-chrome hits |
+| `scripts/data-array-dup-scan.mjs` | clean |
+| `scripts/test-audit-scan.mjs` | baselined; residuals pre-existing (1 jsdom pragma, 4 local-factory, 2 dead-pattern files — recorded in `auditBaseline.json`) |
+| Headless soak 13 wk / seed 20260919 | 0 invariant violations; 842 offers, 116 tournaments, 200 graveyard |
+| `bun run dead-code` (knip) | 465 raw findings → classified (see §S2) |
+
+Baseline reds found and repaired during Phase 0 (landed in `120dc83f`):
+`tsconfig.e2e.json` stale file list (probe script imported excluded
+`simulation-harness.ts`), 1 lint error (`featureFlags.test.ts`
+no-dynamic-delete), 5 test-gate failures (fileBudget on `applyStrategicLayer`,
+quality-audit violations in `decoyAxes`/`intentEngine.survival`/`sonnerLayering`,
+runnerGroups drift). Scanner fixes: `navigationHubs.ts` →
+`src/components/layout/navigationHubs.ts`, `src/engine/runtime/worker.ts` added
+to prodRoots, `.mjs` script roots enabled, extended state-interface coverage.
+
+## Phase 1 — Detection sweep results
+
+- **S1 module reachability:** clean — only ambient `.d.ts` files unreachable.
+- **S2 dead exports:** 433 src candidates → classified. Type-only exports,
+  barrel re-exports, and internal-use exports excluded. Real set: **7 zero-ref
+  exports + 11 test-only exports** (see register).
+- **S3/S8 state fields:** all audited interfaces clean except
+  `ArenaConfig.weatherMods` (writer-only).
+- **S4 content/registry:** all `narrativeContent` pools consumed except
+  `announcer.json :: recap` (sole accessor `recapLine` is dead). Arena lore
+  content dead via removed host surface.
+- **S5 routes/nav:** 0 unlinked pages; legacy redirects (`/arena-hub`,
+  `/world/arena-leaderboards`) intentional.
+- **S6 AI parity:** `updateAIStrategy`→intent engine, seasonal plans, dossier
+  adaptations, decoy masks, phase shifts, competence threading — all live.
+  Verified via consumer tracing, not import graphs.
+- **S7 hooks/selectors:** `getBubbleFromEvent`, `stableStats`, `changedFields`,
+  `stripWeekCaches`, `phaseReached`, `VOID_DECLINE_REASONS` — all internally
+  live or intentional.
+- **S9 spec matrix:** strategy-score constants are vestigial spec-era tables
+  with no scorer in code or spec (v1.0 Strategy Editor spec has no scoring
+  mechanic).
+
+## Findings register — dispositions
+
+| # | Finding | Verdict | Disposition | Plan |
+| --- | --- | --- | --- | --- |
+| V2-01 | `data/arenas/lore.ts` `getArenaLore` + `ARENA_LORE` + backfills (~900 lines) — zero prod readers; V1 C3 surface `ArenaLeaderboards.tsx` was removed | APPROVED — wiring regression | **WIRE**: render lore on `ArenaDetail` `LoreSurface` | RED: `arenaDetail` lore test |
+| V2-02 | `lib/contentPacks.ts :: getPackArenaLore` — dead; pack arenaLore overlay lost host with V2-01 | APPROVED — regression | **WIRE** with V2-01: pack entries merge into arena lore list | RED: overlay merge test |
+| V2-03 | `calculatePerArenaLeaderboards` — dead batch wrapper; live path `calculateArenaLeaderboard` via `arenaDetail/RecordBoards` | APPROVED — superseded | **REMOVE** + trim `leaderboards.test.ts` coverage to singular path | — |
+| V2-04 | `ArenaConfig.weatherMods` (`types/shared/spatial.ts:73`, schema'd `economySchemas.ts:398`) — per-arena, per-weather `zoneDef`/`surfaceMod` overrides, declared + schema'd, zero readers, zero data | APPROVED — spec'd partial integration (`2026-04-15-combat-spatial-system.md`) | **WIRE**: merge weather-matched overrides into effective spatial config in `initializeResolutionContext` (`simulate/initialization.ts`); author `weatherMods` for weather-exposed arenas; surface on `ArenaDetail` | RED: merge test (matching weather applies overrides, other weather no-op), determinism |
+| V2-05 | `announcer.json :: recap` pool + `recapLine` — dead | APPROVED | **WIRE**: `recapLine` for fight-of-the-week in `NarrativePass` "Week in Review" item | RED: newsletter recap-line test |
+| V2-06 | `evaluateQuests` dead; `QuestsWidget` duplicates evaluation inline | APPROVED — duplicate logic | **WIRE**: widget consumes `evaluateQuests` for quest derivation | RED: widget parity test |
+| V2-07 | `POOL_WORLD_CAP` — superseded by `computeRecruitPoolHardCap` (live `recruitment.ts:396`) | APPROVED | **REMOVE** | — |
+| V2-08 | `AI_RECRUIT_SIGNING_RESERVE` — superseded by `checkBudget` affordability (`recruitmentWorker.ts`) | APPROVED | **REMOVE** (stale comment too) | — |
+| V2-09 | `AI_DRAFT_ROTATION_SEED` — rotation mechanic superseded by shard-order-invariant scoring (`recruitmentWorker.ts:152` comment) | APPROVED | **REMOVE** | — |
+| V2-10 | `constants/combat/combat/global.ts` dead tables: `AL_ATTR_SCALING`, `DECISION_THRESHOLDS`, `EFFORT_THRESHOLDS`, `ATTRIBUTE_THRESHOLDS`, `TOTAL_EFFORT_THRESHOLDS`, `STRATEGY_SCORE_CONSTANTS`, `STRATEGY_SCORE_THRESHOLDS` | APPROVED — vestigial spec-era tables; no scorer exists (validator re-implements thresholds inline) | **REMOVE** | — |
+| V2-11 | `CROWD_MOODS` — redundant re-export of schema-canonical `CROWD_MOOD_VALUES` | APPROVED | **REMOVE** | — |
+| V2-12 | `isSeasonalTournamentPrepWeek` — superseded by `isTournamentPrepWeek` (live: `campaignFocusEvaluator`, `intentEngine`) | APPROVED — superseded | **REMOVE** + update `championshipState.test.ts` | — |
+| V2-13 | `getEngineEpoch` / `engineQueueDepth` — dead session instrumentation | APPROVED | **WIRE**: AdminTools `TelemetryPanel` engine-session rows | RED: panel renders epoch/queue depth |
+| V2-14 | `getPendingArchiveRetries` — dead | APPROVED | **WIRE**: `TelemetryPanel` storage row | RED: panel renders pending retries |
+| V2-15 | `setTelemetryProvider` / `getTelemetryProvider` — zero refs anywhere | NOTE — V1 D19 reaffirmed extension point | Keep; document in ledger | — |
+| V2-16 | `ArenaFighterData` type — zero refs | APPROVED | **REMOVE** | — |
+| V2-17 | Dead barrels: `components/equipment/index.ts`, `components/warrior/favorites/index.ts`, `components/eventLog/index.ts` | APPROVED | **REMOVE** (A10 precedent) | — |
+| V2-18 | `resetArenaRegistry`, `clearHistoryResolverCaches`, `opfsArchive` — test seams (`_setup`, mocks) | NOTE — intentional | Keep | — |
+| V2-19 | `getCrestColor`, `getNPCPlan`, `processPlayerOffers`, `computeFreeAgentCost`, `generateRecruitAttrs`, `DEFAULT_AUTOSIM_STOP_CONDITIONS`, `VOID_DECLINE_REASONS`, `postFight` helpers, `PERSONALITY_ADAPTATION_MAP`, `PLAN_INTEL_FRESH_WEEKS`, `DECOY_MIN_WT`, `getBubbleFromEvent`, `phaseReached`, `changedFields`, `stripWeekCaches`, `tournamentDaySeed`, `TRUNCATION_CAPS`, `decayDossiers`, `agentPlanForWarrior`, `retireChanceFor`, `walkAwayTolerance`, `computePoachBid`, `deriveBoutIntent`, `selectGrandChampionshipField`, `traitTrainingCeiling`, `getTopFameWarriors`, `computeFameScore`, `WEAPON_STYLE_SUITABILITY`, `scoreArenaFitForWarrior`, `getEligibleArenasForTournament`, `lowerBound`/`upperBound`, `defaultSpecialtyMods`, `preferredTrainerFocus`, `projectCashFlow`, `assessCrownOpportunity`, `processPlayerOffers` | DISPROVED — internally live exports (API surface) | No action | — |
+
+## Drift map — V1 ledger re-verification
+
+V1 dispositions re-verified against current code. All wired findings still live
+except the **ArenaLeaderboards cluster** — removal of
+`src/pages/ArenaLeaderboards.tsx` (route now redirects to `/world/arenas`)
+orphaned three V1 wirings: `ARENA_LORE` rendering (C3), `getPackArenaLore` (G7),
+and `calculatePerArenaLeaderboards` (which V1 kept as the live board builder —
+the arena cards now use the singular `calculateArenaLeaderboard`, so the batch
+variant became the superseded one). Carried forward as V2-01/02/03.
+
+Still-live V1 wirings (spot-verified): `seasonPoints` accrual/reset/display,
+`Owner.ageRetired` writer+dossier display, `assessBurnRisks`, `tacticAdvisor`,
+`generateSeasonSummary`→`NarrativePass`, injury utils, `getCrestDescription`,
+suitability labels→`TacticBank`/dossier, `getFatigueBand`, `isRetired`, roster
+utils, `addCapped`, `OWNER_PERSONALITIES_WITH_POLICY`, `TournamentBracket`
+sub-components, `WeaponTrail`→`ArenaView`, `StatCard`, `RunResults`→`BoutsStep`,
+history utils→`useArenaDetail`/`TournamentHistory`, `NewsletterFeed`→
+`NarrativePass`, `getWeatherSeason`→`WeatherWidget`,
+`handleLocalStorageQuotaError`, `META_RECRUIT_QUOTES`→content packs,
+`ENCUMBRANCE_LABELS`, `getRecruitQuote`→doctrine intel, `getArenasByTag`→
+`arenaFit` weather filter, `UTILITY_LINKS` nav strip, house rules,
+import/export, a11y pack, bible search, kill analytics, onboarding quests.
+
+Properly removed (V1, still absent): parallel tournament engine (A1),
+`processOutcomeTags`, `pickText`, `applyHealthUpdates`,
+`createMinimalFightSummary`, `StableLinkSheet`/`WarriorLinkSheet`,
+`HeaderMetricDisplay`, `collectAvailableWarriors`, `filterByStatus`,
+`getWarriorPairKey`, `stringToSeed`, dead barrels (A7/A10), combatFactory.
+
+## Phase 3 RED — test inventory
+
+(authored before any implementation; each fails for the intended reason)
+
+(pending)
+
+## Phase 4 GREEN — implementation log
+
+(pending)
+
+## Phase 5 — Final validation battery
+
+(pending)

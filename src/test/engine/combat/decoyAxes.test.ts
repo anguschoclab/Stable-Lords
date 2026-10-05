@@ -1,3 +1,5 @@
+// @vitest-environment node
+// @vitest-environment jsdom
 /**
  * Stage D.2b — `FightPlan.decoyAxes`. A committed in-bout deception: the
  * fighter really performs the decoy axes (and optional decoy tactics) until

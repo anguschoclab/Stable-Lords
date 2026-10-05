@@ -23,7 +23,11 @@ import {
 const FLAGS = ['AI_COMPETENCE', 'AI_SEASON_PLANS', 'AI_READS', 'AI_DECOY'] as const;
 
 afterEach(() => {
-  for (const f of FLAGS) delete (globalThis as Record<string, unknown>)[f];
+  const g = globalThis as Record<string, unknown>;
+  delete g.AI_COMPETENCE;
+  delete g.AI_SEASON_PLANS;
+  delete g.AI_READS;
+  delete g.AI_DECOY;
 });
 
 describe('aiFeature', () => {

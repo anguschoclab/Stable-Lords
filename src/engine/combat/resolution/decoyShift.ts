@@ -81,6 +81,31 @@ function shiftReadHolds(
   }
 }
 
+/** Both fighters' phaseShiftOn declarations at a boundary — call only when
+ *  `ctx.cornerAdvice` marks the first exchange of a non-opening phase. */
+export function applyBoundaryPhaseShifts(
+  fA: FighterState,
+  fD: FighterState,
+  phaseKey: PhaseKey
+): void {
+  applyPhaseShiftBoundary(fA, fD, phaseKey);
+  applyPhaseShiftBoundary(fD, fA, phaseKey);
+}
+
+/** Reveal events first (each fires once), then mask the resolved plans
+ *  while the decoy window still holds. */
+export function resolveDecoyMasks(
+  fA: FighterState,
+  fD: FighterState,
+  phaseKey: PhaseKey,
+  events: CombatEvent[]
+): void {
+  emitDecoyReveal(fA, phaseKey, events);
+  emitDecoyReveal(fD, phaseKey, events);
+  fA.activePlan = applyDecoyMask(fA.activePlan, phaseKey);
+  fD.activePlan = applyDecoyMask(fD.activePlan, phaseKey);
+}
+
 /**
  * Apply `phaseShiftOn` declarations for the phase boundary just entered.
  * Called only when `ctx.cornerAdvice` marks the first exchange of a new

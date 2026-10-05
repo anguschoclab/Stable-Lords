@@ -220,6 +220,97 @@ interface ApplyStrategicLayerArgs {
 }
 
 /**
+ * Dossier- and read-driven counter-conditions appended onto the base plan:
+ * shell up against a known killer (dossier), punish a predictable opponent
+ * (Stage D repetition read for sharp-eyed stables on high-WT fighters).
+ */
+function collectAdaptations(
+  plan: FightPlan,
+  w: Warrior,
+  personality: OwnerPersonality,
+  dossier: OpponentDossier | undefined
+): FightPlan['conditions'] {
+  const adaptations: NonNullable<FightPlan['conditions']> = [];
+  // Dossier-driven counter-conditions: a stable that knows the opponent has
+  // killed one of its fighters shells up the moment that opponent seizes tempo.
+  if (aiFeature('AI_READS') && (dossier?.recordVs.k ?? 0) > 0) {
+    adaptations.push({
+      trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
+      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
+      label: 'Scouted: shell up vs the killer',
+    });
+  }
+
+  // Stage D — repetition read: sharp-eyed stables (Tactician/Methodical)
+  // teach their high-WT fighters to punish a predictable opponent — the
+  // plan switches to a counter-posture once the streak counter climbs.
+  if (
+    aiFeature('AI_READS') &&
+    (personality === 'Tactician' || personality === 'Methodical') &&
+    (w.attributes?.WT ?? 10) >= 7
+  ) {
+    adaptations.push({
+      trigger: { type: 'OPPONENT_TACTIC_STREAK', value: 3 },
+      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
+      label: 'Read: punish the pattern',
+    });
+  }
+  return adaptations;
+}
+
+/**
+ * Stage D.2b — committed in-bout deception: deceptive stables send smart
+ * fighters out performing a false tempo until the mid boundary. The mask
+ * is a real performance cost — opponent streak/momentum reads build on
+ * the decoy — so it stays gated to deceptive stables on high-WT fighters.
+ */
+function applyDecoyAxes(plan: FightPlan, w: Warrior, personality: OwnerPersonality): void {
+  if (
+    !aiFeature('AI_DECOY') ||
+    (personality !== 'Tactician' && personality !== 'Methodical') ||
+    (w.attributes?.WT ?? 10) < DECOY_MIN_WT
+  ) {
+    return;
+  }
+  const styleTactic = getAITactics(w.style).offTactic;
+  const decoy: DecoyAxes = {
+    untilPhase: 'mid',
+    OE: clamp(11 - plan.OE, 1, 10),
+    AL: clamp(11 - plan.AL, 1, 10),
+  };
+  // Mirror the scouting-level decoy: a fighter off the style stereotype
+  // performs the stereotype to bait counters; a stereotypical plan hides
+  // its hand entirely.
+  if (plan.offensiveTactic && plan.offensiveTactic !== styleTactic && styleTactic) {
+    decoy.offensiveTactic = styleTactic;
+  } else if (plan.offensiveTactic === styleTactic) {
+    decoy.offensiveTactic = 'none';
+  }
+  plan.decoyAxes = decoy;
+}
+
+/**
+ * Stage D.4 — boundary-reactive curve: one committed shift per
+ * personality, evaluated once at the phase boundary. Distinct from
+ * per-exchange conditions — a swing back does not revoke it.
+ */
+function applyPhaseShift(plan: FightPlan, personality: OwnerPersonality): void {
+  const shift = PERSONALITY_PHASE_SHIFT[personality];
+  if (!shift) return;
+  plan.phaseShiftOn = [
+    {
+      at: shift.at,
+      when: shift.when,
+      OE: clamp(plan.OE + shift.dOE, 1, 10),
+      AL: clamp(plan.AL + shift.dAL, 1, 10),
+      ...(shift.dKillDesire !== undefined
+        ? { killDesire: clamp((plan.killDesire ?? 5) + shift.dKillDesire, 1, 10) }
+        : {}),
+    },
+  ];
+}
+
+/**
  * Applies the strategic layer after core axes validate: tactic overrides for
  * rematch losers, target/protect/aggression/opening/range levers, phase
  * curves, desperate plan, fallback condition, and WIT-gated conditions.
@@ -268,32 +359,10 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   const universalConditions = buildUniversalConditions(plan);
 
   plan.ownerPersonality = personality;
-  const adaptations = getPersonalityAdaptations(personality, plan, intent);
-
-  // Dossier-driven counter-conditions: a stable that knows the opponent has
-  // killed one of its fighters shells up the moment that opponent seizes tempo.
-  if (aiFeature('AI_READS') && (dossier?.recordVs.k ?? 0) > 0) {
-    adaptations.push({
-      trigger: { type: 'OPPONENT_MOMENTUM_LEAD', value: 2 },
-      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
-      label: 'Scouted: shell up vs the killer',
-    });
-  }
-
-  // Stage D — repetition read: sharp-eyed stables (Tactician/Methodical)
-  // teach their high-WT fighters to punish a predictable opponent — the
-  // plan switches to a counter-posture once the streak counter climbs.
-  if (
-    aiFeature('AI_READS') &&
-    (personality === 'Tactician' || personality === 'Methodical') &&
-    (w.attributes?.WT ?? 10) >= 7
-  ) {
-    adaptations.push({
-      trigger: { type: 'OPPONENT_TACTIC_STREAK', value: 3 },
-      override: { AL: clamp(plan.AL + 2, 1, 10), OE: clamp(plan.OE - 1, 1, 10) },
-      label: 'Read: punish the pattern',
-    });
-  }
+  const adaptations = [
+    ...getPersonalityAdaptations(personality, plan, intent),
+    ...(collectAdaptations(plan, w, personality, dossier) ?? []),
+  ];
   const allConditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
   // WIT-gated condition density (F.3): low-WIT warriors carry sparse,
   // "mistake-shaped" plans — few adaptive branches — mirroring the
@@ -316,50 +385,8 @@ function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
     universalConditions.length
   );
   plan.conditions = allConditions.slice(0, conditionCap);
-
-  // Stage D.2b — committed in-bout deception: deceptive stables send smart
-  // fighters out performing a false tempo until the mid boundary. The mask
-  // is a real performance cost — opponent streak/momentum reads build on
-  // the decoy — so it stays gated to deceptive stables on high-WT fighters.
-  if (
-    aiFeature('AI_DECOY') &&
-    (personality === 'Tactician' || personality === 'Methodical') &&
-    wt >= DECOY_MIN_WT
-  ) {
-    const styleTactic = getAITactics(w.style).offTactic;
-    const decoy: DecoyAxes = {
-      untilPhase: 'mid',
-      OE: clamp(11 - plan.OE, 1, 10),
-      AL: clamp(11 - plan.AL, 1, 10),
-    };
-    // Mirror the scouting-level decoy: a fighter off the style stereotype
-    // performs the stereotype to bait counters; a stereotypical plan hides
-    // its hand entirely.
-    if (plan.offensiveTactic && plan.offensiveTactic !== styleTactic && styleTactic) {
-      decoy.offensiveTactic = styleTactic;
-    } else if (plan.offensiveTactic === styleTactic) {
-      decoy.offensiveTactic = 'none';
-    }
-    plan.decoyAxes = decoy;
-  }
-
-  // Stage D.4 — boundary-reactive curve: one committed shift per
-  // personality, evaluated once at the phase boundary. Distinct from
-  // per-exchange conditions — a swing back does not revoke it.
-  const shift = PERSONALITY_PHASE_SHIFT[personality];
-  if (shift) {
-    plan.phaseShiftOn = [
-      {
-        at: shift.at,
-        when: shift.when,
-        OE: clamp(plan.OE + shift.dOE, 1, 10),
-        AL: clamp(plan.AL + shift.dAL, 1, 10),
-        ...(shift.dKillDesire !== undefined
-          ? { killDesire: clamp((plan.killDesire ?? 5) + shift.dKillDesire, 1, 10) }
-          : {}),
-      },
-    ];
-  }
+  applyDecoyAxes(plan, w, personality);
+  applyPhaseShift(plan, personality);
 }
 
 /**

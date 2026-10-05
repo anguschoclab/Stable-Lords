@@ -93,8 +93,7 @@ function PlanBranch({ flow }: { flow: FtueFlow }) {
         onPlanChange={setPlayerPlan}
         onBack={() => setStep(1)}
         onNext={() => {
-          runTutorialBout();
-          setStep(3);
+          void runTutorialBout().then(() => setStep(3));
         }}
       />
     </StepShell>

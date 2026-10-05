@@ -222,7 +222,7 @@ export function YearEndRecap() {
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-1">
         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-arena-gold">
-          YEAR_END_RECAP · Season {season} · Week {week}
+          YEAR END RECAP · Season {season} · Week {week}
         </span>
         <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/30 via-border/20 to-transparent" />
       </div>

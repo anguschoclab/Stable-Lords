@@ -129,3 +129,35 @@ describe('objectiveStillViable', () => {
     expect(objectiveStillViable(rival, makeGameState())).toBe(true);
   });
 });
+
+describe('lastLossFactors — objective re-planning (N2 consumption)', () => {
+  it('recurring structural losses downgrade a CROWN campaign to banking', () => {
+    const rival = crownRival();
+    rival.agentMemory!.lastLossFactors = ['ATT edge', 'Damage output', 'Style matchup'];
+    const obj = pickSeasonObjective(rival, makeGameState({ rivals: [rival] }));
+    // The stable knows *why* it keeps losing — out-muscled, not unlucky —
+    // so chasing the throne is a waste this season.
+    expect(obj?.kind).not.toBe('CROWN');
+    expect(obj?.reason).toMatch(/ATT edge|Style matchup|Damage output/i);
+  });
+
+  it('a single structural loss label does not block CROWN — noise is not a pattern', () => {
+    const rival = crownRival();
+    rival.agentMemory!.lastLossFactors = ['ATT edge'];
+    const obj = pickSeasonObjective(rival, makeGameState({ rivals: [rival] }));
+    expect(obj?.kind).toBe('CROWN');
+  });
+
+  it('non-structural loss factors (Endurance) do not block CROWN', () => {
+    const rival = crownRival();
+    rival.agentMemory!.lastLossFactors = ['Endurance', 'Endurance', 'Endurance'];
+    const obj = pickSeasonObjective(rival, makeGameState({ rivals: [rival] }));
+    expect(obj?.kind).toBe('CROWN');
+  });
+
+  it('absent lastLossFactors leaves the pick unchanged', () => {
+    const rival = crownRival();
+    const obj = pickSeasonObjective(rival, makeGameState({ rivals: [rival] }));
+    expect(obj?.kind).toBe('CROWN');
+  });
+});

@@ -1,10 +1,14 @@
-import { type GameState, type DeferredBoutLog } from '@/types/state.types';
+import { type GameState, type DeferredBoutLog, type BoutOffer } from '@/types/state.types';
+import type { BoutOfferId, PromoterId } from '@/types/shared/ids';
 import {
   advanceWeek,
   getLastPipelineProfile,
 } from '@/engine/pipeline/services/weekPipelineService';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { displayWeek } from '@/engine/core/absoluteWeek';
+import { isActive } from '@/engine/warrior/warriorStatus';
+import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
 import { createCumulativeTracker, type CumulativeStats } from '@/engine/stats/cumulativeTracker';
 import { truncateState, type TruncationCaps } from '@/engine/storage/truncation';
@@ -63,6 +67,15 @@ export interface SimulationConfig {
    * compare "earlier" states (use the emitted pulses instead).
    */
   onWeek?: (state: GameState, weekIndex: number) => void;
+  /**
+   * Soak observability: inject one deliberately-lowball offer per week at a
+   * famous rival warrior so the purse-counter path is exercised. The offer
+   * resolves through the real offerProcessor sweep — 'Countered' stamps
+   * `counterPurseBump` — so `counterOfferRate` measures the genuine
+   * negotiation pipeline rather than sitting at 0 because organic soaks
+   * never produce counter-eligible offers. Default off.
+   */
+  counterBait?: boolean;
 }
 
 /**
@@ -102,6 +115,82 @@ async function flushDeferredLogs(
     })
   );
   return results.filter((l): l is DeferredBoutLog => l !== null);
+}
+
+/** Fame floor for counter-bait selection — `purseCounter` needs fame-50 > purse. */
+const COUNTER_BAIT_MIN_FAME = 80;
+/** The lowball itself — below any qualifying warrior's fame floor. */
+const COUNTER_BAIT_PURSE = 15;
+/** Bait offers seeded per week — countered offers persist in the map, so
+ *  the weekly snapshot rate accumulates to a measurable share. */
+const COUNTER_BAIT_PER_WEEK = 6;
+
+let counterBaitSeq = 0;
+
+/**
+ * Counter-bait offer (soak observability): a different stable proposes a
+ * purse well under the famous warrior's fame floor, so `evaluateBoutOffer`
+ * legitimately returns 'Countered'. Hard gates (injury, skepticism) precede
+ * the purse check, so candidates are pre-evaluated inline — the evaluation
+ * is deterministic, so the pipeline reaches the same verdict. One per week
+ * is enough signal; skipped entirely when no eligible warrior exists.
+ */
+function seedCounterBaitOffer(state: GameState): void {
+  const rivals = state.rivals ?? [];
+  // Prefer a Greedy promoter — 'Greedy' promoters squeeze the fame floor.
+  const promoter =
+    Object.values(state.promoters ?? {}).find((p) => p.personality === 'Greedy') ??
+    Object.values(state.promoters ?? {})[0];
+  if (!promoter) return;
+  let seeded = 0;
+  for (const rival of rivals) {
+    if (rival.owner?.personality === 'Aggressive') continue;
+    for (const famous of rival.roster) {
+      if (
+        (famous.fame ?? 0) < COUNTER_BAIT_MIN_FAME ||
+        famous.campaignFocus === 'PURSE_HUNTER' ||
+        !isActive(famous)
+      )
+        continue;
+      // Player-side proposer: a countered offer against a player warrior
+      // stays Proposed with its bump visible — resolveCounteredOffers
+      // leaves player-owned responses Pending ("the player's call"), which
+      // is exactly how real counters surface. The standing bumped offer is
+      // what counterOfferRate measures; it prunes only at expiration.
+      for (const oppWarrior of (state.roster ?? []).filter(isActive).slice(0, 6)) {
+        const id = `soak-bait-${state.absoluteWeek}-${counterBaitSeq++}` as BoutOfferId;
+        const offer: BoutOffer = {
+          id,
+          promoterId: promoter.id as PromoterId,
+          warriorIds: [famous.id, oppWarrior.id],
+          boutWeek: displayWeek(state.absoluteWeek + 4),
+          expirationWeek: displayWeek(state.absoluteWeek + 3),
+          createdAbsoluteWeek: state.absoluteWeek,
+          purse: COUNTER_BAIT_PURSE,
+          hype: 10,
+          status: 'Proposed',
+          responses: {
+            [famous.id]: 'Pending',
+            [oppWarrior.id]: 'Pending',
+          },
+        };
+        const verdict = evaluateBoutOffer({
+          offer,
+          rival,
+          warrior: famous,
+          currentWeek: state.absoluteWeek,
+          weather: state.weather as never,
+          opponent: oppWarrior,
+          state,
+        });
+        if (verdict !== 'Countered') continue;
+        (state.boutOffers ??= {})[id] = offer;
+        if (++seeded >= COUNTER_BAIT_PER_WEEK) break;
+      }
+      if (seeded >= COUNTER_BAIT_PER_WEEK) break;
+    }
+    if (seeded >= COUNTER_BAIT_PER_WEEK) break;
+  }
 }
 
 /** Headless: auto-accept attractive contracts proposed to player warriors. */
@@ -176,6 +265,7 @@ async function runWeek(
 
   // A. Weekly Decision Logic (AI/Player)
   autoRespondToPlayerOffers(state);
+  if (config.counterBait) seedCounterBaitOffer(state);
 
   // B. Advance Week
   // Week 1 may run on a caller-supplied initialState, so it clones; every

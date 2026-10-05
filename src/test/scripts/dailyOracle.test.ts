@@ -29,6 +29,8 @@ const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({
   vendettaCount: 0,
   avgDossierCoverage: 0,
   counterOfferRate: 0,
+  offerCount: 0,
+  counteredOfferCount: 0,
   aiCrownsHeld: 0,
   playerCrownsHeld: 0,
   liveTitleOffers: 0,

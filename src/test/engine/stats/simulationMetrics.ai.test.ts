@@ -87,9 +87,10 @@ describe('SimPulse AI metrics (I.1)', () => {
       'o-3': offer(['e' as WarriorId, 'f' as WarriorId], { counterPurseBump: 50 }),
       'o-4': offer(['g' as WarriorId, 'h' as WarriorId]),
     };
-    expect(collectPulse(makeGameState({ boutOffers: boutOffers as never })).counterOfferRate).toBe(
-      0.5
-    );
+    const pulse = collectPulse(makeGameState({ boutOffers: boutOffers as never }));
+    expect(pulse.counterOfferRate).toBe(0.5);
+    expect(pulse.offerCount).toBe(4);
+    expect(pulse.counteredOfferCount).toBe(2);
     expect(collectPulse(makeGameState({})).counterOfferRate).toBe(0);
   });
 });

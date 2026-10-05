@@ -25,6 +25,7 @@ const PROFILE = args.includes('--profile');
 const INVARIANT_EVERY = argVal('--invariants', 5);
 
 let invariantFailures = 0;
+let counteredOfferWeeks = 0;
 const started = performance.now();
 
 const { finalState, pulses, cumulative, profile } = await runSimulation({
@@ -33,17 +34,21 @@ const { finalState, pulses, cumulative, profile } = await runSimulation({
   logFrequency: 5,
   ignoreBankruptcy: true,
   profile: PROFILE,
-  onWeek:
-    INVARIANT_EVERY > 0
-      ? (state, w) => {
-          if (w % INVARIANT_EVERY !== 0 && w !== WEEKS) return;
-          const violations = validateStateInvariants(state);
-          for (const v of violations) {
-            invariantFailures++;
-            console.error(`[INVARIANT:${v.id}] week ${w}: ${v.message}`);
-          }
-        }
-      : undefined,
+  // Counter-eligible offers: without bait, organic soaks never lowball a
+  // famous warrior and counterOfferRate reads 0 forever (audit-v3 §6).
+  counterBait: !args.includes('--no-counter-bait'),
+  onWeek: (state, w) => {
+    // Weekly counter observability — the standing-bump window (~3-4 wk)
+    // outlives pulse sampling, so count every week, not every 5th.
+    if (Object.values(state.boutOffers ?? {}).some((o) => (o.counterPurseBump ?? 0) > 0))
+      counteredOfferWeeks++;
+    if (INVARIANT_EVERY <= 0 || (w % INVARIANT_EVERY !== 0 && w !== WEEKS)) return;
+    const violations = validateStateInvariants(state);
+    for (const v of violations) {
+      invariantFailures++;
+      console.error(`[INVARIANT:${v.id}] week ${w}: ${v.message}`);
+    }
+  },
 });
 
 const elapsedMs = performance.now() - started;
@@ -65,7 +70,10 @@ console.log({
   intentDistribution: last.intentDistribution,
   vendettaCount: last.vendettaCount,
   avgDossierCoverage: last.avgDossierCoverage?.toFixed?.(2),
-  counterOfferRate: last.counterOfferRate?.toFixed?.(2),
+  counterOfferRate: last.counterOfferRate?.toFixed?.(3),
+  counterOfferRatePeak: Math.max(...pulses.map((p) => p.counterOfferRate ?? 0)).toFixed(3),
+  counteredOfferWeeks: `${counteredOfferWeeks}/${WEEKS} weeks`,
+  counteredOffers: `${last.counteredOfferCount ?? 0}/${last.offerCount ?? 0}`,
   playerChallengedWeeks: pulses.reduce((n, p) => n + (p.playerChallengedWeeks || 0), 0),
   aiCrownsHeld: last.aiCrownsHeld,
   playerCrownsHeld: last.playerCrownsHeld,

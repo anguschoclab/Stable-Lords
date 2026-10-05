@@ -40,6 +40,10 @@ export interface SimPulse {
   avgDossierCoverage: number;
   /** Share of standing offers carrying a counter purse bump. */
   counterOfferRate: number;
+  /** Standing offers in the map this week — counterOfferRate's denominator. */
+  offerCount: number;
+  /** Standing offers carrying a counter purse bump — the numerator. */
+  counteredOfferCount: number;
   // ─── Championship metrics (Phase-2 megaplan Stage A baselines) ───
   /** Arena crowns currently held by rival stables vs the player. */
   aiCrownsHeld: number;
@@ -297,6 +301,8 @@ export function collectPulse(state: GameState): SimPulse {
         ? Math.round((ai.totalDossiers / activeRivals.length) * 100) / 100
         : 0,
     counterOfferRate: ai.offerCount > 0 ? ai.counteredCount / ai.offerCount : 0,
+    offerCount: ai.offerCount,
+    counteredOfferCount: ai.counteredCount,
     aiCrownsHeld: champs.aiCrownsHeld,
     playerCrownsHeld: champs.playerCrownsHeld,
     liveTitleOffers: champs.liveTitleOffers,

@@ -125,5 +125,3 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
   return plan;
 }
 
-// Re-export for backward compatibility
-export { getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';

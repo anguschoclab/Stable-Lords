@@ -22,6 +22,8 @@ import {
   RivalrySchema,
   MatchRecordSchema,
   InsightTokenSchema,
+  PoolWarriorSchema,
+  AnnualAwardSchema,
 } from './warriorSchemas';
 import {
   NewsletterItemSchema,
@@ -31,10 +33,10 @@ import {
   TournamentEntrySchema,
   BoutOfferSchema,
   RankingEntrySchema,
-  AnnualAwardSchema,
   ArenaTitleSchema,
   GrandChampionEntrySchema,
   SimulationReportSchema,
+  BoutResultSchema,
 } from './fightSchemas';
 import {
   LedgerEntrySchema,
@@ -72,13 +74,13 @@ export const GameStateSchema = z
         gazette: z.array(NewsletterItemSchema),
         injuries: z.array(z.string()),
         deaths: z.array(z.string()),
-        bouts: z.array(z.any()), // BoutResult - using any
+        bouts: z.array(BoutResultSchema),
         promotions: z.array(z.string()),
       })
       .optional(),
     lastWeekBoutDisplay: z
       .object({
-        results: z.array(z.any()), // BoutResult - using any
+        results: z.array(BoutResultSchema),
         deathNames: z.array(z.string()),
         injuryNames: z.array(z.string()),
       })
@@ -167,14 +169,14 @@ export const GameStateSchema = z
     seasonalGrowth: z.array(SeasonalGrowthSchema),
     rivals: z.array(RivalStableDataSchema),
     legacyFounderQueue: z.array(WarriorSchema).default([]),
-    freeAgents: z.array(z.any()).default([]), // PoolWarrior - using any
+    freeAgents: z.array(PoolWarriorSchema).default([]),
     scoutReports: z.array(ScoutReportDataSchema),
     restStates: z.array(RestStateSchema),
     rivalries: z.array(RivalrySchema),
     matchHistory: z.array(MatchRecordSchema),
     playerChallenges: z.array(z.string()),
     playerAvoids: z.array(z.string()),
-    recruitPool: z.array(z.any()), // PoolWarrior - using any
+    recruitPool: z.array(PoolWarriorSchema),
     rosterBonus: z.number(),
     ownerGrudges: z.array(OwnerGrudgeSchema),
     insightTokens: z.array(InsightTokenSchema),
@@ -196,6 +198,8 @@ export const GameStateSchema = z
     warriorToStableMap: z.any().optional(), // Passthrough for Map field
     rivalMap: z.any().optional(), // Passthrough for Map field
     warriorToOfferIds: z.any().optional(), // Passthrough for Map field
+    rivalryMap: z.any().optional(), // Passthrough for Map field
+    grudgeMap: z.any().optional(), // Passthrough for Map field
     deferredBoutLogs: z.array(DeferredBoutLogSchema).optional(),
     bookmarks: z.array(BookmarkSchema),
     progression: ProgressionStateSchema.optional(),

@@ -118,8 +118,8 @@ describe('coreGenerator', () => {
       expect(plan.conditions!.length).toBeGreaterThan(0);
     });
 
-    it('exports getStyleMatchupMods correctly', async () => {
-      const { getStyleMatchupMods } = await import('@/engine/ai/plan/coreGenerator');
+    it('exposes getStyleMatchupMods from its canonical module', async () => {
+      const { getStyleMatchupMods } = await import('@/engine/ai/matchup/styleMatcher');
       expect(typeof getStyleMatchupMods).toBe('function');
     });
 

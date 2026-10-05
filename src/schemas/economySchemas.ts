@@ -44,7 +44,7 @@ const CrestDataSchema = z.object({
   metalColor: MetalColorSchema,
   charge: CrestChargeSchema,
   generation: z.number(),
-  parentCrest: z.any().optional(), // Recursive - using any
+  parentCrest: z.lazy((): z.ZodTypeAny => CrestDataSchema).optional(),
 });
 
 /**
@@ -236,7 +236,7 @@ export const RivalStableDataSchema = z.object({
   owner: OwnerSchema,
   fame: z.number(),
   roster: z.array(WarriorSchema),
-  trainers: z.array(z.any()).optional(), // Trainer - using any for simplicity
+  trainers: z.array(z.lazy(() => TrainerSchema)).optional(),
   treasury: z.number(),
   strategy: AIStrategySchema.optional(),
   agentMemory: AIAgentMemorySchema.optional(),

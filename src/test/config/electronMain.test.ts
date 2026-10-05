@@ -40,7 +40,7 @@ vi.mock('electron', () => ({
   app: {
     isPackaged: false,
     getName: vi.fn().mockReturnValue('Stable Lords'),
-    getVersion: vi.fn().mockReturnValue('2.1.0'),
+    getVersion: vi.fn().mockReturnValue('3.0.0'),
     getPath: vi.fn().mockReturnValue('/tmp/test-user-data'),
     whenReady: vi.fn().mockResolvedValue(undefined),
     on: vi.fn((event: string, handler: (...args: any[]) => void) => {
@@ -274,7 +274,7 @@ describe('electron/main.ts behavioral tests', () => {
   // Suite: validateAndMigrateState — pure function unit tests
   // ───────────────────────────────────────────────────────────────────────────
   describe('validateAndMigrateState', () => {
-    const CURRENT_VERSION = '2.1.0-hardened';
+    const CURRENT_VERSION = '3.0.0';
 
     it('returns { valid: true, data } when meta.version matches SAVE_STATE_VERSION', () => {
       const state = { meta: { version: CURRENT_VERSION, gameName: 'Test' }, week: 1 };
@@ -350,7 +350,7 @@ describe('electron/main.ts behavioral tests', () => {
 
     it('returns { success: true, data } for a valid-version save', async () => {
       const validState = JSON.stringify({
-        meta: { version: '2.1.0-hardened', gameName: 'Test' },
+        meta: { version: '3.0.0', gameName: 'Test' },
         week: 1,
       });
       vi.mocked(mockFs.readFile).mockResolvedValue(validState);
@@ -434,7 +434,7 @@ describe('electron/main.ts behavioral tests', () => {
 
       const writtenJson = writeSpy.mock.calls[0]![1] as string;
       const writtenState = JSON.parse(writtenJson);
-      expect(writtenState.meta.version).toBe('2.1.0-hardened');
+      expect(writtenState.meta.version).toBe('3.0.0');
     });
 
     it('stamps meta.version even when meta is missing', async () => {
@@ -448,7 +448,7 @@ describe('electron/main.ts behavioral tests', () => {
 
       const writtenJson = writeSpy.mock.calls[0]![1] as string;
       const writtenState = JSON.parse(writtenJson);
-      expect(writtenState.meta.version).toBe('2.1.0-hardened');
+      expect(writtenState.meta.version).toBe('3.0.0');
     });
   });
 });

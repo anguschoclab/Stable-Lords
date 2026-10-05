@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Keep in sync with src/constants/core/core.ts
-const SAVE_STATE_VERSION = '2.1.0-hardened';
+const SAVE_STATE_VERSION = '3.0.0';
 
 /** Minimal validated save-state envelope; the full game payload is opaque to main. */
 interface SaveEnvelope {

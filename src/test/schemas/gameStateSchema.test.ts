@@ -152,7 +152,7 @@ describe('gameStateSchema — GameStateSchema', () => {
     const parsed = GameStateSchema.parse(JSON.parse(JSON.stringify(state)));
 
     expect(parsed.legacyFounderQueue.map((w: any) => w.id)).toEqual([founder.id]);
-    expect(parsed.freeAgents[0].id).toBe('fa-1');
+    expect(parsed.freeAgents[0]?.id).toBe('fa-1');
     const parsedRival = parsed.rivals[0]!;
     expect(parsedRival.owner.foundedByWarriorId).toBe(founder.id);
     expect(parsedRival.owner.foundedByWarriorName).toBe(founder.name);

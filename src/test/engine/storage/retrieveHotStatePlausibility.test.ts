@@ -116,7 +116,7 @@ describe('retrieveHotState plausibility check', () => {
     const result = await service.retrieveHotState('slot-version-mismatch');
     expect(result).toBeNull();
     expect(errorSpy).toHaveBeenCalledWith(
-      'incompatible save version: expected 2.1.0-hardened, got 0.9.0-old',
+      'incompatible save version: expected 3.0.0, got 0.9.0-old',
       expect.objectContaining({ slotId: 'slot-version-mismatch' })
     );
   });
@@ -134,6 +134,6 @@ describe('retrieveHotState plausibility check', () => {
 
 describe('SAVE_STATE_VERSION constant', () => {
   it('is exported and matches expected value', () => {
-    expect(SAVE_STATE_VERSION).toBe('2.1.0-hardened');
+    expect(SAVE_STATE_VERSION).toBe('3.0.0');
   });
 });

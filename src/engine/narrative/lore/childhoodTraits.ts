@@ -4,6 +4,9 @@
  */
 
 export const CHILDHOOD_TRAITS: string[] = [
+  'learned to navigate the city sewers entirely in the pitch black',
+  'always kept a sharpened bone hidden in their boot',
+  'spoke to the shadows when the orphanage matrons weren\'t looking',
   'developed an iron grip from clinging to the underside of merchant carts',
   'used to meticulously trace the structural flaws in stone walls',
   'slept soundly only when the city',

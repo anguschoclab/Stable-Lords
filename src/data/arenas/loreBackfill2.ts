@@ -2,6 +2,20 @@ import type { ArenaLoreEntry } from './lore';
 
 export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_cracked_pillar',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Cracked Pillar',
+    narrative: 'One of the massive stone pillars in the center bears a deep, jagged crack—rumored to be the result of a single, earth-shattering blow from a forgotten champion.'
+  },
+  {
+    id: 'flooded_vault_arena_drowned_king',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Drowned King',
+    narrative: 'A champion heavily armored in steel slipped beneath the waters and never surfaced, pulled down by the weight of his own hubris.'
+  },
+  {
     id: 'sundered_coliseum_silent_death',
     arenaId: 'sundered_coliseum',
     type: 'famous_death',

@@ -863,6 +863,12 @@
   },
   "memorials": {
     "tributes": [
+      "The arena grows colder with the loss of {{name}}.",
+      "A legend has passed into the halls of iron.",
+      "{{name}} fought well, and the sands remember.",
+      "The crowd will chant {{name}}'s name no more.",
+      "Farewell to {{name}}, who fell as warriors do.",
+      "{{name}}'s saga ends here, written in blood.",
       "Fallen in combat.",
       "Their watch is ended.",
       "A brutal end for a brave soul.",

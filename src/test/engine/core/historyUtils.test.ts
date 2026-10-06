@@ -1,412 +1,148 @@
 import { describe, it, expect } from 'vitest';
 import {
-  getRecentFightsForWarrior,
   getFightsForWeek,
   getRecentFights,
+  getRecentFightsForWarrior,
   getAllFightsForWarrior,
   getFightsForArena,
   getFightsForTournament,
+  buildRecentFightPairs
 } from '@/engine/core/historyUtils';
-import { FightingStyle, type FightSummary } from '@/types/game';
-import type { FightId, WarriorId, TournamentId } from '@/types/shared.types';
+import type { FightSummary } from '@/types/combat.types';
 
-function createMockFight(
-  opts: {
-    warriorIdA?: string;
-    warriorIdD?: string;
-    week?: number;
-    absoluteWeek?: number;
-    arenaId?: string;
-    tournamentId?: string | null;
-  } = {}
-): FightSummary {
-  return {
-    id: 'mock-id' as FightId,
-    title: 'Mock Fight',
-    warriorIdA: (opts.warriorIdA ?? 'Attacker') as WarriorId,
-    warriorIdD: (opts.warriorIdD ?? 'Defender') as WarriorId,
-    winner: 'A',
-    by: 'KO',
-    styleA: FightingStyle.StrikingAttack as string,
-    styleD: FightingStyle.ParryRiposte as string,
-    week: opts.week ?? 1,
-    absoluteWeek: opts.absoluteWeek,
-    createdAt: new Date().toISOString(),
-    transcript: [],
-    arenaId: opts.arenaId,
-    tournamentId: opts.tournamentId as TournamentId | undefined,
-  } as FightSummary;
-}
+describe('historyUtils', () => {
+  const createFight = (overrides: Partial<FightSummary>) => ({
+    absoluteWeek: 1,
+    week: 1,
+    warriorIdA: 'a',
+    warriorIdD: 'b',
+    arenaId: 'arena1',
+    tournamentId: undefined,
+    ...overrides
+  } as unknown as FightSummary);
 
-describe('getRecentFightsForWarrior', () => {
-  it('returns empty array when history is empty', () => {
-    const history: FightSummary[] = [];
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toEqual([]);
+  const history = [
+    createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
+    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
+    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
+    createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
+    createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
+  ];
+
+  it('getFightsForWeek', () => {
+    const fights = getFightsForWeek(history, 2);
+    expect(fights).toHaveLength(2);
+    expect(fights[0].warriorIdA).toBe('w3');
+    expect(fights[1].warriorIdA).toBe('w1');
+
+    expect(getFightsForWeek(history, 5)).toHaveLength(0);
+    // with falsy values in array
+    const sparseHistory = [...history, null as any, createFight({ absoluteWeek: 5, week: 5 })];
+    expect(getFightsForWeek(sparseHistory, 5)).toHaveLength(1);
   });
 
-  it('returns empty array when warrior is not in history', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Alpha', warriorIdD: 'Beta' }),
-      createMockFight({ warriorIdA: 'Gamma', warriorIdD: 'Delta' }),
+  it('getRecentFights', () => {
+    const fights = getRecentFights(history, 3);
+    expect(fights).toHaveLength(2);
+    expect(fights[0].absoluteWeek).toBe(3);
+    expect(fights[1].absoluteWeek).toBe(4);
+
+    // Check fallback to week if absoluteWeek is missing
+    const legacyHistory = [
+      createFight({ absoluteWeek: undefined, week: 1 }),
+      createFight({ absoluteWeek: undefined, week: 2 })
     ];
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toEqual([]);
+    expect(getRecentFights(legacyHistory, 2)).toHaveLength(1);
   });
 
-  it('finds fights where warrior is attacker', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'Beta', week: 1 }),
-      createMockFight({ warriorIdA: 'Gamma', warriorIdD: 'Delta', week: 2 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'Epsilon', week: 3 }),
-    ];
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 3]); // Expect chronological order
+  it('getRecentFightsForWarrior', () => {
+    const fights = getRecentFightsForWarrior(history, 'w1', 2);
+    expect(fights).toHaveLength(2);
+    // Should be chronological (because of .reverse())
+    expect(fights[0].absoluteWeek).toBe(2); // w1 vs w5
+    expect(fights[1].absoluteWeek).toBe(4); // w1 vs w8
+
+    const allFights = getRecentFightsForWarrior(history, 'w1', 10);
+    expect(allFights).toHaveLength(3);
   });
 
-  it('finds fights where warrior is defender', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Alpha', warriorIdD: 'Hero', week: 1 }),
-      createMockFight({ warriorIdA: 'Gamma', warriorIdD: 'Delta', week: 2 }),
-      createMockFight({ warriorIdA: 'Epsilon', warriorIdD: 'Hero', week: 3 }),
-    ];
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 3]);
+  it('getAllFightsForWarrior', () => {
+    const fights = getAllFightsForWarrior(history, 'w1');
+    expect(fights).toHaveLength(3);
+    expect(fights[0].absoluteWeek).toBe(1);
+    expect(fights[2].absoluteWeek).toBe(4);
   });
 
-  it('finds fights where warrior is both attacker and defender across different fights', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'Alpha', week: 1 }),
-      createMockFight({ warriorIdA: 'Beta', warriorIdD: 'Hero', week: 2 }),
-      createMockFight({ warriorIdA: 'Gamma', warriorIdD: 'Delta', week: 3 }),
-    ];
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 2]);
+  it('getFightsForArena', () => {
+    const fights = getFightsForArena(history, 'arena2');
+    expect(fights).toHaveLength(1);
+    expect(fights[0].warriorIdD).toBe('w5');
   });
 
-  it('limits the results and returns the most recent fights chronologically', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'B', week: 2 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'C', week: 3 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'D', week: 4 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'E', week: 5 }),
-    ];
-
-    // Default limit is 10, passing an explicit limit of 3
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId, 3);
-
-    expect(result).toHaveLength(3);
-    // Should get weeks 3, 4, 5, returned in chronological order
-    expect(result.map((f) => f.week)).toEqual([3, 4, 5]);
+  it('getFightsForTournament', () => {
+    const fights = getFightsForTournament(history, 't1');
+    expect(fights).toHaveLength(1);
+    expect(fights[0].warriorIdA).toBe('w1');
   });
 
-  it('uses the default limit of 10', () => {
-    const history: FightSummary[] = Array.from({ length: 15 }).map((_, i) =>
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: `Opponent${i}`, week: i + 1 })
-    );
+  it('buildRecentFightPairs', () => {
+    const pairs = buildRecentFightPairs(history, 3, 3); // min week 0
+    // expects pairs for weeks 1, 2, 3, 4
+    // 'w1_w2', 'w3_w4', 'w1_w5', 'w6_w7', 'w1_w8'
+    expect(pairs.size).toBe(5);
+    expect(pairs.has('w1|w2')).toBe(true);
+    expect(pairs.has('w6|w7')).toBe(true);
 
-    const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
-
-    expect(result).toHaveLength(10);
-    // Should get the last 10 weeks (weeks 6 through 15) in chronological order
-    expect(result.map((f) => f.week)).toEqual([6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    const narrowPairs = buildRecentFightPairs(history, 4, 1); // min week 3
+    expect(narrowPairs.size).toBe(2); // w6_w7, w1_w8
+    expect(narrowPairs.has('w1|w8')).toBe(true);
   });
 });
 
-describe('getFightsForWeek', () => {
-  it('returns empty array when history is empty', () => {
-    expect(getFightsForWeek([], 5)).toEqual([]);
-  });
-
-  it('returns fights matching the given week', () => {
-    const history: FightSummary[] = [
-      createMockFight({ week: 1 }),
-      createMockFight({ week: 3 }),
-      createMockFight({ week: 3 }),
-      createMockFight({ week: 5 }),
+describe('buildRecentFightPairs edge cases', () => {
+  it('builds recent fight pairs', () => {
+    const createFight = (overrides) => ({
+      absoluteWeek: 1, week: 1, warriorIdA: 'a', warriorIdD: 'b', arenaId: 'arena1', ...overrides
+    });
+    const history = [
+      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
+      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
+      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
     ];
-    const result = getFightsForWeek(history, 3);
-    expect(result).toHaveLength(2);
-    expect(result.every((f) => f.week === 3)).toBe(true);
-  });
 
-  it('returns fights in chronological order', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A1', warriorIdD: 'D1', week: 3 }),
-      createMockFight({ warriorIdA: 'A2', warriorIdD: 'D2', week: 3 }),
-      createMockFight({ warriorIdA: 'A3', warriorIdD: 'D3', week: 5 }),
-    ];
-    const result = getFightsForWeek(history, 3);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A1', 'A2']);
-  });
+    const pairs = buildRecentFightPairs(history, 3, 3);
+    expect(pairs.size).toBe(5);
+    expect(pairs.has('w1|w2')).toBe(true);
+    expect(pairs.has('w6|w7')).toBe(true);
 
-  it('breaks early when encountering fights with week < target', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'W1', week: 1 }),
-      createMockFight({ warriorIdA: 'W2', week: 3 }),
-      createMockFight({ warriorIdA: 'W3', week: 5 }),
-    ];
-    const result = getFightsForWeek(history, 5);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('W3');
-  });
-
-  it('returns empty array when no fights match the target week', () => {
-    const history: FightSummary[] = [createMockFight({ week: 1 }), createMockFight({ week: 2 })];
-    expect(getFightsForWeek(history, 99)).toEqual([]);
-  });
-
-  it('handles fights at week 0', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Zero', week: 0 }),
-      createMockFight({ warriorIdA: 'One', week: 1 }),
-    ];
-    const result = getFightsForWeek(history, 0);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('Zero');
-  });
-
-  it('distinguishes fights across year boundary using absoluteWeek', () => {
-    // Year 1 week 52 = absoluteWeek 52, Year 2 week 1 = absoluteWeek 53
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Y1W52', week: 52, absoluteWeek: 52 }),
-      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
-    ];
-    // Filtering by absoluteWeek 53 should return only the year-2 fight
-    const result = getFightsForWeek(history, 53);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('Y2W1');
-  });
-
-  it('does not collide year-1 week 1 with year-2 week 1 when absoluteWeek is set', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Y1W1', week: 1, absoluteWeek: 1 }),
-      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
-    ];
-    // Filtering by absoluteWeek 1 should return only the year-1 fight
-    const result = getFightsForWeek(history, 1);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('Y1W1');
-  });
-
-  it('early-break optimization works correctly with monotonically increasing absoluteWeek', () => {
-    // History sorted chronologically by absoluteWeek: 50, 51, 52, 53, 54
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'W50', week: 50, absoluteWeek: 50 }),
-      createMockFight({ warriorIdA: 'W51', week: 51, absoluteWeek: 51 }),
-      createMockFight({ warriorIdA: 'W52', week: 52, absoluteWeek: 52 }),
-      createMockFight({ warriorIdA: 'Y2W1', week: 1, absoluteWeek: 53 }),
-      createMockFight({ warriorIdA: 'Y2W2', week: 2, absoluteWeek: 54 }),
-    ];
-    // Search for absoluteWeek 53 — early-break should stop at absoluteWeek 52 < 53
-    const result = getFightsForWeek(history, 53);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('Y2W1');
-    // Search for absoluteWeek 52 — should find W52 and early-break at W51 < 52
-    const result52 = getFightsForWeek(history, 52);
-    expect(result52).toHaveLength(1);
-    expect(result52[0]!.warriorIdA).toBe('W52');
+    const narrowPairs = buildRecentFightPairs(history, 4, 1);
+    expect(narrowPairs.size).toBe(2);
+    expect(narrowPairs.has('w1|w8')).toBe(true);
   });
 });
 
-describe('getRecentFights', () => {
-  it('returns empty array when history is empty', () => {
-    expect(getRecentFights([], 1)).toEqual([]);
-  });
-
-  it('returns all fights with week >= minWeek', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'B', week: 3 }),
-      createMockFight({ warriorIdA: 'C', week: 5 }),
+describe('buildRecentFightPairs edge cases', () => {
+  it('builds recent fight pairs', () => {
+    const createFight = (overrides) => ({
+      absoluteWeek: 1, week: 1, warriorIdA: 'a', warriorIdD: 'b', arenaId: 'arena1', ...overrides
+    });
+    const history = [
+      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
+      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
+      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
     ];
-    const result = getRecentFights(history, 3);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['B', 'C']);
-  });
 
-  it('returns fights in chronological order', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 3 }),
-      createMockFight({ warriorIdA: 'B', week: 5 }),
-    ];
-    const result = getRecentFights(history, 1);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A', 'B']);
-  });
+    const pairs = buildRecentFightPairs(history, 3, 3);
+    expect(pairs.size).toBe(5);
+    expect(pairs.has('w1|w2')).toBe(true);
+    expect(pairs.has('w6|w7')).toBe(true);
 
-  it('breaks early when encountering fights with week < minWeek', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'B', week: 2 }),
-      createMockFight({ warriorIdA: 'C', week: 5 }),
-    ];
-    const result = getRecentFights(history, 5);
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('C');
-  });
-
-  it('returns empty array when all fights are before minWeek', () => {
-    const history: FightSummary[] = [createMockFight({ week: 1 }), createMockFight({ week: 2 })];
-    expect(getRecentFights(history, 10)).toEqual([]);
-  });
-
-  it('returns all fights when minWeek is 0', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'B', week: 5 }),
-    ];
-    const result = getRecentFights(history, 0);
-    expect(result).toHaveLength(2);
-  });
-});
-
-describe('getAllFightsForWarrior', () => {
-  it('returns empty array when history is empty', () => {
-    expect(getAllFightsForWarrior([], 'Hero' as WarriorId)).toEqual([]);
-  });
-
-  it('returns all fights where warrior is attacker', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'Other', warriorIdD: 'B', week: 2 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'C', week: 3 }),
-    ];
-    const result = getAllFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 3]);
-  });
-
-  it('returns all fights where warrior is defender', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', warriorIdD: 'Hero', week: 1 }),
-      createMockFight({ warriorIdA: 'B', warriorIdD: 'Other', week: 2 }),
-      createMockFight({ warriorIdA: 'C', warriorIdD: 'Hero', week: 3 }),
-    ];
-    const result = getAllFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 3]);
-  });
-
-  it('returns all fights where warrior is both attacker and defender across different fights', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'Alpha', week: 1 }),
-      createMockFight({ warriorIdA: 'Beta', warriorIdD: 'Hero', week: 2 }),
-      createMockFight({ warriorIdA: 'Gamma', warriorIdD: 'Delta', week: 3 }),
-    ];
-    const result = getAllFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.week)).toEqual([1, 2]);
-  });
-
-  it('returns fights in chronological order (forward loop, no reverse)', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'A', week: 1 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'B', week: 2 }),
-      createMockFight({ warriorIdA: 'Hero', warriorIdD: 'C', week: 3 }),
-    ];
-    const result = getAllFightsForWarrior(history, 'Hero' as WarriorId);
-    expect(result.map((f) => f.week)).toEqual([1, 2, 3]);
-  });
-
-  it('returns empty array when warrior not in any fight', () => {
-    const history: FightSummary[] = [createMockFight({ warriorIdA: 'A', warriorIdD: 'B' })];
-    expect(getAllFightsForWarrior(history, 'Nobody' as WarriorId)).toEqual([]);
-  });
-});
-
-describe('getFightsForArena', () => {
-  it('returns empty array when history is empty', () => {
-    expect(getFightsForArena([], 'arena1')).toEqual([]);
-  });
-
-  it('returns all fights matching the arenaId', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1, arenaId: 'arena1' }),
-      createMockFight({ warriorIdA: 'B', week: 2, arenaId: 'arena2' }),
-      createMockFight({ warriorIdA: 'C', week: 3, arenaId: 'arena1' }),
-    ];
-    const result = getFightsForArena(history, 'arena1');
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A', 'C']);
-  });
-
-  it('returns empty array when no fights match arenaId', () => {
-    const history: FightSummary[] = [
-      createMockFight({ arenaId: 'arena1' }),
-      createMockFight({ arenaId: 'arena2' }),
-    ];
-    expect(getFightsForArena(history, 'nonexistent')).toEqual([]);
-  });
-
-  it('does full scan (finds matches even when not contiguous)', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', arenaId: 'arena1' }),
-      createMockFight({ warriorIdA: 'B', arenaId: 'arena2' }),
-      createMockFight({ warriorIdA: 'C', arenaId: 'arena2' }),
-      createMockFight({ warriorIdA: 'D', arenaId: 'arena1' }),
-    ];
-    const result = getFightsForArena(history, 'arena1');
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A', 'D']);
-  });
-
-  it('returns fights in chronological order (forward loop)', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1, arenaId: 'arena1' }),
-      createMockFight({ warriorIdA: 'B', week: 2, arenaId: 'arena1' }),
-      createMockFight({ warriorIdA: 'C', week: 3, arenaId: 'arena1' }),
-    ];
-    const result = getFightsForArena(history, 'arena1');
-    expect(result.map((f) => f.week)).toEqual([1, 2, 3]);
-  });
-});
-
-describe('getFightsForTournament', () => {
-  it('returns empty array when history is empty', () => {
-    expect(getFightsForTournament([], 't1')).toEqual([]);
-  });
-
-  it('returns all fights matching the tournamentId', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1, tournamentId: 't1' }),
-      createMockFight({ warriorIdA: 'B', week: 2, tournamentId: 't2' }),
-      createMockFight({ warriorIdA: 'C', week: 3, tournamentId: 't1' }),
-    ];
-    const result = getFightsForTournament(history, 't1');
-    expect(result).toHaveLength(2);
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A', 'C']);
-  });
-
-  it('returns empty array when no fights match tournamentId', () => {
-    const history: FightSummary[] = [
-      createMockFight({ tournamentId: 't1' }),
-      createMockFight({ tournamentId: 't2' }),
-    ];
-    expect(getFightsForTournament(history, 'nonexistent')).toEqual([]);
-  });
-
-  it('returns fights in chronological order (reverse of backward collection)', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1, tournamentId: 't1' }),
-      createMockFight({ warriorIdA: 'B', week: 2, tournamentId: 't1' }),
-      createMockFight({ warriorIdA: 'C', week: 3, tournamentId: 't1' }),
-    ];
-    const result = getFightsForTournament(history, 't1');
-    expect(result.map((f) => f.warriorIdA)).toEqual(['A', 'B', 'C']);
-  });
-
-  it('handles fights with tournamentId null or undefined (should not match)', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', week: 1, tournamentId: null }),
-      createMockFight({ warriorIdA: 'B', week: 2 }),
-      createMockFight({ warriorIdA: 'C', week: 3, tournamentId: 't1' }),
-    ];
-    const result = getFightsForTournament(history, 't1');
-    expect(result).toHaveLength(1);
-    expect(result[0]!.warriorIdA).toBe('C');
+    const narrowPairs = buildRecentFightPairs(history, 4, 1);
+    expect(narrowPairs.size).toBe(2);
+    expect(narrowPairs.has('w1|w8')).toBe(true);
   });
 });

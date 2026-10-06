@@ -101,6 +101,43 @@ describe('createEnginePool — distributed path', () => {
     expect(spawn.mock.calls.length).toBe(afterFirst); // reused, not respawned
   });
 
+  it('terminate() mid-flight: in-flight chunks still resolve; later calls go in-line', async () => {
+    // D3 — shutdownEnginePool during an in-flight week must not strand or
+    // corrupt the awaiting map. Workers are reference-dropped, not killed,
+    // so dispatched jobs complete; only NEW work takes the in-line path.
+    let release!: () => void;
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    const heldWorker = (): ShardWorkerApi => ({
+      runRivalShardChunk: async (inputs, ctx) => {
+        await gate;
+        return runRivalShardChunk(inputs, ctx);
+      },
+      runBoutShardChunk: async (inputs, ctx) => runBoutShardChunk(inputs, ctx),
+    });
+    const spawn = vi.fn(heldWorker);
+    const pool = createEnginePool(2, { spawnShardWorker: spawn });
+    const state = seededWorld(31);
+    const ctx = rivalShardCtx(state);
+    const inputs = rivalInputs(state);
+    expect(inputs.length).toBeGreaterThan(1);
+
+    const expected = runRivalShardChunk(structuredClone(inputs), structuredClone(ctx));
+
+    const inFlight = pool.mapRivalShards(inputs, ctx);
+    // Dispatch happens synchronously before the first await inside
+    // distributed() — both chunk jobs are already parked on the gate.
+    expect(spawn.mock.calls.length).toBeGreaterThan(0);
+    pool.terminate();
+    release();
+    expect(await inFlight).toEqual(expected);
+
+    const callsAfterTerminate = spawn.mock.calls.length;
+    expect(await pool.mapRivalShards(inputs, ctx)).toEqual(expected);
+    expect(spawn.mock.calls.length).toBe(callsAfterTerminate); // no new workers
+  });
+
   it('terminate() drops workers and falls back to in-line execution', async () => {
     const spawn = vi.fn(fakeShardWorker);
     const pool = createEnginePool(4, { spawnShardWorker: spawn });

@@ -102,6 +102,20 @@ export type AIIntent =
   | 'TOURNAMENT_CAMPAIGN'
   | 'CROWN_CAMPAIGN';
 
+/** Display labels for AI intents — UI must render these, never the raw enum. */
+export const AI_INTENT_DISPLAY_NAMES: Record<AIIntent, string> = {
+  EXPANSION: 'Expansion',
+  CONSOLIDATION: 'Consolidation',
+  VENDETTA: 'Vendetta',
+  RECOVERY: 'Recovery',
+  SURVIVAL: 'Survival',
+  WEALTH_ACCUMULATION: 'Wealth Accumulation',
+  AGGRESSIVE_EXPANSION: 'Market Dominance',
+  ROSTER_DIVERSITY: 'Diversification',
+  TOURNAMENT_CAMPAIGN: 'Tournament Campaign',
+  CROWN_CAMPAIGN: 'Crown Campaign',
+};
+
 /**
  * Defines the shape of ai strategy.
  */

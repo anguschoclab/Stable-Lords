@@ -18,9 +18,6 @@ export interface ArchiveService {
   ) => Promise<void>;
   retrieveBoutLog: (year: number, season: number, boutId: string) => Promise<string[] | null>;
 
-  archiveGazette: (season: number, week: number, markdown: string) => Promise<void>;
-  retrieveGazette: (season: number, week: number) => Promise<string | null>;
-
   archiveHotState: (slotId: string, stateData: GameState) => Promise<void>;
   retrieveHotState: (slotId: string) => Promise<GameState | null>;
 

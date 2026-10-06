@@ -109,6 +109,29 @@ describe('arena events — new entries', () => {
       expect(e!.triggerCondition).toBe('exchange_interval');
       expect(e!.mechanicalEffect).toEqual({ type: 'initiative_mod', value: -2 });
     });
+
+    it('slick_floor requires indoor tags and suppresses ripostes', () => {
+      const e = ARENA_EVENTS.slick_floor;
+      expect(e).toBeDefined();
+      expect(e!.requiredTags).toEqual(['indoor']);
+      expect(e!.triggerCondition).toBe('exchange_interval');
+      expect(e!.mechanicalEffect?.type).toBe('riposte_mod');
+      expect(e!.mechanicalEffect!.value).toBeLessThan(0);
+    });
+  });
+
+  describe('mechanical-effect coverage', () => {
+    it('the registry exercises every declared mechanicalEffect type', () => {
+      // riposte_mod was a dead union member — no event emitted it, so the
+      // marker/echo path in defense.ts was inert. Every declared effect
+      // type must have at least one live producer.
+      const types = new Set(
+        Object.values(ARENA_EVENTS).map((e) => e.mechanicalEffect?.type)
+      );
+      for (const t of ['damage', 'initiative_mod', 'riposte_mod', 'endurance_drain']) {
+        expect(types.has(t as never), `no registry event emits ${t}`).toBe(true);
+      }
+    });
   });
 
   describe('no orphan events', () => {

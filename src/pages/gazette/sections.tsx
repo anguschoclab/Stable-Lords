@@ -153,7 +153,7 @@ export function NarrativeFeed({
     <div className="space-y-24">
       <AnimatePresence mode="popLayout">
         {visibleIssues.map((issue, idx) => (
-          <IssueEntry key={issue.week} issue={issue} season={season} idx={idx} />
+          <IssueEntry key={issue.id} issue={issue} season={season} idx={idx} />
         ))}
       </AnimatePresence>
 

@@ -8,6 +8,7 @@ import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelec
 import {
   TimeAdvanceService,
   type QuarterAdvanceResult,
+  type MonthAdvanceResult,
   type YearAdvanceResult,
   type AdvanceOptions,
 } from './timeAdvance';
@@ -74,7 +75,11 @@ export const TickOrchestrator = {
     // 1. Weekly Transition (Day 7)
     if (nextDay >= 7) {
       // Correct for 52-week year wrap-around logic moved to SystemPass
-      const finalState = await runWeeklyPipeline(state, { mutableInput: opts?.mutableInput });
+      const finalState = await runWeeklyPipeline(state, {
+        headless: opts?.headless,
+        mutableInput: opts?.mutableInput,
+        pool: opts?.pool,
+      });
       return {
         ...finalState,
         day: 0,
@@ -117,8 +122,10 @@ export const TickOrchestrator = {
   /**
    * High-performance: Skips to the end of the current week.
    * Batches tournament rounds into a single summary.
+   * `opts` are forwarded to the weekly pipeline — the worker entry point
+   * passes `mutableInput: true` so worker-owned input is not re-cloned.
    */
-  async skipToWeekEnd(state: GameState): Promise<GameState> {
+  async skipToWeekEnd(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
     let currentState = { ...state };
     const currentDay = state.day || 0;
     const weeklyNewsItems: string[] = [];
@@ -162,7 +169,11 @@ export const TickOrchestrator = {
     }
 
     // 3. Run final weekly pipeline
-    const finalState = await runWeeklyPipeline(currentState);
+    const finalState = await runWeeklyPipeline(currentState, {
+      headless: opts?.headless,
+      mutableInput: opts?.mutableInput,
+      pool: opts?.pool,
+    });
     return {
       ...finalState,
       day: 0,
@@ -185,6 +196,22 @@ export const TickOrchestrator = {
    */
   async skipToQuarterEnd(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
     return TimeAdvanceService.skipToQuarterEnd(state, opts);
+  },
+
+  /**
+   * Advance a month (4 weeks) with progress tracking.
+   * Delegates to TimeAdvanceService for batch processing.
+   */
+  async advanceMonth(state: GameState, opts?: AdvanceOptions): Promise<MonthAdvanceResult> {
+    return TimeAdvanceService.advanceMonth(state, opts);
+  },
+
+  /**
+   * Skip to month end (headless mode for UI).
+   * Batches 4 weeks with deferred I/O.
+   */
+  async skipToMonthEnd(state: GameState, opts?: AdvanceOptions): Promise<MonthAdvanceResult> {
+    return TimeAdvanceService.skipToMonthEnd(state, opts);
   },
 
   /**

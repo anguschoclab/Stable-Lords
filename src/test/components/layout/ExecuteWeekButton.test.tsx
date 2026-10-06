@@ -24,6 +24,7 @@ const defaultHookValue = () => ({
   fightReadyCount: 0,
   matchCardLength: 0,
   handleStartAutosim: (...args: any[]) => mockHandleStartAutosim(...args),
+  stopAutosim: vi.fn(),
   autosimming: false,
   autosimProgress: null,
   autosimResult: null,

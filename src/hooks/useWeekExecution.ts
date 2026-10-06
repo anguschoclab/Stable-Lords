@@ -104,8 +104,18 @@ function useAutosim(
 
   const clearAutosimResult = useCallback(() => setAutosimResult(null), []);
 
+  /**
+   * Cooperative stop — flips the worker-local cancel flag; the autosim loop
+   * exits at the next week boundary and returns its partial result through
+   * the normal commit path (finalState still lands via loadGame).
+   */
+  const stopAutosim = useCallback(() => {
+    void engineProxy.cancelSim();
+  }, []);
+
   return {
     handleStartAutosim,
+    stopAutosim,
     autosimming,
     autosimProgress,
     autosimResult,
@@ -156,6 +166,7 @@ export function useWeekExecution() {
 
   const {
     handleStartAutosim,
+    stopAutosim,
     autosimming,
     autosimProgress,
     autosimResult,
@@ -206,6 +217,7 @@ export function useWeekExecution() {
     fightReadyCount,
     matchCardLength,
     handleStartAutosim,
+    stopAutosim,
     autosimming,
     autosimProgress,
     autosimResult,

@@ -79,8 +79,39 @@ seed 20260919, 26 weeks, pre-`mutableInput` serial baseline):
 > **Staleness note (post-`mutableInput`):** the harness now passes
 > `mutableInput` so `advanceWeek` no longer deep-clones the world each week —
 > a measured ~2× serial speedup (≈586→285 ms/week). The parallel path still
-> pays `structuredClone` per shard chunk, so the true ratio is now ≈0.19× —
-> the failure margin doubled, the conclusion is unchanged and stronger.
+> pays `structuredClone` per shard chunk, so the true ratio was estimated
+> ≈0.19× before the narrowing re-attempt below.
+
+## Gated re-attempt — narrowed shard inputs (FAILED, retained at pool=1)
+
+Per the plan's gated re-attempt, `RivalStrategyPass` now broadcasts a
+narrowed shard ctx: `narrowRivalShardState` (`rivalStableShard.ts`) empties
+every GameState field the rival-processing tree provably never reads
+(newsletter, gazettes, hallOfFame, matchHistory, killEvents, scoutReports,
+ledger, awards, insightTokens, deferredBoutLogs, UI payloads, promoters,
+worldOptions, contentPacks…). The same narrowed ctx feeds the in-line path,
+so sequential and distributed runs read identical input by construction —
+verified byte-identical in `shardInputSize.test.ts`.
+
+Measured re-run (52 weeks, seed 20260919, pool=4):
+
+| run                  | wall-clock                        |
+| -------------------- | --------------------------------- |
+| pool=1 (sequential)  | 15,630 ms                         |
+| pool=4 (distributed) | 47,546 ms                         |
+| **speedup**          | **0.33× — gate requires ≥1.30×**  |
+
+The narrowing roughly doubled throughput vs the pre-attempt estimate but the
+mandatory read surface (roster + rivals + graveyard + retired + arenaHistory
++ tournaments + offers) is still most of the state's serialized weight —
+structuredClone cost remains far above the ~17 ms/week of rival compute each
+shard displaces. Bouts were left on the full-state ctx (deeper transitive
+read set, smaller payload share).
+
+**Decision (unchanged, now stronger):** `poolSize=1` stays the default. The
+next viable step is not payload dieting but *persistent shard state* — shard
+workers holding a synced world copy updated by weekly deltas — a much larger
+architectural change, only worth it if rival-strategy compute outgrows it.
 
 `structuredClone` of the full `GameState` per chunk costs far more than the
 rival-strategy/bout-resolution compute it displaces — the shard workloads

@@ -11,7 +11,7 @@ import type { Warrior } from '@/types/warrior.types';
  */
 const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStableData>>) => {
   if (value.size === 0) return;
-  if (process.env.EPITHET_DEBUG) {
+  if (globalThis.process?.env?.EPITHET_DEBUG) {
     for (const r of state.rivals) {
       const update = value.get(r.id);
       if (!update?.roster) continue;

@@ -3,14 +3,13 @@ import { resolveImpacts } from '@/engine/impacts';
 import { getEnginePool, type EnginePool } from '@/engine/pool/enginePool';
 import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { isPipelineProfiling, beginPipelineProfile } from './weekPipeline/profiling';
 import {
   prepareWeekContext,
   createMutableWeekContext,
   type WeekContext,
 } from './weekPipeline/context';
 import { assertPipelineLegal } from './weekPipeline/passes';
-import { buildWeekCaches } from './weekPipeline/caches';
+import { buildWeekCaches, impactsAffectWeekCaches } from './weekPipeline/caches';
 import { runStage, runBoutPhase, collectCoreImpacts } from './weekPipeline/stages';
 import { checkBankruptcy, finalizeState } from './weekPipeline/finalize';
 
@@ -41,11 +40,7 @@ export interface WeekAdvanceOptions {
   pool?: EnginePool;
 }
 
-export {
-  isPipelineProfiling,
-  getLastPipelineProfile,
-  type PipelinePassTiming,
-} from './weekPipeline/profiling';
+export { isPipelineProfiling } from './weekPipeline/profiling';
 export { WEEK_PIPELINE_PASSES } from './weekPipeline/passes';
 export { buildWeekCaches } from './weekPipeline/caches';
 export { checkBankruptcy } from './weekPipeline/finalize';
@@ -64,8 +59,6 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
   // when configured > 1 (getEnginePool() lazily no-ops at size 1).
   const sharedPool = getEnginePool();
   const pool = opts?.pool ?? (sharedPool.size > 1 ? sharedPool : undefined);
-
-  if (isPipelineProfiling()) beginPipelineProfile();
 
   // Deep clone state once at week boundary to allow safe mutation in all
   // passes — skipped when the caller grants ownership via mutableInput.
@@ -90,7 +83,9 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
-  buildWeekCaches(stateAfterCore);
+  // Only resync caches when a core impact could have replaced roster/rival
+  // identities — pure ledger/newsletter impacts leave the maps accurate.
+  if (impactsAffectWeekCaches(coreImpacts)) buildWeekCaches(stateAfterCore);
 
   const stateAfterWorld = await runStage('world', stateAfterCore, ctx, opts);
   const result = finalizeState(

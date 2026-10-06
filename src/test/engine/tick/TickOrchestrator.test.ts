@@ -104,7 +104,8 @@ describe('TickOrchestrator', () => {
       const nextState = await TickOrchestrator.skipToWeekEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(
-        expect.objectContaining({ day: 1 })
+        expect.objectContaining({ day: 1 }),
+        expect.objectContaining({})
       );
       expect(nextState.day).toBe(0);
       expect(nextState.treasury).toBe(999);

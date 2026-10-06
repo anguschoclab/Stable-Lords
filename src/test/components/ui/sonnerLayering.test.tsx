@@ -7,26 +7,10 @@
  * toasts blocked "MEMORIALIZE & CONTINUE" in e2e), so the toaster is pinned
  * below the overlay floor.
  */
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { act, render } from '@testing-library/react';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
-
-// jsdom lacks matchMedia (next-themes requires it).
-beforeAll(() => {
-  window.matchMedia =
-    window.matchMedia ??
-    ((query: string) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: () => {},
-      removeListener: () => {},
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => false,
-    }));
-});
 
 describe('sonner toaster layering', () => {
   it('stays below the z-50 overlay floor so overlay buttons keep hit-testing priority', async () => {

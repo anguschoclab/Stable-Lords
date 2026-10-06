@@ -582,3 +582,46 @@ describe('awardTournamentPrizes — edge cases', () => {
     expect(playerW1.fame).toBe(100);
   });
 });
+
+// ── Podium finishers killed in the finals ──
+
+describe('awardTournamentPrizes — dead podium finishers', () => {
+  it('still pays the purse to a rival stable whose runner-up died in the finals', () => {
+    const [w1, w2, w3, w4] = makeFourWarriors();
+    const state = makeBaseState();
+    state.roster = [w1];
+    // w2 was killed in the finals bout: off the rival roster, but the death
+    // registry and the selection-time participant snapshot still carry it.
+    state.rivals = [makeTournamentRival([w3, w4])];
+    state.deadWarriorIds = [w2.id];
+    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'A', 'A', 'Gold');
+    const updated = awardTournamentPrizes(tournament, state);
+    const rival = updated.rivals.find((r) => r.id === RIVAL_ID)!;
+    const paid = (rival.ledger ?? [])
+      .filter((l) => l.category === 'prize' && l.label.startsWith('Imperial Gold Cup'))
+      .reduce((s, l) => s + l.amount, 0);
+    // silver (dead runner-up w2, 2500) + bronze (w3, 1250)
+    expect(paid).toBe(3750);
+    expect(rival.treasury).toBe(500 + 3750);
+  });
+
+  it('still pays the purse to the player when their champion died in the finals', () => {
+    const [w1, w2, w3, w4] = makeFourWarriors(1);
+    const state = makeBaseState();
+    // w2 (player) won the finals but died — off the roster.
+    state.roster = [];
+    state.rivals = [makeTournamentRival([w1, w3, w4])];
+    state.deadWarriorIds = [w2.id];
+    const tournament = makeCompletedTournament([w1, w2, w3, w4], 'D', 'A', 'Gold');
+    // winnerFirst='D' → finals winner is warriorIdD (w2, the player).
+    const updated = awardTournamentPrizes(tournament, state);
+    expect(updated.treasury).toBe(1000 + 5000);
+    expect(
+      updated.ledger.some(
+        (l) => l.category === 'prize' && l.label === 'Imperial Gold Cup (1st)'
+      )
+    ).toBe(true);
+    // No posthumous token pool awards.
+    expect(tokenTypesOf(updated)).toEqual([]);
+  });
+});

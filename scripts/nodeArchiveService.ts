@@ -99,31 +99,6 @@ export class NodeArchiveService implements ArchiveService {
   }
 
   /**
-   * Archive gazette.
-   */
-  async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
-    assertSafeFileNamePart(String(week), 'week');
-    return this.enqueue(async () => {
-      const filePath = path.join(this.seasonDir(season, 'gazettes'), `week_${week}.md`);
-      await mkdir(path.dirname(filePath), { recursive: true });
-      await writeFile(filePath, markdown, 'utf8');
-    });
-  }
-
-  /**
-   * Retrieve gazette.
-   */
-  async retrieveGazette(season: number, week: number): Promise<string | null> {
-    assertSafeFileNamePart(String(week), 'week');
-    try {
-      const filePath = path.join(this.seasonDir(season, 'gazettes'), `week_${week}.md`);
-      return await readFile(filePath, 'utf8');
-    } catch {
-      return null;
-    }
-  }
-
-  /**
    * Archive hot state.
    */
   async archiveHotState(slotId: string, stateData: GameState): Promise<void> {

@@ -5,9 +5,48 @@ import type {
   Rivalry,
   OwnerGrudge,
 } from '@/types/state.types';
+import type { StateImpact } from '@/engine/impacts/types';
 import type { WarriorId } from '@/types/shared.types';
 import { getPairKey } from '@/utils/keyUtils';
 import { clearWarriorCache } from '@/engine/core/warriorLookup';
+import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
+
+/**
+ * Impact keys that can change the identity or membership of the data the week
+ * caches index: player roster, rival rosters/stables, rivalries, owner
+ * grudges. Conservative on purpose — over-inclusion costs one rebuild,
+ * under-inclusion silently serves stale map entries until the next boundary.
+ */
+const CACHE_TOUCHING_KEYS = new Set<keyof StateImpact>([
+  'rosterUpdates',
+  'rosterRemovals',
+  'rosterAdditions',
+  'warriorEpithets',
+  'retired',
+  'graveyard',
+  'deadWarriorIds',
+  'rivalsUpdates',
+  'rivalWarriorPatches',
+  'rivalRosterRemovals',
+  'rivalReplacements',
+  'rivalsAdditions',
+  'rivalsRemovals',
+  'rivalries',
+  'ownerGrudges',
+]);
+
+/**
+ * Whether resolving these impacts could invalidate the week caches. Impact
+ * handlers replace warrior/stable objects in place, so a boundary that
+ * applied none of the cache-touching keys leaves every map still accurate —
+ * the caller may skip buildWeekCaches entirely.
+ */
+export function impactsAffectWeekCaches(impacts: StateImpact[]): boolean {
+  return impacts.some(
+    (impact) =>
+      impact != null && Object.keys(impact).some((k) => CACHE_TOUCHING_KEYS.has(k as keyof StateImpact))
+  );
+}
 
 /**
  * Builds warrior and rival maps once per week for O(1) lookups.
@@ -16,6 +55,7 @@ import { clearWarriorCache } from '@/engine/core/warriorLookup';
  * handlers replace objects — e.g. rosterUpdates produces a new Warrior).
  */
 export function buildWeekCaches(state: GameState): void {
+  telemetry.increment(TelemetryEvents.WEEK_CACHE_REBUILDS);
   // The WeakMap in warriorLookup keys on the state object, which survives
   // stage boundaries mid-tick — drop it so post-impact reads never see
   // pre-resolution rosters.

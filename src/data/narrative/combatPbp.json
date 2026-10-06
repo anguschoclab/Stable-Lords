@@ -4074,6 +4074,13 @@
           "The air turns to a milky, blinding white as the mist veil falls.",
           "A sudden, chilling fog violently erases all visibility in the arena."
         ]
+      },
+      "slick_floor": {
+        "lines": [
+          "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
+          "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
+          "The polished arena floor betrays the fighters' footing under the lanterns!"
+        ]
       }
     }
   },

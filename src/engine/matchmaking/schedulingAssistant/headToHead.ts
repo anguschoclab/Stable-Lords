@@ -26,55 +26,76 @@ export interface HeadToHeadRecord {
   lastFightWeek?: number;
 }
 
-function getHeadToHeadRecord(
-  a: Warrior,
-  b: Warrior,
-  arenaHistory: FightSummary[] | undefined
-): PairwiseHeadToHead {
-  let wins = 0;
-  let losses = 0;
-  let total = 0;
-  let lastWinner: 'a' | 'b' | 'draw' | null = null;
-  let lastFightWeek: number | undefined;
-
-  if (!arenaHistory) {
-    return { wins: 0, losses: 0, total: 0, lastWinner: null };
-  }
-
-  for (let i = 0; i < arenaHistory.length; i++) {
-    const fight = arenaHistory[i];
-    if (!fight) continue;
-    const aIsA = fight.warriorIdA === a.id;
-    const aIsD = fight.warriorIdD === a.id;
-    const bIsA = fight.warriorIdA === b.id;
-    const bIsD = fight.warriorIdD === b.id;
-
-    if ((aIsA && bIsD) || (aIsD && bIsA)) {
-      total++;
-      lastFightWeek = fight.week;
-      if (fight.winner === null) {
-        lastWinner = 'draw';
-      } else if ((aIsA && fight.winner === 'A') || (aIsD && fight.winner === 'D')) {
-        wins++;
-        lastWinner = 'a';
-      } else {
-        losses++;
-        lastWinner = 'b';
-      }
-    }
-  }
-
-  return { wins, losses, total, lastWinner, lastFightWeek };
-}
+/** Shared empty record — callers treat the returned record as read-only. */
+const EMPTY_H2H: PairwiseHeadToHead = { wins: 0, losses: 0, total: 0, lastWinner: null };
 
 // arenaHistory is append-only-by-replacement (every writer produces a new
-// array), so keying the memo on the array's identity is safe — a new history
-// automatically starts a fresh cache.
+// array), so keying the index on the array's identity is safe — a new
+// history automatically starts a fresh index.
 const h2hByHistory = new WeakMap<FightSummary[], Map<string, PairwiseHeadToHead>>();
 
 /**
- * Memoized head-to-head lookup: O(F) history scan at most once per ordered
- * warrior pair per arenaHistory identity.
+ * Builds every directional pair record in ONE O(F) pass over the history.
+ *
+ * Key `x|y` accumulates x's record vs y across ALL of their fights,
+ * regardless of which side (A or D) each occupied per fight — matching the
+ * original per-pair scan semantics exactly. Repeated cold-pair O(F) scans
+ * made head-to-head lookup the dominant rival-strategy cost.
+ */
+function headToHeadIndex(arenaHistory: FightSummary[]): Map<string, PairwiseHeadToHead> {
+  const cached = h2hByHistory.get(arenaHistory);
+  if (cached) return cached;
+  const index = new Map<string, PairwiseHeadToHead>();
+  const touch = (xId: string, yId: string): PairwiseHeadToHead => {
+    const key = `${xId}|${yId}`;
+    let rec = index.get(key);
+    if (!rec) {
+      rec = { wins: 0, losses: 0, total: 0, lastWinner: null };
+      index.set(key, rec);
+    }
+    return rec;
+  };
+  for (const fight of arenaHistory) {
+    if (!fight) continue;
+    const aId = fight.warriorIdA;
+    const dId = fight.warriorIdD;
+    if (!aId || !dId) continue;
+    // recA: the fight's A-side warrior's record vs the D-side warrior.
+    const recA = touch(aId, dId);
+    recA.total++;
+    recA.lastFightWeek = fight.week;
+    if (fight.winner === null) {
+      recA.lastWinner = 'draw';
+    } else if (fight.winner === 'A') {
+      recA.wins++;
+      recA.lastWinner = 'a';
+    } else {
+      recA.losses++;
+      recA.lastWinner = 'b';
+    }
+    // Degenerate self-fight: the old scan counted it once — do the same.
+    if (dId === aId) continue;
+    // recD: the same fight from the D-side warrior's perspective.
+    const recD = touch(dId, aId);
+    recD.total++;
+    recD.lastFightWeek = fight.week;
+    if (fight.winner === null) {
+      recD.lastWinner = 'draw';
+    } else if (fight.winner === 'D') {
+      recD.wins++;
+      recD.lastWinner = 'a';
+    } else {
+      recD.losses++;
+      recD.lastWinner = 'b';
+    }
+  }
+  h2hByHistory.set(arenaHistory, index);
+  return index;
+}
+
+/**
+ * Indexed head-to-head lookup: O(1) per ordered warrior pair after one
+ * O(F) index build per arenaHistory identity.
  */
 export function headToHeadFor(
   a: Warrior,
@@ -82,21 +103,15 @@ export function headToHeadFor(
   arenaHistory: FightSummary[] | undefined,
   explicit?: Map<string, PairwiseHeadToHead>
 ): PairwiseHeadToHead {
-  if (!arenaHistory || arenaHistory.length === 0) {
-    return getHeadToHeadRecord(a, b, arenaHistory);
-  }
+  if (!arenaHistory || arenaHistory.length === 0) return EMPTY_H2H;
   // Directional key — wins/losses are recorded from side A's perspective, so
   // `${a}|${b}` must stay distinct from `${b}|${a}` (do not use getPairKey).
   const key = `${a.id}|${b.id}`;
-  let map = explicit ?? h2hByHistory.get(arenaHistory);
-  if (!map) {
-    map = new Map();
-    h2hByHistory.set(arenaHistory, map);
+  if (explicit) {
+    const hit = explicit.get(key);
+    if (hit) return hit;
   }
-  let hh = map.get(key);
-  if (!hh) {
-    hh = getHeadToHeadRecord(a, b, arenaHistory);
-    map.set(key, hh);
-  }
+  const hh = headToHeadIndex(arenaHistory).get(key) ?? EMPTY_H2H;
+  explicit?.set(key, hh);
   return hh;
 }

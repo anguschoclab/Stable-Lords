@@ -25,21 +25,28 @@ function processTournamentPlaceAward(args: ProcessTournamentPlaceAwardArgs): Gam
   const { tier, tournament } = args;
   let updatedState = { ...state };
   const w = findWarriorById(updatedState, warriorId, tournament);
-  if (!w) return updatedState;
+  // A warrior killed in the finals still earned the placement — fall back to
+  // the selection-time participant snapshot so the purse reaches their stable
+  // even though the corpse can take neither medals nor tokens.
+  const participant = w ?? tournament.participants.find((p) => p.id === warriorId);
+  if (!participant) return updatedState;
 
-  const isPlayer = w.stableId === updatedState.player.id;
+  const isPlayer = participant.stableId === updatedState.player.id;
   const purseMult = place === 1 ? 1.0 : place === 2 ? 0.5 : 0.25;
   const prizeGold = Math.floor(basePurse * purseMult);
   const prizeFame = place === 1 ? 100 : place === 2 ? 50 : 25;
 
-  // 1. Update Carrier Medals
-  updatedState = modifyWarrior(updatedState, w.id, (draft) => {
-    if (!draft.career.medals) draft.career.medals = { gold: 0, silver: 0, bronze: 0 };
-    if (place === 1) draft.career.medals.gold++;
-    if (place === 2) draft.career.medals.silver++;
-    if (place === 3) draft.career.medals.bronze++;
-    draft.fame = (draft.fame || 0) + prizeFame;
-  });
+  // 1. Update Carrier Medals (live warriors only — modifyWarrior no-ops on
+  // a dead warrior who has left the rosters anyway, but skip the ceremony).
+  if (w) {
+    updatedState = modifyWarrior(updatedState, w.id, (draft) => {
+      if (!draft.career.medals) draft.career.medals = { gold: 0, silver: 0, bronze: 0 };
+      if (place === 1) draft.career.medals.gold++;
+      if (place === 2) draft.career.medals.silver++;
+      if (place === 3) draft.career.medals.bronze++;
+      draft.fame = (draft.fame || 0) + prizeFame;
+    });
+  }
 
   // 2. Financials & token awards
   const tokenMap: Record<string, Partial<Record<1 | 2 | 3, InsightTokenType[]>>> = {
@@ -67,8 +74,8 @@ function processTournamentPlaceAward(args: ProcessTournamentPlaceAwardArgs): Gam
       ...updatedState.player,
       fame: (updatedState.player.fame || 0) + prizeFame,
     };
-    if (place === 1) updatedState.rosterBonus = (updatedState.rosterBonus || 0) + 1;
-    for (const tokenType of tokens) {
+    if (place === 1 && w) updatedState.rosterBonus = (updatedState.rosterBonus || 0) + 1;
+    for (const tokenType of w ? tokens : []) {
       updatedState = PatronTokenService.awardToken(
         updatedState,
         tokenType as import('@/types/state.types').InsightTokenType,
@@ -78,7 +85,7 @@ function processTournamentPlaceAward(args: ProcessTournamentPlaceAwardArgs): Gam
     }
   } else {
     updatedState = applyRivalAward(
-      { state: updatedState, w: w, place: place, prizeGold: prizeGold, prizeFame: prizeFame, tokens: tokens, awardRng: awardRng, tournament: tournament }
+      { state: updatedState, w: participant, place: place, prizeGold: prizeGold, prizeFame: prizeFame, tokens: w ? tokens : [], awardRng: awardRng, tournament: tournament }
     );
   }
 

@@ -6,6 +6,7 @@ import { deriveAbsoluteWeek, isTournamentWeekOfYear } from '@/engine/core/absolu
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import { pruneBoutOffers, voidUnresolvableSignedOffers } from '@/engine/bout/offerCleanup';
 import { endReign } from '@/engine/championship/arenaChampionship';
+import { validateStateInvariants } from '@/engine/validate/stateInvariants';
 import { buildWeekCaches } from './caches';
 import type { WeekContext } from './context';
 /**
@@ -207,5 +208,12 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
 
   // Handle OPFS archiving — always defer to off-thread flush for consistency
   deferBoutArchives(state, ctx.currentWeek);
+
+  if (import.meta.env.DEV) {
+    const violations = validateStateInvariants(state);
+    if (violations.length > 0) {
+      console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
+    }
+  }
   return state;
 }

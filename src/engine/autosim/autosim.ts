@@ -9,6 +9,7 @@ import { evaluateStopConditions, type SoftStopCondition } from '../pipeline/tick
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 import { applyCouncilDecisions } from '../advisor/applyCouncilPlan';
+import { isSimCancellationRequested } from '../runtime/cancellation';
 
 /**
  * Defines the shape of autosim week summary.
@@ -28,7 +29,14 @@ export interface AutosimWeekSummary {
 export interface AutosimResult {
   finalState: GameState;
   weeksSimmed: number;
-  stopReason: 'max_weeks' | 'death' | 'injury' | 'bankrupt' | 'no_pairings' | 'custom';
+  stopReason:
+    | 'max_weeks'
+    | 'death'
+    | 'injury'
+    | 'bankrupt'
+    | 'no_pairings'
+    | 'custom'
+    | 'cancelled';
   stopDetail: string;
   weekSummaries: AutosimWeekSummary[];
 }
@@ -194,6 +202,12 @@ export async function runAutosim(
   });
 
   for (let i = 0; i < weeksToSim; i++) {
+    // Cooperative cancellation — a cancelSim posted to the worker flips this
+    // flag and the run exits at the next week boundary with partial state.
+    if (isSimCancellationRequested()) {
+      return finish('cancelled', 'Cancelled by user');
+    }
+
     // 1. Advance week headless. Week 1 clones the caller-owned input; weeks
     // after that run on the state advanceWeek itself returned — exclusively
     // owned by this loop — so mutableInput skips the structuredClone.

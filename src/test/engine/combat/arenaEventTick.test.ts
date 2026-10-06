@@ -1,13 +1,12 @@
 /**
- * V2-DEFERRED — ARENA_EVENTS engine wiring.
+ * ARENA_EVENTS engine wiring — contract tests.
  *
  * The arena-event registry (constants/arenaEvents.ts) declares trigger
- * conditions, narrative text, and mechanical effects, but has no production
- * consumer. These tests pin the intended wiring: a per-exchange
- * `tickArenaEvents` pass inside `resolveExchange` that evaluates
- * tag-matched events against the exchange's outcome, applies mechanical
- * effects, and emits ARENA_EVENT CombatEvents that narrate into the bout
- * log.
+ * conditions, narrative text, and mechanical effects. These tests pin the
+ * production wiring: a per-exchange `tickArenaEvents` pass inside
+ * `resolveExchange` that evaluates tag-matched events against the
+ * exchange's outcome, applies mechanical effects, and emits ARENA_EVENT
+ * CombatEvents that narrate into the bout log.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
@@ -643,18 +642,74 @@ describe('arena events — next-exchange attribution', () => {
     expect(riposte).toBeTruthy();
     expect(riposte?.metadata?.arenaModSources).toContain('Synthetic');
   });
+
+  it('emits a RIPOSTE_FAILED marker carrying the mod source when a pending riposte_mod suppresses the counter', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['premium']),
+    });
+    ctx.arenaEventMods = { initiativeMod: 0, riposteMod: -4 };
+    ctx.arenaEventModSources = { initiative: [], riposte: ['Mist Veil'] };
+    ctx.arenaEventCandidates = []; // keep the tick from clobbering sources
+    // ATT/RIP floored → the attack whiffs and the whiff-riposte check fails,
+    // so the pending mod's counter is suppressed deterministically.
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    const marker = events.find((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE_FAILED');
+    expect(marker).toBeTruthy();
+    expect(marker?.metadata?.arenaModSources).toContain('Mist Veil');
+  });
+
+  it('emits no RIPOSTE_FAILED marker when no riposte mod source is pending', () => {
+    const ctx = makeResolutionContext({
+      arenaConfig: arenaWithTags(['premium']),
+    });
+    ctx.arenaEventMods = { initiativeMod: 0, riposteMod: 0 };
+    ctx.arenaEventModSources = { initiative: [], riposte: [] };
+    ctx.arenaEventCandidates = [];
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    const events = resolveExchange(ctx, fA, fD);
+
+    expect(events.every((e) => e.result !== 'RIPOSTE_FAILED')).toBe(true);
+  });
+
+  it('a real registry riposte_mod event (slick_floor) propagates to the RIPOSTE_FAILED marker', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['indoor']) });
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    ctx.exchange = 6; // slick_floor's interval — fires at the tick, queues the mod
+    const firing = resolveExchange(ctx, fA, fD);
+    expect(arenaEventIds(firing)).toContain('slick_floor');
+    expect(ctx.arenaEventModSources?.riposte).toContain('Slick Floor');
+
+    // Next exchange: the pending mod suppresses the whiff-riposte check and
+    // the marker carries the real hazard name.
+    ctx.exchange = 7;
+    const events = resolveExchange(ctx, fA, fD);
+    const marker = events.find((e) => e.result === 'RIPOSTE_FAILED');
+    expect(marker?.metadata?.arenaModSources).toContain('Slick Floor');
+  });
 });
 
 describe('bleed termination — hazard attribution', () => {
   it('attributes a bleed-down to BLEED, not ARENA_HAZARD, even in a tagged arena', () => {
     const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['premium']) });
-    // Sky-high DEF on both fighters guarantees no weapon hit lands, so the
-    // bleed tick is the only thing that can drop fD (hp 3 - stacks 5 × 1).
+    // Attack skill floored on both fighters → every attack whiffs and no
+    // riposte can fire, so the bleed tick is the only thing that can drop
+    // fD (hp 3 - stacks 5 × 1).
     // The end must say BLEED and the arena tick must not stack a second
     // ARENA_HAZARD end on top.
-    const wall = { ATT: 10, PAR: 200, DEF: 200, INI: 10, RIP: 10, DEC: 10 };
-    const fA = makeFighterState({ hp: 100, skills: { ...wall } });
-    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...wall } });
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ hp: 100, skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', hp: 3, bleedStacks: 5, skills: { ...cantHit } });
 
     const events = resolveExchange(ctx, fA, fD);
 

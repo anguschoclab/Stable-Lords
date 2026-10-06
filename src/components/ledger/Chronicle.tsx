@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';
+import { ScrollText, ChevronRight, History, Terminal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { NewsletterItem } from '@/types/state.types';
@@ -102,25 +102,6 @@ function TimelineEntryList({ entries }: { entries: string[] }) {
   );
 }
 
-function TimelineItemFooter() {
-  return (
-    <div className="px-8 py-3 bg-neutral-900/40 border-t border-white/5 flex items-center justify-between opacity-40 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1.5">
-          <Activity className="h-3 w-3 text-muted-foreground" />
-          <span className="text-[8px] font-black uppercase tracking-widest">Integrity: PASS</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <ShieldCheck className="h-3 w-3 text-muted-foreground" />
-          <span className="text-[8px] font-black uppercase tracking-widest">Auth_Lvl: ADMIN</span>
-        </div>
-      </div>
-      <span className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground">
-        LOG_FINALIZED
-      </span>
-    </div>
-  );
-}
 
 function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: number }) {
   return (
@@ -141,7 +122,6 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
       >
         <TimelineItemHeader item={item} />
         <TimelineEntryList entries={item.items} />
-        <TimelineItemFooter />
       </Surface>
     </motion.div>
   );

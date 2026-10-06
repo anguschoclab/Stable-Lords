@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
+import { loadCombatNarrative } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
 import type { Warrior, FightSummary, WarriorId, FightPlan } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
@@ -196,7 +197,10 @@ export function useFtueFlow() {
   const [playerPlan, setPlayerPlan] = useState<FightPlan | null>(null);
   const [boutSeed] = useState(() => cryptoRandomInt(0, 0x7fffffff));
 
-  const runTutorialBout = useCallback(() => {
+  const runTutorialBout = useCallback(async () => {
+    // The FTUE bout runs on the main thread outside the week pipeline, which
+    // is the only production site that warms the combat narrative archive.
+    await loadCombatNarrative();
     const result = simulateTutorialBout(selectedWarriors, playerPlan, boutSeed);
     if (result) setBoutResult(result);
   }, [selectedWarriors, playerPlan, boutSeed]);

@@ -6,6 +6,7 @@ import { FastForward } from 'lucide-react';
 
 interface WorldPanelProps {
   onSkipWeek: () => void;
+  onSkipMonth: () => void;
   onSkipSeason: () => void;
   onSkipFTUE: () => void;
 }
@@ -13,7 +14,7 @@ interface WorldPanelProps {
 /**
  *
  */
-export function WorldPanel({ onSkipWeek, onSkipSeason, onSkipFTUE }: WorldPanelProps) {
+export function WorldPanel({ onSkipWeek, onSkipMonth, onSkipSeason, onSkipFTUE }: WorldPanelProps) {
   return (
     <div className="space-y-12">
       <SectionDivider label="Time Control" />
@@ -34,6 +35,13 @@ export function WorldPanel({ onSkipWeek, onSkipSeason, onSkipFTUE }: WorldPanelP
               variant="secondary"
             >
               Advance 1 Week
+            </Button>
+            <Button
+              onClick={onSkipMonth}
+              className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none"
+              variant="secondary"
+            >
+              Advance Month (4W)
             </Button>
             <Button
               onClick={onSkipSeason}

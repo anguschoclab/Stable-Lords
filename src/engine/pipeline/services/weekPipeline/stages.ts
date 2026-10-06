@@ -6,7 +6,7 @@ import { loadCombatNarrative } from '@/data/narrative';
 import { runBoutSimulationPass } from '../../passes/BoutSimulationPass';
 import { WEEK_PIPELINE_PASSES } from './passes';
 import { isPipelineProfiling, recordPassTiming } from './profiling';
-import { buildWeekCaches } from './caches';
+import { buildWeekCaches, impactsAffectWeekCaches } from './caches';
 import type { WeekContext } from './context';
 import type { WeekAdvanceOptions } from '../weekPipelineService';
 /**
@@ -34,11 +34,11 @@ export async function runBoutPhase(state: GameState, ctx: WeekContext): Promise<
     injuryNames: summary.injuryNames,
   };
 
-  // Resync all week caches: impact handlers replaced warrior/rival objects,
-  // so warriorMap & friends still point at pre-bout identities. Rebuilding
-  // covers deaths, injuries, and roster changes in one pass (supersedes the
-  // old invalidateDeadWarriors + manual rivalMap rebuild — NF2 fix).
-  buildWeekCaches(settledState);
+  // Resync all week caches only when the bout impact could have replaced
+  // warrior/rival identities — a quiet week (no pairings) leaves every map
+  // still accurate. (Supersedes the old invalidateDeadWarriors + manual
+  // rivalMap rebuild — NF2 fix.)
+  if (impactsAffectWeekCaches([boutImpact])) buildWeekCaches(settledState);
 
   return settledState;
 }
@@ -65,7 +65,7 @@ export async function runStage(
     if (profiling) recordPassTiming(spec.id, stage, performance.now() - started);
   }
   const resolved = resolveImpacts(state, impacts);
-  buildWeekCaches(resolved);
+  if (impactsAffectWeekCaches(impacts)) buildWeekCaches(resolved);
   return resolved;
 }
 /**

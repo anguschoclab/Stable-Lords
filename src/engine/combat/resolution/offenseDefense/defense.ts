@@ -83,7 +83,26 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
       { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: 1.0, extraDmg: styleRip.dmgBonus }
     );
     stampRiposteSources(s);
+  } else {
+    stampFailedRiposte(s, defLabel);
   }
+}
+
+/**
+ * A suppressed counter under a pending arena riposte_mod: emit a lightweight
+ * marker carrying the hazard sources so the narrator can attribute the
+ * silence ("X's riposte labors against the venue's grip") instead of the
+ * mod vanishing invisibly like an ordinary miss.
+ */
+function stampFailedRiposte(s: OffenseDefenseCtx, defLabel: 'A' | 'D'): void {
+  const sources = s.ctx.arenaEventModSources?.riposte;
+  if (!sources?.length) return;
+  s.events.push({
+    type: 'DEFENSE',
+    actor: defLabel,
+    result: 'RIPOSTE_FAILED',
+    metadata: { arenaModSources: [...sources] },
+  });
 }
 
 function computeExtraDefPenalty(s: OffenseDefenseCtx): number {
@@ -155,6 +174,8 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
       { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: specRiposteMult, extraDmg: styleRip.dmgBonus }
     );
     stampRiposteSources(s);
+  } else {
+    stampFailedRiposte(s, defLabel);
   }
 }
 

@@ -20,7 +20,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Keep in sync with src/constants/core/core.ts
-const SAVE_STATE_VERSION = '2.1.0-hardened';
+const SAVE_STATE_VERSION = '3.0.0';
 
 /** Minimal validated save-state envelope; the full game payload is opaque to main. */
 interface SaveEnvelope {
@@ -660,73 +660,6 @@ export function registerIPCHandlers() {
       return { success: true, data: JSON.parse(data) };
     } catch (error) {
       console.error('Error retrieving bout log:', error);
-      return { success: false, error: (error as Error).message };
-    }
-  });
-
-  ipcMain.handle('archive-gazette', async (_event, season, week, markdown) => {
-    try {
-      if (!validateSeasonWeek(season)) {
-        return { success: false, error: 'Invalid season' };
-      }
-      if (!validateSeasonWeek(week)) {
-        return { success: false, error: 'Invalid week' };
-      }
-      if (typeof markdown !== 'string' || markdown.length > 100000) {
-        return { success: false, error: 'Invalid markdown format or size too large' };
-      }
-      await ensureSaveDirectory();
-      const filePath = resolveContainedPath(
-        getSaveDirectory(),
-        'seasons',
-        `season_${season}`,
-        'gazettes',
-        `week_${week}.md`
-      );
-      if (!filePath) {
-        return { success: false, error: 'Invalid path' };
-      }
-      const seasonDir = path.dirname(filePath);
-      try {
-        await fs.access(seasonDir);
-      } catch {
-        await fs.mkdir(seasonDir, { recursive: true });
-      }
-      await fs.writeFile(filePath, markdown);
-      return { success: true };
-    } catch (error) {
-      console.error('Error archiving gazette:', error);
-      return { success: false, error: (error as Error).message };
-    }
-  });
-
-  ipcMain.handle('retrieve-gazette', async (_event, season, week) => {
-    try {
-      if (!validateSeasonWeek(season)) {
-        return { success: false, error: 'Invalid season' };
-      }
-      if (!validateSeasonWeek(week)) {
-        return { success: false, error: 'Invalid week' };
-      }
-      const filePath = resolveContainedPath(
-        getSaveDirectory(),
-        'seasons',
-        `season_${season}`,
-        'gazettes',
-        `week_${week}.md`
-      );
-      if (!filePath) {
-        return { success: false, error: 'Invalid path' };
-      }
-      try {
-        await fs.access(filePath);
-      } catch {
-        return { success: false, error: 'Gazette not found' };
-      }
-      const data = await fs.readFile(filePath, 'utf-8');
-      return { success: true, data };
-    } catch (error) {
-      console.error('Error retrieving gazette:', error);
       return { success: false, error: (error as Error).message };
     }
   });

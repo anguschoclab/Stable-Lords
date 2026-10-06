@@ -40,13 +40,15 @@ interface MatchupContext {
 function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
   let matchupModifier = -Infinity;
   let foundOpponent = false;
+  // Constant per calling warrior — hoist out of the opponent loop.
+  const aStableId = (warrior.stableId ?? ctx.rivalId) as string;
   if (ctx.intent === 'VENDETTA' && ctx.targetStableId) {
     const targetPool = ctx.targetIsPlayer ? ctx.playerTargets : (ctx.targetRival?.roster ?? []);
     for (const opponent of targetPool) {
       if (!isActive(opponent)) continue;
       if (ctx.state && isChampionBookingLocked(ctx.state, opponent.id)) continue;
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
-        aStableId: (warrior.stableId ?? ctx.rivalId) as string,
+        aStableId,
         bStableId:
           ctx.targetIsPlayer && ctx.state
             ? (ctx.state.player.id as string)
@@ -59,7 +61,7 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
   } else if (ctx.intent !== 'VENDETTA') {
     for (const opponent of ctx.nonVendettaOpponents) {
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
-        aStableId: (warrior.stableId ?? ctx.rivalId) as string,
+        aStableId,
         bStableId: opponent.stableId as string,
       });
       const score = clamp((matchupScore - 100) / 20, -5, 5);

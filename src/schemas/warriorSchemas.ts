@@ -14,7 +14,24 @@ import {
   DefensiveTacticSchema,
   ConditionTriggerTypeSchema,
   DistanceRangeSchema,
+  AnnualAwardTypeSchema,
 } from './schemaEnums';
+
+/**
+ * AnnualAward schema — lives here (not fightSchemas) so Warrior.awards and
+ * Owner.awards can reference it without a warriorSchemas↔fightSchemas cycle.
+ */
+export const AnnualAwardSchema = z.object({
+  year: z.number(),
+  type: AnnualAwardTypeSchema,
+  warriorId: z.string().optional(),
+  warriorName: z.string().optional(),
+  stableId: z.string().optional(),
+  stableName: z.string().optional(),
+  style: FightingStyleSchema.optional(),
+  value: z.number(),
+  reason: z.string(),
+});
 
 /**
  * Attributes schema with range validation (3-25)
@@ -295,13 +312,50 @@ export const WarriorSchema = z.object({
   dateOfDeath: z.string().optional(),
   causeOfDeath: z.string().optional(),
   yearlySnapshots: z.record(z.string(), CareerRecordSchema).optional(),
-  awards: z.array(z.any()).optional(), // AnnualAward - using any for circular reference
+  awards: z.array(AnnualAwardSchema).optional(),
   traits: z.array(z.string()),
   trainability: z.number().optional(),
   lore: z.string().optional(),
   origin: z.string().optional(),
   lineage: WarriorLineageSchema.optional(),
   isStarInvestment: z.boolean().optional(),
+});
+
+/**
+ * PoolWarrior schema — recruit-pool / free-agent entries. Mirrors
+ * `PoolWarrior` in engine/recruitment/recruitment/types.ts; persisted inside
+ * GameState.recruitPool / freeAgents, so this replaces the `z.any()` holes.
+ */
+export const PoolWarriorSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  style: FightingStyleSchema,
+  attributes: AttributesSchema,
+  potential: z.record(z.string(), z.number()),
+  baseSkills: BaseSkillsSchema,
+  derivedStats: DerivedStatsSchema,
+  tier: z.enum(['Common', 'Promising', 'Exceptional', 'Prodigy']),
+  cost: z.number(),
+  age: z.number(),
+  lore: z.string(),
+  origin: z.string().optional(),
+  traits: z.array(z.string()),
+  addedWeek: z.number(),
+  favorites: WarriorFavoritesSchema,
+  lineage: WarriorLineageSchema.optional(),
+  luckfactor: LuckfactorSchema,
+  veteran: z
+    .object({
+      fame: z.number(),
+      popularity: z.number(),
+      career: CareerRecordSchema,
+      titles: z.array(z.string()),
+    })
+    .optional(),
+  academyStableId: z.string().optional(),
+  academyClaimExpiryWeek: z.number().optional(),
+  shelfWeeksRemaining: z.number().optional(),
+  source: z.enum(['orphanage', 'academy', 'freeAgent', 'generated']).optional(),
 });
 
 /**

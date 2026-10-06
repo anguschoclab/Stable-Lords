@@ -42,6 +42,13 @@ export interface NarrateHelpers {
   getSpeed: (actor: Actor) => number | undefined;
   displayName: (actor: Actor) => string;
   getPostHitRatio: (target: Actor, event: CombatEvent) => number;
+  /**
+   * Victims that already got an hp-ratio state-change line this exchange —
+   * a weapon hit plus a hazard/bleed hit in the same exchange both see the
+   * same threshold crossing, and two "the injury looks severe" lines for
+   * one fighter reads as a dupe. First emitted line wins.
+   */
+  stateChangesIssued: Set<Actor>;
 }
 
 /** One event-type narrator: event + helpers + minute -> lines to append. */
@@ -170,6 +177,13 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
     }
     return out;
   }
+  if (event.result === 'RIPOSTE_FAILED') {
+    // A counter suppressed under a pending arena riposte_mod — echo-only,
+    // never counterstrike narration for a riposte that didn't happen.
+    const sources = event.metadata?.arenaModSources;
+    if (!Array.isArray(sources) || !sources.length) return [];
+    return arenaModEcho(sources, 'riposte', actorName, h, minute);
+  }
   return [];
 };
 
@@ -201,6 +215,29 @@ function hitAttackLead(args: HitAttackLeadArgs): MinuteEvent[] {
   ];
 }
 
+/**
+ * hp-ratio state-change line, deduped per victim per exchange: the first
+ * emitted line marks the victim; later hits in the same exchange (weapon +
+ * environmental seeing the same crossing) don't repeat it.
+ */
+function stateChangeOnce(
+  event: CombatEvent,
+  h: NarrateHelpers,
+  victimName: string
+): string | null {
+  const target = event.target as Actor;
+  if (h.stateChangesIssued.has(target)) return null;
+  const prevRatio = target === 'A' ? h.ctx.prevHpRatioA : h.ctx.prevHpRatioD;
+  const line = stateChangeLine(
+    h.rng,
+    victimName,
+    h.getPostHitRatio(target, event),
+    prevRatio
+  );
+  if (line) h.stateChangesIssued.add(target);
+  return line;
+}
+
 /** Post-hit reactions: severity line, hp-ratio state change, crowd response. */
 function hitReactions(
   event: Parameters<EventNarrator>[0],
@@ -217,9 +254,8 @@ function hitReactions(
   const sevLine = damageSeverityLine(rng, event.value, h.getMaxHp(target), opponentName);
   if (sevLine) out.push({ minute, text: sevLine });
 
-  const prevRatio = target === 'A' ? ctx.prevHpRatioA : ctx.prevHpRatioD;
   const newHpRatio = h.getPostHitRatio(target, event);
-  const sLine = stateChangeLine(rng, opponentName, newHpRatio, prevRatio);
+  const sLine = stateChangeOnce(event, h, opponentName);
   if (sLine) out.push({ minute, text: sLine });
 
   const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio, ctx.crowdMood);
@@ -236,10 +272,7 @@ function hazardStateChange(
   h: NarrateHelpers,
   minute: number
 ): MinuteEvent[] {
-  const target = event.target as Actor;
-  const victimName = h.getName(target);
-  const prevRatio = target === 'A' ? h.ctx.prevHpRatioA : h.ctx.prevHpRatioD;
-  const line = stateChangeLine(h.rng, victimName, h.getPostHitRatio(target, event), prevRatio);
+  const line = stateChangeOnce(event, h, h.getName(event.target as Actor));
   return line ? [{ minute, text: line }] : [];
 }
 

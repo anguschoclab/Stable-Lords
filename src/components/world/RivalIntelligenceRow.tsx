@@ -1,7 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { STYLE_DISPLAY_NAMES, type FightingStyle, type RivalStableData } from '@/types/game';
+import {
+  AI_INTENT_DISPLAY_NAMES,
+  STYLE_DISPLAY_NAMES,
+  type FightingStyle,
+  type RivalStableData,
+} from '@/types/game';
 import { getAllArenas } from '@/data/arenas';
 import type { ArenaTitle } from '@/types/state.types';
 import { cn } from '@/lib/utils';
@@ -195,7 +200,7 @@ function RowHeader({
                   : 'bg-primary/20 text-primary'
           )}
         >
-          {rival.strategy?.intent || 'STABLE'}
+          {rival.strategy?.intent ? AI_INTENT_DISPLAY_NAMES[rival.strategy.intent] : 'No intel'}
         </Badge>
       </div>
     </div>

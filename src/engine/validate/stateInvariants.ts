@@ -1,8 +1,9 @@
 /**
  * State-invariant validation — structural assertions that must hold after any
  * week/quarter/year advance, regardless of execution path (sequential or
- * shard-parallel). Run periodically in soak.mjs and CI slow tests; each check
- * is O(state) and off the hot path.
+ * shard-parallel). Run in dev via `finalizeState` (import.meta.env.DEV),
+ * periodically in soak.mjs, and in CI slow tests; each check is O(state)
+ * and off the hot path.
  *
  * Violations are reported, never thrown mid-run — callers decide whether to
  * abort (CI) or log (soak).

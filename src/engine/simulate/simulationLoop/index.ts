@@ -61,9 +61,19 @@ function runExchange(args: RunExchangeArgs): boolean {
   }
 
   // A. Resolve Math (Dice)
+  const endA0 = fA.endurance;
+  const endD0 = fD.endurance;
   const events = resolveExchange(resCtx, fA, fD);
   if (telemetry) {
-    run.exchangeLog.push(buildExchangeLogEntry(ex, min, phase, events));
+    const entry = buildExchangeLogEntry(ex, min, phase, events);
+    // Net endurance movement this exchange — the input fightAnalysis's
+    // fatigue crossover accumulates. Captures every drain source (combat
+    // costs, arena endurance_drain) because it diffs fighter state, not
+    // the event stream.
+    const dA = fA.endurance - endA0;
+    const dD = fD.endurance - endD0;
+    if (dA !== 0 || dD !== 0) entry.endDeltas = { a: dA, d: dD };
+    run.exchangeLog.push(entry);
   }
 
   // B. Resolve Narration (Drama)

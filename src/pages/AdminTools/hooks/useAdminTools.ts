@@ -7,6 +7,7 @@ import {
   exportSessionState,
   importSaveFile,
   regenerateRivals,
+  skipToMonthEnd,
   skipToSeasonEnd,
 } from './adminActions';
 
@@ -103,6 +104,10 @@ export function useAdminTools() {
     toast.success(`Advanced 1 Week`);
   }, [doAdvanceWeek]);
 
+  const skipMonth = useCallback(async () => {
+    await skipToMonthEnd();
+  }, []);
+
   const skipSeason = useCallback(async () => {
     await skipToSeasonEnd();
   }, []);
@@ -116,6 +121,7 @@ export function useAdminTools() {
     handleExport,
     handleImport,
     skipWeek,
+    skipMonth,
     skipSeason,
     skipFTUE,
     resetRivals,

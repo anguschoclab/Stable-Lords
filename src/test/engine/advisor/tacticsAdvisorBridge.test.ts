@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
 import { FightingStyle } from '@/types/shared.types';

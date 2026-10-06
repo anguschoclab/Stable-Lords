@@ -58,14 +58,6 @@ describe('NodeArchiveService', () => {
     await expect(service.archiveBoutLog(1, 0, '../evil', ['x'], true)).rejects.toThrow(TypeError);
   });
 
-  it('archives and retrieves gazette markdown', async () => {
-    await service.archiveGazette(1, 7, '# Week 7\nHello');
-    const raw = await readFile(path.join(tmpDir, 'season_1', 'gazettes', 'week_7.md'), 'utf8');
-    expect(raw).toContain('Hello');
-    expect(await service.retrieveGazette(1, 7)).toBe('# Week 7\nHello');
-    expect(await service.retrieveGazette(1, 99)).toBeNull();
-  });
-
   it('round-trips hot state with plausibility check', async () => {
     const state = createFreshState('node-archive-hotstate-test');
     await service.archiveHotState('slot-a', state);

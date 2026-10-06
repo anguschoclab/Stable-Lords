@@ -160,7 +160,16 @@ async function runEngineJob(args: RunEngineJobArgs) {
 
   let timerId: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<never>((_, reject) => {
-    timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
+    timerId = setTimeout(() => {
+      // The worker job outlives this rejection — ask it to exit at the next
+      // week boundary instead of burning CPU on a result nobody commits.
+      try {
+        void engineProxy.cancelSim?.().catch(() => {});
+      } catch {
+        /* worker unavailable — nothing to cancel */
+      }
+      reject(new Error('Worker timeout after 15s'));
+    }, 15000);
   });
 
   try {

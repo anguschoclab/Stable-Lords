@@ -68,7 +68,9 @@ export type DeathCauseBucket =
   | 'CRITICAL_CHAIN'
   | 'FATIGUE_COLLAPSE'
   | 'ARMOR_FAILURE'
-  | 'RIVALRY_FINISH';
+  | 'RIVALRY_FINISH'
+  | 'ARENA_HAZARD'
+  | 'BLEED';
 
 /**
  * Fight outcome by type.

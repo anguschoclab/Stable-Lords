@@ -114,42 +114,6 @@ export class ElectronArchiveService implements ArchiveService {
   }
 
   /**
-   * Archive gazette.
-   */
-  async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
-    return this.enqueue(async () => {
-      if (!this.isSupported() || !window.electronAPI) return;
-
-      try {
-        const result = await window.electronAPI.archiveGazette(season, week, markdown);
-        if (!result.success) {
-          console.error('Failed to archive gazette:', result.error);
-        }
-      } catch (error) {
-        console.error('Error archiving gazette:', error);
-      }
-    });
-  }
-
-  /**
-   * Retrieve gazette.
-   */
-  async retrieveGazette(season: number, week: number): Promise<string | null> {
-    if (!this.isSupported() || !window.electronAPI) return null;
-
-    try {
-      const result = await window.electronAPI.retrieveGazette(season, week);
-      if (result.success && result.data) {
-        return result.data;
-      }
-      return null;
-    } catch (error) {
-      console.error('Error retrieving gazette:', error);
-      return null;
-    }
-  }
-
-  /**
    * Get archived bout ids for season.
    */
   async getArchivedBoutIdsForSeason(_season: number): Promise<string[]> {

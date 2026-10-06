@@ -5,6 +5,7 @@ import { StateImpact } from '@/engine/impacts';
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import {
   buildSuccessorIndex,
+  narrowRivalShardState,
   runRivalShardChunk,
   type RivalShardContext,
   type RivalShardOutput,
@@ -52,7 +53,16 @@ export function runRivalStrategyPass(
   // agent context so per-rival memory work never re-scans the world (B.1).
   const perception = buildPerceptionSnapshot(state);
 
-  const shardCtx: RivalShardContext = { state, perception, successorByStable, nextWeek };
+  // Shard ctx carries a narrowed state — fields the rival tree never reads
+  // (logs, archives, UI payloads) are emptied so distributed postMessage
+  // doesn't clone them. The in-line path uses the SAME narrowed ctx, so both
+  // paths compute identical output by construction.
+  const shardCtx: RivalShardContext = {
+    state: narrowRivalShardState(state),
+    perception,
+    successorByStable,
+    nextWeek,
+  };
   const inputs = (state.rivals || []).map((rival, index) => ({ rival, index }));
   const finish = (shardOutputs: RivalShardOutput[]) =>
     finishRivalPass(shardOutputs, state, nextWeek, rng, headless);

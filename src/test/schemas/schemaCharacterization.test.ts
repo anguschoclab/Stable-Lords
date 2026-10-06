@@ -135,6 +135,14 @@ describe('schema characterization', () => {
       }
     });
 
+    it('DeathCauseBucketSchema accepts non-weapon termination causes', () => {
+      // emitDownedBoutEnd stamps bleed/hazard BOUT_ENDs with these causes;
+      // post.causeBucket carries them through FightOutcomeSchema validation.
+      for (const b of ['ARENA_HAZARD', 'BLEED']) {
+        expect(DeathCauseBucketSchema.safeParse(b).success, `${b} should be valid`).toBe(true);
+      }
+    });
+
     it('AIIntentSchema accepts valid intents', () => {
       for (const i of [
         'EXPANSION',

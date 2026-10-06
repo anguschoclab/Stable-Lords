@@ -6,6 +6,35 @@
 import type { GameState, TournamentEntry, Warrior } from '@/types/state.types';
 import { isDead, deadIdSet } from '@/engine/warrior/warriorStatus';
 
+/**
+ * Per-context, identity-keyed warrior index.
+ *
+ * Context-global semantics — this module ships into MULTIPLE execution
+ * contexts (main thread, engine worker, shard workers), and each context
+ * instantiates its OWN module instance, so this cache is never shared
+ * across contexts. GameState objects never cross context boundaries
+ * anyway: `postMessage` structured-clones state, so a state object's
+ * identity only exists in exactly one context.
+ *
+ * Within a context the cache is coherent ONLY because two properties hold:
+ *
+ * 1. `jobQueue` serializes each context's engine work — no concurrent
+ *    callers can observe a partially-built map or race to fill it.
+ * 2. The engine never mutates roster contents in place: passes return
+ *    StateImpacts (passPurity.test.ts), and impact resolution produces a
+ *    NEW GameState object. A new state identity → fresh map → the cache
+ *    can't go stale across the mutations it models. Even under
+ *    `mutableInput`, each week creates a fresh top-level state object
+ *    (createMutableWeekContext shallow-spreads), so identity still turns.
+ *
+ * The residual hazard this contract depends on: a caller mutating
+ * `state.roster`/`state.rivals[*].roster` IN PLACE on the same state
+ * object after the map was built would be served stale lookups until the
+ * state identity changes. Anything doing that must call
+ * clearWarriorCache() first — or, better, keep identity-replacing writes.
+ *
+ * WeakMap keying also bounds memory: entries die with the state object.
+ */
 let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
 
 /**

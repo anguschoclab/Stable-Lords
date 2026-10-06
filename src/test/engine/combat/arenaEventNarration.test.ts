@@ -209,4 +209,87 @@ describe('arena mod echo narration', () => {
     expect(echoPool.length).toBeGreaterThan(0);
     expect(log.some((l) => l.text.includes('Deep Miasma'))).toBe(true);
   });
+
+  it('echoes the hazard source when a pending riposte_mod suppresses the counter', () => {
+    // A failed riposte check emits a marker event instead of a RIPOSTE
+    // defense — the hazard attribution must still surface.
+    const events: CombatEvent[] = [
+      {
+        type: 'DEFENSE',
+        actor: 'D',
+        result: 'RIPOSTE_FAILED',
+        metadata: { arenaModSources: ['Mist Veil'] },
+      },
+    ];
+    const { log } = narrateEvents(events, createNarrCtx(), 6);
+
+    expect(log.length).toBeGreaterThan(0);
+    expect(log.some((l) => l.text.includes('Mist Veil'))).toBe(true);
+
+    // Echo-only: no counterstrike/hit narration for a counter that never
+    // happened — every line must come from an echo pool.
+    const echoLines = ['initiative', 'riposte', 'named'].flatMap(
+      (k) => peekArchive(['pbp', 'arena_fx', 'echo', k]) ?? []
+    );
+    const stripped = (t: string) =>
+      t.replaceAll('Mist Veil', '{{name}}').replaceAll('Lightning', '{{name}}');
+    expect(log.every((l) => echoLines.includes(stripped(l.text)))).toBe(true);
+  });
+
+  it('ignores a bare RIPOSTE_FAILED marker with no mod sources', () => {
+    const events: CombatEvent[] = [{ type: 'DEFENSE', actor: 'D', result: 'RIPOSTE_FAILED' }];
+    const { log } = narrateEvents(events, createNarrCtx(), 6);
+    expect(log).toHaveLength(0);
+  });
+});
+
+describe('state-change line dedupe', () => {
+  const statusPools = () =>
+    (['severe', 'desperate', 'serious'] as const).flatMap(
+      (c) => peekArchive(['pbp', 'status_changes', c]) ?? []
+    );
+
+  it('emits at most one hp-ratio state-change line per victim per exchange', () => {
+    const ctx = { ...createNarrCtx(), prevHpRatioD: 1.0, postHpRatioD: 0.35 };
+    const { log } = narrateEvents(
+      [
+        {
+          type: 'HIT',
+          actor: 'A',
+          target: 'D',
+          value: 60,
+          location: 'Torso',
+          metadata: { appliedDamage: 60 },
+        },
+        hazardHit('D', 'crowd_riot', 5),
+      ],
+      ctx,
+      5
+    );
+
+    // Weapon hit + hazard hit in one exchange both see the same threshold
+    // crossing — the second "injury looks severe" line would read as a dupe.
+    const pools = statusPools();
+    expect(pools.length).toBeGreaterThan(0);
+    expect(log.filter((l) => matchesPool(l.text, pools, 'Lightning'))).toHaveLength(1);
+  });
+
+  it('still emits a state-change line per victim when both fighters cross thresholds', () => {
+    const ctx = {
+      ...createNarrCtx(),
+      prevHpRatioA: 1.0,
+      postHpRatioA: 0.35,
+      prevHpRatioD: 1.0,
+      postHpRatioD: 0.35,
+    };
+    const { log } = narrateEvents(
+      [hazardHit('A', 'crowd_riot', 60), hazardHit('D', 'crowd_riot', 60)],
+      ctx,
+      5
+    );
+
+    const pools = statusPools();
+    expect(log.filter((l) => matchesPool(l.text, pools, 'Thunderstrike'))).toHaveLength(1);
+    expect(log.filter((l) => matchesPool(l.text, pools, 'Lightning'))).toHaveLength(1);
+  });
 });

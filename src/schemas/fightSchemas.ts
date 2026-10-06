@@ -3,14 +3,14 @@
  */
 import { z } from 'zod';
 import {
-  FightingStyleSchema,
   SeasonSchema,
   CrowdMoodTypeSchema,
   WeatherTypeSchema,
   BoutOfferStatusSchema,
   BoutOfferResponseSchema,
   FightOutcomeBySchema,
-  AnnualAwardTypeSchema,
+  CombatEventTypeSchema,
+  DeathCauseBucketSchema,
 } from './schemaEnums';
 import { WarriorSchema, DeathEventSchema } from './warriorSchemas';
 
@@ -148,6 +148,109 @@ const fightAnalysisSchema = z.object({
 });
 
 /**
+ * CombatEvent schema
+ */
+const CombatEventSchema = z.object({
+  type: CombatEventTypeSchema,
+  actor: z.enum(['A', 'D']),
+  target: z.enum(['A', 'D']).optional(),
+  value: z.number().optional(),
+  location: z.string().optional(),
+  result: z.union([z.string(), z.boolean()]).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+});
+
+const exchangePhaseSchema = z.enum(['OPENING', 'MID', 'LATE']);
+const fighterSideSchema = z.enum(['A', 'D']);
+
+/**
+ * MinuteEvent schema
+ */
+const MinuteEventSchema = z.object({
+  minute: z.number(),
+  text: z.string(),
+  phase: exchangePhaseSchema.optional(),
+  offTacticA: z.string().optional(),
+  defTacticA: z.string().optional(),
+  offTacticD: z.string().optional(),
+  defTacticD: z.string().optional(),
+  protectA: z.string().optional(),
+  protectD: z.string().optional(),
+  events: z.array(CombatEventSchema).optional(),
+  emphasis: z.boolean().optional(),
+});
+
+/**
+ * ExchangeLogEntry schema
+ */
+const ExchangeLogEntrySchema = z.object({
+  exchangeIndex: z.number(),
+  minute: z.number(),
+  phase: exchangePhaseSchema.optional(),
+  attackerId: z.string().optional(),
+  defenderId: z.string().optional(),
+  iniWinner: fighterSideSchema.optional(),
+  attResult: z.enum(['hit', 'miss', 'crit', 'fumble']).optional(),
+  parResult: z.enum(['success', 'fail']).nullable().optional(),
+  defResult: z.enum(['dodge', 'fail']).nullable().optional(),
+  ripResult: z.enum(['hit', 'miss']).nullable().optional(),
+  damage: z.number().optional(),
+  hitLocation: z.string().optional(),
+  endDeltas: z.object({ a: z.number(), d: z.number() }).optional(),
+  killWindow: z.boolean().optional(),
+  executionFlag: z.boolean().optional(),
+  reasonCodes: z.array(z.string()).optional(),
+  conditionFire: z
+    .object({ actor: fighterSideSchema, trigger: z.string(), corner: z.boolean() })
+    .optional(),
+  knockdown: fighterSideSchema.optional(),
+  recovery: fighterSideSchema.optional(),
+  momentumShift: z
+    .object({ actor: fighterSideSchema, to: z.number(), from: z.number() })
+    .optional(),
+});
+
+/**
+ * FightOutcome schema
+ */
+const FightOutcomeSchema = z.object({
+  winner: z.union([fighterSideSchema, z.null()]),
+  by: FightOutcomeBySchema,
+  minutes: z.number(),
+  log: z.array(MinuteEventSchema),
+  exchangeLog: z.array(ExchangeLogEntrySchema).optional(),
+  post: z
+    .object({
+      xpA: z.number(),
+      xpD: z.number(),
+      hitsA: z.number().optional(),
+      hitsD: z.number().optional(),
+      gotKillA: z.boolean().optional(),
+      gotKillD: z.boolean().optional(),
+      causeBucket: DeathCauseBucketSchema.optional(),
+      fatalHitLocation: z.string().optional(),
+      fatalExchangeIndex: z.number().optional(),
+      tags: z.array(z.string()).optional(),
+    })
+    .optional(),
+});
+
+/**
+ * BoutResult schema
+ */
+export const BoutResultSchema = z.object({
+  a: WarriorSchema,
+  d: WarriorSchema,
+  outcome: FightOutcomeSchema,
+  announcement: z.string().optional(),
+  isRivalry: z.boolean(),
+  rivalStable: z.string().optional(),
+  contractId: z.string().optional(),
+  arenaId: z.string().optional(),
+  weather: WeatherTypeSchema.optional(),
+});
+
+/**
  * FightSummary schema
  */
 export const FightSummarySchema = z.object({
@@ -159,7 +262,7 @@ export const FightSummarySchema = z.object({
       gazette: z.array(NewsletterItemSchema),
       injuries: z.array(z.string()),
       deaths: z.array(z.string()),
-      bouts: z.array(z.any()), // BoutResult - using any
+      bouts: z.array(BoutResultSchema),
       promotions: z.array(z.string()),
     })
     .optional(),
@@ -211,21 +314,6 @@ export const SimulationReportSchema = z.object({
   agingEvents: z.array(z.string()),
   healthEvents: z.array(z.string()),
   bouts: z.array(FightSummarySchema).optional(),
-});
-
-/**
- * AnnualAward schema
- */
-export const AnnualAwardSchema = z.object({
-  year: z.number(),
-  type: AnnualAwardTypeSchema,
-  warriorId: z.string().optional(),
-  warriorName: z.string().optional(),
-  stableId: z.string().optional(),
-  stableName: z.string().optional(),
-  style: FightingStyleSchema.optional(),
-  value: z.number(),
-  reason: z.string(),
 });
 
 const TitleStatusSchema = z.enum(['active', 'pendingReengagement', 'dormant']);

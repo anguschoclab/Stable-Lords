@@ -4,6 +4,9 @@
  */
 
 export const DEFINING_MOMENTS: string[] = [
+  'until a brutal alley ambush taught them that the first strike is the only one that matters',
+  'realizing that blood was the only currency the city truly respected',
+  'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
   'realizing that mercy in the Undercity was just another word for weakness',
   'until they garroted a corrupt slaver with a stolen rosary',
   'until they drowned a corrupt overseer in a vat of boiling lye',

@@ -322,6 +322,10 @@ for (const [relPath, names] of moduleExports) {
   if (!prodReachable.has(relPath)) continue; // whole file already flagged
   const consumers = moduleConsumers.get(relPath);
   for (const name of names) {
+    // TanStack file routes: `Route` is consumed by the generated
+    // routeTree.gen.ts, which is gitignored and absent in clean checkouts
+    // (CI), so it can never appear in the consumer graph.
+    if (name === 'Route' && relPath.startsWith('src/routes/')) continue;
     const symConsumers = consumers?.get(name);
     const starConsumed = consumers?.get('**') || consumers?.get('*');
     const prodConsumers = new Set(

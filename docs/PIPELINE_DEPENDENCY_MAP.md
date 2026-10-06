@@ -7,11 +7,17 @@ Who owns what, who may mutate what, and where the integration boundaries are.
 ```text
 UI/hooks (main thread)
   ├─ useWeekExecution ── engineSession.runExclusive ──▶ workerProxy ──▶ engine worker
-  ├─ useAdminTools.skipSeason ── engineSession ──▶ advanceQuarter (worker)
-  └─ createStore (zustand) ── commits worker results, owns deferredBoutLogs retry requeue
+  ├─ useExecuteTournamentRound ── store.doAdvanceDay (canonical day path;
+  │  no direct engineProxy calls — seeds, epoch guard, isSimulating come free)
+  ├─ useAdminTools.skipSeason/skipMonth ── engineSession ──▶ advanceQuarter/advanceMonth (worker)
+  └─ createStore (zustand) ── commits worker results, owns deferredBoutLogs retry requeue;
+     15 s engine-job timeout calls worker cancelSim so abandoned jobs stop
 
 engine worker
   ├─ worker.ts ── jobQueue (FIFO) ──▶ TickOrchestrator / TimeAdvanceService / runAutosim
+  ├─ cancelSim ── UNQUEUED: flips the worker-local cancellation flag so the
+  │  in-flight sim exits at the next week boundary (checked in runAutosim and
+  │  advanceSpan); flag cleared at each sim-job start
   └─ NO persistence I/O — returns pendingArchives to caller
 
 main thread persistence
@@ -26,7 +32,10 @@ main thread persistence
   ownership). `mutableInput: true` is legal only when the caller owns the state
   chain — worker-deserialized input, or week 2+ of an autosim/quarter/year run.
 - `buildWeekCaches` output is transient — stripped before worker transfer, rebuilt
-  at stage boundaries and on reconstruction.
+  at stage boundaries (gated on whether the stage emitted membership-changing
+  impacts) and on reconstruction.
+- Outbound serialization strips UI-only `lastWeekBoutDisplay`; durable
+  `deferredBoutLogs` always survives — it is the archive retry channel.
 - `pendingArchives` is data, not I/O — the engine never writes; callers flush via
   `archiveService`.
 
@@ -53,5 +62,12 @@ Rules enforced by `validatePipelinePasses`:
   anywhere else.
 - Tournament days share `resolveTournamentDay` (one seed formula, threaded
   tournament entry) between `advanceDay` and `skipToWeekEnd`.
-- `engineSession` epoch bumps on `loadGame`/reset; results captured pre-bump are
-  discarded (resolve `undefined`).
+- `engineSession` captures the epoch at `runExclusive` call time; a bump
+  (`loadGame`/reset) while the job is queued or running resolves `undefined`
+  — results bound to pre-bump input state can never be committed.
+- Engine code must not read bare `process.env` — use `globalThis.process?.env`
+  (`envSafety.test.ts` enforces).
+- `RivalStrategyPass` distributes a narrowed shard ctx
+  (`narrowRivalShardState`) — identical bytes to the in-line path; adding a
+  GameState field read by rival logic requires widening it
+  (`shardInputSize.test.ts` guards both directions).

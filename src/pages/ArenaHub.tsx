@@ -31,8 +31,14 @@ export default function ArenaHub() {
 
   const matchCard = useMemo(() => buildMatchCard(gameState), [gameState]);
 
-  const { handleStartAutosim, autosimming, autosimProgress, autosimResult, setAutosimResult } =
-    useWeekExecution();
+  const {
+    handleStartAutosim,
+    stopAutosim,
+    autosimming,
+    autosimProgress,
+    autosimResult,
+    setAutosimResult,
+  } = useWeekExecution();
 
   const lifetimeKills = useMemo(
     () => roster.reduce((s, w) => s + (w.career?.kills || 0), 0),
@@ -84,8 +90,11 @@ export default function ArenaHub() {
         isSimulating={autosimming}
         progress={autosimProgress}
         result={autosimResult}
-        onStart={handleStartAutosim}
-        onReset={() => setAutosimResult(null)}
+        handlers={{
+          onStart: handleStartAutosim,
+          onStop: stopAutosim,
+          onReset: () => setAutosimResult(null),
+        }}
       />
     </PageFrame>
   );

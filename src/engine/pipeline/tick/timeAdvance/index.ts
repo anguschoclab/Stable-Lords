@@ -4,6 +4,8 @@ export type {
   WeekSummary,
   QuarterSummary,
   QuarterAdvanceResult,
+  MonthSummary,
+  MonthAdvanceResult,
   YearAdvanceResult,
 } from './types';
 export { DEFAULT_AUTOSIM_STOPS } from './types';

@@ -77,6 +77,25 @@ export interface QuarterAdvanceResult {
 }
 
 /**
+ * A month is a 4-week stride — the span summary has the same shape as a
+ * quarter's (bounded by different week counts, not different fields).
+ */
+export type MonthSummary = QuarterSummary;
+
+/**
+ *
+ */
+export interface MonthAdvanceResult {
+  state: GameState;
+  summaries: WeekSummary[];
+  monthSummary: MonthSummary;
+  stopReason: string | null;
+  weeksCompleted: number;
+  /** Same drain contract as QuarterAdvanceResult — caller owns archival. */
+  pendingArchives: import('@/types/state.types').DeferredBoutLog[];
+}
+
+/**
  *
  */
 export interface YearAdvanceResult {

@@ -23,6 +23,7 @@ export function stripNonSerializable<
     rivalryMap?: unknown;
     grudgeMap?: unknown;
     warriorToOfferIds?: unknown;
+    lastWeekBoutDisplay?: unknown;
   },
 >(
   state: T
@@ -35,6 +36,7 @@ export function stripNonSerializable<
   | 'rivalryMap'
   | 'grudgeMap'
   | 'warriorToOfferIds'
+  | 'lastWeekBoutDisplay'
 > {
   const {
     warriorMap,
@@ -44,6 +46,7 @@ export function stripNonSerializable<
     rivalryMap,
     grudgeMap,
     warriorToOfferIds,
+    lastWeekBoutDisplay,
     ...rest
   } = state;
   return rest;

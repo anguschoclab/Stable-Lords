@@ -90,6 +90,37 @@ export async function skipToSeasonEnd(): Promise<void> {
 }
 
 /**
+ * Fast-forward the simulation by one month (4 weeks) via the engine.
+ * Same session/archive contract as skipToSeasonEnd.
+ */
+export async function skipToMonthEnd(): Promise<void> {
+  const store = useGameStore.getState();
+  if (store.isSimulating) {
+    toast.error('Simulation already in progress.');
+    return;
+  }
+  const currentState = reconstructGameState(store);
+  store.setSimulating(true);
+  try {
+    const result = await engineSession.runExclusive(() =>
+      engineProxy.skipToMonthEnd(currentState)
+    );
+    // undefined → epoch moved mid-run (loadGame/reset); discard the result.
+    if (!result) return;
+    // Batch advancement never does I/O — flush drained transcripts here on
+    // the main thread where the Electron/OPFS switch is visible.
+    archiveBoutLogs(result.pendingArchives ?? []);
+    store.loadGame(store.activeSlotId || 'autosave', result.state);
+    toast.success('Advanced 4 weeks.');
+  } catch (err) {
+    console.error('Skip month failed:', err);
+    toast.error('Month advance failed.');
+  } finally {
+    store.setSimulating(false);
+  }
+}
+
+/**
  * Regenerate the entire rival ecosystem with a fresh seed.
  */
 export function regenerateRivals(setState: (fn: (draft: GameStore) => void) => void): void {

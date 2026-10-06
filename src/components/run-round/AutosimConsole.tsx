@@ -10,8 +10,11 @@ interface AutosimConsoleProps {
   isSimulating: boolean;
   progress: { current: number; total: number; lastSummary?: WeekSummary } | null;
   result: AutosimResult | null;
-  onStart: (weeks: number, options?: { councilAutoPilot?: boolean }) => void;
-  onReset?: () => void;
+  handlers: {
+    onStart: (weeks: number, options?: { councilAutoPilot?: boolean }) => void;
+    onStop?: () => void;
+    onReset?: () => void;
+  };
 }
 
 /**
@@ -22,12 +25,11 @@ export function AutosimConsole({
   isSimulating,
   progress,
   result,
-  onStart,
-  onReset,
+  handlers,
 }: AutosimConsoleProps) {
   const percent = progress ? Math.round((progress.current / progress.total) * 100) : 0;
   const [councilAutoPilot, setCouncilAutoPilot] = useState(false);
-  const start = (weeks: number) => onStart(weeks, { councilAutoPilot });
+  const start = (weeks: number) => handlers.onStart(weeks, { councilAutoPilot });
 
   return (
     <Card className="border-accent/40 bg-accent/5 shadow-lg overflow-hidden">
@@ -46,9 +48,11 @@ export function AutosimConsole({
           />
         )}
 
-        {isSimulating && progress && <ProgressView progress={progress} percent={percent} />}
+        {isSimulating && progress && (
+          <ProgressView progress={progress} percent={percent} onStop={handlers.onStop} />
+        )}
 
-        {result && <ResultView result={result} onReset={onReset} />}
+        {result && <ResultView result={result} onReset={handlers.onReset} />}
       </CardContent>
     </Card>
   );
@@ -115,9 +119,11 @@ function IdleControls({
 function ProgressView({
   progress,
   percent,
+  onStop,
 }: {
   progress: { current: number; total: number; lastSummary?: WeekSummary };
   percent: number;
+  onStop?: () => void;
 }) {
   return (
     <div className="space-y-4">
@@ -145,6 +151,15 @@ function ProgressView({
             </span>
           </div>
         </div>
+      )}
+      {onStop && (
+        <Button
+          variant="outline"
+          onClick={onStop}
+          className="w-full h-8 font-black uppercase text-[10px] tracking-widest border-destructive/40 text-destructive hover:bg-destructive/10"
+        >
+          Stop After This Week
+        </Button>
       )}
     </div>
   );

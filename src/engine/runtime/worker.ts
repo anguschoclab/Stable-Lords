@@ -7,6 +7,7 @@ import { runAutosim } from '../autosim/autosim';
 import { loadCombatNarrative } from '@/data/narrative';
 import { createJobQueue } from './jobQueue';
 import { configureEnginePool, shutdownEnginePool } from '../pool/enginePool';
+import { requestSimCancellation, clearSimCancellation } from './cancellation';
 import type { GameState } from '@/types/state.types';
 import type { WeekAdvanceOptions } from '../pipeline/services/weekPipelineService';
 import type { AutosimOptions } from '../autosim/autosim';
@@ -28,13 +29,18 @@ const narrativeReady = loadCombatNarrative();
 const jobs = createJobQueue();
 
 // Enqueue fn behind the narrative preload — after the first job resolves it
-// this is a cached-promise await, effectively free.
+// this is a cached-promise await, effectively free. The cancellation flag is
+// cleared when each job STARTS: a cancel applies to the job in flight, never
+// to whatever is queued behind it.
 const enqueueSim = async <A extends unknown[], R>(
   fn: (...args: A) => Promise<R> | R,
   ...args: A
 ): Promise<R> => {
   await narrativeReady;
-  return jobs.enqueue(fn, ...args);
+  return jobs.enqueue(() => {
+    clearSimCancellation();
+    return fn(...args);
+  });
 };
 
 // States arrive via postMessage → structuredClone, so this worker exclusively
@@ -44,8 +50,10 @@ const engine = {
     enqueueSim(advanceWeek, state, { ...opts, mutableInput: true }),
   advanceDay: (state: GameState, opts?: WeekAdvanceOptions) =>
     enqueueSim(TickOrchestrator.advanceDay, state, { ...opts, mutableInput: true }),
-  skipToWeekEnd: (...args: Parameters<typeof TickOrchestrator.skipToWeekEnd>) =>
-    enqueueSim(TickOrchestrator.skipToWeekEnd, ...args),
+  skipToWeekEnd: (
+    state: GameState,
+    opts?: Parameters<typeof TickOrchestrator.skipToWeekEnd>[1]
+  ) => enqueueSim(TickOrchestrator.skipToWeekEnd, state, { ...opts, mutableInput: true }),
   resolveTournamentRound: (...args: Parameters<typeof TournamentSelectionService.resolveRound>) =>
     enqueueSim(TournamentSelectionService.resolveRound.bind(TournamentSelectionService), ...args),
   createFreshState: (...args: Parameters<typeof createFreshState>) =>
@@ -54,6 +62,12 @@ const engine = {
     state: GameState,
     opts?: Parameters<typeof TickOrchestrator.advanceQuarter>[1]
   ) => enqueueSim(TickOrchestrator.advanceQuarter, state, { ...opts, mutableInput: true }),
+  advanceMonth: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceMonth>[1]) =>
+    enqueueSim(TickOrchestrator.advanceMonth, state, { ...opts, mutableInput: true }),
+  skipToMonthEnd: (
+    state: GameState,
+    opts?: Parameters<typeof TickOrchestrator.skipToMonthEnd>[1]
+  ) => enqueueSim(TickOrchestrator.skipToMonthEnd, state, { ...opts, mutableInput: true }),
   advanceYear: (state: GameState, opts?: Parameters<typeof TickOrchestrator.advanceYear>[1]) =>
     enqueueSim(TickOrchestrator.advanceYear, state, { ...opts, mutableInput: true }),
   skipToQuarterEnd: (
@@ -79,6 +93,15 @@ const engine = {
       configureEnginePool(size);
       return size;
     }),
+  /**
+   * Cooperative cancel — intentionally NOT queued: Comlink dispatches this
+   * immediately so it flips the worker-local flag while the running job polls
+   * it at week boundaries. The flag clears when the next sim job starts.
+   */
+  cancelSim: () => {
+    requestSimCancellation();
+    return true;
+  },
 };
 
 /**

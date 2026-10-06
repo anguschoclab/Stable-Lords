@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-05T17:48:21.859Z",
+  "generatedAt": "2026-10-06T04:21:51.163Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -161,11 +161,13 @@
     "src/test/engine/pipeline/parallelDeterminism.slow.test.ts",
     "src/test/engine/pipeline/passes/PromoterPass.test.ts",
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
+    "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
     "src/test/engine/pipeline/worldEvolvesWhenPlayerStopped.integration.slow.test.ts",
     "src/test/engine/pipeline/yearRollover.integration.slow.test.ts",
     "src/test/engine/promoters/offerMatchmaking.test.ts",
     "src/test/engine/rivals/rivalWarriorFactory.test.ts",
+    "src/test/engine/sim/_seedProbe.slow.test.ts",
     "src/test/engine/sim/determinism.slow.test.ts",
     "src/test/engine/sim/harnessTruncation.slow.test.ts",
     "src/test/engine/sim/worldLiveness.integration.slow.test.ts",
@@ -189,6 +191,7 @@
     "src/test/hooks/useColumns.test.ts",
     "src/test/hooks/useContractData.test.ts",
     "src/test/hooks/useDigestSummary.test.ts",
+    "src/test/hooks/useExecuteTournamentRound.test.ts",
     "src/test/hooks/useInsightManager.test.ts",
     "src/test/hooks/useListShell.test.tsx",
     "src/test/hooks/useQuadrantDots.test.ts",

@@ -40,6 +40,7 @@ function CategoryPanels({ tools }: { tools: ReturnType<typeof useAdminTools> }) 
     handleExport,
     handleImport,
     skipWeek,
+    skipMonth,
     skipSeason,
     skipFTUE,
     resetRivals,
@@ -60,7 +61,12 @@ function CategoryPanels({ tools }: { tools: ReturnType<typeof useAdminTools> }) 
       )}
 
       {activeCategory === 'WORLD' && (
-        <WorldPanel onSkipWeek={skipWeek} onSkipSeason={skipSeason} onSkipFTUE={skipFTUE} />
+        <WorldPanel
+          onSkipWeek={skipWeek}
+          onSkipMonth={skipMonth}
+          onSkipSeason={skipSeason}
+          onSkipFTUE={skipFTUE}
+        />
       )}
 
       {activeCategory === 'ECONOMY' && (

@@ -40,15 +40,18 @@ export function engineQueueDepth(): number {
 
 export const engineSession = {
   /**
-   * Run `job` exclusively. The epoch is captured when the job actually starts
-   * (not at enqueue time), and resolves `undefined` when the epoch moved while
-   * the job ran — the caller MUST treat that as "discard the result".
+   * Run `job` exclusively. The epoch is captured when `runExclusive` is
+   * called — the caller has already bound its input state into the closure,
+   * so a job enqueued before a loadGame/reset must be discarded even when it
+   * only starts after the bump. Resolves `undefined` when the epoch moved
+   * between enqueue and completion — the caller MUST treat that as "discard
+   * the result".
    */
   async runExclusive<T>(job: () => Promise<T>): Promise<T | undefined> {
+    const callEpoch = epoch;
     return getQueue().enqueue(async () => {
-      const startEpoch = epoch;
       const result = await job();
-      return epoch === startEpoch ? result : undefined;
+      return epoch === callEpoch ? result : undefined;
     });
   },
 

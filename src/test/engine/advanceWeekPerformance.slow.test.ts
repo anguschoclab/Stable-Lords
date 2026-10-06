@@ -6,7 +6,7 @@ describe('advanceWeekPerformance', () => {
   it('advanceWeek completes within reasonable time for a single week', async () => {
     const state = createFreshState('perf-test-single');
     const start = performance.now();
-    advanceWeek(state, { headless: true });
+    await advanceWeek(state, { headless: true });
     const elapsed = performance.now() - start;
 
     // Should complete in under 500ms for a single week

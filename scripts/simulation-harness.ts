@@ -1,9 +1,12 @@
 import { type GameState, type DeferredBoutLog, type BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, PromoterId } from '@/types/shared/ids';
+import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import {
-  advanceWeek,
-  getLastPipelineProfile,
-} from '@/engine/pipeline/services/weekPipelineService';
+  setTelemetryProvider,
+  resetTelemetryProvider,
+  TelemetryEvents,
+  type TelemetryProvider,
+} from '@/engine/core/telemetry';
 import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -224,23 +227,32 @@ function autoRespondToPlayerOffers(state: GameState): void {
   });
 }
 
-/** Fold the last week's per-pass timings into the aggregate table. */
-function aggregatePassProfile(passAgg: Map<string, PassProfileRow>): void {
-  for (const t of getLastPipelineProfile() ?? []) {
-    const row = passAgg.get(t.id) ?? {
-      id: t.id,
-      stage: t.stage,
-      weeks: 0,
-      totalMs: 0,
-      avgMs: 0,
-      maxMs: 0,
-    };
-    row.weeks++;
-    row.totalMs += t.ms;
-    row.avgMs = row.totalMs / row.weeks;
-    row.maxMs = Math.max(row.maxMs, t.ms);
-    passAgg.set(t.id, row);
-  }
+/**
+ * Telemetry provider that folds `pipeline_pass_timing` events into the
+ * aggregate table — installed by runSimulation when `config.profile` is set.
+ */
+function makePassProfileProvider(passAgg: Map<string, PassProfileRow>): TelemetryProvider {
+  return {
+    timing(name, ms, tags) {
+      if (name !== TelemetryEvents.PIPELINE_PASS_TIMING || !tags?.pass) return;
+      const id = tags.pass;
+      const row = passAgg.get(id) ?? {
+        id,
+        stage: tags.stage ?? '',
+        weeks: 0,
+        totalMs: 0,
+        avgMs: 0,
+        maxMs: 0,
+      };
+      row.weeks++;
+      row.totalMs += ms;
+      row.avgMs = row.totalMs / row.weeks;
+      row.maxMs = Math.max(row.maxMs, ms);
+      passAgg.set(id, row);
+    },
+    increment() {},
+    gauge() {},
+  };
 }
 
 /** Drain deferred bout transcripts into the archive sink, re-queuing failures. */
@@ -265,8 +277,7 @@ async function runWeek(
   w: number,
   config: SimulationConfig,
   tracker: ReturnType<typeof createCumulativeTracker>,
-  pulses: SimPulse[],
-  passAgg: Map<string, PassProfileRow>
+  pulses: SimPulse[]
 ): Promise<{ state: GameState; bankrupt: boolean }> {
   const { logFrequency = 1, archiveService } = config;
   const truncateInterval = config.truncateIntervalWeeks ?? 50;
@@ -289,8 +300,6 @@ async function runWeek(
   } else {
     state = await advanceWeek(state, { mutableInput: w > 1 });
   }
-
-  if (config.profile) aggregatePassProfile(passAgg);
 
   // C. Record this week's new bouts/deaths/retirements by id — before any
   // truncation can drop the underlying entries.
@@ -366,15 +375,17 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
   const prevProf = g.__SL_PIPELINE_PROF;
   if (config.profile) g.__SL_PIPELINE_PROF = true;
   const passAgg = new Map<string, PassProfileRow>();
+  if (config.profile) setTelemetryProvider(makePassProfileProvider(passAgg));
 
   try {
     for (let w = 1; w <= weeks; w++) {
-      const step = await runWeek(state, w, config, tracker, pulses, passAgg);
+      const step = await runWeek(state, w, config, tracker, pulses);
       state = step.state;
       if (step.bankrupt) break;
     }
   } finally {
     if (config.profile) {
+      resetTelemetryProvider();
       if (prevProf === undefined) delete g.__SL_PIPELINE_PROF;
       else g.__SL_PIPELINE_PROF = prevProf;
     }

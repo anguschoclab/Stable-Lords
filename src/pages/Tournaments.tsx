@@ -171,9 +171,6 @@ export default function Tournaments() {
   const {
     season,
     year,
-    activeSlotId,
-    loadGame,
-    setSimulating,
     isSimulating,
     currentTournament,
     activeWarriors,
@@ -185,9 +182,6 @@ export default function Tournaments() {
 
   const handleExecuteRound = useExecuteTournamentRound({
     tournament: currentTournament,
-    activeSlotId,
-    loadGame,
-    setSimulating,
   });
 
   // Top-bar ADVANCE BRACKET CTA — resolves the next round of the live bracket;

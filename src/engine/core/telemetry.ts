@@ -6,7 +6,7 @@
 /**
  * Defines the shape of telemetry provider.
  */
-interface TelemetryProvider {
+export interface TelemetryProvider {
   /** Record timing for an operation */
   timing(name: string, durationMs: number, tags?: Record<string, string>): void;
   /** Increment a counter */
@@ -22,7 +22,21 @@ const noopProvider: TelemetryProvider = {
   gauge: () => {},
 };
 
-const globalProvider: TelemetryProvider = noopProvider;
+let globalProvider: TelemetryProvider = noopProvider;
+
+/**
+ * Installs the process's telemetry sink. Each execution context (main
+ * thread, engine worker, shard workers) owns its own module instance —
+ * install the provider in every context that should emit.
+ */
+export function setTelemetryProvider(provider: TelemetryProvider): void {
+  globalProvider = provider;
+}
+
+/** Restores the no-op provider. */
+export function resetTelemetryProvider(): void {
+  globalProvider = noopProvider;
+}
 
 /**
  * True when a real provider is installed — callers use this to gate
@@ -57,7 +71,9 @@ export const TelemetryEvents = {
   ADVANCE_WEEK: 'advance_week',
   ADVANCE_DAY: 'advance_day',
   ADVANCE_QUARTER: 'advance_quarter',
+  ADVANCE_MONTH: 'advance_month',
   ADVANCE_YEAR: 'advance_year',
+  SKIP_TO_MONTH_END: 'skip_to_month_end',
   SKIP_TO_QUARTER_END: 'skip_to_quarter_end',
   SKIP_TO_YEAR_END: 'skip_to_year_end',
   FLUSH_DEFERRED_ARCHIVES: 'flush_deferred_archives',
@@ -70,11 +86,14 @@ export const TelemetryEvents = {
   // Counter events
   ADVANCE_QUARTER_SUCCESS: 'advance_quarter_success',
   ADVANCE_QUARTER_ERROR: 'advance_quarter_error',
+  ADVANCE_MONTH_SUCCESS: 'advance_month_success',
+  ADVANCE_MONTH_ERROR: 'advance_month_error',
   ADVANCE_YEAR_SUCCESS: 'advance_year_success',
   ADVANCE_YEAR_ERROR: 'advance_year_error',
   STOP_CONDITION_TRIGGERED: 'stop_condition_triggered',
 
   // Gauge events
+  WEEK_CACHE_REBUILDS: 'week_cache_rebuilds',
   FEATURE_FLAG_QUARTER: 'feature_flag_quarter',
   FEATURE_FLAG_YEAR: 'feature_flag_year',
   FEATURE_FLAG_HEADLESS: 'feature_flag_headless',

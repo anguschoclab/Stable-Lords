@@ -68,7 +68,7 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
     }
   }
   if (deferredEpithets.length > 0) impactHandlers.warriorEpithets(state, deferredEpithets);
-  if (process.env.EPITHET_DEBUG) {
+  if (globalThis.process?.env?.EPITHET_DEBUG) {
     const dbg = resolveImpacts as typeof resolveImpacts & { __epiCount?: number };
     const before = dbg.__epiCount ?? 0;
     let count = 0;

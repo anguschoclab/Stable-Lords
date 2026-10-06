@@ -90,7 +90,14 @@ describe('RunResultsSummary', () => {
 describe('AutosimConsole', () => {
   it('renders start buttons when idle', () => {
     const onStart = vi.fn();
-    render(<AutosimConsole isSimulating={false} progress={null} result={null} onStart={onStart} />);
+    render(
+      <AutosimConsole
+        isSimulating={false}
+        progress={null}
+        result={null}
+        handlers={{ onStart }}
+      />
+    );
     expect(screen.getByText(/4 Wks/i)).toBeInTheDocument();
     expect(screen.getByText(/8 Wks/i)).toBeInTheDocument();
     expect(screen.getByText(/13 Wks/i)).toBeInTheDocument();
@@ -98,7 +105,14 @@ describe('AutosimConsole', () => {
 
   it('calls onStart with 4 when short button clicked', () => {
     const onStart = vi.fn();
-    render(<AutosimConsole isSimulating={false} progress={null} result={null} onStart={onStart} />);
+    render(
+      <AutosimConsole
+        isSimulating={false}
+        progress={null}
+        result={null}
+        handlers={{ onStart }}
+      />
+    );
     fireEvent.click(screen.getByText(/4 Wks/i));
     expect(onStart).toHaveBeenCalledWith(4, { councilAutoPilot: false });
   });
@@ -109,7 +123,7 @@ describe('AutosimConsole', () => {
         isSimulating={true}
         progress={{ current: 2, total: 4 }}
         result={null}
-        onStart={vi.fn()}
+        handlers={{ onStart: vi.fn() }}
       />
     );
     expect(screen.getByText(/Processing Cycle 2 of 4/i)).toBeInTheDocument();
@@ -130,7 +144,7 @@ describe('AutosimConsole', () => {
           ],
           finalState: null as never,
         }}
-        onStart={vi.fn()}
+        handlers={{ onStart: vi.fn() }}
       />
     );
     expect(screen.getByText(/Simulation Concluded/i)).toBeInTheDocument();

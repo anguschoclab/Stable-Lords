@@ -14,18 +14,26 @@ sequential code path for every scale of advancement.
   orchestrates the 15-pass staged pipeline (core → world → content) over
   `WEEK_PIPELINE_PASSES` (`pipelineStages.ts`). DAG-validated at boot;
   cache maps rebuilt at every stage boundary (`buildWeekCaches`).
-- `src/engine/pipeline/tick/timeAdvance/service.ts` — `advanceQuarter` /
-  `advanceYear` loop `advanceWeek`, evaluate stop conditions **every week**
-  (not just at chunk boundaries), and return `pendingArchives` for the
-  caller to flush — the service never performs I/O.
+- `src/engine/pipeline/tick/timeAdvance/service.ts` — `advanceMonth` (4 wk) /
+  `advanceQuarter` (13 wk) share the `advanceSpan` stride; `advanceYear`
+  loops quarters. All evaluate stop conditions **every week** (not just at
+  chunk boundaries), check cooperative cancellation at week boundaries, and
+  return `pendingArchives` for the caller to flush — the service never
+  performs I/O.
 - `src/engine/autosim.ts` — single sequential path; per-week stop
-  conditions; `mutableInput` ownership after week 1.
+  conditions; `mutableInput` ownership after week 1; cancellation check per
+  week.
+- `src/engine/runtime/cancellation.ts` + `worker.cancelSim` — worker-local
+  cancellation flag; `cancelSim` bypasses the job queue so it works while a
+  sim is in-flight, the flag is cleared at each sim-job start, and the
+  store's 15 s engine-job timeout invokes it automatically.
 - `src/engine/pipeline/tick/TickOrchestrator.ts` — `advanceDay` and
   `skipToWeekEnd` share `resolveTournamentDay` and the
   `tournamentDaySeed(year, week, day)` formula.
 - `src/engine/session.ts` + `src/engine/jobQueue.ts` — all worker entry
   points serialize through the job queue; `engineSession` adds the
-  start-captured epoch guard so stale results can never be committed.
+  call-time-captured epoch guard so stale results (queued or running when
+  `loadGame`/reset fires) can never be committed.
 - `src/engine/pool/enginePool.ts` — opt-in shard pool (`configureEnginePool`).
   Ships at `poolSize=1` — see `docs/PIPELINE_PARALLELISM.md` for the
   measured ship-gate result.
@@ -38,10 +46,10 @@ Install a provider via `setTelemetryProvider`. Emitted events:
 | ------------------------------------------------------------------- | ---------------------- | ------------------------------------------- |
 | `advance_week`                                                      | timing                 | `advanceWeek` (per week)                    |
 | `advance_day`                                                       | timing                 | `TickOrchestrator.advanceDay`               |
-| `advance_quarter` / `advance_year`                                  | timing                 | `TimeAdvanceService`                        |
-| `advance_quarter_success`/`_error`, `advance_year_success`/`_error` | counter                | `TimeAdvanceService`                        |
+| `advance_month` / `advance_quarter` / `advance_year`                  | timing                 | `TimeAdvanceService`                        |
+| `advance_*_success`/`advance_*_error`                               | counter                | `TimeAdvanceService`                        |
 | `stop_condition_triggered`                                          | counter                | `TimeAdvanceService` / autosim              |
-| `pipeline_pass_timing`                                              | timing (tag: `pass`)   | per-pass, when `__SL_PIPELINE_PROF` is set  |
+| `pipeline_pass_timing`                                              | timing (tags: `pass`, `stage`) | per-pass, when `__SL_PIPELINE_PROF` is set  |
 | `parallel_shard_ms`                                                 | timing (tag: `shards`) | `EnginePool.distributed`                    |
 | `serialization_clone_ms`                                            | timing                 | week-context clone (telemetry-enabled only) |
 | `serialization_payload_bytes`                                       | gauge                  | `doAdvanceWeek`/`doAdvanceDay`              |
@@ -56,7 +64,9 @@ There is no runtime flag. The escape hatches are:
 - **Shard pool**: `configureEnginePool(1)` (default) disables distribution
   entirely — the same shard functions run in-line.
 - **Per-pass profiler**: off unless `globalThis.__SL_PIPELINE_PROF` is set;
-  zero-cost otherwise (one flag read per pass).
+  zero-cost otherwise (one flag read per pass). Timings are emitted as
+  `pipeline_pass_timing` telemetry events — `simulation-harness --profile`
+  installs a provider that folds them into the pass table.
 - **Telemetry**: no-op provider by default; `setTelemetryProvider` is the
   only activation.
 
@@ -75,8 +85,10 @@ There is no runtime flag. The escape hatches are:
 
 1. Headless mode intentionally skips player-facing passes (newsletters,
    gazettes, events).
-2. Shard parallelism is currently a measured pessimization (0.38×) — kept
-   opt-in; revisit if shard inputs are narrowed to per-shard slices.
+2. Shard parallelism is a measured pessimization — 0.33× on the 52-week
+   bench even after rival-shard inputs were narrowed (`narrowRivalShardState`).
+   Kept opt-in at `poolSize=1`; the next viable step is persistent shard
+   state, not further payload dieting (`docs/PIPELINE_PARALLELISM.md`).
 3. Graveyard entries are death-time snapshots; a rival victim that remains
    roster-addressable via `lastBoutWeek` rebuilds can accumulate post-death
    progression on the roster copy without affecting the memorial.

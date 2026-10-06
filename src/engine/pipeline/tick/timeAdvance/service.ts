@@ -7,21 +7,36 @@ import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/core/telemet
 import { sweepUnfinishedTournaments } from '@/engine/matchmaking/tournamentSelection/resolution';
 import { truncateState } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
-import type { AdvanceOptions, WeekSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
+import type {
+  AdvanceOptions,
+  WeekSummary,
+  QuarterSummary,
+  QuarterAdvanceResult,
+  MonthAdvanceResult,
+  YearAdvanceResult,
+} from './types';
 import { evaluateStopConditions } from './stopConditions';
+import { isSimCancellationRequested } from '@/engine/runtime/cancellation';
 import { extractWeekSummary, buildQuarterSummary, buildAnnualSummary } from './summaries';
 
+/** Telemetry event names for a multi-week stride (quarter, month). */
+interface SpanEvents {
+  timing: string;
+  success: string;
+}
+
 /**
- * Quarter teardown: terminal tournament sweep (a batch ending on a
- * tournament week returns with no following week-boundary sweep to finish
- * emitted brackets — runs BEFORE draining so any bouts it resolves still
- * archive), transcript drain BEFORE truncation (truncateState caps
- * deferredBoutLogs and would silently drop logs never handed to an archive
- * sink), then truncate, time, and report.
+ * Span teardown: terminal tournament sweep (a batch ending on a tournament
+ * week returns with no following week-boundary sweep to finish emitted
+ * brackets — runs BEFORE draining so any bouts it resolves still archive),
+ * transcript drain BEFORE truncation (truncateState caps deferredBoutLogs
+ * and would silently drop logs never handed to an archive sink), then
+ * truncate, time, and report.
  */
-function finishQuarterRun(ctx: {
+function finishSpanRun(ctx: {
   state: GameState;
   opts?: AdvanceOptions;
+  events: SpanEvents;
   startTime: number;
   startTreasury: number;
   startWeek: number;
@@ -30,7 +45,17 @@ function finishQuarterRun(ctx: {
   pendingArchives: DeferredBoutLog[];
   stopReason: string | null;
   weeksCompleted: number;
-}): { state: GameState; result: QuarterAdvanceResult } {
+}): {
+  state: GameState;
+  result: {
+    state: GameState;
+    summaries: WeekSummary[];
+    spanSummary: QuarterSummary;
+    stopReason: string | null;
+    weeksCompleted: number;
+    pendingArchives: DeferredBoutLog[];
+  };
+} {
   let currentState = sweepUnfinishedTournaments(ctx.state, ctx.opts?.headless);
   ctx.pendingArchives.push(...drainDeferredBoutLogs(currentState));
   currentState = truncateState(currentState);
@@ -41,11 +66,11 @@ function finishQuarterRun(ctx: {
     [TelemetryTags.WEEKS_COMPLETED]: String(ctx.weeksCompleted),
     ...(ctx.stopReason ? { [TelemetryTags.STOP_REASON]: ctx.stopReason } : {}),
   };
-  telemetry.timing(TelemetryEvents.ADVANCE_QUARTER, duration, tags);
+  telemetry.timing(ctx.events.timing, duration, tags);
   if (ctx.stopReason) {
     telemetry.increment(TelemetryEvents.STOP_CONDITION_TRIGGERED, { reason: ctx.stopReason });
   } else {
-    telemetry.increment(TelemetryEvents.ADVANCE_QUARTER_SUCCESS, {
+    telemetry.increment(ctx.events.success, {
       [TelemetryTags.HEADLESS]: String(!!ctx.opts?.headless),
     });
   }
@@ -55,7 +80,7 @@ function finishQuarterRun(ctx: {
     result: {
       state: currentState,
       summaries: ctx.weekSummaries,
-      quarterSummary: buildQuarterSummary(
+      spanSummary: buildQuarterSummary(
         currentState,
         ctx.startWeek,
         ctx.startYear,
@@ -69,6 +94,107 @@ function finishQuarterRun(ctx: {
   };
 }
 
+/**
+ * Shared multi-week stride: `totalWeeks` sequential canonical week advances
+ * with per-week archive drain, per-week stop-condition evaluation, weekly
+ * progress callbacks, and cooperative cancellation at week boundaries.
+ * advanceQuarter (13 weeks) and advanceMonth (4 weeks) are thin wrappers.
+ */
+async function advanceSpan(
+  state: GameState,
+  opts: AdvanceOptions | undefined,
+  totalWeeks: number,
+  events: SpanEvents
+): Promise<{
+  state: GameState;
+  summaries: WeekSummary[];
+  spanSummary: QuarterSummary;
+  stopReason: string | null;
+  weeksCompleted: number;
+  pendingArchives: DeferredBoutLog[];
+}> {
+  const startTime = performance.now();
+
+  let currentState = state;
+  const weekSummaries: WeekSummary[] = [];
+  const pendingArchives: DeferredBoutLog[] = [];
+  const startTreasury = state.treasury;
+  const startWeek = state.week;
+  const startYear = state.year;
+
+  const finish = (stopReason: string | null, weeksCompleted: number) => {
+    const wrapped = finishSpanRun({
+      state: currentState,
+      opts,
+      events,
+      startTime,
+      startTreasury,
+      startWeek,
+      startYear,
+      weekSummaries,
+      pendingArchives,
+      stopReason,
+      weeksCompleted,
+    });
+    currentState = wrapped.state;
+    return wrapped.result;
+  };
+
+  for (let i = 0; i < totalWeeks; i++) {
+    // Cooperative cancellation — cancelSim flips this worker-local flag;
+    // exit at the week boundary with the partial state swept and drained.
+    if (isSimCancellationRequested()) {
+      return finish('cancelled', i);
+    }
+
+    const weekOpts: WeekAdvanceOptions = {
+      headless: opts?.headless,
+      // Week 1 input is caller-owned unless they granted mutableInput;
+      // weeks after that run on this service's own returned state.
+      mutableInput: i > 0 || opts?.mutableInput === true,
+      pool: opts?.pool,
+    };
+    currentState = await advanceWeek(currentState, weekOpts);
+
+    // Drain transcripts weekly into pendingArchives — bounds memory during
+    // the batch and keeps them out of truncateState's deferredBoutLogs cap.
+    pendingArchives.push(...drainDeferredBoutLogs(currentState));
+
+    weekSummaries.push(extractWeekSummary(currentState));
+
+    // Stop conditions are evaluated EVERY week — previously they only ran at
+    // checkpoint boundaries, letting e.g. a roster wipe on week 1 sim three
+    // extra weeks before halting.
+    if (opts?.stopConditions) {
+      const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
+      if (stopResult.shouldStop) {
+        return finish(stopResult.reason ?? 'unknown', i + 1);
+      }
+    }
+
+    if (opts?.onProgress) {
+      opts.onProgress(i + 1, totalWeeks);
+    }
+  }
+
+  return finish(null, totalWeeks);
+}
+
+const QUARTER_EVENTS: SpanEvents = {
+  timing: TelemetryEvents.ADVANCE_QUARTER,
+  success: TelemetryEvents.ADVANCE_QUARTER_SUCCESS,
+};
+
+const MONTH_EVENTS: SpanEvents = {
+  timing: TelemetryEvents.ADVANCE_MONTH,
+  success: TelemetryEvents.ADVANCE_MONTH_SUCCESS,
+};
+
+/** Weeks in a month stride. */
+const WEEKS_PER_MONTH = 4;
+/** Weeks in a quarter stride. */
+const WEEKS_PER_QUARTER = 13;
+
 export const TimeAdvanceService = {
   async advanceWeek(state: GameState, opts?: AdvanceOptions): Promise<GameState> {
     const weekOpts: WeekAdvanceOptions = {
@@ -80,64 +206,32 @@ export const TimeAdvanceService = {
   },
 
   async advanceQuarter(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
-    const startTime = performance.now();
-
-    let currentState = state;
-    const weekSummaries: WeekSummary[] = [];
-    const pendingArchives: DeferredBoutLog[] = [];
-    const startTreasury = state.treasury;
-    const startWeek = state.week;
-    const startYear = state.year;
-
-    const finish = (stopReason: string | null, weeksCompleted: number): QuarterAdvanceResult => {
-      const wrapped = finishQuarterRun({
-        state: currentState,
-        opts,
-        startTime,
-        startTreasury,
-        startWeek,
-        startYear,
-        weekSummaries,
-        pendingArchives,
-        stopReason,
-        weeksCompleted,
-      });
-      currentState = wrapped.state;
-      return wrapped.result;
+    const span = await advanceSpan(state, opts, WEEKS_PER_QUARTER, QUARTER_EVENTS);
+    return {
+      state: span.state,
+      summaries: span.summaries,
+      quarterSummary: span.spanSummary,
+      stopReason: span.stopReason,
+      weeksCompleted: span.weeksCompleted,
+      pendingArchives: span.pendingArchives,
     };
+  },
 
-    for (let i = 0; i < 13; i++) {
-      const weekOpts: WeekAdvanceOptions = {
-        headless: opts?.headless,
-        // Week 1 input is caller-owned unless they granted mutableInput;
-        // weeks after that run on this service's own returned state.
-        mutableInput: i > 0 || opts?.mutableInput === true,
-        pool: opts?.pool,
-      };
-      currentState = await advanceWeek(currentState, weekOpts);
-
-      // Drain transcripts weekly into pendingArchives — bounds memory during
-      // the batch and keeps them out of truncateState's deferredBoutLogs cap.
-      pendingArchives.push(...drainDeferredBoutLogs(currentState));
-
-      weekSummaries.push(extractWeekSummary(currentState));
-
-      // Stop conditions are evaluated EVERY week — previously they only ran at
-      // checkpoint boundaries, letting e.g. a roster wipe on week 1 sim three
-      // extra weeks before halting.
-      if (opts?.stopConditions) {
-        const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
-        if (stopResult.shouldStop) {
-          return finish(stopResult.reason ?? 'unknown', i + 1);
-        }
-      }
-
-      if (opts?.onProgress) {
-        opts.onProgress(i + 1, 13);
-      }
-    }
-
-    return finish(null, 13);
+  /**
+   * Advance a month — a 4-week stride on the canonical week pipeline with
+   * the same teardown as advanceQuarter (terminal tournament sweep, weekly
+   * archive drain, truncation, per-week stop conditions).
+   */
+  async advanceMonth(state: GameState, opts?: AdvanceOptions): Promise<MonthAdvanceResult> {
+    const span = await advanceSpan(state, opts, WEEKS_PER_MONTH, MONTH_EVENTS);
+    return {
+      state: span.state,
+      summaries: span.summaries,
+      monthSummary: span.spanSummary,
+      stopReason: span.stopReason,
+      weeksCompleted: span.weeksCompleted,
+      pendingArchives: span.pendingArchives,
+    };
   },
 
   async advanceYear(state: GameState, opts?: AdvanceOptions): Promise<YearAdvanceResult> {
@@ -179,6 +273,17 @@ export const TimeAdvanceService = {
 
   async skipToQuarterEnd(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
     return this.advanceQuarter(state, {
+      ...opts,
+      headless: true,
+    });
+  },
+
+  /**
+   * Skip to month end (headless mode for UI).
+   * Batches 4 weeks with deferred I/O.
+   */
+  async skipToMonthEnd(state: GameState, opts?: AdvanceOptions): Promise<MonthAdvanceResult> {
+    return this.advanceMonth(state, {
       ...opts,
       headless: true,
     });

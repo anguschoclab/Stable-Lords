@@ -1,0 +1,8 @@
+[
+  {
+    "category": "kill_text.default",
+    "keep": "{{attacker}} stands victorious over the ruined corpse of {{defender}}.",
+    "remove": "{{attacker}} stands victorious over the broken form of {{defender}}.",
+    "similarity": 0.8714285714285714
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "path": "pbp.defenses.riposte.grim",
+    "text": "{{defender}} coldly knocks the weapon aside and drives a brutal, silent riposte toward their foe."
+  },
+  {
+    "path": "pbp.defenses.dodge.tier2_medium",
+    "text": "{{defender}} curves snakelike away from the blow at the last instant."
+  }
+]

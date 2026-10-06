@@ -71,3 +71,34 @@ Rules enforced by `validatePipelinePasses`:
   (`narrowRivalShardState`) — identical bytes to the in-line path; adding a
   GameState field read by rival logic requires widening it
   (`shardInputSize.test.ts` guards both directions).
+
+## Context-local caches
+
+`src/engine` ships into multiple execution contexts (main thread, engine
+worker, shard workers); each context gets its OWN module instance, and
+`postMessage` structured-clones state — so a `GameState` object's identity
+lives in exactly one context and module-level caches never cross it.
+
+Identity-keyed caches (`WeakMap` on a state/history object):
+
+| Cache | Key | Rebuild trigger |
+| ----- | --- | --------------- |
+| `core/warriorLookup.ts` `warriorCache` | `GameState` identity | new state object (every impact resolution, and every week under `mutableInput` since `createMutableWeekContext` shallow-spreads the top level) |
+| `core/historyResolver.ts` `warriorCache`/`stableCache` | state object identity | same |
+| `matchmaking/schedulingAssistant/headToHead.ts` `h2hByHistory` | `arenaHistory` array identity | new history array (append-only-by-replacement) |
+| `matchmaking/arenaFit.ts` `underservedByHistory` | `arenaHistory` identity + week | new history or new week |
+| `advisor/stableCouncilService.ts`, `campaignFocusEvaluator.ts` | state / derived-map identity | new input identity |
+
+Coherence contract — all of these are safe only because:
+
+1. `jobQueue` serializes each context's engine work — no concurrent caller
+   can observe a partially-built map.
+2. The engine never mutates the keyed collections in place: passes return
+   `StateImpact`s (`passPurity.test.ts`) and resolution produces a new
+   object identity. The residual hazard is a caller doing in-place roster
+   mutation on the same state object — it would be served stale entries
+   until identity turns; `clearWarriorCache()` is the escape hatch (tests
+   call it in cleanup).
+
+`moduleCacheRegistry.test.ts` forces every module-level mutable under
+`src/engine` to be registered with a context-safety rationale.

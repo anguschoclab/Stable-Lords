@@ -72,6 +72,13 @@ export const MATCHUP_MATRIX: number[][] = [
   [-3, 1, 0, -1, 0, -1, -1, -1, 0, 0], // WS
 ];
 
+// Style → matrix row/col index, built once at module init. The pairwise
+// scoring hot loop calls getMatchupBonus millions of times per soak —
+// STYLE_ORDER.indexOf there showed up as a real CPU line.
+const STYLE_INDEX: ReadonlyMap<FightingStyle, number> = new Map(
+  STYLE_ORDER.map((style, i) => [style, i])
+);
+
 /**
  * Get matchup bonus from the matrix
  * @param attStyle - Attacker style
@@ -79,8 +86,8 @@ export const MATCHUP_MATRIX: number[][] = [
  * @returns The matchup bonus value
  */
 export function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {
-  const ai = STYLE_ORDER.indexOf(attStyle);
-  const di = STYLE_ORDER.indexOf(defStyle);
+  const ai = STYLE_INDEX.get(attStyle) ?? -1;
+  const di = STYLE_INDEX.get(defStyle) ?? -1;
   if (ai < 0 || di < 0) return 0;
   return MATCHUP_MATRIX[ai]?.[di] ?? 0;
 }

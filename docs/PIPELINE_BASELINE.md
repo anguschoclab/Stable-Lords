@@ -36,21 +36,53 @@ directly.
 
 | Config                        | ms/week | invariants |
 | ----------------------------- | ------- | ---------- |
-| week-mode (weekly advance)    | 282.2   | 0          |
+| week-mode (weekly advance)    | 292.7   | 0          |
+| day-mode (`--day-mode`, seven `advanceDay` ticks per week) | 303.1 | 0 |
+
+Day-mode costs ~+4% over week-mode — the seven day ticks are cheap and the
+weekly pipeline on day 7 dominates either way.
 
 Per-pass profile (40 weeks, total ms — telemetry `pipeline_pass_timing`
 events folded by the harness provider):
 
 | pass              | stage   | total ms | avg ms/wk | share |
 | ----------------- | ------- | -------- | --------- | ----- |
-| rivalStrategy     | world   | 6,887    | 172       | ~61%  |
-| promoter          | world   | 1,160    | 29        | ~10%  |
-| arenaChampionship | world   | 189      | 4.7       | ~2%   |
-| all others        | —       | <44 each  | <1.1     | ~27%  |
+| rivalStrategy     | world   | 6,604    | 165       | ~56%  |
+| promoter          | world   | 1,098    | 27.5      | ~9%   |
+| arenaChampionship | world   | 241      | 6.0       | ~2%   |
+| all others        | —       | <52 each  | <1.3     | ~33%  |
 
-`rivalStrategy` remains the dominant week cost by ~5× the next pass — any
-further optimization effort should target it (`B3` scope), not the
-serial-boundary items.
+### B3 hot-path optimization outcome (post-optimization A/B)
+
+CPU profiling (`bun --cpu-prof`) identified the dominant rival-strategy
+internals: per-pair O(F) head-to-head scans (`getHeadToHeadRecord`,
+~405 ms/20wk), per-bout `underservedWeights` history scans (~246 ms/20wk),
+and `STYLE_ORDER.indexOf` inside `getMatchupBonus` (~115 ms/20wk). Fixes
+shipped:
+
+- `headToHead.ts` — one-pass directional pair index per `arenaHistory`
+  identity (O(F) once, O(1) per pair); equivalence tested pair-by-pair.
+- `arenaFit.ts` — `underservedByHistory` WeakMap memo per (history, week).
+- `combat/matchup.ts` — `STYLE_INDEX` map replaces `indexOf` scans.
+- `boutBidding/generation.ts` — hoisted per-warrior `aStableId` out of the
+  opponent loop; `computeMetaDrift` and the `generatePairings` UI preview
+  were inspected and are NOT real hotspots — left alone.
+
+A/B soak, same seed, idle machine, `--weeks 20`:
+
+| Code           | ms/week | final state         |
+| -------------- | ------- | ------------------- |
+| pre-B3         | 359.8   | reference           |
+| post-B3        | 281.3   | **byte-identical**  |
+
+≈22% faster with provably unchanged output. Post-change CPU profile no
+longer shows `getHeadToHeadRecord` or `underservedWeights`; the remaining
+`scorePairwiseMatchup` self-time is the inherent O(roster × world) opponent
+scan in `bestMatchupModifier`.
+
+Heap check (40-wk soak, `Bun.gc(true)` samples every 5 wk): heap grows
+~1.5 MB/wk tracking `arenaHistory` accumulation (append-only by design);
+post-run full GC returns to ~43 MB — no leak signature.
 
 ## Structural costs removed by the refactor
 

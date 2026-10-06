@@ -247,6 +247,17 @@ export function eligibleArenasFor(warrior: Warrior, opts?: ArenaEligibilityOpts)
 }
 
 /**
+ * Per-(history, week) memo for {@link underservedWeights}. arenaHistory is
+ * append-only-by-replacement, so the WeakMap key expires with the array —
+ * a new history automatically recomputes. Callers treat the returned map
+ * as read-only.
+ */
+const underservedByHistory = new WeakMap<
+  FightSummary[],
+  { week: number; weights: Map<string, number> }
+>();
+
+/**
  * Recent-booking weight: venues with fewer recorded bouts over the last
  * UNDERSERVED_LOOKBACK_WEEKS get up to UNDERSERVED_ARENA_WEIGHT added to
  * their draw score, nudging coverage across the circuit.
@@ -257,6 +268,10 @@ function underservedWeights(
 ): Map<string, number> {
   const weights = new Map<string, number>();
   if (!arenaHistory || currentWeek === undefined) return weights;
+  // selectArenaForMatchup calls this once per bout booking — memoize the
+  // O(F) usage scan per (history identity, week).
+  const cached = underservedByHistory.get(arenaHistory);
+  if (cached?.week === currentWeek) return cached.weights;
 
   const usage = new Map<string, number>();
   let maxUsage = 0;
@@ -274,6 +289,7 @@ function underservedWeights(
       (ARENA_SELECTION.UNDERSERVED_ARENA_WEIGHT * (maxUsage - count)) / maxUsage
     );
   }
+  underservedByHistory.set(arenaHistory, { week: currentWeek, weights });
   return weights;
 }
 

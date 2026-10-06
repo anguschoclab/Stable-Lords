@@ -14,6 +14,7 @@ import {
   getRecommendedChallenges,
   getMatchupsToAvoid,
 } from '@/engine/matchmaking/schedulingAssistant';
+import { headToHeadFor } from '@/engine/matchmaking/schedulingAssistant/headToHead';
 import { getPairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
@@ -1280,6 +1281,74 @@ describe('Scheduling Assistant Engine', () => {
       const ctx = { arenaHistory: history, week: 10 };
 
       expect(scorePairwiseMatchup(a, b, ctx)).toBe(scorePairwiseMatchup(a, b, ctx));
+    });
+
+    describe('one-pass pair index', () => {
+      // Reference implementation of the per-pair O(F) scan the index
+      // replaced — equivalence is asserted pair-by-pair, direction included.
+      const naiveHeadToHead = (aId: string, bId: string, history: FightSummary[]) => {
+        let wins = 0;
+        let losses = 0;
+        let total = 0;
+        let lastWinner: 'a' | 'b' | 'draw' | null = null;
+        let lastFightWeek: number | undefined;
+        for (const fight of history) {
+          if (!fight) continue;
+          const aIsA = fight.warriorIdA === aId;
+          const aIsD = fight.warriorIdD === aId;
+          const bIsA = fight.warriorIdA === bId;
+          const bIsD = fight.warriorIdD === bId;
+          if ((aIsA && bIsD) || (aIsD && bIsA)) {
+            total++;
+            lastFightWeek = fight.week;
+            if (fight.winner === null) {
+              lastWinner = 'draw';
+            } else if ((aIsA && fight.winner === 'A') || (aIsD && fight.winner === 'D')) {
+              wins++;
+              lastWinner = 'a';
+            } else {
+              losses++;
+              lastWinner = 'b';
+            }
+          }
+        }
+        return { wins, losses, total, lastWinner, lastFightWeek };
+      };
+
+      it('agrees with the naive scan for every ordered pair and orientation', () => {
+        const history = [
+          mockFightBetween('a1', 'b1', 'A', 1),
+          mockFightBetween('b1', 'a1', 'A', 2), // reversed orientation
+          mockFightBetween('a1', 'b1', 'D', 3),
+          mockFightBetween('c1', 'b1', 'A', 4),
+          mockFightBetween('c1', 'a1', 'D', 5),
+        ];
+        for (const x of ['a1', 'b1', 'c1']) {
+          for (const y of ['a1', 'b1', 'c1']) {
+            if (x === y) continue;
+            const a = mockWarrior(x, FightingStyle.TotalParry);
+            const b = mockWarrior(y, FightingStyle.TotalParry);
+            expect(headToHeadFor(a, b, history)).toEqual(naiveHeadToHead(x, y, history));
+          }
+        }
+      });
+
+      it('serves repeated lookups from the index (same record object)', () => {
+        const a = mockWarrior('a1', FightingStyle.TotalParry);
+        const b = mockWarrior('b1', FightingStyle.TotalParry);
+        const history = [mockFightBetween('a1', 'b1', 'A', 1)];
+        expect(headToHeadFor(a, b, history)).toBe(headToHeadFor(a, b, history));
+      });
+
+      it('populates the explicit cache with the indexed record', () => {
+        const a = mockWarrior('a1', FightingStyle.TotalParry);
+        const b = mockWarrior('b1', FightingStyle.TotalParry);
+        const history = [mockFightBetween('a1', 'b1', 'A', 1)];
+        const explicit = new Map();
+        const rec = headToHeadFor(a, b, history, explicit);
+        expect(explicit.get('a1|b1')).toBe(rec);
+        expect(rec.wins).toBe(1);
+      });
     });
   });
 });

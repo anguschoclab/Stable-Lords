@@ -52,12 +52,15 @@ const REGISTRY: Record<string, string> = {
   // ── Identity-keyed caches (GC-bounded, safe in any context) ─────────────
   'core/historyResolver.ts:warriorCache': 'WeakMap keyed on state object identity.',
   'core/historyResolver.ts:stableCache': 'WeakMap keyed on state object identity.',
-  'core/warriorLookup.ts:warriorCache': 'WeakMap keyed on GameState identity.',
+  'core/warriorLookup.ts:warriorCache':
+    'WeakMap keyed on GameState identity; per-context module instance — safe only because jobQueue serializes each context\'s engine work and rosters never mutate in place.',
+  'matchmaking/arenaFit.ts:underservedByHistory':
+    'WeakMap keyed on arenaHistory identity; caches per-week underserved weights.',
   'advisor/stableCouncilService.ts:reportCache': 'WeakMap keyed on GameState identity.',
   'advisor/campaignFocusEvaluator.ts:contenderSetCache':
     'WeakMap keyed on the roster-map identity it derives from.',
   'matchmaking/schedulingAssistant/headToHead.ts:h2hByHistory':
-    'WeakMap keyed on the arenaHistory array identity; a new history starts fresh.',
+    'WeakMap keyed on the arenaHistory array identity; a new history rebuilds the index fresh.',
   'storage/archiveService.ts:archiveService':
     'Environment-selected service singleton; assigned once at module init.',
 

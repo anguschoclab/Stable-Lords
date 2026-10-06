@@ -22,30 +22,31 @@ bun x vitest run src/test/perf/rivalStrategyPass.perf.slow.test.ts
 | Batch memory growth                                       | `pipeline.perf.slow.test.ts`          | within gate        |
 | `advanceYear` ≡ 52× `advanceWeek`                         | `weekDeterminism.slow.test.ts`        | ~1.7 s, equivalent |
 | Same-seed determinism (SimPulse + rivals hash)            | `sim/determinism.slow.test.ts`        | identical, ~4 s    |
-| Living-world week, 90-stable band (headless advanceWeek)  | `pipeline.perf.slow.test.ts`          | ~566 ms/week       |
-| Living-world week, 160-stable band (headless advanceWeek) | `pipeline.perf.slow.test.ts`          | ~1,378 ms/week     |
+| Living-world week, 90-stable band (headless advanceWeek)  | `pipeline.perf.slow.test.ts`          | ~630 ms/week (re-measured; ~566 prior) |
+| Living-world week, 160-stable band (headless advanceWeek) | `pipeline.perf.slow.test.ts`          | ~1,430 ms/week (re-measured; ~1,378 prior) |
 
 ## Harness soak baseline (A2 re-measure, telemetry-provider profiling)
 
 Measured via `bun run scripts/soak.mjs --weeks 40 --profile --invariants 5`
-(Bun, headless, 90-rival band reached ~wk 26, seed 20260919). Harness ms/week
-includes archive drain, pulse logging, and tracker overhead that the bare
-`advanceWeek` perf rows above exclude — do not compare them directly.
+(Bun, headless, seed 20260919, idle machine — earlier figures of ~2,800
+ms/wk were measured while a concurrent test suite saturated the box).
+Harness ms/week includes archive drain, pulse logging, and tracker overhead
+that the bare `advanceWeek` perf rows above exclude — do not compare them
+directly.
 
 | Config                        | ms/week | invariants |
 | ----------------------------- | ------- | ---------- |
-| week-mode (weekly advance)    | 2,799   | 0          |
-| `--day-mode`                  | 3,109   | 0          |
+| week-mode (weekly advance)    | 282.2   | 0          |
 
 Per-pass profile (40 weeks, total ms — telemetry `pipeline_pass_timing`
 events folded by the harness provider):
 
 | pass              | stage   | total ms | avg ms/wk | share |
 | ----------------- | ------- | -------- | --------- | ----- |
-| rivalStrategy     | world   | 64,489   | 1,612     | ~58%  |
-| promoter          | world   | 11,974   | 299       | ~11%  |
-| arenaChampionship | world   | 1,988    | 50        | ~2%   |
-| all others        | —       | <410 each | <10      | ~29%  |
+| rivalStrategy     | world   | 6,887    | 172       | ~61%  |
+| promoter          | world   | 1,160    | 29        | ~10%  |
+| arenaChampionship | world   | 189      | 4.7       | ~2%   |
+| all others        | —       | <44 each  | <1.1     | ~27%  |
 
 `rivalStrategy` remains the dominant week cost by ~5× the next pass — any
 further optimization effort should target it (`B3` scope), not the
@@ -73,9 +74,10 @@ True parallelism (rival/bout sharding on a worker pool) ships only if ALL hold:
 Until then the shipped configuration is `poolSize = 1` (serialized, deterministic).
 
 **Gate result (re-measured with narrowed shard ctx, seed 20260919, 52 wk):**
-pool=1 17,946 ms vs pool=4 49,058 ms → **0.37×, FAIL**. An earlier same-day
-run reported 1.51× but was contaminated by a concurrent full-test-suite run
-inflating the sequential leg — always run the gate on an idle machine.
+pool=1 15,630 ms vs pool=4 47,546 ms → **0.33×, FAIL**. (A prior same-day
+pair, 17,946/49,058 → 0.37×, concurs; a still-earlier 1.51× report was
+contaminated by a concurrent full-test-suite run inflating the sequential
+leg — always run the gate on an idle machine.)
 Determinism leg passes (`parallelDeterminism.slow`, pool 1 vs 4 byte-identical);
 the wall-clock leg remains the blocker. Full history in
 `docs/PIPELINE_PARALLELISM.md`.

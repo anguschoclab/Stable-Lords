@@ -25,6 +25,8 @@ export const ARENA_EVENT_CONSTANTS = {
   HEATH_APPARITION_TRIGGER: 18,
   CRUMBLING_SPIRE_FALL_TRIGGER: 10,
   MIST_VEIL_TRIGGER: 7,
+  SLICK_FLOOR_TRIGGER: 6,
+  SLICK_FLOOR_RIPOSTE_MOD: -4,
 } as const;
 import type { ArenaTag, WeatherType } from '@/types/shared.types';
 
@@ -343,6 +345,22 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.MIST_VEIL_TRIGGER,
     narrativeText: 'A sudden, thick veil of mist obscures the tight quarters!',
     mechanicalEffect: { type: 'initiative_mod', value: -2 },
+  },
+
+  // ─── Indoor Events ──────────────────────────────────────────────────────
+  slick_floor: {
+    id: 'slick_floor',
+    name: 'Slick Floor',
+    description: 'Oil-slicked stone betrays explosive footwork',
+    requiredTags: ['indoor'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.SLICK_FLOOR_TRIGGER,
+    narrativeText:
+      'The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!',
+    mechanicalEffect: {
+      type: 'riposte_mod',
+      value: ARENA_EVENT_CONSTANTS.SLICK_FLOOR_RIPOSTE_MOD,
+    },
   },
 };
 

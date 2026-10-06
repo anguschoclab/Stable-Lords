@@ -678,6 +678,25 @@ describe('arena events — next-exchange attribution', () => {
 
     expect(events.every((e) => e.result !== 'RIPOSTE_FAILED')).toBe(true);
   });
+
+  it('a real registry riposte_mod event (slick_floor) propagates to the RIPOSTE_FAILED marker', () => {
+    const ctx = makeResolutionContext({ arenaConfig: arenaWithTags(['indoor']) });
+    const cantHit = { ATT: -100, PAR: 10, DEF: 10, INI: 10, RIP: -100, DEC: 10 };
+    const fA = makeFighterState({ skills: { ...cantHit } });
+    const fD = makeFighterState({ label: 'D', skills: { ...cantHit } });
+
+    ctx.exchange = 6; // slick_floor's interval — fires at the tick, queues the mod
+    const firing = resolveExchange(ctx, fA, fD);
+    expect(arenaEventIds(firing)).toContain('slick_floor');
+    expect(ctx.arenaEventModSources?.riposte).toContain('Slick Floor');
+
+    // Next exchange: the pending mod suppresses the whiff-riposte check and
+    // the marker carries the real hazard name.
+    ctx.exchange = 7;
+    const events = resolveExchange(ctx, fA, fD);
+    const marker = events.find((e) => e.result === 'RIPOSTE_FAILED');
+    expect(marker?.metadata?.arenaModSources).toContain('Slick Floor');
+  });
 });
 
 describe('bleed termination — hazard attribution', () => {

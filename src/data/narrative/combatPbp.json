@@ -3808,6 +3808,13 @@
           "Fog rolls in, swallowing the arena in white!",
           "Dense mist closes around the fighters, hiding every move!"
         ]
+      },
+      "slick_floor": {
+        "lines": [
+          "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
+          "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
+          "The polished arena floor betrays the fighters' footing under the lanterns!"
+        ]
       }
     }
   },

@@ -1,6 +1,21 @@
 import type { TraitDef } from '../types';
 
 export const NOTABLE_TRAITS: Record<string, TraitDef> = {
+  survivalist: {
+    id: 'survivalist',
+    name: 'Survivalist',
+    description: 'Learned to survive the harshest conditions, increasing endurance recovery but occasionally making them overly defensive.',
+    type: 'personality',
+    tier: 1,
+    effect: {
+      enduranceMult: 0.85,
+      defensiveStanceWeight: 1.2
+    },
+    antiSynergy: ['reckless', 'bloodthirsty'],
+    synergy: ['patient', 'resilient'],
+    tags: ['defensive', 'endurance'],
+    weight: 5
+  },
   orphan_vengeance_seeker: {
     id: 'orphan_vengeance_seeker',
     name: 'Vengeance Seeker',

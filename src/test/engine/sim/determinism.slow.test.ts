@@ -2,7 +2,6 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { createHash } from 'crypto';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
@@ -28,12 +27,10 @@ describe('harness determinism (I.2)', () => {
 
     resetIds();
     engineEventBus.clear();
-    NewsletterFeed.clear();
     const a = await runSimulation({ weeks: 8, seed: 777, logFrequency: 1, ignoreBankruptcy: true });
 
     resetIds();
     engineEventBus.clear();
-    NewsletterFeed.clear();
     const b = await runSimulation({ weeks: 8, seed: 777, logFrequency: 1, ignoreBankruptcy: true });
 
     expect(JSON.stringify(a.pulses)).toBe(JSON.stringify(b.pulses));

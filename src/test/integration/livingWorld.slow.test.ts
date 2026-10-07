@@ -15,7 +15,6 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { runSimulation, type CumulativeStats } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import {
   WORLD_RIVAL_FLOOR,
   WORLD_RIVAL_SOFT_CAP,
@@ -48,7 +47,6 @@ describe('Living rival world — 1000-week seeded run', () => {
     let n = 0;
     setMockIdGenerator(() => `id_${++n}`);
     engineEventBus.clear();
-    NewsletterFeed.clear();
     vi.spyOn(console, 'log').mockImplementation(() => {});
     const result = await runSimulation({
       weeks: WEEKS,

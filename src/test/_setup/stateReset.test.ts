@@ -10,10 +10,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { setMockIdGenerator, generateId } from '@/utils/idUtils';
 import { useGameStore } from '@/state/useGameStore';
-import { makeWarrior, makeFightSummary, resetFixtureIds } from '../_fixtures/factories';
+import { makeWarrior, resetFixtureIds } from '../_fixtures/factories';
 import { registerArena, getAllArenas } from '@/data/arenas';
 import { STANDARD_ARENA } from '@/data/arenas';
 import { configureEnginePool, getEnginePool } from '@/engine/pool/enginePool';
@@ -35,20 +34,6 @@ describe('isolation sentinels', () => {
         payload: { prevSeason: 'Spring', newSeason: 'Summer', year: 1 },
       });
       expect(leakLog).toHaveLength(0);
-    });
-  });
-
-  describe('NewsletterFeed', () => {
-    it('A: appends a fight card and abandons it', () => {
-      NewsletterFeed.appendFightResult({
-        summary: makeFightSummary({ id: 'sentinel_fight' as never }),
-        transcript: [],
-      });
-    });
-
-    it('B: feed is empty for the next week close', () => {
-      const issue = NewsletterFeed.closeWeekToIssue(1);
-      expect(issue.fights).toHaveLength(0);
     });
   });
 

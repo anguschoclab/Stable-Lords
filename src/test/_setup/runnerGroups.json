@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T17:27:42.116Z",
+  "generatedAt": "2026-10-07T17:45:00.184Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -172,7 +172,6 @@
     "src/test/engine/sim/determinism.slow.test.ts",
     "src/test/engine/sim/harnessTruncation.slow.test.ts",
     "src/test/engine/sim/worldLiveness.integration.slow.test.ts",
-    "src/test/engine/stats/styleRollups.test.ts",
     "src/test/engine/storage/archiveWorkerProxy.test.ts",
     "src/test/engine/storage/electronArchive.test.ts",
     "src/test/engine/storage/electronIPCBounds.test.ts",

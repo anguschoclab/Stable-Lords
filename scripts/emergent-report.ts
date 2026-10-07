@@ -11,7 +11,6 @@ import { populateInitialWorld } from '../src/engine/core/worldSeeder';
 import { createFreshState } from '../src/engine/factories/gameStateFactory';
 import { setMockIdGenerator } from '../src/utils/idUtils';
 import { engineEventBus } from '../src/engine/core/EventBus';
-import { NewsletterFeed } from '../src/engine/newsletter/feed';
 import { TRAITS } from '../src/engine/traits';
 import { getStyleDefaultLoadout } from '../src/data/equipment';
 import { veteranSigningPatch } from '../src/engine/recruitment/recruitment';
@@ -22,7 +21,6 @@ function resetGlobalState() {
   let idCounter = 0;
   setMockIdGenerator(() => `id_${++idCounter}`);
   engineEventBus.clear();
-  NewsletterFeed.clear();
 }
 
 // ---- helpers -------------------------------------------------------------

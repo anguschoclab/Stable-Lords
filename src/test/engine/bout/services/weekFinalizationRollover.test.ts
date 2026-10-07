@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { finalizeWeekSideEffectsToImpact } from '@/engine/bout/services/WeekFinalizationService';
 import type { GameState } from '@/types/state.types';
 import type { BoutResult } from '@/engine/bout/services/boutProcessorService';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/core/EventBus', () => ({
@@ -11,7 +10,6 @@ vi.mock('@/engine/core/EventBus', () => ({
 
 describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
   beforeEach(() => {
-    NewsletterFeed.clear();
   });
 
   const makeState = (absoluteWeek: number): GameState =>
@@ -68,7 +66,7 @@ describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
   it('newsletter issue ID uses absoluteWeek', () => {
     const state = makeState(53);
     const impact = finalizeWeekSideEffectsToImpact(state, emptyResults);
-    // closeWeekToIssue is called with absoluteWeek
+    // generateIssue is called with absoluteWeek
     // The newsletter issue should have id `issue_53`, not `issue_1`
     expect(impact.gazettes).toBeDefined();
   });

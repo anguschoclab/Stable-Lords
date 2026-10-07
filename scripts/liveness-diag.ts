@@ -1,14 +1,12 @@
 import { runSimulation } from './simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { GameState } from '@/types/state.types';
 
 async function main() {
   let n = 0;
   setMockIdGenerator(() => `id_${++n}`);
   engineEventBus.clear();
-  NewsletterFeed.clear();
   const { finalState } = await runSimulation({
     weeks: 6,
     seed: 20261101,

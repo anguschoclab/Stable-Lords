@@ -12,7 +12,6 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { CHAMPIONS_TOURNEY, ARENA_TITLE } from '@/constants/arena';
 import { WEEKS_PER_YEAR } from '@/constants/core/core';
 import type { GameState } from '@/types/state.types';
@@ -24,7 +23,6 @@ describe('world liveness — 104 weeks (Stage H)', () => {
     let n = 0;
     setMockIdGenerator(() => `id_${++n}`);
     engineEventBus.clear();
-    NewsletterFeed.clear();
   });
   afterAll(() => vi.restoreAllMocks());
 

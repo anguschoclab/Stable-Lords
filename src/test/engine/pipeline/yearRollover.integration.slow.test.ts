@@ -5,7 +5,6 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { BID_MATCHMAKING_ID } from '@/engine/ai/workers/competitionWorker';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
@@ -14,7 +13,6 @@ function reset() {
   let n = 0;
   setMockIdGenerator(() => `id_${++n}`);
   engineEventBus.clear();
-  NewsletterFeed.clear();
 }
 
 describe('year rollover', () => {

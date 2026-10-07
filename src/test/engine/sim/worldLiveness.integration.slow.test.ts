@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
@@ -10,7 +9,6 @@ function reset() {
   let n = 0;
   setMockIdGenerator(() => `id_${++n}`);
   engineEventBus.clear();
-  NewsletterFeed.clear();
 }
 
 describe('world liveness over a long sim (26 weeks)', () => {

@@ -1,16 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { FightCard } from '@/engine/newsletter/feed';
-// import type { FightSummary } from '@/types/combat.types';
 import { makeFightSummary } from '@/test/_fixtures/factories';
 import { setMockIdGenerator } from '@/utils/idUtils';
 
 describe('NewsletterFeed', () => {
-  beforeEach(() => {
-    NewsletterFeed.clear();
-    setMockIdGenerator(() => 'mock-id');
-  });
-
   afterEach(() => {
     setMockIdGenerator(null);
   });
@@ -20,44 +14,38 @@ describe('NewsletterFeed', () => {
     transcript: [],
   });
 
-  it('should append a fight result', () => {
+  it('should issue a newsletter for the supplied fight cards', () => {
     const card = createMockCard();
-    NewsletterFeed.appendFightResult(card);
 
-    const issue = NewsletterFeed.closeWeekToIssue(1);
+    const issue = NewsletterFeed.generateIssue(1, [card]);
     expect(issue.fights).toHaveLength(1);
     expect(issue.fights![0]).toEqual(card);
   });
 
-  it('should clear the feed properly', () => {
-    NewsletterFeed.appendFightResult(createMockCard());
-    NewsletterFeed.clear();
-
-    const issue = NewsletterFeed.closeWeekToIssue(1);
+  it('should produce an empty issue when no fights are supplied', () => {
+    const issue = NewsletterFeed.generateIssue(1, []);
     expect(issue.fights).toHaveLength(0);
   });
 
   it('should calculate correct style rollups', () => {
-    // A wins vs D
-    NewsletterFeed.appendFightResult(
+    const cards = [
+      // A wins vs D
       createMockCard({
         styleA: 'Brawler' as any,
         styleD: 'Speed' as any,
         winner: 'A',
         by: 'KO',
-      })
-    );
-    // D wins vs A
-    NewsletterFeed.appendFightResult(
+      }),
+      // D wins vs A
       createMockCard({
         styleA: 'Speed' as any,
         styleD: 'Power' as any,
         winner: 'D',
         by: 'Kill',
-      })
-    );
+      }),
+    ];
 
-    const issue = NewsletterFeed.closeWeekToIssue(1);
+    const issue = NewsletterFeed.generateIssue(1, cards);
 
     expect(issue.styleRollups['Brawler']!.fights).toBe(1);
     expect(issue.styleRollups['Brawler']!.w).toBe(1);
@@ -74,7 +62,7 @@ describe('NewsletterFeed', () => {
   });
 
   it('should compute top movers based on fame + pop delta', () => {
-    NewsletterFeed.appendFightResult(
+    const cards = [
       createMockCard({
         title: 'Fighter 1 vs Fighter 2',
         warriorIdA: 'f1' as any,
@@ -83,9 +71,7 @@ describe('NewsletterFeed', () => {
         popularityDeltaA: 5,
         fameDeltaD: -5,
         popularityDeltaD: -2,
-      })
-    );
-    NewsletterFeed.appendFightResult(
+      }),
       createMockCard({
         title: 'Fighter 3 vs Fighter 1',
         warriorIdA: 'f3' as any,
@@ -94,10 +80,10 @@ describe('NewsletterFeed', () => {
         popularityDeltaA: 10,
         fameDeltaD: 5,
         popularityDeltaD: 2, // Fighter 1 gets another +7
-      })
-    );
+      }),
+    ];
 
-    const issue = NewsletterFeed.closeWeekToIssue(1);
+    const issue = NewsletterFeed.generateIssue(1, cards);
 
     expect(issue.highlights.topMovers).toBeDefined();
     const movers = issue.highlights.topMovers!;
@@ -111,43 +97,34 @@ describe('NewsletterFeed', () => {
   });
 
   it('should score fights correctly for Fight of the Week', () => {
-    NewsletterFeed.appendFightResult(
+    const cards = [
       createMockCard({
         id: 'boring-fight',
         by: 'Decision' as any,
-      })
-    ); // 0 points
-
-    NewsletterFeed.appendFightResult(
+      }), // 0 points
       createMockCard({
         id: 'draw-fight',
         by: 'Draw' as any,
-      })
-    ); // 1 point
-
-    NewsletterFeed.appendFightResult(
+      }), // 1 point
       createMockCard({
         id: 'flashy-ko-fight',
         by: 'KO',
         flashyTags: ['Flashy'],
-      })
-    ); // 2 (KO) + 2 (Flashy) = 4 points
-
-    NewsletterFeed.appendFightResult(
+      }), // 2 (KO) + 2 (Flashy) = 4 points
       createMockCard({
         id: 'epic-comeback-kill',
         by: 'Kill',
         flashyTags: ['Comeback', 'Flashy'],
-      })
-    ); // 3 (Kill) + 3 (Comeback) + 2 (Flashy) = 8 points
+      }), // 3 (Kill) + 3 (Comeback) + 2 (Flashy) = 8 points
+    ];
 
-    const issue = NewsletterFeed.closeWeekToIssue(1);
+    const issue = NewsletterFeed.generateIssue(1, cards);
 
     expect(issue.highlights.fightOfTheWeekId).toBe('epic-comeback-kill');
   });
 
   it('should create issue with correct week and empty state if no fights', () => {
-    const issue = NewsletterFeed.closeWeekToIssue(42);
+    const issue = NewsletterFeed.generateIssue(42, []);
 
     expect(issue.week).toBe(42);
     expect(issue.id).toBe('issue_42');

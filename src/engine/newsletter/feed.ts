@@ -102,26 +102,13 @@ function computeTopMovers(
     .slice(0, 5);
 }
 
-const current: FightCard[] = [];
-
 /**
- * Newsletter feed.
+ * Newsletter feed — pure issue generation. V14 A2: the module-level `current`
+ * accumulator (`appendFightResult`/`closeWeekToIssue`/`clear`) was dead
+ * mutable surface — the only production caller (NarrativePass) supplies the
+ * week's cards directly to `generateIssue`.
  */
 export const NewsletterFeed = {
-  appendFightResult(card: FightCard) {
-    current.push(card);
-  },
-
-  closeWeekToIssue(week: number): NewsletterIssue {
-    const fights = [...current];
-    current.length = 0;
-    return this.generateIssue(week, fights);
-  },
-
-  clear() {
-    current.length = 0;
-  },
-
   generateIssue(week: number, fights: FightCard[]): NewsletterIssue {
     let bestId: string | null = null;
     let best = -1;

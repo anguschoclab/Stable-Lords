@@ -9,10 +9,8 @@ import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorL
 import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
 import { loadCombatNarrative } from '@/data/narrative';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { clearReconstructionCache } from '@/state/serialization';
-import { StyleRollups } from '@/engine/stats/styleRollups';
 import { resetArenaRegistry } from '@/data/arenas';
 
 enableMapSet();
@@ -239,7 +237,6 @@ afterEach(() => {
     clearSelectionCache?.();
     clearHistoryResolverCaches?.();
     clearReconstructionCache?.();
-    StyleRollups._clearCaches?.();
     resetArenaRegistry?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
@@ -251,7 +248,6 @@ afterEach(() => {
 // Sentinel coverage: src/test/_setup/stateReset.test.ts.
 afterEach(() => {
   engineEventBus.clear();
-  NewsletterFeed.clear();
   setMockIdGenerator(null);
 });
 

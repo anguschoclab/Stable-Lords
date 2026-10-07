@@ -10,7 +10,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
@@ -28,7 +27,6 @@ describe('F.6 competence-gradient seed probe', () => {
       let n = 0;
       setMockIdGenerator(() => `id_${++n}`);
       engineEventBus.clear();
-      NewsletterFeed.clear();
       const { finalState } = await runSimulation({
         weeks: 104,
         seed,

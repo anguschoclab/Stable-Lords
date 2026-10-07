@@ -4,7 +4,6 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { GameState } from '@/types/state.types';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
@@ -13,7 +12,6 @@ function reset() {
   let n = 0;
   setMockIdGenerator(() => `id_${++n}`);
   engineEventBus.clear();
-  NewsletterFeed.clear();
 }
 
 const totalRivalWarriors = (s: GameState) => s.rivals.reduce((acc, r) => acc + r.roster.length, 0);

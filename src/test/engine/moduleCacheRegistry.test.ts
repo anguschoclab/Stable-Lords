@@ -69,10 +69,7 @@ const REGISTRY: Record<string, string> = {
     'Environment-selected service singleton; assigned once at module init.',
 
   // ── Context-guarded caches (no-op where the backing store is absent) ────
-  'stats/styleRollups.ts:weekCache':
-    'localStorage-backed UI metric cache; localStorage guard no-ops in workers.',
-  'stats/styleRollups.ts:rollingCache': 'Same — worker-safe via localStorage guard.',
-  'stats/styleRollups.ts:tourCache': 'Same — worker-safe via localStorage guard.',
+  // (stats/styleRollups.ts removed in V14 — dead write-only subsystem.)
 };
 
 // V14 A1: the const branch also catches `= []`, `= {}`, `new Array()`, and

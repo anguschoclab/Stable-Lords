@@ -19,7 +19,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { validateStateInvariants } from '@/engine/validate/stateInvariants';
 import type { GameState } from '@/types/state.types';
 
@@ -66,7 +65,6 @@ describe('kill/death divergence regression (slow)', () => {
     let idCounter = 0;
     setMockIdGenerator(() => `id_${++idCounter}`);
     engineEventBus.clear();
-    NewsletterFeed.clear();
   });
 
   test('300 weeks: zero dead ids in live stores, kill outcomes == unique deaths', async () => {

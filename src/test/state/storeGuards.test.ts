@@ -7,7 +7,6 @@ vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }
 import '@/test/_setup/setup';
 import { useGameStore } from '@/state/createStore';
 import { clearReconstructionCache, reconstructGameState } from '@/state/serialization';
-import { StyleRollups } from '@/engine/stats/styleRollups';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import type { GameState } from '@/types/state.types';
 import { makeGameState } from '@/test/_fixtures/factories';
@@ -46,7 +45,6 @@ describe('store guards — behavioral tests', () => {
       s.treasury = 1000;
     });
     clearReconstructionCache();
-    StyleRollups._clearCaches();
   });
 
   describe('#3 doAdvanceWeek isSimulating guard', () => {
@@ -120,46 +118,6 @@ describe('store guards — behavioral tests', () => {
     });
   });
 
-  describe('#11a/#11b StyleRollups cache invalidation', () => {
-    it('loadGame clears StyleRollups weekCache so stale data is not returned', () => {
-      localStorage.clear();
-      StyleRollups._clearCaches();
-      StyleRollups.addFight({
-        week: 99,
-        styleA: 'Gladiator',
-        styleD: 'Retiarius',
-        winner: 'A',
-        by: 'Kill',
-      });
-      const week99 = StyleRollups.getWeekRollup(99);
-      expect(week99['Gladiator']).toBeDefined();
-      // loadGame clears caches; also clear localStorage so data is truly gone
-      localStorage.clear();
-      const state = makeMinimalState({ week: 5 });
-      useGameStore.getState().loadGame('test-slot', state);
-      const week99After = StyleRollups.getWeekRollup(99);
-      expect(week99After['Gladiator']).toBeUndefined();
-    });
-
-    it('doReset clears StyleRollups caches', () => {
-      localStorage.clear();
-      StyleRollups._clearCaches();
-      StyleRollups.addFight({
-        week: 99,
-        styleA: 'Gladiator',
-        styleD: 'Retiarius',
-        winner: 'A',
-        by: 'Kill',
-      });
-      const week99 = StyleRollups.getWeekRollup(99);
-      expect(week99['Gladiator']).toBeDefined();
-      localStorage.clear();
-      useGameStore.getState().doReset();
-      const week99After = StyleRollups.getWeekRollup(99);
-      expect(week99After['Gladiator']).toBeUndefined();
-    });
-  });
-
   describe('#13 doAdvanceDay worker timeout', () => {
     it('resets isSimulating when worker stalls beyond 15s timeout', async () => {
       vi.useFakeTimers();
@@ -172,7 +130,7 @@ describe('store guards — behavioral tests', () => {
       const state = makeMinimalState({ week: 1 });
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceDay();
-      vi.advanceTimersByTime(16000);
+      await vi.advanceTimersByTimeAsync(16000);
       try {
         await promise;
       } catch (_e) {

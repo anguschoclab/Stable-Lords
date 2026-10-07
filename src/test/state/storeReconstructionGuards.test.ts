@@ -7,13 +7,11 @@ vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }
 import '@/test/_setup/setup';
 import { useGameStore } from '@/state/createStore';
 import { clearReconstructionCache, reconstructGameState } from '@/state/serialization';
-import { StyleRollups } from '@/engine/stats/styleRollups';
 
 describe('storeReconstructionGuards', () => {
   beforeEach(() => {
     useGameStore.getState().doReset?.();
     clearReconstructionCache();
-    StyleRollups._clearCaches();
   });
 
   it('reconstructGameState returns a valid GameState from store', () => {

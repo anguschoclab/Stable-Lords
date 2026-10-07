@@ -77,7 +77,7 @@ function hasLocalFactory(content) {
 const LEAK_SIGNALS = [
   ['useGameStore', /useGameStore\.(setState|getState)/g],
   ['engineEventBus', /engineEventBus\.(on|emit|subscribe|off)/g],
-  ['NewsletterFeed', /NewsletterFeed/g],
+
   ['setMockIdGenerator', /setMockIdGenerator/g],
   ['viMock', /vi\.mock\(/g],
   ['fakeTimers', /useFakeTimers/g],

@@ -9,7 +9,6 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { aiRosterMin } from '@/constants/ai';
 import { WORLD_RIVAL_FLOOR } from '@/constants/world';
 import { BASE_RESERVE } from '@/engine/ai/workers/budgetWorker';
@@ -24,7 +23,6 @@ describe('world balance — 52 weeks at 90+ stables', () => {
     let n = 0;
     setMockIdGenerator(() => `wb_${++n}`);
     engineEventBus.clear();
-    NewsletterFeed.clear();
   });
   afterAll(() => vi.restoreAllMocks());
 

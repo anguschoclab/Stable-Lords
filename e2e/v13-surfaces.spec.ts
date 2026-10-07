@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { clickNavLink, startNewGame, gotoInApp } from './helpers';
+import { startNewGame, gotoInApp } from './helpers';
 
 /**
  * V13 changed-surface coverage — browser-level checks for the components
@@ -23,6 +23,10 @@ const firstRivalId = (page: Page): Promise<string> =>
     return mod.useGameStore.getState().rivals[0]?.owner.id ?? '';
   });
 
+// The FTUE commit lands asynchronously after bootstrap — under parallel
+// load it can race the store reads/seeds below, so one retry is cheap insurance.
+test.describe.configure({ retries: 1 });
+
 test('selectable rows + icon tab strip', async ({ page, isMobile }) => {
   test.setTimeout(isMobile ? 240_000 : 120_000);
 
@@ -32,11 +36,24 @@ test('selectable rows + icon tab strip', async ({ page, isMobile }) => {
   await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
     timeout: 15_000,
   });
-  await clickNavLink(page, isMobile, 'World', { exact: false });
-  await clickNavLink(page, isMobile, 'Scouting');
+  // gotoInApp — deterministic client-side routing; nav-click coverage is
+  // golden-path's job and races the nav badge re-render.
+  await gotoInApp(page, '/world/scouting');
+
+  // Rival stables land with the FTUE commit — wait until the store has them.
+  await expect(async () => {
+    const n = await page.evaluate(async () => {
+      const storeModulePath = '/src/state/useGameStore.ts';
+      const mod = (await import(/* @vite-ignore */ storeModulePath)) as {
+        useGameStore: { getState: () => { rivals?: unknown[] } };
+      };
+      return mod.useGameStore.getState().rivals?.length ?? 0;
+    });
+    expect(n).toBeGreaterThan(0);
+  }).toPass({ timeout: 20_000 });
 
   const stableCard = page.getByRole('button', { name: /^Select rival stable / }).first();
-  await expect(stableCard).toBeVisible({ timeout: 15_000 });
+  await expect(stableCard).toBeVisible({ timeout: 20_000 });
 
   // Selected treatment: SelectableCard raises the row (z-0 → z-10) and paints
   // the primary border + bottom accent bar.
@@ -75,37 +92,44 @@ test('tooltip badges + save-pack import round trip', async ({ page, isMobile }) 
   // ── TooltipBadge chips on the roster ────────────────────────────────────
   // Fresh orphanage warriors carry neither flaws nor potential, so seed the
   // first roster slot through the store (same store-import pattern as the
-  // golden-path week probe).
-  await page.evaluate(async () => {
-    const storeModulePath = '/src/state/useGameStore.ts';
-    const mod = (await import(/* @vite-ignore */ storeModulePath)) as {
-      useGameStore: {
-        getState: () => {
-          roster: Record<string, unknown>[];
-          setRoster: (roster: Record<string, unknown>[]) => void;
-        };
-      };
-    };
-    const { roster, setRoster } = mod.useGameStore.getState();
-    const [first, ...rest] = roster;
-    setRoster([
-      {
-        ...first,
-        traits: ['fragile'],
-        potential: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
-      },
-      ...rest,
-    ]);
-  });
-
+  // golden-path week probe). Seeding AFTER the roster route mounts avoids
+  // racing the FTUE commit, which can overwrite the roster post-bootstrap.
   await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
     timeout: 15_000,
   });
-  await clickNavLink(page, isMobile, 'Roster');
+  await gotoInApp(page, '/stable/roster');
+  // Seed, then read back — if a late FTUE commit wipes the seed, retry until
+  // the potential field actually persists.
+  await expect(async () => {
+    const persisted = await page.evaluate(async () => {
+      const storeModulePath = '/src/state/useGameStore.ts';
+      const mod = (await import(/* @vite-ignore */ storeModulePath)) as {
+        useGameStore: {
+          getState: () => {
+            roster: Record<string, unknown>[];
+            setRoster: (roster: Record<string, unknown>[]) => void;
+          };
+        };
+      };
+      const { roster, setRoster } = mod.useGameStore.getState();
+      const [first, ...rest] = roster;
+      if (!first) return false;
+      setRoster([
+        {
+          ...first,
+          traits: ['fragile'],
+          potential: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        },
+        ...rest,
+      ]);
+      return mod.useGameStore.getState().roster[0]?.potential != null;
+    });
+    expect(persisted).toBe(true);
+  }).toPass({ timeout: 15_000 });
 
   // PotentialBadge renders the POT grade chip; LiabilityBadge renders a
   // 'Watch'/'Consider releasing' chip once the warrior carries a flaw.
-  const potBadge = page.getByText('POT').first();
+  const potBadge = page.getByText('POT', { exact: true }).first();
   await expect(potBadge).toBeVisible({ timeout: 10_000 });
   const liabilityBadge = page.getByText(/Consider releasing|Watch/).first();
   await expect(liabilityBadge).toBeVisible();

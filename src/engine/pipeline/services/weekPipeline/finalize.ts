@@ -116,7 +116,7 @@ function sweepOrphanedReigns(state: GameState): void {
   // Gate the Set builds: weeks with no crowned reigns (early game) skip
   // all three indexes. Semantics preserved — a champion who is dead or
   // retired while still rostered still loses the crown.
-  const reigns: { title: (typeof titles)[string]; warriorId: string }[] = [];
+  const reigns: { title: (typeof titles)[string]; warriorId: WarriorId }[] = [];
   for (const title of Object.values(titles)) {
     if (title.champion) reigns.push({ title, warriorId: title.champion.warriorId });
   }
@@ -232,5 +232,13 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
   // Runs after deferBoutArchives so this week's transcripts drain before any
   // transcript stripping; span teardown still truncates after its terminal
   // sweep (which can append entries a cap would drop).
-  return truncateState(state);
+  const truncated = truncateState(state);
+  // truncateState clears lastWeekBoutDisplay as cross-week staleness
+  // protection for long batch runs — restore the display this week's bout
+  // phase just produced so the UI sees it on sequential advances (pre-B1
+  // sequential weeks never truncated, so the field always survived). Span
+  // teardown's own truncateState call still clears it, preserving batch
+  // semantics.
+  truncated.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
+  return truncated;
 }

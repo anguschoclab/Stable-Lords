@@ -1,6 +1,7 @@
 // @vitest-isolate — mutates the shared TRUNCATION_CAPS const; must not run in
 // a shared worker alongside tests that read the caps mid-flight.
 import { describe, it, expect, afterAll } from 'vitest';
+import type { GameState } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance/service';
@@ -67,8 +68,15 @@ describe('truncation cadence — sequential vs batch determinism', () => {
       headless: true,
     });
 
+    // lastWeekBoutDisplay is UI-only chrome — never read inbound by the
+    // engine, stripped at serialization — and its per-path lifetime differs
+    // by design: sequential weeks keep it (finalizeState restores the display
+    // the bout phase produced), while span-end teardown truncation clears it
+    // (pre-V14 batch semantics). Excluded from the sim-state byte-compare.
+    const stripDisplay = (s: GameState) => JSON.stringify({ ...s, lastWeekBoutDisplay: undefined });
+
     expect(
-      JSON.stringify(sequential) === JSON.stringify(batch.state),
+      stripDisplay(sequential) === stripDisplay(batch.state),
       'sequential vs batch worlds diverged once truncation caps were crossed — ' +
         'truncateState cadence is not uniform across time scales (B1)'
     ).toBe(true);

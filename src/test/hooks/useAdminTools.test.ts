@@ -141,7 +141,7 @@ describe('useAdminTools', () => {
 
     expect(loadGame).not.toHaveBeenCalled();
     expect(toast.error).toHaveBeenCalledWith('Season rollover failed.');
-    expect(consoleSpy).toHaveBeenCalledWith('Skip season failed:', expect.any(Error));
+    expect(consoleSpy).toHaveBeenCalledWith('Admin fast-forward failed:', expect.any(Error));
   });
 
   it('skipFTUE marks the FTUE complete and preserves the seeded player', () => {

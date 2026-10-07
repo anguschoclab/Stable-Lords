@@ -5,7 +5,7 @@
  *
  * SRP split:
  * - schemaEnums.ts: All z.enum() schemas
- * - warriorSchemas.ts / fightSchemas.ts / economySchemas.ts / statsSchemas.ts:
+ * - warriorSchemas.ts / fightSchemas.ts / economySchemas.ts:
  *   domain z.object() schemas for sub-entities
  * - gameStateSchema.ts: Main GameStateSchema, SaveSlotMetaSchema, and exported types
  */

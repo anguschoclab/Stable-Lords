@@ -47,14 +47,44 @@
 | A10 | `stopConditions.ts:25` `noPairings` flattens `[...roster, ...rivals.flatMap(r=>r.roster)]` (all world warriors) every evaluation, then `isFightReady`-filters all — no early exit | CONFIRMED waste — ~O(world warriors) alloc+scan per week per span | Phase 5: early-exit at 2 eligible; measure first |
 | B1 | **`truncateState` cadence diverges across time scales** — sequential `advanceWeek` never truncates in-session (save-only via `saveSlots.ts`); `advanceMonth/Quarter` truncate at span end; `advanceYear` truncates at EVERY quarter end; autosim every 50w + finish. Capped arrays (`matchHistory`/`arenaHistory`/`rivalries`/`newsletter`) are read by sim passes (`rivalStableShard`, `PromoterPass`, `WorldPass`, `arenaChampionship`) | CONFIRMED structural divergence — batch vs sequential worlds can diverge once a cap is crossed mid-span (500-entry arrays, ~8 bouts/wk → reachable ~w50-60; `rivalries` cap 100 reachable sooner) | Phase 4: determinism test with shrunk `overrides` caps (sequential vs batch, byte-compare) — likely RED first → Phase 5 normalize cadence (truncate every week in `finalizeState`, or prove sim never reads beyond caps) |
 
+
+## Phase 5 — implementation units (commits)
+
+| Unit | Finding | Change | Commit | Gate |
+| --- | --- | --- | --- | --- |
+| B1 | Truncation cadence divergence | `finalizeState` applies `truncateState` at every week boundary; autosim's separate periodic truncation removed | c861053a | `truncationCadence.test.ts` red→green; sequential ≡ month-span byte-identical under reduced caps |
+| A4 | Admin timeout/cancel asymmetry | `engineSession.runGuarded` centralizes 15s timeout → `cancelSim`; `runEngineJob` + `adminActions` delegate | c861053a | `v14EntryPoints.guard` updated to pin delegation; `storeGuards` #13 adapted to async timer advance (timeout now registers inside the queued job, not at enqueue) |
+| A1 | Registry regex blind spot | `DECL_RE` extended to `= []`/`= {}`/`new Array`/annotated constructors; `pendingRetries` + `deathNotifier.handlers` registered | 17228896 (test commit) | registry green; stale-entry check enforces cleanup |
+| A2 | `NewsletterFeed.current` dead mutable | `current`/`appendFightResult`/`closeWeekToIssue`/`clear` removed; pure `generateIssue` kept | 029c5977 | feed.test.ts rewritten to the pure API; 12 files' `clear()` calls + leak signal dropped |
+| A3 | `StyleRollups` dead write-only subsystem | module + dedicated tests deleted; `_clearCaches` callsites removed | 029c5977 | tsc clean; storeGuards survives via timeout/reconstruction tests |
+| A10 | `noPairings` world-flatten alloc | early-exit counter at threshold 2 | 087bee92 | stopConditions/TimeAdvanceService/autosim.unit green |
+| P1 | `getRecentFightsForWarrior` full-tail scans | WeakMap warrior→fights index keyed on arenaHistory identity (append-only-by-replacement invariant, same as h2hByHistory) | 087bee92 | historyUtils 38 green; determinism.slow byte-identical |
+| P2 | `sweepOrphanedReigns` unconditional 3-Set build | early return when no reigns; sets built only when champions exist | 777ee0ff | finalizeContracts green (incl. dead-while-rostered branch preserved) |
+| — | `deferBoutArchives` O(n) scan | EVALUATED-AND-REJECTED — 500 cheap predicates are sub-ms; suffix early-exit risks skipping undrained transcripts on legacy entries lacking `absoluteWeek` | — | recorded for posterity |
+
+## Phase 6 — docs + A/B soak
+
+- Dependency-map stage table rewritten to the declared 16-pass layout
+  (recruitment→core, progression→world, arenaChampionship + seasonal added,
+  boutSimulation removed — it is a phase). `v14PipelineDocs.guard` now green.
+- `PIPELINE_AUDIT` stale "15 passes" → 16; autosim path corrected to
+  `src/engine/autosim/autosim.ts` in three docs.
+- **A/B soak (idle machine, 40w week-mode, same harness):**
+  258.3 → **228.5 ms/week (−11.5%)**; rivalStrategy 146.8 → 121.3 ms/wk
+  (−17.4%); promoter flat 25.0 → 24.6. 0 invariant violations.
+
 ## Phase dispositions
 
 | Phase | Work | Commits |
 | --- | --- | --- |
 | 0 — baseline | `pre-megaplan-v14` tag; soak ×2 + autosim bench; gate triage | (ledger commit) |
-| 1 — audit | entry-point matrix, ownership audit, dead-surface scan, registry blind spot | in progress |
+| 1 — audit | entry-point matrix, ownership audit, dead-surface scan, registry blind spot | ledger (this file) |
 | 2 — profiling | `bun --cpu-prof` 26w soak → `scripts/out/v14-week-soak.cpuprofile`; autosim growth curve (185→225 ms/wk over 52w, driven by history-array length) | measured |
-| 3–7 | pending | — |
+| 3 — contracts | test inventory + matrix (committed in gate) | 17228896 |
+| 4 — test-first | all contract/guard tests authored + committed RED before any production change | 17228896 |
+| 5 — implementation | B1, A4, A1, A2/A3, A10, P1, P2 | c861053a, 029c5977, 087bee92, 777ee0ff |
+| 6 — docs + soak | dependency-map rewrite, audit-doc fixes, A/B soak | 9364dad0, ledger |
+| 7 — close-out | this ledger's verdict table | pending final battery |
 
 ## Phase 2 — CPU bottleneck table (26w soak, 4.9s sampled)
 

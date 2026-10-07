@@ -11,29 +11,29 @@ import {
 import type { FightSummary } from '@/types/combat.types';
 
 describe('historyUtils', () => {
-  const createFight = (overrides: Partial<FightSummary>) => ({
+  const createFight = (overrides: any) => ({
     absoluteWeek: 1,
     week: 1,
-    warriorIdA: 'a',
-    warriorIdD: 'b',
+    warriorIdA: 'a' as any,
+    warriorIdD: 'b' as any,
     arenaId: 'arena1',
     tournamentId: undefined,
     ...overrides
   } as unknown as FightSummary);
 
   const history = [
-    createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
-    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
-    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
-    createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
-    createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
+    createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1' as any, warriorIdD: 'w2' as any }),
+    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3' as any, warriorIdD: 'w4' as any }),
+    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1' as any, warriorIdD: 'w5' as any, arenaId: 'arena2', tournamentId: 't1' as any }),
+    createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6' as any, warriorIdD: 'w7' as any }),
+    createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1' as any, warriorIdD: 'w8' as any }),
   ];
 
   it('getFightsForWeek', () => {
     const fights = getFightsForWeek(history, 2);
     expect(fights).toHaveLength(2);
-    expect(fights[0].warriorIdA).toBe('w3');
-    expect(fights[1].warriorIdA).toBe('w1');
+    expect(fights[0]!.warriorIdA).toBe('w3');
+    expect(fights[1]!.warriorIdA).toBe('w1');
 
     expect(getFightsForWeek(history, 5)).toHaveLength(0);
     // with falsy values in array
@@ -44,8 +44,8 @@ describe('historyUtils', () => {
   it('getRecentFights', () => {
     const fights = getRecentFights(history, 3);
     expect(fights).toHaveLength(2);
-    expect(fights[0].absoluteWeek).toBe(3);
-    expect(fights[1].absoluteWeek).toBe(4);
+    expect(fights[0]!.absoluteWeek).toBe(3);
+    expect(fights[1]!.absoluteWeek).toBe(4);
 
     // Check fallback to week if absoluteWeek is missing
     const legacyHistory = [
@@ -59,8 +59,8 @@ describe('historyUtils', () => {
     const fights = getRecentFightsForWarrior(history, 'w1', 2);
     expect(fights).toHaveLength(2);
     // Should be chronological (because of .reverse())
-    expect(fights[0].absoluteWeek).toBe(2); // w1 vs w5
-    expect(fights[1].absoluteWeek).toBe(4); // w1 vs w8
+    expect(fights[0]!.absoluteWeek).toBe(2); // w1 vs w5
+    expect(fights[1]!.absoluteWeek).toBe(4); // w1 vs w8
 
     const allFights = getRecentFightsForWarrior(history, 'w1', 10);
     expect(allFights).toHaveLength(3);
@@ -69,20 +69,20 @@ describe('historyUtils', () => {
   it('getAllFightsForWarrior', () => {
     const fights = getAllFightsForWarrior(history, 'w1');
     expect(fights).toHaveLength(3);
-    expect(fights[0].absoluteWeek).toBe(1);
-    expect(fights[2].absoluteWeek).toBe(4);
+    expect(fights[0]!.absoluteWeek).toBe(1);
+    expect(fights[2]!.absoluteWeek).toBe(4);
   });
 
   it('getFightsForArena', () => {
     const fights = getFightsForArena(history, 'arena2');
     expect(fights).toHaveLength(1);
-    expect(fights[0].warriorIdD).toBe('w5');
+    expect(fights[0]!.warriorIdD).toBe('w5');
   });
 
   it('getFightsForTournament', () => {
     const fights = getFightsForTournament(history, 't1');
     expect(fights).toHaveLength(1);
-    expect(fights[0].warriorIdA).toBe('w1');
+    expect(fights[0]!.warriorIdA).toBe('w1');
   });
 
   it('buildRecentFightPairs', () => {
@@ -101,15 +101,15 @@ describe('historyUtils', () => {
 
 describe('buildRecentFightPairs edge cases', () => {
   it('builds recent fight pairs', () => {
-    const createFight = (overrides) => ({
-      absoluteWeek: 1, week: 1, warriorIdA: 'a', warriorIdD: 'b', arenaId: 'arena1', ...overrides
+    const createFight = (overrides: any) => ({
+      absoluteWeek: 1, week: 1, warriorIdA: 'a' as any, warriorIdD: 'b' as any, arenaId: 'arena1', ...overrides
     });
     const history = [
-      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
-      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
-      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
-      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
-      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
+      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1' as any, warriorIdD: 'w2' as any }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3' as any, warriorIdD: 'w4' as any }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1' as any, warriorIdD: 'w5' as any, arenaId: 'arena2', tournamentId: 't1' as any }),
+      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6' as any, warriorIdD: 'w7' as any }),
+      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1' as any, warriorIdD: 'w8' as any }),
     ];
 
     const pairs = buildRecentFightPairs(history, 3, 3);
@@ -125,15 +125,15 @@ describe('buildRecentFightPairs edge cases', () => {
 
 describe('buildRecentFightPairs edge cases', () => {
   it('builds recent fight pairs', () => {
-    const createFight = (overrides) => ({
-      absoluteWeek: 1, week: 1, warriorIdA: 'a', warriorIdD: 'b', arenaId: 'arena1', ...overrides
+    const createFight = (overrides: any) => ({
+      absoluteWeek: 1, week: 1, warriorIdA: 'a' as any, warriorIdD: 'b' as any, arenaId: 'arena1', ...overrides
     });
     const history = [
-      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1', warriorIdD: 'w2' }),
-      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3', warriorIdD: 'w4' }),
-      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1', warriorIdD: 'w5', arenaId: 'arena2', tournamentId: 't1' }),
-      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6', warriorIdD: 'w7' }),
-      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1', warriorIdD: 'w8' }),
+      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1' as any, warriorIdD: 'w2' as any }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3' as any, warriorIdD: 'w4' as any }),
+      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w1' as any, warriorIdD: 'w5' as any, arenaId: 'arena2', tournamentId: 't1' as any }),
+      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6' as any, warriorIdD: 'w7' as any }),
+      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1' as any, warriorIdD: 'w8' as any }),
     ];
 
     const pairs = buildRecentFightPairs(history, 3, 3);

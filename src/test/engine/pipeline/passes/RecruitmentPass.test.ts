@@ -35,7 +35,7 @@ describe('runRecruitmentPass', () => {
       freeAgents: [],
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toEqual([mockWarrior]);
     expect(recruitmentModule.partialRefreshPool).not.toHaveBeenCalled();
   });
@@ -55,7 +55,7 @@ describe('runRecruitmentPass', () => {
       freeAgents: [],
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toEqual([mockWarrior]);
     expect(recruitmentModule.partialRefreshPool).toHaveBeenCalled();
   });
@@ -80,7 +80,7 @@ describe('runRecruitmentPass', () => {
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
 
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toHaveLength(2); // 1 normal + 1 bonus
     expect(impact.recruitPool).toContainEqual(bonusWarrior);
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledTimes(1);
@@ -111,7 +111,7 @@ describe('runRecruitmentPass', () => {
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
 
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toHaveLength(4); // 1 normal + 3 bonus
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledTimes(3);
   });
@@ -135,7 +135,7 @@ describe('runRecruitmentPass', () => {
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
 
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toHaveLength(4); // 1 normal + 3 exceptional
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledTimes(3);
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledWith(
@@ -163,7 +163,7 @@ describe('runRecruitmentPass', () => {
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
 
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
 
     const brawler = impact.recruitPool!.find(w => w.id === 'w1')!;
     expect(brawler.academyStableId).toBe('rival1');
@@ -191,10 +191,10 @@ describe('runRecruitmentPass', () => {
       cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
     } as unknown as GameState;
 
-    const impact = runRecruitmentPass(state, new SeededRNG('test'));
+    const impact = runRecruitmentPass(state, new SeededRNG(12345));
 
     expect(impact.freeAgents).toHaveLength(1);
-    expect(impact.freeAgents![0].id).toBe('fa1');
-    expect(impact.freeAgents![0].shelfWeeksRemaining).toBe(1);
+    expect(impact.freeAgents?.[0]?.id).toBe('fa1');
+    expect(impact.freeAgents?.[0]?.shelfWeeksRemaining).toBe(1);
   });
 });

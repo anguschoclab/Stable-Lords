@@ -101,7 +101,9 @@
       "With operatic drama, {{attacker}} brings the weapon down, ending {{defender}} in a spray of crimson.",
       "{{defender}} stumbles, realizes their mistake, and twitches once as {{attacker}} stamps out their life.",
       "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark.",
-      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd."
+      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd.",
+      "With a grim nod, {{attacker}} brings the curtain down, ending {{defender}}'s story.",
+      "The arena falls silent as {{attacker}} ruthlessly dispatches {{defender}}."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -764,9 +766,10 @@
       "{{attacker}} stands victorious, leaving {{defender}} as a grim monument to the sands.",
       "{{attacker}} ends it all with a singular, terrible blow.",
       "The light fades from {{defender}}'s eyes as {{attacker}} strikes the final blow.",
-      "{{attacker}} stands victorious over the broken form of {{defender}}.",
       "A brutal, decisive strike from {{attacker}} seals {{defender}}'s fate.",
-      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}."
+      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}.",
+      "A bleak and brutal end as {{defender}}'s life is snuffed out.",
+      "{{attacker}} stands alone as {{defender}} breathes their bloody last."
     ]
   }
 }

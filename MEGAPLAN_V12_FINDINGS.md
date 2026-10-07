@@ -214,3 +214,34 @@ canonical home if consolidation is warranted — no parallel fixture home.
 | Test-side | 1 APPROVED-low + rest DEFERRED/DISPROVED | Phase 5 |
 | Dead-export surface | ~174 src-scoped | Phase 5 per-symbol |
 | Hygiene | describe fix, KNOWN_SRC_PAIRS prune, baseline tighten | Phases 6–7 |
+
+---
+
+## Closeout (post-implementation, `post-megaplan-v12`)
+
+**Outcome: all phases complete. src↔src clusters 43 → 32; KNOWN_SRC_PAIRS
+pruned to exactly the live set; SRC_TO_SRC baseline 128 → 34.**
+
+| Item | Final status |
+| --- | --- |
+| D1 `newWarriorDefaults` | ✅ DONE — `engine/factories/warriorDefaults.ts`, 3 prod sites repointed |
+| D2 `PendingResolutionDataSchema` | ✅ DONE — exported from `fightSchemas`, imported by `gameStateSchema` |
+| D3 `getTrainerMods` | ✅ DONE — canonical in `engine/trainers`; specialty mods layered |
+| D4 crest unions | ✅ DONE (CORRECTED verdict) — types derive from `enumSources`; ordered tier tables retained as design data |
+| D5 `favoredName` | ✅ DONE — `components/bout-viewer/favoredName.ts` |
+| D6 selectable rows | ✅ DONE (PARTIAL) — `SelectableCard` covers the 2 identical shells; 4 divergent-row pairs registered as residual in KNOWN_SRC_PAIRS |
+| D7 tab strip | ✅ DONE — `IconTabStrip` |
+| D8 file input | ✅ DONE — `utils/fileInput.readFileInput` |
+| D9 tooltip badge | ✅ DONE — `TooltipBadge` |
+| D10 expandable-bar a11y | ✅ DONE — `useToggleBarProps` |
+| D11 plausibility | ✅ DONE — table-driven spec, 48/48 tests green |
+| S1 `emitWarriorBid` | ✅ DONE — per-intent emitters, precedence preserved; fns >80: 2→1 |
+| E1 impacts fn-surface | ✅ EXEMPT — handler-map members, directly unit-tested by design |
+| H1 pair-ledger prune | ✅ DONE — 154→32 + stale-entry assertion added |
+| H2 mislabeled describe | ✅ DONE — `MEGAPLAN-V11` |
+| Residual / deferred | D6 divergent-row primitive (4 pairs registered); Playwright e2e (deferred — unit/contract coverage in place) |
+
+Gate evidence in `MEGAPLAN_V12_LEDGER.md` Phase-8 matrix. All 72 megaplan
+guard specs green post-closeout (incl. orphan guard — the transient
+arena-audio WIP unreachable-files failures resolved when those files were
+deleted by the unrelated feature work).

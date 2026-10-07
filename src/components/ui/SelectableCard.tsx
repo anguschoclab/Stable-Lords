@@ -12,8 +12,8 @@ interface SelectableCardProps {
   selected: boolean;
   onSelect: () => void;
   ariaLabel: string;
-  tooltip: React.ReactNode;
-  tooltipClassName?: string;
+  /** Side-tooltip payload — content plus optional tone overrides. */
+  tooltip: { content: React.ReactNode; className?: string };
   children: React.ReactNode;
 }
 
@@ -22,7 +22,6 @@ export function SelectableCard({
   onSelect,
   ariaLabel,
   tooltip,
-  tooltipClassName,
   children,
 }: SelectableCardProps) {
   return (
@@ -53,8 +52,8 @@ export function SelectableCard({
           </Surface>
         </button>
       </TooltipTrigger>
-      <TooltipContent side="right" className={tooltipClassName}>
-        {tooltip}
+      <TooltipContent side="right" className={tooltip.className}>
+        {tooltip.content}
       </TooltipContent>
     </Tooltip>
   );

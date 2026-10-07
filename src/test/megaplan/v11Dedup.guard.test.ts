@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V12 duplication-consolidation spec (test-first, skipped until
- * Phase 5):
+ * MEGAPLAN-V11 duplication-consolidation spec (authored test-first in V11,
+ * live since the V11 Phase-5 pass):
  *
  * 1. A shared offseason-event helper exists so the chaosHandlers /
  *    socialHandlers / buffHandlers / injuryHandlers cluster stops carrying
@@ -25,7 +25,7 @@ const REPORT = path.join(REPO, 'scripts/out/dup-scan.json');
 const PROD_CLUSTER_CEILING = 50;
 
 describe('megaplan V11: duplicate consolidation', () => {
-describe('MEGAPLAN-V12', () => {
+describe('MEGAPLAN-V11', () => {
   it('a shared offseason-event runner/helper exists', () => {
     const hits = [
       'src/engine/pipeline/offseasonEvents/runEvent.ts',

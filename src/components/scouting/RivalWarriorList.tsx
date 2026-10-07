@@ -31,12 +31,14 @@ function WarriorListItem({
       selected={isSelected}
       onSelect={onSelect}
       ariaLabel={`Select rival warrior ${w.name} (${w.career.wins}W/${w.career.losses}L)`}
-      tooltipClassName="bg-neutral-950 border-white/10"
-      tooltip={
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary">
-          SELECT WARRIOR
-        </p>
-      }
+      tooltip={{
+        className: 'bg-neutral-950 border-white/10',
+        content: (
+          <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+            SELECT WARRIOR
+          </p>
+        ),
+      }}
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">

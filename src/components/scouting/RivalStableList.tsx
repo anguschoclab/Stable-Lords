@@ -103,19 +103,21 @@ function RivalRow({
       selected={isSelected}
       onSelect={() => onSelectRival(rival.owner.id)}
       ariaLabel={`Select rival stable ${rival.owner.stableName}`}
-      tooltipClassName="bg-neutral-900 border-primary/20 shadow-2xl p-3 rounded-none"
-      tooltip={
-        <div className="space-y-1">
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary">
-            CHOOSE STABLE
-          </p>
-          {grudge && (
-            <p className="text-[9px] text-arena-blood/80 uppercase tracking-wider">
-              Active grudge · intensity {grudge.intensity}/5
+      tooltip={{
+        className: 'bg-neutral-900 border-primary/20 shadow-2xl p-3 rounded-none',
+        content: (
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+              CHOOSE STABLE
             </p>
-          )}
-        </div>
-      }
+            {grudge && (
+              <p className="text-[9px] text-arena-blood/80 uppercase tracking-wider">
+                Active grudge · intensity {grudge.intensity}/5
+              </p>
+            )}
+          </div>
+        ),
+      }}
     >
       <RivalIdentity rival={rival} isSelected={isSelected} />
       {grudge && <GrudgeFlames intensity={grudge.intensity} />}

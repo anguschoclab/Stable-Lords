@@ -7,6 +7,7 @@ import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import { pruneBoutOffers, voidUnresolvableSignedOffers } from '@/engine/bout/offerCleanup';
 import { endReign } from '@/engine/championship/arenaChampionship';
 import { validateStateInvariants } from '@/engine/validate/stateInvariants';
+import { truncateState } from '@/engine/storage/truncation';
 import { buildWeekCaches } from './caches';
 import type { WeekContext } from './context';
 /**
@@ -215,5 +216,14 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
       console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
     }
   }
-  return state;
+
+  // V14 B1: truncate at EVERY week boundary — previously only batch spans and
+  // autosim (every 50w) truncated, so sequential in-session play accumulated
+  // unbounded history and diverged from batch worlds once a cap was crossed
+  // (capped arrays feed rivalStrategy/PromoterPass/championship reads). One
+  // cadence for every time scale keeps sequential ≡ batch byte-identical.
+  // Runs after deferBoutArchives so this week's transcripts drain before any
+  // transcript stripping; span teardown still truncates after its terminal
+  // sweep (which can append entries a cap would drop).
+  return truncateState(state);
 }

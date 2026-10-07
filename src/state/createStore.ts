@@ -19,7 +19,6 @@ import {
 } from './serialization';
 import type { GameStore } from './store.types';
 import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
-import { StyleRollups } from '@/engine/stats/styleRollups';
 
 import type { UseBoundStore, StoreApi } from 'zustand';
 
@@ -158,29 +157,15 @@ async function runEngineJob(args: RunEngineJobArgs) {
     draft.isSimulating = true;
   });
 
-  let timerId: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_, reject) => {
-    timerId = setTimeout(() => {
-      // The worker job outlives this rejection — ask it to exit at the next
-      // week boundary instead of burning CPU on a result nobody commits.
-      try {
-        void engineProxy.cancelSim?.().catch(() => {});
-      } catch {
-        /* worker unavailable — nothing to cancel */
-      }
-      reject(new Error('Worker timeout after 15s'));
-    }, 15000);
-  });
-
   try {
-    // runExclusive serializes against every other engine caller
+    // runGuarded = runExclusive + the shared 15s timeout → cancelSim
+    // affordance. runExclusive serializes against every other engine caller
     // (autosim, admin skips) and returns undefined when a loadGame/reset
     // bumped the epoch while the worker computed — stale results are
     // discarded instead of clobbering newer state.
-    const next = await engineSession.runExclusive(async () => {
+    const next = await engineSession.runGuarded(async () => {
       const t0 = performance.now();
-      const resolved = await Promise.race([job(), timeout]);
-      if (timerId) clearTimeout(timerId);
+      const resolved = await job();
       telemetry.timing(TelemetryEvents.ENGINE_ROUNDTRIP_MS, performance.now() - t0, {
         op: opName,
       });
@@ -272,7 +257,6 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
     loadGame: (slotId: string, state: GameState) => {
       bumpEngineEpoch();
       clearReconstructionCache();
-      StyleRollups._clearCaches();
       set((draft) => hydrateDraft(draft, state, slotId));
       archiveService.archiveHotState(slotId, state);
     },
@@ -313,7 +297,6 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
 
     doReset: () => {
       clearReconstructionCache();
-      StyleRollups._clearCaches();
       const fresh = createFreshState('alpha-prime-10');
       get().loadGame('autosave', fresh);
       set({ atTitleScreen: true });

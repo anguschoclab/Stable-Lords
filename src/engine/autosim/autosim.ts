@@ -232,11 +232,10 @@ export async function runAutosim(
     weekSummaries.push(extractWeekSummary(state, state.week));
     weeksSimmed++;
 
-    // NF3: truncate historical arrays periodically to bound memory growth.
-    // deferredBoutLogs needs no flush — headless bouts produce no transcripts.
-    if (weeksSimmed % 50 === 0) {
-      state = truncateState(state);
-    }
+    // NF3: historical arrays are truncated by finalizeState at EVERY week
+    // boundary (V14 B1 — one cadence for all time scales), so no periodic
+    // truncation is needed here. deferredBoutLogs needs no flush — headless
+    // bouts produce no transcripts (pinned by headlessTranscriptContract).
 
     if (onProgress) {
       onProgress(weeksSimmed, weeksToSim);

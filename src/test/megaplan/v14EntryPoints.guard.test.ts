@@ -76,18 +76,31 @@ describe('megaplan V14: engineProxy entry-point matrix', () => {
       if (!cfg.needsSession) continue;
       const text = readFileSync(path.join(path.resolve(SRC, '..'), file), 'utf8');
       expect(text, `${file} must import engineSession`).toMatch(/engineSession/);
-      expect(text, `${file} must gate calls via runExclusive`).toMatch(/runExclusive/);
+      expect(text, `${file} must gate calls via runExclusive/runGuarded`).toMatch(
+        /runExclusive|runGuarded/
+      );
     }
   });
 
   it('admin fast-forward paths carry timeout + cancelSim parity with runEngineJob', () => {
-    const text = readFileSync(
+    const admin = readFileSync(
       path.join(path.resolve(SRC, '..'), 'src/pages/AdminTools/hooks/adminActions.ts'),
       'utf8'
     );
-    expect(text, 'admin skips lack the 15s timeout + cancelSim termination of runEngineJob').toMatch(
-      /setTimeout[\s\S]*cancelSim|cancelSim[\s\S]*setTimeout/
+    // The affordance lives in engineSession.runGuarded — admin paths must
+    // delegate to it (not bare runExclusive) so a hung week is cancelled.
+    expect(admin, 'admin skips must use engineSession.runGuarded for timeout+cancelSim').toMatch(
+      /runGuarded/
     );
+    const session = readFileSync(
+      path.join(SRC, 'engine/runtime/session.ts'),
+      'utf8'
+    );
+    const guarded = session.match(/runGuarded[\s\S]*?\n  \},?/)?.[0] ?? '';
+    expect(guarded, 'runGuarded must retain the setTimeout → cancelSim affordance').toMatch(
+      /setTimeout/
+    );
+    expect(guarded, 'runGuarded must retain the cancelSim call').toMatch(/cancelSim/);
   });
 
   it('admin callers strip non-serializable fields before worker transfer (parity with doAdvance*)', () => {

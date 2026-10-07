@@ -12,6 +12,7 @@
  *    instead of letting the caller apply it.
  */
 import { createJobQueue, type JobQueue } from './jobQueue';
+import { engineProxy } from './workerProxy';
 
 let epoch = 0;
 let queue: JobQueue | null = null;
@@ -58,5 +59,33 @@ export const engineSession = {
   /** Queue a fire-and-forget engine job whose result is handled internally. */
   enqueue<T>(job: () => Promise<T>): Promise<T> {
     return getQueue().enqueue(job);
+  },
+
+  /**
+   * `runExclusive` plus the worker-termination affordance every caller needs:
+   * a timeout that asks the worker to cancel (the in-flight job outlives the
+   * rejection — cancelSim makes it exit at the next week boundary instead of
+   * burning CPU on a discarded result). Without this, a hung week blocks the
+   * worker FIFO indefinitely.
+   */
+  async runGuarded<T>(job: () => Promise<T>, timeoutMs = 15000): Promise<T | undefined> {
+    return this.runExclusive(async () => {
+      let timerId: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<never>((_, reject) => {
+        timerId = setTimeout(() => {
+          try {
+            void engineProxy.cancelSim?.().catch(() => {});
+          } catch {
+            /* worker unavailable — nothing to cancel */
+          }
+          reject(new Error(`Worker timeout after ${timeoutMs}ms`));
+        }, timeoutMs);
+      });
+      try {
+        return await Promise.race([job(), timeout]);
+      } finally {
+        if (timerId) clearTimeout(timerId);
+      }
+    });
   },
 };

@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { engineSession } from '@/engine/runtime/session';
 import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
+import { stripNonSerializable } from '@/state/serialization';
 
 /**
  * Serialize the live store state to a downloadable JSON file.
@@ -59,34 +60,50 @@ export function importSaveFile(
 }
 
 /**
- * Fast-forward the simulation to the next quarter boundary via the engine.
+ * Shared admin fast-forward runner — the same session/archive contract as
+ * the store's runEngineJob: runGuarded supplies the 15s timeout + cancelSim
+ * termination (a hung week must not block the worker FIFO forever), epoch
+ * discard on undefined, deferred-archive flush on the main thread, then
+ * loadGame commit.
  */
-export async function skipToSeasonEnd(): Promise<void> {
+async function runAdminSkip(
+  job: (state: GameState) => Promise<{ state: GameState; pendingArchives?: unknown[] }>,
+  messages: { success: string; failure: string }
+): Promise<void> {
   const store = useGameStore.getState();
   if (store.isSimulating) {
     toast.error('Simulation already in progress.');
     return;
   }
-  const currentState = reconstructGameState(store);
+  // Parity with doAdvance*: strip computed/cached fields before transfer.
+  const currentState = stripNonSerializable(reconstructGameState(store));
   store.setSimulating(true);
   try {
-    const result = await engineSession.runExclusive(() =>
-      engineProxy.skipToQuarterEnd(currentState)
-    );
+    const result = await engineSession.runGuarded(() => job(currentState as GameState));
     // undefined → epoch moved mid-run (loadGame/reset); discard the result.
     if (!result) return;
     // Batch advancement never does I/O — flush drained transcripts here on
     // the main thread where the Electron/OPFS switch is visible.
-    archiveBoutLogs(result.pendingArchives ?? []);
+    archiveBoutLogs((result.pendingArchives ?? []) as Parameters<typeof archiveBoutLogs>[0]);
     // WorldPass already computed the new season each week — no post-hoc fix needed.
     store.loadGame(store.activeSlotId || 'autosave', result.state);
-    toast.success('Season rollover forced.');
+    toast.success(messages.success);
   } catch (err) {
-    console.error('Skip season failed:', err);
-    toast.error('Season rollover failed.');
+    console.error('Admin fast-forward failed:', err);
+    toast.error(messages.failure);
   } finally {
     store.setSimulating(false);
   }
+}
+
+/**
+ * Fast-forward the simulation to the next quarter boundary via the engine.
+ */
+export async function skipToSeasonEnd(): Promise<void> {
+  await runAdminSkip((s) => engineProxy.skipToQuarterEnd(s), {
+    success: 'Season rollover forced.',
+    failure: 'Season rollover failed.',
+  });
 }
 
 /**
@@ -94,30 +111,10 @@ export async function skipToSeasonEnd(): Promise<void> {
  * Same session/archive contract as skipToSeasonEnd.
  */
 export async function skipToMonthEnd(): Promise<void> {
-  const store = useGameStore.getState();
-  if (store.isSimulating) {
-    toast.error('Simulation already in progress.');
-    return;
-  }
-  const currentState = reconstructGameState(store);
-  store.setSimulating(true);
-  try {
-    const result = await engineSession.runExclusive(() =>
-      engineProxy.skipToMonthEnd(currentState)
-    );
-    // undefined → epoch moved mid-run (loadGame/reset); discard the result.
-    if (!result) return;
-    // Batch advancement never does I/O — flush drained transcripts here on
-    // the main thread where the Electron/OPFS switch is visible.
-    archiveBoutLogs(result.pendingArchives ?? []);
-    store.loadGame(store.activeSlotId || 'autosave', result.state);
-    toast.success('Advanced 4 weeks.');
-  } catch (err) {
-    console.error('Skip month failed:', err);
-    toast.error('Month advance failed.');
-  } finally {
-    store.setSimulating(false);
-  }
+  await runAdminSkip((s) => engineProxy.skipToMonthEnd(s), {
+    success: 'Advanced 4 weeks.',
+    failure: 'Month advance failed.',
+  });
 }
 
 /**

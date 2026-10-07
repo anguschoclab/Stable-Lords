@@ -33,34 +33,35 @@ test('primary CTA swaps label and behavior per route', async ({
     timeout: 15_000,
   });
 
-  const nav = (name: string, opts: { exact?: boolean } = { exact: true }) =>
-    clickNavLink(page, isMobile, name, opts);
+  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
+    await clickNavLink(page, isMobile, name, opts);
+    await page.waitForURL(`**${url}`, { timeout: 10_000 });
+  };
 
   // ── advance-intent routes (stable hub) ─────────────────────────────────
-  await nav('Stable', { exact: false });
-  await page.waitForTimeout(500);
+  await nav('Stable', '/stable', { exact: false });
 
-  await nav('Overview');
+  await nav('Overview', '/stable');
   await expectCta(page, /EXECUTE WEEK 1/);
 
-  await nav('Bouts');
+  await nav('Bouts', '/stable/bouts');
   await expectCta(page, /BEGIN CYCLE/);
 
-  await nav('Training');
+  await nav('Training', '/stable/training');
   await expectCta(page, /COMMIT REGIMEN/);
 
-  await nav('Planner');
+  await nav('Planner', '/stable/planner');
   await expectCta(page, /COMMIT REGIMEN/);
 
-  await nav('Offseason');
+  await nav('Offseason', '/stable/offseason');
   await expectCta(page, /CLOSE SEASON/);
 
   // ── page-intent routes ──────────────────────────────────────────────────
-  await nav('Arena');
+  await nav('Arena', '/stable/arena');
   await expectCta(page, /VIEW CARD/);
 
   // Recruit: SIGN CONTRACT stays disabled until a recruit is selected.
-  await nav('Recruit');
+  await nav('Recruit', '/stable/recruit');
   const signCta = await expectCta(page, /SIGN CONTRACT/);
   await expect(signCta).toBeDisabled();
 
@@ -73,18 +74,17 @@ test('primary CTA swaps label and behavior per route', async ({
   }
 
   // ── world hub ───────────────────────────────────────────────────────────
-  await nav('World', { exact: false });
-  await page.waitForTimeout(500);
+  await nav('World', '/world', { exact: false });
 
   // Tournaments: ADVANCE BRACKET is disabled while no live bracket exists
   // (a fresh week-1 game has no tournament in progress).
-  await nav('Tournaments');
+  await nav('Tournaments', '/world/tournaments');
   const bracketCta = await expectCta(page, /ADVANCE BRACKET/);
   await expect(bracketCta).toBeDisabled();
 
   // Scouting's SIGN CONTRACT routes to the contract market — rival warriors
   // are not signable (poaching is AI-side), so this is an honest redirect.
-  await nav('Scouting');
+  await nav('Scouting', '/world/scouting');
   const scoutCta = await expectCta(page, /SIGN CONTRACT/);
   await scoutCta.click();
   await page.waitForURL('**/stable/recruit', { timeout: 10_000 });
@@ -92,9 +92,8 @@ test('primary CTA swaps label and behavior per route', async ({
 
   // ── detail route: no primary CTA ────────────────────────────────────────
   // Roster → click the first warrior link → warrior detail page.
-  await nav('Stable', { exact: false });
-  await page.waitForTimeout(500);
-  await nav('Roster');
+  await nav('Stable', '/stable', { exact: false });
+  await nav('Roster', '/stable/roster');
   const warriorLink = page.locator('main a[href^="/warrior/"]').first();
   if (await warriorLink.isVisible({ timeout: 5_000 }).catch(() => false)) {
     await warriorLink.click();

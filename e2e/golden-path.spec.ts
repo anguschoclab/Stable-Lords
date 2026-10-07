@@ -19,8 +19,10 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Mobile runs are slower (sheet open/close animation per nav click).
   test.setTimeout(isMobile ? 240_000 : 120_000);
 
-  const nav = (name: string, opts: { exact?: boolean } = { exact: true }) =>
-    clickNavLink(page, isMobile, name, opts);
+  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
+    await clickNavLink(page, isMobile, name, opts);
+    await page.waitForURL(`**${url}`, { timeout: 10_000 });
+  };
 
   // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
   await startNewGame(page);
@@ -46,27 +48,27 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   const initialWeek = await readWeek();
 
   // --- Stable Hub pages ---
-  const stablePages = [
-    'Overview',
-    'War Council',
-    'Roster',
-    'Training',
-    'Planner',
-    'Arena',
-    'Equipment',
-    'Bouts',
-    'Promoters',
-    'Trainers',
-    'Finance',
-    'Recruit',
-    'Offseason',
-    'Simulator',
+  const stablePages: [string, string][] = [
+    ['Overview', '/stable'],
+    ['War Council', '/stable/advisor'],
+    ['Roster', '/stable/roster'],
+    ['Training', '/stable/training'],
+    ['Planner', '/stable/planner'],
+    ['Arena', '/stable/arena'],
+    ['Equipment', '/stable/equipment'],
+    ['Bouts', '/stable/bouts'],
+    ['Promoters', '/stable/promoters'],
+    ['Trainers', '/stable/trainers'],
+    ['Finance', '/stable/finance'],
+    ['Recruit', '/stable/recruit'],
+    ['Offseason', '/stable/offseason'],
+    ['Simulator', '/tools/physicals-simulator'],
     // 'Tournaments' also appears in the stable hub but lands on a world route;
     // it is covered in the worldPages sweep below.
   ];
 
-  for (const label of stablePages) {
-    await nav(label);
+  for (const [label, url] of stablePages) {
+    await nav(label, url);
     // Wait for page transition animation + content
     await page.waitForTimeout(800);
     // Verify no crash — check that main content area still exists
@@ -74,46 +76,46 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   }
 
   // --- Switch to World hub ---
-  await nav('World', { exact: false });
+  await nav('World', '/world', { exact: false });
   await page.waitForTimeout(500);
 
-  const worldPages = [
-    'Rankings',
-    'Arenas',
-    'Tournaments',
-    'Prep Mode',
-    'Scouting',
-    'Style Archives',
-    'Chronicle',
-    'Hall of Fame',
-    'Graveyard',
+  const worldPages: [string, string][] = [
+    ['Rankings', '/world'],
+    ['Arenas', '/world/arenas'],
+    ['Tournaments', '/world/tournaments'],
+    ['Prep Mode', '/world/tournament-prep'],
+    ['Scouting', '/world/scouting'],
+    ['Style Archives', '/world/style-archives'],
+    ['Chronicle', '/world/chronicle'],
+    ['Hall of Fame', '/world/history'],
+    ['Graveyard', '/world/graveyard'],
     // Lore route — leaving the world hub collapses its page list, so it must
     // be visited last.
-    'Hall of Fights',
+    ['Hall of Fights', '/lore/hall-of-fights'],
   ];
 
-  for (const label of worldPages) {
-    await nav(label);
+  for (const [label, url] of worldPages) {
+    await nav(label, url);
     await page.waitForTimeout(800);
     await expect(page.locator('main').first()).toBeVisible();
   }
 
   // --- Switch to Bookmarks hub ---
-  await nav('Bookmarks', { exact: false });
+  await nav('Bookmarks', '/bookmarks', { exact: false });
   await page.waitForTimeout(500);
   await expect(page.locator('main').first()).toBeVisible();
 
   // ── 5. Arena Hub → Execute Week (Fight) ─────────────────────────────────
   // Navigate to Arena — the route-aware CTA here is VIEW CARD (page-registered
   // scroll action), not the week pipeline.
-  await nav('Stable', { exact: false });
+  await nav('Stable', '/stable', { exact: false });
   await page.waitForTimeout(500);
-  await nav('Arena');
+  await nav('Arena', '/stable/arena');
   await page.waitForTimeout(1000);
   await expect(page.getByRole('button', { name: /VIEW CARD/ })).toBeVisible();
 
   // Navigate to Bouts — its CTA is BEGIN CYCLE, which runs the week pipeline.
-  await nav('Bouts');
+  await nav('Bouts', '/stable/bouts');
   await page.waitForTimeout(1000);
   const advanceWeekBtn = page.getByRole('button', { name: /BEGIN CYCLE/ });
   await advanceWeekBtn.click();

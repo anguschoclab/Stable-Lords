@@ -14,9 +14,10 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
 import { tickArenaEvents } from '@/engine/combat/mechanics/arenaEvents';
 import { resolveExchange } from '@/engine/combat/resolution/resolution';
-import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
+import { narrateEvents } from '@/engine/combat/narrative/narrator';
 import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
 import { loadCombatNarrative } from '@/data/narrative';
+import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
@@ -485,21 +486,7 @@ describe('arena events — resolution integration', () => {
 });
 
 describe('arena events — narration', () => {
-  const createNarrCtx = (): NarrationContext => ({
-    rng: new SeededRNG(42),
-    nameA: 'Thunderstrike',
-    nameD: 'Lightning',
-    weaponA: 'broadsword',
-    weaponD: 'short_spear',
-    styleA: FightingStyle.StrikingAttack,
-    styleD: FightingStyle.TotalParry,
-    maxHpA: 100,
-    maxHpD: 100,
-    prevHpRatioA: 1.0,
-    prevHpRatioD: 1.0,
-    fameA: 10,
-    fameD: 10,
-  });
+  const createNarrCtx = makeNarrationContext;
 
   it('narrates ARENA_EVENT from the arena-events announce pool', () => {
     const events: CombatEvent[] = [

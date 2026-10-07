@@ -6,19 +6,6 @@
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 
-// ─── Tier Probabilities ─────────────────────────────────────────────────────
-
-/**
- * Recruitment tier probabilities
- * 5% chance for Prodigy, 15% for Exceptional, 30% for Promising, 50% for Common
- */
-export const RECRUITMENT_PROBABILITIES = {
-  PRODIGY: 0.05,
-  EXCEPTIONAL: 0.2,
-  PROMISING: 0.5,
-  COMMON: 1.0, // fallback
-} as const;
-
 // ─── Pool Management ───────────────────────────────────────────────────────
 
 /**
@@ -41,26 +28,6 @@ export const REFRESH_COST = 50;
  * Default pool size (re-exported for convenience)
  */
 export const DEFAULT_POOL_SIZE = POOL_CONSTANTS.DEFAULT_SIZE;
-
-// ─── Lineage System ────────────────────────────────────────────────────────
-
-/**
- * Genetic bloodline system constants
- */
-export const LINEAGE_CONSTANTS = {
-  LEGACY_CHANCE: 0.05,
-  NOBLE_BLOOD_THRESHOLD: 2000,
-} as const;
-
-// ─── Age Range ────────────────────────────────────────────────────────────
-
-/**
- * Recruit age range
- */
-export const RECRUIT_AGE = {
-  MIN: 16,
-  MAX: 22,
-} as const;
 
 // ─── Tier Costs (from narrativeContent) ────────────────────────────────────
 

@@ -4,7 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import { useGameStore } from '@/state/useGameStore';
 
-export const ADVISOR_BASE_ATTRS = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
+const ADVISOR_BASE_ATTRS = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 
 /**
  * Week-5 seeded scenario shared by advisor/widget tests: one player warrior

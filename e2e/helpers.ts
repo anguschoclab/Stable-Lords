@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-export const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:8080';
 
 /**
  * Clicks a side-panel nav link. On mobile viewports the side nav is hidden;

@@ -123,24 +123,6 @@ export const CONDITION_TRIGGERS = [
 
 export const DISTANCE_RANGES = ['Grapple', 'Tight', 'Striking', 'Extended'] as const;
 
-export const ARENA_ZONES = ['Center', 'Edge', 'Corner', 'Obstacle'] as const;
-
-
-export const ARENA_TAGS = [
-  'outdoor',
-  'indoor',
-  'elevated',
-  'water',
-  'cramped',
-  'open',
-  'premium',
-  'uneven',
-  'ruins',
-  'magical',
-  'cursed',
-  'living',
-] as const;
-
 export const SHIELD_SHAPES = ['heater', 'french', 'swiss', 'spanish', 'lozenge'] as const;
 
 export const FIELD_TYPES = [

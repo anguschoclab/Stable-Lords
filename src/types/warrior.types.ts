@@ -83,15 +83,6 @@ export type WarriorStatus = (typeof WARRIOR_STATUSES)[number];
 /** Injury severity tiers (per Design Bible §Injuries) */
 export type InjurySeverity = (typeof INJURY_SEVERITIES)[number];
 
-/** Recovery time ranges by severity (in weeks) */
-export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: number }> = {
-  Minor: { min: 1, max: 2 },
-  Moderate: { min: 2, max: 4 },
-  Severe: { min: 4, max: 8 },
-  Critical: { min: 8, max: 16 },
-  Permanent: { min: Infinity, max: Infinity },
-};
-
 /** Body locations that can sustain injuries */
 export type InjuryLocation = (typeof INJURY_LOCATIONS)[number];
 

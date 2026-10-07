@@ -21,7 +21,11 @@ test('golden path: new game → navigate all pages → fight → advance week', 
 
   const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
     await clickNavLink(page, isMobile, name, opts);
-    await page.waitForURL(`**${url}`, { timeout: 10_000 });
+    // toHaveURL polls — waitForURL can miss a client-side nav that lands
+    // before the waiter registers.
+    await expect(page).toHaveURL(new RegExp(`${url.replace(/[/.]/g, '\\$&')}/?$`), {
+      timeout: 10_000,
+    });
   };
 
   // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────

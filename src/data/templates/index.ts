@@ -14,4 +14,3 @@ export * from './minorTemplates';
 
 // Template utilities
 export * from './templateCache';
-export * from './backstoryData';

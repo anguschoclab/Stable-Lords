@@ -80,7 +80,7 @@ export function randomStableName(rng?: () => number): string {
  * @param rng - Optional random number generator function
  * @returns A random prefixed stable name
  */
-export function randomPrefixedStableName(rng?: () => number): string {
+function randomPrefixedStableName(rng?: () => number): string {
   const prefix = randomPick(STABLE_PREFIXES, rng ?? cryptoRandom);
   const suffix = randomPick(STABLE_SUFFIXES, rng ?? cryptoRandom);
   return `${prefix} ${suffix}`;
@@ -92,6 +92,6 @@ export function randomPrefixedStableName(rng?: () => number): string {
  * @param rng - Optional random number generator function
  * @returns A random alternative stable name
  */
-export function randomAltStableName(rng?: () => number): string {
+function randomAltStableName(rng?: () => number): string {
   return randomPick(STABLE_ALT, rng ?? cryptoRandom);
 }

@@ -23,34 +23,7 @@ import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { validateStateInvariants } from '@/engine/validate/stateInvariants';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/opfsArchive', () => {
-  const mockInstance = {
-    isSupported: () => true,
-    archiveBoutLog: vi.fn().mockResolvedValue(undefined),
-    retrieveBoutLog: vi.fn().mockResolvedValue(null),
-    archiveHotState: vi.fn().mockResolvedValue(undefined),
-    retrieveHotState: vi.fn().mockResolvedValue(null),
-    getArchivedBoutIdsForSeason: vi.fn().mockResolvedValue([]),
-  };
-  return {
-    OPFSArchiveService: class {
-      isSupported = mockInstance.isSupported;
-      archiveBoutLog = mockInstance.archiveBoutLog;
-      retrieveBoutLog = mockInstance.retrieveBoutLog;
-      archiveHotState = mockInstance.archiveHotState;
-      retrieveHotState = mockInstance.retrieveHotState;
-      getArchivedBoutIdsForSeason = mockInstance.getArchivedBoutIdsForSeason;
-    },
-    opfsArchive: mockInstance,
-    ArchiveConflictError: class extends Error {
-      constructor(message: string) {
-        super(message);
-        this.name = 'ArchiveConflictError';
-      }
-    },
-    assertSafeFileNamePart: vi.fn(),
-  };
-});
+vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
 /** Every warrior-id-bearing store a corpse could leak into. */
 function deadIdSightings(state: GameState): string[] {

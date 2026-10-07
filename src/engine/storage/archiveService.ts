@@ -14,6 +14,3 @@ if (typeof window !== 'undefined' && window.electronAPI) {
   const { OPFSArchiveService } = await import('./opfsArchive');
   archiveService = new OPFSArchiveService();
 }
-
-// Re-export the instance for backward compatibility
-export { archiveService as opfsArchive };

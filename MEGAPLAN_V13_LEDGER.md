@@ -1,0 +1,77 @@
+# MEGAPLAN V13 LEDGER — Pipeline & Time-Advancement Campaign
+
+## Baseline
+
+- **Branch:** `main` · **Restore tag:** `pre-megaplan-v13` at `23d5839e`
+- **Concurrency note:** the V12 SRP/DRY campaign was in-flight when this
+  campaign began; its closeout commits landed mid-session (`d1628e5a` et al.).
+  Working tree verified clean before tagging. V13 numbering chosen to avoid
+  collision. Early gate/soak runs overlapped V12's uncommitted WIP — numbers
+  below were taken at `23d5839e` (post-V12-closeout) where noted.
+- **Baseline gates:**
+  - `type-check` (`tsc -b`): ✅ 0 errors
+  - `vitest` (main suite): run in-flight during V12 churn; re-verified at
+    closeout — see Phase 6 gate matrix
+  - `bun run test:bun` (`bun test --isolate`): ⚠ interrupted — runner burned
+    ~170 CPU-min on a single process with no output for >15 min (suspected
+    pathological file under `--isolate`, or contention with concurrent V12
+    work). Deferred to final battery; V12 ledger documents it green.
+  - `eslint`: in-flight at compaction; re-run scheduled at Phase 6
+  - `narrative-validate`: pending re-run at Phase 6
+
+## Phase 0 — baselines (measured at `23d5839e`, idle machine)
+
+| Metric | Prior doc | V13 measured | Verdict |
+| --- | --- | --- | --- |
+| Week soak, 40w | 292.7 ms/wk | **258.3 ms/wk**, 0 invariant violations | ~12% better than doc; `rivalStrategy` 146.8 ms/wk (~57%), `promoter` 25.0 ms/wk (~9.7%), `arenaChampionship` 5.4 ms/wk; ~72 ms/wk outside timed passes (bout phase, sweep, caches, finalize) |
+| Day-mode soak, 40w | +18.5% vs week | **294.7 ms/wk** (~+14% vs 258.3) | overhead persists but modest; day-path shares resolveTournamentDay |
+| Autosim 52w | ~17 s (~327 ms/wk) | **~10.6 s — 204 ms/wk** clean (wk1-26: 185 ms → wk27-52: 225 ms, +21% growth); an earlier 38.3 s reading was contaminated by a concurrent vitest slow-perf run at 99% CPU | Faster than documented; mild growth curve tied to history-array length (Phase 2 target) |
+| parallel-bench pool 4 | 0.33× | not re-run | prior gate stands; `poolSize=1` retained |
+
+## Phase 1 — audit findings (in progress)
+
+| ID | Finding | Verdict | Disposition |
+| --- | --- | --- | --- |
+| A1 | `opfsArchiver.ts` `pendingRetries` is a module-level `[]` that escapes the module-cache registry `DECL_RE` (only `new Map/Set/WeakMap/WeakSet` detected) | CONFIRMED blind spot — real mechanism, guard can't see it | extend registry regex to `= []`/`= {}` mutables or add explicit allow-list; guard test |
+| A2 | `NewsletterFeed.current` (feed.ts:105) — module-level mutable `FightCard[]`, zero production callers (tests only reset it) | CONFIRMED dead mutable surface | removal candidate (test-first) |
+| A3 | `StyleRollups` `weekCache`/`rollingCache` + `_clearCaches` — zero production callers besides `loadGame`'s `_clearCaches()` call | CONFIRMED orphaned subsystem (knip territory) | removal candidate; `_clearCaches` call in `loadGame` becomes dead too |
+| A4 | Admin skip paths (`skipToMonthEnd`/`skipToQuarterEnd`) don't call `stripNonSerializable` and lack the 15s timeout + `cancelSim` that `runEngineJob` has | PARTIAL: strip is harmless today (`reconstructGameState` output can't contain the 8 stripped fields); missing timeout is a real asymmetry — a hung week blocks the FIFO and leaves `isSimulating` stuck | add timeout+cancel parity; strip for defense-in-depth; entry-point guard test |
+| A5 | Dead worker surfaces: `advanceMonth/Quarter/Year`, `skipToYearEnd`, `resolveTournamentRound`, `createFreshState`, `configureEnginePool` have zero production `engineProxy.*` callers (month/quarter/year only reachable via `skipTo*` composition) | CONFIRMED | document or remove (zero backcompat constraints per user); entry-point matrix test |
+| A6 | `sweepUnfinishedTournaments` runs pre-`createMutableWeekContext` on raw input | DISPROVED — pure, spread-based; input never mutated | none |
+| A7 | `collectStoreValues` (60 tracked fields) vs `hydrateDraft` writes — untracked hydrated fields (`pendingResolutionData`, `lastWeekBoutDisplay`, `absoluteWeek`) are correct-but-fragile; adding a tracked field to hydrate without collectStoreValues silently breaks memoization | CONFIRMED drift hazard | field-parity guard test (known-exempt list) |
+| A8 | `runBoutPhase` is outside the timed pass table — ~72 ms/wk of soak time invisible to per-pass profile | CONFIRMED observability gap | instrument bout phase + sweep + finalize in Phase 2 profiling |
+| A9 | Headless transcript invariant — `simulateFight.ts:107` `log: headless ? [] : [...]` hard-nulls per-fight; all 14 `log.push` sites verified under `!headless` gates (narrate.ts:60/65/69 via index.ts:81; outcomes.ts:42/104 via :35/:73; beats.ts:18/32/33 via :14/:31; postFight.ts:100 via :99; narrative.ts intro via simulateFight conditional); `AutosimResult` has no `pendingArchives` so a leak would accumulate silently to the 200-cap | CONFIRMED structural — gates audited, all correct; end-to-end contract unpinned | runtime contract test (headless autosim → zero deferred logs) + static guard on `log.push` sites |
+| A10 | `stopConditions.ts:25` `noPairings` flattens `[...roster, ...rivals.flatMap(r=>r.roster)]` (all world warriors) every evaluation, then `isFightReady`-filters all — no early exit | CONFIRMED waste — ~O(world warriors) alloc+scan per week per span | Phase 5: early-exit at 2 eligible; measure first |
+| B1 | **`truncateState` cadence diverges across time scales** — sequential `advanceWeek` never truncates in-session (save-only via `saveSlots.ts`); `advanceMonth/Quarter` truncate at span end; `advanceYear` truncates at EVERY quarter end; autosim every 50w + finish. Capped arrays (`matchHistory`/`arenaHistory`/`rivalries`/`newsletter`) are read by sim passes (`rivalStableShard`, `PromoterPass`, `WorldPass`, `arenaChampionship`) | CONFIRMED structural divergence — batch vs sequential worlds can diverge once a cap is crossed mid-span (500-entry arrays, ~8 bouts/wk → reachable ~w50-60; `rivalries` cap 100 reachable sooner) | Phase 4: determinism test with shrunk `overrides` caps (sequential vs batch, byte-compare) — likely RED first → Phase 5 normalize cadence (truncate every week in `finalizeState`, or prove sim never reads beyond caps) |
+
+## Phase dispositions
+
+| Phase | Work | Commits |
+| --- | --- | --- |
+| 0 — baseline | `pre-megaplan-v13` tag; soak ×2 + autosim bench; gate triage | (ledger commit) |
+| 1 — audit | entry-point matrix, ownership audit, dead-surface scan, registry blind spot | in progress |
+| 2 — profiling | `bun --cpu-prof` 26w soak → `scripts/out/v13-week-soak.cpuprofile`; autosim growth curve (185→225 ms/wk over 52w, driven by history-array length) | measured |
+| 3–7 | pending | — |
+
+## Phase 2 — CPU bottleneck table (26w soak, 4.9s sampled)
+
+| Function | Self ms | % | Bucket |
+| --- | --- | --- | --- |
+| `cloneObject` + `copyDataProperties` (structuredClone/spread) | 572 | ~12% | state-copy churn across pass boundaries + week-1 clone |
+| `getMatchupBonus` (combat/matchup.ts) | 278 | ~5.7% | bout sim + matchup scoring |
+| `scorePairwiseMatchup` (schedulingAssistant) | 165 | ~3.4% | rivalStrategy matchmaking |
+| `bestMatchupModifier` (boutBidding/generation) | 113 | ~2.3% | rival bid generation |
+| `getRecentFightsForWarrior` (historyUtils) | 107 | ~2.2% | history scans (B3 territory, still hot) |
+| intel dossier family (`observeTells`/`updateDossiers`/`foldFight`/`sideFor`) | ~196 | ~4% | AI memory bookkeeping per bout |
+| `rankContenders` (arenaChampionship/queries) | 99 | ~2% | championship ranking |
+| `findBestOpponent` (offerMatchmaking) | 90 | ~1.8% | promoter offer gen |
+| `applyOfferImpact` | 75 | ~1.5% | offer resolution |
+| `computePlayerThreatLevel` (agentCore) | 73 | ~1.5% | AI |
+| `interpolateTemplate` + `escapeHtml` | ~101 | ~2% | narration (non-headless only) |
+
+**Implications for Phase 5:** the two structural costs are (a) ~12% in
+state-copy churn — whole-state spreads per pass/per impact — and (b) the
+matchup-scoring family (~556ms) shared by bout bidding and sim. Both preserve
+byte-identical gates naturally (pure reorder/memoization candidates).
+`getRecentFightsForWarrior` and the dossier family scale with history length —
+explains the autosim +21% growth curve and the slowest weeks late in runs.

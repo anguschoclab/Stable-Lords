@@ -11,23 +11,7 @@ import '@/test/_setup/setup';
  * PageFrame gap). Pins header + list rendering + tier sort.
  */
 
-vi.mock('@tanstack/react-router', () => ({
-  useParams: () => ({}),
-  useNavigate: () => vi.fn(),
-  Link: ({
-    to,
-    children,
-    className,
-  }: {
-    to: string;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <a href={to} className={className}>
-      {children}
-    </a>
-  ),
-}));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 describe('PromoterDirectory page (region pinning)', () => {
   beforeEach(() => {

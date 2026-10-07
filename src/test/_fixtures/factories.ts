@@ -358,7 +358,7 @@ export function makeTestRecruit(over: Partial<PoolWarrior> = {}): PoolWarrior {
 }
 
 /** Leaderboard row — rank varies by index so tables render sorted data. */
-export function makeWarriorRow(i: number, over: Partial<WarriorRow> = {}): WarriorRow {
+function makeWarriorRow(i: number, over: Partial<WarriorRow> = {}): WarriorRow {
   return {
     id: `w${i}`,
     name: `Warrior${i}`,
@@ -643,4 +643,24 @@ export function makeArena(over: Partial<ArenaConfig> = {}): ArenaConfig {
     startingZone: 'Center',
     ...over,
   };
+}
+
+/**
+ * Minimal Established-tier rival owned by "Test Owner" — the neutral rival
+ * shape shared by recruitment/draft worker tests.
+ */
+export function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
+  return makeRival({
+    id: 'rival_test' as any,
+    owner: makeOwner({
+      id: 'owner_test' as any,
+      name: 'Test Owner',
+      stableName: 'Test Stable',
+      fame: 50,
+      renown: 10,
+    }),
+    fame: 50,
+    tier: 'Established',
+    ...overrides,
+  });
 }

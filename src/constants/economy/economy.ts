@@ -118,26 +118,6 @@ export const MATCHMAKING_SCORE_CONSTANTS = {
   RECOVERY_PENALTY: -200,
 } as const;
 
-// ─── Promoter Capacity ─────────────────────────────────────────────────────
-/**
- * Promoter booking capacity by tier
- */
-export const PROMOTER_CAPACITY = {
-  LEGENDARY: 2,
-  NATIONAL: 4,
-  REGIONAL: 6,
-  LOCAL: 10,
-} as const;
-
-// ─── Capacity UI Thresholds ───────────────────────────────────────────────
-/**
- * UI feedback thresholds for capacity
- */
-export const CAPACITY_UI_THRESHOLDS = {
-  CRITICAL: 80,
-  WARNING: 50,
-} as const;
-
 // ─── Trainer Economics ───────────────────────────────────────────────────
 /**
  * Trainer weekly salary by tier

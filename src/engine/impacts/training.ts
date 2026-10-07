@@ -7,7 +7,7 @@ import type { GameState, Trainer, TrainingAssignment, RestState } from '@/types/
 /**
  * Apply trainers to state.
  */
-export const trainers = (state: GameState, value: Trainer[]) => {
+const trainers = (state: GameState, value: Trainer[]) => {
   state.trainers = value;
 };
 

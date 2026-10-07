@@ -35,7 +35,11 @@ test('primary CTA swaps label and behavior per route', async ({
 
   const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
     await clickNavLink(page, isMobile, name, opts);
-    await page.waitForURL(`**${url}`, { timeout: 10_000 });
+    // toHaveURL polls — waitForURL can miss a client-side nav that lands
+    // before the waiter registers.
+    await expect(page).toHaveURL(new RegExp(`${url.replace(/[/.]/g, '\\$&')}/?$`), {
+      timeout: 10_000,
+    });
   };
 
   // ── advance-intent routes (stable hub) ─────────────────────────────────
@@ -87,7 +91,7 @@ test('primary CTA swaps label and behavior per route', async ({
   await nav('Scouting', '/world/scouting');
   const scoutCta = await expectCta(page, /SIGN CONTRACT/);
   await scoutCta.click();
-  await page.waitForURL('**/stable/recruit', { timeout: 10_000 });
+  await expect(page).toHaveURL(/\/stable\/recruit\/?$/, { timeout: 10_000 });
   await expectCta(page, /SIGN CONTRACT/);
 
   // ── detail route: no primary CTA ────────────────────────────────────────
@@ -97,7 +101,7 @@ test('primary CTA swaps label and behavior per route', async ({
   const warriorLink = page.locator('main a[href^="/warrior/"]').first();
   if (await warriorLink.isVisible({ timeout: 5_000 }).catch(() => false)) {
     await warriorLink.click();
-    await page.waitForURL('**/warrior/**', { timeout: 10_000 });
+    await expect(page).toHaveURL(/\/warrior\//, { timeout: 10_000 });
     await expect(page.getByRole('button', { name: CTA_PATTERN })).toHaveCount(0);
   }
 });

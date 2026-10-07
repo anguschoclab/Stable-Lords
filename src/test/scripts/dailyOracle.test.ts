@@ -7,6 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeMetrics } from '#scripts/daily_oracle';
 import type { SimPulse } from '@/engine/stats/simulationMetrics';
+import { ZERO_TRAIT_FIELDS, ZERO_AI_FIELDS } from '@/test/_fixtures/simMetrics';
 
 const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({
   week: 1,
@@ -18,33 +19,8 @@ const makePulse = (over: Partial<SimPulse> = {}): SimPulse => ({
   avgRivalTreasury: 0,
   medianRivalTreasury: 0,
   totalBouts: 0,
-  traitedWarriors: 0,
-  totalTraits: 0,
-  flawInstances: 0,
-  multiFlawWarriors: 0,
-  classTraitInstances: 0,
-  signatureInstances: 0,
-  intentDistribution: {},
-  playerChallengedWeeks: 0,
-  vendettaCount: 0,
-  avgDossierCoverage: 0,
-  counterOfferRate: 0,
-  offerCount: 0,
-  counteredOfferCount: 0,
-  aiCrownsHeld: 0,
-  playerCrownsHeld: 0,
-  liveTitleOffers: 0,
-  reignEndings: {},
-  grandChampionsCount: 0,
-  crownCampaignsActive: 0,
-  titleOfferStatuses: {},
-  avgPlanIntelStaleness: 0,
-  maskedScoutReports: 0,
-  grandChampFieldSize: 0,
-  grandChampCancellations: 0,
-  avgChampionFatigue: 0,
-  cornerAdviceEvents: 0,
-  competenceDistribution: {},
+  ...ZERO_TRAIT_FIELDS,
+  ...ZERO_AI_FIELDS,
   ...over,
 });
 

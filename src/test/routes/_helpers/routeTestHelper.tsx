@@ -30,7 +30,7 @@ export function expectRouteComponent(route: RouteLike) {
 /**
  *
  */
-export function renderRouteComponent(route: RouteLike) {
+function renderRouteComponent(route: RouteLike) {
   const Component = (route.options?.component ?? route.component) as ComponentType;
   expect(Component).toBeDefined();
   const result = render(<Component />);

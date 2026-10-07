@@ -8,7 +8,6 @@ export * from './economy';
 export * from './combat';
 export * from './recruitment';
 export * from './aging';
-export * from './equipment';
 export * from './training';
 export * from './arena';
 export * from './arenaEvents';

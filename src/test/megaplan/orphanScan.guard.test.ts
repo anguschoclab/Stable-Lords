@@ -77,8 +77,8 @@ describe('megaplan: orphan guard', () => {
     const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
     expect(
       srcDead.length,
-      `dead exports grew past the V2 audit level (${srcDead.length} > 176) — ` +
+      `dead exports grew past the V2 audit level (${srcDead.length} > 156) — ` +
         `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
-    ).toBeLessThanOrEqual(176);
+    ).toBeLessThanOrEqual(156);
   });
 });

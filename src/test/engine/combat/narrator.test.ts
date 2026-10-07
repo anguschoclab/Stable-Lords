@@ -2,28 +2,14 @@
  * Combat Narrator — event-to-text conversion with flavor variation.
  */
 import { describe, it, expect } from 'vitest';
-import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
+import { narrateEvents } from '@/engine/combat/narrative/narrator';
+import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
 import type { CombatEvent } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 
 describe('narrator', () => {
-  const createMockContext = (overrides: Partial<NarrationContext> = {}): NarrationContext => ({
-    rng: new SeededRNG(42),
-    nameA: 'Thunderstrike',
-    nameD: 'Lightning',
-    weaponA: 'broadsword',
-    weaponD: 'short_spear',
-    styleA: FightingStyle.StrikingAttack,
-    styleD: FightingStyle.TotalParry,
-    maxHpA: 100,
-    maxHpD: 100,
-    prevHpRatioA: 1.0,
-    prevHpRatioD: 1.0,
-    fameA: 10,
-    fameD: 10,
-    ...overrides,
-  });
+  const createMockContext = makeNarrationContext;
 
   describe('narrateEvents', () => {
     it('returns narration result with log array', () => {

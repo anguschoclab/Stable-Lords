@@ -4,14 +4,10 @@
  * plus the socialHandlers export map.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  ownerGrudges,
-  rivalries,
-  playerChallenges,
-  playerAvoids,
-  unacknowledgedDeaths,
-  socialHandlers,
-} from '@/engine/impacts/social';
+import { socialHandlers } from '@/engine/impacts/social';
+
+const { ownerGrudges, rivalries, playerChallenges, playerAvoids, unacknowledgedDeaths } =
+  socialHandlers;
 import type { OwnerGrudge, Rivalry } from '@/types/state.types';
 import {
   makeGrudge as fixtureGrudge,

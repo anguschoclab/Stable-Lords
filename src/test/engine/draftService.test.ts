@@ -7,31 +7,12 @@ import type { RivalStableData, GameState } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import {
   makeTestRecruit,
-  makeRival,
-  makeOwner,
+  makeMinimalRival,
   makeWarrior as makeWarriorFixture,
 } from '@/test/_fixtures/factories';
 import { createDefaultMeta } from '@/engine/analytics/metaDrift';
 
-function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
-  return makeRival({
-    id: 'rival_test' as any,
-    owner: makeOwner({
-      id: 'owner_test' as any,
-      name: 'Test Owner',
-      stableName: 'Test Stable',
-      fame: 50,
-      renown: 10,
-    }),
-    fame: 50,
-    tier: 'Established',
-    ...overrides,
-  });
-}
-
-function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
-  return makeTestRecruit(overrides);
-}
+const makePoolWarrior = makeTestRecruit;
 
 function makeMinimalGameState(overrides: Partial<GameState> = {}): GameState {
   const baseState = createFreshState('test-seed');

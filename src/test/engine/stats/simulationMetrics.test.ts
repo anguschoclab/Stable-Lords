@@ -4,39 +4,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
-
-const ZERO_TRAIT_FIELDS = {
-  traitedWarriors: 0,
-  totalTraits: 0,
-  flawInstances: 0,
-  multiFlawWarriors: 0,
-  classTraitInstances: 0,
-  signatureInstances: 0,
-} as const;
-
-const ZERO_AI_FIELDS = {
-  intentDistribution: {},
-  playerChallengedWeeks: 0,
-  vendettaCount: 0,
-  avgDossierCoverage: 0,
-  counterOfferRate: 0,
-  offerCount: 0,
-  counteredOfferCount: 0,
-  aiCrownsHeld: 0,
-  playerCrownsHeld: 0,
-  liveTitleOffers: 0,
-  reignEndings: {},
-  grandChampionsCount: 0,
-  crownCampaignsActive: 0,
-  titleOfferStatuses: {},
-  avgPlanIntelStaleness: 0,
-  maskedScoutReports: 0,
-  grandChampFieldSize: 0,
-  grandChampCancellations: 0,
-  avgChampionFatigue: 0,
-  cornerAdviceEvents: 0,
-  competenceDistribution: {},
-} as const;
+import { ZERO_TRAIT_FIELDS, ZERO_AI_FIELDS } from '@/test/_fixtures/simMetrics';
 
 describe('simulationMetrics', () => {
   let mockState: GameState;

@@ -36,21 +36,3 @@ export interface StableTemplate {
   /** Who the owner was before founding the stable. Orthogonal to stable archetype. */
   backstoryId: BackstoryId;
 }
-
-/**
- * Stable tier type.
- */
-export type StableTier = 'Minor' | 'Established' | 'Major' | 'Legendary';
-
-/**
- * Stable philosophy type.
- */
-export type StablePhilosophy =
-  | 'Brute Force'
-  | 'Speed Kills'
-  | 'Iron Defense'
-  | 'Balanced'
-  | 'Spectacle'
-  | 'Cunning'
-  | 'Endurance'
-  | 'Specialist';

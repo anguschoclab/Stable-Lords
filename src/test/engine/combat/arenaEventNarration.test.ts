@@ -9,10 +9,10 @@
  * mods echo into the next exchange with the hazard named.
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
+import { narrateEvents } from '@/engine/combat/narrative/narrator';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { loadCombatNarrative } from '@/data/narrative';
-import { SeededRNG } from '@/utils/random';
+import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 
@@ -20,21 +20,7 @@ beforeAll(async () => {
   await loadCombatNarrative();
 });
 
-const createNarrCtx = (): NarrationContext => ({
-  rng: new SeededRNG(42),
-  nameA: 'Thunderstrike',
-  nameD: 'Lightning',
-  weaponA: 'broadsword',
-  weaponD: 'short_spear',
-  styleA: FightingStyle.StrikingAttack,
-  styleD: FightingStyle.TotalParry,
-  maxHpA: 100,
-  maxHpD: 100,
-  prevHpRatioA: 1.0,
-  prevHpRatioD: 1.0,
-  fameA: 10,
-  fameD: 10,
-});
+const createNarrCtx = makeNarrationContext;
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 

@@ -24,38 +24,9 @@ export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';
 // ─── Equipment Constants ───────────────────────────────────────────────────
 
 /**
- * Armor weight type.
- */
-export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';
-
-/**
- * Armor_weight_map.
- */
-export const ARMOR_WEIGHT_MAP: Record<
-  ArmorWeight,
-  { minWeight: number; maxWeight: number; speedPenalty: number }
-> = {
-  None: { minWeight: 0, maxWeight: 0, speedPenalty: 0 },
-  Light: { minWeight: 1, maxWeight: 4, speedPenalty: 1 },
-  Medium: { minWeight: 5, maxWeight: 8, speedPenalty: 2 },
-  Heavy: { minWeight: 9, maxWeight: 12, speedPenalty: 4 },
-  'Ultra-Heavy': { minWeight: 13, maxWeight: 20, speedPenalty: 6 },
-};
-
-/**
  * Equipment slot type.
  */
 export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';
-
-/**
- * Defines the shape of armor encumbrance.
- */
-export interface ArmorEncumbrance {
-  totalWeight: number;
-  speedPenalty: number;
-  fatigueMult: number;
-  weightClass: ArmorWeight;
-}
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 

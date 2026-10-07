@@ -142,7 +142,7 @@ export function owningStableOf(
 // ─── Reign transitions ──────────────────────────────────────────────────────
 
 /** Appends a completed reign to the title history. */
-export function pushHistory(title: ArenaTitle, record: ArenaReignRecord): void {
+function pushHistory(title: ArenaTitle, record: ArenaReignRecord): void {
   title.history.push(record);
   if (title.history.length > ARENA_TITLE.HISTORY_CAP) {
     title.history.splice(0, title.history.length - ARENA_TITLE.HISTORY_CAP);

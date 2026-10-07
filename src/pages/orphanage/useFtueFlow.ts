@@ -14,7 +14,7 @@ import { createBoutSummary } from '@/engine/core/fightSummaryFactory';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
 
 /** A completed FTUE exhibition bout: combatants, outcome, and fight summary. */
-export interface BoutResult {
+interface FtueBoutResult {
   a: Warrior;
   d: Warrior;
   outcome: ReturnType<typeof simulateFight>;
@@ -28,7 +28,7 @@ function simulateTutorialBout(
   selectedWarriors: PoolWarrior[],
   playerPlan: FightPlan | null,
   boutSeed: number
-): BoutResult | null {
+): FtueBoutResult | null {
   if (selectedWarriors.length < 2) return null;
   const poolA = selectedWarriors[0];
   const poolB = selectedWarriors[1];
@@ -128,7 +128,7 @@ function useOrphanSelection() {
 function commitFtue(props: {
   state: Pick<GameStore, 'player' | 'graveyard' | 'ftueComplete'>;
   selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
-  boutResult: BoutResult | null;
+  boutResult: FtueBoutResult | null;
   poolSeedValue: number;
   playerPlan: FightPlan | null;
   setState: ReturnType<typeof useGameStore.getState>['setState'];
@@ -193,7 +193,7 @@ export function useFtueFlow() {
     planWarrior,
   } = useOrphanSelection();
 
-  const [boutResult, setBoutResult] = useState<BoutResult | null>(null);
+  const [boutResult, setBoutResult] = useState<FtueBoutResult | null>(null);
   const [playerPlan, setPlayerPlan] = useState<FightPlan | null>(null);
   const [boutSeed] = useState(() => cryptoRandomInt(0, 0x7fffffff));
 

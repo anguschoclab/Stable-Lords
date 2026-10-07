@@ -32,6 +32,8 @@ const REGISTRY: Record<string, string> = {
     'Process-wide telemetry sink, managed by set/resetTelemetryProvider.',
   'core/deathNotifier.ts:busSubscription':
     'Singleton EventBus subscription latch — prevents double-subscribe.',
+  'core/deathNotifier.ts:handlers':
+    'Per-context death-handler registry; attached once at boot, cleared in tests.',
   'runtime/session.ts:epoch':
     'Engine-session epoch guard — the mechanism that discards stale jobs.',
   'runtime/session.ts:queue':
@@ -44,6 +46,8 @@ const REGISTRY: Record<string, string> = {
   'pool/enginePool.ts:sharedPool': 'Shared pool instance; opt-in, default size 1.',
   'pipeline/adapters/opfsArchiver.ts:retryListeners':
     'Listener registry for the deferred-archive retry channel.',
+  'pipeline/adapters/opfsArchiver.ts:pendingRetries':
+    'Main-thread-only retry registry for failed archive writes; re-attempted on next flush.',
   'pipeline/services/weekPipeline/passes.ts:pipelineValidated':
     'Once-only DAG legality latch; validation is idempotent.',
   'combat/mechanics/weaponStats.ts:WEAPON_BY_ID':
@@ -71,7 +75,13 @@ const REGISTRY: Record<string, string> = {
   'stats/styleRollups.ts:tourCache': 'Same — worker-safe via localStorage guard.',
 };
 
-const DECL_RE = /^(?:export\s+)?(let|var)\s+([A-Za-z_$][\w$]*)|^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*=\s*new\s+(Map|Set|WeakMap|WeakSet)\s*[<(]/gm;
+// V13 A1: the const branch also catches `= []`, `= {}`, `new Array()`, and
+// type-annotated constructors (`const x: Set<T> = new Set()` escaped the old
+// `name =` adjacency requirement — deathNotifier's `handlers`). Literals and
+// annotated constructors mutate without hitting the old pattern.
+// (opfsArchiver's `pendingRetries` and newsletter feed's `current` escaped the
+// old collection-constructor-only pattern.)
+const DECL_RE = /^(?:export\s+)?(let|var)\s+([A-Za-z_$][\w$]*)|^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*(?::[^=\n]+)?=\s*(?:new\s+(?:Map|Set|WeakMap|WeakSet|Array)\s*[<(]|\[\s*\]|\{\s*\})/gm;
 const MUTATION_RE = (id: string) => new RegExp(`\\b${id}\\.(set|add|delete|push|clear|pop|shift|splice)\\(`);
 
 describe('engine module-level mutable registry', () => {

@@ -14,21 +14,8 @@ import '@/test/_setup/setup';
 
 let mockId = '';
 vi.mock('@tanstack/react-router', () => ({
+  ...__SHARED_MOCKS.routerLink,
   useParams: () => ({ id: mockId }),
-  useNavigate: () => vi.fn(),
-  Link: ({
-    to,
-    children,
-    className,
-  }: {
-    to: string;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <a href={to} className={className}>
-      {children}
-    </a>
-  ),
 }));
 
 describe('PromoterDetail page (region pinning)', () => {

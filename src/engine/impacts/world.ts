@@ -14,35 +14,35 @@ import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 /**
  * Apply week to state.
  */
-export const week = (state: GameState, value: number) => {
+const week = (state: GameState, value: number) => {
   state.week = value;
 };
 
 /**
  * Apply day to state.
  */
-export const day = (state: GameState, value: number) => {
+const day = (state: GameState, value: number) => {
   state.day = value;
 };
 
 /**
  * Apply season to state.
  */
-export const season = (state: GameState, value: Season) => {
+const season = (state: GameState, value: Season) => {
   state.season = value;
 };
 
 /**
  * Apply weather to state.
  */
-export const weather = (state: GameState, value: WeatherType) => {
+const weather = (state: GameState, value: WeatherType) => {
   state.weather = value;
 };
 
 /**
  * Apply recruit pool to state.
  */
-export const recruitPool = (state: GameState, value: PoolWarrior[]) => {
+const recruitPool = (state: GameState, value: PoolWarrior[]) => {
   state.recruitPool = value;
 };
 
@@ -78,7 +78,7 @@ const legacyFounderEnqueue = (
  * leave the same warrior rostered AND pooled; signing it then clones it into
  * a second stable. Skip ids already shelved or still rostered.
  */
-export const freeAgentAdditions = (state: GameState, value: PoolWarrior[]) => {
+const freeAgentAdditions = (state: GameState, value: PoolWarrior[]) => {
   const live = new Set<string>((state.freeAgents ?? []).map((w) => w.id));
   for (const r of state.rivals ?? []) for (const w of r.roster) live.add(w.id);
   for (const w of state.roster ?? []) live.add(w.id);
@@ -95,14 +95,14 @@ const freeAgentRemovals = (state: GameState, value: string[]) => {
 /**
  * Apply seasonal growth to state.
  */
-export const seasonalGrowth = (state: GameState, value: SeasonalGrowth[]) => {
+const seasonalGrowth = (state: GameState, value: SeasonalGrowth[]) => {
   state.seasonalGrowth = value;
 };
 
 /**
  * Apply realm rankings to state.
  */
-export const realmRankings = (state: GameState, value: Record<string, RankingEntry>) => {
+const realmRankings = (state: GameState, value: Record<string, RankingEntry>) => {
   state.realmRankings = value;
 };
 

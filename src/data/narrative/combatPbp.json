@@ -1055,7 +1055,10 @@
           "{{defender}} throws themselves awkwardly backward, stumbling as the fatal edge passes mere inches away.",
           "Panic flashes in {{defender}}'s eyes as they scramble desperately out of the strike's path.",
           "{{defender}} wildly flails backwards, narrowly avoiding the lethal arc.",
-          "With a panicked gasp, {{defender}} trips but manages to roll under the sweeping attack."
+          "With a panicked gasp, {{defender}} trips but manages to roll under the sweeping attack.",
+          "{{defender}} barely twists away, eyes wide with sudden terror.",
+          "A clumsy, scrambling retreat is the only thing saving {{defender}} from the blow.",
+          "{{defender}} flails out of the way, panic painted across their face."
         ],
         "confident": [
           "{{defender}} barely shifts their weight, a masterclass in minimal effort, dodging with absolute certainty.",
@@ -1703,7 +1706,9 @@
           "{{defender}} barely shifts their stance, intercepting the strike with arrogant ease.",
           "With absolute control, {{defender}} casually swats the heavy strike aside.",
           "{{defender}} perfectly angles their weapon, catching the attack without giving an inch of ground.",
-          "A textbook, effortless parry from {{defender}} stops the assault completely cold."
+          "A textbook, effortless parry from {{defender}} stops the assault completely cold.",
+          "{{defender}} swats the attack aside with disdainful ease.",
+          "A lazy, perfect flick of the wrist from {{defender}} deflects the strike."
         ],
         "theatrical": [
           "{{defender}} catches the strike with a dramatic flourish, spinning their weapon in defiance!",
@@ -1987,7 +1992,9 @@
           "{{defender}} absorbs the brutal punishment, eyes cold over the top of the shield.",
           "A sickening thud echoes as {{defender}} stops the killing blow with raw grit.",
           "{{defender}} braces behind the shield, enduring the violent onslaught without a word.",
-          "The shield is battered, but {{defender}}'s grim resolve never falters."
+          "The shield is battered, but {{defender}}'s grim resolve never falters.",
+          "{{defender}} absorbs the crushing impact on their shield without a sound.",
+          "The shield splinters slightly, but {{defender}} holds the line with grim determination."
         ]
       },
       "parry_break": [
@@ -2321,7 +2328,9 @@
           "{{defender}} orchestrates a magnificent, theatrical retaliation.",
           "{{defender}} twirls the deflected weapon and delivers a flashy, crowd-pleasing counter.",
           "With a showman's shout, {{defender}} throws the attack aside and ripostes with style.",
-          "Playing the hero, {{defender}} spectacularly sweeps the strike away and counters grandly."
+          "Playing the hero, {{defender}} spectacularly sweeps the strike away and counters grandly.",
+          "With a dramatic twirl, {{defender}} turns the deflected blow into a sudden counter!",
+          "Playing to the crowd, {{defender}} parries and dances into a swift return strike!"
         ],
         "grim": [
           "{{defender}} blocks the blow violently, immediately driving a brutal, joyless counterstrike forward.",
@@ -2676,7 +2685,9 @@
           "With a prolonged, agonizing groan, {{name}} collapses under their own weight.",
           "Gravity finally claims {{name}}, pulling them down in a slow, agonizing fall.",
           "Legs giving out entirely, {{name}} sinks heavily to the arena floor.",
-          "{{name}} groans, the weight of the blow sinking in slowly."
+          "{{name}} groans, the weight of the blow sinking in slowly.",
+          "{{name}} struggles agonizingly to rise, their battered body protesting every movement.",
+          "Like a broken doll, {{name}} twitches on the sand, taking precious seconds to find their footing."
         ],
         "fast": [
           "The fight erupts into a blur of motion, both fighters pushing the pace to a dangerous extreme!",
@@ -2754,7 +2765,9 @@
           "{{name}} hits the ground hard, the impact echoing through the arena.",
           "Without warning, {{name}} is violently driven into the dust.",
           "Like a dropped stone, {{name}} plummets to the ground.",
-          "Before the dust settles, {{name}} hits the ground hard."
+          "Before the dust settles, {{name}} hits the ground hard.",
+          "{{name}} hits the dirt and springs up instantly like a coiled snake!",
+          "A fluid roll carries {{name}} right back into a fighting stance, barely breaking rhythm."
         ],
         "recovery_slow": [
           "{{name}} uses their weapon as a crutch, dragging themselves upright with agonizing slowness.",
@@ -4079,7 +4092,15 @@
         "lines": [
           "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
           "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
-          "The polished arena floor betrays the fighters' footing under the lanterns!"
+          "The polished arena floor betrays the fighters' footing under the lanterns!",
+          "Blood and sweat have turned the smooth stones into a perilous sliding ground!",
+          "Fighters struggle for traction on the treacherous, slick surface of the arena.",
+          "Every step is a calculated risk as the wet flagstones offer no grip.",
+          "The ground beneath them is dangerously slick, threatening to upset their balance.",
+          "Sludge and grime coat the arena floor, making each pivot a desperate fight for friction.",
+          "The damp surface of the arena turns basic movement into a hazardous gamble.",
+          "Loss of footing is imminent as the arena floor becomes slicker by the minute.",
+          "A treacherous slickness has claimed the arena floor, turning simple steps into dangerous maneuvers."
         ]
       }
     }

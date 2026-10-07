@@ -74,7 +74,10 @@
         "A poorly timed slash from {{attacker}} misses its true mark.",
         "{{attacker}} swings wide, a grazing cut against {{defender}}.",
         "{{defender}} easily leans back, turning {{attacker}}'s slash into a graze.",
-        "{{attacker}}'s blade slips, only scratching {{defender}}."
+        "{{attacker}}'s blade slips, only scratching {{defender}}.",
+        "The slash slides harmlessly off the armor of {{defender}}.",
+        "A weak cut from {{attacker}} fails to bite into {{defender}}.",
+        "The blade grazes {{defender}}, leaving only a superficial scratch."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -364,7 +367,6 @@
         "{{defender}} sidesteps, forcing {{attacker}}'s bludgeon to slide clumsily off their {{bodyPart}}.",
         "{{attacker}}'s attack loses momentum, resulting in a dull, harmless thud against {{defender}}.",
         "{{attacker}} swings wide, a grazing blow against {{defender}}.",
-        "{{attacker}}'s heavy swing loses momentum, merely bumping {{defender}}.",
         "A clumsy bash from {{attacker}} bounces harmlessly.",
         "{{attacker}} fails to connect cleanly, delivering a weak glancing bash.",
         "{{defender}} shrugs off a poorly aimed bash from {{attacker}}."
@@ -484,7 +486,9 @@
         "A colossal swing from {{attacker}} sends shockwaves through {{defender}}.",
         "{{defender}}'s bones rattle under the tremendous impact of {{attacker}}'s strike.",
         "The horrific crunch of fractured bone resonates as {{attacker}} smashes into {{defender}}'s {{bodyPart}}.",
-        "A heavy, sickening impact reverberates as {{attacker}} smashes into {{defender}}."
+        "A heavy, sickening impact reverberates as {{attacker}} smashes into {{defender}}.",
+        "The bludgeon connects with a heavy thud, staggering {{defender}}.",
+        "A solid bash from {{attacker}} bruises {{defender}}'s ribs."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
@@ -912,7 +916,9 @@
         "A savage lunge sees {{attacker}} completely impale {{defender}} through the {{bodyPart}}.",
         "{{attacker}} executes a surgically perfect lunge, slipping past all defenses to impale {{defender}}'s {{bodyPart}} in a spray of scarlet.",
         "With snake-like speed, {{attacker}}'s point completely skewers the {{bodyPart}} of {{defender}}, pinning them momentarily in sheer agony.",
-        "A devastatingly precise thrust from {{attacker}} punches clean through armor and bone, annihilating {{defender}}'s {{bodyPart}}."
+        "A devastatingly precise thrust from {{attacker}} punches clean through armor and bone, annihilating {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} finds the perfect gap, thrusting deep into {{defender}}'s vitals!",
+        "A devastating puncture wound erupts as {{attacker}}'s blade sinks deep!"
       ]
     },
     "fist": {
@@ -1075,7 +1081,9 @@
         "{{attacker}}'s bare knuckles crash into {{defender}} with a sickening crunch.",
         "{{defender}} stumbles backward from {{attacker}}'s brutal haymaker.",
         "{{attacker}} delivers a crushing hook, shaking {{defender}} to the core.",
-        "{{attacker}} steps inside the guard, delivering a sickening hook directly to {{defender}}'s {{bodyPart}}."
+        "{{attacker}} steps inside the guard, delivering a sickening hook directly to {{defender}}'s {{bodyPart}}.",
+        "A heavy punch from {{attacker}} rocks {{defender}}'s jaw.",
+        "{{attacker}} lands a punishing blow, shaking {{defender}} to the core."
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence.",

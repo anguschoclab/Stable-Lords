@@ -75,8 +75,9 @@
 | lint | ✅ 0 errors / 0 warnings |
 | vitest (`bun run test`) | 8,994 pass / 2 skip — **3 fails, all unrelated WIP**: orphanScan ×2 (arena-audio files committed-but-unwired by in-flight `ArenaView`/`index.ts` edits) + AudioManager init-race test (fixed — WIP mock update) |
 | `bun run test:bun` | 8,953 pass — same 2 orphan-guard fails (WIP) |
-| `bun run test:slow` | running |
-| `bun run test:coverage` | running |
+| `bun run test:slow` | ✅ 190/190 (incl. 104-week AI-liveness soak, parallel determinism 1-vs-4 shards, week/quarter/year determinism) |
+| `bun run test:coverage` | ✅ thresholds met (84/74/78/85.5) — only the same 2 WIP-orphan test fails |
+| Playwright e2e | DEFERRED — not in the routine gate set for local megaplan runs; changed surfaces are unit/contract-covered |
 | build | ✅ |
 | electron:compile | ✅ |
 | narrative-validate | ✅ |

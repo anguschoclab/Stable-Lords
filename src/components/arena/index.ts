@@ -1,4 +1,3 @@
-export { default as ArenaAudio } from './ArenaAudio';
 export { default as ArenaBackground, type ArenaTier, type Season } from './ArenaBackground';
 export { default as ArenaFighter } from './ArenaFighter';
 export { default as ArenaView } from './ArenaView';

@@ -28,18 +28,17 @@ vi.mock('@/engine/runtime/workerProxy', () => ({
 }));
 
 vi.mock('@/state/useGameStore', () => {
-  const doAdvanceWeek = vi.fn().mockResolvedValue(undefined);
-  const doAdvanceDay = vi.fn().mockResolvedValue(undefined);
   const setSimulating = vi.fn();
   const loadGame = vi.fn();
 
   const store = {
     week: 3,
     day: 0,
+    absoluteWeek: 55,
     isTournamentWeek: false,
     isSimulating: false,
     activeSlotId: 'slot-1',
-    roster: [],
+    roster: [] as { id: string }[],
     rivals: [],
     boutOffers: {},
     lastWeekBoutDisplay: {
@@ -54,8 +53,15 @@ vi.mock('@/state/useGameStore', () => {
       deathNames: [],
       injuryNames: [],
     },
-    doAdvanceWeek,
-    doAdvanceDay,
+    // The real store moves the clock on success — these mocks must too, or
+    // the hook's clock-movement check reports a false failure.
+    doAdvanceWeek: vi.fn(async () => {
+      store.week += 1;
+      store.absoluteWeek += 1;
+    }),
+    doAdvanceDay: vi.fn(async () => {
+      store.day += 1;
+    }),
     setSimulating,
     loadGame,
   };
@@ -102,10 +108,20 @@ import { useGameStore, useWorldState } from '@/state/useGameStore';
 describe('useWeekExecution', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Restore store action mocks to working defaults after clearAllMocks wipes them
+    // Restore store action mocks to working defaults after clearAllMocks wipes them.
+    // doAdvanceWeek/doAdvanceDay must move the mock clock — the hook treats an
+    // unmoved clock after resolution as a failure and posts an error toast.
     const store = (useGameStore as any).getState();
-    store.doAdvanceWeek.mockResolvedValue(undefined);
-    store.doAdvanceDay.mockResolvedValue(undefined);
+    store.week = 3;
+    store.day = 0;
+    store.absoluteWeek = 55;
+    store.doAdvanceWeek.mockImplementation(async () => {
+      store.week += 1;
+      store.absoluteWeek += 1;
+    });
+    store.doAdvanceDay.mockImplementation(async () => {
+      store.day += 1;
+    });
     store.isTournamentWeek = false;
     store.isSimulating = false;
 
@@ -177,13 +193,89 @@ describe('useWeekExecution', () => {
     expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
   });
 
-  it('posts error toast when 0 eligible fighters (matchCard=0, fightReady<2)', async () => {
+  it('advances the week with no card and fewer than 2 fight-ready warriors', async () => {
+    // Weeks must advance even when the stable fields nobody — the pipeline is
+    // what heals injuries, ticks the economy, and runs the bankruptcy/roster
+    // floor rescue. Refusing to advance is a soft-lock.
     vi.mocked(generatePairings).mockReturnValueOnce({ pairings: [], voidedOffers: [] });
+    const store = useGameStore() as any;
+    store.roster = [{ id: 'w1' }];
+    const weekBefore = store.week;
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    expect(store.week).toBe(weekBefore + 1);
+    expect(toast.error).not.toHaveBeenCalled();
+    store.roster = [];
+  });
+
+  it('advances the week with an empty roster', async () => {
+    vi.mocked(generatePairings).mockReturnValueOnce({ pairings: [], voidedOffers: [] });
+    const store = useGameStore() as any;
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  it('advances the day on tournament weeks even with no card', async () => {
+    vi.mocked(generatePairings).mockReturnValueOnce({ pairings: [], voidedOffers: [] });
+    const store = useGameStore() as any;
+    store.isTournamentWeek = true;
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+    expect(store.doAdvanceDay).toHaveBeenCalledOnce();
+    expect(toast.error).not.toHaveBeenCalled();
+    store.isTournamentWeek = false;
+  });
+
+  it('posts an error toast (not a success toast) when the clock does not move', async () => {
+    // Worker failure is swallowed inside doAdvanceWeek — the only honest
+    // signal is that the calendar didn't move.
+    const store = useGameStore() as any;
+    store.doAdvanceWeek.mockImplementationOnce(async () => {
+      /* worker failed: clock unchanged */
+    });
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();
     });
     expect(toast.error).toHaveBeenCalled();
+    expect(toast.success).not.toHaveBeenCalled();
+  });
+
+  it('suppresses the failure toast when another simulation is in flight', async () => {
+    const store = useGameStore() as any;
+    store.doAdvanceWeek.mockImplementationOnce(async () => {
+      store.isSimulating = true;
+    });
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+    expect(toast.error).not.toHaveBeenCalled();
+    store.isSimulating = false;
+  });
+
+  it('detects failure on the tournament-day path too', async () => {
+    const store = useGameStore() as any;
+    store.isTournamentWeek = true;
+    store.doAdvanceDay.mockImplementationOnce(async () => {
+      /* worker failed: clock unchanged */
+    });
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+    expect(toast.error).toHaveBeenCalled();
+    expect(toast.success).not.toHaveBeenCalled();
+    store.isTournamentWeek = false;
   });
 
   it('posts success toast with week number on completion', async () => {

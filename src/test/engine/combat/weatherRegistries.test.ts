@@ -1,11 +1,10 @@
 /**
  * Weather registries — verifies WEATHER_CONFIG, WEATHER_STATS,
- * WEATHER_AMBIENCE, and WEATHER_VISUALS have entries for new weather types.
+ * and WEATHER_VISUALS have entries for new weather types.
  */
 import { describe, it, expect } from 'vitest';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 import { WEATHER_STATS } from '@/constants/arena/weatherStats';
-import { WEATHER_AMBIENCE } from '@/constants/arena/weatherAmbience';
 import type { WeatherType } from '@/types/shared.types';
 
 describe('weather registries — new weather types', () => {
@@ -51,23 +50,6 @@ describe('weather registries — new weather types', () => {
     it('Prismatic Rain stats string exists', () => {
       const stats = WEATHER_STATS['Prismatic Rain' as WeatherType];
       expect(stats).toBeDefined();
-    });
-  });
-
-  describe('WEATHER_AMBIENCE (WeatherAudio)', () => {
-    it('Eldritch Eclipse has ambience entry', () => {
-      const ambience = WEATHER_AMBIENCE['Eldritch Eclipse' as WeatherType];
-      expect(ambience).toBeDefined();
-    });
-
-    it('Moonlight Duel ambience is null (no ambience)', () => {
-      const ambience = WEATHER_AMBIENCE['Moonlight Duel' as WeatherType];
-      expect(ambience).toBeNull();
-    });
-
-    it('Prismatic Rain has ambience entry', () => {
-      const ambience = WEATHER_AMBIENCE['Prismatic Rain' as WeatherType];
-      expect(ambience).toBeDefined();
     });
   });
 

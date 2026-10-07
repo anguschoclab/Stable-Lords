@@ -84,7 +84,7 @@ function ViewModeRow({ prefs, set }: { prefs: ArenaPreferences; set: SetPrefs })
   );
 }
 
-/** Crowd volume slider with percentage readout. */
+/** Sound-effects volume slider with percentage readout. */
 function VolumeRow({ prefs, set }: { prefs: ArenaPreferences; set: SetPrefs }) {
   return (
     <div className="space-y-3">
@@ -94,7 +94,7 @@ function VolumeRow({ prefs, set }: { prefs: ArenaPreferences; set: SetPrefs }) {
           className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider"
         >
           <Volume2 className="h-4 w-4" />
-          Crowd Volume
+          Sound Volume
         </Label>
         <span className="text-xs font-mono text-muted-foreground">
           {Math.round(prefs.audioVolume * 100)}%
@@ -102,7 +102,7 @@ function VolumeRow({ prefs, set }: { prefs: ArenaPreferences; set: SetPrefs }) {
       </div>
       <Slider
         id="setting-audio-volume"
-        aria-label="Crowd Volume"
+        aria-label="Sound Volume"
         value={[prefs.audioVolume]}
         min={0}
         max={1}
@@ -159,12 +159,12 @@ function PreferenceRows({ prefs, set }: { prefs: ArenaPreferences; set: SetPrefs
       <SettingRow
         id="setting-audio-enabled"
         icon={Volume2}
-        label="Arena Audio"
-        description="Enable crowd reactions and ambient sounds"
+        label="Sound Effects"
+        description="Enable combat sound effects"
       >
         <Switch
           id="setting-audio-enabled"
-          aria-label="Enable Arena Audio"
+          aria-label="Enable Sound Effects"
           checked={prefs.audioEnabled}
           onCheckedChange={(checked) => set({ audioEnabled: checked })}
         />

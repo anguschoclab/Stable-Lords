@@ -18,6 +18,7 @@ export class AudioManager {
   private static instance: AudioManager | undefined;
   private sfx: Map<SfxType, Howl> = new Map();
   private muted: boolean = false;
+  private volume: number = 1;
   private ready: Promise<void>;
 
   /**
@@ -25,7 +26,7 @@ export class AudioManager {
    */
   private constructor() {
     this.loadSfx();
-    this.ready = this.loadMuteState();
+    this.ready = this.loadSettings();
   }
 
   /**
@@ -47,18 +48,27 @@ export class AudioManager {
   }
 
   /**
-   * Load the mute state from persistent storage (Electron or localStorage).
+   * Load the persisted mute/volume settings (Electron or localStorage).
    */
-  private async loadMuteState() {
+  private async loadSettings() {
+    const parseVolume = (raw: unknown) => {
+      const parsed = raw == null ? NaN : Number(raw);
+      return Number.isFinite(parsed) ? Math.min(1, Math.max(0, parsed)) : 1;
+    };
     if (typeof window !== 'undefined' && window.electronAPI) {
       try {
-        const muted = await window.electronAPI.storeGet(STORE_KEYS.AUDIO_MUTED);
+        const [muted, volume] = await Promise.all([
+          window.electronAPI.storeGet(STORE_KEYS.AUDIO_MUTED),
+          window.electronAPI.storeGet(STORE_KEYS.AUDIO_VOLUME),
+        ]);
         this.muted = muted === 'true';
+        this.applyVolume(parseVolume(volume));
       } catch {
         this.muted = false;
       }
     } else if (typeof localStorage !== 'undefined') {
       this.muted = localStorage.getItem(STORE_KEYS.AUDIO_MUTED) === 'true';
+      this.applyVolume(parseVolume(localStorage.getItem(STORE_KEYS.AUDIO_VOLUME)));
     }
   }
 
@@ -117,6 +127,54 @@ export class AudioManager {
    */
   public isMuted() {
     return this.muted;
+  }
+
+  /**
+   * Resolves once persisted settings have been loaded — the UI hydration
+   * point for mute/volume prefs.
+   */
+  public whenReady(): Promise<void> {
+    return this.ready;
+  }
+
+  /**
+   * Current playback volume (0–1).
+   */
+  public getVolume() {
+    return this.volume;
+  }
+
+  private applyVolume(volume: number) {
+    this.volume = Math.min(1, Math.max(0, volume));
+    for (const sound of this.sfx.values()) {
+      sound.volume(this.volume);
+    }
+  }
+
+  /**
+   * Set playback volume (0–1) for all sound effects and persist it.
+   */
+  public async setVolume(volume: number) {
+    await this.ready;
+    this.applyVolume(volume);
+    const raw = String(this.volume);
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      try {
+        await window.electronAPI.storeSet(STORE_KEYS.AUDIO_VOLUME, raw);
+      } catch (error) {
+        console.error('Failed to save volume to electron-store', error);
+      }
+    } else if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(STORE_KEYS.AUDIO_VOLUME, raw);
+      } catch (error) {
+        if ((error as Error)?.name === 'QuotaExceededError') {
+          console.error('localStorage quota exceeded when saving volume', error);
+        } else {
+          console.error('Failed to save volume', error);
+        }
+      }
+    }
   }
 
   /**

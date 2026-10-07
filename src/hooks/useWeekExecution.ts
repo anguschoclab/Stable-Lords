@@ -1,15 +1,12 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import * as Comlink from 'comlink';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import type { BoutResult } from '@/engine/bout';
-import { generatePairings } from '@/engine/bout/core/pairings';
-import { isFightReady } from '@/engine/warrior/warriorStatus';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { engineSession } from '@/engine/runtime/session';
 import type { AutosimResult } from '@/engine/autosim/autosim';
-import type { Warrior } from '@/types/warrior.types';
 
 /** Reads the post-advance store state into bout results + death toasts. */
 function applyPostAdvanceState(setResults: (r: BoutResult[]) => void): void {
@@ -124,18 +121,42 @@ function useAutosim(
   };
 }
 
-/** Day-or-week advance with its conclusion toast. */
+/**
+ * Day-or-week advance with its conclusion toast.
+ *
+ * The store layer swallows worker failures (`runEngineJob` catch →
+ * console.error), so the only reliable signal is whether the calendar moved —
+ * same detection pattern as useExecuteTournamentRound. An unchanged clock with
+ * no other simulation in flight means the pipeline failed: say so instead of
+ * claiming the week concluded.
+ */
 function useWeekAdvance(
   gameState: ReturnType<typeof useWorldState>,
   doAdvanceDay: () => Promise<unknown>,
   doAdvanceWeek: () => Promise<unknown>
 ) {
   return useCallback(async () => {
+    const clockKey = (s: ReturnType<typeof useGameStore.getState>) =>
+      `${s.absoluteWeek ?? 0}:${s.week}:${s.day}`;
+    const before = clockKey(useGameStore.getState());
+
     if (gameState.isTournamentWeek) {
       await doAdvanceDay();
-      toast.success(`Empire Day ${gameState.day + 1} — Week ${gameState.week} concluded.`);
     } else {
       await doAdvanceWeek();
+    }
+
+    const after = useGameStore.getState();
+    if (clockKey(after) === before) {
+      if (!after.isSimulating) {
+        toast.error('Resolution failed — the calendar did not advance.');
+      }
+      return;
+    }
+
+    if (gameState.isTournamentWeek) {
+      toast.success(`Empire Day ${gameState.day + 1} — Week ${gameState.week} concluded.`);
+    } else {
       toast.success(`Week ${gameState.week} concluded.`);
     }
   }, [gameState, doAdvanceDay, doAdvanceWeek]);
@@ -174,21 +195,13 @@ export function useWeekExecution() {
     clearAutosimResult,
   } = useAutosim(gameState, setSimulating, loadGame);
 
-  const fightReadyCount = useMemo(
-    () => gameState.roster.filter((w: Warrior) => isFightReady(w)).length,
-    [gameState.roster]
-  );
-
-  const matchCardLength = useMemo(() => generatePairings(gameState).pairings.length, [gameState]);
-
   const executeWeek = useCallback(async () => {
     if (runningRef.current) return;
 
-    if (matchCardLength === 0 && fightReadyCount < 2) {
-      toast.error('No warriors are ready to fight this week.');
-      return;
-    }
-
+    // No readiness gate: the week pipeline is also the recovery mechanism
+    // (injury healing, fatigue decay, bankruptcy loan, roster-floor recruit).
+    // Refusing to advance when the stable can't field a card soft-locks the
+    // exact failure states the pipeline exists to rescue.
     runningRef.current = true;
     setRunning(true);
     setResults([]);
@@ -202,7 +215,7 @@ export function useWeekExecution() {
       runningRef.current = false;
       setRunning(false);
     }
-  }, [matchCardLength, fightReadyCount, advance]);
+  }, [advance]);
 
   const clearResults = useCallback(() => {
     setResults([]);
@@ -214,8 +227,6 @@ export function useWeekExecution() {
     running,
     results,
     clearResults,
-    fightReadyCount,
-    matchCardLength,
     handleStartAutosim,
     stopAutosim,
     autosimming,

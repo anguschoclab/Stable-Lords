@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
+import { useAudioSync } from '@/hooks/useAudioSync';
 import { LeftNav } from '@/components/layout/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
 import { WinScreen } from '@/components/progression/WinScreen';
@@ -178,6 +179,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { results, clearResults } = useWeekExecution();
 
   useRivalryAlerts();
+  useAudioSync();
 
   useEffect(() => {
     initialize();

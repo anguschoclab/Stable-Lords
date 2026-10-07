@@ -32,7 +32,6 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 vi.mock('@/components/arena/ArenaBackground', () => ({ default: () => null }));
-vi.mock('@/components/arena/ArenaAudio', () => ({ default: () => null }));
 vi.mock('@/components/arena/SpeechBubbles', () => ({ default: () => null }));
 vi.mock('@/components/arena/FighterPair', () => ({ default: () => null }));
 vi.mock('@/components/arena/MiniCombatLog', () => ({ default: () => null }));

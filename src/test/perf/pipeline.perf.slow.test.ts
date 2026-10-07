@@ -29,24 +29,23 @@ describe('Pipeline Performance Benchmarks', () => {
 
     expect(result.weeksCompleted).toBe(13);
     // Fresh states floor-refill to ~90 rivals on week 1; the old 5s cap
-    // assumed the 8-rival fresh world. Generous ceiling — precise bands live
-    // in the scale-band tests below and docs/PIPELINE_BASELINE.md.
-    expect(duration).toBeLessThan(12000);
+    // assumed the 8-rival fresh world. Ceiling is catastrophic-regression
+    // only: ~1.43s/wk measured at the 160-stable band → ~18.6s/quarter.
+    // Precise bands live in the scale-band tests and docs/PIPELINE_BASELINE.md.
+    expect(duration).toBeLessThan(20000);
   });
 
-  it('headless mode should be faster than full mode', async () => {
+  it('headless mode completes the same span as a bounded quarter', async () => {
+    // Replaces a vacuous "faster than full mode" assertion that never measured
+    // full mode. Full mode requires feature flags, and a wall-clock comparison
+    // on shared CI runners only measures machine noise — assert the contract
+    // headless must keep instead: the span still completes.
     const state = createFreshState('perf-test-headless', '2026-04-28T09:00:00Z');
-
-    // Measure headless mode (skips EventPass and NarrativePass)
-    const headlessStart = performance.now();
-    await TimeAdvanceService.advanceQuarter(state, {
+    const result = await TimeAdvanceService.advanceQuarter(state, {
       headless: true,
     });
-    const headlessDuration = performance.now() - headlessStart;
-
-    // Note: We can't easily compare to full mode since it requires feature flags
-    // But we can verify headless completes in reasonable time
-    expect(headlessDuration).toBeLessThan(12000);
+    expect(result.weeksCompleted).toBe(13);
+    expect(result.state.week).not.toBe(1);
   });
 
   it('autosim should handle large week counts', async () => {

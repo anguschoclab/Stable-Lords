@@ -18,6 +18,7 @@ bun x vitest run src/test/perf/rivalStrategyPass.perf.slow.test.ts
 | Benchmark                                                 | Source                                | Measured           |
 | --------------------------------------------------------- | ------------------------------------- | ------------------ |
 | Populated-world week tick (`RivalStrategyPass` dominant)  | `rivalStrategyPass.perf.slow.test.ts` | ~67 ms             |
+| Fresh-state 13-week `advanceQuarter` (headless)           | `pipeline.perf.slow.test.ts`          | gated <20 s (catastrophic-regression ceiling, not a benchmark; ~1.43 s/wk at the 160-stable band ⇒ ~18.6 s worst case) |
 | 52-week autosim (large week count)                        | `pipeline.perf.slow.test.ts`          | ~17 s isolated / ~26 s under suite load (~330–500 ms/wk) |
 | Batch memory growth                                       | `pipeline.perf.slow.test.ts`          | within gate        |
 | `advanceYear` ≡ 52× `advanceWeek`                         | `weekDeterminism.slow.test.ts`        | ~1.7 s, equivalent |

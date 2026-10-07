@@ -3,17 +3,18 @@ import { cn } from '@/lib/utils';
 import { RotateCcw, LogOut, Save, Volume2, VolumeX } from 'lucide-react';
 import { PrimaryCtaButton } from '@/components/layout/PrimaryCtaButton';
 import { audioManager } from '@/lib/AudioManager';
+import { useArenaPreferences, useGameStore } from '@/state/useGameStore';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 function MuteButton() {
-  const [isMuted, setIsMuted] = useState(audioManager.isMuted());
+  const isMuted = !useArenaPreferences().audioEnabled;
+  const setArenaPreferences = useGameStore((s) => s.setArenaPreferences);
 
   const toggleMute = () => {
-    const next = !isMuted;
-    audioManager.setMuted(next);
-    setIsMuted(next);
+    setArenaPreferences({ audioEnabled: isMuted });
+    void audioManager.setMuted(isMuted);
   };
 
   return (

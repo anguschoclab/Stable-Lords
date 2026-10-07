@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import { useGameStore, useArenaPreferences } from '@/state/useGameStore';
 import ArenaBackground from './ArenaBackground';
-import ArenaAudio from './ArenaAudio';
 import SpeechBubbles from './SpeechBubbles';
 import FighterPair from './FighterPair';
 import MiniCombatLog from './MiniCombatLog';
@@ -18,35 +17,24 @@ import type { MinuteEvent } from '@/types/combat.types';
 import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
 
-/** Ambient layers — crowd reactions, audio, particles, weapon trail flash. */
+/** Ambient layers — crowd reactions, particles, weapon trail flash. */
 function AmbientFx(props: {
   effectsEnabled: boolean;
   arenaTier: ArenaTier;
   crowdState: ReturnType<typeof useCrowdState>;
-  weather: WeatherType;
-  arenaId: string | undefined;
-  arenaPrefs: ReturnType<typeof useArenaPreferences>;
   lastEventType: ReturnType<typeof useLastEventType>;
   isAttackEvent: boolean;
   trailWeaponId: string | undefined;
   attackerSide: 'A' | 'D' | undefined;
   visibleCount: number;
 }) {
-  const { effectsEnabled, arenaTier, crowdState, weather, arenaId } = props;
-  const { arenaPrefs, lastEventType, isAttackEvent, trailWeaponId, attackerSide } = props;
+  const { effectsEnabled, arenaTier, crowdState } = props;
+  const { lastEventType, isAttackEvent, trailWeaponId, attackerSide } = props;
   const { visibleCount } = props;
   return (
     <>
       {/* Crowd Reactions */}
       {effectsEnabled && <CrowdReactions tier={arenaTier} state={crowdState} />}
-
-      {/* Audio Systems */}
-      <ArenaAudio
-        crowdState={crowdState}
-        weather={weather}
-        arenaId={arenaId}
-        arenaPrefs={arenaPrefs}
-      />
 
       {/* Particle System */}
       {effectsEnabled && <ParticleSystem trigger={lastEventType} sourceX={50} sourceY={50} />}
@@ -212,9 +200,6 @@ export default function ArenaView({
         effectsEnabled={arenaPrefs.effectsEnabled}
         arenaTier={arenaTier}
         crowdState={scene.crowdState}
-        weather={weather}
-        arenaId={rest.arenaId}
-        arenaPrefs={arenaPrefs}
         lastEventType={scene.lastEventType}
         isAttackEvent={scene.isAttackEvent}
         trailWeaponId={scene.trailWeaponId}

@@ -235,6 +235,41 @@ describe('AudioManager', () => {
     expect(manager.isMuted()).toBe(true);
   });
 
+  it('setVolume applies the volume to every loaded Howl and persists it', async () => {
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await manager.whenReady();
+
+    await manager.setVolume(0.4);
+    expect(manager.getVolume()).toBe(0.4);
+    expect(localStorage.getItem('sl_audio_volume')).toBe('0.4');
+
+    const sfx = (manager as unknown as { sfx: Map<string, { volume: (v: number) => void }> }).sfx;
+    for (const howl of sfx.values()) {
+      expect(howl.volume).toHaveBeenCalledWith(0.4);
+    }
+  });
+
+  it('clamps out-of-range volume values', async () => {
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await manager.whenReady();
+
+    await manager.setVolume(2);
+    expect(manager.getVolume()).toBe(1);
+    await manager.setVolume(-1);
+    expect(manager.getVolume()).toBe(0);
+  });
+
+  it('loads persisted volume from localStorage on init', async () => {
+    localStorage.setItem('sl_audio_volume', '0.3');
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    await manager.whenReady();
+
+    expect(manager.getVolume()).toBe(0.3);
+  });
+
   it('getInstance returns a singleton until resetForTesting is called', () => {
     const first = AudioManager.getInstance();
     expect(AudioManager.getInstance()).toBe(first);

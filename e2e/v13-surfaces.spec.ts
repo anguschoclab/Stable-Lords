@@ -148,10 +148,10 @@ test('tooltip badges + save-pack import round trip', async ({ page, isMobile }) 
   await page.getByRole('button', { name: 'Export JSON' }).click();
   const download = await downloadPromise;
   const packPath = await download.path();
-  expect(packPath).toBeTruthy();
+  if (!packPath) throw new Error('Export download produced no file path');
   await expect(page.getByText(/Exported save pack/)).toBeVisible({ timeout: 5_000 });
 
   // Feed the exported pack straight back through the hidden file input.
-  await page.locator('input[aria-label="Choose save pack file"]').setInputFiles(packPath!);
+  await page.locator('input[aria-label="Choose save pack file"]').setInputFiles(packPath);
   await expect(page.getByText(/Save pack imported — week/)).toBeVisible({ timeout: 10_000 });
 });

@@ -239,7 +239,7 @@ pruned to exactly the live set; SRC_TO_SRC baseline 128 → 34.**
 | E1 impacts fn-surface | ✅ EXEMPT — handler-map members, directly unit-tested by design |
 | H1 pair-ledger prune | ✅ DONE — 154→32 + stale-entry assertion added |
 | H2 mislabeled describe | ✅ DONE — `MEGAPLAN-V11` |
-| Residual / deferred | D6 divergent-row primitive (4 pairs registered); Playwright e2e (deferred — unit/contract coverage in place) |
+| Residual / deferred | ✅ COMPLETE — D6 divergent-row primitives landed (`selectableRow.ts`/`planTactics.ts`, ceiling 34→30); Playwright e2e landed (`v13-surfaces.spec.ts`, 10/10); dead-export audit 174→154; knip 193→139; test-side dedup done. See ledger addendum |
 
 Gate evidence in `MEGAPLAN_V12_LEDGER.md` Phase-8 matrix. All 72 megaplan
 guard specs green post-closeout (incl. orphan guard — the transient

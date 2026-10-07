@@ -88,3 +88,46 @@
 | function census | fns >80: 1 (`useScouting`, disproved); `emitWarriorBid` split verified |
 | entries-in-loop | 5 known exemptions, unchanged |
 | ui-audit / data-array-dup / find-dupes | clean (Phase 0; ui-audit unchanged by V12 — all new primitives reuse existing token classes) |
+
+---
+
+## Addendum — residual/deferred completion (expanded-scope pass)
+
+User request: "implement the full plan including optional, deferred, and out of
+scope items." This pass finished every deferred bucket left at V12 closeout.
+
+### Work completed
+
+| W | Item | Disposition |
+| --- | --- | --- |
+| W1 | D6 residual selectable rows (4 divergent pairs) | `selectionRowClasses` / `compactSelectRowClasses` / `compactSelectNameClasses` in `components/ui/selectableRow.ts`; `withPlanTactic` / `isPlanTactic` / `tacticButtonClasses` in `planBuilder/planTactics.ts`; `PlanValueSlider` merged the PlanSlider shell (endLabels prop). 7 consumers repointed. src↔src 32→28, ceiling 34→30 (`47967398`) |
+| W2 | `lastWeekBoutDisplay` 55L intra-file clone | Replaced both state literals with `makeGameState` fixture — 3/3 schema tests unchanged |
+| W3 | entries-in-loop ×5 | Verified all 5 exemptions enumerate per-iteration data; allowlist honest, no hoists |
+| W4 | Dead-export audit (174 src-scoped) | → 154. Deleted dead constants (`ARENA_ZONES`, `ARENA_TAGS`, `ArmorWeight`, `ArmorEncumbrance`, `StoreKey`, `StableTier`, `StablePhilosophy`, `DEFAULT_TREASURY`, `RECRUIT_AGE`, meta-drift + title-window tables — all carried **divergent stale values** vs live code), unexported in-file-only impact handlers + `getCrestColor`→kept (test contract), renamed misleading `BoutResult` shadow → `FtueBoutResult`. Barrel/test-contract/generated/registry exports verified and kept |
+| W5 | Knip residuals | 193→139 unused exports, 68→63 types; remaining = barrel indirection + intentional surfaces |
+| W6 | Test-side dedup | Shared `__SHARED_MOCKS.opfsArchive` for 2 slow tests; new fixtures `simMetrics.ts`, `narrationContext.ts`, `makeScoutingOpponent`; `routerLink` mock extended (className + useNavigate/useParams defaults) covering PromoterDetail/Directory + 3 existing consumers; recruitment factories repointed. Remaining ~127 test↔test clusters verdicted: intentional literals (enum mirrors, characterization parallels, minimal `Partial<Warrior>` where omitted fields are load-bearing) — not consolidated |
+| W7 | Playwright e2e | `e2e/v13-surfaces.spec.ts`: SelectableCard z-state on scouting, IconTabStrip active-tab movement, TooltipBadge chips + hover tooltip (store-seeded flaw + potential), export→import save-pack round trip. 10/10 across 5 projects (retries absorb parallel-load flakes) |
+| W8 | Bug found by e2e | `ftueStateBuilder` seed state lacked `absoluteWeek` → PromoterPass wrote offers with NaN `boutWeek`/`expirationWeek` (JSON → null, `createdAbsoluteWeek` dropped) — **every FTUE save-pack failed its own schema on re-import**. Fixed: seed guarantees `absoluteWeek ?? week ?? 1` |
+
+### Gate matrix (residual pass)
+
+| Gate | Result |
+| --- | --- |
+| type-check | ✅ 0 errors |
+| lint | ✅ clean on all touched files (2 `no-regex-spaces` errors exist in parallel V14-WIP files — not this pass) |
+| vitest | 9,008 pass / 9 fail — all 9 attributable to uncommitted V14 pipeline WIP in the shared tree (`truncateState` at week boundary strips `lastWeekBoutDisplay` → boutSimulation/boutDisplayData; `adminActions` toast rename → useAdminTools; session/cancellation WIP → storeGuards timeout; stale pipeline docs → v14PipelineDocs ×4) |
+| megaplan guards | 76/81 — 4 v14PipelineDocs fails are V14 WIP; fileBudget re-green after keeping `buildFTUEInitialState` ≤80 |
+| `test:slow` | 184/190 — 6 fails all V14-truncation/drift: `truncateIntervalWeeks<=0` now truncates unconditionally, `lifetimeStats` history-delta breaks on mid-run capping, `yearRollover` bouts stop, `worldLiveness` reign-stripped/competence-gradient, `simulation_hardening` death-rate |
+| Playwright | ✅ 10/10 (2 tests × 5 projects; 3 flaky-then-pass under 5-worker load) |
+| dup-scan | 28 src↔src (≤30 ceiling); test↔test 127 |
+| orphan-scan | 154 src-scoped dead exports (from 174) |
+| knip | 139 exports / 63 types (from 193/68) |
+| entries-in-loop | 5 verified exemptions |
+| jscpd | 101 clones (from 115) |
+| param-count / function census | 0 violations; fns >80: 2 (`finalizeState` 86 = V14 WIP, `useScouting` 83 disproved) |
+| narrative-validate | ✅ |
+
+### Open follow-ups (documented)
+
+- V14 pipeline work is in-flight and owns its red gates (guard files committed red by design; impl uncommitted).
+- Remaining test↔test clusters are intentional literal mirrors — re-verdict if a shared-fixture precedent emerges.

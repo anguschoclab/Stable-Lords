@@ -113,6 +113,15 @@ function deferBoutArchives(state: GameState, currentWeek: number): void {
 function sweepOrphanedReigns(state: GameState): void {
   const titles = state.arenaChampions;
   if (!titles) return;
+  // Gate the Set builds: weeks with no crowned reigns (early game) skip
+  // all three indexes. Semantics preserved — a champion who is dead or
+  // retired while still rostered still loses the crown.
+  const reigns: { title: (typeof titles)[string]; warriorId: string }[] = [];
+  for (const title of Object.values(titles)) {
+    if (title.champion) reigns.push({ title, warriorId: title.champion.warriorId });
+  }
+  if (reigns.length === 0) return;
+
   const rosteredIds = new Set<string>();
   for (const w of state.roster ?? []) rosteredIds.add(w.id);
   for (const r of state.rivals ?? []) {
@@ -120,12 +129,10 @@ function sweepOrphanedReigns(state: GameState): void {
   }
   const deadIds = new Set((state.graveyard ?? []).map((w) => w.id));
   const retiredIds = new Set((state.retired ?? []).map((w) => w.id));
-  for (const title of Object.values(titles)) {
-    const reign = title.champion;
-    if (!reign) continue;
-    const gone = !rosteredIds.has(reign.warriorId);
-    const dead = deadIds.has(reign.warriorId);
-    const retired = retiredIds.has(reign.warriorId);
+  for (const { title, warriorId } of reigns) {
+    const gone = !rosteredIds.has(warriorId);
+    const dead = deadIds.has(warriorId);
+    const retired = retiredIds.has(warriorId);
     if (!gone && !dead && !retired) continue;
     endReign(
       state,

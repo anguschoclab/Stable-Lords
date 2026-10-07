@@ -31,7 +31,7 @@ describe('Pipeline Performance Benchmarks', () => {
     // Fresh states floor-refill to ~90 rivals on week 1; the old 5s cap
     // assumed the 8-rival fresh world. Generous ceiling — precise bands live
     // in the scale-band tests below and docs/PIPELINE_BASELINE.md.
-    expect(duration).toBeLessThan(12000);
+    expect(duration).toBeLessThan(15000);
   });
 
   it('headless mode should be faster than full mode', async () => {

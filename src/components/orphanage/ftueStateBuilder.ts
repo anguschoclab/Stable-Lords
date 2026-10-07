@@ -130,9 +130,13 @@ export function buildFTUEInitialState(
     promoters[p.id] = p;
   });
 
-  // Build a minimal state snapshot to seed rankings + offers
+  // Build a minimal state snapshot to seed rankings + offers.
+  // baseState comes from the pre-game store where absoluteWeek may be unset —
+  // offer builders read it for boutWeek/expirationWeek, and NaN weeks serialise
+  // to null and fail save-pack schema validation on re-import.
   const seedState: GameState = {
     ...baseState,
+    absoluteWeek: baseState.absoluteWeek ?? baseState.week ?? 1,
     isFTUE: false,
     ftueComplete: true,
     roster: aliveWarriors,

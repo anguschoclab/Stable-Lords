@@ -193,6 +193,114 @@ interface BidEnv {
   targetIsPlayer: boolean;
 }
 
+/** Pre-computed per-warrior bid inputs shared by every intent emitter. */
+interface WarriorBidContext {
+  warrior: Warrior;
+  rival: RivalStableData;
+  intent: string;
+  env: BidEnv;
+  weatherModifier: number;
+  moodModifier: number;
+  matchupModifier: number;
+  warriorIsChallenged: boolean;
+  warriorIsAvoided: boolean;
+}
+
+/**
+ * Per-intent emitters return `undefined` to yield to the next rule, or a
+ * terminal value (`null` = intent handled, no bid; `BoutBid` = bid emitted).
+ * Order is semantic precedence — do not reorder without a balance review.
+ */
+type IntentEmitter = (ctx: WarriorBidContext) => BoutBid | null | undefined;
+
+const emitVendettaBid: IntentEmitter = (c) => {
+  if (c.intent !== 'VENDETTA') return undefined;
+  const targetStableId = c.rival.strategy?.targetStableId;
+  if (!targetStableId) return null;
+  // Player-bound vendetta: the player's avoid list vetoes this warrior.
+  if (c.env.targetIsPlayer && c.warriorIsAvoided) return null;
+  const { weatherModifier, matchupModifier, moodModifier } = c;
+  return {
+    proposingWarriorId: c.warrior.id,
+    targetStableId,
+    priority: Math.max(1, 10 + weatherModifier + moodModifier + matchupModifier),
+    description: `Vendetta target. ${weatherModifier < 0 ? '(Weather caution)' : weatherModifier > 0 ? '(Weather advantage)' : ''} ${matchupModifier > 0 ? '(Favorable matchup)' : matchupModifier < 0 ? '(Unfavorable matchup)' : ''}`,
+  };
+};
+
+// SURVIVAL: no proactive bids — a stable that cannot cover its burn
+// cannot risk a warrior on a bout it does not need.
+const emitSurvivalBid: IntentEmitter = (c) => (c.intent === 'SURVIVAL' ? null : undefined);
+
+const emitCrownCampaignBid: IntentEmitter = (c) => {
+  const arenaId = c.rival.strategy?.targetArenaId;
+  if (
+    c.intent !== 'CROWN_CAMPAIGN' ||
+    !arenaId ||
+    c.rival.agentMemory?.crownAssessment?.warriorId !== c.warrior.id
+  )
+    return undefined;
+  // The campaign warrior's ordinary bookings are pinned to the target
+  // arena — every venue bout there feeds contender ranking.
+  return {
+    proposingWarriorId: c.warrior.id,
+    arenaId,
+    priority: Math.max(1, 9 + c.weatherModifier + c.moodModifier + c.matchupModifier),
+    description: `Crown campaign — climbing the ladder at ${arenaId}.`,
+  };
+};
+
+const emitChallengedBid: IntentEmitter = (c) => {
+  const state = c.env.state;
+  if (!(c.warriorIsChallenged && state && !c.warriorIsAvoided)) return undefined;
+  // The player publicly challenged this warrior — the stable answers.
+  return {
+    proposingWarriorId: c.warrior.id,
+    targetStableId: state.player.id,
+    priority: Math.max(
+      1,
+      8 + c.weatherModifier + c.moodModifier + c.matchupModifier + CHALLENGED_BID_BONUS
+    ),
+    description: 'Answering the challenge the player issued.',
+  };
+};
+
+const emitRecoveryBid: IntentEmitter = (c) => {
+  if (c.intent !== 'RECOVERY') return undefined;
+  if (c.weatherModifier < -2) return null;
+  return {
+    proposingWarriorId: c.warrior.id,
+    maxFame: 50,
+    priority: Math.max(1, 5 + c.moodModifier + c.matchupModifier),
+    description: 'Seeking low-risk recovery bout.',
+  };
+};
+
+const emitExpansionBid: IntentEmitter = (c) => {
+  if (c.intent !== 'EXPANSION') return undefined;
+  return {
+    proposingWarriorId: c.warrior.id,
+    minFame: 100,
+    priority: Math.max(1, 7 + c.weatherModifier + c.moodModifier + c.matchupModifier),
+    description: 'Seeking high-visibility expansion bout.',
+  };
+};
+
+const emitStandardBid = (c: WarriorBidContext): BoutBid => ({
+  proposingWarriorId: c.warrior.id,
+  priority: Math.max(1, 4 + c.weatherModifier + c.moodModifier + c.matchupModifier),
+  description: 'Standard training bout.',
+});
+
+const INTENT_EMITTERS: readonly IntentEmitter[] = [
+  emitVendettaBid,
+  emitSurvivalBid,
+  emitCrownCampaignBid,
+  emitChallengedBid,
+  emitRecoveryBid,
+  emitExpansionBid,
+];
+
 /** Emit a single warrior's bid under the rival's current intent, or none. */
 function emitWarriorBid(
   warrior: Warrior,
@@ -202,78 +310,27 @@ function emitWarriorBid(
   env: BidEnv
 ): BoutBid | null {
   const { weather, crowdMood, state } = env;
-  const weatherModifier = weatherBidModifier(warrior, weather);
 
   // Crowd Pandering
   let moodModifier = 0;
   if (crowdMood === 'Bloodthirsty' && personality === 'Aggressive') moodModifier = +3;
   if (crowdMood === 'Theatrical' && personality === 'Showman') moodModifier = +3;
 
-  const matchupModifier = bestMatchupModifier(warrior, env.matchupCtx);
-
-  const warriorIsChallenged = state !== undefined && state.playerChallenges?.includes(warrior.id);
-  const warriorIsAvoided = state !== undefined && state.playerAvoids?.includes(warrior.id);
-
-  if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
-    // Player-bound vendetta: the player's avoid list vetoes this warrior.
-    if (env.targetIsPlayer && warriorIsAvoided) return null;
-    return {
-      proposingWarriorId: warrior.id,
-      targetStableId: rival.strategy.targetStableId,
-      priority: Math.max(1, 10 + weatherModifier + moodModifier + matchupModifier),
-      description: `Vendetta target. ${weatherModifier < 0 ? '(Weather caution)' : weatherModifier > 0 ? '(Weather advantage)' : ''} ${matchupModifier > 0 ? '(Favorable matchup)' : matchupModifier < 0 ? '(Unfavorable matchup)' : ''}`,
-    };
-  }
-  if (intent === 'VENDETTA') return null;
-  // SURVIVAL: no proactive bids — a stable that cannot cover its burn
-  // cannot risk a warrior on a bout it does not need.
-  if (intent === 'SURVIVAL') return null;
-  if (
-    intent === 'CROWN_CAMPAIGN' &&
-    rival.strategy?.targetArenaId &&
-    rival.agentMemory?.crownAssessment?.warriorId === warrior.id
-  ) {
-    // The campaign warrior's ordinary bookings are pinned to the target
-    // arena — every venue bout there feeds contender ranking.
-    return {
-      proposingWarriorId: warrior.id,
-      arenaId: rival.strategy.targetArenaId,
-      priority: Math.max(1, 9 + weatherModifier + moodModifier + matchupModifier),
-      description: `Crown campaign — climbing the ladder at ${rival.strategy.targetArenaId}.`,
-    };
-  }
-  if (warriorIsChallenged && state && !warriorIsAvoided) {
-    // The player publicly challenged this warrior — the stable answers.
-    return {
-      proposingWarriorId: warrior.id,
-      targetStableId: state.player.id,
-      priority: Math.max(
-        1,
-        8 + weatherModifier + moodModifier + matchupModifier + CHALLENGED_BID_BONUS
-      ),
-      description: 'Answering the challenge the player issued.',
-    };
-  }
-  if (intent === 'RECOVERY') {
-    if (weatherModifier < -2) return null;
-    return {
-      proposingWarriorId: warrior.id,
-      maxFame: 50,
-      priority: Math.max(1, 5 + moodModifier + matchupModifier),
-      description: 'Seeking low-risk recovery bout.',
-    };
-  }
-  if (intent === 'EXPANSION') {
-    return {
-      proposingWarriorId: warrior.id,
-      minFame: 100,
-      priority: Math.max(1, 7 + weatherModifier + moodModifier + matchupModifier),
-      description: 'Seeking high-visibility expansion bout.',
-    };
-  }
-  return {
-    proposingWarriorId: warrior.id,
-    priority: Math.max(1, 4 + weatherModifier + moodModifier + matchupModifier),
-    description: 'Standard training bout.',
+  const ctx: WarriorBidContext = {
+    warrior,
+    rival,
+    intent,
+    env,
+    weatherModifier: weatherBidModifier(warrior, weather),
+    moodModifier,
+    matchupModifier: bestMatchupModifier(warrior, env.matchupCtx),
+    warriorIsChallenged: state !== undefined && !!state.playerChallenges?.includes(warrior.id),
+    warriorIsAvoided: state !== undefined && !!state.playerAvoids?.includes(warrior.id),
   };
+
+  for (const emit of INTENT_EMITTERS) {
+    const bid = emit(ctx);
+    if (bid !== undefined) return bid;
+  }
+  return emitStandardBid(ctx);
 }

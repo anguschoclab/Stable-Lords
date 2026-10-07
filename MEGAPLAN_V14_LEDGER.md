@@ -83,8 +83,8 @@
 | 3 — contracts | test inventory + matrix (committed in gate) | 17228896 |
 | 4 — test-first | all contract/guard tests authored + committed RED before any production change | 17228896 |
 | 5 — implementation | B1, A4, A1, A2/A3, A10, P1, P2 | c861053a, 029c5977, 087bee92, 777ee0ff |
-| 6 — docs + soak | dependency-map rewrite, audit-doc fixes, A/B soak | 9364dad0, ledger |
-| 7 — close-out | this ledger's verdict table | pending final battery |
+| 6 — docs + soak | dependency-map rewrite, audit-doc fixes, A/B soak | 9364dad0 |
+| 7 — close-out | verdict table + regression follow-ups | 618a77d8, this ledger |
 
 ## Phase 2 — CPU bottleneck table (26w soak, 4.9s sampled)
 
@@ -108,3 +108,40 @@ matchup-scoring family (~556ms) shared by bout bidding and sim. Both preserve
 byte-identical gates naturally (pure reorder/memoization candidates).
 `getRecentFightsForWarrior` and the dossier family scale with history length —
 explains the autosim +21% growth curve and the slowest weeks late in runs.
+
+## Phase 7 — close-out
+
+### Regression found + fixed during Phase 5
+
+- `truncateState` clears `lastWeekBoutDisplay` (UI-only, never read inbound).
+  B1's weekly cadence started wiping the display the bout phase just produced
+  — caught by `boutDisplayData`/`boutSimulation` tests in the first full-suite
+  run. Fix (618a77d8): `finalizeState` restores the field post-truncate; span
+  teardown still clears it. B1 byte-compare excludes it by design.
+- `orphanScan` guard caught `src/schemas/statsSchemas.ts` as production-
+  unreachable after the StyleRollups deletion — deleted with its test.
+- `useAdminTools` test updated for the consolidated 'Admin fast-forward
+  failed:' label (A4).
+- `retrieveHotStatePlausibility.test.ts` flaked once under shared-worker
+  packing (3/8961), green on isolated + full-suite re-run — pre-existing
+  shared-mock-ordering hazard, not V14 collateral. Filed as flake to watch.
+
+### Deferred (next campaign candidates, measured not speculative)
+
+- `cloneObject`/`copyDataProperties` ~572ms (~12% of sampled) — pass-boundary
+  state-copy churn; needs structural work on impact application, not a micro-fix.
+- Matchup-scoring call *volume* (~556ms across getMatchupBonus/
+  scorePairwiseMatchup/bestMatchupModifier) — `getMatchupBonus` itself is
+  already Map+matrix optimal; the win is memoizing pairwise scores per
+  (warrior pair, week) — an identity-keyed-cache design question, deferred.
+- Persistent shard state for the engine pool — documented-only per scope
+  (docs/PIPELINE_PARALLELISM.md), `poolSize=1` stands.
+
+### Final gates
+
+- `tsc --build --force`: clean.
+- `eslint` on changed surface: clean.
+- `bunx vitest run` (full fast suite): **813 files / 8,959 tests / 0 failures**.
+- `determinism.slow`: byte-identical two-run hash.
+- 40w week-mode A/B soak: **258.3 → 228.5 ms/wk (−11.5%)**, 0 invariant
+  violations; rivalStrategy 146.8 → 121.3 ms/wk.

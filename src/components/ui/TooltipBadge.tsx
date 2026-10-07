@@ -13,6 +13,10 @@ interface TooltipBadgeProps {
   children: React.ReactNode;
 }
 
+/**
+ * Tooltip badge chip.
+ * @param - { color, tooltip, children }.
+ */
 export function TooltipBadge({ color, tooltip, children }: TooltipBadgeProps) {
   return (
     <Tooltip>

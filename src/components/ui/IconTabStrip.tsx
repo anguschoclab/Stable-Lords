@@ -12,6 +12,10 @@ interface IconTabStripProps<T extends string> {
   className?: string;
 }
 
+/**
+ * Icon tab strip.
+ * @param - { tabs, active tab, on change, class name }.
+ */
 export function IconTabStrip<T extends string>({
   tabs,
   activeTab,

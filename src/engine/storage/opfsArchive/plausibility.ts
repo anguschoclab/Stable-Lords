@@ -57,6 +57,10 @@ const ARRAY_FIELDS = [
   'ledger',
 ] as const;
 
+/**
+ * Returns true when `value` carries every required GameState field.
+ * @param value - Candidate state object.
+ */
 export function isPlausibleGameState(value: unknown): value is GameState {
   if (!isPlainObject(value)) return false;
 

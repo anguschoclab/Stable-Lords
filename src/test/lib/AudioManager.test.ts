@@ -211,13 +211,13 @@ describe('AudioManager', () => {
     expect(consoleSpy).toHaveBeenCalledWith('Failed to save mute state to electron-store', boom);
   });
 
-  it('setMuted called before init completes is not clobbered by loadMuteState', async () => {
-    let resolveStoreGet: (v: unknown) => void = () => {};
+  it('setMuted called before init completes is not clobbered by loadSettings', async () => {
+    const storeGetResolvers: ((v: unknown) => void)[] = [];
     (window as any).electronAPI = {
       storeGet: vi.fn(
         () =>
           new Promise((resolve) => {
-            resolveStoreGet = resolve;
+            storeGetResolvers.push(resolve);
           })
       ),
       storeSet: vi.fn().mockResolvedValue({ success: true }),
@@ -226,9 +226,9 @@ describe('AudioManager', () => {
     AudioManager.resetForTesting();
     const manager = AudioManager.getInstance();
 
-    // setMuted while loadMuteState is still in flight
+    // setMuted while loadSettings is still in flight
     const setMutedPromise = manager.setMuted(true);
-    resolveStoreGet('false');
+    storeGetResolvers.forEach((resolve) => resolve('false'));
     await setMutedPromise;
     await new Promise((r) => setTimeout(r, 50));
 

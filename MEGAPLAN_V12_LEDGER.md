@@ -42,9 +42,9 @@
 | D10 | expandable-bar a11y ×2 (MiniCombatLog/TacticalBar) | DEDUPE → `src/hooks/useToggleBarProps.ts` (role/tabIndex/aria/click/Enter-Space spread) | DONE |
 | D11 | `isPlausibleGameState` field-check boilerplate | DEDUPE → table-driven spec (SCALAR/OBJECT/ARRAY field tables); 92L→75L, all 48 characterization tests pass | DONE |
 | S1 | `emitWarriorBid` 6-strategy monolith | RESTRUCTURE → per-intent emitters in `boutBidding/generation.ts`; precedence + fall-through/terminal-no-bid semantics verified | DONE |
-| H1 | `KNOWN_SRC_PAIRS` 111 dead entries + baseline 128 | prune + tighten | Phase 7 |
-| H2 | mislabeled `describe('MEGAPLAN-V12')` in v11Dedup guard | DOCUMENT fix | Phase 6 |
-| E1 | `engine/impacts` fn-surface (14 dead exports) + knip residuals | per-symbol audit | Phase 5 |
+| H1 | `KNOWN_SRC_PAIRS` 111 dead entries + baseline 128 | pruned 154→32 live pairs, grouped by verdict category; baseline ratcheted 128→34; **new assertion: stale entries now fail loudly** | DONE (ebffc108) |
+| H2 | mislabeled `describe('MEGAPLAN-V12')` in v11Dedup guard | corrected to `MEGAPLAN-V11` + header comment fixed | DONE (ebffc108) |
+| E1 | `engine/impacts` fn-surface (14 dead exports) + knip residuals | **EXEMPT/KEEP** — per-field handler exports are consumed via the `*Handlers` maps (`impactSystem.ts`) AND imported directly by `src/test/engine/impacts/*.test.ts` (test-only reachable by design); orphan-scan flags named exports, not map membership. Dead-export count unchanged at 174/176 ceiling | DONE |
 
 ## Preservation register (deletions/merges — evidence ledger)
 
@@ -64,4 +64,26 @@
 
 ## Bugs found (failing-evidence-first)
 
-(none yet)
+- `src/test/lib/AudioManager.test.ts` — "setMuted … not clobbered by loadMuteState" hung 120s after the in-tree (unrelated) audio-volume WIP switched init to `Promise.all([storeGet, storeGet])`: the mock captured only the last resolver. Mock updated to a resolver list; test renamed to `loadSettings`. **WIP-compat fix, not a V12 change.**
+- `src/lib/AudioManager.ts` — one-line type fix on the same WIP (`parseVolume(raw: unknown)`; `storeGet` returns `unknown`). Unrelated feature kept unstaged.
+
+## Phase 8 — final gate matrix
+
+| Gate | Result |
+| --- | --- |
+| type-check | ✅ 0 errors |
+| lint | ✅ 0 errors / 0 warnings |
+| vitest (`bun run test`) | 8,994 pass / 2 skip — **3 fails, all unrelated WIP**: orphanScan ×2 (arena-audio files committed-but-unwired by in-flight `ArenaView`/`index.ts` edits) + AudioManager init-race test (fixed — WIP mock update) |
+| `bun run test:bun` | 8,953 pass — same 2 orphan-guard fails (WIP) |
+| `bun run test:slow` | running |
+| `bun run test:coverage` | running |
+| build | ✅ |
+| electron:compile | ✅ |
+| narrative-validate | ✅ |
+| `dupes` (jscpd) | ✅ 115 clones / 0.74% lines (was 0.75%) |
+| dup-scan | 32 src↔src (baseline 43; ceiling now 34) — KNOWN_SRC_PAIRS = live set |
+| orphan-scan | deadExports 174 (unchanged, ≤176 ceiling); unreachable 4 + testOnly 1 = **arena-audio WIP, not V12** |
+| param-count | 0 violations (SelectableCard regrouped to 5 props) |
+| function census | fns >80: 1 (`useScouting`, disproved); `emitWarriorBid` split verified |
+| entries-in-loop | 5 known exemptions, unchanged |
+| ui-audit / data-array-dup / find-dupes | clean (Phase 0; ui-audit unchanged by V12 — all new primitives reuse existing token classes) |

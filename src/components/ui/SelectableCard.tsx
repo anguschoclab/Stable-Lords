@@ -17,6 +17,10 @@ interface SelectableCardProps {
   children: React.ReactNode;
 }
 
+/**
+ * Selectable card row.
+ * @param - { selected, on select, aria label, tooltip, children }.
+ */
 export function SelectableCard({
   selected,
   onSelect,

@@ -829,6 +829,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'battle_of_the_broken_spine',
+    arenaId: 'clifftop_arena',
+    type: 'historical_battle',
+    title: 'The Battle of the Broken Spine',
+    description: 'A legendary three-day siege where a single gladiator held the narrow path against fifty combatants, earning the arena its bloody reputation.',
+    discoveryWeight: 8
+  },
+  {
+    id: 'fall_of_the_iron_titan',
+    arenaId: 'iron_forge',
+    type: 'famous_death',
+    title: 'Fall of the Iron Titan',
+    description: 'The infamous death of the undefeated champion known as the Iron Titan, who was melted alive when a saboteur breached the central furnace during the finals.',
+    discoveryWeight: 10
+  },
+  {
+    id: 'the_whispering_pillars',
+    arenaId: 'sunken_temple',
+    type: 'architectural_quirk',
+    title: 'The Whispering Pillars',
+    description: 'The ancient stone pillars surrounding the arena are said to amplify the dying breaths of fallen gladiators, unnerving even the most hardened veterans.',
+    discoveryWeight: 7
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

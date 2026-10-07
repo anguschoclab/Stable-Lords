@@ -18,7 +18,7 @@ const REMOVED_IDS = [
   'pit_born',
   'gutter_snipe',
   'orphan_rage',
-  'survivalist',
+
   'perceptive',
   'armor_chink',
   'wild',
@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 153; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10) + 1 orphan_of_the_abyss
+const EXPECTED_COUNT = 154; // 145 previous + 4 V7 union traits + 1 gutter_wraith + 1 orphan_scavenger (V10) + 1 orphan_of_the_abyss
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

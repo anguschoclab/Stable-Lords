@@ -20,7 +20,7 @@ sequential code path for every scale of advancement.
   chunk boundaries), check cooperative cancellation at week boundaries, and
   return `pendingArchives` for the caller to flush — the service never
   performs I/O.
-- `src/engine/autosim.ts` — single sequential path; per-week stop
+- `src/engine/autosim/autosim.ts` — single sequential path; per-week stop
   conditions; `mutableInput` ownership after week 1; cancellation check per
   week.
 - `src/engine/runtime/cancellation.ts` + `worker.cancelSim` — worker-local

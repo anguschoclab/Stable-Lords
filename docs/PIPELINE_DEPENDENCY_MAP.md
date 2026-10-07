@@ -43,9 +43,9 @@ main thread persistence
 
 | Stage     | Passes (order in WEEK_PIPELINE_PASSES)                                                    |
 | --------- | ----------------------------------------------------------------------------------------- |
-| `core`    | boutSimulation, warrior, economy, equipment                                               |
-| `world`   | world, recruitment, system, rankings, promoter, promoterLifecycle, trainer, rivalStrategy |
-| `content` | event, narrative, progression (+ seasonal handling)                                       |
+| `core`    | warrior, economy, equipment, recruitment                                                                        |
+| `world`   | world, system, rankings, progression, promoter, promoterLifecycle, trainer, arenaChampionship, rivalStrategy     |
+| `content` | event, narrative, seasonal                                                                                      |
 
 Rules enforced by `validatePipelinePasses`:
 

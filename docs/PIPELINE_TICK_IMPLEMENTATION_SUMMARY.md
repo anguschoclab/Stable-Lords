@@ -50,7 +50,7 @@ All phases of the pipeline and tick optimization project have been successfully 
 
 **Files Modified:**
 
-- `src/engine/autosim.ts` (major refactor)
+- `src/engine/autosim/autosim.ts` (major refactor)
 - `src/engine/tick/TickOrchestrator.ts` (extended)
 
 **Features:**
@@ -280,7 +280,7 @@ See `docs/BATCH_ADVANCE_PRODUCTION.md` for detailed rollout procedures.
 - `src/engine/pipeline/services/weekPipelineService.ts`
 - `src/engine/pipeline/adapters/opfsArchiver.ts`
 - `src/engine/tick/TickOrchestrator.ts`
-- `src/engine/autosim.ts`
+- `src/engine/autosim/autosim.ts`
 - `src/engine/featureFlags.ts`
 - `src/engine/index.ts` (exports)
 

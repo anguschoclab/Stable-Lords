@@ -10,24 +10,9 @@ import {
   createTacticInsight,
   createTraitInsights,
 } from '@/engine/scouting/scoutInsights';
-import { FightingStyle, type Warrior } from '@/types/game';
 import { SeededRNG } from '@/utils/random';
-import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
+import { makeScoutingOpponent as makeWarrior } from '@/test/_fixtures/factories';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/shared.types';
-const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureComputedWarrior(
-    { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 },
-    FightingStyle.SlashingAttack,
-    {
-      id: 'w1' as import('@/types/shared.types').WarriorId,
-      name: 'Opponent',
-      fame: 5,
-      career: { wins: 8, losses: 3, kills: 2 },
-      age: 24,
-      plan: { OE: 7, AL: 5, killDesire: 6 } as any,
-      ...overrides,
-    }
-  );
 
 // ─── createStyleInsight ───────────────────────────────────────────────────
 

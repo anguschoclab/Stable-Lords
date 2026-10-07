@@ -18,7 +18,6 @@ import { narrateEvents } from '@/engine/combat/narrative/narrator';
 import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
 import { loadCombatNarrative } from '@/data/narrative';
 import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
-import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';

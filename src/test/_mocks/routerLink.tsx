@@ -15,6 +15,6 @@ export const Link = ({
   </a>
 );
 
-export const useNavigate = () => vi.fn();
+export const useNavigate = (): ReturnType<typeof vi.fn> => vi.fn();
 
 export const useParams = () => ({});

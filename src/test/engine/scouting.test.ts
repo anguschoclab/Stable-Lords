@@ -3,27 +3,14 @@
  */
 import { describe, it, expect } from 'vitest';
 import { generateScoutReport, getScoutCost } from '@/engine/scouting/scouting';
-import { FightingStyle, type Warrior } from '@/types/game';
+import { FightingStyle } from '@/types/game';
 import { SeededRNG } from '@/utils/random';
-import { makeComputedWarrior as fixtureComputedWarrior } from '@/test/_fixtures/factories';
+import { makeScoutingOpponent } from '@/test/_fixtures/factories';
 import { narrativeContent } from '@/data/narrative';
 
 const TEST_RNG = new SeededRNG(42);
 
-const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureComputedWarrior(
-    { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 },
-    FightingStyle.SlashingAttack,
-    {
-      id: 'w1' as import('@/types/shared.types').WarriorId,
-      name: 'Opponent',
-      fame: 5,
-      career: { wins: 8, losses: 3, kills: 2 },
-      age: 24,
-      plan: { OE: 7, AL: 5, killDesire: 6 } as any,
-      ...overrides,
-    }
-  );
+const makeWarrior = makeScoutingOpponent;
 
 describe('Scouting System', () => {
   describe('getScoutCost', () => {

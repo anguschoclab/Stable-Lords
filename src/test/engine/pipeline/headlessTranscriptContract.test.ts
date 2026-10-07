@@ -68,8 +68,20 @@ describe('headless transcript contract', () => {
         GATED_PUSH_COUNTS[rel],
         `new log.push site(s) in unregistered file '${rel}' — verify it is headless-gated and add it to GATED_PUSH_COUNTS`
       ).toBe(count);
+      // In-file gates are `headless` tokens; a file whose pushes are gated at
+      // the call site instead must be pinned in CALL_SITE_GATED with evidence.
+      const CALL_SITE_GATED: Record<string, string> = {
+        // Intro lines are only constructed by simulateFight when !headless —
+        // headless bouts initialise `log` as `[]` (simulateFight.ts).
+        'simulate/narrative.ts': 'simulateFight.ts intro-builder conditional',
+        // narrateExchangeEvents is invoked under `if (!headless)` in
+        // simulationLoop/index.ts — the exchange loop never calls it headless.
+        'simulate/simulationLoop/narrate.ts': 'simulationLoop/index.ts `if (!headless)` wrapper',
+      };
       const src = readFileSync(path.join(ENGINE, rel), 'utf8');
-      expect(src, `'${rel}' lost its headless gating entirely`).toMatch(/headless/);
+      if (!CALL_SITE_GATED[rel]) {
+        expect(src, `'${rel}' lost its headless gating entirely`).toMatch(/headless/);
+      }
     }
     for (const rel of Object.keys(GATED_PUSH_COUNTS)) {
       expect(found.has(rel), `'${rel}' no longer pushes transcript lines — drop its registry entry`).toBe(

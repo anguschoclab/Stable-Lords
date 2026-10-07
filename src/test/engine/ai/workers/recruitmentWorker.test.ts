@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
 import { SeededRNG } from '@/utils/random';
-import type { RivalStableData } from '@/types/state.types';
-import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { makeTestRecruit, makeMinimalRival } from '@/test/_fixtures/factories';
 
 const makePoolWarrior = makeTestRecruit;

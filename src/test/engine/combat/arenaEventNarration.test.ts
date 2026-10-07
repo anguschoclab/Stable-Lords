@@ -13,7 +13,7 @@ import { narrateEvents } from '@/engine/combat/narrative/narrator';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { loadCombatNarrative } from '@/data/narrative';
 import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
-import { FightingStyle } from '@/types/shared.types';
+import { SeededRNG } from '@/utils/random';
 import type { CombatEvent } from '@/types/combat.types';
 
 beforeAll(async () => {

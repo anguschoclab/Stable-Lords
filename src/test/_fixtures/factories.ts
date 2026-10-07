@@ -110,6 +110,26 @@ export function makeSpartacusWarrior(over: Partial<Warrior> = {}): Warrior {
   });
 }
 
+/**
+ * Computed scouting "Opponent" — the fixed rival profile shared by the
+ * scouting suites (SlashingAttack, mid-teens attrs, 8-3-2 career, fame 5).
+ */
+export function makeScoutingOpponent(over: Partial<Warrior> = {}): Warrior {
+  return makeComputedWarrior(
+    { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 },
+    FightingStyle.SlashingAttack,
+    {
+      id: 'w1' as WarriorId,
+      name: 'Opponent',
+      fame: 5,
+      career: { wins: 8, losses: 3, kills: 2 },
+      age: 24,
+      plan: { OE: 7, AL: 5, killDesire: 6 } as Warrior['plan'],
+      ...over,
+    }
+  );
+}
+
 /** Schema-valid Owner. */
 export function makeOwner(over: Partial<Owner> = {}): Owner {
   const id = (over.id as string) ?? nextId('owner');

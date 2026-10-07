@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { compactSelectRowClasses, compactSelectNameClasses } from '@/components/ui/selectableRow';
 import { CheckCircle2 } from 'lucide-react';
 import type { Warrior } from '@/types/state.types';
 import { getFatigueStatus } from '../hooks/useBookingOffice';
@@ -33,21 +34,13 @@ export function AssetRegistry({
           <button
             key={warrior.id}
             onClick={() => onSelect(isSelected ? null : warrior.id)}
-            className={cn(
-              'flex flex-col gap-1 p-4 border transition-all text-left group relative overflow-hidden motion-reduce:transition-none',
-              isSelected
-                ? 'bg-white/[0.05] border-white/20'
-                : 'bg-transparent border-white/5 opacity-40 grayscale hover:opacity-100 hover:grayscale-0',
-              hasAccepted && 'border-l-4 border-l-primary'
+            className={compactSelectRowClasses(
+              isSelected,
+              cn('relative overflow-hidden', hasAccepted && 'border-l-4 border-l-primary')
             )}
           >
             <div className="flex items-center justify-between">
-              <span
-                className={cn(
-                  'text-[10px] font-black uppercase tracking-widest',
-                  isSelected ? 'text-foreground' : 'text-muted-foreground'
-                )}
-              >
+              <span className={compactSelectNameClasses(isSelected)}>
                 {warriorDisplayName(warrior)}
               </span>
               {hasAccepted && <CheckCircle2 className="h-3 w-3 text-primary" />}

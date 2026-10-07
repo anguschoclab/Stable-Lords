@@ -14,7 +14,7 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * live pairs, each registered with its verdict category. NEW duplicate pairs
  * fail loudly; remove a pair from KNOWN_SRC_PAIRS as its cluster is deduped.
  */
-const SRC_TO_SRC_BASELINE = 34;
+const SRC_TO_SRC_BASELINE = 30;
 
 const KNOWN_SRC_PAIRS = new Set([
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop
@@ -63,14 +63,6 @@ const KNOWN_SRC_PAIRS = new Set([
   // component shape, not shared app logic.
   'src/components/ui/alert-dialog.tsx|src/components/ui/sheet.tsx',
 
-  // ─── Related-but-divergent markup families (V12-D6 residual). These rows
-  // share the selectable-row idiom but carry meaningfully different
-  // layout/disabled/accent behavior; SelectableCard covers the two identical
-  // sites — the rest are registered knowingly pending a wider primitive.
-  'src/components/orphanage/PlanStep.tsx|src/components/planBuilder/TacticBank.tsx',
-  'src/components/orphanage/PlanStep.tsx|src/components/planBuilder/sections.tsx',
-  'src/components/scouting/StableSelector.tsx|src/components/scouting/components/WarriorSelector.tsx',
-  'src/pages/BookingOffice/components/AssetRegistry.tsx|src/pages/TrainingPlanner/components/WarriorSelector.tsx',
   // shared shadcn Select/search toolbar boilerplate — different option domains
   // (recruit tier/style vs. rival list sorts), styling, and behavior.
   'src/components/scouting/rivalListShell.tsx|src/pages/Recruit/components/RecruitFilters.tsx',

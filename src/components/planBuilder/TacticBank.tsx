@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { TACTIC_BANK } from './tacticBankData';
+import { withPlanTactic, isPlanTactic, tacticButtonClasses } from './planTactics';
 import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
 import {
   getOffensiveSuitability,
@@ -20,11 +21,7 @@ interface TacticBankProps {
 export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {
   const handleClick = (t: (typeof TACTIC_BANK)[number]) => {
     if (!plan || !onPlanChange) return;
-    if (t.type === 'offensive') {
-      onPlanChange({ ...plan, offensiveTactic: t.id as OffensiveTactic });
-    } else {
-      onPlanChange({ ...plan, defensiveTactic: t.id as DefensiveTactic });
-    }
+    onPlanChange(withPlanTactic(plan, t));
   };
 
   return (
@@ -44,14 +41,11 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
               key={t.id}
               aria-label={`Select Tactic: ${t.id}`}
               onClick={() => handleClick(t)}
-              className={cn(
-                'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all motion-reduce:transition-none motion-reduce:transform-none duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-                plan &&
-                  ((t.type === 'offensive' && plan.offensiveTactic === t.id) ||
-                    (t.type === 'defensive' && plan.defensiveTactic === t.id))
-                  ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
-                  : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(189,138,36,0.15)] active:scale-[0.98] active:shadow-none'
-              )}
+              className={tacticButtonClasses(isPlanTactic(plan, t), {
+                gap: 'gap-3',
+                inactiveExtra:
+                  'hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(189,138,36,0.15)] active:scale-[0.98] active:shadow-none',
+              })}
             >
               <t.icon className="w-4 h-4 shrink-0" />
               {t.label}

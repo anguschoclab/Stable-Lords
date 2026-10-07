@@ -198,25 +198,21 @@ export function PresetBar(props: {
 }
 
 /** Labeled 1–10 plan slider with live value readout (OE / AL / Kill Desire). */
-export function PlanValueSlider({
-  id,
-  label,
-  toneClass,
-  value,
-  onChange,
-}: {
+export function PlanValueSlider(props: {
   id: string;
   label: string;
   toneClass: string;
   value: number;
   onChange: (v: number) => void;
+  endLabels?: { low: string; high: string };
 }) {
+  const { id, label, toneClass, value, onChange, endLabels } = props;
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <Label
           htmlFor={id}
-          className={cn('text-[10px] font-black uppercase tracking-widest', toneClass)}
+          className={cn('text-[10px] font-black uppercase tracking-widest cursor-pointer', toneClass)}
         >
           {label}
         </Label>
@@ -231,6 +227,12 @@ export function PlanValueSlider({
         max={10}
         step={1}
       />
+      {endLabels && (
+        <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+          <span>{endLabels.low}</span>
+          <span>{endLabels.high}</span>
+        </div>
+      )}
     </div>
   );
 }

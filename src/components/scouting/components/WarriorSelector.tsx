@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
+import { selectionRowClasses } from '@/components/ui/selectableRow';
 import type { Warrior } from '@/types/game';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
@@ -103,14 +104,11 @@ function WarriorSelectionCard(props: WarriorSelectionCardProps) {
     <button
       onClick={onSelect}
       disabled={isDisabled}
-      className={cn(
-        'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/selection focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-        isSelected
-          ? cn(colors.bg, colors.border, colors.shadow)
-          : isDisabled
-            ? 'border-white/5 opacity-10 cursor-not-allowed grayscale'
-            : 'border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5'
-      )}
+      className={selectionRowClasses({
+        selected: isSelected,
+        disabled: isDisabled,
+        selectedClasses: cn(colors.bg, colors.border, colors.shadow),
+      })}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">

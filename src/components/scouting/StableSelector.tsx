@@ -5,6 +5,7 @@ import type { RivalStableData } from '@/types/game';
 import { ListToolbar } from './rivalListShell';
 import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
 import { useListShell } from '@/hooks/useListShell';
+import { selectionRowClasses } from '@/components/ui/selectableRow';
 
 interface StableSelectorProps {
   rivals: RivalStableData[];
@@ -101,14 +102,11 @@ function StableRow(props: {
           aria-label={`Select ${r.owner.stableName} as ${ariaRole}`}
           onClick={() => onSelect(r.owner.id === selectedId ? null : r.owner.id)}
           disabled={r.owner.id === otherId}
-          className={cn(
-            'w-full text-left p-3 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none relative group/alpha focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-            selectedId === r.owner.id
-              ? t.selectedBtn
-              : r.owner.id === otherId
-                ? 'border-white/5 opacity-10 cursor-not-allowed grayscale'
-                : 'border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5'
-          )}
+          className={selectionRowClasses({
+            selected: selectedId === r.owner.id,
+            disabled: r.owner.id === otherId,
+            selectedClasses: t.selectedBtn,
+          })}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">

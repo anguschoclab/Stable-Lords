@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { compactSelectRowClasses, compactSelectNameClasses } from '@/components/ui/selectableRow';
 import type { Warrior } from '@/types/state.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
@@ -21,19 +22,9 @@ export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelec
           <button
             key={warrior.id}
             onClick={() => onSelect(warrior.id)}
-            className={cn(
-              'flex flex-col gap-1 p-4 border transition-all text-left group motion-reduce:transition-none',
-              isSelected
-                ? 'bg-white/[0.05] border-white/20'
-                : 'bg-transparent border-white/5 opacity-40 grayscale hover:opacity-100 hover:grayscale-0'
-            )}
+            className={compactSelectRowClasses(isSelected)}
           >
-            <span
-              className={cn(
-                'text-[10px] font-black uppercase tracking-widest',
-                isSelected ? 'text-foreground' : 'text-muted-foreground'
-              )}
-            >
+            <span className={compactSelectNameClasses(isSelected)}>
               {warriorDisplayName(warrior)}
             </span>
             <span

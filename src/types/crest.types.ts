@@ -2,39 +2,32 @@
  * Crest Types - Procedural heraldic crest system for Stable Lords
  */
 
+import {
+  SHIELD_SHAPES,
+  FIELD_TYPES,
+  METAL_COLORS,
+  CHARGE_TYPES,
+} from './enumSources';
+
 /**
  * Shield shape type.
  */
-export type ShieldShape = 'heater' | 'french' | 'swiss' | 'spanish' | 'lozenge';
+export type ShieldShape = (typeof SHIELD_SHAPES)[number];
 
 /**
  * Field type type.
  */
-export type FieldType =
-  | 'solid'
-  | 'fess'
-  | 'pale'
-  | 'bend'
-  | 'chevron'
-  | 'cross'
-  | 'saltire'
-  | 'per-pale'
-  | 'per-fess'
-  | 'gyronny'
-  | 'bend-sinister'
-  | 'pale-environ'
-  | 'chevron-inverted'
-  | 'quarterly';
+export type FieldType = (typeof FIELD_TYPES)[number];
 
 /**
  * Metal color type.
  */
-export type MetalColor = 'gold' | 'silver';
+export type MetalColor = (typeof METAL_COLORS)[number];
 
 /**
  * Charge type type.
  */
-export type ChargeType = 'beast' | 'weapon' | 'symbol' | 'nature' | 'celestial' | 'mythical';
+export type ChargeType = (typeof CHARGE_TYPES)[number];
 
 /**
  * Beast posture type.

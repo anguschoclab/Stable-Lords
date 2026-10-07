@@ -186,3 +186,24 @@ export function getTrainingBonus(
 
   return bonus;
 }
+
+/** Combat-stat modifiers derived from a training bonus (canonical mapping). */
+export function trainerBonusToMods(bonus: Record<TrainerFocus, number>): {
+  attMod: number;
+  parMod: number;
+  defMod: number;
+  iniMod: number;
+  decMod: number;
+  endMod: number;
+  healMod: number;
+} {
+  return {
+    attMod: bonus.Aggression,
+    parMod: Math.floor(bonus.Defense * 0.6),
+    defMod: Math.floor(bonus.Defense * 0.4),
+    iniMod: Math.floor(bonus.Mind * 0.6),
+    decMod: Math.floor(bonus.Mind * 0.4),
+    endMod: bonus.Endurance * 2,
+    healMod: bonus.Healing,
+  };
+}

@@ -9,9 +9,10 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
+// Rival*List selection buttons were consolidated into the shared
+// SelectableCard primitive (MEGAPLAN-V12 D6) — the a11y surface lives there.
 const SCOUTING_FILES = [
-  'src/components/scouting/RivalStableList.tsx',
-  'src/components/scouting/RivalWarriorList.tsx',
+  'src/components/ui/SelectableCard.tsx',
   'src/components/scouting/StableSelector.tsx',
   'src/components/scouting/components/WarriorSelector.tsx',
 ] as const;

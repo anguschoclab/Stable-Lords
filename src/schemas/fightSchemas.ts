@@ -251,21 +251,25 @@ export const BoutResultSchema = z.object({
 });
 
 /**
+ * PendingResolutionData schema — deferred bout-resolution payloads carried on
+ * FightSummary and GameState. Single home: consumed by both schema files.
+ */
+export const PendingResolutionDataSchema = z.object({
+  gazette: z.array(NewsletterItemSchema),
+  injuries: z.array(z.string()),
+  deaths: z.array(z.string()),
+  bouts: z.array(BoutResultSchema),
+  promotions: z.array(z.string()),
+});
+
+/**
  * FightSummary schema
  */
 export const FightSummarySchema = z.object({
   id: z.string(),
   week: z.number(),
   phase: z.enum(['planning', 'resolution']).optional(),
-  pendingResolutionData: z
-    .object({
-      gazette: z.array(NewsletterItemSchema),
-      injuries: z.array(z.string()),
-      deaths: z.array(z.string()),
-      bouts: z.array(BoutResultSchema),
-      promotions: z.array(z.string()),
-    })
-    .optional(),
+  pendingResolutionData: PendingResolutionDataSchema.optional(),
   tournamentId: z.string().nullable().optional(),
   title: z.string(),
   warriorIdA: z.string(),

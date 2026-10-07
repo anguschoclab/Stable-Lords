@@ -1,6 +1,5 @@
 import { Users, Flame } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Surface } from '@/components/ui/Surface';
+import { SelectableCard } from '@/components/ui/SelectableCard';
 import type { RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
@@ -100,38 +99,12 @@ function RivalRow({
   onSelectRival: (id: string) => void;
 }) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          aria-label={`Select rival stable ${rival.owner.stableName}`}
-          className={cn(
-            'w-full text-left group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-            isSelected ? 'z-10' : 'z-0'
-          )}
-          onClick={() => onSelectRival(rival.owner.id)}
-        >
-          <Surface
-            variant={isSelected ? 'paper' : 'glass'}
-            padding="none"
-            className={cn(
-              'transition-all motion-reduce:transition-none motion-reduce:transform-none border bg-neutral-900/60 overflow-hidden',
-              isSelected
-                ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]'
-                : 'border-white/5 hover:border-white/20 hover:bg-white/5'
-            )}
-          >
-            <div className="p-4 flex items-center justify-between">
-              <RivalIdentity rival={rival} isSelected={isSelected} />
-              {grudge && <GrudgeFlames intensity={grudge.intensity} />}
-            </div>
-            {isSelected && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />}
-          </Surface>
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        side="right"
-        className="bg-neutral-900 border-primary/20 shadow-2xl p-3 rounded-none"
-      >
+    <SelectableCard
+      selected={isSelected}
+      onSelect={() => onSelectRival(rival.owner.id)}
+      ariaLabel={`Select rival stable ${rival.owner.stableName}`}
+      tooltipClassName="bg-neutral-900 border-primary/20 shadow-2xl p-3 rounded-none"
+      tooltip={
         <div className="space-y-1">
           <p className="text-[10px] font-black uppercase tracking-widest text-primary">
             CHOOSE STABLE
@@ -142,8 +115,11 @@ function RivalRow({
             </p>
           )}
         </div>
-      </TooltipContent>
-    </Tooltip>
+      }
+    >
+      <RivalIdentity rival={rival} isSelected={isSelected} />
+      {grudge && <GrudgeFlames intensity={grudge.intensity} />}
+    </SelectableCard>
   );
 }
 

@@ -1,5 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { TooltipBadge } from '@/components/ui/TooltipBadge';
 import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import type { Warrior } from '@/types/warrior.types';
 
@@ -21,25 +20,16 @@ export function LiabilityBadge({ warrior }: LiabilityBadgeProps) {
       : 'text-muted-foreground border-white/10';
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          className={cn(
-            'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none',
-            color
-          )}
-        >
-          <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
+    <TooltipBadge
+      color={color}
+      tooltip={liab.factors.map((f) => (
+        <div key={f.name} className="text-[9px] font-mono">
+          {f.name}: {f.weight > 0 ? '+' : ''}
+          {f.weight}
         </div>
-      </TooltipTrigger>
-      <TooltipContent>
-        {liab.factors.map((f) => (
-          <div key={f.name} className="text-[9px] font-mono">
-            {f.name}: {f.weight > 0 ? '+' : ''}
-            {f.weight}
-          </div>
-        ))}
-      </TooltipContent>
-    </Tooltip>
+      ))}
+    >
+      <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
+    </TooltipBadge>
   );
 }

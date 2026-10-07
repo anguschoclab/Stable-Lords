@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useTacticalAlerts, type TacticalAlert } from '@/hooks/useTacticalAlerts';
+import { useToggleBarProps } from '@/hooks/useToggleBarProps';
 
 // ─── Sub-Components ─────────────────────────────────────────────────────────────
 
@@ -29,23 +30,14 @@ function TacticalBarHeader({
   expanded,
   onToggle,
 }: TacticalBarHeaderProps) {
+  const toggleProps = useToggleBarProps({ expanded, label: 'alerts', onToggle });
   return (
     <div
-      role="button"
-      tabIndex={0}
-      aria-expanded={expanded}
-      aria-label={expanded ? 'Collapse alerts' : 'Expand alerts'}
+      {...toggleProps}
       className={cn(
         'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none',
         expanded && 'border-b border-white/5'
       )}
-      onClick={onToggle}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
     >
       <div className="flex items-center gap-3">
         {hasAlerts ? (

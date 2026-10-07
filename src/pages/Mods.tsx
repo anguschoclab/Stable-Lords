@@ -11,6 +11,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { useGameStore } from '@/state/useGameStore';
 import { CANONICAL_HOUSE_RULES } from '@/types/state.types';
 import { parseContentPack } from '@/lib/contentPacks';
+import { readFileInput } from '@/utils/fileInput';
 import { ContentPacksSection, HouseRulesSection } from '@/pages/mods/sections';
 
 /**
@@ -31,14 +32,9 @@ export default function Mods() {
   };
 
   const installPack = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const content = ev.target?.result;
-        if (typeof content !== 'string') throw new Error('Invalid file content');
+    readFileInput(
+      e,
+      (content) => {
         const pack = parseContentPack(content);
         if (contentPacks.some((p) => p.id === pack.id)) {
           toast.error(`Pack "${pack.id}" is already installed.`);
@@ -48,12 +44,9 @@ export default function Mods() {
           s.contentPacks = [...(s.contentPacks ?? []), pack];
         });
         toast.success(`Content pack "${pack.name}" installed.`);
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Failed to load pack.');
-      }
-    };
-    reader.onerror = () => toast.error('Failed to read file.');
-    reader.readAsText(file);
+      },
+      (err) => toast.error(err instanceof Error ? err.message : 'Failed to load pack.')
+    );
   };
 
   const removePack = (id: string) => {

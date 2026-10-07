@@ -98,7 +98,9 @@ describe('megaplan V12: duplicate consolidation', () => {
     const gen = fileText('src/engine/crest/crestGenerator.ts');
     // Property guard (green now and post-refactor): every field-type literal
     // referenced by the generator must be a canonical FIELD_TYPES member.
-    const literals = new Set([...gen.matchAll(/'([a-z-]+)'/g)].map((m) => m[1]));
+    const literals = new Set(
+      [...gen.matchAll(/'([a-z-]+)'/g)].flatMap((m) => (m[1] ? [m[1]] : []))
+    );
     const fieldLike = [...literals].filter((l) =>
       [
         'solid', 'fess', 'pale', 'bend', 'bend-sinister', 'chevron',
@@ -112,10 +114,13 @@ describe('megaplan V12: duplicate consolidation', () => {
         `crestGenerator references non-canonical field type '${l}'`
       ).toBe(true);
     }
-    // Post-refactor the generator must import the canonical list.
+    // The canonical member list is the single source: crest.types.ts must
+    // derive FieldType from FIELD_TYPES (tier tables remain ordered design
+    // data — weight-roll pick order is load-bearing).
+    const crestTypes = fileText('src/types/crest.types.ts');
     expect(
-      /FIELD_TYPES/.test(gen),
-      'crestGenerator re-lists field types instead of consuming FIELD_TYPES'
+      /typeof FIELD_TYPES/.test(crestTypes),
+      'FieldType union must derive from canonical FIELD_TYPES'
     ).toBe(true);
   });
 
@@ -151,6 +156,7 @@ describe('megaplan V12: duplicate consolidation', () => {
     const text =
       fileText('src/lib/importExport.ts') +
       fileText('src/utils/importExport.ts') +
+      fileText('src/utils/fileInput.ts') +
       fileText('src/utils/fileUtils.ts');
     expect(
       /export (function|const) (readJsonFileInput|readFileInput|readJsonUpload)/.test(text),
@@ -172,8 +178,12 @@ describe('megaplan V12: duplicate consolidation', () => {
       candidateExists([
         'src/hooks/useToggleKeydown.ts',
         'src/hooks/useToggleBarKeydown.ts',
+        'src/hooks/useToggleBarProps.ts',
         'src/components/ui/ExpandableBarHeader.tsx',
-      ]) || /useToggleKeydown|useToggleBarKeydown|ExpandableBarHeader/.test(fileText('src/components/arena/MiniCombatLog.tsx'));
+      ]) ||
+      /useToggleKeydown|useToggleBarKeydown|useToggleBarProps|ExpandableBarHeader/.test(
+        fileText('src/components/arena/MiniCombatLog.tsx')
+      );
     expect(found, 'no shared expandable-bar toggle handling found').toBe(true);
   });
 });

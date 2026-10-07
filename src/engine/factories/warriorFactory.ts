@@ -11,6 +11,7 @@ import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { generateId } from '@/utils/idUtils';
 import { entropyRng } from '@/utils/random';
+import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
@@ -61,14 +62,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     // warriors; rng-less test builds stay luck-neutral.
     luckfactor: rng ? rollLuckfactor(rng) : undefined,
     derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
+    ...newWarriorDefaults(),
     age: 18 + Math.floor((rng ? rng.next() : 0.5) * 8),
     favorites,
     traits,

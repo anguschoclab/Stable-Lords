@@ -1,5 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import { TooltipBadge } from '@/components/ui/TooltipBadge';
 import { potentialRating, potentialGrade } from '@/engine/warrior/potential';
 import type { AttributePotential } from '@/types/warrior.types';
 
@@ -26,19 +25,9 @@ export function PotentialBadge({ potential }: PotentialBadgeProps) {
             : 'text-muted-foreground/60 border-white/5';
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div
-          className={cn(
-            'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none',
-            color
-          )}
-        >
-          <span className="text-[8px] font-black uppercase tracking-widest opacity-60">POT</span>
-          <span className="text-[10px] font-mono font-black">{grade}</span>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>Potential grade — ceiling for training gains.</TooltipContent>
-    </Tooltip>
+    <TooltipBadge color={color} tooltip="Potential grade — ceiling for training gains.">
+      <span className="text-[8px] font-black uppercase tracking-widest opacity-60">POT</span>
+      <span className="text-[10px] font-mono font-black">{grade}</span>
+    </TooltipBadge>
   );
 }

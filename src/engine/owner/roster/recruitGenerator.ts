@@ -11,6 +11,7 @@ import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
+import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 
 /** Function type for meta-adaptation recruit style pickers. */
 type AdaptationStyleFn = (
@@ -199,14 +200,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
     baseSkills: finalBaseSkills,
     luckfactor: rollLuckfactor(rng),
     derivedStats: finalDerivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
+    ...newWarriorDefaults(),
     age: 17 + Math.floor(rng.next() * 5),
     stableId: rival.id,
     traits,

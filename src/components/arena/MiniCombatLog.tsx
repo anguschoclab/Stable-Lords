@@ -4,6 +4,7 @@ import { X, History, ChevronUp, ChevronDown } from 'lucide-react';
 import type { MinuteEvent } from '@/types/combat.types';
 import { COMBAT_LOG_TRUNCATION } from '@/constants/core/ui';
 import { classifyEvent } from '@/lib/boutUtils';
+import { useToggleBarProps } from '@/hooks/useToggleBarProps';
 
 interface MiniCombatLogProps {
   events: MinuteEvent[];
@@ -101,25 +102,16 @@ function LogHeader({
   onToggle: () => void;
   onClose?: () => void;
 }) {
+  const toggleProps = useToggleBarProps({ expanded: isExpanded, label: 'combat log', onToggle });
   return (
     <div
-      role="button"
-      tabIndex={0}
-      aria-expanded={isExpanded}
-      aria-label={isExpanded ? 'Collapse combat log' : 'Expand combat log'}
+      {...toggleProps}
       className={cn(
         'flex items-center justify-between gap-2 px-3 py-2',
         'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
         'rounded-none cursor-pointer hover:border-white/20 transition-colors motion-reduce:transition-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
       )}
-      onClick={onToggle}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
     >
       <div className="flex items-center gap-2">
         <History className="h-3.5 w-3.5 text-arena-gold" />

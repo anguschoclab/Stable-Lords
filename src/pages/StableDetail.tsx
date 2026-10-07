@@ -7,7 +7,7 @@ import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { Button } from '@/components/ui/button';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { cn } from '@/lib/utils';
+import { IconTabStrip } from '@/components/ui/IconTabStrip';
 import type { RivalStableData } from '@/types/game';
 import { StableRosterTab } from '@/components/stable/StableRosterTab';
 import { StableLogsTab } from '@/components/stable/StableLogsTab';
@@ -17,9 +17,9 @@ import { deriveStableStats } from './stableDetail/deriveStableStats';
 type DetailTab = 'OVERVIEW' | 'ROSTER' | 'LOGS';
 
 const DETAIL_TABS = [
-  { id: 'OVERVIEW', icon: LayoutDashboard },
-  { id: 'ROSTER', icon: FileText },
-  { id: 'LOGS', icon: History },
+  { id: 'OVERVIEW', label: 'Overview', icon: LayoutDashboard },
+  { id: 'ROSTER', label: 'Roster', icon: FileText },
+  { id: 'LOGS', label: 'Logs', icon: History },
 ] as const;
 
 /** Dossier tab strip — underlined active state. */
@@ -30,26 +30,7 @@ function DossierTabs({
   activeTab: DetailTab;
   onChange: (tab: DetailTab) => void;
 }) {
-  return (
-    <div className="flex items-center gap-8 border-b border-white/5 -mt-4">
-      {DETAIL_TABS.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => onChange(tab.id)}
-          className={cn(
-            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative motion-reduce:transition-none',
-            activeTab === tab.id ? 'text-primary' : 'text-muted-foreground/40 hover:text-foreground'
-          )}
-        >
-          <tab.icon className="h-3.5 w-3.5" />
-          {tab.id}
-          {activeTab === tab.id && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
-          )}
-        </button>
-      ))}
-    </div>
-  );
+  return <IconTabStrip tabs={DETAIL_TABS} activeTab={activeTab} onChange={onChange} className="-mt-4" />;
 }
 
 /** Back-to-scouting link. */

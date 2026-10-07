@@ -1,7 +1,7 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
-import { getTrainingBonus } from '@/engine/trainers/trainers';
+import { getTrainingBonus, trainerBonusToMods } from '@/engine/trainers/trainers';
 import { getSpecialtyMods } from '@/engine/trainers/trainerSpecialties';
 
 /**
@@ -34,16 +34,7 @@ export function getTrainerMods(
       fatiguePenaltyReduction: 0,
     };
   }
-  const bonus = getTrainingBonus(trainers, style);
-  const base = {
-    attMod: bonus.Aggression,
-    parMod: Math.floor(bonus.Defense * 0.6),
-    defMod: Math.floor(bonus.Defense * 0.4),
-    iniMod: Math.floor(bonus.Mind * 0.6),
-    decMod: Math.floor(bonus.Mind * 0.4),
-    endMod: bonus.Endurance * 2,
-    healMod: bonus.Healing,
-  };
+  const base = trainerBonusToMods(getTrainingBonus(trainers, style));
 
   if (fighter && opponent && ctx) {
     const spec = getSpecialtyMods(trainers, fighter, opponent, ctx);

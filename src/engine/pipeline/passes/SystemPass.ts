@@ -17,6 +17,7 @@ import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
@@ -212,14 +213,7 @@ function materializeFloorRecruit(
     const warrior: Warrior = {
       ...poolWarrior,
       id: poolWarrior.id as WarriorId,
-      fame: 0,
-      popularity: 0,
-      titles: [],
-      injuries: [],
-      flair: [],
-      career: { wins: 0, losses: 0, kills: 0 },
-      champion: false,
-      status: 'Active',
+      ...newWarriorDefaults(),
       equipment: getFittedLoadout(poolWarrior.style, poolWarrior.attributes),
       stableId: state.player?.id,
     } as unknown as Warrior;

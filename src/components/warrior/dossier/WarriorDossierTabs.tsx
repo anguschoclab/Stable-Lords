@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { IconTabStrip } from '@/components/ui/IconTabStrip';
 import { LayoutDashboard, Swords, FileText, Activity } from 'lucide-react';
 
 interface Props {
@@ -18,24 +18,5 @@ const TABS = [
  * @param - { active tab, set active tab }.
  */
 export default function WarriorDossierTabs({ activeTab, setActiveTab }: Props) {
-  return (
-    <div className="flex items-center gap-8 border-b border-white/5">
-      {TABS.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={cn(
-            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative',
-            activeTab === tab.id ? 'text-primary' : 'text-muted-foreground/40 hover:text-foreground'
-          )}
-        >
-          <tab.icon className="h-3.5 w-3.5" />
-          {tab.label}
-          {activeTab === tab.id && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
-          )}
-        </button>
-      ))}
-    </div>
-  );
+  return <IconTabStrip tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />;
 }

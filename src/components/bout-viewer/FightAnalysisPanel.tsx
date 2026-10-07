@@ -4,17 +4,12 @@
  */
 import type { FightAnalysis } from '@/engine/narrative/fightAnalysis';
 import { Surface } from '@/components/ui/Surface';
+import { favoredName } from './favoredName';
 
 interface FightAnalysisPanelProps {
   analysis?: FightAnalysis;
   nameA: string;
   nameD: string;
-}
-
-function favoredName(favored: 'A' | 'D' | null, nameA: string, nameD: string): string | null {
-  if (favored === 'A') return nameA;
-  if (favored === 'D') return nameD;
-  return null;
 }
 
 /**

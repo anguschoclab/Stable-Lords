@@ -11,6 +11,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { exportPack, importPack } from '@/lib/importExport';
+import { readFileInput } from '@/utils/fileInput';
 
 function download(filename: string, text: string, mime: string) {
   const blob = new Blob([text], { type: mime });
@@ -43,23 +44,15 @@ export default function ImportExport() {
   };
 
   const doImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const content = ev.target?.result;
-        if (typeof content !== 'string') throw new Error('Invalid file content');
+    readFileInput(
+      e,
+      (content) => {
         const pack = importPack(content);
         loadGame(activeSlotId || 'autosave', pack.state);
         toast.success(`Save pack imported — week ${pack.state.week}.`);
-      } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Failed to import pack.');
-      }
-    };
-    reader.onerror = () => toast.error('Failed to read file.');
-    reader.readAsText(file);
+      },
+      (err) => toast.error(err instanceof Error ? err.message : 'Failed to import pack.')
+    );
   };
 
   return (

@@ -3,17 +3,12 @@
  * factors from a FightForecast. Mirrors FightAnalysisPanel in style.
  */
 import type { FightForecast } from '@/engine/narrative/fightForecast';
+import { favoredName } from './favoredName';
 
 interface FightForecastPanelProps {
   forecast?: FightForecast;
   nameA: string;
   nameD: string;
-}
-
-function favoredName(favored: 'A' | 'D' | null, nameA: string, nameD: string): string | null {
-  if (favored === 'A') return nameA;
-  if (favored === 'D') return nameD;
-  return null;
 }
 
 /**

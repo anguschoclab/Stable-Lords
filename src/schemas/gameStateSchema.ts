@@ -37,6 +37,7 @@ import {
   GrandChampionEntrySchema,
   SimulationReportSchema,
   BoutResultSchema,
+  PendingResolutionDataSchema,
 } from './fightSchemas';
 import {
   LedgerEntrySchema,
@@ -69,15 +70,7 @@ export const GameStateSchema = z
         createdAt: z.string(),
       })
       .strict(),
-    pendingResolutionData: z
-      .object({
-        gazette: z.array(NewsletterItemSchema),
-        injuries: z.array(z.string()),
-        deaths: z.array(z.string()),
-        bouts: z.array(BoutResultSchema),
-        promotions: z.array(z.string()),
-      })
-      .optional(),
+    pendingResolutionData: PendingResolutionDataSchema.optional(),
     lastWeekBoutDisplay: z
       .object({
         results: z.array(BoutResultSchema),

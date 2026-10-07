@@ -22,11 +22,22 @@ export function evaluateStopConditions(
         }
         break;
       case 'noPairings': {
-        const allWarriors = [...state.roster, ...(state.rivals || []).flatMap((r) => r.roster)];
-        const eligibleCount = allWarriors.filter((w) =>
-          isFightReady(w, state.isTournamentWeek)
-        ).length;
-        if (eligibleCount < 2) {
+        // Threshold check: stop counting at 2. Called weekly inside every
+        // autosim/span loop — the old flattened-array allocation + full
+        // filter scanned hundreds of warriors per evaluation for a boolean.
+        let eligible = 0;
+        for (const w of state.roster) {
+          if (isFightReady(w, state.isTournamentWeek) && ++eligible >= 2) break;
+        }
+        if (eligible < 2) {
+          for (const rival of state.rivals ?? []) {
+            for (const w of rival.roster) {
+              if (isFightReady(w, state.isTournamentWeek) && ++eligible >= 2) break;
+            }
+            if (eligible >= 2) break;
+          }
+        }
+        if (eligible < 2) {
           return { shouldStop: true, reason: 'no_pairings' };
         }
         break;

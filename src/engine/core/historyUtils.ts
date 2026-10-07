@@ -41,28 +41,53 @@ export function getRecentFights(arenaHistory: FightSummary[], minWeek: number): 
   return result.reverse();
 }
 
+// arenaHistory is append-only-by-replacement (impact merges concat,
+// truncateState slices — every writer produces a new array), so keying a
+// per-warrior index on the array's identity is safe; a new history starts
+// a fresh index. Same invariant as matchmaking/schedulingAssistant/headToHead.
+const fightsByWarrior = new WeakMap<FightSummary[], Map<string, FightSummary[]>>();
+
+function warriorFightIndex(arenaHistory: FightSummary[]): Map<string, FightSummary[]> {
+  const cached = fightsByWarrior.get(arenaHistory);
+  if (cached) return cached;
+  const index = new Map<string, FightSummary[]>();
+  for (const f of arenaHistory) {
+    if (!f) continue;
+    // Degenerate self-fight (warriorIdA === warriorIdD): the old scan counted
+    // it once for that warrior — the `!==` guard preserves that.
+    if (f.warriorIdA) {
+      const list = index.get(f.warriorIdA);
+      if (list) list.push(f);
+      else index.set(f.warriorIdA, [f]);
+    }
+    if (f.warriorIdD && f.warriorIdD !== f.warriorIdA) {
+      const list = index.get(f.warriorIdD);
+      if (list) list.push(f);
+      else index.set(f.warriorIdD, [f]);
+    }
+  }
+  fightsByWarrior.set(arenaHistory, index);
+  return index;
+}
+
 /**
  * Extracts the most recent fights for a specific warrior.
- * Optimized with a backward loop to break early once the desired count is reached,
- * turning an O(N) full-array scan into an O(K) operation where K is the number of items needed.
+ * Indexed by the warriorFightIndex WeakMap — one O(N) build per unique
+ * history array, then O(1) per lookup. (The old per-call backward scan
+ * only early-exited for warriors WITH enough recent fights; inactive
+ * warriors paid a full-tail scan every call — ~107ms/week self-time.)
  */
 export function getRecentFightsForWarrior(
   arenaHistory: FightSummary[],
   warriorId: string,
   limit: number = 10
 ): FightSummary[] {
-  const result: FightSummary[] = [];
-  for (let i = arenaHistory.length - 1; i >= 0; i--) {
-    const f = arenaHistory[i];
-    if (!f) continue;
-    if (f.warriorIdA === warriorId || f.warriorIdD === warriorId) {
-      result.push(f);
-      if (result.length >= limit) {
-        break;
-      }
-    }
-  }
-  return result.reverse();
+  const fights = warriorFightIndex(arenaHistory).get(warriorId);
+  if (!fights) return [];
+  // slice(-n) yields the last n fights in chronological order — identical to
+  // the old backward-scan + reverse. Math.max mirrors the old limit<=0 edge
+  // (it pushed one match before checking, so 0 behaved as 1).
+  return fights.slice(-Math.max(limit, 1));
 }
 
 /**

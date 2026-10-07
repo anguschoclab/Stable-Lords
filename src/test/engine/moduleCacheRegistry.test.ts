@@ -65,6 +65,8 @@ const REGISTRY: Record<string, string> = {
     'WeakMap keyed on the roster-map identity it derives from.',
   'matchmaking/schedulingAssistant/headToHead.ts:h2hByHistory':
     'WeakMap keyed on the arenaHistory array identity; a new history rebuilds the index fresh.',
+  'core/historyUtils.ts:fightsByWarrior':
+    'WeakMap keyed on the arenaHistory array identity; history is append-only-by-replacement, so a new array rebuilds the index fresh.',
   'storage/archiveService.ts:archiveService':
     'Environment-selected service singleton; assigned once at module init.',
 

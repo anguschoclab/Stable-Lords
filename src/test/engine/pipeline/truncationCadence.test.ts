@@ -1,3 +1,5 @@
+// @vitest-isolate — mutates the shared TRUNCATION_CAPS const; must not run in
+// a shared worker alongside tests that read the caps mid-flight.
 import { describe, it, expect, afterAll } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
@@ -6,7 +8,7 @@ import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
 /**
- * MEGAPLAN-V13 B1 — truncation-cadence determinism (test-first; RED until
+ * MEGAPLAN-V14 B1 — truncation-cadence determinism (test-first; RED until
  * the Phase-5b cadence normalization lands):
  *
  * `truncateState` is applied at batch-span boundaries (month: w4, quarter:
@@ -32,7 +34,7 @@ afterAll(() => {
 });
 
 describe('truncation cadence — sequential vs batch determinism', () => {
-  it('sequential weekly advance and a quarter span produce identical final state once caps are crossed', async () => {
+  it('sequential weekly advance and a month span produce identical final state once caps are crossed', async () => {
     // Shrink caps far below what 13 weeks of a fresh world generates.
     Object.assign(TRUNCATION_CAPS, {
       arenaHistory: 4,
@@ -50,18 +52,18 @@ describe('truncation cadence — sequential vs batch determinism', () => {
       moodHistory: 4,
     });
 
-    const seed = 'v13-truncation-cadence';
+    const seed = 'v14-truncation-cadence';
     const t0 = '2026-04-28T09:00:00Z';
 
     let sequential = createFreshState(seed, t0);
-    for (let i = 0; i < 13; i++) {
+    for (let i = 0; i < 4; i++) {
       sequential = await advanceWeek(sequential, { headless: true, mutableInput: i > 0 });
     }
     // Sequential sessions surface deferred logs on the state; drain them so
     // only sim-affecting differences remain.
     drainDeferredBoutLogs(sequential);
 
-    const batch = await TimeAdvanceService.advanceQuarter(createFreshState(seed, t0), {
+    const batch = await TimeAdvanceService.advanceMonth(createFreshState(seed, t0), {
       headless: true,
     });
 

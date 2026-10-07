@@ -4,7 +4,7 @@ import { runAutosim } from '@/engine/autosim/autosim';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance/service';
 
 /**
- * MEGAPLAN-V13 span-teardown parity (characterization):
+ * MEGAPLAN-V14 span-teardown parity (characterization):
  *
  * Every multi-week entry point must end with the same teardown guarantees:
  * terminal tournament sweep (no unresolved brackets escape a batch), archive
@@ -14,7 +14,7 @@ import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance/service';
  * differ; the contract pinned here is teardown *shape*, not byte equality.
  */
 
-const SEED = 'v13-teardown-parity';
+const SEED = 'v14-teardown-parity';
 const T0 = '2026-04-28T09:00:00Z';
 
 describe('batch teardown parity', () => {

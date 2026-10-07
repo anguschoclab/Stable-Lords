@@ -6,7 +6,7 @@ import { runAutosim } from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 /**
- * MEGAPLAN-V13 headless-transcript contract (L3/A9):
+ * MEGAPLAN-V14 headless-transcript contract (L3/A9):
  *
  * Headless execution (autosim, batch spans, `skipTo*`) must produce ZERO bout
  * transcripts — autosim has no `pendingArchives` field, so any ungated
@@ -91,7 +91,7 @@ describe('headless transcript contract', () => {
   });
 
   it('headless week advances leave deferredBoutLogs empty', async () => {
-    let state = createFreshState('v13-headless-contract', '2026-04-28T09:00:00Z');
+    let state = createFreshState('v14-headless-contract', '2026-04-28T09:00:00Z');
     for (let i = 0; i < 4; i++) {
       state = await advanceWeek(state, { headless: true, mutableInput: i > 0 });
       expect(
@@ -102,7 +102,7 @@ describe('headless transcript contract', () => {
   });
 
   it('headless autosim produces no transcripts across a multi-week run', async () => {
-    const state = createFreshState('v13-headless-autosim', '2026-04-28T09:00:00Z');
+    const state = createFreshState('v14-headless-autosim', '2026-04-28T09:00:00Z');
     const result = await runAutosim(state, { weeksToSim: 6, stopConditions: [] });
     expect(result.weeksSimmed).toBeGreaterThan(0);
     expect(

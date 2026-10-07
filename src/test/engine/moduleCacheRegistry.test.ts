@@ -75,7 +75,7 @@ const REGISTRY: Record<string, string> = {
   'stats/styleRollups.ts:tourCache': 'Same — worker-safe via localStorage guard.',
 };
 
-// V13 A1: the const branch also catches `= []`, `= {}`, `new Array()`, and
+// V14 A1: the const branch also catches `= []`, `= {}`, `new Array()`, and
 // type-annotated constructors (`const x: Set<T> = new Set()` escaped the old
 // `name =` adjacency requirement — deathNotifier's `handlers`). Literals and
 // annotated constructors mutate without hitting the old pattern.

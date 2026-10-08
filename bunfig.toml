@@ -17,4 +17,4 @@ preload = ["./src/test/_setup/bunViPolyfill.ts", "./src/test/_setup/bun-setup.ts
 # directly for the same compile-before-implementation pattern. All remain covered
 # by the vitest suite. entityLink.perf mounts a real zustand store behind a
 # vi.mock async factory + React Profiler/act — vitest-only, hangs bun's runner.
-pathIgnorePatterns = ["e2e/**", "out/**", "src/test/config/environmentNodeCanary.test.ts", "src/test/config/electronMain.test.ts", "**/*.slow.test.ts", "src/test/lib/bibleIndex.test.ts", "src/test/pages/HelpA11y.test.tsx", "src/test/megaplan/appShell.cta.test.tsx", "src/test/megaplan/styleArchives.wired.test.tsx", "src/test/megaplan/wiring.wired.test.tsx", "src/test/components/entityLink.perf.test.tsx"]
+pathIgnorePatterns = ["e2e/**", "out/**", "src/test/config/environmentNodeCanary.test.ts", "src/test/config/electronMain.test.ts", "**/*.slow.test.ts", "**/*.slow.test.tsx", "src/test/lib/bibleIndex.test.ts", "src/test/pages/HelpA11y.test.tsx", "src/test/megaplan/appShell.cta.test.tsx", "src/test/megaplan/styleArchives.wired.test.tsx", "src/test/megaplan/wiring.wired.test.tsx", "src/test/components/entityLink.perf.test.tsx"]

@@ -75,18 +75,8 @@ jobs:
           root_files=(src/test/*.test.ts src/test/*.test.tsx)
           [ ${#root_files[@]} -gt 0 ] && bun --smol test --isolate --timeout 30000 "${root_files[@]}"
 
-  slow-tests:
-    runs-on: ubuntu-latest
-    needs: test
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v7
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.4.0
-      - run: bun install --frozen-lockfile
-      - run: bunx vitest run --config vitest.config.slow.ts
-
+  # The *.slow.test.ts suite moved to .github/workflows/nightly.yml
+  # (nightly + workflow_dispatch) — it is intentionally not a per-PR gate.
   coverage:
     runs-on: ubuntu-latest
     needs: test
@@ -113,9 +103,9 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: test
-    # seasonal-tournament spec self-sets 25min on a starved runner (~17min
-    # locally) and shares the worker with 3 other specs after install.
-    timeout-minutes: 45
+    # Fast tier only: chromium smoke, @slow marathon specs excluded. The full
+    # browser matrix + @slow specs run in the nightly workflow / on dispatch.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
@@ -123,4 +113,4 @@ jobs:
           bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       - run: bunx playwright install --with-deps chromium
-      - run: bunx playwright test --project=chromium
+      - run: bunx playwright test --project=chromium --grep-invert '@slow'

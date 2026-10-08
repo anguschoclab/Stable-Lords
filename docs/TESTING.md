@@ -50,23 +50,54 @@ an inner bracket generator).
 
 ## Slow tests
 
-Files named `*.slow.test.ts` are excluded from the default suite
-(`bunx vitest run`) and from `bun test`; they run in the dedicated slow suite
-(`bun run test:slow`, CI `slow-tests` job) and in `bun run test:all`.
+Files named `*.slow.test.{ts,tsx}` are excluded from the default suite
+(`bunx vitest run`), from `bun test` (`bunfig.toml` `pathIgnorePatterns`),
+and from `test:coverage`; they run in the dedicated slow suite
+(`bun run test:slow`, nightly CI `slow-tests` job) and in `bun run test:all`.
 
-Promote a test to `.slow` when it simulates many weeks, execSyncs tooling,
-or exceeds ~2s wall time.
+The default suite is the fast inner loop — keep it fast. Promote a test to
+`.slow` when it:
+
+- simulates many weeks / runs a balance or determinism harness
+- `execSync`s a subprocess (build, validator script, `npx tsx`, …)
+- exceeds ~2s wall time (the suite is audited periodically for >5s
+  stragglers — demote by renaming to `.slow.test.ts`, then regenerate
+  `runnerGroups.json` via `bun scripts/test-audit-scan.mjs`)
+
+The slow suite is **not** a per-PR gate. It runs nightly and on
+`workflow_dispatch` in `.github/workflows/nightly.yml`; run it locally when
+a change touches the sim/pipeline/economy paths those files cover, or
+before merging work that could shift long-horizon behavior.
+
+## E2E tiers
+
+Playwright runs in two tiers:
+
+- `bun run e2e` — fast tier: chromium only, skips `@slow`-tagged specs via
+  `--grep-invert @slow`. This is the default verification for UI changes
+  and the CI `e2e` job.
+- `bun run e2e:all` — full matrix: all 5 projects (chromium, firefox,
+  webkit, Mobile Chrome, Mobile Safari) including `@slow` specs. Ad hoc
+  only; also runs nightly per-browser shard in `nightly.yml`.
+
+Tag a spec `{ tag: '@slow' }` when it drives a long session (e.g.
+`seasonal-tournament`'s full-year soak, ~17 min locally). When in doubt,
+keep new e2e specs in the fast tier — short navigations and assertions,
+no multi-week advances.
 
 ## Runner parity
 
 - `bunx vitest run` — default suite (CI `test` job)
 - `bun test --isolate` — `bun run test:bun` (CI `bun-test` job)
 - `bunx vitest run --config vitest.config.slow.ts` — slow suite
+  (nightly `slow-tests` job, or `bun run test:slow`)
 - `bunx vitest run --config vitest.config.all.ts` — everything, isolated
 - `bunx vitest run --coverage` — v8 coverage, fails below `coverage.thresholds`
   in `vitest.config.ts` (CI `coverage` job)
 - `bun run electron:compile` — electron main bundle (CI `electron` job)
-- `bunx playwright test --project=chromium` — e2e (CI `e2e` job)
+- `bun run e2e` — chromium smoke, `@slow` excluded (CI `e2e` job)
+- `bun run e2e:all` — full browser matrix + `@slow` (nightly `e2e-matrix`
+  job, or ad hoc)
 
 Bun caveats (enforced by `bunRunnerSafety.test.ts`):
 

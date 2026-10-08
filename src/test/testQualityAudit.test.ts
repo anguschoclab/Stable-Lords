@@ -217,9 +217,11 @@ describe('testQualityAudit', () => {
     expect(outside, `Slow tests outside src/test/: ${outside.join(', ')}`).toEqual([]);
     const slowConfig = fs.readFileSync(path.join(REPO_ROOT, 'vitest.config.slow.ts'), 'utf8');
     expect(slowConfig).toContain('src/test/**/*.slow.test.ts');
+    expect(slowConfig).toContain('src/test/**/*.slow.test.tsx');
     // default config must exclude slow tests so they never run in the fast suite
     const defaultConfig = fs.readFileSync(path.join(REPO_ROOT, 'vitest.config.ts'), 'utf8');
     expect(defaultConfig).toContain('**/*.slow.test.ts');
+    expect(defaultConfig).toContain('**/*.slow.test.tsx');
   });
 
   it('runnerGroups.json matches live isolation signals (regen: test-audit-scan)', () => {

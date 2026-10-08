@@ -34,7 +34,11 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  /* Configure projects for major browsers */
+  /*
+   * Two tiers: `bun run e2e` is the fast tier (chromium only, skips
+   * @slow-tagged marathon specs via --grep-invert). `bun run e2e:all` runs
+   * the full matrix below plus @slow specs — ad hoc / nightly CI only.
+   */
   projects: [
     {
       name: 'chromium',

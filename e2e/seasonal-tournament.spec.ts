@@ -661,13 +661,18 @@ function collectCoverage(cov: YearlyCoverage, snap: StateSnap) {
   cov.minRecruitPool = Math.min(cov.minRecruitPool, c.recruitPoolSize);
 }
 
-test('seasonal tournaments: full game year + year-2 rollover tourney', async ({
-  page,
-  isMobile,
-}: {
-  page: Page;
-  isMobile: boolean;
-}) => {
+// @slow: excluded from the default `bun run e2e` smoke tier (chromium-only,
+// --grep-invert @slow); runs in `bun run e2e:all` and the nightly matrix.
+test(
+  'seasonal tournaments: full game year + year-2 rollover tourney',
+  { tag: '@slow' },
+  async ({
+    page,
+    isMobile,
+  }: {
+    page: Page;
+    isMobile: boolean;
+  }) => {
   // A full year soak: 52 week advances + 4 tournament weeks.
   test.setTimeout(1_500_000);
 

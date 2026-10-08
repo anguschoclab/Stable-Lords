@@ -15,7 +15,7 @@ export default defineConfig({
     hookTimeout: 30000,
     pool: 'threads',
     fileParallelism: true,
-    include: ['src/test/**/*.slow.test.ts'],
+    include: ['src/test/**/*.slow.test.ts', 'src/test/**/*.slow.test.tsx'],
     exclude: ['node_modules/', '**/e2e/**'],
   },
 });

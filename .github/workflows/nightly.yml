@@ -1,0 +1,50 @@
+name: Nightly
+
+# Extended coverage that is too slow to gate every push/PR:
+#   slow-tests   — the *.slow.test.ts vitest suite (multi-week sims, subprocess
+#                  compile/validate checks, balance harnesses)
+#   e2e-matrix   — the full Playwright browser matrix incl. @slow marathon
+#                  specs (per-PR CI runs the chromium smoke tier only)
+# Both are also runnable ad hoc via workflow_dispatch.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  slow-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: bunx vitest run --config vitest.config.slow.ts
+
+  e2e-matrix:
+    runs-on: ubuntu-latest
+    # workers:1 on CI means a single job running all 5 projects serializes the
+    # ~25min seasonal-tournament marathon 5× — sharding per project keeps each
+    # job inside its own timeout.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: 'chromium', browser: 'chromium' }
+          - { project: 'firefox', browser: 'firefox' }
+          - { project: 'webkit', browser: 'webkit' }
+          - { project: 'Mobile Chrome', browser: 'chromium' }
+          - { project: 'Mobile Safari', browser: 'webkit' }
+    # @slow specs self-set up to 25min on a starved runner.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps ${{ matrix.browser }}
+      - run: bunx playwright test --project="${{ matrix.project }}"

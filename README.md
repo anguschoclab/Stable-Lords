@@ -36,10 +36,12 @@ bun run electron:dev # desktop (Electron) version
 ## Development
 
 ```sh
-bun run test         # run the test suite (Vitest)
+bun run test         # fast test suite (Vitest, *.slow.test.* excluded)
+bun run test:slow    # slow suite (multi-week sims, subprocess checks) — ad hoc/nightly
 bun run type-check   # TypeScript type-check
 bun run lint         # ESLint
-bun run e2e          # Playwright end-to-end tests
+bun run e2e          # Playwright smoke (chromium, @slow specs skipped)
+bun run e2e:all      # full browser matrix + marathon specs — ad hoc/nightly
 ```
 
 The player-facing manual lives in [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md); design docs are in [`docs/`](docs/).

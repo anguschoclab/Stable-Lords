@@ -38,7 +38,13 @@ export default defineConfig({
           setupFiles: ['./src/test/_setup/setup.node.ts'],
           isolate: false,
           include: ['**/*.test.ts', '**/*.test.tsx'],
-          exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts', ...isolatedGlobs],
+          exclude: [
+            'node_modules/',
+            '**/e2e/**',
+            '**/*.slow.test.ts',
+            '**/*.slow.test.tsx',
+            ...isolatedGlobs,
+          ],
         },
       },
       {
@@ -47,7 +53,7 @@ export default defineConfig({
           setupFiles: ['./src/test/_setup/setup.node.ts', './src/test/_setup/setup.dom.ts'],
           isolate: true,
           include: isolatedGlobs,
-          exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts'],
+          exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts', '**/*.slow.test.tsx'],
         },
       },
     ],

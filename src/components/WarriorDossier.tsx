@@ -1,6 +1,5 @@
-import React, { lazy, Suspense, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { findWarrior } from '@/engine/core/historyResolver';
 import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -33,29 +32,18 @@ interface WarriorDossierProps {
 export const WarriorDossier = React.memo(function WarriorDossier({
   warriorId,
 }: WarriorDossierProps) {
-  const state = useGameStore(
-    useShallow((s) => ({
-      player: s.player,
-      rivals: s.rivals,
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      realmRankings: s.realmRankings,
-    }))
-  );
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Use fine-grained selector to find the warrior
-  const warrior = useMemo(() => findWarrior(state, warriorId), [state, warriorId]);
-
-  // Also select rankings separately
-  const rankings = state.realmRankings?.[warriorId];
+  // ⚡ Bolt: Use targeted selectors to prevent excessive re-renders when large
+  // arrays like graveyard/retired change but the specific warrior doesn't.
+  const warrior = useGameStore((s) => findWarrior(s, warriorId));
+  const rankings = useGameStore((s) => s.realmRankings?.[warriorId]);
+  const isPlayerOwned = useGameStore((s) => s.roster.some((w) => w.id === warriorId));
 
   if (!warrior)
     return <div className="p-8 text-center text-muted-foreground">Warrior not found.</div>;
 
   const record = `${warrior.career.wins}W - ${warrior.career.losses}L - ${warrior.career.kills}K`;
-  const isPlayerOwned = state.roster.some((w) => w.id === warriorId);
 
   return (
     <ScrollArea className="h-full pr-4">

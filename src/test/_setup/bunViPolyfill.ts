@@ -232,6 +232,20 @@ if (!v.unstubAllEnvs) {
   };
 }
 
+if (!v.advanceTimersByTimeAsync) {
+  // Mirrors vitest's async advance: flush microtasks BEFORE the clock moves
+  // so jobs queued behind a promise chain (e.g. a timer registered inside a
+  // jobQueue enqueue) get to arm before their deadline elapses — the sync
+  // advanceTimersByTime would fire past a timer that was never registered.
+  v.advanceTimersByTimeAsync = async (ms: number) => {
+    await Promise.resolve();
+    await Promise.resolve();
+    v.advanceTimersByTime(ms);
+    await Promise.resolve();
+    await Promise.resolve();
+  };
+}
+
 if (!v.runAllTimersAsync) {
   // Drain pending fake timers, flushing microtasks between rounds so
   // promise-yielding timer callbacks can reschedule. Mirrors vitest's

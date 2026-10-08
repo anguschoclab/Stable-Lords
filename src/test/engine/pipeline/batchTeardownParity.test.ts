@@ -48,15 +48,20 @@ describe('batch teardown parity', () => {
     expect(result.finalState.arenaHistory.length).toBeLessThanOrEqual(500);
   });
 
-  it('advanceYear composes four quarters with one pendingArchives stream', async () => {
-    const result = await TimeAdvanceService.advanceYear(createFreshState(SEED, T0), {
-      headless: true,
-    });
-    expect(result.quarterResults).toHaveLength(4);
-    for (const q of result.quarterResults) {
-      expect(q.weeksCompleted).toBe(13);
-      expect(q.state.deferredBoutLogs ?? []).toEqual([]);
-    }
-    expect((result.state.tournaments ?? []).every((t) => t.completed)).toBe(true);
-  });
+  it(
+    'advanceYear composes four quarters with one pendingArchives stream',
+    async () => {
+      const result = await TimeAdvanceService.advanceYear(createFreshState(SEED, T0), {
+        headless: true,
+      });
+      expect(result.quarterResults).toHaveLength(4);
+      for (const q of result.quarterResults) {
+        expect(q.weeksCompleted).toBe(13);
+        expect(q.state.deferredBoutLogs ?? []).toEqual([]);
+      }
+      expect((result.state.tournaments ?? []).every((t) => t.completed)).toBe(true);
+    },
+    // 52 headless weeks exceed bun's 5s default test timeout (~11s there).
+    60_000
+  );
 });

@@ -142,6 +142,13 @@ explains the autosim +21% growth curve and the slowest weeks late in runs.
 - `tsc --build --force`: clean.
 - `eslint` on changed surface: clean.
 - `bunx vitest run` (full fast suite): **813 files / 8,959 tests / 0 failures**.
+- `bun test --isolate` (full suite): **8,917 pass / 0 fail** after 954350d9
+  (polyfilled `advanceTimersByTimeAsync`; 60s timeout on the ~10s advanceYear
+  contract). The earlier 15-min hang did not reproduce — prior run was
+  contended.
+- `narrative-validate`: clean.
+- `parallelDeterminism.slow`: pool 1 vs 4 byte-identical over 8 weeks.
+- `stateInvariants.slow`: 30 sequential + 30 shard-parallel weeks clean.
 - `determinism.slow`: byte-identical two-run hash.
 - 40w week-mode A/B soak: **258.3 → 228.5 ms/wk (−11.5%)**, 0 invariant
   violations; rivalStrategy 146.8 → 121.3 ms/wk.

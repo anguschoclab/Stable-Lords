@@ -829,6 +829,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'standard_arena_blood_stain_2',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Unwashable Stain',
+    narrative:
+      'Near the center of the arena lies a dark red stain that scrubbing has never managed to remove. It is said to mark the spot where the first champion fell.',
+  },
+  {
+    id: 'gutter_pit_the_blind_orphan_2',
+    arenaId: 'gutter_pit',
+    type: 'famous_death',
+    title: 'The Blind Orphan',
+    narrative:
+      'A legendary rogue who fought entirely by sound met their end here when the crowd unexpectedly went completely silent in awe, leaving them entirely deaf to a fatal stab.',
+  },
+  {
+    id: 'sundered_coliseum_orphans_echo_2',
+    arenaId: 'sundered_coliseum',
+    type: 'architectural_quirk',
+    title: "The Orphan's Echo",
+    narrative:
+      'A crack in the western wall perfectly catches the wind, emitting a sound remarkably like a child weeping. Opponents of high empathy often find their morale broken here.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

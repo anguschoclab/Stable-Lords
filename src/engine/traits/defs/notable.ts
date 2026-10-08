@@ -1,6 +1,33 @@
 import type { TraitDef } from '../types';
 
 export const NOTABLE_TRAITS: Record<string, TraitDef> = {
+  orphan_blood_rage: {
+    id: 'orphan_blood_rage',
+    name: 'Blood Rage',
+    description: 'Years of abuse have left a lingering rage that triggers when bleeding.',
+    effect: { attModLowHp: 1, endModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  gutter_phantom_strike: {
+    id: 'gutter_phantom_strike',
+    name: 'Phantom Strike',
+    description: 'Learned to strike from the shadows of the gutter.',
+    effect: { attModEarly: 1, crtChanceMod: 1, endModFresh: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  shadow_born_killer: {
+    id: 'shadow_born_killer',
+    name: 'Shadow Born Killer',
+    description: 'Raised in the dark, they strike with lethal precision.',
+    effect: { attModLate: 1, crtChanceMod: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_vengeance_seeker: {
     id: 'orphan_vengeance_seeker',
     name: 'Vengeance Seeker',

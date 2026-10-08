@@ -171,4 +171,9 @@ export const DEFINING_MOMENTS: string[] = [
   'until they watched their shadow detach and strike first',
   'realizing the only light in the world comes from a sparked blade',
   'waiting for the moment the crowd falls entirely silent in fear',
+  'realizing that the blood on their hands was the only currency that mattered',
+  'until they strangled a corrupt overseer with their own rusted chains',
+  'realizing that mercy in the undercity is just an invitation for an early grave',
+  'knowing that the iron portcullis of the arena was the only true gate to freedom',
+  'until they shattered an overseer’s jaw and claimed their first taste of actual power',
   ];

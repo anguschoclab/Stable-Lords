@@ -332,4 +332,9 @@ export const ORIGINS: string[] = [
   'Raised by the grim executioners of the Iron Tower',
   'Discovered clutching a shattered skull in the deep mines',
   'Surviving the Long Winter by eating rats in the Under-Vault',
+  'Abandoned in the rusted iron cages of the Cinder-Ash Orphanage',
+  'Raised by the grim grave-keepers of the Obsidian Cemetery',
+  'Survived the silent starvation of the Weeping Sisters Asylum',
+  'Found swaddled in blood-stained rags beneath the Shattered Bridge',
+  'Sold to the pit-masters of the Scab District for a handful of copper',
 ];

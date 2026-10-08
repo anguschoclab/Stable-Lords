@@ -2,7 +2,7 @@
 
 When running shell commands or passing file paths, **always wrap paths in double quotes**. Never use backslash-escaped spaces. For example, you must use "src/folder with spaces/file.ts" instead of src/folder\ with\ spaces/file.ts.
 
-# Testing Discipline
+## Testing Discipline
 
 The test suite is tiered — the default run is the fast inner loop, and the
 expensive tiers are deliberate, not automatic:
@@ -20,4 +20,6 @@ expensive tiers are deliberate, not automatic:
 - **When writing tests:** put the spec in the fast tier by default; name it
   `*.slow.test.ts` if it simulates many weeks, execSyncs a subprocess, or
   takes >~2s, and tag e2e specs `{ tag: '@slow' }` if they drive long
-  sessions. See `docs/TESTING.md` for the full conventions.
+  sessions. File the spec under the `src/test/<domain>/` dir matching its
+  subject's domain — `testQualityAudit` fails on misfiled tests. See
+  `docs/TESTING.md` for the full conventions.

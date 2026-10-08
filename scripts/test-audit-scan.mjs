@@ -276,15 +276,44 @@ fs.writeFileSync(
   )
 );
 
+// Test-dir → prod-domain conformance: a test under src/test/<cat>/ should
+// import at least one module from that domain — otherwise it tests another
+// domain's subjects and is misfiled. Zero-prod-import files are scanner-style
+// audits and exempt. Judgment-call residuals are allowlisted below.
+const CATEGORY_DOMAIN = {
+  components: ['src/components', 'src/pages'],
+  pages: ['src/pages'],
+  routes: ['src/routes'],
+  engine: ['src/engine'],
+  data: ['src/data'],
+  lib: ['src/lib'],
+  utils: ['src/utils'],
+  constants: ['src/constants'],
+  schemas: ['src/schemas'],
+  state: ['src/state'],
+  hooks: ['src/hooks'],
+};
+const misplacedCategoryFiles = records
+  .filter((r) => {
+    const cat = /^src\/test\/([^/]+)\//.exec(r.file)?.[1];
+    const domain = cat && CATEGORY_DOMAIN[cat];
+    if (!domain) return false;
+    const prod = r.imports.filter((i) => i.startsWith('src/') && !i.startsWith('src/test'));
+    return prod.length > 0 && !prod.some((i) => domain.some((d) => i.startsWith(d)));
+  })
+  .map((r) => r.file)
+  .sort();
+
 // Baseline allowlist for testQualityAudit.test.ts structural guards — the set
 // of CURRENT violations each guard tolerates. Entries must shrink to empty as
-// Phases 3–4 land fixes. Committed (lives outside gitignored scripts/out).
+// fixes land. Committed (lives outside gitignored scripts/out).
 const baseline = {
   generatedAt: new Date().toISOString(),
   strayTestFiles: records
     .filter((r) => !r.file.startsWith('src/test/'))
     .map((r) => r.file)
     .sort(),
+  misplacedCategoryFiles,
   sameModuleBasenamePairs: basenameCollisions
     .filter((g) => g.sharedTargets.length > 0)
     .map((g) => g.files.sort())

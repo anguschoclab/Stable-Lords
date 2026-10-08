@@ -5,21 +5,17 @@
  */
 import './sharedMocks';
 import { enableMapSet } from 'immer';
-import { clearWarriorCache as clearSelectionCache } from '@/engine/core/warriorLookup';
-import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
-import { loadCombatNarrative } from '@/data/narrative';
-import { engineEventBus } from '@/engine/core/EventBus';
-import { setMockIdGenerator } from '@/utils/idUtils';
-import { clearReconstructionCache } from '@/state/serialization';
-import { resetArenaRegistry } from '@/data/arenas';
 
 enableMapSet();
 
 // OPFS modules are never mocked globally; ensure no stale mock leaks across files.
 vi.unmock('@/engine/storage/opfsArchive');
 
-// Eagerly load combat narrative data for all tests
+// Eagerly load combat narrative data for all tests. Imported lazily like the
+// afterEach resets below — a static import would defeat vi.mock of
+// '@/data/narrative' in test files that stub it.
 beforeAll(async () => {
+  const { loadCombatNarrative } = await import('@/data/narrative');
   await loadCombatNarrative();
 });
 
@@ -231,24 +227,40 @@ afterEach(() => {
   }
 });
 
-// Clear module-level WeakMap caches to prevent state pollution across tests
-afterEach(() => {
+// Clear module-level WeakMap caches to prevent state pollution across tests.
+// Imported lazily: static imports of prod modules in a setup file defeat
+// vi.mock of those modules (see the enginePool comment below — observed in
+// rivalWarriorFactory.test.ts). When a file mocks one of these, the dynamic
+// import resolves to the mock, the missing export throws, and the catch skips
+// the reset — correct, since a mocked module owns its own state.
+afterEach(async () => {
   try {
-    clearSelectionCache?.();
+    const { clearWarriorCache } = await import('@/engine/core/warriorLookup');
+    const { clearHistoryResolverCaches } = await import('@/engine/core/historyResolver');
+    const { clearReconstructionCache } = await import('@/state/serialization');
+    const { resetArenaRegistry } = await import('@/data/arenas');
+    clearWarriorCache?.();
     clearHistoryResolverCaches?.();
     clearReconstructionCache?.();
     resetArenaRegistry?.();
-  } catch (e) {
-    // Ignore if modules don't export clear functions
+  } catch {
+    // mocked or unavailable in this file's registry — nothing to reset
   }
 });
 
 // Reset engine singletons mutated by tests — preconditions for sharing module
 // state across files (isolate: false) and for intra-file leak prevention.
-// Sentinel coverage: src/test/_setup/stateReset.test.ts.
-afterEach(() => {
-  engineEventBus.clear();
-  setMockIdGenerator(null);
+// Sentinel coverage: src/test/_setup/stateReset.test.ts. Same lazy-import
+// rule: several specs vi.mock('@/engine/core/EventBus').
+afterEach(async () => {
+  try {
+    const { engineEventBus } = await import('@/engine/core/EventBus');
+    const { setMockIdGenerator } = await import('@/utils/idUtils');
+    engineEventBus.clear();
+    setMockIdGenerator(null);
+  } catch {
+    // mocked or unavailable in this file's registry — nothing to reset
+  }
 });
 
 // Reset the shared engine pool. Imported lazily: a static import would pull

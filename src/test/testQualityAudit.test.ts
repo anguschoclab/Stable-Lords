@@ -93,10 +93,12 @@ function allVitestTestFiles(): string[] {
 function extractImportTargets(file: string): Set<string> {
   const content = fs.readFileSync(file, 'utf8');
   const targets = new Set<string>();
-  const re = /from\s+['"]([^'"]+)['"]/g;
+  // Static `from '…'` plus dynamic `import('…')` — several component specs
+  // lazy-import their subject inside the test body.
+  const re = /from\s+['"]([^'"]+)['"]|import\s*\(\s*['"]([^'"]+)['"]/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(content))) {
-    const spec = m[1]!;
+    const spec = (m[1] ?? m[2])!;
     if (spec.startsWith('@/')) targets.add('src/' + spec.slice(2));
     else if (spec.startsWith('.')) {
       const resolved = path.normalize(path.join(path.dirname(file), spec));
@@ -222,6 +224,73 @@ describe('testQualityAudit', () => {
     const defaultConfig = fs.readFileSync(path.join(REPO_ROOT, 'vitest.config.ts'), 'utf8');
     expect(defaultConfig).toContain('**/*.slow.test.ts');
     expect(defaultConfig).toContain('**/*.slow.test.tsx');
+  });
+
+  it('slow suffix is terminal (foo.slow.test.ts, never foo.slow.bar.test.ts)', () => {
+    const violations = allVitestTestFiles()
+      .map(rel)
+      .filter((f) => f.includes('.slow.') && !/\.slow\.test\.(ts|tsx)$/.test(f));
+    expect(violations, `misplaced .slow qualifier:\n${violations.join('\n')}`).toEqual([]);
+  });
+
+  it('test files import from their own domain (category conformance)', () => {
+    // A test under src/test/<cat>/ should import ≥1 module from that domain —
+    // otherwise its subjects live elsewhere and the file is misfiled.
+    // Zero-prod-import files are scanner-style audits and exempt.
+    const CATEGORY_DOMAIN: Record<string, string[]> = {
+      components: ['src/components', 'src/pages'],
+      pages: ['src/pages'],
+      routes: ['src/routes'],
+      engine: ['src/engine'],
+      data: ['src/data'],
+      lib: ['src/lib'],
+      utils: ['src/utils'],
+      constants: ['src/constants'],
+      schemas: ['src/schemas'],
+      state: ['src/state'],
+      hooks: ['src/hooks'],
+    };
+    const violations: string[] = [];
+    for (const f of allVitestTestFiles()) {
+      const relPath = rel(f);
+      const cat = /^src\/test\/([^/]+)\//.exec(relPath)?.[1];
+      const domain = cat ? CATEGORY_DOMAIN[cat] : undefined;
+      if (!domain) continue;
+      const prod = [...extractImportTargets(f)].filter(
+        (t) => t.startsWith('src/') && !t.startsWith('src/test')
+      );
+      if (prod.length > 0 && !prod.some((t) => domain.some((d) => t.startsWith(d)))) {
+        violations.push(relPath);
+      }
+    }
+    expectAllowlistClean(
+      violations.sort(),
+      baseline.misplacedCategoryFiles,
+      'misplaced-category'
+    );
+  });
+
+  it('e2e marathon specs carry the @slow tag', () => {
+    // A spec whose timeout exceeds 5min is a marathon — it must be tagged
+    // @slow so `bun run e2e` (chromium smoke, --grep-invert @slow) skips it.
+    // Sub-5min bumps for slow mobile nav are smoke-tier and stay untagged.
+    const e2eDir = path.join(REPO_ROOT, 'e2e');
+    const violations: string[] = [];
+    for (const f of readDirRecursive(e2eDir, (n) => n.endsWith('.spec.ts'))) {
+      const content = fs.readFileSync(f, 'utf8');
+      const maxTimeout = Math.max(
+        0,
+        ...[...content.matchAll(/test\.setTimeout\(([^)]*)\)/g)].flatMap((m) =>
+          [...m[1]!.matchAll(/(\d[\d_]*)/g)].map((n) => Number(n[1]!.replace(/_/g, '')))
+        )
+      );
+      if (maxTimeout > 300_000 && !content.includes("'@slow'")) {
+        violations.push(rel(f));
+      }
+    }
+    expect(violations, `marathon e2e specs missing @slow tag:\n${violations.join('\n')}`).toEqual(
+      []
+    );
   });
 
   it('runnerGroups.json matches live isolation signals (regen: test-audit-scan)', () => {

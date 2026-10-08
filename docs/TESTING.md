@@ -6,7 +6,7 @@ How to write, place, and run tests in this repo.
 
 All tests live under `src/test/` mirroring the production tree:
 
-```
+```text
 src/test/
   _fixtures/factories.ts   shared entity builders (schema-valid)
   _mocks/                  shared mock modules (synchronous only — see below)
@@ -22,7 +22,29 @@ Rules:
 - **Never colocate tests** next to source (`src/engine/foo.test.ts`). The
   structural audit fails on any test file outside `src/test/`.
 - Mirror the production path: `src/engine/ai/workers/competitionWorker/foo.ts`
-  → `src/test/engine/ai/workers/competitionWorker/foo.test.ts`.
+  → `src/test/engine/ai/workers/competitionWorker/foo.test.ts`. Hooks that
+  live beside their page/component (`src/pages/X/hooks/useY.ts`) mirror under
+  `src/test/pages/X/hooks/` — not the flat `src/test/hooks/` (that dir is for
+  `src/hooks/` subjects only).
+- **Domain conformance** (enforced by `testQualityAudit.test.ts`): a test
+  under `src/test/<cat>/` must import at least one module from that domain
+  (`components/` → `src/components|src/pages`, `engine/` → `src/engine`,
+  `data/` → `src/data`, `schemas/` → `src/schemas`, `constants/` →
+  `src/constants`, `state/` → `src/state`, `utils/` → `src/utils`,
+  `hooks/` → `src/hooks`, `lib/` → `src/lib`, `routes/` → `src/routes`).
+  Misfiled tests get moved, not allowlisted — the two allowlisted residuals
+  are judgment calls documented in `auditBaseline.json`
+  (`misplacedCategoryFiles`).
+- Non-mirror dirs are for suite infrastructure and repo audits only:
+  `_fixtures/`, `_mocks/`, `_setup/`, `config/` (tooling/dep guards),
+  `megaplan/` (initiative guard specs), `integration/`, `perf/`, `ui/`,
+  `lore/`, `scripts/`, `vite/`. Scanner-style audits that read source via fs
+  instead of importing it belong here.
+- Dotted qualifiers are category hints: `.integration` (multi-module flow),
+  `.e2e` (in-suite engine end-to-end), `.perf` (timing gate), `.guard`
+  (structural audit). `.slow` is the tier marker and must be **terminal**:
+  `foo.integration.slow.test.ts`, never `foo.slow.integration.test.ts`
+  (enforced).
 
 ## Environments
 
@@ -142,12 +164,15 @@ Use a dynamic `await import()` inside `afterEach` (see the `enginePool` and
 - DOM tests carry an explicit env pragma (`jsdom`; a deliberate `node` pragma
   is a valid opt-out for absence-assertions)
 - no `vi.mock(() => import())` deadlock pattern
+- `.slow` is terminal in filenames (`*.slow.test.{ts,tsx}` only)
+- test files import from their own domain (see Domain conformance above)
+- e2e specs with `test.setTimeout` > 5min carry a `@slow` tag
 
 Allowlists live in `src/test/_setup/auditBaseline.json` and are
 **shrink-only**: fixing a violation requires deleting its entry (the gate
 fails on stale entries). Regenerate after intentional changes:
 
-```
+```sh
 bun scripts/test-audit-scan.mjs
 ```
 

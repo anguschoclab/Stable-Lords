@@ -1,5 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
+import * as hitLocationModule from '@/engine/combat/mechanics/hitLocation';
 import { protectCovers, rollHitLocation } from '@/engine/combat/mechanics/hitLocation';
+
+const { HIT_LOCATIONS } = hitLocationModule;
 
 describe('hitLocation mechanics', () => {
   describe('protectCovers', () => {
@@ -296,5 +299,54 @@ describe('Hit Location', () => {
       // Covered nothing, exposed array length = 7. Pick index 0 -> 'head'
       expect(rollHitLocation(rng, 'invalid', 'none')).toBe('head');
     });
+  });
+});
+
+// Branches only reachable via out-of-range rng values or a fully-covered
+// protect — merged from hitLocation.coverage.test.ts (the rest of that file
+// duplicated describes above).
+describe('hitLocation fallback branches', () => {
+  it('covers the undefined pick fallback (pick ?? "chest")', () => {
+    let rngCallCount = 0;
+    const rng = () => {
+      rngCallCount++;
+      if (rngCallCount === 1) return 0.5;
+      return 1;
+    };
+    const location = rollHitLocation(rng, 'Any', 'Body');
+    expect(location).toBe('chest');
+  });
+
+  it('covers the undefined exposed pick fallback', () => {
+    let rngCallCount = 0;
+    const rng = () => {
+      rngCallCount++;
+      if (rngCallCount === 1) return 0.2;
+      if (rngCallCount === 2) return 1;
+      return 0.5;
+    };
+    const location = rollHitLocation(rng, 'Any', 'Body');
+    expect(location).toBe(HIT_LOCATIONS[Math.floor(0.5 * HIT_LOCATIONS.length)]);
+  });
+
+  it('handles exposed.length === 0 via mocked spy on protectCovers', () => {
+    vi.spyOn(hitLocationModule, 'protectCovers').mockReturnValue([...HIT_LOCATIONS]);
+
+    let rngCallCount = 0;
+    const rng = () => {
+      rngCallCount++;
+      if (rngCallCount === 1) return 0.2; // triggers exposed check
+      return 0; // fallback pick
+    };
+
+    const location = rollHitLocation(rng, 'Any', 'Everything');
+    expect(location).toBe(HIT_LOCATIONS[0]);
+    vi.restoreAllMocks();
+  });
+});
+
+describe('protectCovers extra coverage', () => {
+  it('handles empty string properly', () => {
+    expect(protectCovers('')).toEqual([]);
   });
 });

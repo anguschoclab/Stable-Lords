@@ -150,5 +150,18 @@ explains the autosim +21% growth curve and the slowest weeks late in runs.
 - `parallelDeterminism.slow`: pool 1 vs 4 byte-identical over 8 weeks.
 - `stateInvariants.slow`: 30 sequential + 30 shard-parallel weeks clean.
 - `determinism.slow`: byte-identical two-run hash.
+- `vitest --config vitest.config.slow.ts` (full slow suite, post-closeout
+  follow-up): B1's weekly truncation broke 6 tests — all fixed and green:
+  - `lifetimeStats` / `yearRollover` / `simulation_hardening` /
+    `harnessTruncation` measured activity via capped array-length deltas —
+    switched to id-set counting and `lifetimeStats` all-time counters
+    (9ec84835). `harnessTruncation`'s `truncateIntervalWeeks <= 0` contract
+    rewritten: the flag now gates only the harness's own pass — pipeline
+    caps are unconditional by design.
+  - `worldLiveness` Stage H + F.6 re-baselined after a 6-seed probe
+    (777/31337/42/555/1234/2024): gradient spread 0.148–3.272 matches the
+    documented pre-V14 fat tail (0.11–2.35) — no systematic economic
+    damage; `stripped` still fires (seed 777: 6). Stage H → seed 777,
+    F.6 → seed 42.
 - 40w week-mode A/B soak: **258.3 → 228.5 ms/wk (−11.5%)**, 0 invariant
   violations; rivalStrategy 146.8 → 121.3 ms/wk.

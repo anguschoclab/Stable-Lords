@@ -4079,7 +4079,14 @@
         "lines": [
           "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
           "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
-          "The polished arena floor betrays the fighters' footing under the lanterns!"
+          "The polished arena floor betrays the fighters' footing under the lanterns!",
+          "A pool of standing water turns the stones slick, threatening to upset any rapid maneuvers!",
+          "The arena floor is deceptively smooth here, making hard pivots dangerous.",
+          "Loose gravel skitters across the paving, creating an unstable surface.",
+          "A patch of slick blood on the ground creates a treacherous hazard.",
+          "The wet flagstones offer little grip, causing the fighters to slide momentarily.",
+          "Slick mud coats the arena floor, forcing a slower, more deliberate pace.",
+          "A treacherous patch of slick moss causes a momentary loss of balance."
         ]
       }
     }

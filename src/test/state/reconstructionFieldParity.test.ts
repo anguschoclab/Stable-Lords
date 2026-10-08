@@ -31,7 +31,7 @@ const EXEMPTIONS = new Set([
 ]);
 
 function collectKeys(): string[] {
-  const m = SERIALIZATION.match(/function collectStoreValues[\s\S]*?\n  return \{([\s\S]*?)\n  \};/);
+  const m = SERIALIZATION.match(/function collectStoreValues[\s\S]*?\n {2}return \{([\s\S]*?)\n {2}\};/);
   expect(m, 'could not locate collectStoreValues return literal').not.toBeNull();
   return [...m![1]!.matchAll(/^\s*(\w+):/gm)].map((x) => x[1]!);
 }

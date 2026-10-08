@@ -22,7 +22,9 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     }
 
     const finalRivalCount = state.rivals?.length || 0;
-    const totalDeaths = state.graveyard?.length || 0;
+    // graveyard is retention-capped (TRUNCATION_CAPS.graveyard) — the all-time
+    // death count lives in lifetimeStats.kills.
+    const totalDeaths = state.lifetimeStats?.kills ?? state.graveyard?.length ?? 0;
     const initialWarriorCountAdjusted = Math.max(initialWarriorCount, 1);
     const annualDeathRate = totalDeaths / 1 / initialWarriorCountAdjusted;
 

@@ -5,6 +5,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { DeferredBoutLog } from '@/types/state.types';
+import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 
 // Minimal valid FightSummary shape — the weekly pipeline parses `title`
 // (getNamesFromTitle) and reads warriorIdA/D, winner, styleA/D.
@@ -105,7 +106,7 @@ describe('runSimulation — historical array truncation', () => {
     }
   }, 120000);
 
-  it('truncateIntervalWeeks <= 0 disables truncation entirely', async () => {
+  it('truncateIntervalWeeks <= 0 disables the harness pass — pipeline caps still apply', async () => {
     const { finalState, cumulative } = await runSimulation({
       weeks: 4,
       seed: 555,
@@ -113,9 +114,18 @@ describe('runSimulation — historical array truncation', () => {
       truncateIntervalWeeks: 0,
     });
 
-    // With truncation off, every bout ever fought remains in arenaHistory
-    expect(finalState.arenaHistory.length).toBe(cumulative.totalBouts);
-    expect(finalState.graveyard.length).toBe(cumulative.deaths);
+    // V14 B1: finalizeState truncates at every week boundary with the
+    // default caps — the flag now only governs the harness's own extra
+    // periodic pass. Retained arrays sit at the cap; all-time truth lives
+    // in the cumulative tracker and lifetimeStats.
+    expect(finalState.arenaHistory.length).toBe(
+      Math.min(cumulative.totalBouts, TRUNCATION_CAPS.arenaHistory)
+    );
+    expect(finalState.graveyard.length).toBe(
+      Math.min(cumulative.deaths, TRUNCATION_CAPS.graveyard)
+    );
+    expect(finalState.lifetimeStats?.bouts).toBe(cumulative.totalBouts);
+    expect(finalState.lifetimeStats?.kills).toBe(cumulative.deaths);
   }, 120000);
 
   it('keeps win/loss counters symmetric across the full run', async () => {

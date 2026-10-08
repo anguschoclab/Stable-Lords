@@ -62,6 +62,7 @@ describe('world liveness — 104 weeks (Stage H)', () => {
     //     once the natural comparator, but honest lethality is only ~2%/bout
     //     and folded-stable champions now report `displaced`, not `retired`.)
     const endings = pulses[pulses.length - 1]!.reignEndings;
+    console.log('[diag] reignEndings:', JSON.stringify(endings));
     expect(endings.stripped ?? 0).toBeGreaterThanOrEqual(1);
     expect(endings.stripped ?? 0).toBeLessThan(endings.defeated ?? 0);
 

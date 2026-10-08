@@ -27,11 +27,14 @@ describe('year rollover', () => {
     (state as any).absoluteWeek = deriveAbsoluteWeek(1, 50);
 
     const boutsPerWeek: number[] = [];
-    let prev = state.arenaHistory.length;
+    // Weekly truncation caps arenaHistory, so array-length deltas read zero
+    // once the cap is crossed even though bouts still fire — measure via the
+    // all-time lifetimeStats counter accumulated in finalizeState.
+    let prev = state.lifetimeStats?.bouts ?? 0;
     for (let i = 0; i < 6; i++) {
       state = await advanceWeek(state, { headless: true });
-      boutsPerWeek.push(state.arenaHistory.length - prev);
-      prev = state.arenaHistory.length;
+      boutsPerWeek.push((state.lifetimeStats?.bouts ?? 0) - prev);
+      prev = state.lifetimeStats?.bouts ?? 0;
     }
 
     expect(state.year).toBe(2);

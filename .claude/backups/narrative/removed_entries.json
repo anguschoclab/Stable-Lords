@@ -1,0 +1,32 @@
+[
+  {
+    "path": "pbp.hit_locations.right arm",
+    "removed": "RIGHT TRICEPS",
+    "kept": "RIGHT BICEPS"
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "removed": "LEFT TRICEPS",
+    "kept": "LEFT BICEPS"
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "removed": "Without breaking eye contact, {{defender}} leans out of the weapon's path.",
+    "kept": "Without breaking eye contact, {{defender}} calmly steps out of the weapon's deadly arc."
+  },
+  {
+    "path": "pbp.defenses.dodge.confident",
+    "removed": "{{defender}} doesn't even blink, leaning just far enough to let the strike whistle past.",
+    "kept": "{{defender}} doesn't even blink, swaying just enough to let the strike pass."
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "removed": "{{defender}} frantically throws their weapon up, barely arresting the crushing momentum.",
+    "kept": "{{defender}} frantically interposes their weapon, barely arresting the lethal momentum."
+  },
+  {
+    "path": "kill_text.default",
+    "removed": "{{attacker}} stands victorious over the broken form of {{defender}}.",
+    "kept": "{{attacker}} stands victorious over the ruined corpse of {{defender}}."
+  }
+]

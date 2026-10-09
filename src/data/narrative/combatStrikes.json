@@ -74,7 +74,11 @@
         "A poorly timed slash from {{attacker}} misses its true mark.",
         "{{attacker}} swings wide, a grazing cut against {{defender}}.",
         "{{defender}} easily leans back, turning {{attacker}}'s slash into a graze.",
-        "{{attacker}}'s blade slips, only scratching {{defender}}."
+        "{{attacker}}'s blade slips, only scratching {{defender}}.",
+        "The blade merely skips off their guard.",
+        "A shallow cut, drawing more anger than blood.",
+        "The edge catches on their armor, doing little harm.",
+        "Barely a scratch as the slash connects weakly."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -188,7 +192,7 @@
         "{{attacker}}'s {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}.",
         "In a blur of practiced rhythm, {{attacker}}'s {{weapon}} flows through {{defender}}'s guard to find the {{bodyPart}}.",
         "{{attacker}} turns the blade with frightening precision, finding a gap in the armor.",
-        "A maestro's stroke—{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
+        "A maestro's stroke\u2014{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
         "A textbook slashing technique from {{attacker}}, carving a clean, devastating arc.",
         "The crowd marvels as {{attacker}}'s blade sings through flesh with terrible grace.",
         "A masterful cut perfectly exploits the smallest opening in {{defender}}'s stance.",
@@ -364,10 +368,12 @@
         "{{defender}} sidesteps, forcing {{attacker}}'s bludgeon to slide clumsily off their {{bodyPart}}.",
         "{{attacker}}'s attack loses momentum, resulting in a dull, harmless thud against {{defender}}.",
         "{{attacker}} swings wide, a grazing blow against {{defender}}.",
-        "{{attacker}}'s heavy swing loses momentum, merely bumping {{defender}}.",
         "A clumsy bash from {{attacker}} bounces harmlessly.",
         "{{attacker}} fails to connect cleanly, delivering a weak glancing bash.",
-        "{{defender}} shrugs off a poorly aimed bash from {{attacker}}."
+        "{{defender}} shrugs off a poorly aimed bash from {{attacker}}.",
+        "A weak blow that simply bounces off.",
+        "The blunt impact is largely absorbed.",
+        "A glancing bash that fails to stagger them."
       ],
       "solid": [
         "{{attacker}} steps into the swing, bringing {{possessive}} {{weapon}} down hard on {{defender}}'s {{bodyPart}}.",
@@ -667,7 +673,10 @@
         "{{attacker}} misjudges the lunge, merely scraping {{defender}}.",
         "A weak thrust from {{attacker}} fails to find purchase.",
         "{{attacker}}'s point snags on armor, failing to pierce {{defender}}.",
-        "{{defender}} pivots, turning a deadly thrust into a minor graze."
+        "{{defender}} pivots, turning a deadly thrust into a minor graze.",
+        "The point scrapes off, finding no purchase.",
+        "A shallow thrust easily deflected.",
+        "The thrust catches on the edge of their defense."
       ],
       "solid": [
         "With practiced precision, {{attacker}} slips {{possessive}} {{weapon}} past {{defender}}'s defenses, striking the {{bodyPart}}!",
@@ -772,7 +781,6 @@
         "{{attacker}}'s point darts forward like a striking serpent, biting {{defender}}.",
         "A rapid lunge from {{attacker}} punches a clean hole in {{defender}}.",
         "{{defender}} gasps as {{attacker}}'s sharp tip finds a vulnerable seam.",
-        "{{attacker}} threads the needle, sinking their point deep into {{defender}}.",
         "With a swift jab, {{attacker}} perforates {{defender}}.",
         "{{attacker}} lunges with terrifying speed, punching a clean hole through {{defender}}'s defense into the {{bodyPart}}."
       ],
@@ -961,7 +969,10 @@
         "A wild swing from {{attacker}} merely grazes {{defender}}'s cheek.",
         "{{attacker}} fails to plant their feet, delivering a weak glancing blow.",
         "{{defender}} easily slips the punch, reducing it to a glancing strike.",
-        "A grazing knuckle from {{attacker}} leaves {{defender}} unfazed."
+        "A grazing knuckle from {{attacker}} leaves {{defender}} unfazed.",
+        "A weak punch that barely connects.",
+        "The blow grazes them, lacking power.",
+        "A glancing strike easily shrugged off."
       ],
       "solid": [
         "{{attacker}} unleashes a raw, bare-knuckle brawl, overwhelming {{defender}} with relentless strikes.",
@@ -972,7 +983,7 @@
         "{{attacker}} drives a piston-like straight punch directly into {{defender}}'s midsection.",
         "A heavy, calculated punch from {{attacker}} slams into {{defender}}'s {{bodyPart}}.",
         "{{attacker}} throws a wild, haymaker punch, putting their entire weight behind it.",
-        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} — a punishing blow!",
+        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} \u2014 a punishing blow!",
         "{{attacker}} closes the distance, throwing a brutal right hook at {{defender}}.",
         "{{attacker}} steps inside the guard and unloads a bone-shattering right hook.",
         "With a brutal uppercut, {{attacker}} lifts {{defender}} clean off their feet.",
@@ -1088,7 +1099,7 @@
         "With boxer-like perfection, the strike lands flush on the absolute weak point.",
         "The blow is delivered with cold, mechanical perfection and devastating timing.",
         "{{attacker}} slips inside the guard to deliver a textbook, staggering cross.",
-        "A master martial artist's strike—{{attacker}} hits the exact pressure point.",
+        "A master martial artist's strike\u2014{{attacker}} hits the exact pressure point.",
         "The punch is a masterpiece of kinetic linking, transferring maximum force.",
         "A clinic in unarmed combat; the punch exploits a millimeter of an opening.",
         "A textbook, flawless punch perfectly dismantles {{defender}}'s guard.",

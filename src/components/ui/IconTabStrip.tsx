@@ -23,13 +23,17 @@ export function IconTabStrip<T extends string>({
   className,
 }: IconTabStripProps<T>) {
   return (
-    <div className={cn('flex items-center gap-8 border-b border-white/5', className)}>
+    <div role="tablist" className={cn('flex items-center gap-8 border-b border-white/5', className)}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
+          role="tab"
+          aria-selected={activeTab === tab.id}
+          aria-controls={`panel-${tab.id}`}
+          id={`tab-${tab.id}`}
           onClick={() => onChange(tab.id)}
           className={cn(
-            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative',
+            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
             activeTab === tab.id
               ? 'text-primary'
               : 'text-muted-foreground/40 hover:text-foreground'

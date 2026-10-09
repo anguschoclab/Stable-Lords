@@ -71,12 +71,12 @@ test('selectable rows + icon tab strip', async ({ page, isMobile }) => {
   expect(rivalId).not.toBe('');
   await gotoInApp(page, `/world/stable/${rivalId}`);
 
-  const rosterTab = page.getByRole('button', { name: 'Roster', exact: true }).last();
-  const logsTab = page.getByRole('button', { name: 'Logs', exact: true }).last();
+  const rosterTab = page.getByRole('tab', { name: 'Roster', exact: true }).last();
+  const logsTab = page.getByRole('tab', { name: 'Logs', exact: true }).last();
   await expect(rosterTab).toBeVisible({ timeout: 10_000 });
 
   // Active tab carries the glowing bottom bar (bg-primary) — it moves on click.
-  const overviewTab = page.getByRole('button', { name: 'Overview', exact: true }).last();
+  const overviewTab = page.getByRole('tab', { name: 'Overview', exact: true }).last();
   await expect(overviewTab.locator('.bg-primary')).toHaveCount(1);
   await logsTab.click();
   await expect(logsTab.locator('.bg-primary')).toHaveCount(1);

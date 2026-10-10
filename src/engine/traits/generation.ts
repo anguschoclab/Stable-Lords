@@ -27,7 +27,7 @@ export function traitsByTier(tier: TraitTier): TraitDef[] {
 /**
  *
  */
-export type TraitId = keyof typeof TRAITS;
+// TraitId is defined as string in types.ts
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**

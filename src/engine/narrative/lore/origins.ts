@@ -332,4 +332,9 @@ export const ORIGINS: string[] = [
   'Raised by the grim executioners of the Iron Tower',
   'Discovered clutching a shattered skull in the deep mines',
   'Surviving the Long Winter by eating rats in the Under-Vault',
+  'Left bound at the rusted gates of the Ashen Sisterhood Asylum',
+  'Raised in the lightless oubliettes of the Hollow Hand Workhouse',
+  'Found shivering among the desecrated tombs of the Silent Order',
+  'Sold to the fighting pits by the debt-ridden wardens of the Weeping Stone',
+  'Endured the terrifying silence of the Blackwood isolation cells',
 ];

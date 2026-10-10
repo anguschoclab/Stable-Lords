@@ -829,6 +829,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'sundered_coliseum_shadow_step',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Shadow Step Massacre',
+    narrative:
+      'A legendary assassin used the lengthening shadows of the setting sun to completely dismantle an entire squad of guards before vanishing into the night.',
+  },
+  {
+    id: 'abyssal_pit_crimson_stain',
+    arenaId: 'the_abyssal_pit',
+    type: 'architectural_quirk',
+    title: 'The Crimson Stain',
+    narrative:
+      'The sand in the center of the pit is permanently stained a dark rust color, no matter how much fresh sand is poured over it.',
+  },
+  {
+    id: 'iron_cage_the_crushed_champion',
+    arenaId: 'the_iron_cage',
+    type: 'famous_death',
+    title: 'The Crushed Champion',
+    narrative:
+      'A massive, heavily armored gladiator was famously crushed when their smaller opponent managed to bend one of the iron bars, pinning the giant against the wall.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

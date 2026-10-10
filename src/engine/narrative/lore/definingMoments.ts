@@ -171,4 +171,9 @@ export const DEFINING_MOMENTS: string[] = [
   'until they watched their shadow detach and strike first',
   'realizing the only light in the world comes from a sparked blade',
   'waiting for the moment the crowd falls entirely silent in fear',
-  ];
+  'until they strangled a cruel matron with the very rags meant to bind them',
+  'realizing that the blood-soaked sands were the only true home for the forgotten',
+  'knowing that their scars were merely a ledger of debts soon to be repaid',
+  'until they shattered a taskmaster’s hand and learned the intoxicating taste of power',
+  'waiting for the day they could turn the screams of the arena into their own personal choir',
+];

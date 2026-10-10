@@ -101,7 +101,10 @@
       "With operatic drama, {{attacker}} brings the weapon down, ending {{defender}} in a spray of crimson.",
       "{{defender}} stumbles, realizes their mistake, and twitches once as {{attacker}} stamps out their life.",
       "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark.",
-      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd."
+      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd.",
+      "A cold, systematic dispatch. The arena falls utterly silent as the final blow connects.",
+      "Clinical and brutal. There is no glory in this end, only an abrupt cessation of life.",
+      "The crowd holds its breath as the execution is carried out with grim efficiency."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -766,7 +769,12 @@
       "The light fades from {{defender}}'s eyes as {{attacker}} strikes the final blow.",
       "{{attacker}} stands victorious over the broken form of {{defender}}.",
       "A brutal, decisive strike from {{attacker}} seals {{defender}}'s fate.",
-      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}."
+      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}.",
+      "The light fades. The blood soaks into the unforgiving sand.",
+      "A grim conclusion to a brutal exchange. The body goes limp.",
+      "The light fades from their eyes. The blood soaks deeply into the unforgiving sand.",
+      "A grim conclusion to a brutal exchange. The body finally goes completely limp.",
+      "It ends not with a triumphant roar, but with the quiet rattling of a final breath."
     ]
   }
 }

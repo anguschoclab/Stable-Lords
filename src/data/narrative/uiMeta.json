@@ -364,6 +364,14 @@
           {
             "min": 0,
             "text": "Is gifted at parrying"
+          },
+          {
+            "min": 25,
+            "text": "unshakable guard"
+          },
+          {
+            "min": 30,
+            "text": "impenetrable defense"
           }
         ],
         "low": [

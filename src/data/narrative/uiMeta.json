@@ -85,15 +85,15 @@
           },
           {
             "min": 4,
-            "text": "Demonstrates impressive initiative (9)"
+            "text": "Dictates the flow of combat with absolute authority"
           },
           {
             "min": 3,
-            "text": "Demonstrates impressive initiative (7)"
+            "text": "Moves with terrifying purpose and sudden swiftness"
           },
           {
             "min": 2,
-            "text": "Demonstrates impressive initiative (8)"
+            "text": "Always seems to be half a step ahead of their opponent"
           },
           {
             "min": 0,
@@ -115,27 +115,27 @@
           },
           {
             "min": 4,
-            "text": "Has reasonable, if basic, initiative (4)"
+            "text": "Maintains a commanding presence, forcing errors"
           },
           {
             "min": 3,
-            "text": "Has reasonable, if basic, initiative (5)"
+            "text": "Patiently waits for the perfect moment to strike"
           },
           {
             "min": 3,
-            "text": "Has reasonable, if basic, initiative (6)"
+            "text": "Uses spacing and timing to effortlessly control the bout"
           },
           {
             "min": 3,
-            "text": "Has reasonable, if basic, initiative (8)"
+            "text": "Reacts to threats with calm, practiced efficiency"
           },
           {
             "min": 1,
-            "text": "Has reasonable, if basic, initiative (7)"
+            "text": "Turns their opponent's momentum against them"
           },
           {
             "min": 1,
-            "text": "Has reasonable, if basic, initiative (9)"
+            "text": "Never rushes, completely confident in their timing"
           },
           {
             "min": 0,
@@ -249,23 +249,23 @@
           },
           {
             "min": 4,
-            "text": "Mounts a ferocious offense (6)"
+            "text": "Unleashes devastating combinations with terrifying speed"
           },
           {
             "min": 4,
-            "text": "Mounts a ferocious offense (8)"
+            "text": "Every strike carries lethal intent and incredible power"
           },
           {
             "min": 4,
-            "text": "Mounts a ferocious offense (9)"
+            "text": "Their offensive technique is a masterclass in brutality"
           },
           {
             "min": 3,
-            "text": "Mounts a ferocious offense (7)"
+            "text": "Breaks through guards with overwhelming force"
           },
           {
             "min": 2,
-            "text": "Mounts a ferocious offense (5)"
+            "text": "Finds openings that shouldn't even exist"
           },
           {
             "min": 0,
@@ -287,27 +287,27 @@
           },
           {
             "min": 4,
-            "text": "Provides a steady offensive front (3)"
+            "text": "Strikes with surgical precision, wasting no effort"
           },
           {
             "min": 4,
-            "text": "Provides a steady offensive front (9)"
+            "text": "Every attack is meticulously calculated for maximum effect"
           },
           {
             "min": 3,
-            "text": "Provides a steady offensive front (5)"
+            "text": "Their offensive timing is absolutely flawless"
           },
           {
             "min": 3,
-            "text": "Provides a steady offensive front (6)"
+            "text": "Exploits even the tiniest weaknesses in their opponent's guard"
           },
           {
             "min": 2,
-            "text": "Provides a steady offensive front (4)"
+            "text": "Their strikes are incredibly efficient and deadly"
           },
           {
             "min": 1,
-            "text": "Provides a steady offensive front (8)"
+            "text": "Rarely misses a targeted blow"
           },
           {
             "min": 0,
@@ -315,7 +315,7 @@
           },
           {
             "min": 0,
-            "text": "Provides a steady offensive front (7)"
+            "text": "Dismantles their opponent with cold, clinical strikes"
           }
         ]
       },
@@ -425,27 +425,27 @@
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (4)"
+            "text": "Their guard is an impenetrable fortress"
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (5)"
+            "text": "Deflects even the heaviest blows with practiced ease"
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (6)"
+            "text": "Their defensive footwork is an absolute marvel"
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (7)"
+            "text": "Absorbs pressure without breaking a sweat"
           },
           {
             "min": 1,
-            "text": "Shows solid defense capabilities in the arena (8)"
+            "text": "Makes dodging lethal strikes look like a casual stroll"
           },
           {
             "min": 1,
-            "text": "Shows solid defense capabilities in the arena (9)"
+            "text": "Their parries are sharp, strong, and perfectly timed"
           },
           {
             "min": 0,
@@ -453,7 +453,7 @@
           },
           {
             "min": 0,
-            "text": "Shows solid defense capabilities in the arena (3)"
+            "text": "Completely shuts down their opponent's offensive rhythm"
           }
         ],
         "low": [
@@ -467,31 +467,31 @@
           },
           {
             "min": 4,
-            "text": "Shows solid defense capabilities in the arena (3)"
+            "text": "Evades attacks with minimalist, perfect movements"
           },
           {
             "min": 4,
-            "text": "Shows solid defense capabilities in the arena (7)"
+            "text": "Their defensive awareness is almost supernatural"
           },
           {
             "min": 4,
-            "text": "Shows solid defense capabilities in the arena (8)"
+            "text": "Rarely exerts unnecessary energy when defending"
           },
           {
             "min": 3,
-            "text": "Shows solid defense capabilities in the arena (5)"
+            "text": "Slips past strikes by the narrowest, most calculated of margins"
           },
           {
             "min": 3,
-            "text": "Shows solid defense capabilities in the arena (6)"
+            "text": "Their defensive patience frustrates even the most aggressive foes"
           },
           {
             "min": 2,
-            "text": "Shows solid defense capabilities in the arena (9)"
+            "text": "Always maintains perfect balance, even under heavy assault"
           },
           {
             "min": 1,
-            "text": "Shows solid defense capabilities in the arena (4)"
+            "text": "Their spatial awareness keeps them safely out of harm's way"
           },
           {
             "min": 0,
@@ -511,23 +511,23 @@
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (6)"
+            "text": "Possesses a seemingly bottomless well of stamina"
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (9)"
+            "text": "Fights with the same intensity in the final minute as the first"
           },
           {
             "min": 2,
-            "text": "Shows solid endurance capabilities in the arena (8)"
+            "text": "Shrugs off fatigue as if it were a minor inconvenience"
           },
           {
             "min": 1,
-            "text": "Shows solid endurance capabilities in the arena (3)"
+            "text": "Their relentless pace eventually breaks every opponent"
           },
           {
             "min": 1,
-            "text": "Shows solid endurance capabilities in the arena (4)"
+            "text": "Seems completely unfazed by extended, grueling bouts"
           },
           {
             "min": 0,
@@ -535,11 +535,11 @@
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (5)"
+            "text": "Maintains incredible power even when completely exhausted"
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (7)"
+            "text": "Their physical conditioning is second to none"
           }
         ],
         "low": [
@@ -553,19 +553,19 @@
           },
           {
             "min": 4,
-            "text": "Shows solid endurance capabilities in the arena (5)"
+            "text": "Conserves energy with masterful efficiency"
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (4)"
+            "text": "Never wastes a breath or a movement"
           },
           {
             "min": 3,
-            "text": "Shows solid endurance capabilities in the arena (7)"
+            "text": "Paces themselves perfectly throughout the entire bout"
           },
           {
             "min": 2,
-            "text": "Shows solid endurance capabilities in the arena (6)"
+            "text": "Their stamina management is a tactical masterclass"
           },
           {
             "min": 0,
@@ -573,15 +573,15 @@
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (3)"
+            "text": "Always keeps something in reserve for the final exchange"
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (8)"
+            "text": "Recovers incredibly quickly during lulls in the action"
           },
           {
             "min": 0,
-            "text": "Shows solid endurance capabilities in the arena (9)"
+            "text": "Makes their opponent do all the exhausting work"
           }
         ]
       }
@@ -595,35 +595,35 @@
           },
           {
             "min": 4,
-            "text": "Struggles significantly with initiative (2)"
+            "text": "Hesitates precisely when decisive action is required"
           },
           {
             "min": 4,
-            "text": "Struggles significantly with initiative (5)"
+            "text": "Moves with agonizing slowness, giving away every advantage"
           },
           {
             "min": 3,
-            "text": "Struggles significantly with initiative (4)"
+            "text": "Seems completely overwhelmed by the pacing of combat"
           },
           {
             "min": 3,
-            "text": "Struggles significantly with initiative (6)"
+            "text": "Reacts to threats only after they've already landed"
           },
           {
             "min": 3,
-            "text": "Struggles significantly with initiative (7)"
+            "text": "Stands rooted to the spot when they should be moving"
           },
           {
             "min": 3,
-            "text": "Struggles significantly with initiative (8)"
+            "text": "Consistently second-guesses their own attacks"
           },
           {
             "min": 2,
-            "text": "Struggles significantly with initiative (3)"
+            "text": "Allows the opponent to dictate the flow of the entire match"
           },
           {
             "min": 1,
-            "text": "Struggles significantly with initiative (9)"
+            "text": "Takes too long to recover from even minor missteps"
           },
           {
             "min": 0,
@@ -637,35 +637,35 @@
           },
           {
             "min": 4,
-            "text": "Is woefully slow to react (3)"
+            "text": "Shows a concerning lack of situational awareness"
           },
           {
             "min": 4,
-            "text": "Is woefully slow to react (4)"
+            "text": "Fails to capitalize on obvious openings"
           },
           {
             "min": 2,
-            "text": "Is woefully slow to react (2)"
+            "text": "Gets easily distracted by feints and footwork"
           },
           {
             "min": 2,
-            "text": "Is woefully slow to react (6)"
+            "text": "Lacks the killer instinct needed to press an advantage"
           },
           {
             "min": 2,
-            "text": "Is woefully slow to react (9)"
+            "text": "Seems content to simply survive rather than win"
           },
           {
             "min": 1,
-            "text": "Is woefully slow to react (5)"
+            "text": "Moves as if fighting underwater"
           },
           {
             "min": 1,
-            "text": "Is woefully slow to react (7)"
+            "text": "Shows zero urgency even when terribly outmatched"
           },
           {
             "min": 1,
-            "text": "Is woefully slow to react (8)"
+            "text": "Rarely seizes the initiative, preferring a passive stance"
           },
           {
             "min": 0,
@@ -685,27 +685,27 @@
           },
           {
             "min": 4,
-            "text": "Struggles to mount a proper offensive (7)"
+            "text": "Swings wildly, expending energy with nothing to show for it"
           },
           {
             "min": 4,
-            "text": "Struggles to mount a proper offensive (8)"
+            "text": "Their offensive technique is an embarrassing display"
           },
           {
             "min": 4,
-            "text": "Struggles to mount a proper offensive (9)"
+            "text": "Fails to connect even the most basic of combinations"
           },
           {
             "min": 3,
-            "text": "Struggles to mount a proper offensive (5)"
+            "text": "Leaves themselves wide open after every clumsy strike"
           },
           {
             "min": 3,
-            "text": "Struggles to mount a proper offensive (6)"
+            "text": "Lacks any real power behind their desperate swings"
           },
           {
             "min": 1,
-            "text": "Struggles to mount a proper offensive (4)"
+            "text": "Their attacks are as predictable as the sunrise"
           },
           {
             "min": 0,
@@ -713,7 +713,7 @@
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (3)"
+            "text": "Struggles to find the range, constantly hitting empty air"
           }
         ],
         "low": [
@@ -723,23 +723,23 @@
           },
           {
             "min": 3,
-            "text": "Struggles to mount a proper offensive (5)"
+            "text": "Shows a complete lack of precision in their strikes"
           },
           {
             "min": 2,
-            "text": "Struggles to mount a proper offensive (3)"
+            "text": "Their offensive maneuvers are slow and easily countered"
           },
           {
             "min": 2,
-            "text": "Struggles to mount a proper offensive (4)"
+            "text": "Fails to put their weight behind their attacks"
           },
           {
             "min": 1,
-            "text": "Struggles to mount a proper offensive (2)"
+            "text": "Seems afraid to commit fully to any offensive action"
           },
           {
             "min": 1,
-            "text": "Struggles to mount a proper offensive (7)"
+            "text": "Their strikes lack both speed and conviction"
           },
           {
             "min": 0,
@@ -747,15 +747,15 @@
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (6)"
+            "text": "Rarely follows through on their attacks"
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (8)"
+            "text": "Their offense is practically non-existent"
           },
           {
             "min": 0,
-            "text": "Struggles to mount a proper offensive (9)"
+            "text": "Seems to close their eyes right before they swing"
           }
         ]
       },
@@ -771,23 +771,23 @@
           },
           {
             "min": 4,
-            "text": "Has terrible defensive instincts (3)"
+            "text": "Their guard is riddled with exploitable holes"
           },
           {
             "min": 2,
-            "text": "Has terrible defensive instincts (8)"
+            "text": "Flinches away from strikes instead of properly deflecting them"
           },
           {
             "min": 1,
-            "text": "Has terrible defensive instincts (4)"
+            "text": "Backpedals clumsily instead of holding their ground"
           },
           {
             "min": 1,
-            "text": "Has terrible defensive instincts (6)"
+            "text": "Routinely fails to raise their shield in time"
           },
           {
             "min": 1,
-            "text": "Has terrible defensive instincts (7)"
+            "text": "Their parries are weak and easily broken through"
           },
           {
             "min": 0,
@@ -795,11 +795,11 @@
           },
           {
             "min": 0,
-            "text": "Has terrible defensive instincts (5)"
+            "text": "Seems to absorb blows rather than actually avoiding them"
           },
           {
             "min": 0,
-            "text": "Has terrible defensive instincts (9)"
+            "text": "Consistently falls for simple misdirections"
           }
         ],
         "low": [
@@ -809,31 +809,31 @@
           },
           {
             "min": 4,
-            "text": "Has terrible defensive instincts (8)"
+            "text": "Shows a terrifying lack of defensive coordination"
           },
           {
             "min": 3,
-            "text": "Has terrible defensive instincts (2)"
+            "text": "Leaves their vital areas completely exposed"
           },
           {
             "min": 3,
-            "text": "Has terrible defensive instincts (3)"
+            "text": "Fails to anticipate incoming strikes until it's too late"
           },
           {
             "min": 2,
-            "text": "Has terrible defensive instincts (5)"
+            "text": "Their defensive reactions are sluggish and uncoordinated"
           },
           {
             "min": 2,
-            "text": "Has terrible defensive instincts (6)"
+            "text": "Seems to have no concept of distance management"
           },
           {
             "min": 1,
-            "text": "Has terrible defensive instincts (4)"
+            "text": "Rarely attempts to block, preferring to just take the hit"
           },
           {
             "min": 1,
-            "text": "Has terrible defensive instincts (7)"
+            "text": "Their evasive maneuvers are clumsy and ineffective"
           },
           {
             "min": 0,
@@ -841,7 +841,7 @@
           },
           {
             "min": 0,
-            "text": "Has terrible defensive instincts (9)"
+            "text": "Displays a shocking lack of self-preservation instincts"
           }
         ]
       }

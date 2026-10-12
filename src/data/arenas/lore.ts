@@ -829,6 +829,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'charnel_pits_the_grinding_teeth',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Grinding Teeth',
+    narrative:
+      'The floor of the Charnel Pits is incredibly uneven, embedded with partially exposed skulls. Fighters who misstep often find their ankles snared by the jaws of the dead.',
+  },
+  {
+    id: 'volcanic_crater_obsidian_fall',
+    arenaId: 'volcanic_crater',
+    type: 'famous_death',
+    title: 'The Obsidian Fall',
+    narrative:
+      'A flamboyant champion, attempting to dodge near the edge, slipped on a smooth sheet of obsidian and fell backwards into a fumarole, disappearing entirely.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

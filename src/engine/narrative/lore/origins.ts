@@ -332,4 +332,9 @@ export const ORIGINS: string[] = [
   'Raised by the grim executioners of the Iron Tower',
   'Discovered clutching a shattered skull in the deep mines',
   'Surviving the Long Winter by eating rats in the Under-Vault',
+  'Raised by silent monks who believed pain was the only true prayer',
+  'Abandoned in the rusted husk of an iron juggernaut in the Scrap Wards',
+  'Found shivering amidst the cooling embers of the Black Church',
+  'Sold to the pit-masters for a handful of silver coins and a flagon of cheap wine',
+  'Survived the Blood Rot by hiding beneath the corpses of the fallen',
 ];

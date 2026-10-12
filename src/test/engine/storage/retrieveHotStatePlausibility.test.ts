@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { setMockOPFSFileText } from '@/test/_setup/setup';
-import { SAVE_STATE_VERSION } from '@/constants/core';
+import { SAVE_STATE_VERSION } from '@/constants/core/core';
 import { makeGameState } from '@/test/_fixtures/factories';
 
 describe('retrieveHotState plausibility check', () => {

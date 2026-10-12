@@ -138,6 +138,13 @@ export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.25,
     description: 'An unearthly eclipse that saps the breath but fuels destructive strikes.',
   },
+  'Cursed Eclipse': {
+    staminaMult: 1.25,
+    initiativeMod: -3,
+    riposteMod: 4,
+    damageMult: 1.2,
+    description: 'A cursed eclipse fills the arena with dread, quickening reflexes and amplifying blows but sapping endurance.',
+  },
   'Blood Moon': {
     staminaMult: 0.9,
     initiativeMod: +3,

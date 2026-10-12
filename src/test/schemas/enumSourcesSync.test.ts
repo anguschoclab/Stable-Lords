@@ -26,6 +26,7 @@ describe('enumSources sync with WeatherType', () => {
     'Gravity Anomaly',
     'Ashfall',
     'Eldritch Eclipse',
+    'Cursed Eclipse',
     'Acid Rain',
     'Mana Surge',
     'Rainbow',
@@ -76,12 +77,12 @@ describe('enumSources sync with WeatherType', () => {
     );
   });
 
-  it('WEATHER_TYPES count is 63 (48 original + 14 new)', () => {
-    expect(WEATHER_TYPES.length).toBe(63);
+  it('WEATHER_TYPES count is 64 (48 original + 14 new + 1 extra)', () => {
+    expect(WEATHER_TYPES.length).toBe(64);
   });
 
-  it('WeatherTypeSchema options count is 63', () => {
-    expect(schemaOptions.length).toBe(63);
+  it('WeatherTypeSchema options count is 64', () => {
+    expect(schemaOptions.length).toBe(64);
   });
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

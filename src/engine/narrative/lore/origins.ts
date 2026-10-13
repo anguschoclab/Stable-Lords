@@ -332,4 +332,10 @@ export const ORIGINS: string[] = [
   'Raised by the grim executioners of the Iron Tower',
   'Discovered clutching a shattered skull in the deep mines',
   'Surviving the Long Winter by eating rats in the Under-Vault',
+  'Abandoned outside the fighting pits wrapped in a bloodied tunic',
+  'Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings',
+  'Found wandering the ash-choked streets of the Foundry District',
+  'Born in the flooded sublevels of the Crying Sisters Orphanage',
+  'Raised in the soot-choked halls of the Iron Orphanage',
+  'Abandoned at the rusted gates of the Cinder-Block Orphanage',
 ];

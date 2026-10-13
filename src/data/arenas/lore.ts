@@ -829,6 +829,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'charnel_pits_flesh_rot',
+    arenaId: 'charnel_pits',
+    type: 'hazard',
+    title: 'The Carrion Stench',
+    narrative:
+      'The overpowering stench of the pits has been known to nauseate and break the resolve of unseasoned fighters.',
+  },
+  {
+    id: 'standard_arena_forgotten_champion',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The Forgotten Champion',
+    narrative:
+      'A reigning champion suddenly collapsed from a delayed poison before a single blow was struck, leaving the crowd in stunned silence.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

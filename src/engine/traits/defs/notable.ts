@@ -494,4 +494,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  orphan_of_the_ashes: {
+    id: 'orphan_of_the_ashes',
+    name: 'Orphan of the Ashes',
+    description:
+      '+1 Defense in the LATE phase, +10% Endurance — raised in the soot-choked foundries, their lungs and resolve are ironclad.',
+    effect: { defModLate: 1, enduranceMult: 0.9 },
+    weight: 0.6,
+    synergy: ['tank'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };

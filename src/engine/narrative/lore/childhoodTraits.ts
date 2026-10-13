@@ -191,4 +191,8 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to read the flow of blood from a fresh wound',
   'collected the rusted iron teeth of the old pit hounds',
   'never made a sound even when walking on broken glass',
+  'developed a terrifyingly serene smile right before physical conflict erupted',
+  'learned to gauge distance by dodging the matron’s iron ruler',
+  'always hid a sharpened stone in their cheek',
+  'memorized the sound of a blade being drawn in the dark',
 ];

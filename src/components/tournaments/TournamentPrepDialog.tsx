@@ -108,8 +108,14 @@ function PrepWarriorCard({ warrior: w }: { warrior: Warrior }) {
             {(w.fame ?? 0) > 80 && (
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Near Retirement Age warning"
+                      className="inline-flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                    >
+                      <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse motion-reduce:animate-none" />
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent>Near Retirement Age</TooltipContent>
                 </Tooltip>

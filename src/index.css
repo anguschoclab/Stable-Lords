@@ -1031,6 +1031,9 @@
     stroke-width: 1;
   }
 }
+.animate-weapon-trail {
+  animation: weapon-trail 0.5s ease-out forwards;
+}
 
 /* Particle animations */
 @keyframes particle-fade {
@@ -1202,6 +1205,9 @@
     opacity: 0.7;
   }
 }
+.animate-blood-pool {
+  animation: blood-pool 2s ease-out forwards;
+}
 
 /* Dust cloud */
 @keyframes dust-cloud {
@@ -1216,6 +1222,9 @@
     transform: scale(2);
     opacity: 0;
   }
+}
+.animate-dust-cloud {
+  animation: dust-cloud 1.5s ease-out forwards;
 }
 
 /* Apply animations with utility classes */
@@ -1340,7 +1349,10 @@
   .animate-snow,
   .animate-fog-drift,
   .animate-ash-fall,
-  .animate-mana-spark {
+  .animate-mana-spark,
+  .animate-blood-pool,
+  .animate-dust-cloud,
+  .animate-weapon-trail {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }

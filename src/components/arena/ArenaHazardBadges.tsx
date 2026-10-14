@@ -19,7 +19,7 @@ export function ArenaHazardBadges({ tags, size = 'md' }: ArenaHazardBadgesProps)
       {tags.includes('water') && (
         <Badge
           variant="outline"
-          className={cn(sizeClasses[size], 'border-blue-500/30 text-blue-400')}
+          className={cn(sizeClasses[size], 'border-primary/30 text-primary')}
         >
           WATER HAZARD
         </Badge>
@@ -27,7 +27,7 @@ export function ArenaHazardBadges({ tags, size = 'md' }: ArenaHazardBadgesProps)
       {tags.includes('cursed') && (
         <Badge
           variant="outline"
-          className={cn(sizeClasses[size], 'border-purple-500/30 text-purple-400')}
+          className={cn(sizeClasses[size], 'border-destructive/30 text-destructive')}
         >
           CURSED GROUND
         </Badge>

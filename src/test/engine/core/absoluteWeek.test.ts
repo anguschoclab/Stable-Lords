@@ -19,9 +19,12 @@ describe('absoluteWeek utils', () => {
     expect(deriveAbsoluteWeek(1, 52)).toBe(52);
     expect(deriveAbsoluteWeek(2, 1)).toBe(53);
     expect(deriveAbsoluteWeek(2, 52)).toBe(104);
-    // handles missing or 0
+    // handles missing, negative, or 0
     expect(deriveAbsoluteWeek(0, 0)).toBe(1);
     expect(deriveAbsoluteWeek(undefined, undefined)).toBe(1);
+    expect(deriveAbsoluteWeek(-1, -10)).toBe(1);
+    expect(deriveAbsoluteWeek(1, -5)).toBe(1);
+    expect(deriveAbsoluteWeek(0, 5)).toBe(5);
   });
 
   it('displayWeek', () => {

@@ -11,6 +11,15 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.8,
   },
+  orphanage_survivor: {
+    id: 'orphanage_survivor',
+    name: 'Orphanage Survivor',
+    description: 'Survived the darkest halls of the orphanage. Has learned to fight harder when backed into a corner.',
+    effect: { attModLate: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 0.8,
+  },
   knife_juggler: {
     id: 'knife_juggler',
     name: 'Knife Juggler',

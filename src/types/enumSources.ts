@@ -27,6 +27,7 @@ export const WEATHER_TYPES = [
   'Thunderstorm',
   'Ashfall',
   'Eldritch Eclipse',
+  'Cursed Eclipse',
   'Prismatic Rain',
   'Moonlight Duel',
   'Acid Rain',
@@ -68,6 +69,27 @@ export const WEATHER_TYPES = [
   'Abyssal Tempest',
   'Temporal Rift',
   'Stardust Gale',
+  'Mana Storm',
+  'Dreamweavers Mist',
+  'Shattered Skies',
+] as const;
+
+/**
+ * Weather types that exist only as offseason-event experiences — never rolled
+ * by `rollWeather` and never assigned to `state.weather` by any code path.
+ * Every WeatherType must appear in exactly one seasonal pool
+ * (`SEASONAL_WEATHER` via `SEASONABLE_WEATHER_TYPES`) or this list;
+ * `weatherSeasonExclusivity.test.ts` guards the union.
+ */
+export const OFFSEASON_WEATHER_TYPES = [
+  'Weeping Skies',
+  'Eclipse of Chaos',
+  'Eldritch Eclipse',
+  'Prismatic Rain',
+  'Moonlight Duel',
+  'Winds of Chaos',
+  'Diamond Rain',
+  'Cosmic Anomaly',
   'Mana Storm',
   'Dreamweavers Mist',
   'Shattered Skies',

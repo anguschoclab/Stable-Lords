@@ -6,6 +6,7 @@ import { describe, it, expect } from 'vitest';
 import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { SeededRNG } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
+import { WEATHER_TYPES, OFFSEASON_WEATHER_TYPES } from '@/types/enumSources';
 import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
@@ -86,6 +87,46 @@ describe('Weather season exclusivity', () => {
     for (let seed = 0; seed < 10000; seed++) {
       const w = rollWeather(new SeededRNG(seed * 7 + 1), 'Spring');
       expect(w).not.toBe('Rain of Frogs');
+    }
+  });
+});
+
+describe('weather fixture-union completeness (V15)', () => {
+  it('every WeatherType is consciously bucketed: seasonable or offseason-only', () => {
+    const bucketed = new Set<string>([...SEASONABLE_WEATHER_TYPES, ...OFFSEASON_WEATHER_TYPES]);
+    for (const w of WEATHER_TYPES) {
+      expect(
+        bucketed.has(w),
+        `${w} is in neither SEASONABLE_WEATHER_TYPES nor OFFSEASON_WEATHER_TYPES — ` +
+          `register it in a seasonal pool (seasonalWeather.ts) or the offseason allowlist (enumSources.ts)`
+      ).toBe(true);
+    }
+    // and no stale entries: every bucketed name must be a real WeatherType
+    const union = new Set<string>(WEATHER_TYPES);
+    for (const w of bucketed) {
+      expect(union.has(w), `${w} is bucketed but not a WeatherType — stale entry`).toBe(true);
+    }
+  });
+
+  it('OFFSEASON_WEATHER_TYPES and SEASONABLE_WEATHER_TYPES are disjoint and dedup-free', () => {
+    const off = new Set<string>(OFFSEASON_WEATHER_TYPES);
+    expect(off.size).toBe(OFFSEASON_WEATHER_TYPES.length);
+    for (const w of SEASONABLE_WEATHER_TYPES) {
+      expect(off.has(w), `${w} is in both fixture and offseason lists`).toBe(false);
+    }
+    expect(new Set(SEASONABLE_WEATHER_TYPES).size).toBe(SEASONABLE_WEATHER_TYPES.length);
+  });
+
+  it('SEASONABLE_WEATHER_TYPES members are each covered by at least one seasonal bucket', () => {
+    for (const w of SEASONABLE_WEATHER_TYPES) {
+      const containing = (Object.keys(SEASONAL_WEATHER) as Season[]).filter((s) =>
+        SEASONAL_WEATHER[s].includes(w)
+      );
+      expect(
+        containing.length,
+        `${w} is in the fixture but no seasonal bucket — ` +
+          `add it to SHARED_WEATHER or SEASON_EXCLUSIVE_WEATHER in seasonalWeather.ts`
+      ).toBeGreaterThanOrEqual(1);
     }
   });
 });

@@ -27,6 +27,7 @@ const LEGACY_TRAIT_ORDER = [
   'orphan_resilience',
   'hollow_gaze',
   'scab_survivor',
+  'orphanage_survivor',
   'gutter_shadow',
   'guttersnipe_cunning',
   'iron_stomach',
@@ -173,6 +174,17 @@ const LEGACY_TRAIT_ORDER = [
   'orphan_scavenger',
   'orphan_vengeance_seeker',
   'orphan_of_the_abyss',
+  'ash_born_survivor',
+  'silent_monk',
+  'feral_child',
+  'orphan_blood_rage',
+  'gutter_phantom_strike',
+  'shadow_born_killer',
+  'orphan_of_the_ashes',
+  'orphan_unflinching',
+  'orphan_street_tactics',
+  'orphan_survivor_guilt',
+  'orphan_shadow_step',
 ];
 
 const MERGED: Record<string, TraitDef> = {

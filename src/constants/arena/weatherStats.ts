@@ -10,6 +10,7 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   Clear: 'NORMAL VISIBILITY | ZERO DRAIN',
   'Prismatic Rain': 'STAMINA DRAIN 115% | INITIATIVE +1 | RIPOSTE +1 | DAMAGE +5%',
   'Eldritch Eclipse': 'STAMINA DRAIN 95% | INITIATIVE +2 | RIPOSTE +2 | DAMAGE +20%',
+  'Cursed Eclipse': 'STAMINA DRAIN 125% | INITIATIVE -3 | RIPOSTE +4 | DAMAGE +20%',
   'Moonlight Duel': 'STAMINA DRAIN 110% | INITIATIVE +1',
   'Crimson Snow': 'STAMINA DRAIN 140% | INITIATIVE -3 | RIPOSTE +2 | DAMAGE +15%',
   Overcast: 'LOW VISIBILITY | STABLE ENDURANCE',

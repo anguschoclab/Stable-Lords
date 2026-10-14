@@ -50,6 +50,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   Clear: null,
   'Prismatic Rain': () => <RainEffect />,
   'Eldritch Eclipse': () => <EclipseEffect />,
+  'Cursed Eclipse': () => <EclipseEffect />,
   'Moonlight Duel': null,
   'Crimson Snow': () => <BlizzardEffect />,
   Overcast: null,

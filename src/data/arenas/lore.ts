@@ -829,6 +829,110 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
+  {
+    id: 'sundered_coliseum_shadow_step',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Shadow Step Massacre',
+    narrative:
+      'A legendary assassin used the lengthening shadows of the setting sun to completely dismantle an entire squad of guards before vanishing into the night.',
+  },
+  {
+    id: 'abyssal_pit_crimson_stain',
+    arenaId: 'the_abyssal_pit',
+    type: 'architectural_quirk',
+    title: 'The Crimson Stain',
+    narrative:
+      'The sand in the center of the pit is permanently stained a dark rust color, no matter how much fresh sand is poured over it.',
+  },
+  {
+    id: 'iron_cage_the_crushed_champion',
+    arenaId: 'the_iron_cage',
+    type: 'famous_death',
+    title: 'The Crushed Champion',
+    narrative:
+      'A massive, heavily armored gladiator was famously crushed when their smaller opponent managed to bend one of the iron bars, pinning the giant against the wall.',
+  },
+  {
+    id: 'charnel_pits_the_grinding_teeth',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Grinding Teeth',
+    narrative:
+      'The floor of the Charnel Pits is incredibly uneven, embedded with partially exposed skulls. Fighters who misstep often find their ankles snared by the jaws of the dead.',
+  },
+  {
+    id: 'volcanic_crater_obsidian_fall',
+    arenaId: 'volcanic_crater',
+    type: 'famous_death',
+    title: 'The Obsidian Fall',
+    narrative:
+      'A flamboyant champion, attempting to dodge near the edge, slipped on a smooth sheet of obsidian and fell backwards into a fumarole, disappearing entirely.',
+  },
+  {
+    id: 'charnel_pits_flesh_rot',
+    arenaId: 'charnel_pits',
+    type: 'hazard',
+    title: 'The Carrion Stench',
+    narrative:
+      'The overpowering stench of the pits has been known to nauseate and break the resolve of unseasoned fighters.',
+  },
+  {
+    id: 'standard_arena_forgotten_champion',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The Forgotten Champion',
+    narrative:
+      'A reigning champion suddenly collapsed from a delayed poison before a single blow was struck, leaving the crowd in stunned silence.',
+  },
+  {
+    id: 'battle_of_the_broken_spine',
+    arenaId: 'clifftop_arena',
+    type: 'historical_battle',
+    title: 'The Battle of the Broken Spine',
+    narrative:
+      'A legendary three-day siege where a single gladiator held the narrow path against fifty combatants, earning the arena its bloody reputation.',
+  },
+  {
+    id: 'fall_of_the_iron_titan',
+    arenaId: 'iron_forge',
+    type: 'famous_death',
+    title: 'Fall of the Iron Titan',
+    narrative:
+      'The infamous death of the undefeated champion known as the Iron Titan, who was melted alive when a saboteur breached the central furnace during the finals.',
+  },
+  {
+    id: 'the_whispering_pillars',
+    arenaId: 'sunken_temple',
+    type: 'architectural_quirk',
+    title: 'The Whispering Pillars',
+    narrative:
+      'The ancient stone pillars surrounding the arena are said to amplify the dying breaths of fallen gladiators, unnerving even the most hardened veterans.',
+  },
+  {
+    id: 'standard_arena_forgotten_blade',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Forgotten Blade',
+    narrative:
+      "Buried deep beneath the central sands is said to be the rusted longsword of the arena's very first champion, radiating a faint aura of bloodlust.",
+  },
+  {
+    id: 'sundered_coliseum_shattered_pillar',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Shattered Pillar',
+    narrative:
+      'The jagged ruins of the eastern pillar remain as a testament to the colossal blow that not only ended a legendary match, but nearly brought down the entire coliseum.',
+  },
+  {
+    id: 'mudpit_arena_drowned_sorrows',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'Drowned Sorrows',
+    narrative:
+      'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08T06:40:42.427Z",
+  "generatedAt": "2026-10-14T22:15:43.907Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -110,6 +110,7 @@
     "src/test/components/tournaments/TournamentsReadiness.test.tsx",
     "src/test/components/ui/ButtonAriaLabel.test.tsx",
     "src/test/components/ui/IconMedallion.test.tsx",
+    "src/test/components/ui/IconTabStrip.test.tsx",
     "src/test/components/ui/LinkifiedText.test.tsx",
     "src/test/components/ui/VitalityRing.test.tsx",
     "src/test/components/ui/WarriorBadges.test.tsx",
@@ -162,6 +163,7 @@
     "src/test/engine/pipeline/opfsArchiverFlush.test.ts",
     "src/test/engine/pipeline/parallelDeterminism.slow.test.ts",
     "src/test/engine/pipeline/passes/PromoterPass.test.ts",
+    "src/test/engine/pipeline/passes/RecruitmentPass.test.ts",
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
     "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
@@ -178,6 +180,7 @@
     "src/test/engine/storage/electronArchive.test.ts",
     "src/test/engine/storage/electronIPCBounds.test.ts",
     "src/test/engine/storage/opfsArchive.test.ts",
+    "src/test/engine/storage/retrieveHotStatePlausibility.test.ts",
     "src/test/engine/stylePassives.test.ts",
     "src/test/engine/tick/TickOrchestrator.test.ts",
     "src/test/engine/tick/daySeedParity.test.ts",

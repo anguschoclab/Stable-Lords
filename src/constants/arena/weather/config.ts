@@ -37,6 +37,14 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'A terrifying cosmic rift empowers strikes but exhausts fighters.',
   },
+  'Cursed Eclipse': {
+    icon: Moon,
+    colorClass: 'text-purple-500',
+    bgClass: 'bg-purple-900/10',
+    borderClass: 'border-purple-500/20',
+    extraClass: 'glow-neon-purple',
+    description: 'A cursed eclipse casting an eerie purple hue. Unpredictable violence abounds.',
+  },
   'Abyssal Tempest': {
     icon: Flame,
     colorClass: 'text-arena-fame',

@@ -40,7 +40,6 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -85,7 +84,6 @@
       "A brutal, final strike separates {{defender}} from the mortal coil.",
       "{{attacker}} executes a flawless, cold-blooded finishing blow.",
       "A brutal execution that leaves the crowd in stunned silence.",
-      "{{attacker}} delivers a cold, methodical coup de grâce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
       "The sands drink deeply today.",
@@ -101,7 +99,13 @@
       "With operatic drama, {{attacker}} brings the weapon down, ending {{defender}} in a spray of crimson.",
       "{{defender}} stumbles, realizes their mistake, and twitches once as {{attacker}} stamps out their life.",
       "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark.",
-      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd."
+      "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd.",
+      "With a grim nod, {{attacker}} brings the curtain down, ending {{defender}}'s story.",
+      "The arena falls silent as {{attacker}} ruthlessly dispatches {{defender}}.",
+      "A cold, systematic dispatch. The arena falls utterly silent as the final blow connects.",
+      "Clinical and brutal. There is no glory in this end, only an abrupt cessation of life.",
+      "The crowd holds its breath as the execution is carried out with grim efficiency.",
+      "It ends not with a triumphant roar, but with the quiet rattling of a final breath."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -181,7 +185,7 @@
       "{{defender}} collapses from pure exhaustion, offering no resistance as {{attacker}} delivers the end.",
       "Exhaustion claims {{defender}} completely, leaving them helpless as {{attacker}} steps in for the grim, final kill.",
       "Too exhausted to even raise a weapon, {{defender}} simply awaits the end as {{attacker}} delivers the deathblow.",
-      "{{defender}}'s legs finally give out; {{attacker}} shows no mercy, finishing the exhausted gladiator."
+      "The crowd falls silent as {{attacker}} delivers the final, pitiless blow to the fallen {{defender}}."
     ],
     "rivalry_finish": [
       "With a scream of pure hatred, {{attacker}} buries their {{weapon}} into {{defender}}, finishing the blood feud once and for all.",
@@ -359,7 +363,12 @@
         "The crowd roars as {{attacker}}'s blade takes {{defender}}'s head in a single, fluid decapitation.",
         "With a final, desperate heave, {{attacker}} sweeps their blade through {{defender}}, ending the rivalry in a spray of crimson.",
         "With a horrific sound, {{attacker}}'s blade completely severs {{defender}}'s spine.",
-        "{{attacker}}'s clean, merciless slash permanently ends {{defender}}'s suffering."
+        "{{attacker}}'s clean, merciless slash permanently ends {{defender}}'s suffering.",
+        "{{attacker}}'s blade arcs beautifully, separating {{defender}}'s head from their shoulders.",
+        "A wicked, horizontal slash from {{attacker}} disembowels {{defender}} right on the sands.",
+        "{{attacker}} executes a brutal, two-handed cleave that nearly cuts {{defender}} in half.",
+        "With a terrifying spray of crimson, {{attacker}} severs {{defender}}'s neck.",
+        "{{defender}} collapses as {{attacker}}'s edge carves a lethal crescent across their throat."
       ],
       "piercing": [
         "{{attacker}} drives the point of their {{weapon}} straight through {{defender}}'s skull.",
@@ -415,7 +424,6 @@
         "A blindingly fast lunge from {{attacker}} skewers {{defender}} completely.",
         "{{attacker}} pins {{defender}} to the arena floor with a brutal, final thrust.",
         "With clinical precision, {{attacker}} punctures {{defender}}'s lung, ending the bout.",
-        "{{defender}} chokes on their own blood as {{attacker}} twists the embedded point.",
         "A final, devastating thrust from {{attacker}} leaves {{defender}} utterly lifeless.",
         "{{attacker}} finds the gap in the armor, driving their point home for the kill.",
         "The sheer force of {{attacker}}'s thrust crumples {{defender}} in a tragic finale.",
@@ -459,7 +467,12 @@
         "{{attacker}} runs {{defender}} completely through, lifting them momentarily off their feet before they die.",
         "A precision thrust pierces {{defender}}'s heart; they look down in disbelief before the light leaves their eyes.",
         "{{attacker}} drives the point precisely through {{defender}}'s beating heart.",
-        "A gruesome thrust from {{attacker}} impales {{defender}}, leaving them twitching as they die."
+        "A gruesome thrust from {{attacker}} impales {{defender}}, leaving them twitching as they die.",
+        "{{attacker}} lunges perfectly, sinking their point directly into {{defender}}'s heart.",
+        "A vicious thrust from {{attacker}} skewers {{defender}} completely, pinning them to the air for a moment.",
+        "{{defender}} gasps a final time as {{attacker}} threads the needle, piercing their throat.",
+        "{{attacker}} drives their weapon deep into {{defender}}'s chest cavity, a flawless, fatal execution.",
+        "With terrifying precision, {{attacker}} impales {{defender}} through the visor."
       ],
       "bashing": [
         "A deafening crack signals the end as {{attacker}} crushes {{defender}}'s skull.",
@@ -561,7 +574,12 @@
         "{{defender}} is driven violently into the earth, their spine shattering with a sickening crack.",
         "With a merciless downward smash, {{attacker}} turns {{defender}}'s helmet—and what was inside it—into a gory ruin.",
         "{{attacker}} brings their weapon down, turning {{defender}}'s skull into ruin.",
-        "A final, terrifying bash from {{attacker}} splatters {{defender}}'s vital organs."
+        "A final, terrifying bash from {{attacker}} splatters {{defender}}'s vital organs.",
+        "{{attacker}} brings their weapon down with seismic force, totally obliterating {{defender}}'s helm and skull.",
+        "A colossal, sweeping smash from {{attacker}} shatters {{defender}}'s ribcage, stopping their heart instantly.",
+        "{{defender}} is driven violently into the dirt as {{attacker}} crushes their spine with a final blow.",
+        "With a sickening crunch that echoes through the stands, {{attacker}} caves in {{defender}}'s chest.",
+        "{{attacker}} pulverizes {{defender}} into the red sands with a horrific downward strike."
       ],
       "fist": [
         "{{attacker}} delivers a lethal blow to the temple, dropping {{defender}} lifeless.",
@@ -664,7 +682,12 @@
         "{{attacker}} rains down unyielding blows until {{defender}} stops twitching, the sand stained a dark, muddy red.",
         "With a final, desperate hook, {{attacker}} caves in {{defender}}'s larynx, silencing them forever.",
         "{{attacker}}'s final, brutal punch caves in {{defender}}'s chest cavity.",
-        "With a sickening snap, {{attacker}} breaks {{defender}}'s neck with their bare hands."
+        "With a sickening snap, {{attacker}} breaks {{defender}}'s neck with their bare hands.",
+        "{{attacker}} unleashes a skull-cracking haymaker that turns {{defender}}'s lights out forever.",
+        "A sickening snap rings out as {{attacker}} breaks {{defender}}'s neck with a brutal right hook.",
+        "{{attacker}} mounts the fallen {{defender}} and delivers a horrifying, bare-knuckle execution.",
+        "{{defender}}'s chest caves in under the primal, brutal force of {{attacker}}'s final punch.",
+        "With bare hands and raw fury, {{attacker}} beats the very life from {{defender}}'s body."
       ]
     },
     "default": [
@@ -764,9 +787,26 @@
       "{{attacker}} stands victorious, leaving {{defender}} as a grim monument to the sands.",
       "{{attacker}} ends it all with a singular, terrible blow.",
       "The light fades from {{defender}}'s eyes as {{attacker}} strikes the final blow.",
-      "{{attacker}} stands victorious over the broken form of {{defender}}.",
       "A brutal, decisive strike from {{attacker}} seals {{defender}}'s fate.",
-      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}."
+      "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}.",
+      "{{defender}} succumbs to their wounds, collapsing without fanfare.",
+      "Vital organs pierced, {{defender}} bleeds out quietly on the sand.",
+      "A precise strike severs an artery; {{defender}} expires rapidly.",
+      "{{defender}}'s body shuts down from catastrophic trauma.",
+      "With a final, bubbling scream, {{defender}} falls lifeless to the dirt.",
+      "{{defender}} clutches their fatal wound in disbelief before collapsing into the darkness.",
+      "Blood sprays in a theatrical arc as {{defender}} meets a brutal, violent end.",
+      "{{defender}}'s eyes widen in terror as death finally claims them on the arena floor.",
+      "{{defender}} finally realizes that catching weapons with their face was a poor strategy.",
+      "At least {{defender}} won't have to worry about paying off their debts anymore.",
+      "{{defender}} is dramatically rearranged into a less breathing configuration.",
+      "Well, that's one way for {{defender}} to get out of the next fight.",
+      "Another nameless corpse for the pyre. {{defender}}'s struggle ends in silence.",
+      "The crowd barely cheers as {{defender}}'s life ebbs away into the uncaring dirt.",
+      "{{defender}} twitches once, then stills, forgotten by tomorrow.",
+      "No glory, no honor, just the wet sound of {{defender}} dying alone in the sand.",
+      "A bleak and brutal end as {{defender}}'s life is snuffed out.",
+      "{{attacker}} stands alone as {{defender}} breathes their bloody last."
     ]
   }
 }

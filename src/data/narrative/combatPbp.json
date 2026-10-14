@@ -773,7 +773,7 @@
           "With clinical precision, {{defender}} punishes the overextension without hesitation.",
           "{{defender}} wastes no movement, answering the strike with a dark, devastating counter.",
           "{{defender}} coldly intercepts the weapon, immediately exploiting the opening with zero hesitation.",
-          "Not a single wasted motion—{{defender}} parries and strikes back with lethal intent.",
+          "A single precise motion—{{defender}} parries and strikes back with lethal intent.",
           "{{defender}}'s dead eyes betray nothing as they brutally punish the failed attack.",
           "A sickening crunch as {{defender}} blocks and delivers a completely ruthless counter.",
           "{{defender}} absorbs the impact and wordlessly buries their weapon in return.",
@@ -892,7 +892,7 @@
           "A desperate, undignified dive saves {{defender}} from a lethal blow.",
           "{{name}} drops low, narrowly dodging the blow with a panicked gasp!",
           "{{defender}} moves beyond {{attacker}}'s reach.",
-          "{{defender}} blurs aside a heartbeat before the blow lands — preternatural reflexes!"
+          "{{defender}} blurs aside a heartbeat before the blow lands!"
         ],
         "tier4_supernatural": [
           "{{defender}} blinks out of reality for a fraction of a second, entirely avoiding the blow.",
@@ -907,7 +907,7 @@
           "{{defender}} defies physics, twisting in ways no mortal should!",
           "{{defender}} evades the blow as if reading {{attacker}}'s mind.",
           "{{defender}} simply is not where the blow lands - impossible!",
-          "{{defender}} sidesteps with terrifying, preternatural speed.",
+          "{{defender}} sidesteps with terrifying, inhuman speed.",
           "{{defender}} vanishes like a ghost, reappearing untouched.",
           "{{defender}} dodges with an eerie, perfect calmness."
         ],
@@ -1905,7 +1905,7 @@
           "With cold, mechanical precision, {{defender}} grinds the incoming attack to a halt.",
           "With a sickening crunch of steel, {{defender}} stops the blow dead, their expression an emotionless mask.",
           "{{defender}} steps into the attack, parrying with bone-jarring force and dead eyes.",
-          "No wasted motion. {{defender}} brutally slaps the attack aside, saving their energy for the kill.",
+          "{{defender}} brutally slaps the attack aside, saving their energy for the kill.",
           "{{defender}} blocks with brutal efficiency, a heavy, deadening impact.",
           "{{defender}} absorbs the shock without blinking, a stoic wall of resistance.",
           "The parry is solid, harsh, and utterly devoid of emotion.",

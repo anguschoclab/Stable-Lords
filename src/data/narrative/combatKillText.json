@@ -40,7 +40,6 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "{{attacker}} ends it with a cold, clinical decapitation, leaving the crowd in stunned silence.",
       "{{attacker}} delivers the heavy, mournful deathblow, ending {{defender}}'s sorrowful journey.",
       "The shadow of death falls as {{attacker}} grants a stoic, melancholy release to {{defender}}.",
@@ -85,7 +84,6 @@
       "A brutal, final strike separates {{defender}} from the mortal coil.",
       "{{attacker}} executes a flawless, cold-blooded finishing blow.",
       "A brutal execution that leaves the crowd in stunned silence.",
-      "{{attacker}} delivers a cold, methodical coup de grâce.",
       "A final, unceremonious end to a bloody struggle.",
       "Death comes swiftly in the arena.",
       "The sands drink deeply today.",
@@ -181,7 +179,7 @@
       "{{defender}} collapses from pure exhaustion, offering no resistance as {{attacker}} delivers the end.",
       "Exhaustion claims {{defender}} completely, leaving them helpless as {{attacker}} steps in for the grim, final kill.",
       "Too exhausted to even raise a weapon, {{defender}} simply awaits the end as {{attacker}} delivers the deathblow.",
-      "{{defender}}'s legs finally give out; {{attacker}} shows no mercy, finishing the exhausted gladiator."
+      "The crowd falls silent as {{attacker}} delivers the final, pitiless blow to the fallen {{defender}}."
     ],
     "rivalry_finish": [
       "With a scream of pure hatred, {{attacker}} buries their {{weapon}} into {{defender}}, finishing the blood feud once and for all.",

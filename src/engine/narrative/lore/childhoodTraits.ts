@@ -186,23 +186,17 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to read the flow of blood from a fresh wound',
   'collected the rusted iron teeth of the old pit hounds',
   'never made a sound even when walking on broken glass',
-<<<<<<< HEAD
-<<<<<<< HEAD
   'developed a terrifyingly accurate throw using stolen cobblestones',
   'spent their youth silently observing the brutal executions in the Weeping Square',
   'learned to map the lightless catacombs entirely by touch',
   'would calmly catch venomous scorpions bare-handed in the Sump',
   'learned to feign death so convincingly that grave-robbers would pass them by',
-=======
   'developed a peculiar habit of counting the heartbeats of dying men',
   'learned to gauge a fighter\'s weakness just by watching them walk',
   'would purposefully dislocate their own joints to escape iron cuffs',
->>>>>>> origin/feat/expand-narrative-lore-16020072306619245288
-=======
-  'developed a terrifyingly serene smile right before physical conflict erupted',
   'would purposefully instigate fights just to study how different people bleed',
   'learned to map out exit routes the moment they entered a new room',
   'developed an uncanny ability to read the twitch of a muscle before a strike',
   'learned to hold their breath for minutes while hiding in the submerged cisterns',
->>>>>>> origin/lore-keeper-content-expansion-14912624017552954191
+  'memorized the sound of a blade being drawn in the dark',
 ];

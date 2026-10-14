@@ -830,7 +830,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
   {
-<<<<<<< HEAD
     id: 'sundered_coliseum_shadow_step',
     arenaId: 'sundered_coliseum',
     type: 'historical_battle',
@@ -853,7 +852,8 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Crushed Champion',
     narrative:
       'A massive, heavily armored gladiator was famously crushed when their smaller opponent managed to bend one of the iron bars, pinning the giant against the wall.',
-=======
+  },
+  {
     id: 'charnel_pits_the_grinding_teeth',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',
@@ -868,7 +868,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Obsidian Fall',
     narrative:
       'A flamboyant champion, attempting to dodge near the edge, slipped on a smooth sheet of obsidian and fell backwards into a fumarole, disappearing entirely.',
->>>>>>> origin/feat/expand-narrative-lore-16020072306619245288
+  },
+  {
+    id: 'charnel_pits_flesh_rot',
+    arenaId: 'charnel_pits',
+    type: 'hazard',
+    title: 'The Carrion Stench',
+    narrative:
+      'The overpowering stench of the pits has been known to nauseate and break the resolve of unseasoned fighters.',
+  },
+  {
+    id: 'standard_arena_forgotten_champion',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The Forgotten Champion',
+    narrative:
+      'A reigning champion suddenly collapsed from a delayed poison before a single blow was struck, leaving the crowd in stunned silence.',
   },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,

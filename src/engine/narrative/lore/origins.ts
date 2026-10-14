@@ -342,4 +342,10 @@ export const ORIGINS: string[] = [
   'Survived the silent starvation of the Weeping Sisters Asylum',
   'Found swaddled in blood-stained rags beneath the Shattered Bridge',
   'Sold to the pit-masters of the Scab District for a handful of copper',
+  'Abandoned outside the fighting pits wrapped in a bloodied tunic',
+  'Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings',
+  'Found wandering the ash-choked streets of the Foundry District',
+  'Born in the flooded sublevels of the Crying Sisters Orphanage',
+  'Raised in the soot-choked halls of the Iron Orphanage',
+  'Abandoned at the rusted gates of the Cinder-Block Orphanage',
 ];

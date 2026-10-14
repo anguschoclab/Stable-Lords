@@ -74,7 +74,10 @@
         "A poorly timed slash from {{attacker}} misses its true mark.",
         "{{attacker}} swings wide, a grazing cut against {{defender}}.",
         "{{defender}} easily leans back, turning {{attacker}}'s slash into a graze.",
-        "{{attacker}}'s blade slips, only scratching {{defender}}."
+        "{{attacker}}'s blade slips, only scratching {{defender}}.",
+        "{{attacker}}'s blade skitters lightly across {{defender}}'s armor.",
+        "A shallow cut from {{attacker}} merely grazes {{defender}}.",
+        "{{attacker}}'s slash fails to bite deeply, glancing off {{defender}}."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -375,7 +378,10 @@
         "{{attacker}} swings wide, a grazing blow against {{defender}}.",
         "A clumsy bash from {{attacker}} bounces harmlessly.",
         "{{attacker}} fails to connect cleanly, delivering a weak glancing bash.",
-        "{{defender}} shrugs off a poorly aimed bash from {{attacker}}."
+        "{{defender}} shrugs off a poorly aimed bash from {{attacker}}.",
+        "{{attacker}}'s heavy blow merely nudges {{defender}} off balance.",
+        "A blunt strike from {{attacker}} clatters weakly against {{defender}}.",
+        "{{attacker}}'s bashing attack loses momentum, glancing off {{defender}}'s guard."
       ],
       "solid": [
         "{{attacker}} steps into the swing, bringing {{possessive}} {{weapon}} down hard on {{defender}}'s {{bodyPart}}.",
@@ -683,7 +689,9 @@
         "{{attacker}} misjudges the lunge, merely scraping {{defender}}.",
         "A weak thrust from {{attacker}} fails to find purchase.",
         "{{attacker}}'s point snags on armor, failing to pierce {{defender}}.",
-        "{{defender}} pivots, turning a deadly thrust into a minor graze."
+        "{{defender}} pivots, turning a deadly thrust into a minor graze.",
+        "A quick jab by {{attacker}} only snags {{defender}}'s clothing.",
+        "{{attacker}}'s point fails to penetrate, sliding past {{defender}}."
       ],
       "solid": [
         "With practiced precision, {{attacker}} slips {{possessive}} {{weapon}} past {{defender}}'s defenses, striking the {{bodyPart}}!",

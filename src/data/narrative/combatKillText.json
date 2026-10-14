@@ -251,7 +251,12 @@
       "A horrifying spray of vital fluids marks the instant {{defender}}'s body fails completely.",
       "{{defender}}'s form is utterly broken by {{attacker}}'s devastating, lethal attack.",
       "The fatal impact tears through bone and organ, leaving {{defender}} lifeless in the dirt.",
-      "The light in {{defender}}'s eyes extinguishes instantly as {{attacker}} delivers the ultimate, devastating blow."
+      "The light in {{defender}}'s eyes extinguishes instantly as {{attacker}} delivers the ultimate, devastating blow.",
+      "{{attacker}} lands a final, catastrophic blow, turning {{defender}}'s desperate defense into a tragic mess of ruin.",
+      "The light leaves {{defender}}'s eyes before they even hit the sand, snuffed out by {{attacker}}'s ruthless power.",
+      "{{attacker}} offers no quarter, ensuring their final strike is a spectacle of absolute destruction upon {{defender}}.",
+      "A sickening crunch echoes across the arena as {{attacker}} forcibly evicts the life from {{defender}}.",
+      "{{defender}} crumples like a discarded puppet, their strings cut permanently by {{attacker}}'s merciless assault."
     ],
     "weapon_specific": {
       "slashing": [
@@ -764,7 +769,6 @@
       "{{attacker}} stands victorious, leaving {{defender}} as a grim monument to the sands.",
       "{{attacker}} ends it all with a singular, terrible blow.",
       "The light fades from {{defender}}'s eyes as {{attacker}} strikes the final blow.",
-      "{{attacker}} stands victorious over the broken form of {{defender}}.",
       "A brutal, decisive strike from {{attacker}} seals {{defender}}'s fate.",
       "{{defender}} collapses into the bloody sand, finally bested by {{attacker}}."
     ]

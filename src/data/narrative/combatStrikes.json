@@ -204,7 +204,12 @@
         "A masterclass in bloodshed: {{attacker}} leaves {{defender}} reeling with a perfect slash.",
         "With flawless edge alignment, {{attacker}} executes a breathtakingly smooth slice against {{defender}}.",
         "A masterclass in swordsmanship! {{attacker}} threads a beautiful, devastating arc through {{defender}}'s defense.",
-        "With absolute mastery, {{attacker}} guides the slashing blade perfectly into {{defender}}'s {{bodyPart}}."
+        "With absolute mastery, {{attacker}} guides the slashing blade perfectly into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} weaves a flawless tapestry of steel, opening a terrifying gash on {{defender}}.",
+        "With a flick of the wrist that defies logic, {{attacker}}'s blade finds flesh.",
+        "A masterful, sweeping cut from {{attacker}} demonstrates years of bloody perfection.",
+        "{{attacker}}'s blade dances past all guard, a sublime stroke of butchery.",
+        "Perfection in motion: {{attacker}} delivers a slashing arc that leaves the crowd in awe."
       ],
       "critical_human": [
         "A horrifying display of speed as {{attacker}} carves a deep path through {{defender}}'s {{bodyPart}} with {{possessive}} {{weapon}}!",
@@ -364,7 +369,6 @@
         "{{defender}} sidesteps, forcing {{attacker}}'s bludgeon to slide clumsily off their {{bodyPart}}.",
         "{{attacker}}'s attack loses momentum, resulting in a dull, harmless thud against {{defender}}.",
         "{{attacker}} swings wide, a grazing blow against {{defender}}.",
-        "{{attacker}}'s heavy swing loses momentum, merely bumping {{defender}}.",
         "A clumsy bash from {{attacker}} bounces harmlessly.",
         "{{attacker}} fails to connect cleanly, delivering a weak glancing bash.",
         "{{defender}} shrugs off a poorly aimed bash from {{attacker}}."
@@ -506,7 +510,12 @@
         "Using perfect leverage, {{attacker}} lands an unbelievably precise and crushing blow on {{defender}}.",
         "{{attacker}} flows effortlessly into a ruinous, perfectly timed smash against {{defender}}.",
         "With brutal perfection, {{attacker}} brings the bludgeon down on {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} measures the distance perfectly, landing a crushing blow on {{defender}}."
+        "{{attacker}} measures the distance perfectly, landing a crushing blow on {{defender}}.",
+        "{{attacker}} channels raw kinetic perfection, delivering a crushing blow that shatters bone and spirit.",
+        "A masterclass in brutality: {{attacker}} finds the perfect angle to completely crush {{defender}}'s guard.",
+        "With terrifying precision, {{attacker}} brings their weapon down in a flawless, heavy strike.",
+        "{{attacker}} demonstrates the terrible art of blunt force, connecting with sickening perfection.",
+        "A perfect, heavy swing from {{attacker}} sends a shockwave through {{defender}}'s frame."
       ],
       "critical_human": [
         "The arena trembles as {{attacker}} unleashes a terrifying overhead smash, crushing the {{bodyPart}}!",
@@ -800,7 +809,12 @@
         "With a practiced thrust, {{attacker}} penetrates {{defender}}'s guard.",
         "{{attacker}}'s strike is a blur, leaving a deep puncture wound.",
         "With pinpoint accuracy, {{attacker}} slips the point precisely into a gap in {{defender}}'s guard.",
-        "An exquisitely timed lunge from {{attacker}} finds its mark with surgical perfection against {{defender}}."
+        "An exquisitely timed lunge from {{attacker}} finds its mark with surgical perfection against {{defender}}.",
+        "{{attacker}} threads the needle perfectly, their point finding the tiniest gap in {{defender}}'s armor.",
+        "A sublime thrust from {{attacker}} bypasses every defense with terrifying surgical accuracy.",
+        "With a master's eye, {{attacker}} slips the point of their weapon deep into {{defender}}.",
+        "{{attacker}}'s weapon becomes an extension of their will, skewering {{defender}} flawlessly.",
+        "A perfect lunge from {{attacker}} demonstrates the deadly elegance of a master."
       ],
       "critical_human": [
         "{{attacker}} extends fully, every ounce of reach behind his {{weapon}} as it sinks deep into the {{bodyPart}}!",
@@ -1097,7 +1111,12 @@
         "A picture-perfect combination from {{attacker}} leaves {{defender}} disoriented.",
         "Using spectacular technique, {{attacker}} slips the guard and lands a flawless, devastating strike on {{defender}}.",
         "{{attacker}} exploits a tiny opening with a breathtakingly precise and powerful combination against {{defender}}.",
-        "A masterclass in unarmed combat: {{attacker}} strikes {{defender}}'s {{bodyPart}} perfectly."
+        "A masterclass in unarmed combat: {{attacker}} strikes {{defender}}'s {{bodyPart}} perfectly.",
+        "{{attacker}} delivers a masterfully placed blow, the sheer kinetic transfer devastating {{defender}}.",
+        "A flawless strike from {{attacker}} lands exactly on the jaw, a testament to years of pit fighting.",
+        "{{attacker}} finds the perfect opening, their fist connecting with a terrifying crack.",
+        "With brutal perfection, {{attacker}}'s bare hands become deadly instruments of war.",
+        "A master's punch from {{attacker}} perfectly bypasses the guard, dropping {{defender}}."
       ],
       "critical_human": [
         "{{attacker}} throws a rock-fisted PUNCH of incredible felling power into the {{bodyPart}}!",

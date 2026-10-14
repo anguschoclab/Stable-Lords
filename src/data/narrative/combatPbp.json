@@ -1975,7 +1975,12 @@
           "{{defender}} catches the strike on their shield and winks at the nearest spectators.",
           "A loud, echoing clang rings out as {{defender}} dramatically stops the attack.",
           "{{defender}} spins into the block, using the shield like a dancer's prop.",
-          "The crowd gasps as {{defender}} narrowly but stylishly blocks with the shield."
+          "The crowd gasps as {{defender}} narrowly but stylishly blocks with the shield.",
+          "{{defender}} spins their SHIELD, catching the blow with a shower of sparks for the crowd!",
+          "With a dramatic flourish, {{defender}} blocks with their SHIELD and winks at the nearest noble.",
+          "{{defender}} bangs their weapon against their SHIELD before absorbing the attack effortlessly.",
+          "A theatrical pivot brings {{defender}}'s SHIELD exactly where it needs to be, to the crowd's delight.",
+          "{{defender}} catches the strike on their SHIELD, playing to the crowd's gasps."
         ],
         "grim": [
           "{{defender}} silently absorbs the bone-jarring impact on their blood-stained shield.",
@@ -1987,7 +1992,12 @@
           "{{defender}} absorbs the brutal punishment, eyes cold over the top of the shield.",
           "A sickening thud echoes as {{defender}} stops the killing blow with raw grit.",
           "{{defender}} braces behind the shield, enduring the violent onslaught without a word.",
-          "The shield is battered, but {{defender}}'s grim resolve never falters."
+          "The shield is battered, but {{defender}}'s grim resolve never falters.",
+          "{{defender}} hunkers down behind their splintering SHIELD, expecting no mercy.",
+          "With a heavy grunt, {{defender}} absorbs a bone-rattling blow on their SHIELD.",
+          "{{defender}}'s SHIELD groans under the impact, a grim testament to the violence.",
+          "Bracing for the inevitable, {{defender}} catches the brutal strike on their SHIELD.",
+          "Splinters fly from {{defender}}'s SHIELD, yet they hold their ground in grim silence."
         ]
       },
       "parry_break": [
@@ -4079,7 +4089,14 @@
         "lines": [
           "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
           "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
-          "The polished arena floor betrays the fighters' footing under the lanterns!"
+          "The polished arena floor betrays the fighters' footing under the lanterns!",
+          "A sudden slip on the oil-slicked floor throws {{defender}} wildly off balance!",
+          "{{attacker}} skids across the treacherous stones, struggling to find purchase.",
+          "Footing becomes a deadly gamble as the arena floor runs slick with spilled substances.",
+          "A treacherous patch of polished stone threatens to send fighters sprawling.",
+          "The combatants cautiously circle, boots sliding on the greasy flagstones.",
+          "{{defender}} almost loses their footing on the dangerously slick surface!",
+          "Every sudden movement is a risk on this treacherously slick floor."
         ]
       }
     }

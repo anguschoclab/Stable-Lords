@@ -20,7 +20,6 @@ import { CLASS_TRAITS } from './defs/classTraits';
  * (literal keys, then NEW_FLAWS, then CLASS_TRAITS via Object.assign).
  */
 const LEGACY_TRAIT_ORDER = [
-  'survivalist',
   'orphan_street_rat',
   'orphan_pit_fighter',
   'orphan_survivor',

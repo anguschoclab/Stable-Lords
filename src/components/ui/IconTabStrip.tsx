@@ -29,8 +29,6 @@ export function IconTabStrip<T extends string>({
           key={tab.id}
           role="tab"
           aria-selected={activeTab === tab.id}
-          aria-controls={`panel-${tab.id}`}
-          id={`tab-${tab.id}`}
           onClick={() => onChange(tab.id)}
           className={cn(
             'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',

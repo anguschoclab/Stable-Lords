@@ -494,15 +494,4 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
-  orphan_shadow_step: {
-    id: 'orphan_shadow_step',
-    name: 'Shadow Step',
-    description: 'Learned to move silently and unpredictably to avoid abuse, granting evasive speed early in combat.',
-    effect: { defModEarly: 1, iniModEarly: 1 },
-    weight: 0.5,
-    synergy: ['evasive', 'quick'],
-    antiSynergy: ['tank', 'heavy_handed'],
-    tier: 'Notable',
-    sign: 'positive',
-  },
 };

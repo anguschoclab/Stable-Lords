@@ -332,12 +332,4 @@ export const ORIGINS: string[] = [
   'Raised by the grim executioners of the Iron Tower',
   'Discovered clutching a shattered skull in the deep mines',
   'Surviving the Long Winter by eating rats in the Under-Vault',
-  'Abandoned at the rusted gates of the Cinder-Ash Orphanage',
-  'Raised by the grim overseers of the Iron Chain workhouse, learning that obedience was paid in bruises',
-  'Found swaddled in blood-stained rags in the forgotten catacombs beneath the Dross Wards',
-  'Raised in the lightless cellars of the Harrow-Home for Wayward Foundlings where only the strongest survived',
-  'Sold to the under-barons of the Scab District for a handful of copper by desperate, starving parents',
-  'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
-  'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
-  'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
 ];

@@ -829,30 +829,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Whenever the wind howls from the east, a fine powder of pulverized bone blinds fighters and chokes the lungs of the weak.',
   },
-  {
-    id: 'standard_arena_forgotten_blade',
-    arenaId: 'standard_arena',
-    type: 'architectural_quirk',
-    title: 'The Forgotten Blade',
-    narrative:
-      'Buried deep beneath the central sands is said to be the rusted longsword of the arena\'s very first champion, radiating a faint aura of bloodlust.',
-  },
-  {
-    id: 'sundered_coliseum_shattered_pillar',
-    arenaId: 'sundered_coliseum',
-    type: 'historical_battle',
-    title: 'The Shattered Pillar',
-    narrative:
-      'The jagged ruins of the eastern pillar remain as a testament to the colossal blow that not only ended a legendary match, but nearly brought down the entire coliseum.',
-  },
-  {
-    id: 'mudpit_arena_drowned_sorrows',
-    arenaId: 'mudpit_arena',
-    type: 'famous_death',
-    title: 'Drowned Sorrows',
-    narrative:
-      'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
-  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

@@ -171,8 +171,4 @@ export const DEFINING_MOMENTS: string[] = [
   'until they watched their shadow detach and strike first',
   'realizing the only light in the world comes from a sparked blade',
   'waiting for the moment the crowd falls entirely silent in fear',
-  'until they shattered an executioner’s axe with a desperate, bare-handed block',
-  'realizing that the blood on their hands was the only ink they needed to write their legend',
-  'knowing that every broken bone from their past was just a lesson in how to break others',
-  'until they stepped into the arena and felt the sand beneath their feet, finally finding home',
-];
+  ];

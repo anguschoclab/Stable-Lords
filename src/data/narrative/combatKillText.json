@@ -101,7 +101,11 @@
       "The arena claims its due. {{attacker}} delivers a bleak, joyless strike that snuffs out {{defender}}'s spark.",
       "{{attacker}} looms over the fallen {{defender}}, delivering a final, absolute strike that silences the weeping crowd.",
       "With a grim nod, {{attacker}} brings the curtain down, ending {{defender}}'s story.",
-      "The arena falls silent as {{attacker}} ruthlessly dispatches {{defender}}."
+      "The arena falls silent as {{attacker}} ruthlessly dispatches {{defender}}.",
+      "A cold, systematic dispatch. The arena falls utterly silent as the final blow connects.",
+      "Clinical and brutal. There is no glory in this end, only an abrupt cessation of life.",
+      "The crowd holds its breath as the execution is carried out with grim efficiency.",
+      "It ends not with a triumphant roar, but with the quiet rattling of a final breath."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",

@@ -1061,7 +1061,9 @@
           "{{defender}} barely avoids the strike, losing their footing in a desperate dodge.",
           "{{defender}} barely twists away, eyes wide with sudden terror.",
           "A clumsy, scrambling retreat is the only thing saving {{defender}} from the blow.",
-          "{{defender}} flails out of the way, panic painted across their face."
+          "{{defender}} flails out of the way, panic painted across their face.",
+          "{{defender}} stumbles backward wildly, barely evading the blow in a panicked flail.",
+          "Scrambling for footing, {{defender}} just narrowly escapes the swinging steel."
         ],
         "confident": [
           "{{defender}} barely shifts their weight, a masterclass in minimal effort, dodging with absolute certainty.",
@@ -2205,6 +2207,7 @@
           "Stumbling from the block, {{defender}} wildly thrusts forward in a desperate counter-attack.",
           "Operating purely on frantic adrenaline, {{defender}} parries and lashes back blindly.",
           "{{defender}} forces the attack aside and throws a chaotic, unbalanced riposte.",
+          "Eyes closed in fear, {{defender}} thrusts their weapon in a desperate counter.",
           "After a panicked deflection, {{defender}} lashes out blindly in a wild counter-attack.",
           "Breathing heavily, {{defender}} parries and immediately throws a desperate, ragged counter.",
           "{{defender}} barely survives the block, instantly snapping back with a messy riposte."
@@ -2999,6 +3002,8 @@
           "Springing upward like a coiled viper, {{name}} is instantly ready.",
           "{{name}} leaps to their feet, completely ignoring the painful impact.",
           "{{name}} springs up from the dirt, eyes blazing with furious adrenaline.",
+          "A miraculous kip-up puts {{name}} right back into the fight!",
+          "Refusing to stay down, {{name}} bounces right back up, teeth bared.",
           "{{name}} instantly springs back to their feet, practically bouncing off the arena floor.",
           "With a sudden burst of adrenaline, {{name}} kips up off the sand, refusing to stay down.",
           "{{name}} rolls with the impact, immediately popping back into a fighting stance."
@@ -4213,6 +4218,8 @@
           "The damp surface of the arena turns basic movement into a hazardous gamble.",
           "Loss of footing is imminent as the arena floor becomes slicker by the minute.",
           "A treacherous slickness has claimed the arena floor, turning simple steps into dangerous maneuvers.",
+          "A misstep on the oil-slicked flagstones costs them dearly!",
+          "The spilled oil turns the arena into a hazardous skating rink of death.",
           "{{attacker}} finds no traction on the slick floor.",
           "The slick floor causes {{attacker}} to stagger momentarily.",
           "{{attacker}} slides awkwardly on the slick surface.",

@@ -334,6 +334,10 @@
             "text": "Predicts the angle of attack flawlessly, turning force against itself"
           },
           {
+            "min": 25,
+            "text": "unshakable guard"
+          },
+          {
             "min": 23,
             "text": "An impenetrable wall of iron, turning aside the deadliest steel"
           },

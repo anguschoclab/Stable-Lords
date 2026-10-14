@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import {
+import { collectUsedWarriorNames, collectUsedWarriorIds,
   collectAllWarriors,
   collectAllActiveWarriors,
   collectBookedWarriorIds,
@@ -336,5 +336,47 @@ describe('warriorCollection', () => {
       expect(map.size).toBe(1);
       expect(map.get('dup')?.name).toBe('latest_dup');
     });
+  });
+});
+
+describe('warriorCollection edge cases', () => {
+  const w1 = { id: 'w1', name: 'Warrior1', status: 'Active' };
+  const w2 = { id: 'w2', name: 'Warrior2', status: 'Injured' };
+  const r1 = { id: 'r1', name: 'Rival1', status: 'Active' };
+  const g1 = { id: 'g1', name: 'Grave1' };
+  const ret1 = { id: 'ret1', name: 'Ret1' };
+  const p1 = { id: 'p1', name: 'Pool1' };
+  const fa1 = { id: 'fa1', name: 'FA1' };
+
+  const mockState = {
+    roster: [w1, w2],
+    rivals: [{ roster: [r1] }],
+    graveyard: [g1],
+    retired: [ret1],
+    recruitPool: [p1],
+    freeAgents: [fa1],
+    tournaments: [{ participants: [{ id: 't1' }] }],
+    deadWarriorIds: ['dead1'],
+    boutOffers: {
+      'off1': { status: 'Signed', boutWeek: 10, warriorIds: ['w1', 'r1'] },
+      'off2': { status: 'Pending', boutWeek: 10, warriorIds: ['w2'] }
+    }
+  };
+
+  it('collectUsedWarriorNames new tests', () => {
+    const names = collectUsedWarriorNames(mockState as any);
+    expect(names.size).toBe(7); // 5 known + pool(1) + fa(1)
+    expect(names.has('Warrior1')).toBe(true);
+    expect(names.has('Pool1')).toBe(true);
+    expect(names.has('FA1')).toBe(true);
+  });
+
+  it('collectUsedWarriorIds new tests', () => {
+    const ids = collectUsedWarriorIds(mockState as any);
+    expect(ids.size).toBe(9); // 5 known + pool(1) + fa(1) + tournament(1) + deadIds(1)
+    expect(ids.has('w1')).toBe(true);
+    expect(ids.has('p1')).toBe(true);
+    expect(ids.has('t1')).toBe(true);
+    expect(ids.has('dead1')).toBe(true);
   });
 });

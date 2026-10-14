@@ -1,3 +1,6 @@
+// @vitest-isolate — B-FLAKE-1: depends on module-level mockOpfsFileText in
+// setup.node.ts; a shared-worker sibling's lifecycle can reset it mid-file
+// (observed 3×: V12, V14, V15). Runs in the isolated project.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { setMockOPFSFileText } from '@/test/_setup/setup';

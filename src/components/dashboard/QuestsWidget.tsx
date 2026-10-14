@@ -42,6 +42,7 @@ export const QuestsWidget = React.memo(function QuestsWidget() {
         <button
           type="button"
           aria-label="Dismiss getting started checklist"
+          title="Dismiss getting started checklist"
           onClick={() =>
             setState((prev) => ({
               ...prev,

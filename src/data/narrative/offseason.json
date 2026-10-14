@@ -442,7 +442,9 @@
     },
     "mysterious_patron": {
       "title": "A Mysterious Patron!",
-      "newsletter": ["A mysterious patron was impressed by your stable and donated {{gold}} gold!"]
+      "newsletter": [
+        "A mysterious patron was impressed by your stable and donated {{gold}} gold!"
+      ]
     },
     "goblin_merchant": {
       "title": "Goblin Merchant",

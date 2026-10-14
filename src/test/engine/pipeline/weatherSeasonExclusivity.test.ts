@@ -109,7 +109,7 @@ describe('weather fixture-union completeness (V15)', () => {
   });
 
   it('OFFSEASON_WEATHER_TYPES and SEASONABLE_WEATHER_TYPES are disjoint and dedup-free', () => {
-    const off = new Set(OFFSEASON_WEATHER_TYPES);
+    const off = new Set<string>(OFFSEASON_WEATHER_TYPES);
     expect(off.size).toBe(OFFSEASON_WEATHER_TYPES.length);
     for (const w of SEASONABLE_WEATHER_TYPES) {
       expect(off.has(w), `${w} is in both fixture and offseason lists`).toBe(false);

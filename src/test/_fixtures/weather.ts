@@ -59,4 +59,5 @@ export const SEASONABLE_WEATHER_TYPES: WeatherType[] = [
   'Temporal Rift',
   'Stardust Gale',
   'Abyssal Tempest',
+  'Cursed Eclipse',
 ];

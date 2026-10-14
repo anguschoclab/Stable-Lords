@@ -65,6 +65,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Rain of Frogs',
     'Whispering Winds',
     'Stardust Gale',
+    'Cursed Eclipse',
   ],
   Winter: [
     'Blizzard',
@@ -147,6 +148,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Blood Fog': 1,
   'Rain of Frogs': 0.5,
   'Stardust Gale': 3,
+  'Cursed Eclipse': 1,
 
   // Winter-exclusive
   Blizzard: 15,

@@ -202,4 +202,8 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed an uncanny ability to read the twitch of a muscle before a strike',
   'learned to hold their breath for minutes while hiding in the submerged cisterns',
   'memorized the sound of a blade being drawn in the dark',
+  'developed calluses like iron from constantly punching the stone walls of their cell',
+  'learned to predict a strike just by the subtle shift of the aggressor’s shoulder',
+  'would instinctively drop their center of gravity the moment someone raised a hand',
+  'perfected a deceptive limp to lure overconfident bullies into a devastating counter-strike',
 ];

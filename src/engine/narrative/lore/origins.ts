@@ -353,4 +353,9 @@ export const ORIGINS: string[] = [
   'Born in the flooded sublevels of the Crying Sisters Orphanage',
   'Raised in the soot-choked halls of the Iron Orphanage',
   'Abandoned at the rusted gates of the Cinder-Block Orphanage',
+  'Raised by the grim overseers of the Iron Chain workhouse, learning that obedience was paid in bruises',
+  'Found swaddled in blood-stained rags in the forgotten catacombs beneath the Dross Wards',
+  'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
+  'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
+  'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
 ];

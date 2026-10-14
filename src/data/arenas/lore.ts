@@ -885,6 +885,54 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A reigning champion suddenly collapsed from a delayed poison before a single blow was struck, leaving the crowd in stunned silence.',
   },
+  {
+    id: 'battle_of_the_broken_spine',
+    arenaId: 'clifftop_arena',
+    type: 'historical_battle',
+    title: 'The Battle of the Broken Spine',
+    narrative:
+      'A legendary three-day siege where a single gladiator held the narrow path against fifty combatants, earning the arena its bloody reputation.',
+  },
+  {
+    id: 'fall_of_the_iron_titan',
+    arenaId: 'iron_forge',
+    type: 'famous_death',
+    title: 'Fall of the Iron Titan',
+    narrative:
+      'The infamous death of the undefeated champion known as the Iron Titan, who was melted alive when a saboteur breached the central furnace during the finals.',
+  },
+  {
+    id: 'the_whispering_pillars',
+    arenaId: 'sunken_temple',
+    type: 'architectural_quirk',
+    title: 'The Whispering Pillars',
+    narrative:
+      'The ancient stone pillars surrounding the arena are said to amplify the dying breaths of fallen gladiators, unnerving even the most hardened veterans.',
+  },
+  {
+    id: 'standard_arena_forgotten_blade',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Forgotten Blade',
+    narrative:
+      "Buried deep beneath the central sands is said to be the rusted longsword of the arena's very first champion, radiating a faint aura of bloodlust.",
+  },
+  {
+    id: 'sundered_coliseum_shattered_pillar',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Shattered Pillar',
+    narrative:
+      'The jagged ruins of the eastern pillar remain as a testament to the colossal blow that not only ended a legendary match, but nearly brought down the entire coliseum.',
+  },
+  {
+    id: 'mudpit_arena_drowned_sorrows',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'Drowned Sorrows',
+    narrative:
+      'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

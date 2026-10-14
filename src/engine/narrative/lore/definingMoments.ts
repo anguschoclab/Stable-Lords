@@ -185,4 +185,7 @@ export const DEFINING_MOMENTS: string[] = [
   'knowing that the deafening roar of the bloodsands is the only true applause',
   'until they finally snapped and drove a rusty iron spike through the leg of their abusive taskmaster',
   'knowing that their survival depended on weaponizing every ounce of their childhood terror',
+  'until they shattered an executioner’s axe with a desperate, bare-handed block',
+  'knowing that every broken bone from their past was just a lesson in how to break others',
+  'until they stepped into the arena and felt the sand beneath their feet, finally finding home',
 ];

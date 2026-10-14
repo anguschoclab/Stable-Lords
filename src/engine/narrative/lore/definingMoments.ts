@@ -176,4 +176,7 @@ export const DEFINING_MOMENTS: string[] = [
   'knowing that their scars were merely a ledger of debts soon to be repaid',
   'until they shattered a taskmaster’s hand and learned the intoxicating taste of power',
   'waiting for the day they could turn the screams of the arena into their own personal choir',
+  'until they strangled a veteran gladiator with their bare hands in a tavern brawl',
+  'knowing that the only god left in the world is the sharp end of a blade',
+  'realizing that survival means burning down everything they once loved',
 ];

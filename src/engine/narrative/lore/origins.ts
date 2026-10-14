@@ -337,4 +337,9 @@ export const ORIGINS: string[] = [
   'Found shivering among the desecrated tombs of the Silent Order',
   'Sold to the fighting pits by the debt-ridden wardens of the Weeping Stone',
   'Endured the terrifying silence of the Blackwood isolation cells',
+  'Raised by silent monks who believed pain was the only true prayer',
+  'Abandoned in the rusted husk of an iron juggernaut in the Scrap Wards',
+  'Found shivering amidst the cooling embers of the Black Church',
+  'Sold to the pit-masters for a handful of silver coins and a flagon of cheap wine',
+  'Survived the Blood Rot by hiding beneath the corpses of the fallen',
 ];

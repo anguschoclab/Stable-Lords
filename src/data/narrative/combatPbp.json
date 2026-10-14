@@ -1980,7 +1980,11 @@
           "With a frantic grunt, {{defender}} gets their shield in the way of certain doom.",
           "{{defender}} cowers behind the shield, a desperate prayer on their lips.",
           "The heavy strike nearly wrenches the shield from {{defender}}'s desperate grip.",
-          "{{defender}} blindly throws the shield forward to block the savage assault."
+          "{{defender}} blindly throws the shield forward to block the savage assault.",
+          "{{defender}} throws their shield up in a frantic, desperate block.",
+          "In a panic, {{defender}} hides behind their shield, hoping it holds.",
+          "{{defender}} blindly thrusts their shield forward, a desperate act of preservation.",
+          "With a panicked cry, {{defender}} brings their shield up just in time."
         ],
         "confident": [
           "{{defender}} plants their feet and lets the shield effortlessly absorb the blow.",
@@ -1993,7 +1997,11 @@
           "{{defender}} swats the strike away with the rim of their shield, unimpressed.",
           "A textbook block from {{defender}} stops the attack dead in its tracks.",
           "{{defender}} takes the hit on the shield, not yielding an inch of ground.",
-          "With brutal efficiency, {{defender}}'s shield negates the entire attack."
+          "With brutal efficiency, {{defender}}'s shield negates the entire attack.",
+          "{{defender}} raises their shield with practiced ease, absorbing the blow perfectly.",
+          "A confident sneer crosses {{defender}}'s face as they easily block with their shield.",
+          "{{defender}} expertly positions their shield, the impact barely registering.",
+          "With an air of bored superiority, {{defender}} catches the attack on their shield."
         ],
         "theatrical": [
           "{{defender}} flourishes their shield before catching the blow with a dramatic spark.",
@@ -2005,7 +2013,13 @@
           "{{defender}} catches the strike on their shield and winks at the nearest spectators.",
           "A loud, echoing clang rings out as {{defender}} dramatically stops the attack.",
           "{{defender}} spins into the block, using the shield like a dancer's prop.",
-          "The crowd gasps as {{defender}} narrowly but stylishly blocks with the shield."
+          "The crowd gasps as {{defender}} narrowly but stylishly blocks with the shield.",
+          "{{defender}} deflects the blow with a sweeping, dramatic flourish of their shield.",
+          "{{defender}} spins and catches the strike on their shield, playing to the crowd.",
+          "With a theatrical shout, {{defender}} angles their shield to deflect the attack perfectly.",
+          "{{defender}} makes a show of raising their shield, deflecting the blow with undeniable style.",
+          "{{defender}} catches the attack on their shield with a grand, sweeping gesture.",
+          "With an exaggerated heave, {{defender}} brings their shield around to absorb the blow beautifully."
         ],
         "grim": [
           "{{defender}} silently absorbs the bone-jarring impact on their blood-stained shield.",
@@ -2017,7 +2031,13 @@
           "{{defender}} absorbs the brutal punishment, eyes cold over the top of the shield.",
           "A sickening thud echoes as {{defender}} stops the killing blow with raw grit.",
           "{{defender}} braces behind the shield, enduring the violent onslaught without a word.",
-          "The shield is battered, but {{defender}}'s grim resolve never falters."
+          "The shield is battered, but {{defender}}'s grim resolve never falters.",
+          "{{defender}} braces their shield against the blow, their expression unreadable.",
+          "With a grim set to their jaw, {{defender}} takes the impact on their battered shield.",
+          "{{defender}} coldly absorbs the strike on their shield, giving no ground.",
+          "A grim, silent block from {{defender}}'s shield halts the attack completely.",
+          "{{defender}} meets the attack with their shield, eyes cold and dead.",
+          "There is no joy in {{defender}}'s block, only grim, unyielding steel."
         ]
       },
       "parry_break": [
@@ -4166,6 +4186,13 @@
           "The torch-lit flagstones are slick with spilled oil — quick footwork turns treacherous!",
           "A sheen of oil coats the stone floor, turning every pivot into a gamble!",
           "The polished arena floor betrays the fighters' footing under the lanterns!",
+          "{{defender}}'s foot slips on a patch of slick gore, throwing off their balance.",
+          "{{defender}} struggles for purchase as the slick floor offers no traction.",
+          "A sudden skid on the slick arena floor leaves {{defender}} scrambling to stay upright.",
+          "{{defender}} slips on the slick stones, barely catching themselves.",
+          "The slick surface causes {{defender}}'s footing to betray them.",
+          "{{defender}} stumbles, their boots sliding across the slick gore.",
+          "Without warning, the slick floor sends {{defender}} skidding awkwardly.",
           "{{attacker}} finds no traction on the slick floor.",
           "The slick floor causes {{attacker}} to stagger momentarily.",
           "{{attacker}} slides awkwardly on the slick surface.",

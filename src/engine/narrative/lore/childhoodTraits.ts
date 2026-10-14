@@ -206,4 +206,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to predict a strike just by the subtle shift of the aggressor’s shoulder',
   'would instinctively drop their center of gravity the moment someone raised a hand',
   'perfected a deceptive limp to lure overconfident bullies into a devastating counter-strike',
+  'learned to gauge a fighter\'s hesitation by the rhythmic tapping of their weapon hilt',
+  'spent their youth silently tracking pit hounds to learn the perfect ambush angle',
+  'would willingly take a shallow cut just to learn how different blades bite into flesh',
 ];

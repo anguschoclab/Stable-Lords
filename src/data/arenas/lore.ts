@@ -933,6 +933,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'standard_arena_the_silent_stand',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Silent Stand',
+    narrative:
+      'A legendary match where both fighters, utterly exhausted, simply stared at each other for ten full minutes before collapsing simultaneously in a draw.',
+  },
+  {
+    id: 'the_iron_cage_rusting_grasp',
+    arenaId: 'the_iron_cage',
+    type: 'architectural_quirk',
+    title: 'The Rusting Grasp',
+    narrative:
+      'Certain sections of the cage are heavily magnetized, a remnant of an old forge beneath the arena. Fighters wearing heavy steel often find their weapons inexplicably pulled toward the bars.',
+  },
+  {
+    id: 'volcanic_crater_the_ember_dance',
+    arenaId: 'volcanic_crater',
+    type: 'famous_death',
+    title: 'The Ember Dance',
+    narrative:
+      'A nimble duelist attempted to use an erupting geyser of hot ash as cover, but inhaled the superheated air and burned from the inside out, dropping dead before their opponent could strike.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

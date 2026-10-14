@@ -4,6 +4,11 @@
  */
 
 export const ORIGINS: string[] = [
+  'Left wrapped in rags on the steps of the Ashen Convent',
+  'Raised by wild dogs in the ruins of the Old Aqueduct',
+  'Found clutching a bloodied coin in the Gutters',
+  'Abandoned inside a forgotten crypt near the Undercity',
+  'Survived the great fire that consumed the Iron Spire Orphanage',
   'Abandoned at the rusted gates of the Blackwood Workhouse',
   'Survived the chilling cullings of the Whispering Vaults',
   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',

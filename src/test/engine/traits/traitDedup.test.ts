@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 161; // 160 (#1044 + #1049 + #1038) + 1 orphan_of_the_ashes (#1051)
+const EXPECTED_COUNT = 164; // 161 + 3 orphan traits salvaged from #1032
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

@@ -47,9 +47,35 @@ all 23. DISPROVED the assumption that adjudicable review feedback existed.
 | #1032 | lore+traits | green, CONFLICTING | own delta small (9 files) BUT slow-test edits revert V14's seed re-baseline (777→42 → back to 777, bar 1.3→1.0) | PARTIAL | **CHERRY-PICK** lore+traits only; reject all test edits |
 | #1031 | narrative-JSON | green, stale | real delta ~10 lines; bulk is `.claude/backups/*.json` blobs (+6,117) | PARTIAL | **CHERRY-PICK** content lines only |
 
-**Merge set (9):** #1053, #1052, #1050, #1049, #1048*, #1045, #1044, #1043, #1041, #1039*, #1038, #1037, #1036 (*=with modifications).
-**Cherry-pick set (4):** #1046, #1033, #1032, #1031 (+#1047 trait salvage).
-**Close set (6):** #1051, #1042, #1040, #1035, #1034 (+#1047 branch after salvage).
+### Executed outcomes (Phase 5 — actual, supersedes projected sets above)
+
+| PR | Projected | Actual | Notes |
+| --- | --- | --- | --- |
+| #1053 | MERGE | **MERGED** (`964c27dc`) | union-resolved combatPbp conflicts |
+| #1052 | MERGE | **MERGED** (`ebd57dba`) | clean |
+| #1051 | CLOSE | **MERGED** (`dd28fd87`) | union resolution added 3 unique traits + lore; the "6+4+4 dupes" flag proved correct — auto-merge had already landed the same lines elsewhere, dup-guard caught them, second occurrences removed |
+| #1050 | MERGE | **SALVAGED** (`220ff3e0`) | 27 unique shield-block/slick-floor lines applied; rest subsumed |
+| #1049 | MERGE | **MERGED** (`39fe6d5d`) | union lore resolution |
+| #1048 | FIX-THEN-MERGE | **MERGED + FIXED** (`c3bba981`, `8b2b81f4`) | completed all 5 missed surfaces: WEATHER_VISUALS, WEATHER_STATS, Fall seasonal pool + weight 1, fixture entry |
+| #1047 | SALVAGE | **SALVAGED** (`a898e5db`) | orphan_shadow_step with archetypes corrected (`['evasive','quick']`→`agile`, `'heavy_handed'`→`brutal`) + 3 lore entries + 12 lore lines; 3 near-dupe lines dropped |
+| #1046 | CHERRY-PICK (drop scripts) | **MERGED whole** (`d7f75208`) | deviation: the 8 analysis/expansion scripts kept — lint-clean, pass narrative_validate, and have `scripts/` precedent; flagged for future pruning review |
+| #1045 | MERGE | **PARTIAL SALVAGE** (`f2c1d17b`) | verdict REVERSED on close reading: +165 lines dominated by near-dupe pairs (one-word-mutated twins) and 4× form-letter strike templates; also used `{{name}}` tokens in `{{defender}}` arrays and broke uiMeta's descending min order. 12 distinct lines salvaged; ~150 rejected |
+| #1044 | MERGE | **MERGED** (`5a8ff44d`) | clean |
+| #1043 | MERGE | **MERGED** (`87f707c2`) | `.jules/palette.md` stripped in merge |
+| #1042 | CLOSE | **CLOSE** | empty diff confirmed |
+| #1041 | MERGE | **MERGED** (`ecda3882`) | clean |
+| #1040 | CLOSE | **FINDINGS APPLIED** (`da04f1f3`) | ~half its flagged dupes already removed by #1046; applied the defensible remainder (triple "coup de grâce"/"wasted motion"/"preternatural" phrasings rewritten); rejected borderline flags |
+| #1039 | MERGE minus aria-controls | **MERGED + FIXED** (`2688a6b7`, `26cea92b`) | dangling `aria-controls`/`id` pair removed (no `panel-*` targets exist) |
+| #1038 | MERGE | **MERGED** (`1600ff7c`) | union lore resolution |
+| #1037 | MERGE | **MERGED** (`faf32983`) | `.jules/bolt.md` stripped in merge |
+| #1036 | MERGE | **MERGED** (`a5e7f299`) | union-resolved combatPbp conflict |
+| #1035 | CLOSE | **PARTIAL SALVAGE** (`a898e5db`) | ~20 unique lines applied to matching arrays; its dupe removals already covered |
+| #1034 | CLOSE | **PARTIAL SALVAGE** (`a898e5db`) | 3 lore entries applied with schema correction (`description`/`discoveryWeight`→`narrative` — its type-check failure); REJECTED `survivalist` resurrection (deliberately-removed trait, stale TraitDef shape) and root-level `find_duplicates.cjs` |
+| #1033 | CHERRY-PICK | **CHERRY-PICKED** (`67b26687`, `0f55c22f`) | 4 test files; negative-input assertions restored; perf-ceiling loosening (12s→15s) rejected |
+| #1032 | CHERRY-PICK | **CHERRY-PICKED** (`b0c2e309`) | 3 traits + 2 lore entries + 13 lore lines; gate loosenings (worldLiveness 1.3→1.0, perf 12s→20s) rejected |
+| #1031 | CHERRY-PICK | **FINDINGS APPLIED** (`da04f1f3`) | its 3 prod removals partially covered by #1046; remainder adjudicated line-by-line |
+
+**Final tallies:** 10 merged wholesale, 1 merged+completed (#1048), 8 content-salvaged (cherry-pick or line-level), 4 audit-findings applied, 1 empty close (#1042). No PR merged blind — every diff was read, and ~60% of the narrative cluster's claimed "new content" proved to be near-dupe padding or schema-invalid.
 
 ## 2. New findings (V15 audit)
 

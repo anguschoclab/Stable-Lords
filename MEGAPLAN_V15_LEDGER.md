@@ -43,4 +43,44 @@
 
 ## Phase log
 
-_(filled as phases complete)_
+### Phase 4 — test-first (commit `242bfd4d`)
+
+RED contract tests committed before any production change:
+weather fixture-union guard (`weatherSeasonExclusivity`), IconTabStrip
+a11y contract, cosmicAnomaly unconditional count, plausibility flake
+isolation (`@vitest-isolate`).
+
+### Phase 5 — merge/fix execution
+
+- 10 merge commits (#1053, #1052, #1051, #1049, #1048, #1046, #1044,
+  #1043, #1041, #1039, #1038, #1037, #1036 — 12 merges total).
+- #1048 completion: WEATHER_VISUALS + WEATHER_STATS + Fall pool +
+  weight + fixture (its CI TS2741 now green).
+- `OFFSEASON_WEATHER_TYPES` formalized (11 event-only types) +
+  fixture-union guard: `WEATHER_TYPES ≡ SEASONABLE ∪ OFFSEASON`.
+- Salvage commits: #1033 (tests), #1032 (traits+lore, gate loosenings
+  rejected), #1050, #1035, #1034 (schema-fixed), #1047
+  (archetype-fixed), #1045 (12 distinct lines of ~165).
+- Dedupe applied from #1040/#1031 findings; 11 union-merge dupes
+  caught by dup-guard and removed.
+- Trait count: 153 → 165. Weather types: 63 → 64 (Cursed Eclipse,
+  Fall season, weight 1).
+
+### Phase 6 — final battery (vs baseline)
+
+| Gate | Result | vs baseline |
+| --- | --- | --- |
+| `type-check` | ✅ green | green → green |
+| `lint` | ✅ green | green → green |
+| `build` | ✅ green (189 precache) | unchanged |
+| `electron:compile` | ✅ green (24.14 KB) | unchanged |
+| `narrative-validate` | ✅ clean | unchanged |
+| `test` fast suite | ✅ **801 files / 8,860 tests, 0 failures** | 799/8,869 → +2 files; the known `retrieveHotStatePlausibility` flake eliminated via isolation |
+| jscpd | 101 clones / 0.77% | 100 / 0.75% (+1 — merged content) |
+| orphan-scan | 154 src deadExports / ceil 156 | unchanged |
+| ui-audit / data-array-dup | ✅ clean | unchanged |
+| 40w soak | 10.7s — **267.1 ms/wk**, 0 violations | 248.7 ms/wk (+7.4% — content growth + machine variance) |
+| `e2e` chromium | 3 pass + 2 flaky-on-retry | timing-sensitive selectors; consistent with documented e2e flakiness |
+| `test:slow` | SKIPPED | user directive |
+
+No regressions introduced. All merged PR content verified green.

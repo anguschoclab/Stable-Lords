@@ -177,6 +177,9 @@ const LEGACY_TRAIT_ORDER = [
   'ash_born_survivor',
   'silent_monk',
   'feral_child',
+  'orphan_blood_rage',
+  'gutter_phantom_strike',
+  'shadow_born_killer',
 ];
 
 const MERGED: Record<string, TraitDef> = {

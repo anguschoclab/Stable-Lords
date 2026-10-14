@@ -26,6 +26,7 @@ export type WeatherType =
   | 'Gravity Anomaly'
   | 'Ashfall'
   | 'Eldritch Eclipse'
+  | 'Cursed Eclipse'
   | 'Prismatic Rain'
   | 'Acid Rain'
   | 'Mana Surge'

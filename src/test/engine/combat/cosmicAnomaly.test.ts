@@ -50,7 +50,7 @@ describe('Cosmic Anomaly weather type', () => {
     }
   });
 
-  it('weather type count is 63', () => {
-    expect(WEATHER_TYPES.length).toBe(63);
+  it('weather type count is 64', () => {
+    expect(WEATHER_TYPES.length).toBe(64);
   });
 });

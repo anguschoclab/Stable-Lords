@@ -18,6 +18,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'A strange, iridescent rain begins to fall. The air itself feels charged with anticipation.',
   'Eldritch Eclipse':
     'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
+  'Cursed Eclipse':
+    'A Cursed Eclipse casts an eerie, blood-curdling purple glow over the sand. Fighters prepare for chaos.',
   'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',
 
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',

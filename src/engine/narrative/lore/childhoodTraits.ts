@@ -191,4 +191,9 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to read the flow of blood from a fresh wound',
   'collected the rusted iron teeth of the old pit hounds',
   'never made a sound even when walking on broken glass',
+  'developed a terrifyingly accurate throw using stolen cobblestones',
+  'spent their youth silently observing the brutal executions in the Weeping Square',
+  'learned to map the lightless catacombs entirely by touch',
+  'would calmly catch venomous scorpions bare-handed in the Sump',
+  'learned to feign death so convincingly that grave-robbers would pass them by',
 ];

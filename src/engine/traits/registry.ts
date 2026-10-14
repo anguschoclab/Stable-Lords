@@ -27,6 +27,7 @@ const LEGACY_TRAIT_ORDER = [
   'orphan_resilience',
   'hollow_gaze',
   'scab_survivor',
+  'orphanage_survivor',
   'gutter_shadow',
   'guttersnipe_cunning',
   'iron_stomach',

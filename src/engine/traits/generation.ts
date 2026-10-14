@@ -12,7 +12,7 @@ import {
   BIRTH_FLAW_CHANCE,
 } from '@/constants/combat/combat';
 import { TRAITS } from './registry';
-import type { TraitDef, TraitTier } from './types';
+import type { TraitDef, TraitTier, TraitId } from './types';
 
 /** Class traits available to a given fighting style. */
 export function traitsForStyle(style: FightingStyle): TraitDef[] {
@@ -27,7 +27,7 @@ export function traitsByTier(tier: TraitTier): TraitDef[] {
 /**
  *
  */
-export type TraitId = keyof typeof TRAITS;
+// TraitId is defined as string in types.ts
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**

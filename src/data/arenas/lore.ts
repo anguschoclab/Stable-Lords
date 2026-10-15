@@ -933,6 +933,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'sundial_arena_blood_noon',
+    arenaId: 'sundial_arena',
+    type: 'historical_battle',
+    title: 'The Blood Noon',
+    narrative:
+      'A legendary bout that lasted exactly until high noon, when the blinding glare reflecting off the golden sundial allowed a fatal, unseen strike to end the stalemate.',
+  },
+  {
+    id: 'obsidian_pit_glass_shatter',
+    arenaId: 'obsidian_pit',
+    type: 'architectural_quirk',
+    title: 'The Razor Floors',
+    narrative:
+      'The ancient obsidian floor constantly splinters under heavy impacts, turning the arena surface into a field of jagged razors that shred unprotected feet.',
+  },
+  {
+    id: 'whispering_caves_echoing_death',
+    arenaId: 'whispering_caves',
+    type: 'famous_death',
+    title: 'The Echoing Death',
+    narrative:
+      'A blind combatant used the cave’s acoustic anomalies to pinpoint their opponent’s racing heartbeat, driving a spike through the dark before a single clash of steel occurred.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

@@ -352,4 +352,9 @@ export const ORIGINS: string[] = [
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
   'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
   'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
+  'Abandoned outside the blackened gates of the Silent Order, wrapped in a torn fighting banner',
+  'Raised in the lightless cellars of the Weeping Mother Orphanage, learning to see in the dark',
+  'Discovered among the rusted husks of forgotten siege engines in the Slag Wards',
+  'Survived the merciless culling of the Hollow Hill workhouse by hiding in the charnel pits',
+  'Sold by desperate debt-ridden parents to the pit-bosses of the Sump for a handful of silver',
 ];

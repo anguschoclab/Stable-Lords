@@ -5,7 +5,7 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     id: 'orphan_shadow_stalker',
     name: 'Shadow Stalker',
     description: 'Perfected the art of moving unseen in the slums, making them a ghost in the arena.',
-    effect: { defModEarly: 1, iniModLate: 1 },
+    effect: { defModEarly: 1, attModLate: 1 },
     tier: 'Notable',
     sign: 'positive',
     weight: 0.5,

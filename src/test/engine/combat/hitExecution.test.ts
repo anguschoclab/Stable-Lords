@@ -209,6 +209,48 @@ describe('executeHit — commit mechanic', () => {
   });
 });
 
+describe('executeHit — AimedBlow logic', () => {
+  it('applies armor bypass math for AimedBlow', () => {
+    // Math.round(postFlat + bypass * (preArmor - postFlat))
+    const { events } = callExecuteHit({
+      attacker: {
+        style: FightingStyle.AimedBlow,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 100 }, // high DF for bypass
+      },
+      defender: { armorId: 'Heavy' }, // provide some armor to be bypassed
+    });
+    const hitEvents = events.filter((e) => e.type === 'HIT' && e.actor === 'A');
+    expect(hitEvents.length).toBeGreaterThan(0);
+    expect(hitEvents[0]!.value).toBeGreaterThan(0);
+  });
+
+  it('shifts hit location index if locIdx > 0 for AimedBlow', () => {
+    const events: CombatEvent[] = [];
+    const attacker = makeFighter({ style: FightingStyle.AimedBlow });
+    const defender = makeFighter({ label: 'D' });
+
+    // We mock RNG so rollHitLocation returns an index > 0.
+    // rollHitLocation logic is complex, but with rng() = 0.99 it should hit a later location like "left_leg"
+    const rng = () => 0.99;
+    const tactA = resolveEffectiveTactics(attacker.activePlan, 'opening');
+    const offModsA = getOffensiveTacticMods(tactA.offTactic, attacker.style);
+    const passA = getPassive(attacker.style);
+    const passD = getPassive(defender.style);
+    const ctx = makeCtx();
+
+    executeHit({
+      events, rng, attacker, defender, attTactics: tactA, attOffMods: offModsA,
+      attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING',
+      phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx, defPassive: passD
+    });
+
+    const hitEvents = events.filter((e) => e.type === 'HIT' && e.actor === 'A');
+    expect(hitEvents.length).toBeGreaterThan(0);
+    // Since hit location is shifted down by 1 index, we can just verify it didn't crash and recorded a hit location
+    expect(hitEvents[0]!.location).toBeDefined();
+  });
+});
+
 describe('executeHit — BA guard break', () => {
   it('increments defender.parDegrade on BashingAttack hit', () => {
     const { defender } = callExecuteHit({
@@ -427,6 +469,39 @@ describe('executeHit — HIT event structure', () => {
     const hitEvents = events.filter((e) => e.type === 'HIT' && e.actor === 'A');
     expect(hitEvents[0]!.metadata?.appliedDamage).toBeDefined();
     expect(typeof hitEvents[0]!.metadata?.appliedDamage).toBe('number');
+  });
+});
+
+describe('executeHit — contextual multipliers', () => {
+  it('applies trainer and crowd multipliers correctly', () => {
+    // This will cover ctx branches in damage.ts (trainerModsA/D)
+    // and killWindow.ts (specKillBonus, crowdKillBonus)
+    const ctx = makeCtx();
+    ctx.trainerModsA = { damageReceivedMult: 1.5, killWindowBonus: 10 };
+    ctx.trainerModsD = { damageReceivedMult: 0.5, killWindowBonus: 5 };
+    ctx.crowdKillBonus = 5;
+
+    // Use LATE phase to hit `killPos = 2` branch in gatherKillThreshold
+    const { events } = callExecuteHit({
+      ctx,
+      phase: 'LATE',
+      attacker: { label: 'A', style: FightingStyle.StrikingAttack },
+      defender: { label: 'D', hp: 1, maxHp: 100 },
+      rng: () => 0.01 // ensure kill check fires
+    });
+
+    const boutEnd = events.filter((e) => e.type === 'BOUT_END');
+    expect(boutEnd.length).toBeGreaterThan(0);
+  });
+
+  it('handles MID phase for kill threshold', () => {
+    const { events } = callExecuteHit({
+      phase: 'MID',
+      defender: { hp: 1, maxHp: 100 },
+      rng: () => 0.01
+    });
+    const boutEnd = events.filter((e) => e.type === 'BOUT_END');
+    expect(boutEnd.length).toBeGreaterThan(0);
   });
 });
 

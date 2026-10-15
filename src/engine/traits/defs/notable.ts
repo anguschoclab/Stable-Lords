@@ -1,6 +1,24 @@
 import type { TraitDef } from '../types';
 
 export const NOTABLE_TRAITS: Record<string, TraitDef> = {
+  orphan_shadow_stalker: {
+    id: 'orphan_shadow_stalker',
+    name: 'Shadow Stalker',
+    description: 'Perfected the art of moving unseen in the slums, making them a ghost in the arena.',
+    effect: { defModEarly: 1, attModLate: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
+  gutter_blade_dancer: {
+    id: 'gutter_blade_dancer',
+    name: 'Blade Dancer',
+    description: 'Turned the frantic evasion of alley fights into a deadly, rhythmic combat flow.',
+    effect: { defModLate: 1, dmgBonus: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_blood_rage: {
     id: 'orphan_blood_rage',
     name: 'Blood Rage',

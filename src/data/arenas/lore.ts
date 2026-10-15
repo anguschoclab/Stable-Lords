@@ -933,6 +933,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'sun_baked_plateau_blood_noon',
+    arenaId: 'sun_baked_plateau',
+    type: 'historical_battle',
+    title: 'The Blood Noon',
+    narrative:
+      'A legendary bout that lasted exactly until high noon, when the blinding glare reflecting off the golden plateau allowed a fatal, unseen strike to end the stalemate.',
+  },
+  {
+    id: 'the_crystal_spire_glass_shatter',
+    arenaId: 'the_crystal_spire',
+    type: 'architectural_quirk',
+    title: 'The Razor Floors',
+    narrative:
+      'The ancient crystal floor constantly splinters under heavy impacts, turning the arena surface into a field of jagged razors that shred unprotected feet.',
+  },
+  {
+    id: 'forgotten_crypt_echoing_death',
+    arenaId: 'forgotten_crypt',
+    type: 'famous_death',
+    title: 'The Echoing Death',
+    narrative:
+      'A blind combatant used the crypt’s acoustic anomalies to pinpoint their opponent’s racing heartbeat, driving a spike through the dark before a single clash of steel occurred.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

@@ -184,4 +184,9 @@ export const DEFINING_MOMENTS: string[] = [
   'until they shattered an executioner’s axe with a desperate, bare-handed block',
   'knowing that every broken bone from their past was just a lesson in how to break others',
   'until they stepped into the arena and felt the sand beneath their feet, finally finding home',
+  'realizing that the roar of the arena crowd was the only family they ever needed',
+  'until they gutted a corrupt pit-boss with a smuggled shank to secure their freedom',
+  'knowing that the only way to escape the darkness of the slums was to conquer the light of the colosseum',
+  'until a brutal betrayal taught them that trusting anyone is a fatal flaw in the blood sports',
+  'realizing the scars on their back were not a ledger of punishment, but a map to their eventual glory',
 ];

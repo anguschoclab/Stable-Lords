@@ -189,7 +189,6 @@
         "With a metallic hiss, {{attacker}}'s blade shears through armor and into {{defender}}'s {{bodyPart}}.",
         "A swift slice from {{attacker}} catches {{defender}} deep in the flesh.",
         "{{attacker}}'s blade arcs gracefully, biting deeply into the flesh of {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} carves a brutal, sweeping arc across {{defender}}'s {{bodyPart}}.",
         "The blade bites deeply into {{defender}}'s {{bodyPart}}, leaving a ghastly wound.",
         "{{attacker}} rips a vicious laceration across {{defender}}'s {{bodyPart}}.",
         "A wicked horizontal slash from {{attacker}} catches {{defender}} solidly on the {{bodyPart}}.",
@@ -503,9 +502,7 @@
         "A heavy, sickening impact reverberates as {{attacker}} smashes into {{defender}}.",
         "{{attacker}} brings the heavy weapon crashing down against {{defender}}'s {{bodyPart}}.",
         "A jarring, bone-rattling thud echoes as {{attacker}} slams into {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} delivers a sickening concussive blow to {{defender}}'s {{bodyPart}}.",
         "The sheer impact of {{attacker}}'s strike sends shockwaves through {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} batters {{defender}}'s {{bodyPart}} with a punishing, heavy strike.",
         "The bludgeon connects with a heavy thud, staggering {{defender}}.",
         "A solid bash from {{attacker}} bruises {{defender}}'s ribs."
       ],
@@ -695,7 +692,6 @@
         "A weak thrust from {{attacker}} fails to find purchase.",
         "{{attacker}}'s point snags on armor, failing to pierce {{defender}}.",
         "{{defender}} pivots, turning a deadly thrust into a minor graze.",
-        "A quick jab by {{attacker}} only snags {{defender}}'s clothing.",
         "{{attacker}}'s point fails to penetrate, sliding past {{defender}}."
       ],
       "solid": [
@@ -805,7 +801,6 @@
         "{{attacker}} lunges with terrifying speed, punching a clean hole through {{defender}}'s defense into the {{bodyPart}}.",
         "{{attacker}} lunges with terrifying speed, driving the point into {{defender}}'s {{bodyPart}}.",
         "A sharp, cruel thrust from {{attacker}} finds purchase in {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} threads the needle, sinking their weapon deep into {{defender}}'s {{bodyPart}}.",
         "The point bites maliciously as {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
         "{{attacker}} delivers a sudden, agonizing stab straight into {{defender}}'s {{bodyPart}}."
       ],
@@ -1114,9 +1109,6 @@
         "{{defender}} stumbles backward from {{attacker}}'s brutal haymaker.",
         "{{attacker}} delivers a crushing hook, shaking {{defender}} to the core.",
         "{{attacker}} steps inside the guard, delivering a sickening hook directly to {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} lands a punishing, bare-knuckle hook to {{defender}}'s {{bodyPart}}.",
-        "A sharp, snapping jab from {{attacker}} snaps {{defender}}'s head back.",
-        "{{attacker}} sinks a heavy body blow directly into {{defender}}'s {{bodyPart}}.",
         "The sickening sound of knuckle on bone rings out as {{attacker}} connects with the {{bodyPart}}.",
         "{{attacker}} delivers a bruising straight right to {{defender}}'s {{bodyPart}}.",
         "A heavy punch from {{attacker}} rocks {{defender}}'s jaw."
@@ -1249,7 +1241,6 @@
         "{{attacker}} connects with a terrifyingly heavy haymaker, sending a concussive shockwave through {{defender}}'s {{bodyPart}} that shatters their resolve.",
         "A brutal, bare-knuckle uppercut from {{attacker}} completely destroys the structural integrity of {{defender}}'s {{bodyPart}}.",
         "{{attacker}} delivers a sickeningly perfect strike to the {{bodyPart}}, the explosive force leaving {{defender}} reeling and broken.",
-        "{{attacker}} unleashes a monstrous haymaker, cratering {{defender}}'s {{bodyPart}}.",
         "A devastating, perfectly placed uppercut from {{attacker}} completely scrambles {{defender}}.",
         "{{defender}} is sent staggering by a jaw-shattering blow to the {{bodyPart}} from {{attacker}}.",
         "{{attacker}} steps into a crushing hook, visibly buckling {{defender}}'s knees with a strike to the {{bodyPart}}."

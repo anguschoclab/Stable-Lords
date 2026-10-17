@@ -184,4 +184,8 @@ export const DEFINING_MOMENTS: string[] = [
   'until they shattered an executioner’s axe with a desperate, bare-handed block',
   'knowing that every broken bone from their past was just a lesson in how to break others',
   'until they stepped into the arena and felt the sand beneath their feet, finally finding home',
+  'until they gutted a slaver with a shard of rusted iron, realizing that freedom is taken, not given',
+  'knowing that the deafening roar of the bloodsands could silence the screaming ghosts of their past',
+  'until they watched a legendary champion fall, realizing even the gods of the arena bleed red',
+  'realizing that the only difference between a street-rat and a king is the pile of bodies beneath them',
 ];

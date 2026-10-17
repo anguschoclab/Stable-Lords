@@ -933,6 +933,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'bloodsands_the_red_dune',
+    arenaId: 'bloodsands_arena',
+    type: 'architectural_quirk',
+    title: 'The Red Dune',
+    narrative:
+      'In the eastern quadrant, the sand has absorbed so much blood over the centuries that it has clumped into a solid, crimson dune that fighters often use for higher ground.',
+  },
+  {
+    id: 'lantern_hall_the_flickering_shadows',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Flickering Shadows',
+    narrative:
+      'During the Grand Solstice bout, a rogue gust of wind extinguished half the lanterns, leading to a brutal, blind melee where the eventual victor fought purely on sound and instinct.',
+  },
+  {
+    id: 'flooded_vault_rusting_grasp',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Rusting Grasp',
+    narrative:
+      'A heavily armored juggernaut found his sabatons wedged deep in the submerged grating. Unable to free himself, he was slowly dismantled by a much lighter, nimbler duelist.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

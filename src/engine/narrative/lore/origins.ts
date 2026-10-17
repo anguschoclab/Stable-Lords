@@ -352,4 +352,12 @@ export const ORIGINS: string[] = [
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
   'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
   'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
+  'Cast out into the bone-chilling mist of the Weeping Fens as a mere child',
+  'Survived the great purge of the Slag-Heaps by hiding beneath the rusted husks of war machines',
+  'Raised by the grim executioners of the Iron Keep, learning early the weight of a severed head',
+  'Found shivering among the bloody bandages outside the gladiatorial infirmary',
+  'Abandoned to the tender mercies of the feral hounds in the Undercity kennels',
+  'Endured the lightless, suffocating depths of the Sunken Oubliette for a stolen loaf of bread',
+  'Raised amidst the constant clangor of the Blood-Forge, deafened to the screams of the dying',
+  'Sold to a cruel fighting academy at age five to settle a gambling debt',
 ];

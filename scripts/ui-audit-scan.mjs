@@ -67,9 +67,12 @@ const SCREAM_ATTR_RE =
   /\b(?:label|title|placeholder|aria-label|subtitle|eyebrow|description|tooltip|message)\s*=\s*['"`{][^'"`}]*\b[A-Z]{2,}_[A-Z0-9_]{2,}\b/;
 const isScreamingCopy = (l) =>
   SCREAM_JSX_TEXT_RE.test(l) || (SCREAM_ATTR_RE.test(l) && SCREAM_TOKEN.test(l));
-// fake-chrome: decorative sci-fi chrome words that can't map to real state.
-// 'Override'/'telemetry' excluded — both are real game features here.
-const FAKE_CHROME_RE = /\b(SECTOR|SECURE|UPLINK|ENCRYPTED|CLASSIFIED|PROTOCOL)\b/;
+// fake-chrome: decorative sci-fi chrome or status claims that can't map to real
+// state. 'Override'/'telemetry' excluded — both are real game features here.
+const FAKE_CHROME_UPPER_RE = /\b(SECTOR|SECURE|UPLINK|ENCRYPTED|CLASSIFIED|PROTOCOL)\b/;
+const FAKE_CHROME_COPY_RE =
+  /\b(Scouts at work|host connection|lock-on|deep scan|SCAN COMPLETED|LIVE ARENA FEED)\b/i;
+const isFakeChrome = (l) => FAKE_CHROME_UPPER_RE.test(l) || FAKE_CHROME_COPY_RE.test(l);
 
 /** Collect classified UI violations. Returns { findings, filesAffected }. */
 export function collectUiAudit() {
@@ -110,7 +113,7 @@ export function collectUiAudit() {
         if (/\banimate-|transition(-|\s|"|')/.test(l) && !/motion-reduce/.test(l)) {
           findings['motion-violation'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
         }
-        if (FAKE_CHROME_RE.test(l)) {
+        if (isFakeChrome(l)) {
           findings['fake-chrome'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
         }
       }

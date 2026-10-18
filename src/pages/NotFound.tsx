@@ -19,7 +19,7 @@ const NotFound = () => {
         </div>
         <h1 className="text-foreground text-6xl font-bold uppercase tracking-widest mb-4">404</h1>
         <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-8">
-          This sector of the arena does not exist
+          This arena road leads nowhere
         </p>
         <Link
           to="/"

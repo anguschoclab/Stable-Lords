@@ -4,6 +4,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
 import { StyleCard } from './styleArchives/StyleCard';
@@ -34,6 +35,7 @@ export default function StyleArchives() {
         icon={BookOpen}
         actions={
           <Input
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search the archives…"
@@ -51,10 +53,22 @@ export default function StyleArchives() {
           ))}
         </div>
         {filtered.length === 0 && (
-          <div className="mt-8 py-16 text-center border border-dashed border-white/10">
+          <div
+            role="status"
+            className="mt-8 py-16 text-center border border-dashed border-white/10"
+          >
             <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               No disciplines match your query
             </p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setQuery('')}
+              className="mt-4"
+            >
+              Clear search
+            </Button>
           </div>
         )}
       </section>

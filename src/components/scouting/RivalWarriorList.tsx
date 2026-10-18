@@ -118,11 +118,11 @@ export function RivalWarriorList({
           >
             <Swords className="h-12 w-12 text-muted-foreground opacity-20" />
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Select a Stable to Begin Roster Scan
-              </p>
-              <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">
-                Awaiting host connection...
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                Select a Rival Stable
+              </h4>
+              <p className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+                Choose a stable to inspect its active roster.
               </p>
             </div>
           </Surface>

@@ -7,7 +7,7 @@ import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { resolvePrimaryCta, resolvePrimaryCtaKey, useCtaRegistry } from './primaryCta';
 
 const ctaClass =
-  'flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.15em] bg-primary text-primary-foreground rounded-none shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black';
+  'flex items-center gap-1.5 h-10 px-2 font-black text-[9px] uppercase tracking-[0.15em] bg-primary text-primary-foreground rounded-none shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black sm:gap-2 sm:px-4 sm:text-[10px] lg:gap-3 lg:px-6';
 
 /**
  * Route-aware primary CTA — DESIGN_PAGE_SYSTEM_v1.0 §1. The shared top bar

@@ -26,7 +26,8 @@ function HeaderLogo() {
   return (
     <Link
       to="/"
-      className="flex items-center gap-4 group active:scale-95 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300"
+      aria-label="Stable Lords"
+      className="hidden sm:flex items-center gap-3 lg:gap-4 group active:scale-95 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300"
     >
       <ImperialRing
         size="md"

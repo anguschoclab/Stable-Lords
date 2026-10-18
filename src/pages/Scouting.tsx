@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Radio } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
@@ -14,8 +14,8 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
-/** Header actions: report count + live-scouts indicator. */
-function HeaderStats({ reportCount }: { reportCount: number }) {
+/** Header actions: report count + tracked rival-stable count. */
+function HeaderStats({ reportCount, rivalCount }: { reportCount: number; rivalCount: number }) {
   return (
     <div className="flex items-center gap-6">
       <div className="flex flex-col items-end">
@@ -25,16 +25,17 @@ function HeaderStats({ reportCount }: { reportCount: number }) {
         <span className="text-sm font-display font-black text-foreground">{reportCount} Filed</span>
       </div>
       <div className="flex items-center gap-4 border-l border-white/5 pl-6">
-        <ImperialRing
-          size="xs"
-          variant="blood"
-          className="animate-pulse motion-reduce:animate-none"
-        >
-          <Radio className="h-3 w-3 text-primary" />
+        <ImperialRing size="xs" variant="blood">
+          <Users className="h-3 w-3 text-primary" />
         </ImperialRing>
-        <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
-          Scouts at work...
-        </span>
+        <div className="flex flex-col items-start">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Rival Stables
+          </span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+            {rivalCount} Tracked
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -83,7 +84,9 @@ export default function Scouting() {
       <PageHeader
         title="Rival Scouting"
         subtitle="WORLD · RIVAL STABLES · SCOUTING REPORTS"
-        actions={<HeaderStats reportCount={scoutReports?.length || 0} />}
+        actions={
+          <HeaderStats reportCount={scoutReports?.length || 0} rivalCount={rivals?.length || 0} />
+        }
       />
 
       <Tabs defaultValue="scout" className="w-full space-y-12">

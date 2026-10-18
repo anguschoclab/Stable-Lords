@@ -75,11 +75,11 @@ function DossierColumn({
         >
           <Target className="h-12 w-12 text-muted-foreground opacity-20" />
           <div className="space-y-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
               Select a Warrior to Scout
-            </p>
-            <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">
-              Establish lock-on to proceed with deep scan
+            </h4>
+            <p className="text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+              Choose a warrior to order a scout report.
             </p>
           </div>
         </Surface>

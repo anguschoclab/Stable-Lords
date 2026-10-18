@@ -11,8 +11,8 @@ export function resolveEventLogRouteState(
   isCompactShell: boolean,
   currentlyOpen: boolean
 ): boolean {
-  if (AUTO_OPEN_PATHS.includes(pathname)) return true;
   if (isCompactShell) return false;
+  if (AUTO_OPEN_PATHS.includes(pathname)) return true;
   if (AUTO_CLOSE_PATHS.some((path) => pathname.startsWith(path))) return false;
   return currentlyOpen;
 }

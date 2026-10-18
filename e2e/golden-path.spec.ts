@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { clickNavLink, startNewGame } from './helpers';
+import { navigateNavLink, startNewGame } from './helpers';
 
 /**
  * Golden path E2E test:
@@ -19,14 +19,8 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Mobile runs are slower (sheet open/close animation per nav click).
   test.setTimeout(isMobile ? 240_000 : 120_000);
 
-  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
-    await clickNavLink(page, isMobile, name, opts);
-    // toHaveURL polls — waitForURL can miss a client-side nav that lands
-    // before the waiter registers.
-    await expect(page).toHaveURL(new RegExp(`${url.replace(/[/.]/g, '\\$&')}/?$`), {
-      timeout: 10_000,
-    });
-  };
+  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) =>
+    navigateNavLink(page, isMobile, name, url, opts);
 
   // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
   await startNewGame(page);

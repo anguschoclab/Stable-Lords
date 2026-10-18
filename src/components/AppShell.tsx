@@ -171,7 +171,7 @@ function ShellContent(props: {
     <>
       <div className="flex-1 flex flex-row overflow-hidden relative">
         {/* ─── Left Navigation Rail ─── */}
-        <div className="hidden md:flex">
+        <div className="hidden lg:flex">
           <LeftNav />
         </div>
 
@@ -229,7 +229,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     setEventLogOpen,
     initialize,
   } = useShellState();
-  const isCompactShell = useMediaQuery('(max-width: 767px)');
+  const isCompactShell = useMediaQuery('(max-width: 1023px)');
   const location = useLocation();
   const activePath = location.pathname;
   const [resetOpen, setResetOpen] = useState(false);

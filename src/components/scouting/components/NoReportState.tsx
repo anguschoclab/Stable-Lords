@@ -2,7 +2,7 @@ import { Target, Terminal, Eye, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import type { ScoutQuality } from '@/types/game';
-import { getScoutCost } from '@/engine/scouting/scouting';
+import { getScoutAttributeVariance, getScoutCost } from '@/engine/scouting/scouting';
 
 interface NoReportStateProps {
   warriorName: string;
@@ -66,7 +66,7 @@ interface ScoutingButtonProps {
 
 function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonProps) {
   const isExpert = quality === 'Expert';
-  const precision = quality === 'Expert' ? '99.9%' : quality === 'Detailed' ? '85%' : '60%';
+  const variance = getScoutAttributeVariance(quality);
 
   return (
     <button
@@ -94,10 +94,10 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
         </div>
         <div className="text-left">
           <span className="text-[10px] font-black uppercase tracking-[0.15em] block leading-none mb-1">
-            {quality} SCAN
+            {quality} Report
           </span>
           <span className="text-[9px] font-bold uppercase tracking-widest opacity-40">
-            Precision: {precision}
+            Attribute variance ±{variance}
           </span>
         </div>
       </div>

@@ -291,7 +291,7 @@ export function HeaderActions({
 }: HeaderActionsProps) {
   if (compact) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <PrimaryCtaButton />
         <EventLogButton />
         <SessionControlsSheet

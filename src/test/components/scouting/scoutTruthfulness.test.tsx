@@ -52,16 +52,18 @@ describe('scouting truthfulness and copy', () => {
     useGameStore.getState().loadGame('scout-empty-state', state as GameState);
 
     render(
-      <ScoutIntelTab
-        rivals={[rival]}
-        reports={[]}
-        selectedRivalId={null}
-        onSelectRival={vi.fn()}
-        selectedWarriorId={null}
-        onSelectWarrior={vi.fn()}
-        treasury={100}
-        onScout={vi.fn()}
-      />
+      <TooltipProvider>
+        <ScoutIntelTab
+          rivals={[rival]}
+          reports={[]}
+          selectedRivalId={null}
+          onSelectRival={vi.fn()}
+          selectedWarriorId={null}
+          onSelectWarrior={vi.fn()}
+          treasury={100}
+          onScout={vi.fn()}
+        />
+      </TooltipProvider>
     );
 
     expect(

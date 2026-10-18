@@ -13,7 +13,7 @@ export function ReportNotes({ notes }: ReportNotesProps) {
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-            FIELD OBSERVATIONS
+            Scout Observations
           </span>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed font-medium">{notes}</p>

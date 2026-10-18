@@ -67,6 +67,11 @@ export function getScoutCost(quality: ScoutQuality): number {
   return SCOUT_COST[quality];
 }
 
+/** Get the maximum per-attribute fuzz applied by a report quality. */
+export function getScoutAttributeVariance(quality: ScoutQuality): number {
+  return QUALITY_FUZZ[quality];
+}
+
 /** Converts a numerical stat into a qualitative text description */
 function getAttributeDescription(value: number): string {
   if (value <= 5) return 'Pathetic';

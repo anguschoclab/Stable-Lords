@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { resolveEventLogRouteState } from '@/components/layout/eventLogRoutePolicy';
 
 describe('resolveEventLogRouteState', () => {
-  it('opens the feed on high-context routes at either shell width', () => {
-    expect(resolveEventLogRouteState('/stable/arena', true, false)).toBe(true);
+  it('opens the feed on high-context desktop routes without hijacking compact shells', () => {
+    expect(resolveEventLogRouteState('/stable/arena', true, false)).toBe(false);
     expect(resolveEventLogRouteState('/stable/planner', false, false)).toBe(true);
   });
 

@@ -16,10 +16,68 @@ export async function clickNavLink(
 ) {
   if (isMobile) {
     await page.getByRole('button', { name: 'Open navigation menu' }).click();
-    await page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first().click();
+    const link = page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first();
+    await link.focus();
+    await link.press('Enter');
   } else {
-    await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
+    const link = page.locator('nav').getByRole('link', { name, exact: opts.exact }).first();
+    await link.focus();
+    await link.press('Enter');
   }
+}
+
+/**
+ * Clicks a nav link and verifies the client-side route changed. Parallel test
+ * workers can occasionally race a TanStack navigation click during route
+ * loading, so retry the click until the expected pathname is observed.
+ */
+interface TsrWindow {
+  __TSR_ROUTER__?: {
+    navigate: (opts: { to: string }) => Promise<void>;
+    state?: { status?: string };
+  };
+}
+
+/** Waits until the router reports the target route committed and idle. */
+async function waitForSettledRoute(page: Page, path: string, timeout = 10_000) {
+  await page.waitForFunction(
+    (p) =>
+      window.location.pathname === p &&
+      (window as TsrWindow).__TSR_ROUTER__?.state?.status === 'idle',
+    path,
+    { timeout }
+  );
+  // Route state can settle one render before the nav subtree swaps hubs.
+  await page.evaluate(
+    () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+  );
+}
+
+/** Activates a nav link and waits for the target route to commit. */
+export async function navigateNavLink(
+  page: Page,
+  isMobile: boolean,
+  name: string,
+  url: string,
+  opts: { exact?: boolean } = { exact: true }
+) {
+  const deadline = Date.now() + 10_000;
+
+  while (Date.now() < deadline) {
+    try {
+      await waitForSettledRoute(page, url, 250);
+      return;
+    } catch {
+      await clickNavLink(page, isMobile, name, opts);
+      try {
+        await waitForSettledRoute(page, url, 1_500);
+        return;
+      } catch {
+        // Retry while the shared deadline remains; produce the standard error below.
+      }
+    }
+  }
+  await waitForSettledRoute(page, url);
 }
 
 /**
@@ -91,12 +149,28 @@ export async function startNewGame(page: Page, names: { owner?: string; stable?:
 /**
  * Client-side navigation to an in-app route that has no nav link
  * (/mods, /import-export, /admin, …). A full `page.goto` reloads the SPA and
- * lands back on the title screen, so instead we pushState + dispatch
- * popstate, which TanStack Router's history listener picks up.
+ * lands back on the title screen, so use the mounted TanStack router handle
+ * instead of synthesizing a popstate event.
  */
 export async function gotoInApp(page: Page, path: string) {
-  await page.evaluate((p) => {
-    window.history.pushState({}, '', p);
-    window.dispatchEvent(new PopStateEvent('popstate'));
-  }, path);
+  const deadline = Date.now() + 10_000;
+
+  while (Date.now() < deadline) {
+    await page.evaluate(async (p) => {
+      const router = (window as TsrWindow).__TSR_ROUTER__;
+      if (!router) throw new Error('TanStack router is not mounted');
+      try {
+        await router.navigate({ to: p });
+      } catch (error) {
+        if (window.location.pathname !== p) throw error;
+      }
+    }, path);
+    try {
+      await waitForSettledRoute(page, path, 1_500);
+      return;
+    } catch {
+      // Retry while the shared deadline remains; produce the standard error below.
+    }
+  }
+  await waitForSettledRoute(page, path);
 }

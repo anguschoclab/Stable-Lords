@@ -193,7 +193,7 @@ export function InducteeCard({
           {/* Stats grid */}
           <CareerStatsGrid warrior={warrior} />
 
-          {/* Performance Sector */}
+          {/* Performance ratios */}
           <PerformanceRatio winRate={winRate} />
 
           {/* Titles */}

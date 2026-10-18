@@ -1,4 +1,4 @@
-import { Microscope, Info } from 'lucide-react';
+import { ScrollText, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { ScoutReportData } from '@/types/game';
 
@@ -14,7 +14,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div>
-          <Microscope className="h-5 w-5" />
+          <ScrollText className="h-5 w-5" />
         </div>
         <div>
           <h3 className="font-display font-black uppercase text-base tracking-tight leading-none mb-1">
@@ -23,11 +23,11 @@ export function ReportHeader({ report }: ReportHeaderProps) {
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-primary/10 border border-primary/20">
               <span className="text-[8px] font-black uppercase tracking-widest text-primary leading-none">
-                {report.quality} SCAN COMPLETED
+                {report.quality} Report
               </span>
             </div>
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-40">
-              ACTIVE
+              Filed Week {report.week}
             </span>
           </div>
         </div>
@@ -43,8 +43,8 @@ export function ReportHeader({ report }: ReportHeaderProps) {
           </button>
         </TooltipTrigger>
         <TooltipContent className="w-full max-w-60 text-[10px] font-medium leading-relaxed bg-neutral-950 border-white/10 uppercase tracking-widest">
-          Deep scan report established for the current combat cycle. Intelligence degrades over
-          time.
+          A {report.quality.toLowerCase()} scout report filed during week {report.week}.
+          Intelligence degrades over time.
         </TooltipContent>
       </Tooltip>
     </div>

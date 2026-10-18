@@ -1,6 +1,6 @@
 /**
  * MobileNav — Mobile navigation drawer using Sheet component
- * Provides hamburger menu + slide-out navigation for < md viewports
+ * Provides hamburger menu + slide-out navigation for compact < lg viewports
  */
 import { useState } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
@@ -61,13 +61,13 @@ export function MobileNav({ className }: MobileNavProps) {
     ?.id ?? null) as HubId | null;
 
   return (
-    <div className={cn('flex md:hidden', className)}>
+    <div className={cn('flex lg:hidden', className)}>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"
             size="icon"
-            className="h-10 w-10 rounded-none hover:bg-white/5 transition-colors motion-reduce:transition-none"
+            className="h-9 w-9 sm:h-10 sm:w-10 rounded-none hover:bg-white/5 transition-colors motion-reduce:transition-none"
             tooltip="Open navigation menu"
             aria-label="Open navigation menu"
           >

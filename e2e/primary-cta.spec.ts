@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { clickNavLink, startNewGame } from './helpers';
+import { gotoInApp, navigateNavLink, startNewGame } from './helpers';
 
 /**
  * Route-aware primary CTA (DESIGN_PAGE_SYSTEM_v1.0 §1):
@@ -33,14 +33,8 @@ test('primary CTA swaps label and behavior per route', async ({
     timeout: 15_000,
   });
 
-  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) => {
-    await clickNavLink(page, isMobile, name, opts);
-    // toHaveURL polls — waitForURL can miss a client-side nav that lands
-    // before the waiter registers.
-    await expect(page).toHaveURL(new RegExp(`${url.replace(/[/.]/g, '\\$&')}/?$`), {
-      timeout: 10_000,
-    });
-  };
+  const nav = async (name: string, url: string, opts: { exact?: boolean } = { exact: true }) =>
+    navigateNavLink(page, isMobile, name, url, opts);
 
   // ── advance-intent routes (stable hub) ─────────────────────────────────
   await nav('Stable', '/stable', { exact: false });
@@ -104,4 +98,31 @@ test('primary CTA swaps label and behavior per route', async ({
     await expect(page).toHaveURL(/\/warrior\//, { timeout: 10_000 });
     await expect(page.getByRole('button', { name: CTA_PATTERN })).toHaveCount(0);
   }
+
+  // ── compact header: brand, CTA, and controls must not overlap ────────────
+  await page.setViewportSize({ width: 375, height: 812 });
+  await gotoInApp(page, '/stable');
+  await expectCta(page, /EXECUTE WEEK 1/);
+
+  const headerMetrics = await page.evaluate(() => {
+    const box = (selector: string) => {
+      const rect = document.querySelector(selector)?.getBoundingClientRect();
+      return rect ? { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left } : null;
+    };
+    return {
+      header: box('header'),
+      logo: box('header a[href="/"]'),
+      nav: box('header button[aria-label="Open navigation menu"]'),
+      cta: box('header button[aria-label^="EXECUTE WEEK"]'),
+      feed: box('header button[aria-label="Open arena feed"]'),
+      controls: box('header button[aria-label="Open session controls"]'),
+      documentOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+
+  expect(headerMetrics.documentOverflow).toBeLessThanOrEqual(0);
+  expect(headerMetrics.header?.bottom).toBeLessThanOrEqual(64);
+  expect(headerMetrics.nav?.right).toBeLessThanOrEqual(headerMetrics.cta?.left ?? 0);
+  expect(headerMetrics.logo?.right ?? 0).toBeLessThanOrEqual(headerMetrics.cta?.left ?? 0);
+  expect(headerMetrics.controls?.right ?? 0).toBeLessThanOrEqual(headerMetrics.header?.right ?? 0);
 });

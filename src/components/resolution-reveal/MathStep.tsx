@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import type { GameState } from '@/types/state.types';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
@@ -69,7 +70,10 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
                   key={`${g.warriorName}-${g.attr}-${i}`}
                   className="flex items-center justify-between text-sm"
                 >
-                  <span className="font-medium">{g.warriorName}</span>
+                  <span className="font-medium flex items-center gap-2">
+                    <WarriorNameAvatar name={g.warriorName} size="xs" />
+                    {g.warriorName}
+                  </span>
                   <div className="flex gap-2 font-mono">
                     <Badge variant="outline" className="text-primary">
                       +{g.gain} {g.attr}

@@ -21,6 +21,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { DirectoryStatsGrid, PersonalityGuide } from './promoterDirectory/sections';
+import { AvatarForEntity } from '@/components/avatar';
 
 const TIER_COLORS: Record<Promoter['tier'], string> = {
   Local: 'bg-muted/40 text-muted-foreground border-border/40',
@@ -142,16 +143,25 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
     <Card className="group hover:border-primary/50 transition-all duration-300 motion-reduce:transition-none">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start gap-2">
-          <div className="space-y-1 min-w-0 flex-1">
-            <CardTitle className="text-base font-black uppercase tracking-wider text-primary truncate">
-              {promoter.name}
-            </CardTitle>
-            <div className="text-[10px] font-mono uppercase flex items-center gap-1.5 flex-wrap text-muted-foreground">
-              <Badge variant="outline" className={`text-[9px] ${tierColor}`}>
-                {promoter.tier}
-              </Badge>
-              <span className="opacity-60">•</span>
-              <span className="opacity-60">Age {promoter.age}</span>
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            <AvatarForEntity
+              entityId={promoter.id}
+              entityType="promoter"
+              source={promoter}
+              size="sm"
+              className="border border-white/10 bg-neutral-950"
+            />
+            <div className="space-y-1 min-w-0 flex-1">
+              <CardTitle className="text-base font-black uppercase tracking-wider text-primary truncate">
+                {promoter.name}
+              </CardTitle>
+              <div className="text-[10px] font-mono uppercase flex items-center gap-1.5 flex-wrap text-muted-foreground">
+                <Badge variant="outline" className={`text-[9px] ${tierColor}`}>
+                  {promoter.tier}
+                </Badge>
+                <span className="opacity-60">•</span>
+                <span className="opacity-60">Age {promoter.age}</span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">

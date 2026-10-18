@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Activity, Skull } from 'lucide-react';
 import uiMeta from '@/data/narrative/uiMeta.json';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface InjuriesStepProps {
   injuries: string[];
@@ -31,9 +32,16 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <Skull className="h-5 w-5" />
             <h4>Fallen Warriors</h4>
           </div>
-          <ul className="list-disc list-inside text-sm text-destructive-foreground">
+          <ul className="list-none space-y-2 text-sm text-destructive-foreground">
             {deaths.map((name: string) => (
-              <li key={name}>{name}</li>
+              <li key={name} className="flex items-center gap-2">
+                <WarriorNameAvatar
+                  name={name}
+                  size="xs"
+                  className="border border-destructive/30 grayscale"
+                />
+                {name}
+              </li>
             ))}
           </ul>
         </div>
@@ -45,9 +53,12 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <Activity className="h-5 w-5" />
             <h4>Injured Roster</h4>
           </div>
-          <ul className="list-disc list-inside text-sm text-arena-gold">
+          <ul className="list-none space-y-2 text-sm text-arena-gold">
             {injuries.map((name: string) => (
-              <li key={name}>{name}</li>
+              <li key={name} className="flex items-center gap-2">
+                <WarriorNameAvatar name={name} size="xs" className="border border-arena-gold/30" />
+                {name}
+              </li>
             ))}
           </ul>
         </div>

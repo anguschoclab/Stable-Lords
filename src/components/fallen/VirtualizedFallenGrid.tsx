@@ -10,6 +10,7 @@ import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { Warrior } from '@/types/game';
 import type { FightingStyle } from '@/types/game';
 import { useColumns } from '@/hooks/useColumns';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface VirtualizedFallenGridProps {
   warriors: Warrior[];
@@ -194,15 +195,24 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive via-destructive/40 to-transparent opacity-60 group-hover:opacity-100 transition-opacity motion-reduce:transition-none" />
       <div className="p-8 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-8">
-          <div className="flex flex-col">
-            <WarriorLink
-              name={warriorDisplayName(w)}
-              id={w.id}
-              className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors motion-reduce:transition-none"
+          <div className="flex items-start gap-4">
+            <AvatarForEntity
+              entityId={w.id}
+              entityType="warrior"
+              source={w}
+              size="md"
+              className="border border-border/40 bg-neutral-950 grayscale opacity-80"
             />
-            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 mt-1">
-              {STYLE_DISPLAY_NAMES[w.style as FightingStyle]}
-            </span>
+            <div className="flex flex-col">
+              <WarriorLink
+                name={warriorDisplayName(w)}
+                id={w.id}
+                className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors motion-reduce:transition-none"
+              />
+              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 mt-1">
+                {STYLE_DISPLAY_NAMES[w.style as FightingStyle]}
+              </span>
+            </div>
           </div>
           <div className="flex flex-col items-end gap-2">
             <Badge

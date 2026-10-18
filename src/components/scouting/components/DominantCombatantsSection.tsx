@@ -1,6 +1,7 @@
 import { Trophy } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface TopWarrior {
   id: string;
@@ -64,14 +65,21 @@ export function DominantCombatantsSection({
                 </div>
 
                 <div className="flex items-center justify-between mb-2">
-                  <WarriorNameTag
+                  <div className="flex items-center gap-2 min-w-0">
+                    <WarriorNameAvatar
+                      warriorId={warrior.id}
+                      size="xs"
+                      className="border border-white/10 bg-neutral-950 shrink-0"
+                    />
+                    <WarriorNameTag
                     id={warrior.id}
                     name={warrior.name}
                     epithet={warrior.epithet}
                     isChampion={warrior.isChampion}
-                    injuryCount={warrior.injuryCount}
-                    isDead={warrior.isDead}
-                  />
+                      injuryCount={warrior.injuryCount}
+                      isDead={warrior.isDead}
+                    />
+                  </div>
                   <div className={`text-[10px] font-mono font-black ${color}`}>
                     {warrior.career.wins}W-{warrior.career.losses}L
                   </div>

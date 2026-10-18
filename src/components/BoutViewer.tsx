@@ -93,6 +93,8 @@ export default function BoutViewer(props: BoutViewerProps) {
         visibleCount={playback.visibleCount}
         expanded={expanded}
         onToggleExpanded={() => setExpanded(!expanded)}
+        warriorA={props.warriorA}
+        warriorD={props.warriorD}
       />
 
       {expanded && (

@@ -3,6 +3,7 @@ import { Surface } from '@/components/ui/Surface';
 import { selectionRowClasses } from '@/components/ui/selectableRow';
 import type { Warrior } from '@/types/game';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface WarriorSelectorProps {
   warriors: { warrior: Warrior; stable: string }[];
@@ -112,16 +113,16 @@ function WarriorSelectionCard(props: WarriorSelectionCardProps) {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div
+          <AvatarForEntity
+            entityId={warrior.id}
+            entityType="warrior"
+            source={warrior}
+            size="xs"
             className={cn(
-              'h-8 w-8 flex items-center justify-center rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none',
-              isSelected
-                ? colors.bg + ' ' + colors.border + ' ' + colors.text
-                : 'bg-neutral-800 text-muted-foreground border-white/5'
+              'border transition-all motion-reduce:transition-none',
+              isSelected ? colors.border : 'border-white/5 bg-neutral-950'
             )}
-          >
-            <span className="text-xs font-black">{warrior.name.charAt(0)}</span>
-          </div>
+          />
           <div className="flex-1 min-w-0">
             <div
               className={cn(

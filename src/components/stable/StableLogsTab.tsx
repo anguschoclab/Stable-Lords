@@ -6,6 +6,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getNamesFromTitle } from '@/utils/fightTitle';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface StableLogsTabProps {
   recentBouts: FightSummary[];
@@ -52,7 +53,13 @@ function BoutLogRow({ f, stableWarriorIds }: { f: FightSummary; stableWarriorIds
           )}
         />
         <div>
-          <div className="flex items-center gap-4 mb-1.5">
+          <div className="flex items-center gap-3 mb-1.5">
+            <WarriorNameAvatar
+              warriorId={f.warriorIdA}
+              name={n.a}
+              size={20}
+              className="border border-white/10 bg-neutral-950"
+            />
             <WarriorLink
               name={n.a}
               className={cn(
@@ -61,6 +68,12 @@ function BoutLogRow({ f, stableWarriorIds }: { f: FightSummary; stableWarriorIds
               )}
             />
             <span className="text-[9px] font-black text-muted-foreground/20">vs</span>
+            <WarriorNameAvatar
+              warriorId={f.warriorIdD}
+              name={n.d}
+              size={20}
+              className="border border-white/10 bg-neutral-950"
+            />
             <WarriorLink
               name={n.d}
               className={cn(

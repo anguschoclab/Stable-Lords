@@ -1,6 +1,7 @@
 import { Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/state.types';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface OfferMatchupPanelProps {
   playerWarrior?: Warrior;
@@ -25,6 +26,17 @@ export function OfferMatchupPanel({
         <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary/40">
           YOUR FIGHTER
         </span>
+        {playerWarrior && (
+          <div className="flex justify-center">
+            <AvatarForEntity
+              entityId={playerWarrior.id}
+              entityType="warrior"
+              source={playerWarrior}
+              size="sm"
+              className="border border-primary/20 bg-neutral-950"
+            />
+          </div>
+        )}
         <div className="text-xs font-display font-black uppercase text-foreground">
           {playerWarrior?.name}
         </div>
@@ -53,6 +65,17 @@ export function OfferMatchupPanel({
         <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/20">
           OPPONENT
         </span>
+        {opponent && (
+          <div className="flex justify-center">
+            <AvatarForEntity
+              entityId={opponent.id}
+              entityType="warrior"
+              source={opponent}
+              size="sm"
+              className="border border-white/10 bg-neutral-950"
+            />
+          </div>
+        )}
         <div className="text-xs font-display font-black uppercase text-muted-foreground/80">
           {opponent?.name || 'UNKNOWN'}
         </div>

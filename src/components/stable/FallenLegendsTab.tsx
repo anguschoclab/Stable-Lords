@@ -1,11 +1,12 @@
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
-import { Skull, Armchair } from 'lucide-react';
+import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface FallenLegendsTabProps {
   graveyard: Warrior[];
@@ -18,6 +19,7 @@ interface FallenLegendsTabProps {
 export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) {
   const fallen = [
     ...(graveyard ?? []).map((w) => ({
+      warrior: w,
       name: warriorDisplayName(w),
       style: w.style,
       kind: 'fallen' as const,
@@ -25,6 +27,7 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
       week: w.deathWeek,
     })),
     ...(retired ?? []).map((w) => ({
+      warrior: w,
       name: warriorDisplayName(w),
       style: w.style,
       kind: 'retired' as const,
@@ -64,6 +67,7 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
 }
 
 type Legend = {
+  warrior: Warrior;
   name: string;
   style: string;
   kind: 'fallen' | 'retired';
@@ -79,16 +83,16 @@ function LegendCard({ legend: w }: { legend: Legend }) {
       className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all motion-reduce:transition-none motion-reduce:transform-none"
     >
       <div className="flex items-center gap-6">
-        <div
+        <AvatarForEntity
+          entityId={w.warrior.id}
+          entityType="warrior"
+          source={w.warrior}
+          size="sm"
           className={cn(
-            'p-3 border transition-all motion-reduce:transition-none motion-reduce:transform-none',
-            w.kind === 'fallen'
-              ? 'bg-destructive/5 border-destructive/20 text-destructive'
-              : 'bg-white/5 border-white/10 text-muted-foreground/40'
+            'border bg-neutral-950',
+            w.kind === 'fallen' ? 'border-destructive/30 grayscale' : 'border-white/10 opacity-80'
           )}
-        >
-          {w.kind === 'fallen' ? <Skull className="h-4 w-4" /> : <Armchair className="h-4 w-4" />}
-        </div>
+        />
         <div className="flex flex-col">
           <span className="text-[12px] font-black uppercase tracking-tight text-foreground">
             {w.name}

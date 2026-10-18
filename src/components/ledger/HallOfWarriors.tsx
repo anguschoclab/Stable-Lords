@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { type FightingStyle } from '@/types/game';
 import type { Warrior, CareerRecord } from '@/types/game';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -84,13 +85,22 @@ const RETIRED_COLUMNS: StandingsColumn<Warrior>[] = [
     headClassName: 'pl-8 py-4 text-arena-gold/70',
     cellClassName: 'pl-8 py-5',
     render: (w) => (
-      <div className="flex flex-col">
-        <span>{warriorDisplayName(w)}</span>
-        <div className="flex items-center gap-2 mt-1">
-          <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
-          <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
-            RANK: EMERITUS
-          </span>
+      <div className="flex items-center gap-3">
+        <AvatarForEntity
+          entityId={w.id}
+          entityType="warrior"
+          source={w}
+          size="xs"
+          className="border border-arena-gold/20 bg-neutral-950 shrink-0 opacity-80"
+        />
+        <div className="flex flex-col">
+          <span>{warriorDisplayName(w)}</span>
+          <div className="flex items-center gap-2 mt-1">
+            <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
+            <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
+              RANK: EMERITUS
+            </span>
+          </div>
         </div>
       </div>
     ),

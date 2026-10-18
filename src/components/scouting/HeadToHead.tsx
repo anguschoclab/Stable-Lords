@@ -3,10 +3,11 @@ import { Badge } from '@/components/ui/badge';
 import { Swords, History, Zap, Target } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { Warrior } from '@/types/game';
-import { resolveWarriorName } from '@/engine/core/historyResolver';
+import { findWarrior, resolveWarriorName } from '@/engine/core/historyResolver';
 import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { useHeadToHeadData } from '@/hooks/useScoutingHeadToHead';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface HeadToHeadProps {
   nameA: string;
@@ -93,17 +94,28 @@ function EngagementRow({
 
   const warriorIdLeft = aIsStableA ? f.warriorIdA : f.warriorIdD;
   const warriorIdRight = aIsStableA ? f.warriorIdD : f.warriorIdA;
+  const leftWarrior = findWarrior(state, warriorIdLeft);
+  const rightWarrior = findWarrior(state, warriorIdRight);
 
   return (
     <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none motion-reduce:transition-none">
       <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">W{f.week}</div>
       <div
         className={cn(
-          'flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
+          'flex-1 flex items-center gap-2 truncate text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
           winnerIsA ? 'text-primary' : 'text-muted-foreground/40'
         )}
       >
-        {resolveWarriorName(state, warriorIdLeft, 'Unknown')}
+        {leftWarrior && (
+          <AvatarForEntity
+            entityId={leftWarrior.id}
+            entityType="warrior"
+            source={leftWarrior}
+            size={16}
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
+        )}
+        <span className="truncate">{resolveWarriorName(state, warriorIdLeft, 'Unknown')}</span>
       </div>
       <div className="flex items-center gap-1 mx-4">
         <Target className="h-3 w-3 text-arena-gold/40" />
@@ -116,11 +128,20 @@ function EngagementRow({
       </div>
       <div
         className={cn(
-          'flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
+          'flex-1 flex items-center justify-end gap-2 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight motion-reduce:transition-none',
           winnerIsB ? 'text-accent' : 'text-muted-foreground/40'
         )}
       >
-        {resolveWarriorName(state, warriorIdRight, 'Unknown')}
+        <span className="truncate">{resolveWarriorName(state, warriorIdRight, 'Unknown')}</span>
+        {rightWarrior && (
+          <AvatarForEntity
+            entityId={rightWarrior.id}
+            entityType="warrior"
+            source={rightWarrior}
+            size={16}
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
+        )}
       </div>
     </div>
   );

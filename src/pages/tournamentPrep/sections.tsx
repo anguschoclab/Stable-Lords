@@ -8,6 +8,7 @@ import { STYLE_DISPLAY_NAMES, type WeatherType } from '@/types/shared.types';
 import { fightExperience, prepIssues, type PrepIssue } from './prepChecks';
 import type { Warrior, TournamentEntry } from '@/types/state.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 function EntrantName({ w, isPlayerOwned }: { w: Warrior; isPlayerOwned: boolean }) {
   return (
@@ -80,11 +81,20 @@ function EntrantRow({
         issues.some((i) => i.blocking) && 'border-destructive/20 bg-destructive/[0.03]'
       )}
     >
-      <div className="min-w-0">
-        <EntrantName w={w} isPlayerOwned={isPlayerOwned} />
-        <span className="text-[9px] text-muted-foreground/50 uppercase tracking-widest">
-          {stableName} · {STYLE_DISPLAY_NAMES[w.style]} · {fightExperience(w)} FE
-        </span>
+      <div className="flex items-center gap-3 min-w-0">
+        <AvatarForEntity
+          entityId={w.id}
+          entityType="warrior"
+          source={w}
+          size="xs"
+          className="border border-white/10 bg-neutral-950 shrink-0"
+        />
+        <div className="min-w-0">
+          <EntrantName w={w} isPlayerOwned={isPlayerOwned} />
+          <span className="text-[9px] text-muted-foreground/50 uppercase tracking-widest">
+            {stableName} · {STYLE_DISPLAY_NAMES[w.style]} · {fightExperience(w)} FE
+          </span>
+        </div>
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
         <EntrantIssues issues={issues} />

@@ -6,6 +6,9 @@ import BoutResolution from '@/components/bout-viewer/BoutResolution';
 import BoutHeader from '@/components/bout-viewer/BoutHeader';
 import { FightingStyle } from '@/types/game';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useGameStore } from '@/state/useGameStore';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { makeTestWarrior } from '@/test/_fixtures/namedWarrior';
 
 vi.mock('@/components/arena', () => ({
   ViewModeToggle: ({ mode, onChange }: { mode: string; onChange: (m: string) => void }) => (
@@ -40,6 +43,31 @@ describe('BoutHeader', () => {
     );
     expect(screen.getByText('Alice')).toBeInTheDocument();
     expect(screen.getByText('Bob')).toBeInTheDocument();
+  });
+
+  it('renders fighter portraits when the warriors resolve in state', () => {
+    const fresh = createFreshState('test');
+    const alice = makeTestWarrior('w-alice', 'Alice', { avatarSeed: 11 });
+    useGameStore.getState().loadGame('autosave', {
+      ...fresh,
+      roster: [alice],
+    } as never);
+    const { container } = renderWithTooltip(
+      <BoutHeader
+        nameA="Alice"
+        nameD="Bob"
+        styleA={FightingStyle.BashingAttack}
+        styleD={FightingStyle.TotalParry}
+        winner="A"
+        minutes={5}
+        totalEvents={10}
+        visibleCount={5}
+        expanded={false}
+        onToggleExpanded={vi.fn()}
+        warriorA={alice}
+      />
+    );
+    expect(container.querySelectorAll('img').length).toBeGreaterThan(0);
   });
 
   it('renders Swords icon between names', () => {

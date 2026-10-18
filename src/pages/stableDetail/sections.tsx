@@ -13,6 +13,7 @@ import { useGameStore } from '@/state/useGameStore';
 import type { RivalStableData } from '@/types/game';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 /** Full-page fallback when the route id matches no rival stable. */
 export function StableNotFound() {
@@ -68,7 +69,16 @@ export function StableSidebar({
           )}
         </ImperialRing>
 
-        <div className="text-center space-y-1 px-8">
+        <div className="text-center space-y-3 px-8">
+          <div className="flex justify-center">
+            <AvatarForEntity
+              entityId={rival.owner.id}
+              entityType="owner"
+              source={rival.owner}
+              size="md"
+              className="border border-white/10 bg-neutral-950"
+            />
+          </div>
           <h2 className="text-xl font-display font-black uppercase tracking-tight text-foreground">
             {rival.owner.name}
           </h2>
@@ -215,6 +225,13 @@ export function StableOverviewTab({
                   variant="outline"
                   className="h-10 px-4 rounded-none border-white/5 bg-white/[0.02] text-muted-foreground/40 font-black uppercase text-[10px] tracking-widest"
                 >
+                  <AvatarForEntity
+                    entityId={w.id}
+                    entityType="warrior"
+                    source={w}
+                    size={20}
+                    className="mr-2 border border-white/10 bg-neutral-950 grayscale"
+                  />
                   <WarriorLink name={w.name} id={w.id} className="mr-2 hover:text-destructive">
                     {warriorDisplayName(w)}
                   </WarriorLink>

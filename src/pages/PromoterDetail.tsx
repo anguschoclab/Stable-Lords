@@ -16,6 +16,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ReturnLink } from '@/components/ui/ReturnLink';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
+import { AvatarForEntity } from '@/components/avatar';
 
 const TABS: SubNavTab[] = [
   { id: 'overview', label: 'Overview', icon: <Target className="h-4 w-4" /> },
@@ -62,13 +63,22 @@ function PromoterHero({ promoter }: { promoter: Promoter }) {
   return (
     <div className={`p-6 rounded-none border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 flex-wrap">
-            <Badge variant="outline" className={`text-xs ${tierStyle.badge}`}>
-              {promoter.tier}
-            </Badge>
+        <div className="flex items-start gap-4">
+          <AvatarForEntity
+            entityId={promoter.id}
+            entityType="promoter"
+            source={promoter}
+            size="lg"
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge variant="outline" className={`text-xs ${tierStyle.badge}`}>
+                {promoter.tier}
+              </Badge>
+            </div>
+            <p className="text-sm opacity-80">{personality.description}</p>
           </div>
-          <p className="text-sm opacity-80">{personality.description}</p>
         </div>
         <div className="flex items-center gap-3">
           <BookmarkButton entityType="promoter" entityId={promoter.id} size="md" />

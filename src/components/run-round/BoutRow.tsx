@@ -7,6 +7,8 @@ import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { OutcomeIcon } from './OutcomeIcon';
+import { AvatarForEntity } from '@/components/avatar';
+import type { Warrior } from '@/types/warrior.types';
 
 interface BoutRowProps {
   res: BoutResult;
@@ -20,10 +22,12 @@ function FighterCell({
   name,
   isWinner,
   right,
+  warrior,
 }: {
   name: string;
   isWinner: boolean;
   right?: boolean;
+  warrior?: Warrior;
 }) {
   const bar = (
     <div
@@ -43,16 +47,27 @@ function FighterCell({
       {name}
     </span>
   );
+  const portrait = warrior ? (
+    <AvatarForEntity
+      entityId={warrior.id}
+      entityType="warrior"
+      source={warrior}
+      size="xs"
+      className={cn('border border-white/10 bg-neutral-950', !isWinner && 'opacity-70')}
+    />
+  ) : null;
   return (
     <div className={cn('flex items-center gap-3 min-w-36', right && 'justify-end text-right')}>
       {right ? (
         <>
           {label}
+          {portrait}
           {bar}
         </>
       ) : (
         <>
           {bar}
+          {portrait}
           {label}
         </>
       )}
@@ -68,7 +83,7 @@ function RowTrigger({ res, isExpanded }: { res: BoutResult; isExpanded: boolean 
     <CollapsibleTrigger asChild>
       <div className="p-4 cursor-pointer flex items-center justify-between group">
         <div className="flex items-center gap-6 flex-1">
-          <FighterCell name={res.a.name} isWinner={isWinnerA} />
+          <FighterCell name={res.a.name} isWinner={isWinnerA} warrior={res.a} />
 
           <div className="flex flex-col items-center gap-1.5 px-4">
             <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.15em]">
@@ -82,7 +97,7 @@ function RowTrigger({ res, isExpanded }: { res: BoutResult; isExpanded: boolean 
             </Badge>
           </div>
 
-          <FighterCell name={res.d.name} isWinner={isWinnerD} right />
+          <FighterCell name={res.d.name} isWinner={isWinnerD} right warrior={res.d} />
         </div>
 
         <div className="flex items-center gap-4 ml-6">

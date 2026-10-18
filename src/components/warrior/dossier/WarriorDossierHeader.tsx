@@ -7,6 +7,7 @@ import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface WarriorDossierHeaderProps {
   warrior: Warrior;
@@ -37,7 +38,15 @@ export function WarriorDossierHeader({
   const isAvoided = playerAvoids?.includes(warrior.id) ?? false;
   return (
     <div className="flex items-center justify-between">
-      <div className="space-y-1">
+      <div className="flex items-center gap-4">
+        <AvatarForEntity
+          entityId={warrior.id}
+          entityType="warrior"
+          source={warrior}
+          size="md"
+          className="border border-white/10 bg-neutral-950 shrink-0"
+        />
+        <div className="space-y-1">
         <h2 className="text-2xl font-display font-black tracking-tight uppercase">
           {warriorDisplayName(warrior)}
         </h2>
@@ -46,6 +55,7 @@ export function WarriorDossierHeader({
             {record}
           </span>
           <FormSparkline warriorId={warrior.id} />
+        </div>
         </div>
       </div>
       <div className="flex flex-col items-end gap-2">

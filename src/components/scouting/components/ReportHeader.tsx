@@ -1,6 +1,7 @@
 import { ScrollText, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { ScoutReportData } from '@/types/game';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface ReportHeaderProps {
   report: ScoutReportData;
@@ -13,6 +14,11 @@ export function ReportHeader({ report }: ReportHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
       <div className="flex items-center gap-4">
+        <WarriorNameAvatar
+          name={report.warriorName}
+          size="sm"
+          className="border border-white/10 bg-neutral-950"
+        />
         <div>
           <ScrollText className="h-5 w-5" />
         </div>

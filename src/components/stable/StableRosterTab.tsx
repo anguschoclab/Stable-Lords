@@ -2,13 +2,13 @@ import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
-import { Activity, Heart, Zap } from 'lucide-react';
+import { Heart, Zap } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { ConditionBattery } from '@/components/ui/ConditionBattery';
 import { Surface } from '@/components/ui/Surface';
-import { ImperialRing } from '@/components/ui/ImperialRing';
 import { cn } from '@/lib/utils';
+import { AvatarForEntity } from '@/components/avatar';
 
 function StatBar({ label, value, max = 21 }: { label: string; value: number; max?: number }) {
   const pct = Math.min(100, (value / max) * 100);
@@ -66,9 +66,13 @@ function RosterCard({ w }: { w: Warrior }) {
       <div className="p-6">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
-            <ImperialRing size="sm" variant="bronze">
-              <Activity className="h-4 w-4 text-muted-foreground/40" />
-            </ImperialRing>
+            <AvatarForEntity
+              entityId={w.id}
+              entityType="warrior"
+              source={w}
+              size="sm"
+              className="border border-white/10 bg-neutral-950 shrink-0"
+            />
             <div>
               <WarriorLink
                 name={warriorDisplayName(w)}

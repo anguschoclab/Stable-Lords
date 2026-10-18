@@ -8,6 +8,7 @@ import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle } from '@/types/shared.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface VeteranReassignmentDialogProps {
   open: boolean;
@@ -52,20 +53,29 @@ export function VeteranReassignmentDialog({
                 key={w.id}
                 className="flex items-center justify-between p-6 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all motion-reduce:transition-none motion-reduce:transform-none"
               >
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-4">
-                    <span className="text-lg font-black uppercase tracking-tight">
-                      {warriorDisplayName(w)}
-                    </span>
-                    <StatBadge styleName={w.style as FightingStyle} />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest rounded-none">
-                      {preview.tier} Staff
-                    </Badge>
-                    <span className="text-[10px] text-muted-foreground/80 uppercase tracking-widest italic">
-                      Specialization: {preview.focus}
-                    </span>
+                <div className="flex items-center gap-4">
+                  <AvatarForEntity
+                    entityId={w.id}
+                    entityType="warrior"
+                    source={w}
+                    size="sm"
+                    className="border border-white/10 bg-neutral-950 shrink-0"
+                  />
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-4">
+                      <span className="text-lg font-black uppercase tracking-tight">
+                        {warriorDisplayName(w)}
+                      </span>
+                      <StatBadge styleName={w.style as FightingStyle} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest rounded-none">
+                        {preview.tier} Staff
+                      </Badge>
+                      <span className="text-[10px] text-muted-foreground/80 uppercase tracking-widest italic">
+                        Specialization: {preview.focus}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <Button

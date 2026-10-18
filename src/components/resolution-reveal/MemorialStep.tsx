@@ -5,6 +5,7 @@ import type { Warrior } from '@/types/warrior.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { hashStr } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
@@ -44,6 +45,15 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
                 key={w.id}
                 className="bg-muted/40 border border-border/60 p-6 rounded-none text-center min-w-72 shadow-2xl relative"
               >
+                <div className="flex justify-center mb-3">
+                  <AvatarForEntity
+                    entityId={w.id}
+                    entityType="warrior"
+                    source={w}
+                    size="lg"
+                    className="border border-border/60 bg-neutral-950 grayscale"
+                  />
+                </div>
                 <h3 className="text-2xl font-display font-bold text-destructive mb-1 drop-shadow-md">
                   {warriorDisplayName(w)}
                 </h3>

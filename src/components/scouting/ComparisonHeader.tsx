@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeftRight } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData, Warrior } from '@/types/game';
+import { AvatarForEntity } from '@/components/avatar';
 
 type ComparisonHeaderProps =
   | { kind: 'stable'; rivalA: RivalStableData; rivalB: RivalStableData }
@@ -37,6 +38,9 @@ function SideColumn({
  *
  */
 export function ComparisonHeader(props: ComparisonHeaderProps) {
+  const sourceA = props.kind === 'stable' ? props.rivalA.owner : props.warriorA;
+  const sourceB = props.kind === 'stable' ? props.rivalB.owner : props.warriorB;
+  const entityType = props.kind === 'stable' ? 'owner' : 'warrior';
   const leftTitle =
     props.kind === 'stable'
       ? props.rivalA.owner.stableName
@@ -55,6 +59,17 @@ export function ComparisonHeader(props: ComparisonHeaderProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
       <SideColumn label="Challenger" colorClass="text-primary" title={leftTitle}>
+        {sourceA && (
+          <div className="flex justify-center">
+            <AvatarForEntity
+              entityId={sourceA.id}
+              entityType={entityType}
+              source={sourceA}
+              size="md"
+              className="border border-primary/20 bg-neutral-950"
+            />
+          </div>
+        )}
         {props.kind === 'stable' ? (
           <div className="flex justify-center">
             <Badge
@@ -85,6 +100,17 @@ export function ComparisonHeader(props: ComparisonHeaderProps) {
       </div>
 
       <SideColumn label="Defender" colorClass="text-accent" title={rightTitle}>
+        {sourceB && (
+          <div className="flex justify-center">
+            <AvatarForEntity
+              entityId={sourceB.id}
+              entityType={entityType}
+              source={sourceB}
+              size="md"
+              className="border border-accent/20 bg-neutral-950"
+            />
+          </div>
+        )}
         {props.kind === 'stable' ? (
           <div className="flex justify-center">
             <Badge

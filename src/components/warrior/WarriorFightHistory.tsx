@@ -124,8 +124,10 @@ function ExpandedBout({
   // a massive state object from the parent via useShallow. This prevents the entire
   // fight history list from re-rendering whenever any unrelated warrior state updates,
   // and allows findWarrior to correctly utilize its WeakMap cache against the raw state.
-  const weaponIdA = useGameStore((state) => findWarrior(state, f.warriorIdA)?.equipment?.weapon);
-  const weaponIdD = useGameStore((state) => findWarrior(state, f.warriorIdD)?.equipment?.weapon);
+  const warriorA = useGameStore((state) => findWarrior(state, f.warriorIdA));
+  const warriorD = useGameStore((state) => findWarrior(state, f.warriorIdD));
+  const weaponIdA = warriorA?.equipment?.weapon;
+  const weaponIdD = warriorD?.equipment?.weapon;
 
   return (
     <div className="p-4 border-t border-white/5 animate-fade-in motion-reduce:animate-none">
@@ -141,6 +143,8 @@ function ExpandedBout({
         analysis={f.analysis}
         weaponIdA={weaponIdA}
         weaponIdD={weaponIdD}
+        warriorA={warriorA}
+        warriorD={warriorD}
       />
     </div>
   );

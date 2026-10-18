@@ -1,22 +1,15 @@
 import { useMemo } from 'react';
 import type { AvatarData } from '@/types/avatar.types';
 import { cn } from '@/lib/utils';
+import { AVATAR_SIZE_MAP, type AvatarSize } from './avatarSizes';
 
 /** Props for the layered avatar portrait. */
 export interface AvatarProps {
   portrait: AvatarData;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
+  size?: AvatarSize;
   className?: string;
   animate?: boolean;
 }
-
-const SIZE_MAP: Record<Exclude<NonNullable<AvatarProps['size']>, number>, number> = {
-  xs: 32,
-  sm: 48,
-  md: 80,
-  lg: 128,
-  xl: 256,
-};
 
 /** Convert an optional hex tint into a CSS filter string. */
 function tintToFilter(tint?: string): string | undefined {
@@ -52,7 +45,7 @@ function tintToFilter(tint?: string): string | undefined {
  * Render a layered avatar portrait as a stack of absolutely positioned images.
  */
 export function Avatar({ portrait, size = 'md', className, animate = false }: AvatarProps) {
-  const pixelSize = typeof size === 'number' ? size : SIZE_MAP[size];
+  const pixelSize = typeof size === 'number' ? size : AVATAR_SIZE_MAP[size];
 
   const sortedLayers = useMemo(
     () => [...portrait.layers].sort((a, b) => a.z - b.z),

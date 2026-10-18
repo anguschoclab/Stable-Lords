@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { TagBadge } from '@/components/ui/WarriorBadges';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronDown, ChevronUp, Timer, Trophy, Swords } from 'lucide-react';
+import { WarriorNameAvatar } from '@/components/avatar';
+import type { Warrior } from '@/types/warrior.types';
 
 interface BoutHeaderProps {
   nameA: string;
@@ -17,6 +19,9 @@ interface BoutHeaderProps {
   visibleCount: number;
   expanded: boolean;
   onToggleExpanded: () => void;
+  /** Full fighter objects when available (id-precise portrait lookup). */
+  warriorA?: Warrior;
+  warriorD?: Warrior;
 }
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -56,13 +61,25 @@ interface FighterPanelProps {
   isLoser: boolean;
   accentClass: string;
   victorClass: string;
+  warrior?: Warrior;
 }
 
 function FighterPanel(props: FighterPanelProps) {
-  const { label, name, style, isWinner, isLoser } = props;
+  const { label, name, style, isWinner, isLoser, warrior } = props;
   const { accentClass, victorClass } = props;
   return (
     <div className="text-center flex-1 space-y-4">
+      <div className="flex justify-center">
+        <WarriorNameAvatar
+          warriorId={warrior?.id}
+          name={name}
+          size="lg"
+          className={cn(
+            'border border-white/10 bg-neutral-950 transition-all duration-700',
+            isLoser && 'grayscale opacity-60'
+          )}
+        />
+      </div>
       <div className="space-y-1">
         <h4
           className={cn('text-[9px] font-black tracking-[0.15em] uppercase opacity-40', accentClass)}
@@ -188,7 +205,7 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
 export default function BoutHeader(props: BoutHeaderProps) {
   const { nameA, nameD, styleA, styleD, winner } = props;
   const { isRivalry, minutes, totalEvents, visibleCount, expanded } = props;
-  const { onToggleExpanded } = props;
+  const { onToggleExpanded, warriorA, warriorD } = props;
   return (
     <div className="relative p-8 border-b border-white/5 bg-neutral-900/40 backdrop-blur-md">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />
@@ -205,6 +222,7 @@ export default function BoutHeader(props: BoutHeaderProps) {
             isLoser={winner === 'D'}
             accentClass="text-primary"
             victorClass="drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]"
+            warrior={warriorA}
           />
 
           <TacticalInterlink isRivalry={isRivalry} />
@@ -217,6 +235,7 @@ export default function BoutHeader(props: BoutHeaderProps) {
             isLoser={winner === 'A'}
             accentClass="text-accent"
             victorClass="drop-shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)]"
+            warrior={warriorD}
           />
         </div>
 

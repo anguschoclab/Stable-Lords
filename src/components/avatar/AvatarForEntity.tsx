@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Avatar, type AvatarProps } from './Avatar';
+import { AVATAR_SIZE_MAP } from './avatarSizes';
 import { useAvatarCatalog } from './useAvatarCatalog';
 import type {
   AvatarConfig,
@@ -31,20 +32,20 @@ function resolveEntityColors(
   entityType: AvatarEntityType,
   entityId: string,
   source: AvatarForEntityProps['source'],
-  player: Owner,
-  rivals: RivalStableData[]
+  player: Owner | undefined,
+  rivals: RivalStableData[] | undefined
 ): { primary?: string; secondary?: string } {
   if (entityType === 'owner') {
     const owner = source as Owner;
     return { primary: owner.crest?.primaryColor, secondary: owner.crest?.secondaryColor };
   }
   if (entityType === 'warrior' || entityType === 'poolWarrior') {
-    const rival = rivals.find((r) => r.roster?.some((w) => w.id === entityId));
-    const crest = rival?.crest ?? player.crest;
+    const rival = (rivals ?? []).find((r) => r.roster?.some((w) => w.id === entityId));
+    const crest = rival?.crest ?? player?.crest;
     return { primary: crest?.primaryColor, secondary: crest?.secondaryColor };
   }
   if (entityType === 'trainer') {
-    return { primary: player.crest?.primaryColor, secondary: player.crest?.secondaryColor };
+    return { primary: player?.crest?.primaryColor, secondary: player?.crest?.secondaryColor };
   }
   return {};
 }
@@ -53,8 +54,8 @@ function buildAvatarConfig(
   entityId: string,
   entityType: AvatarEntityType,
   source: AvatarForEntityProps['source'],
-  player: Owner,
-  rivals: RivalStableData[]
+  player: Owner | undefined,
+  rivals: RivalStableData[] | undefined
 ): AvatarConfig {
   const colors = resolveEntityColors(entityType, entityId, source, player, rivals);
   const warriorLike = isWarriorLike(source);
@@ -79,15 +80,8 @@ function buildAvatarConfig(
 }
 
 function AvatarPlaceholder({ size, className }: { size: AvatarProps['size']; className?: string }) {
-  return (
-    <div
-      className={className}
-      style={{
-        width: typeof size === 'number' ? size : 80,
-        height: typeof size === 'number' ? size : 80,
-      }}
-    />
-  );
+  const pixels = typeof size === 'number' ? size : AVATAR_SIZE_MAP[size ?? 'md'];
+  return <div className={className} style={{ width: pixels, height: pixels }} />;
 }
 
 /**

@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import type { FightOutcomeBy } from '@/types/game';
 import { getOutcomeStyles } from '@/engine/combat/utils/outcomeStyles';
 import { Skull, Swords, Zap, Shield, Activity, Crosshair } from 'lucide-react';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface BoutResolutionProps {
   isComplete: boolean;
@@ -58,6 +59,13 @@ function VictoryBanner({
         <div className={outcomeStyle.textClass}>
           {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
         </div>
+        {winnerName && (
+          <WarriorNameAvatar
+            name={winnerName}
+            size="lg"
+            className="border-2 border-arena-gold/40 bg-neutral-950 shadow-[0_0_20px_rgba(0,0,0,0.6)]"
+          />
+        )}
         <div className="text-center space-y-2">
           <h2
             className={cn(

@@ -8,6 +8,7 @@ import { getWeaponCategory } from './utils/weaponCategory';
 import { FighterBars } from './components/FighterBars';
 import { FighterNamePlate } from './components/FighterNamePlate';
 import { FighterFigure } from './components/FighterFigure';
+import { WarriorNameAvatar } from '@/components/avatar';
 
 interface ArenaFighterProps {
   name: string;
@@ -46,7 +47,14 @@ export default function ArenaFighter(props: ArenaFighterProps) {
   return (
     <div className={containerClassName} style={containerStyle}>
       <FighterBars hpPercent={hpPercent} fpPercent={fpPercent} isWinner={isWinner} />
-      <FighterNamePlate name={name} isWinner={isWinner} />
+      <div className="flex items-center gap-1.5">
+        <WarriorNameAvatar
+          name={name}
+          size="xs"
+          className={cn('border border-white/10 bg-neutral-950', isDead && 'grayscale')}
+        />
+        <FighterNamePlate name={name} isWinner={isWinner} />
+      </div>
       <div
         className={cn('relative', stanceClass, idleClass)}
         style={{ width: size, height: size * 1.5 }}

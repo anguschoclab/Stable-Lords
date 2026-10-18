@@ -4,6 +4,7 @@ import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatNumber, type PersonalityConfig, type PromoterStats } from './config';
+import { AvatarForEntity } from '@/components/avatar';
 
 /** One headline stat card. */
 function StatCard({
@@ -71,7 +72,14 @@ function PersonalityCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+        <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-3">
+          <AvatarForEntity
+            entityId={promoter.id}
+            entityType="promoter"
+            source={promoter}
+            size="xs"
+            className="border border-white/10 bg-neutral-950"
+          />
           {personality.icon} {personality.label} Traits
         </CardTitle>
       </CardHeader>

@@ -8,6 +8,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { ListToolbar } from './rivalListShell';
 import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
 import { useListShell } from '@/hooks/useListShell';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface RivalStableListProps {
   rivals: RivalStableData[];
@@ -37,6 +38,16 @@ function RivalIdentity({ rival, isSelected }: { rival: RivalStableData; isSelect
           </div>
         )}
       </div>
+      <AvatarForEntity
+        entityId={rival.owner.id}
+        entityType="owner"
+        source={rival.owner}
+        size={40}
+        className={cn(
+          'shrink-0 border transition-all motion-reduce:transition-none',
+          isSelected ? 'border-primary/60' : 'border-white/10 group-hover:border-white/20'
+        )}
+      />
       <div className="space-y-1 min-w-0">
         <span
           className={cn(

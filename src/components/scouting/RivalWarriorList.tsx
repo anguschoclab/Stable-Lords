@@ -4,6 +4,7 @@ import { SelectableCard } from '@/components/ui/SelectableCard';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { Warrior, ScoutReportData } from '@/types/game';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface RivalWarriorListProps {
   warriors: Warrior[];
@@ -42,6 +43,13 @@ function WarriorListItem({
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
+          <AvatarForEntity
+            entityId={w.id}
+            entityType="warrior"
+            source={w}
+            size="xs"
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
           <WarriorNameTag id={w.id} name={w.name} epithet={w.epithet} useCrown={false} />
           {hasReport && (
             <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse motion-reduce:animate-none">

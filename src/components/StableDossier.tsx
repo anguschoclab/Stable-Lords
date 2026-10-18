@@ -11,6 +11,7 @@ import { StableCrest } from '@/components/crest';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { getChargeDescription } from '@/engine/crest/crestGenerator';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface StableDossierProps {
   stableId?: string;
@@ -110,6 +111,13 @@ function RosterList({ stable }: { stable: StableLike }) {
               className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
             >
               <div className="flex items-center gap-2">
+                <AvatarForEntity
+                  entityId={w.id}
+                  entityType="warrior"
+                  source={w}
+                  size={20}
+                  className="border border-white/10 bg-neutral-950 shrink-0"
+                />
                 <StatBadge styleName={w.style} />
                 <span className="text-sm font-medium">{warriorDisplayName(w)}</span>
               </div>
@@ -164,9 +172,18 @@ function DossierHeader({ stable }: { stable: StableLike }) {
             <Badge variant="outline">Rival</Badge>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">
-          Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
-        </p>
+        <div className="flex items-center gap-2">
+          <AvatarForEntity
+            entityId={stable.owner.id}
+            entityType="owner"
+            source={stable.owner}
+            size="xs"
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
+          <p className="text-sm text-muted-foreground">
+            Master: <span className="font-bold text-foreground">{stable.owner.name}</span>
+          </p>
+        </div>
         {stable.owner.ageRetired !== undefined && (
           <p className="text-[10px] text-muted-foreground/70">
             Ascended to the mantle in week {stable.owner.ageRetired}

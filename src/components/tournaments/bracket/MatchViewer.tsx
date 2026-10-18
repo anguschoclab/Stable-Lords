@@ -52,6 +52,8 @@ export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: M
             analysis={fightSummary.analysis}
             weaponIdA={findWarrior(gameState, fightSummary.warriorIdA)?.equipment?.weapon}
             weaponIdD={findWarrior(gameState, fightSummary.warriorIdD)?.equipment?.weapon}
+            warriorA={findWarrior(gameState, fightSummary.warriorIdA)}
+            warriorD={findWarrior(gameState, fightSummary.warriorIdD)}
           />
         </div>
         <Button

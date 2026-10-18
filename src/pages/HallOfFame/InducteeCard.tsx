@@ -10,6 +10,7 @@ import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { AvatarForEntity } from '@/components/avatar';
 
 /* ── helpers ─────────────────────────────────────────────── */
 
@@ -233,6 +234,13 @@ function InducteeHeader({
     <div className="flex items-start justify-between">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
+          <AvatarForEntity
+            entityId={warrior.id}
+            entityType="warrior"
+            source={warrior}
+            size="sm"
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
           <div
             className={cn(
               'p-1.5 rounded-none border',

@@ -2,12 +2,14 @@ import { Briefcase, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
-import type { BoutOffer, PromoterPersonality } from '@/types/state.types';
+import type { BoutOffer, Promoter, PromoterPersonality } from '@/types/state.types';
 import type { PersonalityEntry } from '@/data/promoterPersonalityConfig';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface OfferCardHeaderProps {
   offer: BoutOffer;
-  promoter?: { name?: string; tier?: string; personality?: string };
+  /** Full `Promoter` at runtime; structurally permissive for tests. */
+  promoter?: { id?: string; name?: string; tier?: string; personality?: string };
   personality?: PromoterPersonality;
   personalityConfig: PersonalityEntry | null;
   isCouncilPick?: boolean;
@@ -91,9 +93,19 @@ export function OfferCardHeader(props: OfferCardHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 flex items-start justify-between bg-white/[0.01]">
       <div className="flex items-center gap-4">
-        <ImperialRing size="sm" variant="bronze">
-          <Briefcase className="h-4 w-4 text-muted-foreground/40" />
-        </ImperialRing>
+        {promoter?.name ? (
+          <AvatarForEntity
+            entityId={promoter.id ?? offer.promoterId}
+            entityType="promoter"
+            source={promoter as Promoter}
+            size="sm"
+            className="border border-white/10 bg-neutral-950"
+          />
+        ) : (
+          <ImperialRing size="sm" variant="bronze">
+            <Briefcase className="h-4 w-4 text-muted-foreground/40" />
+          </ImperialRing>
+        )}
         <div>
           <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground leading-none mb-1">
             {promoter?.name || 'External Syndicate'}

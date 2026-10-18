@@ -1,8 +1,13 @@
 import { Trophy, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { resolveWarriorName, type NameResolutionState } from '@/engine/core/historyResolver';
-import type { TournamentBout } from '@/types/game';
+import {
+  findWarrior,
+  resolveWarriorName,
+  type NameResolutionState,
+} from '@/engine/core/historyResolver';
+import type { TournamentBout, WarriorId } from '@/types/game';
 import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface WarriorSlotsProps {
   bout: TournamentBout;
@@ -29,9 +34,12 @@ function SlotRow(props: {
   showByeIcon?: boolean;
   ariaLabel: string;
   onClick: () => void;
+  warriorId?: WarriorId;
+  gameState: NameResolutionState;
 }) {
   const { label, isChosen, otherChosen, championship, isBye } = props;
   const { byeClass, showByeIcon = false, ariaLabel, onClick } = props;
+  const warrior = props.warriorId ? findWarrior(props.gameState, props.warriorId) : undefined;
   return (
     <div
       role="button"
@@ -58,10 +66,19 @@ function SlotRow(props: {
       <div className="flex items-center gap-2 truncate">
         <div
           className={cn(
-            'w-1 h-4 rounded-full',
+            'w-1 h-4 rounded-full shrink-0',
             isChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
           )}
         />
+        {warrior && !isBye && (
+          <AvatarForEntity
+            entityId={warrior.id}
+            entityType="warrior"
+            source={warrior}
+            size={20}
+            className="border border-white/10 bg-neutral-950 shrink-0"
+          />
+        )}
         <span className="text-xs truncate">{label}</span>
         {isBye && showByeIcon && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
       </div>
@@ -98,6 +115,8 @@ export function WarriorSlots(props: WarriorSlotsProps) {
         byeClass="bg-muted/30"
         showByeIcon
         onClick={handleClick}
+        warriorId={bout.warriorIdA}
+        gameState={gameState}
       />
 
       {/* VS indicator - hide for byes */}
@@ -134,6 +153,8 @@ export function WarriorSlots(props: WarriorSlotsProps) {
         isBye={isBye}
         byeClass="opacity-50 italic text-muted-foreground"
         onClick={handleClick}
+        warriorId={isBye ? undefined : bout.warriorIdD}
+        gameState={gameState}
       />
     </div>
   );

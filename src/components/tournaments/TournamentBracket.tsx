@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { Medal, Crown } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
-import { resolveWarriorName } from '@/engine/core/historyResolver';
+import { findWarrior, resolveWarriorName } from '@/engine/core/historyResolver';
 import { useWarriorNameState } from '@/state/useGameStore';
 import type { TournamentBout, FightSummary } from '@/types/game';
 import { BracketMatchNode } from './BracketMatchNode';
+import { AvatarForEntity } from '@/components/avatar';
 
 interface TournamentBracketProps {
   bouts: TournamentBout[];
@@ -113,6 +114,7 @@ export function ChampionDisplay({
   const displayName = championId
     ? resolveWarriorName(state, championId, championName)
     : championName;
+  const champion = championId ? findWarrior(state, championId) : undefined;
 
   return (
     <Surface
@@ -121,7 +123,17 @@ export function ChampionDisplay({
     >
       <div className="p-8 text-center space-y-4">
         <div className="flex flex-col items-center gap-4">
-          <Crown className="h-16 w-16 text-arena-gold animate-bounce motion-reduce:animate-none" />
+          {champion ? (
+            <AvatarForEntity
+              entityId={champion.id}
+              entityType="warrior"
+              source={champion}
+              size="lg"
+              className="border-2 border-arena-gold/50 bg-neutral-950"
+            />
+          ) : (
+            <Crown className="h-16 w-16 text-arena-gold animate-bounce motion-reduce:animate-none" />
+          )}
           <div className="space-y-2">
             <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-black">
               Tournament Supreme Champion
@@ -158,6 +170,7 @@ export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighligh
   const displayName = thirdPlaceId
     ? resolveWarriorName(state, thirdPlaceId, thirdPlaceName)
     : thirdPlaceName;
+  const medalist = thirdPlaceId ? findWarrior(state, thirdPlaceId) : undefined;
 
   return (
     <Surface
@@ -166,7 +179,17 @@ export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighligh
     >
       <div className="p-5 text-center">
         <div className="flex items-center justify-center gap-4">
-          <Medal className="h-6 w-6 text-arena-gold" />
+          {medalist ? (
+            <AvatarForEntity
+              entityId={medalist.id}
+              entityType="warrior"
+              source={medalist}
+              size="sm"
+              className="border border-arena-gold/30 bg-neutral-950"
+            />
+          ) : (
+            <Medal className="h-6 w-6 text-arena-gold" />
+          )}
           <div className="text-left">
             <p className="text-[9px] uppercase tracking-widest text-muted-foreground/60 font-black">
               Third Place Medalist

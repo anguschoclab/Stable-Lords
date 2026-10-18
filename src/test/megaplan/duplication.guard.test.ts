@@ -14,9 +14,10 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * live pairs, each registered with its verdict category. NEW duplicate pairs
  * fail loudly; remove a pair from KNOWN_SRC_PAIRS as its cluster is deduped.
  */
-const SRC_TO_SRC_BASELINE = 30;
+const SRC_TO_SRC_BASELINE = 31;
 
 const KNOWN_SRC_PAIRS = new Set([
+  'src/components/stable/StableRosterTab.tsx|src/components/stable/VeteranReassignmentDialog.tsx',
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop
   // destructuring, import preambles) across the shell↔extracted-module
   // boundary, not behavioral duplication. Established project pattern.

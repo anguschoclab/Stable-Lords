@@ -1,0 +1,177 @@
+{
+  "combatKillText.json.kill_text.weapon_specific.slashing": [
+    "{{attacker}}'s blade arcs beautifully, separating {{defender}}'s head from their shoulders.",
+    "A wicked, horizontal slash from {{attacker}} disembowels {{defender}} right on the sands.",
+    "{{attacker}} executes a brutal, two-handed cleave that nearly cuts {{defender}} in half.",
+    "With a terrifying spray of crimson, {{attacker}} severs {{defender}}'s neck.",
+    "{{defender}} collapses as {{attacker}}'s edge carves a lethal crescent across their throat."
+  ],
+  "combatKillText.json.kill_text.weapon_specific.piercing": [
+    "{{attacker}} lunges perfectly, sinking their point directly into {{defender}}'s heart.",
+    "A vicious thrust from {{attacker}} skewers {{defender}} completely, pinning them to the air for a moment.",
+    "{{defender}} gasps a final time as {{attacker}} threads the needle, piercing their throat.",
+    "{{attacker}} drives their weapon deep into {{defender}}'s chest cavity, a flawless, fatal execution.",
+    "With terrifying precision, {{attacker}} impales {{defender}} through the visor."
+  ],
+  "combatKillText.json.kill_text.weapon_specific.bashing": [
+    "{{attacker}} brings their weapon down with seismic force, totally obliterating {{defender}}'s helm and skull.",
+    "A colossal, sweeping smash from {{attacker}} shatters {{defender}}'s ribcage, stopping their heart instantly.",
+    "{{defender}} is driven violently into the dirt as {{attacker}} crushes their spine with a final blow.",
+    "With a sickening crunch that echoes through the stands, {{attacker}} caves in {{defender}}'s chest.",
+    "{{attacker}} pulverizes {{defender}} into the red sands with a horrific downward strike."
+  ],
+  "combatKillText.json.kill_text.weapon_specific.fist": [
+    "{{defender}}'s chest caves in under the primal, brutal force of {{attacker}}'s final punch.",
+    "{{defender}}'s chest caves in under the primal, brutal force of {{attacker}}'s final punch.",
+    "{{attacker}} unleashes a skull-cracking haymaker that turns {{defender}}'s lights out forever.",
+    "A sickening snap rings out as {{attacker}} breaks {{defender}}'s neck with a brutal right hook.",
+    "{{attacker}} mounts the fallen {{defender}} and delivers a horrifying, bare-knuckle execution.",
+    "With bare hands and raw fury, {{attacker}} beats the very life from {{defender}}'s body."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.desperate": [
+    "With a panicked scramble, {{defender}} hurls themselves out of the weapon's path.",
+    "With a panicked scramble, {{defender}} hurls themselves out of the weapon's path.",
+    "{{defender}} stumbles backward just in time, narrowly avoiding a lethal strike.",
+    "{{defender}} practically falls over to evade, trading dignity for survival."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.confident": [
+    "{{defender}} reads the attack perfectly, stepping aside with clinical precision.",
+    "{{defender}} reads the attack perfectly, stepping aside with clinical precision.",
+    "Without even blinking, {{defender}} weaves out of danger, making it look effortless.",
+    "{{defender}} smoothly sidesteps the incoming blow, entirely unfazed."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.theatrical": [
+    "{{defender}} performs a dramatic backflip to evade the attack.",
+    "{{defender}} pirouettes away from the strike, flashing a wicked grin to the crowd.",
+    "With a dramatic flourish, {{defender}} leaps to safety, playing to the roaring stands.",
+    "{{defender}} spins elegantly out of range, turning evasion into a performance."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.grim": [
+    "{{defender}} steps back into the shadows, a cold, expressionless evasion.",
+    "With no wasted movement, {{defender}} silently slips past the deadly arc.",
+    "{{defender}} ducks the blow with a stoic, dead-eyed calm."
+  ],
+  "combatPbp.json.pbp.defenses.parry.desperate": [
+    "{{defender}} throws up a hasty block, barely absorbing the horrific impact.",
+    "Sparks fly as {{defender}} frantically bats the weapon away at the very last second.",
+    "{{defender}} is forced onto the back foot, violently deflecting the incoming steel."
+  ],
+  "combatPbp.json.pbp.defenses.parry.confident": [
+    "{{defender}} intercepts the strike with casual authority, completely unbothered.",
+    "A firm, calculated parry from {{defender}} effortlessly halts the offensive.",
+    "{{defender}} meets the blow head-on, their guard remaining absolutely absolute."
+  ],
+  "combatPbp.json.pbp.defenses.parry.theatrical": [
+    "{{defender}} swats the blade aside with an arrogant flick of the wrist.",
+    "With a showman's flair, {{defender}} loudly clashes steel, inviting the crowd's cheer.",
+    "{{defender}} deflects the blow beautifully, holding the pose for a fraction of a second."
+  ],
+  "combatPbp.json.pbp.defenses.parry.grim": [
+    "{{defender}} violently slaps the weapon aside, their face locked in a murderous scowl.",
+    "A brutal, heavy parry from {{defender}} sends a shockwave through the air.",
+    "{{defender}} intercepts the strike with a jarring clang, eyes promising violence."
+  ],
+  "combatPbp.json.pbp.defenses.riposte.desperate": [
+    "After a panicked deflection, {{defender}} lashes out blindly in a wild counter-attack.",
+    "Breathing heavily, {{defender}} parries and immediately throws a desperate, ragged counter.",
+    "{{defender}} barely survives the block, instantly snapping back with a messy riposte."
+  ],
+  "combatPbp.json.pbp.defenses.riposte.confident": [
+    "{{defender}} turns the parry into a fluid, deadly counterstrike with practiced ease.",
+    "A perfect deflection opens the door, and {{defender}} smoothly slides in for the riposte.",
+    "{{defender}} absorbs the momentum entirely, redirecting it into a flawless counter."
+  ],
+  "combatPbp.json.pbp.defenses.riposte.theatrical": [
+    "{{defender}} bats the weapon away and retaliates with a flourishing, spinning strike.",
+    "With a grand, sweeping motion, {{defender}} parries and dances into a beautiful counter.",
+    "{{defender}} winks to the crowd mid-deflection, seamlessly returning a flashy riposte."
+  ],
+  "combatPbp.json.pbp.defenses.riposte.grim": [
+    "{{defender}} brutally forces the weapon aside, driving in a savage, wordless counter.",
+    "A jarring parry is immediately followed by a ruthless, punishing riposte from {{defender}}.",
+    "{{defender}} creates an opening with sheer force, stepping in for a brutal retaliation."
+  ],
+  "combatPbp.json.pbp.knockdown.pacing.slow": [
+    "{{name}} staggers heavily, swaying for agonizing seconds before finally collapsing to the sand.",
+    "Like a felled timber, {{name}} tips backward in slow motion, crashing to the dirt.",
+    "The impact echoes through the arena, and {{name}} slowly, inevitably crumbles."
+  ],
+  "combatPbp.json.pbp.knockdown.pacing.fast": [
+    "{{name}} is instantly swept off their feet, hitting the ground with a sickening thud.",
+    "A sudden, violent impact drops {{name}} immediately into the dirt.",
+    "{{name}}'s legs are taken out completely, slamming them violently into the sand."
+  ],
+  "combatPbp.json.pbp.knockdown.pacing.recovery_slow": [
+    "{{name}} groans, pushing up from the sand with agonizing, trembling slowness.",
+    "Covered in dirt, {{name}} crawls to their knees before finally, shakily finding their footing.",
+    "The crowd watches as {{name}} struggles violently against their own battered body to stand."
+  ],
+  "combatPbp.json.pbp.knockdown.pacing.recovery_fast": [
+    "{{name}} instantly springs back to their feet, practically bouncing off the arena floor.",
+    "With a sudden burst of adrenaline, {{name}} kips up off the sand, refusing to stay down.",
+    "{{name}} rolls with the impact, immediately popping back into a fighting stance."
+  ],
+  "combatStrikes.json.strikes.slashing.solid": [
+    "{{attacker}} carves a brutal, sweeping arc across {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} carves a brutal, sweeping arc across {{defender}}'s {{bodyPart}}.",
+    "The blade bites deeply into {{defender}}'s {{bodyPart}}, leaving a ghastly wound.",
+    "{{attacker}} rips a vicious laceration across {{defender}}'s {{bodyPart}}.",
+    "A wicked horizontal slash from {{attacker}} catches {{defender}} solidly on the {{bodyPart}}.",
+    "{{attacker}} draws a horrifying line of crimson across {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.slashing.critical": [
+    "{{attacker}} cleaves through {{defender}}'s guard entirely, biting horrifically deep into the {{bodyPart}}.",
+    "A devastating, momentum-fueled swing from {{attacker}} nearly severs {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} unleashes a monstrous slash, opening a terrifying wound on {{defender}}'s {{bodyPart}}.",
+    "{{defender}} reels backward as {{attacker}}'s blade carves deeply into their {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.bashing.solid": [
+    "{{attacker}} delivers a sickening concussive blow to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} delivers a sickening concussive blow to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} batters {{defender}}'s {{bodyPart}} with a punishing, heavy strike.",
+    "{{attacker}} batters {{defender}}'s {{bodyPart}} with a punishing, heavy strike.",
+    "{{attacker}} brings the heavy weapon crashing down against {{defender}}'s {{bodyPart}}.",
+    "A jarring, bone-rattling thud echoes as {{attacker}} slams into {{defender}}'s {{bodyPart}}.",
+    "The sheer impact of {{attacker}}'s strike sends shockwaves through {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.bashing.critical": [
+    "{{attacker}} unleashes a cataclysmic blow, audibly shattering bone in {{defender}}'s {{bodyPart}}.",
+    "A monstrous swing from {{attacker}} caves in {{defender}}'s defenses, crushing the {{bodyPart}}.",
+    "{{defender}} is nearly knocked off their feet by a colossal smash to the {{bodyPart}} from {{attacker}}.",
+    "With terrifying force, {{attacker}} crushes {{defender}}'s {{bodyPart}} in a ruinous impact."
+  ],
+  "combatStrikes.json.strikes.piercing.glancing": [
+    "A quick jab by {{attacker}} only snags {{defender}}'s clothing."
+  ],
+  "combatStrikes.json.strikes.piercing.solid": [
+    "{{attacker}} threads the needle, sinking their weapon deep into {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} threads the needle, sinking their weapon deep into {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} lunges with terrifying speed, driving the point into {{defender}}'s {{bodyPart}}.",
+    "A sharp, cruel thrust from {{attacker}} finds purchase in {{defender}}'s {{bodyPart}}.",
+    "The point bites maliciously as {{attacker}} skewers {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} delivers a sudden, agonizing stab straight into {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.piercing.critical": [
+    "{{attacker}} drives a horrific, life-threatening thrust deep into {{defender}}'s {{bodyPart}}.",
+    "With sickening depth, {{attacker}} impales {{defender}}'s {{bodyPart}}.",
+    "{{defender}} gasps in agony as {{attacker}} buries their weapon to the hilt in the {{bodyPart}}.",
+    "A flawless, devastating lunge from {{attacker}} pierces straight through {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.fist.solid": [
+    "{{attacker}} lands a punishing, bare-knuckle hook to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} sinks a heavy body blow directly into {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} lands a punishing, bare-knuckle hook to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} sinks a heavy body blow directly into {{defender}}'s {{bodyPart}}.",
+    "A sharp, snapping jab from {{attacker}} snaps {{defender}}'s head back.",
+    "A sharp, snapping jab from {{attacker}} snaps {{defender}}'s head back.",
+    "The sickening sound of knuckle on bone rings out as {{attacker}} connects with the {{bodyPart}}.",
+    "{{attacker}} delivers a bruising straight right to {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.fist.critical": [
+    "{{attacker}} unleashes a monstrous haymaker, cratering {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} unleashes a monstrous haymaker, cratering {{defender}}'s {{bodyPart}}.",
+    "A devastating, perfectly placed uppercut from {{attacker}} completely scrambles {{defender}}.",
+    "{{defender}} is sent staggering by a jaw-shattering blow to the {{bodyPart}} from {{attacker}}.",
+    "{{attacker}} steps into a crushing hook, visibly buckling {{defender}}'s knees with a strike to the {{bodyPart}}."
+  ]
+}

@@ -41,6 +41,11 @@ vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 // Mock Radix UI Tabs to always render both contents for easy testing
 vi.mock('@/components/ui/tabs', () => ({ ...__SHARED_MOCKS.radixTabs }));
+vi.mock('@/components/avatar', () => ({
+  AvatarForEntity: ({ entityId }: { entityId: string }) => (
+    <div data-testid={`trainer-avatar-${entityId}`} />
+  ),
+}));
 
 describe('Trainers Component', () => {
   let mockState: GameState;
@@ -95,6 +100,7 @@ describe('Trainers Component', () => {
     // Matching the focus text in the new UI impact box
     const focusBadge = screen.getAllByText(/Aggression/i)[0];
     expect(focusBadge).toBeInTheDocument();
+    expect(screen.getByTestId('trainer-avatar-t1')).toBeInTheDocument();
   });
 
   it('renders hiring pool correctly', async () => {
@@ -109,6 +115,7 @@ describe('Trainers Component', () => {
 
     const focusBadge = screen.getAllByText(/Defense/i)[0];
     expect(focusBadge).toBeInTheDocument();
+    expect(screen.getByTestId('trainer-avatar-t2')).toBeInTheDocument();
   });
 
   it('allows firing a trainer', async () => {

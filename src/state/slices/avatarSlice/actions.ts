@@ -26,7 +26,7 @@ export function createAvatarActions(
     ensureAvatar: (config: AvatarConfig) => {
       const cached = get().avatarCache[config.entityId];
       if (cached) return cached;
-      const next = generateAvatar(config);
+      const next = { ...generateAvatar(config), generatedAtWeek: get().week };
       set((state) => ({
         avatarCache: { ...state.avatarCache, [config.entityId]: next },
       }));
@@ -35,7 +35,10 @@ export function createAvatarActions(
 
     rerollAvatar: (config: AvatarConfig) => {
       const newSeed = cryptoRandomInt(0, 999999);
-      const next = generateAvatar({ ...config, seed: newSeed });
+      const next = {
+        ...generateAvatar({ ...config, seed: newSeed }),
+        generatedAtWeek: get().week,
+      };
       set((state) => ({
         avatarCache: { ...state.avatarCache, [config.entityId]: next },
       }));

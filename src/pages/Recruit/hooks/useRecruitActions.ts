@@ -86,12 +86,18 @@ function applyPoolRefreshDraft(draft: GameStore) {
 /** Draft mutation for a custom-built recruit; navigates to the new warrior. */
 function applyCustomCreateDraft(
   draft: GameStore,
-  data: { name: string; style: FightingStyle; attributes: Attributes },
+  data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number },
   navigate: (opts: { to: string }) => void
 ) {
   const rng = new SeededRNG(draft.week + hashStr(data.name));
   const id = rng.uuid('warrior') as WarriorId;
-  const warrior = makeWarrior({ id: id, name: data.name, style: data.style, attrs: data.attributes });
+  const warrior = makeWarrior({
+    id,
+    name: data.name,
+    style: data.style,
+    attrs: data.attributes,
+    overrides: { avatarSeed: data.avatarSeed ?? hashStr(`avatar:${data.name}`) },
+  });
 
   draft.roster.push(warrior);
 
@@ -154,7 +160,7 @@ export function useRecruitActions({
   }, [deductFunds, setState]);
 
   const handleCustomCreate = useCallback(
-    (data: { name: string; style: FightingStyle; attributes: Attributes }) => {
+    (data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number }) => {
       if (rosterFull) {
         toast.error('Roster full!');
         return;

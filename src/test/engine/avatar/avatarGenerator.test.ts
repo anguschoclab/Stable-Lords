@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { generateAvatar } from '@/engine/avatar/avatarGenerator';
+import {
+  ageGroupForAge,
+  avatarDescription,
+  clothingCategoryForStyle,
+  generateAvatar,
+  seedForEntity,
+  wearScore,
+} from '@/engine/avatar/avatarGenerator';
 import { FightingStyle } from '@/types/shared.types';
 import type { AvatarConfig } from '@/types/avatar.types';
 
@@ -57,6 +64,32 @@ describe('avatarGenerator', () => {
     const youngMarks = young.layers.filter((l) => l.category === 'markings');
     const vetMarks = veteran.layers.filter((l) => l.category === 'markings');
     expect(vetMarks.length).toBeGreaterThan(youngMarks.length);
+  });
+
+  it('exports stable seed and exact age helpers', () => {
+    expect(seedForEntity('warrior', 'w-1')).toBe(seedForEntity('warrior', 'w-1'));
+    expect(seedForEntity('warrior', 'w-1')).not.toBe(seedForEntity('trainer', 'w-1'));
+    expect([19, 20, 34, 35, 49, 50].map(ageGroupForAge)).toEqual([
+      'young',
+      'adult',
+      'adult',
+      'middle',
+      'middle',
+      'elder',
+    ]);
+  });
+
+  it('increases wear and description severity with career history', () => {
+    const novice = baseConfig({ age: 18, kills: 0, fame: 0, injuries: [] });
+    const veteran = baseConfig({ age: 55, kills: 10, fame: 2500, injuries: ['scar', 'break'] });
+    expect(wearScore(veteran)).toBeGreaterThan(wearScore(novice));
+    expect(avatarDescription(veteran)).toBe('Scarred Veteran of the Arena');
+  });
+
+  it('maps fighting styles to thematic clothing tags', () => {
+    expect(clothingCategoryForStyle(FightingStyle.BashingAttack)).toBe('heavy');
+    expect(clothingCategoryForStyle(FightingStyle.TotalParry)).toBe('defensive');
+    expect(clothingCategoryForStyle(FightingStyle.AimedBlow)).toBe('light');
   });
 
   it('orders layers by ascending z value', () => {

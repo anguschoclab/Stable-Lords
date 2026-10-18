@@ -20,6 +20,10 @@ vi.mock('@/components/charts/FormSparkline', () => ({
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: vi.fn(() => vi.fn()),
 }));
+vi.mock('@/components/avatar', () => ({
+  AvatarForEntity: () => <div data-testid="warrior-avatar" />,
+  AvatarRerollButton: () => <button data-testid="avatar-reroll">Reroll</button>,
+}));
 
 import { WarriorHeroHeader } from '@/components/warrior/WarriorHeroHeader';
 import { FightingStyle } from '@/types/shared.types';
@@ -95,5 +99,25 @@ describe('WarriorHeroHeader', () => {
   it('renders no crown badges when the warrior holds none', () => {
     render(<WarriorHeroHeader {...baseProps} id="w1" arenaCrowns={{ current: [], past: [] }} />);
     expect(screen.queryByText(/Champion of/)).not.toBeInTheDocument();
+  });
+
+  it('renders the warrior avatar and an owned-warrior reroll control', () => {
+    const sourceWarrior = makeWarrior();
+    render(
+      <WarriorHeroHeader
+        {...baseProps}
+        id={sourceWarrior.id}
+        sourceWarrior={sourceWarrior}
+        isPlayerOwned
+      />
+    );
+    expect(screen.getByTestId('warrior-avatar')).toBeInTheDocument();
+    expect(screen.getByTestId('avatar-reroll')).toBeInTheDocument();
+  });
+
+  it('does not render the reroll control for a rival warrior', () => {
+    render(<WarriorHeroHeader {...baseProps} sourceWarrior={makeWarrior()} isPlayerOwned={false} />);
+    expect(screen.getByTestId('warrior-avatar')).toBeInTheDocument();
+    expect(screen.queryByTestId('avatar-reroll')).not.toBeInTheDocument();
   });
 });

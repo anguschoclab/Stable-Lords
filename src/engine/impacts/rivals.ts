@@ -5,6 +5,7 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+import { ageGroupForAge } from '@/engine/avatar/avatarGenerator';
 
 /**
  * Apply rivals updates to state.
@@ -33,6 +34,19 @@ const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStabl
   }
   state.rivals = state.rivals.map((r) => {
     const update = value.get(r.id);
+    if (update?.roster) {
+      const previous = new Map(r.roster.map((warrior) => [warrior.id, warrior]));
+      const nextIds = new Set(update.roster.map((warrior) => warrior.id));
+      for (const warrior of update.roster) {
+        const prior = previous.get(warrior.id);
+        if (prior && ageGroupForAge(prior.age) !== ageGroupForAge(warrior.age)) {
+          delete state.avatarCache?.[warrior.id];
+        }
+      }
+      for (const warrior of r.roster) {
+        if (!nextIds.has(warrior.id)) delete state.avatarCache?.[warrior.id];
+      }
+    }
     return update ? { ...r, ...update } : r;
   });
   // Rebuild rivalMap cache from the updated rivals array to guarantee sync
@@ -71,6 +85,7 @@ const rivalWarriorPatches = (state: GameState, value: Map<WarriorId, Partial<War
 const rivalRosterRemovals = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
   const ids = new Set<string>(value);
+  for (const id of ids) delete state.avatarCache?.[id];
   state.rivals = state.rivals.map((r) =>
     r.roster.some((w) => ids.has(w.id))
       ? { ...r, roster: r.roster.filter((w) => !ids.has(w.id)) }

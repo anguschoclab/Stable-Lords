@@ -14,9 +14,25 @@ vi.mock('@/state/useGameStore', () => ({
     const state = {
       treasury: { gold: 1000 },
       roster: [],
+      player: { crest: { primaryColor: '#111111', secondaryColor: '#222222' } },
     };
     return selector ? selector(state) : state;
   },
+}));
+
+vi.mock('@/components/avatar', () => ({
+  Avatar: () => <div data-testid="builder-avatar" />,
+}));
+vi.mock('@/components/avatar/useAvatarCatalog', () => ({ useAvatarCatalog: () => true }));
+vi.mock('@/engine/avatar/avatarGenerator', () => ({
+  generateAvatar: () => ({
+    seed: 1,
+    entityType: 'warrior',
+    gender: 'neutral',
+    ageGroup: 'adult',
+    primaryColor: '#111111',
+    layers: [],
+  }),
 }));
 
 vi.mock('@/components/warrior/WarriorStats', () => ({
@@ -82,8 +98,9 @@ describe('SkillsPreview', () => {
 
 describe('WarriorBuilder', () => {
   it('renders without crashing', () => {
-    const { container } = render(<WarriorBuilder onCreateWarrior={vi.fn()} />);
+    const { container, getByTestId } = render(<WarriorBuilder onCreateWarrior={vi.fn()} />);
     expect(container.firstChild).toBeInTheDocument();
+    expect(getByTestId('builder-avatar')).toBeInTheDocument();
   });
 });
 

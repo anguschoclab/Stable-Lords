@@ -15,7 +15,12 @@ import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { clamp } from '@/utils/math';
 
 interface UseWarriorBuilderStateDeps {
-  onCreateWarrior: (data: { name: string; style: FightingStyle; attributes: Attributes }) => void;
+  onCreateWarrior: (data: {
+    name: string;
+    style: FightingStyle;
+    attributes: Attributes;
+    avatarSeed: number;
+  }) => void;
   maxRoster: number;
   currentRosterSize: number;
 }
@@ -52,6 +57,7 @@ export function useWarriorBuilderState({
   const [name, setName] = useState('');
   const [style, setStyle] = useState<FightingStyle>(FightingStyle.StrikingAttack);
   const [attrs, setAttrs] = useState<Attributes>({ ...DEFAULT_ATTRS });
+  const [avatarSeed, setAvatarSeed] = useState(() => cryptoRandomInt(0, 999999));
 
   const total = useMemo(() => ATTRIBUTE_KEYS.reduce((s, k) => s + attrs[k], 0), [attrs]);
   const remaining = ATTRIBUTE_TOTAL - total;
@@ -77,14 +83,16 @@ export function useWarriorBuilderState({
         personality,
       })
     );
+    setAvatarSeed(cryptoRandomInt(0, 999999));
   }, [personality]);
 
   const handleCreate = useCallback(() => {
     if (!isValid || rosterFull) return;
-    onCreateWarrior({ name: name.trim().toUpperCase(), style, attributes: attrs });
+    onCreateWarrior({ name: name.trim().toUpperCase(), style, attributes: attrs, avatarSeed });
     setName('');
     setAttrs({ ...DEFAULT_ATTRS });
-  }, [isValid, rosterFull, name, style, attrs, onCreateWarrior]);
+    setAvatarSeed(cryptoRandomInt(0, 999999));
+  }, [isValid, rosterFull, name, style, attrs, avatarSeed, onCreateWarrior]);
 
   return {
     name,
@@ -92,6 +100,7 @@ export function useWarriorBuilderState({
     personality,
     style,
     setStyle,
+    avatarSeed,
     attrs,
     total,
     remaining,

@@ -26,6 +26,9 @@ vi.mock('@/components/ui/badge', () => ({
 }));
 
 vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
+vi.mock('@/components/avatar', () => ({
+  AvatarForEntity: () => <div data-testid="recruit-avatar" />,
+}));
 
 import { RecruitCard } from '@/components/stable/RecruitCard';
 
@@ -68,6 +71,13 @@ const baseProps = {
 };
 
 describe('RecruitCard', () => {
+  it('renders a small avatar for the recruit', () => {
+    const { getByTestId } = render(
+      <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted={false} />
+    );
+    expect(getByTestId('recruit-avatar')).toBeInTheDocument();
+  });
+
   it('renders Scout [25G] button when unscouted', () => {
     const { container } = render(
       <RecruitCard {...baseProps} warrior={makePoolWarrior()} isScouted={false} />

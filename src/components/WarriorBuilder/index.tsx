@@ -2,6 +2,7 @@
  * Stable Lords — Warrior Builder
  * Create a new warrior: allocate 70 points across 7 attributes, pick style, name.
  */
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Shuffle } from 'lucide-react';
 import { ATTRIBUTE_TOTAL } from '@/types/game';
@@ -12,12 +13,17 @@ import { AttributeSliders } from './components/AttributeSliders';
 import { SkillsPreview } from './components/SkillsPreview';
 import { PhysicalsPreview } from './components/PhysicalsPreview';
 import { CreateButton } from './components/CreateButton';
+import { Avatar } from '@/components/avatar';
+import { useAvatarCatalog } from '@/components/avatar/useAvatarCatalog';
+import { generateAvatar } from '@/engine/avatar/avatarGenerator';
+import { useGameStore } from '@/state/useGameStore';
 
 interface WarriorBuilderProps {
   onCreateWarrior: (data: {
     name: string;
     style: import('@/types/game').FightingStyle;
     attributes: import('@/types/game').Attributes;
+    avatarSeed: number;
   }) => void;
   maxRoster?: number;
   currentRosterSize?: number;
@@ -37,6 +43,7 @@ export default function WarriorBuilder({
     personality,
     style,
     setStyle,
+    avatarSeed,
     attrs,
     total,
     remaining,
@@ -47,6 +54,23 @@ export default function WarriorBuilder({
     randomize,
     handleCreate,
   } = useWarriorBuilderState({ onCreateWarrior, maxRoster, currentRosterSize });
+  const catalogReady = useAvatarCatalog();
+  const crest = useGameStore((state) => state.player.crest);
+  const preview = useMemo(
+    () =>
+      catalogReady
+        ? generateAvatar({
+            entityId: 'warrior-builder-preview',
+            entityType: 'warrior',
+            seed: avatarSeed,
+            name: name || 'New Warrior',
+            style,
+            primaryColor: crest?.primaryColor,
+            secondaryColor: crest?.secondaryColor,
+          })
+        : null,
+    [avatarSeed, catalogReady, crest?.primaryColor, crest?.secondaryColor, name, style]
+  );
 
   const buttonStatus: 'roster-full' | 'invalid' | 'valid' = rosterFull
     ? 'roster-full'
@@ -64,9 +88,12 @@ export default function WarriorBuilder({
             attributes.
           </p>
         </div>
-        <Button variant="outline" onClick={randomize} className="gap-2">
-          <Shuffle className="h-4 w-4" /> Randomize
-        </Button>
+        <div className="flex items-center gap-3">
+          {preview && <Avatar portrait={preview} size="md" className="border border-border" />}
+          <Button variant="outline" onClick={randomize} className="gap-2">
+            <Shuffle className="h-4 w-4" /> Randomize
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

@@ -8,12 +8,19 @@ import type { WarriorId } from '@/types/shared.types';
 import type { WarriorEpithetAward } from './types';
 import { epithetRankOf } from '@/data/names/epithets';
 import { removeFromRoster, updateRoster } from '@/utils/roster';
+import { ageGroupForAge } from '@/engine/avatar/avatarGenerator';
 
 /**
  * Apply roster updates to state.
  */
 const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
   if (value.size === 0) return;
+  for (const [id, update] of value) {
+    const currentAge = state.roster.find((warrior) => warrior.id === id)?.age;
+    if (update.age !== undefined && ageGroupForAge(currentAge) !== ageGroupForAge(update.age)) {
+      delete state.avatarCache?.[id];
+    }
+  }
 
   // Directly modify the roster without mapping if we only have a few updates
   // and the array is large, or just map if value has many updates
@@ -39,6 +46,7 @@ const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>
  */
 const rosterRemovals = (state: GameState, value: WarriorId[]) => {
   if (value.length === 0) return;
+  for (const id of value) delete state.avatarCache?.[id];
   state.roster = removeFromRoster(state.roster, value);
 };
 

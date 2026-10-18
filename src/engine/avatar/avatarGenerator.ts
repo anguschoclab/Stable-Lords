@@ -14,11 +14,11 @@ import { getAvatarCatalog, getCatalogEntries } from './avatarCatalog';
 
 const DEFAULT_PRIMARY = '#6b7280';
 
-function seedForEntity(entityType: string, entityId: string): number {
+export function seedForEntity(entityType: string, entityId: string): number {
   return hashStr(`${entityType}:${entityId}`);
 }
 
-function ageGroupForAge(age?: number): AvatarAgeGroup {
+export function ageGroupForAge(age?: number): AvatarAgeGroup {
   if (age === undefined || age === null) return 'adult';
   if (age <= 19) return 'young';
   if (age <= 34) return 'adult';
@@ -26,7 +26,7 @@ function ageGroupForAge(age?: number): AvatarAgeGroup {
   return 'elder';
 }
 
-function wearScore(config: AvatarConfig): number {
+export function wearScore(config: AvatarConfig): number {
   let score = 0;
   const age = config.age ?? 25;
   if (age > 35) score += (age - 35) * 0.5;
@@ -45,7 +45,7 @@ function wearScore(config: AvatarConfig): number {
   return score;
 }
 
-function avatarDescription(config: AvatarConfig): string | undefined {
+export function avatarDescription(config: AvatarConfig): string | undefined {
   const wear = wearScore(config);
   const age = ageGroupForAge(config.age);
   if (wear > 25) return 'Scarred Veteran of the Arena';
@@ -79,7 +79,7 @@ function pickAgeGroup(config: AvatarConfig, rng: SeededRNG): AvatarAgeGroup {
   return base;
 }
 
-function styleClothingTag(style?: FightingStyle): string | undefined {
+export function clothingCategoryForStyle(style?: FightingStyle): string | undefined {
   if (!style) return undefined;
   switch (style) {
     case FightingStyle.BashingAttack:
@@ -208,7 +208,7 @@ function generateAvatarFromCatalog(
   const layers: AvatarLayer[] = [];
   let z = 0;
 
-  const styleTag = styleClothingTag(config.style);
+  const styleTag = clothingCategoryForStyle(config.style);
   const styleTags = styleTag ? [styleTag] : undefined;
 
   const shoulderEntry = pickEntryWithFallback(rng, catalog, 'shoulders', styleTags);

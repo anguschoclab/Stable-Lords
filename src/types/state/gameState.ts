@@ -12,6 +12,7 @@ import type {
   WeatherType,
 } from '../shared.types';
 import type { Warrior } from '../warrior.types';
+import type { AvatarData } from '../avatar.types';
 import type { ArenaTitle, GrandChampionEntry, Promoter } from './championship';
 import type {
   GazetteStory,
@@ -159,6 +160,9 @@ export interface GameState {
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
   progression: ProgressionState;
+  /** Lazily populated cache of entity portraits. Kept as a plain Record so it
+   *  survives JSON serialization and worker round-trips. */
+  avatarCache?: Record<string, AvatarData>;
 }
 
 /**

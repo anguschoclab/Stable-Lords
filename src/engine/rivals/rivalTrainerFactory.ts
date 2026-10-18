@@ -51,6 +51,7 @@ export function generateStableTrainers(
       fame: trainerTier === 'Master' ? 5 : 1,
       age: 30 + Math.floor(rng() * 35),
       contractWeeksLeft: 52,
+      avatarSeed: Math.floor(rng() * 1000000),
     });
   }
 

@@ -194,6 +194,8 @@ export interface Warrior {
   isStarInvestment?: boolean;
   /** Player-pinned or advisory campaign focus archetype. */
   campaignFocus?: import('@/engine/advisor/types').CampaignFocus;
+  /** Deterministic seed for the warrior's portrait. */
+  avatarSeed?: number;
 }
 
 // Re-exports for convenience

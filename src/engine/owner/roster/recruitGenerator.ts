@@ -206,5 +206,6 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
     traits,
     origin,
     lore,
+    avatarSeed: Math.floor(rng.next() * 1000000),
   };
 }

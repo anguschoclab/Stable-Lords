@@ -1,0 +1,604 @@
+{
+  "categories": {
+    "accessories": [
+      {
+        "src": "/avatars/layers/accessories/headband_red_01.png",
+        "category": "accessories",
+        "tags": [
+          "headband",
+          "red"
+        ]
+      },
+      {
+        "src": "/avatars/layers/accessories/circlet_gold_01.png",
+        "category": "accessories",
+        "tags": [
+          "circlet",
+          "gold"
+        ]
+      },
+      {
+        "src": "/avatars/layers/accessories/glasses_round_01.png",
+        "category": "accessories",
+        "tags": [
+          "glasses",
+          "round"
+        ]
+      },
+      {
+        "src": "/avatars/layers/accessories/bandana_01.png",
+        "category": "accessories",
+        "tags": [
+          "bandana"
+        ]
+      }
+    ],
+    "clothing": [
+      {
+        "src": "/avatars/layers/clothing/tunic_orange_01.png",
+        "category": "clothing",
+        "tags": [
+          "tunic",
+          "orange"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/robe_blue_01.png",
+        "category": "clothing",
+        "tags": [
+          "robe",
+          "blue"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/tunic_blue_01.png",
+        "category": "clothing",
+        "tags": [
+          "tunic",
+          "blue"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/armor_plate_01.png",
+        "category": "clothing",
+        "tags": [
+          "armor",
+          "plate"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/armor_leather_01.png",
+        "category": "clothing",
+        "tags": [
+          "armor",
+          "leather"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/armor_plate_02.png",
+        "category": "clothing",
+        "tags": [
+          "armor",
+          "plate"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/gambeson_01.png",
+        "category": "clothing",
+        "tags": [
+          "gambeson"
+        ]
+      },
+      {
+        "src": "/avatars/layers/clothing/robe_green_01.png",
+        "category": "clothing",
+        "tags": [
+          "robe",
+          "green"
+        ]
+      }
+    ],
+    "mouth": [
+      {
+        "src": "/avatars/layers/mouth/smirk_01.png",
+        "category": "mouth",
+        "tags": [
+          "smirk"
+        ]
+      },
+      {
+        "src": "/avatars/layers/mouth/grim_01.png",
+        "category": "mouth",
+        "tags": [
+          "grim"
+        ]
+      },
+      {
+        "src": "/avatars/layers/mouth/neutral_01.png",
+        "category": "mouth",
+        "tags": [
+          "neutral"
+        ]
+      }
+    ],
+    "skinTone": [
+      {
+        "src": "/avatars/layers/skinTone/medium_01.png",
+        "category": "skinTone",
+        "tags": [
+          "medium"
+        ]
+      },
+      {
+        "src": "/avatars/layers/skinTone/light_01.png",
+        "category": "skinTone",
+        "tags": [
+          "light"
+        ]
+      },
+      {
+        "src": "/avatars/layers/skinTone/dark_01.png",
+        "category": "skinTone",
+        "tags": [
+          "dark"
+        ]
+      },
+      {
+        "src": "/avatars/layers/skinTone/deep_01.png",
+        "category": "skinTone",
+        "tags": [
+          "deep"
+        ]
+      },
+      {
+        "src": "/avatars/layers/skinTone/olive_01.png",
+        "category": "skinTone",
+        "tags": [
+          "olive"
+        ]
+      }
+    ],
+    "eyes": [
+      {
+        "src": "/avatars/layers/eyes/blue_01.png",
+        "category": "eyes",
+        "tags": [
+          "blue"
+        ]
+      },
+      {
+        "src": "/avatars/layers/eyes/brown_01.png",
+        "category": "eyes",
+        "tags": [
+          "brown"
+        ]
+      },
+      {
+        "src": "/avatars/layers/eyes/gray_01.png",
+        "category": "eyes",
+        "tags": [
+          "gray"
+        ]
+      },
+      {
+        "src": "/avatars/layers/eyes/green_01.png",
+        "category": "eyes",
+        "tags": [
+          "green"
+        ]
+      }
+    ],
+    "base": [
+      {
+        "src": "/avatars/layers/base/elder_fem_01.png",
+        "category": "base",
+        "tags": [
+          "elder",
+          "fem"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/adult_masc_01.png",
+        "category": "base",
+        "tags": [
+          "adult",
+          "masc"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/elder_masc_01.png",
+        "category": "base",
+        "tags": [
+          "elder",
+          "masc"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/young_fem_01.png",
+        "category": "base",
+        "tags": [
+          "young",
+          "fem"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/young_masc_01.png",
+        "category": "base",
+        "tags": [
+          "young",
+          "masc"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/elder_neutral_01.png",
+        "category": "base",
+        "tags": [
+          "elder",
+          "neutral"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/middle_masc_01.png",
+        "category": "base",
+        "tags": [
+          "middle",
+          "masc"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/young_neutral_01.png",
+        "category": "base",
+        "tags": [
+          "young",
+          "neutral"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/adult_fem_01.png",
+        "category": "base",
+        "tags": [
+          "adult",
+          "fem"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/middle_neutral_01.png",
+        "category": "base",
+        "tags": [
+          "middle",
+          "neutral"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/adult_neutral_01.png",
+        "category": "base",
+        "tags": [
+          "adult",
+          "neutral"
+        ]
+      },
+      {
+        "src": "/avatars/layers/base/middle_fem_01.png",
+        "category": "base",
+        "tags": [
+          "middle",
+          "fem"
+        ]
+      }
+    ],
+    "hair": [
+      {
+        "src": "/avatars/layers/hair/brown_balding_01.png",
+        "category": "hair",
+        "tags": [
+          "brown",
+          "balding"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/red_braids_01.png",
+        "category": "hair",
+        "tags": [
+          "red",
+          "braids"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/red_mohawk_01.png",
+        "category": "hair",
+        "tags": [
+          "red",
+          "mohawk"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/blonde_long_01.png",
+        "category": "hair",
+        "tags": [
+          "blonde",
+          "long"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/black_long_01.png",
+        "category": "hair",
+        "tags": [
+          "black",
+          "long"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/blonde_braids_01.png",
+        "category": "hair",
+        "tags": [
+          "blonde",
+          "braids"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/blonde_mohawk_01.png",
+        "category": "hair",
+        "tags": [
+          "blonde",
+          "mohawk"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/blonde_short_01.png",
+        "category": "hair",
+        "tags": [
+          "blonde",
+          "short"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/red_long_01.png",
+        "category": "hair",
+        "tags": [
+          "red",
+          "long"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/gray_short_01.png",
+        "category": "hair",
+        "tags": [
+          "gray",
+          "short"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/brown_mohawk_01.png",
+        "category": "hair",
+        "tags": [
+          "brown",
+          "mohawk"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/brown_braids_01.png",
+        "category": "hair",
+        "tags": [
+          "brown",
+          "braids"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/brown_short_01.png",
+        "category": "hair",
+        "tags": [
+          "brown",
+          "short"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/black_mohawk_01.png",
+        "category": "hair",
+        "tags": [
+          "black",
+          "mohawk"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/black_braids_01.png",
+        "category": "hair",
+        "tags": [
+          "black",
+          "braids"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/black_balding_01.png",
+        "category": "hair",
+        "tags": [
+          "black",
+          "balding"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/gray_balding_01.png",
+        "category": "hair",
+        "tags": [
+          "gray",
+          "balding"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/gray_long_01.png",
+        "category": "hair",
+        "tags": [
+          "gray",
+          "long"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/brown_long_01.png",
+        "category": "hair",
+        "tags": [
+          "brown",
+          "long"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/red_balding_01.png",
+        "category": "hair",
+        "tags": [
+          "red",
+          "balding"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/red_short_01.png",
+        "category": "hair",
+        "tags": [
+          "red",
+          "short"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/blonde_balding_01.png",
+        "category": "hair",
+        "tags": [
+          "blonde",
+          "balding"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/black_short_01.png",
+        "category": "hair",
+        "tags": [
+          "black",
+          "short"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/gray_braids_01.png",
+        "category": "hair",
+        "tags": [
+          "gray",
+          "braids"
+        ]
+      },
+      {
+        "src": "/avatars/layers/hair/gray_mohawk_01.png",
+        "category": "hair",
+        "tags": [
+          "gray",
+          "mohawk"
+        ]
+      }
+    ],
+    "facialHair": [
+      {
+        "src": "/avatars/layers/facialHair/beard_black_01.png",
+        "category": "facialHair",
+        "tags": [
+          "beard",
+          "black"
+        ]
+      },
+      {
+        "src": "/avatars/layers/facialHair/mustache_01.png",
+        "category": "facialHair",
+        "tags": [
+          "mustache"
+        ]
+      },
+      {
+        "src": "/avatars/layers/facialHair/stubble_01.png",
+        "category": "facialHair",
+        "tags": [
+          "stubble"
+        ]
+      },
+      {
+        "src": "/avatars/layers/facialHair/goatee_01.png",
+        "category": "facialHair",
+        "tags": [
+          "goatee"
+        ]
+      }
+    ],
+    "shoulders": [
+      {
+        "src": "/avatars/layers/shoulders/pauldron_steel_01.png",
+        "category": "shoulders",
+        "tags": [
+          "pauldron",
+          "steel"
+        ]
+      },
+      {
+        "src": "/avatars/layers/shoulders/cloak_fur_01.png",
+        "category": "shoulders",
+        "tags": [
+          "cloak",
+          "fur"
+        ]
+      },
+      {
+        "src": "/avatars/layers/shoulders/spiked_pauldron_01.png",
+        "category": "shoulders",
+        "tags": [
+          "spiked",
+          "pauldron"
+        ]
+      },
+      {
+        "src": "/avatars/layers/shoulders/bare_01.png",
+        "category": "shoulders",
+        "tags": [
+          "bare"
+        ]
+      }
+    ],
+    "markings": [
+      {
+        "src": "/avatars/layers/markings/eyepatch_left_01.png",
+        "category": "markings",
+        "tags": [
+          "eyepatch",
+          "left"
+        ]
+      },
+      {
+        "src": "/avatars/layers/markings/scar_brow_01.png",
+        "category": "markings",
+        "tags": [
+          "scar",
+          "brow"
+        ]
+      },
+      {
+        "src": "/avatars/layers/markings/wrinkles_01.png",
+        "category": "markings",
+        "tags": [
+          "wrinkles"
+        ]
+      },
+      {
+        "src": "/avatars/layers/markings/warpaint_black_01.png",
+        "category": "markings",
+        "tags": [
+          "warpaint",
+          "black"
+        ]
+      },
+      {
+        "src": "/avatars/layers/markings/bruise_01.png",
+        "category": "markings",
+        "tags": [
+          "bruise"
+        ]
+      },
+      {
+        "src": "/avatars/layers/markings/scar_cheek_01.png",
+        "category": "markings",
+        "tags": [
+          "scar",
+          "cheek"
+        ]
+      }
+    ]
+  }
+}

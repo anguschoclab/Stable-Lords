@@ -70,6 +70,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     equipment,
     lore: overrides?.lore ?? '',
     origin: overrides?.origin ?? '',
+    avatarSeed: overrides?.avatarSeed ?? (rng ? Math.floor(rng.next() * 1000000) : 0),
     ...overrides,
   };
 }

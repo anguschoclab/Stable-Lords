@@ -36,7 +36,7 @@ interface UseRecruitActionsParams {
 function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, totalCost: number) {
   const recruitRng = new SeededRNG(draft.week + hashStr(w.name));
   const warrior = makeWarrior(
-    { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
+    { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential, avatarSeed: w.avatarSeed } }
   );
   // Displaced veterans keep identity, fame, and career through signing.
   Object.assign(warrior, veteranSigningPatch(w));

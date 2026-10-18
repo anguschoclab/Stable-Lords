@@ -77,11 +77,16 @@ function retireToGraveyard(
     causeOfDeath: cause,
   };
 
-  return {
+  const update: Partial<GameStore> = {
     roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
     graveyard: [...state.graveyard, dead],
     unacknowledgedDeaths: [...(state.unacknowledgedDeaths || []), warriorId],
   };
+  if (state.avatarCache) {
+    const { [warriorId]: _droppedAvatar, ...avatarCache } = state.avatarCache;
+    update.avatarCache = avatarCache;
+  }
+  return update;
 }
 
 /** Move `warriorId` from the roster into the retired list. Hall-of-Fame
@@ -97,6 +102,10 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
     roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
     retired: [...state.retired, ret],
   };
+  if (state.avatarCache) {
+    const { [warriorId]: _droppedAvatar, ...avatarCache } = state.avatarCache;
+    update.avatarCache = avatarCache;
+  }
 
   const founderRng = new SeededRNG(
     (state.absoluteWeek ?? state.week) * 977 + state.retired.length
@@ -130,15 +139,36 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       cause: string,
       deathEvent?: Parameters<GameStore['killWarrior']>[3]
     ) => {
-      set((state) => retireToGraveyard(state, warriorId, killedBy, cause, deathEvent));
+      set((state) => {
+        if (state.avatarCache) {
+          state.avatarCache = Object.fromEntries(
+            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
+          );
+        }
+        return retireToGraveyard(state, warriorId, killedBy, cause, deathEvent);
+      });
     },
 
     retireWarrior: (warriorId: WarriorId) => {
-      set((state) => retireFromRoster(state, warriorId));
+      set((state) => {
+        if (state.avatarCache) {
+          state.avatarCache = Object.fromEntries(
+            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
+          );
+        }
+        return retireFromRoster(state, warriorId);
+      });
     },
 
     releaseWarrior: (warriorId: WarriorId, _reason = 'Released') => {
-      set((state) => retireFromRoster(state, warriorId));
+      set((state) => {
+        if (state.avatarCache) {
+          state.avatarCache = Object.fromEntries(
+            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
+          );
+        }
+        return retireFromRoster(state, warriorId);
+      });
     },
 
     consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => {

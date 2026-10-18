@@ -137,5 +137,6 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
     favorites,
     lineage,
     source: 'orphanage',
+    avatarSeed: Math.floor(rng.next() * 1000000),
   };
 }

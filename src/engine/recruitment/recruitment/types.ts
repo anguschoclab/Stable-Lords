@@ -69,6 +69,8 @@ export interface PoolWarrior {
   shelfWeeksRemaining?: number;
   /** Where this recruit entered the supply chain — diagnostics + AI routing. */
   source?: 'orphanage' | 'academy' | 'freeAgent' | 'generated';
+  /** Deterministic seed for the recruit's portrait. */
+  avatarSeed?: number;
 }
 
 // TIER data is now fetched from narrative domain files

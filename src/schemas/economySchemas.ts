@@ -69,6 +69,7 @@ export const OwnerSchema = z.object({
   parentStableId: z.string().optional(),
   age: z.number().optional(),
   ageRetired: z.number().optional(),
+  avatarSeed: z.number().optional(),
 });
 
 /**
@@ -88,6 +89,7 @@ export const PromoterSchema = z.object({
     mentorId: z.string().optional(),
     legacyFame: z.number(),
   }),
+  avatarSeed: z.number().optional(),
 });
 
 /**
@@ -360,5 +362,6 @@ export const TrainerSchema = z.object({
   legacyWins: z.number().optional(),
   legacyKills: z.number().optional(),
   specialty: TrainerSpecialtySchema.optional(),
+  avatarSeed: z.number().optional(),
 });
 

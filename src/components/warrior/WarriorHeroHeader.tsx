@@ -7,6 +7,8 @@ import { useGameStore } from '@/state/useGameStore';
 import type { InsightToken } from '@/types/state.types';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { AvatarForEntity, AvatarRerollButton } from '@/components/avatar';
+import type { Warrior } from '@/types/warrior.types';
 
 interface ObfuscatedWarrior {
   name: string;
@@ -31,6 +33,8 @@ interface WarriorHeroHeaderProps {
   insightTokens?: InsightToken[];
   /** Arena display names this warrior reigns over / once reigned over. */
   arenaCrowns?: { current: string[]; past: string[] };
+  /** Full warrior record used to render the procedural portrait. */
+  sourceWarrior?: Warrior;
 }
 
 /**
@@ -45,54 +49,86 @@ interface WarriorHeroHeaderProps {
   insight tokens,
 }.
  */
-export function WarriorHeroHeader(props: WarriorHeroHeaderProps) {
-  const { warrior, record, streakLabel: _streakLabel, streakVal: _streakVal, id } = props;
-  const { isPlayerOwned, insightTokens, arenaCrowns } = props;
+/** Left-side identity block: portrait, name, stats, badges. */
+function WarriorIdentityBlock(props: WarriorHeroHeaderProps) {
+  const { warrior, sourceWarrior, isPlayerOwned, id, record, insightTokens, arenaCrowns } = props;
   const renameWarrior = useGameStore((s) => s.renameWarrior);
-  const warriorInsightTokens = insightTokens?.filter((token) => token.warriorId === id) || [];
+  const intelCount = insightTokens?.filter((token) => token.warriorId === id).length ?? 0;
 
+  return (
+    <div className="flex items-start gap-6">
+      {sourceWarrior && (
+        <div className="shrink-0">
+          <AvatarForEntity
+            entityId={sourceWarrior.id}
+            entityType="warrior"
+            source={sourceWarrior}
+            size="xl"
+          />
+        </div>
+      )}
+      <div className="space-y-4">
+        <div className="space-y-1">
+          <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary/60">
+            {isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}
+          </span>
+          <div className="flex items-center gap-4">
+            {isPlayerOwned && id ? (
+              <EditableText
+                value={warrior.name}
+                onSave={(newName) =>
+                  renameWarrior(id as import('@/types/shared.types').WarriorId, newName)
+                }
+                className="text-4xl font-display font-black uppercase tracking-tight"
+                label="Rename"
+              />
+            ) : (
+              <h1 className="text-4xl font-display font-black uppercase tracking-tight">
+                {warrior.name}
+              </h1>
+            )}
+            {warrior.epithet && (
+              <span className="text-2xl font-display italic text-arena-gold/80 tracking-tight">
+                {warrior.epithet}
+              </span>
+            )}
+            {isPlayerOwned && sourceWarrior && (
+              <AvatarRerollButton
+                config={{
+                  entityId: sourceWarrior.id,
+                  entityType: 'warrior',
+                  seed: sourceWarrior.avatarSeed ?? 0,
+                  name: sourceWarrior.name,
+                  age: sourceWarrior.age,
+                  style: sourceWarrior.style,
+                  kills: sourceWarrior.career?.kills,
+                  fame: sourceWarrior.fame,
+                  injuries: sourceWarrior.injuries?.map((i) =>
+                    typeof i === 'string' ? i : i.name
+                  ),
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        <StatStrip style={warrior.style} record={record} intelCount={intelCount} />
+        <BadgeStrip warrior={warrior} arenaCrowns={arenaCrowns} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Render the WarriorHeroHeader component.
+ * @param props - Header data and callbacks.
+ */
+export function WarriorHeroHeader(props: WarriorHeroHeaderProps) {
   return (
     <Surface variant="glass" className="relative p-8 border-white/5 overflow-hidden">
       <div className="absolute top-0 left-0 w-1 h-full bg-primary/40" />
-
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary/60">
-              {isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}
-            </span>
-            <div className="flex items-center gap-4">
-              {isPlayerOwned && id ? (
-                <EditableText
-                  value={warrior.name}
-                  onSave={(newName) =>
-                    renameWarrior(id as import('@/types/shared.types').WarriorId, newName)
-                  }
-                  className="text-4xl font-display font-black uppercase tracking-tight"
-                  label="Rename"
-                />
-              ) : (
-                <h1 className="text-4xl font-display font-black uppercase tracking-tight">
-                  {warrior.name}
-                </h1>
-              )}
-              {warrior.epithet && (
-                <span className="text-2xl font-display italic text-arena-gold/80 tracking-tight">
-                  {warrior.epithet}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <StatStrip
-            style={warrior.style}
-            record={record}
-            intelCount={warriorInsightTokens.length}
-          />
-
-          <BadgeStrip warrior={warrior} arenaCrowns={arenaCrowns} />
-        </div>
-
+        <WarriorIdentityBlock {...props} />
         <StatusRings />
       </div>
     </Surface>

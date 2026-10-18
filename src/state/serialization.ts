@@ -115,6 +115,7 @@ type GameStateValues = {
   bookmarks: import('@/types/bookmark.types').Bookmark[];
   progression: GameState['progression'];
   deferredBoutLogs: GameState['deferredBoutLogs'];
+  avatarCache: GameState['avatarCache'];
 };
 
 let lastResult: GameState | null = null;
@@ -191,6 +192,7 @@ function collectStoreValues(store: GameStore): GameStateValues {
     bookmarks: store.bookmarks,
     progression: store.progression,
     deferredBoutLogs: store.deferredBoutLogs,
+    avatarCache: store.avatarCache,
   };
 }
 

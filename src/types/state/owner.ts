@@ -62,4 +62,6 @@ export interface Owner {
   ageRetired?: number; // Week the previous owner retired
   /** Management skill tier — scales AI decision noise (Stage B). */
   competence?: OwnerCompetence;
+  /** Deterministic seed for the owner's portrait. */
+  avatarSeed?: number;
 }

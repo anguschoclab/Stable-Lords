@@ -8,6 +8,25 @@ import { enableMapSet } from 'immer';
 
 enableMapSet();
 
+// Ensure the avatar catalog is always available in tests so components that
+// render portraits don't crash waiting for an async manifest load.
+beforeEach(async () => {
+  const { loadAvatarCatalog } = await import('@/engine/avatar/avatarCatalog');
+  const { createTestAvatarCatalog } = await import('@/test/_fixtures/avatarCatalog');
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      Promise.resolve(
+        new Response(JSON.stringify(createTestAvatarCatalog()), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      )
+    )
+  );
+  await loadAvatarCatalog();
+});
+
 // OPFS modules are never mocked globally; ensure no stale mock leaks across files.
 vi.unmock('@/engine/storage/opfsArchive');
 

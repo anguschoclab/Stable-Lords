@@ -88,6 +88,8 @@ export interface Promoter {
   capacity: number; // Max bouts per week
   biases: FightingStyle[];
   arenaPool?: string[];
+  /** Deterministic seed for the promoter's portrait. */
+  avatarSeed?: number;
   history: {
     totalPursePaid: number;
     notableBouts: FightId[];

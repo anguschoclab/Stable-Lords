@@ -5,6 +5,7 @@ import type { WorldSlice } from './slices/worldSlice';
 import type { TournamentSlice } from './slices/tournamentSlice';
 import type { BookmarksSlice } from './slices/bookmarksSlice';
 import type { ProgressionSlice } from './slices/progressionSlice';
+import type { AvatarSlice } from './slices/avatarSlice';
 
 /**
  *
@@ -52,4 +53,5 @@ export type GameStore = GameStoreState &
   WorldSlice &
   TournamentSlice &
   BookmarksSlice &
-  ProgressionSlice;
+  ProgressionSlice &
+  AvatarSlice;

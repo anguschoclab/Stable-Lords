@@ -6,9 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
-import { ImperialRing } from '@/components/ui/ImperialRing';
-import { Eye, Heart, Zap, Quote, Star, Coins, Sword, Info, UserPlus } from 'lucide-react';
+import { Eye, Heart, Zap, Quote, Star, Coins, Info, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AvatarForEntity } from '@/components/avatar';
 
 function TierBadge({ tier }: { tier: RecruitTier }) {
   const stars = TIER_STARS[tier];
@@ -233,13 +233,16 @@ interface RecruitCardProps {
  * Card header — sigil ring, name, style/age/veteran badges, tier badge.
  */
 function RecruitCardHeader({ warrior }: { warrior: PoolWarrior }) {
-  const config = TIER_CONFIG[warrior.tier];
   return (
     <div className="flex items-start justify-between">
       <div className="flex items-center gap-6">
-        <ImperialRing size="md" variant={config.ring}>
-          <Sword className={cn('h-5 w-5', config.text)} />
-        </ImperialRing>
+        <AvatarForEntity
+          entityId={warrior.id}
+          entityType="poolWarrior"
+          source={warrior}
+          size="md"
+          className="border border-white/10"
+        />
         <div>
           <h3 className="text-xl font-display font-black uppercase tracking-tight text-foreground leading-none mb-2">
             {warrior.name}

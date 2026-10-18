@@ -57,6 +57,9 @@ export function useTrainerActions({
       const trainer = convertRetiredToTrainer(warrior);
       setState((draft) => {
         draft.trainers.push(trainer);
+        draft.avatarCache = Object.fromEntries(
+          Object.entries(draft.avatarCache).filter(([key]) => key !== warriorId)
+        );
       });
       toast.success(`${warrior.name} retired to coaching. Specialization: ${trainer.focus}.`);
       setConvertDialogOpen(false);

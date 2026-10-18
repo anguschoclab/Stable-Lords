@@ -293,6 +293,7 @@ function signPoolRecruit(args: SignPoolRecruitArgs): RivalStableData | null {
     favorites: recruit.favorites,
     equipment: getFittedLoadout(recruit.style, recruit.attributes),
     isStarInvestment: recruit.tier === 'Prodigy',
+    avatarSeed: recruit.avatarSeed,
   };
   // Veterans (displaced by dissolution) keep their identity and career;
   // ordinary recruits take the fresh-prospect defaults above.

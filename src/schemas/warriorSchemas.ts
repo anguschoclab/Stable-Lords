@@ -319,6 +319,7 @@ export const WarriorSchema = z.object({
   origin: z.string().optional(),
   lineage: WarriorLineageSchema.optional(),
   isStarInvestment: z.boolean().optional(),
+  avatarSeed: z.number().optional(),
 });
 
 /**
@@ -356,6 +357,7 @@ export const PoolWarriorSchema = z.object({
   academyClaimExpiryWeek: z.number().optional(),
   shelfWeeksRemaining: z.number().optional(),
   source: z.enum(['orphanage', 'academy', 'freeAgent', 'generated']).optional(),
+  avatarSeed: z.number().optional(),
 });
 
 /**

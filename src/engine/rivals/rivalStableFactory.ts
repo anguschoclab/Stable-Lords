@@ -174,6 +174,7 @@ function buildOwner(args: BuildOwnerArgs): Owner {
     competence: rollCompetence(rng, tmpl.tier, difficulty),
     favoredStyles: tmpl.preferredStyles,
     backstoryId: tmpl.backstoryId,
+    avatarSeed: Math.floor(rng.next() * 1000000),
   };
 }
 

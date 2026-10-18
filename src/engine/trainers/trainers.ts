@@ -117,6 +117,7 @@ export function generateHiringPool(count: number, seed: number): Trainer[] {
       fame: tier === 'Master' ? 5 : tier === 'Seasoned' ? 3 : 1,
       age: 30 + Math.floor(rng() * 25), // Diverse ages from 30 to 55
       contractWeeksLeft: 52, // 1 year
+      avatarSeed: Math.floor(rng() * 1000000),
     });
   }
   return pool;
@@ -160,6 +161,7 @@ export function convertRetiredToTrainer(warrior: Warrior): Trainer {
     styleBonusStyle: warrior.style,
     legacyWins: warrior.career.wins,
     legacyKills: warrior.career.kills,
+    avatarSeed: warrior.avatarSeed,
   };
 }
 

@@ -193,6 +193,7 @@ function DetailMainColumn(props: {
     <div className="lg:col-span-8 space-y-8">
       <WarriorHeroHeader
         warrior={displayWarrior}
+        sourceWarrior={warrior}
         record={record}
         streakLabel={streakLabel}
         streakVal={streakVal}

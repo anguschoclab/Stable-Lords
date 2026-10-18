@@ -18,4 +18,6 @@ export interface Trainer {
   legacyWins?: number;
   legacyKills?: number;
   specialty?: TrainerSpecialty;
+  /** Deterministic seed for the trainer's portrait. */
+  avatarSeed?: number;
 }

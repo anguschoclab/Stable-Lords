@@ -1,4 +1,5 @@
 import { Crown, Star } from 'lucide-react';
+import { AvatarForEntity } from '@/components/avatar';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -29,6 +30,7 @@ interface RosterWarriorRowProps {
     flair?: string[];
     traits?: string[];
     age?: number;
+    avatarSeed?: number;
   };
   rankIndex: number;
   onClick: () => void;
@@ -121,8 +123,16 @@ export function RosterWarriorRow({
           {/* Personnel Info */}
           <div className="flex-1 min-w-0 space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="space-y-1.5">
-                <WarriorNameTag
+              <div className="flex items-center gap-4">
+                <AvatarForEntity
+                  entityId={warrior.id}
+                  entityType="warrior"
+                  source={warrior as Warrior}
+                  size="sm"
+                  className="border border-white/10"
+                />
+                <div className="space-y-1.5">
+                  <WarriorNameTag
                   id={warrior.id}
                   name={warrior.name}
                   epithet={warrior.epithet}
@@ -144,6 +154,7 @@ export function RosterWarriorRow({
                   {warrior.traits?.slice(0, 3).map((t) => (
                     <TraitBadge key={t} traitId={t} className="text-[8px]" />
                   ))}
+                </div>
                 </div>
               </div>
 

@@ -42,6 +42,7 @@ function baseFreshState(createdAt: string): GameState {
       fame: 0,
       renown: 0,
       titles: 0,
+      avatarSeed: 1,
     },
     fame: 0,
     popularity: 0,
@@ -95,6 +96,7 @@ function baseFreshState(createdAt: string): GameState {
     awards: [],
     bookmarks: [],
     progression: DEFAULT_PROGRESSION,
+    avatarCache: {},
   };
 }
 

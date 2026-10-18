@@ -29,6 +29,7 @@ import { createWorldSlice } from './slices/worldSlice';
 import { createTournamentSlice } from './slices/tournamentSlice';
 import { createBookmarksSlice } from './slices/bookmarksSlice';
 import { createProgressionSlice } from './slices/progressionSlice';
+import { createAvatarSlice } from './slices/avatarSlice';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
 /**
@@ -129,6 +130,7 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.progression = state.progression || DEFAULT_PROGRESSION;
   draft.lastSimulationReport = state.lastSimulationReport;
   draft.deferredBoutLogs = state.deferredBoutLogs || [];
+  draft.avatarCache = state.avatarCache || {};
 
   draft.activeSlotId = slotId;
   draft.atTitleScreen = false;
@@ -336,6 +338,7 @@ export const useGameStore: UseBoundStore<StoreApi<GameStore>> = create<GameStore
         ...createTournamentSlice(set, get, ...args),
         ...createBookmarksSlice(set, get, ...args),
         ...createProgressionSlice(set, get, ...args),
+        ...createAvatarSlice(set, get, ...args),
 
         // ─── Core State ───
         ...createCoreState(set),

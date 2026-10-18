@@ -78,6 +78,7 @@ async function createNewGame(args: CreateNewGameArgs): Promise<void> {
   fresh.player.stableName = stableName.trim();
   fresh.player.crest = playerCrest;
   fresh.player.generation = 0;
+  fresh.player.avatarSeed = cryptoRandomInt(0, 999999);
   const slotId = newSlotId();
   const identitySeed = slotId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
   applyBackstoryToPlayer(fresh, backstoryId, new SeededRNG(identitySeed));

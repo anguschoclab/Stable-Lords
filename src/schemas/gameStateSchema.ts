@@ -16,6 +16,7 @@ import {
   CrowdMoodTypeSchema,
   WorldDifficultySchema,
 } from './schemaEnums';
+import { AvatarDataSchema } from './avatarSchemas';
 import {
   WarriorSchema,
   RestStateSchema,
@@ -196,6 +197,7 @@ export const GameStateSchema = z
     deferredBoutLogs: z.array(DeferredBoutLogSchema).optional(),
     bookmarks: z.array(BookmarkSchema),
     progression: ProgressionStateSchema.optional(),
+    avatarCache: z.record(z.string(), AvatarDataSchema).optional(),
   })
   .strict();
 

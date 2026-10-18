@@ -42,6 +42,7 @@ export function warriorToPoolWarrior(w: Warrior, week: number, rng: IRNGService)
     luckfactor: w.luckfactor ?? rollLuckfactor(rng),
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source: 'freeAgent',
+    avatarSeed: w.avatarSeed,
     veteran: {
       fame: w.fame ?? 0,
       popularity: w.popularity ?? 0,
@@ -64,5 +65,6 @@ export function veteranSigningPatch(recruit: PoolWarrior): Partial<Warrior> {
     popularity: recruit.veteran.popularity,
     career: { ...recruit.veteran.career },
     titles: [...recruit.veteran.titles],
+    avatarSeed: recruit.avatarSeed,
   };
 }

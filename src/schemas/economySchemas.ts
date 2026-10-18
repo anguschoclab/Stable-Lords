@@ -261,6 +261,7 @@ export const RivalStableDataSchema = z.object({
  */
 export const ScoutReportDataSchema = z.object({
   id: z.string(),
+  warriorId: z.string(),
   warriorName: z.string(),
   style: z.string(),
   quality: ScoutQualitySchema,

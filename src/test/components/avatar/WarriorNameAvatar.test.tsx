@@ -47,6 +47,22 @@ describe('WarriorNameAvatar', () => {
     expect(container.querySelectorAll('img').length).toBeGreaterThan(0);
   });
 
+  it('prefers warriorId over name when two warriors share a display name', () => {
+    const first = makeTestWarrior('w-first', 'Geminus', { avatarSeed: 11 });
+    const second = makeTestWarrior('w-second', 'Geminus', { avatarSeed: 22 });
+    useGameStore.getState().loadGame('autosave', {
+      ...useGameStore.getState(),
+      roster: [first, second],
+    } as never);
+    const { container } = render(<WarriorNameAvatar warriorId={second.id} name="Geminus" />);
+    expect(container.querySelectorAll('img').length).toBeGreaterThan(0);
+    // The portrait must be cached against the id passed in — the same-name
+    // sibling's cache entry must not be what identity resolution produced.
+    const cache = useGameStore.getState().avatarCache;
+    expect(cache[second.id]).toBeDefined();
+    expect(cache[first.id]).toBeUndefined();
+  });
+
   it('renders nothing when the warrior cannot be resolved', () => {
     const { container } = render(<WarriorNameAvatar name="Nobody Named This" />);
     expect(container.firstChild).toBeNull();

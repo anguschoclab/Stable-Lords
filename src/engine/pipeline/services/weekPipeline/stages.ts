@@ -30,8 +30,8 @@ export async function runBoutPhase(state: GameState, ctx: WeekContext): Promise<
   // Stash bout display data for the main thread to build pendingResolutionData
   settledState.lastWeekBoutDisplay = {
     results,
-    deathNames: summary.deathNames,
-    injuryNames: summary.injuryNames,
+    deaths: summary.deathRefs,
+    injuries: summary.injuryRefs,
   };
 
   // Resync all week caches only when the bout impact could have replaced

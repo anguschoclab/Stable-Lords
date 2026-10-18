@@ -2,7 +2,12 @@ import { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
-import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting/scouting';
+import {
+  generateScoutReport,
+  getScoutCost,
+  matchesScoutTarget,
+  type ScoutQuality,
+} from '@/engine/scouting/scouting';
 import { type ScoutReportData, type Warrior, type RivalStableData } from '@/types/game';
 import { SeededRNG } from '@/utils/random';
 import { hashStr } from '@/utils/random';
@@ -30,9 +35,9 @@ function purchaseScoutReport(
   const rng = new SeededRNG(week + hashStr(activeWarrior.name));
   const { report } = generateScoutReport(activeWarrior, quality, week, rng, owner);
 
-  // Ensure we don't have duplicate reports for the same warrior
+  // Ensure we don't have duplicate reports for the same warrior (id-keyed)
   const newReports = [
-    ...(scoutReports ?? []).filter((r: ScoutReportData) => r.warriorName !== activeWarrior.name),
+    ...(scoutReports ?? []).filter((r: ScoutReportData) => !matchesScoutTarget(r, activeWarrior)),
     report as ScoutReportData,
   ];
 

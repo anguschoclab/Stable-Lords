@@ -19,6 +19,7 @@ import {
 } from './serialization';
 import type { GameStore } from './store.types';
 import { deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
+import { buildResolutionPayload } from './resolutionPayload';
 
 import type { UseBoundStore, StoreApi } from 'zustand';
 
@@ -39,14 +40,11 @@ import { DEFAULT_PROGRESSION } from '@/constants/progression';
 function commitWorkerResult(store: GameStore, next: GameState, currentWeek: number): void {
   const flushed = flushDeferredArchivesOffThread(next);
   flushed.phase = 'resolution';
-  const display = flushed.lastWeekBoutDisplay;
-  const resolutionPayload = {
-    bouts: display?.results ?? [],
-    deaths: display?.deathNames ?? [],
-    injuries: display?.injuryNames ?? [],
-    promotions: [],
-    gazette: flushed.newsletter.filter((n) => n.week === currentWeek),
-  };
+  const resolutionPayload = buildResolutionPayload(
+    flushed.lastWeekBoutDisplay,
+    flushed.newsletter,
+    currentWeek
+  );
   flushed.pendingResolutionData = resolutionPayload;
 
   if (flushed.arenaHistory && flushed.arenaHistory.length > 0) {

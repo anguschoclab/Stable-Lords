@@ -2,11 +2,18 @@ import { motion } from 'framer-motion';
 import { Activity, Skull } from 'lucide-react';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { WarriorNameAvatar } from '@/components/avatar';
+import type { WarriorRef } from '@/types/shared.types';
 
 interface InjuriesStepProps {
-  injuries: string[];
-  deaths: string[];
+  injuries: WarriorRef[];
+  deaths: WarriorRef[];
 }
+
+/** Display name of a casualty entry — tolerates legacy plain-string records. */
+const refName = (r: WarriorRef | string): string => (typeof r === 'string' ? r : r.name);
+/** Warrior id of a casualty entry — undefined for legacy string records. */
+const refId = (r: WarriorRef | string): string | undefined =>
+  typeof r === 'string' ? undefined : r.id;
 
 /**
  * Injuries step.
@@ -33,14 +40,15 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <h4>Fallen Warriors</h4>
           </div>
           <ul className="list-none space-y-2 text-sm text-destructive-foreground">
-            {deaths.map((name: string) => (
-              <li key={name} className="flex items-center gap-2">
+            {deaths.map((d, i) => (
+              <li key={`${refId(d) ?? refName(d)}-${i}`} className="flex items-center gap-2">
                 <WarriorNameAvatar
-                  name={name}
+                  warriorId={refId(d)}
+                  name={refName(d)}
                   size="xs"
                   className="border border-destructive/30 grayscale"
                 />
-                {name}
+                {refName(d)}
               </li>
             ))}
           </ul>
@@ -54,10 +62,15 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <h4>Injured Roster</h4>
           </div>
           <ul className="list-none space-y-2 text-sm text-arena-gold">
-            {injuries.map((name: string) => (
-              <li key={name} className="flex items-center gap-2">
-                <WarriorNameAvatar name={name} size="xs" className="border border-arena-gold/30" />
-                {name}
+            {injuries.map((r, i) => (
+              <li key={`${refId(r) ?? refName(r)}-${i}`} className="flex items-center gap-2">
+                <WarriorNameAvatar
+                  warriorId={refId(r)}
+                  name={refName(r)}
+                  size="xs"
+                  className="border border-arena-gold/30"
+                />
+                {refName(r)}
               </li>
             ))}
           </ul>

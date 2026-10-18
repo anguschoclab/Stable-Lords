@@ -223,14 +223,15 @@ describe('ResolutionReveal narrowed selector', () => {
 });
 
 describe('ResolutionReveal deadWarriors resolution', () => {
-  const deaths = (names: string[]) => ({
+  const deaths = (refs: ({ id: string; name: string } | string)[]) => ({
     pendingResolutionData: {
       gazette: 'Test',
       injuries: [],
-      deaths: names,
+      deaths: refs,
       bouts: [],
     },
   });
+  const ref = (id: string, name: string) => ({ id, name });
   const dead = (id: string, name: string) => ({ id, name, age: 30, fame: 5 });
 
   function stepThrough(times: number) {
@@ -250,9 +251,9 @@ describe('ResolutionReveal deadWarriors resolution', () => {
     });
   });
 
-  it('resolves death names against graveyard entries, in death order', () => {
+  it('resolves death refs against graveyard entries by id, in death order', () => {
     useTestStore.setState({
-      arenaHistory: [deaths(['Bravo', 'Alpha'])],
+      arenaHistory: [deaths([ref('w2', 'Bravo'), ref('w1', 'Alpha')])],
       graveyard: [dead('w1', 'Alpha'), dead('w2', 'Bravo'), dead('w3', 'Charlie')],
       week: 2,
     });
@@ -261,9 +262,35 @@ describe('ResolutionReveal deadWarriors resolution', () => {
     expect(screen.getByTestId('memorial')).toHaveTextContent('Memorial:Bravo,Alpha');
   });
 
-  it('filters out death names missing from the graveyard', () => {
+  it('resolves death refs by id even when the ref name matches a different warrior', () => {
+    // Same-name collision: ref {id: w2, name: 'Bravo'} must resolve graveyard
+    // entry w2 (named 'Alpha'), not the w9 entry actually named 'Bravo'.
     useTestStore.setState({
-      arenaHistory: [deaths(['Ghost', 'Bravo'])],
+      arenaHistory: [deaths([ref('w2', 'Bravo')])],
+      graveyard: [dead('w2', 'Alpha'), dead('w9', 'Bravo')],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    stepThrough(4);
+    expect(screen.getByTestId('memorial')).toHaveTextContent('Memorial:Alpha');
+  });
+
+  it('still resolves legacy string death entries by name', () => {
+    // In-flight states hydrated before the WarriorRef migration carry plain
+    // name strings — the memorial must keep resolving them.
+    useTestStore.setState({
+      arenaHistory: [deaths(['Bravo'])],
+      graveyard: [dead('w2', 'Bravo')],
+      week: 2,
+    });
+    render(<ResolutionReveal />);
+    stepThrough(4);
+    expect(screen.getByTestId('memorial')).toHaveTextContent('Bravo');
+  });
+
+  it('filters out death refs missing from the graveyard', () => {
+    useTestStore.setState({
+      arenaHistory: [deaths([ref('gx', 'Ghost'), ref('w2', 'Bravo')])],
       graveyard: [dead('w2', 'Bravo')],
       week: 2,
     });
@@ -278,7 +305,7 @@ describe('ResolutionReveal deadWarriors resolution', () => {
     // The dead deserve the memorial even if their records are absent — an
     // empty step must not collapse into a blank panel (F-memorial).
     useTestStore.setState({
-      arenaHistory: [deaths(['Ghost'])],
+      arenaHistory: [deaths([ref('gx', 'Ghost')])],
       graveyard: [],
       week: 2,
     });

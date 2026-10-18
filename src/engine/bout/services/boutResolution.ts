@@ -57,7 +57,7 @@ function handleInvalidBout(ctx: BoutContext): BoutImpact {
     impact: {},
     result: null,
     voidedOffer: ctx.contract,
-    stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] },
+    stats: { death: false, playerDeath: false, injured: false, deathRefs: [], injuryRefs: [] },
   };
 }
 
@@ -314,8 +314,8 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
       death: deathRes.death,
       playerDeath: deathRes.playerDeath,
       injured: injuryRes.injured,
-      deathNames: deathRes.deathNames,
-      injuredNames: injuryRes.injuredNames,
+      deathRefs: deathRes.deathRefs,
+      injuryRefs: injuryRes.injuryRefs,
     },
   };
 }

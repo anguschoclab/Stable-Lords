@@ -15,6 +15,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <WarriorNameAvatar
+          warriorId={report.warriorId}
           name={report.warriorName}
           size="sm"
           className="border border-white/10 bg-neutral-950"

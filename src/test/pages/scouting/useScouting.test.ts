@@ -75,6 +75,7 @@ describe('useScouting controller', () => {
     expect(state.treasury).toBe(200 - getScoutCost('Detailed'));
     expect(state.scoutReports).toHaveLength(1);
     expect(state.scoutReports?.[0]).toMatchObject({
+      warriorId: warrior.id,
       warriorName: 'Cassius',
       quality: 'Detailed',
       week: 3,
@@ -100,5 +101,27 @@ describe('useScouting controller', () => {
     const reports = useGameStore.getState().scoutReports ?? [];
     expect(reports).toHaveLength(1);
     expect(reports[0]?.quality).toBe('Expert');
+  });
+
+  it('keeps reports for same-name warriors separate — dedupe keys on warriorId', () => {
+    // Two different warriors can share a display name; scouting the second
+    // must not discard the first's report.
+    const warriorA = makeTestWarrior('rival-w1', 'Cassius');
+    const warriorB = makeTestWarrior('rival-w2', 'Cassius');
+    const rival = makeRivalStable('rival-a', [warriorA, warriorB]);
+    loadState([rival], 500);
+
+    const { result } = renderHook(() => useScouting(false));
+    act(() => result.current.handleSelectRival(rival.owner.id));
+
+    act(() => result.current.handleSelectWarrior(warriorA.id));
+    act(() => result.current.handleScout('Basic'));
+
+    act(() => result.current.handleSelectWarrior(warriorB.id));
+    act(() => result.current.handleScout('Basic'));
+
+    const reports = useGameStore.getState().scoutReports ?? [];
+    expect(reports).toHaveLength(2);
+    expect(reports.map((r) => r.warriorId).sort()).toEqual([warriorA.id, warriorB.id].sort());
   });
 });

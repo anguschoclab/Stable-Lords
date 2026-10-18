@@ -8,6 +8,8 @@ interface BoutResolutionProps {
   isComplete: boolean;
   winner: 'A' | 'D' | null;
   winnerName: string | null;
+  /** Winner's warrior UUID — keys the victory-banner portrait. */
+  winnerId?: string;
   by: FightOutcomeBy;
   minutes: number;
   totalEvents: number;
@@ -36,11 +38,13 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 /** Cinematic winner banner — outcome-styled title plus bout stats. */
 function VictoryBanner({
   winnerName,
+  winnerId,
   by,
   minutes,
   totalEvents,
 }: {
   winnerName: string | null;
+  winnerId?: string;
   by: FightOutcomeBy;
   minutes: number;
   totalEvents: number;
@@ -61,6 +65,7 @@ function VictoryBanner({
         </div>
         {winnerName && (
           <WarriorNameAvatar
+            warriorId={winnerId}
             name={winnerName}
             size="lg"
             className="border-2 border-arena-gold/40 bg-neutral-950 shadow-[0_0_20px_rgba(0,0,0,0.6)]"
@@ -141,7 +146,7 @@ function AnnouncementOverlay({ announcement }: { announcement: string }) {
 
 /** Post-bout resolution overlay: victory banner, draw banner, and comms line. */
 export default function BoutResolution(props: BoutResolutionProps) {
-  const { isComplete, winner, winnerName, by, minutes } = props;
+  const { isComplete, winner, winnerName, winnerId, by, minutes } = props;
   const { totalEvents, announcement } = props;
   if (!isComplete) return null;
 
@@ -150,6 +155,7 @@ export default function BoutResolution(props: BoutResolutionProps) {
       {winner ? (
         <VictoryBanner
           winnerName={winnerName}
+          winnerId={winnerId}
           by={by}
           minutes={minutes}
           totalEvents={totalEvents}

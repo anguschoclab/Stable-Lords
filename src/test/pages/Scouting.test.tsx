@@ -31,8 +31,8 @@ describe('Scouting page header', () => {
       makeRivalStable('rival-c', [makeTestWarrior('c1', 'Gamma')]),
     ];
     state.scoutReports = [
-      { id: 'report-1', warriorName: 'Alpha' },
-      { id: 'report-2', warriorName: 'Beta' },
+      { id: 'report-1', warriorId: 'a1', warriorName: 'Alpha' },
+      { id: 'report-2', warriorId: 'b1', warriorName: 'Beta' },
     ] as GameState['scoutReports'];
     useGameStore.getState().loadGame('scouting-header', state as GameState);
 

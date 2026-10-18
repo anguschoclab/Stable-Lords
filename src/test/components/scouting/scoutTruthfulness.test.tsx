@@ -28,6 +28,7 @@ describe('scouting truthfulness and copy', () => {
   it('shows the report filing week instead of a static ACTIVE status', () => {
     const report = {
       id: 'report-1',
+      warriorId: 'w-cassius',
       warriorName: 'Cassius',
       quality: 'Detailed',
       week: 7,
@@ -79,5 +80,42 @@ describe('scouting truthfulness and copy', () => {
       screen.getByText('Choose a warrior to order a scout report.')
     ).toBeInTheDocument();
     expect(screen.queryByText(/host connection|lock-on|deep scan/i)).not.toBeInTheDocument();
+  });
+
+  it('attaches reports to warriors by warriorId — a same-name sibling gets no INTEL badge or dossier', () => {
+    const state = createFreshState('scout-id-match-seed');
+    const target = makeTestWarrior('w-target', 'Geminus');
+    const sameName = makeTestWarrior('w-samename', 'Geminus');
+    const rival = makeRivalStable('rival-a', [target, sameName]);
+    state.rivals = [rival];
+    useGameStore.getState().loadGame('scout-id-match', state as GameState);
+
+    const report = {
+      id: 'report-1',
+      warriorId: target.id,
+      warriorName: 'Geminus',
+      quality: 'Basic',
+      week: 2,
+    } as ScoutReportData;
+
+    render(
+      <TooltipProvider>
+        <ScoutIntelTab
+          rivals={[rival]}
+          reports={[report]}
+          selectedRivalId={rival.owner.id as string}
+          onSelectRival={vi.fn()}
+          selectedWarriorId={sameName.id}
+          onSelectWarrior={vi.fn()}
+          treasury={100}
+          onScout={vi.fn()}
+        />
+      </TooltipProvider>
+    );
+
+    // INTEL badge appears exactly once — on the id-matched warrior only.
+    expect(screen.getAllByText('INTEL')).toHaveLength(1);
+    // The dossier column shows the no-report state for the same-name sibling.
+    expect(screen.getByText('Basic Report')).toBeInTheDocument();
   });
 });

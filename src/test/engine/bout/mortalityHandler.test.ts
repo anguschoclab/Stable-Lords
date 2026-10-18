@@ -51,7 +51,7 @@ describe('mortalityHandler', () => {
 
       expect(result.death).toBe(false);
       expect(result.playerDeath).toBe(false);
-      expect(result.deathNames).toHaveLength(0);
+      expect(result.deathRefs).toHaveLength(0);
     });
 
     it('processes death for Kill outcome', () => {
@@ -67,7 +67,7 @@ describe('mortalityHandler', () => {
       const result = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });
 
       expect(result.death).toBe(true);
-      expect(result.deathNames).toContain('Warrior D');
+      expect(result.deathRefs).toContainEqual({ id: 'warrior-d', name: 'Warrior D' });
     });
 
     it('routes player warrior death correctly', () => {
@@ -89,7 +89,7 @@ describe('mortalityHandler', () => {
       const result = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });
 
       expect(result.playerDeath).toBe(true);
-      expect(result.deathNames).toContain('Warrior A');
+      expect(result.deathRefs).toContainEqual({ id: 'player-warrior', name: 'Warrior A' });
     });
 
     it('routes rival warrior death correctly', () => {
@@ -320,7 +320,24 @@ describe('mortalityHandler', () => {
       expect(result).toHaveProperty('impact');
       expect(result).toHaveProperty('death');
       expect(result).toHaveProperty('playerDeath');
-      expect(result).toHaveProperty('deathNames');
+      expect(result).toHaveProperty('deathRefs');
+    });
+
+    it('carries the victim id in the death ref — same-name victims stay distinguishable', () => {
+      // Display names may collide; the ref must carry the warrior UUID so
+      // downstream identity lookups never depend on the name string.
+      const s = createMockState();
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior A', // identical display name to side A
+        stableId: 'rival-1' as StableId,
+      });
+      const outcome = createMockOutcome({ by: 'Kill' });
+
+      const result = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });
+
+      expect(result.deathRefs).toEqual([{ id: 'warrior-d', name: 'Warrior A' }]);
     });
 
     it('respects week parameter for death record', () => {

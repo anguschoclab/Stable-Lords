@@ -95,7 +95,7 @@ describe('house rules — severe injury instead of death', () => {
 
     expect(res.death).toBe(false);
     expect(res.playerDeath).toBe(false);
-    expect(res.deathNames).toHaveLength(0);
+    expect(res.deathRefs).toHaveLength(0);
     expect(res.impact.graveyard).toBeUndefined();
     const upd = res.impact.rosterUpdates?.get(wD.id);
     expect(upd?.injuries?.[0]?.severity).toBe('Critical');

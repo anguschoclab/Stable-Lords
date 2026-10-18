@@ -57,6 +57,9 @@ function AmbientFx(props: {
 interface ArenaViewProps {
   nameA: string;
   nameD: string;
+  /** Fighter UUIDs — key the name-plate portraits when the caller has them. */
+  warriorIdA?: string;
+  warriorIdD?: string;
   styleA: FightingStyle;
   styleD: FightingStyle;
   log: MinuteEvent[];
@@ -140,6 +143,8 @@ function BoutStage(p: ArenaViewProps & { scene: ReturnType<typeof useArenaScene>
       <FighterPair
         nameA={p.nameA}
         nameD={p.nameD}
+        warriorIdA={p.warriorIdA}
+        warriorIdD={p.warriorIdD}
         styleA={p.styleA}
         styleD={p.styleD}
         fighterA={anim.fighterA}

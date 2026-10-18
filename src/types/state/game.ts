@@ -291,6 +291,8 @@ export interface RivalStableData {
  */
 export interface ScoutReportData {
   id: ScoutReportId;
+  /** Stable UUID of the scouted warrior — the report's identity. */
+  warriorId: WarriorId;
   warriorName: string;
   style: string;
   quality: ScoutQuality;

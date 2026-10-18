@@ -8,6 +8,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { audioManager } from '@/lib/AudioManager';
 import type { FightSummary } from '@/types/combat.types';
+import type { WarriorRef } from '@/types/shared.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
 import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
@@ -71,20 +72,23 @@ function NextButton({
   );
 }
 
-/** Resolve death names against the graveyard, preserving report order. */
+/** Resolve death refs against the graveyard by id, preserving report order.
+ *  Plain-string entries (legacy hydrated payloads) resolve by name. */
 function useDeadWarriors(
-  data: { deaths: string[] } | undefined,
+  data: { deaths: (WarriorRef | string)[] } | undefined,
   graveyard: GameStore['graveyard']
 ) {
   return React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map<string, NonNullable<typeof graveyard>[number]>();
+    const byId = new Map<string, NonNullable<typeof graveyard>[number]>();
+    const byName = new Map<string, NonNullable<typeof graveyard>[number]>();
     for (const entry of graveyard ?? []) {
-      graveyardByName.set(entry.name, entry);
+      byId.set(entry.id, entry);
+      byName.set(entry.name, entry);
     }
     const result: NonNullable<typeof graveyard>[number][] = [];
-    for (const name of data.deaths) {
-      const w = graveyardByName.get(name);
+    for (const d of data.deaths) {
+      const w = typeof d === 'string' ? byName.get(d) : (byId.get(d.id) ?? byName.get(d.name));
       if (w) result.push(w);
     }
     return result;

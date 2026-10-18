@@ -1,5 +1,5 @@
 import type { GameState, RestState } from '@/types/state.types';
-import type { WarriorId } from '@/types/shared.types';
+import type { WarriorId, WarriorRef } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { generateInjury } from '@/engine/injuries';
@@ -32,7 +32,7 @@ export function handleInjuries(args: HandleInjuriesArgs) {
   const { s, wA, wD, outcome, week } = args;
   const {seed } = args;
   let injured = false;
-  const names: string[] = [];
+  const refs: WarriorRef[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   const restStates: RestState[] = [];
@@ -46,7 +46,7 @@ export function handleInjuries(args: HandleInjuriesArgs) {
   const injA = generateInjury(wA, outcome, 'A', seed);
   if (injA) {
     injured = true;
-    names.push(wA.name);
+    refs.push({ id: wA.id, name: wA.name });
     if (s.roster.some((w) => w.id === wA.id)) {
       const existing = rosterUpdates.get(wA.id) || wA;
       rosterUpdates.set(wA.id, { ...existing, injuries: [...(existing.injuries || []), injA] });
@@ -63,7 +63,7 @@ export function handleInjuries(args: HandleInjuriesArgs) {
   const injD = generateInjury(wD, outcome, 'D', seed ? seed + 1 : undefined);
   if (injD) {
     injured = true;
-    names.push(wD.name);
+    refs.push({ id: wD.id, name: wD.name });
     if (s.roster.some((w) => w.id === wD.id)) {
       const existing = rosterUpdates.get(wD.id) || wD;
       rosterUpdates.set(wD.id, { ...existing, injuries: [...(existing.injuries || []), injD] });
@@ -82,5 +82,5 @@ export function handleInjuries(args: HandleInjuriesArgs) {
     restStates,
   };
 
-  return { impact, injured, injuredNames: names };
+  return { impact, injured, injuryRefs: refs };
 }

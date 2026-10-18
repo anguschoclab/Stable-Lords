@@ -251,15 +251,23 @@ export const BoutResultSchema = z.object({
 });
 
 /**
+ * WarriorRef schema — persisted warrior identity (UUID + display name).
+ */
+export const WarriorRefSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+/**
  * PendingResolutionData schema — deferred bout-resolution payloads carried on
  * FightSummary and GameState. Single home: consumed by both schema files.
  */
 export const PendingResolutionDataSchema = z.object({
   gazette: z.array(NewsletterItemSchema),
-  injuries: z.array(z.string()),
-  deaths: z.array(z.string()),
+  injuries: z.array(WarriorRefSchema),
+  deaths: z.array(WarriorRefSchema),
   bouts: z.array(BoutResultSchema),
-  promotions: z.array(z.string()),
+  promotions: z.array(WarriorRefSchema),
 });
 
 /**

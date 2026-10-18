@@ -81,7 +81,7 @@ describe('serialization — outbound worker payload', () => {
       grudgeMap: new Map(),
       warriorToOfferIds: new Map(),
       cachedMetaDrift: {},
-      lastWeekBoutDisplay: { results: [{}], deathNames: ['x'], injuryNames: [] },
+      lastWeekBoutDisplay: { results: [{}], deaths: [{ id: 'w-x', name: 'x' }], injuries: [] },
     };
 
     const stripped = stripNonSerializable(tagged) as Record<string, unknown>;

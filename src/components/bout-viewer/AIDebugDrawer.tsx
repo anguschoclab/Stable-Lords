@@ -2,6 +2,7 @@ import { isAIDebugEnabled } from '@/engine/ai/debug';
 import type { ExchangeLogEntry } from '@/types/combat.types';
 import type { ScoutReportData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import { matchesScoutTarget } from '@/engine/scouting/scouting';
 
 interface AIDebugDrawerProps {
   exchangeLog: ExchangeLogEntry[] | undefined;
@@ -26,7 +27,7 @@ function PlanLine({
 }) {
   if (!warrior?.plan) return null;
   const p = warrior.plan as { OE?: number; AL?: number; killDesire?: number };
-  const belief = scoutReports?.filter((r) => r.warriorName === warrior.name).at(-1);
+  const belief = scoutReports?.filter((r) => matchesScoutTarget(r, warrior)).at(-1);
   return (
     <div data-testid={testId} className="px-3 py-1 flex gap-3 border-b border-white/5">
       <span className="text-muted-foreground/40 w-10 shrink-0">{label}</span>

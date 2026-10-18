@@ -12,6 +12,8 @@ import { WarriorNameAvatar } from '@/components/avatar';
 
 interface ArenaFighterProps {
   name: string;
+  /** Warrior UUID — keys the name-plate portrait; name is display-only. */
+  warriorId?: string;
   pose: FighterPose;
   stats: FighterStats;
   style: FightingStyle;
@@ -28,7 +30,7 @@ interface ArenaFighterProps {
  *
  */
 export default function ArenaFighter(props: ArenaFighterProps) {
-  const { name, pose, stats, style, weaponName = 'Longsword' } = props;
+  const { name, warriorId, pose, stats, style, weaponName = 'Longsword' } = props;
   const { shieldName, isWinner, isDead, isActive, className } = props;
   const { size = 120 } = props;
   const weaponCategory = getWeaponCategory(weaponName);
@@ -49,6 +51,7 @@ export default function ArenaFighter(props: ArenaFighterProps) {
       <FighterBars hpPercent={hpPercent} fpPercent={fpPercent} isWinner={isWinner} />
       <div className="flex items-center gap-1.5">
         <WarriorNameAvatar
+          warriorId={warriorId}
           name={name}
           size="xs"
           className={cn('border border-white/10 bg-neutral-950', isDead && 'grayscale')}

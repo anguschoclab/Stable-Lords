@@ -206,6 +206,8 @@ function ArenaOrLog(props: Pick<
   | 'arenaId'
   | 'weaponIdA'
   | 'weaponIdD'
+  | 'warriorA'
+  | 'warriorD'
 > & {
   visibleCount: number;
   isPlaying: boolean;
@@ -213,11 +215,13 @@ function ArenaOrLog(props: Pick<
 }) {
   const { viewMode, nameA, nameD, styleA, styleD } = props;
   const { log, winner, arenaTier, effectiveWeather, arenaId } = props;
-  const { weaponIdA, weaponIdD, visibleCount, isPlaying, isComplete } = props;
+  const { weaponIdA, weaponIdD, warriorA, warriorD, visibleCount, isPlaying, isComplete } = props;
   return viewMode === 'arena' ? (
     <ArenaView
       nameA={nameA}
       nameD={nameD}
+      warriorIdA={warriorA?.id}
+      warriorIdD={warriorD?.id}
       styleA={styleA as FightingStyle}
       styleD={styleD as FightingStyle}
       log={log}
@@ -263,6 +267,7 @@ function ResolutionAndPanels(props: Pick<
         isComplete={isComplete}
         winner={winner}
         winnerName={winnerName}
+        winnerId={winner === 'A' ? warriorA?.id : winner === 'D' ? warriorD?.id : undefined}
         by={by}
         minutes={minutes}
         totalEvents={totalEvents}

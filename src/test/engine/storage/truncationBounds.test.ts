@@ -80,7 +80,7 @@ describe('truncationBounds', () => {
 
   it('lastWeekBoutDisplay is cleared', () => {
     const state = createFreshState('truncation-boutdisplay-test');
-    state.lastWeekBoutDisplay = { results: [], deathNames: [], injuryNames: [] } as any;
+    state.lastWeekBoutDisplay = { results: [], deaths: [], injuries: [] } as any;
 
     const truncated = truncateState(state);
     expect(truncated.lastWeekBoutDisplay).toBeUndefined();

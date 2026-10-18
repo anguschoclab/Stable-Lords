@@ -10,6 +10,7 @@ import {
   type PhaseStrategy,
   type DeathEvent,
   type WarriorId,
+  type WarriorRef,
   type StableId,
   type FightId,
   type TournamentId,
@@ -158,6 +159,20 @@ export interface FightOutcome {
 }
 
 /**
+ * Defines the shape of the deferred bout-resolution display payload carried
+ * on the latest FightSummary (and mirrored on GameState) until the player
+ * dismisses the resolution reveal. Casualty lists are warrior refs — the
+ * UUID is the identity, the name is display text.
+ */
+export interface PendingResolutionData {
+  gazette: NewsletterItem[];
+  injuries: WarriorRef[];
+  deaths: WarriorRef[];
+  bouts: BoutResult[];
+  promotions: WarriorRef[];
+}
+
+/**
  * Defines the shape of fight summary.
  */
 export interface FightSummary {
@@ -165,13 +180,7 @@ export interface FightSummary {
   week: number;
   absoluteWeek?: number;
   phase?: 'planning' | 'resolution';
-  pendingResolutionData?: {
-    gazette: NewsletterItem[];
-    injuries: string[];
-    deaths: string[];
-    bouts: BoutResult[];
-    promotions: string[];
-  };
+  pendingResolutionData?: PendingResolutionData;
   tournamentId?: TournamentId | null;
   title: string;
   warriorIdA: WarriorId;

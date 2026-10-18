@@ -39,6 +39,7 @@ import {
   SimulationReportSchema,
   BoutResultSchema,
   PendingResolutionDataSchema,
+  WarriorRefSchema,
 } from './fightSchemas';
 import {
   LedgerEntrySchema,
@@ -75,8 +76,8 @@ export const GameStateSchema = z
     lastWeekBoutDisplay: z
       .object({
         results: z.array(BoutResultSchema),
-        deathNames: z.array(z.string()),
-        injuryNames: z.array(z.string()),
+        deaths: z.array(WarriorRefSchema),
+        injuries: z.array(WarriorRefSchema),
       })
       .optional(),
     ftueComplete: z.boolean(),

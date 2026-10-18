@@ -6,6 +6,7 @@ import { RivalWarriorList } from './RivalWarriorList';
 import { ScoutReportDetails } from './ScoutReportDetails';
 import { Surface } from '@/components/ui/Surface';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { matchesScoutTarget } from '@/engine/scouting/scouting';
 
 interface ScoutIntelTabProps {
   rivals: RivalStableData[];
@@ -123,7 +124,7 @@ export function ScoutIntelTab(props: ScoutIntelTabProps) {
   );
 
   const existingReport = useMemo(
-    () => (activeWarrior ? reports.find((r) => r.warriorName === activeWarrior.name) : null),
+    () => (activeWarrior ? reports.find((r) => matchesScoutTarget(r, activeWarrior)) : null),
     [reports, activeWarrior]
   );
 

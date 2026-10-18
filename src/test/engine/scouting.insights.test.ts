@@ -3,7 +3,7 @@
  * Tests the individual create*Insight functions directly + integration via generateScoutReport.
  */
 import { describe, it, expect } from 'vitest';
-import { generateScoutReport } from '@/engine/scouting/scouting';
+import { generateScoutReport, matchesScoutTarget } from '@/engine/scouting/scouting';
 import {
   createStyleInsight,
   createAttributeInsights,
@@ -214,5 +214,43 @@ describe('generateScoutReport — insight token counts', () => {
     const ids = newInsights.map((i) => i.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
+  });
+});
+
+// ─── warrior identity on reports ──────────────────────────────────────────
+
+describe('generateScoutReport — warrior identity', () => {
+  it('stamps the report with the scouted warrior UUID', () => {
+    const warrior = makeWarrior();
+    const rng = new SeededRNG(42);
+    const { report } = generateScoutReport(warrior, 'Basic', 1, rng);
+
+    expect(report.warriorId).toBe(warrior.id);
+    expect(report.warriorName).toBe(warrior.name);
+  });
+});
+
+// ─── matchesScoutTarget ───────────────────────────────────────────────────
+
+describe('matchesScoutTarget', () => {
+  const report = (over: Record<string, unknown>) =>
+    ({ id: 'r1', warriorId: 'w-1', warriorName: 'Cassius', ...over }) as never;
+
+  it('matches on warriorId, not the display name', () => {
+    const warrior = makeWarrior();
+    const r = report({ warriorId: warrior.id, warriorName: 'Different Name' });
+    expect(matchesScoutTarget(r, warrior)).toBe(true);
+  });
+
+  it('rejects a same-name report filed for a different warrior id', () => {
+    const warrior = makeWarrior();
+    const r = report({ warriorId: 'other-id', warriorName: warrior.name });
+    expect(matchesScoutTarget(r, warrior)).toBe(false);
+  });
+
+  it('falls back to warriorName for legacy reports without an id', () => {
+    const warrior = makeWarrior();
+    const r = report({ warriorId: undefined, warriorName: warrior.name });
+    expect(matchesScoutTarget(r, warrior)).toBe(true);
   });
 });

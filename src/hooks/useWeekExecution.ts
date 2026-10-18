@@ -17,9 +17,9 @@ function applyPostAdvanceState(setResults: (r: BoutResult[]) => void): void {
 
   // Emit death toasts from lastWeekBoutDisplay (replaces engineEventBus-based toasts
   // that only worked when processWeekBouts ran on the main thread)
-  if (storeState.lastWeekBoutDisplay?.deathNames) {
-    storeState.lastWeekBoutDisplay.deathNames.forEach((name) => {
-      toast(`${name} has fallen in the arena.`, {
+  if (storeState.lastWeekBoutDisplay?.deaths) {
+    storeState.lastWeekBoutDisplay.deaths.forEach((d) => {
+      toast(`${d.name} has fallen in the arena.`, {
         description: 'The stands fall briefly silent.',
         duration: 6000,
       });

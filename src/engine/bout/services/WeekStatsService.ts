@@ -13,8 +13,8 @@ export function createWeekBoutSummary(): WeekBoutSummary {
     bouts: 0,
     deaths: 0,
     injuries: 0,
-    deathNames: [],
-    injuryNames: [],
+    deathRefs: [],
+    injuryRefs: [],
     hadPlayerDeath: false,
     hadRivalryEscalation: false,
   };
@@ -29,12 +29,12 @@ export function accumulateWeekStats(summary: WeekBoutSummary, res: BoutImpact): 
   if (!res.result) return;
   summary.bouts++;
   if (res.stats.death) {
-    summary.deaths += res.stats.deathNames.length;
-    summary.deathNames.push(...res.stats.deathNames);
+    summary.deaths += res.stats.deathRefs.length;
+    summary.deathRefs.push(...res.stats.deathRefs);
   }
   if (res.stats.playerDeath) summary.hadPlayerDeath = true;
   if (res.stats.injured) {
-    summary.injuries += res.stats.injuredNames.length;
-    summary.injuryNames.push(...res.stats.injuredNames);
+    summary.injuries += res.stats.injuryRefs.length;
+    summary.injuryRefs.push(...res.stats.injuryRefs);
   }
 }

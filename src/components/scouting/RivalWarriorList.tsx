@@ -5,6 +5,7 @@ import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { Warrior, ScoutReportData } from '@/types/game';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { AvatarForEntity } from '@/components/avatar';
+import { matchesScoutTarget } from '@/engine/scouting/scouting';
 
 interface RivalWarriorListProps {
   warriors: Warrior[];
@@ -113,7 +114,7 @@ export function RivalWarriorList({
           <WarriorListItem
             key={w.id}
             warrior={w}
-            hasReport={reports.some((r) => r.warriorName === w.name)}
+            hasReport={reports.some((r) => matchesScoutTarget(r, w))}
             isSelected={selectedWarriorId === w.id}
             onSelect={() => onSelectWarrior(w.id)}
           />

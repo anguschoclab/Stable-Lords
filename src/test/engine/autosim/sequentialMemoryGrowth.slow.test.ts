@@ -65,7 +65,7 @@ describe('NF3: sequential autosim memory growth', () => {
 
   it('truncateState clears lastWeekBoutDisplay', () => {
     const state = createFreshState('trunc-display-test', '2025-01-01T00:00:00.000Z');
-    state.lastWeekBoutDisplay = { results: [], deathNames: [], injuryNames: [] } as any;
+    state.lastWeekBoutDisplay = { results: [], deaths: [], injuries: [] } as any;
 
     const truncated = truncateState(state);
     expect(truncated.lastWeekBoutDisplay).toBeUndefined();

@@ -9,6 +9,7 @@ import type {
   TournamentId,
   Trainer,
   WarriorId,
+  WarriorRef,
   WeatherType,
 } from '../shared.types';
 import type { Warrior } from '../warrior.types';
@@ -52,17 +53,11 @@ export interface GameState {
     version: string;
     createdAt: string;
   };
-  pendingResolutionData?: {
-    gazette: NewsletterItem[];
-    injuries: string[];
-    deaths: string[];
-    bouts: import('@/engine/bout').BoutResult[];
-    promotions: string[];
-  };
+  pendingResolutionData?: import('@/types/combat.types').PendingResolutionData;
   lastWeekBoutDisplay?: {
     results: import('@/engine/bout').BoutResult[];
-    deathNames: string[];
-    injuryNames: string[];
+    deaths: WarriorRef[];
+    injuries: WarriorRef[];
   };
   ftueComplete: boolean;
   ftueStep?: number;

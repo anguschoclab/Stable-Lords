@@ -7,6 +7,16 @@ export type Brand<T, TBrand extends string> = T & { readonly __brand: TBrand };
 export type WarriorId = Brand<string, 'WarriorId'>;
 
 /**
+ * A persisted reference to a warrior — stable UUID plus display name.
+ * Identity flows through `id`; `name` is kept for self-contained display in
+ * payloads (resolution reveals, toasts) that would otherwise need a lookup.
+ */
+export interface WarriorRef {
+  id: WarriorId;
+  name: string;
+}
+
+/**
  * Stable id type.
  */
 export type StableId = Brand<string, 'StableId'>;

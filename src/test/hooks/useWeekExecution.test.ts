@@ -50,8 +50,8 @@ vi.mock('@/state/useGameStore', () => {
           isRivalry: false,
         },
       ],
-      deathNames: [],
-      injuryNames: [],
+      deaths: [],
+      injuries: [],
     },
     // The real store moves the clock on success — these mocks must too, or
     // the hook's clock-movement check reports a false failure.

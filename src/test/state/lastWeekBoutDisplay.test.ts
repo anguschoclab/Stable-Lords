@@ -9,8 +9,8 @@ describe('lastWeekBoutDisplay integration', () => {
     const state = makeGameState({
       lastWeekBoutDisplay: {
         results: [],
-        deathNames: ['Warrior X'],
-        injuryNames: ['Warrior Y'],
+        deaths: [{ id: 'w-x', name: 'Warrior X' }],
+        injuries: [{ id: 'w-y', name: 'Warrior Y' }],
       },
     });
 
@@ -28,8 +28,8 @@ describe('lastWeekBoutDisplay integration', () => {
       meta: { gameName: 'Test', version: '1.0', createdAt: '' },
       lastWeekBoutDisplay: {
         results: [{ a: { id: 'w1' }, d: { id: 'w2' }, outcome: {} }] as any,
-        deathNames: ['X'],
-        injuryNames: ['Y'],
+        deaths: [{ id: 'w-x', name: 'X' }],
+        injuries: [{ id: 'w-y', name: 'Y' }],
       },
     } as unknown as GameState;
 

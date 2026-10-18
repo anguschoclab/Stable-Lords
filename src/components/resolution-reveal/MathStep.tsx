@@ -65,13 +65,16 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
         <ScrollArea className="h-[200px] border rounded-none p-4 bg-muted/30">
           <div className="space-y-4">
             {lastSimulationReport?.trainingGains.map(
-              (g: { warriorName: string; gain: number; attr: string }, i: number) => (
+              (
+                g: { warriorId?: string; warriorName: string; gain: number; attr: string },
+                i: number
+              ) => (
                 <div
-                  key={`${g.warriorName}-${g.attr}-${i}`}
+                  key={`${g.warriorId ?? g.warriorName}-${g.attr}-${i}`}
                   className="flex items-center justify-between text-sm"
                 >
                   <span className="font-medium flex items-center gap-2">
-                    <WarriorNameAvatar name={g.warriorName} size="xs" />
+                    <WarriorNameAvatar warriorId={g.warriorId} name={g.warriorName} size="xs" />
                     {g.warriorName}
                   </span>
                   <div className="flex gap-2 font-mono">

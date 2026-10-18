@@ -11,6 +11,8 @@ import {
   DefensiveTacticSchema,
 } from '@/schemas/schemaEnums';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
+import { PendingResolutionDataSchema } from '@/schemas/fightSchemas';
+import { ScoutReportDataSchema } from '@/schemas/economySchemas';
 import type { StableId } from '@/types/shared.types';
 
 describe('gameStateSchema — enum schemas', () => {
@@ -81,6 +83,41 @@ describe('gameStateSchema — enum schemas', () => {
 
   it('DefensiveTacticSchema rejects invalid tactic', () => {
     expect(() => DefensiveTacticSchema.parse('Block')).toThrow();
+  });
+});
+
+describe('warrior-identity schemas', () => {
+  const baseReport = {
+    id: 'r-1',
+    warriorId: 'w-1',
+    warriorName: 'Cassius',
+    style: 'STRIKING ATTACK',
+    quality: 'Basic',
+    week: 3,
+    attributeRanges: {},
+    record: '1W-0L',
+    knownInjuries: [],
+    notes: '',
+  };
+
+  it('ScoutReportDataSchema requires warriorId', () => {
+    expect(ScoutReportDataSchema.safeParse(baseReport).success).toBe(true);
+    const { warriorId: _dropped, ...noId } = baseReport;
+    expect(ScoutReportDataSchema.safeParse(noId).success).toBe(false);
+  });
+
+  it('PendingResolutionDataSchema requires WarriorRef objects for deaths/injuries', () => {
+    const payload = {
+      gazette: [],
+      injuries: [{ id: 'w-1', name: 'Alpha' }],
+      deaths: [{ id: 'w-2', name: 'Beta' }],
+      bouts: [],
+      promotions: [],
+    };
+    expect(PendingResolutionDataSchema.safeParse(payload).success).toBe(true);
+
+    const legacy = { ...payload, deaths: ['Beta'], injuries: [] };
+    expect(PendingResolutionDataSchema.safeParse(legacy).success).toBe(false);
   });
 });
 

@@ -26,6 +26,7 @@ export type { ScoutQuality };
  */
 interface ScoutReport {
   id: string;
+  warriorId: string;
   warriorName: string;
   style: string;
   quality: ScoutQuality;
@@ -296,6 +297,7 @@ export function generateScoutReport(
   return {
     report: {
       id: rng.uuid(),
+      warriorId: warrior.id,
       warriorName: warrior.name,
       style: warrior.style,
       quality,
@@ -314,4 +316,16 @@ export function generateScoutReport(
     },
     newInsights,
   };
+}
+
+/**
+ * Whether a scout report describes `warrior`. Identity is the warrior UUID;
+ * `warriorName` only backstops legacy in-memory records that predate the id
+ * field — new reports always match on id.
+ */
+export function matchesScoutTarget(
+  report: { warriorId?: string; warriorName: string },
+  warrior: { id: string; name: string }
+): boolean {
+  return report.warriorId ? report.warriorId === warrior.id : report.warriorName === warrior.name;
 }

@@ -44,7 +44,7 @@ describe('injuryHandler', () => {
       const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result.injured).toBe(false);
-      expect(result.injuredNames).toHaveLength(0);
+      expect(result.injuryRefs).toHaveLength(0);
       expect(result.impact.rosterUpdates?.size).toBe(0);
     });
 
@@ -129,7 +129,7 @@ describe('injuryHandler', () => {
 
       expect(result).toHaveProperty('impact');
       expect(result).toHaveProperty('injured');
-      expect(result).toHaveProperty('injuredNames');
+      expect(result).toHaveProperty('injuryRefs');
       expect(result.impact).toHaveProperty('restStates');
       expect(result.impact).toHaveProperty('rosterUpdates');
       expect(result.impact).toHaveProperty('rivalWarriorPatches');
@@ -152,7 +152,7 @@ describe('injuryHandler', () => {
       const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result.injured).toBe(false);
-      expect(result.injuredNames).toHaveLength(0);
+      expect(result.injuryRefs).toHaveLength(0);
     });
 
     it('handles Exhaustion outcome', () => {
@@ -173,7 +173,7 @@ describe('injuryHandler', () => {
 
       // Exhaustion may or may not generate injuries depending on implementation
       expect(result).toHaveProperty('injured');
-      expect(result).toHaveProperty('injuredNames');
+      expect(result).toHaveProperty('injuryRefs');
     });
 
     it('handles Stoppage outcome', () => {
@@ -193,7 +193,7 @@ describe('injuryHandler', () => {
       const result = handleInjuries({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1 });
 
       expect(result).toHaveProperty('injured');
-      expect(result).toHaveProperty('injuredNames');
+      expect(result).toHaveProperty('injuryRefs');
     });
 
     it('passes seed to injury generation', () => {

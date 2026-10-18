@@ -75,7 +75,7 @@ function applySevereInjuryRule(args: ApplySevereInjuryRuleArgs) {
     impact,
     death: false,
     playerDeath: false,
-    deathNames: [],
+    deathRefs: [],
   };
 }
 
@@ -205,7 +205,7 @@ export function handleDeath(args: HandleDeathArgs) {
   const { s, wA, wD, outcome, week } = args;
   const { tags, rng = new SeededRNG(week * 9973 + 123), tournamentId } = args;
   if (outcome.by !== 'Kill')
-    return { impact: {}, death: false, playerDeath: false, deathNames: [] };
+    return { impact: {}, death: false, playerDeath: false, deathRefs: [] };
 
   if (s.houseRules?.severeInjuryInsteadOfDeath) {
     return applySevereInjuryRule({ s: s, wA: wA, wD: wD, outcome: outcome, week: week, rng: rng });
@@ -214,7 +214,7 @@ export function handleDeath(args: HandleDeathArgs) {
   // A Kill outcome with no winner is malformed — there is no killer and no
   // victim. Recording it would graveyard the wrong (living) warrior.
   if (outcome.winner !== 'A' && outcome.winner !== 'D') {
-    return { impact: {}, death: false, playerDeath: false, deathNames: [] };
+    return { impact: {}, death: false, playerDeath: false, deathRefs: [] };
   }
 
   const victim = outcome.winner === 'A' ? wD : wA;
@@ -315,6 +315,6 @@ function assembleDeathImpact(args: AssembleDeathImpactArgs) {
     impact,
     death: true,
     playerDeath: isPlayerVictim,
-    deathNames: [warriorDisplayName(victim)],
+    deathRefs: [{ id: victim.id, name: warriorDisplayName(victim) }],
   };
 }

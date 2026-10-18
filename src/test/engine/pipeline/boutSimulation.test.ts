@@ -19,8 +19,8 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     // Casualty lists are stashed for the bout screen. Whether this particular
     // seeded bout produces an injury is combat tuning, not pipeline behavior —
     // assert the shape, not the outcome.
-    expect(Array.isArray(nextState.lastWeekBoutDisplay!.deathNames)).toBe(true);
-    expect(Array.isArray(nextState.lastWeekBoutDisplay!.injuryNames)).toBe(true);
+    expect(Array.isArray(nextState.lastWeekBoutDisplay!.deaths)).toBe(true);
+    expect(Array.isArray(nextState.lastWeekBoutDisplay!.injuries)).toBe(true);
 
     // - The offer should be removed from boutOffers (assuming processWeekBouts prunes it)
     expect((nextState.boutOffers as any)['offer-1']).toBeUndefined();

@@ -6,6 +6,8 @@ interface FighterPairProps {
   // Fighter identities
   nameA: string;
   nameD: string;
+  warriorIdA?: string;
+  warriorIdD?: string;
   styleA: FightingStyle;
   styleD: FightingStyle;
   // Fighter poses from useArenaAnimation
@@ -30,7 +32,7 @@ interface FighterPairProps {
  * Extracts duplicate ArenaFighter prop assembly from ArenaView.
  */
 export default function FighterPair(props: FighterPairProps) {
-  const { nameA, nameD, styleA, styleD, fighterA } = props;
+  const { nameA, nameD, warriorIdA, warriorIdD, styleA, styleD, fighterA } = props;
   const { fighterD, hpA, hpD, fpA, fpD } = props;
   const { maxHpA, maxHpD, isWinnerA, isWinnerD, isDeadA } = props;
   const { isDeadD } = props;
@@ -39,6 +41,7 @@ export default function FighterPair(props: FighterPairProps) {
       {/* Fighter A */}
       <ArenaFighter
         name={nameA}
+        warriorId={warriorIdA}
         pose={fighterA}
         stats={{
           maxHp: maxHpA,
@@ -55,6 +58,7 @@ export default function FighterPair(props: FighterPairProps) {
       {/* Fighter D */}
       <ArenaFighter
         name={nameD}
+        warriorId={warriorIdD}
         pose={fighterD}
         stats={{
           maxHp: maxHpD,

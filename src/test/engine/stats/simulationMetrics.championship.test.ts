@@ -209,7 +209,7 @@ describe('SimPulse championship metrics (Stage H)', () => {
       } as unknown as BoutResult,
     ];
     const pulse = collectPulse(
-      makeGameState({ lastWeekBoutDisplay: { results, deathNames: [], injuryNames: [] } })
+      makeGameState({ lastWeekBoutDisplay: { results, deaths: [], injuries: [] } })
     );
     expect(pulse.cornerAdviceEvents).toBe(2);
     expect(collectPulse(makeGameState({})).cornerAdviceEvents).toBe(0);

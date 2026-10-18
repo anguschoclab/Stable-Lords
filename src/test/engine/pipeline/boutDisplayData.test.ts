@@ -14,8 +14,8 @@ describe('BoutSimulationPass returns display data', () => {
     expect(result).toHaveProperty('results');
     expect(result).toHaveProperty('summary');
     expect(Array.isArray(result.results)).toBe(true);
-    expect(result.summary).toHaveProperty('deathNames');
-    expect(result.summary).toHaveProperty('injuryNames');
+    expect(result.summary).toHaveProperty('deathRefs');
+    expect(result.summary).toHaveProperty('injuryRefs');
   });
 
   it('runBoutPhase stashes lastWeekBoutDisplay on state via advanceWeek', async () => {
@@ -24,8 +24,8 @@ describe('BoutSimulationPass returns display data', () => {
 
     expect(nextState.lastWeekBoutDisplay).toBeDefined();
     expect(nextState.lastWeekBoutDisplay!.results).toHaveLength(1);
-    expect(Array.isArray(nextState.lastWeekBoutDisplay!.deathNames)).toBe(true);
-    expect(Array.isArray(nextState.lastWeekBoutDisplay!.injuryNames)).toBe(true);
+    expect(Array.isArray(nextState.lastWeekBoutDisplay!.deaths)).toBe(true);
+    expect(Array.isArray(nextState.lastWeekBoutDisplay!.injuries)).toBe(true);
   });
 
   it('lastWeekBoutDisplay is plain serializable data (no Maps)', async () => {

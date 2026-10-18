@@ -4,7 +4,7 @@
  */
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { FightOutcome } from '@/types/combat.types';
-import type { WeatherType } from '@/types/shared.types';
+import type { WeatherType, WarriorRef } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { getMoodModifiers } from '@/engine/bout/crowdMood';
 
@@ -42,8 +42,10 @@ export interface BoutImpact {
     death: boolean;
     playerDeath: boolean;
     injured: boolean;
-    deathNames: string[];
-    injuredNames: string[];
+    /** Warriors who died this bout — id is identity, name is display. */
+    deathRefs: WarriorRef[];
+    /** Warriors injured this bout — id is identity, name is display. */
+    injuryRefs: WarriorRef[];
   };
 }
 
@@ -54,8 +56,8 @@ export interface WeekBoutSummary {
   bouts: number;
   deaths: number;
   injuries: number;
-  deathNames: string[];
-  injuryNames: string[];
+  deathRefs: WarriorRef[];
+  injuryRefs: WarriorRef[];
   hadPlayerDeath: boolean;
   hadRivalryEscalation: boolean;
 }

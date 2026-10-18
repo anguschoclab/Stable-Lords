@@ -35,7 +35,7 @@ all 23. DISPROVED the assumption that adjudicable review feedback existed.
 | #1044 | lore+traits | green | honest: +1 common trait (orphanage_survivor) + generation wiring | APPROVED | **MERGE** |
 | #1043 | a11y | green | honest: title attr on dismiss button | APPROVED | **MERGE** — strip `.jules/palette.md` |
 | #1042 | perf | green | FALSIFIED: empty diff (0 files) | REJECTED | CLOSE — no content |
-| #1041 | a11y/UI | green | mixed: hazard-badge token migration + focus ring good; 3 `.animate-*` classes unused (dead CSS, but completes existing convention); `??`→`||` on aria-describedby neutral-positive | APPROVED | **MERGE** |
+| #1041 | a11y/UI | green | mixed: hazard-badge token migration + focus ring good; 3 `.animate-*` classes unused (dead CSS, but completes existing convention); `??`→`\|\|` on aria-describedby neutral-positive | APPROVED | **MERGE** |
 | #1040 | narrative-JSON | **red (test)** | dedup drops `strikes.piercing.solid` to 104 < 105 thin-category floor — over-pruned | REJECTED | CLOSE |
 | #1039 | a11y | green | honest: tablist/tab roles + focus ring + e2e role update — BUT `aria-controls` dangles (no `id="panel-*"` exists) | PARTIAL | **MERGE minus `aria-controls`/`id`** |
 | #1038 | lore+traits | green | honest: +3 notable traits + lore | APPROVED | **MERGE** |

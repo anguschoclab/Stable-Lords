@@ -11,7 +11,7 @@
 
 Every page except `/start` and `/welcome` (FTUE) renders inside the **App Shell**:
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  TOP BAR  (sticky, h-14, shared across all pages)        │
 ├──────────┬──────────────────────────────┬────────────────┤
@@ -45,7 +45,7 @@ Every page except `/start` and `/welcome` (FTUE) renders inside the **App Shell*
 
 Every page canvas follows the same four-band structure:
 
-```
+```text
 ┌───────────────────────────────────────────────────────┐
 │  BAND 1 — PageHeader                                  │
 │   codex eyebrow · Cinzel title · parchment subtitle   │
@@ -187,7 +187,7 @@ Grid cards:
 
 Band 1: minimal header — `EXECUTE WEEK N` eyebrow, _"The sand is raked."_ subtitle.
 Band 2 (pinned banner): **Stable Readiness** — 4 stat pills (healthy / injured / in-training / scheduled).
-Band 3: single focus card "Week 12 Manifest" — list of bouts with prominent ` BEGIN CYCLE ›` CTA at the bottom.
+Band 3: single focus card "Week 12 Manifest" — list of bouts with prominent `BEGIN CYCLE ›` CTA at the bottom.
 After results: cards transform in place — win rows bronze tint, kill rows blood-variant, draws parchment-variant.
 
 ### 6.3 `/tournaments` — Archetype A

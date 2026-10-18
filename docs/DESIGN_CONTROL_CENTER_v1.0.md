@@ -28,7 +28,7 @@ Analogue to the Administrative Control Center, but reframed around the **weekly 
 
 ## 2. Page Skeleton
 
-```
+```text
 ┌───────────────────────────────────────────────────────────────────────────┐
 │  TOP BAR   DATE · WEEK · SEASON   |   GOLD   |   FAME   |   STABLE NAME   │  ← sticky, h-14
 ├──────────┬────────────────────────────────────────────┬───────────────────┤
@@ -79,7 +79,7 @@ Codex rule: all label slugs above values use `codex-label` (9px, `tracking-[0.4e
 
 `w-60`, `bg-card`, full-height. Groups use `codex-label` section headers with gradient underline.
 
-```
+```text
 MY STABLE
   ▣ Control Center     (active — primary/[0.08] bg, border-l-2 border-primary)
   ⚔ Roster        [18]
@@ -108,7 +108,7 @@ Counts/badges: small bronze-outlined pills. Hover row: `bg-white/[0.03]`. Active
 
 All cards use `variant="glass"` unless noted. All corners hard (`rounded-none`). All card headers follow:
 
-```
+```text
 CODEX_LABEL · SUB_LABEL                                       [icon action]
 Large Cinzel Title
 Optional muted subtitle sentence.
@@ -183,7 +183,7 @@ Eyebrow: `LUDUS · TRAINING` Title: `Active Regimens`
 
 Up to 4 rows:
 
-```
+```text
 Warrior Name                          ▓▓▓▓▓▓░░░░  63%
 PROGRAM · FOCUS_NOTE
 ```
@@ -216,7 +216,7 @@ Header: `text-[9px] font-black uppercase tracking-widest`. Numbers: `font-mono f
 
 `w-80`, sticky, own scroll container. Header:
 
-```
+```text
 Event Log                         [ALL] [ARENA] [NEWS]
 ```
 
@@ -224,7 +224,7 @@ Tab pills: arena-blood active, others muted outline.
 
 Entry format (12–14 per screen):
 
-```
+```text
 [icon tint]  YR12 · WK12 · DAY 3 · 09:12
              Bold title line (Cinzel 500, 15px)
              Two-line muted papyrus body.
@@ -249,7 +249,7 @@ Empty state: _"The Presses Are Silent."_
 
 Just like the PDF's OVERVIEW / BOUTS / STABLE / FINANCIALS / STORYLINES:
 
-```
+```text
 OVERVIEW · BOUTS · STABLE · FINANCES · STORYLINES
 ```
 

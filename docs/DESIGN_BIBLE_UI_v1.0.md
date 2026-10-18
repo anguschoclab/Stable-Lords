@@ -64,7 +64,7 @@ The design system is called **Codex Sanguis** (The Blood Record). It renders thi
 
 ### Primary Palette
 
-```
+```text
 Background:    #0C0806  (HSL 24 18% 5%)   — Charred wood / near-black
 Card Surface:  #140F09  (HSL 26 20% 8%)   — Dark aged leather
 Primary:       #872228  (HSL 358 65% 32%) — Deep blood crimson
@@ -76,7 +76,7 @@ Border:        #2A1E13  (HSL 30 18% 16%)  — Weathered wood grain
 
 ### Arena Color Tokens
 
-```
+```text
 --arena-gold:   #C9972A  — Burnished arena gold (fame, wealth)
 --arena-blood:  #912228  — Arena crimson (kills, danger, warning)
 --arena-fame:   #8B5FC4  — Fame purple (prestige, glory)
@@ -173,7 +173,7 @@ The _only_ exceptions:
 
 Dark warm surface with subtle gradient overlay. The workhorse card style.
 
-```
+```css
 bg: rgba(#120D09, 0.7) with backdrop-blur
 border: 1px warm dark (#2A1E13)
 top-border: slightly lighter for depth
@@ -183,7 +183,7 @@ top-border: slightly lighter for depth
 
 Bronze-gold accented for fame and glory elements.
 
-```
+```css
 border: arena-gold/30 with gold glow shadow
 ```
 
@@ -191,7 +191,7 @@ border: arena-gold/30 with gold glow shadow
 
 Crimson accented for lethal results and warnings.
 
-```
+```css
 border: arena-blood/30 with blood glow shadow
 ```
 
@@ -199,7 +199,7 @@ border: arena-blood/30 with blood glow shadow
 
 Aged warm surface for Gazette, Hall of Fame, chronicle content.
 
-```
+```css
 bg: very dark warm with parchment-texture overlay
 border-double style effect
 ```
@@ -243,7 +243,7 @@ Tables follow these conventions:
 
 Tiers use color-coded outlines:
 
-```
+```css
 Common:     border-border/40 text-muted-foreground
 Promising:  border-blue-500/30 text-blue-400 bg-blue-500/10
 Exceptional: border-purple-500/50 text-purple-400 (+ subtle glow)
@@ -262,7 +262,7 @@ Progress/stat bars should feel like **sand filling a carved groove**:
 
 Primary buttons use the crimson brand color:
 
-```
+```css
 bg: primary (blood crimson)
 hover: brightness up + slight scale
 text: warm papyrus white
@@ -271,7 +271,7 @@ shadow: subtle glow-blood on primary actions
 
 Secondary buttons:
 
-```
+```css
 bg: neutral-900/60 border border-white/5
 text: muted-foreground
 hover: subtle white/5 increase
@@ -455,7 +455,7 @@ Animations should feel like a page being turned or a door being opened — **pur
 | `livePulse`                      | Status indicators    | 2s breathe                           |
 | Page transitions                 | Route changes        | Instant with fade — no sliding pages |
 
-### DON'Ts
+### Animation DON'Ts
 
 - ❌ No bouncy spring animations (easing should be ease-out or [0.16, 1, 0.3, 1])
 - ❌ No rotation animations (unless a weapon is literally spinning)

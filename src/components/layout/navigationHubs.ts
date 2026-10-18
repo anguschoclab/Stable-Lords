@@ -37,21 +37,20 @@ export const HUBS = [
     icon: Swords,
     to: '/stable',
     pages: [
-      { to: '/stable', label: 'Overview', icon: LayoutDashboard, exact: true },
-      { to: '/stable/advisor', label: 'War Council', icon: ShieldCheck },
-      { to: '/stable/roster', label: 'Roster', icon: BookUser },
-      { to: '/stable/training', label: 'Training', icon: Dumbbell },
-      { to: '/stable/planner', label: 'Planner', icon: BrainCircuit },
-      { to: '/stable/arena', label: 'Arena', icon: Flame },
-      { to: '/stable/equipment', label: 'Equipment', icon: Wrench },
-      { to: '/stable/bouts', label: 'Bouts', icon: ScrollText },
-      { to: '/stable/promoters', label: 'Promoters', icon: Building2 },
-      { to: '/stable/trainers', label: 'Trainers', icon: Dumbbell },
-      { to: '/stable/finance', label: 'Finance', icon: Coins },
-      { to: '/stable/recruit', label: 'Recruit', icon: UserPlus },
-      { to: '/stable/offseason', label: 'Offseason', icon: Sunset },
-      { to: '/tools/physicals-simulator', label: 'Simulator', icon: Activity },
-      { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
+      { to: '/stable', label: 'Overview', icon: LayoutDashboard, exact: true, section: 'Command' },
+      { to: '/stable/advisor', label: 'War Council', icon: ShieldCheck, section: 'Command' },
+      { to: '/stable/arena', label: 'Arena', icon: Flame, section: 'Command' },
+      { to: '/stable/bouts', label: 'Bouts', icon: ScrollText, section: 'Command' },
+      { to: '/stable/roster', label: 'Roster', icon: BookUser, section: 'Roster' },
+      { to: '/stable/training', label: 'Training', icon: Dumbbell, section: 'Roster' },
+      { to: '/stable/planner', label: 'Planner', icon: BrainCircuit, section: 'Roster' },
+      { to: '/stable/equipment', label: 'Equipment', icon: Wrench, section: 'Roster' },
+      { to: '/stable/promoters', label: 'Promoters', icon: Building2, section: 'Operations' },
+      { to: '/stable/trainers', label: 'Trainers', icon: Dumbbell, section: 'Operations' },
+      { to: '/stable/finance', label: 'Finance', icon: Coins, section: 'Operations' },
+      { to: '/stable/recruit', label: 'Recruit', icon: UserPlus, section: 'Operations' },
+      { to: '/stable/offseason', label: 'Offseason', icon: Sunset, section: 'Operations' },
+      { to: '/tools/physicals-simulator', label: 'Simulator', icon: Activity, section: 'Tools' },
     ],
   },
   {
@@ -72,13 +71,6 @@ export const HUBS = [
       { to: '/world/graveyard', label: 'Graveyard', icon: Skull },
     ],
   },
-  {
-    id: 'bookmarks',
-    label: 'Bookmarks',
-    icon: Bookmark,
-    to: '/bookmarks',
-    pages: [],
-  },
 ] as const;
 
 /**
@@ -87,6 +79,7 @@ export const HUBS = [
  */
 export const UTILITY_LINKS = [
   { to: '/help', label: 'Help', icon: LifeBuoy },
+  { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
   { to: '/import-export', label: 'Import / Export', icon: FileJson },
   { to: '/mods', label: 'Mods', icon: FlaskConical },
   { to: '/admin', label: 'Admin', icon: Terminal, devOnly: true },

@@ -109,7 +109,7 @@ function ReadView({
       <div className="absolute -inset-2 rounded-none bg-primary/0 group-hover:bg-primary/5 border border-primary/0 group-hover:border-primary/10 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-300" />
 
       {label && (
-        <span className="absolute -top-4 left-0 text-[8px] uppercase tracking-[0.2em] font-black text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
+        <span className="absolute -top-4 left-0 text-[8px] uppercase tracking-[0.15em] font-black text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity motion-reduce:transition-none">
           {label}
         </span>
       )}

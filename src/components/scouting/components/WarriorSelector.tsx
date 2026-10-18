@@ -40,7 +40,7 @@ export function WarriorSelector(props: WarriorSelectorProps) {
     <Surface variant="glass" className="border-border/40 space-y-4">
       <div className="flex items-center gap-3">
         <div className={cn('p-1 px-2 rounded-none border', colors.bg, colors.border)}>
-          <span className={cn('text-[10px] font-black uppercase tracking-[0.2em]', colors.text)}>
+          <span className={cn('text-[10px] font-black uppercase tracking-[0.15em]', colors.text)}>
             {label}
           </span>
         </div>

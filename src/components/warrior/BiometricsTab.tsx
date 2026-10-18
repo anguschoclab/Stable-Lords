@@ -35,7 +35,7 @@ function PhysiqueColumn({ warrior }: { warrior: Warrior }) {
           </Suspense>
           <div className="mt-12 space-y-6">
             <div className="flex items-center justify-between">
-              <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.3em]">
+              <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.15em]">
                 Arena Form
               </span>
               <FormSparkline warriorId={warrior.id} />

@@ -24,7 +24,7 @@ export function TrainingReportBanner({
   return (
     <Surface variant="glass" className="border-primary/20 overflow-hidden mb-12">
       <div className="flex items-center justify-between px-5 py-3 bg-primary/5 border-b border-white/5">
-        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.15em] text-primary">
           <TrendingUp className="h-3.5 w-3.5" />
           Last Week's Report
         </div>

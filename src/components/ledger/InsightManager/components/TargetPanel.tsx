@@ -67,7 +67,7 @@ export function TargetPanel(props: TargetPanelProps) {
         ) : (
           <div className="py-20 text-center opacity-20">
             <Target className="h-12 w-12 mx-auto mb-4" />
-            <p className="text-[10px] font-black uppercase tracking-[0.3em]">
+            <p className="text-[10px] font-black uppercase tracking-[0.15em]">
               Select an Insight Token
             </p>
             <p className="text-[9px] lowercase mt-2 italic font-medium">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -35,7 +35,7 @@ function OverviewTab({
 function SectionLabel({ label, children }: { label: string; children?: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3 px-1">
-      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+      <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
         {label}
       </span>
       <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
@@ -119,12 +119,7 @@ function OverviewTabs({
  *
  */
 export default function WorldOverview() {
-  const [syncing, setSyncing] = useState(true);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setSyncing(false), 1800);
-    return () => clearTimeout(t);
-  }, []);
 
   const overview = useWorldOverview(showBookmarkedOnly);
   const { state, totalWarriors, totalKills, topStable, topStableId, totalStables } = overview;
@@ -136,16 +131,10 @@ export default function WorldOverview() {
         subtitle={`WORLD · ${state.season} · RANKINGS`}
         icon={Globe}
         actions={
-          <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.34em] text-muted-foreground opacity-60">
+          <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-60">
             <span>Lords Connected: {totalStables}</span>
             <div className="h-4 w-px bg-border/40" />
-            {syncing ? (
-              <span className="text-primary italic animate-pulse motion-reduce:animate-none">
-                Loading...
-              </span>
-            ) : (
-              <span className="text-primary">Arena Data Live</span>
-            )}
+            <span className="text-primary">Week {state.week}</span>
           </div>
         }
       />

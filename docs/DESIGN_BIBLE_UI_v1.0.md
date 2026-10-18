@@ -308,7 +308,7 @@ hover: subtle white/5 increase
 - The "First Blood" result card: Dramatic — blood-border variant, winner announced in large crimson
 - Final step: Warm arrival — "Your Story Begins" with golden accents, entering the main game
 
-### Dashboard (`/`)
+### Control Center (`/stable`)
 
 **Atmosphere**: The _tablinum_ (patron's office) — everything you need to manage your empire at a glance.
 
@@ -321,7 +321,7 @@ hover: subtle white/5 increase
 - Draggable edit mode: Warm highlight rings instead of cold blue
 - Widgets should feel like documents laid on a desk — each has its own "ink and parchment" feel
 
-### Arena Command Hub (`/arena`)
+### Arena Hub (`/stable/arena`)
 
 **Atmosphere**: Standing in the sponsor's box overlooking the colosseum floor.
 
@@ -332,18 +332,18 @@ hover: subtle white/5 increase
 - Crowd Mood widget: Large mood icon (like an omen/auspice) + bronze modifier stats
 - The "ARENA ANALYTICS" panel feels like a carved wall of statistics
 
-### Run Round (`/run-round`)
+### Booking Office (`/stable/bouts`)
 
-**Atmosphere**: The arena floor is prepared. Warriors are ready. The signal must be given.
+**Atmosphere**: The arena floor is prepared through contracts and matchmaking. Warriors are ready; the signal is given from the shared command bar.
 
 **Key Elements**:
 
-- `EXECUTE WEEK [N] CYCLE` button: Maximum visual weight — primary large, blood crimson
-- Match cards: Each bout looks like an official bout declaration — fighter names prominent, vs divider
-- "Stable Readiness" sidebar: Quick data panel, like an official manifest
-- After results: Cards show win/loss/kill with appropriate color weight (kills in blood crimson, wins in gold)
+- `BEGIN CYCLE` shell action: Maximum visual weight — primary large, blood crimson
+- Offer cards: Each bout looks like an official bout declaration — fighter names prominent, vs divider
+- "Stable Readiness" strip: Quick data panel, like an official manifest
+- After results: ResolutionReveal shows win/loss/kill with appropriate color weight (kills in blood crimson, wins in gold)
 
-### Stable Hall (`/stable`)
+### Stable Hall (`/stable/roster`)
 
 **Atmosphere**: The trophy room and great hall of your stable. Warrior portraits line the walls.
 
@@ -355,7 +355,7 @@ hover: subtle white/5 increase
 - Trainer table: Official staff registry format
 - Reputation sliders: Carved groove fills in warm red
 
-### Training Grounds (`/training`)
+### Training Grounds (`/stable/training`)
 
 **Atmosphere**: The gymnasium — dusty, functional, purposeful.
 
@@ -366,7 +366,7 @@ hover: subtle white/5 increase
 - Recovery state: Subtle warm red tint — medical/healing connotation
 - "RESET ALL" button: Secondary style — clears the training manifest
 
-### Recruitment (`/recruit`)
+### Recruitment (`/stable/recruit`)
 
 **Atmosphere**: The fighter market — browsing warrior contracts at the forum.
 
@@ -377,7 +377,7 @@ hover: subtle white/5 increase
 - Cost display: Gold coin icon + bronze-colored number
 - Custom builder tab: "Forge a Warrior" — creation process feels deliberate
 
-### The Gazette (`/gazette`)
+### The Gazette (`/world/chronicle`)
 
 **Atmosphere**: The _acta diurna_ — Rome's daily gazette, pinned at the forum.
 
@@ -413,7 +413,7 @@ hover: subtle white/5 increase
 - Rankings tables: Player's stable highlighted with crimson left-border
 - World stats: Four large carved numbers at the top — total stables, warriors, kills, top stable
 
-### Graveyard (`/graveyard`)
+### Graveyard (`/world/graveyard`)
 
 **Atmosphere**: The memorial wall. Solemn, heavy, permanent.
 
@@ -425,7 +425,7 @@ hover: subtle white/5 increase
 - Two tabs: "MY FALLEN" and "WORLD MEMORIAL" — player's losses vs. all
 - Minimal color — this is a place of death and memory
 
-### Hall of Fame (`/hall-of-fame`)
+### Hall of Fame (`/world/history`)
 
 **Atmosphere**: The shrine room. Legendary warriors immortalized.
 

@@ -50,6 +50,11 @@ function BibleSearch() {
           {hits.length} {hits.length === 1 ? 'result' : 'results'}
         </p>
       )}
+      {query.trim() !== '' && hits.length === 0 && (
+        <p className="border border-white/5 bg-black/20 px-3 py-4 text-xs text-muted-foreground">
+          No matching codex entry. Try a mechanic, workspace, or fighting-style name.
+        </p>
+      )}
       <ul className="space-y-2">
         {hits.map((hit, i) => (
           <li key={`${hit.docId}-${i}`} className="border-l-2 border-arena-gold/30 pl-3 py-1">

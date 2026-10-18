@@ -18,7 +18,7 @@ export function DeathModalHeader() {
       <h1 className="text-3xl md:text-5xl font-display font-black tracking-tighter text-arena-blood uppercase">
         THE SANDS CLAIM ANOTHER
       </h1>
-      <p className="text-[10px] tracking-[0.4em] font-black uppercase text-muted-foreground/60">
+      <p className="text-[10px] tracking-[0.15em] font-black uppercase text-muted-foreground/60">
         Chronicle. Archive. Remembrance.
       </p>
     </header>

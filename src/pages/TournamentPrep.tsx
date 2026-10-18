@@ -17,13 +17,13 @@ function PrepHeaderStats({
   return (
     <div className="flex items-center gap-8">
       <div className="flex flex-col items-end">
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">
           Entrants
         </span>
         <span className="font-display font-black text-xl text-foreground">{totalEntrants}</span>
       </div>
       <div className="flex flex-col items-end">
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">
           Your Warriors
         </span>
         <span className="font-display font-black text-xl text-arena-gold">{yourEntrantCount}</span>

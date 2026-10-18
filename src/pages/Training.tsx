@@ -28,7 +28,7 @@ function HeaderActions({
 }) {
   return (
     <div className="flex items-center gap-6">
-      <div className="hidden sm:flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
+      <div className="hidden sm:flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
         <div className="flex items-center gap-1.5">
           <Activity className="h-3 w-3 text-primary" />
           <span>Training: {trainingPct}%</span>
@@ -56,7 +56,7 @@ function HeaderActions({
 function EmptyRoster({ onNavigate }: { onNavigate: () => void }) {
   return (
     <Surface variant="glass" className="py-24 text-center border-dashed border-white/5">
-      <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+      <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
         No warriors · Recruit to begin training
       </p>
       <Button

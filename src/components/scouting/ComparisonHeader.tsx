@@ -21,7 +21,7 @@ function SideColumn({
   return (
     <div className="text-center flex-1 relative z-10 space-y-4">
       <h4
-        className={`text-[10px] font-black tracking-[0.4em] ${colorClass} uppercase leading-none opacity-60`}
+        className={`text-[10px] font-black tracking-[0.15em] ${colorClass} uppercase leading-none opacity-60`}
       >
         {label}
       </h4>
@@ -79,7 +79,7 @@ export function ComparisonHeader(props: ComparisonHeaderProps) {
         <div className="p-3 rounded-full bg-neutral-900 border border-white/5 shadow-inner">
           <ArrowLeftRight className="h-6 w-6 text-muted-foreground/40" />
         </div>
-        <span className="text-[9px] font-black text-muted-foreground/20 tracking-[0.5em] uppercase mt-4">
+        <span className="text-[9px] font-black text-muted-foreground/20 tracking-[0.15em] uppercase mt-4">
           VS
         </span>
       </div>

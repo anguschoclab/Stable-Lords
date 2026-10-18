@@ -20,9 +20,9 @@ describe('SubPageList', () => {
     expect(screen.queryByRole('link')).toBeNull();
   });
 
-  it('renders correct number of pages for stable hub (15)', () => {
+  it('renders correct number of pages for stable hub (14)', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable" />);
-    expect(screen.getAllByRole('link')).toHaveLength(15);
+    expect(screen.getAllByRole('link')).toHaveLength(14);
   });
 
   it('renders correct number of pages for world hub (10)', () => {
@@ -30,8 +30,8 @@ describe('SubPageList', () => {
     expect(screen.getAllByRole('link')).toHaveLength(10);
   });
 
-  it('renders no pages for bookmarks hub (0 pages)', () => {
-    render(<SubPageList activeHubId="bookmarks" currentPath="/bookmarks" />);
+  it('renders no pages for utility-only destinations', () => {
+    render(<SubPageList activeHubId={null} currentPath="/bookmarks" />);
     expect(screen.queryByRole('link')).toBeNull();
   });
 
@@ -44,13 +44,13 @@ describe('SubPageList', () => {
 
   it('marks prefix-match page as active when currentPath.startsWith(page.to + "/")', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable/roster/extra" />);
-    const rosterLink = screen.getByText('Roster').closest('a');
+    const rosterLink = screen.getByRole('link', { name: 'Roster' });
     expect(rosterLink?.className).toMatch(/text-foreground/);
   });
 
   it('does NOT mark non-matching pages as active', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable/training" />);
-    const rosterLink = screen.getByText('Roster').closest('a');
+    const rosterLink = screen.getByRole('link', { name: 'Roster' });
     // Inactive pages have text-muted-foreground/50, not text-foreground
     // (hover:text-foreground/80 is present but the base class is muted)
     expect(rosterLink?.className).toMatch(/text-muted-foreground\/50/);
@@ -66,16 +66,29 @@ describe('SubPageList', () => {
 
   it('inactive page has text-muted-foreground/50 styling', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable" />);
-    const rosterLink = screen.getByText('Roster').closest('a');
+    const rosterLink = screen.getByRole('link', { name: 'Roster' });
     expect(rosterLink?.className).toMatch(/text-muted-foreground\/50/);
   });
 
   it('renders page labels as text', () => {
     render(<SubPageList activeHubId="stable" currentPath="/stable" />);
     expect(screen.getByText('Overview')).toBeInTheDocument();
-    expect(screen.getByText('Roster')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Roster' })).toBeInTheDocument();
     expect(screen.getByText('Training')).toBeInTheDocument();
     expect(screen.getByText('Planner')).toBeInTheDocument();
+  });
+
+  it('renders Stable task groups as accessible section labels', () => {
+    render(<SubPageList activeHubId="stable" currentPath="/stable" />);
+
+    for (const section of ['Command', 'Roster', 'Operations', 'Tools']) {
+      expect(screen.getByRole('heading', { name: section })).toBeInTheDocument();
+    }
+    expect(
+      screen
+        .getByRole('heading', { name: 'Command' })
+        .compareDocumentPosition(screen.getByRole('link', { name: 'Overview' }))
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 
   it('renders page icons (SVG elements)', () => {
@@ -91,7 +104,7 @@ describe('SubPageList', () => {
       </span>
     );
     render(<SubPageList activeHubId="stable" currentPath="/stable" LinkComponent={CustomLink} />);
-    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(15);
+    expect(screen.getAllByTestId('custom-page-link')).toHaveLength(14);
   });
 
   it('renders motion indicator div when useMotionIndicator=true (default) and page is active', () => {

@@ -31,7 +31,7 @@ export function IconTabStrip<T extends string>({
           aria-selected={activeTab === tab.id}
           onClick={() => onChange(tab.id)}
           className={cn(
-            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+            'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.15em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
             activeTab === tab.id
               ? 'text-primary'
               : 'text-muted-foreground/40 hover:text-foreground'

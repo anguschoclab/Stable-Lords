@@ -57,7 +57,7 @@ export function MedicalAuditWidget() {
         {atRisk.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 opacity-20 group-hover:opacity-30 transition-opacity motion-reduce:transition-none">
             <Activity className="h-12 w-12 mb-4" />
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center italic">
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-center italic">
               Roster Healthy
             </p>
           </div>
@@ -71,7 +71,7 @@ export function MedicalAuditWidget() {
       </div>
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
-        <div className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40 flex items-center gap-2">
+        <div className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40 flex items-center gap-2">
           Stable Health Active <Activity className="h-3 w-3 text-destructive" />
         </div>
       </div>

@@ -10,6 +10,7 @@ import {
   Hourglass,
 } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
+import { Link } from '@tanstack/react-router';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -64,6 +65,7 @@ export default function StableLedger() {
 
       {/* Band 2 — Financial Runway Alert */}
       <RunwayBanner runway={runway} isEmergency={isEmergency} breakdown={breakdown} />
+      <FinancialDecisions />
 
       <Tabs defaultValue="overview" className="w-full">
         <LedgerTabList />
@@ -95,6 +97,38 @@ export default function StableLedger() {
   );
 }
 
+function FinancialDecisions() {
+  const linkClass =
+    'px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 text-foreground/80 hover:bg-white/5 rounded-none transition-colors motion-reduce:transition-none';
+  return (
+    <section aria-labelledby="financial-decisions-heading" className="space-y-4">
+      <SectionDivider label="Financial Decisions" />
+      <Surface variant="glass" className="p-5">
+        <h2
+          id="financial-decisions-heading"
+          className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground"
+        >
+          Resolve Weekly Obligations
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Runway is driven by roster upkeep, trainer contracts, and assigned training.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link to="/stable/training" className={linkClass}>
+            Review Training
+          </Link>
+          <Link to="/stable/trainers" className={linkClass}>
+            Manage Contracts
+          </Link>
+          <Link to="/stable/recruit" className={linkClass}>
+            Recruit Reinforcements
+          </Link>
+        </div>
+      </Surface>
+    </section>
+  );
+}
+
 const LEDGER_TABS = [
   { value: 'overview', icon: Coins, label: 'Ledger' },
   { value: 'tokens', icon: Sparkles, label: 'Vault' },
@@ -111,7 +145,7 @@ function LedgerTabList() {
         <TabsTrigger
           key={tab.value}
           value={tab.value}
-          className="text-[9px] font-black uppercase tracking-[0.2em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0 motion-reduce:transition-none"
+          className="text-[9px] font-black uppercase tracking-[0.15em] py-4 gap-3 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-[inset_0_-4px_0_hsl(var(--primary))] transition-all duration-300 rounded-none border-r border-white/5 last:border-0 motion-reduce:transition-none"
         >
           <tab.icon className="h-3.5 w-3.5 opacity-60" />
           <span className="hidden sm:inline">{tab.label}</span>
@@ -157,7 +191,7 @@ function RunwayBanner({
         </div>
         <div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground">
               Treasury Runway
             </span>
             {isEmergency && (
@@ -174,7 +208,7 @@ function RunwayBanner({
 
       <div className="flex items-center gap-10">
         <div className="text-right">
-          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
+          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.15em] mb-1.5">
             Weekly Burn
           </div>
           <div className="font-mono font-black text-destructive text-xl leading-none">
@@ -183,7 +217,7 @@ function RunwayBanner({
         </div>
         <div className="h-10 w-px bg-white/5" />
         <div className="text-right">
-          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1.5">
+          <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.15em] mb-1.5">
             Net Variance
           </div>
           <div

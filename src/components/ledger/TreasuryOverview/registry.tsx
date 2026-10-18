@@ -45,7 +45,7 @@ function LedgerTable({ recentLedger }: { recentLedger: LedgerEntry[] }) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-20 group">
         <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
-        <p className="text-sm font-display font-black uppercase tracking-[0.3em]">No Entries</p>
+        <p className="text-sm font-display font-black uppercase tracking-[0.15em]">No Entries</p>
         <p className="text-[10px] lowercase italic opacity-80 mt-2 font-medium">
           Fight a bout to see transactions here...
         </p>
@@ -125,7 +125,7 @@ export function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegis
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
         <button
           aria-label="Access Full Archive"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none motion-reduce:transition-none"
+          className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none motion-reduce:transition-none"
         >
           Access Full Archive{' '}
           <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />

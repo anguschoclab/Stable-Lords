@@ -136,7 +136,7 @@ function EpitaphSurface({ w, season }: { w: Warrior; season: string }) {
         &quot;
       </p>
       <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">
-        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground">
           <Crosshair className="w-3.5 h-3.5 text-destructive" />
           {w.killedBy ? (
             <>
@@ -200,7 +200,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
               id={w.id}
               className="font-display font-black text-2xl uppercase tracking-tighter group-hover:text-destructive transition-colors motion-reduce:transition-none"
             />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/50 mt-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50 mt-1">
               {STYLE_DISPLAY_NAMES[w.style as FightingStyle]}
             </span>
           </div>

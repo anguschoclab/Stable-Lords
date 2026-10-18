@@ -21,7 +21,7 @@ function ChronicleEmptyState() {
         <Terminal className="h-16 w-16 text-muted-foreground opacity-20 relative z-10" />
       </div>
       <div className="space-y-2 relative z-10">
-        <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="text-sm font-display font-black uppercase tracking-[0.15em] text-muted-foreground">
           No Events Yet
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
@@ -55,11 +55,11 @@ function TimelineItemHeader({ item }: { item: NewsletterItem }) {
         <div className="space-y-1">
           <h4>{item.title}</h4>
           <div className="flex items-center gap-3">
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
+            <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40">
               Logged
             </span>
             <div className="h-1 w-1 rounded-full bg-white/10" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
+            <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40">
               System Event
             </span>
           </div>

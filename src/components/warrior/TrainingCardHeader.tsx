@@ -34,7 +34,7 @@ export function TrainingCardHeader({
             isChampion={warrior.champion}
           />
           <div className="flex items-center gap-2 opacity-60">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em]">
               {STYLE_DISPLAY_NAMES[warrior.style]}
             </span>
             <div className="h-2 w-px bg-white/20" />

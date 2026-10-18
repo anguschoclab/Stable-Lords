@@ -49,7 +49,7 @@ export function ChampionBlock(props: ChampionBlockProps) {
         {reign && champStableIsPlayer && (
           <button
             onClick={onRelinquish}
-            className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] border border-destructive/30 text-destructive/80 hover:bg-destructive/10 transition-colors motion-reduce:transition-none"
+            className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.15em] border border-destructive/30 text-destructive/80 hover:bg-destructive/10 transition-colors motion-reduce:transition-none"
           >
             Relinquish Crown
           </button>
@@ -100,7 +100,7 @@ function ContenderLadder({
 }) {
   return (
     <div className="mt-4 pt-4 border-t border-white/5">
-      <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">
+      <div className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">
         Next in line
       </div>
       <div className="flex flex-wrap gap-x-6 gap-y-1.5">

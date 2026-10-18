@@ -26,7 +26,7 @@ export function PreAdvanceChecklist() {
           <ImperialRing size="xs" variant={unresolvedDirectives.length > 0 ? 'gold' : 'blood'}>
             <ShieldCheck className="h-3.5 w-3.5 text-arena-gold" />
           </ImperialRing>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
             War Council Checklist
           </span>
         </div>
@@ -41,7 +41,7 @@ export function PreAdvanceChecklist() {
       {unresolvedDirectives.length === 0 ? (
         <div className="flex items-center gap-3 text-muted-foreground/60">
           <CheckCircle2 className="h-4 w-4 text-arena-gold/70" />
-          <p className="text-[10px] font-black uppercase tracking-[0.2em]">
+          <p className="text-[10px] font-black uppercase tracking-[0.15em]">
             All council directives resolved
           </p>
         </div>

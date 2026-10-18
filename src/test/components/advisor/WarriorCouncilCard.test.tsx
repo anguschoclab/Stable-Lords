@@ -6,6 +6,8 @@ import { FightingStyle } from '@/types/shared.types';
 import type { WarriorAdvisorCard } from '@/engine/advisor/types';
 import '@/test/_setup/setup';
 
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
+
 const mockCard: WarriorAdvisorCard = {
   warriorId: 'w1' as any,
   warriorName: 'Aulus',

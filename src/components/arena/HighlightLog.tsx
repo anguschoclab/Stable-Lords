@@ -129,7 +129,7 @@ function HighlightLog({ log, visibleCount }: Props) {
   return (
     <div className="border-t border-white/5 bg-neutral-950/60 px-6 py-4">
       <div className="flex items-center gap-3 mb-3">
-        <div className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">
+        <div className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
           Highlight_Reel
         </div>
         <div className="h-px flex-1 bg-white/5" />

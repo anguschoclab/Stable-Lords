@@ -27,7 +27,7 @@ export function KeyMetricsSection(props: KeyMetricsSectionProps) {
         <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
           <Trophy className="h-3.5 w-3.5 text-primary" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Key Metrics
         </h3>
       </div>

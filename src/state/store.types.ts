@@ -20,6 +20,8 @@ interface GameStoreState {
   isSimulating: boolean;
   isInitialized: boolean;
   eventLogOpen: boolean;
+  /** Newest event ID acknowledged in the Arena Feed; null means nothing read. */
+  eventLogLastReadId: string | null;
 }
 
 /**
@@ -29,6 +31,7 @@ interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
   setEventLogOpen: (open: boolean) => void;
+  markEventLogRead: (eventId: string | null) => void;
   doAdvanceWeek: (processedState?: GameState) => Promise<void>;
   doAdvanceDay: (processedState?: GameState) => Promise<void>;
   initialize: () => void;

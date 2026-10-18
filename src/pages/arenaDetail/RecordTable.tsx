@@ -42,7 +42,7 @@ export function RecordTable({
     <Surface variant="glass" className="overflow-hidden p-0">
       <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
         {icon}
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
           {title}
         </span>
       </div>

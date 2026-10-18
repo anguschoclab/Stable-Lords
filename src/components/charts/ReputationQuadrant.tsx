@@ -36,13 +36,15 @@ export function ReputationQuadrant({ className }: { className?: string }) {
         </div>
       </div>
 
-      <QuadrantPlot>
-        <TooltipProvider>
-          {dots.map((dot) => (
-            <QuadrantDotItem key={dot.id} dot={dot} />
-          ))}
-        </TooltipProvider>
-      </QuadrantPlot>
+      <TooltipProvider>
+        <QuadrantPlot>
+          <div className="absolute inset-0">
+            {dots.map((dot) => (
+              <QuadrantDotItem key={dot.id} dot={dot} />
+            ))}
+          </div>
+        </QuadrantPlot>
+      </TooltipProvider>
     </Surface>
   );
 }

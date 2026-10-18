@@ -27,7 +27,7 @@ function ChronicleOfMerit({ warrior }: { warrior: Warrior }) {
         </div>
         <div className="p-8 space-y-6">
           <div className="flex justify-between items-center">
-            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               Highest Renown
             </span>
             <span className="text-sm font-display font-black text-foreground">
@@ -35,7 +35,7 @@ function ChronicleOfMerit({ warrior }: { warrior: Warrior }) {
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               Laurels Won
             </span>
             <span className="text-sm font-display font-black text-foreground">
@@ -43,7 +43,7 @@ function ChronicleOfMerit({ warrior }: { warrior: Warrior }) {
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               Purse Earned
             </span>
             <span className="text-sm font-display font-black text-arena-gold">
@@ -76,7 +76,7 @@ function HonorsSection({ warrior }: { warrior: Warrior }) {
             <div key={`${award.year}-${award.type}-${i}`} className="space-y-3">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <span className="text-[8px] font-black uppercase text-primary tracking-[0.3em]">
+                  <span className="text-[8px] font-black uppercase text-primary tracking-[0.15em]">
                     Year {award.year}
                   </span>
                   <div className="text-[11px] font-black uppercase tracking-widest text-foreground">
@@ -123,7 +123,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
                 <h2 className="font-display font-black uppercase text-3xl tracking-tight text-foreground">
                   Blood Record
                 </h2>
-                <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+                <p className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
                   Every bout, every wound
                 </p>
               </div>

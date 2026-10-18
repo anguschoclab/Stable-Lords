@@ -36,7 +36,7 @@ export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps)
           <ArrowUp className="h-4 w-4 text-arena-gold" />
         </div>
         <div className="text-left">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-arena-gold block leading-none mb-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold block leading-none mb-1">
             UPGRADE TO {nextQuality.toUpperCase()}
           </span>
           <span className="text-[9px] font-bold uppercase tracking-widest text-arena-gold/60">

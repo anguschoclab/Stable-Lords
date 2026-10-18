@@ -14,7 +14,7 @@ export function TrainerTierBadge({ tier }: TrainerTierBadgeProps) {
     <Badge
       variant="outline"
       className={cn(
-        'text-[9px] font-black border-none uppercase tracking-[0.2em] px-3 py-0.5 h-auto',
+        'text-[9px] font-black border-none uppercase tracking-[0.15em] px-3 py-0.5 h-auto',
         tier === 'Master'
           ? 'bg-arena-gold/20 text-arena-gold shadow-[0_0_10px_rgba(255,215,0,0.1)]'
           : tier === 'Seasoned'

@@ -17,7 +17,7 @@ export function RankStrip({ rankIndex }: RankStripProps) {
       )}
     >
       <div className="absolute top-0 left-0 w-full md:w-1 h-1 md:h-full bg-primary opacity-40 group-hover:opacity-100 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-500" />
-      <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 md:mb-1">
+      <span className="text-[9px] font-black uppercase tracking-[0.15em] opacity-40 md:mb-1">
         RANK
       </span>
       <span

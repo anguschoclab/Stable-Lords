@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -76,6 +77,18 @@ export function CouncilCardHeader({
   );
 }
 
+/** Small route jump from advice to the surface that resolves it. */
+function AdvisorActionLink({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="mt-3 inline-flex text-[9px] font-black uppercase tracking-[0.15em] text-arena-gold/80 transition-colors hover:text-arena-gold motion-reduce:transition-none"
+    >
+      {label}
+    </Link>
+  );
+}
+
 /** Combat & tournament advice column. */
 export function CombatColumn({
   card,
@@ -144,6 +157,8 @@ export function CombatColumn({
             </span>
           </p>
         )}
+
+        <AdvisorActionLink to="/stable/bouts" label="Review bout offers" />
       </div>
     </div>
   );
@@ -193,6 +208,8 @@ export function TrainingColumn({ card }: { card: WarriorAdvisorCard }) {
             {card.trainingAdvice.burnWarning}
           </p>
         )}
+
+        <AdvisorActionLink to="/stable/training" label="Adjust training" />
       </div>
     </div>
   );
@@ -233,6 +250,8 @@ export function TacticsColumn({ card }: { card: WarriorAdvisorCard }) {
             {note}
           </p>
         ))}
+
+        <AdvisorActionLink to={`/warrior/${card.warriorId}`} label="Open war plan" />
       </div>
     </div>
   );

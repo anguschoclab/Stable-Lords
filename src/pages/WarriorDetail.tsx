@@ -2,9 +2,7 @@
  * Stable Lords — Warrior Detail
  * Deep dive into a single warrior's stats, history, and equipment.
  */
-import { Link } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Target, ScrollText, User } from 'lucide-react';
+import { Target, ScrollText, User } from 'lucide-react';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
@@ -19,6 +17,7 @@ import { MissionControlTab } from '@/components/warrior/MissionControlTab';
 import { ChronicleTab } from '@/components/warrior/ChronicleTab';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
+import { ReturnLink } from '@/components/ui/ReturnLink';
 import { DetailHeaderActions, DetailTabStrip, DetailSidebar } from '@/pages/WarriorDetail/sections';
 
 const TABS: SubNavTab[] = [
@@ -32,11 +31,7 @@ function UnknownWarrior() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
       <p className="text-muted-foreground">No gladiator bears this mark.</p>
-      <Link to="/">
-        <Button variant="outline">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Return to the Ludus
-        </Button>
-      </Link>
+      <ReturnLink to="/world/scouting" label="Back to Scouting" />
     </div>
   );
 }
@@ -75,6 +70,24 @@ function DetailTabBody(props: {
   );
 }
 
+function getWarriorPresentation(
+  warrior: import('@/types/game').Warrior,
+  displayWarrior: import('@/lib/obfuscation').ObfuscatedWarrior,
+  arenaHistory: import('@/types/game').FightSummary[]
+) {
+  const currentPlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
+  const currentLoadout = warrior.equipment ?? DEFAULT_LOADOUT;
+  const record = `${displayWarrior.career.wins}W - ${displayWarrior.career.losses}L - ${displayWarrior.career.kills}K`;
+  const streakVal = computeStreaks(arenaHistory).get(warrior.id) ?? 0;
+  const streakLabel =
+    streakVal > 0
+      ? `${streakVal}-Bout Reign`
+      : streakVal < 0
+        ? `${Math.abs(streakVal)}-Bout Slump`
+        : null;
+  return { currentPlan, currentLoadout, record, streakVal, streakLabel };
+}
+
 /**
  * Warrior detail.
  */
@@ -84,6 +97,7 @@ export default function WarriorDetail() {
     warrior,
     displayWarrior,
     isPlayerOwned,
+    returnContext,
     activeTab,
     setActiveTab,
     arenaHistory,
@@ -96,21 +110,14 @@ export default function WarriorDetail() {
 
   if (!warrior || !displayWarrior) return <UnknownWarrior />;
 
-  const currentPlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
-  const currentLoadout = warrior.equipment ?? DEFAULT_LOADOUT;
-  const record = `${displayWarrior.career.wins}W - ${displayWarrior.career.losses}L - ${displayWarrior.career.kills}K`;
-
-  const streakMap = computeStreaks(arenaHistory);
-  const streakVal = streakMap.get(warrior.id) ?? 0;
-  const streakLabel =
-    streakVal > 0
-      ? `${streakVal}-Bout Reign`
-      : streakVal < 0
-        ? `${Math.abs(streakVal)}-Bout Slump`
-        : null;
+  const { currentPlan, currentLoadout, record, streakVal, streakLabel } =
+    getWarriorPresentation(warrior, displayWarrior, arenaHistory);
 
   return (
     <PageFrame maxWidth="lg" className="pb-32">
+      <div className="mb-6">
+        <ReturnLink to={returnContext.to} label={returnContext.label} />
+      </div>
       <PageHeader
         icon={User}
         eyebrow={isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}

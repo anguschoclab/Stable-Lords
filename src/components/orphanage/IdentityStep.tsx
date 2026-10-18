@@ -85,7 +85,7 @@ function IdentityField(props: {
     <div className="space-y-1.5">
       <label
         htmlFor={id}
-        className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
+        className="text-[10px] font-black uppercase tracking-[0.15em] text-accent/70"
       >
         {label}
       </label>

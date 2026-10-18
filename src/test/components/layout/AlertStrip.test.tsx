@@ -15,7 +15,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const defaultAlerts: Record<HubId, number> = { stable: 0, world: 0, bookmarks: 0 };
+const defaultAlerts: Record<HubId, number> = { stable: 0, world: 0 };
 
 describe('AlertStrip', () => {
   beforeEach(() => {

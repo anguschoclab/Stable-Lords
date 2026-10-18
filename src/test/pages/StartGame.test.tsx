@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import StartGame from '@/pages/StartGame';
 import * as saveSlots from '@/state/saveSlots';
 import { toast } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { useGameStore } from '@/state/useGameStore';
 
@@ -67,7 +68,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     expect(fileInput).not.toBeNull();
@@ -98,7 +103,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(['{"valid": "json"}'], 'save.json', { type: 'application/json' });
@@ -128,7 +137,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, {
@@ -155,7 +168,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, {
@@ -183,7 +200,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, {
@@ -210,7 +231,11 @@ describe('StartGame', () => {
       return mockFileReader;
     }) as any;
 
-    render(<StartGame />);
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, {
@@ -220,5 +245,80 @@ describe('StartGame', () => {
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith('Failed to read save file.');
     });
+  });
+
+  it('prioritizes continue for the newest save and loads that slot', async () => {
+    const loadGame = vi.fn();
+    useGameStore.setState({ loadGame } as never);
+    vi.mocked(saveSlots.listSaveSlots).mockResolvedValue([
+      { id: 'old', name: 'Old Stable', timestamp: '2025-01-01T00:00:00Z', week: 1, year: 1 },
+      { id: 'new', name: 'New Stable', timestamp: '2025-01-03T00:00:00Z', week: 4, year: 1 },
+    ] as any);
+    vi.mocked(saveSlots.loadFromSlot).mockResolvedValue({ marker: 'state' } as any);
+
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
+
+    const continueButton = await screen.findByRole('button', { name: /Continue — New Stable/i });
+    fireEvent.click(continueButton);
+
+    await waitFor(() => {
+      expect(saveSlots.loadFromSlot).toHaveBeenCalledWith('new');
+      expect(loadGame).toHaveBeenCalledWith('new', { marker: 'state' });
+    });
+  });
+
+  it('disables new game at the save cap with the reason on the action', async () => {
+    vi.mocked(saveSlots.listSaveSlots).mockResolvedValue(
+      Array.from({ length: 10 }, (_, i) => ({
+        id: `slot-${i}`,
+        name: `Stable ${i}`,
+        timestamp: `2025-01-${String(i + 1).padStart(2, '0')}T00:00:00Z`,
+        week: 1,
+        year: 1,
+      })) as any
+    );
+
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
+
+    const maxLabel = await screen.findByText(/Max 10 saves/i);
+    const newGame = maxLabel.closest('button');
+    expect(newGame).toBeDisabled();
+  });
+
+  it('requires confirmation before deleting a save and can cancel safely', async () => {
+    vi.mocked(saveSlots.listSaveSlots).mockResolvedValue([
+      { id: 'slot-1', name: 'Iron Wolves', timestamp: '2025-01-02T00:00:00Z', week: 2, year: 1 },
+    ] as any);
+
+    render(
+      <TooltipProvider>
+        <StartGame />
+      </TooltipProvider>
+    );
+    fireEvent.click(await screen.findByRole('button', { name: /Delete save for Iron Wolves/i }));
+
+    const dialog = await screen.findByRole('alertdialog', { name: /Erase this Record/i });
+    expect(within(dialog).getByText(/permanently deleted/i)).toBeInTheDocument();
+
+    fireEvent.click(within(dialog).getByRole('button', { name: /Preserve/i }));
+    expect(saveSlots.deleteSlot).not.toHaveBeenCalled();
+
+    fireEvent.click(await screen.findByRole('button', { name: /Delete save for Iron Wolves/i }));
+    fireEvent.click(
+      within(await screen.findByRole('alertdialog', { name: /Erase this Record/i })).getByRole(
+        'button',
+        { name: /Expunge Record/i }
+      )
+    );
+
+    await waitFor(() => expect(saveSlots.deleteSlot).toHaveBeenCalledWith('slot-1'));
   });
 });

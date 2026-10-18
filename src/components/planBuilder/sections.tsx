@@ -36,7 +36,7 @@ export function PlanHeader({
           <CardTitle className="font-display text-xl font-black italic uppercase tracking-tighter text-arena-blood">
             Battle Strategy
           </CardTitle>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
             {STYLE_DISPLAY_NAMES[plan.style]} · Engineering
           </p>
         </div>
@@ -56,7 +56,7 @@ export function PlanHeader({
               </Badge>
               <div
                 className={cn(
-                  'text-lg font-mono font-black italic',
+                  'text-lg font-mono font-black',
                   matchupAdv > 0 ? 'text-primary' : 'text-destructive'
                 )}
               >

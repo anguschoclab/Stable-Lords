@@ -46,7 +46,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
 
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="h-10 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-          <span className="text-[10px] font-black text-muted-foreground/40 tracking-[0.3em] italic font-display uppercase">
+          <span className="text-[10px] font-black text-muted-foreground/40 tracking-[0.15em] italic font-display uppercase">
             VS
           </span>
           <div className="h-10 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent" />

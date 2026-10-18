@@ -50,7 +50,7 @@ function MatchupPanel({ style }: { style: FightingStyle }) {
   return (
     <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/5">
       <div className="space-y-2">
-        <span className="text-[8px] font-black uppercase tracking-[0.25em] text-muted-foreground/40 flex items-center gap-1.5">
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 flex items-center gap-1.5">
           <Swords className="h-2.5 w-2.5" /> Strong vs
         </span>
         <div className="flex flex-wrap gap-1">
@@ -62,7 +62,7 @@ function MatchupPanel({ style }: { style: FightingStyle }) {
         </div>
       </div>
       <div className="space-y-2">
-        <span className="text-[8px] font-black uppercase tracking-[0.25em] text-muted-foreground/40 flex items-center gap-1.5">
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 flex items-center gap-1.5">
           <Shield className="h-2.5 w-2.5" /> Vulnerable vs
         </span>
         <div className="flex flex-wrap gap-1">
@@ -99,7 +99,7 @@ export function StyleCard({ style }: { style: FightingStyle }) {
             <h3 className="font-display font-black uppercase tracking-tight text-foreground text-sm truncate">
               {STYLE_DISPLAY_NAMES[style]}
             </h3>
-            <span className="text-[8px] font-black uppercase tracking-[0.25em] text-muted-foreground/50">
+            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/50">
               {entry.archetype}
             </span>
           </div>
@@ -122,7 +122,7 @@ export function StyleCard({ style }: { style: FightingStyle }) {
         </div>
 
         <div className="space-y-2 pt-3 border-t border-white/5">
-          <span className="text-[8px] font-black uppercase tracking-[0.25em] text-muted-foreground/40">
+          <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
             Signature Weapons
           </span>
           <p className="text-[10px] text-foreground/70 font-medium leading-relaxed">
@@ -133,7 +133,7 @@ export function StyleCard({ style }: { style: FightingStyle }) {
         <MatchupPanel style={style} />
 
         <div className="pt-3 border-t border-white/5">
-          <span className="text-[8px] font-black uppercase tracking-[0.25em] text-muted-foreground/40">
+          <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
             Counterplay
           </span>
           <p className="text-[10px] text-muted-foreground/60 italic leading-relaxed mt-1.5">

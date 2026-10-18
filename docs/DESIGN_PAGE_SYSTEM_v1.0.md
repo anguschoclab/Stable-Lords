@@ -27,17 +27,19 @@ Every page except `/start` and `/welcome` (FTUE) renders inside the **App Shell*
 
 | Route                                            | Primary CTA                              |
 | ------------------------------------------------ | ---------------------------------------- |
-| `/` Control Center                               | `EXECUTE WEEK N ›`                       |
-| `/run-round`                                     | `BEGIN CYCLE ›`                          |
-| `/arena`                                         | `VIEW CARD ›`                            |
-| `/tournaments`                                   | `ADVANCE BRACKET ›`                      |
-| `/training`, `/training-planner`                 | `COMMIT REGIMEN ›`                       |
-| `/recruit`, `/scouting`                          | `SIGN CONTRACT ›` (enabled on selection) |
-| `/offseason`                                     | `CLOSE SEASON ›`                         |
-| Detail pages (warrior, stable)                   | Contextual secondary actions only        |
-| Lore (gazette, hall-of-fame, graveyard, history) | No primary CTA — reading rooms           |
+| `/stable` Control Center                         | `EXECUTE WEEK N ›`                       |
+| `/stable/bouts` Booking Office                   | `BEGIN CYCLE ›`                          |
+| `/stable/arena`                                  | `VIEW CARD ›`                            |
+| `/world/tournaments`                             | `ADVANCE BRACKET ›`                      |
+| `/stable/training`, `/stable/planner`            | `COMMIT REGIMEN ›`                       |
+| `/stable/recruit`, `/world/scouting`             | `SIGN CONTRACT ›` (enabled on selection) |
+| `/stable/offseason`                              | `CLOSE SEASON ›`                         |
+| Detail pages (warrior, stable, promoter)         | Contextual secondary actions only        |
+| Chronicle rooms                                  | No primary CTA — reading rooms           |
 
-**Event Log** is present everywhere. Default-collapsed on lore/detail pages; default-open on Control Center, Run Round, Arena, Tournaments.
+`/` redirects into `/stable`. The booking route is the week-preparation surface; `BEGIN CYCLE` runs the shared week/day pipeline and resolution is shown by the shell-level results overlay rather than a separate run-round page. Chronicle rooms are `/world/chronicle`, `/world/history`, `/world/graveyard`, and `/lore/hall-of-fights`.
+
+**Event Log** is present everywhere on desktop. Default-collapsed on lore/detail pages; default-open on Control Center, Booking Office, Arena, and Tournaments. On mobile it is an on-demand sheet rather than a permanent rail.
 
 ---
 
@@ -117,6 +119,8 @@ Use when: one subject, many facets.
 
 Left roster column (selectable list, `lg:col-span-4`) → right editor canvas (`lg:col-span-8`). Footer action bar sticks bottom with `COMMIT / RESET / PREVIEW` buttons.
 
+Transactional workspaces keep edits in local draft state until an explicit commit applies them atomically. Booking Office is the exception: its offers still resolve immediately, so its labels must say accept/decline rather than imply a pending draft.
+
 Use when: the user is assigning/configuring something per-entity.
 
 ### E. **Chronicle** — Gazette, History, Hall of Fame, Graveyard
@@ -125,7 +129,7 @@ Centered column, `max-w-4xl`, parchment-variant cards stacked vertically. Masthe
 
 Use when: the page is for reading, not clicking.
 
-### F. **Focus** — Run Round, Orphanage FTUE step
+### F. **Focus** — Orphanage FTUE step
 
 Single hero card centered, minimal chrome, one massive CTA. Event log collapsed by default.
 
@@ -135,32 +139,40 @@ Use when: one action is the entire point of the screen.
 
 ## 5. Route → Archetype map
 
-| Route                       | Archetype       | Band 2 Hero?           | Event Log default |
-| --------------------------- | --------------- | ---------------------- | ----------------- |
-| `/` Control Center          | A Command Grid  | Yes (storyline)        | Open              |
-| `/arena` Arena Hub          | A Command Grid  | Yes (crowd mood)       | Open              |
-| `/run-round`                | F Focus         | Pinned cycle banner    | Collapsed         |
-| `/tournaments`              | A Command Grid  | Yes (bracket state)    | Open              |
-| `/training`                 | B Ledger        | —                      | Collapsed         |
-| `/training-planner`         | D Planner       | —                      | Collapsed         |
-| `/booking-office`           | D Planner       | Yes (card preview)     | Collapsed         |
-| `/stable` Stable Hall       | B Ledger        | Yes (stable summary)   | Collapsed         |
-| `/stable/:id` Stable Detail | C Dossier       | —                      | Collapsed         |
-| `/warrior/:id`              | C Dossier       | —                      | Collapsed         |
-| `/trainers`                 | B Ledger        | —                      | Collapsed         |
-| `/recruit`                  | B Ledger        | —                      | Collapsed         |
-| `/scouting`                 | B Ledger        | —                      | Collapsed         |
-| `/stable-equipment`         | D Planner       | —                      | Collapsed         |
-| `/stable-ledger` Treasury   | A Command Grid  | Yes (runway alert)     | Open              |
-| `/world` World Overview     | B Ledger        | Yes (season standings) | Open              |
-| `/gazette`                  | E Chronicle     | Masthead               | Hidden            |
-| `/hall-of-fame`             | E Chronicle     | Masthead               | Hidden            |
-| `/graveyard`                | E Chronicle     | Memorial header        | Hidden            |
-| `/offseason`                | A Command Grid  | Yes (season recap)     | Open              |
-| `/physicals`                | D Planner       | —                      | Collapsed         |
-| `/admin`                    | B Ledger        | —                      | Collapsed         |
-| `/help`                     | E Chronicle     | —                      | Hidden            |
-| `/start`, `/welcome`        | bare (no shell) | —                      | —                 |
+| Route                                  | Archetype       | Band 2 Hero?           | Event Log default |
+| -------------------------------------- | --------------- | ---------------------- | ----------------- |
+| `/stable` Control Center               | A Command Grid  | Yes (storyline)        | Open              |
+| `/stable/advisor`                      | A Command Grid  | Yes (directives)       | Collapsed         |
+| `/stable/roster` Stable Hall           | B Ledger        | Yes (stable summary)   | Collapsed         |
+| `/stable/training`                     | B Ledger        | —                      | Collapsed         |
+| `/stable/planner`                      | D Planner       | —                      | Collapsed         |
+| `/stable/arena` Arena Hub              | A Command Grid  | Yes (crowd mood)       | Open              |
+| `/stable/equipment`                    | D Planner       | —                      | Collapsed         |
+| `/stable/bouts` Booking Office         | D Planner       | Yes (offer manifest)   | Collapsed         |
+| `/stable/promoters`                    | B Ledger        | —                      | Collapsed         |
+| `/stable/promoter/:id`                 | C Dossier       | —                      | Collapsed         |
+| `/stable/trainers`                     | B Ledger        | —                      | Collapsed         |
+| `/stable/finance` Treasury             | A Command Grid  | Yes (runway alert)     | Open              |
+| `/stable/recruit`                      | B Ledger        | —                      | Collapsed         |
+| `/stable/offseason`                    | A Command Grid  | Yes (season recap)     | Open              |
+| `/world` World Overview                | B Ledger        | Yes (season standings) | Open              |
+| `/world/arenas`                        | B Ledger        | —                      | Collapsed         |
+| `/world/arenas/:arenaId`               | C Dossier       | —                      | Collapsed         |
+| `/world/tournaments`                   | A Command Grid  | Yes (bracket state)    | Open              |
+| `/world/tournament-prep`               | D Planner       | Yes (entrant status)   | Collapsed         |
+| `/world/scouting`                      | B Ledger        | —                      | Collapsed         |
+| `/world/style-archives`                | B Ledger        | —                      | Collapsed         |
+| `/world/chronicle` Gazette             | E Chronicle     | Masthead               | Hidden            |
+| `/world/history` Hall of Fame          | E Chronicle     | Masthead               | Hidden            |
+| `/world/graveyard`                     | E Chronicle     | Memorial header        | Hidden            |
+| `/world/stable/:id`                    | C Dossier       | —                      | Collapsed         |
+| `/warrior/:id`                         | C Dossier       | —                      | Collapsed         |
+| `/lore/hall-of-fights`                 | E Chronicle     | Masthead               | Hidden            |
+| `/tools/physicals-simulator`           | D Planner       | —                      | Collapsed         |
+| `/bookmarks`, `/import-export`, `/mods`| B Ledger        | —                      | Collapsed         |
+| `/admin`                               | B Ledger        | —                      | Collapsed         |
+| `/help`                                | E Chronicle     | —                      | Hidden            |
+| Title screen, `/welcome`               | bare (no shell) | —                      | —                 |
 
 "Hidden" = the right rail is not rendered at all on that route (reclaims the width for reading).
 
@@ -170,7 +182,7 @@ Use when: one action is the entire point of the screen.
 
 Each section lists only what is unique beyond the archetype. Common rules from §1–4 apply.
 
-### 6.1 `/arena` Arena Hub — Archetype A
+### 6.1 `/stable/arena` Arena Hub — Archetype A
 
 Hero Strip: **Crowd Mood** card full-width — large omen icon (auspicious/neutral/restless), `arena-pop` border, modifiers list as bronze stat pills (`TICKET_YIELD +8% · FAME_GAIN +4%`).
 
@@ -183,25 +195,25 @@ Grid cards:
 5. **Recent Kills** — blood-variant list with weapon + date.
 6. **Sponsor Interest** — patrons watching your stable.
 
-### 6.2 `/run-round` — Archetype F
+### 6.2 `/stable/bouts` Booking Office — Archetype D
 
-Band 1: minimal header — `EXECUTE WEEK N` eyebrow, _"The sand is raked."_ subtitle.
-Band 2 (pinned banner): **Stable Readiness** — 4 stat pills (healthy / injured / in-training / scheduled).
-Band 3: single focus card "Week 12 Manifest" — list of bouts with prominent `BEGIN CYCLE ›` CTA at the bottom.
-After results: cards transform in place — win rows bronze tint, kill rows blood-variant, draws parchment-variant.
+Band 1: `Bout Offers` header with the current week and live offer count.
+Band 2 (status strip): roster readiness and unbooked warriors.
+Band 3: left roster rail + right tabbed offer lists (`THIS WEEK`, `UPCOMING`) wired to real offer state. `BEGIN CYCLE ›` remains the shell CTA; it starts the week/day pipeline and opens the shared resolution sequence instead of routing to a retired focus page.
+After results: ResolutionReveal presents gazette, medical, combat, simulation, and memorial stages with win/kill/death color weight.
 
-### 6.3 `/tournaments` — Archetype A
+### 6.3 `/world/tournaments` — Archetype A
 
 Hero Strip: **Active Bracket** — current tournament name, round indicator `ROUND 3 OF 5`, progress bar.
 Cards: Bracket Viewer (spans 2 cols), Participants list, Prize Purse (`variant="gold"`), Seedings, Past Champions (parchment-variant).
 
-### 6.4 `/training` + `/training-planner`
+### 6.4 `/stable/training` + `/stable/planner`
 
 **Training (B Ledger)**: header HUD shows `ACTIVE · MEDICAL · RESERVE` counts. Filters sidebar: style focus, program type, coach. Main table columns: Warrior · Program · Coach · Week · ETA · Intensity bar.
 
 **Training Planner (D Planner)**: left column = roster selectable list with a `ASSIGNED / UNASSIGNED` segmented filter. Right canvas = regimen editor — program picker, focus weights (carved-groove sliders), coach dropdown, preview stat deltas. Bottom sticky action bar: `RESET · PREVIEW · COMMIT REGIMEN ›`.
 
-### 6.5 `/stable` Stable Hall — Archetype B
+### 6.5 `/stable/roster` Stable Hall — Archetype B
 
 Hero Strip: stable name (hero Cinzel), crest ornament, Fame/Titles HUD bronze-bordered. Filter sidebar: class, style, rank, availability. Main: warrior portrait grid at `md:grid-cols-2 xl:grid-cols-3` — each is a parchment-variant card with name, style seal, small stat-row.
 
@@ -215,63 +227,63 @@ Hero banner: name in Cinzel 900 + style badge + alive/dead indicator + Fame numb
 - EQUIPMENT: loadout grid (weapon, armor, accessories), each as an armory entry.
 - BACKSTORY: parchment-variant narrative block.
 
-### 6.7 `/stable/:id` Stable Detail — Archetype C
+### 6.7 `/world/stable/:id` Stable Detail — Archetype C
 
 Hero banner: stable crest, owner name, era founded. Tabs: `REGISTER · ROSTER · RIVALRIES · HISTORY`. Shows a rival stable from the player's POV.
 
-### 6.8 `/recruit` + `/scouting` — Archetype B
+### 6.8 `/stable/recruit` + `/world/scouting` — Archetype B
 
 Recruit: tabs `MARKET · FORGE A WARRIOR` in PageHeader. Market = ledger of contracts. Scouting = ledger of discovered world warriors.
 Player cards feature: cost in gold, tier seal badge, style, scouted confidence meter (for scouting only).
 
-### 6.9 `/booking-office` — Archetype D
-
-Left: unbooked warriors. Right: week matchmaker — drag warriors into bout slots, see H2H, odds, stakes. Sticky footer: `AUTOFILL · CLEAR · COMMIT CARD ›`.
-
-### 6.10 `/stable-equipment` — Archetype D
+### 6.9 `/stable/equipment` — Archetype D
 
 Left: warriors list. Right: loadout builder — slotted grid with drag-drop; armory inventory accordion below.
 
-### 6.11 `/stable-ledger` Treasury — Archetype A
+### 6.10 `/stable/finance` Treasury — Archetype A
 
 Hero Strip: current Gold, delta, runway — if runway < 4wk, `variant="blood"` escalation.
 Cards: Income streams, Expense streams, Sponsorships, Outstanding debts, Upcoming obligations, 12-week history chart (carved-groove bars).
 
-### 6.12 `/world` World Overview — Archetype B
+### 6.11 `/world` World Overview — Archetype B
 
 Tabs: `STABLES · WARRIORS · INTELLIGENCE`.
 Top strip: four carved stat blocks — Total Stables, Total Warriors, Kills This Season, Top Stable.
 Main: rankings table. Player rows crimson left-border.
 
-### 6.13 `/gazette` — Archetype E (the distinctive one)
+### 6.12 `/world/chronicle` — Archetype E (the distinctive one)
 
 Full-width masthead: `THE ARENA GAZETTE` centered Cinzel 900 with decorative rules above/below; issue line `Week 12 // Autumn // 412 AE`. Content column: stacked parchment-variant article cards — headline Cinzel 700, byline muted italic, body Inter with generous leading. Sidebar: league leaders, latest results — stone-tablet tables.
 
-### 6.14 `/hall-of-fame` — Archetype E
+### 6.13 `/world/history` — Archetype E
 
 Masthead: `HALL OF FAME` with Crown icon + gold glow. Then year-grouped sections; each inductee card gold-variant with portrait area, career record, induction quote.
 
-### 6.15 `/graveyard` — Archetype E
+### 6.14 `/world/graveyard` — Archetype E
 
 Masthead: Skull + blood shadow. Tabs `MY FALLEN · WORLD MEMORIAL`. Cards darker, plaque-shaped, minimal color — cause of death in small muted italic.
 
-### 6.16 `/offseason` — Archetype A
+### 6.15 `/stable/offseason` — Archetype A
 
-Hero Strip: season recap headline with champion card. Cards: Promotions/Demotions, Retirements, Deaths, Rookie Draft, Financial Close-out, Storylines Emerging.
+Hero Strip: season recap headline with champion card. Cards: Promotions/Demotions, Retirements, Deaths, Rookie Draft, Financial Close-out, Storylines Emerging. The right rail carries a `Season Close Checklist` whose roster/staff/ledger items link to the workspace that resolves each obligation; close eligibility must be derived from the active offseason window, never hardcoded.
 
-### 6.17 `/physicals` — Archetype D
+### 6.16 `/tools/physicals-simulator` — Archetype D
 
-Left: warrior picker. Right: simulated fight lab — matchup preview, run-N-times, histogram of outcomes. Mark with `codex-label` "SIMULATION · NO RECORDS KEPT" eyebrow to distinguish from real bouts.
+Left: warrior picker. Right: deterministic two-fighter projection — one simplified 10-minute attrition pass with clearly labeled assumptions. Mark with `codex-label` "SIMULATION · NO RECORDS KEPT" and state that the sandbox does not mutate roster, records, or treasury.
 
-### 6.18 `/admin` — Archetype B
+### 6.16a `/import-export` — Archetype B
+
+Export is immediate. Import is a two-step transaction: parse and validate the pack, show a preview with stable/week/roster summary, then require `Confirm Import` before the session is replaced. `Cancel Import` discards the pending pack without touching canonical state.
+
+### 6.17 `/admin` — Archetype B
 
 Dev/debug only. Ledger of game-state toggles. `codex-label` eyebrow `IMPERIAL CENSOR · ADMIN`. Guard with environment check.
 
-### 6.19 `/help` — Archetype E
+### 6.18 `/help` — Archetype E
 
 Masthead `CODEX · HELP`. Accordion of topics, each in parchment-variant. No HUD, no event log.
 
-### 6.20 `/start` Title Screen and `/welcome` Orphanage FTUE
+### 6.19 Title Screen and `/welcome` Orphanage FTUE
 
 Do NOT use the App Shell. See bible §8 for their bespoke treatments. They are the only two routes that break the shell rule.
 
@@ -297,9 +309,9 @@ Names align to component layer already in `src/components/`:
 | `<SectionDivider>` | codex-label + gradient line                              | every grid band                      |
 | `<EventLogRail>`   | right-rail event feed with filter tabs                   | shell                                |
 | `<FocusCard>`      | single-hero-card wrapper                                 | archetype F                          |
-| `<BoutRow>`        | canonical bout representation                            | CC, Arena, Run Round, Warrior Detail |
+| `<BoutRow>`        | canonical bout representation                            | archetypes A, C, D                   |
 
-Pages should compose these — no page should hand-roll its own header, table header, or stat bar.
+`<BoutRow>` appears on Control Center, Arena, Booking Office, and Warrior Detail. Pages should compose these — no page should hand-roll its own header, table header, or stat bar.
 
 ---
 
@@ -345,14 +357,14 @@ Suggested order — each step is PR-sized and independently shippable:
 1. **Build the shell**: `AppShell`, `TopBar`, `LeftNav`, `EventLogRail`. Wire to `/` only. Feature-flag.
 2. **Extract `PageFrame` + `PageHeader`**: unify what's scattered across existing pages. Swap existing pages to use it, one at a time. No visual regressions expected.
 3. **Refactor tables → `LedgerTable`**: Stable Hall, Trainers, World Overview, Recruit, Scouting, Training. One PR per page.
-4. **Adopt archetype A (Command Grid)**: `/`, `/arena`, `/tournaments`, `/stable-ledger`, `/offseason`.
-5. **Adopt archetype C (Dossier)**: `/warrior/:id`, `/stable/:id`.
-6. **Adopt archetype D (Planner)**: `/training-planner`, `/booking-office`, `/stable-equipment`, `/physicals`.
-7. **Adopt archetype E (Chronicle)**: `/gazette`, `/hall-of-fame`, `/graveyard`, `/help`.
-8. **Adopt archetype F (Focus)**: `/run-round`.
+4. **Adopt archetype A (Command Grid)**: `/stable`, `/stable/arena`, `/world/tournaments`, `/stable/finance`, `/stable/offseason`.
+5. **Adopt archetype C (Dossier)**: `/warrior/:id`, `/world/stable/:id`, `/stable/promoter/:id`, `/world/arenas/:arenaId`.
+6. **Adopt archetype D (Planner)**: `/stable/planner`, `/stable/bouts`, `/stable/equipment`, `/world/tournament-prep`, `/tools/physicals-simulator`.
+7. **Adopt archetype E (Chronicle)**: `/world/chronicle`, `/world/history`, `/world/graveyard`, `/lore/hall-of-fights`, `/help`.
+8. **Retire archetype F as a route**: the former focus-page behavior lives in the shell CTA plus ResolutionReveal; FTUE remains the only bespoke multi-step room.
 9. **Final pass**: remove bespoke headers, delete dead CSS, enforce checklist (§9) in CI lint.
 
-The FTUE (`/welcome`) and Title (`/start`) stay bespoke; they are intentionally pre-shell rooms.
+The FTUE (`/welcome`) and Title screen stay bespoke; they are intentionally pre-shell rooms.
 
 ---
 

@@ -55,7 +55,7 @@ export function YearAwardsSection(props: YearAwardsSectionProps) {
                             {award.stableName}
                           </span>
                         </div>
-                        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                        <div className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
                           Leader:{' '}
                           {player.stableName === award.stableName ? player.name : 'Rival Owner'}
                         </div>

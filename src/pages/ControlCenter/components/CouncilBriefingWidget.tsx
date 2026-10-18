@@ -22,7 +22,7 @@ export function CouncilBriefingWidget() {
             <ImperialRing size="xs" variant="gold">
               <ShieldCheck className="h-3.5 w-3.5 text-arena-gold" />
             </ImperialRing>
-            <span className="text-[10px] font-black uppercase tracking-[0.25em] text-arena-gold">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold">
               Lanista's War Council Directive
             </span>
           </div>

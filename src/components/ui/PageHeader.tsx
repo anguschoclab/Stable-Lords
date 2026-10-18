@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
@@ -19,6 +19,8 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
   (_props, ref) => {
     const { className, title, subtitle, eyebrow, actions } = _props;
     const { icon: Icon, ...props } = _props;
+    const reduceMotion = useReducedMotion();
+    const duration = reduceMotion ? 0 : undefined;
     return (
       <div ref={ref} className={cn('relative space-y-6 pb-6', className)} {...props}>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -33,11 +35,11 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: duration ?? 0.4, ease: [0.16, 1, 0.3, 1] }}
                   className="flex flex-col"
                 >
                   {eyebrow && (
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-accent/50 mb-1">
+                    <span className="text-[10px] font-black uppercase tracking-[0.15em] text-accent/50 mb-1">
                       {eyebrow}
                     </span>
                   )}
@@ -50,8 +52,8 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.4 }}
-                  className="text-[10px] md:text-xs text-muted-foreground font-black uppercase tracking-[0.25em] opacity-40 italic"
+                  transition={{ delay: reduceMotion ? 0 : 0.2, duration: duration ?? 0.4 }}
+                  className="text-[10px] md:text-xs text-muted-foreground font-black uppercase tracking-[0.15em] opacity-60"
                 >
                   {subtitle}
                 </motion.div>
@@ -63,7 +65,7 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.35 }}
+              transition={{ delay: reduceMotion ? 0 : 0.3, duration: duration ?? 0.35 }}
               className="flex items-center gap-3"
             >
               {actions}

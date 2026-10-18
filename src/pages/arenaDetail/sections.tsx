@@ -23,7 +23,7 @@ export function UnknownArena() {
   return (
     <Surface variant="glass" className="p-10 text-center">
       <MapPin className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+      <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
         This arena does not exist in the circuit
       </p>
       <Link

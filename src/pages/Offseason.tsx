@@ -9,7 +9,19 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { YearEndRecap, SeasonSynthesis } from '@/components/ledger';
-import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, History } from 'lucide-react';
+import {
+  CalendarDays,
+  UserPlus,
+  GraduationCap,
+  BookOpen,
+  ArrowRight,
+  History,
+  CheckCircle2,
+  AlertCircle,
+} from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore } from '@/state/useGameStore';
+import { isActive } from '@/engine/warrior/warriorStatus';
 
 const SEASON_ACTIONS = [
   {
@@ -35,10 +47,129 @@ const SEASON_ACTIONS = [
   },
 ];
 
-/** Right column: season action links + historical-context note. */
-function DirectivesColumn() {
+function ChecklistStatus({ ready, readyLabel, reviewLabel }: {
+  ready: boolean;
+  readyLabel: string;
+  reviewLabel: string;
+}) {
+  const Icon = ready ? CheckCircle2 : AlertCircle;
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 text-[8px] font-black uppercase tracking-[0.15em] ${
+        ready ? 'text-primary' : 'text-arena-gold'
+      }`}
+    >
+      <Icon className="h-3 w-3" />
+      {ready ? readyLabel : reviewLabel}
+    </span>
+  );
+}
+
+function ChecklistRow({
+  to,
+  title,
+  detail,
+  status,
+}: {
+  to: string;
+  title: string;
+  detail: string;
+  status: { ready: boolean; readyLabel: string; reviewLabel: string };
+}) {
+  return (
+    <Link to={to} className="block group">
+      <div className="flex items-center justify-between gap-4 border border-white/5 bg-black/20 p-4 transition-colors group-hover:border-primary/30 motion-reduce:transition-none">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">
+            {title}
+          </p>
+          <p className="mt-1 text-[9px] uppercase tracking-widest text-muted-foreground/50">
+            {detail}
+          </p>
+        </div>
+        <ChecklistStatus
+          ready={status.ready}
+          readyLabel={status.readyLabel}
+          reviewLabel={status.reviewLabel}
+        />
+      </div>
+    </Link>
+  );
+}
+
+function SeasonCloseChecklist({
+  activeCount,
+  trainerCount,
+  treasury,
+  closeEligible,
+}: {
+  activeCount: number;
+  trainerCount: number;
+  treasury: number;
+  closeEligible: boolean;
+}) {
+  return (
+    <section aria-label="Season Close Checklist" className="space-y-4">
+      <SectionDivider label="Season Close Checklist" variant="gold" />
+      <Surface variant="glass" className="space-y-3 border-white/5 p-4">
+        <ChecklistRow
+          to="/stable/recruit"
+          title="Review roster"
+          detail={`${activeCount} active warriors under contract`}
+          status={{ ready: activeCount > 0, readyLabel: 'Ready', reviewLabel: 'Needs review' }}
+        />
+        <ChecklistRow
+          to="/stable/trainers"
+          title="Review staff"
+          detail={`${trainerCount} trainers under contract`}
+          status={{ ready: trainerCount > 0, readyLabel: 'Ready', reviewLabel: 'Needs review' }}
+        />
+        <ChecklistRow
+          to="/stable/finance"
+          title="Audit ledger"
+          detail={`${treasury} gold in treasury`}
+          status={{ ready: treasury >= 0, readyLabel: 'Solvent', reviewLabel: 'Crisis' }}
+        />
+        <div className="flex items-center justify-between gap-4 border border-white/5 bg-black/20 p-4">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
+              Close season
+            </p>
+            <p className="mt-1 text-[9px] uppercase tracking-widest text-muted-foreground/50">
+              Advancement remains available; close only during the offseason window.
+            </p>
+          </div>
+          <ChecklistStatus
+            ready={closeEligible}
+            readyLabel="Close eligible"
+            reviewLabel="Close unavailable"
+          />
+        </div>
+      </Surface>
+    </section>
+  );
+}
+
+/** Right column: season close checklist, action links + historical-context note. */
+function DirectivesColumn({
+  activeCount,
+  trainerCount,
+  treasury,
+  closeEligible,
+}: {
+  activeCount: number;
+  trainerCount: number;
+  treasury: number;
+  closeEligible: boolean;
+}) {
   return (
     <div className="lg:col-span-4 space-y-12">
+      <SeasonCloseChecklist
+        activeCount={activeCount}
+        trainerCount={trainerCount}
+        treasury={treasury}
+        closeEligible={closeEligible}
+      />
       <div className="space-y-6">
         <SectionDivider label="Season Actions" />
         <div className="flex flex-col gap-4">
@@ -88,6 +219,17 @@ function DirectivesColumn() {
  * Offseason.
  */
 export default function Offseason() {
+  const { week, roster, trainers, treasury } = useGameStore(
+    useShallow((s) => ({
+      week: s.week,
+      roster: s.roster,
+      trainers: s.trainers,
+      treasury: s.treasury,
+    }))
+  );
+  const activeCount = roster.filter((w) => isActive(w)).length;
+  const closeEligible = week === 1;
+
   return (
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
@@ -102,7 +244,7 @@ export default function Offseason() {
                 Cycle Status
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
-                Off-Season
+                {closeEligible ? 'Off-Season' : 'In Season'}
               </span>
             </div>
           </div>
@@ -123,7 +265,12 @@ export default function Offseason() {
           </div>
         </div>
 
-        <DirectivesColumn />
+        <DirectivesColumn
+          activeCount={activeCount}
+          trainerCount={trainers.length}
+          treasury={treasury}
+          closeEligible={closeEligible}
+        />
       </div>
     </PageFrame>
   );

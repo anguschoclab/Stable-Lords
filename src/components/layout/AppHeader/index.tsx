@@ -19,6 +19,7 @@ interface AppHeaderProps {
   lastSavedAt: string | null;
   onResetPrompt: () => void;
   returnToTitle: () => void;
+  compact?: boolean;
 }
 
 function HeaderLogo() {
@@ -38,7 +39,7 @@ function HeaderLogo() {
         <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors motion-reduce:transition-none">
           Stable Lords
         </span>
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-30">
           Codex Sanguis · v1.0
         </span>
       </div>
@@ -52,10 +53,10 @@ function HeaderLogo() {
 export function AppHeader(props: AppHeaderProps) {
   const { week, day, isTournamentWeek, treasury, fame } = props;
   const { crowdMood, weather, isSimulating, lastSavedAt, onResetPrompt } = props;
-  const { returnToTitle } = props;
+  const { returnToTitle, compact = false } = props;
   return (
-    <header className="h-16 border-b border-white/5 bg-background/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
-      <div className="flex items-center gap-10">
+    <header className="h-16 border-b border-white/5 bg-background/90 backdrop-blur-2xl z-50 flex items-center justify-between px-3 sm:px-6 sticky top-0 flex-shrink-0 shadow-2xl">
+      <div className="flex min-w-0 items-center gap-3 lg:gap-10">
         <div className="flex items-center gap-4">
           <MobileNav />
           <HeaderLogo />
@@ -74,6 +75,7 @@ export function AppHeader(props: AppHeaderProps) {
       </div>
 
       <HeaderActions
+        compact={compact}
         isSimulating={isSimulating}
         lastSavedAt={lastSavedAt}
         onResetPrompt={onResetPrompt}

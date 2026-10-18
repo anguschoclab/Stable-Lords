@@ -89,7 +89,7 @@ function LedgerStream(props: {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         {icon}
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground">
           {title}
         </span>
         <div className="h-px flex-1 bg-white/5" />
@@ -129,7 +129,7 @@ function NetFluxFooter({ net }: { net: number }) {
         className="bg-black/40 border border-white/5 flex justify-between items-center group hover:border-primary/30 transition-all motion-reduce:transition-none motion-reduce:transform-none"
       >
         <div className="flex flex-col">
-          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] opacity-40">
+          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.15em] opacity-40">
             Weekly Net Flux
           </span>
           <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors motion-reduce:transition-none">

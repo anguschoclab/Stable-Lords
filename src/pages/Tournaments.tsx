@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
+import { Surface } from '@/components/ui/Surface';
 import { Trophy, UserPlus, ShieldCheck } from 'lucide-react';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
@@ -99,6 +100,24 @@ function CampaignArchives(props: {
   );
 }
 
+/** Explicit campaign status when no live bracket exists. */
+function CampaignStatus() {
+  return (
+    <section aria-labelledby="campaign-status-heading" className="space-y-4">
+      <SectionDivider label="Campaign Status" />
+      <Surface variant="glass" className="p-6">
+        <h2 id="campaign-status-heading" className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground">
+          No Active Campaign
+        </h2>
+        <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+          Tournaments begin during seasonal campaign weeks. Use Prep Mode to review readiness and
+          recruit warriors if your roster is short.
+        </p>
+      </Surface>
+    </section>
+  );
+}
+
 /** Readiness banner, live manifest, and campaign archives. */
 function TournamentBody(props: {
   tournamentState: ReturnType<typeof useTournamentState>;
@@ -132,6 +151,8 @@ function TournamentBody(props: {
           warriors={playerWarriorsInTournament}
         />
       )}
+
+      {!currentTournament && <CampaignStatus />}
 
       {currentTournament && (
         <ActiveTournamentManifest

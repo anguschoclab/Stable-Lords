@@ -120,7 +120,7 @@ export function TierSection({
         ))}
         {tournament.participants.length === 0 && (
           <div className="py-8 text-center border border-dashed border-white/10">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               No entrants recorded
             </span>
           </div>
@@ -139,7 +139,7 @@ export function EmptyPrepState() {
     >
       <Snowflake className="h-10 w-10 text-muted-foreground/20" />
       <div className="space-y-1">
-        <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="text-sm font-display font-black uppercase tracking-[0.15em] text-muted-foreground">
           No pending tournament
         </p>
         <p className="text-[10px] text-muted-foreground/50 uppercase tracking-widest">
@@ -148,7 +148,7 @@ export function EmptyPrepState() {
       </div>
       <Link
         to="/world/tournaments"
-        className="mt-2 flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-4 py-2 transition-all motion-reduce:transition-none"
+        className="mt-2 flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-4 py-2 transition-all motion-reduce:transition-none"
       >
         <Trophy className="h-3 w-3" /> Tournament Index
       </Link>

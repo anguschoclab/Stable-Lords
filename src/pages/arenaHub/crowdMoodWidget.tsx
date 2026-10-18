@@ -31,7 +31,7 @@ export function CrowdMoodWidget() {
         <div>
           <div className="flex items-center gap-2">
             <Eye className="h-3 w-3 text-accent" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
               Crowd Temperament
             </span>
           </div>

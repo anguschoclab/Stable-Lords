@@ -71,7 +71,7 @@ function RowTrigger({ res, isExpanded }: { res: BoutResult; isExpanded: boolean 
           <FighterCell name={res.a.name} isWinner={isWinnerA} />
 
           <div className="flex flex-col items-center gap-1.5 px-4">
-            <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em]">
+            <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.15em]">
               VS
             </span>
             <Badge

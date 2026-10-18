@@ -55,7 +55,7 @@ export function NameField(props: {
     <div className="space-y-2">
       <label
         htmlFor={id}
-        className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
+        className="text-[10px] font-black uppercase tracking-[0.15em] text-accent/70"
       >
         {label}
       </label>
@@ -89,7 +89,7 @@ export function NameField(props: {
 export function CrestPanel({ crest, onRandomize }: { crest: CrestData; onRandomize: () => void }) {
   return (
     <div className="space-y-3">
-      <label className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70 flex items-center gap-2">
+      <label className="text-[10px] font-black uppercase tracking-[0.15em] text-accent/70 flex items-center gap-2">
         HERALDIC SEAL
         <span className="text-[8px] text-muted-foreground/50 normal-case tracking-normal">
           — Your sigil in the arena

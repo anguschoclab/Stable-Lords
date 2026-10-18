@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { makeTestWarrior, makeDefaultPlan } from '@/test/_fixtures/namedWarrior';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import TrainingPlanner from '@/pages/TrainingPlanner';
 import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -117,9 +117,11 @@ describe('TrainingPlanner (Battle Plans)', () => {
 
     const newPlan = makePlan(FightingStyle.BashingAttack);
     newPlan.OE = 9;
-    useGameStore.getState().setState((draft) => {
-      const found = draft.roster.find((w) => w.id === 'w1');
-      if (found) found.plan = newPlan;
+    act(() => {
+      useGameStore.getState().setState((draft) => {
+        const found = draft.roster.find((w) => w.id === 'w1');
+        if (found) found.plan = newPlan;
+      });
     });
 
     const roster = useGameStore.getState().roster;
@@ -141,9 +143,11 @@ describe('TrainingPlanner (Battle Plans)', () => {
 
     const updatedPlan = makePlan();
     updatedPlan.AL = 8;
-    useGameStore.getState().setState((draft) => {
-      const found = draft.roster.find((w) => w.id === 'w1');
-      if (found) found.plan = updatedPlan;
+    act(() => {
+      useGameStore.getState().setState((draft) => {
+        const found = draft.roster.find((w) => w.id === 'w1');
+        if (found) found.plan = updatedPlan;
+      });
     });
 
     const warrior = useGameStore.getState().roster.find((w) => w.id === 'w1');

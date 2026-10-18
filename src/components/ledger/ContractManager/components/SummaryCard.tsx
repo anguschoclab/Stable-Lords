@@ -35,7 +35,7 @@ export function SummaryCard(props: SummaryCardProps) {
         <Icon className="h-6 w-6" />
       </div>
       <div>
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
+        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40">
           {label}
         </p>
         <p className="text-xl font-mono font-black">{value}</p>

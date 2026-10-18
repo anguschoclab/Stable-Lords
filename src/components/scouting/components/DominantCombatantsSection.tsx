@@ -33,7 +33,7 @@ export function DominantCombatantsSection({
         <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
           <Trophy className="h-3.5 w-3.5 text-arena-gold" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Top Warriors
         </h3>
       </div>

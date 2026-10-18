@@ -19,7 +19,7 @@ export function StyleOfTheSeason({ metaEntries, topStyle }: StyleOfTheSeasonProp
         <div className="p-1.5 rounded-none bg-accent/10 border border-accent/20">
           <TrendingUp className="h-3.5 w-3.5 text-accent" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-accent">
           Style of the Season
         </h3>
       </div>

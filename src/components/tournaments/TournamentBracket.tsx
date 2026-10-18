@@ -55,7 +55,7 @@ export function TournamentBracket({
         {sortedRounds.map(([round, roundBouts], rIdx) => (
           <div key={round} className="flex flex-col justify-around gap-8 relative py-4">
             <div className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50">
+              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/50">
                 {round === totalRounds && totalRounds > 1 ? 'Championship' : `Round ${round}`}
               </span>
             </div>
@@ -123,7 +123,7 @@ export function ChampionDisplay({
         <div className="flex flex-col items-center gap-4">
           <Crown className="h-16 w-16 text-arena-gold animate-bounce motion-reduce:animate-none" />
           <div className="space-y-2">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-black">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-black">
               Tournament Supreme Champion
             </p>
             <h3 className="text-4xl font-display font-black uppercase tracking-tighter text-foreground mt-2">

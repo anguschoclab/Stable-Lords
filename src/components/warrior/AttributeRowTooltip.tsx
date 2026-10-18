@@ -30,7 +30,7 @@ export function AttributeRowTooltip(props: AttributeRowTooltipProps) {
       className="bg-neutral-950 border-white/10 p-3 space-y-2 w-56 z-50"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em]">
           {ATTRIBUTE_LABELS[attributeKey]}
         </span>
         {chance > 0 && (

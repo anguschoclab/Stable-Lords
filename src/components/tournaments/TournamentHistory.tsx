@@ -110,7 +110,7 @@ function SeasonCard(props: {
         <span className="text-xl group-hover:scale-125 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none">
           {seasonIcons[season]}
         </span>
-        <span className="font-display font-black uppercase text-[10px] tracking-[0.2em]">
+        <span className="font-display font-black uppercase text-[10px] tracking-[0.15em]">
           {seasonNames[season]}
         </span>
       </div>

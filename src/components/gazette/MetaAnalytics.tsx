@@ -137,7 +137,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
             Sample: {allFights.length} Bouts
           </span>
         </div>
-        <span className="text-[8px] font-black uppercase tracking-[0.3em]">Current Meta</span>
+        <span className="text-[8px] font-black uppercase tracking-[0.15em]">Current Meta</span>
       </div>
     </Surface>
   );

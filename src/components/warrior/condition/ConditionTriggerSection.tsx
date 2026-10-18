@@ -23,7 +23,7 @@ export function ConditionTriggerSection({
 
   return (
     <div className="space-y-2">
-      <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
+      <div className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
         When
       </div>
       <div className="flex items-center gap-2 flex-wrap">

@@ -43,6 +43,11 @@ export function OfferCard(props: OfferCardProps) {
   const fatigue = playerWarrior?.fatigue ?? 0;
   const fatigueStatus = getFatigueStatus(fatigue);
   const injuryBadge = getInjuryBadge(playerWarrior?.injuries || []);
+  const acceptDisabledReason = injuryBadge
+    ? `${injuryBadge.label} injury blocks this bout`
+    : isExhausted(fatigue)
+      ? 'Critical fatigue blocks this bout'
+      : undefined;
   // Signed state must reflect the persisted offer, not just this page's local
   // click-tracker — offers signed via the War Council (autopilot or "Execute
   // War Council Plan") never touch signedOfferIds.
@@ -89,7 +94,8 @@ export function OfferCard(props: OfferCardProps) {
 
       <OfferActions
         isSigned={isSigned}
-        acceptDisabled={!!injuryBadge || isExhausted(fatigue)}
+        acceptDisabled={!!acceptDisabledReason}
+        acceptDisabledReason={acceptDisabledReason}
         onAccept={() => onResponse(offer.id, playerWarriorId, 'Accepted')}
         onDecline={() => onResponse(offer.id, playerWarriorId, 'Declined')}
       />

@@ -133,4 +133,65 @@ describe('useTrainingPlanner', () => {
     expect((result.current as any).avgTrainability).toBeUndefined();
     expect((result.current as any).currentTrainers).toBeUndefined();
   });
+
+  it('keeps plan edits in a draft until the player commits them', () => {
+    const committed = { ...makePlan(), OE: 3 };
+    const draft = { ...makePlan(), OE: 9, killDesire: 8 };
+    const w1 = makeTestWarrior('w1', 'Alpha', { plan: committed });
+    loadState([w1]);
+
+    const { result } = renderHook(() => useTrainingPlanner());
+    act(() => result.current.handlePlanChange(draft));
+
+    expect(result.current.draftPlan).toEqual(draft);
+    expect(result.current.isDirty).toBe(true);
+    expect(useGameStore.getState().roster[0]!.plan).toEqual(committed);
+  });
+
+  it('commits the draft atomically to the selected warrior and clears dirty state', () => {
+    const original = { ...makePlan(), OE: 3 };
+    const draft = { ...makePlan(), OE: 9, killDesire: 8 };
+    const w1 = makeTestWarrior('w1', 'Alpha', { plan: original });
+    loadState([w1]);
+
+    const { result } = renderHook(() => useTrainingPlanner());
+    act(() => result.current.handlePlanChange(draft));
+    act(() => result.current.commitPlan());
+
+    expect(useGameStore.getState().roster[0]!.plan).toEqual(draft);
+    expect(result.current.draftPlan).toEqual(draft);
+    expect(result.current.isDirty).toBe(false);
+  });
+
+  it('resetPlan restores the committed plan without mutating the roster', () => {
+    const committed = { ...makePlan(), OE: 3 };
+    const draft = { ...makePlan(), OE: 9, killDesire: 8 };
+    const w1 = makeTestWarrior('w1', 'Alpha', { plan: committed });
+    loadState([w1]);
+
+    const { result } = renderHook(() => useTrainingPlanner());
+    act(() => result.current.handlePlanChange(draft));
+    act(() => result.current.resetPlan());
+
+    expect(result.current.draftPlan).toEqual(committed);
+    expect(result.current.isDirty).toBe(false);
+    expect(useGameStore.getState().roster[0]!.plan).toEqual(committed);
+  });
+
+  it('switching warriors discards the previous unsaved draft', () => {
+    const planA = { ...makePlan(), OE: 3 };
+    const planB = { ...makePlan(), OE: 7 };
+    const w1 = makeTestWarrior('w1', 'Alpha', { plan: planA });
+    const w2 = makeTestWarrior('w2', 'Beta', { plan: planB });
+    loadState([w1, w2]);
+
+    const { result } = renderHook(() => useTrainingPlanner());
+    act(() => result.current.handlePlanChange({ ...makePlan(), OE: 9 }));
+    act(() => result.current.setSelectedId('w2'));
+
+    expect(result.current.selectedWarrior?.id).toBe('w2');
+    expect(result.current.draftPlan).toEqual(planB);
+    expect(result.current.isDirty).toBe(false);
+    expect(useGameStore.getState().roster[0]!.plan).toEqual(planA);
+  });
 });

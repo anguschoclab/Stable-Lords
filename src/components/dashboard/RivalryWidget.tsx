@@ -79,7 +79,7 @@ export function RivalryWidget() {
         <Button
           variant="ghost"
           aria-label="Access Conflict Archives"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
+          className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >
           Access Conflict Archives{' '}
           <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
@@ -104,7 +104,7 @@ function RivalryList({
   if (rivalries.length === 0) {
     return (
       <div className="py-12 text-center opacity-20 italic">
-        <p className="text-[10px] uppercase tracking-[0.3em]">No significant vendettas detected</p>
+        <p className="text-[10px] uppercase tracking-[0.15em]">No significant vendettas detected</p>
       </div>
     );
   }

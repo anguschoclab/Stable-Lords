@@ -18,7 +18,7 @@ function HeaderStats({ fame, titles }: { fame: number; titles: number }) {
   return (
     <div className="flex items-center gap-8">
       <div className="flex flex-col items-end">
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">
           Eminent Fame
         </span>
         <div className="flex items-center gap-2 font-display font-black text-xl text-arena-gold">
@@ -27,7 +27,7 @@ function HeaderStats({ fame, titles }: { fame: number; titles: number }) {
       </div>
       <div className="h-8 w-px bg-white/5" />
       <div className="flex flex-col items-end">
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">
           Master Titles
         </span>
         <div className="flex items-center gap-2 font-display font-black text-xl text-primary">

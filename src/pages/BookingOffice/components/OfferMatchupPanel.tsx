@@ -22,7 +22,7 @@ export function OfferMatchupPanel({
   return (
     <div className="flex items-center justify-between gap-6">
       <div className="flex-1 text-center space-y-2">
-        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/40">
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary/40">
           YOUR FIGHTER
         </span>
         <div className="text-xs font-display font-black uppercase text-foreground">
@@ -50,7 +50,7 @@ export function OfferMatchupPanel({
       </div>
 
       <div className="flex-1 text-center space-y-2">
-        <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/20">
           OPPONENT
         </span>
         <div className="text-xs font-display font-black uppercase text-muted-foreground/80">

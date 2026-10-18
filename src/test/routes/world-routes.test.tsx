@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from 'vitest';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { describeRoutes } from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/WorldOverview', () => ({
@@ -52,18 +54,12 @@ const routes = [
 
 describeRoutes(routes);
 
-describe('Route: world/arena-leaderboards (legacy redirect)', () => {
-  it('redirects to /world/arenas', async () => {
-    const mod = await import('@/routes/world/arena-leaderboards');
-    const beforeLoad = (mod.Route.options as { beforeLoad?: () => void }).beforeLoad;
-    expect(beforeLoad).toBeDefined();
-    expect(() => beforeLoad!()).toThrow();
-    try {
-      beforeLoad!();
-    } catch (e) {
-      expect((e as { to?: string }).to ?? (e as { options?: { to?: string } }).options?.to).toBe(
-        '/world/arenas'
-      );
-    }
+describe('Route: world/arena-leaderboards (retired)', () => {
+  it('does not retain a compatibility route file', () => {
+    const legacyRoute = path.resolve(
+      __dirname,
+      '../../routes/world/arena-leaderboards.tsx'
+    );
+    expect(existsSync(legacyRoute)).toBe(false);
   });
 });

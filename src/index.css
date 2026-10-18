@@ -471,7 +471,7 @@
 
   /* ── Section Label (replaces UPPERCASE_UNDERSCORED text) ── */
   .codex-label {
-    @apply text-[10px] font-black uppercase tracking-[0.4em];
+    @apply text-[10px] font-black uppercase tracking-[0.15em];
     color: hsl(var(--arena-gold) / 0.5);
     font-family: 'Cinzel', serif;
   }

@@ -20,13 +20,11 @@ const ALLOWED_UNREACHABLE = new Set([
   'src/vite-env.d.ts', // vite ambient decls
 ]);
 const ALLOWED_TEST_ONLY = new Set(['src/engine/validate/stateInvariants.ts']);
-// Documented legacy redirects, covered by route tests.
+// Dynamic and shell-owned routes are not reachable through static nav links.
 const ALLOWED_UNLINKED_ROUTES = new Set([
-  '/arena-hub',
   '/',
   '/stable/promoter.:id',
   '/warrior/:id',
-  '/world/arena-leaderboards',
   '/world/arenas.:arenaId',
   '/world/stable/:id',
 ]);

@@ -151,7 +151,11 @@ test('tooltip badges + save-pack import round trip', async ({ page, isMobile }) 
   if (!packPath) throw new Error('Export download produced no file path');
   await expect(page.getByText(/Exported save pack/)).toBeVisible({ timeout: 5_000 });
 
-  // Feed the exported pack straight back through the hidden file input.
+  // Feed the exported pack through review, then explicitly replace the session.
   await page.locator('input[aria-label="Choose save pack file"]').setInputFiles(packPath);
+  await expect(page.getByRole('status').filter({ hasText: 'Ready to import' })).toBeVisible({
+    timeout: 10_000,
+  });
+  await page.getByRole('button', { name: 'Confirm Import' }).click();
   await expect(page.getByText(/Save pack imported — week/)).toBeVisible({ timeout: 10_000 });
 });

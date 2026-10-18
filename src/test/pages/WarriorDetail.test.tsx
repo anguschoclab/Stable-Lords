@@ -124,7 +124,7 @@ describe('WarriorDetail', () => {
   it('renders "Return to the Ludus" button in empty state', () => {
     mockRoster = [];
     render(<WarriorDetail />);
-    expect(screen.getByText('Return to the Ludus')).toBeInTheDocument();
+    expect(screen.getByText('Back to Scouting')).toBeInTheDocument();
   });
 
   // --- Eyebrow labels ---

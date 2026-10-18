@@ -216,7 +216,7 @@ describe('ActiveTournamentManifest', () => {
     seasonIcon: '🌿',
   };
 
-  it('renders the tournament name and "LIVE PHASE" badge', () => {
+  it('renders the tournament name and in-progress state badge', () => {
     render(
       <ActiveTournamentManifest
         tournament={makeTournament({ name: 'Spring Classic' })}
@@ -224,7 +224,7 @@ describe('ActiveTournamentManifest', () => {
       />
     );
     expect(screen.getByText('Spring Classic')).toBeDefined();
-    expect(screen.getByText(/LIVE PHASE/i)).toBeDefined();
+    expect(screen.getByText(/IN PROGRESS/i)).toBeDefined();
   });
 
   it('renders TournamentSchedule and TournamentBracket children', () => {

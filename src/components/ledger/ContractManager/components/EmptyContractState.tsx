@@ -13,7 +13,7 @@ export function EmptyContractState() {
         <GraduationCap className="h-16 w-16 text-muted-foreground opacity-20 relative z-10 group-hover:scale-110 transition-transform duration-500 motion-reduce:transition-none motion-reduce:transform-none" />
       </div>
       <div className="space-y-2">
-        <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <p className="text-sm font-display font-black uppercase tracking-[0.15em] text-muted-foreground">
           No Active Contracts
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">

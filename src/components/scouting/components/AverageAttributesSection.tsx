@@ -24,7 +24,7 @@ export function AverageAttributesSection({
         <div className="p-1.5 rounded-none bg-accent/10 border border-accent/20">
           <BarChart3 className="h-3.5 w-3.5 text-accent" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Average Attributes
         </h3>
       </div>

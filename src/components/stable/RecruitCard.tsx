@@ -17,7 +17,7 @@ function TierBadge({ tier }: { tier: RecruitTier }) {
     <Badge
       variant="outline"
       className={cn(
-        'text-[9px] gap-1.5 font-black uppercase tracking-[0.2em] px-3 py-1 rounded-none border-white/10',
+        'text-[9px] gap-1.5 font-black uppercase tracking-[0.15em] px-3 py-1 rounded-none border-white/10',
         config.text
       )}
     >
@@ -79,7 +79,7 @@ function IntelPanel({
       <div className="bg-white/[0.02] border border-white/5 p-6 flex items-center justify-between group/scout">
         <div className="flex items-center gap-3 opacity-40">
           <Info className="h-4 w-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em]">
             Potential Unknown
           </span>
         </div>
@@ -99,7 +99,7 @@ function IntelPanel({
     <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in motion-reduce:animate-none fade-in slide-in-from-top-2 duration-700">
       <div className="flex items-center gap-3">
         <Eye className="h-4 w-4 text-primary" />
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
           Scouted
         </span>
       </div>
@@ -191,7 +191,7 @@ function SignActions({
 
       <div className="flex items-center gap-3">
         <Button
-          className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
+          className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.15em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none motion-reduce:transform-none"
           disabled={!canAfford || rosterFull}
           onClick={() => onRecruit(warrior, false)}
         >

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Mods from '@/pages/Mods';
 import { useGameStore } from '@/state/useGameStore';
@@ -30,6 +30,25 @@ describe('Mods page (G1/G7)', () => {
     expect(useGameStore.getState().houseRules?.severeInjuryInsteadOfDeath).toBe(true);
   });
 
+  it('restores canonical rules without requiring a restart', () => {
+    render(<Mods />);
+    fireEvent.click(screen.getByRole('button', { name: /no-death exhibitions/i }));
+    fireEvent.click(screen.getByRole('button', { name: /restore canonical rules/i }));
+    expect(useGameStore.getState().houseRules?.deathRateMult).toBe(1);
+    expect(screen.getAllByText(/no restart required/i).length).toBeGreaterThan(0);
+  });
+
+  it('surfaces malformed packs and leaves installed packs untouched', async () => {
+    render(<Mods />);
+    const input = screen.getByLabelText(/choose content pack file/i);
+    fireEvent.change(input, {
+      target: { files: [new File(['{bad json'], 'bad.json', { type: 'application/json' })] },
+    });
+    expect(await screen.findByRole('alert')).toHaveTextContent(/unexpected token|json/i);
+    expect(useGameStore.getState().contentPacks ?? []).toHaveLength(0);
+    expect(screen.getByRole('button', { name: /install pack/i })).toBeEnabled();
+  });
+
   it('installs a valid content pack and lists it', async () => {
     const setSpy = vi.spyOn(useGameStore.getState(), 'setState');
     render(<Mods />);
@@ -47,10 +66,13 @@ describe('Mods page (G1/G7)', () => {
         },
       ],
     });
-    fireEvent.change(input, {
-      target: { files: [new File([pack], 'p.json', { type: 'application/json' })] },
+    await act(async () => {
+      fireEvent.change(input, {
+        target: { files: [new File([pack], 'p.json', { type: 'application/json' })] },
+      });
+      await vi.waitFor(() => expect(setSpy).toHaveBeenCalled());
     });
-    await vi.waitFor(() => expect(setSpy).toHaveBeenCalled());
     expect(useGameStore.getState().contentPacks?.[0]?.name).toBe('Lore Pack');
+    expect(screen.getByText(/applied · 1 lore · 0 quotes/i)).toBeInTheDocument();
   });
 });

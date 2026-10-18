@@ -140,7 +140,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 px-2">
-        <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+        <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.15em]">
           Rival Stables
         </h3>
         <div className="h-px flex-1 bg-border/20" />

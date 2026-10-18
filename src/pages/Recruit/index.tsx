@@ -13,7 +13,7 @@ import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 const TAB_TRIGGER_CLASS =
-  'flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
+  'flex-1 h-full font-black uppercase text-[10px] tracking-[0.15em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
 
 function HeaderStats({
   rosterSize,

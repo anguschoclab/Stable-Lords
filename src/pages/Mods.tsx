@@ -2,7 +2,7 @@
  * Mods — House Rules and content-pack loader.
  * Spec: Feature Matrix #25 (`/mods`) and #36 (Content Updater).
  */
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FlaskConical } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -10,42 +10,44 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { useGameStore } from '@/state/useGameStore';
 import { CANONICAL_HOUSE_RULES } from '@/types/state.types';
-import { parseContentPack } from '@/lib/contentPacks';
+import { parseContentPack, type ContentPack } from '@/lib/contentPacks';
 import { readFileInput } from '@/utils/fileInput';
+import type { GameStore } from '@/state/store.types';
 import { ContentPacksSection, HouseRulesSection } from '@/pages/mods/sections';
 
-/**
- * Mods page.
- */
-export default function Mods() {
-  const houseRules = useGameStore((s) => s.houseRules) ?? CANONICAL_HOUSE_RULES;
-  const contentPacks = useGameStore((s) => s.contentPacks) ?? [];
-  const setState = useGameStore((s) => s.setState);
+function useContentPackActions(
+  installedPacks: ContentPack[],
+  setState: GameStore['setState']
+) {
   const fileRef = useRef<HTMLInputElement>(null);
-
-  const nonCanonical = houseRules.deathRateMult !== 1 || houseRules.severeInjuryInsteadOfDeath;
-
-  const setRules = (patch: Partial<typeof houseRules>) => {
-    setState((s) => {
-      s.houseRules = { ...CANONICAL_HOUSE_RULES, ...s.houseRules, ...patch };
-    });
-  };
+  const [pendingPack, setPendingPack] = useState<string | null>(null);
+  const [packError, setPackError] = useState<string | null>(null);
 
   const installPack = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPendingPack(e.target.files?.[0]?.name ?? 'content pack');
+    setPackError(null);
     readFileInput(
       e,
       (content) => {
         const pack = parseContentPack(content);
-        if (contentPacks.some((p) => p.id === pack.id)) {
+        if (installedPacks.some((p) => p.id === pack.id)) {
+          setPendingPack(null);
+          setPackError(`Pack "${pack.id}" is already installed.`);
           toast.error(`Pack "${pack.id}" is already installed.`);
           return;
         }
         setState((s) => {
           s.contentPacks = [...(s.contentPacks ?? []), pack];
         });
+        setPendingPack(null);
         toast.success(`Content pack "${pack.name}" installed.`);
       },
-      (err) => toast.error(err instanceof Error ? err.message : 'Failed to load pack.')
+      (err) => {
+        const message = err instanceof Error ? err.message : 'Failed to load pack.';
+        setPendingPack(null);
+        setPackError(message);
+        toast.error(message);
+      }
     );
   };
 
@@ -55,6 +57,31 @@ export default function Mods() {
     });
     toast.success('Content pack removed.');
   };
+
+  return { fileRef, pendingPack, packError, installPack, removePack };
+}
+
+/**
+ * Mods page.
+ */
+export default function Mods() {
+  const houseRules = useGameStore((s) => s.houseRules) ?? CANONICAL_HOUSE_RULES;
+  const contentPacks = useGameStore((s) => s.contentPacks) ?? [];
+  const setState = useGameStore((s) => s.setState);
+  const { fileRef, pendingPack, packError, installPack, removePack } = useContentPackActions(
+    contentPacks,
+    setState
+  );
+
+  const nonCanonical = houseRules.deathRateMult !== 1 || houseRules.severeInjuryInsteadOfDeath;
+
+  const setRules = (patch: Partial<typeof houseRules>) => {
+    setState((s) => {
+      s.houseRules = { ...CANONICAL_HOUSE_RULES, ...s.houseRules, ...patch };
+    });
+  };
+
+  const resetRules = () => setRules(CANONICAL_HOUSE_RULES);
 
   return (
     <PageFrame maxWidth="lg">
@@ -72,6 +99,7 @@ export default function Mods() {
             houseRules={houseRules}
             nonCanonical={nonCanonical}
             setRules={setRules}
+            resetRules={resetRules}
           />
         </div>
 
@@ -80,6 +108,8 @@ export default function Mods() {
           <ContentPacksSection
             contentPacks={contentPacks}
             fileRef={fileRef}
+            pendingPack={pendingPack}
+            packError={packError}
             installPack={installPack}
             removePack={removePack}
           />

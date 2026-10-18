@@ -1,12 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { describeRoutes } from './_helpers/routeTestHelper';
 
 vi.mock('@/pages/AdminTools', () => ({
   default: () => <div data-testid="admin-tools">AdminTools</div>,
-}));
-vi.mock('@/pages/ArenaHub', () => ({
-  default: () => <div data-testid="arena-hub">ArenaHub</div>,
 }));
 vi.mock('@/pages/Bookmarks', () => ({
   default: () => <div data-testid="bookmarks">Bookmarks</div>,
@@ -47,19 +46,9 @@ const routes = [
 
 describeRoutes(routes);
 
-describe('Route: arena-hub (legacy alias)', () => {
-  it('redirects to the canonical /stable/arena surface', async () => {
-    const mod = await import('@/routes/arena-hub');
-    const beforeLoad = mod.Route.options.beforeLoad;
-    expect(typeof beforeLoad).toBe('function');
-    if (typeof beforeLoad !== 'function') throw new Error('expected redirect beforeLoad');
-    expect(() => beforeLoad({} as never)).toThrow();
-    try {
-      beforeLoad({} as never);
-    } catch (e) {
-      expect((e as { options?: { to?: string } }).options?.to ?? (e as { to?: string }).to).toBe(
-        '/stable/arena'
-      );
-    }
+describe('Route: arena-hub (retired)', () => {
+  it('does not retain a compatibility route file', () => {
+    const legacyRoute = path.resolve(__dirname, '../../routes/arena-hub.tsx');
+    expect(existsSync(legacyRoute)).toBe(false);
   });
 });

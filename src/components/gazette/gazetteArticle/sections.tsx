@@ -49,7 +49,7 @@ export function ArticleMasthead({
               Week {issue.week}
             </Badge>
             <div className="h-1 w-1 rounded-full bg-white/20" />
-            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em]">
               Season {season}
             </span>
           </div>
@@ -63,7 +63,7 @@ export function ArticleMasthead({
         </div>
 
         <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity motion-reduce:transition-none">
-          <span className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">
+          <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground">
             Certified
           </span>
           <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export function LeadStory({ issue, warriorNames, stableNames }: SectionProps) {
       <div className="space-y-6 relative z-10">
         <div className="flex items-center gap-3">
           <div className="h-px w-8 bg-primary/40" />
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
             Lead Story
           </span>
         </div>
@@ -137,7 +137,7 @@ export function SideRegistry({ issue, warriorNames, stableNames }: SectionProps)
     <div className="lg:col-span-4 p-8 md:p-12 bg-white/[0.01] space-y-10">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40">
             In Brief
           </h4>
           <div className="h-1.5 w-1.5 rounded-full bg-arena-gold animate-pulse motion-reduce:animate-none" />
@@ -152,7 +152,7 @@ export function SideRegistry({ issue, warriorNames, stableNames }: SectionProps)
               <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)] motion-reduce:transition-none" />
               <div className="flex items-center gap-2">
                 <Zap className="h-3 w-3 text-arena-gold opacity-40 group-hover/short:opacity-100 transition-opacity motion-reduce:transition-none" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/40 group-hover/short:text-arena-gold transition-colors motion-reduce:transition-none">
+                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-foreground/40 group-hover/short:text-arena-gold transition-colors motion-reduce:transition-none">
                   INTEL_FRAGMENT
                 </span>
               </div>
@@ -186,7 +186,7 @@ export function SideRegistry({ issue, warriorNames, stableNames }: SectionProps)
         </Surface>
         <div className="flex items-center justify-center gap-2 opacity-20">
           <MessageSquare className="h-3 w-3" />
-          <span className="text-[8px] font-black uppercase tracking-[0.3em]">
+          <span className="text-[8px] font-black uppercase tracking-[0.15em]">
             REACTION_LOGS_LOCKED
           </span>
         </div>

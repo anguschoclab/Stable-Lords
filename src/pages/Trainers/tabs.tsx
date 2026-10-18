@@ -30,7 +30,7 @@ function EmptyStaffState() {
         <h4 className="font-display font-black uppercase tracking-widest text-muted-foreground/60">
           No Trainers
         </h4>
-        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] italic max-w-sm mx-auto">
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.15em] italic max-w-sm mx-auto">
           Hire specialists from the hiring pool to begin training your warriors.
         </p>
       </div>
@@ -50,7 +50,7 @@ function FocusBonus({ focus, total }: { focus: TrainerFocus; total: number }) {
           <span className="text-3xl font-display font-black text-foreground">+{total}</span>
           <Zap className="h-4 w-4 text-arena-gold animate-pulse motion-reduce:animate-none" />
         </div>
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-primary transition-colors motion-reduce:transition-none">
           {focus}
         </span>
       </div>
@@ -140,7 +140,7 @@ function RetireToCoachCta({
           <Armchair className="h-5 w-5" />
         </ImperialRing>
         <div className="text-left">
-          <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-1">
+          <span className="text-[12px] font-black uppercase tracking-[0.15em] block mb-1">
             Retire to Coach
           </span>
           <span className="text-[10px] text-muted-foreground/50 uppercase tracking-widest italic">
@@ -178,7 +178,7 @@ function HireAction({
       <Button
         disabled={!canHire || !canTransact(treasury, TIER_COST[trainer.tier as TrainerTier] ?? 50)}
         onClick={() => onHire(trainer)}
-        className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all motion-reduce:transition-none"
+        className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.15em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all motion-reduce:transition-none"
       >
         <UserPlus className="h-4 w-4 mr-3" />
         Hire
@@ -212,7 +212,7 @@ export function HireTab({
             <h3 className="text-lg font-black uppercase tracking-tight text-foreground leading-none mb-1.5">
               Available Trainers
             </h3>
-            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] leading-none">
+            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.15em] leading-none">
               {currentHiringPool.length} candidates available
             </p>
           </div>

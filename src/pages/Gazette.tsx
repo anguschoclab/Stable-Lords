@@ -15,7 +15,15 @@ import { AnalyticsRegistry, NarrativeFeed } from './gazette/sections';
 
 // ─── Gazette Masthead ──────────────────────────────────────────────────────────
 
-function GazetteMasthead({ season, week }: { season: string; week: number }) {
+function GazetteMasthead({
+  season,
+  week,
+  hasContent,
+}: {
+  season: string;
+  week: number;
+  hasContent: boolean;
+}) {
   return (
     <div className="text-center space-y-3 py-10 relative">
       {/* Top ornamental rule — thick and thin */}
@@ -25,7 +33,7 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
       </div>
 
       {/* Pub info row */}
-      <div className="flex items-center justify-center gap-6 text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+      <div className="flex items-center justify-center gap-6 text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
         <span>Est. 412 AE</span>
         <span className="w-1 h-1 inline-block rounded-none bg-accent/40" />
         <span>
@@ -56,9 +64,13 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
 
       {/* Live indicator */}
       <div className="flex items-center justify-center gap-2 mt-1">
-        <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse motion-reduce:animate-none" />
-        <span className="text-[9px] font-black uppercase tracking-[0.35em] text-primary/50">
-          Latest Edition
+        <div
+          className={`w-1.5 h-1.5 rounded-none ${
+            hasContent ? 'bg-primary animate-pulse motion-reduce:animate-none' : 'bg-muted-foreground/30'
+          }`}
+        />
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-primary/50">
+          {hasContent ? 'Latest Edition' : 'No Editions'}
         </span>
       </div>
 
@@ -85,7 +97,7 @@ function GazetteEmptyState() {
         <Terminal className="h-16 w-16 relative z-10 opacity-15 text-muted-foreground" />
       </div>
       <div className="space-y-2 relative z-10 text-center">
-        <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground/50">
+        <p className="text-sm font-display font-black uppercase tracking-[0.15em] text-muted-foreground/50">
           The Presses Are Silent
         </p>
         <p className="text-xs text-muted-foreground/35 italic max-w-sm mx-auto leading-relaxed">
@@ -122,7 +134,7 @@ export default function Gazette() {
   return (
     <div className="space-y-16 max-w-7xl mx-auto pb-32 animate-in fade-in duration-700 motion-reduce:animate-none">
       {/* ── Masthead ──────────────────────────────────────────────────────────── */}
-      <GazetteMasthead season={season} week={week} />
+      <GazetteMasthead season={season} week={week} hasContent={hasContent} />
 
       {/* ── Analytics Registry ────────────────────────────────────────────────── */}
       {hasContent && <AnalyticsRegistry allFights={allFights} />}

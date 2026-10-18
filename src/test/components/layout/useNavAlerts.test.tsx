@@ -40,23 +40,16 @@ describe('useNavAlerts', () => {
     vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
   });
 
-  it('returns zero counts when no alerts, no tournament, no bookmarks', () => {
+  it('returns zero counts when no alerts and no tournament', () => {
     const { result } = renderHook(() => useNavAlerts());
     expect(result.current.counts.stable).toBe(0);
     expect(result.current.counts.world).toBe(0);
-    expect(result.current.counts.bookmarks).toBe(0);
   });
 
   it('returns counts.world = 1 when isTournamentWeek = true', () => {
     useGameStore.setState({ isTournamentWeek: true } as never);
     const { result } = renderHook(() => useNavAlerts());
     expect(result.current.counts.world).toBe(1);
-  });
-
-  it('returns counts.bookmarks = N matching bookmarkCount', () => {
-    useGameStore.setState({ bookmarks: Array(7) } as never);
-    const { result } = renderHook(() => useNavAlerts());
-    expect(result.current.counts.bookmarks).toBe(7);
   });
 
   it('parses untrained count from unassigned-training alert message', () => {
@@ -124,11 +117,10 @@ describe('useNavAlerts', () => {
     expect(result.current.counts.stable).toBe(0);
   });
 
-  it('returns correct links object (stable→/stable, world→/world/tournaments, bookmarks→/bookmarks)', () => {
+  it('returns correct links object (stable→/stable, world→/world/tournaments)', () => {
     const { result } = renderHook(() => useNavAlerts());
     expect(result.current.links.stable).toBe('/stable');
     expect(result.current.links.world).toBe('/world/tournaments');
-    expect(result.current.links.bookmarks).toBe('/bookmarks');
   });
 
   it('handles malformed alert message (no number) — defaults to 0', () => {

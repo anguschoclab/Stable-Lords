@@ -44,7 +44,7 @@ export function MissionControlTab({
               <ImperialRing size="sm" variant="gold">
                 <Crosshair className="h-4 w-4 text-arena-gold" />
               </ImperialRing>
-              <span className="font-display font-black uppercase tracking-[0.2em] text-[11px]">
+              <span className="font-display font-black uppercase tracking-[0.15em] text-[11px]">
                 Battle Doctrine
               </span>
             </div>

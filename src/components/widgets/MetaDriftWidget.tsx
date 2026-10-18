@@ -19,7 +19,7 @@ function DriftHeader() {
         <ImperialRing size="xs" variant="bronze">
           <Activity className="h-3 w-3 text-primary" />
         </ImperialRing>
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Style Meta Drift
         </span>
       </div>

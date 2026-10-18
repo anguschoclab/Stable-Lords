@@ -186,7 +186,7 @@ function DoctrineSurface({
         className={`p-4 border-b border-white/5 ${colorVariant === 'primary' ? 'bg-primary/5' : 'bg-accent/5 text-right'}`}
       >
         <h3
-          className={`text-[9px] font-black uppercase tracking-[0.2em] ${colorVariant === 'primary' ? 'text-primary' : 'text-accent'}`}
+          className={`text-[9px] font-black uppercase tracking-[0.15em] ${colorVariant === 'primary' ? 'text-primary' : 'text-accent'}`}
         >
           {stableName} Doctrines
         </h3>

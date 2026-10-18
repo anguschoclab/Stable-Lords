@@ -27,8 +27,8 @@ describe('HUBS structure after consolidation', () => {
 });
 
 describe('HUBS extended structure', () => {
-  it('has exactly 3 hubs', () => {
-    expect(HUBS).toHaveLength(3);
+  it('has exactly 2 product hubs', () => {
+    expect(HUBS).toHaveLength(2);
   });
 
   it('each hub has id, label, icon, to, and pages properties', () => {
@@ -42,9 +42,9 @@ describe('HUBS extended structure', () => {
     });
   });
 
-  it('stable hub has exactly 15 pages', () => {
+  it('stable hub has exactly 14 pages', () => {
     const stable = HUBS.find((h) => h.id === 'stable')!;
-    expect(stable.pages).toHaveLength(15);
+    expect(stable.pages).toHaveLength(14);
   });
 
   it('world hub has exactly 10 pages', () => {
@@ -52,9 +52,10 @@ describe('HUBS extended structure', () => {
     expect(world.pages).toHaveLength(10);
   });
 
-  it('bookmarks hub has exactly 0 pages', () => {
-    const bookmarks = HUBS.find((h) => h.id === 'bookmarks')!;
-    expect(bookmarks.pages).toHaveLength(0);
+  it('bookmarks is a utility destination, not a hub', () => {
+    const hubIds = HUBS.map((h) => h.id as string);
+    expect(hubIds).not.toContain('bookmarks');
+    expect(UTILITY_LINKS.some((link) => link.to === '/bookmarks')).toBe(true);
   });
 
   it('all hub `to` paths start with /', () => {
@@ -117,7 +118,7 @@ describe('HUBS extended structure', () => {
     expect(labels).toContain('Finance');
     expect(labels).toContain('Recruit');
     expect(labels).toContain('Offseason');
-    expect(labels).toContain('Tournaments');
+    expect(labels).not.toContain('Tournaments');
     expect(labels).toContain('Simulator');
   });
 
@@ -138,9 +139,10 @@ describe('HUBS extended structure', () => {
 });
 
 describe('UTILITY_LINKS (E1/E4 nav wiring)', () => {
-  it('exposes /help and /admin as reachable utility destinations', () => {
+  it('exposes /help, /bookmarks, and /admin as reachable utility destinations', () => {
     const paths = UTILITY_LINKS.map((l) => l.to);
     expect(paths).toContain('/help');
+    expect(paths).toContain('/bookmarks');
     expect(paths).toContain('/admin');
   });
 

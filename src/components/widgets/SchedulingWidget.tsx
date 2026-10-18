@@ -104,7 +104,7 @@ function CardFooter(props: {
   return (
     <>
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
-        <div className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">
+        <div className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.15em]">
           Priority_Index
         </div>
         <div

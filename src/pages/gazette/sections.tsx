@@ -22,7 +22,7 @@ export function AnalyticsRegistry({ allFights }: { allFights: FightSummary[] }) 
         icon={BarChart3}
         title="Arena Stats"
         subtitle="Historical Aggregates"
-        badge="Live"
+        badge="Aggregate"
         badgeStyle="primary"
       />
 
@@ -50,7 +50,7 @@ export function AnalyticsRegistry({ allFights }: { allFights: FightSummary[] }) 
             background: 'linear-gradient(90deg, transparent, rgba(var(--gold-glow-rgb), 0.25))',
           }}
         />
-        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground/30">
+        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/30">
           <Scroll className="h-3 w-3" />
           <span>Narrative Archive</span>
           <Scroll className="h-3 w-3" />
@@ -104,7 +104,7 @@ function LoadMoreControl({ remaining, onLoadMore }: { remaining: number; onLoadM
       />
 
       <div className="flex flex-col items-center gap-2">
-        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40">
+        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em] opacity-40">
           Archive Remainder: {remaining} Editions
         </span>
       </div>
@@ -116,7 +116,7 @@ function LoadMoreControl({ remaining, onLoadMore }: { remaining: number; onLoadM
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-arena-gold/5 to-arena-gold/0 motion-reduce:transition-none" />
         <div className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-transparent via-arena-gold/80 to-transparent motion-reduce:transition-none" />
         <History className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent transition-colors motion-reduce:transition-none" />
-        <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-accent transition-colors motion-reduce:transition-none">
+        <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 group-hover:text-accent transition-colors motion-reduce:transition-none">
           Historical Recall
         </span>
         <ChevronDown className="relative z-10 h-4 w-4 text-muted-foreground/40 group-hover:text-accent group-hover:translate-y-1 transition-all motion-reduce:transition-none motion-reduce:transform-none" />

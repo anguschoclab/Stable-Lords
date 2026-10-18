@@ -28,7 +28,7 @@ function EmptyAcademy() {
         <Surface
           variant="neon"
           padding="sm"
-          className="text-[10px] font-black uppercase tracking-[0.2em] px-8 py-2.5 hover:scale-105 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
+          className="text-[10px] font-black uppercase tracking-[0.15em] px-8 py-2.5 hover:scale-105 transition-transform motion-reduce:transition-none motion-reduce:transform-none"
         >
           Enlist Specialists
         </Surface>
@@ -181,7 +181,7 @@ export function TrainerTable() {
         <Button
           asChild
           variant="outline"
-          className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none border border-primary/20 bg-transparent h-auto"
+          className="text-[10px] font-black uppercase tracking-[0.15em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all motion-reduce:transition-none motion-reduce:transform-none border border-primary/20 bg-transparent h-auto"
         >
           <Link to="/stable/trainers" aria-label="Manage Staff">
             Manage Staff

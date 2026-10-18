@@ -39,18 +39,18 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
 
     return (
       <div className="h-screen w-screen bg-background flex flex-col items-center justify-center gap-6 font-mono text-center px-8">
-        <div className="text-primary text-[10px] uppercase tracking-[0.5em] animate-pulse motion-reduce:animate-none">
+        <div className="text-primary text-[10px] uppercase tracking-[0.15em] animate-pulse motion-reduce:animate-none">
           Error
         </div>
         <h1>Fatal Error</h1>
-        <p className="text-muted-foreground text-xs uppercase tracking-[0.3em] max-w-sm">
+        <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] max-w-sm">
           A fatal error occurred. The arena scribe cannot continue.
         </p>
         {/* Error details are hidden to prevent information leakage */}
         <button
           aria-label="Try Again"
           onClick={() => this.setState({ hasError: false, error: null })}
-          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
+          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.15em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >
           Try Again
         </button>

@@ -29,7 +29,7 @@ export function ArenaAnalyticsSurface({ renown, lifetimeKills, winRate }: ArenaA
           <ImperialRing size="sm" variant="blood">
             <BarChart3 className="h-3.5 w-3.5 text-primary" />
           </ImperialRing>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
             Stable Stats
           </span>
         </div>
@@ -52,7 +52,7 @@ export function ArenaAnalyticsSurface({ renown, lifetimeKills, winRate }: ArenaA
       </div>
 
       <div className="pt-6 border-t border-white/5">
-        <p className="text-[9px] text-muted-foreground/30 leading-relaxed uppercase tracking-[0.2em] font-black italic">
+        <p className="text-[9px] text-muted-foreground/30 leading-relaxed uppercase tracking-[0.15em] font-black italic">
           Season record updated after each bout.
         </p>
       </div>
@@ -71,7 +71,7 @@ export function ArenaStatusStrip({
   lifetimeKills: number;
 }) {
   const itemClass =
-    'flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap text-muted-foreground/60';
+    'flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.15em] whitespace-nowrap text-muted-foreground/60';
   return (
     <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 px-6 border-t border-white/5 mt-12 transition-all duration-700 motion-reduce:transition-none">
       <div className={itemClass}>

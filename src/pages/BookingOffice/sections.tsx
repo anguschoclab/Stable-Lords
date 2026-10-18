@@ -55,7 +55,7 @@ export function RosterStatusBar({
         <ImperialRing size="sm" variant="blood">
           <Target className="h-4 w-4 text-primary" />
         </ImperialRing>
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Roster Status
         </span>
       </div>
@@ -103,13 +103,13 @@ function EmptyOffers({ title, hint }: { title: string; hint: string }) {
   return (
     <Surface
       variant="glass"
-      className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
+      className="py-24 md:py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
     >
       <ImperialRing size="lg" variant="bronze" className="opacity-20">
         <Briefcase className="h-8 w-8" />
       </ImperialRing>
       <div className="space-y-2">
-        <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+        <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
           {title}
         </p>
         <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
@@ -245,7 +245,7 @@ function OfferTabBar({
   upcomingCount: number;
 }) {
   const triggerClass =
-    'flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0';
+    'flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.15em] text-muted-foreground border-0';
   return (
     <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
       <TabsList className="flex w-full h-full bg-transparent p-0 gap-1 rounded-none">

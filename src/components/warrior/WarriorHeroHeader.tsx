@@ -58,7 +58,7 @@ export function WarriorHeroHeader(props: WarriorHeroHeaderProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
         <div className="space-y-4">
           <div className="space-y-1">
-            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">
+            <span className="text-[8px] font-black uppercase tracking-[0.15em] text-primary/60">
               {isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}
             </span>
             <div className="flex items-center gap-4">

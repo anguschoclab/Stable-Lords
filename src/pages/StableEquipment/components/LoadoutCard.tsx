@@ -28,7 +28,7 @@ function EncumbranceMeter({ totalWeight, carryCap }: { totalWeight: number; carr
   const over = totalWeight > carryCap;
   return (
     <div className="space-y-2 pt-6 mt-auto">
-      <div className="flex justify-between text-[9px] font-black uppercase tracking-[0.3em] mb-1">
+      <div className="flex justify-between text-[9px] font-black uppercase tracking-[0.15em] mb-1">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -82,7 +82,7 @@ function RequirementFailures({
 }) {
   return (
     <div className="p-3 bg-destructive/10 border border-destructive/20 space-y-2 mt-4">
-      <div className="flex items-center gap-2 text-[8px] font-black uppercase text-destructive tracking-[0.3em]">
+      <div className="flex items-center gap-2 text-[8px] font-black uppercase text-destructive tracking-[0.15em]">
         <AlertTriangle className="h-3 w-3" /> Stat Requirement Failed
       </div>
       <div className="flex flex-wrap gap-2">
@@ -115,11 +115,11 @@ function CardHead({ rec, isTop }: { rec: LoadoutRec; isTop: boolean }) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border">
+        <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.15em] px-2 py-0 border">
           {rec.synergy}% SYNERGY
         </Badge>
         {isTop && (
-          <Badge className="bg-arena-gold text-primary-foreground font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">
+          <Badge className="bg-arena-gold text-primary-foreground font-black uppercase text-[8px] tracking-[0.15em] px-2 py-0 border-none">
             OPTIMAL PATH
           </Badge>
         )}
@@ -195,15 +195,16 @@ function ApplyFooter({
     <div className="p-4 bg-black/40 border-t border-white/5">
       <Button
         className={cn(
-          'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all motion-reduce:transition-none',
+          'w-full h-12 font-black uppercase text-[10px] tracking-[0.15em] transition-all motion-reduce:transition-none',
           isTop
             ? 'bg-primary text-primary-foreground hover:bg-primary/90'
             : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.1] text-foreground'
         )}
         onClick={() => onApply(rec.loadout, rec.label)}
         disabled={disabled}
+        title={disabled ? 'Stat requirements are not met or no warrior is selected.' : undefined}
       >
-        Apply Loadout
+        Review Loadout
       </Button>
     </div>
   );
@@ -242,7 +243,12 @@ export function LoadoutCard(props: LoadoutCardProps) {
         <EncumbranceMeter totalWeight={rec.totalWeight} carryCap={carryCap} />
       </div>
 
-      <ApplyFooter rec={rec} isTop={isTop} disabled={disabled} onApply={onApply} />
+      <ApplyFooter
+        rec={rec}
+        isTop={isTop}
+        disabled={disabled || Boolean(reqCheck && !reqCheck.met)}
+        onApply={onApply}
+      />
     </Surface>
   );
 }

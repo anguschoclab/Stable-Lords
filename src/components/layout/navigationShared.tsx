@@ -2,7 +2,7 @@
  * Shared navigation components and utilities
  * Eliminates duplication between LeftNav and MobileNav
  */
-import { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,11 +28,10 @@ interface UseNavAlertsOptions {
 // eslint-disable-next-line react-refresh/only-export-components
 export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const { trackWeek = false } = options;
-  const { week, isTournamentWeek, bookmarkCount } = useGameStore(
+  const { week, isTournamentWeek } = useGameStore(
     useShallow((s) => ({
       week: s.week,
       isTournamentWeek: s.isTournamentWeek,
-      bookmarkCount: s.bookmarks.length,
     }))
   );
   const alerts = useTacticalAlerts();
@@ -65,12 +64,10 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
     counts: {
       stable: showStableAlert ? untrainedCount + pendingOffers : 0,
       world: isTournamentWeek ? 1 : 0,
-      bookmarks: bookmarkCount,
     } as Record<HubId, number>,
     links: {
       stable: '/stable',
       world: '/world/tournaments',
-      bookmarks: '/bookmarks',
     } as Record<HubId, string>,
   };
 }
@@ -172,6 +169,8 @@ interface SubPageListProps {
 export function SubPageList(props: SubPageListProps) {
   const { activeHubId, currentPath, LinkComponent = Link, pageLinkClassName, iconClassName } = props;
   const { useMotionIndicator = true, animationDuration = 0.3 } = props;
+  const pages = HUBS.find((h) => h.id === activeHubId)?.pages ?? [];
+
   return (
     <AnimatePresence mode="wait">
       {activeHubId && (
@@ -183,47 +182,55 @@ export function SubPageList(props: SubPageListProps) {
           transition={{ duration: animationDuration, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col gap-0.5 px-2"
         >
-          {HUBS.find((h) => h.id === activeHubId)?.pages.map((page) => {
-            const pageAny = page as { to: string; exact?: boolean };
+          {pages.map((page, index) => {
+            const pageAny = page as { to: string; exact?: boolean; section?: string };
             const isActive = pageAny.exact
               ? currentPath === page.to
               : currentPath === page.to || currentPath.startsWith(`${page.to}/`);
             const PageIcon = page.icon;
+            const previous = pages[index - 1] as { section?: string } | undefined;
+            const startsSection = pageAny.section !== undefined && pageAny.section !== previous?.section;
 
             return (
-              <LinkComponent
-                key={page.to}
-                to={page.to}
-                className={cn(
-                  'relative flex items-center gap-2.5 px-3 py-1.5 rounded-none',
-                  'text-[10px] font-black uppercase tracking-wider transition-all motion-reduce:transition-none motion-reduce:transform-none duration-150 group',
-                  isActive
-                    ? 'text-foreground bg-white/8'
-                    : 'text-muted-foreground/50 hover:text-foreground/80 hover:bg-white/5',
-                  pageLinkClassName
+              <Fragment key={page.to}>
+                {startsSection && (
+                  <h3 className="mt-3 px-3 pb-1 text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 first:mt-0">
+                    {pageAny.section}
+                  </h3>
                 )}
-              >
-                {useMotionIndicator && isActive && (
-                  <motion.div
-                    layoutId="leftnav-page-indicator"
-                    className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"
-                    transition={{ duration: animationDuration, ease: [0.16, 1, 0.3, 1] }}
-                  />
-                )}
-                {!useMotionIndicator && isActive && (
-                  <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary" />
-                )}
-                <PageIcon
+                <LinkComponent
+                  to={page.to}
                   className={cn(
-                    'h-3.5 w-3.5 shrink-0 transition-colors motion-reduce:transition-none',
+                    'relative flex items-center gap-2.5 px-3 py-1.5 rounded-none',
+                    'text-[10px] font-black uppercase tracking-wider transition-all motion-reduce:transition-none motion-reduce:transform-none duration-150 group',
                     isActive
-                      ? 'text-primary'
-                      : 'text-muted-foreground/40 group-hover:text-muted-foreground/70',
-                    iconClassName
+                      ? 'text-foreground bg-white/8'
+                      : 'text-muted-foreground/50 hover:text-foreground/80 hover:bg-white/5',
+                    pageLinkClassName
                   )}
-                />
-                <span className="relative">{page.label}</span>
-              </LinkComponent>
+                >
+                  {useMotionIndicator && isActive && (
+                    <motion.div
+                      layoutId="leftnav-page-indicator"
+                      className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"
+                      transition={{ duration: animationDuration, ease: [0.16, 1, 0.3, 1] }}
+                    />
+                  )}
+                  {!useMotionIndicator && isActive && (
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary" />
+                  )}
+                  <PageIcon
+                    className={cn(
+                      'h-3.5 w-3.5 shrink-0 transition-colors motion-reduce:transition-none',
+                      isActive
+                        ? 'text-primary'
+                        : 'text-muted-foreground/40 group-hover:text-muted-foreground/70',
+                      iconClassName
+                    )}
+                  />
+                  <span className="relative">{page.label}</span>
+                </LinkComponent>
+              </Fragment>
             );
           })}
         </motion.div>

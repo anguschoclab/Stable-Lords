@@ -35,4 +35,13 @@ describe('Tournaments Page', () => {
     const recruitBtn = getByRole('button', { name: /Recruit Warriors/i });
     expect(recruitBtn).toBeDefined();
   });
+
+  it('shows an explicit no-active-campaign status and no bracket action', () => {
+    const { getByRole, queryByRole } = render(<Tournaments />);
+
+    const status = getByRole('region', { name: /no active campaign/i });
+    expect(status).toHaveTextContent(/no active campaign/i);
+    expect(status).toHaveTextContent(/tournaments begin during seasonal campaign weeks/i);
+    expect(queryByRole('button', { name: /execute|resolve|advance/i })).not.toBeInTheDocument();
+  });
 });

@@ -28,7 +28,7 @@ export function NoReportState({ warriorName, treasury, onScout }: NoReportStateP
             <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
               <Terminal className="h-4 w-4 text-primary" />
             </div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary leading-none">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.15em] text-primary leading-none">
               No Report Available
             </h4>
           </div>
@@ -93,7 +93,7 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
           <Eye className="h-4 w-4" />
         </div>
         <div className="text-left">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] block leading-none mb-1">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] block leading-none mb-1">
             {quality} SCAN
           </span>
           <span className="text-[9px] font-bold uppercase tracking-widest opacity-40">

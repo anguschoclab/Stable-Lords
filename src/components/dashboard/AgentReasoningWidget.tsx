@@ -161,7 +161,7 @@ function IntentPanel({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className={cn('w-4 h-4', metric.color)} />
-          <span className={cn('text-xs font-black uppercase tracking-[0.2em]', metric.color)}>
+          <span className={cn('text-xs font-black uppercase tracking-[0.15em]', metric.color)}>
             {metric.label}
           </span>
         </div>

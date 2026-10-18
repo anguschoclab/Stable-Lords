@@ -196,7 +196,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
           >
             <div className="flex justify-between items-center">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-1">
+                <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 mb-1">
                   {d.style}
                 </span>
                 <WarriorLink

@@ -13,7 +13,7 @@ function SeasonMetaRow({ season, week }: { season: string; week: number }) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40 mb-1">
           CURRENT SEASON
         </span>
         <div className="flex items-center gap-2">
@@ -30,7 +30,7 @@ function SeasonMetaRow({ season, week }: { season: string; week: number }) {
       </div>
 
       <div className="text-right">
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground opacity-40 mb-1">
           WEEK
         </span>
         <div className="text-xl font-mono font-black text-foreground/80">{week} / 13</div>
@@ -140,7 +140,7 @@ export function SeasonWidget() {
             <Clock className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="font-display text-sm font-black uppercase tracking-[0.2em] text-carved">
+            <h3 className="font-display text-sm font-black uppercase tracking-[0.15em] text-carved">
               Season Chronicle
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">

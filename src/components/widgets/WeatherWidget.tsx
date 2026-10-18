@@ -31,7 +31,7 @@ export function WeatherWidget() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Cloud className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
             Arena Environment
           </span>
         </div>

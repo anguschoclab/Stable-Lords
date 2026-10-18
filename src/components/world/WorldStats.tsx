@@ -106,7 +106,7 @@ function StatTile({
         <item.icon className={cn('h-12 w-12', item.color)} />
       </div>
       <div className="p-5 flex flex-col justify-center min-h-[90px] relative z-10">
-        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mb-1 leading-none">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 mb-1 leading-none">
           {item.label}
         </span>
         <p

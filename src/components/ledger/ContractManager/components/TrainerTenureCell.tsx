@@ -26,7 +26,7 @@ export function TrainerTenureCell({ weeksLeft }: TrainerTenureCellProps) {
             }
           />
           {isExpiring && (
-            <span className="text-[8px] font-black uppercase text-destructive tracking-[0.2em] animate-pulse motion-reduce:animate-none text-center">
+            <span className="text-[8px] font-black uppercase text-destructive tracking-[0.15em] animate-pulse motion-reduce:animate-none text-center">
               Critical_End_Notice
             </span>
           )}

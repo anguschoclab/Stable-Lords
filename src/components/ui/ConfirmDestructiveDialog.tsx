@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,12 +32,23 @@ export function ConfirmDestructiveDialog(props: ConfirmDestructiveDialogProps) {
   const { open, onOpenChange, title, description, cancelLabel = 'Cancel' } = props;
   const { confirmLabel, onConfirm, contentClassName, contentStyle, titleClassName } = props;
   const { descriptionClassName, cancelClassName, confirmClassName, descriptionId } = props;
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (open) restoreFocusRef.current = document.activeElement as HTMLElement | null;
+  }, [open]);
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
         className={contentClassName}
         style={contentStyle}
         aria-describedby={descriptionId}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          const restore = restoreFocusRef.current;
+          if (restore?.isConnected) restore.focus();
+        }}
       >
         <AlertDialogHeader>
           <AlertDialogTitle className={titleClassName}>{title}</AlertDialogTitle>

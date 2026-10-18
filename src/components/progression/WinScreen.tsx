@@ -75,7 +75,7 @@ function WinActions({
         onClick={acknowledgeWin}
         aria-label="Continue Legacy"
         className={cn(
-          'flex-1 px-6 py-4 text-[11px] font-black uppercase tracking-[0.2em]',
+          'flex-1 px-6 py-4 text-[11px] font-black uppercase tracking-[0.15em]',
           'bg-primary text-primary-foreground hover:bg-primary/90',
           'transition-colors motion-reduce:transition-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
         )}
@@ -86,7 +86,7 @@ function WinActions({
         onClick={doReset}
         aria-label="New Game"
         className={cn(
-          'flex items-center justify-center gap-2 px-6 py-4 text-[11px] font-black uppercase tracking-[0.2em]',
+          'flex items-center justify-center gap-2 px-6 py-4 text-[11px] font-black uppercase tracking-[0.15em]',
           'border border-white/10 text-muted-foreground hover:text-foreground hover:border-white/20',
           'transition-colors motion-reduce:transition-none duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background'
         )}
@@ -128,7 +128,7 @@ export function WinScreen() {
           <div className="flex flex-col items-center gap-4 text-center">
             <Crown className="h-12 w-12 text-arena-gold" />
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-arena-gold/60">
+              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold/60">
                 Championship
               </span>
               <h1 className="font-display font-black text-4xl tracking-tight text-arena-gold">

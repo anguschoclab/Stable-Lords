@@ -144,7 +144,7 @@ export default function Bookmarks() {
             <Bookmark className="h-8 w-8" />
           </ImperialRing>
           <div className="space-y-2">
-            <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+            <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               No Entries Marked
             </p>
             <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">

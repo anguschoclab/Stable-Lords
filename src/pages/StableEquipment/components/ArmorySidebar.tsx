@@ -25,7 +25,7 @@ function StyleSelect({
     <div className="space-y-3">
       <label
         htmlFor="style-select"
-        className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60"
+        className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60"
       >
         Select Style
       </label>
@@ -58,7 +58,7 @@ function TipsBlock({ tips }: { tips: string[] }) {
     <>
       {tips.length > 0 && (
         <div className="space-y-4 pt-4 border-t border-white/5">
-          <div className="flex items-center gap-2 text-[9px] font-black uppercase text-arena-gold tracking-[0.3em]">
+          <div className="flex items-center gap-2 text-[9px] font-black uppercase text-arena-gold tracking-[0.15em]">
             <Lightbulb className="h-3.5 w-3.5" /> Tips
           </div>
           <ul className="space-y-3">
@@ -124,7 +124,7 @@ export function ArmorySidebar(props: {
       </Surface>
 
       <Surface variant="glass" className="space-y-4">
-        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 px-1 mb-2">
+        <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 px-1 mb-2">
           <Star className="h-3 w-3 text-arena-gold" /> Style Champions
         </div>
         <WarriorSelector

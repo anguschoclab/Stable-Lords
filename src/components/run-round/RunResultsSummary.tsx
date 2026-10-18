@@ -11,7 +11,7 @@ interface RunResultsSummaryProps {
 export function RunResultsSummary({ deaths, KOs }: RunResultsSummaryProps) {
   return (
     <div className="flex items-center gap-3 px-2">
-      <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+      <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.15em]">
         Fight Results
       </h3>
       <div className="h-px flex-1 bg-border/20" />

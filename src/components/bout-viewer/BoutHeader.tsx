@@ -65,7 +65,7 @@ function FighterPanel(props: FighterPanelProps) {
     <div className="text-center flex-1 space-y-4">
       <div className="space-y-1">
         <h4
-          className={cn('text-[9px] font-black tracking-[0.4em] uppercase opacity-40', accentClass)}
+          className={cn('text-[9px] font-black tracking-[0.15em] uppercase opacity-40', accentClass)}
         >
           {label}
         </h4>
@@ -92,7 +92,7 @@ function FighterPanel(props: FighterPanelProps) {
         {isWinner && (
           <div
             className={cn(
-              'flex items-center gap-2 text-[10px] font-black tracking-[0.2em] animate-pulse motion-reduce:animate-none',
+              'flex items-center gap-2 text-[10px] font-black tracking-[0.15em] animate-pulse motion-reduce:animate-none',
               accentClass
             )}
           >

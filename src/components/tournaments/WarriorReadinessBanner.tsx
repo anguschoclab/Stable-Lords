@@ -28,7 +28,7 @@ export function WarriorReadinessBanner({ tournament, warriors }: WarriorReadines
             <ImperialRing size="sm" variant="blood">
               <Zap className="h-3.5 w-3.5 text-primary" />
             </ImperialRing>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
               Combat Status Audit
             </span>
           </div>

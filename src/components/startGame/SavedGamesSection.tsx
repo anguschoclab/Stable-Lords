@@ -29,7 +29,7 @@ export default function SavedGamesSection(props: SavedGamesSectionProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <span className="text-[9px] font-black uppercase tracking-[0.4em] text-accent/40 font-display">
+        <span className="text-[9px] font-black uppercase tracking-[0.15em] text-accent/40 font-display">
           SAVED GAMES
         </span>
         <div

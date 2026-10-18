@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
-import { useParams, Link } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { Shield, ArrowLeft, LayoutDashboard, FileText, History } from 'lucide-react';
+import { Shield, LayoutDashboard, FileText, History } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { Button } from '@/components/ui/button';
+import { ReturnLink } from '@/components/ui/ReturnLink';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { IconTabStrip } from '@/components/ui/IconTabStrip';
@@ -37,19 +37,7 @@ function DossierTabs({
 function BackLink() {
   return (
     <div className="mb-8">
-      <Button
-        variant="ghost"
-        size="sm"
-        asChild
-        className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all motion-reduce:transition-none"
-      >
-        <Link
-          to="/world/scouting"
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
-        >
-          <ArrowLeft className="h-3 w-3" /> Back to Scouting
-        </Link>
-      </Button>
+      <ReturnLink to="/world/scouting" label="Back to Scouting" />
     </div>
   );
 }

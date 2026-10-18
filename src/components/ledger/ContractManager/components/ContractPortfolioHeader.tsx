@@ -25,7 +25,7 @@ export function ContractPortfolioHeader({
             Contract Ledger
           </h3>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
+            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.15em] opacity-60">
               Active Contracts: {activeCount}
             </span>
             <div className="h-1 w-1 rounded-full bg-primary animate-pulse motion-reduce:animate-none" />

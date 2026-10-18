@@ -2,8 +2,8 @@
  * Import/Export Manager — JSON/YAML save packs.
  * Spec: Feature Matrix #27, route `/import-export`.
  */
-import { useRef } from 'react';
-import { Upload, FileJson, FileText } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Upload, FileJson, FileText, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -31,6 +31,7 @@ export default function ImportExport() {
   const loadGame = useGameStore((s) => s.loadGame);
   const activeSlotId = useGameStore((s) => s.activeSlotId);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [pendingPack, setPendingPack] = useState<ReturnType<typeof importPack> | null>(null);
 
   const doExport = (format: 'json' | 'yaml') => {
     const state = reconstructGameState(useGameStore.getState());
@@ -46,13 +47,16 @@ export default function ImportExport() {
   const doImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     readFileInput(
       e,
-      (content) => {
-        const pack = importPack(content);
-        loadGame(activeSlotId || 'autosave', pack.state);
-        toast.success(`Save pack imported — week ${pack.state.week}.`);
-      },
+      (content) => setPendingPack(importPack(content)),
       (err) => toast.error(err instanceof Error ? err.message : 'Failed to import pack.')
     );
+  };
+
+  const confirmImport = () => {
+    if (!pendingPack) return;
+    loadGame(activeSlotId || 'autosave', pendingPack.state);
+    toast.success(`Save pack imported — week ${pendingPack.state.week}.`);
+    setPendingPack(null);
   };
 
   return (
@@ -67,8 +71,69 @@ export default function ImportExport() {
       <div className="space-y-8">
         <ExportSection onExport={doExport} />
         <ImportSection fileRef={fileRef} onImport={doImport} />
+        <ImportPreview
+          pack={pendingPack}
+          onConfirm={confirmImport}
+          onCancel={() => setPendingPack(null)}
+        />
       </div>
     </PageFrame>
+  );
+}
+
+/** Pending import preview — review the parsed pack before replacing the session. */
+function ImportPreview({
+  pack,
+  onConfirm,
+  onCancel,
+}: {
+  pack: ReturnType<typeof importPack> | null;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  if (!pack) return null;
+  const stableName = pack.state.player?.stableName || 'Unknown Stable';
+  return (
+    <div role="status" aria-live="polite">
+      <SectionDivider label="Import preview" variant="gold" />
+      <Surface variant="glass" className="p-6 mt-4 border-arena-gold/40">
+        <div className="space-y-4">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground mb-1">
+              Ready to import
+            </p>
+            <h2 className="font-display text-xl font-black uppercase text-foreground">
+              {stableName}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Week {pack.state.week} · Season {pack.state.season} · {pack.state.roster?.length || 0}{' '}
+              warriors
+            </p>
+          </div>
+          <p className="text-xs text-arena-blood bg-arena-blood/10 border border-arena-blood/30 p-3">
+            Confirming replaces the current session with this save pack.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 rounded-none transition-colors motion-reduce:transition-none"
+            >
+              <Check className="h-3.5 w-3.5" />
+              Confirm Import
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-white/10 text-foreground/80 hover:bg-white/5 rounded-none transition-colors motion-reduce:transition-none"
+            >
+              <X className="h-3.5 w-3.5" />
+              Cancel Import
+            </button>
+          </div>
+        </div>
+      </Surface>
+    </div>
   );
 }
 

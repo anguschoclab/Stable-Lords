@@ -143,6 +143,72 @@ function sweepOrphanedReigns(state: GameState): void {
   }
 }
 
+function cleanupBoutOffers(state: GameState, ctx: WeekContext): void {
+  if (!state.boutOffers) return;
+  // Signed contracts whose combatant died/retired/disappeared this week are
+  // voided here (same week, not at their scheduled bout) so they can never sit
+  // as stale ghosts.
+  const voided = voidUnresolvableSignedOffers(state);
+  if (voided.length > 0) {
+    state.newsletter = [
+      ...(state.newsletter || []),
+      {
+        id: `voided_contracts_${state.absoluteWeek}`,
+        week: state.absoluteWeek,
+        title: 'Bout Contract Voided',
+        items: voided.map(
+          (o) =>
+            `Contract ${o.id} was voided — a signed bout could not be fought (a combatant retired, died, or left the roster).`
+        ),
+        category: 'news' as const,
+      },
+    ];
+  }
+  const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
+  state.boutOffers = pruneBoutOffers(state.boutOffers, justFinishedWeek);
+}
+
+function rebuildWarriorOfferIndex(state: GameState): void {
+  // Build warrior→offerIds index for O(1) lookup in autosim
+  const warriorToOfferIds = new Map<WarriorId, BoutOfferId[]>();
+  for (const offer of Object.values(state.boutOffers || {})) {
+    for (const wId of offer.warriorIds) {
+      const list = warriorToOfferIds.get(wId as WarriorId) ?? [];
+      if (list.length === 0) warriorToOfferIds.set(wId as WarriorId, list);
+      list.push(offer.id);
+    }
+  }
+  state.warriorToOfferIds = warriorToOfferIds;
+}
+
+function finalizePersistence(state: GameState, ctx: WeekContext): GameState {
+  // Handle OPFS archiving — always defer to off-thread flush for consistency
+  deferBoutArchives(state, ctx.currentWeek);
+  if (import.meta.env.DEV) {
+    const violations = validateStateInvariants(state);
+    if (violations.length > 0) {
+      console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
+    }
+  }
+  // V14 B1: truncate at EVERY week boundary — previously only batch spans and
+  // autosim (every 50w) truncated, so sequential in-session play accumulated
+  // unbounded history and diverged from batch worlds once a cap was crossed
+  // (capped arrays feed rivalStrategy/PromoterPass/championship reads). One
+  // cadence for every time scale keeps sequential ≡ batch byte-identical.
+  // Runs after deferBoutArchives so this week's transcripts drain before any
+  // transcript stripping; span teardown still truncates after its terminal
+  // sweep (which can append entries a cap would drop).
+  const truncated = truncateState(state);
+  // truncateState clears lastWeekBoutDisplay as cross-week staleness
+  // protection for long batch runs — restore the display this week's bout
+  // phase just produced so the UI sees it on sequential advances (pre-B1
+  // sequential weeks never truncated, so the field always survived). Span
+  // teardown's own truncateState call still clears it, preserving batch
+  // semantics.
+  truncated.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
+  return truncated;
+}
+
 /**
  * Applies week-boundary bookkeeping to the settled state: week/year rollover,
  * tournament-mode release, lifetime counters, training decay, rest pruning,
@@ -171,74 +237,9 @@ export function finalizeState(state: GameState, oldState: GameState, ctx: WeekCo
   // Prune expired rest states so warriors become bookable again after KO recovery
   state.restStates = clearExpiredRest(state.restStates || [], state.absoluteWeek);
 
-  // 🧹 Bout offer cleanup — single implementation in offerCleanup.ts, shared
-  // with RivalStrategyPass's pre-bidding purge. Signed contracts whose
-  // combatant died/retired/disappeared this week are voided here (same week,
-  // not at their scheduled bout) so they can never sit as stale ghosts.
-  if (state.boutOffers) {
-    const voided = voidUnresolvableSignedOffers(state);
-    if (voided.length > 0) {
-      state.newsletter = [
-        ...(state.newsletter || []),
-        {
-          id: `voided_contracts_${state.absoluteWeek}`,
-          week: state.absoluteWeek,
-          title: 'Bout Contract Voided',
-          items: voided.map(
-            (o) =>
-              `Contract ${o.id} was voided — a signed bout could not be fought (a combatant retired, died, or left the roster).`
-          ),
-          category: 'news' as const,
-        },
-      ];
-    }
-    const justFinishedWeek = deriveAbsoluteWeek(ctx.nextYear, ctx.nextWeek) - 1;
-    state.boutOffers = pruneBoutOffers(state.boutOffers, justFinishedWeek);
-  }
-
-  // Build warrior→offerIds index for O(1) lookup in autosim
-  const warriorToOfferIds = new Map<WarriorId, BoutOfferId[]>();
-  for (const offer of Object.values(state.boutOffers || {})) {
-    for (const wId of offer.warriorIds) {
-      let list = warriorToOfferIds.get(wId as WarriorId);
-      if (!list) {
-        list = [];
-        warriorToOfferIds.set(wId as WarriorId, list);
-      }
-      list.push(offer.id);
-    }
-  }
-  state.warriorToOfferIds = warriorToOfferIds;
-
+  cleanupBoutOffers(state, ctx);
+  rebuildWarriorOfferIndex(state);
   applySeasonBoundaryReset(state, oldState);
-
   sweepOrphanedReigns(state);
-
-  // Handle OPFS archiving — always defer to off-thread flush for consistency
-  deferBoutArchives(state, ctx.currentWeek);
-
-  if (import.meta.env.DEV) {
-    const violations = validateStateInvariants(state);
-    if (violations.length > 0) {
-      console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
-    }
-  }
-
-  // V14 B1: truncate at EVERY week boundary — previously only batch spans and
-  // autosim (every 50w) truncated, so sequential in-session play accumulated
-  // unbounded history and diverged from batch worlds once a cap was crossed
-  // (capped arrays feed rivalStrategy/PromoterPass/championship reads). One
-  // cadence for every time scale keeps sequential ≡ batch byte-identical.
-  // Runs after deferBoutArchives so this week's transcripts drain before any
-  // transcript stripping; span teardown still truncates after its terminal
-  // sweep (which can append entries a cap would drop).
-  const truncated = truncateState(state);
-  // truncateState clears lastWeekBoutDisplay as cross-week staleness
-  // protection for long batch runs — restore the display this week's bout
-  // phase just produced so the UI sees it on sequential advances (pre-B1
-  // sequential weeks never truncated, so the field always survived). Span
-  // teardown's own truncateState call still clears it, preserving batch
-  // semantics.
-  truncated.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
-  return truncated;
+  return finalizePersistence(state, ctx);
 }

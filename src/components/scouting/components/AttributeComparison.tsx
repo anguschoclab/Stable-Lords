@@ -15,7 +15,7 @@ export function AttributeComparison({ warriorA, warriorB }: AttributeComparisonP
   return (
     <Surface variant="glass" className="border-border/40 space-y-6">
       <div className="flex items-center gap-3">
-        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
           ATTRIBUTE MATRIX
         </span>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />

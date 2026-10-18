@@ -52,7 +52,7 @@ export default function StyleArchives() {
         </div>
         {filtered.length === 0 && (
           <div className="mt-8 py-16 text-center border border-dashed border-white/10">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               No disciplines match your query
             </p>
           </div>

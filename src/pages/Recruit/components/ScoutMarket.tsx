@@ -35,13 +35,13 @@ function EmptyPool() {
   return (
     <Surface
       variant="glass"
-      className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
+      className="py-24 md:py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
     >
       <ImperialRing size="lg" variant="bronze" className="opacity-20">
         <Search className="h-8 w-8" />
       </ImperialRing>
       <div className="space-y-2">
-        <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+        <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
           No Results
         </p>
         <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
@@ -94,7 +94,7 @@ export function ScoutMarket(props: ScoutMarketProps) {
             <ImperialRing size="xs" variant="blood">
               <Target className="h-3 w-3" />
             </ImperialRing>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               Showing {filteredPool.length} of {recruitPool.length} Available Recruits
             </span>
           </div>

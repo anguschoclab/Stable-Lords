@@ -25,7 +25,7 @@ function StepBadges({
   hasDeaths: boolean;
 }) {
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap justify-end gap-2">
       <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>1. The Gazette</Badge>
       <Badge
         variant={step === 'injuries' ? 'default' : 'secondary'}
@@ -91,6 +91,61 @@ function useDeadWarriors(
   }, [data, graveyard]);
 }
 
+function ResolutionDialog(props: {
+  step: RevealStep;
+  data: NonNullable<FightSummary['pendingResolutionData']>;
+  week: number;
+  lastSimulationReport: GameStore['lastSimulationReport'];
+  deadWarriors: ReturnType<typeof useDeadWarriors>;
+  hasInjuriesOrDeaths: boolean;
+  onNext: () => void;
+  onDismiss: () => void;
+}) {
+  const { step, data, week, lastSimulationReport, deadWarriors } = props;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-2 sm:p-4">
+      <Card
+        role="dialog"
+        aria-modal="true"
+        aria-label={uiMeta.fanfare.resolution_title}
+        tabIndex={-1}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') props.onDismiss();
+        }}
+        className="w-full max-w-3xl max-h-[calc(100dvh-1rem)] sm:max-h-[90vh] flex flex-col shadow-2xl border-border/50 overflow-hidden"
+      >
+        <CardHeader className="bg-secondary/30 pb-4 shrink-0">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <CardTitle className="text-2xl font-display font-bold">
+                {uiMeta.fanfare.resolution_title}
+              </CardTitle>
+              <CardDescription>Week {week - 1} Results</CardDescription>
+            </div>
+            <StepBadges
+              step={step}
+              hasInjuriesOrDeaths={props.hasInjuriesOrDeaths}
+              hasDeaths={data.deaths.length > 0}
+            />
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex-1 overflow-hidden p-0 relative">
+          <AnimatePresence mode="wait">
+            {step === 'gazette' && <GazetteStep gazette={data.gazette} />}
+            {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
+            {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
+            {step === 'math' && <MathStep lastSimulationReport={lastSimulationReport} />}
+            {step === 'memorial' && <MemorialStep deadWarriors={deadWarriors} />}
+          </AnimatePresence>
+        </CardContent>
+
+        <NextButton step={step} hasDeaths={data.deaths.length > 0} onNext={props.onNext} />
+      </Card>
+    </div>
+  );
+}
+
 /**
  * Resolution reveal — the weekly results stepper (gazette → medical →
  * combat logs → math → graveyard).
@@ -140,36 +195,15 @@ export default function ResolutionReveal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
-      <Card className="w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl border-border/50 overflow-hidden">
-        <CardHeader className="bg-secondary/30 pb-4 shrink-0">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl font-display font-bold">
-                {uiMeta.fanfare.resolution_title}
-              </CardTitle>
-              <CardDescription>Week {state.week - 1} Results</CardDescription>
-            </div>
-            <StepBadges
-              step={step}
-              hasInjuriesOrDeaths={hasInjuriesOrDeaths}
-              hasDeaths={data.deaths.length > 0}
-            />
-          </div>
-        </CardHeader>
-
-        <CardContent className="flex-1 overflow-hidden p-0 relative">
-          <AnimatePresence mode="wait">
-            {step === 'gazette' && <GazetteStep gazette={data.gazette} />}
-            {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
-            {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
-            {step === 'math' && <MathStep lastSimulationReport={state.lastSimulationReport} />}
-            {step === 'memorial' && <MemorialStep deadWarriors={deadWarriors} />}
-          </AnimatePresence>
-        </CardContent>
-
-        <NextButton step={step} hasDeaths={data.deaths.length > 0} onNext={handleNext} />
-      </Card>
-    </div>
+    <ResolutionDialog
+      step={step}
+      data={data}
+      week={state.week}
+      lastSimulationReport={state.lastSimulationReport}
+      deadWarriors={deadWarriors}
+      hasInjuriesOrDeaths={hasInjuriesOrDeaths}
+      onNext={handleNext}
+      onDismiss={doClearResolution}
+    />
   );
 }

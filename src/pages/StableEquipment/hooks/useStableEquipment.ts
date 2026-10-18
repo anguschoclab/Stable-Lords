@@ -8,6 +8,66 @@ import {
 } from '@/engine/equipment/equipmentOptimizer';
 import { toast } from 'sonner';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import {
+  checkWeaponRequirements,
+  validateLoadout,
+  type EquipmentLoadout,
+} from '@/data/equipment';
+
+function usePendingLoadout(props: {
+  activeWarriors: ReturnType<typeof useGameStore.getState>['roster'];
+  targetWarriorId: string;
+  updateWarriorEquipment: ReturnType<typeof useGameStore.getState>['updateWarriorEquipment'];
+}) {
+  const { activeWarriors, targetWarriorId, updateWarriorEquipment } = props;
+  const targetWarrior = useMemo(
+    () => activeWarriors.find((w) => w.id === targetWarriorId),
+    [activeWarriors, targetWarriorId]
+  );
+  const [pendingLoadout, setPendingLoadout] = useState<{
+    loadout: EquipmentLoadout;
+    label: string;
+  } | null>(null);
+
+  const handleApply = (loadout: EquipmentLoadout, label: string) => {
+    if (!targetWarriorId) {
+      toast.error('Select a warrior first');
+      return;
+    }
+    setPendingLoadout({ loadout, label });
+  };
+
+  const commitLoadout = () => {
+    if (!pendingLoadout || !targetWarrior) return;
+    const issues = validateLoadout(pendingLoadout.loadout);
+    const reqCheck = checkWeaponRequirements(
+      pendingLoadout.loadout.weapon,
+      targetWarrior.attributes
+    );
+    if (issues.length > 0 || !reqCheck.met) {
+      toast.error(issues[0]?.message ?? 'Warrior does not meet the weapon requirements.');
+      return;
+    }
+    updateWarriorEquipment(
+      targetWarriorId as import('@/types/shared.types').WarriorId,
+      pendingLoadout.loadout
+    );
+    toast.success(`Applied ${pendingLoadout.label} loadout to ${targetWarrior.name}`);
+    setPendingLoadout(null);
+  };
+
+  const cancelLoadout = () => setPendingLoadout(null);
+  const clearPendingLoadout = () => setPendingLoadout(null);
+
+  return {
+    targetWarrior,
+    pendingLoadout,
+    handleApply,
+    commitLoadout,
+    cancelLoadout,
+    clearPendingLoadout,
+  };
+}
 
 /**
  *
@@ -29,21 +89,22 @@ export function useStableEquipment() {
   const recs = useMemo(() => generateRecommendations(selectedStyle, carryCap), [selectedStyle]);
   const tips = useMemo(() => getStyleEquipmentTips(selectedStyle), [selectedStyle]);
 
-  const targetWarrior = useMemo(
-    () => activeWarriors.find((w) => w.id === targetWarriorId),
-    [activeWarriors, targetWarriorId]
-  );
+  const {
+    targetWarrior,
+    pendingLoadout,
+    handleApply,
+    commitLoadout,
+    cancelLoadout,
+    clearPendingLoadout,
+  } = usePendingLoadout({ activeWarriors, targetWarriorId, updateWarriorEquipment });
 
-  const handleApply = (loadout: import('@/data/equipment').EquipmentLoadout, label: string) => {
-    if (!targetWarriorId) {
-      toast.error('Select a warrior first');
-      return;
-    }
-    updateWarriorEquipment(targetWarriorId as import('@/types/shared.types').WarriorId, loadout);
-    toast.success(`Applied ${label} loadout to ${targetWarrior?.name}`);
+  const selectTargetWarrior = (id: string) => {
+    clearPendingLoadout();
+    setTargetWarriorId(id);
   };
 
   const handleStyleChange = (style: FightingStyle) => {
+    clearPendingLoadout();
     setSelectedStyle(style);
     const firstMatch = activeWarriors.find((w) => w.style === style);
     if (firstMatch) setTargetWarriorId(firstMatch.id);
@@ -59,7 +120,10 @@ export function useStableEquipment() {
     tips,
     styleEntries: Object.entries(STYLE_DISPLAY_NAMES),
     handleStyleChange,
-    setTargetWarriorId,
+    setTargetWarriorId: selectTargetWarrior,
     handleApply,
+    pendingLoadout,
+    commitLoadout,
+    cancelLoadout,
   };
 }

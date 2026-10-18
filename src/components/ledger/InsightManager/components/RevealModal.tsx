@@ -26,7 +26,7 @@ export function RevealModal({ data, onClose }: RevealModalProps) {
             <Sparkles />
           </div>
 
-          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.15em] text-primary mb-2">
             Discovery Successful
           </h4>
           <h2>{data.name}</h2>

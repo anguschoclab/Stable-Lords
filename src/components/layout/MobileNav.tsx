@@ -91,7 +91,6 @@ export function MobileNav({ className }: MobileNavProps) {
               alertLinks={{
                 stable: '/stable',
                 world: '/world/tournaments',
-                bookmarks: '/bookmarks',
               }}
               LinkComponent={SheetCloseLink}
               showChevron={true}

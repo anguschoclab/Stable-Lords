@@ -57,7 +57,7 @@ function StableColumn(props: {
       <div className={cn('flex items-center gap-3 px-2', rightAlign && 'text-right')}>
         {rightAlign && <div className={cn('h-px flex-1', t.rule)} />}
         <div className={cn('p-1 px-2 rounded-none border', t.chipBg)}>
-          <span className={cn('text-[9px] font-black uppercase tracking-[0.2em]', t.chipText)}>
+          <span className={cn('text-[9px] font-black uppercase tracking-[0.15em]', t.chipText)}>
             {title}
           </span>
         </div>

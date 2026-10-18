@@ -17,7 +17,7 @@ export function SeasonDeclarations({ seasonGazette }: SeasonDeclarationsProps) {
         <div className="p-1.5 rounded-none bg-primary/10 border border-primary/20">
           <ScrollText className="h-3.5 w-3.5 text-primary" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
           Season Declarations
         </h3>
       </div>

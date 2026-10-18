@@ -19,13 +19,13 @@ export function StableNotFound() {
   return (
     <PageFrame
       maxWidth="xl"
-      className="flex flex-col items-center justify-center py-48 text-center"
+      className="flex flex-col items-center justify-center py-24 md:py-32 text-center"
     >
       <ImperialRing size="lg" variant="bronze" className="opacity-20 mb-8">
         <Shield className="h-10 w-10" />
       </ImperialRing>
       <div className="space-y-6">
-        <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
+        <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
           Stable Identifier Not Found
         </p>
         <Button
@@ -72,7 +72,7 @@ export function StableSidebar({
           <h2 className="text-xl font-display font-black uppercase tracking-tight text-foreground">
             {rival.owner.name}
           </h2>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 italic">
             Ludus Primus
           </p>
         </div>

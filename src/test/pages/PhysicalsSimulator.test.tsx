@@ -47,6 +47,14 @@ describe('PhysicalsSimulator Page', () => {
     expect(screen.getByText(/SIMULATION RESULTS/i)).toBeDefined();
   });
 
+  it('labels the result as a deterministic sandbox projection', () => {
+    render(<PhysicalsSimulator />);
+
+    const projection = screen.getByRole('region', { name: /sandbox projection/i });
+    expect(projection).toHaveTextContent(/deterministic sample: 1 pass/i);
+    expect(projection).toHaveTextContent(/does not mutate roster, records, or treasury/i);
+  });
+
   it('calculates initial stats properly for both fighters', () => {
     render(<PhysicalsSimulator />);
 

@@ -99,7 +99,7 @@ function DiscoverySummary({ chart }: { chart: FavoritesChart }) {
     <div className="grid grid-cols-2 gap-4">
       {cells.map(({ icon: Icon, label, count }) => (
         <div key={label} className="p-3 bg-white/[0.02] border border-white/5">
-          <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+          <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
             <Icon className="h-3 w-3" /> {label}
           </div>
           <div className="mt-2 font-display font-black text-lg text-foreground">
@@ -130,7 +130,7 @@ function DistributionRows({
 }) {
   return (
     <div className="space-y-2">
-      <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+      <div className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
         {title}
       </div>
       {rows.map((row) => (

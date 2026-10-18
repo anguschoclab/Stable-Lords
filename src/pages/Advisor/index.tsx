@@ -70,7 +70,7 @@ export default function AdvisorPage() {
             className="py-24 text-center border-dashed border-white/5 space-y-3"
           >
             <Users className="h-8 w-8 mx-auto text-muted-foreground/30" />
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
               No Warriors in Current Category
             </p>
           </Surface>

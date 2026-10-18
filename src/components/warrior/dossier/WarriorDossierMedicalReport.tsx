@@ -46,7 +46,7 @@ export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalRe
               <div className="flex flex-col">
                 <span>{name}</span>
                 {typeof inj !== 'string' && (
-                  <span className="text-[8px] opacity-60 font-mono italic">
+                  <span className="text-[8px] opacity-60 font-mono">
                     {inj.location || 'General'}
                   </span>
                 )}

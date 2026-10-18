@@ -36,7 +36,7 @@ function StaffStats({ staffCount, treasury }: { staffCount: number; treasury: nu
 }
 
 const TRAINER_TAB_TRIGGER =
-  'gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em] motion-reduce:transition-none';
+  'gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.15em] motion-reduce:transition-none';
 
 /** The four staff tabs — current, hire, mentors, legends. */
 function TrainerTabList() {

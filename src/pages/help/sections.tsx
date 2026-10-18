@@ -1,5 +1,22 @@
+import { Link } from '@tanstack/react-router';
 import { Badge } from '@/components/ui/badge';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+const HELP_LINK =
+  'text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold/80 transition-colors hover:text-arena-gold motion-reduce:transition-none';
+
+/** Route links from a rules topic to the workspace that applies it. */
+function ContextLinks({ links }: { links: { to: string; label: string }[] }) {
+  return (
+    <nav aria-label="Related workspaces" className="flex flex-wrap gap-x-4 gap-y-2 pt-2">
+      {links.map((link) => (
+        <Link key={link.to} to={link.to} className={HELP_LINK}>
+          {link.label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
 
 /** Codex section: strategy. */
 export function StrategyBasicsSection() {
@@ -46,6 +63,12 @@ export function StrategyBasicsSection() {
           <strong>Defensive Tactics</strong>: Dodge, Parry, Riposte, or Responsiveness. Riposte
           works best for parry styles; Total Parry excels with the Parry tactic.
         </div>
+        <ContextLinks
+          links={[
+            { to: '/stable/planner', label: 'Configure battle plans' },
+            { to: '/stable/training', label: 'Review training' },
+          ]}
+        />
       </AccordionContent>
     </AccordionItem>
   );
@@ -108,6 +131,9 @@ export function FightingStylesSection() {
           others. Offensive styles beat other offensives but struggle against defensive styles.
           Total Parry and Wall of Steel counter most attackers but lose to each other.
         </p>
+        <ContextLinks
+          links={[{ to: '/world/style-archives', label: 'Open style archives' }]}
+        />
       </AccordionContent>
     </AccordionItem>
   );
@@ -211,6 +237,9 @@ export function EquipmentSection() {
           <strong>Preferred Weapons</strong>: Weapons marked with ⭐ are thematically suited to your
           style. Use them for optimal performance.
         </p>
+        <ContextLinks
+          links={[{ to: '/stable/equipment', label: 'Review stable equipment' }]}
+        />
       </AccordionContent>
     </AccordionItem>
   );

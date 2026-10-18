@@ -93,7 +93,7 @@ export function RivalWarriorList({
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-2">
         <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
-          <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
+          <span className="text-[10px] font-black text-primary uppercase tracking-[0.15em]">
             {stableName ? `${stableName} Roster` : 'Select Stable'}
           </span>
         </div>

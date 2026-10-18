@@ -77,7 +77,7 @@ function ElapsedColumn({ minutesPassed }: { minutesPassed: number }) {
       </div>
       {minutesPassed < 10 && (
         <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[9px] font-black uppercase h-6 px-3">
-          <AlertTriangle className="h-3 w-3 mr-1.5" /> Early_Stoppage
+          <AlertTriangle className="h-3 w-3 mr-1.5" /> Early Stoppage
         </Badge>
       )}
     </div>
@@ -115,6 +115,22 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
             fighterB={{ hp: simulation.hpB, max: simulation.calcB.hp, label: 'Fighter B' }}
           />
         </div>
+
+        <section aria-labelledby="sandbox-projection-heading" className="mt-8 border-t border-white/10 pt-6">
+          <h5
+            id="sandbox-projection-heading"
+            className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground"
+          >
+            Sandbox Projection
+          </h5>
+          <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+            Deterministic sample: 1 pass through a simplified 10-minute attrition model. The result
+            does not represent probabilistic win odds or tactical variance.
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+            This sandbox does not mutate roster, records, or treasury.
+          </p>
+        </section>
       </div>
     </Surface>
   );

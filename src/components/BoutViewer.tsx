@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { MinuteEvent, FightOutcomeBy, FightingStyle } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { useBoutPlayback } from '@/hooks/useBoutPlayback';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useArenaPreferences, useGameStore } from '@/state/useGameStore';
 import ArenaView from './arena/ArenaView';
 import TacticalLogView from './arena/TacticalLogView';
@@ -64,6 +65,7 @@ export default function BoutViewer(props: BoutViewerProps) {
     onViewModeChange,
     playback,
     scoutReports,
+    logEndRef,
     effectiveWeather,
     minutes,
     winnerName,
@@ -104,6 +106,7 @@ export default function BoutViewer(props: BoutViewerProps) {
           onViewModeChange={onViewModeChange}
           playback={playback}
           scoutReports={scoutReports}
+          logEndRef={logEndRef}
         />
       )}
     </Surface>
@@ -125,10 +128,14 @@ function useBoutViewerState(props: Pick<BoutViewerProps, 'log' | 'winner' | 'nam
 
   const playback = useBoutPlayback(log);
   const { visibleCount } = playback;
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [visibleCount]);
+    logEndRef.current?.scrollIntoView?.({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'nearest',
+    });
+  }, [visibleCount, prefersReducedMotion]);
 
   const winnerName = winner === 'A' ? nameA : winner === 'D' ? nameD : null;
 
@@ -146,6 +153,7 @@ function useBoutViewerState(props: Pick<BoutViewerProps, 'log' | 'winner' | 'nam
     },
     playback,
     scoutReports,
+    logEndRef,
     effectiveWeather,
     minutes,
     winnerName,
@@ -178,6 +186,7 @@ interface BoutBodyProps extends Pick<
   onViewModeChange: (mode: ViewMode) => void;
   playback: ReturnType<typeof useBoutPlayback>;
   scoutReports: ReturnType<typeof useGameStore.getState>['scoutReports'];
+  logEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
 /** Content area: animated arena or tactical log depending on view mode. */
@@ -277,7 +286,7 @@ function ResolutionAndPanels(props: Pick<
 
 /** The expanded viewer body: controls, arena/log, highlights, resolution, panels. */
 function BoutBody(props: BoutBodyProps) {
-  const { viewMode, onViewModeChange, playback, log } = props;
+  const { viewMode, onViewModeChange, playback, log, logEndRef } = props;
   const {
     isPlaying,
     speed,
@@ -307,18 +316,25 @@ function BoutBody(props: BoutBodyProps) {
       />
 
       {/* Content Area - Arena or Log */}
-      <ArenaOrLog
-        {...props}
-        visibleCount={visibleCount}
-        isPlaying={isPlaying}
-        isComplete={isComplete}
-      />
+      <section aria-label="Live bout">
+        <ArenaOrLog
+          {...props}
+          visibleCount={visibleCount}
+          isPlaying={isPlaying}
+          isComplete={isComplete}
+        />
+        <div ref={logEndRef} aria-hidden="true" />
+      </section>
 
       {/* Highlight Reel — curated notable minutes */}
-      <HighlightLog log={log} visibleCount={visibleCount} />
+      <section aria-label="Bout highlights">
+        <HighlightLog log={log} visibleCount={visibleCount} />
+      </section>
 
       {/* Cinematic Resolution Banner, fallbacks, and comms link overlay */}
-      <ResolutionAndPanels {...props} isComplete={isComplete} totalEvents={totalEvents} />
+      <section aria-label="Bout result and analysis">
+        <ResolutionAndPanels {...props} isComplete={isComplete} totalEvents={totalEvents} />
+      </section>
     </div>
   );
 }

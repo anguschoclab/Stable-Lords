@@ -48,7 +48,7 @@ export function TournamentPrepDialog({
           </h2>
         </div>
         <div className="p-8 space-y-8">
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 p-5 bg-white/[0.02] border-l-2 border-primary/40 leading-relaxed italic">
+          <div className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 p-5 bg-white/[0.02] border-l-2 border-primary/40 leading-relaxed italic">
             Review your roster before entering the seasonal tournament. Once locked in, your lineup
             cannot be changed for the duration of the campaign.
           </div>
@@ -65,7 +65,7 @@ export function TournamentPrepDialog({
                 onOpenChange(false);
                 onStart();
               }}
-              className="h-12 px-10 gap-3 font-black uppercase text-[11px] tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_hsl(var(--primary)/0.3)] group"
+              className="h-12 px-10 gap-3 font-black uppercase text-[11px] tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_hsl(var(--primary)/0.3)] group"
             >
               <Trophy className="h-4 w-4 group-hover:scale-125 transition-transform motion-reduce:transition-none motion-reduce:transform-none" />
               <span>INITIATE SEASON CAMPAIGN</span>

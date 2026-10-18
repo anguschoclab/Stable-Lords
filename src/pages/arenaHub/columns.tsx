@@ -27,7 +27,7 @@ function CircuitCrownsWidget() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Trophy className="h-3.5 w-3.5 text-arena-gold" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
               Circuit Crowns
             </span>
           </div>

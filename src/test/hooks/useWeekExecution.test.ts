@@ -222,6 +222,25 @@ describe('useWeekExecution', () => {
     expect(toast.error).not.toHaveBeenCalled();
   });
 
+  it('advances the week when every rostered warrior is injured or exhausted', async () => {
+    const store = useGameStore() as any;
+    store.roster = [
+      { id: 'w1', status: 'Injured', fatigue: 90 },
+      { id: 'w2', status: 'Active', fatigue: 100 },
+    ];
+    const weekBefore = store.week;
+    const { result } = renderHook(() => useWeekExecution());
+
+    await act(async () => {
+      await result.current.executeWeek();
+    });
+
+    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    expect(store.week).toBe(weekBefore + 1);
+    expect(toast.error).not.toHaveBeenCalled();
+    store.roster = [];
+  });
+
   it('advances the day on tournament weeks even with no card', async () => {
     vi.mocked(generatePairings).mockReturnValueOnce({ pairings: [], voidedOffers: [] });
     const store = useGameStore() as any;

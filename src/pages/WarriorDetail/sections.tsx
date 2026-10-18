@@ -64,7 +64,7 @@ export function DetailTabStrip({
           key={tab.id}
           onClick={() => onSelect(tab.id)}
           className={cn(
-            'relative flex items-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
+            'relative flex items-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 motion-reduce:transition-none',
             activeTab === tab.id
               ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px'
               : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
@@ -159,7 +159,7 @@ function BloodLedgerSurface({
       {streakLabel && (
         <div
           className={cn(
-            'p-3 text-center border font-black uppercase text-[10px] tracking-[0.2em]',
+            'p-3 text-center border font-black uppercase text-[10px] tracking-[0.15em]',
             streakVal > 0
               ? 'border-primary/20 bg-primary/5 text-primary'
               : 'border-destructive/20 bg-destructive/5 text-destructive'
@@ -170,7 +170,7 @@ function BloodLedgerSurface({
       )}
 
       {champion && (
-        <div className="p-3 text-center border border-arena-gold/20 bg-arena-gold/10 text-arena-gold font-black uppercase text-[10px] tracking-[0.2em]">
+        <div className="p-3 text-center border border-arena-gold/20 bg-arena-gold/10 text-arena-gold font-black uppercase text-[10px] tracking-[0.15em]">
           Champion of the Arena
         </div>
       )}

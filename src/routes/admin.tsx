@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import AdminTools from '@/pages/AdminTools';
+import NotFound from '@/pages/NotFound';
 
 /**
- * Route.
+ * Development-only route; production renders the canonical 404 surface.
  */
 export const Route = createFileRoute('/admin')({
-  component: AdminTools,
+  component: import.meta.env.DEV ? AdminTools : NotFound,
 });

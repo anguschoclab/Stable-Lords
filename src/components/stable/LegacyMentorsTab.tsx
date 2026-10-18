@@ -33,7 +33,7 @@ export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
         <ImperialRing size="lg" variant="bronze" className="opacity-20">
           <Award className="h-8 w-8" />
         </ImperialRing>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 italic">
           No mentor legacy recorded yet.
         </p>
       </Surface>

@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Help from '@/pages/Help';
 import { A11Y_KEY } from '@/lib/a11yPrefs';
+
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 describe('Help — accessibility settings (G3)', () => {
   beforeEach(() => {
@@ -40,5 +42,35 @@ describe('Help — design bible search (G5)', () => {
     const input = screen.getByRole('searchbox', { name: /search the design bible/i });
     fireEvent.change(input, { target: { value: 'encumbrance' } });
     expect(screen.getByText(/^\d+ results?$/)).toBeInTheDocument();
+  });
+
+  it('shows an explicit recovery state when search has no results', () => {
+    render(<Help />);
+    fireEvent.click(screen.getByRole('button', { name: /design bible/i }));
+    fireEvent.change(screen.getByRole('searchbox', { name: /search the design bible/i }), {
+      target: { value: 'definitely-not-a-real-mechanic' },
+    });
+    expect(screen.getByText(/no matching codex entry/i)).toBeInTheDocument();
+  });
+});
+
+describe('Help — current information architecture', () => {
+  it('uses accordion controls and links topics to the workspaces that resolve them', () => {
+    render(<Help />);
+    expect(screen.getByRole('button', { name: /strategy basics/i })).toHaveAttribute(
+      'aria-expanded'
+    );
+    expect(screen.getByRole('link', { name: /configure battle plans/i })).toHaveAttribute(
+      'href',
+      '/stable/planner'
+    );
+    expect(screen.getByRole('link', { name: /open style archives/i })).toHaveAttribute(
+      'href',
+      '/world/style-archives'
+    );
+    expect(screen.getByRole('link', { name: /review stable equipment/i })).toHaveAttribute(
+      'href',
+      '/stable/equipment'
+    );
   });
 });

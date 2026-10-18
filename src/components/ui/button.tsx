@@ -19,8 +19,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, But
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (_props, ref) => {
-    const { className, variant, size, asChild = false, tooltip } = _props;
-    const { tooltipSide = 'top', ...props } = _props;
+    const { className, variant, size, asChild = false, tooltip, tooltipSide = 'top', ...props } =
+      _props;
     const Comp = asChild ? Slot : 'button';
     const title = props.title;
     const ariaLabel = props['aria-label'];

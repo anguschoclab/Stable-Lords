@@ -69,7 +69,7 @@ function VictoryBanner({
           </h2>
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-8 bg-white/10" />
-            <div className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+            <div className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.15em]">
               BY WAY OF {(by ?? 'RESOLUTION').toUpperCase()}
             </div>
             <span className="h-px w-8 bg-white/10" />
@@ -107,7 +107,7 @@ function DrawBanner({ minutes }: { minutes: number }) {
       <h2 className="font-display font-black text-3xl uppercase tracking-tighter italic text-muted-foreground/60">
         MUTUAL_DEPLETION_DRAW
       </h2>
-      <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.5em]">
+      <div className="text-[10px] font-black text-muted-foreground/40 uppercase tracking-[0.15em]">
         {minutes} MINUTES // NO RESOLUTION
       </div>
     </div>

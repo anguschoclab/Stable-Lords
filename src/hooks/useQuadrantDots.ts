@@ -32,10 +32,10 @@ export function useQuadrantDots(
         isPlayer: true,
       },
     ];
-    for (const rival of rivals ?? []) {
+    for (const [index, rival] of (rivals ?? []).entries()) {
       const rep = computeRivalReputation(rival.roster);
       result.push({
-        id: rival.id,
+        id: `rival-${index}-${rival.id ?? rival.owner.id ?? 'unknown'}`,
         label: rival.owner.stableName,
         fame: rep.fame,
         notoriety: rep.notoriety,

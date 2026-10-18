@@ -70,7 +70,7 @@ function CareerStatsGrid({ warrior }: { warrior: Warrior }) {
 function PerformanceRatio({ winRate }: { winRate: number }) {
   return (
     <div className="space-y-2 py-2">
-      <div className="flex items-center justify-between text-[10px] font-black tracking-[0.2em] text-muted-foreground/60">
+      <div className="flex items-center justify-between text-[10px] font-black tracking-[0.15em] text-muted-foreground/60">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -103,7 +103,7 @@ function CareerPeakFight({ best, warrior }: { best: FightSummary; warrior: Warri
   const warriorIsA = best.warriorIdA === warrior.id;
   return (
     <div className="bg-black/20 rounded-none p-4 border border-border/10 mt-auto">
-      <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-3 flex items-center justify-between">
+      <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.15em] mb-3 flex items-center justify-between">
         <span>Career Peak</span>
         <span>Week {best.week}</span>
       </div>
@@ -247,7 +247,7 @@ function InducteeHeader({
             {warriorDisplayName(warrior)}
           </span>
         </div>
-        <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
+        <div className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 flex items-center gap-2">
           <span>{STYLE_DISPLAY_NAMES[warrior.style]}</span>
           <span className="opacity-40">·</span>
           <span>AGE {warrior.age ?? '??'}</span>

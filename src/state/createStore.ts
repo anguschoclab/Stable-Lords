@@ -202,8 +202,10 @@ type CoreStateFields =
   | 'isSimulating'
   | 'isInitialized'
   | 'eventLogOpen'
+  | 'eventLogLastReadId'
   | 'toggleEventLog'
   | 'setEventLogOpen'
+  | 'markEventLogRead'
   | 'initialize'
   | 'setSimulating';
 
@@ -225,6 +227,7 @@ function createCoreState(set: StoreSet): Pick<GameStore, CoreStateFields> {
     isSimulating: false,
     isInitialized: false,
     eventLogOpen: false,
+    eventLogLastReadId: null,
 
     toggleEventLog: () => {
       set((draft) => {
@@ -234,6 +237,11 @@ function createCoreState(set: StoreSet): Pick<GameStore, CoreStateFields> {
     setEventLogOpen: (open: boolean) => {
       set((draft) => {
         draft.eventLogOpen = open;
+      });
+    },
+    markEventLogRead: (eventId: string | null) => {
+      set((draft) => {
+        draft.eventLogLastReadId = eventId;
       });
     },
 

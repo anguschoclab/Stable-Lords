@@ -17,7 +17,7 @@ export function GrudgeNetwork({ grudges, rivalMap }: GrudgeNetworkProps) {
         <div className="p-1.5 rounded-none bg-arena-blood/10 border border-arena-blood/20">
           <Flame className="h-3.5 w-3.5 text-arena-blood" />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-arena-blood">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-blood">
           Grudge Network
         </h3>
         <span className="ml-auto text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest">

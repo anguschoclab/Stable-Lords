@@ -52,6 +52,51 @@ function purchaseScoutReport(
   toast.success(`Report filed for ${activeWarrior.name}. (-${cost}g)`);
 }
 
+function useScoutingReports(
+  scoutReports: ScoutReportData[] | undefined,
+  bookmarks: GameStore['bookmarks'],
+  showBookmarkedOnly: boolean
+) {
+  const allReports = useMemo(() => scoutReports ?? [], [scoutReports]);
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
+  const filteredReports = useMemo(() => {
+    if (!showBookmarkedOnly) return allReports;
+    const ids = bookmarkIds.get('scoutReport');
+    return allReports.filter((r) => ids?.has(r.id));
+  }, [allReports, showBookmarkedOnly, bookmarkIds]);
+  const bookmarkedCount = allReports.filter((r) =>
+    bookmarkIds.get('scoutReport')?.has(r.id)
+  ).length;
+  return { allReports, filteredReports, bookmarkedCount };
+}
+
+function useRivalSelection(rivals: RivalStableData[] | undefined) {
+  const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
+  const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
+  const rivalMap = useMemo(() => {
+    const map = new Map<string, RivalStableData>();
+    for (const r of rivals ?? []) map.set(r.owner.id as string, r);
+    return map;
+  }, [rivals]);
+  const activeRival = selectedRivalId ? rivalMap.get(selectedRivalId) : undefined;
+  const activeWarrior = activeRival?.roster.find((w: Warrior) => w.id === selectedWarriorId);
+  const handleSelectRival = useCallback((id: string) => {
+    setSelectedRivalId(id);
+    setSelectedWarriorId(null);
+  }, []);
+  const handleSelectWarrior = useCallback((id: string) => {
+    setSelectedWarriorId(id);
+  }, []);
+  return {
+    selectedRivalId,
+    selectedWarriorId,
+    activeRival,
+    activeWarrior,
+    handleSelectRival,
+    handleSelectWarrior,
+  };
+}
+
 /**
  * Store selection, rival/warrior selection state, and the scout-report
  * purchase action for the Scouting page.
@@ -68,38 +113,19 @@ export function useScouting(showBookmarkedOnly: boolean) {
       bookmarks: s.bookmarks,
     }))
   );
-  const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
-  const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
-
-  const allReports = useMemo(() => scoutReports ?? [], [scoutReports]);
-  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
-  const filteredReports = useMemo(() => {
-    if (!showBookmarkedOnly) return allReports;
-    const ids = bookmarkIds.get('scoutReport');
-    return allReports.filter((r) => ids?.has(r.id));
-  }, [allReports, showBookmarkedOnly, bookmarkIds]);
-
-  const bookmarkedCount = allReports.filter((r) =>
-    bookmarkIds.get('scoutReport')?.has(r.id)
-  ).length;
-
-  const rivalMap = useMemo(() => {
-    const map = new Map<string, RivalStableData>();
-    for (const r of rivals ?? []) {
-      map.set(r.owner.id as string, r);
-    }
-    return map;
-  }, [rivals]);
-
-  const activeRival = useMemo(
-    () => (selectedRivalId ? rivalMap.get(selectedRivalId) : undefined),
-    [rivalMap, selectedRivalId]
+  const { filteredReports, bookmarkedCount } = useScoutingReports(
+    scoutReports,
+    bookmarks,
+    showBookmarkedOnly
   );
-
-  const activeWarrior = useMemo(
-    () => activeRival?.roster.find((w: Warrior) => w.id === selectedWarriorId),
-    [activeRival, selectedWarriorId]
-  );
+  const {
+    selectedRivalId,
+    selectedWarriorId,
+    activeRival,
+    activeWarrior,
+    handleSelectRival,
+    handleSelectWarrior,
+  } = useRivalSelection(rivals);
 
   const handleScout = useCallback(
     (quality: ScoutQuality) => {
@@ -115,14 +141,6 @@ export function useScouting(showBookmarkedOnly: boolean) {
     [treasury, week, scoutReports, setState, activeWarrior, activeRival]
   );
 
-  const handleSelectRival = useCallback((id: string) => {
-    setSelectedRivalId(id);
-    setSelectedWarriorId(null);
-  }, []);
-
-  const handleSelectWarrior = useCallback((id: string) => {
-    setSelectedWarriorId(id);
-  }, []);
 
   return {
     treasury,

@@ -61,7 +61,7 @@ function TitleScreen({ flow }: { flow: StartGameFlow }) {
 
         {/* ── Footer ── */}
         <div className="text-center space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-[0.35em] text-muted-foreground/25">
+          <p className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/25">
             Stable Lords v2.0
           </p>
           <p className="text-[8px] text-muted-foreground/20 italic">All records saved locally</p>

@@ -74,7 +74,7 @@ export function GlobalTreasuryMatrix({
                   stat.color
                 )}
               />
-              <span className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground font-black mb-1 opacity-60">
+              <span className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground font-black mb-1 opacity-60">
                 {stat.label}
               </span>
               <span

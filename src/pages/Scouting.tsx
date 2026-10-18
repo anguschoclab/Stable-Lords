@@ -43,7 +43,7 @@ function HeaderStats({ reportCount }: { reportCount: number }) {
 /** Three-tab trigger row (Reports / Stable Dynamics / Warrior Face-Off). */
 function ScoutTabsList() {
   const triggerClass =
-    'flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
+    'flex-1 h-full font-black uppercase text-[10px] tracking-[0.15em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none';
   return (
     <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
       <TabsTrigger value="scout" className={triggerClass}>

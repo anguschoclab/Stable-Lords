@@ -103,12 +103,12 @@ export function ArenaLeaderboard() {
       <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="h-4 w-4 text-arena-gold" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
             Global Power Rankings
           </span>
         </div>
         <div className="text-[10px] font-mono text-muted-foreground flex items-center gap-2">
-          <Activity className="h-3 w-3 text-primary" /> LIVE ARENA FEED
+          <Activity className="h-3 w-3 text-primary" /> CURRENT STANDINGS
         </div>
       </div>
       <StandingsTable

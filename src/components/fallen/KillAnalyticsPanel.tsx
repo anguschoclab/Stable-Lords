@@ -81,7 +81,7 @@ export function KillAnalyticsPanel({ fights, graveyard = [] }: KillAnalyticsPane
     return (
       <Surface variant="glass" className="p-10 text-center">
         <Skull className="h-8 w-8 mx-auto mb-3 text-muted-foreground/20" />
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
           No kills recorded
         </p>
         <p className="text-[9px] text-muted-foreground/30 mt-1 uppercase tracking-widest">
@@ -99,7 +99,7 @@ export function KillAnalyticsPanel({ fights, graveyard = [] }: KillAnalyticsPane
     <Surface variant="glass" className="p-6 border-white/5">
       <div className="flex items-center gap-3 mb-6">
         <Skull className="h-4 w-4 text-arena-blood" />
-        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-arena-blood">
+        <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-arena-blood">
           Mechanics of Death
         </h3>
         <span className="ml-auto text-[9px] font-mono text-muted-foreground/40">

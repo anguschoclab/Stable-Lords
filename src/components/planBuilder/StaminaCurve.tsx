@@ -55,7 +55,7 @@ export default function StaminaCurve({ plan, warrior, width = 240, height = 56 }
 
   return (
     <div className="flex items-center gap-3">
-      <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
+      <div className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">
         Stamina Curve
       </div>
       <svg width={width} height={height} className="border border-white/5 bg-black/40">

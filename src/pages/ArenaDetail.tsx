@@ -4,6 +4,7 @@ import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { ConfirmDestructiveDialog } from '@/components/ui/ConfirmDestructiveDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { ReturnLink } from '@/components/ui/ReturnLink';
 import { Badge } from '@/components/ui/badge';
 import { ArenaHazardBadges } from '@/components/arena/ArenaHazardBadges';
 import { ScrollText } from 'lucide-react';
@@ -20,7 +21,7 @@ function LoreSurface({ effects, lore }: { effects: string[]; lore: ArenaLoreEntr
     <Surface variant="glass" className="p-5 mb-6">
       <div className="flex items-center gap-2 mb-3">
         <ScrollText className="h-3.5 w-3.5 text-arena-gold/70" />
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground/80">
           The Ground Itself
         </span>
       </div>
@@ -117,34 +118,22 @@ function ArenaDetailTail({
  * title history, and the four record boards (wins, kills, best-in-class,
  * best stable).
  */
-export default function ArenaDetail() {
-  const { arenaId } = useParams({ strict: false }) as { arenaId: string };
+function ArenaDetailContent({
+  arenaId,
+  detail,
+}: {
+  arenaId: string;
+  detail: ReturnType<typeof useArenaDetail>;
+}) {
   const [confirmRelinquish, setConfirmRelinquish] = useState(false);
-
-  const {
-    arena,
-    state,
-    store,
-    reign,
-    champWarrior,
-    champStable,
-    isExcluded,
-    badge,
-    effects,
-    lore,
-    lb,
-    styleLeaders,
-    stableStandings,
-    recentBouts,
-    ladder,
-    history,
-    champId,
-  } = useArenaDetail(arenaId);
-
+  const { arena } = detail;
   if (!arena) return <UnknownArenaPage arenaId={arenaId} />;
 
   return (
     <PageFrame>
+      <div className="mb-6">
+        <ReturnLink to="/world/arenas" label="Back to the Arena Circuit" />
+      </div>
       <PageHeader
         title={arena.name}
         subtitle={`Tier ${arena.tier} · ${arena.size.toUpperCase()} · ${arena.tags.join(' · ')}`}
@@ -153,46 +142,56 @@ export default function ArenaDetail() {
             <ArenaHazardBadges tags={arena.tags} size="md" />
             <Badge
               variant="outline"
-              className={cn('text-[9px] font-black tracking-widest', badge.className)}
+              className={cn('text-[9px] font-black tracking-widest', detail.badge.className)}
             >
-              {badge.label}
+              {detail.badge.label}
             </Badge>
           </>
         }
       />
 
       {/* Lore + real effects */}
-      <LoreSurface effects={effects} lore={lore} />
+      <LoreSurface effects={detail.effects} lore={detail.lore} />
 
       {/* Champion block */}
-      {!isExcluded && (
+      {!detail.isExcluded && (
         <ChampionBlock
-          state={state}
-          reign={reign}
-          champWarrior={champWarrior}
-          champStableName={champStable?.stableName}
-          champStableIsPlayer={champStable?.isPlayer ?? false}
-          ladder={ladder}
+          state={detail.state}
+          reign={detail.reign}
+          champWarrior={detail.champWarrior}
+          champStableName={detail.champStable?.stableName}
+          champStableIsPlayer={detail.champStable?.isPlayer ?? false}
+          ladder={detail.ladder}
           onRelinquish={() => setConfirmRelinquish(true)}
         />
       )}
 
       <RecordBoards
-        lb={lb}
-        styleLeaders={styleLeaders}
-        stableStandings={stableStandings}
-        champId={champId}
+        lb={detail.lb}
+        styleLeaders={detail.styleLeaders}
+        stableStandings={detail.stableStandings}
+        champId={detail.champId}
       />
 
-      <ArenaDetailTail arenaId={arenaId} history={history} recentBouts={recentBouts} />
+      <ArenaDetailTail
+        arenaId={arenaId}
+        history={detail.history}
+        recentBouts={detail.recentBouts}
+      />
 
       <RelinquishDialog
         open={confirmRelinquish}
         onOpenChange={setConfirmRelinquish}
         arenaName={arena.name}
-        champName={champWarrior?.name}
-        onConfirm={() => store.relinquishArenaTitle(arenaId)}
+        champName={detail.champWarrior?.name}
+        onConfirm={() => detail.store.relinquishArenaTitle(arenaId)}
       />
     </PageFrame>
   );
+}
+
+/** Routed arena detail page. */
+export default function ArenaDetail() {
+  const { arenaId } = useParams({ strict: false }) as { arenaId: string };
+  return <ArenaDetailContent arenaId={arenaId} detail={useArenaDetail(arenaId)} />;
 }

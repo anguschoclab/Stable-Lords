@@ -101,6 +101,19 @@ describe('useQuadrantDots', () => {
     expect(result.current[0]!.isPlayer).toBe(true);
   });
 
+  it('keeps rendered keys unique when fixture rival IDs collide', () => {
+    const state = createMockGameState();
+    const rivals = [
+      createMockRival(),
+      createMockRival({
+        owner: { stableName: 'Duplicate ID Rival' } as any as RivalStableData['owner'],
+      }),
+    ];
+    const { result } = renderHook(() => useQuadrantDots(state, rivals));
+
+    expect(new Set(result.current.map((dot) => dot.id)).size).toBe(result.current.length);
+  });
+
   it('memoizes result for same inputs', () => {
     const state = createMockGameState();
     const rivals = [createMockRival()];

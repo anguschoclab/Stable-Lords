@@ -14,7 +14,7 @@ function EmptyRegistry() {
   return (
     <div className="py-24 text-center opacity-30 group">
       <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700 motion-reduce:transition-none motion-reduce:transform-none" />
-      <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
+      <p className="text-sm font-display font-black uppercase tracking-[0.15em]">
         No Retired Warriors
       </p>
       <p className="text-[10px] lowercase italic font-medium mt-2">

@@ -31,7 +31,7 @@ function WinTally({
     <div className="space-y-4">
       <div className="flex items-center justify-between font-display">
         <div className="text-left">
-          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-primary mb-1">
+          <div className="text-[8px] font-black uppercase tracking-[0.15em] text-primary mb-1">
             Challenger
           </div>
           <div className="text-lg font-black text-foreground leading-none">{winsA}W</div>
@@ -40,7 +40,7 @@ function WinTally({
           <Zap className="h-4 w-4 text-arena-gold" />
         </div>
         <div className="text-right">
-          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-accent mb-1">
+          <div className="text-[8px] font-black uppercase tracking-[0.15em] text-accent mb-1">
             Defender
           </div>
           <div className="text-lg font-black text-foreground leading-none">{winsB}W</div>
@@ -109,7 +109,7 @@ function EngagementRow({
         <Target className="h-3 w-3 text-arena-gold/40" />
         <Badge
           variant="outline"
-          className="text-[8px] h-4 py-0 uppercase tracking-widest border-white/10 text-muted-foreground/40 font-mono italic"
+          className="text-[8px] h-4 py-0 uppercase tracking-widest border-white/10 text-muted-foreground/40 font-mono"
         >
           {f.by || 'D'}
         </Badge>
@@ -145,7 +145,7 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
           <div className="p-1 px-2 rounded-none bg-arena-gold/10 border border-arena-gold/20">
             <History className="h-3.5 w-3.5 text-arena-gold" />
           </div>
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-foreground">
             Head-to-Head History
           </h3>
         </div>

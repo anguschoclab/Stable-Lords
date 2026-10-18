@@ -47,7 +47,7 @@ function TabBar({
           key={id}
           onClick={() => setActiveTab(id)}
           className={cn(
-            'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 motion-reduce:transition-none',
+            'relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300 motion-reduce:transition-none',
             activeTab === id
               ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px shadow-[inset_0_-10px_20px_-10px_rgba(135,34,40,0.2)]'
               : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
@@ -61,29 +61,72 @@ function TabBar({
   );
 }
 
+/** Named weekly-loop grouping for the overview surface. */
+function CommandSection({
+  id,
+  label,
+  children,
+  className,
+}: {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section aria-labelledby={`${id}-heading`} className={className}>
+      <h2
+        id={`${id}-heading`}
+        className="mb-3 text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/50"
+      >
+        {label}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
 /** The three tab bodies: overview widget grid, roster snapshot, reputation stack. */
 function TabContent({ state }: { state: ControlCenterState }) {
-  const { activeTab, week, absoluteWeek, season, arenaHistory, boutOffers } = state;
+  const { activeTab, week, absoluteWeek, season, arenaHistory, boutOffers, treasury } = state;
   return (
     <div className="min-h-[400px] animate-in fade-in duration-500 motion-reduce:animate-none">
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="md:col-span-2">
+          <CommandSection id="attention" label="Attention Required" className="md:col-span-2">
             <CouncilBriefingWidget />
-          </div>
-          <SeasonWidget />
-          <QuestsWidget />
-          <ObjectivesWidget />
-          <WeeklyDigestWidget
-            week={week}
-            season={season}
-            arenaHistory={arenaHistory}
-            boutOffers={boutOffers ?? {}}
-            currentWeek={absoluteWeek}
-          />
-          <div className="md:col-span-2">
+          </CommandSection>
+
+          <CommandSection id="solvency" label="Solvency and Record" className="md:col-span-2">
+            <p className="mb-3 text-[10px] font-mono text-muted-foreground/60">
+              Treasury: {(treasury ?? 0).toLocaleString()}g
+            </p>
+            <KpiBar />
+          </CommandSection>
+
+          <CommandSection id="decisions" label="Required Decisions" className="contents">
+            <SeasonWidget />
+            <QuestsWidget />
+            <ObjectivesWidget />
+          </CommandSection>
+
+          <CommandSection id="scheduled-bouts" label="Scheduled Bouts">
+            <WeeklyDigestWidget
+              week={week}
+              season={season}
+              arenaHistory={arenaHistory}
+              boutOffers={boutOffers ?? {}}
+              currentWeek={absoluteWeek}
+            />
+          </CommandSection>
+
+          <CommandSection
+            id="last-week"
+            label="Last Week's Consequences"
+            className="md:col-span-2"
+          >
             <RecentBoutsWidget />
-          </div>
+          </CommandSection>
         </div>
       )}
       {activeTab === 'roster' && <RosterSnapshot />}
@@ -137,8 +180,6 @@ export default function ControlCenter() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Left Column: High Density Intel */}
         <div className="lg:col-span-8 flex flex-col gap-10">
-          <KpiBar />
-
           <div className="space-y-6">
             <SectionDivider label="Rankings" variant="gold" />
             <RankingsBar />

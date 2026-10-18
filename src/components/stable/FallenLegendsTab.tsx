@@ -44,7 +44,7 @@ export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) 
         <ImperialRing size="lg" variant="bronze" className="opacity-20">
           <Skull className="h-8 w-8" />
         </ImperialRing>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 italic">
           No legends memorialized in the archives.
         </p>
       </Surface>

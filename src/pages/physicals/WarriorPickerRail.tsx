@@ -21,7 +21,7 @@ export function WarriorPickerRail({
   return (
     <aside className="lg:col-span-3 space-y-6 sticky top-6">
       <div className="px-1 flex items-center justify-between">
-        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
+        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.15em]">
           Select Warriors
         </span>
       </div>

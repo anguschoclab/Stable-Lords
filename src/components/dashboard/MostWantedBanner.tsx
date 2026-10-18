@@ -15,7 +15,7 @@ export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBanner
     <div className="border-t border-white/5 pt-6">
       <div className="flex items-center gap-2 mb-4">
         <Target className="h-3.5 w-3.5 text-destructive opacity-60" />
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground">
           High Priority Target
         </span>
       </div>

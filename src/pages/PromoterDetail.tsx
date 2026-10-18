@@ -3,18 +3,18 @@
  * Deep dive into a single promoter's history, personality, and active offers.
  */
 import { useMemo, useState } from 'react';
-import { useParams, Link } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, History, Target } from 'lucide-react';
+import { Calendar, History, Target } from 'lucide-react';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { PERSONALITY_CONFIG, TIER_COLORS, calculateStats } from './promoterDetail/config';
 import { OverviewTab, HistoryTab, OffersTab } from './promoterDetail/tabs';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { ReturnLink } from '@/components/ui/ReturnLink';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 
 const TABS: SubNavTab[] = [
@@ -89,11 +89,7 @@ function PromoterNotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
       <p className="text-muted-foreground">Promoter not found.</p>
-      <Link to="/stable/promoters">
-        <Button variant="outline">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Directory
-        </Button>
-      </Link>
+      <ReturnLink to="/stable/promoters" label="Back to Promoters" />
     </div>
   );
 }
@@ -114,17 +110,11 @@ export default function PromoterDetail() {
 
   return (
     <PageFrame className="space-y-6">
+      <ReturnLink to="/stable/promoters" label="Back to Promoters" />
       <PageHeader
         eyebrow="Promoter"
         title={promoter.name}
         subtitle={`OPS · PROMOTERS · ${promoter.tier.toUpperCase()} CIRCUIT`}
-        actions={
-          <Link to="/stable/promoters">
-            <Button variant="ghost" className="gap-2">
-              <ArrowLeft className="h-4 w-4" /> Back to Directory
-            </Button>
-          </Link>
-        }
       />
 
       {/* Hero Section */}

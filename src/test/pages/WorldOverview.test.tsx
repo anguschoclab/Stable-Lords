@@ -109,6 +109,13 @@ describe('WorldOverview Component', () => {
     expect(rivalWlkCell.length).toBeGreaterThan(0);
   });
 
+  it('shows the actual week instead of a fabricated live/loading status', () => {
+    render(<WorldOverview />);
+    expect(screen.queryByText(/Loading\.\.\./i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Arena Data Live/i)).not.toBeInTheDocument();
+    expect(screen.getByText(`Week ${mockState.week}`)).toBeInTheDocument();
+  });
+
   it('renders warrior rows correctly', async () => {
     render(<WorldOverview />);
 

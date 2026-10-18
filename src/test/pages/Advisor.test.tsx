@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import AdvisorPage from '@/pages/Advisor';
 import { useGameStore } from '@/state/useGameStore';
@@ -8,6 +8,14 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';
+
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, children, className }: any) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
+}));
 
 const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 
@@ -82,5 +90,18 @@ describe('AdvisorPage', () => {
     const grid = within(screen.getByTestId('warrior-cards'));
     expect(grid.queryByText('Aulus')).toBeNull();
     expect(grid.getByText('Brutus')).toBeDefined();
+  });
+
+  it('links every advisory lane to the surface that resolves it', () => {
+    render(<AdvisorPage />);
+
+    const grid = within(screen.getByTestId('warrior-cards'));
+    expect(grid.getAllByRole('link', { name: /Review bout offers/i })).toHaveLength(2);
+    expect(grid.getAllByRole('link', { name: /Adjust training/i })).toHaveLength(2);
+    expect(grid.getAllByRole('link', { name: /Open war plan/i })).toHaveLength(2);
+    expect(grid.getAllByRole('link', { name: /Open war plan/i })[0]).toHaveAttribute(
+      'href',
+      '/warrior/w1'
+    );
   });
 });

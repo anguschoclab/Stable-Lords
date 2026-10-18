@@ -14,16 +14,16 @@ const NotFound = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))]">
       <div className="text-center font-mono">
-        <div className="text-primary text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse motion-reduce:animate-none">
+        <div className="text-primary text-[10px] uppercase tracking-[0.15em] mb-4 animate-pulse motion-reduce:animate-none">
           Route Not Found
         </div>
         <h1 className="text-foreground text-6xl font-bold uppercase tracking-widest mb-4">404</h1>
-        <p className="text-muted-foreground text-xs uppercase tracking-[0.3em] mb-8">
+        <p className="text-muted-foreground text-xs uppercase tracking-[0.15em] mb-8">
           This sector of the arena does not exist
         </p>
         <Link
           to="/"
-          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors motion-reduce:transition-none"
+          className="text-primary text-[10px] uppercase tracking-[0.15em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors motion-reduce:transition-none"
         >
           Return to Hub
         </Link>

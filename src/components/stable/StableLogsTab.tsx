@@ -70,7 +70,7 @@ function BoutLogRow({ f, stableWarriorIds }: { f: FightSummary; stableWarriorIds
             />
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/20">
+            <span className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground/20">
               Week {f.week}
             </span>
             {f.by && (

@@ -12,6 +12,9 @@ import { WinScreen } from '@/components/progression/WinScreen';
 import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/layout/TacticalBar';
 import EventLog from '@/components/EventLog';
+import { MobileEventLogSheet } from '@/components/layout/MobileEventLogSheet';
+import { resolveEventLogRouteState } from '@/components/layout/eventLogRoutePolicy';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';
 import { ResultsBanner } from '@/components/layout/ResultsBanner';
@@ -34,7 +37,7 @@ function LoadingOverlay({ isInitialized }: LoadingOverlayProps) {
           className="absolute inset-0 z-50 bg-background flex items-center justify-center flex-col gap-4"
         >
           <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin motion-reduce:animate-none" />
-          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse motion-reduce:animate-none">
+          <div className="text-[10px] font-black uppercase tracking-[0.15em] text-primary/60 animate-pulse motion-reduce:animate-none">
             Unsealing the Archive...
           </div>
         </motion.div>
@@ -73,17 +76,12 @@ function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
 // We open the Event Log on the dashboard and high-stakes command screens.
 // We close it on management-heavy screens (Stable/World) to maximize workspace.
 
-function useRouteAwareEventLog(activePath: string) {
+function useRouteAwareEventLog(activePath: string, isCompactShell: boolean) {
   useEffect(() => {
-    const autoOpenPaths = ['/', '/stable/arena', '/stable/planner'];
-    const autoClosePaths = ['/stable', '/world', '/stable/roster', '/stable/training'];
-
-    if (autoOpenPaths.includes(activePath)) {
-      useGameStore.getState().setEventLogOpen(true);
-    } else if (autoClosePaths.some((p) => activePath.startsWith(p))) {
-      useGameStore.getState().setEventLogOpen(false);
-    }
-  }, [activePath]);
+    const { eventLogOpen, setEventLogOpen } = useGameStore.getState();
+    const nextOpen = resolveEventLogRouteState(activePath, isCompactShell, eventLogOpen);
+    if (nextOpen !== eventLogOpen) setEventLogOpen(nextOpen);
+  }, [activePath, isCompactShell]);
 }
 
 /** Central column: results banner, animated page outlet, overlays. */
@@ -155,6 +153,63 @@ function useShellState() {
   );
 }
 
+function ShellContent(props: {
+  week: number;
+  isInitialized: boolean;
+  eventLogOpen: boolean;
+  setEventLogOpen: (open: boolean) => void;
+  isCompactShell: boolean;
+  pathname: string;
+  results: ReturnType<typeof useWeekExecution>['results'];
+  clearResults: () => void;
+  resetOpen: boolean;
+  setResetOpen: (open: boolean) => void;
+  doReset: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <div className="flex-1 flex flex-row overflow-hidden relative">
+        {/* ─── Left Navigation Rail ─── */}
+        <div className="hidden md:flex">
+          <LeftNav />
+        </div>
+
+        {/* ─── Main Content Area ─── */}
+        <MainColumn
+          week={props.week}
+          isInitialized={props.isInitialized}
+          results={props.results}
+          clearResults={props.clearResults}
+          pathname={props.pathname}
+        >
+          {props.children}
+        </MainColumn>
+
+        {/* ─── Event Log Context ─── */}
+        {!props.isCompactShell && (
+          <EventLogRail eventLogOpen={props.eventLogOpen}>
+            <EventLog />
+          </EventLogRail>
+        )}
+      </div>
+
+      {props.isCompactShell && (
+        <MobileEventLogSheet open={props.eventLogOpen} onOpenChange={props.setEventLogOpen} />
+      )}
+
+      <DeathModal />
+      <WinScreen />
+
+      <ResetDialog
+        open={props.resetOpen}
+        onOpenChange={props.setResetOpen}
+        onConfirm={props.doReset}
+      />
+    </>
+  );
+}
+
 /** Application shell: header, CTA, and routed content frame. */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {
@@ -171,8 +226,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     isSimulating,
     isInitialized,
     eventLogOpen,
+    setEventLogOpen,
     initialize,
   } = useShellState();
+  const isCompactShell = useMediaQuery('(max-width: 767px)');
   const location = useLocation();
   const activePath = location.pathname;
   const [resetOpen, setResetOpen] = useState(false);
@@ -185,7 +242,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     initialize();
   }, [initialize]);
 
-  useRouteAwareEventLog(activePath);
+  useRouteAwareEventLog(activePath, isCompactShell);
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
@@ -201,35 +258,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         lastSavedAt={lastSavedAt}
         onResetPrompt={() => setResetOpen(true)}
         returnToTitle={returnToTitle}
+        compact={isCompactShell}
       />
 
-      <div className="flex-1 flex flex-row overflow-hidden relative">
-        {/* ─── Left Navigation Rail ─── */}
-        <div className="hidden md:flex">
-          <LeftNav />
-        </div>
-
-        {/* ─── Main Content Area ─── */}
-        <MainColumn
-          week={week}
-          isInitialized={isInitialized}
-          results={results}
-          clearResults={clearResults}
-          pathname={location.pathname}
-        >
-          {children}
-        </MainColumn>
-
-        {/* ─── Event Log Right Rail ─── */}
-        <EventLogRail eventLogOpen={eventLogOpen}>
-          <EventLog />
-        </EventLogRail>
-      </div>
-
-      <DeathModal />
-      <WinScreen />
-
-      <ResetDialog open={resetOpen} onOpenChange={setResetOpen} onConfirm={doReset} />
+      <ShellContent
+        week={week}
+        isInitialized={isInitialized}
+        eventLogOpen={eventLogOpen}
+        setEventLogOpen={setEventLogOpen}
+        isCompactShell={isCompactShell}
+        pathname={location.pathname}
+        results={results}
+        clearResults={clearResults}
+        resetOpen={resetOpen}
+        setResetOpen={setResetOpen}
+        doReset={doReset}
+      >
+        {children}
+      </ShellContent>
     </div>
   );
 }

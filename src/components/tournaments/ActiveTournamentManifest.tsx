@@ -155,7 +155,7 @@ export function ActiveTournamentManifest(props: ActiveTournamentManifestProps) {
   );
 }
 
-/** Manifest header: season ring, tournament name, LIVE PHASE badge. */
+/** Manifest header: season ring, tournament name, and in-progress state badge. */
 function ManifestHeader({ name, seasonIcon }: { name: string; seasonIcon: string }) {
   return (
     <div className="pb-6 bg-primary/5 border-b border-white/5 p-8 flex items-center justify-between">
@@ -164,7 +164,7 @@ function ManifestHeader({ name, seasonIcon }: { name: string; seasonIcon: string
           <span className="text-xl">{seasonIcon}</span>
         </ImperialRing>
         <div className="flex flex-col">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
             Tournament Active
           </span>
           <h3 className="font-display text-2xl font-black uppercase tracking-tight text-foreground">
@@ -172,8 +172,8 @@ function ManifestHeader({ name, seasonIcon }: { name: string; seasonIcon: string
           </h3>
         </div>
       </div>
-      <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] px-6 py-2 rounded-none animate-pulse motion-reduce:animate-none">
-        LIVE PHASE
+      <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.15em] px-6 py-2 rounded-none animate-pulse motion-reduce:animate-none">
+        IN PROGRESS
       </Badge>
     </div>
   );
@@ -226,7 +226,7 @@ function ActionFooter({
         <Button
           onClick={onExecuteRound}
           disabled={isSimulating}
-          className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.4em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none rounded-none"
+          className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all motion-reduce:transition-none rounded-none"
         >
           <Play className="h-5 w-5 mr-4 fill-current" /> EXECUTE NEXT BOUT
         </Button>
@@ -236,7 +236,7 @@ function ActionFooter({
         <Button
           variant="outline"
           onClick={onOpenPrep}
-          className="w-full h-12 font-black uppercase text-[10px] tracking-[0.2em] gap-3 bg-white/5 border-white/10 hover:bg-white/10 transition-all motion-reduce:transition-none rounded-none"
+          className="w-full h-12 font-black uppercase text-[10px] tracking-[0.15em] gap-3 bg-white/5 border-white/10 hover:bg-white/10 transition-all motion-reduce:transition-none rounded-none"
         >
           <Settings2 className="h-4 w-4" /> OPEN PREPARATION CONSOLE
         </Button>

@@ -16,11 +16,10 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-const defaultAlerts: Record<HubId, number> = { stable: 0, world: 0, bookmarks: 0 };
+const defaultAlerts: Record<HubId, number> = { stable: 0, world: 0 };
 const defaultAlertLinks: Record<HubId, string> = {
   stable: '/stable',
   world: '/world/tournaments',
-  bookmarks: '/bookmarks',
 };
 
 describe('HubSwitcher', () => {
@@ -28,13 +27,13 @@ describe('HubSwitcher', () => {
     mockNavigate.mockClear();
   });
 
-  it('renders all 3 hubs (Stable, World, Bookmarks) as links with correct href', () => {
+  it('renders the canonical Stable and World hubs as links with correct href', () => {
     render(
       <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     expect(screen.getByRole('link', { name: /Stable/i })).toHaveAttribute('href', '/stable');
     expect(screen.getByRole('link', { name: /World/i })).toHaveAttribute('href', '/world');
-    expect(screen.getByRole('link', { name: /Bookmarks/i })).toHaveAttribute('href', '/bookmarks');
+    expect(screen.queryByRole('link', { name: /Bookmarks/i })).toBeNull();
   });
 
   it('renders hub labels as text', () => {
@@ -43,7 +42,7 @@ describe('HubSwitcher', () => {
     );
     expect(screen.getByText('Stable')).toBeInTheDocument();
     expect(screen.getByText('World')).toBeInTheDocument();
-    expect(screen.getByText('Bookmarks')).toBeInTheDocument();
+    expect(screen.queryByText('Bookmarks')).toBeNull();
   });
 
   it('applies active styling (text-primary bg-primary/10) to active hub', () => {
@@ -181,7 +180,7 @@ describe('HubSwitcher', () => {
         LinkComponent={CustomLink}
       />
     );
-    expect(screen.getAllByTestId('custom-link')).toHaveLength(3);
+    expect(screen.getAllByTestId('custom-link')).toHaveLength(2);
   });
 
   it('passes linkClassName to link element className', () => {
@@ -217,7 +216,7 @@ describe('HubSwitcher', () => {
     );
     expect(screen.getByText('Stable')).toBeInTheDocument();
     expect(screen.getByText('World')).toBeInTheDocument();
-    expect(screen.getByText('Bookmarks')).toBeInTheDocument();
+    expect(screen.queryByText('Bookmarks')).toBeNull();
     // None should have active styling
     const stableLink = screen.getByText('Stable').closest('a');
     expect(stableLink?.className).not.toMatch(/bg-primary\/10/);

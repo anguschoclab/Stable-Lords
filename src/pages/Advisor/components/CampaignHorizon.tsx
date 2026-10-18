@@ -80,7 +80,7 @@ export function CampaignHorizon() {
         <ImperialRing size="xs" variant="gold">
           <CalendarClock className="h-3.5 w-3.5 text-arena-gold" />
         </ImperialRing>
-        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-arena-gold">
+        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold">
           Campaign Horizon
         </span>
       </div>

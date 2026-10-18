@@ -38,7 +38,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-2">
+        <div className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 flex items-center gap-2">
           <Activity className="h-3 w-3" /> Fighting Rhythm
         </div>
         {isRhythmDiscovered && (

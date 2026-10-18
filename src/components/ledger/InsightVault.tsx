@@ -126,7 +126,7 @@ function TokenSection({ config, tokens }: TokenSectionProps) {
           <div
             className={`h-2 w-2 rounded-full ${config.pulseColor} animate-pulse motion-reduce:animate-none`}
           />
-          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground flex items-center gap-2">
             {config.title}
           </h4>
         </div>
@@ -194,7 +194,7 @@ function StatItem({ icon: Icon, label, value, sublabel, variant }: StatItemProps
         />
       </div>
       <div>
-        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">
+        <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em] block mb-1 opacity-40">
           {label}
         </span>
         <span className={`text-xl font-mono font-black ${v.valueText}`}>{value}</span>
@@ -291,7 +291,7 @@ function InsightSummary({ total, tokensByType }: { total: number; tokensByType: 
         />
         <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none motion-reduce:transition-none" />
-          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">
+          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.15em] mb-4 opacity-40">
             Status
           </span>
           <div className="flex items-center gap-3">

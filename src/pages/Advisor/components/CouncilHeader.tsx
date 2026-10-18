@@ -91,7 +91,7 @@ export function CouncilHeader({ summary, onExecuteAll }: CouncilHeaderProps) {
               <ImperialRing size="sm" variant="gold">
                 <ShieldCheck className="h-4 w-4 text-arena-gold" />
               </ImperialRing>
-              <span className="text-[11px] font-black uppercase tracking-[0.25em] text-arena-gold">
+              <span className="text-[11px] font-black uppercase tracking-[0.15em] text-arena-gold">
                 War Council Strategic Directive
               </span>
             </div>

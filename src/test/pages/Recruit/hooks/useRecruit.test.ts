@@ -731,6 +731,19 @@ describe('useRecruit orchestrator', () => {
     expect(result.current.rosterFull).toBe(false);
   });
 
+  it('rosterFull ignores dead warriors lingering on the roster', () => {
+    const roster = [
+      ...Array.from({ length: BASE_ROSTER_CAP - 1 }, (_, i) =>
+        makeTestWarrior(`w${i}`, `Warrior${i}`)
+      ),
+      { ...makeTestWarrior('w-dead', 'Fallen'), status: 'Dead' as const },
+    ];
+    loadState({ roster });
+    const { result } = renderHook(() => useRecruit());
+    expect(result.current.activeRosterSize).toBe(BASE_ROSTER_CAP - 1);
+    expect(result.current.rosterFull).toBe(false);
+  });
+
   it('canRefresh is false when treasury < REFRESH_COST', () => {
     loadState({ treasury: 10 });
     const { result } = renderHook(() => useRecruit());

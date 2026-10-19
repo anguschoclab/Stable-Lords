@@ -173,7 +173,7 @@ function ScoutMarketTab({
  */
 export default function Recruit() {
   const recruit = useRecruit();
-  const { roster, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } = recruit;
+  const { activeRosterSize, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } = recruit;
 
   // Contract selection drives the top-bar SIGN CONTRACT CTA — disabled until
   // a recruit is picked, then signs that recruit (base contract, no bonus).
@@ -190,7 +190,7 @@ export default function Recruit() {
         title="Recruitment"
         subtitle="STABLE · CONTRACT MARKET"
         actions={
-          <HeaderStats rosterSize={roster.length} maxRoster={MAX_ROSTER} treasury={treasury} />
+          <HeaderStats rosterSize={activeRosterSize} maxRoster={MAX_ROSTER} treasury={treasury} />
         }
       />
 
@@ -217,7 +217,7 @@ export default function Recruit() {
         <CustomWarriorTab
           onCreate={recruit.handleCustomCreate}
           maxRoster={MAX_ROSTER}
-          rosterSize={roster.length}
+          rosterSize={activeRosterSize}
         />
       </Tabs>
     </PageFrame>

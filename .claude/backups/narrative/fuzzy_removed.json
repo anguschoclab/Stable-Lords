@@ -1,0 +1,35 @@
+{
+  "combatKillText.json.kill_text.weapon_specific.fist": [
+    "{{defender}}'s chest caves in under the primal, brutal force of {{attacker}}'s final punch."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.desperate": [
+    "With a panicked scramble, {{defender}} hurls themselves out of the weapon's path."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.confident": [
+    "{{defender}} reads the attack perfectly, stepping aside with clinical precision."
+  ],
+  "combatPbp.json.pbp.defenses.dodge.theatrical": [
+    "{{defender}} performs a dramatic backflip to evade the attack."
+  ],
+  "combatStrikes.json.strikes.slashing.solid": [
+    "{{attacker}} carves a brutal, sweeping arc across {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.bashing.solid": [
+    "{{attacker}} delivers a sickening concussive blow to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} batters {{defender}}'s {{bodyPart}} with a punishing, heavy strike."
+  ],
+  "combatStrikes.json.strikes.piercing.glancing": [
+    "A quick jab by {{attacker}} only snags {{defender}}'s clothing."
+  ],
+  "combatStrikes.json.strikes.piercing.solid": [
+    "{{attacker}} threads the needle, sinking their weapon deep into {{defender}}'s {{bodyPart}}."
+  ],
+  "combatStrikes.json.strikes.fist.solid": [
+    "{{attacker}} lands a punishing, bare-knuckle hook to {{defender}}'s {{bodyPart}}.",
+    "{{attacker}} sinks a heavy body blow directly into {{defender}}'s {{bodyPart}}.",
+    "A sharp, snapping jab from {{attacker}} snaps {{defender}}'s head back."
+  ],
+  "combatStrikes.json.strikes.fist.critical": [
+    "{{attacker}} unleashes a monstrous haymaker, cratering {{defender}}'s {{bodyPart}}."
+  ]
+}

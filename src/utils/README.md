@@ -2,7 +2,7 @@
 
 This directory contains general-purpose utilities shared across the codebase.
 All modules are framework-agnostic and have no React or game-logic dependencies
-(except `roster.ts` and `warriorCollection.ts`, which depend on game types).
+(except `roster.ts`, which depends on game types).
 
 ## Modules
 
@@ -103,14 +103,9 @@ Player roster manipulation utilities (game-type aware).
 | `filterByStatus`        | `(roster, status) => Warrior[]`   | Filter by specific status                |
 | `filterHealthy`         | `(roster) => Warrior[]`           | Filter to active, uninjured warriors     |
 
-### `warriorCollection.ts`
-
-Re-export barrel for warrior collection utilities.
-
-| Export                    | Source                            | Purpose                                                      |
-| ------------------------- | --------------------------------- | ------------------------------------------------------------ |
-| `collectAllKnownWarriors` | `@/engine/core/warriorCollection` | Collect all warriors (roster + graveyard + retired + rivals) |
-| `buildWarriorMap`         | `@/engine/core/warriorCollection` | Build a comprehensive warrior lookup map                     |
+Warrior lookup maps live in `@/engine/core/entityIndex` (`getWarriorIndex`,
+cached and read-only); `collectAllKnownWarriors` lives in
+`@/engine/core/warriorCollection`.
 
 ### `stateUtils.ts`
 

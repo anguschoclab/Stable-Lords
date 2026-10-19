@@ -17,7 +17,7 @@ import { MissionControlTab } from '@/components/warrior/MissionControlTab';
 import { ChronicleTab } from '@/components/warrior/ChronicleTab';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { ReturnLink } from '@/components/ui/ReturnLink';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs/Breadcrumbs';
 import { DetailHeaderActions, DetailTabStrip, DetailSidebar } from '@/pages/WarriorDetail/sections';
 
 const TABS: SubNavTab[] = [
@@ -31,7 +31,7 @@ function UnknownWarrior() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
       <p className="text-muted-foreground">No gladiator bears this mark.</p>
-      <ReturnLink to="/world/scouting" label="Back to Scouting" />
+      <Breadcrumbs />
     </div>
   );
 }
@@ -97,7 +97,6 @@ export default function WarriorDetail() {
     warrior,
     displayWarrior,
     isPlayerOwned,
-    returnContext,
     activeTab,
     setActiveTab,
     arenaHistory,
@@ -116,7 +115,7 @@ export default function WarriorDetail() {
   return (
     <PageFrame maxWidth="lg" className="pb-32">
       <div className="mb-6">
-        <ReturnLink to={returnContext.to} label={returnContext.label} />
+        <Breadcrumbs />
       </div>
       <PageHeader
         icon={User}

@@ -1,5 +1,5 @@
 import type { useNavigate } from '@tanstack/react-router';
-import { buildWarriorMap } from '@/engine/core/warriorCollection';
+import { getWarriorIndex } from '@/engine/core/entityIndex';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/store.types';
 import type { Bookmark } from '@/types/bookmark.types';
@@ -14,7 +14,7 @@ interface BookmarkRow {
 }
 
 /** Bookmark rows grouped by entity type for the bookmarks page sections. */
-export type BookmarkGroups = Record<BookmarkEntityType, BookmarkRow[]>;
+type BookmarkGroups = Record<BookmarkEntityType, BookmarkRow[]>;
 
 type Navigate = ReturnType<typeof useNavigate>;
 type Slice = Pick<
@@ -39,9 +39,6 @@ type LookupMaps = ReturnType<typeof buildLookupMaps>;
  */
 function buildLookupMaps(s: Slice) {
   const {
-    roster,
-    graveyard,
-    retired,
     rivals,
     promoters,
     trainers,
@@ -51,9 +48,7 @@ function buildLookupMaps(s: Slice) {
   } = s;
   const typesPresent = new Set(s.bookmarks.map((b) => b.entityType));
 
-  const warriorMap = typesPresent.has('warrior')
-    ? buildWarriorMap({ roster, graveyard, retired, rivals })
-    : undefined;
+  const warriorMap = typesPresent.has('warrior') ? getWarriorIndex(s) : undefined;
 
   const rivalMap = typesPresent.has('rival')
     ? new Map<string, (typeof rivals)[number]>()

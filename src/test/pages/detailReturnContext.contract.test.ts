@@ -10,18 +10,22 @@ function source(file: string) {
 
 describe('detail-page return context contract', () => {
   it.each([
-    ['pages/WarriorDetail.tsx', 'returnContext.to'],
-    ['pages/StableDetail.tsx', '/world/scouting'],
-    ['pages/PromoterDetail.tsx', '/stable/promoters'],
-    ['pages/ArenaDetail.tsx', '/world/arenas'],
-  ])('%s exposes its real parent through ReturnLink', (file, destination) => {
+    'pages/WarriorDetail.tsx',
+    'pages/StableDetail.tsx',
+    'pages/PromoterDetail.tsx',
+    'pages/ArenaDetail.tsx',
+  ])('%s renders the hybrid Breadcrumbs trail', (file) => {
     const text = source(file);
-    expect(text).toContain('ReturnLink');
-    expect(text).toContain('<ReturnLink');
-    expect(text).toContain(destination);
+    expect(text).toContain('Breadcrumbs');
+    expect(text).toContain('<Breadcrumbs');
   });
 
   it('returns missing warriors to scouting instead of the root redirect', () => {
-    expect(source('pages/WarriorDetail.tsx')).toContain('to="/world/scouting"');
+    // The canonical fallback now lives in the route registry — unknown
+    // warrior ids chain to World › Scouting (asserted behaviorally in
+    // routeCrumbs.test.ts).
+    expect(source('components/layout/breadcrumbs/routeCrumbs.ts')).toContain(
+      "'/world/scouting'"
+    );
   });
 });

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { buildWarriorMap } from '@/engine/core/warriorCollection';
+import { findWarrior } from '@/engine/core/historyResolver';
 import { obfuscateWarrior } from '@/lib/obfuscation';
 import { type FightPlan } from '@/types/game';
 import type { GameState, Warrior } from '@/types/state.types';
@@ -11,7 +11,6 @@ import { getCurrentArenaTitles, getPastArenaTitles } from '@/engine/championship
 import { getAllArenas } from '@/data/arenas';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { toast } from 'sonner';
-import { getWarriorReturnContext } from '@/pages/WarriorDetail/returnContext';
 
 /** Roster-mutation handlers bound to the viewed warrior. */
 function useWarriorMutations(
@@ -62,37 +61,23 @@ function useWarriorMutations(
 
 function useWarriorIdentity(props: {
   id: string;
-  roster: Warrior[];
-  graveyard: Warrior[];
-  retired: Warrior[];
-  rivals: ReturnType<typeof useGameStore.getState>['rivals'];
   insightTokens: ReturnType<typeof useGameStore.getState>['insightTokens'];
 }) {
-  const { id, roster, graveyard, retired, rivals, insightTokens } = props;
-  const { warrior, isPlayerOwned } = useMemo(() => {
-    const allMap = buildWarriorMap({ roster, graveyard, retired, rivals });
-    const playerIds = new Set<string>();
-    for (const w of roster) playerIds.add(w.id);
-    for (const w of graveyard) playerIds.add(w.id);
-    for (const w of retired) playerIds.add(w.id);
-    const found = allMap.get(id);
-    return { warrior: found, isPlayerOwned: found ? playerIds.has(id) : false };
-  }, [id, roster, graveyard, retired, rivals]);
-  const ownerStableId = useMemo(() => {
-    if (isPlayerOwned) return undefined;
-    return rivals?.find((rival) => rival.roster?.some((w) => w.id === id))?.owner.id as
-      | string
-      | undefined;
-  }, [id, isPlayerOwned, rivals]);
-  const returnContext = useMemo(
-    () => getWarriorReturnContext({ isPlayerOwned, ownerStableId }),
-    [isPlayerOwned, ownerStableId]
+  const { id, insightTokens } = props;
+  // Atomic selectors on the shared entity index — O(1) lookups, no
+  // per-render map build, and no fresh-literal cache misses.
+  const warrior = useGameStore((s) => findWarrior(s, id));
+  const isPlayerOwned = useGameStore(
+    (s) =>
+      s.roster.some((w) => w.id === id) ||
+      s.graveyard.some((w) => w.id === id) ||
+      s.retired.some((w) => w.id === id)
   );
   const displayWarrior = useMemo(() => {
     if (!warrior) return null;
     return obfuscateWarrior(warrior, insightTokens, isPlayerOwned);
   }, [warrior, insightTokens, isPlayerOwned]);
-  return { warrior, isPlayerOwned, returnContext, displayWarrior };
+  return { warrior, isPlayerOwned, displayWarrior };
 }
 
 function useArenaCrowns(id: string, arenaChampions: GameState['arenaChampions']) {
@@ -112,10 +97,6 @@ function useArenaCrowns(id: string, arenaChampions: GameState['arenaChampions'])
 function useWarriorDetailStore() {
   return useGameStore(
     useShallow((s) => ({
-      roster: s.roster,
-      graveyard: s.graveyard,
-      retired: s.retired,
-      rivals: s.rivals,
       arenaHistory: s.arenaHistory,
       arenaChampions: s.arenaChampions,
       insightTokens: s.insightTokens,
@@ -133,10 +114,6 @@ export function useWarriorDetail() {
   const navigate = useNavigate();
 
   const {
-    roster,
-    graveyard,
-    retired,
-    rivals,
     arenaHistory,
     arenaChampions,
     insightTokens,
@@ -145,12 +122,8 @@ export function useWarriorDetail() {
   } = useWarriorDetailStore();
 
   const [activeTab, setActiveTab] = useState('biometrics');
-  const { warrior, isPlayerOwned, returnContext, displayWarrior } = useWarriorIdentity({
+  const { warrior, isPlayerOwned, displayWarrior } = useWarriorIdentity({
     id,
-    roster,
-    graveyard,
-    retired,
-    rivals,
     insightTokens,
   });
   const arenaCrowns = useArenaCrowns(id, arenaChampions);
@@ -167,7 +140,6 @@ export function useWarriorDetail() {
     warrior,
     displayWarrior,
     isPlayerOwned,
-    returnContext,
     activeTab,
     setActiveTab,
     arenaHistory,

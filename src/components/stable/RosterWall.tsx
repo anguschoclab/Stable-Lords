@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
+import { useListShell } from '@/hooks/useListShell';
+import { ListToolbar } from '@/components/ui/ListToolbar';
+import { warriorSearchText, WARRIOR_SORTS } from '@/components/warrior/warriorListUtils';
 import { useBookmarks, useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
@@ -89,9 +92,56 @@ function WallHeader({
   );
 }
 
-/**
- *
- */
+// warriorId → best contender standing across arenas (same index rival AI
+// campaigns against — the chip shows real ladder position, not decoration).
+function buildContenderBadges(state: GameState) {
+  const index = buildContenderIndex(state);
+  const badges = new Map<string, { arenaName: string; rank: number }>();
+  for (const [arenaId, ids] of index) {
+    ids.forEach((wId, i) => {
+      const rank = i + 1;
+      const existing = badges.get(wId);
+      if (!existing || rank < existing.rank) {
+        badges.set(wId, { arenaName: getArenaById(arenaId).name, rank });
+      }
+    });
+  }
+  return badges;
+}
+
+/** Animated roster-row grid (or the empty state when nothing matches). */
+function RosterRows({
+  warriors,
+  contenderBadges,
+  onSelect,
+}: {
+  warriors: ReturnType<typeof useActiveRoster>;
+  contenderBadges: Map<string, { arenaName: string; rank: number }>;
+  onSelect: (id: string) => void;
+}) {
+  if (warriors.length === 0) return <EmptyRosterState />;
+  return (
+    <div className="grid gap-6">
+      {warriors.map((w, i) => (
+        <motion.div
+          key={w.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
+        >
+          <RosterWarriorRow
+            warrior={w}
+            rankIndex={i}
+            onClick={() => onSelect(w.id)}
+            contenderBadge={contenderBadges.get(w.id)}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/** The player roster wall — searchable, sortable, bookmark-filterable. */
 export function RosterWall() {
   const navigate = useNavigate();
   const sortedRoster = useActiveRoster();
@@ -107,28 +157,23 @@ export function RosterWall() {
     }))
   );
 
-  // warriorId → best contender standing across arenas (same index rival AI
-  // campaigns against — the chip shows real ladder position, not decoration).
-  const contenderBadges = useMemo(() => {
-    const index = buildContenderIndex(crownState as GameState);
-    const badges = new Map<string, { arenaName: string; rank: number }>();
-    for (const [arenaId, ids] of index) {
-      ids.forEach((wId, i) => {
-        const rank = i + 1;
-        const existing = badges.get(wId);
-        if (!existing || rank < existing.rank) {
-          badges.set(wId, { arenaName: getArenaById(arenaId).name, rank });
-        }
-      });
-    }
-    return badges;
-  }, [crownState]);
+  const contenderBadges = useMemo(
+    () => buildContenderBadges(crownState as GameState),
+    [crownState]
+  );
+
+  const list = useListShell(sortedRoster, {
+    searchText: warriorSearchText,
+    sorts: WARRIOR_SORTS,
+    defaultSortId: 'fame',
+    pageSize: 25,
+  });
 
   const filteredRoster = useMemo(() => {
-    if (!showBookmarkedOnly) return sortedRoster;
+    if (!showBookmarkedOnly) return list.visible;
     const ids = bookmarkIdsByType(bookmarks).get('warrior');
-    return sortedRoster.filter((w) => ids?.has(w.id));
-  }, [sortedRoster, showBookmarkedOnly, bookmarks]);
+    return list.visible.filter((w) => ids?.has(w.id));
+  }, [list.visible, showBookmarkedOnly, bookmarks]);
 
   const rosterStyles = useMemo(
     () => sortedRoster.map((w) => w.style as FightingStyle),
@@ -146,28 +191,23 @@ export function RosterWall() {
         onToggleBookmarked={() => setShowBookmarkedOnly((v) => !v)}
       />
 
+      {sortedRoster.length > 0 && (
+        <div className="px-8 pt-6">
+          <ListToolbar
+            list={list}
+            sorts={WARRIOR_SORTS}
+            placeholder="Search roster…"
+            ariaLabel="Filter roster"
+          />
+        </div>
+      )}
+
       <div className="p-8">
-        {filteredRoster.length === 0 ? (
-          <EmptyRosterState />
-        ) : (
-          <div className="grid gap-6">
-            {filteredRoster.map((w, i) => (
-              <motion.div
-                key={w.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
-              >
-                <RosterWarriorRow
-                  warrior={w}
-                  rankIndex={i}
-                  onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
-                  contenderBadge={contenderBadges.get(w.id)}
-                />
-              </motion.div>
-            ))}
-          </div>
-        )}
+        <RosterRows
+          warriors={filteredRoster}
+          contenderBadges={contenderBadges}
+          onSelect={(id) => navigate({ to: '/warrior/$id', params: { id } })}
+        />
       </div>
     </Surface>
   );

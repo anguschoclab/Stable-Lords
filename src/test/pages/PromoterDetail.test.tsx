@@ -16,6 +16,7 @@ let mockId = '';
 vi.mock('@tanstack/react-router', () => ({
   ...__SHARED_MOCKS.routerLink,
   useParams: () => ({ id: mockId }),
+  useLocation: () => ({ pathname: `/stable/promoter/${mockId}` }),
 }));
 
 describe('PromoterDetail page (region pinning)', () => {

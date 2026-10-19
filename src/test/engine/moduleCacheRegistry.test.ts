@@ -54,8 +54,8 @@ const REGISTRY: Record<string, string> = {
     'Lazy-init lookup over static WEAPONS data; written once, then read-only.',
 
   // ── Identity-keyed caches (GC-bounded, safe in any context) ─────────────
-  'core/historyResolver.ts:warriorCache': 'WeakMap keyed on state object identity.',
-  'core/historyResolver.ts:stableCache': 'WeakMap keyed on state object identity.',
+  'core/entityIndex.ts:indexCache':
+    'WeakMap keyed on state object identity — the unified lookup+search index backing historyResolver.',
   'core/warriorLookup.ts:warriorCache':
     'WeakMap keyed on GameState identity; per-context module instance — safe only because jobQueue serializes each context\'s engine work and rosters never mutate in place.',
   'avatar/avatarCatalog.ts:cachedCatalog':

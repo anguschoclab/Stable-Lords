@@ -6,6 +6,9 @@ import type { Warrior, ScoutReportData } from '@/types/game';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { AvatarForEntity } from '@/components/avatar';
 import { matchesScoutTarget } from '@/engine/scouting/scouting';
+import { ListToolbar } from '@/components/ui/ListToolbar';
+import { useListShell } from '@/hooks/useListShell';
+import { warriorSearchText, WARRIOR_SORTS } from '@/components/warrior/warriorListUtils';
 
 interface RivalWarriorListProps {
   warriors: Warrior[];
@@ -98,6 +101,12 @@ export function RivalWarriorList({
   reports,
   stableName,
 }: RivalWarriorListProps) {
+  const list = useListShell(warriors, {
+    searchText: warriorSearchText,
+    sorts: WARRIOR_SORTS,
+    pageSize: 25,
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-2">
@@ -109,8 +118,15 @@ export function RivalWarriorList({
         <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
       </div>
 
+      <ListToolbar
+        list={list}
+        sorts={WARRIOR_SORTS}
+        placeholder="Search warriors…"
+        ariaLabel="Filter warriors"
+      />
+
       <div className="grid grid-cols-1 gap-2 overflow-y-auto max-h-[60vh] pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-        {warriors.map((w) => (
+        {list.visible.map((w) => (
           <WarriorListItem
             key={w.id}
             warrior={w}
@@ -120,7 +136,7 @@ export function RivalWarriorList({
           />
         ))}
 
-        {warriors.length === 0 && (
+        {list.visible.length === 0 && (
           <Surface
             variant="glass"
             className="py-16 text-center border-dashed border-border/30 flex flex-col items-center gap-4"

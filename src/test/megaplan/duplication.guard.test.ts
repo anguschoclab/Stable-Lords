@@ -34,9 +34,9 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/pages/StartGame.tsx|src/pages/startGame/useStartGame.ts',
   'src/pages/Trainers.tsx|src/pages/Trainers/hooks/useTrainers.ts',
   'src/pages/WarriorDetail.tsx|src/pages/WarriorDetail/hooks/useWarriorDetail.ts',
-  // bookmarks page seam: the hook owns the store slice + navigation, the pure
-  // module owns row projection — same thin interface-overlap category.
-  'src/pages/bookmarks/groupBookmarks.ts|src/pages/bookmarks/useBookmarkGroups.ts',
+  // Warrior-card avatar block idiom — the sm-size AvatarForEntity + adjacent
+  // flex wrapper is a shared display pattern, not behavioral duplication.
+  'src/components/stable/StableRosterTab.tsx|src/components/stable/VeteranReassignmentDialog.tsx',
 
   // ─── Shard-boundary boilerplate — V11 file→directory splits carry the same
   // import preamble into orchestrator + sibling shards. Registered knowingly.
@@ -63,8 +63,9 @@ const KNOWN_SRC_PAIRS = new Set([
   'src/components/ui/alert-dialog.tsx|src/components/ui/sheet.tsx',
 
   // shared shadcn Select/search toolbar boilerplate — different option domains
-  // (recruit tier/style vs. rival list sorts), styling, and behavior.
-  'src/components/scouting/rivalListShell.tsx|src/pages/Recruit/components/RecruitFilters.tsx',
+  // (recruit tier/style vs. list sorts), styling, and behavior. The toolbar
+  // moved scouting/rivalListShell → ui/ListToolbar when lists adopted it.
+  'src/components/ui/ListToolbar.tsx|src/pages/Recruit/components/RecruitFilters.tsx',
   // Shared dashboard/settings card idiom — divergent content, same shell.
   'src/components/dashboard/BriefingTab.tsx|src/components/dashboard/GazetteTab.tsx',
   'src/components/layout/ArenaSettings.tsx|src/components/stable/FighterConfigCard.tsx',

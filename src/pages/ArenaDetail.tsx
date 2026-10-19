@@ -4,7 +4,7 @@ import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { ConfirmDestructiveDialog } from '@/components/ui/ConfirmDestructiveDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { ReturnLink } from '@/components/ui/ReturnLink';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs/Breadcrumbs';
 import { Badge } from '@/components/ui/badge';
 import { ArenaHazardBadges } from '@/components/arena/ArenaHazardBadges';
 import { ScrollText } from 'lucide-react';
@@ -132,7 +132,7 @@ function ArenaDetailContent({
   return (
     <PageFrame>
       <div className="mb-6">
-        <ReturnLink to="/world/arenas" label="Back to the Arena Circuit" />
+        <Breadcrumbs />
       </div>
       <PageHeader
         title={arena.name}

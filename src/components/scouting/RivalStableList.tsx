@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { useGameStore } from '@/state/useGameStore';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import { ListToolbar } from './rivalListShell';
+import { ListToolbar } from '@/components/ui/ListToolbar';
 import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
 import { useListShell } from '@/hooks/useListShell';
 import { AvatarForEntity } from '@/components/avatar';

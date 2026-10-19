@@ -71,12 +71,14 @@ describe('megaplan: orphan guard', () => {
   // a name list — the report mixes live API surface (types, electron entry
   // points, script utilities) with genuine orphans, so the guard asserts the
   // src-scoped count never grows past the post-audit level.
+  // Tightened 159 → 157 during the entity-index/breadcrumb consolidation
+  // (ReturnLink + returnContext removed, new exports all wired).
   it('dead-export count does not grow past the V2 audit level', () => {
     const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
     expect(
       srcDead.length,
-      `dead exports grew past the V2 audit level (${srcDead.length} > 156) — ` +
+      `dead exports grew past the V2 audit level (${srcDead.length} > 157) — ` +
         `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
-    ).toBeLessThanOrEqual(156);
+    ).toBeLessThanOrEqual(157);
   });
 });

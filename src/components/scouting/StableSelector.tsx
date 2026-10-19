@@ -2,7 +2,7 @@ import { Shield, Hexagon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { RivalStableData } from '@/types/game';
-import { ListToolbar } from './rivalListShell';
+import { ListToolbar } from '@/components/ui/ListToolbar';
 import { RIVAL_SORTS, rivalSearchText } from './utils/rivalListUtils';
 import { useListShell } from '@/hooks/useListShell';
 import { selectionRowClasses } from '@/components/ui/selectableRow';

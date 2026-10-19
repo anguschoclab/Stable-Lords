@@ -13,6 +13,7 @@ import {
   UtilityStrip,
 } from './navigationShared';
 import { HUBS, type HubId } from './navigationHubs';
+import { GlobalSearch } from './GlobalSearch';
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -39,6 +40,11 @@ export function LeftNav({ className }: LeftNavProps) {
         className
       )}
     >
+      {/* Global entity search */}
+      <div className="pt-2">
+        <GlobalSearch />
+      </div>
+
       {/* Hub switcher */}
       <HubSwitcher
         activeHubId={activeHubId}

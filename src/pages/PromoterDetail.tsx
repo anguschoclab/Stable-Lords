@@ -14,7 +14,7 @@ import { OverviewTab, HistoryTab, OffersTab } from './promoterDetail/tabs';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { ReturnLink } from '@/components/ui/ReturnLink';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs/Breadcrumbs';
 import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 import { AvatarForEntity } from '@/components/avatar';
 
@@ -99,7 +99,7 @@ function PromoterNotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
       <p className="text-muted-foreground">Promoter not found.</p>
-      <ReturnLink to="/stable/promoters" label="Back to Promoters" />
+      <Breadcrumbs />
     </div>
   );
 }
@@ -120,7 +120,7 @@ export default function PromoterDetail() {
 
   return (
     <PageFrame className="space-y-6">
-      <ReturnLink to="/stable/promoters" label="Back to Promoters" />
+      <Breadcrumbs />
       <PageHeader
         eyebrow="Promoter"
         title={promoter.name}

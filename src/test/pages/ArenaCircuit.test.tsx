@@ -16,6 +16,7 @@ const params = { arenaId: STANDARD_ARENA.id };
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, ...props }: { children?: React.ReactNode }) => <a {...props}>{children}</a>,
   useParams: () => params,
+  useLocation: () => ({ pathname: `/world/arenas/${params.arenaId}` }),
 }));
 
 const CHAMP_ID = 'w-champ' as WarriorId;
@@ -171,7 +172,8 @@ describe('ArenaDetail', () => {
         <ArenaDetail />
       </TooltipProvider>
     );
-    expect(screen.getByText(STANDARD_ARENA.name)).toBeInTheDocument();
+    // The name appears in both the breadcrumb leaf and the page header.
+    expect(screen.getAllByText(STANDARD_ARENA.name).length).toBeGreaterThan(0);
     expect(screen.getByText('Arena Champion')).toBeInTheDocument();
     expect(screen.getByText('Aurelia the Bold')).toBeInTheDocument();
     expect(screen.getByText('Top Warriors')).toBeInTheDocument();

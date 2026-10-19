@@ -6,6 +6,7 @@
  *   1-9         — Navigate to nav items by index
  *   E           — Toggle event log sidebar
  *   ?           — Navigate to Help
+ *   /           — Focus the global entity search
  */
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
@@ -63,6 +64,13 @@ export function useKeyboardShortcuts({ onToggleSidebar }: UseKeyboardShortcutsOp
       if (key === '?') {
         e.preventDefault();
         navigate({ to: '/help' });
+        return;
+      }
+
+      // / → focus the global entity search
+      if (key === '/') {
+        e.preventDefault();
+        document.getElementById('global-search-input')?.focus();
         return;
       }
 

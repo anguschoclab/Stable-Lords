@@ -75,7 +75,7 @@ function FighterPanel(props: FighterPanelProps) {
           name={name}
           size="lg"
           className={cn(
-            'border border-white/10 bg-neutral-950 transition-all duration-700',
+            'border border-white/10 bg-neutral-950 transition-all motion-reduce:transition-none motion-reduce:transform-none duration-700',
             isLoser && 'grayscale opacity-60'
           )}
         />

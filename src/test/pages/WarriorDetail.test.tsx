@@ -60,19 +60,13 @@ vi.mock('@/engine/warrior/warriorStatus', () => ({
 vi.mock('@/lib/obfuscation', () => ({
   obfuscateWarrior: vi.fn((_w: any) => _w),
 }));
-vi.mock('@/engine/core/warriorCollection', () => ({
-  buildWarriorMap: vi.fn((args: any) => {
-    const map = new Map();
-    for (const w of [...args.roster, ...args.rivals, ...args.graveyard, ...args.retired]) {
-      map.set(w.id, w);
-    }
-    return map;
-  }),
+vi.mock('@/components/layout/breadcrumbs/Breadcrumbs', () => ({
+  Breadcrumbs: () => <div data-testid="breadcrumbs" />,
 }));
 vi.mock('sonner', () => ({ toast: { success: vi.fn() } }));
 
 let mockRoster: Warrior[] = [];
-let mockRivals: Warrior[] = [];
+let mockRivals: any[] = [];
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector: any) =>
@@ -121,10 +115,10 @@ describe('WarriorDetail', () => {
     expect(screen.getByText('No gladiator bears this mark.')).toBeInTheDocument();
   });
 
-  it('renders "Return to the Ludus" button in empty state', () => {
+  it('renders the breadcrumb trail in empty state', () => {
     mockRoster = [];
     render(<WarriorDetail />);
-    expect(screen.getByText('Back to Scouting')).toBeInTheDocument();
+    expect(screen.getByTestId('breadcrumbs')).toBeInTheDocument();
   });
 
   // --- Eyebrow labels ---
@@ -135,7 +129,13 @@ describe('WarriorDetail', () => {
 
   it('renders "Rival Gladiator" eyebrow for rival warrior', () => {
     mockRoster = [];
-    mockRivals = [makeWarrior()];
+    mockRivals = [
+      {
+        id: 'r1',
+        owner: { id: 'r1', stableName: 'Rival Stable' },
+        roster: [makeWarrior()],
+      },
+    ];
     render(<WarriorDetail />);
     expect(screen.getByTestId('eyebrow')).toHaveTextContent('Rival Gladiator');
   });

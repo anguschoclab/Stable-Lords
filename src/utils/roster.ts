@@ -9,7 +9,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 /**
  * Builds a Map<string, Warrior> from the game state
  * Includes both player roster and all rival rosters (excludes graveyard/retired)
- * Use buildWarriorMap from warriorCollection.ts for comprehensive lookups
+ * Use getWarriorIndex from engine/core/entityIndex.ts for comprehensive lookups
  */
 export function buildActiveWarriorMap(state: GameState): Map<string, Warrior> {
   const map = new Map<string, Warrior>();

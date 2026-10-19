@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { useAudioSync } from '@/hooks/useAudioSync';
+import { useNavTrailRecorder } from '@/components/layout/breadcrumbs/useNavTrailRecorder';
 import { LeftNav } from '@/components/layout/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
 import { WinScreen } from '@/components/progression/WinScreen';
@@ -237,6 +238,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useRivalryAlerts();
   useAudioSync();
+  useNavTrailRecorder();
 
   useEffect(() => {
     initialize();

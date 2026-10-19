@@ -5,7 +5,7 @@ import { MetaDriftWidget } from '@/components/widgets';
 import type { RivalStableData } from '@/types/game';
 import type { ArenaTitle } from '@/types/state.types';
 import { RivalIntelligenceRow } from './RivalIntelligenceRow';
-import { ListToolbar } from '@/components/scouting/rivalListShell';
+import { ListToolbar } from '@/components/ui/ListToolbar';
 import { RIVAL_SORTS, rivalSearchText } from '@/components/scouting/utils/rivalListUtils';
 import { useListShell } from '@/hooks/useListShell';
 

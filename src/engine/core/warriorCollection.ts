@@ -151,20 +151,6 @@ export function collectUsedWarriorIds(state: {
   return ids;
 }
 
-/**
- * Builds a Map of warrior id → warrior for fast lookups.
- * Includes all warriors (roster, graveyard, retired, rivals).
- * Later entries overwrite earlier ones.
- */
-export function buildWarriorMap(state: {
-  roster: Warrior[];
-  graveyard: Warrior[];
-  retired: Warrior[];
-  rivals: { roster: Warrior[] }[];
-}): Map<string, Warrior> {
-  const map = new Map<string, Warrior>();
-  for (const w of collectAllKnownWarriors(state)) {
-    map.set(w.id, w);
-  }
-  return map;
-}
+// Warrior id→warrior lookup is provided by the shared entity index —
+// use `getWarriorIndex` (read-only, cached) and copy the Map if you
+// need mutation (`new Map(getWarriorIndex(state))`).

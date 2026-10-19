@@ -13,6 +13,7 @@ import {
   UtilityStrip,
 } from './navigationShared';
 import { HUBS, type HubId } from './navigationHubs';
+import { GlobalSearch } from './GlobalSearch';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -84,6 +85,11 @@ export function MobileNav({ className }: MobileNavProps) {
           </SheetHeader>
 
           <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden">
+            {/* Global entity search */}
+            <div className="p-3 border-b border-white/5">
+              <GlobalSearch variant="inline" onNavigate={() => setOpen(false)} />
+            </div>
+
             {/* Hub switcher */}
             <HubSwitcher
               activeHubId={activeHubId}

@@ -10,6 +10,7 @@ import type { Attributes } from '@/types/shared.types';
 interface ActiveRosterItem {
   id: string;
   name: string;
+  epithet?: string;
   fame: number;
   style: string;
   champion: boolean;
@@ -35,6 +36,7 @@ export function useActiveRoster(): ActiveRosterItem[] {
         result.push({
           id: w.id,
           name: w.name,
+          epithet: w.epithet,
           fame: w.fame,
           style: w.style,
           champion: w.champion,

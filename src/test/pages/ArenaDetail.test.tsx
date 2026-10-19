@@ -16,6 +16,7 @@ import '@/test/_setup/setup';
 let mockArenaId = '';
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ arenaId: mockArenaId }),
+  useLocation: () => ({ pathname: `/world/arenas/${mockArenaId}` }),
   useNavigate: () => vi.fn(),
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a href={to}>{children}</a>

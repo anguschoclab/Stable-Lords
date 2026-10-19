@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Shield, LayoutDashboard, FileText, History } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { ReturnLink } from '@/components/ui/ReturnLink';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs/Breadcrumbs';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { IconTabStrip } from '@/components/ui/IconTabStrip';
@@ -37,7 +37,7 @@ function DossierTabs({
 function BackLink() {
   return (
     <div className="mb-8">
-      <ReturnLink to="/world/scouting" label="Back to Scouting" />
+      <Breadcrumbs />
     </div>
   );
 }

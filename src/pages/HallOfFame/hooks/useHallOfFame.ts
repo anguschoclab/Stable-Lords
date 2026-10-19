@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
-import { collectAllKnownWarriors, buildWarriorMap } from '@/engine/core/warriorCollection';
+import { collectAllKnownWarriors } from '@/engine/core/warriorCollection';
+import { getWarriorIndex } from '@/engine/core/entityIndex';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { AnnualAward } from '@/types/game';
 import type { UpsetEntry } from '@/components/awards/UpsetsList';
@@ -64,10 +65,9 @@ export function useHallOfFame() {
     () => collectAllKnownWarriors({ roster, graveyard, retired, rivals }),
     [roster, graveyard, retired, rivals]
   );
-  const warriorById = useMemo(
-    () => buildWarriorMap({ roster, graveyard, retired, rivals }),
-    [roster, graveyard, retired, rivals]
-  );
+  // Shared entity index — same cached Map across callers, no rebuild per
+  // render (the WeakMap keys on the store state object itself).
+  const warriorById = useGameStore((s) => getWarriorIndex(s));
 
   const yearlyAwards = useMemo(() => {
     const groups: Record<number, AnnualAward[]> = {};

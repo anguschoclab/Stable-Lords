@@ -1,6 +1,9 @@
 import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';
+import { ListToolbar } from '@/components/ui/ListToolbar';
+import { useListShell } from '@/hooks/useListShell';
+import { warriorSearchText, WARRIOR_SORTS } from '@/components/warrior/warriorListUtils';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { Heart, Zap } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
@@ -43,14 +46,24 @@ interface StableRosterTabProps {
  *
  */
 export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
+  const list = useListShell(activeRoster, {
+    searchText: warriorSearchText,
+    sorts: WARRIOR_SORTS,
+    pageSize: 25,
+  });
+
   return (
     <div className="space-y-8">
+      <ListToolbar
+        list={list}
+        sorts={WARRIOR_SORTS}
+        placeholder="Search warriors…"
+        ariaLabel="Filter warriors"
+      />
       <div className="grid grid-cols-1 gap-6">
-        {activeRoster
-          .sort((a, b) => b.fame - a.fame)
-          .map((w) => (
-            <RosterCard key={w.id} w={w} />
-          ))}
+        {list.visible.map((w) => (
+          <RosterCard key={w.id} w={w} />
+        ))}
       </div>
     </div>
   );

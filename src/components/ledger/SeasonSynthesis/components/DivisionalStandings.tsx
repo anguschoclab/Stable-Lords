@@ -1,7 +1,7 @@
 import { Surface } from '@/components/ui/Surface';
 import { Trophy } from 'lucide-react';
 import type { RivalPerformance } from '../hooks/useSeasonData';
-import { ListToolbar } from '@/components/scouting/rivalListShell';
+import { ListToolbar } from '@/components/ui/ListToolbar';
 import { useListShell } from '@/hooks/useListShell';
 import type { SortOption } from '@/hooks/useListShell';
 

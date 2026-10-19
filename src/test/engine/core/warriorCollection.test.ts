@@ -6,8 +6,8 @@ import { collectUsedWarriorNames, collectUsedWarriorIds,
   collectAllActiveWarriors,
   collectBookedWarriorIds,
   collectAllKnownWarriors,
-  buildWarriorMap,
 } from '@/engine/core/warriorCollection';
+import { getWarriorIndex } from '@/engine/core/entityIndex';
 import { FightingStyle } from '@/types/shared.types';
 import {
   makeWarrior as fixtureWarrior,
@@ -317,24 +317,26 @@ describe('warriorCollection', () => {
     });
   });
 
-  describe('buildWarriorMap', () => {
+  describe('getWarriorIndex (shared entity index)', () => {
     it('builds a map of all warriors by ID', () => {
-      const map = buildWarriorMap(mockState);
+      const map = getWarriorIndex(mockState);
       expect(map.size).toBe(4);
       expect(map.get('p1')?.id).toBe('p1');
       expect(map.get('rv1')?.id).toBe('rv1');
     });
 
-    it('latest entry overwrites duplicate IDs', () => {
+    it('roster wins duplicate IDs (unified entity-index precedence)', () => {
+      // The consolidated index applies findWarrior's roster-over-rivals
+      // precedence everywhere — the player roster is authoritative.
       const duplicateState = {
         roster: [dummyWarrior('dup')],
         graveyard: [],
         retired: [],
-        rivals: [{ roster: [{ ...dummyWarrior('dup'), name: 'latest_dup' } as Warrior] }],
+        rivals: [{ roster: [{ ...dummyWarrior('dup'), name: 'rival_dup' } as Warrior] }],
       } as any;
-      const map = buildWarriorMap(duplicateState);
+      const map = getWarriorIndex(duplicateState);
       expect(map.size).toBe(1);
-      expect(map.get('dup')?.name).toBe('latest_dup');
+      expect(map.get('dup')?.name).toBe('dup');
     });
   });
 });

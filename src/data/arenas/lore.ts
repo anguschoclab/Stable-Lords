@@ -933,6 +933,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'charnel_pits_screaming_skulls',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Screaming Skulls',
+    narrative:
+      'The wind whistling through the exposed eye sockets of the arena floor creates an unsettling chorus of wails, causing lesser fighters to drop their guard in terror.',
+  },
+  {
+    id: 'mudpit_arena_suffocating_tide',
+    arenaId: 'mudpit_arena',
+    type: 'hazard',
+    title: 'The Suffocating Tide',
+    narrative:
+      'When heavy rains fall, the bloody mud rises significantly, forcing fighters to constantly move or risk sinking and drowning in the mire.',
+  },
+  {
+    id: 'standard_arena_forgotten_kings_bout',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Forgotten King’s Bout',
+    narrative:
+      'Legend states that an exiled king fought here anonymously. He supposedly bled out on the center sands, and it is said the dirt there still repels water to this day.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

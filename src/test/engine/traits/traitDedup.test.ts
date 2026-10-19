@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 165; // 164 + 1 orphan_shadow_step salvaged from #1047 (archetypes corrected)
+const EXPECTED_COUNT = 167; // 164 + 1 orphan_shadow_step salvaged from #1047 (archetypes corrected) + 2 new lore expansion traits
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

@@ -47,6 +47,9 @@ export const AI_PRESTIGE_RATE = 0.04;
 /** Hard cap: prestige upkeep never exceeds this fraction of treasury per week. */
 export const AI_PRESTIGE_CAP_RATE = 0.05;
 
+/** Max scout reports a rival keeps in `agentMemory.scoutReports` — oldest evict first. */
+export const AI_SCOUT_REPORT_CAP = 12;
+
 // ─── Personality draft weights ────────────────────────────────────────────
 // Extended scorer inputs for the unified draft (megaplan): each personality
 // buys what it values — Showman pays for Prodigies, Pragmatic hunts value,

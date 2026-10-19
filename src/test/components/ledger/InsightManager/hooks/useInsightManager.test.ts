@@ -100,4 +100,31 @@ describe('#14 useInsightManager timer cleanup on re-reveal', () => {
     // consumeInsightToken should NOT have been called because timer was cleared
     expect(consumeInsightToken).not.toHaveBeenCalled();
   });
+
+  it('Trait token reveal surfaces the suspected trait, not Unknown (V16/F3c)', () => {
+    const consumeInsightToken = vi.fn();
+    const tokens = [
+      { id: 't-trait', type: 'Trait', detail: 'Suspected trait: Iron Skin', week: 1 },
+    ] as unknown as InsightToken[];
+    const roster = [makeWarrior('w1', 'Alice')];
+
+    const { result } = renderHook(() =>
+      useInsightManager({ consumeInsightToken, insightTokens: tokens, roster })
+    );
+
+    act(() => {
+      result.current.setSelectedTokenId('t-trait');
+      result.current.setSelectedWarriorId('w1');
+    });
+    act(() => {
+      result.current.handleReveal();
+    });
+    act(() => {
+      vi.advanceTimersByTime(2100);
+    });
+
+    expect(result.current.revealData?.type).toBe('Trait');
+    expect(result.current.revealData?.result).not.toBe('Unknown');
+    expect(result.current.revealData?.result).toContain('Iron Skin');
+  });
 });

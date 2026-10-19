@@ -173,6 +173,9 @@ export interface OpponentDossier {
     suspectedAL?: number;
     lastPlanWeek?: number;
   };
+  /** Scouted read on the opposing stablemaster's competence — written by
+   *  AI scout reports; absent on Basic scouting. */
+  suspectedCompetence?: import('./owner').OwnerCompetence;
   /** Plan tendencies witnessed directly in fights this stable watched —
    *  normalized 0–1 running mean of observed OE/AL with a sample count.
    *  Consumed by crown targeting, offer eval, and scout blending. */
@@ -239,6 +242,9 @@ export interface AIAgentMemory {
   };
   /** Perceived opponent intel keyed by stable id (player stable included). */
   opponentDossiers: Record<string, OpponentDossier>;
+  /** AI-filed scout reports on rival warriors — same ScoutReportData the
+   *  player's scouting page persists; capped by AI_SCOUT_REPORT_CAP. */
+  scoutReports?: ScoutReportData[];
   /** Top reasons recent bouts were lost, most recent first, capped at 3. */
   lastLossFactors?: string[];
   /** Current crown target — the stable's best (warrior, arena) campaign. */
@@ -302,6 +308,8 @@ export interface ScoutReportData {
   knownInjuries: string[];
   suspectedOE?: string;
   suspectedAL?: string;
+  /** Traits suspected/discovered during scouting. */
+  suspectedTraits?: string[];
   /** True when the target stable is known to mask its committed plan —
    *  the report's plan section may reflect a decoy. */
   possiblyMaskedPlan?: boolean;

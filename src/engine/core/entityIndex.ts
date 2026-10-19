@@ -35,6 +35,10 @@ export interface SearchEntry {
 /** Cached per-state index: exact lookups plus the flat search corpus. */
 interface EntityIndex {
   warriorById: Map<string, Warrior>;
+  /** Combat-eligible subset — player roster + rival rosters only. Powers
+   *  `findWarriorById`; graveyard and retired entries are never combat
+   *  targets, so they live only in `warriorById`. */
+  livingWarriorById: Map<string, Warrior>;
   warriorByName: Map<string, Warrior>;
   stableIdByName: Map<string, string>;
   stableNameById: Map<string, string>;
@@ -87,6 +91,22 @@ export interface EntityIndexState {
 
 // ─── Cache ─────────────────────────────────────────────────────────────────
 
+/**
+ * Per-context, identity-keyed index.
+ *
+ * Context-global semantics — this module ships into MULTIPLE execution
+ * contexts (main thread, engine worker, shard workers), and each context
+ * instantiates its OWN module instance, so this cache is never shared
+ * across contexts. GameState objects never cross context boundaries
+ * anyway: `postMessage` structured-clones state, so a state object's
+ * identity only exists in exactly one context.
+ *
+ * Within a context the cache is coherent because the engine never mutates
+ * roster contents in place: passes return StateImpacts, and impact
+ * resolution produces a NEW GameState object → fresh index → no staleness.
+ * Callers that DO replace roster contents on the same state object (test
+ * hooks, buildWeekCaches) must call clearEntityIndexCaches() first.
+ */
 let indexCache = new WeakMap<object, EntityIndex>();
 
 /** Clears the entity index cache — called by clearHistoryResolverCaches. */
@@ -237,6 +257,7 @@ function indexPeople(state: EntityIndexState, corpusById: Map<string, SearchEntr
 
 function buildIndex(state: EntityIndexState): EntityIndex {
   const warriorById = new Map<string, Warrior>();
+  const livingWarriorById = new Map<string, Warrior>();
   const warriorByName = new Map<string, Warrior>();
   const corpusById = new Map<string, SearchEntry>();
   const stableIdByName = new Map<string, string>();
@@ -248,6 +269,9 @@ function buildIndex(state: EntityIndexState): EntityIndex {
   indexWarriors(state, (w, bucket, stable) => {
     if (!w) return;
     warriorById.set(w.id as string, w as Warrior);
+    if (bucket === 'Yours' || bucket === 'Rival') {
+      livingWarriorById.set(w.id as string, w as Warrior);
+    }
     warriorByName.set(w.name, w as Warrior);
     corpusById.set(`warrior:${w.id}`, warriorEntry(w, bucket, stable));
   });
@@ -256,6 +280,7 @@ function buildIndex(state: EntityIndexState): EntityIndex {
 
   return {
     warriorById,
+    livingWarriorById,
     warriorByName,
     stableIdByName,
     stableNameById,

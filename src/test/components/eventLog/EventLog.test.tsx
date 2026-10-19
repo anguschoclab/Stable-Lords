@@ -4,7 +4,22 @@ import { render, screen } from '@testing-library/react';
 import { WeekDivider } from '@/components/eventLog/WeekDivider';
 import { EVENT_ICONS } from '@/components/eventLog/constants';
 import { processFightEvents } from '@/components/eventLog/eventProcessors';
+import type { EventType } from '@/types/eventLog';
 import type { FightSummary } from '@/types/game';
+
+/** The live EventType union — 'recruit' was removed (V16/F5: zero producers). */
+const ALL_EVENT_TYPES: readonly EventType[] = [
+  'fight',
+  'kill',
+  'death',
+  'tournament',
+  'news',
+  'injury',
+  'retirement',
+  'training',
+  'event',
+  'recovery',
+];
 
 describe('WeekDivider', () => {
   it('renders week number', () => {
@@ -20,17 +35,13 @@ describe('WeekDivider', () => {
 
 describe('EVENT_ICONS', () => {
   it('has icons for all event types', () => {
-    expect(EVENT_ICONS.fight).toBeDefined();
-    expect(EVENT_ICONS.kill).toBeDefined();
-    expect(EVENT_ICONS.death).toBeDefined();
-    expect(EVENT_ICONS.recruit).toBeDefined();
-    expect(EVENT_ICONS.tournament).toBeDefined();
-    expect(EVENT_ICONS.news).toBeDefined();
-    expect(EVENT_ICONS.event).toBeDefined();
-    expect(EVENT_ICONS.injury).toBeDefined();
-    expect(EVENT_ICONS.retirement).toBeDefined();
-    expect(EVENT_ICONS.training).toBeDefined();
-    expect(EVENT_ICONS.recovery).toBeDefined();
+    for (const type of ALL_EVENT_TYPES) {
+      expect(EVENT_ICONS[type], type).toBeDefined();
+    }
+  });
+
+  it('covers exactly the EventType union — no dead entries (V16/F5)', () => {
+    expect(Object.keys(EVENT_ICONS).sort()).toEqual([...ALL_EVENT_TYPES].sort());
   });
 
   it('has icon and color for each type', () => {

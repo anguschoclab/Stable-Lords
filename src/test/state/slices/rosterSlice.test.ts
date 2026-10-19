@@ -219,6 +219,19 @@ describe('RosterSlice', () => {
     expect(w.flair).toContain('Tactical Insight');
   });
 
+  it('should consume insight token of type Trait — no longer a silent no-op (V16/F3c)', () => {
+    act(() => {
+      useTestStore.getState().addWarrior(mockWarrior);
+      useTestStore.setState({
+        insightTokens: [{ id: 't1', type: 'Trait', detail: 'Suspected trait: Iron Skin' }] as any,
+      });
+      useTestStore.getState().consumeInsightToken('t1' as any, 'w1' as any);
+    });
+    const w = useTestStore.getState().roster[0]!;
+    expect(w.flair).toContain('Pattern Reader');
+    expect(useTestStore.getState().insightTokens).toHaveLength(0);
+  });
+
   it('should do nothing if consumeInsightToken targets non-existent token', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);

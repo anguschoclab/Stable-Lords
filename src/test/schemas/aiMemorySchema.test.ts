@@ -53,6 +53,39 @@ describe('AIAgentMemorySchema — perception fields', () => {
     expect(() => AIAgentMemorySchema.parse(bad)).toThrow();
   });
 
+  it('round-trips rival-filed scout reports and dossier suspectedCompetence (V16/F3)', () => {
+    const memory = {
+      ...baseMemory,
+      opponentDossiers: {
+        'stable-9': {
+          lastSeenWeek: 12,
+          knownStyles: ['LUNGING ATTACK'],
+          estimatedThreat: 0.65,
+          recordVs: { w: 2, l: 1, k: 1 },
+          suspectedCompetence: 'Veteran',
+        },
+      },
+      scoutReports: [
+        {
+          id: 'rpt-1',
+          warriorId: 'w-9',
+          warriorName: 'Scouted Sam',
+          style: 'STRIKING ATTACK',
+          quality: 'Expert',
+          week: 12,
+          attributeRanges: {},
+          record: '5W-2L',
+          knownInjuries: [],
+          suspectedTraits: ['Iron Skin'],
+          notes: 'n',
+        },
+      ],
+    };
+    const parsed = AIAgentMemorySchema.parse(memory);
+    expect(parsed.scoutReports?.[0]?.suspectedTraits).toEqual(['Iron Skin']);
+    expect(parsed.opponentDossiers['stable-9']!.suspectedCompetence).toBe('Veteran');
+  });
+
   it('rejects out-of-range threat estimates', () => {
     const bad = {
       ...baseMemory,

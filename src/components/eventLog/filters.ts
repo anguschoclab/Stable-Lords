@@ -12,7 +12,7 @@ export type EventFilterCategory = (typeof EVENT_FILTER_CATEGORIES)[number]['id']
 
 const CATEGORY_TYPES: Record<Exclude<EventFilterCategory, 'all'>, readonly EventType[]> = {
   consequences: ['fight', 'kill', 'death', 'injury', 'retirement', 'tournament'],
-  reports: ['news', 'event', 'training', 'recruit', 'recovery'],
+  reports: ['news', 'event', 'training', 'recovery'],
 };
 
 /** Filter a derived feed without changing its source data. */

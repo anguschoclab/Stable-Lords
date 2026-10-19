@@ -33,16 +33,17 @@ function purchaseScoutReport(
   }
 
   const rng = new SeededRNG(week + hashStr(activeWarrior.name));
-  const { report } = generateScoutReport(activeWarrior, quality, week, rng, owner);
+  const { report, newInsights } = generateScoutReport(activeWarrior, quality, week, rng, owner);
 
   // Ensure we don't have duplicate reports for the same warrior (id-keyed)
   const newReports = [
     ...(scoutReports ?? []).filter((r: ScoutReportData) => !matchesScoutTarget(r, activeWarrior)),
-    report as ScoutReportData,
+    report,
   ];
 
   setState((draft: GameStore) => {
     draft.scoutReports = newReports;
+    draft.insightTokens = [...(draft.insightTokens ?? []), ...newInsights];
     draft.treasury = (treasury ?? 0) - cost;
     draft.ledger.push({
       id: String(

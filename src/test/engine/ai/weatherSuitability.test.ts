@@ -7,6 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle, type WeatherType } from '@/types/shared.types';
+import { WEATHER_TYPES } from '@/types/enumSources';
 import type { Warrior } from '@/types/warrior.types';
 import {
   HAZARDOUS_WEATHER,
@@ -17,35 +18,9 @@ import {
 } from '@/engine/ai/weatherSuitability';
 import { makeWarrior } from '@/test/_fixtures/factories';
 
-const ALL_WEATHER: WeatherType[] = [
-  'Clear',
-  'Rainy',
-  'Sweltering',
-  'Blizzard',
-  'Dense Fog',
-  'Sandstorm',
-  'Gale',
-  'Tornado',
-  'Hailstorm',
-  'Thunderstorm',
-  'Ashfall',
-  'Acid Rain',
-  'Mana Surge',
-  'Blood Moon',
-  'Eclipse',
-  'Scorching Wind',
-  'Spooky Night',
-  'Meteor Shower',
-  'Abyssal Gloom',
-  'Cursed Miasma',
-  'Chaotic Winds',
-  'Blood Rain',
-  'Wildfire Smoke',
-  'Mirage',
-  'Moonlight Duel',
-  'Breezy',
-  'Overcast',
-];
+// V16: sweep the full WeatherType union — newly registered weather can no
+// longer escape the parity matrix silently.
+const ALL_WEATHER: readonly WeatherType[] = WEATHER_TYPES;
 const ALL_STYLES = Object.values(FightingStyle);
 const CN_VALUES = [0, 5, 8, 10, 12, 15, 20];
 
@@ -62,6 +37,7 @@ function legacyVerifyBlock(w: Warrior, weather: WeatherType): boolean {
   if (weather === 'Gale' && (w.style === FightingStyle.StrikingAttack || isLunger)) return true;
   if (weather === 'Tornado') return true;
   if (weather === 'Hailstorm' && w.attributes.CN < 12) return true;
+  if (weather === 'Cursed Eclipse' && w.attributes.CN < 12) return true;
   return false;
 }
 
@@ -72,12 +48,14 @@ function legacyOfferDecline(w: Warrior, weather: WeatherType): boolean {
   if (weather === 'Dense Fog' && isLunger) return true;
   if (weather === 'Blizzard' && (isLunger || w.attributes.CN < 12)) return true;
   if (weather === 'Acid Rain') return true;
+  if (weather === 'Cursed Eclipse' && w.attributes.CN < 10) return true;
   return false;
 }
 
 function legacyCommitteeSkip(w: Warrior, weather: WeatherType): boolean {
   if (weather === 'Rainy' && w.style === FightingStyle.LungingAttack) return true;
   if (weather === 'Sweltering' && (w.attributes.CN || 0) < 10) return true;
+  if (weather === 'Cursed Eclipse' && (w.attributes.CN || 0) < 10) return true;
   return false;
 }
 
@@ -146,6 +124,12 @@ function legacyBidModifier(warrior: Warrior, weather: WeatherType): number {
   } else if (weather === 'Mirage') {
     weatherModifier = -2;
     if (warrior.style === FightingStyle.LungingAttack) weatherModifier = -4;
+  } else if (weather === 'Cursed Eclipse') {
+    // V16 — intended behavior: riposters thrive under the eclipse; fragile
+    // warriors fade; everyone else is mildly unsettled.
+    weatherModifier = -1;
+    if (warrior.attributes.CN < 12) weatherModifier = -3;
+    if (warrior.style === FightingStyle.ParryRiposte) weatherModifier = +3;
   }
   return weatherModifier;
 }
@@ -226,5 +210,34 @@ describe('weatherSuitability consolidation (G16 parity)', () => {
 
   it('HAZARDOUS_WEATHER matches the legacy intentEngine list', () => {
     expect([...HAZARDOUS_WEATHER].sort()).toEqual([...LEGACY_HAZARDOUS].sort());
+  });
+});
+
+describe('Cursed Eclipse — seasonable weather with explicit AI rules (V16)', () => {
+  const cn = (v: number, style = FightingStyle.StrikingAttack) =>
+    makeWarrior({
+      style,
+      attributes: { ST: 10, CN: v, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    });
+
+  it('blocks weak-conditioning warriors from accepting bouts', () => {
+    expect(acceptanceWeatherBlock(cn(11), 'Cursed Eclipse')).not.toBeNull();
+    expect(acceptanceWeatherBlock(cn(12), 'Cursed Eclipse')).toBeNull();
+  });
+
+  it('declines offers for very fragile warriors', () => {
+    expect(offerWeatherDecline(cn(9), 'Cursed Eclipse')).toBe(true);
+    expect(offerWeatherDecline(cn(10), 'Cursed Eclipse')).toBe(false);
+  });
+
+  it('skeptical committees skip fragile entries', () => {
+    expect(committeeWeatherSkip(cn(9), 'Cursed Eclipse')).toBe(true);
+    expect(committeeWeatherSkip(cn(10), 'Cursed Eclipse')).toBe(false);
+  });
+
+  it('bid modifier favors ParryRiposte and penalizes low CN', () => {
+    expect(weatherBidModifier(cn(15, FightingStyle.ParryRiposte), 'Cursed Eclipse')).toBe(3);
+    expect(weatherBidModifier(cn(11), 'Cursed Eclipse')).toBe(-3);
+    expect(weatherBidModifier(cn(15), 'Cursed Eclipse')).toBe(-1);
   });
 });

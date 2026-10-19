@@ -107,6 +107,20 @@ describe('Warrior Lookup Utilities', () => {
     expect(findWarriorById(state, 'w-cached')).toBeUndefined();
   });
 
+  it('does not resolve a warrior that only exists in the graveyard', () => {
+    // Coverage parity guard for the entityIndex delegation: graveyard and
+    // retired entries belong to the all-warriors index, not the living one.
+    const dead = { id: 'w-gy', status: 'Dead' } as Warrior;
+    const state = { roster: [], rivals: [], graveyard: [dead] } as unknown as GameState;
+    expect(findWarriorById(state, 'w-gy')).toBeUndefined();
+  });
+
+  it('does not resolve a retired warrior', () => {
+    const retired = { id: 'w-ret', status: 'Retired' } as Warrior;
+    const state = { roster: [], rivals: [], retired: [retired] } as unknown as GameState;
+    expect(findWarriorById(state, 'w-ret')).toBeUndefined();
+  });
+
   it('handles state without rivals', () => {
     const warrior = { id: 'w-1' } as Warrior;
     const state = { roster: [warrior] } as unknown as GameState;

@@ -1,6 +1,6 @@
 import type { WeatherType, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SEASONS } from '@/types/enumSources';
+import { SEASONS, OFFSEASON_WEATHER_TYPES } from '@/types/enumSources';
 
 /**
  * Seasonal weather system — bucket tables, weighted rolling, and
@@ -182,6 +182,12 @@ const WEATHER_SEASON: Map<WeatherType, Season | 'All'> = (() => {
 })();
 
 /**
+ * Offseason weather types, as a set for O(1) membership checks in
+ * {@link rollWeather}'s pool filter.
+ */
+const OFFSEASON_SET: ReadonlySet<string> = new Set(OFFSEASON_WEATHER_TYPES);
+
+/**
  * Roll weather using the seasonal bucket system.
  *
  * Builds a cumulative-weight table from {@link SEASONAL_WEATHER} for the given
@@ -189,7 +195,9 @@ const WEATHER_SEASON: Map<WeatherType, Season | 'All'> = (() => {
  * bucket has a non-zero chance.
  */
 export function rollWeather(rng: IRNGService, season: Season): WeatherType {
-  const pool = SEASONAL_WEATHER[season];
+  // Offseason weather can never be rolled in-season — the pools are already
+  // season-only, so this is the runtime guard against bucket drift.
+  const pool = SEASONAL_WEATHER[season].filter((w) => !OFFSEASON_SET.has(w));
   const weights = pool.map((w) => WEATHER_WEIGHTS[w] ?? DEFAULT_WEIGHT);
   const total = weights.reduce((sum, w) => sum + w, 0);
 

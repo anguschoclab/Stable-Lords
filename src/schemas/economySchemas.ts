@@ -186,6 +186,7 @@ const OpponentDossierSchema = z.object({
       lastPlanWeek: z.number().optional(),
     })
     .optional(),
+  suspectedCompetence: OwnerCompetenceSchema.optional(),
   observedTells: z
     .object({
       oe: z.number().min(0).max(1),
@@ -208,6 +209,7 @@ export const AIAgentMemorySchema = z.object({
   seasonRecord: SeasonRecordSchema.optional(),
   lastSeasonRecord: SeasonRecordSchema.optional(),
   opponentDossiers: z.record(z.string(), OpponentDossierSchema),
+  scoutReports: z.array(z.lazy(() => ScoutReportDataSchema)).optional(),
   lastLossFactors: z.array(z.string()).max(3).optional(),
   crownAssessment: z
     .object({
@@ -271,6 +273,7 @@ export const ScoutReportDataSchema = z.object({
   knownInjuries: z.array(z.string()),
   suspectedOE: z.string().optional(),
   suspectedAL: z.string().optional(),
+  suspectedTraits: z.array(z.string()).optional(),
   possiblyMaskedPlan: z.boolean().optional(),
   suspectedCompetence: OwnerCompetenceSchema.optional(),
   notes: z.string(),

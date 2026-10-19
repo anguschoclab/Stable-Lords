@@ -5,7 +5,6 @@ export type EventType =
   | 'fight'
   | 'kill'
   | 'death'
-  | 'recruit'
   | 'tournament'
   | 'news'
   | 'injury'

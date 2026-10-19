@@ -49,6 +49,8 @@ function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
     }
   } else if (token.type === 'Tactic') {
     draft.flair = [...(draft.flair || []), 'Tactical Insight'];
+  } else if (token.type === 'Trait') {
+    draft.flair = [...(draft.flair || []), 'Pattern Reader'];
   }
 
   return draft;

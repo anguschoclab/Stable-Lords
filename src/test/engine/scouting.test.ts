@@ -136,8 +136,9 @@ describe('Scouting System', () => {
       const warrior = makeWarrior();
       const { report } = generateScoutReport(warrior, 'Basic', 1, TEST_RNG);
 
-      for (const key in report.attributeRanges) {
-        expect(typeof report.attributeRanges[key]).toBe('string');
+      for (const [key, value] of Object.entries(report.attributeRanges)) {
+        expect(typeof key).toBe('string');
+        expect(typeof value).toBe('string');
       }
     });
 

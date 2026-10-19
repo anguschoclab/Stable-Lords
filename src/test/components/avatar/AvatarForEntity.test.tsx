@@ -42,4 +42,37 @@ describe('AvatarForEntity', () => {
     );
     expect(container.querySelector('img')?.getAttribute('src')).toBe('/cached.png');
   });
+
+  it('resolves a dead/retired rival warrior to its stable crest, not the player crest (V16/F4)', () => {
+    // The roster scan only sees live rosters — a fallen rival warrior must
+    // still resolve its stable's colors through `stableId`.
+    const fresh = createFreshState('test-crest');
+    fresh.rivals = [
+      {
+        id: 'rival-9',
+        owner: { id: 'rival-9', name: 'R', stableName: 'Rivals', fame: 0, renown: 0, titles: 0, personality: 'Pragmatic' },
+        fame: 0,
+        treasury: 0,
+        roster: [],
+        ledger: [],
+        trainingAssignments: [],
+        crest: {
+          shieldShape: 'heater',
+          fieldType: 'plain',
+          primaryColor: '#112233',
+          metalColor: 'argent',
+          charge: { kind: 'none' },
+          generation: 0,
+        },
+      },
+    ] as never;
+    useGameStore.getState().loadGame('autosave', fresh);
+
+    const fallen = makeTestWarrior('w-fallen', 'Fallen', {
+      avatarSeed: 777,
+      stableId: 'rival-9',
+    } as never);
+    render(<AvatarForEntity entityId="w-fallen" entityType="warrior" source={fallen} size="md" />);
+    expect(useGameStore.getState().avatarCache['w-fallen']?.primaryColor).toBe('#112233');
+  });
 });

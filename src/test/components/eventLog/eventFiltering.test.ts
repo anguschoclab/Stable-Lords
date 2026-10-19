@@ -48,4 +48,27 @@ describe('event filtering', () => {
       'reports',
     ]);
   });
+
+  it('every EventType lands in a player-facing category (V16/F5)', () => {
+    const allTypes: GameEvent['type'][] = [
+      'fight',
+      'kill',
+      'death',
+      'tournament',
+      'news',
+      'injury',
+      'retirement',
+      'training',
+      'event',
+      'recovery',
+    ];
+    const feed = allTypes.map((type) => event(`e-${type}`, type));
+    const covered = new Set(
+      [
+        ...filterEventsByCategory(feed, 'consequences'),
+        ...filterEventsByCategory(feed, 'reports'),
+      ].map((e) => e.type)
+    );
+    expect([...covered].sort()).toEqual([...allTypes].sort());
+  });
 });

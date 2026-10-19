@@ -40,7 +40,12 @@ function resolveEntityColors(
     return { primary: owner.crest?.primaryColor, secondary: owner.crest?.secondaryColor };
   }
   if (entityType === 'warrior' || entityType === 'poolWarrior') {
-    const rival = (rivals ?? []).find((r) => r.roster?.some((w) => w.id === entityId));
+    // The warrior's recorded stable is authoritative — it survives death and
+    // retirement, when the live-roster scan can no longer find the warrior.
+    const stableId = (source as { stableId?: string }).stableId;
+    const rival =
+      (rivals ?? []).find((r) => r.id === stableId) ??
+      (rivals ?? []).find((r) => r.roster?.some((w) => w.id === entityId));
     const crest = rival?.crest ?? player?.crest;
     return { primary: crest?.primaryColor, secondary: crest?.secondaryColor };
   }

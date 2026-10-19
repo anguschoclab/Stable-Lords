@@ -1,7 +1,6 @@
 import {
   Swords,
   Skull,
-  UserPlus,
   Trophy,
   Newspaper,
   AlertTriangle,
@@ -16,7 +15,6 @@ export const EVENT_ICONS: Record<EventType, { icon: React.ElementType; color: st
   fight: { icon: Swords, color: 'text-primary' },
   kill: { icon: Skull, color: 'text-arena-blood' },
   death: { icon: Skull, color: 'text-destructive' },
-  recruit: { icon: UserPlus, color: 'text-arena-pop' },
   tournament: { icon: Trophy, color: 'text-arena-gold' },
   news: { icon: Newspaper, color: 'text-muted-foreground' },
   event: { icon: Sparkles, color: 'text-arena-gold' },

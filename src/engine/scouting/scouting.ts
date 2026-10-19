@@ -8,8 +8,14 @@
  * - Known injuries
  * - Suspected fight plan tendencies
  */
-import type { InsightToken, Owner, OwnerCompetence } from '@/types/state.types';
+import type {
+  InsightToken,
+  Owner,
+  OwnerCompetence,
+  ScoutReportData,
+} from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import type { ScoutReportId } from '@/types/shared.types';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { OWNER_COMPETENCES } from '@/types/enumSources';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -20,34 +26,6 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Re-export ScoutQuality for backward compatibility
 export type { ScoutQuality };
-
-/**
- * Defines the shape of scout report.
- */
-interface ScoutReport {
-  id: string;
-  warriorId: string;
-  warriorName: string;
-  style: string;
-  quality: ScoutQuality;
-  week: number;
-  /** Attribute ranges mapped to text descriptions */
-  attributeRanges: Record<string, string>;
-  record: string;
-  knownInjuries: string[];
-  suspectedOE?: string; // "Low" | "Medium" | "High"
-  suspectedAL?: string;
-  /** Traits suspected/discovered during scouting */
-  suspectedTraits?: string[];
-  /** True when the target stable masks its committed plan — the reported
-   *  tendencies may describe a decoy rather than the real fight plan. */
-  possiblyMaskedPlan?: boolean;
-  /** Scouted read on the stablemaster's competence (Stage E). Expert
-   *  scouts name the real tier; Detailed may be a tier off; Basic
-   *  reports carry no read at all. */
-  suspectedCompetence?: OwnerCompetence;
-  notes: string;
-}
 
 const QUALITY_FUZZ: Record<ScoutQuality, number> = {
   Basic: 5,
@@ -279,7 +257,7 @@ export function generateScoutReport(
   week: number,
   rng: IRNGService,
   owner?: Owner
-): { report: ScoutReport; newInsights: InsightToken[] } {
+): { report: ScoutReportData; newInsights: InsightToken[] } {
   const fuzz = QUALITY_FUZZ[quality];
 
   const attributeRanges = generateScoutAttributeRanges(warrior, fuzz, rng);
@@ -296,7 +274,7 @@ export function generateScoutReport(
 
   return {
     report: {
-      id: rng.uuid(),
+      id: rng.uuid() as ScoutReportId,
       warriorId: warrior.id,
       warriorName: warrior.name,
       style: warrior.style,

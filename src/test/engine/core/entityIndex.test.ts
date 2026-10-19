@@ -229,3 +229,36 @@ describe('getWarriorIndex / cache identity', () => {
     expect(ensureEntityIndex(s as never).corpus).toBe(ensureEntityIndex(s as never).corpus);
   });
 });
+
+describe('livingWarriorById — combat-eligible lookup (V16/F1)', () => {
+  beforeEach(() => clearEntityIndexCaches());
+
+  it('indexes player roster and rival rosters only', () => {
+    const s = makeState({
+      roster: [namedWarrior('w-1', 'Alice')],
+      graveyard: [namedWarrior('w-2', 'Dead Bob', { status: 'Dead' })],
+      retired: [namedWarrior('w-3', 'Old Carol', { status: 'Retired' })],
+      rivals: [
+        makeRival({
+          id: 'r1' as StableId,
+          owner: makeOwner({ id: 'r1' as StableId, stableName: 'Iron Wolves' }),
+          roster: [namedWarrior('w-4', 'Rival Dave')],
+        }),
+      ],
+    });
+    const index = ensureEntityIndex(s as never);
+    expect(index.livingWarriorById.get('w-1')?.name).toBe('Alice');
+    expect(index.livingWarriorById.get('w-4')?.name).toBe('Rival Dave');
+    expect(index.livingWarriorById.has('w-2'), 'graveyard excluded').toBe(false);
+    expect(index.livingWarriorById.has('w-3'), 'retired excluded').toBe(false);
+  });
+
+  it('dead warriors still appear in the all-warriors index but never the living one', () => {
+    const s = makeState({
+      graveyard: [namedWarrior('w-dead', 'Fallen', { status: 'Dead' })],
+    });
+    const index = ensureEntityIndex(s as never);
+    expect(index.warriorById.has('w-dead')).toBe(true);
+    expect(index.livingWarriorById.has('w-dead')).toBe(false);
+  });
+});

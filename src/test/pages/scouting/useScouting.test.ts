@@ -124,4 +124,21 @@ describe('useScouting controller', () => {
     expect(reports).toHaveLength(2);
     expect(reports.map((r) => r.warriorId).sort()).toEqual([warriorA.id, warriorB.id].sort());
   });
+
+  it('deposits generated insight tokens into state.insightTokens (V16/F3b)', () => {
+    // generateScoutInsights emits a Style token on every report — they were
+    // previously discarded at the purchase call site.
+    const warrior = makeTestWarrior('rival-w1', 'Cassius');
+    const rival = makeRivalStable('rival-a', [warrior]);
+    loadState([rival], 200);
+
+    const { result } = renderHook(() => useScouting(false));
+    act(() => result.current.handleSelectRival(rival.owner.id));
+    act(() => result.current.handleSelectWarrior(warrior.id));
+    act(() => result.current.handleScout('Basic'));
+
+    const tokens = useGameStore.getState().insightTokens ?? [];
+    expect(tokens.length).toBeGreaterThan(0);
+    expect(tokens.some((t) => t.type === 'Style' && t.warriorId === warrior.id)).toBe(true);
+  });
 });

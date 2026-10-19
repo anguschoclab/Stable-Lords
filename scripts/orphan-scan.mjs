@@ -75,7 +75,12 @@ const e2eFiles = fs.existsSync(path.join(ROOT, 'e2e'))
 
 const allFiles = new Map(); // abs -> rel
 for (const f of [...srcFiles, ...scriptFiles, electronMain, ...e2eFiles]) {
-  if (fs.existsSync(f)) allFiles.set(f, rel(f));
+  const relPath = rel(f);
+  // Generated artifacts (*.gen.ts, e.g. routeTree.gen.ts) are gitignored and
+  // absent in clean checkouts — counting them makes the dead-export ratchet
+  // depend on whether the generator last ran locally.
+  if (/\.gen\.[tj]sx?$/.test(relPath)) continue;
+  if (fs.existsSync(f)) allFiles.set(f, relPath);
 }
 
 // ─── Import extraction ──────────────────────────────────────────────────────

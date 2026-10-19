@@ -9,12 +9,25 @@
  * opponents best — and by persisted dossier `observedTells` from witnessed
  * fights, which override the reputation prior.
  */
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type {
+  GameState,
+  OpponentDossier,
+  RivalStableData,
+  ScoutReportData,
+  Warrior,
+} from '@/types/state.types';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import { logAgentAction } from '../agentCore';
-import { hashStr } from '@/utils/random';
+import { hashStr, SeededRNG } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import { blendQuality } from '../competence';
+import { findWarriorById } from '@/engine/core/warriorLookup';
+import {
+  generateScoutReport,
+  matchesScoutTarget,
+  type ScoutQuality,
+} from '@/engine/scouting/scouting';
+import { AI_SCOUT_REPORT_CAP } from '@/constants/ai';
 
 /** Scouting acuity by owner personality — tighter plan estimates. */
 const SCOUT_QUALITY: Record<string, number> = {
@@ -130,6 +143,171 @@ function effectivePlanBias(
   };
 }
 
+/** Blended scout acuity → player-facing scout quality tier. */
+function toScoutQuality(quality: number): ScoutQuality {
+  if (quality >= 0.75) return 'Expert';
+  if (quality >= 0.55) return 'Detailed';
+  return 'Basic';
+}
+
+/** OE/AL report bands → normalized planIntel values. */
+const PLAN_BAND_VALUE: Record<string, number> = { High: 0.75, Medium: 0.5, Low: 0.25 };
+
+/**
+ * Which warrior on the scouted stable the report covers: the warrior we'll
+ * actually fight (a signed/proposed title bout) if one exists, else the
+ * stable's most accomplished active warrior — deterministic tiebreak on id.
+ */
+function pickReportWarrior(
+  rival: RivalStableData,
+  targetId: string,
+  targetRival: RivalStableData | undefined,
+  state: GameState
+): Warrior | undefined {
+  const selfIds = new Set(rival.roster.map((w) => w.id));
+  for (const offer of Object.values(state.boutOffers ?? {})) {
+    if (!offer.titleArenaId) continue;
+    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
+    const mine = offer.warriorIds.find((id) => selfIds.has(id));
+    if (!mine) continue;
+    const otherId = offer.warriorIds.find((id) => id !== mine);
+    if (!otherId) continue;
+    const oppStable =
+      state.warriorToStableMap?.get(otherId)?.stableId ??
+      (state.roster?.some((w) => w.id === otherId) ? state.player.id : undefined);
+    if (oppStable === targetId) return findWarriorById(state, otherId);
+  }
+
+  const pool = (targetId === state.player.id ? state.roster : targetRival?.roster) ?? [];
+  const active = pool.filter((w) => w.status !== 'Dead' && w.status !== 'Retired');
+  if (active.length === 0) return undefined;
+  return [...active].sort(
+    (a, b) =>
+      b.career.wins - a.career.wins ||
+      (b.fame ?? 0) - (a.fame ?? 0) ||
+      String(a.id).localeCompare(String(b.id))
+  )[0];
+}
+
+/** One scout report's inputs — grouped to stay inside the param budget. */
+interface ScoutReportArgs {
+  rival: RivalStableData;
+  reportWarrior: Warrior;
+  targetRival: RivalStableData | undefined;
+  week: number;
+  quality: number;
+  memory: RivalStableData['agentMemory'];
+  dossier: OpponentDossier;
+  estimate: { suspectedOE: number; suspectedAL: number };
+}
+
+/**
+ * File a ScoutReportData for `reportWarrior` through the same machinery the
+ * player's scouting page uses, then fold it back into the dossier: Expert
+ * OE/AL bands override the reputation estimate (unless the target masks),
+ * the warrior's style joins knownStyles, and any competence read lands on
+ * the dossier. Returns the capped report list plus the updated dossier.
+ */
+function fileScoutReport(args: ScoutReportArgs): {
+  scoutReports: ScoutReportData[];
+  dossier: OpponentDossier;
+} {
+  const { rival, reportWarrior, targetRival, week, quality, memory, dossier, estimate } = args;
+  const reportRng = new SeededRNG(hashStr(`scout|${rival.id}|${week}|${reportWarrior.id}`));
+  const { report } = generateScoutReport(
+    reportWarrior,
+    toScoutQuality(quality),
+    week,
+    reportRng,
+    targetRival?.owner
+  );
+  const scoutReports = [
+    ...(memory?.scoutReports ?? []).filter((r) => !matchesScoutTarget(r, reportWarrior)),
+    report,
+  ].slice(-AI_SCOUT_REPORT_CAP);
+
+  const next: OpponentDossier = { ...dossier };
+  if (!report.possiblyMaskedPlan && report.suspectedOE) {
+    // Only Expert reports carry OE/AL bands — they are the scout's real
+    // read on the committed plan and beat the reputation estimate.
+    next.planIntel = {
+      suspectedOE: PLAN_BAND_VALUE[report.suspectedOE] ?? estimate.suspectedOE,
+      suspectedAL: PLAN_BAND_VALUE[report.suspectedAL ?? ''] ?? estimate.suspectedAL,
+      lastPlanWeek: week,
+    };
+  }
+  if (!next.knownStyles.includes(reportWarrior.style)) {
+    next.knownStyles = [...next.knownStyles, reportWarrior.style];
+  }
+  if (report.suspectedCompetence) {
+    next.suspectedCompetence = report.suspectedCompetence;
+  }
+  return { scoutReports, dossier: next };
+}
+
+/** Dossier refresh inputs — grouped to stay inside the param budget. */
+interface DossierRefreshArgs {
+  rival: RivalStableData;
+  targetId: string;
+  targetRival: RivalStableData | undefined;
+  state: GameState;
+  week: number;
+  quality: number;
+  memory: NonNullable<RivalStableData['agentMemory']>;
+}
+
+/**
+ * Refresh the target dossier: reputation planIntel estimate plus, when a
+ * reportable warrior exists on the scouted stable, a filed scout report
+ * folded back through fileScoutReport.
+ */
+function refreshDossier(args: DossierRefreshArgs): {
+  dossier: OpponentDossier;
+  scoutReports: ScoutReportData[] | undefined;
+} {
+  const { rival, targetId, targetRival, state, week, quality, memory } = args;
+  const dossiers = memory.opponentDossiers;
+  const effectiveBias = effectivePlanBias(
+    targetRival,
+    dossiers[targetId]?.observedTells,
+    week,
+    quality
+  );
+  const estimate = estimatePlan(rival.owner.id, targetId, week, quality, effectiveBias);
+
+  const prior = dossiers[targetId] ?? {
+    lastSeenWeek: week,
+    knownStyles: [],
+    estimatedThreat: 0.5,
+    recordVs: { w: 0, l: 0, k: 0 },
+  };
+
+  let dossier: OpponentDossier = {
+    ...prior,
+    planIntel: {
+      suspectedOE: estimate.suspectedOE,
+      suspectedAL: estimate.suspectedAL,
+      lastPlanWeek: week,
+    },
+  };
+
+  const reportWarrior = pickReportWarrior(rival, targetId, targetRival, state);
+  if (!reportWarrior) return { dossier, scoutReports: memory.scoutReports };
+
+  const filed = fileScoutReport({
+    rival,
+    reportWarrior,
+    targetRival,
+    week,
+    quality,
+    memory,
+    dossier,
+    estimate,
+  });
+  dossier = filed.dossier;
+  return { dossier, scoutReports: filed.scoutReports };
+}
+
 /**
  * Weekly scouting pass. Mutates nothing outside `rival.agentMemory`.
  * Returns the updated rival plus gazette items.
@@ -142,7 +320,6 @@ export function processIntel(
   const gazetteItems: string[] = [];
   const memory = rival.agentMemory;
   if (!memory?.opponentDossiers) return { updatedRival: rival, gazetteItems };
-  const dossiers = memory.opponentDossiers;
 
   const week = state.absoluteWeek ?? state.week;
   const targetId = pickScoutTarget(rival, state);
@@ -155,39 +332,23 @@ export function processIntel(
   const targetRival = (state.rivals ?? []).find(
     (r) => r.id === targetId || r.owner.id === targetId
   );
-  const effectiveBias = effectivePlanBias(
+
+  const refreshed = refreshDossier({
+    rival,
+    targetId,
     targetRival,
-    dossiers[targetId]?.observedTells,
+    state,
     week,
-    quality
-  );
-
-  const estimate = estimatePlan(rival.owner.id, targetId, week, quality, effectiveBias);
-
-  const prior = dossiers[targetId] ?? {
-    lastSeenWeek: week,
-    knownStyles: [],
-    estimatedThreat: 0.5,
-    recordVs: { w: 0, l: 0, k: 0 },
-  };
-
-  const updatedDossiers = {
-    ...dossiers,
-    [targetId]: {
-      ...prior,
-      planIntel: {
-        suspectedOE: estimate.suspectedOE,
-        suspectedAL: estimate.suspectedAL,
-        lastPlanWeek: week,
-      },
-    },
-  };
+    quality,
+    memory,
+  });
 
   let updatedRival: RivalStableData = {
     ...rival,
     agentMemory: {
       ...memory,
-      opponentDossiers: updatedDossiers,
+      opponentDossiers: { ...memory.opponentDossiers, [targetId]: refreshed.dossier },
+      scoutReports: refreshed.scoutReports,
     },
   };
 
@@ -195,8 +356,9 @@ export function processIntel(
     targetId === state.player.id
       ? 'the player stable'
       : (targetRival?.owner.stableName ?? 'an unknown stable');
+  const intel = refreshed.dossier.planIntel;
   updatedRival = logAgentAction(
-    { rival: updatedRival, type: 'INTEL', description: `Scouted ${targetName}: suspected OE ${estimate.suspectedOE}, AL ${estimate.suspectedAL}.`, riskTier: 'Low', week: state.week, cause: 'INTEL_UPDATE' }
+    { rival: updatedRival, type: 'INTEL', description: `Scouted ${targetName}: suspected OE ${intel?.suspectedOE}, AL ${intel?.suspectedAL}.`, riskTier: 'Low', week: state.week, cause: 'INTEL_UPDATE' }
   );
 
   return { updatedRival, gazetteItems };

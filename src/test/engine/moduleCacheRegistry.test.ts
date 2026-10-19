@@ -55,9 +55,7 @@ const REGISTRY: Record<string, string> = {
 
   // ── Identity-keyed caches (GC-bounded, safe in any context) ─────────────
   'core/entityIndex.ts:indexCache':
-    'WeakMap keyed on state object identity — the unified lookup+search index backing historyResolver.',
-  'core/warriorLookup.ts:warriorCache':
-    'WeakMap keyed on GameState identity; per-context module instance — safe only because jobQueue serializes each context\'s engine work and rosters never mutate in place.',
+    'WeakMap keyed on state object identity — the unified lookup+search index backing historyResolver and findWarriorById.',
   'avatar/avatarCatalog.ts:cachedCatalog':
     'Module-level avatar catalog cache; loaded once per context from the public manifest, resettable via setAvatarCatalog/clearAvatarCatalog.',
   'matchmaking/arenaFit.ts:underservedByHistory':

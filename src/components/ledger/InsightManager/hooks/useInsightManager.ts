@@ -97,5 +97,6 @@ function resolveInsightResult(token: InsightToken, warrior: Warrior): string {
   if (type === 'Style') return '+1 ATT Permanently Applied';
   if (type === 'Attribute') return 'Primary Attribute Enhanced (+1)';
   if (type === 'Tactic') return 'Tactical Insight Unlocked';
+  if (type === 'Trait') return token.detail || 'Trait Pattern Read';
   return 'Unknown';
 }

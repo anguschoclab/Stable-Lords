@@ -16,7 +16,7 @@ import { evolvePhilosophies } from '@/engine/owner/philosophy';
 import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
-import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { collectUsedWarriorNames, collectUsedWarriorIds } from '@/engine/core/warriorCollection';
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import type { Warrior } from '@/types/warrior.types';
 import {
@@ -213,6 +213,7 @@ function materializeFloorRecruit(
   rng: IRNGService
 ): { warrior: Warrior; updatedPool?: PoolWarrior[] } | null {
   const deadIds = deadIdSet(state);
+  const usedIds = collectUsedWarriorIds(state);
   const eligible = (state.recruitPool ?? []).filter((w) => !deadIds.has(w.id));
   if (eligible.length > 0) {
     // Lowest-tier first — a floor recruit is emergency stock, not the
@@ -223,6 +224,7 @@ function materializeFloorRecruit(
     const warrior = poolWarriorToWarrior(picked, {
       stableId: state.player?.id,
       rng,
+      usedIds,
       deadIds,
     });
     return {
@@ -231,14 +233,22 @@ function materializeFloorRecruit(
     };
   }
 
-  // Pool empty — a walk-on aspirant materializes through the same recipe as
-  // every other intake, then converts through the same path.
+  // Pool empty — a Common walk-on aspirant materializes through the same
+  // recipe as every other intake, then converts through the same path.
   const recruit = generateRecruit({
     rng,
     usedNames: collectUsedWarriorNames(state),
     week: state.week,
+    forceTier: 'Common',
   });
-  return { warrior: poolWarriorToWarrior(recruit, { stableId: state.player?.id, rng, deadIds }) };
+  return {
+    warrior: poolWarriorToWarrior(recruit, {
+      stableId: state.player?.id,
+      rng,
+      usedIds,
+      deadIds,
+    }),
+  };
 }
 
 /**

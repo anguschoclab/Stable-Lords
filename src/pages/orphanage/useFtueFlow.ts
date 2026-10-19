@@ -7,6 +7,7 @@ import { loadCombatNarrative } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
 import type { Warrior, FightSummary, FightPlan } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { SAVE_STATE_VERSION } from '@/constants/core';
 import { generateId } from '@/utils/idUtils';
 import { SeededRNG } from '@/utils/random';
 import { generateOrphanPool } from '@/data/orphanPool';
@@ -143,8 +144,18 @@ function commitFtue(props: {
     return;
   }
 
+  // The store carries no `meta` block (it's synthesized at save time), so the
+  // FTUE seed supplies one explicitly instead of casting the store shape.
+  const baseState: GameState = {
+    ...state,
+    meta: {
+      gameName: 'Stable Lords',
+      version: SAVE_STATE_VERSION,
+      createdAt: new Date().toISOString(),
+    },
+  };
   const result = buildFTUEInitialState(
-    state as unknown as GameState,
+    baseState,
     selectedWarriors,
     boutResult as Parameters<typeof buildFTUEInitialState>[2],
     poolSeedValue,

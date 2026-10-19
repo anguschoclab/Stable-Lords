@@ -69,7 +69,7 @@
 - F3c: `applyInsightToken` + `resolveInsightResult` `'Trait'` cases — flair
   `'Pattern Reader'` + reveal string.
 - `AIDebugDrawer`: dev-flagged `rivalIntel` surface (agentMemory scout reports
-  + dossier beliefs per side).
+  and dossier beliefs per side).
 - Tests green: intelWorker V16 describe 7/7, schema specs 2/2, useScouting F3b
   1/1, rosterSlice F3c 1/1, useInsightManager Trait reveal 1/1.
 

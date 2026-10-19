@@ -7,6 +7,7 @@ import {
   accumulateWeekStats,
 } from '@/engine/bout/services/WeekStatsService';
 import type { BoutImpact } from '@/engine/bout/services/boutProcessorService';
+import type { WarriorId } from '@/types/shared.types';
 
 const impact = (over: Partial<BoutImpact['stats']>): BoutImpact =>
   ({
@@ -26,7 +27,11 @@ describe('WeekStatsService', () => {
     const summary = createWeekBoutSummary();
     accumulateWeekStats(
       summary,
-      impact({ death: true, playerDeath: true, deathRefs: [{ id: 'w1', name: 'A' }] })
+      impact({
+        death: true,
+        playerDeath: true,
+        deathRefs: [{ id: 'w1' as WarriorId, name: 'A' }],
+      })
     );
 
     expect(summary.bouts).toBe(1);
@@ -42,8 +47,8 @@ describe('WeekStatsService', () => {
       impact({
         injured: true,
         injuryRefs: [
-          { id: 'w1', name: 'A' },
-          { id: 'w2', name: 'B' },
+          { id: 'w1' as WarriorId, name: 'A' },
+          { id: 'w2' as WarriorId, name: 'B' },
         ],
       })
     );

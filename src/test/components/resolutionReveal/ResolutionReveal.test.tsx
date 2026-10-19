@@ -7,6 +7,7 @@ import { InjuriesStep } from '@/components/resolution-reveal/InjuriesStep';
 import { MemorialStep } from '@/components/resolution-reveal/MemorialStep';
 import { BoutsStep } from '@/components/resolution-reveal/BoutsStep';
 import ResolutionReveal from '@/components/ResolutionReveal';
+import type { WarriorId } from '@/types/shared.types';
 
 vi.mock('framer-motion', () => ({
   motion: {
@@ -86,7 +87,12 @@ describe('InjuriesStep', () => {
   });
 
   it('renders injury text when injuries present', () => {
-    render(<InjuriesStep injuries={['Alice injured']} deaths={[]} />);
+    render(
+      <InjuriesStep
+        injuries={[{ id: 'w1' as WarriorId, name: 'Alice injured' }]}
+        deaths={[]}
+      />
+    );
     expect(screen.getByText('Alice injured')).toBeInTheDocument();
   });
 });

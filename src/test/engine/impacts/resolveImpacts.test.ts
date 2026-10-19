@@ -278,6 +278,7 @@ describe('resolveImpacts', () => {
     const state = makeInitialState();
     const scoutReport: ScoutReportData = {
       id: 's1' as any,
+      warriorId: 'w1' as any,
       warriorName: 'Alice',
       style: 'Striking',
       quality: 'High' as any,

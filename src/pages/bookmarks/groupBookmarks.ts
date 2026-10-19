@@ -5,7 +5,7 @@ import type { GameStore } from '@/state/store.types';
 import type { Bookmark } from '@/types/bookmark.types';
 
 /** A display row derived from a bookmarked entity. */
-interface BookmarkRow {
+export interface BookmarkRow {
   id: string;
   name: string;
   subtitle?: string;

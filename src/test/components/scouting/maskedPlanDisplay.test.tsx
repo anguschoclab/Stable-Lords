@@ -18,6 +18,7 @@ vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
 const report = (over: Partial<ScoutReportData> = {}): ScoutReportData => ({
   id: 'rep-1' as never,
+  warriorId: 'w-1' as never,
   warriorName: 'Masked Blade',
   style: 'LungingAttack',
   quality: 'Expert',

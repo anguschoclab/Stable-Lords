@@ -533,6 +533,34 @@ describe('aiDraftFromPool', () => {
     });
   });
 
+  // 10c. Released-source routing
+
+  describe('Released-source routing', () => {
+    it('routes released-source entries back to the free-agent shelf when undrafted', () => {
+      // A player-released warrior sits in the recruit pool with
+      // source='released'. If no stable can afford it, it must return to the
+      // free-agent shelf (with its veteran snapshot intact) instead of
+      // silently remaining in the open pool.
+      const released = makePoolWarrior({
+        id: 'rel-1',
+        name: 'Released Vet',
+        cost: 999_999,
+        source: 'released',
+      } as any);
+      const poorRival = makeMinimalRival({ treasury: 1 });
+
+      const result = aiDraftFromPool({
+        pool: [released],
+        rivals: [poorRival],
+        week: 1,
+        state,
+      });
+
+      expect(result.updatedPool.some((w) => w.id === 'rel-1')).toBe(false);
+      expect(result.updatedFreeAgents.some((w) => w.id === 'rel-1')).toBe(true);
+    });
+  });
+
   // 11. Edge Cases
 
   describe('Edge Cases', () => {

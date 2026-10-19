@@ -18,7 +18,12 @@ import { computeFreeAgentCost, type PoolWarrior, type RecruitTier } from './type
  * popularity, career, and titles so the signing path restores the warrior's
  * identity rather than minting a fresh prospect.
  */
-export function warriorToPoolWarrior(w: Warrior, week: number, rng: IRNGService): PoolWarrior {
+export function warriorToPoolWarrior(
+  w: Warrior,
+  week: number,
+  rng: IRNGService,
+  source: 'freeAgent' | 'released' = 'freeAgent'
+): PoolWarrior {
   const fame = w.fame ?? 0;
   const tier: RecruitTier =
     fame >= 200 ? 'Prodigy' : fame >= 80 ? 'Exceptional' : fame >= 30 ? 'Promising' : 'Common';
@@ -41,7 +46,7 @@ export function warriorToPoolWarrior(w: Warrior, week: number, rng: IRNGService)
     lineage: w.lineage,
     luckfactor: w.luckfactor ?? rollLuckfactor(rng),
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
-    source: 'freeAgent',
+    source,
     avatarSeed: w.avatarSeed,
     veteran: {
       fame: w.fame ?? 0,
@@ -67,4 +72,24 @@ export function veteranSigningPatch(recruit: PoolWarrior): Partial<Warrior> {
     titles: [...recruit.veteran.titles],
     avatarSeed: recruit.avatarSeed,
   };
+}
+
+/**
+ * Weekly shelf decay split: countdown ticks, survivors and expired entries
+ * partition, and registered-dead ids drop out of both buckets. The caller
+ * decides the expired entries' fate (clearance draft, honored retirement).
+ */
+export function partitionAgedFreeAgents(
+  freeAgents: PoolWarrior[] | undefined,
+  deadIds: ReadonlySet<string>
+): { surviving: PoolWarrior[]; expired: PoolWarrior[] } {
+  const surviving: PoolWarrior[] = [];
+  const expired: PoolWarrior[] = [];
+  for (const w of freeAgents ?? []) {
+    if (deadIds.has(w.id)) continue;
+    const next = { ...w, shelfWeeksRemaining: (w.shelfWeeksRemaining ?? 0) - 1 };
+    if (next.shelfWeeksRemaining > 0) surviving.push(next);
+    else expired.push(next);
+  }
+  return { surviving, expired };
 }

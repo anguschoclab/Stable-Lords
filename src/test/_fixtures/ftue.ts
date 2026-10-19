@@ -1,21 +1,24 @@
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, makePoolWarrior } from '@/test/_fixtures/factories';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 const FTUE_BASE_ATTRS = { ST: 12, CN: 10, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 10 };
 
-/** make Plan Warrior. */
-export const makePlanWarrior = (name: string) => ({
-  name,
-  style: FightingStyle.LungingAttack,
-  attrs: FTUE_BASE_ATTRS,
-  age: 20,
-  trait: 'iron_will',
-  lore: '',
-  origin: '',
-  potential: undefined,
-});
+/** make Plan Warrior — an orphan-pool recruit (PoolWarrior shape). */
+export const makePlanWarrior = (name: string): PoolWarrior =>
+  makePoolWarrior({
+    id: `orp_${name}`,
+    name,
+    style: FightingStyle.LungingAttack,
+    attributes: { ...FTUE_BASE_ATTRS },
+    age: 20,
+    traits: ['iron_will'],
+    lore: '',
+    origin: '',
+    source: 'orphanage',
+  });
 
 const FTUE_W_A = makeWarrior(
   { id: 'w-a' as any, name: 'Varak', style: FightingStyle.LungingAttack, attrs: FTUE_BASE_ATTRS }

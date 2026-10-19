@@ -2,14 +2,15 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
 import { loadCombatNarrative } from '@/data/narrative';
 import type { GameState } from '@/types/state.types';
-import type { Warrior, FightSummary, WarriorId, FightPlan } from '@/types/game';
+import type { Warrior, FightSummary, FightPlan } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { generateId } from '@/utils/idUtils';
+import { SeededRNG } from '@/utils/random';
 import { generateOrphanPool } from '@/data/orphanPool';
+import { poolWarriorToWarrior } from '@/engine/recruitment/recruitment';
 import { createBoutSummary } from '@/engine/core/fightSummaryFactory';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
 
@@ -33,8 +34,8 @@ function simulateTutorialBout(
   const poolA = selectedWarriors[0];
   const poolB = selectedWarriors[1];
   if (!poolA || !poolB) return null;
-  const wA = makeWarrior({ id: poolA.id as WarriorId, name: poolA.name, style: poolA.style, attrs: poolA.attrs });
-  const wB = makeWarrior({ id: poolB.id as WarriorId, name: poolB.name, style: poolB.style, attrs: poolB.attrs });
+  const wA = poolWarriorToWarrior(poolA, { rng: new SeededRNG(boutSeed) });
+  const wB = poolWarriorToWarrior(poolB, { rng: new SeededRNG(boutSeed + 1) });
   const planA = playerPlan ?? defaultPlanForWarrior(wA);
   const planB = defaultPlanForWarrior(wB);
   const outcome = simulateFight({ planA: planA, planD: planB, warriorA: wA, warriorD: wB, providedRng: boutSeed });
@@ -110,8 +111,8 @@ function useOrphanSelection() {
     if (selectedWarriors.length < 1) return null;
     const poolA = selectedWarriors[0];
     if (!poolA) return null;
-    return makeWarrior({ id: poolA.id as WarriorId, name: poolA.name, style: poolA.style, attrs: poolA.attrs });
-  }, [selectedWarriors]);
+    return poolWarriorToWarrior(poolA, { rng: new SeededRNG(poolSeedValue + 77) });
+  }, [selectedWarriors, poolSeedValue]);
 
   return {
     selected,
@@ -126,7 +127,6 @@ function useOrphanSelection() {
 
 /** Build the post-FTUE game state, commit it, persist, and enter the Stable hub. */
 function commitFtue(props: {
-  state: Pick<GameStore, 'player' | 'graveyard' | 'ftueComplete'>;
   selectedWarriors: Parameters<typeof buildFTUEInitialState>[1];
   boutResult: FtueBoutResult | null;
   poolSeedValue: number;
@@ -135,8 +135,9 @@ function commitFtue(props: {
   saveCurrentState: () => void;
   navigate: ReturnType<typeof useNavigate>;
 }) {
-  const { state, selectedWarriors, boutResult, poolSeedValue, playerPlan } = props;
+  const { selectedWarriors, boutResult, poolSeedValue, playerPlan } = props;
   const { setState, saveCurrentState, navigate } = props;
+  const state = useGameStore.getState();
   if (state.ftueComplete) {
     navigate({ to: '/stable' });
     return;
@@ -207,7 +208,6 @@ export function useFtueFlow() {
 
   const finishFTUE = useCallback(() => {
     commitFtue({
-      state,
       selectedWarriors,
       boutResult,
       poolSeedValue,
@@ -217,7 +217,6 @@ export function useFtueFlow() {
       navigate,
     });
   }, [
-    state,
     setState,
     selectedWarriors,
     boutResult,

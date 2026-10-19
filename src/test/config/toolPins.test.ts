@@ -38,7 +38,15 @@ describe('package.json bunx/bun-x tool pins', () => {
     ...Object.keys(pkg.dependencies ?? {}),
     ...Object.keys(pkg.devDependencies ?? {}),
   ]);
-  const localBins = new Set(fs.existsSync(BIN_DIR) ? fs.readdirSync(BIN_DIR) : []);
+  // Windows emits suffixed shims (<bin>.cmd/.exe/.ps1) alongside the raw
+  // binary — index both forms so a Windows checkout resolves the same set.
+  const localBins = new Set(
+    fs.existsSync(BIN_DIR)
+      ? fs
+          .readdirSync(BIN_DIR)
+          .flatMap((n) => [n, n.replace(/\.(cmd|exe|ps1)$/i, '')])
+      : []
+  );
 
   it('every bunx/bun x target resolves locally or is version-pinned', () => {
     const violations: string[] = [];

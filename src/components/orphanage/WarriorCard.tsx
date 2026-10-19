@@ -48,7 +48,7 @@ function TraitTooltipContent({ trait }: { trait: string }) {
 
 /** Selectable warrior card shown in the orphanage draft grid. */
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {
-  const stats = computeWarriorStats(warrior.attrs, warrior.style);
+  const stats = computeWarriorStats(warrior.attributes, warrior.style);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -121,11 +121,11 @@ function CardBody({ warrior, hp }: { warrior: WarriorCardProps['warrior']; hp: n
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 border border-arena-gold/30 bg-arena-gold/5 text-arena-gold cursor-help">
-                  {TRAIT_DATA[warrior.trait]?.name ?? warrior.trait}
+                  {TRAIT_DATA[warrior.traits[0] ?? '']?.name ?? warrior.traits[0] ?? ''}
                 </span>
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs text-[10px]">
-                <TraitTooltipContent trait={warrior.trait} />
+                <TraitTooltipContent trait={warrior.traits[0] ?? ''} />
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

@@ -51,13 +51,24 @@ function makeOrphan(overrides: Partial<OrphanWarrior> = {}): OrphanWarrior {
     name: 'TestWarrior',
     age: 20,
     style: FightingStyle.StrikingAttack,
-    attrs: { ...attrs },
+    attributes: { ...attrs },
     lore: 'A mysterious fighter from the hills.',
-    trait: 'test_trait',
+    traits: ['test_trait'],
     origin: 'Highland',
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
+    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
+    derivedStats: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
+    luckfactor: { ATT: 0, DEF: 0, INI: 0, PAR: 0, RIP: 0, DEC: 0 },
+    tier: 'Common',
+    cost: 100,
+    addedWeek: 1,
+    favorites: {
+      weaponId: 'broadsword',
+      rhythm: { oe: 5, al: 5 },
+      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+    },
     ...overrides,
-  };
+  } as OrphanWarrior;
 }
 
 const baseCardProps = { isSelected: false, canSelect: true };
@@ -161,7 +172,7 @@ describe('WarriorCard', () => {
     const { container } = render(
       <WarriorCard
         {...baseCardProps}
-        warrior={makeOrphan({ trait: 'flavor_only' })}
+        warrior={makeOrphan({ traits: ['flavor_only'] })}
         onClick={vi.fn()}
       />
     );
@@ -172,7 +183,7 @@ describe('WarriorCard', () => {
     const { container } = render(
       <WarriorCard
         {...baseCardProps}
-        warrior={makeOrphan({ trait: 'with_fight_plan' })}
+        warrior={makeOrphan({ traits: ['with_fight_plan'] })}
         onClick={vi.fn()}
       />
     );
@@ -188,7 +199,7 @@ describe('WarriorCard', () => {
     const { container } = render(
       <WarriorCard
         {...baseCardProps}
-        warrior={makeOrphan({ trait: 'with_static_mods' })}
+        warrior={makeOrphan({ traits: ['with_static_mods'] })}
         onClick={vi.fn()}
       />
     );
@@ -203,7 +214,7 @@ describe('WarriorCard', () => {
     const { container } = render(
       <WarriorCard
         {...baseCardProps}
-        warrior={makeOrphan({ trait: 'with_empty_effect' })}
+        warrior={makeOrphan({ traits: ['with_empty_effect'] })}
         onClick={vi.fn()}
       />
     );

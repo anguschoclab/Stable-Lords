@@ -6,6 +6,7 @@ import { createRosterSlice, RosterSlice } from '@/state/slices/rosterSlice';
 import { act } from '@testing-library/react';
 import type { Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 
 const mockWarrior: Warrior = {
   id: 'w1' as import('@/types/shared.types').WarriorId,
@@ -25,7 +26,13 @@ const mockWarrior: Warrior = {
 };
 
 const createTestStore = () =>
-  create<RosterSlice & { week: number }>()(
+  create<
+    RosterSlice & {
+      week: number;
+      freeAgents?: import('@/engine/recruitment/recruitment').PoolWarrior[];
+      player?: { id: import('@/types/shared.types').StableId; stableName: string };
+    }
+  >()(
     immer((set: any, get: any, api: any) => ({
       ...createRosterSlice(set, get, api),
       week: 1,
@@ -102,21 +109,93 @@ describe('RosterSlice', () => {
     expect(useTestStore.getState().retired).toHaveLength(0);
   });
 
-  it('should release a warrior', () => {
+  it('should release a warrior onto the free-agent shelf, not the retired roll', () => {
     act(() => {
-      useTestStore.getState().addWarrior(mockWarrior);
-      useTestStore.getState().releaseWarrior('w1' as any);
+      useTestStore.setState({
+        roster: [
+          { ...mockWarrior, id: 'w-1' } as any,
+          { ...mockWarrior, id: 'w-2' } as any,
+        ],
+        freeAgents: [],
+        retired: [],
+      });
+      useTestStore.getState().releaseWarrior('w-2' as any);
     });
-    expect(useTestStore.getState().roster).toHaveLength(0);
-    expect(useTestStore.getState().retired).toHaveLength(1);
-    expect(useTestStore.getState().retired[0]!.status).toBe('Retired');
+    expect(useTestStore.getState().roster.map((w: any) => w.id)).toEqual(['w-1']);
+    expect(useTestStore.getState().retired).toHaveLength(0);
+    const fa = useTestStore.getState().freeAgents ?? [];
+    expect(fa).toHaveLength(1);
+    expect(fa[0]!.id).toBe('w-2');
+    expect(fa[0]!.source).toBe('released');
   });
 
   it('should do nothing if releaseWarrior targets non-existent warrior', () => {
     act(() => {
+      useTestStore.setState({ freeAgents: [], retired: [] });
       useTestStore.getState().releaseWarrior('none' as any);
     });
     expect(useTestStore.getState().retired).toHaveLength(0);
+    expect(useTestStore.getState().freeAgents ?? []).toHaveLength(0);
+  });
+
+  it('should drop addWarrior calls beyond the roster cap', () => {
+    const full = Array.from({ length: BASE_ROSTER_CAP }, (_, i) => ({
+      ...mockWarrior,
+      id: `w${i}`,
+    }));
+    act(() => {
+      useTestStore.setState({ roster: full as any, rosterBonus: 0 });
+      useTestStore.getState().addWarrior({ ...mockWarrior, id: 'w-new' } as any);
+    });
+    expect(useTestStore.getState().roster).toHaveLength(BASE_ROSTER_CAP);
+    expect(useTestStore.getState().roster.some((w: any) => w.id === 'w-new')).toBe(false);
+  });
+
+  it('should honor rosterBonus when applying the addWarrior cap', () => {
+    const full = Array.from({ length: BASE_ROSTER_CAP }, (_, i) => ({
+      ...mockWarrior,
+      id: `w${i}`,
+    }));
+    act(() => {
+      useTestStore.setState({ roster: full as any, rosterBonus: 1 });
+      useTestStore.getState().addWarrior({ ...mockWarrior, id: 'w-new' } as any);
+    });
+    expect(useTestStore.getState().roster).toHaveLength(BASE_ROSTER_CAP + 1);
+  });
+
+  it('should drop duplicate-id addWarrior calls', () => {
+    act(() => {
+      useTestStore.getState().addWarrior(mockWarrior);
+      useTestStore.getState().addWarrior(mockWarrior);
+    });
+    expect(useTestStore.getState().roster).toHaveLength(1);
+  });
+
+  it('should stamp stableId from state.player.id on addWarrior when unset', () => {
+    act(() => {
+      useTestStore.setState({ player: { id: 'player-1' } as any });
+      useTestStore.getState().addWarrior(mockWarrior);
+    });
+    expect(useTestStore.getState().roster[0]!.stableId).toBe('player-1');
+  });
+
+  it('should pick the insight-token attribute deterministically for a fixed seed', () => {
+    const pickOnce = () => {
+      const store = createTestStore();
+      act(() => {
+        store.setState({
+          week: 7,
+          roster: [{ ...mockWarrior } as any],
+          insightTokens: [{ id: 't-attr', type: 'Attribute' }] as any,
+        });
+        store.getState().consumeInsightToken('t-attr' as any, 'w1' as any);
+      });
+      const attrs = store.getState().roster[0]!.attributes;
+      return (Object.keys(attrs) as (keyof typeof attrs)[]).find((k) => attrs[k] === 11);
+    };
+    const first = pickOnce();
+    expect(first).toBeDefined();
+    expect(pickOnce()).toBe(first);
   });
 
   it('should update warrior equipment', () => {

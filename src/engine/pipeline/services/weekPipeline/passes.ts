@@ -45,7 +45,14 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
     id: 'recruitment',
     stage: 'core',
     run: (s, ctx) => runRecruitmentPass(s, ctx.rootRng),
-    writes: ['recruitPool'],
+    writes: [
+      'recruitPool',
+      'freeAgents',
+      'retired',
+      'rivalsUpdates',
+      'legacyFounderEnqueue',
+      'newsletterItems',
+    ],
   },
   {
     id: 'world',

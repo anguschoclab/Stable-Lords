@@ -25,6 +25,7 @@ import { generateStableTrainers } from './rivalTrainerFactory';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner } from '@/data/names/cultures';
 import { rollCompetence } from '@/engine/ai/competence';
+import { aiRosterMax } from '@/constants/ai';
 
 /**
  * Gets stable templates.
@@ -284,7 +285,10 @@ function buildRoster(
   usedWarriorNames: Set<string>
 ): Warrior[] {
   const [minR, maxR] = tmpl.rosterRange;
-  const warriorCount = minR + Math.floor(rng.next() * (maxR - minR + 1));
+  // Clamp to the personality cap — template ranges may exceed aiRosterMax.
+  const cap = Math.min(maxR, aiRosterMax(tmpl.personality));
+  const floor = Math.min(minR, cap);
+  const warriorCount = floor + Math.floor(rng.next() * (cap - floor + 1));
   const warriors: Warrior[] = [];
   const culture = cultureForOwner(tmpl.personality, tmpl.philosophy);
 

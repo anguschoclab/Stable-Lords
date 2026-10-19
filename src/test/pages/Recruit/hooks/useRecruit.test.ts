@@ -11,6 +11,8 @@ import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { makePoolWarrior as fixturePoolWarrior } from '@/test/_fixtures/factories';
 import { REFRESH_COST } from '@/engine/recruitment/recruitment';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+import { SeededRNG, hashStr } from '@/utils/random';
+import { toast } from 'sonner';
 import '@/test/_setup/setup';
 
 const mockNavigate = vi.fn();
@@ -245,7 +247,7 @@ describe('useRecruitActions', () => {
   let setState: any;
   let deductFunds: any;
 
-  function renderActionsHook(overrides?: { rosterFull?: boolean }) {
+  function renderActionsHook(overrides?: { rosterFull?: boolean; navigate?: typeof mockNavigate }) {
     setState = vi.fn();
     deductFunds = vi.fn(() => true);
     const { result } = renderHook(() =>
@@ -254,7 +256,7 @@ describe('useRecruitActions', () => {
         setState,
         deductFunds,
         week: 1,
-        navigate: mockNavigate,
+        navigate: overrides?.navigate ?? mockNavigate,
       })
     );
     return result;
@@ -373,6 +375,94 @@ describe('useRecruitActions', () => {
     expect(draft.recruitPool).toHaveLength(0);
   });
 
+  it('signed recruit preserves traits, lore, origin, favorites, lineage, and luckfactor', () => {
+    const result = renderActionsHook();
+    const w = makePoolWarrior({
+      id: 'pw-x',
+      name: 'Full Package',
+      cost: 50,
+      traits: ['iron_will'],
+      lore: 'Raised by wolves.',
+      origin: 'The far north',
+      favorites: {
+        weaponId: 'broadsword',
+        rhythm: { oe: 6, al: 4 },
+        discovered: { weapon: true, rhythm: false, weaponHints: 2, rhythmHints: 0 },
+      },
+      lineage: { generation: 3, pedigree: 'Noble Blood' },
+      luckfactor: { ATT: 2, DEF: -1, INI: 1, PAR: 0, RIP: 3, DEC: -2 },
+    });
+    act(() => result.current.handleRecruit(w, false));
+
+    const draft = {
+      week: 1,
+      roster: [] as Warrior[],
+      recruitPool: [w],
+      freeAgents: [] as PoolWarrior[],
+      player: { id: 'player-1', stableName: 'Test Stable' },
+      newsletter: [] as { id: string; week: number; title: string; items: string[] }[],
+      rosterBonus: 0,
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    const signed = draft.roster[0]!;
+    expect(signed.traits).toEqual(['iron_will']);
+    expect(signed.lore).toBe('Raised by wolves.');
+    expect(signed.origin).toBe('The far north');
+    expect(signed.favorites).toEqual(w.favorites);
+    expect(signed.lineage).toEqual(w.lineage);
+    expect(signed.luckfactor).toEqual(w.luckfactor);
+    expect(signed.stableId).toBe('player-1');
+  });
+
+  it('in-draft cap rejection: a full draft roster signs nothing and keeps pools intact', () => {
+    const result = renderActionsHook();
+    const w = makePoolWarrior({ id: 'pw-cap', cost: 50 });
+    act(() => result.current.handleRecruit(w, false));
+    expect(setState).toHaveBeenCalled();
+
+    const fullRoster = Array.from({ length: BASE_ROSTER_CAP }, (_, i) =>
+      makeTestWarrior(`wx${i}`, `Warrior${i}`)
+    );
+    const draft = {
+      week: 1,
+      roster: fullRoster,
+      recruitPool: [w],
+      freeAgents: [] as PoolWarrior[],
+      player: { id: 'player-1', stableName: 'Test Stable' },
+      newsletter: [] as { id: string; week: number; title: string; items: string[] }[],
+      rosterBonus: 0,
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    expect(draft.roster).toHaveLength(BASE_ROSTER_CAP);
+    expect(draft.roster.every((x) => x.id !== 'pw-cap')).toBe(true);
+    expect(draft.recruitPool).toEqual([w]);
+  });
+
+  it('pre-flight rejects a recruit whose id is registered dead before funds move', () => {
+    loadState({ deadWarriorIds: ['pw-dead' as never] });
+    const result = renderActionsHook();
+    const w = makePoolWarrior({ id: 'pw-dead', cost: 50 });
+    act(() => result.current.handleRecruit(w, false));
+    expect(toast.error).toHaveBeenCalled();
+    expect(deductFunds).not.toHaveBeenCalled();
+    expect(setState).not.toHaveBeenCalled();
+  });
+
+  it('pre-flight rejects when the live roster is at the cap (ROSTER_FULL)', () => {
+    const full = Array.from({ length: BASE_ROSTER_CAP }, (_, i) =>
+      makeTestWarrior(`wf${i}`, `Warrior${i}`)
+    );
+    loadState({ roster: full });
+    const result = renderActionsHook();
+    const w = makePoolWarrior({ id: 'pw-full', cost: 50 });
+    act(() => result.current.handleRecruit(w, false));
+    expect(toast.error).toHaveBeenCalled();
+    expect(deductFunds).not.toHaveBeenCalled();
+    expect(setState).not.toHaveBeenCalled();
+  });
+
   // ── handleScout ──
 
   it('handleScout calls deductFunds with 25g', () => {
@@ -484,6 +574,88 @@ describe('useRecruitActions', () => {
     );
     expect(setState).not.toHaveBeenCalled();
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('refresh draft preserves academy-claimed and apprentice entries while cycling the rest', () => {
+    const result = renderActionsHook();
+    act(() => result.current.handleRefresh());
+    expect(setState).toHaveBeenCalled();
+
+    const claimed = makePoolWarrior({
+      id: 'claimed-1',
+      academyStableId: 'r-1' as never,
+      academyClaimExpiryWeek: 7,
+    });
+    const apprentice = makePoolWarrior({ id: 'app-1', source: 'apprentice' });
+    const normal = makePoolWarrior({ id: 'normal-1' });
+    const draft = {
+      week: 5,
+      roster: [] as Warrior[],
+      recruitPool: [claimed, apprentice, normal],
+      freeAgents: [] as PoolWarrior[],
+      rivals: [{ roster: [] }] as never,
+      retired: [] as Warrior[],
+      player: { stableName: 'Test Stable' },
+      newsletter: [] as { id: string; week: number; title: string; items: string[] }[],
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    const ids = draft.recruitPool.map((w) => w.id);
+    expect(ids).toContain('claimed-1');
+    expect(ids).toContain('app-1');
+    expect(ids).not.toContain('normal-1');
+  });
+
+  it('custom-create draft mints an id that avoids dead identities and stamps the stable', () => {
+    const result = renderActionsHook({ navigate: mockNavigate });
+    act(() =>
+      result.current.handleCustomCreate({
+        name: 'Custom Warrior',
+        style: FightingStyle.StrikingAttack,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      })
+    );
+    expect(setState).toHaveBeenCalled();
+
+    // The draft mints from SeededRNG(week + hashStr(name)); seed its first
+    // candidate as dead so the loop must re-roll.
+    const probe = new SeededRNG(1 + hashStr('Custom Warrior'));
+    const firstCandidate = probe.uuid('warrior');
+    const draft = {
+      week: 1,
+      roster: [] as Warrior[],
+      deadWarriorIds: [firstCandidate] as never,
+      player: { id: 'player-1', stableName: 'Test Stable' },
+      rosterBonus: 0,
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    const w = draft.roster[0]!;
+    expect(w.id).not.toBe(firstCandidate);
+    expect(w.stableId).toBe('player-1');
+  });
+
+  it('custom-create draft refuses to push past the active cap in-draft', () => {
+    const result = renderActionsHook({ navigate: mockNavigate });
+    act(() =>
+      result.current.handleCustomCreate({
+        name: 'Blocked Warrior',
+        style: FightingStyle.StrikingAttack,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      })
+    );
+    const full = Array.from({ length: BASE_ROSTER_CAP }, (_, i) =>
+      makeTestWarrior(`wc${i}`, `Warrior${i}`)
+    );
+    const draft = {
+      week: 1,
+      roster: full,
+      player: { id: 'player-1', stableName: 'Test Stable' },
+      rosterBonus: 0,
+    };
+    act(() => setState.mock.calls[0]![0](draft as never));
+
+    expect(draft.roster).toHaveLength(BASE_ROSTER_CAP);
   });
 });
 

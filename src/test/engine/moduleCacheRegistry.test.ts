@@ -88,7 +88,7 @@ describe('engine module-level mutable registry', () => {
     const found = new Set<string>();
     for (const file of walk(ENGINE_ROOT)) {
       const src = readFileSync(file, 'utf8');
-      const rel = relative(ENGINE_ROOT, file);
+      const rel = relative(ENGINE_ROOT, file).replace(/\\/g, '/');
       for (const m of src.matchAll(DECL_RE)) {
         const id = m[2] ?? m[3];
         const isLet = !!m[2];

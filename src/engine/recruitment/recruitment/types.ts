@@ -68,21 +68,23 @@ export interface PoolWarrior {
   /** Weeks left before a free agent leaves the market (veteran entries only). */
   shelfWeeksRemaining?: number;
   /** Where this recruit entered the supply chain — diagnostics + AI routing. */
-  source?: 'orphanage' | 'academy' | 'freeAgent' | 'generated';
+  source?: 'orphanage' | 'academy' | 'freeAgent' | 'released' | 'apprentice' | 'generated';
   /** Deterministic seed for the recruit's portrait. */
   avatarSeed?: number;
 }
 
-// TIER data is now fetched from narrative domain files
+// TIER data is now fetched from narrative domain files — the literals are
+// the design-table fallbacks so a missing/renamed narrative key degrades to
+// the documented economy instead of silently pricing recruits at 0g.
 
 /**
  * Tier_cost.
  */
 export const TIER_COST: Record<RecruitTier, number> = {
-  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common?.cost ?? 0,
-  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.cost ?? 0,
-  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.cost ?? 0,
-  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.cost ?? 0,
+  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common?.cost ?? 100,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.cost ?? 150,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.cost ?? 250,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.cost ?? 400,
 };
 
 /**
@@ -90,9 +92,9 @@ export const TIER_COST: Record<RecruitTier, number> = {
  */
 export const TIER_STARS: Record<RecruitTier, number> = {
   Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common?.stars ?? 0,
-  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.stars ?? 0,
-  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.stars ?? 0,
-  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.stars ?? 0,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.stars ?? 1,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.stars ?? 2,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.stars ?? 3,
 };
 
 /**

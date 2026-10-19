@@ -24,6 +24,7 @@ import type {
   TournamentEntry,
 } from '@/types/state.types';
 import type { CrowdMoodType, WeatherType } from '@/types/shared.types';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
@@ -183,6 +184,40 @@ describe('resolveImpacts', () => {
     expect(newState.roster).toHaveLength(3);
     expect(newState.roster[2]?.id).toBe('w3');
     expect(newState.roster[2]?.name).toBe('Charlie');
+  });
+
+  it('rosterAdditions drops ids already known to the world', () => {
+    const state = makeInitialState();
+    const impact: StateImpact = {
+      rosterAdditions: [makeWarrior('w1', 'Alice Clone'), makeWarrior('w3', 'Charlie')],
+    };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.roster).toHaveLength(3);
+    expect(newState.roster.map((w) => w.id)).toEqual(['w1', 'w2', 'w3']);
+  });
+
+  it('rosterAdditions stamps stableId from state.player.id when unset', () => {
+    const state = makeInitialState();
+    const impact: StateImpact = { rosterAdditions: [makeWarrior('w3', 'Charlie')] };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.roster[2]?.stableId).toBe(state.player.id);
+  });
+
+  it('rosterAdditions clamps to the active-roster cap', () => {
+    const state = makeInitialState();
+    state.roster = Array.from({ length: BASE_ROSTER_CAP - 1 }, (_, i) =>
+      makeWarrior(`wf${i}`, `Filler${i}`)
+    );
+    state.rosterBonus = 0;
+    const impact: StateImpact = {
+      rosterAdditions: [makeWarrior('wx', 'X'), makeWarrior('wy', 'Y')],
+    };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.roster).toHaveLength(BASE_ROSTER_CAP);
+    expect(newState.roster.some((w) => w.id === 'wy')).toBe(false);
   });
 
   it('handles rosterRemovals - empty array', () => {

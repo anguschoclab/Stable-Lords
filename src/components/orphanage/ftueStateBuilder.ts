@@ -1,8 +1,11 @@
 import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { generatePotential } from '@/engine/warrior/potential';
 import { generateRivalStables } from '@/engine/rivals';
-import { generateRecruitPool } from '@/engine/recruitment/recruitment';
+import {
+  generateRecruitPool,
+  poolWarriorToWarrior,
+  type PoolWarrior,
+} from '@/engine/recruitment/recruitment';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
@@ -10,20 +13,9 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Promoter } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine';
 import { TRAIT_DATA } from '@/data/orphanPool';
-import type { FightingStyle, FightPlan } from '@/types/shared.types';
-import type { Attributes } from '@/types/shared.types';
-import type { AttributePotential } from '@/types/warrior.types';
+import type { FightPlan, StableId } from '@/types/shared.types';
 
-interface SelectedWarrior {
-  name: string;
-  style: FightingStyle;
-  attrs: Attributes;
-  age: number;
-  trait: string;
-  lore: string;
-  origin?: string;
-  potential?: AttributePotential;
-}
+type SelectedWarrior = PoolWarrior;
 
 interface BoutResult {
   a: { name: string };
@@ -36,32 +28,28 @@ interface BoutResult {
  *
  */
 /** Build one FTUE warrior record; applies bout-outcome fame/popularity when the orphan fought. */
-function buildFTUEWarrior(
-  pw: SelectedWarrior,
-  idx: number,
-  boutResult: BoutResult | null,
-  playerPlan: FightPlan | null | undefined,
-  finishRng: SeededRNG
-) {
-  // Use the orphan's pre-generated potential (or regenerate if somehow missing)
-  const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
+function buildFTUEWarrior(opts: {
+  pw: SelectedWarrior;
+  idx: number;
+  boutResult: BoutResult | null;
+  playerPlan: FightPlan | null | undefined;
+  finishRng: SeededRNG;
+  stableId: StableId | undefined;
+}) {
+  const { pw, idx, boutResult, playerPlan, finishRng, stableId } = opts;
   // Build base plan and merge trait-based modifiers
-  const basePlan = defaultPlanForWarrior(makeWarrior({ id: undefined, name: pw.name, style: pw.style, attrs: pw.attrs }));
-  const traitData = TRAIT_DATA[pw.trait];
+  const basePlan = defaultPlanForWarrior(
+    makeWarrior({ id: undefined, name: pw.name, style: pw.style, attrs: pw.attributes })
+  );
+  const traitData = TRAIT_DATA[pw.traits[0] ?? ''];
   const traitMods = traitData?.effect.fightPlanMod ?? {};
   // warrior[0] is the plan warrior — apply player's custom plan if provided
   const plan =
     idx === 0 && playerPlan ? { ...playerPlan, ...traitMods } : { ...basePlan, ...traitMods };
-  const w = makeWarrior(
-    { id: finishRng.uuid() as import('@/types/shared.types').WarriorId, name: pw.name, style: pw.style, attrs: pw.attrs, overrides: {
-      potential,
-      age: pw.age,
-      plan,
-      traits: [pw.trait],
-      lore: pw.lore,
-      origin: pw.origin,
-    }, rng: finishRng }
-  );
+  const w = {
+    ...poolWarriorToWarrior(pw, { stableId, rng: finishRng }),
+    plan,
+  };
   if (boutResult) {
     const wasA = pw.name === boutResult.a.name;
     const wasD = pw.name === boutResult.d.name;
@@ -88,9 +76,10 @@ export function buildFTUEInitialState(
   playerPlan?: FightPlan | null
 ) {
   const finishRng = new SeededRNG(poolSeedValue + 999);
+  const stableId = baseState.player?.id;
 
   const warriors = selectedWarriors.map((pw, idx) =>
-    buildFTUEWarrior(pw, idx, boutResult, playerPlan, finishRng)
+    buildFTUEWarrior({ pw, idx, boutResult, playerPlan, finishRng, stableId })
   );
 
   const deadWarriorName =

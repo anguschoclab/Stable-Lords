@@ -1,21 +1,23 @@
 import type { GameStore } from '@/state/useGameStore';
 import { Warrior, InsightToken } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { formatWeek } from '@/utils/format';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { retireWithHonors } from '@/engine/warrior/retirement';
+import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
+import { warriorToPoolWarrior } from '@/engine/recruitment/recruitment';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import {
   isLegacyFounderCaliber,
   buildLegacyFounderQueueEntry,
   collectCrownedWarriorIds,
 } from '@/engine/ai/legacyFounder';
-import { SeededRNG } from '@/utils/random';
+import { SeededRNG, hashStr } from '@/utils/random';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /** Apply an insight token's effect to a warrior draft. */
-function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
+function applyInsightToken(w: Warrior, token: InsightToken, state: GameStore): Warrior {
   const draft = { ...w };
   if (!draft.favorites) {
     draft.favorites = {
@@ -37,7 +39,11 @@ function applyInsightToken(w: Warrior, token: InsightToken): Warrior {
     }
   } else if (token.type === 'Attribute') {
     const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
-    const attrKey = primaries[cryptoRandomInt(0, primaries.length - 1)];
+    // Deterministic pick — the same warrior/token/week always yields the same
+    // attribute bump (save-scum re-rolls were a real exploit).
+    const attrKey = new SeededRNG(state.week * 31 + hashStr(`${w.id}:${token.id}`)).pick([
+      ...primaries,
+    ]);
     if (attrKey) {
       draft.attributes = {
         ...draft.attributes,
@@ -125,6 +131,34 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
   return update;
 }
 
+/** Move `warriorId` from the roster onto the free-agent shelf — a release,
+ *  not a retirement: the warrior keeps competing for whoever signs them. */
+function releaseFromRoster(
+  state: GameStore,
+  warriorId: WarriorId,
+  reason: string
+): Partial<GameStore> {
+  const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+  if (!warrior) return state;
+
+  const releaseSeed = (state.absoluteWeek ?? state.week) * 991 + hashStr(warrior.id);
+  const poolEntry = warriorToPoolWarrior(warrior, state.week, new SeededRNG(releaseSeed), 'released');
+  poolEntry.lore = `${poolEntry.lore} (${reason} from ${state.player?.stableName ?? 'the syndicate'} in week ${state.week}.)`;
+
+  const update: Partial<GameStore> = {
+    roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
+    freeAgents: [
+      ...(state.freeAgents ?? []).filter((p) => p.id !== poolEntry.id),
+      poolEntry,
+    ],
+  };
+  if (state.avatarCache) {
+    const { [warriorId]: _droppedAvatar, ...avatarCache } = state.avatarCache;
+    update.avatarCache = avatarCache;
+  }
+  return update;
+}
+
 /**
  * Creates roster-related actions for the game store, including managing warriors,
  * insight tokens, equipment, and death acknowledgements.
@@ -133,7 +167,18 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
   return {
     setRoster: (roster: Warrior[]) => set(() => ({ roster })),
 
-    addWarrior: (warrior: Warrior) => set((state) => ({ roster: [...state.roster, warrior] })),
+    addWarrior: (warrior: Warrior) =>
+      set((state) => {
+        const activeCount = state.roster.filter((w: Warrior) => isActive(w)).length;
+        if (activeCount >= BASE_ROSTER_CAP + (state.rosterBonus ?? 0)) return state;
+        if (state.roster.some((w: Warrior) => w.id === warrior.id)) return state;
+        // Dead identities can never re-enter a roster through any path.
+        if (deadIdSet(state).has(warrior.id)) return state;
+        const stamped = warrior.stableId
+          ? warrior
+          : { ...warrior, stableId: state.player?.id };
+        return { roster: [...state.roster, stamped] };
+      }),
 
     killWarrior: (
       warriorId: WarriorId,
@@ -162,14 +207,14 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       });
     },
 
-    releaseWarrior: (warriorId: WarriorId, _reason = 'Released') => {
+    releaseWarrior: (warriorId: WarriorId, reason = 'Released') => {
       set((state) => {
         if (state.avatarCache) {
           state.avatarCache = Object.fromEntries(
             Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
           );
         }
-        return retireFromRoster(state, warriorId);
+        return releaseFromRoster(state, warriorId, reason);
       });
     },
 
@@ -179,7 +224,9 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         if (!token) return state;
 
         return {
-          roster: updateEntityInList(state.roster, warriorId, (w) => applyInsightToken(w, token)),
+          roster: updateEntityInList(state.roster, warriorId, (w) =>
+            applyInsightToken(w, token, state)
+          ),
           insightTokens: state.insightTokens.filter((t: InsightToken) => t.id !== tokenId),
         };
       });

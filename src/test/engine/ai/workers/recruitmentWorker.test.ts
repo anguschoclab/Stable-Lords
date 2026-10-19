@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
 import { SeededRNG } from '@/utils/random';
-import { makeTestRecruit, makeMinimalRival } from '@/test/_fixtures/factories';
+import {
+  makeTestRecruit,
+  makeMinimalRival,
+  makeWarrior,
+} from '@/test/_fixtures/factories';
+import { aiRosterMax } from '@/constants/ai';
+import { AI_GENERATED_RECRUIT_COST } from '@/constants/world';
 
 const makePoolWarrior = makeTestRecruit;
 
@@ -89,5 +95,59 @@ describe('processRecruitment — veteran free agency', () => {
     expect(signed?.id).not.toBe('pw-ordinary');
     expect(signed?.fame).toBe(10);
     expect(signed?.career).toEqual({ wins: 0, losses: 0, kills: 0 });
+  });
+});
+
+describe('processRecruitment — cap and funnel invariants', () => {
+  it('a roster already at aiRosterMax produces no signing even with candidates and budget', () => {
+    const personality = 'Pragmatic';
+    const maxRoster = aiRosterMax(personality);
+    const rival = makeMinimalRival({
+      owner: { ...makeMinimalRival().owner, personality },
+      treasury: 10000,
+      roster: Array.from({ length: maxRoster }, (_, i) =>
+        makeWarrior({ id: `wr-${i}` as never })
+      ),
+      needsRecruit: true,
+    });
+    const recruit = makePoolWarrior({ id: 'pw-cap' });
+    const rng = new SeededRNG(42);
+
+    const { updatedRival, updatedPool } = processRecruitment({
+      rival,
+      pool: [recruit],
+      week: 2,
+      rng,
+      isMajorDraftWeek: true,
+    });
+
+    expect(updatedRival.roster).toHaveLength(maxRoster);
+    expect(updatedRival.roster.every((w) => w.id !== 'pw-cap')).toBe(true);
+    expect(updatedPool.map((w) => w.id)).toEqual(['pw-cap']);
+  });
+
+  it('generated-fallback signing leaves the undrafted pool untouched (not emptied)', () => {
+    // An astronomically-priced recruit fails the budget gate so signings === 0,
+    // which triggers the generated-recruit fallback — the undrafted recruit
+    // must stay on the shelf.
+    const rival = makeMinimalRival({ treasury: 5000, needsRecruit: true, roster: [] });
+    const unaffordable = makePoolWarrior({ id: 'pw-pricey', cost: 999_999 });
+    const rng = new SeededRNG(42);
+
+    const { updatedRival, updatedPool } = processRecruitment({
+      rival,
+      pool: [unaffordable],
+      week: 2,
+      rng,
+      isMajorDraftWeek: false,
+    });
+
+    if (updatedRival.roster.length > 0) {
+      // If the generated fallback signed, it paid the flat generated fee —
+      // and the pool recruit was never consumed.
+      expect(updatedRival.roster[0]?.id).not.toBe('pw-pricey');
+    }
+    expect(updatedPool.map((w) => w.id)).toEqual(['pw-pricey']);
+    expect(AI_GENERATED_RECRUIT_COST).toBe(60);
   });
 });

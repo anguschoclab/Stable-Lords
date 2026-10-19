@@ -9,6 +9,7 @@ import { validateArenaChampions, validateStateInvariants } from '@/engine/valida
 import { makeGameState, makeWarrior, makeRival } from '@/test/_fixtures/factories';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 
 function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
   return {
@@ -242,6 +243,45 @@ describe('dead-registry coverage — deadWarriorIds ∪ graveyard', () => {
     });
     const v = validateStateInvariants(state);
     expect(v.filter((x) => x.id === 'dead-id-in-active-store')).toEqual([]);
+  });
+});
+
+describe('roster caps', () => {
+  it('flags a player roster over BASE_ROSTER_CAP + rosterBonus', () => {
+    const roster = Array.from({ length: BASE_ROSTER_CAP + 1 }, (_, i) =>
+      makeWarrior({ id: `pc-${i}` as WarriorId })
+    );
+    const v = validateStateInvariants(makeGameState({ roster, rosterBonus: 0 }));
+    expect(v.some((x) => x.id === 'roster-cap-exceeded')).toBe(true);
+  });
+
+  it('honors rosterBonus raising the player limit', () => {
+    const roster = Array.from({ length: BASE_ROSTER_CAP + 1 }, (_, i) =>
+      makeWarrior({ id: `pc-${i}` as WarriorId })
+    );
+    const v = validateStateInvariants(makeGameState({ roster, rosterBonus: 1 }));
+    expect(v.some((x) => x.id === 'roster-cap-exceeded')).toBe(false);
+  });
+
+  it('flags a rival roster over aiRosterMax for its personality', () => {
+    // Default fixture owner is Pragmatic → cap 8.
+    const roster = Array.from({ length: 9 }, (_, i) =>
+      makeWarrior({ id: `rc-${i}` as WarriorId })
+    );
+    const rival = makeRival({ roster });
+    const v = validateStateInvariants(makeGameState({ rivals: [rival] }));
+    expect(v.some((x) => x.id === 'roster-cap-exceeded')).toBe(true);
+  });
+
+  it('only counts active warriors toward the cap', () => {
+    const roster = [
+      ...Array.from({ length: BASE_ROSTER_CAP }, (_, i) =>
+        makeWarrior({ id: `pa-${i}` as WarriorId })
+      ),
+      makeWarrior({ id: 'pd-0' as WarriorId, status: 'Dead' as never }),
+    ];
+    const v = validateStateInvariants(makeGameState({ roster, rosterBonus: 0 }));
+    expect(v.some((x) => x.id === 'roster-cap-exceeded')).toBe(false);
   });
 });
 

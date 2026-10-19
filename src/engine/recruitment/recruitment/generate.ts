@@ -10,6 +10,7 @@ import type { Archetype } from '@/data/names/archetypeNames';
 import { generateWarriorName, generateDynasticWarriorName } from '@/data/names/nameGenerator';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
+import { ATTRIBUTE_MIN } from '@/types/shared.types';
 import { TIER_COST, type PoolWarrior, type RecruitTier } from './types';
 
 // Names come from the procedural generator (src/data/names/nameGenerator.ts);
@@ -36,10 +37,12 @@ function rollTier(rng: IRNGService): RecruitTier {
 function pickStyleAndLineage(
   rng: IRNGService,
   meta: StyleMeta | undefined,
-  legacyCandidates: Warrior[]
+  legacyCandidates: Warrior[],
+  legacyChance = 0.05
 ): { style: FightingStyle; lineage: WarriorLineage | undefined } {
-  // 🧬 Genetic Bloodlines: 5% chance to be a Legacy recruit
-  const isLegacy = rng.next() < 0.05 && legacyCandidates.length > 0;
+  // 🧬 Genetic Bloodlines: small chance to be a Legacy recruit — boosted when
+  // retired veterans mentor the next intake (see RecruitmentPass).
+  const isLegacy = rng.next() < legacyChance && legacyCandidates.length > 0;
   if (isLegacy) {
     const parent = rng.pick(legacyCandidates);
     return {
@@ -89,15 +92,17 @@ interface GenerateRecruitArgs {
   forceTier?: RecruitTier;
   meta?: StyleMeta;
   legacyCandidates?: Warrior[];
+  /** Override the 5% base legacy-bloodline roll (mentor-boosted weeks). */
+  legacyChance?: number;
 }
 
 // Include new origins/traits in generateRecruit() pools. No manual wiring needed due to dynamic nature.
 /** Generates a recruit: style/lineage, unique name, stats, lore payload. */
 export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
-  const { rng, usedNames, week, forceTier, meta } = args;
+  const { rng, usedNames, week, forceTier, meta, legacyChance } = args;
   const { legacyCandidates = [] } = args;
   const tier = forceTier ?? rollTier(rng);
-  const { style, lineage } = pickStyleAndLineage(rng, meta, legacyCandidates);
+  const { style, lineage } = pickStyleAndLineage(rng, meta, legacyCandidates, legacyChance);
 
   const archetype = STYLE_ARCHETYPE[style];
   const attributes = generateArchetypeAttrs(style, rng);
@@ -137,6 +142,61 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
     favorites,
     lineage,
     source: 'orphanage',
+    avatarSeed: Math.floor(rng.next() * 1000000),
+  };
+}
+
+/**
+ * Academy apprentice intake — the same recipe as generateRecruit, but the
+ * cadet is younger (14–16), rolls each attribute 2 points lighter (floored
+ * at ATTRIBUTE_MIN), prices at three quarters of the open-market tier cost,
+ * and — for Common cadets — carries Promising potential headroom (an
+ * academy shapes raw kids further than their intake numbers suggest).
+ * Consumes the same RNG draw sequence as generateRecruit.
+ */
+export function generateApprentice(args: GenerateRecruitArgs): PoolWarrior {
+  const { rng, usedNames, week, forceTier, meta, legacyChance } = args;
+  const { legacyCandidates = [] } = args;
+  const tier = forceTier ?? rollTier(rng);
+  const { style, lineage } = pickStyleAndLineage(rng, meta, legacyCandidates, legacyChance);
+
+  const archetype = STYLE_ARCHETYPE[style];
+  const attributes = generateArchetypeAttrs(style, rng);
+
+  const traits = generateTraits(rng, archetype);
+  applyTraitAttrBonuses(attributes, traits);
+  for (const key of Object.keys(attributes) as (keyof typeof attributes)[]) {
+    attributes[key] = Math.max(ATTRIBUTE_MIN, attributes[key] - 2);
+  }
+
+  const name = pickRecruitName(rng, archetype, usedNames, lineage);
+
+  const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
+  // Common cadets get Promising headroom — academies grow raw material.
+  const potential = generatePotential(attributes, tier === 'Common' ? 'Promising' : tier, rng);
+  const favorites = generateFavorites(style, rng);
+  const originStr = generateOrigin(rng);
+  const loreStr = generateLore(name, rng);
+
+  return {
+    id: rng.uuid(),
+    name,
+    style,
+    attributes,
+    potential,
+    baseSkills,
+    luckfactor: rollLuckfactor(rng),
+    derivedStats,
+    tier,
+    cost: Math.floor(TIER_COST[tier] * 0.75),
+    age: 14 + Math.floor(rng.next() * 3),
+    lore: loreStr,
+    origin: originStr,
+    traits,
+    addedWeek: week,
+    favorites,
+    lineage,
+    source: 'apprentice',
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
 }

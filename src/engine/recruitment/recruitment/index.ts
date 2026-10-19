@@ -6,11 +6,24 @@ export {
   TIER_STARS,
   computeFreeAgentCost,
   computeRecruitPoolSize,
+  computeRecruitPoolHardCap,
   type PoolWarrior,
   type RecruitTier,
 } from './types';
-export { generateRecruit } from './generate';
+export { generateRecruit, generateApprentice } from './generate';
 export { fullRefreshPool, generateRecruitPool, partialRefreshPool } from './pool';
-export { veteranSigningPatch, warriorToPoolWarrior } from './freeAgents';
+export {
+  partitionAgedFreeAgents,
+  veteranSigningPatch,
+  warriorToPoolWarrior,
+} from './freeAgents';
+export {
+  poolWarriorToWarrior,
+  signWarrior,
+  type SignWarriorArgs,
+  type SignWarriorFailure,
+  type SignWarriorResult,
+  type PoolToWarriorOpts,
+} from '../signWarrior';
 
 // AI Draft behavior has been moved to src/engine/draftService.ts

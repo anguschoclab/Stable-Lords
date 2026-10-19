@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { runSystemPass } from '@/engine/pipeline/passes/SystemPass';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { WarriorId, StableId } from '@/types/shared.types';
-import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
+import { makeRival, makeWarrior, makePoolWarrior } from '@/test/_fixtures/factories';
 import type { RivalStableData } from '@/types/state.types';
 
 describe('SystemPass Snapshotting Logic', () => {
@@ -153,5 +153,72 @@ describe('SystemPass — seasonal churn wiring', () => {
 
     const items = impact.newsletterItems ?? [];
     expect(items.some((n) => (n.items ?? []).some((i) => i.includes('COLLAPSE')))).toBe(true);
+  });
+});
+
+describe('SystemPass — player roster floor', () => {
+  function floorState(): ReturnType<typeof createFreshState> {
+    const s = createFreshState('seed-floor');
+    s.week = 5;
+    s.year = 1;
+    s.season = 'Spring';
+    s.roster = [];
+    s.rivals = [];
+    return s;
+  }
+
+  it('signs the lowest-tier non-dead pool candidate and drains it by id', () => {
+    const state = floorState();
+    const dead = makePoolWarrior({ id: 'dead-one', tier: 'Common' });
+    const prodigy = makePoolWarrior({ id: 'prodigy-1', tier: 'Prodigy' });
+    const common = makePoolWarrior({ id: 'common-1', tier: 'Common' });
+    state.recruitPool = [dead, prodigy, common];
+    state.deadWarriorIds = ['dead-one' as WarriorId];
+
+    const impact = runSystemPass(state);
+
+    const added = impact.rosterAdditions ?? [];
+    expect(added).toHaveLength(1);
+    expect(added[0]?.name).toBe(common.name);
+    expect(added[0]?.stableId).toBe(state.player.id);
+
+    const poolIds = (impact.recruitPool ?? []).map((w) => w.id);
+    expect(poolIds).toContain('prodigy-1');
+    expect(poolIds).toContain('dead-one'); // dead stay shelved, just unsigned
+    expect(poolIds).not.toContain('common-1');
+  });
+
+  it('preserves the veteran snapshot when the floor pick is a displaced veteran', () => {
+    const state = floorState();
+    const vet = makePoolWarrior({
+      id: 'vet-1',
+      tier: 'Common',
+      veteran: {
+        fame: 120,
+        popularity: 40,
+        career: { wins: 9, losses: 3, kills: 0 },
+        titles: ['Regional Champ' as never],
+      },
+    });
+    state.recruitPool = [vet];
+
+    const impact = runSystemPass(state);
+
+    const added = impact.rosterAdditions ?? [];
+    expect(added).toHaveLength(1);
+    expect(added[0]?.id).toBe('vet-1');
+    expect(added[0]?.fame).toBe(120);
+    expect(added[0]?.career).toEqual({ wins: 9, losses: 3, kills: 0 });
+  });
+
+  it('mints a walk-on through the recruit recipe when the pool is empty', () => {
+    const state = floorState();
+    state.recruitPool = [];
+
+    const impact = runSystemPass(state);
+
+    const added = impact.rosterAdditions ?? [];
+    expect(added).toHaveLength(1);
+    expect(added[0]?.stableId).toBe(state.player.id);
   });
 });

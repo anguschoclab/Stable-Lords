@@ -16,17 +16,14 @@ import { evolvePhilosophies } from '@/engine/owner/philosophy';
 import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
-import { generateArchetypeAttrs, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
-import { generateWarriorName } from '@/data/names/nameGenerator';
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
-import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
-import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { PoolWarrior } from '@/engine/recruitment/recruitment';
-import type { WarriorId } from '@/types/shared.types';
+import {
+  generateRecruit,
+  poolWarriorToWarrior,
+  type PoolWarrior,
+} from '@/engine/recruitment/recruitment';
 
 /**
  * Stable Lords — System & Season Pipeline Pass
@@ -199,37 +196,49 @@ function applyWeeklyPrestigeDecay(state: GameState, impact: StateImpact): void {
   }
 }
 
+const TIER_RANK: Record<string, number> = {
+  Common: 0,
+  Promising: 1,
+  Exceptional: 2,
+  Prodigy: 3,
+};
+
 /**
- * Materialize a floor recruit: convert a PoolWarrior to a full Warrior, or
- * generate one from scratch if the recruit pool is empty.
+ * Materialize a floor recruit: convert the lowest-tier eligible pool recruit
+ * through the unified converter (dead ids never auto-sign), or generate one
+ * from scratch if the recruit pool is empty.
  */
 function materializeFloorRecruit(
   state: GameState,
   rng: IRNGService
 ): { warrior: Warrior; updatedPool?: PoolWarrior[] } | null {
-  if (state.recruitPool && state.recruitPool.length > 0) {
-    const poolWarrior = state.recruitPool[0];
-    if (!poolWarrior) return null;
-    const warrior: Warrior = {
-      ...poolWarrior,
-      id: poolWarrior.id as WarriorId,
-      ...newWarriorDefaults(),
-      equipment: getFittedLoadout(poolWarrior.style, poolWarrior.attributes),
+  const deadIds = deadIdSet(state);
+  const eligible = (state.recruitPool ?? []).filter((w) => !deadIds.has(w.id));
+  if (eligible.length > 0) {
+    // Lowest-tier first — a floor recruit is emergency stock, not the
+    // season's Prodigy.
+    const picked = eligible.reduce((a, b) =>
+      (TIER_RANK[a.tier] ?? 0) <= (TIER_RANK[b.tier] ?? 0) ? a : b
+    );
+    const warrior = poolWarriorToWarrior(picked, {
       stableId: state.player?.id,
-    } as unknown as Warrior;
-    return { warrior, updatedPool: state.recruitPool.slice(1) };
+      rng,
+      deadIds,
+    });
+    return {
+      warrior,
+      updatedPool: (state.recruitPool ?? []).filter((w) => w.id !== picked.id),
+    };
   }
 
-  const style = rng.pick(Object.values(FightingStyle));
-  const attrs = generateArchetypeAttrs(style, rng);
-  const warrior = makeWarrior(
-    { id: rng.uuid() as WarriorId, name: generateWarriorName({
-      rng,
-      archetype: STYLE_ARCHETYPE[style],
-      usedNames: collectUsedWarriorNames(state),
-    }), style: style, attrs: attrs, overrides: {}, rng: rng }
-  );
-  return { warrior };
+  // Pool empty — a walk-on aspirant materializes through the same recipe as
+  // every other intake, then converts through the same path.
+  const recruit = generateRecruit({
+    rng,
+    usedNames: collectUsedWarriorNames(state),
+    week: state.week,
+  });
+  return { warrior: poolWarriorToWarrior(recruit, { stableId: state.player?.id, rng, deadIds }) };
 }
 
 /**
@@ -257,6 +266,9 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
     const floorRng = new SeededRNG((state.absoluteWeek ?? state.week) * 6151 + 29);
     const recruit = materializeFloorRecruit(state, floorRng);
     if (recruit) {
+      // `rosterAdditions`/`recruitPool` remain undeclared writes (pre-existing);
+      // declaring `recruitPool` here would collide with rivalStrategy's
+      // same-stage replace.
       impact.rosterAdditions = [...(impact.rosterAdditions ?? []), recruit.warrior];
       if (recruit.updatedPool) {
         impact.recruitPool = recruit.updatedPool;

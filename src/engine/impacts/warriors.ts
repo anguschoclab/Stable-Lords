@@ -9,6 +9,9 @@ import type { WarriorEpithetAward } from './types';
 import { epithetRankOf } from '@/data/names/epithets';
 import { removeFromRoster, updateRoster } from '@/utils/roster';
 import { ageGroupForAge } from '@/engine/avatar/avatarGenerator';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+import { isActive } from '@/engine/warrior/warriorStatus';
+import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
 
 /**
  * Apply roster updates to state.
@@ -54,7 +57,21 @@ const rosterRemovals = (state: GameState, value: WarriorId[]) => {
  *
  */
 const rosterAdditions = (state: GameState, value: Warrior[]) => {
-  state.roster = [...state.roster, ...value];
+  if (value.length === 0) return;
+  // The funnel is the gatekeeper — impacts are the last line of defense:
+  // dedupe against every known warrior id, clamp to the active cap.
+  const usedIds = collectUsedWarriorIds(state);
+  const room = BASE_ROSTER_CAP + (state.rosterBonus ?? 0) - state.roster.filter(isActive).length;
+  if (room <= 0) return;
+  const stamped = value
+    .filter((w) => {
+      if (usedIds.has(w.id)) return false;
+      usedIds.add(w.id);
+      return true;
+    })
+    .slice(0, room)
+    .map((w) => (w.stableId ? w : { ...w, stableId: state.player?.id }));
+  if (stamped.length > 0) state.roster = [...state.roster, ...stamped];
 };
 
 /**

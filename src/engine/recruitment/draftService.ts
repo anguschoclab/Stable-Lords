@@ -41,7 +41,7 @@ function rivalDraftMeta(
  * don't always pick first, then need-sort (stable sort keeps the rotation
  * inside each need tier — fewest active warriors still pick first).
  */
-function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): RivalStableData[] {
+export function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): RivalStableData[] {
   const rotated = [...rivals];
   if (rotated.length > 0) {
     const rot = week % rotated.length;
@@ -109,7 +109,7 @@ export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
   for (const rival of sortedRivals) {
     const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
-      { rival: rival, pool: currentPool, week: week, rng: rngService, isMajorDraftWeek: isMajorDraftWeek, meta: customMeta, usedNames: usedNames, usedIds: usedIds }
+      { rival: rival, pool: currentPool, week: week, rng: rngService, isMajorDraftWeek: isMajorDraftWeek, meta: customMeta, usedNames: usedNames, usedIds: usedIds, deadIds: deadIds }
     );
 
     draftResults[updatedRival.owner.id] = updatedRival;
@@ -122,8 +122,12 @@ export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
 
   // Split the merged candidate pool back into the free-agent shelf and the
   // orphanage pool — the `source` tag stamped at intake is the partition key.
-  const updatedFreeAgents = currentPool.filter((w) => w.source === 'freeAgent' || w.veteran);
-  const updatedPool = currentPool.filter((w) => w.source !== 'freeAgent' && !w.veteran);
+  // 'released' entries (player-initiated releases) recirculate on the
+  // free-agent shelf alongside displaced veterans.
+  const isShelfEntry = (w: PoolWarrior) =>
+    w.source === 'freeAgent' || w.source === 'released' || !!w.veteran;
+  const updatedFreeAgents = currentPool.filter(isShelfEntry);
+  const updatedPool = currentPool.filter((w) => !isShelfEntry(w));
 
   return {
     updatedPool,

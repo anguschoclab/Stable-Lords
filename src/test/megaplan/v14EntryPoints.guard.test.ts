@@ -55,7 +55,7 @@ const DEAD_SURFACE: string[] = [
 function productionCallSites(): Map<string, string[]> {
   const sites = new Map<string, string[]>();
   for (const file of walk(SRC)) {
-    const rel = path.relative(path.resolve(SRC, '..'), file);
+    const rel = path.relative(path.resolve(SRC, '..'), file).replace(/\\/g, '/');
     if (rel.includes('src/test/') || rel.includes('src/engine/runtime/')) continue;
     const text = readFileSync(file, 'utf8');
     const methods = [...text.matchAll(ENGINE_PROXY_CALL_RE)].map((m) => m[1]!);

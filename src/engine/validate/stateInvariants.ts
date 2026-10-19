@@ -11,6 +11,9 @@
 import type { GameState, TitleStatus, ArenaReignEndReason } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { isActive } from '@/engine/warrior/warriorStatus';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+import { aiRosterMax } from '@/constants/ai';
 
 /** A single violated invariant. */
 interface InvariantViolation {
@@ -53,8 +56,17 @@ function checkRosterIntegrity(state: GameState, out: InvariantViolation[]): void
     claim(w.id, 'player roster');
     checkWarrior(w, 'player roster', out);
   }
+  const playerActive = (state.roster ?? []).filter(isActive).length;
+  const playerCap = BASE_ROSTER_CAP + (state.rosterBonus ?? 0);
+  if (playerActive > playerCap) {
+    out.push({
+      id: 'roster-cap-exceeded',
+      message: `player roster has ${playerActive} active warriors (cap ${playerCap})`,
+    });
+  }
   for (const r of state.rivals ?? []) {
     const inner = new Set<string>();
+    let activeCount = 0;
     for (const w of r.roster ?? []) {
       if (inner.has(w.id)) {
         out.push({
@@ -63,7 +75,15 @@ function checkRosterIntegrity(state: GameState, out: InvariantViolation[]): void
         });
       }
       inner.add(w.id);
+      if (isActive(w)) activeCount++;
       checkWarrior(w, `rival ${r.id}`, out);
+    }
+    const cap = aiRosterMax(r.owner?.personality);
+    if (activeCount > cap) {
+      out.push({
+        id: 'roster-cap-exceeded',
+        message: `rival ${r.id} has ${activeCount} active warriors (cap ${cap})`,
+      });
     }
   }
 }

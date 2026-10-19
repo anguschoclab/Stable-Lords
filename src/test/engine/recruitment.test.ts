@@ -94,22 +94,22 @@ describe('partialRefreshPool', () => {
 describe('fullRefreshPool', () => {
   it('returns exactly DEFAULT_POOL_SIZE warriors', () => {
     const usedNames = new Set<string>();
-    const pool = fullRefreshPool(1, usedNames);
+    const pool = fullRefreshPool({ week: 1, usedNames });
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
   });
 
   it('all warriors have the correct addedWeek value', () => {
     const usedNames = new Set<string>();
     const week = 5;
-    const pool = fullRefreshPool(week, usedNames);
+    const pool = fullRefreshPool({ week, usedNames });
     expect(pool.every((w) => w.addedWeek === week)).toBe(true);
   });
 
   it('uses provided RNG when given', () => {
     const usedNames = new Set<string>();
     const rng = new SeededRNG(12345);
-    const pool1 = fullRefreshPool(1, usedNames, rng);
-    const pool2 = fullRefreshPool(1, usedNames, rng);
+    const pool1 = fullRefreshPool({ week: 1, usedNames, rng });
+    const pool2 = fullRefreshPool({ week: 1, usedNames, rng });
     // Same RNG should produce different results (state advances)
     expect(pool1[0]?.id).not.toBe(pool2[0]?.id);
   });
@@ -117,8 +117,8 @@ describe('fullRefreshPool', () => {
   it('creates seeded RNG with correct formula when omitted', () => {
     const week = 10;
     // Default seed formula: week * 1337 + 7 = 10 * 1337 + 7 = 13377
-    const pool1 = fullRefreshPool(week, new Set<string>());
-    const pool2 = fullRefreshPool(week, new Set<string>());
+    const pool1 = fullRefreshPool({ week, usedNames: new Set<string>() });
+    const pool2 = fullRefreshPool({ week, usedNames: new Set<string>() });
     // Same week should produce identical pool with default seed
     expect(pool1[0]?.id).toBe(pool2[0]?.id);
     expect(pool1[0]?.name).toBe(pool2[0]?.name);
@@ -126,7 +126,7 @@ describe('fullRefreshPool', () => {
 
   it('respects usedNames set and produces unique names within pool', () => {
     const usedNames = new Set<string>(['EXTERNAL_NAME']);
-    const pool = fullRefreshPool(1, usedNames);
+    const pool = fullRefreshPool({ week: 1, usedNames });
     const names = pool.map((w) => w.name);
     const uniqueNames = new Set(names);
     expect(names.length).toBe(uniqueNames.size);
@@ -136,7 +136,7 @@ describe('fullRefreshPool', () => {
   it('ignores existing pool state (full refresh)', () => {
     const usedNames = new Set<string>();
     const oldPool = generateRecruitPool({ count: DEFAULT_POOL_SIZE, week: 1, usedNames: usedNames });
-    const newPool = fullRefreshPool(2, usedNames);
+    const newPool = fullRefreshPool({ week: 2, usedNames });
     // New pool should have completely different warriors
     const oldIds = new Set(oldPool.map((w) => w.id));
     const newIds = new Set(newPool.map((w) => w.id));
@@ -146,21 +146,16 @@ describe('fullRefreshPool', () => {
     expect(newPool.every((w) => w.addedWeek === 2)).toBe(true);
   });
 
-  it('does NOT use style meta drift (unlike partialRefreshPool)', () => {
+  it('generates a full-size pool without meta drift when none is supplied', () => {
     const usedNames = new Set<string>();
-    const pool = fullRefreshPool(1, usedNames);
-    // fullRefreshPool has no meta parameter (unlike partialRefreshPool)
-    // This test documents the intentional design choice
+    const pool = fullRefreshPool({ week: 1, usedNames });
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
   });
 
-  it('does NOT use legacy candidates for bloodlines (unlike partialRefreshPool)', () => {
+  it('generates a full-size pool without legacy candidates when none are supplied', () => {
     const usedNames = new Set<string>();
-    const pool = fullRefreshPool(1, usedNames);
-    // fullRefreshPool has no legacyCandidates parameter (unlike partialRefreshPool)
-    // This test documents the intentional design choice
+    const pool = fullRefreshPool({ week: 1, usedNames });
     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
-    // The key is that fullRefreshPool doesn't accept legacyCandidates at all
   });
 });
 

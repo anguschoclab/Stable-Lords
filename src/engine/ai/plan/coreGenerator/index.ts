@@ -46,8 +46,11 @@ interface AiPlanForWarriorArgs {
   competence?: OwnerCompetence;
 }
 
-/** Generates a full weekly plan for one AI warrior given owner personality. */
-export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
+/** Aggregates every dial source into the initial clamped plan. */
+function assembleBasePlan(args: AiPlanForWarriorArgs): {
+  plan: FightPlan;
+  mods: ReturnType<typeof computePlanModifiers>;
+} {
   const { w, personality, philosophy, opponentStyle, intent } = args;
   const { grudgeIntensity = 0, dossier, now } = args;
   const base = defaultPlanForWarrior(w);
@@ -60,7 +63,6 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
     ? getStyleMatchupMods(w.style, opponentStyle)
     : { oe: 0, al: 0, kd: 0 };
 
-  // Generate initial plan
   const plan: FightPlan = {
     ...base,
     OE: clamp(
@@ -103,7 +105,11 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
         ? clamp((base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0), 0, 10)
         : 0,
   };
+  return { plan, mods };
+}
 
+/** Strategy-score validation and style-suitability bias on the assembled plan. */
+function applyPlanValidation(plan: FightPlan, w: Warrior): void {
   // Strategy score validation with retry logic
   validateAndAdjustPlan(plan, w);
 
@@ -112,6 +118,15 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
   const styleSuitabilityBias = getStyleSuitabilityBias(w.style);
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
+}
+
+/** Generates a full weekly plan for one AI warrior given owner personality. */
+export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
+  const { w, personality, intent } = args;
+  const { dossier } = args;
+  const { plan, mods } = assembleBasePlan(args);
+
+  applyPlanValidation(plan, w);
 
   applyStrategicLayer({
     plan: plan,

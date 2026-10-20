@@ -117,6 +117,61 @@ interface ScoreCandidatesArgs {
  * prefs ∪ founder favored styles), roster-balance duplicates, meta drift,
  * youth/ready-now bonuses, and time-in-pool pressure.
  */
+type DraftWeights = typeof DEFAULT_DRAFT_WEIGHTS;
+
+/** Scores one pool candidate against the personality weights table. */
+function scoreCandidate(
+  w: PoolWarrior,
+  weights: DraftWeights,
+  prefsSet: Set<FightingStyle>,
+  activeStyleCounts: Map<string, number>,
+  meta: StyleMeta | undefined,
+  owner: Pick<RivalStableData['owner'], 'id' | 'competence'> | undefined,
+  week: number
+): number {
+  let score = 0;
+  score += weights.tierBonus[w.tier] ?? 0;
+  if (prefsSet.has(w.style)) score += weights.styleMatchBonus;
+  if (w.veteran) score += weights.veteranBonus;
+
+  // ⚡ TSA: Meta-Fit Scoring
+  const drift = meta?.[w.style] || 0;
+  score += drift * 5; // Reward styles that are trending up
+
+  // ⚡ TSA: Style Diversity Guard
+  const styleCount = activeStyleCounts.get(w.style) ?? 0;
+  if (styleCount > 0) {
+    score -= styleCount * weights.duplicatePenalty;
+  }
+
+  // Youth appetite — Methodical prospect-hunting.
+  if (weights.youthBonusPerYear > 0 && w.age < 21) {
+    score += (21 - w.age) * weights.youthBonusPerYear;
+  }
+
+  // Ready-now appetite — Aggressive wants attribute totals today.
+  if (weights.readyBonusPerPoint > 0) {
+    const attrTotal = Object.values(w.attributes ?? {}).reduce<number>(
+      (acc, v) => acc + (typeof v === 'number' ? v : 0),
+      0
+    );
+    score += Math.max(0, attrTotal - 70) * weights.readyBonusPerPoint;
+  }
+
+  // Price appetite — thrifty personalities discount expensive recruits.
+  score -= (w.cost * weights.priceSensitivity) / 100;
+
+  // Competence noise — a Novice front office misevaluates candidates while
+  // a Master nearly always spots the best value (Stage B). Deterministic
+  // per (owner, candidate, week) so shard order can't change the pick.
+  score += competenceJitter(owner, `draft|${w.id}|${week}`, 25);
+
+  const weeksAvailable = week - w.addedWeek;
+  score += weeksAvailable * 10;
+
+  return score;
+}
+
 function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScore: number } {
   const { pool, roster, personality, week, meta } = args;
   const { favoredStyles } = args;
@@ -138,46 +193,9 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
   for (let i = 0; i < pool.length; i++) {
     const w = pool[i];
     if (!w) continue;
-    let score = 0;
-    score += weights.tierBonus[w.tier] ?? 0;
-    if (prefsSet.has(w.style)) score += weights.styleMatchBonus;
-    if (w.veteran) score += weights.veteranBonus;
-
-    // ⚡ TSA: Meta-Fit Scoring
-    const drift = meta?.[w.style] || 0;
-    score += drift * 5; // Reward styles that are trending up
-
-    // ⚡ TSA: Style Diversity Guard
-    const styleCount = activeStyleCounts.get(w.style) ?? 0;
-    if (styleCount > 0) {
-      score -= styleCount * weights.duplicatePenalty;
-    }
-
-    // Youth appetite — Methodical prospect-hunting.
-    if (weights.youthBonusPerYear > 0 && w.age < 21) {
-      score += (21 - w.age) * weights.youthBonusPerYear;
-    }
-
-    // Ready-now appetite — Aggressive wants attribute totals today.
-    if (weights.readyBonusPerPoint > 0) {
-      const attrTotal = Object.values(w.attributes ?? {}).reduce<number>(
-        (acc, v) => acc + (typeof v === 'number' ? v : 0),
-        0
-      );
-      score += Math.max(0, attrTotal - 70) * weights.readyBonusPerPoint;
-    }
-
-    // Price appetite — thrifty personalities discount expensive recruits.
-    score -= (w.cost * weights.priceSensitivity) / 100;
-
-    // Competence noise — a Novice front office misevaluates candidates while
-    // a Master nearly always spots the best value (Stage B). Deterministic
-    // per (owner, candidate, week) so shard order can't change the pick.
-    score += competenceJitter(args.owner, `draft|${w.id}|${week}`, 25);
-
-    const weeksAvailable = week - w.addedWeek;
-    score += weeksAvailable * 10;
-
+    const score = scoreCandidate(
+      w, weights, prefsSet, activeStyleCounts, meta, args.owner, week
+    );
     if (score > bestScore) {
       bestScore = score;
       bestIdx = i;
@@ -369,27 +387,67 @@ interface ProcessRecruitmentArgs {
  * RecruitmentWorker: Handles drafting warriors from the pool.
  * Implements "Context Isolation" and "Risk-Tiered Execution".
  */
-export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentResult {
-  const { rival, pool, week, rng, isMajorDraftWeek } = args;
-  const { meta, usedNames, usedIds, deadIds } = args;
-  let updatedRival = { ...rival };
-  const gazetteItems: string[] = [];
-  const remainingPool = [...pool];
-
-  const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
-  let activeCount = countActiveRoster(updatedRival);
-
-  // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
-  // is deliberately decoupled from the player's `BASE_ROSTER_CAP` constant.
-  // Single config source: src/constants/ai.ts (G9).
-  const maxRoster = aiRosterMax(updatedRival.owner.personality);
-  if (activeCount >= maxRoster) {
-    return { updatedRival, updatedPool: remainingPool, gazetteItems };
+/**
+ * Generated fallback: only when the pools couldn't serve a stable that
+ * declared a need or sits below its minimum — cheap, so poor stables can
+ * still refill instead of starving out.
+ */
+function tryGeneratedFallback(args: {
+  updatedRival: RivalStableData;
+  week: number;
+  meta: StyleMeta | undefined;
+  gazetteItems: string[];
+  needsRecruit: boolean;
+  activeCount: number;
+  minRoster: number;
+  intent: string;
+  signings: number;
+  usedNames?: Set<string>;
+  usedIds?: Set<string>;
+  deadIds?: ReadonlySet<string>;
+}): RivalStableData {
+  const { updatedRival, week, meta, gazetteItems, needsRecruit } = args;
+  const { activeCount, minRoster, intent, signings } = args;
+  const { usedNames, usedIds, deadIds } = args;
+  if (
+    signings !== 0 ||
+    !(needsRecruit || activeCount < minRoster) ||
+    intent === 'RECOVERY' ||
+    intent === 'SURVIVAL'
+  ) {
+    return updatedRival;
   }
+  // signGeneratedRecruit appends directly into `gazetteItems`.
+  const signed = signGeneratedRecruit({
+    updatedRival: updatedRival,
+    week: week,
+    meta: meta,
+    gazetteItems: gazetteItems,
+    usedNames: usedNames,
+    usedIds: usedIds,
+    deadIds: deadIds,
+  });
+  return signed ? signed.updatedRival : updatedRival;
+}
 
-  // G9: a stable flagged needsRecruit always drafts — the flag is set by
-  // processAIRosterManagement (unified path) and cleared on a successful sign.
-  const needsRecruit = updatedRival.needsRecruit === true;
+/** Derives the draft context (capacity, visibility, appetite) and runs the pool draft cycle. */
+function runPoolDraft(args: {
+  updatedRival: RivalStableData;
+  remainingPool: PoolWarrior[];
+  week: number;
+  rng: IRNGService;
+  isMajorDraftWeek: boolean;
+  meta?: StyleMeta;
+  activeCount: number;
+  maxRoster: number;
+  needsRecruit: boolean;
+  gazetteItems: string[];
+  usedIds?: Set<string>;
+  deadIds?: ReadonlySet<string>;
+}): { updatedRival: RivalStableData; signings: number; minRoster: number } {
+  const { updatedRival, remainingPool, week, rng, isMajorDraftWeek } = args;
+  const { meta, activeCount, maxRoster, needsRecruit } = args;
+  const { gazetteItems, usedIds, deadIds } = args;
 
   // Academy first-look: recruits claimed by another stable's academy are
   // invisible until the claim expires.
@@ -424,31 +482,63 @@ export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentRes
       deadIds,
     },
   });
+  return { updatedRival: drafted.updatedRival, signings: drafted.signings, minRoster };
+}
+
+export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentResult {
+  const { rival, pool, week, rng, isMajorDraftWeek } = args;
+  const { meta, usedNames, usedIds, deadIds } = args;
+  let updatedRival = { ...rival };
+  const gazetteItems: string[] = [];
+  const remainingPool = [...pool];
+
+  const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
+  let activeCount = countActiveRoster(updatedRival);
+
+  // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
+  // is deliberately decoupled from the player's `BASE_ROSTER_CAP` constant.
+  // Single config source: src/constants/ai.ts (G9).
+  const maxRoster = aiRosterMax(updatedRival.owner.personality);
+  if (activeCount >= maxRoster) {
+    return { updatedRival, updatedPool: remainingPool, gazetteItems };
+  }
+
+  // G9: a stable flagged needsRecruit always drafts — the flag is set by
+  // processAIRosterManagement (unified path) and cleared on a successful sign.
+  const needsRecruit = updatedRival.needsRecruit === true;
+
+  const drafted = runPoolDraft({
+    updatedRival: updatedRival,
+    remainingPool: remainingPool,
+    week: week,
+    rng: rng,
+    isMajorDraftWeek: isMajorDraftWeek,
+    meta: meta,
+    activeCount: activeCount,
+    maxRoster: maxRoster,
+    needsRecruit: needsRecruit,
+    gazetteItems: gazetteItems,
+    usedIds: usedIds,
+    deadIds: deadIds,
+  });
   updatedRival = drafted.updatedRival;
   const signings = drafted.signings;
   activeCount += signings;
 
-  // Generated fallback: only when the pools couldn't serve a stable that
-  // declared a need or sits below its minimum — cheap, so poor stables can
-  // still refill instead of starving out.
-  if (
-    signings === 0 &&
-    (needsRecruit || activeCount < minRoster) &&
-    intent !== 'RECOVERY' &&
-    intent !== 'SURVIVAL'
-  ) {
-    // signGeneratedRecruit appends directly into `gazetteItems`.
-    const signed = signGeneratedRecruit({
-      updatedRival: updatedRival,
-      week: week,
-      meta: meta,
-      gazetteItems: gazetteItems,
-      usedNames: usedNames,
-      usedIds: usedIds,
-      deadIds: deadIds,
-    });
-    if (signed) updatedRival = signed.updatedRival;
-  }
+  updatedRival = tryGeneratedFallback({
+    updatedRival: updatedRival,
+    week: week,
+    meta: meta,
+    gazetteItems: gazetteItems,
+    needsRecruit: needsRecruit,
+    activeCount: activeCount,
+    minRoster: drafted.minRoster,
+    intent: intent,
+    signings: signings,
+    usedNames: usedNames,
+    usedIds: usedIds,
+    deadIds: deadIds,
+  });
 
   return { updatedRival, updatedPool: remainingPool, gazetteItems };
 }

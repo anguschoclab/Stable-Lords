@@ -94,15 +94,15 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/scouting/components/DominantCombatantsSection.tsx'), 'split src/components/scouting/components/DominantCombatantsSection.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S15: agingSystem decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S15', () => {
+  it('S15: agingSystem decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S15', () => {
     expect(budgetFor('src/engine/aging/agingSystem.ts'), 'split src/engine/aging/agingSystem.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S16: index decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S16', () => {
+  it('S16: index decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S16', () => {
     expect(budgetFor('src/engine/ai/plan/coreGenerator/index.ts'), 'split src/engine/ai/plan/coreGenerator/index.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S17: recruitmentWorker decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S17', () => {
+  it('S17: recruitmentWorker decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S17', () => {
     expect(budgetFor('src/engine/ai/workers/recruitmentWorker.ts'), 'split src/engine/ai/workers/recruitmentWorker.ts into orchestrator + named siblings').toEqual([]);
   });
 

@@ -212,17 +212,13 @@ function routeRivalAgingUpdate(
  * @param rng - RNG service for retirement checks
  * @returns The state impact containing roster updates and retirement events
  */
-export function computeAgingImpact(state: GameState, rng: IRNGService): StateImpact {
-  const ageEvents: string[] = [];
-  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
-  const toRetire: WarriorId[] = [];
-  const retiredWarriors: Warrior[] = [];
-  // Founder-caliber retirees enqueue onto the persisted queue — the seasonal
-  // expansion pass mints their stables. WarriorPass excludes these ids from
-  // trainer conversion so one retiree is never claimed twice.
-  const founderEnqueued: Warrior[] = [];
-
+/** Enumerates every agable warrior plus the retirement-context id sets. */
+function collectAgingCandidates(state: GameState): {
+  allWarriors: { w: Warrior; isPlayer: boolean; rivalId?: string }[];
+  isAgeTick: boolean;
+  championIds: Set<WarriorId>;
+  crownedIds: ReturnType<typeof collectCrownedWarriorIds>;
+} {
   const allWarriors: { w: Warrior; isPlayer: boolean; rivalId?: string }[] = [];
   state.roster.forEach((w) => allWarriors.push({ w, isPlayer: true }));
   state.rivals.forEach((r) =>
@@ -241,6 +237,68 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   // Past or present crown-holders are founder caliber when they retire.
   const crownedIds = collectCrownedWarriorIds(state);
 
+  return { allWarriors, isAgeTick, championIds, crownedIds };
+}
+
+interface AgingAccumulators {
+  ageEvents: string[];
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>;
+  rivalsUpdates: Map<StableId, Partial<RivalStableData>>;
+  toRetire: WarriorId[];
+  retiredWarriors: Warrior[];
+  founderEnqueued: Warrior[];
+}
+
+/** Routes one warrior's aging outcome onto the impact accumulators. */
+function routeAgingOutcome(
+  acc: AgingAccumulators,
+  result: AgingResult,
+  w: Warrior,
+  isPlayer: boolean,
+  rivalId: string | undefined,
+  crownedIds: ReturnType<typeof collectCrownedWarriorIds>,
+  state: GameState,
+  rng: IRNGService
+): void {
+  if (result.ageEvent) {
+    acc.ageEvents.push(result.ageEvent);
+  }
+
+  if (result.retired && result.retiredObj) {
+    acc.retiredWarriors.push(result.retiredObj);
+    if (
+      isLegacyFounderCaliber(result.retiredObj, crownedIds) &&
+      rng.next() < LEGACY_FOUND_CHANCE
+    ) {
+      acc.founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
+    }
+    if (isPlayer) {
+      acc.toRetire.push(w.id);
+    }
+  } else if (result.update) {
+    if (isPlayer) {
+      acc.rosterUpdates.set(w.id, result.update);
+    } else if (rivalId) {
+      routeRivalAgingUpdate(state, rivalId as StableId, w.id, result.update, acc.rivalsUpdates);
+    }
+  }
+}
+
+export function computeAgingImpact(state: GameState, rng: IRNGService): StateImpact {
+  const acc: AgingAccumulators = {
+    ageEvents: [],
+    rosterUpdates: new Map<WarriorId, Partial<Warrior>>(),
+    rivalsUpdates: new Map<StableId, Partial<RivalStableData>>(),
+    toRetire: [],
+    retiredWarriors: [],
+    // Founder-caliber retirees enqueue onto the persisted queue — the seasonal
+    // expansion pass mints their stables. WarriorPass excludes these ids from
+    // trainer conversion so one retiree is never claimed twice.
+    founderEnqueued: [],
+  };
+
+  const { allWarriors, isAgeTick, championIds, crownedIds } = collectAgingCandidates(state);
+
   for (const { w, isPlayer, rivalId } of allWarriors) {
     // Dead warriors do not age and are never "retired" posthumously — a
     // lingering dead entry would otherwise land in `retired` on top of its
@@ -255,32 +313,10 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       isAgeTick,
       isChampion: championIds.has(w.id),
     });
-
-    if (result.ageEvent) {
-      ageEvents.push(result.ageEvent);
-    }
-
-    if (result.retired && result.retiredObj) {
-      retiredWarriors.push(result.retiredObj);
-      if (
-        isLegacyFounderCaliber(result.retiredObj, crownedIds) &&
-        rng.next() < LEGACY_FOUND_CHANCE
-      ) {
-        founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
-      }
-      if (isPlayer) {
-        toRetire.push(w.id);
-      }
-    } else if (result.update) {
-      const update = result.update;
-      if (isPlayer) {
-        rosterUpdates.set(w.id, update);
-      } else if (rivalId) {
-        routeRivalAgingUpdate(state, rivalId as StableId, w.id, update, rivalsUpdates);
-      }
-    }
+    routeAgingOutcome(acc, result, w, isPlayer, rivalId, crownedIds, state, rng);
   }
 
+  const { ageEvents, rosterUpdates, rivalsUpdates, toRetire, retiredWarriors, founderEnqueued } = acc;
   removeRetiredFromRivalRosters(state, retiredWarriors, rivalsUpdates);
 
   return {

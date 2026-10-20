@@ -62,7 +62,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D3: zero-state GameState literal tails repointed to makeGameState — MEGAPLAN-D3', () => {
+  it('D3: zero-state GameState literal tails repointed to makeGameState — MEGAPLAN-D3', () => {
     const re = /scoutReports:\s*\[\],\s*\n\s*restStates:\s*\[\]/g;
     const offenders = [
       'src/test/engine/core/warriorCollection.test.ts',

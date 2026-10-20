@@ -352,4 +352,11 @@ export const ORIGINS: string[] = [
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
   'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
   'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
+  'Abandoned beneath the colossal gears of the rusted Grand Clock',
+  'Found clinging to life among the flotsam of the Sallow River',
+  'Raised in the lightless cellars of the Black Candle Priory',
+  'Sold to clear the debts of a gambler who never won a single toss',
+  'Survived the mass exile of the Weeping Dispossessed',
+  'Found swaddled in beggar’s cloth in the shadows of the High Court',
+  'Abandoned during the frantic exodus from the Cinder Wards',
 ];

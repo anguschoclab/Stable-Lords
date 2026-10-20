@@ -602,4 +602,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  orphan_shadow_fighter: {
+    id: 'orphan_shadow_fighter',
+    name: 'Shadow Fighter',
+    description: 'Honed in pitch darkness, their strikes find vulnerabilities others miss.',
+    effect: { killWindowBonus: 0.008, iniModEarly: 1 },
+    weight: 0.5,
+    synergy: ['cunning'],
+    antiSynergy: ['tank'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };

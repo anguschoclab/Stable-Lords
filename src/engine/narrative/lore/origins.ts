@@ -352,4 +352,9 @@ export const ORIGINS: string[] = [
   'Abandoned in the soot-stained nursery of the Ashen Ward Workhouse, taught to fight for every scrap',
   'Survived the brutal starvation of the Rat-Catcher Guilds in the Undercity by eating things better left unnamed',
   'Raised in the echoing halls of the Sunken Orphanage of Dross, listening to the screams of the forgotten',
+  'Born in the lightless oubliettes of the Hollow Hand Workhouse, where silence was the only mercy',
+  'Found abandoned amongst the desecrated tombs of the Silent Order, swaddled in burial shrouds',
+  'Sold to the fighting pits by the debt-ridden wardens of the Weeping Stone, trading flesh for silver',
+  'Endured the terrifying silence of the Blackwood isolation cells, learning to speak only with violence',
+  'Raised by silent monks of the Iron Chalice who believed pain was the only true prayer to the old gods',
 ];

@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD001 MD024 MD025 MD033 -->
+
 # 🏛️ Stable Lords — Master Design Bible v1.0 (Non-Lossy Collation)
 
 **Generated:** 2026-02-07 (Europe/Stockholm)
@@ -159,7 +161,7 @@ The **Arena Hub** serves as the player’s main window into the active competiti
 
 ### Arena Leaderboard Display
 
-```
+```text
 ╔════════════════════════════════════════════════╗
 ║  ARENA RANKINGS — WEEK 34, YEAR 12             ║
 ╠════════════════════════════════════════════════╣
@@ -247,7 +249,7 @@ Fame = W*Wins + K*Kills + D*DramaticMoments + C*CrowdApproval + G*GazetteMention
 
 ### Notoriety System
 
-```
+```text
 Notoriety = BaseKills*2 + FatalFinishers*3 + RivalKills*5 + DishonorableActs*2
 ```
 
@@ -4213,7 +4215,7 @@ This is a Next.js + TypeScript starter that wires your provided **src** content 
 
 ## Structure
 
-```
+```text
 /src
   app/            # Next's app router (layout.tsx, page.tsx)
   components/     # UI components (from your archive)
@@ -4705,7 +4707,7 @@ This is a Next.js + TypeScript starter that wires your provided **src** content 
 
 ## Structure
 
-```
+```text
 /src
   app/            # Next's app router (layout.tsx, page.tsx)
   components/     # UI components (from your archive)
@@ -5128,7 +5130,7 @@ bun install
 bun run dev
 ```
 
-Open http://localhost:5173
+Open <http://localhost:5173>
 
 ---
 

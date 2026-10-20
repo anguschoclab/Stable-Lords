@@ -9,23 +9,26 @@ import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
 /**
- * MEGAPLAN-V14 B1 — truncation-cadence determinism (test-first; RED until
- * the Phase-5b cadence normalization lands):
+ * MEGAPLAN-V14 B1 — truncation-cadence determinism (authored test-first,
+ * live since Phase 5b):
  *
- * `truncateState` is applied at batch-span boundaries (month: w4, quarter:
- * w13, year: every quarter end) and every 50 weeks + finish in autosim —
- * but NEVER on the sequential `advanceWeek` path (in-session it is applied
- * only to the persisted copy at save time). Capped arrays
+ * `truncateState` runs at EVERY week boundary on the sequential
+ * `advanceWeek` path (see finalize.ts), matching batch spans and autosim —
+ * pre-B1, sequential play carried history untruncated in-session (only the
+ * persisted copy was truncated at save time), so it diverged from batch
+ * worlds once a cap was crossed. Capped arrays
  * (`matchHistory`, `arenaHistory`, `rivalries`, `newsletter`, `graveyard`…)
  * are read by sim passes (rivalStableShard, PromoterPass, WorldPass,
- * arenaChampionship), so once a cap is crossed mid-run the two paths no
- * longer produce identical worlds.
+ * arenaChampionship), so one cadence at every time scale keeps sequential
+ * ≡ batch byte-identical.
  *
- * This spec shrinks the caps so a single quarter crosses them, then runs the
- * same seeded 13 weeks through sequential advanceWeek vs advanceQuarter and
- * byte-compares the final states (deferredBoutLogs drained on both sides —
- * sequential leaves them on the state, batch drains weekly; that asymmetry
- * is by design and normalized here).
+ * This spec shrinks the caps so a single month span crosses them, then runs
+ * the same seeded 4 weeks through sequential advanceWeek vs
+ * TimeAdvanceService.advanceMonth and byte-compares the final states
+ * (deferredBoutLogs drained on both sides — sequential leaves them on the
+ * state, batch drains weekly; that asymmetry is by design and normalized
+ * here). `lastWeekBoutDisplay` is excluded — its per-path lifetime differs
+ * by design (inline note below).
  */
 
 const SAVED_CAPS = { ...TRUNCATION_CAPS };

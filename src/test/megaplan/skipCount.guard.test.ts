@@ -81,15 +81,19 @@ describe('megaplan: skip-count guard', () => {
   });
 
   it('no stale phase-pending markers in spec files', () => {
-    const STALE = /\b(?:skipped|red|partially red)\s+until\s+Phase\b|\bContract TBD\b/i;
+    // Scanned against whole file contents, not line-by-line — stale claims
+    // have been observed split across line breaks ("RED until\nthe Phase-5b
+    // …") and in "until <work> lands" form, which a narrower per-line check
+    // missed after the referenced work had shipped.
+    const STALE =
+      /\b(?:skipped|red|partially red)\s+until\s+(?:the\s+)?(?:Phase\b|[^.]*?\blands?\b)|\bContract TBD\b/gi;
     const offenders: string[] = [];
     for (const file of testFiles(TEST_ROOT)) {
       if (file === SELF) continue; // this file's regex literals would self-match
-      readFileSync(file, 'utf8')
-        .split('\n')
-        .forEach((line, i) => {
-          if (STALE.test(line)) offenders.push(`${file}:${i + 1}`);
-        });
+      const content = readFileSync(file, 'utf8');
+      for (const match of content.matchAll(STALE)) {
+        offenders.push(`${file}:${content.slice(0, match.index).split('\n').length}`);
+      }
     }
     expect(
       offenders,

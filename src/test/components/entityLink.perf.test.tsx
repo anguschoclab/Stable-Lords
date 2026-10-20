@@ -1,12 +1,13 @@
 /**
  * MEGAPLAN-V9 gate — EntityLink render stability.
  *
- * Characterizes the perf contract the EntityLink synthesis must meet:
- * subscribing to a resolved *primitive id* must shield the component from
- * unrelated store churn (graveyard growth, roster edits elsewhere). The
- * current implementation selects five large slices via useShallow, so any
- * reference change in player/rivals/roster/graveyard/retired re-renders —
- * these tests are RED until the memoized atomic-selector version lands.
+ * Characterizes the perf contract the EntityLink synthesis must meet
+ * (authored test-first, live since the V9 atomic-selector synthesis
+ * `2c94f990`): subscribing to a resolved *primitive id* must shield the
+ * component from unrelated store churn (graveyard growth, roster edits
+ * elsewhere). The implementation resolves ids through atomic selectors
+ * (see EntityLink.tsx), so reference changes in
+ * player/rivals/roster/graveyard/retired do not re-render the link.
  *
  * Uses a real zustand store behind a mocked '@/state/useGameStore' so actual
  * subscription semantics (selector + Object.is equality) are exercised.

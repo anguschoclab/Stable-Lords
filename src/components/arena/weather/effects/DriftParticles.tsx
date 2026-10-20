@@ -1,16 +1,8 @@
 import type { CSSProperties, ReactElement } from 'react';
 import { driftParticleStyle } from './particles';
 
-/** Props for {@link DriftParticles}. */
-export interface DriftParticlesProps {
-  /** Number of particles to render. */
-  count: number;
-  /** Key prefix for the particle elements (default 'p-'). */
-  keyPrefix?: string;
-  /** Full className applied to each particle div. */
-  particleClassName: string;
-  /** Per-particle base style (positioning, size, color) merged before the drift vector. */
-  position?: (index: number) => CSSProperties;
+/** Drift-vector + timing bundle for {@link DriftParticles}. */
+interface DriftSpec {
   /** Per-particle horizontal drift in px (evaluated per particle). */
   tx: () => number;
   /** Per-particle vertical drift in px (evaluated per particle). */
@@ -19,6 +11,20 @@ export interface DriftParticlesProps {
   durationS?: { base: number; range: number };
   /** Max random animation delay in seconds — forwarded to `driftParticleStyle`. */
   delayS?: number;
+}
+
+/** Props for {@link DriftParticles}. */
+interface DriftParticlesProps {
+  /** Number of particles to render. */
+  count: number;
+  /** Key prefix for the particle elements (default 'p-'). */
+  keyPrefix?: string;
+  /** Full className applied to each particle div. */
+  particleClassName: string;
+  /** Per-particle base style (positioning, size, color) merged before the drift vector. */
+  position?: (index: number) => CSSProperties;
+  /** Drift vector + timing — mirrors `driftParticleStyle(tx, ty, opts)`. */
+  drift: DriftSpec;
 }
 
 /**
@@ -30,10 +36,7 @@ export function DriftParticles({
   keyPrefix = 'p-',
   particleClassName,
   position,
-  tx,
-  ty,
-  durationS,
-  delayS,
+  drift,
 }: DriftParticlesProps): ReactElement[] {
   return Array.from({ length: count }).map((_, i) => (
     <div
@@ -41,7 +44,10 @@ export function DriftParticles({
       className={particleClassName}
       style={{
         ...position?.(i),
-        ...driftParticleStyle(tx(), ty(), { delayS, durationS }),
+        ...driftParticleStyle(drift.tx(), drift.ty(), {
+          delayS: drift.delayS,
+          durationS: drift.durationS,
+        }),
       }}
     />
   ));

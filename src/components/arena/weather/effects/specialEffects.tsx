@@ -56,10 +56,12 @@ export function GravityAnomalyEffect() {
         keyPrefix="debris-"
         particleClassName="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
         position={() => ({ left: `${cryptoRandom() * 100}%`, bottom: '0%' })}
-        tx={() => (cryptoRandom() - 0.5) * 80}
-        ty={() => -(100 + cryptoRandom() * 120)}
-        delayS={4}
-        durationS={{ base: 3, range: 3 }}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 80,
+          ty: () => -(100 + cryptoRandom() * 120),
+          delayS: 4,
+          durationS: { base: 3, range: 3 },
+        }}
       />
       {/* Gravitational distortion rings */}
       {Array.from({ length: 3 }).map((_, i) => (
@@ -100,10 +102,12 @@ export function RainbowEffect() {
           background: `hsl(${cryptoRandom() * 360}, 80%, 70%)`,
           opacity: '0.4',
         })}
-        tx={() => (cryptoRandom() - 0.5) * 40}
-        ty={() => (cryptoRandom() - 0.5) * 40}
-        delayS={4}
-        durationS={{ base: 3, range: 3 }}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 40,
+          ty: () => (cryptoRandom() - 0.5) * 40,
+          delayS: 4,
+          durationS: { base: 3, range: 3 },
+        }}
       />
       {/* Soft golden glow at the horizon */}
       <div

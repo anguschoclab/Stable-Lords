@@ -56,9 +56,11 @@ export function ManaSurgeEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 100}
-        ty={() => (cryptoRandom() - 0.5) * 100}
-        delayS={4}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 100,
+          ty: () => (cryptoRandom() - 0.5) * 100,
+          delayS: 4,
+        }}
       />
     </div>
   );
@@ -77,8 +79,10 @@ export function LocustSwarmEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 80}
-        ty={() => (cryptoRandom() - 0.5) * 80}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 80,
+          ty: () => (cryptoRandom() - 0.5) * 80,
+        }}
       />
     </div>
   );

@@ -62,8 +62,10 @@ export function TornadoEffect() {
           left: `${30 + cryptoRandom() * 40}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 70}
-        ty={() => (cryptoRandom() - 0.5) * 70}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 70,
+          ty: () => (cryptoRandom() - 0.5) * 70,
+        }}
       />
     </div>
   );
@@ -125,9 +127,11 @@ export function ChaoticWindsEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 100}
-        ty={() => (cryptoRandom() - 0.5) * 60}
-        durationS={{ base: 2, range: 2 }}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 100,
+          ty: () => (cryptoRandom() - 0.5) * 60,
+          durationS: { base: 2, range: 2 },
+        }}
       />
     </div>
   );

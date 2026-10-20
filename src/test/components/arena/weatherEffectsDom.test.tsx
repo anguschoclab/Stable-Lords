@@ -78,8 +78,7 @@ describe('DriftParticles (contract)', () => {
         count: 7,
         particleClassName: 'absolute w-1 h-1 bg-x animate-chaotic-drift',
         position: () => ({ left: '10%', bottom: '0%' }),
-        tx: () => 5,
-        ty: () => -80,
+        drift: { tx: () => 5, ty: () => -80 },
       })
     );
     expect(count(html, 'absolute w-1 h-1 bg-x animate-chaotic-drift')).toBe(7);
@@ -91,9 +90,7 @@ describe('DriftParticles (contract)', () => {
         count: 1,
         particleClassName: 'p',
         position: () => ({ top: '33%' }),
-        tx: () => 12,
-        ty: () => -40,
-        durationS: { base: 2, range: 2 },
+        drift: { tx: () => 12, ty: () => -40, durationS: { base: 2, range: 2 } },
       })
     );
     expect(html).toContain('--tx:12px');
@@ -111,8 +108,7 @@ describe('DriftParticles (contract)', () => {
         count: 4,
         particleClassName: 'p',
         position: () => ({ left: `${cryptoRandom() * 100}%` }),
-        tx: () => cryptoRandom() * 10,
-        ty: () => -cryptoRandom() * 10,
+        drift: { tx: () => cryptoRandom() * 10, ty: () => -cryptoRandom() * 10 },
       })
     );
     expect(count(a, 'class="p"')).toBe(4);

@@ -48,8 +48,10 @@ export function ArcaneStormEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 140}
-        ty={() => (cryptoRandom() - 0.5) * 140}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 140,
+          ty: () => (cryptoRandom() - 0.5) * 140,
+        }}
       />
     </div>
   );
@@ -83,10 +85,12 @@ export function AetherStormEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 160}
-        ty={() => (cryptoRandom() - 0.5) * 160}
-        delayS={4}
-        durationS={{ base: 2, range: 2 }}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 160,
+          ty: () => (cryptoRandom() - 0.5) * 160,
+          delayS: 4,
+          durationS: { base: 2, range: 2 },
+        }}
       />
       {/* Violet secondary particles for prismatic effect */}
       <DriftParticles
@@ -97,9 +101,11 @@ export function AetherStormEffect() {
           left: `${cryptoRandom() * 100}%`,
           top: `${cryptoRandom() * 100}%`,
         })}
-        tx={() => (cryptoRandom() - 0.5) * 120}
-        ty={() => (cryptoRandom() - 0.5) * 120}
-        durationS={{ base: 2.5, range: 2 }}
+        drift={{
+          tx: () => (cryptoRandom() - 0.5) * 120,
+          ty: () => (cryptoRandom() - 0.5) * 120,
+          durationS: { base: 2.5, range: 2 },
+        }}
       />
     </div>
   );

@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 165; // 164 + 1 orphan_shadow_step salvaged from #1047 (archetypes corrected)
+const EXPECTED_COUNT = 175; // 165 + 10 V17 curated traits (#1056/#1057/#1060/#1064)
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a
@@ -205,6 +205,33 @@ describe('Trait deduplication', () => {
       expect(REMOVED_IDS).not.toContain('orphan_vengeance');
       expect(REMOVED_IDS).not.toContain('orphan_fragility');
     });
+  });
+
+  describe('V17 curated traits (PRs #1056/#1057/#1060/#1064)', () => {
+    const CASES: [string, Record<string, unknown>][] = [
+      ['orphan_shadow_fighter', { killWindowBonus: 0.008, iniModEarly: 1 }],
+      ['orphan_shadow_stalker', { defModEarly: 1, attModLate: 1 }],
+      ['gutter_blade_dancer', { defModLate: 1, dmgBonus: 1 }],
+      ['blind_spot_mapper', { defModEarly: 1, iniModEarly: 1, decMod: 1 }],
+      ['serene_psychopath', { decMod: 1, defModLate: 1, enduranceMult: 0.95 }],
+      ['ice_numbed', { defModLowHp: 2, parModHighHp: 1 }],
+      ['armor_cracker', { attMod: 1, dmgBonus: 1 }],
+      ['jagged_claws', { dmgBonus: 1, iniMod: 1 }],
+      ['orphan_blood_bound', { attModLowHp: 3, defModLowHp: -2 }],
+      ['ash_choked_fury', { dmgBonus: 1, defMod: 1 }],
+    ];
+
+    for (const [id, effect] of CASES) {
+      it(`${id} is defined as Notable/positive with its curated core effect`, () => {
+        const t = TRAITS[id];
+        expect(t, `${id} missing from TRAITS`).toBeDefined();
+        expect(t!.tier).toBe('Notable');
+        expect(t!.sign).toBe('positive');
+        for (const [k, v] of Object.entries(effect)) {
+          expect((t!.effect as Record<string, unknown>)[k]).toBe(v);
+        }
+      });
+    }
   });
 
   describe('no orphan references in CONFLICT_GROUPS', () => {

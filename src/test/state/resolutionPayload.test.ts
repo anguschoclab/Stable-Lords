@@ -28,6 +28,12 @@ describe('buildResolutionPayload', () => {
     expect(payload.bouts).toEqual([]);
   });
 
+  it('tolerates an undefined newsletter array (F1 — worker round-trip gap)', () => {
+    const payload = buildResolutionPayload(undefined, undefined, 5);
+
+    expect(payload.gazette).toEqual([]);
+  });
+
   it('filters gazette items to the resolved week', () => {
     const items = [
       { id: 'n1', week: 5, headline: 'This week' },

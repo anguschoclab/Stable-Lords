@@ -264,18 +264,17 @@ function resolveFatigueMods(
   };
 }
 
-/** Pre-exchange setup: recovery, conditions, psych, tactics, fatigue, passives, traits. */
-export function prepareExchange(
-  ctx: ResolutionContext,
+/**
+ * Knockdown recovery, boundary phase shifts, conditional-plan evaluation and
+ * decoy masking — everything that mutates `activePlan` before tactics resolve.
+ */
+function recoverAndAdaptPlans(
   fA: FighterState,
   fD: FighterState,
+  ctx: ResolutionContext,
+  phaseKey: 'opening' | 'mid' | 'late',
   events: CombatEvent[]
-): ExchangeSetup {
-  const { rng, phase, exchange } = ctx;
-  const stylePhase = phase as StylePhase;
-  const phaseKey: 'opening' | 'mid' | 'late' =
-    phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
-
+): { condResultA: ReturnType<typeof evaluateConditions>; condResultD: ReturnType<typeof evaluateConditions> } {
   // ── Recovery from knockdown ──
   if (fA.knockedDown) {
     fA.knockedDown = false;
@@ -292,10 +291,8 @@ export function prepareExchange(
   if (ctx.cornerAdvice && phaseKey !== 'opening') applyBoundaryPhaseShifts(fA, fD, phaseKey);
 
   // ── Evaluate conditional fight plans (WT-gated) ──
-  const wtA = fA.attributes.WT;
-  const wtD = fD.attributes.WT;
-  const condResultA = evaluateConditions(fA, fD, ctx, wtA);
-  const condResultD = evaluateConditions(fD, fA, ctx, wtD);
+  const condResultA = evaluateConditions(fA, fD, ctx, fA.attributes.WT);
+  const condResultD = evaluateConditions(fD, fA, ctx, fD.attributes.WT);
   fA.activePlan = condResultA.newPlan;
   fD.activePlan = condResultD.newPlan;
 
@@ -304,6 +301,18 @@ export function prepareExchange(
   // behavior — resolved tactics and OE/AL read the masked plan.
   resolveDecoyMasks(fA, fD, phaseKey, events);
 
+  return { condResultA, condResultD };
+}
+
+/** Psych evaluation, specialty mods, psych modifier lookup and desperate state. */
+function resolvePsychAndSpecialty(
+  fA: FighterState,
+  fD: FighterState,
+  ctx: ResolutionContext,
+  condResultA: ReturnType<typeof evaluateConditions>,
+  condResultD: ReturnType<typeof evaluateConditions>,
+  events: CombatEvent[]
+): { psychA: ReturnType<typeof getPsychStateMods>['psychA']; psychD: ReturnType<typeof getPsychStateMods>['psychD'] } {
   // ── Psych state evaluation ──
   events.push(...evaluatePsychState(fA, fD, ctx, condResultA, condResultD));
 
@@ -315,6 +324,24 @@ export function prepareExchange(
 
   // ── Desperate state handling ──
   events.push(...handleDesperateState(fA, fD));
+
+  return { psychA, psychD };
+}
+
+/** Pre-exchange setup: recovery, conditions, psych, tactics, fatigue, passives, traits. */
+export function prepareExchange(
+  ctx: ResolutionContext,
+  fA: FighterState,
+  fD: FighterState,
+  events: CombatEvent[]
+): ExchangeSetup {
+  const { rng, phase, exchange } = ctx;
+  const stylePhase = phase as StylePhase;
+  const phaseKey: 'opening' | 'mid' | 'late' =
+    phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
+
+  const { condResultA, condResultD } = recoverAndAdaptPlans(fA, fD, ctx, phaseKey, events);
+  const { psychA, psychD } = resolvePsychAndSpecialty(fA, fD, ctx, condResultA, condResultD, events);
 
   emitIntentTelemetry({
     fA: fA,

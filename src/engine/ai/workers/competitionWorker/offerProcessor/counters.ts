@@ -57,6 +57,105 @@ function escalateCounter(args: EscalateCounterArgs): boolean {
   return true;
 }
 
+interface ResolvePendingResponseArgs {
+  state: GameState;
+  currentOffers: OfferMap;
+  rivalMap: Map<StableId | string, RivalStableData>;
+  offer: BoutOffer;
+  wId: WarriorId;
+  owningRival: RivalStableData;
+  pendingWarrior: Warrior;
+}
+
+/** The proposer stable must be able to fund the purse bump. */
+function proposerCanFund(
+  offer: BoutOffer,
+  wId: WarriorId,
+  rivalMap: Map<StableId | string, RivalStableData>
+): boolean {
+  const proposerStable = offer.proposerStableId
+    ? rivalMap.get(offer.proposerStableId)
+    : undefined;
+  const bump = offer.counterPurseBump ?? 0;
+  const proposerSide = proposerStable?.roster.some((w) => w.id === wId) ?? false;
+  return (
+    !proposerSide ||
+    bump === 0 ||
+    (proposerStable !== undefined && checkBudget(proposerStable, bump, 'OTHER').isAffordable)
+  );
+}
+
+/**
+ * Stage C: one bounded escalation — a second-round counter may stand
+ * (negotiationRound 0→1) when the stable tolerates haggling; after that
+ * the offer is take-it-or-leave-it.
+ */
+function maybeEscalateSecondRound(
+  args: ResolvePendingResponseArgs,
+  final: 'Accepted' | 'Declined' | 'Countered' | 'CounteredVenue'
+): boolean {
+  if (final !== 'Countered' && final !== 'CounteredVenue') return false;
+  const { state, currentOffers, offer, wId, pendingWarrior, owningRival } = args;
+  return escalateCounter({
+    state: state,
+    currentOffers: currentOffers,
+    offer: offer,
+    wId: wId,
+    verdict: final,
+    pendingWarrior: pendingWarrior,
+    owningRival: owningRival,
+  });
+}
+
+/**
+ * Resolves one pending AI-owned response on a countered offer: funds the
+ * purse bump, evaluates acceptance, applies one bounded second-round
+ * escalation, then stamps the final Accept/Decline (with its reason note).
+ * Returns true when the offer was escalated and stays Proposed.
+ */
+function resolvePendingWarriorResponse(args: ResolvePendingResponseArgs): boolean {
+  const { state, currentOffers, rivalMap, offer, wId } = args;
+  const { owningRival, pendingWarrior } = args;
+  const opponentId = offer.warriorIds.find((id) => id !== wId);
+  const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
+
+  let final: 'Accepted' | 'Declined';
+  let declineReason: string | undefined;
+  if (!proposerCanFund(offer, wId, rivalMap)) {
+    final = 'Declined';
+    declineReason = 'proposer-cant-fund';
+  } else {
+    const verdict = boutAcceptance.evaluateBoutOffer({
+      offer: offer,
+      rival: owningRival,
+      warrior: pendingWarrior,
+      currentWeek: state.absoluteWeek,
+      weather: state.weather as WeatherType,
+      opponent: opponent,
+      state: state,
+    });
+    const outcome = resolveSecondRound(offer, verdict, owningRival);
+    if (maybeEscalateSecondRound(args, outcome.final)) return true;
+    final = outcome.final === 'Accepted' ? 'Accepted' : 'Declined';
+    declineReason = outcome.final === 'Declined' ? outcome.reason : undefined;
+  }
+
+  const impact = respondToBoutOffer(
+    { ...state, boutOffers: currentOffers },
+    offer.id as BoutOfferId,
+    wId as WarriorId,
+    final
+  );
+  applyOfferImpact(currentOffers, impact);
+  if (final === 'Declined' && declineReason) {
+    const updated = currentOffers[offer.id];
+    if (updated) {
+      updated.responseNotes = { ...(updated.responseNotes ?? {}), [wId]: declineReason };
+    }
+  }
+  return false;
+}
+
 /**
  * Negotiation resolution sweep: every offer now carrying a 'Countered'
  * response gets its remaining 'Pending' AI-owned warriors resolved in-pass.
@@ -84,70 +183,16 @@ export function resolveCounteredOffers(
 
       const pendingWarrior = state.warriorMap?.get(wId);
       if (!pendingWarrior) continue;
-      const opponentId = offer.warriorIds.find((id) => id !== wId);
-      const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
 
-      // The proposer stable must be able to fund the purse bump.
-      const proposerStable = offer.proposerStableId
-        ? rivalMap.get(offer.proposerStableId)
-        : undefined;
-      const bump = offer.counterPurseBump ?? 0;
-      const proposerSide = proposerStable?.roster.some((w) => w.id === wId) ?? false;
-      const affordable =
-        !proposerSide ||
-        bump === 0 ||
-        (proposerStable !== undefined && checkBudget(proposerStable, bump, 'OTHER').isAffordable);
-
-      let final: 'Accepted' | 'Declined';
-      let declineReason: string | undefined;
-      if (!affordable) {
-        final = 'Declined';
-        declineReason = 'proposer-cant-fund';
-      } else {
-        const verdict = boutAcceptance.evaluateBoutOffer({
-          offer: offer,
-          rival: owningRival,
-          warrior: pendingWarrior,
-          currentWeek: state.absoluteWeek,
-          weather: state.weather as WeatherType,
-          opponent: opponent,
-          state: state,
-        });
-        // Stage C: one bounded escalation — a second-round counter may
-        // stand (negotiationRound 0→1) when the stable tolerates haggling;
-        // after that the offer is take-it-or-leave-it.
-        const outcome = resolveSecondRound(offer, verdict, owningRival);
-        if (
-          (outcome.final === 'Countered' || outcome.final === 'CounteredVenue') &&
-          escalateCounter({
-            state: state,
-            currentOffers: currentOffers,
-            offer: offer,
-            wId: wId,
-            verdict: outcome.final,
-            pendingWarrior: pendingWarrior,
-            owningRival: owningRival,
-          })
-        ) {
-          continue; // offer stays Proposed for the next pass — bounded by round
-        }
-        final = outcome.final === 'Accepted' ? 'Accepted' : 'Declined';
-        declineReason = outcome.final === 'Declined' ? outcome.reason : undefined;
-      }
-
-      const impact = respondToBoutOffer(
-        { ...state, boutOffers: currentOffers },
-        offer.id as BoutOfferId,
-        wId as WarriorId,
-        final
-      );
-      applyOfferImpact(currentOffers, impact);
-      if (final === 'Declined' && declineReason) {
-        const updated = currentOffers[offer.id];
-        if (updated) {
-          updated.responseNotes = { ...(updated.responseNotes ?? {}), [wId]: declineReason };
-        }
-      }
+      resolvePendingWarriorResponse({
+        state,
+        currentOffers,
+        rivalMap,
+        offer,
+        wId,
+        owningRival,
+        pendingWarrior,
+      });
     }
   }
 }

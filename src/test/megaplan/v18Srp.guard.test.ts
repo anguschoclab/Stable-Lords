@@ -58,11 +58,11 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/state/slices/rosterSlice/actions.ts'), 'split src/state/slices/rosterSlice/actions.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S6: exchangePrep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S6', () => {
+  it('S6: exchangePrep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S6', () => {
     expect(budgetFor('src/engine/combat/resolution/exchangePrep.ts'), 'split src/engine/combat/resolution/exchangePrep.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S7: counters decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S7', () => {
+  it('S7: counters decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S7', () => {
     expect(budgetFor('src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts'), 'split src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts into orchestrator + named siblings').toEqual([]);
   });
 

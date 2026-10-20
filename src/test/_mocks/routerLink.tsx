@@ -22,3 +22,13 @@ export const useNavigate = (): ReturnType<typeof vi.fn> => vi.fn();
 
 /** Shared useParams stub — tests override post-spread for param'd routes. */
 export const useParams = () => ({});
+
+let mockPathname = '/';
+
+/** Tests call this (e.g. in beforeEach) to point useLocation at a path. */
+export const setMockPathname = (pathname: string): void => {
+  mockPathname = pathname;
+};
+
+/** Shared useLocation stub — reads the pathname set via setMockPathname. */
+export const useLocation = () => ({ pathname: mockPathname });

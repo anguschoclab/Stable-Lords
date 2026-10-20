@@ -5,12 +5,7 @@ import { makeWarriorRows } from '@/test/_fixtures/factories';
 
 import { useGameStore } from '@/state/useGameStore';
 
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => vi.fn(),
-  Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
-    <a href={to}>{children}</a>
-  ),
-}));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 describe('WarriorLeaderboard (virtualized)', () => {
   beforeEach(() => {

@@ -111,8 +111,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D6: inline react-router mocks repointed to _mocks/routerLink — MEGAPLAN-D6', () => {
-    const re = /vi\.mock\('@tanstack\/react-router'/g;
+  it('D6: inline react-router mocks repointed to _mocks/routerLink — MEGAPLAN-D6', () => {
     const offenders = [
       'src/test/components/dashboard/CouncilBriefingWidget.test.tsx',
       'src/test/pages/Advisor.test.tsx',
@@ -122,7 +121,12 @@ describe('megaplan V18: test-tier deduplication', () => {
       'src/test/routes/world-routes.test.tsx',
       'src/test/components/WarriorLeaderboardVirtualized.test.tsx',
       'src/test/components/WarriorLeaderboardVirtualizedBranch.test.tsx',
-    ].filter((f) => occurrences([f], re) > 0);
+    ].filter((f) => {
+      const t = fileText(f);
+      const mocks = (t.match(/vi\.mock\('@tanstack\/react-router'/g) ?? []).length;
+      const shared = (t.match(/__SHARED_MOCKS\.routerLink/g) ?? []).length;
+      return mocks > shared; // a vi.mock factory not repointed to the shared module
+    });
     expect(offenders, 'inline react-router mocks still inline').toEqual([]);
   });
 

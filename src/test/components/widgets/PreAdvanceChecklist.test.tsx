@@ -7,13 +7,7 @@ import { useGameStore } from '@/state/useGameStore';
 import type { BoutOffer } from '@/types/state.types';
 import '@/test/_setup/setup';
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, className }: any) => (
-    <a href={to} className={className}>
-      {children}
-    </a>
-  ),
-}));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 const seed = seedAdvisorScenario;
 

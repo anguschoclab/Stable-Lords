@@ -6,30 +6,13 @@ import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';
+import { setMockPathname } from '@/test/_mocks/routerLink';
 
-let currentPath = '/stable';
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    className,
-  }: {
-    to: string;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <a href={to} className={className}>
-      {children}
-    </a>
-  ),
-  useLocation: () => ({ pathname: currentPath }),
-  useNavigate: () => vi.fn(),
-}));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 describe('LeftNav', () => {
   beforeEach(() => {
-    currentPath = '/stable';
+    setMockPathname('/stable');
     useGameStore
       .getState()
       .loadGame('left-nav-contract', createFreshState('left-nav-seed') as GameState);
@@ -50,7 +33,7 @@ describe('LeftNav', () => {
   });
 
   it('switches the rendered task group when the active route belongs to World', () => {
-    currentPath = '/world/tournaments';
+    setMockPathname('/world/tournaments');
     render(<LeftNav />);
     const nav = screen.getByRole('navigation');
 

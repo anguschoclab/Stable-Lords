@@ -9,13 +9,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';
 
-vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, className }: any) => (
-    <a href={to} className={className}>
-      {children}
-    </a>
-  ),
-}));
+vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
 const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 

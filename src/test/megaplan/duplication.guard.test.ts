@@ -81,15 +81,10 @@ const EXEMPT_PAIRS = new Set([
 // ─── DEBT — genuine cloned logic, drain to zero. V17's whole-repo prettier
 // pass normalized quote style and line wrapping across already-parallel
 // handlers, surfacing 8-line blocks that prior formatting differences had
-// masked. Eliminated via statGrantOutcome/makeMinorInjury (offseason),
-// DriftParticles (weather effects), rivalFightPlan (rival-plan tail).
-const DEBT_PAIRS = new Set([
-  // warriorOutcome/addStat + makeInjury boilerplate across offseason handlers —
-  // DRAINED by statGrantOutcome/makeMinorInjury (7 pairs eliminated).
-  // driftParticleStyle particle-JSX idiom — DRAINED by DriftParticles
-  // grudge lookup + aiPlanForWarrior tail
-  'src/engine/bout/services/boutResolution.ts|src/engine/matchmaking/tournamentSelection/utils.ts',
-]);
+// masked. All 9 drained: statGrantOutcome/makeMinorInjury (7 offseason
+// pairs), DriftParticles (weather particle JSX), rivalFightPlan (rival-plan
+// grudge+aiPlan tail).
+const DEBT_PAIRS = new Set<string>([]);
 
 describe('megaplan: duplication guard', () => {
   const { clusters, counts } = collectDuplicates();

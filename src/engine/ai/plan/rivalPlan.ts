@@ -9,6 +9,8 @@ import type { OpponentDossier } from '@/types/state/game';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
+import { aiPlanForWarrior } from './coreGenerator';
+import { getPairKey } from '@/utils/keyUtils';
 
 /** Options for {@link rivalFightPlan}. */
 export interface RivalFightPlanOpts {
@@ -28,15 +30,35 @@ export interface RivalFightPlanOpts {
 }
 
 /**
- * Build the fight plan a rival stable's warrior commits against an opponent.
- * NOT IMPLEMENTED — signature stub for the test-first commit; replaced in the
- * rival-plan dedup commit.
+ * Build the fight plan a rival stable's warrior commits against an opponent:
+ * the shared grudge-lookup + `aiPlanForWarrior` tail. The no-rival fallback
+ * (`defaultPlanForWarrior` + `killDesire: 7`) stays at the call sites.
  */
 export function rivalFightPlan(
-  _state: GameState,
-  _w: Warrior,
-  _rival: RivalStableData,
-  _opts: RivalFightPlanOpts = {}
+  state: GameState,
+  w: Warrior,
+  rival: RivalStableData,
+  opts: RivalFightPlanOpts = {}
 ): FightPlan {
-  throw new Error('rivalFightPlan: not implemented');
+  const { opponentStyle, opponentId, opponentStableId, dossier, now } = opts;
+
+  let grudgeIntensity = 0;
+  if (opponentId) {
+    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentId));
+    grudgeIntensity = grudge?.intensity ?? 0;
+  }
+
+  return aiPlanForWarrior({
+    w: w,
+    personality: rival.owner.personality || 'Pragmatic',
+    philosophy: rival.philosophy || 'Opportunist',
+    opponentStyle: opponentStyle,
+    intent: rival.strategy?.intent,
+    grudgeIntensity: grudgeIntensity,
+    dossier:
+      dossier ??
+      (opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined),
+    now: now ?? state.absoluteWeek ?? state.week,
+    competence: rival.owner.competence,
+  });
 }

@@ -10,8 +10,7 @@
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
-import { aiPlanForWarrior } from './coreGenerator';
-import { getPairKey } from '@/utils/keyUtils';
+import { rivalFightPlan } from './rivalPlan';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { clamp } from '@/utils/math';
 
@@ -30,22 +29,13 @@ export function agentPlanForWarrior(
     opponentStableId ??
     (opponent.stableId as string | undefined) ??
     state.warriorToStableMap?.get(opponent.id)?.stableId;
-  const dossier = resolvedOpponentStable
-    ? rival.agentMemory?.opponentDossiers?.[resolvedOpponentStable]
-    : undefined;
-
-  const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, resolvedOpponentStable ?? ''));
-
-  return aiPlanForWarrior({
-    w: w,
-    personality: rival.owner.personality ?? 'Pragmatic',
-    philosophy: rival.philosophy ?? 'Opportunist',
+  return rivalFightPlan(state, w, rival, {
     opponentStyle: opponent.style,
-    intent: rival.strategy?.intent,
-    grudgeIntensity: grudge?.intensity ?? 0,
-    dossier: dossier,
-    now: state.absoluteWeek ?? state.week,
-    competence: rival.owner.competence,
+    // FIXME(F): a stable id is passed where the grudge map is owner-keyed —
+    // the player path works only because state.player.id doubles as its
+    // owner key; rival-vs-rival lookups are dead. Fixed in the F-bug commit.
+    opponentId: resolvedOpponentStable,
+    opponentStableId: resolvedOpponentStable,
   });
 }
 

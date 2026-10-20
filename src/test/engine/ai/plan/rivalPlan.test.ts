@@ -14,7 +14,6 @@
 import { describe, it, expect } from 'vitest';
 import { rivalFightPlan } from '@/engine/ai/plan/rivalPlan';
 import { makeWarrior, makeRival, makeOwner, makeGameState } from '@/test/_fixtures/factories';
-import { getPairKey } from '@/utils/keyUtils';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { OwnerGrudge } from '@/types/state/game';
 import type { OpponentDossier } from '@/types/state/game';
@@ -27,7 +26,6 @@ function baseState(over: Partial<GameState> = {}): GameState {
   return makeGameState({
     week: 10,
     absoluteWeek: 20,
-    grudgeMap: new Map<string, OwnerGrudge>(),
     ...over,
   } as Partial<GameState>);
 }
@@ -54,6 +52,16 @@ function grudge(intensity: number): OwnerGrudge {
   };
 }
 
+function dossier(over: Partial<OpponentDossier> = {}): OpponentDossier {
+  return {
+    lastSeenWeek: 1,
+    knownStyles: [],
+    estimatedThreat: 0.5,
+    recordVs: { w: 0, l: 0, k: 0 },
+    ...over,
+  } as OpponentDossier;
+}
+
 describe('rivalFightPlan', () => {
   it('produces a FightPlan using rival defaults for missing personality/philosophy', () => {
     const state = baseState();
@@ -73,10 +81,9 @@ describe('rivalFightPlan', () => {
   });
 
   it('reads grudge intensity from grudgeMap keyed by owner ids', () => {
-    const gm = new Map<string, OwnerGrudge>([
-      [getPairKey(OWNER_ID, 'owner-opp' as StableId), grudge(3)],
-    ]);
-    const state = baseState({ grudgeMap: gm });
+    // grudgeMap is rebuilt from ownerGrudges — the same wiring the week
+    // pipeline performs in buildWeekCaches.
+    const state = baseState({ ownerGrudges: [grudge(3)] } as Partial<GameState>);
     const rival = rivalWith();
 
     const withGrudge = rivalFightPlan(state, warrior(), rival, {
@@ -91,31 +98,35 @@ describe('rivalFightPlan', () => {
   });
 
   it('looks up the dossier by opponentStableId in agentMemory.opponentDossiers', () => {
-    const dossier = { lastOutcome: 'Win', rematchNotes: 'x' } as unknown as OpponentDossier;
+    // A losing record shifts rematch axes — proving the dossier was read.
+    const d = dossier({ recordVs: { w: 0, l: 4, k: 1 } });
     const rival = rivalWith({
-      agentMemory: { opponentDossiers: { 'st-opp': dossier } } as never,
+      agentMemory: { opponentDossiers: { 'st-opp': d } } as never,
     });
     const state = baseState();
 
     const viaStableId = rivalFightPlan(state, warrior(), rival, {
       opponentStableId: 'st-opp',
     });
-    const viaExplicit = rivalFightPlan(state, warrior(), rival, { dossier });
-    expect(viaStableId).toEqual(viaExplicit);
+    const noDossier = rivalFightPlan(state, warrior(), rival, {});
+    expect(viaStableId.AL).toBeGreaterThan(noDossier.AL ?? 0);
+    expect(viaStableId.killDesire).toBeGreaterThan(noDossier.killDesire ?? 0);
   });
 
   it('prefers an explicit dossier over the stableId lookup', () => {
-    const dossier = { lastOutcome: 'Loss' } as unknown as OpponentDossier;
+    const explicit = dossier({ recordVs: { w: 4, l: 0, k: 0 } });
     const rival = rivalWith({
-      agentMemory: { opponentDossiers: { 'st-opp': {} } } as never,
+      agentMemory: {
+        opponentDossiers: { 'st-opp': dossier({ recordVs: { w: 0, l: 4, k: 0 } }) },
+      } as never,
     });
     const state = baseState();
 
     const out = rivalFightPlan(state, warrior(), rival, {
       opponentStableId: 'st-opp',
-      dossier,
+      dossier: explicit,
     });
-    const expected = rivalFightPlan(state, warrior(), rival, { dossier });
+    const expected = rivalFightPlan(state, warrior(), rival, { dossier: explicit });
     expect(out).toEqual(expected);
   });
 

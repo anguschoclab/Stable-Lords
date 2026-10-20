@@ -6,7 +6,7 @@ import { GameState, Warrior } from '@/types/state.types';
 import type { FightingStyle } from '@/types/shared.types';
 import { type FightOutcome, type FightPlan, type FightSummary } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
+import { rivalFightPlan } from '@/engine/ai/plan/rivalPlan';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { SeededRNG } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -28,7 +28,6 @@ import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import { handleInjuries } from '../injuryHandler';
 import { handleProgressions } from '../progressionHandler';
 import { handleReporting } from '../reportingHandler';
-import { getPairKey } from '@/utils/keyUtils';
 import type { BoutContext, BoutImpact } from './boutProcessorTypes';
 
 function getValidatedCombatants(
@@ -88,22 +87,10 @@ export function getNPCPlan(
     return w.plan;
   }
 
-  let grudgeIntensity = 0;
-  if (opponentOwnerId) {
-    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentOwnerId));
-    grudgeIntensity = grudge?.intensity ?? 0;
-  }
-
-  return aiPlanForWarrior({
-    w: w,
-    personality: rival.owner.personality || 'Pragmatic',
-    philosophy: rival.philosophy || 'Opportunist',
+  return rivalFightPlan(state, w, rival, {
     opponentStyle: opponentStyle,
-    intent: rival.strategy?.intent,
-    grudgeIntensity: grudgeIntensity,
-    dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined,
-    now: week,
-    competence: rival.owner.competence,
+    opponentId: opponentOwnerId,
+    opponentStableId: opponentStableId,
   });
 }
 

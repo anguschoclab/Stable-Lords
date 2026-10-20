@@ -2,9 +2,8 @@ import type { GameState, Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { aiPlanForWarrior } from '@/engine';
+import { rivalFightPlan } from '@/engine/ai/plan/rivalPlan';
 import { defaultPlanForWarrior } from '@/engine/simulate';
-import { getPairKey } from '@/utils/keyUtils';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 
 /**
@@ -30,20 +29,9 @@ export function getAIPlan(
   const rival = w.stableId ? state.rivalMap?.get(w.stableId) : undefined;
   if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
 
-  let grudgeIntensity = 0;
-  if (opponentOwnerId) {
-    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentOwnerId));
-    grudgeIntensity = grudge?.intensity ?? 0;
-  }
-
-  return aiPlanForWarrior({
-    w: w,
-    personality: rival.owner.personality || 'Pragmatic',
-    philosophy: rival.philosophy || 'Opportunist',
+  return rivalFightPlan(state, w, rival, {
     opponentStyle: opponentStyle,
-    intent: rival.strategy?.intent,
-    grudgeIntensity: grudgeIntensity,
-    competence: rival.owner.competence,
+    opponentId: opponentOwnerId,
   });
 }
 

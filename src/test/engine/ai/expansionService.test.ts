@@ -13,6 +13,8 @@ import {
   WORLD_RIVAL_HARD_CAP,
   EXPANSION_MAX_PER_CHURN,
 } from '@/constants/world';
+import { aiRosterMax } from '@/constants/ai';
+import { personalityFromCareer } from '@/engine/ai/legacyFounder';
 
 function makeFounder(name: string): Warrior {
   return makeWarrior({ id: undefined, name: name, style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: {
@@ -165,6 +167,37 @@ describe('ExpansionService', () => {
         expect(stable.owner.stableName).toBeDefined();
         expect(Array.isArray(stable.roster)).toBe(true);
       });
+    });
+
+    it('legacy-founder stables respect the founder-derived personality cap (F3)', () => {
+      // applyLegacyFounder overwrites owner.personality AFTER the roster was
+      // minted under the template's personality cap — a career-derived
+      // Tactician/Methodical founder landing on an Aggressive template must
+      // not debut over aiRosterMax(8).
+      const founder = makeWarrior({ id: undefined, name: 'Wall Legend', style: FightingStyle.WallOfSteel, attrs: ATTRS_10, overrides: {
+        age: 45,
+        fame: 1600,
+        career: { wins: 60, losses: 12, kills: 1 },
+      } });
+      expect(personalityFromCareer(founder)).toBe('Tactician');
+
+      let legacyMints = 0;
+      for (let seed = 1; seed <= 60; seed++) {
+        const s = createFreshState(`cap-seed-${seed}`);
+        s.rivals = s.rivals.slice(0, 5);
+        s.legacyFounderQueue = [founder];
+        const { minted } = ExpansionService.processExpansion(s, new SeededRNG(seed * 104729));
+        for (const m of minted) {
+          const active = m.stable.roster.filter((w) => w.status === 'Active').length;
+          expect(
+            active,
+            `seed ${seed}: ${m.origin} stable ${m.stable.owner.stableName} has ${active} active > cap ${aiRosterMax(m.stable.owner.personality)}`
+          ).toBeLessThanOrEqual(aiRosterMax(m.stable.owner.personality));
+          if (m.origin === 'legacy') legacyMints++;
+        }
+      }
+      // The sweep must actually exercise the founder path.
+      expect(legacyMints).toBeGreaterThan(0);
     });
 
     it('is deterministic with the same seed', () => {

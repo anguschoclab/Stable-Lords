@@ -14,6 +14,7 @@ import {
   ORGANIC_LICENSE_BATCH_MAX,
   RECRUIT_POOL_MIN,
 } from '@/constants/world';
+import { aiRosterMax } from '@/constants/ai';
 import { AI_TREASURY_THRESHOLDS } from '@/constants/economy';
 import { deriveFounderTrainer, founderStableName, personalityFromCareer } from './legacyFounder';
 
@@ -64,6 +65,13 @@ function applyLegacyFounder(
   newStable.owner.foundedByWarriorName = founder.name;
   newStable.owner.parentStableId = founder.stableId as RivalStableData['id'] | undefined;
   newStable.owner.personality = personalityFromCareer(founder);
+  // Re-clamp the minted roster to the founder-derived cap — the template's
+  // personality may allow a larger stable (Aggressive 10 vs the derived 8),
+  // which would debut the stable over the roster-cap invariant.
+  const rosterCap = aiRosterMax(newStable.owner.personality);
+  if (newStable.roster.length > rosterCap) {
+    newStable.roster = newStable.roster.slice(0, rosterCap);
+  }
   // The stable teaches what the founder knew — their style first.
   newStable.owner.favoredStyles = [founder.style];
   newStable.philosophy = 'Specialist';

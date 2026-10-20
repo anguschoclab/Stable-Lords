@@ -7,6 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { collectPulse } from '@/engine/stats/simulationMetrics';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import type { BoutOffer, RivalStableData, ArenaTitle, TournamentEntry } from '@/types/state.types';
 import type { StableId, WarriorId, BoutOfferId, PromoterId } from '@/types/shared.types';
@@ -38,20 +39,7 @@ function titleOffer(status: BoutOffer['status'], id: string): BoutOffer {
 }
 
 function titleWithChampion(warriorId: string): ArenaTitle {
-  return {
-    champion: {
-      warriorId: warriorId as WarriorId,
-      startedAbsoluteWeek: 10,
-      defenses: 0,
-      lastActivityWeek: 10,
-    },
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-  };
+  return makeArenaTitle(warriorId, { startedAbsoluteWeek: 10, lastActivityWeek: 10 });
 }
 
 function championsTourney(participants: number, completed = true): TournamentEntry {

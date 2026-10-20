@@ -10,6 +10,7 @@ import {
   makeComputedWarrior as fixtureComputedWarrior,
   makeRival as fixtureRival,
 } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
 
@@ -190,20 +191,7 @@ describe('computeAgingImpact — champion deferral', () => {
       roster: onRivalRoster ? [] : [w],
       rivals: onRivalRoster ? [fixtureRival({ id: 'r1' as any, roster: [w] })] : [],
       arenaChampions: {
-        arena_1: {
-          champion: {
-            warriorId: w.id,
-            startedAbsoluteWeek: 1,
-            defenses: 0,
-            lastActivityWeek: 1,
-          },
-          status: 'active',
-          history: [],
-          refusals: 0,
-          deferrals: 0,
-          noContenderStreak: 0,
-          declinedContenders: {},
-        },
+        arena_1: makeArenaTitle(w.id),
       },
       recruitPool: [],
       phase: 'Planning',

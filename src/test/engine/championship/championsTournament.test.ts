@@ -21,22 +21,14 @@ import { SEASONAL_TOURNAMENT_WEEKS } from '@/constants/core/dates';
 /** Retired 13-week tournament cadence — kept inline as the historical fixture. */
 const LEGACY_TOURNAMENT_WEEKS = [13, 26, 39, 52] as const;
 import { makeGameState, makeWarrior, makeRival } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle, GameState, TournamentEntry, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';
 
 // ─── Builders ───────────────────────────────────────────────────────────────
 
 function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...partial,
-  };
+  return makeArenaTitle(null, partial);
 }
 
 function champ(id: string, opts: Partial<Warrior> = {}): Warrior {

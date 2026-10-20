@@ -12,6 +12,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 import { makeComputedWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
@@ -140,20 +141,8 @@ describe('championship lifecycle through advanceWeek', () => {
       } as GameState['rivals'][number],
     ];
     state.arenaChampions = {
-      [ARENA]: {
-        champion: {
-          warriorId: 'w-champ' as WarriorId,
-          startedAbsoluteWeek: 1,
-          defenses: 0,
-          lastActivityWeek: 1, // long elapsed → books immediately
-        },
-        status: 'active',
-        history: [],
-        refusals: 0,
-        deferrals: 0,
-        noContenderStreak: 0,
-        declinedContenders: {},
-      },
+      // long elapsed → books immediately
+      [ARENA]: makeArenaTitle('w-champ'),
     };
 
     let resolved = false;
@@ -179,20 +168,7 @@ describe('championship lifecycle through advanceWeek', () => {
     const arenas = ['standard_arena', 'mudpit_arena', 'narrow_bridge', 'brass_ring'];
     state.arenaChampions = {};
     arenas.forEach((a, i) => {
-      state.arenaChampions![a] = {
-        champion: {
-          warriorId: ids[i] as WarriorId,
-          startedAbsoluteWeek: 1,
-          defenses: 0,
-          lastActivityWeek: 50,
-        },
-        status: 'active',
-        history: [],
-        refusals: 0,
-        deferrals: 0,
-        noContenderStreak: 0,
-        declinedContenders: {},
-      };
+      state.arenaChampions![a] = makeArenaTitle(ids[i] as string, { lastActivityWeek: 50 });
     });
 
     // 51 → 52: the pass emits the champions-only bracket.

@@ -74,7 +74,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D4: ArenaTitle literals + title() clones repointed to makeArenaTitle — MEGAPLAN-D4', () => {
+  it('D4: ArenaTitle literals + title() clones repointed to makeArenaTitle — MEGAPLAN-D4', () => {
     const re = /noContenderStreak:\s*0,\s*\n\s*declinedContenders:\s*\{\}/g;
     const offenders = [
       'src/test/engine/championship/championsTournament.test.ts',

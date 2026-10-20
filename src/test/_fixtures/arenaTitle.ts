@@ -27,16 +27,20 @@ export function makeVenueWarrior(
 /** make Arena Title. */
 export function makeArenaTitle(
   championId: string | null,
-  opts: { defenses?: number } & Partial<ArenaTitle> = {}
+  opts: {
+    defenses?: number;
+    startedAbsoluteWeek?: number;
+    lastActivityWeek?: number;
+  } & Partial<ArenaTitle> = {}
 ): ArenaTitle {
-  const { defenses = 0, ...over } = opts;
+  const { defenses = 0, startedAbsoluteWeek = 1, lastActivityWeek = 1, ...over } = opts;
   return {
     champion: championId
       ? {
           warriorId: championId as WarriorId,
-          startedAbsoluteWeek: 1,
+          startedAbsoluteWeek,
           defenses,
-          lastActivityWeek: 1,
+          lastActivityWeek,
         }
       : null,
     status: 'active',

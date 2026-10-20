@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { makeGameState, makeRival, makeWarrior } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { Warrior } from '@/types/state.types';
 import type { ArenaTitle } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
@@ -21,20 +22,7 @@ const cullTarget = (over: Partial<Warrior> = {}): Warrior =>
   });
 
 const titleReigningOn = (warriorId: string): Record<string, ArenaTitle> => ({
-  arena_1: {
-    champion: {
-      warriorId: warriorId as Warrior['id'],
-      startedAbsoluteWeek: 1,
-      defenses: 0,
-      lastActivityWeek: 1,
-    },
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-  },
+  arena_1: makeArenaTitle(warriorId),
 });
 
 const stateWith = (rival: ReturnType<typeof makeRival>, titles = {}) =>

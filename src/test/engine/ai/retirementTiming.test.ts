@@ -10,6 +10,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SeasonalRetirementService, retireChanceFor } from '@/engine/ai/seasonalRetirementService';
 import { makeWarrior, makeRival, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
@@ -72,20 +73,7 @@ describe('processSeasonalRetirement timing', () => {
       week: 13,
       rivals: [rival],
       arenaChampions: {
-        standard_arena: {
-          champion: {
-            warriorId: 'reigning' as WarriorId,
-            startedAbsoluteWeek: 1,
-            defenses: 1,
-            lastActivityWeek: 1,
-          },
-          status: 'active',
-          history: [],
-          refusals: 0,
-          deferrals: 0,
-          noContenderStreak: 0,
-          declinedContenders: {},
-        },
+        standard_arena: makeArenaTitle('reigning', { defenses: 1 }),
       },
     });
 

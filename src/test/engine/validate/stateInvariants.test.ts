@@ -7,21 +7,13 @@
 import { describe, it, expect } from 'vitest';
 import { validateArenaChampions, validateStateInvariants } from '@/engine/validate/stateInvariants';
 import { makeGameState, makeWarrior, makeRival } from '@/test/_fixtures/factories';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 
 function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: null,
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...partial,
-  };
+  return makeArenaTitle(null, partial);
 }
 
 const reign = (id: string) => ({

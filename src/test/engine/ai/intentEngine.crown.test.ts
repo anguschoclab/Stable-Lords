@@ -15,23 +15,10 @@ import {
 } from '@/test/_fixtures/factories';
 import type { ArenaTitle } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 
 function titleWithChampion(warriorId: string, over: Partial<ArenaTitle> = {}): ArenaTitle {
-  return {
-    champion: {
-      warriorId: warriorId as WarriorId,
-      startedAbsoluteWeek: 1,
-      defenses: 0,
-      lastActivityWeek: 1,
-    },
-    status: 'active',
-    history: [],
-    refusals: 0,
-    deferrals: 0,
-    noContenderStreak: 0,
-    declinedContenders: {},
-    ...over,
-  };
+  return makeArenaTitle(warriorId, over);
 }
 
 function crownAssessment(arenaId = 'arena_a', warriorId = 'w1') {

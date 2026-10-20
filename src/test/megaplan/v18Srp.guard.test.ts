@@ -82,7 +82,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/matchmaking/tournamentSelection/resolution/results.ts'), 'split src/engine/matchmaking/tournamentSelection/resolution/results.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S12: warriorStatements decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S12', () => {
+  it('S12: warriorStatements decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S12', () => {
     expect(budgetFor('src/data/warriorStatements.ts'), 'split src/data/warriorStatements.ts into orchestrator + named siblings').toEqual([]);
   });
 
@@ -110,7 +110,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/resolution-reveal/MathStep.tsx'), 'split src/components/resolution-reveal/MathStep.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S19: trainingImpact decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S19', () => {
+  it('S19: trainingImpact decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S19', () => {
     expect(budgetFor('src/engine/training/trainingImpact.ts'), 'split src/engine/training/trainingImpact.ts into orchestrator + named siblings').toEqual([]);
   });
 
@@ -205,7 +205,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/AppShell.tsx')).toEqual([]);
   });
 
-  it.skip('S33: rivalStableShard split — file ≤190 lines or sibling module — MEGAPLAN-S33', () => {
+  it('S33: rivalStableShard split — file ≤190 lines or sibling module — MEGAPLAN-S33', () => {
     const shrunk = exists('src/engine/pipeline/passes/rivalStableShard.ts') && fileLines('src/engine/pipeline/passes/rivalStableShard.ts') <= 190;
     const landed = ["src/engine/pipeline/passes/rivalStableShard/"].some(exists);
     expect(shrunk || landed, 'src/engine/pipeline/passes/rivalStableShard.ts not decomposed').toBe(true);

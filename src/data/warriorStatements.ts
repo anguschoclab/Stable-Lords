@@ -131,54 +131,15 @@ export function generateWarriorStatements(
   const isGoodWit = wt > 7;
   const p = persona;
 
-  const initiative = getStatement({
-    skillKey: 'initiative',
-    baseValue: skills.INI,
-    highThreshold: 13,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
-  const riposte = getStatement({
-    skillKey: 'riposte',
-    baseValue: skills.RIP,
-    highThreshold: 13,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
-  const attack = getStatement({
-    skillKey: 'attack',
-    baseValue: skills.ATT,
-    highThreshold: 10,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
-  const parry = getStatement({
-    skillKey: 'parry',
-    baseValue: skills.PAR,
-    highThreshold: 10,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
-  const defense = getStatement({
-    skillKey: 'defense',
-    baseValue: skills.DEF,
-    highThreshold: 7,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
-  const endurance = getStatement({
-    skillKey: 'endurance',
-    baseValue: skills.DEC,
-    highThreshold: 10,
-    isGoodWit: isGoodWit,
-    wt: wt,
-    personaData: p,
-  });
+  const skill = (skillKey: string, baseValue: number, highThreshold: number) =>
+    getStatement({
+      skillKey: skillKey,
+      baseValue: baseValue,
+      highThreshold: highThreshold,
+      isGoodWit: isGoodWit,
+      wt: wt,
+      personaData: p,
+    });
 
   // Descriptors
   const coordRating = computeCoordination(sp, df);
@@ -195,12 +156,12 @@ export function generateWarriorStatements(
   }
 
   return {
-    initiative,
-    riposte,
-    attack,
-    parry,
-    defense,
-    endurance,
+    initiative: skill('initiative', skills.INI, 13),
+    riposte: skill('riposte', skills.RIP, 13),
+    attack: skill('attack', skills.ATT, 10),
+    parry: skill('parry', skills.PAR, 10),
+    defense: skill('defense', skills.DEF, 7),
+    endurance: skill('endurance', skills.DEC, 10),
     coordination,
     quickness,
     activity,

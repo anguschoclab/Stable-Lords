@@ -160,6 +160,78 @@ function processAttributeAssignment(args: ProcessAttributeAssignmentArgs): {
   return { currentRoster, seasonalGrowth: growth };
 }
 
+interface ProcessAssignmentArgs {
+  assignment: TrainingAssignment;
+  warrior: Warrior;
+  healingBonus: number;
+  currentRoster: Map<WarriorId, Warrior>;
+  seasonalGrowth: SeasonalGrowth[];
+  results: TrainingResult[];
+  state: GameState;
+  rng: IRNGService;
+  weather: import('@/types/shared.types').WeatherType;
+}
+
+/** Dispatches one training assignment to its type-specific processor. */
+function processAssignment(args: ProcessAssignmentArgs): {
+  currentRoster: Map<WarriorId, Warrior>;
+  seasonalGrowth: SeasonalGrowth[];
+} {
+  const { assignment, warrior, healingBonus, currentRoster, results } = args;
+  const { seasonalGrowth, state, rng, weather } = args;
+
+  // ── Recovery Mode ──
+  if (assignment.type === 'recovery') {
+    return {
+      currentRoster: processRecoveryAssignment(warrior, healingBonus, currentRoster, results),
+      seasonalGrowth,
+    };
+  }
+
+  // ── Skill Drilling ──
+  if (assignment.type === 'skillDrill') {
+    return {
+      currentRoster: processSkillDrillAssignment({
+        assignment: assignment,
+        warrior: warrior,
+        healingBonus: healingBonus,
+        currentRoster: currentRoster,
+        results: results,
+        state: state,
+        rng: rng,
+        weather: weather,
+      }),
+      seasonalGrowth,
+    };
+  }
+
+  // ── Trait Training (multi-week) ──
+  if (assignment.type === 'trait') {
+    processTraitAssignment({
+      assignment: assignment,
+      warrior: warrior,
+      state: state,
+      rng: rng,
+      currentRoster: currentRoster,
+      results: results,
+    });
+    return { currentRoster, seasonalGrowth };
+  }
+
+  // ── Attribute Training ──
+  return processAttributeAssignment({
+    assignment: assignment,
+    warrior: warrior,
+    healingBonus: healingBonus,
+    currentRoster: currentRoster,
+    results: results,
+    state: state,
+    seasonalGrowth: seasonalGrowth,
+    rng: rng,
+    weather: weather,
+  });
+}
+
 /**
  * Compute the impact of training assignments for the current week.
  * Returns a pure impact object without modifying game state directly.
@@ -193,52 +265,8 @@ export function computeTrainingImpact(
   for (const assignment of state.trainingAssignments) {
     const warrior = currentRoster.get(assignment.warriorId);
     if (!warrior) continue;
-
-    // ── Recovery Mode ──
-    if (assignment.type === 'recovery') {
-      currentRoster = processRecoveryAssignment(warrior, healingBonus, currentRoster, results);
-      continue;
-    }
-
-    // ── Skill Drilling ──
-    if (assignment.type === 'skillDrill') {
-      currentRoster = processSkillDrillAssignment({
-        assignment: assignment,
-        warrior: warrior,
-        healingBonus: healingBonus,
-        currentRoster: currentRoster,
-        results: results,
-        state: state,
-        rng: rng,
-        weather: weather,
-      });
-      continue;
-    }
-
-    // ── Trait Training (multi-week) ──
-    if (assignment.type === 'trait') {
-      processTraitAssignment({
-        assignment: assignment,
-        warrior: warrior,
-        state: state,
-        rng: rng,
-        currentRoster: currentRoster,
-        results: results,
-      });
-      continue;
-    }
-
-    // ── Attribute Training ──
-    const outcome = processAttributeAssignment({
-      assignment: assignment,
-      warrior: warrior,
-      healingBonus: healingBonus,
-      currentRoster: currentRoster,
-      results: results,
-      state: state,
-      seasonalGrowth: seasonalGrowth,
-      rng: rng,
-      weather: weather,
+    const outcome = processAssignment({
+      assignment, warrior, healingBonus, currentRoster, seasonalGrowth, results, state, rng, weather,
     });
     currentRoster = outcome.currentRoster;
     seasonalGrowth = outcome.seasonalGrowth;

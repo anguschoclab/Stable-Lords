@@ -6,6 +6,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState } from '@/types/state.types';
 import {
   makeWarrior as fixtureWarrior,
+  makeInjury,
   makeGameState as fixtureGameState,
 } from '@/test/_fixtures/factories';
 
@@ -38,14 +39,11 @@ describe('evaluateCampaignFocus', () => {
   it('assigns REHABILITATION if warrior has moderate, severe, or critical injury', () => {
     const warrior = mkWarrior({
       injuries: [
-        {
+        makeInjury({
           id: 'inj1' as any,
-          name: 'Torn Muscle',
-          description: '',
           severity: 'Moderate',
           weeksRemaining: 2,
-          penalties: {},
-        },
+        }),
       ],
     });
     const state = mkState();

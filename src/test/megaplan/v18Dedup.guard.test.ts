@@ -24,7 +24,7 @@ const CW = 'src/test/engine/ai/workers/competitionWorker';
 
 describe('megaplan V18: test-tier deduplication', () => {
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D1: shared competitionWorker eval-harness + dominant-rankings fixture exist — MEGAPLAN-D1', async () => {
+  it('D1: shared competitionWorker eval-harness + dominant-rankings fixture exist — MEGAPLAN-D1', async () => {
     const found = candidateExists([
       `${CW}/_helpers.ts`,
       `${CW}/helpers.ts`,
@@ -131,7 +131,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D7: shared component-mock entries exist in __SHARED_MOCKS and boilerplate sites repointed — MEGAPLAN-D7', () => {
+  it('D7: shared component-mock entries exist in __SHARED_MOCKS and boilerplate sites repointed — MEGAPLAN-D7', () => {
     const sm = fileText('src/test/_setup/sharedMocks.ts');
     for (const key of ['uiBadge', 'paperDoll', 'sonner', 'workerProxy', 'orphanPool']) {
       expect(sm, `__SHARED_MOCKS missing ${key}`).toContain(key);
@@ -139,7 +139,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D8: shared determinism harness exists (run-twice + compare) — MEGAPLAN-D8', () => {
+  it('D8: shared determinism harness exists (run-twice + compare) — MEGAPLAN-D8', () => {
     const text =
       fileText('src/test/_helpers/determinism.ts') +
       fileText('src/test/_fixtures/determinism.ts') +
@@ -151,7 +151,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D9: shared stubbed weather-roll helper exists — MEGAPLAN-D9', () => {
+  it('D9: shared stubbed weather-roll helper exists — MEGAPLAN-D9', () => {
     const text =
       fileText('src/test/_fixtures/weather.ts') +
       fileText('src/test/_helpers/weather.ts') +
@@ -214,7 +214,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D14: misc cloned helpers extracted — walk crawler, comlink/worker mock, injury + tourney factories — MEGAPLAN-D14', () => {
+  it('D14: misc cloned helpers extracted — walk crawler, comlink/worker mock, injury + tourney factories — MEGAPLAN-D14', () => {
     const helpers = fileText('src/test/_helpers/fsWalk.ts') + fileText('src/test/_fixtures/fsWalk.ts');
     expect(
       /function\* walk|walkTsFiles|listTsFiles/.test(helpers),

@@ -68,9 +68,7 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: any) => <span>{children}</span>,
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 // eslint-disable-next-line prefer-const
 let useTestStore: any;

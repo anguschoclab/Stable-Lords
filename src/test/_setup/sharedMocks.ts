@@ -20,20 +20,25 @@ import * as fightForecastEngine from '@/test/_mocks/fightForecastEngine';
 import * as gameStoreEmpty from '@/test/_mocks/gameStoreEmpty';
 import * as gameStoreSelector from '@/test/_mocks/gameStoreSelector';
 import * as opfsArchive from '@/test/_mocks/opfsArchive';
+import * as orphanPool from '@/test/_mocks/orphanPool';
+import * as paperDoll from '@/test/_mocks/paperDoll';
 import * as radixTabs from '@/test/_mocks/radixTabs';
 import * as routerLink from '@/test/_mocks/routerLink';
 import * as scrollArea from '@/test/_mocks/scrollArea';
 import * as sheet from '@/test/_mocks/sheet';
 import * as skillCalc from '@/test/_mocks/skillCalc';
+import * as sonner from '@/test/_mocks/sonner';
 import * as stateSelectors from '@/test/_mocks/stateSelectors';
 import * as tooltip from '@/test/_mocks/tooltip';
 import * as tournamentHooks from '@/test/_mocks/tournamentHooks';
 import * as tournamentScheduleUi from '@/test/_mocks/tournamentScheduleUi';
+import * as uiBadge from '@/test/_mocks/uiBadge';
 import * as uiImperialRing from '@/test/_mocks/uiImperialRing';
 import * as uiSectionDivider from '@/test/_mocks/uiSectionDivider';
 import * as uiSurface from '@/test/_mocks/uiSurface';
 import * as useShallow from '@/test/_mocks/useShallow';
 import * as weekPipeline from '@/test/_mocks/weekPipeline';
+import * as workerProxy from '@/test/_mocks/workerProxy';
 
 const registry = {
   bookmarkButton,
@@ -44,20 +49,25 @@ const registry = {
   gameStoreEmpty,
   gameStoreSelector,
   opfsArchive,
+  orphanPool,
+  paperDoll,
   radixTabs,
   routerLink,
   scrollArea,
   sheet,
   skillCalc,
+  sonner,
   stateSelectors,
   tooltip,
   tournamentHooks,
   tournamentScheduleUi,
+  uiBadge,
   uiImperialRing,
   uiSectionDivider,
   uiSurface,
   useShallow,
   weekPipeline,
+  workerProxy,
 };
 
 declare global {

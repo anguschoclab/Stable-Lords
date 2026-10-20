@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-const mockWrap = vi.fn((obj: unknown) => obj);
-const mockWorkerCtor = vi.fn(function (this: unknown) {
-  return { postMessage: vi.fn(), terminate: vi.fn(), addEventListener: vi.fn() };
-});
+const { mockWrap, mockWorkerCtor } = __SHARED_MOCKS.workerProxy.makeWorkerMocks();
 
 vi.mock('comlink', () => ({
   wrap: mockWrap,

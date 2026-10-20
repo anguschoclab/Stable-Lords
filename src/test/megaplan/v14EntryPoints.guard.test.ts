@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { walkTsFiles } from '@/test/_helpers/fsWalk';
 import path from 'node:path';
 
 /**
@@ -22,13 +23,7 @@ import path from 'node:path';
 
 const SRC = path.resolve(__dirname, '../..');
 
-function* walk(dir: string): Generator<string> {
-  for (const e of readdirSync(dir)) {
-    const p = path.join(dir, e);
-    if (statSync(p).isDirectory()) yield* walk(p);
-    else if (/\.(ts|tsx)$/.test(p)) yield p;
-  }
-}
+
 
 const ENGINE_PROXY_CALL_RE = /engineProxy\.(\w+)\s*\(/g;
 
@@ -52,7 +47,7 @@ const DEAD_SURFACE: string[] = [
 
 function productionCallSites(): Map<string, string[]> {
   const sites = new Map<string, string[]>();
-  for (const file of walk(SRC)) {
+  for (const file of walkTsFiles(SRC)) {
     const rel = path.relative(path.resolve(SRC, '..'), file).replace(/\\/g, '/');
     if (rel.includes('src/test/') || rel.includes('src/engine/runtime/')) continue;
     const text = readFileSync(file, 'utf8');

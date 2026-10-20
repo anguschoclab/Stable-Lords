@@ -12,14 +12,7 @@ vi.mock('@/engine/warrior/warriorStatus', () => ({
   isFightReady: vi.fn(() => true),
 }));
 
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-    // Support toast() function call for death notifications
-    default: vi.fn(),
-  },
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {

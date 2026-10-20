@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { walkTsFiles } from '@/test/_helpers/fsWalk';
 import path from 'node:path';
 
 /**
@@ -26,15 +27,9 @@ import path from 'node:path';
 const REPO = path.resolve(__dirname, '../../..');
 const SRC = path.join(REPO, 'src');
 
-function* srcFiles(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir)) {
-    const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) yield* srcFiles(full);
-    else if (/\.(ts|tsx)$/.test(entry)) yield full;
-  }
-}
 
-const allSrc = [...srcFiles(SRC)];
+
+const allSrc = [...walkTsFiles(SRC)];
 
 function body(rel: string): string {
   return readFileSync(path.join(REPO, rel), 'utf8');

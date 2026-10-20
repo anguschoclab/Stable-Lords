@@ -9,6 +9,7 @@ import {
 } from '@/components/tournaments';
 import type { TournamentEntry, Warrior, FightSummary } from '@/types/game';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeTournament } from '@/test/_fixtures/tournamentState';
 
 // ─── Shared mocks (mirror src/test/components/tournaments/Tournaments.test.tsx) ──
 vi.mock('framer-motion', () => ({
@@ -39,9 +40,7 @@ vi.mock('@/components/ui/ImperialRing', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick }: { children?: React.ReactNode; onClick?: () => void }) => (
@@ -74,19 +73,7 @@ const makeWarrior = (overrides: Record<string, unknown> = {}): Warrior =>
     ...overrides,
   } as any);
 
-function makeTournament(overrides: Partial<TournamentEntry> = {}): TournamentEntry {
-  return {
-    id: 't1',
-    season: 'Spring',
-    week: 5,
-    tierId: 'Gold',
-    name: 'Spring Classic',
-    bracket: [],
-    participants: [],
-    completed: false,
-    ...overrides,
-  } as unknown as TournamentEntry;
-}
+
 
 // ─── TournamentPrizeBadge ─────────────────────────────────────────────────────
 describe('TournamentPrizeBadge', () => {

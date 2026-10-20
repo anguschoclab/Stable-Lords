@@ -10,17 +10,11 @@ import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId, InjuryId } from '@/types/shared.types';
 import type { RestState, TrainingAssignment } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeWarrior as fixtureWarrior, makeInjury as sharedMakeInjury } from '@/test/_fixtures/factories';
 
 // Helper to create injury data for isFightReady tests
-const makeInjury = (severity: InjuryData['severity'], weeksRemaining: number): InjuryData => ({
-  id: 'test-injury' as InjuryId,
-  name: 'Test Injury',
-  description: 'Test',
-  severity,
-  weeksRemaining,
-  penalties: {},
-});
+const makeInjury = (severity: InjuryData['severity'], weeksRemaining: number): InjuryData =>
+  sharedMakeInjury({ severity, weeksRemaining });
 
 describe('isDead', () => {
   it('returns true when status is Dead', () => {

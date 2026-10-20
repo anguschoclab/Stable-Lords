@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
 import { runNarratedVsHeadless } from '@/test/_fixtures/narratedVsHeadless';
+import { simulateDeterministically } from '@/test/_fixtures/determinism';
 import { FightingStyle } from '@/types/shared.types';
 
 const ATTRS = { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 };
@@ -39,25 +40,7 @@ describe('combat resolution determinism characterization', () => {
           rng: undefined,
         });
 
-        const run1 = simulateFight({
-          planA: defaultPlanForWarrior(A),
-          planD: defaultPlanForWarrior(D),
-          warriorA: A,
-          warriorD: D,
-          providedRng: seed,
-        });
-        const run2 = simulateFight({
-          planA: defaultPlanForWarrior(A),
-          planD: defaultPlanForWarrior(D),
-          warriorA: A,
-          warriorD: D,
-          providedRng: seed,
-        });
-
-        expect(
-          { w: run1.winner, b: run1.by, m: run1.minutes },
-          `seed ${seed} diverged for ${styleA} vs ${styleD}`
-        ).toEqual({ w: run2.winner, b: run2.by, m: run2.minutes });
+        simulateDeterministically(A, D, seed);
       }
     });
   }
@@ -141,13 +124,7 @@ describe('combat resolution determinism characterization', () => {
         rng: undefined,
       });
 
-      const run1 = simulateFight({
-        planA: defaultPlanForWarrior(A),
-        planD: defaultPlanForWarrior(D),
-        warriorA: A,
-        warriorD: D,
-        providedRng: seed,
-      });
+      const run1 = simulateDeterministically(A, D, seed);
       const run2 = simulateFight({
         planA: defaultPlanForWarrior(A),
         planD: defaultPlanForWarrior(D),

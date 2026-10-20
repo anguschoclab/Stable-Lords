@@ -9,7 +9,7 @@ import type { GameState, Promoter, Warrior, BoutOffer } from '@/types/state.type
 import type { WarriorId, PromoterId, BoutOfferId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 const warrior = (id: string, overrides: Partial<Warrior> = {}) =>
   makeWarrior({ id: id as WarriorId, name: id, fatigue: 0, injuries: [], ...overrides } as any);

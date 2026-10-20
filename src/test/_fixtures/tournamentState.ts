@@ -98,6 +98,27 @@ export function makeTournamentWarrior(
   });
 }
 
+/**
+ * Bare TournamentEntry — the "t1 / Spring / week-5" literal cloned across the
+ * tournament component and page specs. `over` permits extra render-time keys
+ * (seasonName/winner) several components read off the loosened entry shape.
+ */
+export function makeTournament(
+  over: Partial<TournamentEntry> & Record<string, unknown> = {}
+): TournamentEntry {
+  return {
+    id: 't1' as TournamentId,
+    season: 'Spring',
+    week: 5,
+    tierId: 'Gold',
+    name: 'Spring Classic',
+    bracket: [],
+    participants: [],
+    completed: false,
+    ...over,
+  };
+}
+
 /** Builds a completed tournament bracket fixture with winners decided. */
 export function makeCompletedTournament(
   warriors: Warrior[],

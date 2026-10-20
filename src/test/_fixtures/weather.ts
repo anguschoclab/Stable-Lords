@@ -1,4 +1,7 @@
-import type { WeatherType } from '@/types/shared.types';
+import { vi } from 'vitest';
+import { SeededRNG } from '@/utils/random';
+import { rollWeather } from '@/engine/weather/seasonalWeather';
+import type { WeatherType, Season } from '@/types/shared.types';
 
 /**
  * The weather types that can occur during regular weeks — i.e. every
@@ -61,3 +64,19 @@ export const SEASONABLE_WEATHER_TYPES: WeatherType[] = [
   'Abyssal Tempest',
   'Cursed Eclipse',
 ];
+
+/** Stubs rng.next to a fixed value for the duration of fn — spy + restore included. */
+export function stubRngNext<T>(rng: SeededRNG, value: number, fn: () => T): T {
+  const mock = vi.spyOn(rng, 'next').mockReturnValue(value);
+  try {
+    return fn();
+  } finally {
+    mock.mockRestore();
+  }
+}
+
+/** Rolls seasonal weather with a forced rng.next value — kills the spy+restore boilerplate. */
+export function rollStubbedWeather(season: Season, rollValue: number): WeatherType {
+  const rng = new SeededRNG(0);
+  return stubRngNext(rng, rollValue, () => rollWeather(rng, season));
+}

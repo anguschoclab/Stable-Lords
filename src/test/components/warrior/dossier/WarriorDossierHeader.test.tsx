@@ -31,9 +31,7 @@ vi.mock('@/components/bookmarks/BookmarkButton', () => ({
   BookmarkButton: () => <div data-testid="bookmark-button" />,
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
   StatBadge: () => <div data-testid="stat-badge" />,

@@ -8,9 +8,7 @@ vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
 
 vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: any) => <span>{children}</span>,
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 vi.mock('@/components/ui/table', () => ({
   Table: ({ children }: any) => <table>{children}</table>,

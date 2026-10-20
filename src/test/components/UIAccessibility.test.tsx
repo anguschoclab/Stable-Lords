@@ -11,15 +11,7 @@ import { vi } from 'vitest';
 
 vi.mock('@/engine/warrior/skillCalc', () => ({ ...__SHARED_MOCKS.skillCalc }));
 
-vi.mock('@/data/orphanPool', () => ({
-  TRAIT_DATA: {
-    test_trait: {
-      name: 'Test Trait',
-      description: 'A test trait',
-      effect: {},
-    },
-  },
-}));
+vi.mock('@/data/orphanPool', () => __SHARED_MOCKS.orphanPool);
 
 vi.mock('@/engine/warrior/potential', () => ({
   potentialRating: () => 75,

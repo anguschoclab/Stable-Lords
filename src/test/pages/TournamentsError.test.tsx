@@ -5,16 +5,7 @@ import '@/test/_setup/setup';
 
 const mockLoadGame = vi.fn();
 
-const baseTournament = {
-  id: 't1',
-  season: 'Spring',
-  completed: false,
-  bracket: [],
-  participants: [],
-  name: 'Test Cup',
-  week: 1,
-  tierId: 'tier-1',
-};
+const baseTournament = makeTournament({ name: 'Test Cup', week: 1, tierId: 'tier-1' });
 
 const store = {
   tournaments: [baseTournament],
@@ -44,12 +35,7 @@ vi.mock('@/engine/runtime/workerProxy', () => ({
   },
 }));
 
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 vi.mock('@/lib/AudioManager', () => ({
   audioManager: { play: vi.fn() },
@@ -77,6 +63,7 @@ import { engineProxy } from '@/engine/runtime/workerProxy';
 import { toast } from 'sonner';
 import { audioManager } from '@/lib/AudioManager';
 import { makePageStoreState } from '@/test/_fixtures/storeState';
+import { makeTournament } from '@/test/_fixtures/tournamentState';
 
 /** The state the canonical day-advance returns for the executed round. */
 function resolvedState(over: Record<string, unknown> = {}) {

@@ -17,13 +17,7 @@ vi.mock('@/components/ui/WarriorBadges', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, className }: any) => (
-    <span data-testid="badge" className={className}>
-      {children}
-    </span>
-  ),
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 vi.mock('@/components/avatar', () => ({

@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { SeededRNG } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
-import { SEASONABLE_WEATHER_TYPES } from '@/test/_fixtures/weather';
+import { SEASONABLE_WEATHER_TYPES, rollStubbedWeather } from '@/test/_fixtures/weather';
 
 const ALL_WEATHER_TYPES: WeatherType[] = SEASONABLE_WEATHER_TYPES;
 
@@ -104,11 +104,8 @@ describe('Blood Moon Feature', () => {
   });
 
   it('should roll Blood Moon weather when rng yields high enough value', () => {
-    const rng = new SeededRNG(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.41);
-    const weather = rollWeather(rng, 'Summer');
+    const weather = rollStubbedWeather('Summer', 0.41);
     expect(weather).toBe('Blood Moon');
-    mock.mockRestore();
   });
 });
 
@@ -118,11 +115,8 @@ describe('Blood Rain Feature', () => {
   });
 
   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
-    const rng = new SeededRNG(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.866);
-    const weather = rollWeather(rng, 'Spring');
+    const weather = rollStubbedWeather('Spring', 0.866);
     expect(weather).toBe('Blood Rain');
-    mock.mockRestore();
   });
 });
 
@@ -132,10 +126,7 @@ describe('Locust Swarm Feature', () => {
   });
 
   it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {
-    const rng = new SeededRNG(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.761);
-    const weather = rollWeather(rng, 'Summer');
+    const weather = rollStubbedWeather('Summer', 0.761);
     expect(weather).toBe('Locust Swarm');
-    mock.mockRestore();
   });
 });

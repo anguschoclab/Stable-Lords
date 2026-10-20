@@ -4,7 +4,7 @@ import { computeHealthImpact } from '@/engine/warrior/health';
 import { FightingStyle, type WarriorId, type InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { makeGameState, makeWarrior } from '@/test/_fixtures/factories';
+import { makeGameState, makeWarrior, makeInjury as sharedMakeInjury } from '@/test/_fixtures/factories';
 
 describe('generateInjury', () => {
   const mockWarrior = makeWarrior({
@@ -41,14 +41,8 @@ describe('generateInjury', () => {
 });
 
 describe('isTooInjuredToFight', () => {
-  const makeInjury = (severity: InjuryData['severity'], weeksRemaining: number): InjuryData => ({
-    id: 'test-injury' as InjuryId,
-    name: 'Test Injury',
-    description: 'Test',
-    severity,
-    weeksRemaining,
-    penalties: {},
-  });
+  const makeInjury = (severity: InjuryData['severity'], weeksRemaining: number): InjuryData =>
+    sharedMakeInjury({ severity, weeksRemaining });
 
   describe('empty and non-Severe severities', () => {
     it('returns false for empty injury array', () => {

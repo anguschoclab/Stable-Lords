@@ -19,12 +19,7 @@ vi.mock('@/state/saveSlots', () => ({
   MAX_SAVE_SLOTS: 10,
 }));
 
-vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 vi.mock('@/engine/crest/crestGenerator', () => ({
   generateCrest: vi.fn().mockReturnValue({

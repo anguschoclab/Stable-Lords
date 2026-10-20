@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { walkTsFiles } from '@/test/_helpers/fsWalk';
 import path from 'node:path';
 
 /**
@@ -35,20 +36,14 @@ const REGISTERED_SKIP_TICKETS = new Set<string>([
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;
 
-function* testFiles(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir)) {
-    const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) yield* testFiles(full);
-    else if (/\.(?:test|spec)\.[tj]sx?$/.test(entry)) yield full;
-  }
-}
+
 
 describe('megaplan: skip-count guard', () => {
   const SELF = __filename;
 
   it('no hard skips outside src/test/megaplan', () => {
     const offenders: string[] = [];
-    for (const file of testFiles(TEST_ROOT)) {
+    for (const file of walkTsFiles(TEST_ROOT, /\.(?:test|spec)\.[tj]sx?$/)) {
       if (file.includes('/megaplan/') || file === SELF) continue;
       readFileSync(file, 'utf8')
         .split('\n')
@@ -66,7 +61,7 @@ describe('megaplan: skip-count guard', () => {
     const dir = path.join(TEST_ROOT, 'megaplan');
     const unregistered: string[] = [];
     let total = 0;
-    for (const file of testFiles(dir)) {
+    for (const file of walkTsFiles(dir, /\.(?:test|spec)\.[tj]sx?$/)) {
       if (file === SELF) continue;
       readFileSync(file, 'utf8')
         .split('\n')
@@ -93,7 +88,7 @@ describe('megaplan: skip-count guard', () => {
     const STALE =
       /\b(?:skipped|red|partially red)\s+until\s+(?:the\s+)?(?:Phase\b|[^.]*?\blands?\b)|\bContract TBD\b/gi;
     const offenders: string[] = [];
-    for (const file of testFiles(TEST_ROOT)) {
+    for (const file of walkTsFiles(TEST_ROOT, /\.(?:test|spec)\.[tj]sx?$/)) {
       if (file === SELF) continue; // this file's regex literals would self-match
       const content = readFileSync(file, 'utf8');
       for (const match of content.matchAll(STALE)) {

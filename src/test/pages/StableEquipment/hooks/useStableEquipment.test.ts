@@ -10,7 +10,7 @@ import type { Warrior } from '@/types/game';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';
 
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 function loadState(roster: Warrior[]) {
   const state = createFreshState('test-seed');

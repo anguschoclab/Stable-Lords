@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import { walkTsFiles } from '@/test/_helpers/fsWalk';
 import path from 'node:path';
 
 /**
@@ -17,15 +18,9 @@ import path from 'node:path';
 const REPO = path.resolve(__dirname, '../../..');
 const SRC = path.join(REPO, 'src');
 
-function* srcFiles(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir)) {
-    const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) yield* srcFiles(full);
-    else if (/\.(ts|tsx)$/.test(entry) && !entry.includes('/test/')) yield full;
-  }
-}
 
-const prodFiles = [...srcFiles(SRC)].filter((f) => !f.includes(`${path.sep}test${path.sep}`));
+
+const prodFiles = [...walkTsFiles(SRC)].filter((f) => !f.includes(`${path.sep}test${path.sep}`));
 
 function consumersOf(symbol: string, exclude: string): string[] {
   const re = new RegExp(`\\b${symbol}\\b`);

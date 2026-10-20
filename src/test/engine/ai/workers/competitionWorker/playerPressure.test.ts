@@ -17,35 +17,15 @@ import {
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
-import type { GameState, RankingEntry } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+import {
+  dominantRankings,
+  playerPressureState,
+} from '@/test/_fixtures/competitionWorker';
 
 beforeEach(() => resetFixtureIds());
 
-/** Rankings where the player's warrior sits #1 of ten — 'Dominant' threat. */
-function dominantRankings(playerWarriorId: string): Record<WarriorId, RankingEntry> {
-  const entries: Record<WarriorId, RankingEntry> = {
-    [playerWarriorId as WarriorId]: { overallRank: 1, classRank: 1, compositeScore: 100 },
-  };
-  for (let i = 2; i <= 10; i++) {
-    entries[`dummy-${i}` as WarriorId] = {
-      overallRank: i,
-      classRank: i,
-      compositeScore: 100 - i,
-    };
-  }
-  return entries;
-}
 
-/** Player-owned opponent + dominant rankings (or empty for the control). */
-function playerState(opponent: ReturnType<typeof makeWarrior>, dominant: boolean): GameState {
-  return makeGameState({
-    week: 5,
-    absoluteWeek: 5,
-    roster: [opponent],
-    realmRankings: dominant ? dominantRankings(opponent.id) : {},
-  });
-}
 
 describe('dominant-player offer pressure', () => {
   it('a Methodical stable declines a coin-flip bout vs a dominant player', () => {
@@ -73,7 +53,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, true),
+        state: playerPressureState(opponent, true),
       })
     ).toBe('Declined');
     expect(
@@ -84,7 +64,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, false),
+        state: playerPressureState(opponent, false),
       })
     ).toBe('Accepted');
   });
@@ -113,7 +93,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, true),
+        state: playerPressureState(opponent, true),
       })
     ).toBe('Accepted');
     expect(
@@ -124,7 +104,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, false),
+        state: playerPressureState(opponent, false),
       })
     ).toBe('Countered');
   });
@@ -153,7 +133,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, true),
+        state: playerPressureState(opponent, true),
       })
     ).toBe('Countered');
     expect(
@@ -164,7 +144,7 @@ describe('dominant-player offer pressure', () => {
         currentWeek: 5,
         weather: 'Clear',
         opponent: opponent,
-        state: playerState(opponent, false),
+        state: playerPressureState(opponent, false),
       })
     ).toBe('Accepted');
   });

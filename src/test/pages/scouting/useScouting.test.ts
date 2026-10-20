@@ -12,7 +12,7 @@ import type { GameState } from '@/types/state.types';
 import type { RivalStableData } from '@/types/game';
 import '@/test/_setup/setup';
 
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 function loadState(rivals: RivalStableData[], treasury = 200) {
   const state = createFreshState('scouting-contract-seed');

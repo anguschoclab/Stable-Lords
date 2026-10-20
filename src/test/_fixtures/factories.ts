@@ -5,7 +5,7 @@
  * Replaces the per-suite local `makeWarrior`/`makeRival` copies. Every builder
  * returns objects that parse cleanly through the matching Zod schema.
  */
-import type { Warrior } from '@/types/warrior.types';
+import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FighterState } from '@/engine/combat/resolution/types';
 import type { ResolutionContext } from '@/engine/combat/resolution/types';
 import type { WeatherType } from '@/types/shared.types';
@@ -20,7 +20,7 @@ import type {
   RivalStableData,
 } from '@/types/state.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
-import type { ArenaConfig, Attributes, FightPlan, Trainer } from '@/types/shared.types';
+import type { ArenaConfig, Attributes, FightPlan, Trainer, InjuryId } from '@/types/shared.types';
 import type { Rivalry, OwnerGrudge } from '@/types/state.types';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 import type { WarriorRow } from '@/types/leaderboard';
@@ -706,4 +706,17 @@ export function makeMinimalRival(overrides: Partial<RivalStableData> = {}): Riva
     tier: 'Established',
     ...overrides,
   });
+}
+
+/** Schema-valid InjuryData — "Test Injury" with tunable severity/weeks. */
+export function makeInjury(over: Partial<InjuryData> = {}): InjuryData {
+  return {
+    id: 'test-injury' as InjuryId,
+    name: 'Test Injury',
+    description: 'Test',
+    severity: 'Minor',
+    weeksRemaining: 0,
+    penalties: {},
+    ...over,
+  };
 }

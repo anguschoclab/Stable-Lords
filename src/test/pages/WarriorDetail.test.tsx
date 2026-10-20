@@ -63,7 +63,7 @@ vi.mock('@/lib/obfuscation', () => ({
 vi.mock('@/components/layout/breadcrumbs/Breadcrumbs', () => ({
   Breadcrumbs: () => <div data-testid="breadcrumbs" />,
 }));
-vi.mock('sonner', () => ({ toast: { success: vi.fn() } }));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 let mockRoster: Warrior[] = [];
 let mockRivals: any[] = [];

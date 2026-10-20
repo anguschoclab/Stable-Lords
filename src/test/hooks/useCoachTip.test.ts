@@ -6,9 +6,7 @@ import type { Warrior, GameState } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
-vi.mock('sonner', () => ({
-  toast: vi.fn(),
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 let storeState: any = {};
 const setStateSpy = vi.fn();

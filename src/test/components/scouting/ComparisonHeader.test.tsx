@@ -17,13 +17,7 @@ vi.mock('@/components/ui/Surface', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, className }: any) => (
-    <span data-testid="badge" className={className}>
-      {children}
-    </span>
-  ),
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
   fixtureRival({

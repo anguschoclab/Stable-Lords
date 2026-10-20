@@ -16,6 +16,7 @@ import { TournamentBoutRow } from '@/components/tournaments/schedule/TournamentB
 import { TournamentRoundCard } from '@/components/tournaments/schedule/TournamentRoundCard';
 import { ActiveTournamentManifest } from '@/components/tournaments/ActiveTournamentManifest';
 import type { TournamentEntry, TournamentBout } from '@/types/game';
+import { makeTournament } from '@/test/_fixtures/tournamentState';
 
 vi.mock('framer-motion', () => ({
   motion: {
@@ -80,17 +81,9 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
-}));
+vi.mock('@/components/ui/badge', () => __SHARED_MOCKS.uiBadge);
 
-const mockTournament = {
-  id: 't1',
-  week: 5,
-  bracket: [],
-  completed: false,
-  seasonName: 'Spring',
-} as unknown as TournamentEntry;
+const mockTournament = makeTournament({ seasonName: 'Spring' });
 
 describe('TournamentBracket', () => {
   it('renders without crashing with empty bracket', () => {
@@ -183,7 +176,7 @@ describe('TournamentHistory', () => {
 
   it('renders with past tournaments', () => {
     const pastTournaments = [
-      { id: 't1', week: 1, bracket: [], completed: true, seasonName: 'Winter', winner: 'Alice' },
+      makeTournament({ week: 1, completed: true, seasonName: 'Winter', winner: 'Alice' }),
     ] as unknown as TournamentEntry[];
     const { container } = render(
       <TournamentHistory
@@ -198,7 +191,7 @@ describe('TournamentHistory', () => {
 
   it('expands a past tournament to show its recorded bouts from arenaHistory', () => {
     const pastTournaments = [
-      { id: 't1', week: 12, bracket: [], completed: true, season: 'Winter', champion: 'Alice' },
+      makeTournament({ week: 12, completed: true, season: 'Winter', champion: 'Alice' }),
     ] as unknown as TournamentEntry[];
     const arenaHistory = [
       {

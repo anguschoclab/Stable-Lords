@@ -21,12 +21,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-vi.mock('sonner', () => ({
-  toast: {
-    error: vi.fn(),
-    success: vi.fn(),
-  },
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 import { useRecruit } from '@/pages/Recruit/hooks/useRecruit';
 import { useRecruitFilters } from '@/pages/Recruit/hooks/useRecruitFilters';

@@ -8,9 +8,7 @@ import { makeGameState } from '@/test/_fixtures/factories';
 import { exportPack } from '@/lib/importExport';
 import { toast } from 'sonner';
 
-vi.mock('sonner', () => ({
-  toast: { success: vi.fn(), error: vi.fn() },
-}));
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
 describe('ImportExport page (G2)', () => {
   beforeEach(() => {

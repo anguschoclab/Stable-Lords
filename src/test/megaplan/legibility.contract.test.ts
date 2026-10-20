@@ -1,21 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { listTsFiles } from '@/test/_helpers/fsWalk';
 import path from 'node:path';
 
 const SRC = path.resolve(__dirname, '../..');
 const SCAN_DIRS = ['components', 'pages', 'hooks', 'routes'];
 
-function walk(dir: string, out: string[] = []): string[] {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const file = path.join(dir, entry.name);
-    if (entry.isDirectory()) walk(file, out);
-    else if (/\.tsx?$/.test(entry.name)) out.push(file);
-  }
-  return out;
-}
+
 
 function sourceFiles(): string[] {
-  return SCAN_DIRS.flatMap((dir) => walk(path.join(SRC, dir))).map((file) =>
+  return SCAN_DIRS.flatMap((dir) => listTsFiles(path.join(SRC, dir))).map((file) =>
     path.relative(SRC, file)
   );
 }

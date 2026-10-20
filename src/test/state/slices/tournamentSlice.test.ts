@@ -5,6 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 import { createTournamentSlice, TournamentSlice } from '@/state/slices/tournamentSlice';
 import { act } from '@testing-library/react';
 import type { TournamentEntry } from '@/types/state.types';
+import { makeTournament } from '@/test/_fixtures/tournamentState';
 
 const createTestStore = () =>
   create<TournamentSlice>()(
@@ -27,16 +28,7 @@ describe('TournamentSlice', () => {
 
   it('should set tournaments', () => {
     const tournaments: TournamentEntry[] = [
-      {
-        id: 't1' as import('@/types/shared.types').TournamentId,
-        week: 10,
-        participants: [],
-        season: 'Spring',
-        tierId: 'Amateur',
-        name: 'Mock',
-        bracket: [],
-        completed: false,
-      } as any,
+      makeTournament({ week: 10, tierId: 'Amateur', name: 'Mock' }),
     ];
 
     act(() => {

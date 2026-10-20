@@ -16,9 +16,7 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/components/ui/PaperDoll', () => ({
-  PaperDoll: () => <div data-testid="paper-doll">PaperDoll</div>,
-}));
+vi.mock('@/components/ui/PaperDoll', () => __SHARED_MOCKS.paperDoll);
 
 const mockWarrior = {
   name: 'Brutus',

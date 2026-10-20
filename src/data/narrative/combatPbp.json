@@ -1054,7 +1054,6 @@
           "{{defender}} wildly flails backwards, narrowly avoiding the lethal arc.",
           "With a panicked gasp, {{defender}} trips but manages to roll under the sweeping attack.",
           "{{defender}} stumbles backward just in time, narrowly avoiding a lethal strike.",
-          "With a panicked scramble, {{defender}} hurls themselves out of the weapon's path.",
           "{{defender}} practically falls over to evade, trading dignity for survival.",
           "{{defender}} scrambles wildly out of the path of the blow.",
           "With a panicked yelp, {{defender}} flings themselves aside.",
@@ -1181,7 +1180,6 @@
           "Bored by the attempt, {{defender}} casually sidesteps, leaving their opponent swinging at empty air.",
           "{{defender}} evades with the lazy confidence of a true master, letting the blade pass by an inch.",
           "A smirk crosses {{defender}}'s face as they effortlessly sidestep the heavy assault.",
-          "{{defender}} reads the attack perfectly, stepping aside with clinical precision.",
           "Without even blinking, {{defender}} weaves out of danger, making it look effortless.",
           "{{defender}} smoothly sidesteps the incoming blow, entirely unfazed."
         ],
@@ -1310,7 +1308,6 @@
           "{{defender}} pirouettes away from the strike, flashing a wicked grin to the crowd.",
           "With a dramatic flourish, {{defender}} leaps to safety, playing to the roaring stands.",
           "{{defender}} spins elegantly out of range, turning evasion into a performance.",
-          "{{defender}} performs a dramatic backflip to evade the attack.",
           "With a flourish, {{defender}} sidesteps the clumsy blow.",
           "{{defender}} dances out of reach, bowing mockingly to {{attacker}}."
         ],

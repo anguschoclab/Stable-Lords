@@ -255,7 +255,12 @@
       "A horrifying spray of vital fluids marks the instant {{defender}}'s body fails completely.",
       "{{defender}}'s form is utterly broken by {{attacker}}'s devastating, lethal attack.",
       "The fatal impact tears through bone and organ, leaving {{defender}} lifeless in the dirt.",
-      "The light in {{defender}}'s eyes extinguishes instantly as {{attacker}} delivers the ultimate, devastating blow."
+      "The light in {{defender}}'s eyes extinguishes instantly as {{attacker}} delivers the ultimate, devastating blow.",
+      "{{attacker}} lands a final, catastrophic blow, turning {{defender}}'s desperate defense into a tragic mess of ruin.",
+      "The light leaves {{defender}}'s eyes before they even hit the sand, snuffed out by {{attacker}}'s ruthless power.",
+      "{{attacker}} offers no quarter, ensuring their final strike is a spectacle of absolute destruction upon {{defender}}.",
+      "A sickening crunch echoes across the arena as {{attacker}} forcibly evicts the life from {{defender}}.",
+      "{{defender}} crumples like a discarded puppet, their strings cut permanently by {{attacker}}'s merciless assault."
     ],
     "weapon_specific": {
       "slashing": [
@@ -686,7 +691,6 @@
         "{{attacker}} unleashes a skull-cracking haymaker that turns {{defender}}'s lights out forever.",
         "A sickening snap rings out as {{attacker}} breaks {{defender}}'s neck with a brutal right hook.",
         "{{attacker}} mounts the fallen {{defender}} and delivers a horrifying, bare-knuckle execution.",
-        "{{defender}}'s chest caves in under the primal, brutal force of {{attacker}}'s final punch.",
         "With bare hands and raw fury, {{attacker}} beats the very life from {{defender}}'s body."
       ]
     },

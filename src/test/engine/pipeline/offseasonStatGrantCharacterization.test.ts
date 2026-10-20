@@ -100,7 +100,10 @@ const CASES: Case[] = [
   {
     name: 'handleFameBoost',
     handler: handleFameBoost,
-    expected: { updates: { fame: 75 }, news: news('|xp:{{xp}}|fame:25|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { fame: 75 },
+      news: news('|xp:{{xp}}|fame:25|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleEpiphany',
@@ -114,32 +117,50 @@ const CASES: Case[] = [
   {
     name: 'handleBardsSong',
     handler: handleBardsSong,
-    expected: { updates: { fame: 75 }, news: news('|xp:{{xp}}|fame:25|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { fame: 75 },
+      news: news('|xp:{{xp}}|fame:25|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleMysticVision',
     handler: handleMysticVision,
-    expected: { updates: { xp: 115, fame: 60 }, news: news('|xp:15|fame:10|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 115, fame: 60 },
+      news: news('|xp:15|fame:10|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleStrangeDream',
     handler: handleStrangeDream,
-    expected: { updates: { xp: 110 }, news: news('|xp:10|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 110 },
+      news: news('|xp:10|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleMeteorShower',
     handler: handleMeteorShower,
-    expected: { updates: { xp: 120, fame: 63 }, news: news('|xp:20|fame:13|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 120, fame: 63 },
+      news: news('|xp:20|fame:13|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleGladiatorOlympics',
     handler: handleGladiatorOlympics,
-    expected: { updates: { xp: 120, fame: 65 }, news: news('|xp:20|fame:15|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 120, fame: 65 },
+      news: news('|xp:20|fame:15|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleLoyalStrayDog',
     handler: handleLoyalStrayDog,
-    expected: { updates: { xp: 110 }, news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 110 },
+      news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleChaosSpores',
@@ -161,17 +182,26 @@ const CASES: Case[] = [
   {
     name: 'handleShadowTraining',
     handler: handleShadowTraining,
-    expected: { updates: { xp: 125, fame: 42 }, news: news('|xp:25|fame:8|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 125, fame: 42 },
+      news: news('|xp:25|fame:8|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleOffseasonTrainingCamp',
     handler: handleOffseasonTrainingCamp,
-    expected: { updates: { xp: 150 }, news: news('|xp:50|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 150 },
+      news: news('|xp:50|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleWanderingMerchantStrangeBrew',
     handler: handleWanderingMerchantStrangeBrew,
-    expected: { updates: { xp: 120, fame: 60 }, news: news('|xp:20|fame:10|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 120, fame: 60 },
+      news: news('|xp:20|fame:10|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleWanderingBlacksmith',
@@ -298,7 +328,10 @@ const CASES: Case[] = [
   {
     name: 'handlePhantomSparringPartner',
     handler: handlePhantomSparringPartner,
-    expected: { updates: { xp: 140, fatigue: 30 }, news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 140, fatigue: 30 },
+      news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleDreamweaversMist',
@@ -388,12 +421,18 @@ const CASES: Case[] = [
   {
     name: 'handleShatteredSkiesRitual',
     handler: handleShatteredSkiesRitual,
-    expected: { updates: { xp: 125, fatigue: 35 }, news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 125, fatigue: 35 },
+      news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleWeepingSkies',
     handler: handleWeepingSkies,
-    expected: { updates: { xp: 120 }, news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}') },
+    expected: {
+      updates: { xp: 120 },
+      news: news('|xp:{{xp}}|fame:{{fame}}|gold:{{gold}}|trait:{{trait}}'),
+    },
   },
   {
     name: 'handleTavernBrawl',

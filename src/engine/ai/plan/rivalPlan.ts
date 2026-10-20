@@ -17,8 +17,9 @@ export interface RivalFightPlanOpts {
   /** Opponent fighting style, when known. */
   opponentStyle?: FightingStyle;
   /**
-   * Grudge-map lookup key — the OWNER-id namespace (the player's
-   * `state.player.id` doubles as the player-side key).
+   * Grudge-map lookup key in the OWNER-id namespace — a fallback used only
+   * when `opponentStableId` is absent. (The player's `state.player.id`
+   * doubles as the player-side key.)
    */
   opponentId?: string;
   /** Opponent's stable id — used for `agentMemory.opponentDossiers` lookup. */
@@ -42,9 +43,18 @@ export function rivalFightPlan(
 ): FightPlan {
   const { opponentStyle, opponentId, opponentStableId, dossier, now } = opts;
 
+  // Grudge keys live in the OWNER-id namespace. The stable id identifies the
+  // actual opponent and wins over a caller-supplied opponentId: a rival
+  // stable resolves to its owner's id through rivalMap; anything else (the
+  // player stable) uses its own id, which doubles as the player-side key.
+  const grudgeKey =
+    opponentStableId !== undefined
+      ? (state.rivalMap?.get(opponentStableId)?.owner.id ?? opponentStableId)
+      : opponentId;
+
   let grudgeIntensity = 0;
-  if (opponentId) {
-    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentId));
+  if (grudgeKey) {
+    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, grudgeKey));
     grudgeIntensity = grudge?.intensity ?? 0;
   }
 

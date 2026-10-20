@@ -130,6 +130,98 @@ describe('rivalFightPlan', () => {
     expect(out).toEqual(expected);
   });
 
+  it('resolves a rival opponentStableId to its owner id for the grudge lookup (F-bug)', () => {
+    // The caller supplies the opponent's STABLE id; the grudge lives under
+    // the opponent's OWNER id. The helper must bridge the two namespaces.
+    const oppRival = makeRival({
+      id: 'st-opp' as StableId,
+      owner: makeOwner({ id: 'owner-opp' as StableId }),
+    });
+    const state = baseState({
+      ownerGrudges: [grudge(3)],
+      rivals: [oppRival],
+    } as Partial<GameState>);
+    const rival = rivalWith();
+
+    const viaStable = rivalFightPlan(state, warrior(), rival, {
+      opponentStableId: 'st-opp',
+    });
+    const baseline = rivalFightPlan(
+      baseState({ rivals: [oppRival] } as Partial<GameState>),
+      warrior(),
+      rival,
+      { opponentStableId: 'st-opp' }
+    );
+
+    expect(viaStable.killDesire).toBeGreaterThan(baseline.killDesire ?? 0);
+    expect(viaStable.AL).toBeGreaterThan(baseline.AL ?? 0);
+  });
+
+  it('does not let a caller-supplied opponentId shadow the stable-resolved owner (F-bug)', () => {
+    // Regression: boutResolution historically passed state.player.id as the
+    // grudge key even for rival-vs-rival bouts — a rival's grudge against
+    // the player leaked into plans against unrelated rivals. The stable id
+    // identifies the actual opponent and must win.
+    const oppRival = makeRival({
+      id: 'st-opp' as StableId,
+      owner: makeOwner({ id: 'owner-opp' as StableId }),
+    });
+    const state = baseState();
+    const playerGrudge: OwnerGrudge = {
+      id: 'g2' as OwnerGrudge['id'],
+      ownerIdA: OWNER_ID,
+      ownerIdB: state.player.id,
+      intensity: 5,
+      reason: 'test',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
+    const withPlayerGrudge = baseState({
+      ownerGrudges: [playerGrudge],
+      rivals: [oppRival],
+    } as Partial<GameState>);
+    const rival = rivalWith();
+
+    // Even with opponentId = player.id (the old bout call-site shape), the
+    // plan must reflect the stable-resolved opponent — no player grudge.
+    const plan = rivalFightPlan(withPlayerGrudge, warrior(), rival, {
+      opponentId: state.player.id,
+      opponentStableId: 'st-opp',
+    });
+    const clean = rivalFightPlan(
+      baseState({ rivals: [oppRival] } as Partial<GameState>),
+      warrior(),
+      rival,
+      { opponentStableId: 'st-opp' }
+    );
+    expect(plan).toEqual(clean);
+  });
+
+  it('keeps the player path: an unresolved stable id is itself the owner key', () => {
+    // Player warriors' stableId equals state.player.id — the id grudges are
+    // stored under — and is absent from rivalMap, so it falls through.
+    const state = baseState();
+    const playerGrudge: OwnerGrudge = {
+      id: 'g3' as OwnerGrudge['id'],
+      ownerIdA: OWNER_ID,
+      ownerIdB: state.player.id,
+      intensity: 4,
+      reason: 'test',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
+    const withGrudge = baseState({ ownerGrudges: [playerGrudge] } as Partial<GameState>);
+    const rival = rivalWith();
+
+    const viaStable = rivalFightPlan(withGrudge, warrior(), rival, {
+      opponentStableId: state.player.id,
+    });
+    const baseline = rivalFightPlan(baseState(), warrior(), rival, {
+      opponentStableId: state.player.id,
+    });
+    expect(viaStable.killDesire).toBeGreaterThan(baseline.killDesire ?? 0);
+  });
+
   it('defaults `now` to absoluteWeek ?? week', () => {
     const state = baseState();
     const rival = rivalWith();

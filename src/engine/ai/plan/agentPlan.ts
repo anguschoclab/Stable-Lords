@@ -31,10 +31,9 @@ export function agentPlanForWarrior(
     state.warriorToStableMap?.get(opponent.id)?.stableId;
   return rivalFightPlan(state, w, rival, {
     opponentStyle: opponent.style,
-    // FIXME(F): a stable id is passed where the grudge map is owner-keyed —
-    // the player path works only because state.player.id doubles as its
-    // owner key; rival-vs-rival lookups are dead. Fixed in the F-bug commit.
-    opponentId: resolvedOpponentStable,
+    // Stable id identifies the actual opponent — rivalFightPlan resolves it
+    // to the owner-namespace grudge key (player stables fall through, since
+    // state.player.id doubles as the owner key).
     opponentStableId: resolvedOpponentStable,
   });
 }

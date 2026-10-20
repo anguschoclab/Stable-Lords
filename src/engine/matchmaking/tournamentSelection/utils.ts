@@ -8,22 +8,17 @@ import { generateWarriorName } from '@/data/names/nameGenerator';
 
 /**
  * Get ai plan.
- * @param opponentStyle - Opponent style. (optional)
- * @param opponentOwnerId - Opponent owner id. (optional)
- */
-
-/**
- * Get ai plan.
  * @param state -
  * @param w -
  * @param opponentStyle -
- * @param opponentOwnerId -
+ * @param opponentStableId - Opponent stable id — resolved to the
+ *   owner-namespace grudge key inside rivalFightPlan.
  */
 export function getAIPlan(
   state: GameState,
   w: Warrior,
   opponentStyle?: FightingStyle,
-  opponentOwnerId?: string
+  opponentStableId?: string
 ) {
   // warrior.stableId is rival.id (StableId), not owner.id
   const rival = w.stableId ? state.rivalMap?.get(w.stableId) : undefined;
@@ -31,7 +26,7 @@ export function getAIPlan(
 
   return rivalFightPlan(state, w, rival, {
     opponentStyle: opponentStyle,
-    opponentId: opponentOwnerId,
+    opponentStableId: opponentStableId,
   });
 }
 

@@ -120,11 +120,15 @@ function runBoutSimulation(
   const weather = _ctx.isTournamentBout ? 'Clear' : state.weather;
   const arenaId = resolveBoutArenaId(_ctx, boutSeed);
 
+  // The opponent's stable id identifies them — rivalFightPlan resolves it to
+  // the owner-namespace grudge key (player stables fall through to their own
+  // id). Passing ctx.playerId as the grudge key here used to leak player
+  // grudges into rival-vs-rival bouts.
   const planA = isNPCWarrior(state, validCW)
-    ? getNPCPlan(state, validCW, validCO.style, _ctx.playerId, validCO.stableId as string)
+    ? getNPCPlan(state, validCW, validCO.style, undefined, validCO.stableId as string)
     : getDefaultPlan(validCW, defaultPlanForWarrior);
   const planD = isNPCWarrior(state, validCO)
-    ? getNPCPlan(state, validCO, validCW.style, _ctx.playerId, validCW.stableId as string)
+    ? getNPCPlan(state, validCO, validCW.style, undefined, validCW.stableId as string)
     : getDefaultPlan(validCO, defaultPlanForWarrior);
 
   return simulateFight({

@@ -447,18 +447,6 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
         renown: 0,
         titles: 0,
       },
-      rivalMap: new Map([
-        ['rival-1', rival1],
-        ['rival-2', rival2],
-      ]) as any,
-      warriorMap: new Map([
-        [warrior1.id, warrior1],
-        [warrior2.id, warrior2],
-      ]) as any,
-      warriorToStableMap: new Map([
-        [warrior1.id, { stableId: 'rival-1', isPlayer: false }],
-        [warrior2.id, { stableId: 'rival-2', isPlayer: false }],
-      ]) as any,
     });
 
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);

@@ -29,14 +29,7 @@ const store = {
   arenaHistory: [],
   newsletter: [],
   deferredBoutLogs: [],
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
+  player: makePageStoreState().player,
   activeSlotId: 'slot-1',
   loadGame: mockLoadGame,
   bookmarks: [],
@@ -83,6 +76,7 @@ import Tournaments from '@/pages/Tournaments';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { toast } from 'sonner';
 import { audioManager } from '@/lib/AudioManager';
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 
 /** The state the canonical day-advance returns for the executed round. */
 function resolvedState(over: Record<string, unknown> = {}) {

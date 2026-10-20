@@ -4,9 +4,10 @@ import { render, screen } from '@testing-library/react';
 import FightsList from '@/components/awards/FightsList';
 import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';
 import type { FightSummary } from '@/types/game';
+import { makeFightSummary } from '@/test/_fixtures/factories';
 
 const mockFights: FightSummary[] = [
-  {
+  makeFightSummary({
     id: 'f1' as never,
     title: 'Alice vs Bob',
     winner: 'A',
@@ -18,8 +19,8 @@ const mockFights: FightSummary[] = [
     styleA: 'Bashing Attack',
     styleD: 'Parry',
     createdAt: '2024-01-01',
-  },
-  {
+  }),
+  makeFightSummary({
     id: 'f2' as never,
     title: 'Carol vs Dave',
     winner: 'D',
@@ -30,7 +31,7 @@ const mockFights: FightSummary[] = [
     styleA: 'Striking Attack',
     styleD: 'Evasion',
     createdAt: '2024-01-02',
-  },
+  }),
 ];
 
 const mockUpsets: UpsetEntry[] = [

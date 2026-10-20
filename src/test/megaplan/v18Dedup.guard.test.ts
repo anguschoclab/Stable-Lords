@@ -178,7 +178,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D11: fight-summary literals repointed to makeFightSummary — MEGAPLAN-D11', () => {
+  it('D11: fight-summary literals repointed to makeFightSummary — MEGAPLAN-D11', () => {
     const offenders = [
       'src/test/components/awards/Awards.test.tsx',
       'src/test/components/eventLog/EventLog.test.tsx',
@@ -189,7 +189,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D12: rival/rivalMap literals repointed to makeRival/makeOwner — MEGAPLAN-D12', () => {
+  it('D12: rival/rivalMap literals repointed to makeRival/makeOwner — MEGAPLAN-D12', () => {
     const re = /rivalMap:\s*new Map\(\[\s*\n?\s*\['rival-/g;
     const offenders = [
       'src/test/engine/ai/boutBidding.test.ts',
@@ -201,7 +201,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D13: _fixtures echo clones repointed — Dragon\'s Hearth player literal drained — MEGAPLAN-D13', () => {
+  it('D13: _fixtures echo clones repointed — Dragon\'s Hearth player literal drained — MEGAPLAN-D13', () => {
     const re = /stableName:\s*["']Dragon's Hearth["']/g;
     const offenders = [
       'src/test/components/RosterWallAnimation.test.tsx',

@@ -6,6 +6,7 @@ import { EVENT_ICONS } from '@/components/eventLog/constants';
 import { processFightEvents } from '@/components/eventLog/eventProcessors';
 import type { EventType } from '@/types/eventLog';
 import type { FightSummary } from '@/types/game';
+import { makeFightSummary } from '@/test/_fixtures/factories';
 
 /** The live EventType union — 'recruit' was removed (V16/F5: zero producers). */
 const ALL_EVENT_TYPES: readonly EventType[] = [
@@ -60,7 +61,7 @@ describe('processFightEvents', () => {
 
   it('processes fight events correctly', () => {
     const fights: FightSummary[] = [
-      {
+      makeFightSummary({
         id: 'f1' as never,
         title: 'Alice vs Bob',
         winner: 'A',
@@ -71,7 +72,7 @@ describe('processFightEvents', () => {
         styleA: 'Bashing Attack',
         styleD: 'Parry',
         createdAt: '2024-01-01',
-      },
+      }),
     ];
     const result = processFightEvents(fights);
     expect(result).toHaveLength(1);
@@ -81,7 +82,7 @@ describe('processFightEvents', () => {
 
   it('marks kill events correctly', () => {
     const fights: FightSummary[] = [
-      {
+      makeFightSummary({
         id: 'f2' as never,
         title: 'Carol vs Dave',
         winner: 'D',
@@ -92,7 +93,7 @@ describe('processFightEvents', () => {
         styleA: 'Striking Attack',
         styleD: 'Evasion',
         createdAt: '2024-01-02',
-      },
+      }),
     ];
     const result = processFightEvents(fights);
     expect(result[0]!.type).toBe('kill');

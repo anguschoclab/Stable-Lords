@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import type { Warrior } from '@/types/game';
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 import { FightingStyle } from '@/types/game';
 
 const mockHelpers = {
@@ -25,14 +26,7 @@ const applyStore = () =>
   useGameStore.setState({
     isBookmarked: () => false,
     roster: mockRoster,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
+    player: makePageStoreState().player,
     rivals: [],
     retired: [],
     graveyard: [],

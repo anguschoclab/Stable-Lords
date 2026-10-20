@@ -5,16 +5,10 @@ import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
 import { useGameStore } from '@/state/useGameStore';
+import { makePageStoreState } from '@/test/_fixtures/storeState';
 
 const fakeStoreState = {
-  player: {
-    id: 'p1',
-    name: 'Player',
-    stableName: "Dragon's Hearth",
-    fame: 0,
-    renown: 0,
-    titles: 0,
-  },
+  player: makePageStoreState().player,
   rivals: [],
   roster: [],
   graveyard: [],

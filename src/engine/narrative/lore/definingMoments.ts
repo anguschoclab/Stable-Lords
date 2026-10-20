@@ -200,4 +200,9 @@ export const DEFINING_MOMENTS: string[] = [
   'knowing that the cheers of the crowd were the only apology the world would ever offer them',
   'until they choked the life from a corrupt guard and felt the heavy weight of true freedom',
   'realizing that the only way to avoid the slaughterhouse was to become the butcher',
+  'until they realized the only thing separating the gutter from the colosseum was the number of eyes watching the kill',
+  'knowing that every drop of blood spilled in the streets was just practice for the sands',
+  'until a desperate fight over a crust of bread taught them that survival always comes at a cost',
+  'realizing that the deafening roar of the arena was the only sound that could drown out the silence of their past',
+  'until they locked eyes with a dying champion and understood that glory was just another word for survival',
 ];

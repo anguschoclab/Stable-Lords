@@ -223,4 +223,9 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to gauge an adversary’s exhaustion by the trembling of their weapon hand',
   'always carried a piece of fractured mirror to watch their own back',
   'would meticulously catalog the dying breaths of strays to understand the final moments of life',
+  'learned to map the exact rhythm of a guard’s patrol just by the sound of their boots on cobblestone',
+  'would purposely walk with a severe limp to bait overconfident thieves into lethal counterattacks',
+  'spent their youth silently climbing the sheer outer walls of the colosseum to watch the bloodletting',
+  'developed an uncanny ability to gauge the exact weight of a makeshift weapon merely by looking at it',
+  'learned to feign unconsciousness under a pile of corpses to survive the winter cullings',
 ];

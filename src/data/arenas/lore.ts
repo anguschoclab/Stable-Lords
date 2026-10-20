@@ -933,6 +933,102 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A disgraced noble, stripped of his armor, fought wildly until exhaustion set in, only to slip and silently drown in three inches of thick, bloody mud.',
   },
+  {
+    id: 'standard_arena_the_silent_stand',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Silent Stand',
+    narrative:
+      'A legendary match where both fighters, utterly exhausted, simply stared at each other for ten full minutes before collapsing simultaneously in a draw.',
+  },
+  {
+    id: 'the_iron_cage_rusting_grasp',
+    arenaId: 'the_iron_cage',
+    type: 'architectural_quirk',
+    title: 'The Rusting Grasp',
+    narrative:
+      'Certain sections of the cage are heavily magnetized, a remnant of an old forge beneath the arena. Fighters wearing heavy steel often find their weapons inexplicably pulled toward the bars.',
+  },
+  {
+    id: 'volcanic_crater_the_ember_dance',
+    arenaId: 'volcanic_crater',
+    type: 'famous_death',
+    title: 'The Ember Dance',
+    narrative:
+      'A nimble duelist attempted to use an erupting geyser of hot ash as cover, but inhaled the superheated air and burned from the inside out, dropping dead before their opponent could strike.',
+  },
+  {
+    id: 'sun_baked_plateau_blood_noon',
+    arenaId: 'sun_baked_plateau',
+    type: 'historical_battle',
+    title: 'The Blood Noon',
+    narrative:
+      'A legendary bout that lasted exactly until high noon, when the blinding glare reflecting off the golden plateau allowed a fatal, unseen strike to end the stalemate.',
+  },
+  {
+    id: 'the_crystal_spire_glass_shatter',
+    arenaId: 'the_crystal_spire',
+    type: 'architectural_quirk',
+    title: 'The Razor Floors',
+    narrative:
+      'The ancient crystal floor constantly splinters under heavy impacts, turning the arena surface into a field of jagged razors that shred unprotected feet.',
+  },
+  {
+    id: 'forgotten_crypt_echoing_death',
+    arenaId: 'forgotten_crypt',
+    type: 'famous_death',
+    title: 'The Echoing Death',
+    narrative:
+      'A blind combatant used the crypt’s acoustic anomalies to pinpoint their opponent’s racing heartbeat, driving a spike through the dark before a single clash of steel occurred.',
+  },
+  {
+    id: 'bloodsands_the_red_dune',
+    arenaId: 'bloodsands_arena',
+    type: 'architectural_quirk',
+    title: 'The Red Dune',
+    narrative:
+      'In the eastern quadrant, the sand has absorbed so much blood over the centuries that it has clumped into a solid, crimson dune that fighters often use for higher ground.',
+  },
+  {
+    id: 'lantern_hall_the_flickering_shadows',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Flickering Shadows',
+    narrative:
+      'During the Grand Solstice bout, a rogue gust of wind extinguished half the lanterns, leading to a brutal, blind melee where the eventual victor fought purely on sound and instinct.',
+  },
+  {
+    id: 'flooded_vault_rusting_grasp',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Rusting Grasp',
+    narrative:
+      'A heavily armored juggernaut found his sabatons wedged deep in the submerged grating. Unable to free himself, he was slowly dismantled by a much lighter, nimbler duelist.',
+  },
+  {
+    id: 'charnel_pits_screaming_skulls',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Screaming Skulls',
+    narrative:
+      'The wind whistling through the exposed eye sockets of the arena floor creates an unsettling chorus of wails, causing lesser fighters to drop their guard in terror.',
+  },
+  {
+    id: 'mudpit_arena_suffocating_tide',
+    arenaId: 'mudpit_arena',
+    type: 'hazard',
+    title: 'The Suffocating Tide',
+    narrative:
+      'When heavy rains fall, the bloody mud rises significantly, forcing fighters to constantly move or risk sinking and drowning in the mire.',
+  },
+  {
+    id: 'standard_arena_forgotten_kings_bout',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Forgotten King’s Bout',
+    narrative:
+      'Legend states that an exiled king fought here anonymously. He supposedly bled out on the center sands, and it is said the dirt there still repels water to this day.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

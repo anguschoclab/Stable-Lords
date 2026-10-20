@@ -66,7 +66,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts'), 'split src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S8: scheduling decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S8', () => {
+  it('S8: scheduling decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S8', () => {
     expect(budgetFor('src/engine/championship/arenaChampionship/phases/scheduling.ts'), 'split src/engine/championship/arenaChampionship/phases/scheduling.ts into orchestrator + named siblings').toEqual([]);
   });
 
@@ -78,7 +78,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/warrior/dossier/WarriorDossierHeader.tsx'), 'split src/components/warrior/dossier/WarriorDossierHeader.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S11: results decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S11', () => {
+  it('S11: results decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S11', () => {
     expect(budgetFor('src/engine/matchmaking/tournamentSelection/resolution/results.ts'), 'split src/engine/matchmaking/tournamentSelection/resolution/results.ts into orchestrator + named siblings').toEqual([]);
   });
 

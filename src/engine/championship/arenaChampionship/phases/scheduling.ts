@@ -30,6 +30,79 @@ export function titleBoutsPerWeekCap(arenaCount = getNormalArenas().length): num
   );
 }
 
+interface ScheduleArenaArgs {
+  state: GameState;
+  delta: ChampionshipDelta;
+  rng: IRNGService;
+  arenaId: string;
+  targetWeek: number;
+  now: number;
+  bookedNext: Set<string>;
+}
+
+/** Books a reigning champion's defense when the interval has elapsed. */
+function scheduleChampionDefense(
+  args: ScheduleArenaArgs,
+  reign: NonNullable<NonNullable<ReturnType<typeof titleOf>>['champion']>
+): boolean {
+  const { state, delta, rng, arenaId, targetWeek, now, bookedNext } = args;
+  if (now - reign.lastActivityWeek < ARENA_TITLE.DEFENSE_INTERVAL_WEEKS) return false;
+  if (bookedNext.has(reign.warriorId)) {
+    ensureTitle(state, delta, arenaId).deferrals += 1;
+    return false;
+  }
+  const contender = selectTitleContender(state, arenaId, delta, { bookedIds: bookedNext });
+  if (!contender) {
+    // Eligible-but-booked slides are informational; true no-contender
+    // weeks are counted by the transition step.
+    if (selectTitleContender(state, arenaId, delta)) {
+      ensureTitle(state, delta, arenaId).deferrals += 1;
+    }
+    return false;
+  }
+  delta.newOffers.push(
+    makeTitleOffer({
+      rng: rng,
+      arenaId: arenaId,
+      aId: reign.warriorId,
+      bId: contender.id,
+      targetDisplayWeek: targetWeek,
+      now: now,
+    })
+  );
+  CHAMPIONSHIP_DEBUG.offersCreated++;
+  CHAMPIONSHIP_DEBUG.defensesScheduled++;
+  bookedNext.add(contender.id);
+  bookedNext.add(reign.warriorId);
+  return true;
+}
+
+/** Vacant title — the top two eligible contenders fight for the crown. */
+function scheduleVacantTitle(args: ScheduleArenaArgs): boolean {
+  const { state, delta, rng, arenaId, targetWeek, now, bookedNext } = args;
+  const ranked = rankContenders(state, arenaId, delta, { bookedIds: bookedNext });
+  if (ranked.length < 2) {
+    if (ranked.length >= 1) ensureTitle(state, delta, arenaId).deferrals += 1;
+    return false;
+  }
+  const [a, b] = ranked;
+  if (!a || !b) return false;
+  delta.newOffers.push(
+    makeTitleOffer({
+      rng: rng,
+      arenaId: arenaId,
+      aId: a.warrior.id,
+      bId: b.warrior.id,
+      targetDisplayWeek: targetWeek,
+      now: now,
+    })
+  );
+  CHAMPIONSHIP_DEBUG.offersCreated++;
+  bookedNext.add(a.warrior.id);
+  bookedNext.add(b.warrior.id);
+  return true;
+}
+
 /**
  * Books title defenses for the next week on the normal cadence.
  * Skips non-active titles (transitions ran first), tournament weeks,
@@ -64,61 +137,14 @@ export function scheduleTitleBouts(
     if (title?.status !== 'active') continue;
     if (liveTitleArenas.has(arenaId)) continue;
 
-    if (title.champion) {
-      const reign = title.champion;
-      if (now - reign.lastActivityWeek < ARENA_TITLE.DEFENSE_INTERVAL_WEEKS) continue;
-      if (bookedNext.has(reign.warriorId)) {
-        ensureTitle(state, delta, arenaId).deferrals += 1;
-        continue;
-      }
-      const contender = selectTitleContender(state, arenaId, delta, { bookedIds: bookedNext });
-      if (!contender) {
-        // Eligible-but-booked slides are informational; true no-contender
-        // weeks are counted by the transition step.
-        if (selectTitleContender(state, arenaId, delta)) {
-          ensureTitle(state, delta, arenaId).deferrals += 1;
-        }
-        continue;
-      }
-      delta.newOffers.push(
-        makeTitleOffer({
-          rng: rng,
-          arenaId: arenaId,
-          aId: reign.warriorId,
-          bId: contender.id,
-          targetDisplayWeek: targetWeek,
-          now: now,
-        })
-      );
-      CHAMPIONSHIP_DEBUG.offersCreated++;
-      CHAMPIONSHIP_DEBUG.defensesScheduled++;
+    const arenaArgs: ScheduleArenaArgs = {
+      state, delta, rng, arenaId, targetWeek, now, bookedNext,
+    };
+    const booked = title.champion
+      ? scheduleChampionDefense(arenaArgs, title.champion)
+      : scheduleVacantTitle(arenaArgs);
+    if (booked) {
       liveTitleArenas.add(arenaId);
-      bookedNext.add(contender.id);
-      bookedNext.add(reign.warriorId);
-      bookedCount++;
-    } else {
-      // Vacant — top two eligible contenders fight for the crown.
-      const ranked = rankContenders(state, arenaId, delta, { bookedIds: bookedNext });
-      if (ranked.length < 2) {
-        if (ranked.length >= 1) ensureTitle(state, delta, arenaId).deferrals += 1;
-        continue;
-      }
-      const [a, b] = ranked;
-      if (!a || !b) continue;
-      delta.newOffers.push(
-        makeTitleOffer({
-          rng: rng,
-          arenaId: arenaId,
-          aId: a.warrior.id,
-          bId: b.warrior.id,
-          targetDisplayWeek: targetWeek,
-          now: now,
-        })
-      );
-      CHAMPIONSHIP_DEBUG.offersCreated++;
-      liveTitleArenas.add(arenaId);
-      bookedNext.add(a.warrior.id);
-      bookedNext.add(b.warrior.id);
       bookedCount++;
     }
   }

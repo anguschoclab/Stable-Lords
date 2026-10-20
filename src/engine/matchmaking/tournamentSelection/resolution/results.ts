@@ -59,52 +59,26 @@ export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
   // 🔒 Tournament fatigue exemption: No fatigue accrual for tournament participants during tournament week
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
-  updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
-    updateWarriorFromBoutOutcome({
-      warrior: w,
-      isAttacker: true,
-      winnerSide: winnerSide,
-      isKill: isKill,
-      skipFatigue: shouldSkipFatigue,
-      arenaId: arenaId,
-    })
-  );
-  updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
-    updateWarriorFromBoutOutcome({
-      warrior: w,
-      isAttacker: false,
-      winnerSide: winnerSide,
-      isKill: isKill,
-      skipFatigue: shouldSkipFatigue,
-      arenaId: arenaId,
-    })
-  );
+  const applyOutcome = (roster: Warrior[], wId: Warrior['id'], isAttacker: boolean) =>
+    updateEntityInList(roster, wId, (w) =>
+      updateWarriorFromBoutOutcome({
+        warrior: w,
+        isAttacker,
+        winnerSide: winnerSide,
+        isKill: isKill,
+        skipFatigue: shouldSkipFatigue,
+        arenaId: arenaId,
+      })
+    );
+
+  updatedState.roster = applyOutcome(updatedState.roster, wA.id, true);
+  updatedState.roster = applyOutcome(updatedState.roster, wD.id, false);
 
   if (wA.stableId || wD.stableId) {
     updatedState.rivals = updatedState.rivals.map((r) => {
       let rRoster = r.roster;
-      if (r.id === wA.stableId)
-        rRoster = updateEntityInList(rRoster, wA.id, (w) =>
-          updateWarriorFromBoutOutcome({
-            warrior: w,
-            isAttacker: true,
-            winnerSide: winnerSide,
-            isKill: isKill,
-            skipFatigue: shouldSkipFatigue,
-            arenaId: arenaId,
-          })
-        );
-      if (r.id === wD.stableId)
-        rRoster = updateEntityInList(rRoster, wD.id, (w) =>
-          updateWarriorFromBoutOutcome({
-            warrior: w,
-            isAttacker: false,
-            winnerSide: winnerSide,
-            isKill: isKill,
-            skipFatigue: shouldSkipFatigue,
-            arenaId: arenaId,
-          })
-        );
+      if (r.id === wA.stableId) rRoster = applyOutcome(rRoster, wA.id, true);
+      if (r.id === wD.stableId) rRoster = applyOutcome(rRoster, wD.id, false);
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });
   }

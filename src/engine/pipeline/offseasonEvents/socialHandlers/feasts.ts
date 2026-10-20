@@ -5,8 +5,7 @@ import {
   announceOffseasonEvent,
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
-  warriorOutcome,
+  statGrantOutcome,
 } from '../helpers';
 
 /**
@@ -102,12 +101,10 @@ export function handleStreetPerformance(run: OffseasonEventRun) {
         ? currentFlair
         : [...currentFlair, 'Local Hero'];
 
-      return warriorOutcome(
-        {
-          fame: addStat(chosen.fame, fameGained),
-          flair: newFlair,
-        },
-        { fame: fameGained, gold: goldGained }
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
+        { updates: { flair: newFlair }, mirror: true, announce: { gold: goldGained } }
       );
     },
   });
@@ -134,13 +131,7 @@ export function handleTravelingCircus(run: OffseasonEventRun) {
         makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
       );
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { xp: xpGained, fame: fameGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained, fame: fameGained }, { mirror: true });
     },
   });
 }

@@ -1,10 +1,8 @@
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeMinorInjury } from '@/engine/injuries/utils';
 import {
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
-  withAddedInjury,
-  warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from '../helpers';
 
@@ -16,22 +14,13 @@ export function handleSuspiciousMushroomStew(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 20 + Math.floor(rng.next() * 16);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Stomach Ache',
         description: 'A gnawing ache from eating suspicious glowing mushrooms.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { CN: -1, SP: -1 },
       });
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { injury: newInjury, mirror: true });
     },
     healthyOnly: true,
   });
@@ -44,10 +33,7 @@ export function handlePhantomSparringPartner(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 40;
       const fatigueGained = 10;
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        fatigue: addStat(chosen.fatigue, fatigueGained),
-      });
+      return statGrantOutcome(chosen, { xp: xpGained, fatigue: fatigueGained });
     },
   });
 }
@@ -58,19 +44,12 @@ export function handleDreamweaversMist(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
     apply: (chosen) => {
-      const xpGained = 15;
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Magic Burn',
         description: 'Strange magical blisters that throb in the dark.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { CN: -1 },
       });
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        injuries: withAddedInjury(chosen, newInjury),
-      });
+      return statGrantOutcome(chosen, { xp: 15 }, { injury: newInjury });
     },
   });
 }
@@ -81,14 +60,9 @@ export function handlePrismaticGaleExposure(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
     apply: (chosen) => {
-      const xpGained = 20;
-
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Prismatic Dizziness',
         description: 'Still seeing colors and feeling off-balance.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { SP: -1, CN: -1 },
       });
 
@@ -98,10 +72,7 @@ export function handlePrismaticGaleExposure(run: OffseasonEventRun) {
         origin: 'Prismatic Gale',
       });
 
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        injuries: withAddedInjury(chosen, newInjury),
-      });
+      return statGrantOutcome(chosen, { xp: 20 }, { injury: newInjury });
     },
   });
 }

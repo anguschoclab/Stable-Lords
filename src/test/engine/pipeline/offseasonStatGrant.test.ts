@@ -69,6 +69,16 @@ describe('statGrantOutcome', () => {
     expect(out.updates).toEqual({ traits: ['a'], xp: 105 });
   });
 
+  it('clampToZero floors granted stats at 0 — the Math.max(0, stat - loss) idiom', () => {
+    expect(statGrantOutcome(chosen(), { fame: -10 }, { clampToZero: true }).updates).toEqual({
+      fame: 40,
+    });
+    const broke = makeWarrior({ id: 'w2' as never, name: 'B', fame: 5 });
+    expect(statGrantOutcome(broke, { fame: -60 }, { clampToZero: true }).updates).toEqual({
+      fame: 0,
+    });
+  });
+
   it('supports update-only outcomes (e.g. injury + no stat grant)', () => {
     const injuries = [{ id: 'i1', name: 'X' }] as never[];
     const out = statGrantOutcome(chosen(), {}, { updates: { injuries }, announce: { gold: 35 } });

@@ -84,14 +84,8 @@ const EXEMPT_PAIRS = new Set([
 // masked. Eliminated via statGrantOutcome/makeMinorInjury (offseason),
 // DriftParticles (weather effects), rivalFightPlan (rival-plan tail).
 const DEBT_PAIRS = new Set([
-  // warriorOutcome/addStat + makeInjury boilerplate across offseason handlers
-  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/chaosHandlers/rift.ts',
-  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
-  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
-  'src/engine/pipeline/offseasonEvents/chaosHandlers/oddities.ts|src/engine/pipeline/offseasonEvents/chaosHandlers/phenomena.ts',
-  'src/engine/pipeline/offseasonEvents/chaosHandlers/oddities.ts|src/engine/pipeline/offseasonEvents/injuryHandlers.ts',
-  'src/engine/pipeline/offseasonEvents/chaosHandlers/rift.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
-  'src/engine/pipeline/offseasonEvents/socialHandlers/street.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
+  // warriorOutcome/addStat + makeInjury boilerplate across offseason handlers —
+  // DRAINED by statGrantOutcome/makeMinorInjury (7 pairs eliminated).
   // driftParticleStyle particle-JSX idiom
   'src/components/arena/weather/effects/heatEffects.tsx|src/components/arena/weather/effects/windEffects.tsx',
   // grudge lookup + aiPlanForWarrior tail

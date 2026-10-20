@@ -1,13 +1,12 @@
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeMinorInjury } from '@/engine/injuries/utils';
 import {
   withChosenWarrior,
   withChosenWarriorNews,
   type OffseasonEventRun,
-  addStat,
   withAddedInjury,
-  warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from '../helpers';
 
@@ -32,13 +31,7 @@ export function handleChaosRift(run: OffseasonEventRun) {
         origin: 'Chaos Rift',
       });
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { xp: xpGained, fame: fameGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained, fame: fameGained }, { mirror: true });
     },
   });
 }
@@ -60,11 +53,9 @@ export function handleChaoticSpells(run: OffseasonEventRun) {
       }
 
       if (roll < 0.66) {
-        const newInjury = makeInjury(rng, {
+        const newInjury = makeMinorInjury(rng, {
           name: 'Arcane Burns',
           description: 'Singed by erratic magic.',
-          severity: 'Minor',
-          weeksBase: 1,
           weeksRange: 2,
           penalties: { SP: -1, CN: -1 },
         });

@@ -1,4 +1,4 @@
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeInjury, makeMinorInjury } from '@/engine/injuries/utils';
 import {
   withChosenWarriorNews,
   type OffseasonEventRun,
@@ -68,12 +68,9 @@ export function handleFeyTrickster(run: OffseasonEventRun) {
       }
 
       // Tricked
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Fey Prank',
         description: 'A deeply embarrassing magical prank.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { WL: -1, SP: -1 },
       });
       ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
@@ -102,11 +99,9 @@ export function handleRogueAlchemist(run: OffseasonEventRun) {
       }
 
       // Failure
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Alchemical Sickness',
         description: 'Nausea, cold sweats, and strange bodily humming.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 2,
         penalties: { SP: -1, CN: -1 },
       });

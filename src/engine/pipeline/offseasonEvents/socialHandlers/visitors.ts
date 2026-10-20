@@ -5,8 +5,8 @@ import { hasInjuries } from '@/engine/injuries/utils';
 import {
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
   warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from '../helpers';
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -73,12 +73,7 @@ export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
         origin: 'Wandering Fortune Teller',
       });
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { gold: cost }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { announce: { gold: cost } });
     },
   });
 }
@@ -103,12 +98,7 @@ export function handleDreamweaverVisit(run: OffseasonEventRun) {
         origin: 'Dreamweaver',
       });
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { mirror: true });
     },
   });
 }

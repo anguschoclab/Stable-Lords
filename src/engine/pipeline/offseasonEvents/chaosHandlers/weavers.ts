@@ -1,4 +1,4 @@
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeInjury, makeMinorInjury } from '@/engine/injuries/utils';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
 import {
@@ -77,12 +77,10 @@ export function handleChaosWeaversGame(run: OffseasonEventRun) {
       });
     } else {
       // Lose
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Mystic Bruises',
         description: 'A lingering supernatural bruise.',
-        severity: 'Minor',
         weeksBase: 2,
-        weeksRange: 1,
         penalties: { CN: -1 },
       });
       ctx.rosterUpdates.set(chosen.id, { injuries: withAddedInjury(chosen, newInjury) });
@@ -138,12 +136,10 @@ export function handleChaosWeaversProphecy(run: OffseasonEventRun) {
       xp: (chosen.xp || 0) + xpGained,
     });
 
-    const newInjury = makeInjury(rng, {
+    const newInjury = makeMinorInjury(rng, {
       name: 'Prophetic Madness',
       description: 'The Chaos Weaver shared a prophecy. The mind reels.',
-      severity: 'Minor',
       weeksBase: 2,
-      weeksRange: 1,
       penalties: { CN: -1 },
     });
 

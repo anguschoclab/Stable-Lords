@@ -2,15 +2,9 @@
  * Injury offseason events — cause injuries to warriors, sometimes with fame/gold side effects.
  */
 
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeMinorInjury } from '@/engine/injuries/utils';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
-import {
-  withChosenWarrior,
-  type OffseasonEventRun,
-  addStat,
-  withAddedInjury,
-  warriorOutcome,
-} from './helpers';
+import { withChosenWarrior, type OffseasonEventRun, statGrantOutcome } from './helpers';
 
 /**
  *
@@ -22,21 +16,20 @@ export function handleTavernBrawl(run: OffseasonEventRun) {
     apply: (chosen) => {
       const fameGained = 10 + Math.floor(rng.next() * 11);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Bruised Ribs',
         description: 'Painful but manageable.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 2,
         penalties: { CN: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
         {
-          fame: addStat(chosen.fame, fameGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { fame: fameGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
     healthyOnly: true,
@@ -53,21 +46,22 @@ export function handlePlagueOutbreak(run: OffseasonEventRun) {
     apply: (chosen) => {
       const fameLost = 5 + Math.floor(rng.next() * 10);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Camp Fever',
         description: 'Leaves the victim weak and fatigued.',
-        severity: 'Minor',
         weeksBase: 2,
         weeksRange: 2,
         penalties: { CN: -2, ST: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: -fameLost },
         {
-          fame: Math.max(0, (chosen.fame || 0) - fameLost),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { fame: fameLost }
+          clampToZero: true,
+          injury: newInjury,
+          announce: { fame: fameLost },
+        }
       );
     },
     healthyOnly: true,
@@ -84,21 +78,20 @@ export function handleWildAnimalAttack(run: OffseasonEventRun) {
     apply: (chosen) => {
       const fameGained = 5 + Math.floor(rng.next() * 6);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Bite Wound',
         description: 'A nasty bite from a wild beast.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 2,
         penalties: { CN: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
         {
-          fame: addStat(chosen.fame, fameGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { fame: fameGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
     healthyOnly: true,
@@ -119,20 +112,20 @@ export function handleGoblinRaid(run: OffseasonEventRun) {
         makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other')
       );
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Goblin Scratch',
         description: 'Nasty scratch from a tiny spear.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 2,
         penalties: { CN: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        {},
         {
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { gold: goldLost }
+          injury: newInjury,
+          announce: { gold: goldLost },
+        }
       );
     },
   });
@@ -148,21 +141,20 @@ export function handleUndergroundPitFight(run: OffseasonEventRun) {
     apply: (chosen) => {
       const fameGained = 15 + Math.floor(rng.next() * 16);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Busted Knuckles',
         description: 'A messy wound from a bare-knuckle pit fight.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 3,
         penalties: { SP: -1, CN: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
         {
-          fame: addStat(chosen.fame, fameGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { fame: fameGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
   });
@@ -178,21 +170,19 @@ export function handleTavernBrawlSurprise(run: OffseasonEventRun) {
     apply: (chosen) => {
       const fameGained = 15 + Math.floor(rng.next() * 11);
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Tavern Bruises',
         description: 'Scrapes and bruises from a sudden tavern brawl.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { SP: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
         {
-          fame: addStat(chosen.fame, fameGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { fame: fameGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
   });
@@ -208,21 +198,20 @@ export function handleSecretFightClub(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 15 + Math.floor(rng.next() * 11);
       const fameGained = 10 + Math.floor(rng.next() * 11);
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Brawler Bruises',
         description: 'Bruises from an unsanctioned underground brawl.',
-        severity: 'Minor',
         weeksBase: 2,
         weeksRange: 2,
         penalties: { SP: -1 },
       });
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { xp: xpGained, fame: fameGained },
         {
-          xp: addStat(chosen.xp, xpGained),
-          fame: addStat(chosen.fame, fameGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { xp: xpGained, fame: fameGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
   });
@@ -237,20 +226,18 @@ export function handleChaoticWeatherExperiment(run: OffseasonEventRun) {
     ...run,
     apply: (chosen) => {
       const xpGained = 15 + Math.floor(rng.next() * 10);
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Magic Burns',
         description: 'Minor burns from a wild weather experiment gone wrong.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { SP: -1 },
       });
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { xp: xpGained },
         {
-          xp: addStat(chosen.xp, xpGained),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { xp: xpGained }
+          injury: newInjury,
+          mirror: true,
+        }
       );
     },
   });

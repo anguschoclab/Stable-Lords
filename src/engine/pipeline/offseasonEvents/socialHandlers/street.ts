@@ -6,8 +6,7 @@ import {
   announceOffseasonEvent,
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
-  warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from '../helpers';
 
@@ -33,11 +32,10 @@ export function handleShadowMarketRun(run: OffseasonEventRun) {
         origin: 'Shadow Market',
       });
 
-      return warriorOutcome(
-        {
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { gold: cost, fame: fameGained }
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
+        { mirror: true, announce: { gold: cost } }
       );
     },
   });
@@ -58,13 +56,8 @@ export function handleLoyalStray(run: OffseasonEventRun) {
 
   withChosenWarrior({
     ...run,
-    apply: (chosen) => ({
-      updates: {
-        xp: (chosen.xp || 0) + 10,
-        fame: (chosen.fame || 0) + 5,
-      },
-      announce: { xp: 10, fame: 5, gold: cost },
-    }),
+    apply: (chosen) =>
+      statGrantOutcome(chosen, { xp: 10, fame: 5 }, { mirror: true, announce: { gold: cost } }),
   });
 }
 
@@ -88,11 +81,10 @@ export function handleBountyHunterVisit(run: OffseasonEventRun) {
 
       const fameGained = 10;
 
-      return warriorOutcome(
-        {
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { gold: goldGained, fame: fameGained }
+      return statGrantOutcome(
+        chosen,
+        { fame: fameGained },
+        { mirror: true, announce: { gold: goldGained } }
       );
     },
   });
@@ -124,12 +116,7 @@ export function handleMidnightMarket(run: OffseasonEventRun) {
         origin: 'Midnight Market',
       });
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { gold: cost }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { announce: { gold: cost } });
     },
   });
 }

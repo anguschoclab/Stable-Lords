@@ -6,8 +6,8 @@ import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import {
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
   warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from './helpers';
 
@@ -17,10 +17,7 @@ import {
 export function handleFameBoost(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
-    apply: (chosen) => ({
-      updates: { fame: (chosen.fame || 0) + 25 },
-      announce: { fame: 25 },
-    }),
+    apply: (chosen) => statGrantOutcome(chosen, { fame: 25 }, { mirror: true }),
   });
 }
 
@@ -37,10 +34,7 @@ export function handleEpiphany(run: OffseasonEventRun) {
         detail: 'Discovered a hidden reserve of strength during offseason meditation.',
         origin: 'Epiphany',
       });
-      return warriorOutcome({
-        fame: addStat(chosen.fame, 10),
-        xp: addStat(chosen.xp, 15),
-      });
+      return statGrantOutcome(chosen, { fame: 10, xp: 15 });
     },
   });
 }
@@ -54,12 +48,7 @@ export function handleBardsSong(run: OffseasonEventRun) {
     ...run,
     apply: (chosen) => {
       const fameGained = 15 + Math.floor(rng.next() * 20);
-      return warriorOutcome(
-        {
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { fame: fameGained }
-      );
+      return statGrantOutcome(chosen, { fame: fameGained }, { mirror: true });
     },
   });
 }
@@ -70,13 +59,7 @@ export function handleBardsSong(run: OffseasonEventRun) {
 export function handleMysticVision(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
-    apply: (chosen) => ({
-      updates: {
-        xp: (chosen.xp || 0) + 15,
-        fame: (chosen.fame || 0) + 10,
-      },
-      announce: { xp: 15, fame: 10 },
-    }),
+    apply: (chosen) => statGrantOutcome(chosen, { xp: 15, fame: 10 }, { mirror: true }),
   });
 }
 
@@ -89,12 +72,7 @@ export function handleStrangeDream(run: OffseasonEventRun) {
     ...run,
     apply: (chosen) => {
       const xpGained = 5 + Math.floor(rng.next() * 11);
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { mirror: true });
     },
   });
 }
@@ -109,13 +87,7 @@ export function handleMeteorShower(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 15 + Math.floor(rng.next() * 11);
       const fameGained = 10 + Math.floor(rng.next() * 6);
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { xp: xpGained, fame: fameGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained, fame: fameGained }, { mirror: true });
     },
   });
 }
@@ -130,13 +102,7 @@ export function handleGladiatorOlympics(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 15 + Math.floor(rng.next() * 11);
       const fameGained = 10 + Math.floor(rng.next() * 11);
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          fame: addStat(chosen.fame, fameGained),
-        },
-        { xp: xpGained, fame: fameGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained, fame: fameGained }, { mirror: true });
     },
   });
 }
@@ -149,9 +115,7 @@ export function handleLoyalStrayDog(run: OffseasonEventRun) {
     ...run,
     apply: (chosen) => {
       const xpGained = 10;
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-      });
+      return statGrantOutcome(chosen, { xp: xpGained });
     },
   });
 }
@@ -189,12 +153,10 @@ export function handleChaosSpores(run: OffseasonEventRun) {
         ? currentTraits
         : [...currentTraits, 'spore_kissed'];
 
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          traits: newTraits,
-        },
-        { xp: xpGained }
+      return statGrantOutcome(
+        chosen,
+        { xp: xpGained },
+        { updates: { traits: newTraits }, mirror: true }
       );
     },
   });
@@ -213,12 +175,7 @@ export function handleChaosWeaversGift(run: OffseasonEventRun) {
         detail: 'A chaotic revelation sparked a new combat tactic.',
         origin: 'Chaos Weaver',
       });
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { mirror: true });
     },
   });
 }
@@ -233,12 +190,10 @@ export function handleShadowTraining(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 20 + Math.floor(rng.next() * 11);
       const fameLost = 5 + Math.floor(rng.next() * 6);
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-          fame: Math.max(0, (chosen.fame || 0) - fameLost),
-        },
-        { xp: xpGained, fame: fameLost }
+      return statGrantOutcome(
+        chosen,
+        { xp: xpGained, fame: -fameLost },
+        { clampToZero: true, mirror: true, announce: { fame: fameLost } }
       );
     },
   });
@@ -253,12 +208,7 @@ export function handleOffseasonTrainingCamp(run: OffseasonEventRun) {
     ...run,
     apply: (chosen) => {
       const xpGained = 40 + Math.floor(rng.next() * 21);
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { mirror: true });
     },
   });
 }
@@ -267,13 +217,7 @@ export function handleOffseasonTrainingCamp(run: OffseasonEventRun) {
 export function handleWanderingMerchantStrangeBrew(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
-    apply: (chosen) => ({
-      updates: {
-        xp: (chosen.xp || 0) + 20,
-        fame: (chosen.fame || 0) + 10,
-      },
-      announce: { xp: 20, fame: 10 },
-    }),
+    apply: (chosen) => statGrantOutcome(chosen, { xp: 20, fame: 10 }, { mirror: true }),
   });
 }
 
@@ -289,12 +233,7 @@ export function handleWanderingBlacksmith(run: OffseasonEventRun) {
       const xpGained = 20 + Math.floor(rng.next() * 11);
       ctx.treasuryDelta -= 50;
       ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Wandering Blacksmith', -50, 'other'));
-      return warriorOutcome(
-        {
-          xp: addStat(chosen.xp, xpGained),
-        },
-        { xp: xpGained }
-      );
+      return statGrantOutcome(chosen, { xp: xpGained }, { mirror: true });
     },
   });
 }

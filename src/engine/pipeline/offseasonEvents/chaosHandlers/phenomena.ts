@@ -1,12 +1,11 @@
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 
-import { makeInjury } from '@/engine/injuries/utils';
+import { makeInjury, makeMinorInjury } from '@/engine/injuries/utils';
 import {
   withChosenWarrior,
   type OffseasonEventRun,
-  addStat,
-  withAddedInjury,
   warriorOutcome,
+  statGrantOutcome,
   grantInsightToken,
 } from '../helpers';
 
@@ -30,10 +29,7 @@ export function handleTemporalAnomaly(run: OffseasonEventRun) {
         origin: 'Temporal Anomaly',
       });
 
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        traits: newTraits,
-      });
+      return statGrantOutcome(chosen, { xp: xpGained }, { updates: { traits: newTraits } });
     },
   });
 }
@@ -61,12 +57,14 @@ export function handleCursedTreasureDiscovery(run: OffseasonEventRun) {
         penalties: { WL: -2, CN: -1 },
       });
 
-      return warriorOutcome(
+      return statGrantOutcome(
+        chosen,
+        { fame: -fameLost },
         {
-          fame: Math.max(0, (chosen.fame || 0) - fameLost),
-          injuries: withAddedInjury(chosen, newInjury),
-        },
-        { gold: goldGained, fame: fameLost }
+          clampToZero: true,
+          injury: newInjury,
+          announce: { gold: goldGained, fame: fameLost },
+        }
       );
     },
   });
@@ -78,21 +76,14 @@ export function handleAbyssalTempestRitual(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
     apply: (chosen) => {
-      const xpGained = 25;
-
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Abyssal Gaze',
         description: 'Stared too deeply into the void.',
-        severity: 'Minor',
-        weeksBase: 1,
         weeksRange: 2,
         penalties: { SP: -1, CN: -1 },
       });
 
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        injuries: withAddedInjury(chosen, newInjury),
-      });
+      return statGrantOutcome(chosen, { xp: 25 }, { injury: newInjury });
     },
   });
 }
@@ -106,12 +97,9 @@ export function handleUnexplainedMonolith(run: OffseasonEventRun) {
       const xpGained = 15;
       const fameGained = 10;
 
-      const newInjury = makeInjury(rng, {
+      const newInjury = makeMinorInjury(rng, {
         name: 'Monolith Fatigue',
         description: 'Exhausted from touching the unknown.',
-        severity: 'Minor',
-        weeksBase: 1,
-        weeksRange: 1,
         penalties: { SP: -1 },
       });
 
@@ -144,10 +132,7 @@ export function handleShatteredSkiesRitual(run: OffseasonEventRun) {
     apply: (chosen) => {
       const xpGained = 25;
       const fatigueGained = 15;
-      return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        fatigue: addStat(chosen.fatigue, fatigueGained),
-      });
+      return statGrantOutcome(chosen, { xp: xpGained, fatigue: fatigueGained });
     },
   });
 }
@@ -156,9 +141,6 @@ export function handleShatteredSkiesRitual(run: OffseasonEventRun) {
 export function handleWeepingSkies(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
-    apply: (chosen) => ({
-      updates: { xp: (chosen.xp || 0) + 20 },
-      announce: {},
-    }),
+    apply: (chosen) => statGrantOutcome(chosen, { xp: 20 }),
   });
 }

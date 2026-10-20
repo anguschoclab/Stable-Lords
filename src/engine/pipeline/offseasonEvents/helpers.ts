@@ -137,19 +137,34 @@ export interface StatGrantOutcomeOpts {
   announce?: Record<string, string | number>;
   /** Copy the grant deltas into the announce payload (explicit announce wins). */
   mirror?: boolean;
+  /** Clamp each granted stat at 0 — the `Math.max(0, stat - loss)` idiom. */
+  clampToZero?: boolean;
+  /** Injury to append via `withAddedInjury` — the common `updates.injuries` case. */
+  injury?: Warrior['injuries'][number];
 }
 
 /**
- * Build the standard "grant stats to the chosen warrior" outcome.
- * NOT IMPLEMENTED — signature stub for the test-first commit; replaced in the
- * statGrantOutcome dedup commit.
+ * Build the standard "grant stats to the chosen warrior" outcome: each grant
+ * becomes `stat: addStat(chosen[stat], delta)` in `updates`; `announce` is
+ * newsletter data and is never auto-derived from the grants — pass `mirror`
+ * to copy the deltas, `announce` for explicit (possibly unrelated) values.
  */
 export function statGrantOutcome(
-  _chosen: Warrior,
-  _grants: Partial<Record<GrantableStat, number>>,
-  _opts: StatGrantOutcomeOpts = {}
+  chosen: Warrior,
+  grants: Partial<Record<GrantableStat, number>>,
+  opts: StatGrantOutcomeOpts = {}
 ): ChosenWarriorOutcome {
-  throw new Error('statGrantOutcome: not implemented');
+  const updates: Partial<Warrior> = { ...(opts.updates ?? {}) };
+  if (opts.injury) updates.injuries = withAddedInjury(chosen, opts.injury);
+  for (const [stat, delta] of Object.entries(grants) as [GrantableStat, number][]) {
+    if (delta === undefined) continue;
+    const next = addStat(chosen[stat], delta);
+    updates[stat] = opts.clampToZero ? Math.max(0, next) : next;
+  }
+  return {
+    updates,
+    announce: { ...(opts.mirror ? grants : {}), ...(opts.announce ?? {}) },
+  };
 }
 
 /** Parameters for {@link grantInsightToken} — warrior identity and week come from `run`/`chosen`. */

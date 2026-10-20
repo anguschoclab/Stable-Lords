@@ -14,10 +14,12 @@ import { getAvatarCatalog, getCatalogEntries } from './avatarCatalog';
 
 const DEFAULT_PRIMARY = '#6b7280';
 
+/** Derive a deterministic avatar seed from an entity's type and id. */
 export function seedForEntity(entityType: string, entityId: string): number {
   return hashStr(`${entityType}:${entityId}`);
 }
 
+/** Map a numeric age to its avatar age bracket; unknown ages default to adult. */
 export function ageGroupForAge(age?: number): AvatarAgeGroup {
   if (age === undefined || age === null) return 'adult';
   if (age <= 19) return 'young';
@@ -26,6 +28,7 @@ export function ageGroupForAge(age?: number): AvatarAgeGroup {
   return 'elder';
 }
 
+/** Score how weathered an avatar should look from age, kills, injuries, and fame. */
 export function wearScore(config: AvatarConfig): number {
   let score = 0;
   const age = config.age ?? 25;
@@ -45,6 +48,7 @@ export function wearScore(config: AvatarConfig): number {
   return score;
 }
 
+/** Return a flavor title for notable avatars, or undefined for unremarkable ones. */
 export function avatarDescription(config: AvatarConfig): string | undefined {
   const wear = wearScore(config);
   const age = ageGroupForAge(config.age);
@@ -79,6 +83,7 @@ function pickAgeGroup(config: AvatarConfig, rng: SeededRNG): AvatarAgeGroup {
   return base;
 }
 
+/** Map a fighting style to a clothing weight tag for catalog filtering. */
 export function clothingCategoryForStyle(style?: FightingStyle): string | undefined {
   if (!style) return undefined;
   switch (style) {

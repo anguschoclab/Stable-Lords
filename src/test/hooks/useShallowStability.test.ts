@@ -3,10 +3,29 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
+// F2: the original regexes required `)=>` with no space — Prettier always
+// emits `) =>`, so both guards could never match (dead since inception).
+// Repaired to allow whitespace; the .map rule is also narrowed to the real
+// hazard — callbacks that allocate a fresh object each call. Primitive
+// projections like `(w) => w.id` (the #1062 pattern) are the recommended
+// useShallow idiom and are allowed.
+const MAP_TO_OBJECT_RE = /useShallow\(\s*\([^)]*\)\s*=>\s*[^;}]*\.map\(\s*\([^)]*\)\s*=>\s*\(?\s*{/g;
+const ARRAY_FROM_RE = /useShallow\(\s*\([^)]*\)\s*=>\s*[^;}]*Array\.from\(/g;
+
 describe('useShallow stability audit', () => {
   const srcDir = path.resolve(__dirname, '../../');
 
-  it('no useShallow selector calls .map() inside the selector callback', () => {
+  it('audit regexes actually match their planted-positive shapes (F2)', () => {
+    expect(
+      MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => ({ id: w.id })))')
+    ).toBe(true);
+    expect(
+      MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => w.id))')
+    ).toBe(false);
+    expect(ARRAY_FROM_RE.test('useShallow((s) => Array.from(s.ids))')).toBe(true);
+  });
+
+  it('no useShallow selector maps to freshly-allocated objects inside the callback', () => {
     const files = [
       ...readDirRecursive(path.join(srcDir, 'state'), '.ts'),
       ...readDirRecursive(path.join(srcDir, 'hooks'), '.ts'),
@@ -15,15 +34,13 @@ describe('useShallow stability audit', () => {
     const violations: string[] = [];
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf-8');
-      // Look for useShallow((s) => ... .map( pattern
-      const useShallowBlocks = content.match(/useShallow\(\([^)]+\)=>[^}]+\.map\(/g);
-      if (useShallowBlocks) {
+      if (MAP_TO_OBJECT_RE.test(content)) {
         violations.push(path.basename(file));
       }
     }
     expect(
       violations,
-      `Files with .map() inside useShallow: ${violations.join(', ')}`
+      `Files with object-allocating .map() inside useShallow: ${violations.join(', ')}`
     ).toHaveLength(0);
   });
 
@@ -36,8 +53,7 @@ describe('useShallow stability audit', () => {
     const violations: string[] = [];
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf-8');
-      const useShallowBlocks = content.match(/useShallow\(\([^)]+\)=>[^}]+Array\.from\(/g);
-      if (useShallowBlocks) {
+      if (ARRAY_FROM_RE.test(content)) {
         violations.push(path.basename(file));
       }
     }

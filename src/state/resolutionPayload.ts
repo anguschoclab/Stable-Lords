@@ -11,7 +11,7 @@ import type { NewsletterItem, PendingResolutionData } from '@/types/combat.types
  */
 export function buildResolutionPayload(
   display: GameState['lastWeekBoutDisplay'] | undefined,
-  newsletter: NewsletterItem[],
+  newsletter: NewsletterItem[] | undefined,
   currentWeek: number
 ): PendingResolutionData {
   return {
@@ -19,6 +19,6 @@ export function buildResolutionPayload(
     deaths: display?.deaths ?? [],
     injuries: display?.injuries ?? [],
     promotions: [],
-    gazette: newsletter.filter((n) => n.week === currentWeek),
+    gazette: (newsletter ?? []).filter((n) => n.week === currentWeek),
   };
 }

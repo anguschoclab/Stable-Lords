@@ -333,20 +333,16 @@ describe('validateStrategy', () => {
 
     describe('Warrior without attributes', () => {
       it('no WT warning when warrior has no attributes', () => {
-        const warrior: Partial<Warrior> = {
+        const { attributes, derivedStats, age, fatigue, ...warrior } = makeWarrior({
           id: crypto.randomUUID() as any,
           name: 'Test Warrior',
           style: FightingStyle.StrikingAttack,
           fame: 0,
-          popularity: 0,
-          titles: [],
-          injuries: [],
-          flair: [],
-          career: { wins: 0, losses: 0, kills: 0 },
-          champion: false,
-          status: 'Active',
-          traits: [],
-        };
+        });
+        void attributes;
+        void derivedStats;
+        void age;
+        void fatigue;
         const plan = createMockFightPlan(FightingStyle.StrikingAttack, 10, 10);
         const warnings = validateStrategy(plan, warrior as Warrior);
         // Will have OVER_EXERTION but not WT_TOO_LOW_FOR_EFFORT (skipped due to no attributes)
@@ -791,20 +787,16 @@ describe('estimateStaminaCurve', () => {
     });
 
     it('warrior without attributes (WT defaults to 10)', () => {
-      const warrior: Partial<Warrior> = {
+      const { attributes, derivedStats, age, fatigue, ...warrior } = makeWarrior({
         id: crypto.randomUUID() as any,
         name: 'Test Warrior',
         style: FightingStyle.StrikingAttack,
         fame: 0,
-        popularity: 0,
-        titles: [],
-        injuries: [],
-        flair: [],
-        career: { wins: 0, losses: 0, kills: 0 },
-        champion: false,
-        status: 'Active',
-        traits: [],
-      };
+      });
+      void attributes;
+      void derivedStats;
+      void age;
+      void fatigue;
       const plan = createMockFightPlan(FightingStyle.StrikingAttack, 5, 5);
       const curve = estimateStaminaCurve(plan, warrior as Warrior);
       expect(curve[0]).toBe(70); // 50 + 10 * 2

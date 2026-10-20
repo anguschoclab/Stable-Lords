@@ -4,27 +4,21 @@ import type { StableEconomyInput } from '@/engine/economy';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import { WARRIOR_UPKEEP_BASE, IDLE_STIPEND } from '@/constants/economy';
+import { makeWarrior } from '@/test/_fixtures/factories';
 
 function makeIdleWarrior(): Warrior {
-  return {
-    id: 'w1' as any,
+  return makeWarrior({
+    id: 'w1' as WarriorId,
     name: 'Idle Warrior',
     style: FightingStyle.LungingAttack,
     attributes: { ST: 50, CN: 50, SZ: 50, WT: 50, WL: 50, SP: 50, DF: 50 },
     baseSkills: { OE: 50, KD: 50, DE: 50, AG: 50, IN: 50, HE: 50 },
     derivedStats: { AP: 10, DP: 10, HP: 100, SP: 10, IN: 10, HE: 10 } as any,
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
     age: 20,
-    traits: [],
-  } as unknown as Warrior;
+  });
 }
 
 describe('Idle stipend over-correction guard', () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import { REPO, candidateExists, fileExists, fileText } from './_probeHelpers';
+import { ZERO_WARRIOR_FIELDS } from '@/test/_fixtures/statWarrior';
 
 /**
  * MEGAPLAN-V12 duplication-consolidation spec (authored test-first, live since Phase 4):
@@ -32,16 +33,7 @@ describe('megaplan V12: duplicate consolidation', () => {
       const a = make();
       const b = make();
       // Canonical zero-state contract (pinned by warriorFactory.test.ts).
-      expect(a).toMatchObject({
-        fame: 0,
-        popularity: 0,
-        titles: [],
-        injuries: [],
-        flair: [],
-        career: { wins: 0, losses: 0, kills: 0 },
-        champion: false,
-        status: 'Active',
-      });
+      expect(a).toMatchObject(ZERO_WARRIOR_FIELDS);
       // Variation point: each call must mint fresh containers — a shared const
       // would alias mutable arrays across warriors.
       a.titles.push('x');

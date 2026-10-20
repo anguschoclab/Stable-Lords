@@ -3,25 +3,17 @@ import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, makeWarrior } from '@/test/_fixtures/factories';
 
 function makeMinimalWarrior(overrides: Partial<Warrior> = {}): Warrior {
-  return {
+  const { derivedStats, age, fatigue, ...warrior } = makeWarrior({
     id: crypto.randomUUID() as any,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    traits: [],
     ...overrides,
-  } as Warrior;
+  });
+  return warrior as Warrior;
 }
 
 function makeBaseState(): GameState {

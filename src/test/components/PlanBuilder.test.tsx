@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import PlanBuilder from '@/components/PlanBuilder';
 import { FightingStyle } from '@/types/shared.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { makeWarrior } from '@/test/_fixtures/factories';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import '@/test/_setup/setup';
@@ -176,21 +177,12 @@ describe('PlanBuilder Style Presets', () => {
   });
 
   it('renders Restore Default button when warrior is provided', () => {
-    const warrior = {
+    const warrior = makeWarrior({
       id: 'test-id',
       name: 'Test Warrior',
       style: FightingStyle.AimedBlow,
-      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       fame: 0,
-      popularity: 0,
-      titles: [],
-      injuries: [],
-      flair: [],
-      career: { wins: 0, losses: 0, kills: 0 },
-      champion: false,
-      status: 'Active',
-      traits: [],
-    } as any;
+    });
 
     render(
       <TooltipProvider>

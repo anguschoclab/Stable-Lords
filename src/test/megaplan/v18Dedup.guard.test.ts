@@ -92,7 +92,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D5: statWarrior-shaped warrior literals repointed — MEGAPLAN-D5', () => {
+  it('D5: statWarrior-shaped warrior literals repointed — MEGAPLAN-D5', () => {
     const re = /career:\s*\{\s*wins:\s*0,\s*losses:\s*0,\s*kills:\s*0\s*\},\s*\n\s*champion:\s*false,\s*\n\s*status:\s*'Active'/g;
     const offenders = [
       'src/test/engine/strategyValidator.test.ts',

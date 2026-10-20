@@ -6,24 +6,17 @@ import { createRosterSlice, RosterSlice } from '@/state/slices/rosterSlice';
 import { act } from '@testing-library/react';
 import type { Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+import { makeWarrior } from '@/test/_fixtures/factories';
 
-const mockWarrior: Warrior = {
-  id: 'w1' as import('@/types/shared.types').WarriorId,
+const mockWarrior: Warrior = makeWarrior({
+  id: 'w1' as WarriorId,
   name: 'Gaius',
   style: FightingStyle.AimedBlow,
-  attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
   fame: 0,
-  popularity: 0,
-  titles: [],
-  injuries: [],
-  flair: [],
-  career: { wins: 0, losses: 0, kills: 0 },
-  champion: false,
-  status: 'Active',
-  traits: [],
   age: 20,
-};
+});
 
 const createTestStore = () =>
   create<

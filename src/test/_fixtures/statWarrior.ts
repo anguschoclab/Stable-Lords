@@ -2,6 +2,18 @@ import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle, WarriorId } from '@/types/shared.types';
 
+/** Canonical zero-state warrior fields — the contract pinned by warriorFactory tests. */
+export const ZERO_WARRIOR_FIELDS = {
+  fame: 0,
+  popularity: 0,
+  titles: [],
+  injuries: [],
+  flair: [],
+  career: { wins: 0, losses: 0, kills: 0 },
+  champion: false,
+  status: 'Active',
+} as const;
+
 /** Shared combat-test warrior — all-15 attributes, stats derived via computeWarriorStats. */
 export function makeStatWarrior(
   style: FightingStyle,

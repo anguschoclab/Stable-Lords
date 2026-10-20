@@ -26,7 +26,7 @@ against live scans on 2026-10-21 (see FINDINGS §0).
 
 ---
 
-## Phase 0 — Safety, baseline & retroactive record
+## Phase 0 — Safety, baseline & retroactive record — ✅ DONE (`5934e2f9`)
 
 1. Tag restore point: `git tag pre-megaplan-v18` at start HEAD. Open
    `MEGAPLAN_V18_LEDGER.md` with the baseline block.
@@ -70,7 +70,11 @@ against live scans on 2026-10-21 (see FINDINGS §0).
 
 **Exit:** tag exists; LEDGER §0 filled; retroactive credits recorded.
 
-## Phase 1 — Detection & inventory (no code changes)
+## Phase 1 — Detection & inventory (no code changes) — ✅ DONE
+
+(`scripts/srp-census.mjs` landed; FINDINGS §A/§D/§U populated; verdict
+tables recorded — see FINDINGS for the 142-candidate census output and
+per-tier triage.)
 
 Run the full scanner battery at the measured tiers above and capture every
 result into FINDINGS. Then build the three verdict tables.

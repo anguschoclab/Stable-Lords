@@ -23,10 +23,15 @@ import path from 'node:path';
 
 const TEST_ROOT = path.resolve(__dirname, '..');
 
-// Registered spec-skip tickets — currently empty: every ticketed phase has
-// landed and been un-skipped. Register a new MEGAPLAN-* ticket here before
-// parking a test-first spec under .skip.
-const REGISTERED_SKIP_TICKETS = new Set<string>();
+// Registered spec-skip tickets. Register a new MEGAPLAN-* ticket here
+// before parking a test-first spec under .skip; removing a skip as its
+// phase lands is always safe.
+const REGISTERED_SKIP_TICKETS = new Set<string>([
+  // V18 SRP decomposition contracts — un-skip per landing batch (Phase 3).
+  ...Array.from({ length: 34 }, (_, i) => `MEGAPLAN-S${i + 1}`),
+  // V18 test-tier dedup contracts — un-skip per cluster drain (Phase 4).
+  ...Array.from({ length: 14 }, (_, i) => `MEGAPLAN-D${i + 1}`),
+]);
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;
 

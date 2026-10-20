@@ -88,26 +88,243 @@ const EXEMPT_PAIRS = new Set([
 // grudge+aiPlan tail).
 const DEBT_PAIRS = new Set<string>([]);
 
+// ═══ V18 — test↔test ledger (exact-normalized w8). This tier was never
+// gated before V18, so boilerplate cloned freely: inline literal copies of
+// _fixtures/* seeds, per-file `makeWarrior`/`title()`/`createMockWarrior`
+// helper clones, and repeated vi.mock/harness boilerplate. Verdict split
+// (V18 Phase-1 triage, all 150 pairs read): 4 EXEMPT literal pins +
+// import-preamble echoes vs. 146 DEBT clones with an obvious shared home.
+// DEBT drains as clusters land in `src/test/_fixtures/` / `_mocks/` /
+// `_helpers` per the V18 §D table — MEGAPLAN-D1…D14.
+const TEST_TO_TEST_BASELINE = 150;
+const TEST_DEBT_BUDGET = 146;
+
+const TEST_EXEMPT_PAIRS = new Set([
+  // enumSourcesSync re-enumerates the weather union — re-listing the
+  // canonical literals is the sync guard's entire purpose (literal pin).
+  'src/test/_fixtures/weather.ts|src/test/schemas/enumSourcesSync.test.ts',
+  // Characterization spec deliberately re-pins the weapon→style tables
+  // verbatim — the pin is the test.
+  'src/test/data/equipment/weaponStyles.characterization.test.ts|src/test/data/equipment/weaponStyles.test.ts',
+  // Both specs import the same makeTournamentBaseState fixture block — a
+  // shared import preamble, not a clone.
+  'src/test/engine/matchmaking/tournament/awardsTokens.test.ts|src/test/engine/matchmaking/tournament/tournamentSelection.test.ts',
+  // Shared weatherSuitability import preamble + derived OFFSEASON set echo.
+  'src/test/engine/ai/weatherDisposition.completeness.test.ts|src/test/engine/ai/weatherSuitability.test.ts',
+]);
+
+const TEST_DEBT_PAIRS = new Set([
+  'src/test/_fixtures/advisorSeed.ts|src/test/components/dashboard/CouncilBriefingWidget.test.tsx',
+  'src/test/_fixtures/arenaTitle.ts|src/test/engine/ai/intentEngine.crown.test.ts',
+  'src/test/_fixtures/bidRoster.ts|src/test/engine/bout/aiPlanIntegration.test.ts',
+  'src/test/_fixtures/bidRoster.ts|src/test/engine/pipeline/passes/RivalStrategyPass.slow.test.ts',
+  'src/test/_fixtures/factories.ts|src/test/components/stable/RecruitCard.test.tsx',
+  'src/test/_fixtures/factories.ts|src/test/engine/matchmaking/arenaFit.test.ts',
+  'src/test/_fixtures/signedBout.ts|src/test/engine/pipeline/deadLifecycle.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/components/PlanBuilder.test.tsx',
+  'src/test/_fixtures/statWarrior.ts|src/test/engine/aging/veteranCompensation.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/engine/bout/boutProcessorService.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/engine/economy/idleStipend.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/engine/strategyValidator.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/_fixtures/statWarrior.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/_fixtures/storeState.ts|src/test/components/RosterWallAnimation.test.tsx',
+  'src/test/_fixtures/storeState.ts|src/test/components/VirtualizedFallenGrid.test.tsx',
+  'src/test/_fixtures/storeState.ts|src/test/pages/TournamentsError.test.tsx',
+  'src/test/_mocks/routerLink.tsx|src/test/components/layout/LeftNav.test.tsx',
+  'src/test/components/BookmarkButton.test.tsx|src/test/components/BookmarkButtonA11y.test.tsx',
+  'src/test/components/EntityLink.test.tsx|src/test/components/entityLink.perf.test.tsx',
+  'src/test/components/PlanBuilder.test.tsx|src/test/engine/aging/veteranCompensation.test.ts',
+  'src/test/components/PlanBuilder.test.tsx|src/test/engine/bout/boutProcessorService.test.ts',
+  'src/test/components/PlanBuilder.test.tsx|src/test/engine/economy/idleStipend.test.ts',
+  'src/test/components/PlanBuilder.test.tsx|src/test/engine/strategyValidator.test.ts',
+  'src/test/components/PlanBuilder.test.tsx|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/components/PlanBuilder.test.tsx|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/components/ResolutionReveal.selector.test.tsx|src/test/components/resolutionReveal/ResolutionReveal.test.tsx',
+  'src/test/components/RosterWallAnimation.test.tsx|src/test/components/VirtualizedFallenGrid.test.tsx',
+  'src/test/components/RosterWallAnimation.test.tsx|src/test/pages/TournamentsError.test.tsx',
+  'src/test/components/UIAccessibility.test.tsx|src/test/components/orphanage/WarriorCard.test.tsx',
+  'src/test/components/VirtualizedFallenGrid.test.tsx|src/test/pages/TournamentsError.test.tsx',
+  'src/test/components/WarriorDossier.test.tsx|src/test/components/warrior/dossier/WarriorDossierHeader.test.tsx',
+  'src/test/components/WarriorLeaderboardVirtualized.test.tsx|src/test/components/WarriorLeaderboardVirtualizedBranch.test.tsx',
+  'src/test/components/avatar/AvatarRerollButton.test.tsx|src/test/state/avatarSlice.test.ts',
+  'src/test/components/awards/Awards.test.tsx|src/test/components/eventLog/EventLog.test.tsx',
+  'src/test/components/bookingOffice/OfferActions.test.tsx|src/test/components/bookingOffice/offerCardParts.test.tsx',
+  'src/test/components/charts/StyleMeterTable.test.tsx|src/test/engine/matchmaking/arenaFit.test.ts',
+  'src/test/components/dashboard/BriefingTab.test.tsx|src/test/components/dashboard/GazetteTab.test.tsx',
+  'src/test/components/dashboard/BriefingTab.test.tsx|src/test/components/gazette/GazetteArticle.test.tsx',
+  'src/test/components/dashboard/CouncilBriefingWidget.test.tsx|src/test/components/widgets/PreAdvanceChecklist.test.tsx',
+  'src/test/components/dashboard/CouncilBriefingWidget.test.tsx|src/test/pages/Advisor.test.tsx',
+  'src/test/components/dashboard/GazetteTab.test.tsx|src/test/components/gazette/GazetteArticle.test.tsx',
+  'src/test/components/dashboard/WeeklyDigestMini.test.tsx|src/test/hooks/useDigestSummary.test.ts',
+  'src/test/components/equipment/EncumbranceBar.test.tsx|src/test/engine/combat/equipmentIntegration.test.ts',
+  'src/test/components/eventLog/EventLog.test.tsx|src/test/components/eventLog/eventFiltering.test.ts',
+  'src/test/components/modals/Modals.test.tsx|src/test/components/resolutionReveal/ResolutionReveal.test.tsx',
+  'src/test/components/scouting/ComparisonHeader.test.tsx|src/test/components/stable/RecruitCard.test.tsx',
+  'src/test/components/stable/RosterWarriorRow.test.tsx|src/test/engine/potential.test.ts',
+  'src/test/components/tournaments/TournamentComponents.test.tsx|src/test/components/tournaments/TournamentsReadiness.test.tsx',
+  'src/test/components/warrior/ChronicleTab.test.tsx|src/test/components/warrior/MissionControlTab.test.tsx',
+  'src/test/components/warrior/WarriorHeroHeader.test.tsx|src/test/components/warrior/dossier/WarriorDossierHeader.test.tsx',
+  'src/test/components/warrior/WarriorHeroHeader.test.tsx|src/test/pages/WarriorDetail.test.tsx',
+  'src/test/components/warrior/WarriorTrainingCard.advisor.test.tsx|src/test/components/warrior/WarriorTrainingCard.heatbar.test.tsx',
+  'src/test/components/widgets/PreAdvanceChecklist.test.tsx|src/test/pages/Advisor.test.tsx',
+  'src/test/engine/advisor/campaignFocusEvaluator.test.ts|src/test/engine/advisor/trainingAdvisor.test.ts',
+  'src/test/engine/advisor/crownBidFocus.test.ts|src/test/engine/advisor/rivalRoles.test.ts',
+  'src/test/engine/advisor/stableCouncilService.test.ts|src/test/engine/aging.test.ts',
+  'src/test/engine/advisor/stableCouncilService.test.ts|src/test/engine/ai/retirementTiming.test.ts',
+  'src/test/engine/aging.test.ts|src/test/engine/ai/intentEngine.crown.test.ts',
+  'src/test/engine/aging.test.ts|src/test/engine/ai/retirementTiming.test.ts',
+  'src/test/engine/aging.test.ts|src/test/engine/ai/rosterCulling.test.ts',
+  'src/test/engine/aging.test.ts|src/test/integration/autosimCouncil.crown.test.ts',
+  'src/test/engine/aging.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/engine/aging/veteranCompensation.test.ts|src/test/engine/bout/boutProcessorService.test.ts',
+  'src/test/engine/aging/veteranCompensation.test.ts|src/test/engine/economy/idleStipend.test.ts',
+  'src/test/engine/aging/veteranCompensation.test.ts|src/test/engine/strategyValidator.test.ts',
+  'src/test/engine/aging/veteranCompensation.test.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/engine/aging/veteranCompensation.test.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/engine/ai/bankruptcyService.test.ts|src/test/engine/economy/economy.test.ts',
+  'src/test/engine/ai/boutBidding.test.ts|src/test/engine/ai/boutBiddingIntegration.test.ts',
+  'src/test/engine/ai/boutBidding.test.ts|src/test/engine/bout/aiPlanIntegration.test.ts',
+  'src/test/engine/ai/boutBiddingIntegration.test.ts|src/test/engine/core/absoluteWeekRollover.test.ts',
+  'src/test/engine/ai/intentEngine.crown.test.ts|src/test/engine/ai/retirementTiming.test.ts',
+  'src/test/engine/ai/intentEngine.crown.test.ts|src/test/engine/ai/rosterCulling.test.ts',
+  'src/test/engine/ai/intentEngine.crown.test.ts|src/test/integration/autosimCouncil.crown.test.ts',
+  'src/test/engine/ai/intentEngine.crown.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/engine/ai/memory/intelDossier.observedTells.test.ts|src/test/engine/ai/memory/intelDossier.test.ts',
+  'src/test/engine/ai/plan/planMasking.test.ts|src/test/engine/bout/npcPlanPersistence.test.ts',
+  'src/test/engine/ai/retirementTiming.test.ts|src/test/engine/ai/rosterCulling.test.ts',
+  'src/test/engine/ai/retirementTiming.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/engine/ai/rosterCulling.test.ts|src/test/integration/autosimCouncil.crown.test.ts',
+  'src/test/engine/ai/rosterCulling.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/responseNotes.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/offerProcessor.test.ts|src/test/engine/ai/workers/competitionWorker/responseNotes.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/offerProcessor.test.ts|src/test/engine/matchmaking/weatherAwareMatchmaking.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/crownWorker.dominance.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
+  'src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
+  'src/test/engine/ai/workers/rosterWorker.test.ts|src/test/engine/training/training.test.ts',
+  'src/test/engine/autosim/sequentialMemoryGrowth.slow.test.ts|src/test/engine/sim/harnessTruncation.slow.test.ts',
+  'src/test/engine/bloodMoon.test.ts|src/test/engine/pipeline/seasonalWeather.test.ts',
+  'src/test/engine/bloodRain.test.ts|src/test/engine/pipeline/seasonalWeather.test.ts',
+  'src/test/engine/bout/boutProcessorService.test.ts|src/test/engine/economy/idleStipend.test.ts',
+  'src/test/engine/bout/boutProcessorService.test.ts|src/test/engine/strategyValidator.test.ts',
+  'src/test/engine/bout/boutProcessorService.test.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/engine/bout/boutProcessorService.test.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/engine/bout/planDefaults.test.ts|src/test/engine/strategyValidator.test.ts',
+  'src/test/engine/bout/reportingHandler.test.ts|src/test/engine/bout/resolveHelpers.test.ts',
+  'src/test/engine/boutSimulationTimestamp.test.ts|src/test/engine/pipeline/boutSimulationReportLeakage.test.ts',
+  'src/test/engine/championship/arenaChampionship.test.ts|src/test/engine/championship/arenaChampionshipPass.test.ts',
+  'src/test/engine/championship/championsTournament.test.ts|src/test/engine/validate/stateInvariants.test.ts',
+  'src/test/engine/championship/championsTournament.test.ts|src/test/pages/ArenaCircuit.test.tsx',
+  'src/test/engine/combat/aiIntentTelemetry.test.ts|src/test/engine/narrative/narrationDeterminism.test.ts',
+  'src/test/engine/combat/combat.test.ts|src/test/engine/combat/simulate.test.ts',
+  'src/test/engine/combat/conditionEngine.test.ts|src/test/engine/combat/conditionEngine.triggers.test.ts',
+  'src/test/engine/combat/hitExecution.test.ts|src/test/engine/combat/offenseDefense.test.ts',
+  'src/test/engine/combat/resolutionDeterminism.test.ts|src/test/engine/narrative/narrationDeterminism.test.ts',
+  'src/test/engine/core/entityIndex.test.ts|src/test/layout/breadcrumbs/routeCrumbs.test.ts',
+  'src/test/engine/core/warriorCollection.test.ts|src/test/engine/matchmaking/schedulingAssistant.test.ts',
+  'src/test/engine/core/warriorCollection.test.ts|src/test/engine/training/training.test.ts',
+  'src/test/engine/core/warriorCollection.test.ts|src/test/hooks/useRivalries.test.ts',
+  'src/test/engine/economy/economy.test.ts|src/test/engine/economy/economyScaling.test.ts',
+  'src/test/engine/economy/idleStipend.test.ts|src/test/engine/strategyValidator.test.ts',
+  'src/test/engine/economy/idleStipend.test.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/engine/economy/idleStipend.test.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/engine/envSafety.test.ts|src/test/engine/moduleCacheRegistry.test.ts',
+  'src/test/engine/impacts/resolveImpacts.test.ts|src/test/engine/storage/truncationBounds.test.ts',
+  'src/test/engine/impacts/resolveImpactsCoverage.test.ts|src/test/engine/pipeline/impactMergeOrder.test.ts',
+  'src/test/engine/injuries.test.ts|src/test/engine/warriorStatus.test.ts',
+  'src/test/engine/pipeline/bountifulHarvest.test.ts|src/test/engine/pipeline/seasonalChaosWeaversProphecy.test.ts',
+  'src/test/engine/pipeline/grudgeWorldDecoupling.test.ts|src/test/engine/pipeline/playerGrudges.test.ts',
+  'src/test/engine/pipeline/impactMergeOrder.test.ts|src/test/engine/pipeline/rivalMapStaleness.test.ts',
+  'src/test/engine/pipeline/passes/PromoterPass.test.ts|src/test/engine/pipeline/seasonalPrismaticGale.test.ts',
+  'src/test/engine/pipeline/passes/RecruitmentPass.test.ts|src/test/engine/recruitment/freeAgents.test.ts',
+  'src/test/engine/pipeline/seasonalChaosWeaver.test.ts|src/test/engine/pipeline/seasonalMonolithEvent.test.ts',
+  'src/test/engine/pipeline/seasonalDreamweaversMist.test.ts|src/test/engine/pipeline/seasonalPhantomSparring.test.ts',
+  'src/test/engine/pipeline/seasonalPrismaticGale.test.ts|src/test/engine/recruitment/signWarrior.test.ts',
+  'src/test/engine/stats/simulationMetrics.championship.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/engine/storage/archiveWorkerProxy.test.ts|src/test/engine/workerProxy.test.ts',
+  'src/test/engine/storage/electronArchive.test.ts|src/test/engine/storage/electronIPCBounds.test.ts',
+  'src/test/engine/storage/opfsArchive.test.ts|src/test/engine/storage/retrieveHotStatePlausibility.test.ts',
+  'src/test/engine/strategyValidator.test.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/test/engine/strategyValidator.test.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/engine/validate/stateInvariants.test.ts|src/test/pages/ArenaCircuit.test.tsx',
+  'src/test/hooks/useActiveRoster.test.ts|src/test/hooks/useAtRiskWarriors.test.ts',
+  'src/test/hooks/useCoachTip.test.ts|src/test/hooks/useShallowMemoization.test.ts',
+  'src/test/integration/autosimCouncil.crown.test.ts|src/test/integration/championshipAdvanceWeek.slow.test.ts',
+  'src/test/megaplan/v12Dedup.guard.test.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/test/pages/AdminTools/hooks/useAdminTools.test.ts|src/test/pages/TournamentsError.test.tsx',
+  'src/test/pages/AdminTools/hooks/useAdminTools.test.ts|src/test/state/saveSlots.test.ts',
+]);
+
+// ═══ V18 — mixed src↔test ledger (exact-normalized w8). All 27 pairs are
+// intentional literal pins: specs re-stating canonical production literals
+// (zero-state objects, enum unions, ctx key lists, barrel/mocks surfaces)
+// as assertion data — the duplication is the point.
+const MIXED_BASELINE = 27;
+
+const MIXED_EXEMPT_PAIRS = new Set([
+  'src/components/layout/MobileNav.tsx|src/test/_mocks/routerLink.tsx',
+  'src/components/layout/MobileNav.tsx|src/test/components/layout/LeftNav.test.tsx',
+  'src/components/world/WarriorLeaderboardFilters.tsx|src/test/components/FilterToggleButton.test.tsx',
+  'src/data/equipment/weaponStyles.ts|src/test/data/equipment/weaponStyles.test.ts',
+  'src/data/equipment/weapons.ts|src/test/data/equipment/weaponStyles.test.ts',
+  'src/data/equipment/weapons/items.ts|src/test/data/equipment/weaponStyles.test.ts',
+  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/enduranceCosts.test.ts',
+  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/offenseDefense.test.ts',
+  'src/engine/factories/gameStateFactory.ts|src/test/engine/core/warriorCollection.test.ts',
+  'src/engine/factories/gameStateFactory.ts|src/test/engine/training/training.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/_fixtures/statWarrior.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/components/PlanBuilder.test.tsx',
+  'src/engine/factories/warriorDefaults.ts|src/test/engine/aging/veteranCompensation.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/engine/bout/boutProcessorService.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/engine/economy/idleStipend.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/engine/strategyValidator.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/megaplan/v12Dedup.guard.test.ts',
+  'src/engine/factories/warriorDefaults.ts|src/test/state/slices/rosterSlice.test.ts',
+  'src/engine/narrative/index.ts|src/test/engine/narrative/combatNarrators.test.ts',
+  'src/engine/traits/mods.ts|src/test/engine/traitMods.test.ts',
+  'src/engine/traits/registry.ts|src/test/engine/combat/traitBalance.slow.test.ts',
+  'src/engine/weather/seasonalWeather.ts|src/test/engine/pipeline/weatherSeasonExclusivity.test.ts',
+  'src/test/_fixtures/weather.ts|src/types/enumSources.ts',
+  'src/test/components/warrior/condition/ConditionTriggerSection.test.tsx|src/types/enumSources.ts',
+  'src/test/megaplan/typeSurface.test.ts|src/types/state.types.ts',
+  'src/test/schemas/enumSourcesSync.test.ts|src/types/enumSources.ts',
+  'src/test/schemas/schemaCharacterization.test.ts|src/types/enumSources.ts',
+]);
+
+const MIXED_DEBT_PAIRS = new Set<string>([]);
+
+const IS_TEST = (f: string) => f.includes('/test/') || /\.(test|spec)\.tsx?$/.test(f);
+
 describe('megaplan: duplication guard', () => {
   const { clusters, counts } = collectDuplicates();
-  const srcPairs = clusters.filter((c: { pair: string[] }) =>
-    c.pair.every((f: string) => !f.includes('/test/') && !/\.(test|spec)\.tsx?$/.test(f))
+  const pairKey = (c: { pair: string[] }) => `${c.pair[0]}|${c.pair[1]}`;
+  const srcPairs = clusters.filter((c: { pair: string[] }) => c.pair.every((f) => !IS_TEST(f)));
+  const testPairs = clusters.filter((c: { pair: string[] }) => c.pair.every(IS_TEST));
+  const mixedPairs = clusters.filter(
+    (c: { pair: string[] }) => c.pair.filter(IS_TEST).length === 1
   );
   const REGISTERED = new Set([...EXEMPT_PAIRS, ...DEBT_PAIRS]);
+  const TEST_REGISTERED = new Set([...TEST_EXEMPT_PAIRS, ...TEST_DEBT_PAIRS]);
+  const MIXED_REGISTERED = new Set([...MIXED_EXEMPT_PAIRS, ...MIXED_DEBT_PAIRS]);
 
   it('src↔src duplicate pair count never exceeds baseline', () => {
     expect(counts.srcToSrc).toBeLessThanOrEqual(SRC_TO_SRC_BASELINE);
   });
 
   it('every src↔src pair is registered (no NEW duplication)', () => {
-    const novel = srcPairs
-      .map((c: { pair: string[] }) => `${c.pair[0]}|${c.pair[1]}`)
-      .filter((p: string) => !REGISTERED.has(p));
+    const novel = srcPairs.map(pairKey).filter((p: string) => !REGISTERED.has(p));
     expect(novel, 'new duplicate pairs introduced — dedupe or register knowingly').toEqual([]);
   });
 
   it('registered pairs stay pruned to live pairs (no stale entries)', () => {
-    const live = new Set(srcPairs.map((c: { pair: string[] }) => `${c.pair[0]}|${c.pair[1]}`));
+    const live = new Set(srcPairs.map(pairKey));
     const stale = [...REGISTERED].filter((p) => !live.has(p));
     expect(
       stale,
@@ -117,5 +334,51 @@ describe('megaplan: duplication guard', () => {
 
   it('DEBT_PAIRS drains — size never exceeds its remaining budget', () => {
     expect(DEBT_PAIRS.size).toBeLessThanOrEqual(9);
+  });
+
+  it('test↔test duplicate pair count never exceeds baseline', () => {
+    expect(counts.testToTest).toBeLessThanOrEqual(TEST_TO_TEST_BASELINE);
+  });
+
+  it('every test↔test pair is registered (no NEW duplication)', () => {
+    const novel = testPairs.map(pairKey).filter((p: string) => !TEST_REGISTERED.has(p));
+    expect(
+      novel,
+      'new test↔test duplicate pairs introduced — consolidate into _fixtures/_mocks or register knowingly'
+    ).toEqual([]);
+  });
+
+  it('test registered pairs stay pruned to live pairs (no stale entries)', () => {
+    const live = new Set(testPairs.map(pairKey));
+    const stale = [...TEST_REGISTERED].filter((p) => !live.has(p));
+    expect(
+      stale,
+      'TEST_EXEMPT_PAIRS/TEST_DEBT_PAIRS contain dead entries — remove them (live ledger)'
+    ).toEqual([]);
+  });
+
+  it('TEST_DEBT_PAIRS drains — size never exceeds its remaining budget', () => {
+    expect(TEST_DEBT_PAIRS.size).toBeLessThanOrEqual(TEST_DEBT_BUDGET);
+  });
+
+  it('mixed duplicate pair count never exceeds baseline', () => {
+    expect(counts.mixed).toBeLessThanOrEqual(MIXED_BASELINE);
+  });
+
+  it('every mixed pair is registered (no NEW duplication)', () => {
+    const novel = mixedPairs.map(pairKey).filter((p: string) => !MIXED_REGISTERED.has(p));
+    expect(
+      novel,
+      'new src↔test duplicate pairs introduced — literal pins register knowingly, logic clones get consolidated'
+    ).toEqual([]);
+  });
+
+  it('mixed registered pairs stay pruned to live pairs (no stale entries)', () => {
+    const live = new Set(mixedPairs.map(pairKey));
+    const stale = [...MIXED_REGISTERED].filter((p) => !live.has(p));
+    expect(
+      stale,
+      'MIXED_EXEMPT_PAIRS/MIXED_DEBT_PAIRS contain dead entries — remove them (live ledger)'
+    ).toEqual([]);
   });
 });

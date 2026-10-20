@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
+import { REPO, candidateExists, fileExists, fileText } from './_probeHelpers';
 
 /**
  * MEGAPLAN-V12 duplication-consolidation spec (authored test-first, live since Phase 4):
@@ -10,19 +10,6 @@ import path from 'node:path';
  * duplicates identical. Behavioral asserts use dynamic import so failures are
  * clean assertion reds, not module-resolution crashes (v11Dedup precedent).
  */
-
-const REPO = path.resolve(__dirname, '../../..');
-
-const fileExists = (p: string) => existsSync(path.join(REPO, p));
-const fileText = (p: string) => {
-  try {
-    return readFileSync(path.join(REPO, p), 'utf8');
-  } catch {
-    return '';
-  }
-};
-
-const candidateExists = (paths: string[]) => paths.some(fileExists);
 
 describe('megaplan V12: duplicate consolidation', () => {
   it('D1: a shared fresh-warrior defaults helper exists and returns fresh objects (no aliasing)', async () => {

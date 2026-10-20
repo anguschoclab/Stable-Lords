@@ -56,4 +56,6 @@ V18 numbering formalizes work already on `main` so the ledger is honest
 
 | Commit | Phase | Batch | Outcome |
 | ------ | ----- | ----- | ------- |
-| _pending_ | | | |
+| `5934e2f9` | 0 | tag + LEDGER + baseline matrix | all gates green at `83efd41b` |
+| `b2308ac2` | 1 | `srp-census.mjs` + FINDINGS §A/§D/§U | 142-candidate census; 150 test pairs → 4 EXEMPT/146 DEBT (D1–D14); mixed 27 EXEMPT; ident-w20 src 181 EXEMPT; §U1–U10 registered |
+| _next_ | 2 | test inventory RED | 34 S + 14 D parked contracts; live-ledger ×3; U-preservation live |

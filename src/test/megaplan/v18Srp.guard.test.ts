@@ -54,7 +54,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/scouting/ComparisonHeader.tsx'), 'split src/components/scouting/ComparisonHeader.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S5: actions decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S5', () => {
+  it('S5: actions decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S5', () => {
     expect(budgetFor('src/state/slices/rosterSlice/actions.ts'), 'split src/state/slices/rosterSlice/actions.ts into orchestrator + named siblings').toEqual([]);
   });
 

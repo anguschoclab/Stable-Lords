@@ -159,11 +159,19 @@ function releaseFromRoster(
   return update;
 }
 
-/**
- * Creates roster-related actions for the game store, including managing warriors,
- * insight tokens, equipment, and death acknowledgements.
- */
-export function createRosterActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
+type SetFn = (fn: (state: GameStore) => Partial<GameStore>) => void;
+
+/** Drop a warrior's cached portrait inside the in-flight state draft. */
+function purgeCachedAvatar(state: GameStore, warriorId: WarriorId): void {
+  if (state.avatarCache) {
+    state.avatarCache = Object.fromEntries(
+      Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
+    );
+  }
+}
+
+/** Roster admission actions: replace the roster / admit one warrior. */
+function rosterEntryActions(set: SetFn) {
   return {
     setRoster: (roster: Warrior[]) => set(() => ({ roster })),
 
@@ -177,7 +185,12 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         const stamped = warrior.stableId ? warrior : { ...warrior, stableId: state.player?.id };
         return { roster: [...state.roster, stamped] };
       }),
+  };
+}
 
+/** Roster exit actions: death, retirement, release — each purges the avatar cache. */
+function rosterExitActions(set: SetFn) {
+  return {
     killWarrior: (
       warriorId: WarriorId,
       killedBy: string,
@@ -185,37 +198,30 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       deathEvent?: Parameters<GameStore['killWarrior']>[3]
     ) => {
       set((state) => {
-        if (state.avatarCache) {
-          state.avatarCache = Object.fromEntries(
-            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
-          );
-        }
+        purgeCachedAvatar(state, warriorId);
         return retireToGraveyard(state, warriorId, killedBy, cause, deathEvent);
       });
     },
 
     retireWarrior: (warriorId: WarriorId) => {
       set((state) => {
-        if (state.avatarCache) {
-          state.avatarCache = Object.fromEntries(
-            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
-          );
-        }
+        purgeCachedAvatar(state, warriorId);
         return retireFromRoster(state, warriorId);
       });
     },
 
     releaseWarrior: (warriorId: WarriorId, reason = 'Released') => {
       set((state) => {
-        if (state.avatarCache) {
-          state.avatarCache = Object.fromEntries(
-            Object.entries(state.avatarCache).filter(([key]) => key !== warriorId)
-          );
-        }
+        purgeCachedAvatar(state, warriorId);
         return releaseFromRoster(state, warriorId, reason);
       });
     },
+  };
+}
 
+/** Roster metadata actions: insight tokens, equipment, rename, death ack. */
+function rosterMetaActions(set: SetFn) {
+  return {
     consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => {
       set((state) => {
         const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);
@@ -257,5 +263,17 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         unacknowledgedDeaths: (state.unacknowledgedDeaths || []).filter((id) => id !== warriorId),
       }));
     },
+  };
+}
+
+/**
+ * Creates roster-related actions for the game store, including managing warriors,
+ * insight tokens, equipment, and death acknowledgements.
+ */
+export function createRosterActions(set: SetFn) {
+  return {
+    ...rosterEntryActions(set),
+    ...rosterExitActions(set),
+    ...rosterMetaActions(set),
   };
 }

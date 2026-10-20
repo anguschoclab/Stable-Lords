@@ -19,10 +19,12 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  *     dedupe targets.
  *   DEBT_PAIRS — genuine cloned logic slated for elimination. Drains to
  *     zero; each dedup commit removes its entries.
+ * V18 dedup then drained all 9 debt pairs (statGrantOutcome/makeMinorInjury
+ * ×7 offseason, DriftParticles, rivalFightPlan) → baseline 36→27.
  * NEW duplicate pairs fail loudly; a pair leaving either set must be dead
  * on the scan (the stale-entries test enforces the live-ledger invariant).
  */
-const SRC_TO_SRC_BASELINE = 36;
+const SRC_TO_SRC_BASELINE = 27;
 
 const EXEMPT_PAIRS = new Set([
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop

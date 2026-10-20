@@ -8,6 +8,7 @@ import type {
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
+import { makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 
 describe('Seasonal Chaos Weavers Prophecy', () => {
   it('picks a warrior, grants xp, gives madness injury and logs newsletter', () => {
@@ -33,13 +34,7 @@ describe('Seasonal Chaos Weavers Prophecy', () => {
       ],
     };
 
-    const ctx: OffseasonEventContext = {
-      rosterUpdates: new Map(),
-      newsletterItems: [],
-      ledgerEntries: [],
-      insightTokens: [],
-      treasuryDelta: 0,
-    };
+    const ctx: OffseasonEventContext = makeOffseasonCtx();
 
     handleChaosWeaversProphecy({ state, nextWeek: 1, e: eventData, rng, ctx });
 

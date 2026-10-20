@@ -159,7 +159,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D10: offseason specs repointed to makeOffseasonCtx (verbatim ctx literals drained) — MEGAPLAN-D10', () => {
+  it('D10: offseason specs repointed to makeOffseasonCtx (verbatim ctx literals drained) — MEGAPLAN-D10', () => {
     const re = /rosterUpdates:\s*new Map(?:<[^>]*>)?\(\),\s*\n\s*newsletterItems:\s*\[\],\s*\n\s*ledgerEntries:\s*\[\]/g;
     const offenders = [
       'src/test/engine/pipeline/seasonalChaosWeaver.test.ts',

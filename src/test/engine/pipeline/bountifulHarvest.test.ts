@@ -6,6 +6,7 @@ import {
   type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents/types';
 import { SeededRNG } from '@/utils/random';
+import { makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 
 describe('Bountiful Harvest Offseason Event', () => {
   it('adds 200 gold to treasury and records ledger entry', () => {
@@ -17,13 +18,7 @@ describe('Bountiful Harvest Offseason Event', () => {
       newsletter: ['A local village celebrated... (+{{gold}} Gold)'],
     };
 
-    const ctx: OffseasonEventContext = {
-      rosterUpdates: new Map(),
-      newsletterItems: [],
-      ledgerEntries: [],
-      insightTokens: [],
-      treasuryDelta: 0,
-    };
+    const ctx: OffseasonEventContext = makeOffseasonCtx();
 
     const rng = new SeededRNG(123);
 

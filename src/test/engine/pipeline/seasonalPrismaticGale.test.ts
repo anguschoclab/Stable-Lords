@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { handlePrismaticGaleExposure } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import type { GameState } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
+import { makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 import type {
   OffseasonEventNarrative,
   OffseasonEventContext,
@@ -35,13 +36,7 @@ describe('prismatic_gale_exposure offseason event', () => {
     warrior.injuries = [];
     warrior.xp = 10;
     mockState = { roster: [warrior] } as unknown as GameState;
-    mockCtx = {
-      rosterUpdates: new Map(),
-      newsletterItems: [],
-      ledgerEntries: [],
-      insightTokens: [],
-      treasuryDelta: 0,
-    };
+    mockCtx = makeOffseasonCtx();
   });
 
   it('should apply xp, injury, and an insight token', () => {

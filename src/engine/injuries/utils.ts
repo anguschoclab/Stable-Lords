@@ -56,3 +56,20 @@ export function makeInjury(
     penalties: params.penalties,
   };
 }
+
+/**
+ * Build a Minor-severity injury — the common offseason case. NOT IMPLEMENTED —
+ * signature stub for the test-first commit; replaced in the dedup commit.
+ */
+export function makeMinorInjury(
+  _rng: IRNGService,
+  _params: {
+    name: string;
+    description: string;
+    penalties: InjuryData['penalties'];
+    weeksBase?: number;
+    weeksRange?: number;
+  }
+): InjuryData {
+  throw new Error('makeMinorInjury: not implemented');
+}

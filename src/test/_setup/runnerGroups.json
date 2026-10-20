@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T21:26:15.169Z",
+  "generatedAt": "2026-10-20T21:51:32.991Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -35,6 +35,7 @@
     "src/test/components/advisor/CampaignHorizon.test.tsx",
     "src/test/components/advisor/WarriorCouncilCard.test.tsx",
     "src/test/components/arena/WeaponTrailWiring.test.tsx",
+    "src/test/components/arena/weatherEffectsDom.test.tsx",
     "src/test/components/avatar/Avatar.test.tsx",
     "src/test/components/avatar/AvatarForEntity.test.tsx",
     "src/test/components/avatar/AvatarRerollButton.test.tsx",

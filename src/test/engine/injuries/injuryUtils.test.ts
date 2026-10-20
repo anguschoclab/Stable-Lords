@@ -5,6 +5,7 @@ import {
   getInjurySeverityCounts,
   hasInjuryOfSeverity,
   makeInjury,
+  makeMinorInjury,
 } from '@/engine/injuries/utils';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -123,6 +124,77 @@ describe('Injury Utilities', () => {
         weeksRemaining: 4, // 2 + Math.floor(0.5 * 4) = 4
         penalties: { ST: 10 },
       });
+    });
+  });
+
+  describe('makeMinorInjury', () => {
+    it('builds a Minor injury with a 1-week base and range by default', () => {
+      const rng = {
+        uuid: vi.fn().mockReturnValue('injury-x'),
+        next: vi.fn().mockReturnValue(0.5),
+      } as unknown as IRNGService;
+
+      const injury = makeMinorInjury(rng, {
+        name: 'Bruise',
+        description: 'Ouch.',
+        penalties: { CN: -1 },
+      });
+
+      expect(injury).toEqual({
+        id: 'injury-x',
+        name: 'Bruise',
+        description: 'Ouch.',
+        severity: 'Minor',
+        weeksRemaining: 1,
+        penalties: { CN: -1 },
+      });
+      expect(rng.uuid).toHaveBeenCalledWith('injury');
+    });
+
+    it('honours explicit weeksBase/weeksRange windows', () => {
+      const rng = {
+        uuid: vi.fn().mockReturnValue('injury-y'),
+        next: vi.fn().mockReturnValue(0.5),
+      } as unknown as IRNGService;
+
+      const injury = makeMinorInjury(rng, {
+        name: 'Sprain',
+        description: 'Twisted.',
+        weeksBase: 2,
+        weeksRange: 4,
+        penalties: { SP: -1 },
+      });
+
+      expect(injury.weeksRemaining).toBe(4); // 2 + Math.floor(0.5 * 4)
+    });
+
+    it('consumes the rng exactly like makeInjury', () => {
+      const a = {
+        uuid: vi.fn().mockReturnValue('id-a'),
+        next: vi.fn().mockReturnValue(0.5),
+      } as unknown as IRNGService;
+      const b = {
+        uuid: vi.fn().mockReturnValue('id-a'),
+        next: vi.fn().mockReturnValue(0.5),
+      } as unknown as IRNGService;
+
+      const viaHelper = makeMinorInjury(a, {
+        name: 'N',
+        description: 'd',
+        weeksBase: 2,
+        weeksRange: 2,
+        penalties: { CN: -1 },
+      });
+      const viaMakeInjury = makeInjury(b, {
+        name: 'N',
+        description: 'd',
+        severity: 'Minor',
+        weeksBase: 2,
+        weeksRange: 2,
+        penalties: { CN: -1 },
+      });
+
+      expect(viaHelper).toEqual(viaMakeInjury);
     });
   });
 });

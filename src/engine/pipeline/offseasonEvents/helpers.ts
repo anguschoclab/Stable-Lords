@@ -67,7 +67,7 @@ export function announceOffseasonEvent(args: AnnounceOffseasonEventArgs): void {
 }
 
 /** Outcome returned by a `withChosenWarrior` apply callback. */
-interface ChosenWarriorOutcome {
+export interface ChosenWarriorOutcome {
   updates?: Partial<Warrior>;
   announce?: Record<string, string | number>;
 }
@@ -124,6 +124,32 @@ export function warriorOutcome(
   announce: Record<string, string | number> = {}
 ): ChosenWarriorOutcome {
   return { updates, announce };
+}
+
+/** Warrior counters a {@link statGrantOutcome} grant can bump. */
+export type GrantableStat = 'xp' | 'fame' | 'popularity' | 'fatigue';
+
+/** Options for {@link statGrantOutcome}. */
+export interface StatGrantOutcomeOpts {
+  /** Extra roster-update fields merged ahead of the stat grants (grants win collisions). */
+  updates?: Partial<Warrior>;
+  /** Announce data used verbatim — never merged with grant deltas. */
+  announce?: Record<string, string | number>;
+  /** Copy the grant deltas into the announce payload (explicit announce wins). */
+  mirror?: boolean;
+}
+
+/**
+ * Build the standard "grant stats to the chosen warrior" outcome.
+ * NOT IMPLEMENTED — signature stub for the test-first commit; replaced in the
+ * statGrantOutcome dedup commit.
+ */
+export function statGrantOutcome(
+  _chosen: Warrior,
+  _grants: Partial<Record<GrantableStat, number>>,
+  _opts: StatGrantOutcomeOpts = {}
+): ChosenWarriorOutcome {
+  throw new Error('statGrantOutcome: not implemented');
 }
 
 /** Parameters for {@link grantInsightToken} — warrior identity and week come from `run`/`chosen`. */

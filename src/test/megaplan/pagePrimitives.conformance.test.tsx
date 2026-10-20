@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-L2 spec (test-first, skipped until Phase 6):
+ * MEGAPLAN-L2 spec (authored test-first, live since Phase 6):
  *
  * Every routed page renders inside the shared shell primitives:
  * PageFrame (<main>) wrapping content + PageHeader (<h1.font-display>).

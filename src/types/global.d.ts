@@ -35,14 +35,6 @@ declare global {
         body: string;
       }) => Promise<{ success: boolean; error?: string }>;
     };
-
-    // Seasonal flavor strings (documented but not yet implemented)
-    SL_FLAVOR?: {
-      spring: string[];
-      summer: string[];
-      fall: string[];
-      winter: string[];
-    };
   }
 }
 

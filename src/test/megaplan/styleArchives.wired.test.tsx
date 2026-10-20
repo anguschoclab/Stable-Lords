@@ -4,18 +4,16 @@ import { render, screen } from '@testing-library/react';
 import '@/test/_setup/setup';
 
 /**
- * MEGAPLAN-G1 spec (test-first, skipped until Phase 5):
+ * MEGAPLAN-G1 spec (authored test-first, live since Phase 5):
  *
  * Feature Integration Matrix #6 — "Style Archives Browser (10 warrior types)".
- * No browser exists today: the only FightingStyle enumeration in UI is the
- * WarriorBuilder dropdown. Spec surface: a browsable archives surface listing
- * all 10 canonical styles with compendium data (display name, description,
- * key stats/requirements), reachable via the World or Lore hub.
+ * Landed surface: `src/pages/StyleArchives.tsx` renders every FightingStyle
+ * value from STYLE_DISPLAY_NAMES with compendium data (display name,
+ * description, key stats/requirements) — no hardcoded style list — routed
+ * at `/world/style-archives` and nav-linked via `navigationHubs`.
  *
- * Implementation contract (drives Phase-5 build):
- *   - `src/pages/StyleArchives.tsx` (or lore/) renders every FightingStyle
- *     value from STYLE_DISPLAY_NAMES — no hardcoded style list.
- *   - Routed at `/world/style-archives` (or lore route) + nav-linked.
+ * This spec stays as the wiring guard: the page renders all 10 canonical
+ * styles and the route + nav link remain live.
  */
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -30,7 +28,8 @@ describe('Style Archives browser (MEGAPLAN-G1)', () => {
 
   it('renders all 10 canonical fighting styles from the enum, not a hardcoded list', async () => {
     const { FightingStyle, STYLE_DISPLAY_NAMES } = await import('@/types/shared.types');
-    // Glob so the spec compiles before the page exists.
+    // Glob-load keeps a deleted surface a clean assertion red, not a
+    // module-resolution crash (v11Dedup precedent).
     const files = import.meta.glob('/src/pages/StyleArchives.*');
     const loader = Object.values(files)[0] as
       (() => Promise<Record<string, React.ComponentType>>) | undefined;

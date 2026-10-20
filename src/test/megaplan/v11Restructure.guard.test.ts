@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V13 monolith-restructure spec (test-first, skipped until Phase 4):
+ * MEGAPLAN-V13 monolith-restructure spec (authored test-first, live since Phase 4):
  *
  * Every >400-line *logic* file identified by the V11 audit must be split below
  * the target budget — the file either shrinks to ≤400 lines or is replaced by

@@ -2,12 +2,11 @@
 import { describe, it, expect } from 'vitest';
 
 /**
- * MEGAPLAN-L1 spec (test-first, skipped until Phase 6):
+ * MEGAPLAN-L1 spec (authored test-first, live since Phase 6):
  *
  * DESIGN_PAGE_SYSTEM_v1.0 §1 mandates a per-route primary CTA in the shared
  * top bar. The spec's route names predate the hub reorganization; the
- * canonical mapping (implemented via a location-aware CTA registry in
- * components/layout/navigationShared.tsx or similar) is:
+ * canonical mapping is:
  *
  *   '/'                        → EXECUTE WEEK N ›   (advances week)
  *   '/stable/bouts'            → BEGIN CYCLE ›
@@ -19,11 +18,12 @@ import { describe, it, expect } from 'vitest';
  *   detail pages               → no primary CTA (contextual secondaries only)
  *   lore pages                 → no primary CTA (reading rooms)
  *
- * Implementation contract: a route→CTA registry keyed on pathname prefixes,
- * consumed by AppHeader. This spec drives that surface.
+ * Landed contract: `PRIMARY_CTA_BY_ROUTE` + `resolvePrimaryCta` in
+ * `src/components/layout/primaryCta.ts` — a route→CTA registry keyed on
+ * pathname prefixes, consumed via `PrimaryCtaButton`/`useRegisterCtaAction`.
  */
-// The registry module lands with the Phase-6 CTA implementation — glob so the
-// spec compiles before the module exists (empty map = not yet implemented).
+// Glob-load keeps a deleted registry a clean assertion red, not a
+// module-resolution crash (v11Dedup precedent).
 const ctaModule = import.meta.glob<Record<string, unknown>>('/src/components/layout/primaryCta.*');
 
 async function loadRegistry(): Promise<Record<string, unknown> | null> {

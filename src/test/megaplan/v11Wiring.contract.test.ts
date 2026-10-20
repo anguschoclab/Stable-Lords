@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V14 wiring contracts (test-first, skipped until Phase 6):
+ * MEGAPLAN-V14 wiring contracts (authored test-first, live since Phase 6):
  *
  * 1. Constants liveness — every export in a leaf constants module must be
  *    imported by at least one non-test file outside its own module. Flags the

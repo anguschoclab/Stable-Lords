@@ -4,7 +4,7 @@ import path from 'node:path';
 import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipeline/passes';
 
 /**
- * MEGAPLAN-V14 pipeline-docs drift guard (test-first, red until Phase 5e):
+ * MEGAPLAN-V14 pipeline-docs drift guard (authored test-first, live since Phase 5e):
  *
  * L1/A-finding — docs/PIPELINE_DEPENDENCY_MAP.md's stage table drifted from
  * WEEK_PIPELINE_PASSES: it lists `recruitment` under `world` (code: `core`),

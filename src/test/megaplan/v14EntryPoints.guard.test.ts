@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V14 entry-point guard (test-first; partially red until Phase 5c):
+ * MEGAPLAN-V14 entry-point guard (authored test-first, live since Phase 5c):
  *
  * Freezes the production-call surface of the engine worker:
  *  1. Every `engineProxy.<method>` call site lives in an allowlisted file.
@@ -12,12 +12,10 @@ import path from 'node:path';
  *     result protection.
  *  3. Admin fast-forward paths (`skipToMonthEnd`/`skipToQuarterEnd`) carry
  *     the same timeout + `cancelSim` termination affordance as
- *     `runEngineJob` — today a hung week in an admin skip blocks the worker
- *     FIFO forever with no timeout. (RED)
+ *     `runEngineJob` — a hung admin skip must not block the worker FIFO.
  *  4. Admin callers pass state through `stripNonSerializable` like the
- *     store path — harmless today because `reconstructGameState` cannot
- *     emit the stripped fields, but the divergence is a latent break.
- *     (RED — defense in depth)
+ *     store path (defense in depth — `reconstructGameState` cannot
+ *     currently emit the stripped fields, but the parity is pinned).
  *  5. The worker's exposed surface stays intentional: every exposed method
  *     either has a production caller or is pinned in DEAD_SURFACE.
  */

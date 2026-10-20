@@ -3,22 +3,21 @@ import { describe, it, expect } from 'vitest';
 import '@/test/_setup/setup';
 
 /**
- * MEGAPLAN-G2/G3 spec (test-first, skipped until Phase 5):
+ * MEGAPLAN-G2/G3 spec (authored test-first, live since Phase 5):
  *
- * G2 — Feature Matrix #5 "Favorite Weapon Charting Toolkit": favorites display
- * exists (warrior/favorites/*, FavoritesCard) but the cross-warrior affinity
- * charting surface is absent. Contract: a charting surface (page or dossier
- * section) that visualizes discovered favorite-weapon/rhythm data across the
- * roster — all values derived from real warrior.favorites, never placeholders.
+ * G2 — Feature Matrix #5 "Favorite Weapon Charting Toolkit": landed as
+ * `src/components/warrior/favorites/FavoritesCharting.tsx`, rendered by
+ * `StableHall` — a charting surface visualizing discovered favorite-weapon/
+ * rhythm data across the roster, all values derived from real
+ * warrior.favorites, never placeholders.
  *
- * G3 — Feature Matrix #23 "Tournament Prep Mode": FE/class freeze checks for
- * tournament entrants. PhysicalsSimulator covers #9 physicals; prep-mode
- * surface absent. Contract TBD at Phase-5 verification — test encodes the
- * minimum: a prep surface exists that lists tournament entrants with their
- * eligibility/class status.
+ * G3 — Feature Matrix #23 "Tournament Prep Mode": landed as
+ * `src/pages/TournamentPrep.tsx`, routed at `/world/tournament-prep` — a
+ * prep surface listing tournament entrants per pending tournament class
+ * with eligibility checks (blocking vs advisory).
  */
-// import.meta.glob: spec compiles before the surfaces exist (empty map =
-// not yet implemented — lands with the Phase-5 build).
+// import.meta.glob: asserts the surface files exist — a deleted module
+// fails as a clean assertion red, not a module-resolution crash.
 const chartingModule = import.meta.glob('/src/components/warrior/favorites/FavoritesCharting.*');
 const prepModule = import.meta.glob('/src/pages/TournamentPrep.*');
 

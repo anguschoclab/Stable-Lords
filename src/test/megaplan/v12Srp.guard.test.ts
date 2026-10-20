@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { collectSizes } from '../../../scripts/function-length.mjs';
 
 /**
- * MEGAPLAN-V12 single-responsibility spec (test-first, red until Phase 3):
+ * MEGAPLAN-V12 single-responsibility spec (authored test-first, live since Phase 3):
  *
  * S1: `emitWarriorBid` in boutBidding/generation.ts packs six intent
  * strategies (VENDETTA, CROWN_CAMPAIGN, challenged-response, RECOVERY,

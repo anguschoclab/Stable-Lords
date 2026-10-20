@@ -3,7 +3,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V12 duplication-consolidation spec (test-first, red until Phase 4):
+ * MEGAPLAN-V12 duplication-consolidation spec (authored test-first, live since Phase 4):
  *
  * Verdicted DEDUPE clusters from MEGAPLAN_V12_FINDINGS.md section A1 — each
  * asserts the shared abstraction exists and honors the contract that made the

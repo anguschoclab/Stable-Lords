@@ -3,12 +3,11 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V11 dead-surface spec (test-first, skipped until Phase 3):
+ * MEGAPLAN-V11 dead-surface spec (authored test-first, live since Phase 3):
  *
  * Pins the dead-code elimination targets found by the V11 knip/orphan audit.
- * Each assertion describes the post-purge shape; the spec flips green as
- * Phase 3 lands each unit. Skipped under ticket MEGAPLAN-V11 per the
- * skip-count guard convention.
+ * Phase 3 landed every target below; this spec is the regression guard
+ * keeping them dead.
  *
  * Targets:
  *  - src/schemas/schemaObjects.ts — pure re-export barrel (imported only by

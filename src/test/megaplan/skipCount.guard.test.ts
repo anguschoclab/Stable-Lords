@@ -23,18 +23,10 @@ import path from 'node:path';
 
 const TEST_ROOT = path.resolve(__dirname, '..');
 
-// Registered spec-skip tickets (un-skip as the owning phase lands).
-const REGISTERED_SKIP_TICKETS = new Set([
-  'MEGAPLAN-G1', // Style Archives browser
-  'MEGAPLAN-G2', // favorites charting toolkit
-  'MEGAPLAN-G3', // tournament prep mode
-  'MEGAPLAN-L1', // per-route primary CTA
-  'MEGAPLAN-L2', // PageFrame/PageHeader conformance
-  'MEGAPLAN-V11', // dead-surface elimination (schema barrels, aliases, dead hooks/files)
-  'MEGAPLAN-V12', // duplicate consolidation (shared helpers + standings primitive)
-  'MEGAPLAN-V13', // monolith restructure budgets (>400-line targets)
-  'MEGAPLAN-V14', // wiring contracts (constants liveness)
-]);
+// Registered spec-skip tickets — currently empty: every ticketed phase has
+// landed and been un-skipped. Register a new MEGAPLAN-* ticket here before
+// parking a test-first spec under .skip.
+const REGISTERED_SKIP_TICKETS = new Set<string>();
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;
 
@@ -86,5 +78,22 @@ describe('megaplan: skip-count guard', () => {
       total,
       `megaplan skip count grew past the ${REGISTERED_SKIP_TICKETS.size} registered tickets`
     ).toBeLessThanOrEqual(REGISTERED_SKIP_TICKETS.size);
+  });
+
+  it('no stale phase-pending markers in spec files', () => {
+    const STALE = /\b(?:skipped|red|partially red)\s+until\s+Phase\b|\bContract TBD\b/i;
+    const offenders: string[] = [];
+    for (const file of testFiles(TEST_ROOT)) {
+      if (file === SELF) continue; // this file's regex literals would self-match
+      readFileSync(file, 'utf8')
+        .split('\n')
+        .forEach((line, i) => {
+          if (STALE.test(line)) offenders.push(`${file}:${i + 1}`);
+        });
+    }
+    expect(
+      offenders,
+      'spec docblock still claims pending phase work that has landed — rewrite as live guard'
+    ).toEqual([]);
   });
 });

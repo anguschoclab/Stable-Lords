@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/charts/WarriorRadarChart', () => ({
   WarriorRadarChart: ({ warrior }: any) => (
@@ -53,19 +53,10 @@ vi.mock('@/engine/core/historyResolver', () => ({
 
 const mockState: any = { roster: [] as Warrior[] };
 
-const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: (overrides.id ?? 'w1') as WarriorId,
-    name: overrides.name ?? 'Spartacus',
-    style: FightingStyle.StrikingAttack,
-    baseSkills: { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 },
-    career: { wins: 5, losses: 3, kills: 1 },
-    fame: 0,
-    ...overrides,
-  } as any);
+const makeWarrior = (over: Partial<Warrior> = {}): Warrior =>
+  makeSpartacusWarrior({ fame: 0, popularity: 0, ...over });
 
 import { WarriorDossier } from '@/components/WarriorDossier';
-import { FightingStyle } from '@/types/shared.types';
 
 describe('WarriorDossier', () => {
   beforeEach(() => {

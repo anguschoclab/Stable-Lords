@@ -44,7 +44,7 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   // eslint-disable-next-line vitest/no-disabled-tests
-  it.skip('D2: warrior wrapper clones repointed — no per-file createMockWarrior/makeWarrior-wrap literals — MEGAPLAN-D2', () => {
+  it('D2: warrior wrapper clones repointed — no per-file createMockWarrior/makeWarrior-wrap literals — MEGAPLAN-D2', () => {
     const offenders = [
       'src/test/hooks/useActiveRoster.test.ts',
       'src/test/hooks/useAtRiskWarriors.test.ts',

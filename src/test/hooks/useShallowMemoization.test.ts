@@ -4,7 +4,7 @@
  */
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { makeWarrior } from '@/test/_fixtures/factories';
+import { makeHookWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
@@ -25,22 +25,13 @@ vi.mock('@/state/useGameStore', () => ({
   },
 }));
 
-function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior({
-    id: id as WarriorId,
-    name: `Warrior ${id}`,
-    potential: undefined,
-    fatigue: 0,
-    ...overrides,
-  });
-}
 
 describe('useShallow memoization', () => {
   describe('useActiveRoster', () => {
     it('returns referentially stable result when roster is unchanged', () => {
       const roster = [
-        createMockWarrior('w1', { fame: 100 }),
-        createMockWarrior('w2', { fame: 50 }),
+        makeHookWarrior('w1', { fame: 100 }),
+        makeHookWarrior('w2', { fame: 50 }),
       ];
       Object.assign(mockStore, defaultStoreState, { roster });
 
@@ -53,7 +44,7 @@ describe('useShallow memoization', () => {
 
   describe('useAtRiskWarriors', () => {
     it('returns referentially stable result when roster is unchanged', () => {
-      const roster = [createMockWarrior('w1', { fatigue: 80, injuries: [] })];
+      const roster = [makeHookWarrior('w1', { fatigue: 80, injuries: [] })];
       Object.assign(mockStore, defaultStoreState, { roster });
 
       const { result, rerender } = renderHook(() => useAtRiskWarriors());

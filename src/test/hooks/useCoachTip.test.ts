@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { makeWarrior } from '@/test/_fixtures/factories';
+import { makeHookWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import type { Warrior, GameState } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
@@ -21,15 +21,6 @@ vi.mock('@/state/useGameStore', () => ({
   useWorldState: () => storeState,
 }));
 
-function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior({
-    id: id as WarriorId,
-    name: `Warrior ${id}`,
-    potential: undefined,
-    fatigue: 0,
-    ...overrides,
-  });
-}
 
 function setStore(overrides: Partial<GameState> = {}) {
   storeState = {
@@ -62,8 +53,8 @@ describe('useCoachTip', () => {
   });
 
   it('resolves warrior context via rosterMap for /warrior/:id routes', async () => {
-    const w50 = createMockWarrior('w50', { name: 'Fiftieth' });
-    setStore({ roster: [createMockWarrior('w1'), w50] });
+    const w50 = makeHookWarrior('w50', { name: 'Fiftieth' });
+    setStore({ roster: [makeHookWarrior('w1'), w50] });
 
     renderHook(() => useCoachTip('/warrior/w50'));
     vi.advanceTimersByTime(1100);
@@ -78,9 +69,9 @@ describe('useCoachTip', () => {
   it('resolves correct warrior from a large roster (O(1) Map lookup)', async () => {
     const roster: Warrior[] = [];
     for (let i = 0; i < 100; i++) {
-      roster.push(createMockWarrior(`w${i}`));
+      roster.push(makeHookWarrior(`w${i}`));
     }
-    const target = createMockWarrior('w50', { name: 'Target Warrior' });
+    const target = makeHookWarrior('w50', { name: 'Target Warrior' });
     roster[50] = target;
     setStore({ roster });
 
@@ -92,7 +83,7 @@ describe('useCoachTip', () => {
   });
 
   it('falls through when warrior ID is not found in roster', async () => {
-    setStore({ roster: [createMockWarrior('w1')] });
+    setStore({ roster: [makeHookWarrior('w1')] });
 
     renderHook(() => useCoachTip('/warrior/nonexistent'));
     vi.advanceTimersByTime(1100);
@@ -106,7 +97,7 @@ describe('useCoachTip', () => {
   });
 
   it('does not attempt warrior lookup for non-warrior routes', async () => {
-    setStore({ roster: [createMockWarrior('w1')] });
+    setStore({ roster: [makeHookWarrior('w1')] });
 
     renderHook(() => useCoachTip('/stable'));
     vi.advanceTimersByTime(1100);
@@ -118,7 +109,7 @@ describe('useCoachTip', () => {
   });
 
   it('rebuilds rosterMap when roster reference changes', async () => {
-    const roster1 = [createMockWarrior('w1')];
+    const roster1 = [makeHookWarrior('w1')];
     setStore({ roster: roster1 });
 
     const { rerender } = renderHook(({ path }) => useCoachTip(path), {
@@ -131,7 +122,7 @@ describe('useCoachTip', () => {
 
     // Change roster reference — new array with same warrior
     (toast as any).mockClear();
-    const roster2 = [createMockWarrior('w1', { name: 'Updated' })];
+    const roster2 = [makeHookWarrior('w1', { name: 'Updated' })];
     setStore({ roster: roster2 });
     rerender({ path: '/warrior/w1' });
 
@@ -142,7 +133,7 @@ describe('useCoachTip', () => {
   });
 
   it('does not fire tips when ftueComplete is false', async () => {
-    setStore({ ftueComplete: false, roster: [createMockWarrior('w1')] });
+    setStore({ ftueComplete: false, roster: [makeHookWarrior('w1')] });
 
     renderHook(() => useCoachTip('/warrior/w1'));
     vi.advanceTimersByTime(1100);

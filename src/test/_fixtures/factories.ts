@@ -110,6 +110,31 @@ export function makeSpartacusWarrior(over: Partial<Warrior> = {}): Warrior {
   });
 }
 
+/** Hook-test warrior — bare positional (id, over): name `Warrior ${id}`, no potential. */
+export function makeHookWarrior(id: string, over: Partial<Warrior> = {}): Warrior {
+  return makeWarrior({ id: id as WarriorId, name: `Warrior ${id}`, potential: undefined, ...over });
+}
+
+/** Hook-test warrior — StrikingAttack, fame 0, derivedStats removed (at-risk/roster selectors). */
+export function makeStrikingWarrior(id: string, over: Partial<Warrior> = {}): Warrior {
+  return makeHookWarrior(id, {
+    style: FightingStyle.StrikingAttack,
+    fame: 0,
+    derivedStats: undefined,
+    ...over,
+  });
+}
+
+/** Warrior with a tuned WT attribute — plan/strategy-defaults suites. */
+export function makeWtWarrior(style: FightingStyle, wt = 10): Warrior {
+  return makeWarrior({
+    id: nextId('w') as WarriorId,
+    name: 'Test Warrior',
+    style,
+    attributes: { ...ATTRS_10, WT: wt },
+  });
+}
+
 /**
  * Computed scouting "Opponent" — the fixed rival profile shared by the
  * scouting suites (SlashingAttack, mid-teens attrs, 8-3-2 career, fame 5).

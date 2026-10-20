@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { makeWarrior } from '@/test/_fixtures/factories';
+import { makeStrikingWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import type { Warrior } from '@/types/game';
@@ -18,16 +18,6 @@ const defaultStoreState = {
 const applyStore = (override: any = {}) =>
   useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
-function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {
-  return makeWarrior({
-    id: id as Warrior['id'],
-    name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    fame: 0,
-    derivedStats: undefined,
-    ...overrides,
-  });
-}
 
 describe('useActiveRoster', () => {
   it('returns an empty array when roster is empty', () => {
@@ -39,9 +29,9 @@ describe('useActiveRoster', () => {
   it('filters out Dead and Retired warriors', () => {
     applyStore({
       roster: [
-        createMockWarrior('w1', { status: 'Active', fame: 100 }),
-        createMockWarrior('w2', { status: 'Dead', fame: 200 }),
-        createMockWarrior('w3', { status: 'Retired', fame: 300 }),
+        makeStrikingWarrior('w1', { status: 'Active', fame: 100 }),
+        makeStrikingWarrior('w2', { status: 'Dead', fame: 200 }),
+        makeStrikingWarrior('w3', { status: 'Retired', fame: 300 }),
       ],
     });
     const { result } = renderHook(() => useActiveRoster());
@@ -52,9 +42,9 @@ describe('useActiveRoster', () => {
   it('sorts by fame descending', () => {
     applyStore({
       roster: [
-        createMockWarrior('w1', { fame: 50 }),
-        createMockWarrior('w2', { fame: 200 }),
-        createMockWarrior('w3', { fame: 100 }),
+        makeStrikingWarrior('w1', { fame: 50 }),
+        makeStrikingWarrior('w2', { fame: 200 }),
+        makeStrikingWarrior('w3', { fame: 100 }),
       ],
     });
     const { result } = renderHook(() => useActiveRoster());
@@ -64,7 +54,7 @@ describe('useActiveRoster', () => {
   it('returns correct field subset', () => {
     applyStore({
       roster: [
-        createMockWarrior('w1', {
+        makeStrikingWarrior('w1', {
           name: 'Test',
           fame: 42,
           style: FightingStyle.BashingAttack,
@@ -86,7 +76,7 @@ describe('useActiveRoster', () => {
 
   it('returns referentially stable result across re-renders with same roster', () => {
     applyStore({
-      roster: [createMockWarrior('w1', { fame: 100 }), createMockWarrior('w2', { fame: 50 })],
+      roster: [makeStrikingWarrior('w1', { fame: 100 }), makeStrikingWarrior('w2', { fame: 50 })],
     });
     const { result, rerender } = renderHook(() => useActiveRoster());
     const first = result.current;

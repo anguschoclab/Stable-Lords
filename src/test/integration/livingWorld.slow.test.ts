@@ -15,10 +15,7 @@ import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { runSimulation, type CumulativeStats } from '#scripts/simulation-harness';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
-import {
-  WORLD_RIVAL_FLOOR,
-  WORLD_RIVAL_SOFT_CAP,
-} from '@/constants/world';
+import { WORLD_RIVAL_FLOOR, WORLD_RIVAL_SOFT_CAP } from '@/constants/world';
 import { BASE_RESERVE } from '@/engine/ai/workers/budgetWorker';
 import { aiRosterMax, aiRosterMin } from '@/constants/ai';
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -97,8 +94,7 @@ describe('Living rival world — 1000-week seeded run', () => {
     const solvent = finalState.rivals.filter((r) => r.treasury >= BASE_RESERVE * 10);
     expect(solvent.length).toBeGreaterThan(0);
     const fills = solvent.map(
-      (r) =>
-        r.roster.filter((w) => isActive(w)).length / aiRosterMax(r.owner.personality)
+      (r) => r.roster.filter((w) => isActive(w)).length / aiRosterMax(r.owner.personality)
     );
     const avgFill = fills.reduce((a, b) => a + b, 0) / fills.length;
     expect(

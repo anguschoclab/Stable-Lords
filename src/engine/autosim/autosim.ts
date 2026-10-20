@@ -30,13 +30,7 @@ export interface AutosimResult {
   finalState: GameState;
   weeksSimmed: number;
   stopReason:
-    | 'max_weeks'
-    | 'death'
-    | 'injury'
-    | 'bankrupt'
-    | 'no_pairings'
-    | 'custom'
-    | 'cancelled';
+    'max_weeks' | 'death' | 'injury' | 'bankrupt' | 'no_pairings' | 'custom' | 'cancelled';
   stopDetail: string;
   weekSummaries: AutosimWeekSummary[];
 }
@@ -190,10 +184,7 @@ export async function runAutosim(
   // Terminal sweep: a sim whose final week emitted a bracket (or stopped
   // mid-tournament-week) would otherwise return with it unresolved — no
   // following week-boundary sweep ever runs. Seed-identical to that sweep.
-  const finish = (
-    stopReason: AutosimResult['stopReason'],
-    stopDetail: string
-  ): AutosimResult => ({
+  const finish = (stopReason: AutosimResult['stopReason'], stopDetail: string): AutosimResult => ({
     finalState: truncateState(sweepUnfinishedTournaments(state, true)),
     weeksSimmed,
     stopReason,

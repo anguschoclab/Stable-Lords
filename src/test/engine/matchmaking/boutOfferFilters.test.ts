@@ -46,7 +46,14 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
 
 describe('filterAndSortOffers', () => {
   it('returns empty arrays and zero highestPurse when given empty inputs', () => {
-    const result = filterAndSortOffers({ boutOffers: {}, roster: [], week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: {},
+      roster: [],
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.thisWeekOffers).toEqual([]);
     expect(result.upcomingOffers).toEqual([]);
     expect(result.idleWarriors).toEqual([]);
@@ -61,9 +68,14 @@ describe('filterAndSortOffers', () => {
       status: 'Proposed',
       boutWeek: 2,
     });
-    const result = filterAndSortOffers(
-      { boutOffers: { ['o1' as BoutOfferId]: offer }, roster: [w1], week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null }
-    );
+    const result = filterAndSortOffers({
+      boutOffers: { ['o1' as BoutOfferId]: offer },
+      roster: [w1],
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.thisWeekOffers).toHaveLength(1);
     expect(result.thisWeekOffers[0]!.id).toBe('o1');
   });
@@ -76,9 +88,14 @@ describe('filterAndSortOffers', () => {
       status: 'Proposed',
       boutWeek: 2,
     });
-    const result = filterAndSortOffers(
-      { boutOffers: { ['o1' as BoutOfferId]: offer }, roster: [w1], week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null }
-    );
+    const result = filterAndSortOffers({
+      boutOffers: { ['o1' as BoutOfferId]: offer },
+      roster: [w1],
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.thisWeekOffers).toHaveLength(0);
     expect(result.highestPurse).toBe(0);
   });
@@ -123,7 +140,14 @@ describe('filterAndSortOffers', () => {
         status: 'Canceled',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     const ids = result.thisWeekOffers.map((o) => o.id);
     expect(ids).toContain('proposed');
     expect(ids).toContain('signed');
@@ -150,7 +174,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: 'w1' });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: 'w1',
+    });
     expect(result.thisWeekOffers).toHaveLength(1);
     expect(result.thisWeekOffers[0]!.id).toBe('o1');
   });
@@ -178,7 +209,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 3, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 3,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.thisWeekOffers.map((o) => o.id)).toContain('thisWeek');
     expect(result.upcomingOffers.map((o) => o.id)).toContain('upcoming');
     expect(result.thisWeekOffers.map((o) => o.id)).not.toContain('past');
@@ -210,7 +248,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.thisWeekOffers).toHaveLength(1);
     expect(result.thisWeekOffers[0]!.id).toBe('high');
   });
@@ -254,7 +299,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: promoters, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: promoters,
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     const tiers = result.thisWeekOffers.map((o) => promoters[o.promoterId]!.tier);
     expect(tiers).toEqual(['Legendary', 'National', 'Regional', 'Local']);
   });
@@ -285,7 +337,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     const weeks = result.upcomingOffers.map((o) => o.boutWeek);
     expect(weeks).toEqual([6, 8, 10]);
   });
@@ -302,7 +361,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.idleWarriors).toHaveLength(1);
     expect(result.idleWarriors[0]!.id).toBe('w2');
   });
@@ -311,7 +377,14 @@ describe('filterAndSortOffers', () => {
     const w1 = makeWarrior({ id: 'w1' as WarriorId, status: 'Active' });
     const w2 = makeWarrior({ id: 'w2' as WarriorId, status: 'Dead' });
     const roster = [w1, w2];
-    const result = filterAndSortOffers({ boutOffers: {}, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: {},
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.idleWarriors).toHaveLength(1);
     expect(result.idleWarriors[0]!.id).toBe('w1');
   });
@@ -335,7 +408,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.highestPurse).toBe(500);
   });
 
@@ -361,7 +441,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: promoters, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: promoters,
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     // Legendary should come before missing (rank 0)
     expect(result.thisWeekOffers[0]!.id).toBe('known');
     expect(result.thisWeekOffers[1]!.id).toBe('unknown');
@@ -385,7 +472,14 @@ describe('filterAndSortOffers', () => {
       }),
     };
     const signedIds = new Set<string>(['pending']);
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: signedIds, selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: signedIds,
+      selectedWarriorId: null,
+    });
     const ids = result.thisWeekOffers.map((o) => o.id);
     expect(ids).toContain('pending');
     expect(ids).not.toContain('stale');
@@ -406,7 +500,14 @@ describe('filterAndSortOffers', () => {
     // Selecting w1 hides w2's offer from thisWeek, but w2 is still booked
     // (warriorsWithOffers is built from playerOffers, not the filtered list)
     // while w1 — holding no offer — is idle.
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: 'w1' });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: 'w1',
+    });
     expect(result.thisWeekOffers).toHaveLength(0);
     expect(result.idleWarriors.map((w) => w.id)).toEqual(['w1']);
   });
@@ -430,7 +531,14 @@ describe('filterAndSortOffers', () => {
         status: 'Proposed',
       }),
     };
-    const result = filterAndSortOffers({ boutOffers: offers, roster: roster, week: 1, promoters: {}, signedOfferIds: new Set(), selectedWarriorId: null });
+    const result = filterAndSortOffers({
+      boutOffers: offers,
+      roster: roster,
+      week: 1,
+      promoters: {},
+      signedOfferIds: new Set(),
+      selectedWarriorId: null,
+    });
     expect(result.idleWarriors).toHaveLength(0);
   });
 });

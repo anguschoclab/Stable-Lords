@@ -17,18 +17,26 @@ import {
 import type { ArenaTitle } from '@/types/state.types';
 
 const journeyman = () =>
-  makeWarrior({ id: undefined, name: 'Journeyman', style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: {
-    career: { wins: 8, losses: 12, kills: 0 },
-    fame: 10,
-  } });
+  makeWarrior({
+    id: undefined,
+    name: 'Journeyman',
+    style: FightingStyle.StrikingAttack,
+    attrs: ATTRS_10,
+    overrides: {
+      career: { wins: 8, losses: 12, kills: 0 },
+      fame: 10,
+    },
+  });
 
-const titleWithReigns = (
-  championId: string | null,
-  historyIds: string[]
-): ArenaTitle =>
+const titleWithReigns = (championId: string | null, historyIds: string[]): ArenaTitle =>
   ({
     champion: championId
-      ? { warriorId: championId as WarriorId, reignStartWeek: 10, defenses: 0, lastActivityWeek: 10 }
+      ? {
+          warriorId: championId as WarriorId,
+          reignStartWeek: 10,
+          defenses: 0,
+          lastActivityWeek: 10,
+        }
       : null,
     history: historyIds.map((id) => ({
       warriorId: id as WarriorId,
@@ -78,7 +86,14 @@ describe('isLegacyFounderCaliber', () => {
   it('admits headline annual award winners', () => {
     const w = journeyman();
     w.awards = [
-      { year: 1, type: 'WARRIOR_OF_YEAR', warriorId: w.id, warriorName: w.name, value: 20, reason: 'x' },
+      {
+        year: 1,
+        type: 'WARRIOR_OF_YEAR',
+        warriorId: w.id,
+        warriorName: w.name,
+        value: 20,
+        reason: 'x',
+      },
     ];
     expect(isLegacyFounderCaliber(w, new Set())).toBe(true);
   });
@@ -139,9 +154,13 @@ describe('personalityFromCareer', () => {
   });
 
   it('returns Showman at hall-of-fame fame or mass popularity', () => {
-    const famous = founderOf(FightingStyle.StrikingAttack, { wins: 2, losses: 2, kills: 0 }, {
-      fame: 150,
-    });
+    const famous = founderOf(
+      FightingStyle.StrikingAttack,
+      { wins: 2, losses: 2, kills: 0 },
+      {
+        fame: 150,
+      }
+    );
     expect(personalityFromCareer(famous)).toBe('Showman');
 
     const popular = founderOf(

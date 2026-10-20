@@ -49,10 +49,7 @@ const recruitPool = (state: GameState, value: PoolWarrior[]) => {
 /**
  * Apply legacy-founder queue to state.
  */
-const legacyFounderQueue = (
-  state: GameState,
-  value: import('@/types/warrior.types').Warrior[]
-) => {
+const legacyFounderQueue = (state: GameState, value: import('@/types/warrior.types').Warrior[]) => {
   state.legacyFounderQueue = value;
 };
 

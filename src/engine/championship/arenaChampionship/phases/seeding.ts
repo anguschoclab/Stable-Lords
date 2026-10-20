@@ -61,8 +61,7 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
     if (title?.champion) continue;
     const rows = rankedByArena.get(arenaId) ?? [];
     const pickId =
-      claimedByArena.get(arenaId) ??
-      rows.find((r) => !claimed.has(r.warrior.id))?.warrior.id;
+      claimedByArena.get(arenaId) ?? rows.find((r) => !claimed.has(r.warrior.id))?.warrior.id;
     if (!pickId) continue;
     const t = ensureTitle(state, delta, arenaId);
     crown(t, pickId, state.absoluteWeek);

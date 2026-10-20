@@ -17,15 +17,20 @@ describe('prismatic_gale_exposure offseason event', () => {
 
   beforeEach(() => {
     mockRng = new SeededRNG(12345);
-    const warrior = makeWarrior({ id: 'w1' as any, name: 'Test Warrior', style: FightingStyle.StrikingAttack, attrs: {
-      ST: 10,
-      CN: 10,
-      SZ: 10,
-      WT: 10,
-      WL: 10,
-      SP: 10,
-      DF: 10,
-    } });
+    const warrior = makeWarrior({
+      id: 'w1' as any,
+      name: 'Test Warrior',
+      style: FightingStyle.StrikingAttack,
+      attrs: {
+        ST: 10,
+        CN: 10,
+        SZ: 10,
+        WT: 10,
+        WL: 10,
+        SP: 10,
+        DF: 10,
+      },
+    });
     warrior.status = 'Active';
     warrior.injuries = [];
     warrior.xp = 10;
@@ -45,7 +50,13 @@ describe('prismatic_gale_exposure offseason event', () => {
       effectType: 'prismatic_gale_exposure',
       newsletter: ['Test newsletter'],
     };
-    handlePrismaticGaleExposure({ state: mockState, nextWeek: 10, e: eventDef, rng: mockRng, ctx: mockCtx });
+    handlePrismaticGaleExposure({
+      state: mockState,
+      nextWeek: 10,
+      e: eventDef,
+      rng: mockRng,
+      ctx: mockCtx,
+    });
 
     expect(mockCtx.rosterUpdates.has('w1' as WarriorId)).toBe(true);
     const update = mockCtx.rosterUpdates.get('w1' as WarriorId)!;

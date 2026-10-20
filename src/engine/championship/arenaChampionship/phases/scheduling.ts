@@ -81,7 +81,14 @@ export function scheduleTitleBouts(
         continue;
       }
       delta.newOffers.push(
-        makeTitleOffer({ rng: rng, arenaId: arenaId, aId: reign.warriorId, bId: contender.id, targetDisplayWeek: targetWeek, now: now })
+        makeTitleOffer({
+          rng: rng,
+          arenaId: arenaId,
+          aId: reign.warriorId,
+          bId: contender.id,
+          targetDisplayWeek: targetWeek,
+          now: now,
+        })
       );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       CHAMPIONSHIP_DEBUG.defensesScheduled++;
@@ -99,7 +106,14 @@ export function scheduleTitleBouts(
       const [a, b] = ranked;
       if (!a || !b) continue;
       delta.newOffers.push(
-        makeTitleOffer({ rng: rng, arenaId: arenaId, aId: a.warrior.id, bId: b.warrior.id, targetDisplayWeek: targetWeek, now: now })
+        makeTitleOffer({
+          rng: rng,
+          arenaId: arenaId,
+          aId: a.warrior.id,
+          bId: b.warrior.id,
+          targetDisplayWeek: targetWeek,
+          now: now,
+        })
       );
       CHAMPIONSHIP_DEBUG.offersCreated++;
       liveTitleArenas.add(arenaId);

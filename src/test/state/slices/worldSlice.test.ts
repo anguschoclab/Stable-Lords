@@ -211,7 +211,13 @@ describe('WorldSlice', () => {
           { id: 'w1', fame: 10, popularity: 10, career: { wins: 1, losses: 1, kills: 1 } } as any,
         ],
       });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'w1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5 });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'w1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+      });
     });
 
     const w = useTestStore.getState().roster[0]!;
@@ -227,7 +233,13 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         roster: [{ id: 'w1' } as any],
       });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'w1' as any, won: false, killed: false, fameDelta: -5, popDelta: -5 });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'w1' as any,
+        won: false,
+        killed: false,
+        fameDelta: -5,
+        popDelta: -5,
+      });
     });
 
     const w = useTestStore.getState().roster[0]!;
@@ -241,7 +253,13 @@ describe('WorldSlice', () => {
   it('should not crash if updateWarriorStatus targets non-existent player warrior', () => {
     act(() => {
       useTestStore.setState({ roster: [] });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'w1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5 });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'w1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+      });
     });
     expect(useTestStore.getState().roster).toEqual([]);
   });
@@ -263,7 +281,14 @@ describe('WorldSlice', () => {
           } as any,
         ],
       });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'rw1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5, rivalStableId: 'r1' as any });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'rw1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+        rivalStableId: 'r1' as any,
+      });
     });
 
     const w = useTestStore.getState().rivals[0]!.roster[0]!;
@@ -390,7 +415,13 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         roster: [{ id: 'w1' } as any],
       });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'w1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5 });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'w1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+      });
     });
 
     const w = useTestStore.getState().roster[0]!;
@@ -406,7 +437,14 @@ describe('WorldSlice', () => {
       useTestStore.setState({
         rivals: [{ owner: { id: 'r1' }, roster: [{ id: 'rw1' } as any] } as any],
       });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'rw1' as any, won: false, killed: false, fameDelta: -5, popDelta: -5, rivalStableId: 'r1' as any });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'rw1' as any,
+        won: false,
+        killed: false,
+        fameDelta: -5,
+        popDelta: -5,
+        rivalStableId: 'r1' as any,
+      });
     });
 
     const w = useTestStore.getState().rivals[0]!.roster[0]!;
@@ -420,7 +458,14 @@ describe('WorldSlice', () => {
   it('should not throw if updateWarriorStatus targets non-existent rival stable', () => {
     act(() => {
       useTestStore.setState({ rivals: [] });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'rw1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5, rivalStableId: 'r1' as any });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'rw1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+        rivalStableId: 'r1' as any,
+      });
     });
     expect(useTestStore.getState().rivals).toEqual([]);
   });
@@ -428,7 +473,14 @@ describe('WorldSlice', () => {
   it('should not throw if updateWarriorStatus targets non-existent rival warrior', () => {
     act(() => {
       useTestStore.setState({ rivals: [{ owner: { id: 'r1' }, roster: [] } as any] });
-      useTestStore.getState().updateWarriorStatus({ warriorId: 'rw1' as any, won: true, killed: true, fameDelta: 5, popDelta: 5, rivalStableId: 'r1' as any });
+      useTestStore.getState().updateWarriorStatus({
+        warriorId: 'rw1' as any,
+        won: true,
+        killed: true,
+        fameDelta: 5,
+        popDelta: 5,
+        rivalStableId: 'r1' as any,
+      });
     });
     expect(useTestStore.getState().rivals[0]!.roster).toEqual([]);
   });

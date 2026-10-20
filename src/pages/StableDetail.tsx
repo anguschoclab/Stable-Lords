@@ -30,7 +30,9 @@ function DossierTabs({
   activeTab: DetailTab;
   onChange: (tab: DetailTab) => void;
 }) {
-  return <IconTabStrip tabs={DETAIL_TABS} activeTab={activeTab} onChange={onChange} className="-mt-4" />;
+  return (
+    <IconTabStrip tabs={DETAIL_TABS} activeTab={activeTab} onChange={onChange} className="-mt-4" />
+  );
 }
 
 /** Back-to-scouting link. */

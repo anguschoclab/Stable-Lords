@@ -31,8 +31,7 @@ export function useExecuteTournamentRound({
       await useGameStore.getState().doAdvanceDay();
       const after = useGameStore.getState();
       const updated = (after.tournaments || []).find((t) => t.id === tournament.id);
-      const advanced =
-        `${after.absoluteWeek ?? 0}:${after.week}:${after.day}` !== beforeKey;
+      const advanced = `${after.absoluteWeek ?? 0}:${after.week}:${after.day}` !== beforeKey;
       if (!advanced && !updated?.completed) {
         toast.error('Resolution failed.');
         return;

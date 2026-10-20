@@ -46,9 +46,13 @@ describe('house rules — death rate multiplier', () => {
   it('canonical mult (1) produces kills in a lopsided matchup', () => {
     let kills = 0;
     for (let i = 0; i < 40; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(killer), planD: defaultPlanForWarrior(victim), warriorA: killer, warriorD: victim, providedRng: 1000 + i * 7919 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(killer),
+        planD: defaultPlanForWarrior(victim),
+        warriorA: killer,
+        warriorD: victim,
+        providedRng: 1000 + i * 7919,
+      });
       if (o.by === 'Kill') kills++;
     }
     expect(kills).toBeGreaterThan(0);
@@ -57,9 +61,19 @@ describe('house rules — death rate multiplier', () => {
   it('deathRateMult 0 produces zero kills across the same seeds', () => {
     let kills = 0;
     for (let i = 0; i < 40; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(killer), planD: defaultPlanForWarrior(victim), warriorA: killer, warriorD: victim, providedRng: 1000 + i * 7919, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena', crowdMood: undefined, headless: true, deathRateMult: 0 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(killer),
+        planD: defaultPlanForWarrior(victim),
+        warriorA: killer,
+        warriorD: victim,
+        providedRng: 1000 + i * 7919,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'standard_arena',
+        crowdMood: undefined,
+        headless: true,
+        deathRateMult: 0,
+      });
       if (o.by === 'Kill') kills++;
     }
     expect(kills).toBe(0);

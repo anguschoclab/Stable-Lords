@@ -459,9 +459,7 @@ describe('runAutosim', () => {
       name: 'Terminal Cup',
       participants: [wA, wB],
       completed: false,
-      bracket: [
-        { round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id },
-      ],
+      bracket: [{ round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id }],
     };
     const state = makeSimmableState({ tournaments: [pending] });
 

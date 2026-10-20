@@ -188,10 +188,7 @@ function IntentPanel({
         </div>
       )}
       {rival.agentMemory?.seasonObjective && (
-        <div
-          data-testid="season-objective"
-          className="pt-2 border-t border-white/5 space-y-1"
-        >
+        <div data-testid="season-objective" className="pt-2 border-t border-white/5 space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-[8px] font-black uppercase tracking-widest text-arena-gold/70">
               Season plan · {rival.agentMemory.seasonObjective.kind}

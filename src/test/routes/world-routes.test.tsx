@@ -56,10 +56,7 @@ describeRoutes(routes);
 
 describe('Route: world/arena-leaderboards (retired)', () => {
   it('does not retain a compatibility route file', () => {
-    const legacyRoute = path.resolve(
-      __dirname,
-      '../../routes/world/arena-leaderboards.tsx'
-    );
+    const legacyRoute = path.resolve(__dirname, '../../routes/world/arena-leaderboards.tsx');
     expect(existsSync(legacyRoute)).toBe(false);
   });
 });

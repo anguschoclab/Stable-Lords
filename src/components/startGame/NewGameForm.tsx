@@ -62,10 +62,12 @@ function useRandomizers({
 }
 
 /** Name + crest field cluster. */
-function IdentityFields(props: Pick<
-  NewGameFormProps,
-  'ownerName' | 'setOwnerName' | 'stableName' | 'setStableName' | 'playerCrest'
-> & { onRandomizeCrest: () => void }) {
+function IdentityFields(
+  props: Pick<
+    NewGameFormProps,
+    'ownerName' | 'setOwnerName' | 'stableName' | 'setStableName' | 'playerCrest'
+  > & { onRandomizeCrest: () => void }
+) {
   const { ownerName, setOwnerName, stableName, setStableName, playerCrest } = props;
   const { onRandomizeCrest } = props;
   return (

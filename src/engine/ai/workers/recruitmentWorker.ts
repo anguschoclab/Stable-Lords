@@ -45,17 +45,32 @@ interface SignGeneratedRecruitArgs {
  * parallel recruitment path). Consumes no pool entry, so it returns only
  * the updated stable — the caller's remainingPool passes through untouched.
  */
-function signGeneratedRecruit(args: SignGeneratedRecruitArgs): { updatedRival: RivalStableData } | null {
+function signGeneratedRecruit(
+  args: SignGeneratedRecruitArgs
+): { updatedRival: RivalStableData } | null {
   const { week, meta, gazetteItems, usedNames } = args;
   let { updatedRival } = args;
   const { usedIds, deadIds } = args;
   const budgetReport = checkBudget(updatedRival, AI_GENERATED_RECRUIT_COST, 'ROSTER');
   if (!budgetReport.isAffordable) return null;
-  const generated = generateAIRecruit({ rival: updatedRival, week: week, meta: meta, seed: undefined, usedNames: usedNames, usedIds: usedIds });
+  const generated = generateAIRecruit({
+    rival: updatedRival,
+    week: week,
+    meta: meta,
+    seed: undefined,
+    usedNames: usedNames,
+    usedIds: usedIds,
+  });
   if (!generated) return null;
-  const signed = signWarrior(
-    { prebuilt: generated, roster: updatedRival.roster, maxRoster: aiRosterMax(updatedRival.owner.personality), treasury: updatedRival.treasury, signingCost: AI_GENERATED_RECRUIT_COST, stableId: updatedRival.id, deadIds: deadIds }
-  );
+  const signed = signWarrior({
+    prebuilt: generated,
+    roster: updatedRival.roster,
+    maxRoster: aiRosterMax(updatedRival.owner.personality),
+    treasury: updatedRival.treasury,
+    signingCost: AI_GENERATED_RECRUIT_COST,
+    stableId: updatedRival.id,
+    deadIds: deadIds,
+  });
   if (!signed.ok) return null;
   usedNames?.add(generated.name);
   updatedRival = {
@@ -72,9 +87,14 @@ function signGeneratedRecruit(args: SignGeneratedRecruitArgs): { updatedRival: R
     description: `Paid ${AI_GENERATED_RECRUIT_COST}g signing fee for ${generated.name}.`,
     riskTier: budgetReport.riskTier,
   });
-  updatedRival = logAgentAction(
-    { rival: updatedRival, type: 'ROSTER', description: `Signed recruit ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`, riskTier: budgetReport.riskTier, week: week, cause: 'ROSTER_DIVERSITY' }
-  );
+  updatedRival = logAgentAction({
+    rival: updatedRival,
+    type: 'ROSTER',
+    description: `Signed recruit ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`,
+    riskTier: budgetReport.riskTier,
+    week: week,
+    cause: 'ROSTER_DIVERSITY',
+  });
   gazetteItems.push(
     `📣 MARKET: ${updatedRival.owner.stableName} signed ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`
   );
@@ -192,7 +212,10 @@ interface DraftPoolSigningsArgs {
  * first, with the quality gate dropped for desperate stables and a skip-to-
  * next-best path when the top candidate is unaffordable.
  */
-function draftPoolSignings(args: DraftPoolSigningsArgs): { updatedRival: RivalStableData; signings: number } {
+function draftPoolSignings(args: DraftPoolSigningsArgs): {
+  updatedRival: RivalStableData;
+  signings: number;
+} {
   const { remainingPool, visible, week, rng } = args;
   let { updatedRival } = args;
   const { meta, personality, favoredStyles, ctx } = args;
@@ -203,21 +226,34 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): { updatedRival: RivalSt
   }
 
   for (let slot = 0; slot < ctx.slotsAvailable; slot++) {
-    const { bestIdx, bestScore } = scoreCandidates(
-      { pool: visible, roster: updatedRival.roster, personality: personality, week: week, meta: meta, favoredStyles: favoredStyles, owner: updatedRival.owner }
-    );
+    const { bestIdx, bestScore } = scoreCandidates({
+      pool: visible,
+      roster: updatedRival.roster,
+      personality: personality,
+      week: week,
+      meta: meta,
+      favoredStyles: favoredStyles,
+      owner: updatedRival.owner,
+    });
     if (bestIdx < 0) break;
     const recruit = visible[bestIdx];
     if (!recruit) break;
 
     const qualityGate = bestScore > 0;
-    const desperation =
-      ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
+    const desperation = ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
     if (!qualityGate && !desperation) break;
 
-    const signed = signPoolRecruit(
-      { updatedRival: updatedRival, recruit: recruit, cost: recruit.cost, week: week, rng: rng, gazetteItems: ctx.gazetteItems, usedIds: ctx.usedIds, deadIds: ctx.deadIds, maxRoster: ctx.maxRoster }
-    );
+    const signed = signPoolRecruit({
+      updatedRival: updatedRival,
+      recruit: recruit,
+      cost: recruit.cost,
+      week: week,
+      rng: rng,
+      gazetteItems: ctx.gazetteItems,
+      usedIds: ctx.usedIds,
+      deadIds: ctx.deadIds,
+      maxRoster: ctx.maxRoster,
+    });
     if (!signed) {
       // Can't afford the best candidate — remove it and try the next-best
       // (a Pragmatic stable should still find value buys further down).
@@ -261,9 +297,17 @@ function signPoolRecruit(args: SignPoolRecruitArgs): RivalStableData | null {
   const budgetReport = checkBudget(updatedRival, cost, 'ROSTER');
   if (!budgetReport.isAffordable) return null;
 
-  const signed = signWarrior(
-    { recruit: recruit, roster: updatedRival.roster, maxRoster: maxRoster, treasury: updatedRival.treasury, signingCost: cost, stableId: updatedRival.id, rng: rng, usedIds: usedIds, deadIds: deadIds }
-  );
+  const signed = signWarrior({
+    recruit: recruit,
+    roster: updatedRival.roster,
+    maxRoster: maxRoster,
+    treasury: updatedRival.treasury,
+    signingCost: cost,
+    stableId: updatedRival.id,
+    rng: rng,
+    usedIds: usedIds,
+    deadIds: deadIds,
+  });
   if (!signed.ok) return null;
 
   updatedRival.treasury -= signed.costPaid;
@@ -278,9 +322,13 @@ function signPoolRecruit(args: SignPoolRecruitArgs): RivalStableData | null {
   });
 
   updatedRival.roster = [...updatedRival.roster, signed.warrior];
-  updatedRival = logAgentAction(
-    { rival: updatedRival, type: 'ROSTER', description: `Signed ${recruit.tier} warrior ${recruit.name} for ${signed.costPaid}g.`, riskTier: budgetReport.riskTier, week: week }
-  );
+  updatedRival = logAgentAction({
+    rival: updatedRival,
+    type: 'ROSTER',
+    description: `Signed ${recruit.tier} warrior ${recruit.name} for ${signed.costPaid}g.`,
+    riskTier: budgetReport.riskTier,
+    week: week,
+  });
   gazetteItems.push(
     `📣 MARKET: ${updatedRival.owner.stableName} signed ${recruit.tier} ${recruit.name} for ${signed.costPaid}g.`
   );
@@ -297,9 +345,7 @@ function countActiveRoster(rival: RivalStableData): number {
 function visiblePool(pool: PoolWarrior[], rivalId: string, week: number): PoolWarrior[] {
   return pool.filter(
     (w) =>
-      !w.academyStableId ||
-      w.academyStableId === rivalId ||
-      (w.academyClaimExpiryWeek ?? 0) < week
+      !w.academyStableId || w.academyStableId === rivalId || (w.academyClaimExpiryWeek ?? 0) < week
   );
 }
 
@@ -358,9 +404,26 @@ export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentRes
   // AI_RECRUITS_PER_WEEK_MAX signings per week; below-minimum stables drop
   // the quality gate so they never stall behind a weak pool.
   const slotsAvailable = Math.min(AI_RECRUITS_PER_WEEK_MAX, maxRoster - activeCount);
-  const drafted = draftPoolSignings(
-    { updatedRival: updatedRival, remainingPool: remainingPool, visible: visible, week: week, rng: rng, meta: meta, personality: personality, favoredStyles: favoredStyles, ctx: { slotsAvailable, needsRecruit, minRoster, maxRoster, isMajorDraftWeek, gazetteItems, usedIds, deadIds } }
-  );
+  const drafted = draftPoolSignings({
+    updatedRival: updatedRival,
+    remainingPool: remainingPool,
+    visible: visible,
+    week: week,
+    rng: rng,
+    meta: meta,
+    personality: personality,
+    favoredStyles: favoredStyles,
+    ctx: {
+      slotsAvailable,
+      needsRecruit,
+      minRoster,
+      maxRoster,
+      isMajorDraftWeek,
+      gazetteItems,
+      usedIds,
+      deadIds,
+    },
+  });
   updatedRival = drafted.updatedRival;
   const signings = drafted.signings;
   activeCount += signings;
@@ -375,9 +438,15 @@ export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentRes
     intent !== 'SURVIVAL'
   ) {
     // signGeneratedRecruit appends directly into `gazetteItems`.
-    const signed = signGeneratedRecruit(
-      { updatedRival: updatedRival, week: week, meta: meta, gazetteItems: gazetteItems, usedNames: usedNames, usedIds: usedIds, deadIds: deadIds }
-    );
+    const signed = signGeneratedRecruit({
+      updatedRival: updatedRival,
+      week: week,
+      meta: meta,
+      gazetteItems: gazetteItems,
+      usedNames: usedNames,
+      usedIds: usedIds,
+      deadIds: deadIds,
+    });
     if (signed) updatedRival = signed.updatedRival;
   }
 

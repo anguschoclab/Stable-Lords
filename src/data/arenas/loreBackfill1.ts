@@ -6,175 +6,200 @@ export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
     arenaId: 'mudpit_arena',
     type: 'historical_battle',
     title: 'The Mudpit War',
-    narrative: 'A Mudpit promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped.',
+    narrative:
+      'A Mudpit promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped.',
   },
   {
     id: 'mudpit_arena_famous_death_1',
     arenaId: 'mudpit_arena',
     type: 'famous_death',
     title: 'The Death at Mudpit',
-    narrative: 'A Mudpit fighter drowned on dry land when a geyser burst under the sand; the promoters capped it with a grating.',
+    narrative:
+      'A Mudpit fighter drowned on dry land when a geyser burst under the sand; the promoters capped it with a grating.',
   },
   {
     id: 'bloodsands_arena_historical_battle_0',
     arenaId: 'bloodsands_arena',
     type: 'historical_battle',
     title: 'The Bloodsands War',
-    narrative: 'A Bloodsands legend says the first winner there was buried under the center; the sand is still red.',
+    narrative:
+      'A Bloodsands legend says the first winner there was buried under the center; the sand is still red.',
   },
   {
     id: 'bloodsands_arena_famous_death_1',
     arenaId: 'bloodsands_arena',
     type: 'famous_death',
     title: 'The Death at Bloodsands',
-    narrative: 'The Bloodsands executioner fell to his own blade; the crowd said the arena itself claimed him.',
+    narrative:
+      'The Bloodsands executioner fell to his own blade; the crowd said the arena itself claimed him.',
   },
   {
     id: 'underpit_arena_historical_battle_0',
     arenaId: 'underpit_arena',
     type: 'historical_battle',
     title: 'The Underpit War',
-    narrative: 'The Underpit record books list a bout where both fighters died on the same count; the coin flipped.',
+    narrative:
+      'The Underpit record books list a bout where both fighters died on the same count; the coin flipped.',
   },
   {
     id: 'underpit_arena_famous_death_1',
     arenaId: 'underpit_arena',
     type: 'famous_death',
     title: 'The Death at Underpit',
-    narrative: 'The last Underpit champion died defending a corner that gave way beneath them; the section was never rebuilt.',
+    narrative:
+      'The last Underpit champion died defending a corner that gave way beneath them; the section was never rebuilt.',
   },
   {
     id: 'highplain_arena_historical_battle_0',
     arenaId: 'highplain_arena',
     type: 'historical_battle',
     title: 'The High Plain War',
-    narrative: 'The High Plain spring games saw a farmer\'s boy break a champion\'s ribs with a gate hinge.',
+    narrative:
+      "The High Plain spring games saw a farmer's boy break a champion's ribs with a gate hinge.",
   },
   {
     id: 'highplain_arena_famous_death_1',
     arenaId: 'highplain_arena',
     type: 'famous_death',
     title: 'The Death at High Plain',
-    narrative: 'A High Plain rookie died kneeling on a dropped shield; the veterans still call that spot the rookie\'s grave.',
+    narrative:
+      "A High Plain rookie died kneeling on a dropped shield; the veterans still call that spot the rookie's grave.",
   },
   {
     id: 'highplain_arena_architectural_quirk_2',
     arenaId: 'highplain_arena',
     type: 'architectural_quirk',
     title: 'The High Plain Feature',
-    narrative: 'A hidden bell inside High Plain rings when the crowd reaches a fever pitch; the fighters call it the kill-call.',
+    narrative:
+      'A hidden bell inside High Plain rings when the crowd reaches a fever pitch; the fighters call it the kill-call.',
   },
   {
     id: 'clifftop_arena_historical_battle_0',
     arenaId: 'clifftop_arena',
     type: 'historical_battle',
     title: 'The Clifftop War',
-    narrative: 'The Clifftop climb challenge required fighters to reach the top before a bout; half the field never made it.',
+    narrative:
+      'The Clifftop climb challenge required fighters to reach the top before a bout; half the field never made it.',
   },
   {
     id: 'clifftop_arena_famous_death_1',
     arenaId: 'clifftop_arena',
     type: 'famous_death',
     title: 'The Death at Clifftop',
-    narrative: 'A Clifftop legend says the ghost of the first loser still fights in the back row of the crowd.',
+    narrative:
+      'A Clifftop legend says the ghost of the first loser still fights in the back row of the crowd.',
   },
   {
     id: 'clifftop_arena_hazard_3',
     arenaId: 'clifftop_arena',
     type: 'hazard',
     title: 'The Clifftop Trap',
-    narrative: 'The Clifftop crowd throws debris at fighters who retreat — the attendants sweep the sand but never remove the stains.',
+    narrative:
+      'The Clifftop crowd throws debris at fighters who retreat — the attendants sweep the sand but never remove the stains.',
   },
   {
     id: 'sunken_temple_famous_death_1',
     arenaId: 'sunken_temple',
     type: 'famous_death',
     title: 'The Death at Sunken Temple',
-    narrative: 'A Sunken Temple fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest.',
+    narrative:
+      'A Sunken Temple fighter died of a broken heart after the crowd turned on them; the attendants said the arena took the rest.',
   },
   {
     id: 'crystal_cavern_historical_battle_0',
     arenaId: 'crystal_cavern',
     type: 'historical_battle',
     title: 'The Crystal Cavern War',
-    narrative: 'The Crystal Cavern crystal pulse during a title bout blinded both fighters; the judges called it a draw.',
+    narrative:
+      'The Crystal Cavern crystal pulse during a title bout blinded both fighters; the judges called it a draw.',
   },
   {
     id: 'whispering_grove_historical_battle_0',
     arenaId: 'whispering_grove',
     type: 'historical_battle',
     title: 'The Whispering Grove War',
-    narrative: 'Two Whispering Grove rivals fought the longest recorded bout: forty-one exchanges before one fell to a cramp.',
+    narrative:
+      'Two Whispering Grove rivals fought the longest recorded bout: forty-one exchanges before one fell to a cramp.',
   },
   {
     id: 'whispering_grove_hazard_3',
     arenaId: 'whispering_grove',
     type: 'hazard',
     title: 'The Whispering Grove Trap',
-    narrative: 'Whispering Grove is prone to volcanic eruption — a veteran learns to read the cracks before they widen.',
+    narrative:
+      'Whispering Grove is prone to volcanic eruption — a veteran learns to read the cracks before they widen.',
   },
   {
     id: 'stormtop_terrace_historical_battle_0',
     arenaId: 'stormtop_terrace',
     type: 'historical_battle',
     title: 'The Stormtop Terrace War',
-    narrative: 'A Stormtop Terrace champion was thrown from the edge and finished the bout on a lower ledge; the judges allowed it.',
+    narrative:
+      'A Stormtop Terrace champion was thrown from the edge and finished the bout on a lower ledge; the judges allowed it.',
   },
   {
     id: 'stormtop_terrace_hazard_3',
     arenaId: 'stormtop_terrace',
     type: 'hazard',
     title: 'The Stormtop Terrace Trap',
-    narrative: 'A Stormtop Terrace hazard the crowds cheer for: the open ground that exposes a retreat.',
+    narrative:
+      'A Stormtop Terrace hazard the crowds cheer for: the open ground that exposes a retreat.',
   },
   {
     id: 'glacial_rift_historical_battle_0',
     arenaId: 'glacial_rift',
     type: 'historical_battle',
     title: 'The Glacial Rift War',
-    narrative: 'The Glacial Rift squeeze games saw a fighter hide behind a pillar for three rounds; the crowd booed them to death.',
+    narrative:
+      'The Glacial Rift squeeze games saw a fighter hide behind a pillar for three rounds; the crowd booed them to death.',
   },
   {
     id: 'glacial_rift_architectural_quirk_2',
     arenaId: 'glacial_rift',
     type: 'architectural_quirk',
     title: 'The Glacial Rift Feature',
-    narrative: 'The Glacial Rift floor slopes imperceptibly toward Edge; fighters who don\'t adjust their stance end up fighting downhill.',
+    narrative:
+      "The Glacial Rift floor slopes imperceptibly toward Edge; fighters who don't adjust their stance end up fighting downhill.",
   },
   {
     id: 'glacial_rift_hazard_3',
     arenaId: 'glacial_rift',
     type: 'hazard',
     title: 'The Glacial Rift Trap',
-    narrative: 'The Glacial Rift walls have crushed more fighters than any blade; the attendants keep a mallet for mercy killings.',
+    narrative:
+      'The Glacial Rift walls have crushed more fighters than any blade; the attendants keep a mallet for mercy killings.',
   },
   {
     id: 'glacial_rift_architectural_quirk_4',
     arenaId: 'glacial_rift',
     type: 'architectural_quirk',
     title: 'The Glacial Rift Secret',
-    narrative: 'The Glacial Rift stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd.',
+    narrative:
+      'The Glacial Rift stands are built from the bones of decommissioned vessels; the wood still groans under a heavy crowd.',
   },
   {
     id: 'sky_platform_historical_battle_0',
     arenaId: 'sky_platform',
     type: 'historical_battle',
     title: 'The Sky Platform War',
-    narrative: 'The Sky Platform stands sway in a hard wind; a fighter who stumbles is said to have lost to the sky.',
+    narrative:
+      'The Sky Platform stands sway in a hard wind; a fighter who stumbles is said to have lost to the sky.',
   },
   {
     id: 'sky_platform_famous_death_1',
     arenaId: 'sky_platform',
     type: 'famous_death',
     title: 'The Death at Sky Platform',
-    narrative: 'The Sky Platform wind took a fighter\'s weapon and their footing; the opponent waited for them to fall.',
+    narrative:
+      "The Sky Platform wind took a fighter's weapon and their footing; the opponent waited for them to fall.",
   },
   {
     id: 'sky_platform_architectural_quirk_2',
     arenaId: 'sky_platform',
     type: 'architectural_quirk',
     title: 'The Sky Platform Feature',
-    narrative: 'Sky Platform has no roof over the corners — the fighters there call it the sky\'s mercy.',
+    narrative:
+      "Sky Platform has no roof over the corners — the fighters there call it the sky's mercy.",
   },
   {
     id: 'sky_platform_hazard_3',
@@ -188,196 +213,224 @@ export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
     arenaId: 'misty_valley',
     type: 'famous_death',
     title: 'The Death at Misty Valley',
-    narrative: 'The Misty Valley monolith burned a champion\'s memory away; they fought on, but forgot why.',
+    narrative:
+      "The Misty Valley monolith burned a champion's memory away; they fought on, but forgot why.",
   },
   {
     id: 'misty_valley_architectural_quirk_2',
     arenaId: 'misty_valley',
     type: 'architectural_quirk',
     title: 'The Misty Valley Feature',
-    narrative: 'A narrow service gate under Misty Valley lets the wounded exit unseen; a fighter who uses it is never allowed to return.',
+    narrative:
+      'A narrow service gate under Misty Valley lets the wounded exit unseen; a fighter who uses it is never allowed to return.',
   },
   {
     id: 'misty_valley_hazard_3',
     arenaId: 'misty_valley',
     type: 'hazard',
     title: 'The Misty Valley Trap',
-    narrative: 'A Misty Valley hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout.',
+    narrative:
+      'A Misty Valley hazard is the crowd itself: they lean so far over the rail they sometimes fall into the pit mid-bout.',
   },
   {
     id: 'narrow_bridge_historical_battle_0',
     arenaId: 'narrow_bridge',
     type: 'historical_battle',
     title: 'The Narrow Bridge War',
-    narrative: 'The Narrow Bridge crowd once burned the seats after a judges\' call; the promoter rebuilt them in stone.',
+    narrative:
+      "The Narrow Bridge crowd once burned the seats after a judges' call; the promoter rebuilt them in stone.",
   },
   {
     id: 'the_meat_grinder_famous_death_1',
     arenaId: 'the_meat_grinder',
     type: 'famous_death',
     title: 'The Death at Meat Grinder',
-    narrative: 'The Meat Grinder dead are said to cheer for fighters who lose; the crowd calls it the other crowd.',
+    narrative:
+      'The Meat Grinder dead are said to cheer for fighters who lose; the crowd calls it the other crowd.',
   },
   {
     id: 'the_meat_grinder_architectural_quirk_2',
     arenaId: 'the_meat_grinder',
     type: 'architectural_quirk',
     title: 'The Meat Grinder Feature',
-    narrative: 'The Meat Grinder walls carry old runes that bleed in moonlight — no mason will repair them.',
+    narrative:
+      'The Meat Grinder walls carry old runes that bleed in moonlight — no mason will repair them.',
   },
   {
     id: 'the_meat_grinder_architectural_quirk_4',
     arenaId: 'the_meat_grinder',
     type: 'architectural_quirk',
     title: 'The Meat Grinder Secret',
-    narrative: 'The Meat Grinder floor is laid over a mass grave; the attendants say the bones shift underfoot.',
+    narrative:
+      'The Meat Grinder floor is laid over a mass grave; the attendants say the bones shift underfoot.',
   },
   {
     id: 'the_abyssal_pit_historical_battle_0',
     arenaId: 'the_abyssal_pit',
     type: 'historical_battle',
     title: 'The Abyssal Pit War',
-    narrative: 'A Abyssal Pit veteran kept their footing through a gale that ripped the canopy away; the crowd called it the sky\'s trial.',
+    narrative:
+      "A Abyssal Pit veteran kept their footing through a gale that ripped the canopy away; the crowd called it the sky's trial.",
   },
   {
     id: 'the_abyssal_pit_famous_death_1',
     arenaId: 'the_abyssal_pit',
     type: 'famous_death',
     title: 'The Death at Abyssal Pit',
-    narrative: 'A Abyssal Pit rookie froze to death on the climb before the bout began; the judges counted it a forfeit.',
+    narrative:
+      'A Abyssal Pit rookie froze to death on the climb before the bout began; the judges counted it a forfeit.',
   },
   {
     id: 'the_abyssal_pit_architectural_quirk_2',
     arenaId: 'the_abyssal_pit',
     type: 'architectural_quirk',
     title: 'The Abyssal Pit Feature',
-    narrative: 'The sand in Abyssal Pit is imported black grit that hides blood until it pools; the attendants rake it between every bout.',
+    narrative:
+      'The sand in Abyssal Pit is imported black grit that hides blood until it pools; the attendants rake it between every bout.',
   },
   {
     id: 'the_abyssal_pit_hazard_3',
     arenaId: 'the_abyssal_pit',
     type: 'hazard',
     title: 'The Abyssal Pit Trap',
-    narrative: 'The Abyssal Pit rail was added after three fighters were blown off in one afternoon; the wind still hums through it.',
+    narrative:
+      'The Abyssal Pit rail was added after three fighters were blown off in one afternoon; the wind still hums through it.',
   },
   {
     id: 'jungle_ruins_famous_death_1',
     arenaId: 'jungle_ruins',
     type: 'famous_death',
     title: 'The Death at Jungle Ruins',
-    narrative: 'A Jungle Ruins fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse.',
+    narrative:
+      'A Jungle Ruins fighter was stoned to death by the crowd for throwing the bout; the promoter never paid the purse.',
   },
   {
     id: 'jungle_ruins_architectural_quirk_2',
     arenaId: 'jungle_ruins',
     type: 'architectural_quirk',
     title: 'The Jungle Ruins Feature',
-    narrative: 'Jungle Ruins is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp.',
+    narrative:
+      'Jungle Ruins is built so Edge drops away in shadow; veterans fight with their backs to it to hide a limp.',
   },
   {
     id: 'jungle_ruins_hazard_3',
     arenaId: 'jungle_ruins',
     type: 'hazard',
     title: 'The Jungle Ruins Trap',
-    narrative: 'The Jungle Ruins floor gives way when rain soaks it; the promoters post a groundskeeper with a broom who doubles as a bodyguard.',
+    narrative:
+      'The Jungle Ruins floor gives way when rain soaks it; the promoters post a groundskeeper with a broom who doubles as a bodyguard.',
   },
   {
     id: 'the_bramble_ring_famous_death_1',
     arenaId: 'the_bramble_ring',
     type: 'famous_death',
     title: 'The Death at Bramble Ring',
-    narrative: 'The Bramble Ring champion was poisoned between rounds; the attendants swept the cup but kept the stain.',
+    narrative:
+      'The Bramble Ring champion was poisoned between rounds; the attendants swept the cup but kept the stain.',
   },
   {
     id: 'sun_baked_plateau_historical_battle_0',
     arenaId: 'sun_baked_plateau',
     type: 'historical_battle',
     title: 'The Sun-Baked Plateau War',
-    narrative: 'The Sun-Baked Plateau crowd once rioted when a fighter refused to bleed on the cursed soil; they killed him themselves.',
+    narrative:
+      'The Sun-Baked Plateau crowd once rioted when a fighter refused to bleed on the cursed soil; they killed him themselves.',
   },
   {
     id: 'sun_baked_plateau_famous_death_1',
     arenaId: 'sun_baked_plateau',
     type: 'famous_death',
     title: 'The Death at Sun-Baked Plateau',
-    narrative: 'A Sun-Baked Plateau champion was pulled into the cursed earth by hands that had no bodies; the hole filled with blood.',
+    narrative:
+      'A Sun-Baked Plateau champion was pulled into the cursed earth by hands that had no bodies; the hole filled with blood.',
   },
   {
     id: 'sun_baked_plateau_hazard_3',
     arenaId: 'sun_baked_plateau',
     type: 'hazard',
     title: 'The Sun-Baked Plateau Trap',
-    narrative: 'Sun-Baked Plateau claims a few fighters each season to the whispering darkness — the attendants have stopped counting.',
+    narrative:
+      'Sun-Baked Plateau claims a few fighters each season to the whispering darkness — the attendants have stopped counting.',
   },
   {
     id: 'ancient_aqueduct_historical_battle_0',
     arenaId: 'ancient_aqueduct',
     type: 'historical_battle',
     title: 'The Ancient Aqueduct War',
-    narrative: 'The Ancient Aqueduct flood season once swept a whole bracket into the overflow channel; only the champion swam out.',
+    narrative:
+      'The Ancient Aqueduct flood season once swept a whole bracket into the overflow channel; only the champion swam out.',
   },
   {
     id: 'the_sunken_vault_famous_death_1',
     arenaId: 'the_sunken_vault',
     type: 'famous_death',
     title: 'The Death at Sunken Vault',
-    narrative: 'The Sunken Vault tide swallowed a champion mid-victory; the crowd called it the last tide.',
+    narrative:
+      'The Sunken Vault tide swallowed a champion mid-victory; the crowd called it the last tide.',
   },
   {
     id: 'iron_forge_historical_battle_0',
     arenaId: 'iron_forge',
     type: 'historical_battle',
     title: 'The Iron Forge War',
-    narrative: 'The Iron Forge silver season saw a fighter sell their own bodyguard mid-bout to buy a bigger purse.',
+    narrative:
+      'The Iron Forge silver season saw a fighter sell their own bodyguard mid-bout to buy a bigger purse.',
   },
   {
     id: 'iron_forge_famous_death_1',
     arenaId: 'iron_forge',
     type: 'famous_death',
     title: 'The Death at Iron Forge',
-    narrative: 'A Iron Forge fighter demanded a golden bowl for their blood; the promoter had it melted down as the purse.',
+    narrative:
+      'A Iron Forge fighter demanded a golden bowl for their blood; the promoter had it melted down as the purse.',
   },
   {
     id: 'iron_forge_architectural_quirk_2',
     arenaId: 'iron_forge',
     type: 'architectural_quirk',
     title: 'The Iron Forge Feature',
-    narrative: 'The Iron Forge walls carry the scars of a hundred years of impacts — no mason will repair them.',
+    narrative:
+      'The Iron Forge walls carry the scars of a hundred years of impacts — no mason will repair them.',
   },
   {
     id: 'mist_shrouded_ruins_historical_battle_0',
     arenaId: 'mist_shrouded_ruins',
     type: 'historical_battle',
     title: 'The Mist-Shrouded Ruins War',
-    narrative: 'A Mist-Shrouded Ruins legend says the crystal remembers every blow; fighters pray to it before they draw.',
+    narrative:
+      'A Mist-Shrouded Ruins legend says the crystal remembers every blow; fighters pray to it before they draw.',
   },
   {
     id: 'mist_shrouded_ruins_architectural_quirk_2',
     arenaId: 'mist_shrouded_ruins',
     type: 'architectural_quirk',
     title: 'The Mist-Shrouded Ruins Feature',
-    narrative: 'The Mist-Shrouded Ruins walls carry veins of faintly glowing crystal — no mason will repair them.',
+    narrative:
+      'The Mist-Shrouded Ruins walls carry veins of faintly glowing crystal — no mason will repair them.',
   },
   {
     id: 'the_gallows_tree_historical_battle_0',
     arenaId: 'the_gallows_tree',
     type: 'historical_battle',
     title: 'The Gallows Tree War',
-    narrative: 'The Gallows Tree priests record every death in a black book chained to the gate; the pages have turned brown.',
+    narrative:
+      'The Gallows Tree priests record every death in a black book chained to the gate; the pages have turned brown.',
   },
   {
     id: 'forgotten_crypt_famous_death_1',
     arenaId: 'forgotten_crypt',
     type: 'famous_death',
     title: 'The Death at Forgotten Crypt',
-    narrative: 'A Forgotten Crypt fighter was found hanging from the cursed rafters; the attendants cut them down but never closed the arena.',
+    narrative:
+      'A Forgotten Crypt fighter was found hanging from the cursed rafters; the attendants cut them down but never closed the arena.',
   },
   {
     id: 'the_asylum_historical_battle_0',
     arenaId: 'the_asylum',
     type: 'historical_battle',
     title: 'The Asylum War',
-    narrative: 'A Asylum legend says the cursed ground drinks the blood of the loser; winners taste salt on their lips.',
+    narrative:
+      'A Asylum legend says the cursed ground drinks the blood of the loser; winners taste salt on their lips.',
   },
   {
     id: 'the_asylum_hazard_3',
@@ -391,153 +444,175 @@ export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
     arenaId: 'volcanic_crater',
     type: 'famous_death',
     title: 'The Death at Volcanic Crater',
-    narrative: 'The Volcanic Crater champion fell from the highest point and was buried where they landed; the crowd built a cairn.',
+    narrative:
+      'The Volcanic Crater champion fell from the highest point and was buried where they landed; the crowd built a cairn.',
   },
   {
     id: 'shattered_monolith_historical_battle_0',
     arenaId: 'shattered_monolith',
     type: 'historical_battle',
     title: 'The Shattered Monolith War',
-    narrative: 'The Shattered Monolith wind games saw three fighters blown off the same corner in one afternoon; the rail was added.',
+    narrative:
+      'The Shattered Monolith wind games saw three fighters blown off the same corner in one afternoon; the rail was added.',
   },
   {
     id: 'shattered_monolith_architectural_quirk_4',
     arenaId: 'shattered_monolith',
     type: 'architectural_quirk',
     title: 'The Shattered Monolith Secret',
-    narrative: 'Shattered Monolith has no roof over the corners — the fighters there call it the echo\'s mercy.',
+    narrative:
+      "Shattered Monolith has no roof over the corners — the fighters there call it the echo's mercy.",
   },
   {
     id: 'verdant_labyrinth_architectural_quirk_2',
     arenaId: 'verdant_labyrinth',
     type: 'architectural_quirk',
     title: 'The Verdant Labyrinth Feature',
-    narrative: 'The Verdant Labyrinth pumps are older than the arena; the attendants say they still run on a drowned engine.',
+    narrative:
+      'The Verdant Labyrinth pumps are older than the arena; the attendants say they still run on a drowned engine.',
   },
   {
     id: 'the_shifting_sands_historical_battle_0',
     arenaId: 'the_shifting_sands',
     type: 'historical_battle',
     title: 'The Shifting Sands War',
-    narrative: 'A Shifting Sands stable once fielded a dwarf and a giant in the same week; the dwarf won by stooping.',
+    narrative:
+      'A Shifting Sands stable once fielded a dwarf and a giant in the same week; the dwarf won by stooping.',
   },
   {
     id: 'the_shifting_sands_hazard_3',
     arenaId: 'the_shifting_sands',
     type: 'hazard',
     title: 'The Shifting Sands Trap',
-    narrative: 'Shifting Sands claims a few fighters each season to the weight of its own violence — the attendants have stopped counting.',
+    narrative:
+      'Shifting Sands claims a few fighters each season to the weight of its own violence — the attendants have stopped counting.',
   },
   {
     id: 'the_cursed_swamp_historical_battle_0',
     arenaId: 'the_cursed_swamp',
     type: 'historical_battle',
     title: 'The Cursed Swamp War',
-    narrative: 'In the Cursed Swamp night games, the shadows moved before the fighters did — the priests closed the arena for a season.',
+    narrative:
+      'In the Cursed Swamp night games, the shadows moved before the fighters did — the priests closed the arena for a season.',
   },
   {
     id: 'the_jagged_peak_historical_battle_0',
     arenaId: 'the_jagged_peak',
     type: 'historical_battle',
     title: 'The Jagged Peak War',
-    narrative: 'A Jagged Peak champion was found kneeling on the cursed earth, throat cut, still holding the crown.',
+    narrative:
+      'A Jagged Peak champion was found kneeling on the cursed earth, throat cut, still holding the crown.',
   },
   {
     id: 'the_jagged_peak_architectural_quirk_2',
     arenaId: 'the_jagged_peak',
     type: 'architectural_quirk',
     title: 'The Jagged Peak Feature',
-    narrative: 'The Jagged Peak gate is chained with silver links; the priests renew them every blood moon.',
+    narrative:
+      'The Jagged Peak gate is chained with silver links; the priests renew them every blood moon.',
   },
   {
     id: 'the_murky_depths_historical_battle_0',
     arenaId: 'the_murky_depths',
     type: 'historical_battle',
     title: 'The Murky Depths War',
-    narrative: 'A Murky Depths champion was pulled under by the water\'s weight mid-victory; the crowd called it the last tide.',
+    narrative:
+      "A Murky Depths champion was pulled under by the water's weight mid-victory; the crowd called it the last tide.",
   },
   {
     id: 'the_frozen_lake_famous_death_1',
     arenaId: 'the_frozen_lake',
     type: 'famous_death',
     title: 'The Death at Frozen Lake',
-    narrative: 'A Frozen Lake legend says the water keeps a tally of the dead; the attendants drain it and find bones.',
+    narrative:
+      'A Frozen Lake legend says the water keeps a tally of the dead; the attendants drain it and find bones.',
   },
   {
     id: 'the_frozen_lake_architectural_quirk_2',
     arenaId: 'the_frozen_lake',
     type: 'architectural_quirk',
     title: 'The Frozen Lake Feature',
-    narrative: 'The Frozen Lake walls are coated in waterproof tar that reeks of pitch and dead fish.',
+    narrative:
+      'The Frozen Lake walls are coated in waterproof tar that reeks of pitch and dead fish.',
   },
   {
     id: 'misty_pit_historical_battle_0',
     arenaId: 'misty_pit',
     type: 'historical_battle',
     title: 'The Misty Pit War',
-    narrative: 'A Misty Pit champion won three titles in the same corner; the attendants now mark it with a red flag.',
+    narrative:
+      'A Misty Pit champion won three titles in the same corner; the attendants now mark it with a red flag.',
   },
   {
     id: 'misty_pit_hazard_3',
     arenaId: 'misty_pit',
     type: 'hazard',
     title: 'The Misty Pit Trap',
-    narrative: 'Misty Pit is prone to unstable footing — a veteran learns to read the cracks before they widen.',
+    narrative:
+      'Misty Pit is prone to unstable footing — a veteran learns to read the cracks before they widen.',
   },
   {
     id: 'the_bathhouse_arena_historical_battle_0',
     arenaId: 'the_bathhouse_arena',
     type: 'historical_battle',
     title: 'The Bathhouse War',
-    narrative: 'The Bathhouse tide games saw a veteran hold the same footing for six bouts while the water rose around them.',
+    narrative:
+      'The Bathhouse tide games saw a veteran hold the same footing for six bouts while the water rose around them.',
   },
   {
     id: 'the_desolate_heath_famous_death_1',
     arenaId: 'the_desolate_heath',
     type: 'famous_death',
     title: 'The Death at Desolate Heath',
-    narrative: 'The Desolate Heath crowd calls a certain corner \'the widow\'s seat\' — three partners have died watching their spouse fight there.',
+    narrative:
+      "The Desolate Heath crowd calls a certain corner 'the widow's seat' — three partners have died watching their spouse fight there.",
   },
   {
     id: 'glacial_rift_extra_0',
     arenaId: 'glacial_rift',
     type: 'architectural_quirk',
     title: 'The Glacial Rift Chronicle',
-    narrative: 'Glacial Rift keeps a bell that rings only when a fighter takes their first real beating; veterans call it the baptism.',
+    narrative:
+      'Glacial Rift keeps a bell that rings only when a fighter takes their first real beating; veterans call it the baptism.',
   },
   {
     id: 'sky_platform_extra_0',
     arenaId: 'sky_platform',
     type: 'architectural_quirk',
     title: 'The Sky Platform Chronicle',
-    narrative: 'A Sky Platform legend says the wind itself whispers advice to those who kneel before the drop.',
+    narrative:
+      'A Sky Platform legend says the wind itself whispers advice to those who kneel before the drop.',
   },
   {
     id: 'the_meat_grinder_extra_0',
     arenaId: 'the_meat_grinder',
     type: 'architectural_quirk',
     title: 'The Meat Grinder Chronicle',
-    narrative: 'The Meat Grinder attendants never speak above a whisper; the rumor is the first one to raise their voice in a century was found hanging from the rafters.',
+    narrative:
+      'The Meat Grinder attendants never speak above a whisper; the rumor is the first one to raise their voice in a century was found hanging from the rafters.',
   },
   {
     id: 'jungle_ruins_extra_0',
     arenaId: 'jungle_ruins',
     type: 'architectural_quirk',
     title: 'The Jungle Ruins Chronicle',
-    narrative: 'The Jungle Ruins crowd throws pebbles at losers — the attendants sweep them into a mass grave for the unremembered.',
+    narrative:
+      'The Jungle Ruins crowd throws pebbles at losers — the attendants sweep them into a mass grave for the unremembered.',
   },
   {
     id: 'shattered_monolith_extra_0',
     arenaId: 'shattered_monolith',
     type: 'architectural_quirk',
     title: 'The Shattered Monolith Chronicle',
-    narrative: 'The Shattered Monolith attendants tie a ribbon to the rail for every fighter lost to the edge; the rail is covered in red.',
+    narrative:
+      'The Shattered Monolith attendants tie a ribbon to the rail for every fighter lost to the edge; the rail is covered in red.',
   },
   {
     id: 'verdant_labyrinth_extra_0',
     arenaId: 'verdant_labyrinth',
     type: 'architectural_quirk',
     title: 'The Verdant Labyrinth Chronicle',
-    narrative: 'A Verdant Labyrinth legend says the first champion whispers advice to those who kneel before the flood line.',
-  }
+    narrative:
+      'A Verdant Labyrinth legend says the first champion whispers advice to those who kneel before the flood line.',
+  },
 ];

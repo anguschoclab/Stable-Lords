@@ -25,7 +25,12 @@ const rivalWith = (over: {
       fame: over.fame ?? 100,
     }),
     agentMemory: makeAgentMemory({
-      seasonRecord: { wins: over.wins ?? 0, losses: over.losses ?? 0, kills: 0, rosterSizeAtSeasonStart: 6 },
+      seasonRecord: {
+        wins: over.wins ?? 0,
+        losses: over.losses ?? 0,
+        kills: 0,
+        rosterSizeAtSeasonStart: 6,
+      },
     }),
   });
 
@@ -36,7 +41,13 @@ describe('deriveAmbitionArc', () => {
   });
 
   it('a mid-career Journeyman at .500 is PRIME', () => {
-    const rival = rivalWith({ competence: 'Journeyman', generation: 1, age: 45, wins: 5, losses: 5 });
+    const rival = rivalWith({
+      competence: 'Journeyman',
+      generation: 1,
+      age: 45,
+      wins: 5,
+      losses: 5,
+    });
     expect(deriveAmbitionArc(rival)).toBe('PRIME');
   });
 

@@ -45,9 +45,7 @@ describe('avatar lifecycle', () => {
         layers: [],
       },
     };
-    const next = resolveImpacts(state, [
-      { rosterUpdates: new Map([[warrior.id, { age: 35 }]]) },
-    ]);
+    const next = resolveImpacts(state, [{ rosterUpdates: new Map([[warrior.id, { age: 35 }]]) }]);
     expect(next.avatarCache?.[warrior.id]).toBeUndefined();
   });
 });

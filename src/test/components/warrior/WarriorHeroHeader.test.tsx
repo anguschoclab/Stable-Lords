@@ -116,7 +116,9 @@ describe('WarriorHeroHeader', () => {
   });
 
   it('does not render the reroll control for a rival warrior', () => {
-    render(<WarriorHeroHeader {...baseProps} sourceWarrior={makeWarrior()} isPlayerOwned={false} />);
+    render(
+      <WarriorHeroHeader {...baseProps} sourceWarrior={makeWarrior()} isPlayerOwned={false} />
+    );
     expect(screen.getByTestId('warrior-avatar')).toBeInTheDocument();
     expect(screen.queryByTestId('avatar-reroll')).not.toBeInTheDocument();
   });

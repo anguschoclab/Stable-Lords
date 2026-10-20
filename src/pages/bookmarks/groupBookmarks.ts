@@ -38,14 +38,7 @@ type LookupMaps = ReturnType<typeof buildLookupMaps>;
  * bookmarked — instead of re-scanning arrays inside the row loop.
  */
 function buildLookupMaps(s: Slice) {
-  const {
-    rivals,
-    promoters,
-    trainers,
-    tournaments,
-    boutOffers,
-    scoutReports,
-  } = s;
+  const { rivals, promoters, trainers, tournaments, boutOffers, scoutReports } = s;
   const typesPresent = new Set(s.bookmarks.map((b) => b.entityType));
 
   const warriorMap = typesPresent.has('warrior') ? getWarriorIndex(s) : undefined;

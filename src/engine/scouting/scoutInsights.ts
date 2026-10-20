@@ -125,7 +125,14 @@ interface GenerateScoutInsightsArgs {
 export function generateScoutInsights(args: GenerateScoutInsightsArgs): InsightToken[] {
   const { warrior, quality, week, rng, styleName } = args;
   const { suspectedOE, suspectedAL, suspectedTraits } = args;
-  const tactic = createTacticInsight({ warrior: warrior, quality: quality, suspectedOE: suspectedOE, suspectedAL: suspectedAL, week: week, rng: rng });
+  const tactic = createTacticInsight({
+    warrior: warrior,
+    quality: quality,
+    suspectedOE: suspectedOE,
+    suspectedAL: suspectedAL,
+    week: week,
+    rng: rng,
+  });
   return [
     createStyleInsight(warrior, styleName, week, rng),
     ...createAttributeInsights(warrior, quality, week, rng),

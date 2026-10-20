@@ -22,11 +22,37 @@ describe('combat resolution determinism characterization', () => {
   for (const [styleA, styleD] of STYLE_PAIRS) {
     it(`${styleA} vs ${styleD} produces identical outcomes across repeated seeds`, () => {
       for (const seed of SEEDS) {
-        const A = makeWarrior({ id: undefined, name: 'A', style: styleA, attrs: ATTRS, overrides: undefined, rng: undefined });
-        const D = makeWarrior({ id: undefined, name: 'D', style: styleD, attrs: ATTRS, overrides: undefined, rng: undefined });
+        const A = makeWarrior({
+          id: undefined,
+          name: 'A',
+          style: styleA,
+          attrs: ATTRS,
+          overrides: undefined,
+          rng: undefined,
+        });
+        const D = makeWarrior({
+          id: undefined,
+          name: 'D',
+          style: styleD,
+          attrs: ATTRS,
+          overrides: undefined,
+          rng: undefined,
+        });
 
-        const run1 = simulateFight({ planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed });
-        const run2 = simulateFight({ planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed });
+        const run1 = simulateFight({
+          planA: defaultPlanForWarrior(A),
+          planD: defaultPlanForWarrior(D),
+          warriorA: A,
+          warriorD: D,
+          providedRng: seed,
+        });
+        const run2 = simulateFight({
+          planA: defaultPlanForWarrior(A),
+          planD: defaultPlanForWarrior(D),
+          warriorA: A,
+          warriorD: D,
+          providedRng: seed,
+        });
 
         expect(
           { w: run1.winner, b: run1.by, m: run1.minutes },
@@ -38,10 +64,22 @@ describe('combat resolution determinism characterization', () => {
 
   it('headless and narrated produce identical mechanical outcomes', () => {
     for (const seed of SEEDS) {
-      const A = makeWarrior(
-        { id: undefined, name: 'A', style: FightingStyle.StrikingAttack, attrs: ATTRS, overrides: undefined, rng: undefined }
-      );
-      const D = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: ATTRS, overrides: undefined, rng: undefined });
+      const A = makeWarrior({
+        id: undefined,
+        name: 'A',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
+      const D = makeWarrior({
+        id: undefined,
+        name: 'D',
+        style: FightingStyle.TotalParry,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
 
       const { narrated, headless } = runNarratedVsHeadless(A, D, seed);
 
@@ -55,11 +93,29 @@ describe('combat resolution determinism characterization', () => {
   it('different seeds produce varied outcomes (not all same winner)', () => {
     const winners = new Set<string>();
     for (const seed of SEEDS) {
-      const A = makeWarrior(
-        { id: undefined, name: 'A', style: FightingStyle.StrikingAttack, attrs: ATTRS, overrides: undefined, rng: undefined }
-      );
-      const D = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs: ATTRS, overrides: undefined, rng: undefined });
-      const result = simulateFight({ planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed });
+      const A = makeWarrior({
+        id: undefined,
+        name: 'A',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
+      const D = makeWarrior({
+        id: undefined,
+        name: 'D',
+        style: FightingStyle.TotalParry,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
+      const result = simulateFight({
+        planA: defaultPlanForWarrior(A),
+        planD: defaultPlanForWarrior(D),
+        warriorA: A,
+        warriorD: D,
+        providedRng: seed,
+      });
       winners.add(result.winner ?? 'draw');
     }
     // Should see at least some variety in winners across 20 seeds
@@ -68,13 +124,37 @@ describe('combat resolution determinism characterization', () => {
 
   it('exchange log structure is stable for same seed', () => {
     for (const seed of [1, 42, 99]) {
-      const A = makeWarrior(
-        { id: undefined, name: 'A', style: FightingStyle.LungingAttack, attrs: ATTRS, overrides: undefined, rng: undefined }
-      );
-      const D = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.WallOfSteel, attrs: ATTRS, overrides: undefined, rng: undefined });
+      const A = makeWarrior({
+        id: undefined,
+        name: 'A',
+        style: FightingStyle.LungingAttack,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
+      const D = makeWarrior({
+        id: undefined,
+        name: 'D',
+        style: FightingStyle.WallOfSteel,
+        attrs: ATTRS,
+        overrides: undefined,
+        rng: undefined,
+      });
 
-      const run1 = simulateFight({ planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed });
-      const run2 = simulateFight({ planA: defaultPlanForWarrior(A), planD: defaultPlanForWarrior(D), warriorA: A, warriorD: D, providedRng: seed });
+      const run1 = simulateFight({
+        planA: defaultPlanForWarrior(A),
+        planD: defaultPlanForWarrior(D),
+        warriorA: A,
+        warriorD: D,
+        providedRng: seed,
+      });
+      const run2 = simulateFight({
+        planA: defaultPlanForWarrior(A),
+        planD: defaultPlanForWarrior(D),
+        warriorA: A,
+        warriorD: D,
+        providedRng: seed,
+      });
 
       const ex1Len = run1.exchangeLog?.length ?? 0;
       const ex2Len = run2.exchangeLog?.length ?? 0;

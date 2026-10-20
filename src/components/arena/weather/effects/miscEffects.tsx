@@ -53,10 +53,12 @@ export function ManaSurgeEffect() {
           key={i}
           className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              top: `${cryptoRandom() * 100}%`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 100, (cryptoRandom() - 0.5) * 100, { delayS: 4 }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 100}%`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 100, (cryptoRandom() - 0.5) * 100, {
+              delayS: 4,
+            }),
+          }}
         />
       ))}
     </div>
@@ -73,10 +75,10 @@ export function LocustSwarmEffect() {
           key={i}
           className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              top: `${cryptoRandom() * 100}%`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 80, (cryptoRandom() - 0.5) * 80),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 100}%`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 80, (cryptoRandom() - 0.5) * 80),
+          }}
         />
       ))}
     </div>

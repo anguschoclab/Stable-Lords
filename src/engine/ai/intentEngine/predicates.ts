@@ -74,7 +74,8 @@ export function objectiveServicingIntent(ctx: IntentContext): AIIntent | undefin
     case 'TREASURY':
       return 'WEALTH_ACCUMULATION';
     case 'REBUILD': {
-      const minSize = ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
+      const minSize =
+        ctx.personality === 'Aggressive' ? 8 : ctx.personality === 'Methodical' ? 5 : 6;
       return ctx.activeRoster.length < minSize ? 'EXPANSION' : 'CONSOLIDATION';
     }
     case 'TOURNAMENT':

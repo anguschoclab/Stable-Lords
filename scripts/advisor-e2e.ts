@@ -117,9 +117,13 @@ const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool) {
   if (state.roster.length >= 5 || state.treasury - w.cost < 300) break;
   const recruitRng = new SeededRNG(state.week + hashStr(w.name));
-  const warrior = makeWarrior(
-    { id: recruitRng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
-  );
+  const warrior = makeWarrior({
+    id: recruitRng.uuid('warrior') as WarriorId,
+    name: w.name,
+    style: w.style,
+    attrs: w.attributes,
+    overrides: { age: w.age, potential: w.potential },
+  });
   state.roster.push(warrior);
   state.treasury -= w.cost;
   state.recruitPool = (state.recruitPool ?? []).filter((p) => p.id !== w.id);

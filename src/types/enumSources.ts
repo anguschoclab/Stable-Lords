@@ -142,7 +142,6 @@ export const CONDITION_TRIGGERS = [
   'PSYCH_IS',
 ] as const;
 
-
 export const DISTANCE_RANGES = ['Grapple', 'Tight', 'Striking', 'Extended'] as const;
 
 export const SHIELD_SHAPES = ['heater', 'french', 'swiss', 'spanish', 'lozenge'] as const;
@@ -183,9 +182,6 @@ export const BEAST_POSTURES = [
   'statant',
   'forcene',
 ] as const;
-
-
-
 
 export const BOUT_OFFER_STATUSES = [
   'Proposed',

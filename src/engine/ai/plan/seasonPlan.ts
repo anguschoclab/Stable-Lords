@@ -68,11 +68,9 @@ export function pickSeasonObjective(
   const losses = lossesAreStructural(rival);
   if (crown && crownWarrior && isActive(crownWarrior)) {
     if (arc !== 'DECLINING' && !losses.structural) {
-      return objective(
-        'CROWN',
-        `Season campaign: ${crown.reason}`,
-        { targetArenaId: crown.arenaId }
-      );
+      return objective('CROWN', `Season campaign: ${crown.reason}`, {
+        targetArenaId: crown.arenaId,
+      });
     }
   }
 
@@ -132,7 +130,9 @@ export function applySeasonPlan(rival: RivalStableData, state: GameState): Rival
   // AI_SEASON_PLANS off: the objective is inert — stripped from memory so
   // the weekly intent cascade sees no objective layer at all.
   if (!aiFeature('AI_SEASON_PLANS')) {
-    return obj === undefined ? rival : { ...rival, agentMemory: { ...memory, seasonObjective: undefined } };
+    return obj === undefined
+      ? rival
+      : { ...rival, agentMemory: { ...memory, seasonObjective: undefined } };
   }
 
   if (obj && obj.weeksRemaining > 1 && objectiveStillViable(rival, state)) {

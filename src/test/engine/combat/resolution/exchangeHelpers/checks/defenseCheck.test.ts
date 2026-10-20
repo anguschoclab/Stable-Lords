@@ -29,7 +29,23 @@ describe('defenseCheck', () => {
     } as FighterState;
 
     const result = performDefenseCheck(
-      { rng: rng, def: def, curDefOE: 100, matchup: 0, fat: 0, curDefMods: defaultMods as any, curPassD: defaultPassives as any, curBiasDef: 0, overDef: 0, isDodge: true, curAntiSynDef: defaultAntiSynergy as any, curOffMods: defaultMods as any, ctx: undefined, attacker: undefined, extraDefPenalty: 0 } // extraDefPenalty
+      {
+        rng: rng,
+        def: def,
+        curDefOE: 100,
+        matchup: 0,
+        fat: 0,
+        curDefMods: defaultMods as any,
+        curPassD: defaultPassives as any,
+        curBiasDef: 0,
+        overDef: 0,
+        isDodge: true,
+        curAntiSynDef: defaultAntiSynergy as any,
+        curOffMods: defaultMods as any,
+        ctx: undefined,
+        attacker: undefined,
+        extraDefPenalty: 0,
+      } // extraDefPenalty
     );
 
     expect(result.type).toBe('DODGE');
@@ -46,7 +62,23 @@ describe('defenseCheck', () => {
     } as FighterState;
 
     const result = performDefenseCheck(
-      { rng: rng, def: def, curDefOE: 100, matchup: 0, fat: 0, curDefMods: defaultMods as any, curPassD: defaultPassives as any, curBiasDef: 0, overDef: 0, isDodge: false, curAntiSynDef: defaultAntiSynergy as any, curOffMods: defaultMods as any, ctx: undefined, attacker: undefined, extraDefPenalty: 0 } // extraDefPenalty
+      {
+        rng: rng,
+        def: def,
+        curDefOE: 100,
+        matchup: 0,
+        fat: 0,
+        curDefMods: defaultMods as any,
+        curPassD: defaultPassives as any,
+        curBiasDef: 0,
+        overDef: 0,
+        isDodge: false,
+        curAntiSynDef: defaultAntiSynergy as any,
+        curOffMods: defaultMods as any,
+        ctx: undefined,
+        attacker: undefined,
+        extraDefPenalty: 0,
+      } // extraDefPenalty
     );
 
     expect(result.type).toBe('PARRY');
@@ -63,7 +95,23 @@ describe('defenseCheck', () => {
     } as FighterState;
 
     const result = performDefenseCheck(
-      { rng: rng, def: def, curDefOE: 1, matchup: 0, fat: 0, curDefMods: defaultMods as any, curPassD: defaultPassives as any, curBiasDef: 0, overDef: 0, isDodge: true, curAntiSynDef: defaultAntiSynergy as any, curOffMods: defaultMods as any, ctx: undefined, attacker: undefined, extraDefPenalty: 0 } // extraDefPenalty
+      {
+        rng: rng,
+        def: def,
+        curDefOE: 1,
+        matchup: 0,
+        fat: 0,
+        curDefMods: defaultMods as any,
+        curPassD: defaultPassives as any,
+        curBiasDef: 0,
+        overDef: 0,
+        isDodge: true,
+        curAntiSynDef: defaultAntiSynergy as any,
+        curOffMods: defaultMods as any,
+        ctx: undefined,
+        attacker: undefined,
+        extraDefPenalty: 0,
+      } // extraDefPenalty
     );
 
     expect(result.type).toBe('DODGE');
@@ -82,7 +130,23 @@ describe('defenseCheck', () => {
 
     // Test that the +15 defense bonus for committed attacker allows a successful parry that would otherwise fail
     const result = performDefenseCheck(
-      { rng: rng, def: def, curDefOE: 1, matchup: 0, fat: 0, curDefMods: defaultMods as any, curPassD: defaultPassives as any, curBiasDef: 0, overDef: 0, isDodge: false, curAntiSynDef: defaultAntiSynergy as any, curOffMods: defaultMods as any, ctx: undefined, attacker: attacker, extraDefPenalty: 0 } // extraDefPenalty
+      {
+        rng: rng,
+        def: def,
+        curDefOE: 1,
+        matchup: 0,
+        fat: 0,
+        curDefMods: defaultMods as any,
+        curPassD: defaultPassives as any,
+        curBiasDef: 0,
+        overDef: 0,
+        isDodge: false,
+        curAntiSynDef: defaultAntiSynergy as any,
+        curOffMods: defaultMods as any,
+        ctx: undefined,
+        attacker: attacker,
+        extraDefPenalty: 0,
+      } // extraDefPenalty
     );
 
     expect(result.type).toBe('PARRY');

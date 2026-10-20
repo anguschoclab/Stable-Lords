@@ -5,10 +5,7 @@ import { defaultAvatarState } from './initialState';
 import { createAvatarActions } from './actions';
 
 /** Avatar slice: portrait cache plus lazy generation/reroll actions. */
-export const createAvatarSlice: StateCreator<GameStore, [], [], AvatarSlice> = (
-  set,
-  get
-) => ({
+export const createAvatarSlice: StateCreator<GameStore, [], [], AvatarSlice> = (set, get) => ({
   ...defaultAvatarState,
   ...createAvatarActions(set, get),
 });

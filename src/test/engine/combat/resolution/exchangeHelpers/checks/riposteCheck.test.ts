@@ -15,7 +15,15 @@ describe('riposteCheck', () => {
     const def = { skills: { RIP: 90 } } as FighterState;
 
     const result = performRiposteCheck(
-      { rng: rng, def: def, matchup: 0, fat: 0, penaltyOrBonus: 0, curPass: defaultPassives as any, curAntiSynDef: defaultAntiSynergy as any } // curAntiSynDef
+      {
+        rng: rng,
+        def: def,
+        matchup: 0,
+        fat: 0,
+        penaltyOrBonus: 0,
+        curPass: defaultPassives as any,
+        curAntiSynDef: defaultAntiSynergy as any,
+      } // curAntiSynDef
     );
 
     expect(result).toBe(true);
@@ -26,7 +34,15 @@ describe('riposteCheck', () => {
     const def = { skills: { RIP: 10 } } as FighterState;
 
     const result = performRiposteCheck(
-      { rng: rng, def: def, matchup: 0, fat: 0, penaltyOrBonus: 0, curPass: defaultPassives as any, curAntiSynDef: defaultAntiSynergy as any } // curAntiSynDef
+      {
+        rng: rng,
+        def: def,
+        matchup: 0,
+        fat: 0,
+        penaltyOrBonus: 0,
+        curPass: defaultPassives as any,
+        curAntiSynDef: defaultAntiSynergy as any,
+      } // curAntiSynDef
     );
 
     expect(result).toBe(false);
@@ -38,7 +54,15 @@ describe('riposteCheck', () => {
     const antiSynergy = { defMult: 10 };
 
     const result = performRiposteCheck(
-      { rng: rng, def: def, matchup: 0, fat: 0, penaltyOrBonus: 0, curPass: defaultPassives as any, curAntiSynDef: antiSynergy as any } // curAntiSynDef
+      {
+        rng: rng,
+        def: def,
+        matchup: 0,
+        fat: 0,
+        penaltyOrBonus: 0,
+        curPass: defaultPassives as any,
+        curAntiSynDef: antiSynergy as any,
+      } // curAntiSynDef
     );
 
     expect(result).toBe(true);

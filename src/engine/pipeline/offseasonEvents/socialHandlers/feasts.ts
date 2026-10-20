@@ -1,6 +1,13 @@
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 
-import { getActiveWarriors, announceOffseasonEvent, withChosenWarrior, type OffseasonEventRun, addStat, warriorOutcome } from '../helpers';
+import {
+  getActiveWarriors,
+  announceOffseasonEvent,
+  withChosenWarrior,
+  type OffseasonEventRun,
+  addStat,
+  warriorOutcome,
+} from '../helpers';
 
 /**
  *
@@ -48,19 +55,25 @@ export function handleMidnightFeast(run: OffseasonEventRun) {
       fame: (chosen.fame || 0) + fameGained,
     });
 
-    announceOffseasonEvent({ ...run, data: {
-      name: chosen.name,
-      xp: xpGained,
-      fame: fameGained,
-      gold: cost,
-    } });
+    announceOffseasonEvent({
+      ...run,
+      data: {
+        name: chosen.name,
+        xp: xpGained,
+        fame: fameGained,
+        gold: cost,
+      },
+    });
   } else {
-    announceOffseasonEvent({ ...run, data: {
-      name: 'Someone',
-      xp: 0,
-      fame: 0,
-      gold: cost,
-    } });
+    announceOffseasonEvent({
+      ...run,
+      data: {
+        name: 'Someone',
+        xp: 0,
+        fame: 0,
+        gold: cost,
+      },
+    });
   }
 }
 
@@ -73,25 +86,31 @@ export function handleMidnightFeast(run: OffseasonEventRun) {
  */
 export function handleStreetPerformance(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
-  withChosenWarrior({ ...run, apply: (chosen) => {
-    const fameGained = 15;
-    const goldGained = 50 + Math.floor(rng.next() * 50);
-    ctx.treasuryDelta += goldGained;
+  withChosenWarrior({
+    ...run,
+    apply: (chosen) => {
+      const fameGained = 15;
+      const goldGained = 50 + Math.floor(rng.next() * 50);
+      ctx.treasuryDelta += goldGained;
 
-    ctx.ledgerEntries.push(
-      makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
-    );
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
+      );
 
-    const currentFlair = chosen.flair || [];
-    const newFlair = currentFlair.includes('Local Hero')
-      ? currentFlair
-      : [...currentFlair, 'Local Hero'];
+      const currentFlair = chosen.flair || [];
+      const newFlair = currentFlair.includes('Local Hero')
+        ? currentFlair
+        : [...currentFlair, 'Local Hero'];
 
-    return warriorOutcome({
-        fame: addStat(chosen.fame, fameGained),
-        flair: newFlair,
-      }, { fame: fameGained, gold: goldGained });
-  } });
+      return warriorOutcome(
+        {
+          fame: addStat(chosen.fame, fameGained),
+          flair: newFlair,
+        },
+        { fame: fameGained, gold: goldGained }
+      );
+    },
+  });
 }
 
 /**
@@ -103,21 +122,27 @@ export function handleStreetPerformance(run: OffseasonEventRun) {
  */
 export function handleTravelingCircus(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
-  withChosenWarrior({ ...run, apply: (chosen) => {
-    const xpGained = 20 + Math.floor(rng.next() * 21);
-    const fameGained = 15 + Math.floor(rng.next() * 11);
-    const cost = 25;
+  withChosenWarrior({
+    ...run,
+    apply: (chosen) => {
+      const xpGained = 20 + Math.floor(rng.next() * 21);
+      const fameGained = 15 + Math.floor(rng.next() * 11);
+      const cost = 25;
 
-    ctx.treasuryDelta -= cost;
-    ctx.ledgerEntries.push(
-      makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
-    );
+      ctx.treasuryDelta -= cost;
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other')
+      );
 
-    return warriorOutcome({
-        xp: addStat(chosen.xp, xpGained),
-        fame: addStat(chosen.fame, fameGained),
-      }, { xp: xpGained, fame: fameGained });
-  } });
+      return warriorOutcome(
+        {
+          xp: addStat(chosen.xp, xpGained),
+          fame: addStat(chosen.fame, fameGained),
+        },
+        { xp: xpGained, fame: fameGained }
+      );
+    },
+  });
 }
 
 /**

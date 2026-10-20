@@ -50,7 +50,14 @@ describe('AIEventCause sync guard', () => {
       } as AIAgentMemory,
     });
     for (const cause of Object.keys(NON_INTENT_CAUSES) as AIEventCause[]) {
-      rival = logAgentAction({ rival: rival, type: 'ROSTER', description: `test-${cause}`, riskTier: 'Low', week: 5, cause: cause });
+      rival = logAgentAction({
+        rival: rival,
+        type: 'ROSTER',
+        description: `test-${cause}`,
+        riskTier: 'Low',
+        week: 5,
+        cause: cause,
+      });
       expect(rival.agentMemory?.currentIntent).toBe('RECOVERY');
     }
     expect(rival.actionHistory).toHaveLength(Object.keys(NON_INTENT_CAUSES).length);
@@ -59,7 +66,14 @@ describe('AIEventCause sync guard', () => {
   it('every AIIntent is a valid cause and updates currentIntent', () => {
     let rival = makeRival();
     for (const intent of AI_INTENTS) {
-      rival = logAgentAction({ rival: rival, type: 'STRATEGY', description: `test-${intent}`, riskTier: 'Low', week: 5, cause: intent });
+      rival = logAgentAction({
+        rival: rival,
+        type: 'STRATEGY',
+        description: `test-${intent}`,
+        riskTier: 'Low',
+        week: 5,
+        cause: intent,
+      });
       expect(rival.agentMemory?.currentIntent).toBe(intent);
     }
   });

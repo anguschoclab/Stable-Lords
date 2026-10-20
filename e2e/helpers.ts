@@ -49,7 +49,10 @@ async function waitForSettledRoute(page: Page, path: string, timeout = 10_000) {
   );
   // Route state can settle one render before the nav subtree swaps hubs.
   await page.evaluate(
-    () => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      )
   );
 }
 

@@ -100,12 +100,26 @@ function resolveOEAL(
   phaseKey: 'opening' | 'mid' | 'late',
   exchange: number
 ): { OE_A: number; AL_A: number; OE_D: number; AL_D: number } {
-  const [OE_A, AL_A] = calculateFinalOEAL(
-    { effOE: fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE, effAL: fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL, plan: fA.activePlan, hp: fA.hp, maxHp: fA.maxHp, end: fA.endurance, maxEnd: fA.maxEndurance, exchange: exchange }
-  );
-  const [OE_D, AL_D] = calculateFinalOEAL(
-    { effOE: fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE, effAL: fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL, plan: fD.activePlan, hp: fD.hp, maxHp: fD.maxHp, end: fD.endurance, maxEnd: fD.maxEndurance, exchange: exchange }
-  );
+  const [OE_A, AL_A] = calculateFinalOEAL({
+    effOE: fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE,
+    effAL: fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL,
+    plan: fA.activePlan,
+    hp: fA.hp,
+    maxHp: fA.maxHp,
+    end: fA.endurance,
+    maxEnd: fA.maxEndurance,
+    exchange: exchange,
+  });
+  const [OE_D, AL_D] = calculateFinalOEAL({
+    effOE: fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE,
+    effAL: fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL,
+    plan: fD.activePlan,
+    hp: fD.hp,
+    maxHp: fD.maxHp,
+    end: fD.endurance,
+    maxEnd: fD.maxEndurance,
+    exchange: exchange,
+  });
   return { OE_A, AL_A, OE_D, AL_D };
 }
 
@@ -120,7 +134,10 @@ interface ResolveStylePassivesArgs {
   events: CombatEvent[];
 }
 
-function resolveStylePassives(args: ResolveStylePassivesArgs): { passA: ReturnType<typeof getStylePassive>; passD: ReturnType<typeof getStylePassive> } {
+function resolveStylePassives(args: ResolveStylePassivesArgs): {
+  passA: ReturnType<typeof getStylePassive>;
+  passD: ReturnType<typeof getStylePassive>;
+} {
   const { rng, fA, fD, stylePhase, exchange } = args;
   const { tactA, tactD, events } = args;
   const passA = getStylePassive(fA.style, {
@@ -299,15 +316,29 @@ export function prepareExchange(
   // ── Desperate state handling ──
   events.push(...handleDesperateState(fA, fD));
 
-  emitIntentTelemetry({ fA: fA, fD: fD, ctx: ctx, condResultA: condResultA, condResultD: condResultD, events: events });
+  emitIntentTelemetry({
+    fA: fA,
+    fD: fD,
+    ctx: ctx,
+    condResultA: condResultA,
+    condResultD: condResultD,
+    events: events,
+  });
 
   const tac = resolveTacticsAndBias(fA, fD, phaseKey);
   const oal = resolveOEAL(fA, fD, phaseKey, exchange);
   const { fatA, fatD } = resolveFatigueMods(fA, fD, ctx, psychA, psychD);
 
-  const { passA, passD } = resolveStylePassives(
-    { rng: rng, fA: fA, fD: fD, stylePhase: stylePhase, exchange: exchange, tactA: tac.tactA, tactD: tac.tactD, events: events }
-  );
+  const { passA, passD } = resolveStylePassives({
+    rng: rng,
+    fA: fA,
+    fD: fD,
+    stylePhase: stylePhase,
+    exchange: exchange,
+    tactA: tac.tactA,
+    tactD: tac.tactD,
+    events: events,
+  });
   const { dynTraitsA, dynTraitsD } = resolveDynamicTraits(fA, fD, stylePhase);
 
   return {

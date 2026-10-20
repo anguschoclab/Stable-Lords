@@ -33,7 +33,7 @@ interface PerformAttackCheckArgs {
 export function performAttackCheck(args: PerformAttackCheckArgs) {
   const { rng, att, curAttOE, matchup, fat } = args;
   const { curOffMods, curPass, curAntiSyn, curBiasAtt, overAtt } = args;
-  const {extraBonus = 0 } = args;
+  const { extraBonus = 0 } = args;
   // Commit mode: attacker throws caution aside — +10 ATT bonus but defender gets compensating bonus in defense
   const commitBonus = att.committed ? 10 : 0;
   return skillCheck(

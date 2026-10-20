@@ -133,28 +133,28 @@ export function RosterWarriorRow({
                 />
                 <div className="space-y-1.5">
                   <WarriorNameTag
-                  id={warrior.id}
-                  name={warrior.name}
-                  epithet={warrior.epithet}
-                  isChampion={warrior.champion}
-                  injuryCount={injuryCount}
-                  useCrown
-                />
-                {!warrior.champion && contenderBadge && (
-                  <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-arena-gold/80">
-                    <Crown className="h-2.5 w-2.5" />
-                    Contender #{contenderBadge.rank} · {contenderBadge.arenaName}
-                  </span>
-                )}
-                <div className="flex items-center gap-3">
-                  <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
-                  <FameChip fame={warrior.fame} />
-                  <PotentialBadge potential={warrior.potential} />
-                  {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
-                  {warrior.traits?.slice(0, 3).map((t) => (
-                    <TraitBadge key={t} traitId={t} className="text-[8px]" />
-                  ))}
-                </div>
+                    id={warrior.id}
+                    name={warrior.name}
+                    epithet={warrior.epithet}
+                    isChampion={warrior.champion}
+                    injuryCount={injuryCount}
+                    useCrown
+                  />
+                  {!warrior.champion && contenderBadge && (
+                    <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-arena-gold/80">
+                      <Crown className="h-2.5 w-2.5" />
+                      Contender #{contenderBadge.rank} · {contenderBadge.arenaName}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-3">
+                    <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
+                    <FameChip fame={warrior.fame} />
+                    <PotentialBadge potential={warrior.potential} />
+                    {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
+                    {warrior.traits?.slice(0, 3).map((t) => (
+                      <TraitBadge key={t} traitId={t} className="text-[8px]" />
+                    ))}
+                  </div>
                 </div>
               </div>
 

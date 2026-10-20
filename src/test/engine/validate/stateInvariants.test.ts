@@ -219,9 +219,7 @@ describe('dead-registry coverage — deadWarriorIds ∪ graveyard', () => {
     const w = makeWarrior({ id: 'dx-6' as WarriorId });
     const state = makeGameState({
       deadWarriorIds: [w.id],
-      tournaments: [
-        { id: 't1', participants: [w], completed: false, bracket: [] } as never,
-      ],
+      tournaments: [{ id: 't1', participants: [w], completed: false, bracket: [] } as never],
     });
     const v = validateStateInvariants(state);
     expect(v.some((x) => x.id === 'dead-id-in-active-store')).toBe(true);
@@ -265,9 +263,7 @@ describe('roster caps', () => {
 
   it('flags a rival roster over aiRosterMax for its personality', () => {
     // Default fixture owner is Pragmatic → cap 8.
-    const roster = Array.from({ length: 9 }, (_, i) =>
-      makeWarrior({ id: `rc-${i}` as WarriorId })
-    );
+    const roster = Array.from({ length: 9 }, (_, i) => makeWarrior({ id: `rc-${i}` as WarriorId }));
     const rival = makeRival({ roster });
     const v = validateStateInvariants(makeGameState({ rivals: [rival] }));
     expect(v.some((x) => x.id === 'roster-cap-exceeded')).toBe(true);

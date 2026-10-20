@@ -116,7 +116,9 @@ export default function BoutViewer(props: BoutViewerProps) {
 }
 
 /** Viewer state: prefs-backed view mode, playback, weather, derived labels. */
-function useBoutViewerState(props: Pick<BoutViewerProps, 'log' | 'winner' | 'nameA' | 'nameD' | 'arenaId' | 'weather'>) {
+function useBoutViewerState(
+  props: Pick<BoutViewerProps, 'log' | 'winner' | 'nameA' | 'nameD' | 'arenaId' | 'weather'>
+) {
   const { log, winner, nameA, nameD, arenaId } = props;
   const { weather } = props;
   const isIndoor = isIndoorArena(arenaId);
@@ -192,27 +194,29 @@ interface BoutBodyProps extends Pick<
 }
 
 /** Content area: animated arena or tactical log depending on view mode. */
-function ArenaOrLog(props: Pick<
-  BoutBodyProps,
-  | 'viewMode'
-  | 'nameA'
-  | 'nameD'
-  | 'styleA'
-  | 'styleD'
-  | 'log'
-  | 'winner'
-  | 'arenaTier'
-  | 'effectiveWeather'
-  | 'arenaId'
-  | 'weaponIdA'
-  | 'weaponIdD'
-  | 'warriorA'
-  | 'warriorD'
-> & {
-  visibleCount: number;
-  isPlaying: boolean;
-  isComplete: boolean;
-}) {
+function ArenaOrLog(
+  props: Pick<
+    BoutBodyProps,
+    | 'viewMode'
+    | 'nameA'
+    | 'nameD'
+    | 'styleA'
+    | 'styleD'
+    | 'log'
+    | 'winner'
+    | 'arenaTier'
+    | 'effectiveWeather'
+    | 'arenaId'
+    | 'weaponIdA'
+    | 'weaponIdD'
+    | 'warriorA'
+    | 'warriorD'
+  > & {
+    visibleCount: number;
+    isPlaying: boolean;
+    isComplete: boolean;
+  }
+) {
   const { viewMode, nameA, nameD, styleA, styleD } = props;
   const { log, winner, arenaTier, effectiveWeather, arenaId } = props;
   const { weaponIdA, weaponIdD, warriorA, warriorD, visibleCount, isPlaying, isComplete } = props;
@@ -243,21 +247,23 @@ function ArenaOrLog(props: Pick<
 }
 
 /** Resolution banner, analysis panel, and dev AI telemetry drawer. */
-function ResolutionAndPanels(props: Pick<
-  BoutBodyProps,
-  | 'winner'
-  | 'winnerName'
-  | 'by'
-  | 'minutes'
-  | 'announcement'
-  | 'analysis'
-  | 'nameA'
-  | 'nameD'
-  | 'exchangeLog'
-  | 'warriorA'
-  | 'warriorD'
-  | 'scoutReports'
-> & { isComplete: boolean; totalEvents: number }) {
+function ResolutionAndPanels(
+  props: Pick<
+    BoutBodyProps,
+    | 'winner'
+    | 'winnerName'
+    | 'by'
+    | 'minutes'
+    | 'announcement'
+    | 'analysis'
+    | 'nameA'
+    | 'nameD'
+    | 'exchangeLog'
+    | 'warriorA'
+    | 'warriorD'
+    | 'scoutReports'
+  > & { isComplete: boolean; totalEvents: number }
+) {
   const { isComplete, winner, winnerName, by, minutes } = props;
   const { totalEvents, announcement, analysis, nameA, nameD } = props;
   const { exchangeLog, warriorA, warriorD, scoutReports } = props;

@@ -297,9 +297,14 @@ export function narrateHit(args: NarrateHitArgs): string {
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, style);
 
-  const severity = getStrikeSeverity(
-    { damage: damage || 0, maxHp: maxHp || 100, isFatal: isFatal || false, isCrit: isSuperFlashy || false, isFavorite: isFavorite || false, fame: attackerFame || 0 }
-  );
+  const severity = getStrikeSeverity({
+    damage: damage || 0,
+    maxHp: maxHp || 100,
+    isFatal: isFatal || false,
+    isCrit: isSuperFlashy || false,
+    isFavorite: isFavorite || false,
+    fame: attackerFame || 0,
+  });
 
   if (severity === 'critical_human' || severity === 'critical_supernatural') {
     audioManager.play('crit');

@@ -55,7 +55,7 @@ describe('finalize contracts', () => {
     ).toBe(true);
     expect(
       drained.some((l) => l.boutId === 'stale_bout_1'),
-      'a prior-week transcript leaked into this week\'s archive drain'
+      "a prior-week transcript leaked into this week's archive drain"
     ).toBe(false);
     const freshEntry = next.arenaHistory.find((f) => f.id === 'fresh_bout_1');
     expect(
@@ -112,9 +112,6 @@ describe('finalize contracts', () => {
     ).toBe(true);
 
     const healthyChamp = (healthy as { champion?: { warriorId?: string } | null })?.champion;
-    expect(
-      healthyChamp?.warriorId,
-      'a healthy reign was incorrectly swept'
-    ).toBe(healthyId);
+    expect(healthyChamp?.warriorId, 'a healthy reign was incorrectly swept').toBe(healthyId);
   });
 });

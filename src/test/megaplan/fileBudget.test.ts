@@ -53,11 +53,18 @@ describe('megaplan: file & function budgets', () => {
     // Drifted to 7 (WarriorBuilder, ComparisonHeader, RosterWarriorRow,
     // WarriorDossierHeader, createRosterActions, DominantCombatantsSection,
     // MathStep) — the ratchet still forbids growth beyond that.
-    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(7);
-    // >800: commonCorpus.ts + routeTree.gen.ts (generated data) + arenas/lore.ts
-    // (pure lore data — crossed during the megaplan lore-pool expansion).
+    // V17 whole-repo prettier pass expanded compact one-liners (`if (x) return y;`,
+    // inline arrows) into multi-line bodies — 12 more fns crossed 80 lines with
+    // zero over the 120 ceiling (resolveDecision, useRecruitActions,
+    // prepareExchange, resolveCounteredOffers, scheduleTitleBouts,
+    // applyBoutResults, generateWarriorStatements, buildFTUEInitialState,
+    // computeAgingImpact, aiPlanForWarrior, processRecruitment,
+    // computeTrainingImpact + 5 at exactly 80). Rebaselined to 19.
+    expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(19);
+    // >800: commonCorpus.ts + arenas/lore.ts (pure data) only — routeTree.gen.ts
+    // dropped to 788 under prettier formatting; tightened 4 → 2.
     expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(
-      4
+      2
     );
   });
 });

@@ -50,10 +50,8 @@ const engine = {
     enqueueSim(advanceWeek, state, { ...opts, mutableInput: true }),
   advanceDay: (state: GameState, opts?: WeekAdvanceOptions) =>
     enqueueSim(TickOrchestrator.advanceDay, state, { ...opts, mutableInput: true }),
-  skipToWeekEnd: (
-    state: GameState,
-    opts?: Parameters<typeof TickOrchestrator.skipToWeekEnd>[1]
-  ) => enqueueSim(TickOrchestrator.skipToWeekEnd, state, { ...opts, mutableInput: true }),
+  skipToWeekEnd: (state: GameState, opts?: Parameters<typeof TickOrchestrator.skipToWeekEnd>[1]) =>
+    enqueueSim(TickOrchestrator.skipToWeekEnd, state, { ...opts, mutableInput: true }),
   resolveTournamentRound: (...args: Parameters<typeof TournamentSelectionService.resolveRound>) =>
     enqueueSim(TournamentSelectionService.resolveRound.bind(TournamentSelectionService), ...args),
   createFreshState: (...args: Parameters<typeof createFreshState>) =>

@@ -1,11 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import {
-  buildMatchupScore,
-  getEligibleRivals,
-  scoreMatchup,
-  type MatchupScore,
-} from './matchups';
+import { buildMatchupScore, getEligibleRivals, scoreMatchup, type MatchupScore } from './matchups';
 
 export { type PairwiseHeadToHead } from './headToHead';
 export { scorePairwiseMatchup } from './pairwise';

@@ -203,7 +203,14 @@ describe('mortalityHandler', () => {
       });
       const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };
 
-      const result = handleDeath({ s: s, wA: warrior, wD: wD, outcome: outcome, week: 1, tags: [] });
+      const result = handleDeath({
+        s: s,
+        wA: warrior,
+        wD: wD,
+        outcome: outcome,
+        week: 1,
+        tags: [],
+      });
 
       expect(result.impact?.rosterRemovals).toContain('player-warrior');
     });
@@ -218,7 +225,14 @@ describe('mortalityHandler', () => {
       });
       const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };
 
-      const result = handleDeath({ s: s, wA: warrior, wD: wD, outcome: outcome, week: 7, tags: [] });
+      const result = handleDeath({
+        s: s,
+        wA: warrior,
+        wD: wD,
+        outcome: outcome,
+        week: 7,
+        tags: [],
+      });
 
       expect(result.impact?.killEvents).toHaveLength(1);
       expect(result.impact?.killEvents?.[0]).toMatchObject({
@@ -262,7 +276,14 @@ describe('mortalityHandler', () => {
 
       // Just verify no crash
       expect(() =>
-        handleDeath({ s: s, wA: wA, wD: wD, outcome: createMockOutcome({ by: 'Kill', winner: 'A' }), week: 1, tags: [] })
+        handleDeath({
+          s: s,
+          wA: wA,
+          wD: wD,
+          outcome: createMockOutcome({ by: 'Kill', winner: 'A' }),
+          week: 1,
+          tags: [],
+        })
       ).not.toThrow();
     });
 
@@ -366,7 +387,16 @@ describe('mortalityHandler', () => {
       const outcome = createMockOutcome({ by: 'Kill' });
 
       // Should not throw with tags
-      expect(() => handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: ['Flashy', 'Giant Killer'] })).not.toThrow();
+      expect(() =>
+        handleDeath({
+          s: s,
+          wA: wA,
+          wD: wD,
+          outcome: outcome,
+          week: 1,
+          tags: ['Flashy', 'Giant Killer'],
+        })
+      ).not.toThrow();
     });
   });
 });

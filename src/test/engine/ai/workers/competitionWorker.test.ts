@@ -91,7 +91,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [fatiguedWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: fatiguedWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: fatiguedWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
 
@@ -100,9 +105,12 @@ describe('CompetitionWorker', () => {
         'aggressive_rival',
         'Aggressive Stable',
         [
-          makeWarrior(
-            { id: generateId(undefined, 'warrior') as WarriorId, name: 'Aggressive Warrior', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } }
-          ),
+          makeWarrior({
+            id: generateId(undefined, 'warrior') as WarriorId,
+            name: 'Aggressive Warrior',
+            style: FightingStyle.StrikingAttack,
+            attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          }),
         ],
         'Aggressive'
       );
@@ -117,7 +125,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [fatiguedWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: fatiguedWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: fatiguedWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       // Aggressive rivals accept even with high fatigue
       expect(result).toBe('Accepted');
     });
@@ -135,7 +148,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [restedWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: restedWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: restedWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Accepted');
     });
 
@@ -152,7 +170,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [freshWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: freshWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: freshWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Accepted');
     });
   });
@@ -179,7 +202,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
 
@@ -203,7 +231,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
 
@@ -227,7 +260,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
 
@@ -252,7 +290,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
 
@@ -276,7 +319,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       // Minor injuries don't block acceptance
       expect(result).toBe('Accepted');
     });
@@ -292,7 +340,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [healthyWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: healthyWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: healthyWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Accepted');
     });
 
@@ -324,7 +377,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [injuredWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: injuredWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: injuredWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       // Moderate injury blocks acceptance despite Minor injury being present
       expect(result).toBe('Declined');
     });
@@ -352,7 +410,12 @@ describe('CompetitionWorker', () => {
 
       const offer = createTestOffer(state, 'p_local', [compromisedWarrior.id as string]);
 
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: compromisedWarrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: compromisedWarrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Declined');
     });
   });
@@ -500,7 +563,14 @@ describe('CompetitionWorker', () => {
       const offer = createTestOffer(state, 'p_local', [warrior.id as string]);
 
       // Should not throw and should evaluate based on other criteria
-      expect(() => evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: state.absoluteWeek })).not.toThrow();
+      expect(() =>
+        evaluateBoutOffer({
+          offer: offer,
+          rival: rival,
+          warrior: warrior,
+          currentWeek: state.absoluteWeek,
+        })
+      ).not.toThrow();
     });
 
     it('should handle warriors with undefined injuries', () => {
@@ -515,7 +585,12 @@ describe('CompetitionWorker', () => {
       const offer = createTestOffer(state, 'p_local', [warrior.id as string]);
 
       // Should not throw and should treat as no injuries
-      const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: state.absoluteWeek });
+      const result = evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+        currentWeek: state.absoluteWeek,
+      });
       expect(result).toBe('Accepted');
     });
 
@@ -536,9 +611,12 @@ describe('CompetitionWorker', () => {
     it('should process offers for 10 rivals without cross-talk', () => {
       const manyRivals: RivalStableData[] = [];
       for (let i = 0; i < 10; i++) {
-        const w = makeWarrior(
-          { id: generateId(undefined, 'warrior') as WarriorId, name: `Warrior ${i}`, style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } }
-        );
+        const w = makeWarrior({
+          id: generateId(undefined, 'warrior') as WarriorId,
+          name: `Warrior ${i}`,
+          style: FightingStyle.StrikingAttack,
+          attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        });
         manyRivals.push(createTestRival(`rival_${i}`, `Stable ${i}`, [w]));
       }
 
@@ -576,13 +654,19 @@ describe('CompetitionWorker', () => {
     });
 
     it('should skip offers for rival ID not in rivals array', () => {
-      const w = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Test Warrior', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } }
-      );
+      const w = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Test Warrior',
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      });
       const realRival = createTestRival('real_rival', 'Real Stable', [w]);
-      const ghostW = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Ghost Warrior', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } }
-      );
+      const ghostW = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Ghost Warrior',
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      });
       const realOffer = createTestOffer(state, 'p_local', [w.id as string], 100, 100);
       const ghostOffer = createTestOffer(state, 'p_local', [ghostW.id as string], 100, 100);
       state.boutOffers = {

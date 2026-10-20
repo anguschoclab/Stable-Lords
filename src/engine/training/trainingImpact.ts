@@ -60,7 +60,9 @@ interface ProcessSkillDrillAssignmentArgs {
 /**
  * Helper to process the skill drilling training assignment.
  */
-function processSkillDrillAssignment(args: ProcessSkillDrillAssignmentArgs): Map<WarriorId, Warrior> {
+function processSkillDrillAssignment(
+  args: ProcessSkillDrillAssignmentArgs
+): Map<WarriorId, Warrior> {
   const { assignment, warrior, healingBonus, currentRoster, results } = args;
   const { state, rng, weather } = args;
   if (!assignment.skill) return currentRoster;
@@ -107,7 +109,10 @@ interface ProcessAttributeAssignmentArgs {
 /**
  * Helper to process the attribute training assignment.
  */
-function processAttributeAssignment(args: ProcessAttributeAssignmentArgs): { currentRoster: Map<WarriorId, Warrior>; seasonalGrowth: SeasonalGrowth[] } {
+function processAttributeAssignment(args: ProcessAttributeAssignmentArgs): {
+  currentRoster: Map<WarriorId, Warrior>;
+  seasonalGrowth: SeasonalGrowth[];
+} {
   const { assignment, warrior, healingBonus, currentRoster, results } = args;
   const { state, seasonalGrowth, rng, weather } = args;
   const attr = assignment.attribute;
@@ -197,22 +202,44 @@ export function computeTrainingImpact(
 
     // ── Skill Drilling ──
     if (assignment.type === 'skillDrill') {
-      currentRoster = processSkillDrillAssignment(
-        { assignment: assignment, warrior: warrior, healingBonus: healingBonus, currentRoster: currentRoster, results: results, state: state, rng: rng, weather: weather }
-      );
+      currentRoster = processSkillDrillAssignment({
+        assignment: assignment,
+        warrior: warrior,
+        healingBonus: healingBonus,
+        currentRoster: currentRoster,
+        results: results,
+        state: state,
+        rng: rng,
+        weather: weather,
+      });
       continue;
     }
 
     // ── Trait Training (multi-week) ──
     if (assignment.type === 'trait') {
-      processTraitAssignment({ assignment: assignment, warrior: warrior, state: state, rng: rng, currentRoster: currentRoster, results: results });
+      processTraitAssignment({
+        assignment: assignment,
+        warrior: warrior,
+        state: state,
+        rng: rng,
+        currentRoster: currentRoster,
+        results: results,
+      });
       continue;
     }
 
     // ── Attribute Training ──
-    const outcome = processAttributeAssignment(
-      { assignment: assignment, warrior: warrior, healingBonus: healingBonus, currentRoster: currentRoster, results: results, state: state, seasonalGrowth: seasonalGrowth, rng: rng, weather: weather }
-    );
+    const outcome = processAttributeAssignment({
+      assignment: assignment,
+      warrior: warrior,
+      healingBonus: healingBonus,
+      currentRoster: currentRoster,
+      results: results,
+      state: state,
+      seasonalGrowth: seasonalGrowth,
+      rng: rng,
+      weather: weather,
+    });
     currentRoster = outcome.currentRoster;
     seasonalGrowth = outcome.seasonalGrowth;
   }

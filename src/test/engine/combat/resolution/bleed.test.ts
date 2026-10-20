@@ -64,9 +64,13 @@ describe('SL bleed (integration)', () => {
     let wins = 0;
     const N = 200;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(sl), planD: defaultPlanForWarrior(ps), warriorA: sl, warriorD: ps, providedRng: i * 10009 + 41 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(sl),
+        planD: defaultPlanForWarrior(ps),
+        warriorA: sl,
+        warriorD: ps,
+        providedRng: i * 10009 + 41,
+      });
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;

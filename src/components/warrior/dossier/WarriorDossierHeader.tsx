@@ -47,15 +47,15 @@ export function WarriorDossierHeader({
           className="border border-white/10 bg-neutral-950 shrink-0"
         />
         <div className="space-y-1">
-        <h2 className="text-2xl font-display font-black tracking-tight uppercase">
-          {warriorDisplayName(warrior)}
-        </h2>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase opacity-60 tracking-widest">
-            {record}
-          </span>
-          <FormSparkline warriorId={warrior.id} />
-        </div>
+          <h2 className="text-2xl font-display font-black tracking-tight uppercase">
+            {warriorDisplayName(warrior)}
+          </h2>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase opacity-60 tracking-widest">
+              {record}
+            </span>
+            <FormSparkline warriorId={warrior.id} />
+          </div>
         </div>
       </div>
       <div className="flex flex-col items-end gap-2">

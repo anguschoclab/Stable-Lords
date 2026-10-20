@@ -21,7 +21,10 @@ interface NarrateExchangeEventsArgs {
  * Resolves narration for one exchange (drama layer): post-exchange HP ratios,
  * event narration, and tactic-streak commentary. Returns updated ratios.
  */
-export function narrateExchangeEvents(args: NarrateExchangeEventsArgs): { prevHpRatioA: number; prevHpRatioD: number } {
+export function narrateExchangeEvents(args: NarrateExchangeEventsArgs): {
+  prevHpRatioA: number;
+  prevHpRatioD: number;
+} {
   const { c, fA, fD, events, min } = args;
   const { prevHpRatioA, prevHpRatioD } = args;
   // Use authoritative post-mitigation HP ratios from the engine state.

@@ -103,8 +103,7 @@ const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
   'Dense Fog': {
     bucket: 'arena',
     hazardous: true,
-    acceptanceBlock: (w) =>
-      LUNGER(w) ? 'Zero visibility prevents lunging strategy.' : null,
+    acceptanceBlock: (w) => (LUNGER(w) ? 'Zero visibility prevents lunging strategy.' : null),
     offerDecline: LUNGER,
     bidModifier: (w) => (LUNGER(w) ? -5 : RIPOSTE(w) ? 3 : 0),
   },
@@ -115,8 +114,7 @@ const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
   'Cursed Eclipse': {
     // V16 — was registered as seasonable Fall weather with zero AI rules.
     bucket: 'arena',
-    acceptanceBlock: (w) =>
-      CN_LT(12)(w) ? 'The eclipse saps weak constitutions.' : null,
+    acceptanceBlock: (w) => (CN_LT(12)(w) ? 'The eclipse saps weak constitutions.' : null),
     offerDecline: CN_LT(10),
     committeeSkip: CN0_LT(10),
     bidModifier: (w) => (RIPOSTE(w) ? 3 : CN_LT(12)(w) ? -3 : -1),

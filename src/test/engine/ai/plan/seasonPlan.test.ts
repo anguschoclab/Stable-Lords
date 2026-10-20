@@ -14,12 +14,7 @@ import {
   objectiveStillViable,
   SEASON_OBJECTIVE_WEEKS,
 } from '@/engine/ai/plan/seasonPlan';
-import {
-  makeRival,
-  makeWarrior,
-  makeGameState,
-  makeAgentMemory,
-} from '@/test/_fixtures/factories';
+import { makeRival, makeWarrior, makeGameState, makeAgentMemory } from '@/test/_fixtures/factories';
 
 const crownRival = () => {
   const w = makeWarrior({ id: 'w-crown' as never });

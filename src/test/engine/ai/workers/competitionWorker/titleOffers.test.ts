@@ -108,9 +108,17 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: killer('k1'), state: state })).toBe(
-      'Accepted'
-    );
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: champ,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: killer('k1'),
+        state: state,
+      })
+    ).toBe('Accepted');
   });
 
   it('a champion who can still afford a refusal may decline at critical health', () => {
@@ -125,9 +133,15 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(0);
     expect(
-      evaluateBoutOffer(
-        { offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: makeWarrior({ id: 'k1' as WarriorId }), state: state }
-      )
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: champ,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: makeWarrior({ id: 'k1' as WarriorId }),
+        state: state,
+      })
     ).toBe('Declined');
   });
 
@@ -141,9 +155,17 @@ describe('evaluateBoutOffer — reign management', () => {
     const rival = makeRival({ roster: [champ] });
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: champ, currentWeek: 5, weather: 'Clear', opponent: killer('k1'), state: state })).toBe(
-      'Declined'
-    );
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: champ,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: killer('k1'),
+        state: state,
+      })
+    ).toBe('Declined');
   });
 
   it('a calculating challenger declines a known killer — the cooldown is cheap', () => {
@@ -154,9 +176,17 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: challenger, currentWeek: 5, weather: 'Clear', opponent: killer('champ_x'), state: state })).toBe(
-      'Declined'
-    );
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: challenger,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: killer('champ_x'),
+        state: state,
+      })
+    ).toBe('Declined');
   });
 
   it('an aggressive challenger takes the shot regardless', () => {
@@ -167,9 +197,17 @@ describe('evaluateBoutOffer — reign management', () => {
     });
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: challenger, currentWeek: 5, weather: 'Clear', opponent: killer('champ_x'), state: state })).toBe(
-      'Accepted'
-    );
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: challenger,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: killer('champ_x'),
+        state: state,
+      })
+    ).toBe('Accepted');
   });
 });
 

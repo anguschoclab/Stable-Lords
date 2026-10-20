@@ -88,10 +88,7 @@ describe('InjuriesStep', () => {
 
   it('renders injury text when injuries present', () => {
     render(
-      <InjuriesStep
-        injuries={[{ id: 'w1' as WarriorId, name: 'Alice injured' }]}
-        deaths={[]}
-      />
+      <InjuriesStep injuries={[{ id: 'w1' as WarriorId, name: 'Alice injured' }]} deaths={[]} />
     );
     expect(screen.getByText('Alice injured')).toBeInTheDocument();
   });
@@ -134,9 +131,7 @@ describe('ResolutionReveal controller', () => {
   it('presents results as a labelled modal dialog', () => {
     render(<ResolutionReveal />);
 
-    expect(
-      screen.getByRole('dialog', { name: 'Week Results' })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Week Results' })).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
   });
 

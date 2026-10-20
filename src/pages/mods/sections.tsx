@@ -22,7 +22,10 @@ type HouseRulesSectionProps = {
   resetRules: () => void;
 };
 
-function HouseRulesStatus({ nonCanonical, resetRules }: Pick<HouseRulesSectionProps, 'nonCanonical' | 'resetRules'>) {
+function HouseRulesStatus({
+  nonCanonical,
+  resetRules,
+}: Pick<HouseRulesSectionProps, 'nonCanonical' | 'resetRules'>) {
   return (
     <>
       {nonCanonical && (
@@ -47,7 +50,10 @@ function HouseRulesStatus({ nonCanonical, resetRules }: Pick<HouseRulesSectionPr
   );
 }
 
-function DeathRateControl({ houseRules, setRules }: Pick<HouseRulesSectionProps, 'houseRules' | 'setRules'>) {
+function DeathRateControl({
+  houseRules,
+  setRules,
+}: Pick<HouseRulesSectionProps, 'houseRules' | 'setRules'>) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-1">
@@ -80,7 +86,10 @@ function DeathRateControl({ houseRules, setRules }: Pick<HouseRulesSectionProps,
   );
 }
 
-function SevereInjuryControl({ houseRules, setRules }: Pick<HouseRulesSectionProps, 'houseRules' | 'setRules'>) {
+function SevereInjuryControl({
+  houseRules,
+  setRules,
+}: Pick<HouseRulesSectionProps, 'houseRules' | 'setRules'>) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-1">
@@ -131,7 +140,10 @@ type ContentPacksSectionProps = {
   removePack: (id: string) => void;
 };
 
-function PackInstallControls({ fileRef, installPack }: Pick<ContentPacksSectionProps, 'fileRef' | 'installPack'>) {
+function PackInstallControls({
+  fileRef,
+  installPack,
+}: Pick<ContentPacksSectionProps, 'fileRef' | 'installPack'>) {
   return (
     <>
       <input
@@ -157,7 +169,10 @@ function PackInstallControls({ fileRef, installPack }: Pick<ContentPacksSectionP
   );
 }
 
-function PackStatus({ pendingPack, packError }: Pick<ContentPacksSectionProps, 'pendingPack' | 'packError'>) {
+function PackStatus({
+  pendingPack,
+  packError,
+}: Pick<ContentPacksSectionProps, 'pendingPack' | 'packError'>) {
   return (
     <div aria-live="polite" className="mt-3 space-y-2">
       {pendingPack && (
@@ -166,7 +181,10 @@ function PackStatus({ pendingPack, packError }: Pick<ContentPacksSectionProps, '
         </p>
       )}
       {packError && (
-        <p role="alert" className="text-[10px] font-black uppercase tracking-[0.15em] text-destructive">
+        <p
+          role="alert"
+          className="text-[10px] font-black uppercase tracking-[0.15em] text-destructive"
+        >
           {packError}
         </p>
       )}
@@ -179,12 +197,18 @@ function PackStatus({ pendingPack, packError }: Pick<ContentPacksSectionProps, '
   );
 }
 
-function PackList({ contentPacks, removePack }: Pick<ContentPacksSectionProps, 'contentPacks' | 'removePack'>) {
+function PackList({
+  contentPacks,
+  removePack,
+}: Pick<ContentPacksSectionProps, 'contentPacks' | 'removePack'>) {
   if (contentPacks.length === 0) return null;
   return (
     <ul className="mt-4 space-y-2">
       {contentPacks.map((p) => (
-        <li key={p.id} className="flex items-center justify-between border border-white/5 px-3 py-2">
+        <li
+          key={p.id}
+          className="flex items-center justify-between border border-white/5 px-3 py-2"
+        >
           <div className="flex items-center gap-2 min-w-0">
             <ScrollText className="h-3.5 w-3.5 text-arena-gold shrink-0" />
             <div className="min-w-0">

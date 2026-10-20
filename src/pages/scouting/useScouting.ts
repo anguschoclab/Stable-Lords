@@ -147,7 +147,6 @@ export function useScouting(showBookmarkedOnly: boolean) {
     [treasury, week, scoutReports, setState, activeWarrior, activeRival]
   );
 
-
   return {
     treasury,
     week,

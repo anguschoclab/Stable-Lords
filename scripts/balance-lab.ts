@@ -148,10 +148,20 @@ if (files.length) {
     const D = pool[Math.floor(rng.next() * pool.length)]!;
     if (A === D || A.w.stableId === D.w.stableId) continue;
     const pA = tweakPlan(
-      aiPlanForWarrior({ w: A.w, personality: A.personality as never, philosophy: A.philosophy, opponentStyle: D.w.style })
+      aiPlanForWarrior({
+        w: A.w,
+        personality: A.personality as never,
+        philosophy: A.philosophy,
+        opponentStyle: D.w.style,
+      })
     );
     const pD = tweakPlan(
-      aiPlanForWarrior({ w: D.w, personality: D.personality as never, philosophy: D.philosophy, opponentStyle: A.w.style })
+      aiPlanForWarrior({
+        w: D.w,
+        personality: D.personality as never,
+        philosophy: D.philosophy,
+        opponentStyle: A.w.style,
+      })
     );
     record(
       t,

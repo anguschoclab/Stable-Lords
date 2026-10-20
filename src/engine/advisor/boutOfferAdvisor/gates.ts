@@ -1,10 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
-import type {
-  CampaignFocus,
-  WarriorFightAdvice,
-  WarriorTournamentAdvice,
-} from '../types';
+import type { CampaignFocus, WarriorFightAdvice, WarriorTournamentAdvice } from '../types';
 import { boutOfferAbsoluteWeek, deriveAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);

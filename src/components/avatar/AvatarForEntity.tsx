@@ -4,11 +4,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { Avatar, type AvatarProps } from './Avatar';
 import { AVATAR_SIZE_MAP } from './avatarSizes';
 import { useAvatarCatalog } from './useAvatarCatalog';
-import type {
-  AvatarConfig,
-  AvatarData,
-  AvatarEntityType,
-} from '@/types/avatar.types';
+import type { AvatarConfig, AvatarData, AvatarEntityType } from '@/types/avatar.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { Trainer } from '@/types/shared.types';
 import type { Owner, Promoter, RivalStableData } from '@/types/state.types';
@@ -24,7 +20,9 @@ export interface AvatarForEntityProps {
   className?: string;
 }
 
-function isWarriorLike(source: unknown): source is { style?: FightingStyle; career?: { kills?: number } } {
+function isWarriorLike(
+  source: unknown
+): source is { style?: FightingStyle; career?: { kills?: number } } {
   return typeof source === 'object' && source !== null;
 }
 
@@ -66,7 +64,7 @@ function buildAvatarConfig(
   const warriorLike = isWarriorLike(source);
   const injuries = Array.isArray((source as { injuries?: unknown }).injuries)
     ? (source as { injuries?: { name?: string }[] }).injuries?.map((i) =>
-        typeof i === 'string' ? i : i.name ?? ''
+        typeof i === 'string' ? i : (i.name ?? '')
       )
     : undefined;
   return {

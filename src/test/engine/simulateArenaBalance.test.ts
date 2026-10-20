@@ -37,9 +37,16 @@ describe('Arena Tag Weights Balance', () => {
             const planA = defaultPlanForWarrior(warriorA);
             const planB = defaultPlanForWarrior(warriorB);
 
-            const outcome = simulateFight(
-              { planA: planA, planD: planB, warriorA: warriorA, warriorD: warriorB, providedRng: rng, trainers: [], weather: 'Clear', arenaId: arena.id }
-            );
+            const outcome = simulateFight({
+              planA: planA,
+              planD: planB,
+              warriorA: warriorA,
+              warriorD: warriorB,
+              providedRng: rng,
+              trainers: [],
+              weather: 'Clear',
+              arenaId: arena.id,
+            });
             if (outcome.winner === 'A') wins++;
             total++;
           }

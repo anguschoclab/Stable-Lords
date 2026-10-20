@@ -11,12 +11,7 @@ import {
 } from '@/engine/recruitment/recruitment';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { SeededRNG } from '@/utils/random';
-import {
-  makeWarrior,
-  makePoolWarrior,
-  makeGameState,
-  makeRival,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makePoolWarrior, makeGameState, makeRival } from '@/test/_fixtures/factories';
 import { FREE_AGENT_SHELF_WEEKS } from '@/constants/world';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { StableId } from '@/types/shared.types';
@@ -161,15 +156,19 @@ describe('free-agent shelf expiry', () => {
         titles: [],
       },
     });
-    const brokeRival = makeRival({ id: 'r-broke' as StableId, roster: [], treasury: 10, needsRecruit: true });
+    const brokeRival = makeRival({
+      id: 'r-broke' as StableId,
+      roster: [],
+      treasury: 10,
+      needsRecruit: true,
+    });
     const state = makeGameState({ freeAgents: [expiringVet], rivals: [brokeRival] });
 
     const impact = runRecruitmentPass(state, new SeededRNG(7));
 
     expect(
-      impact.rivalsUpdates?.get('r-broke' as StableId)?.roster?.some(
-        (w) => w.id === 'vet-broke'
-      ) ?? false
+      impact.rivalsUpdates?.get('r-broke' as StableId)?.roster?.some((w) => w.id === 'vet-broke') ??
+        false
     ).toBe(false);
     expect(impact.retired?.some((w) => w.id === 'vet-broke')).toBe(true);
     expect(impact.freeAgents?.some((w) => w.id === 'vet-broke')).toBe(false);
@@ -187,7 +186,12 @@ describe('free-agent shelf expiry', () => {
         titles: [],
       },
     });
-    const needyRival = makeRival({ id: 'r-needy' as StableId, roster: [], treasury: 5000, needsRecruit: true });
+    const needyRival = makeRival({
+      id: 'r-needy' as StableId,
+      roster: [],
+      treasury: 5000,
+      needsRecruit: true,
+    });
     const state = makeGameState({
       freeAgents: [expiringVet],
       rivals: [needyRival],

@@ -16,8 +16,6 @@ import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { computePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
 
-
-
 /**
  * Feint modulation by personality (Stage D, N3): the WT-derived baseline
  * in `defaultPlanForWarrior` is shaped — deceptive stables sharpen it,
@@ -115,7 +113,15 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
 
-  applyStrategicLayer({ plan: plan, w: w, personality: personality, intent: intent, dossier: dossier, mods: mods, competence: args.competence });
+  applyStrategicLayer({
+    plan: plan,
+    w: w,
+    personality: personality,
+    intent: intent,
+    dossier: dossier,
+    mods: mods,
+    competence: args.competence,
+  });
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {
@@ -124,4 +130,3 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
 
   return plan;
 }
-

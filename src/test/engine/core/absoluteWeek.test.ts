@@ -10,7 +10,7 @@ import {
   isTournamentWeekOfYear,
   weeksUntilNextSeasonalTournament,
   isTournamentPrepWeek,
-  weeksUntilChampionsTournament
+  weeksUntilChampionsTournament,
 } from '@/engine/core/absoluteWeek';
 
 describe('absoluteWeek utils', () => {

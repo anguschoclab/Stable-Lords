@@ -60,10 +60,24 @@ export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
   const shouldSkipFatigue = skipFatigue ?? state.isTournamentWeek;
 
   updatedState.roster = updateEntityInList(updatedState.roster, wA.id, (w) =>
-    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
+    updateWarriorFromBoutOutcome({
+      warrior: w,
+      isAttacker: true,
+      winnerSide: winnerSide,
+      isKill: isKill,
+      skipFatigue: shouldSkipFatigue,
+      arenaId: arenaId,
+    })
   );
   updatedState.roster = updateEntityInList(updatedState.roster, wD.id, (w) =>
-    updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
+    updateWarriorFromBoutOutcome({
+      warrior: w,
+      isAttacker: false,
+      winnerSide: winnerSide,
+      isKill: isKill,
+      skipFatigue: shouldSkipFatigue,
+      arenaId: arenaId,
+    })
   );
 
   if (wA.stableId || wD.stableId) {
@@ -71,11 +85,25 @@ export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
       let rRoster = r.roster;
       if (r.id === wA.stableId)
         rRoster = updateEntityInList(rRoster, wA.id, (w) =>
-          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: true, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
+          updateWarriorFromBoutOutcome({
+            warrior: w,
+            isAttacker: true,
+            winnerSide: winnerSide,
+            isKill: isKill,
+            skipFatigue: shouldSkipFatigue,
+            arenaId: arenaId,
+          })
         );
       if (r.id === wD.stableId)
         rRoster = updateEntityInList(rRoster, wD.id, (w) =>
-          updateWarriorFromBoutOutcome({ warrior: w, isAttacker: false, winnerSide: winnerSide, isKill: isKill, skipFatigue: shouldSkipFatigue, arenaId: arenaId })
+          updateWarriorFromBoutOutcome({
+            warrior: w,
+            isAttacker: false,
+            winnerSide: winnerSide,
+            isKill: isKill,
+            skipFatigue: shouldSkipFatigue,
+            arenaId: arenaId,
+          })
         );
       return rRoster !== r.roster ? { ...r, roster: rRoster } : r;
     });
@@ -138,7 +166,9 @@ function applyTournamentKill(
   updatedState.tournaments = (updatedState.tournaments || []).map((t) => ({
     ...t,
     participants: (t.participants || []).map((p) =>
-      p.id === victim.id && p.status !== 'Dead' ? { ...p, status: 'Dead' as const, isDead: true } : p
+      p.id === victim.id && p.status !== 'Dead'
+        ? { ...p, status: 'Dead' as const, isDead: true }
+        : p
     ),
   }));
 }

@@ -93,9 +93,17 @@ describe('applyBoutResults — arena attribution', () => {
     const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
 
     const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
-    const result = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
-    );
+    const result = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Gold Cup',
+      rng: new SeededRNG(12345),
+      skipFatigue: true,
+      arenaId: 'sundered_coliseum',
+    });
 
     const summary = result.arenaHistory[result.arenaHistory.length - 1];
     expect(summary?.arenaId).toBe('sundered_coliseum');
@@ -109,9 +117,17 @@ describe('applyBoutResults — career.byArena accounting', () => {
     const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
 
     const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;
-    const result = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
-    );
+    const result = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Gold Cup',
+      rng: new SeededRNG(12345),
+      skipFatigue: true,
+      arenaId: 'sundered_coliseum',
+    });
 
     expect(result.roster[0]?.career.byArena?.sundered_coliseum).toEqual({
       wins: 1,
@@ -141,9 +157,17 @@ describe('applyBoutResults — career.byArena accounting', () => {
     const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);
 
     const outcome = { winner: 'A', by: 'Kill', log: [] } as unknown as FightOutcome;
-    const result = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: outcome, tId: 't1', tName: 'Gold Cup', rng: new SeededRNG(12345), skipFatigue: true, arenaId: 'sundered_coliseum' }
-    );
+    const result = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Gold Cup',
+      rng: new SeededRNG(12345),
+      skipFatigue: true,
+      arenaId: 'sundered_coliseum',
+    });
 
     const winner = result.roster.find((w) => w.id === 'wA');
     expect(winner?.career.byArena?.sundered_coliseum).toEqual({ wins: 3, losses: 1, kills: 2 });

@@ -49,8 +49,7 @@ export function CombatAnalysis({
           className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/70"
         >
           <ShieldAlert className="h-3 w-3 shrink-0 text-arena-fame/70" />
-          Stablemaster reads as{' '}
-          <span className="text-arena-fame">{suspectedCompetence}</span>
+          Stablemaster reads as <span className="text-arena-fame">{suspectedCompetence}</span>
         </div>
       )}
 

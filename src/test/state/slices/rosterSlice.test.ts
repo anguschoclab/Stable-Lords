@@ -112,10 +112,7 @@ describe('RosterSlice', () => {
   it('should release a warrior onto the free-agent shelf, not the retired roll', () => {
     act(() => {
       useTestStore.setState({
-        roster: [
-          { ...mockWarrior, id: 'w-1' } as any,
-          { ...mockWarrior, id: 'w-2' } as any,
-        ],
+        roster: [{ ...mockWarrior, id: 'w-1' } as any, { ...mockWarrior, id: 'w-2' } as any],
         freeAgents: [],
         retired: [],
       });

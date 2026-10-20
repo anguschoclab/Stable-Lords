@@ -71,7 +71,9 @@ function ArenaCard({
                 {arena.name}
               </div>
               <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mt-0.5 flex gap-1">
-                <span>{SIZE_LABELS[arena.size]} · TIER {arena.tier}</span>
+                <span>
+                  {SIZE_LABELS[arena.size]} · TIER {arena.tier}
+                </span>
                 <ArenaHazardBadges tags={arena.tags} size="sm" />
               </div>
             </div>

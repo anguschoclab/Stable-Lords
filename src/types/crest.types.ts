@@ -2,12 +2,7 @@
  * Crest Types - Procedural heraldic crest system for Stable Lords
  */
 
-import {
-  SHIELD_SHAPES,
-  FIELD_TYPES,
-  METAL_COLORS,
-  CHARGE_TYPES,
-} from './enumSources';
+import { SHIELD_SHAPES, FIELD_TYPES, METAL_COLORS, CHARGE_TYPES } from './enumSources';
 
 /**
  * Shield shape type.

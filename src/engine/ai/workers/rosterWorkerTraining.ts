@@ -107,7 +107,10 @@ interface ExecuteTrainingAttemptArgs {
 /**
  * Execute a single training attempt: state adapter + processAttributeTraining + injury roll + stat recompute.
  */
-function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
+function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): {
+  warrior: Warrior;
+  seasonalGrowth: SeasonalGrowth[];
+} {
   const { w, chosen, stable, season, seasonalGrowth } = args;
   const { rng, healingBonus } = args;
   const stateAdapter = {
@@ -145,7 +148,11 @@ interface PerformAITrainingArgs {
 }
 
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
-export function performAITraining(args: PerformAITrainingArgs): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
+export function performAITraining(args: PerformAITrainingArgs): {
+  warrior: Warrior;
+  seasonalGrowth: SeasonalGrowth[];
+  chosen?: keyof Attributes;
+} {
   const { w, stable, season, seasonalGrowth, rng } = args;
   const { healingBonus = 0 } = args;
   if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
@@ -163,9 +170,15 @@ export function performAITraining(args: PerformAITrainingArgs): { warrior: Warri
   const chosen = selectTrainingFocus(w, season, burned);
   if (!chosen) return { warrior: w, seasonalGrowth };
 
-  const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt(
-    { w: w, chosen: chosen, stable: stable, season: season, seasonalGrowth: seasonalGrowth, rng: rng, healingBonus: healingBonus }
-  );
+  const { warrior, seasonalGrowth: nextGrowth } = executeTrainingAttempt({
+    w: w,
+    chosen: chosen,
+    stable: stable,
+    season: season,
+    seasonalGrowth: seasonalGrowth,
+    rng: rng,
+    healingBonus: healingBonus,
+  });
 
   return { warrior, seasonalGrowth: nextGrowth, chosen };
 }

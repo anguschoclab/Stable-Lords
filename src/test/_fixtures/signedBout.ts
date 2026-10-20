@@ -12,13 +12,23 @@ import { makeGameState } from '@/test/_fixtures/factories';
 export function makeSignedBoutState(): GameState {
   const rng = new SeededRNG(1);
 
-  const warriorA = makeWarrior(
-    { id: 'warrior-a' as import('@/types/shared.types').WarriorId, name: 'Fighter A', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 10 }, rng: rng }
-  );
+  const warriorA = makeWarrior({
+    id: 'warrior-a' as import('@/types/shared.types').WarriorId,
+    name: 'Fighter A',
+    style: FightingStyle.StrikingAttack,
+    attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    overrides: { fame: 10 },
+    rng: rng,
+  });
 
-  const warriorD = makeWarrior(
-    { id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Fighter D', style: FightingStyle.BashingAttack, attrs: { ST: 12, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 10 }, overrides: { fame: 5 }, rng: rng }
-  );
+  const warriorD = makeWarrior({
+    id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+    name: 'Fighter D',
+    style: FightingStyle.BashingAttack,
+    attrs: { ST: 12, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 10 },
+    overrides: { fame: 5 },
+    rng: rng,
+  });
 
   const promoter: Promoter = {
     id: 'promoter-1' as import('@/types/shared.types').PromoterId,

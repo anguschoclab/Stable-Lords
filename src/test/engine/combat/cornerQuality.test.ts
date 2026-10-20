@@ -42,8 +42,7 @@ const slowWitted = (plan = twoConditionPlan()) =>
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 4, WL: 10, SP: 10, DF: 10 },
   });
 
-const opponentAhead = () =>
-  makeFighterState({ label: 'D', plan: makePlan(), momentum: 3 });
+const opponentAhead = () => makeFighterState({ label: 'D', plan: makePlan(), momentum: 3 });
 
 const boundaryCtx = (
   trainers?: NonNullable<Parameters<typeof makeResolutionContext>[0]>['trainers']

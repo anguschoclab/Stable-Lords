@@ -104,16 +104,30 @@ export function resolveCounteredOffers(
         final = 'Declined';
         declineReason = 'proposer-cant-fund';
       } else {
-        const verdict = boutAcceptance.evaluateBoutOffer(
-          { offer: offer, rival: owningRival, warrior: pendingWarrior, currentWeek: state.absoluteWeek, weather: state.weather as WeatherType, opponent: opponent, state: state }
-        );
+        const verdict = boutAcceptance.evaluateBoutOffer({
+          offer: offer,
+          rival: owningRival,
+          warrior: pendingWarrior,
+          currentWeek: state.absoluteWeek,
+          weather: state.weather as WeatherType,
+          opponent: opponent,
+          state: state,
+        });
         // Stage C: one bounded escalation — a second-round counter may
         // stand (negotiationRound 0→1) when the stable tolerates haggling;
         // after that the offer is take-it-or-leave-it.
         const outcome = resolveSecondRound(offer, verdict, owningRival);
         if (
           (outcome.final === 'Countered' || outcome.final === 'CounteredVenue') &&
-          escalateCounter({ state: state, currentOffers: currentOffers, offer: offer, wId: wId, verdict: outcome.final, pendingWarrior: pendingWarrior, owningRival: owningRival })
+          escalateCounter({
+            state: state,
+            currentOffers: currentOffers,
+            offer: offer,
+            wId: wId,
+            verdict: outcome.final,
+            pendingWarrior: pendingWarrior,
+            owningRival: owningRival,
+          })
         ) {
           continue; // offer stays Proposed for the next pass — bounded by round
         }

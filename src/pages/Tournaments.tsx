@@ -77,7 +77,8 @@ function CampaignArchives(props: {
   season: Parameters<typeof TournamentHistory>[0]['currentSeason'];
   arenaHistory: Parameters<typeof TournamentHistory>[0]['arenaHistory'];
 }) {
-  const { showBookmarkedOnly, onToggleBookmarked, bookmarkedCount, pastTournaments, season } = props;
+  const { showBookmarkedOnly, onToggleBookmarked, bookmarkedCount, pastTournaments, season } =
+    props;
   const { arenaHistory } = props;
   return (
     <div className="space-y-6 pt-12">
@@ -106,7 +107,10 @@ function CampaignStatus() {
     <section aria-labelledby="campaign-status-heading" className="space-y-4">
       <SectionDivider label="Campaign Status" />
       <Surface variant="glass" className="p-6">
-        <h2 id="campaign-status-heading" className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground">
+        <h2
+          id="campaign-status-heading"
+          className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground"
+        >
           No Active Campaign
         </h2>
         <p className="mt-2 text-xs text-muted-foreground leading-relaxed">

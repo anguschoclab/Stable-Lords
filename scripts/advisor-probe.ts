@@ -21,9 +21,13 @@ const pool = [...(state.recruitPool ?? [])].sort((a, b) => a.cost - b.cost);
 for (const w of pool.slice(0, 5)) {
   const rng = new SeededRNG(state.week + hashStr(w.name));
   state.roster.push(
-    makeWarrior(
-      { id: rng.uuid('warrior') as WarriorId, name: w.name, style: w.style, attrs: w.attributes, overrides: { age: w.age, potential: w.potential } }
-    )
+    makeWarrior({
+      id: rng.uuid('warrior') as WarriorId,
+      name: w.name,
+      style: w.style,
+      attrs: w.attributes,
+      overrides: { age: w.age, potential: w.potential },
+    })
   );
 }
 const ids = new Set(state.roster.map((w) => w.id));

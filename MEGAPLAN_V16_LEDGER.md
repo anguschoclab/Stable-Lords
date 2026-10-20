@@ -8,24 +8,24 @@
 
 ## Phase 0 — baseline gate matrix
 
-| Gate | Result | Notes |
-| --- | --- | --- |
-| `type-check` (tsr + tsc --build) | ✅ 0 errors | routeTree.gen.ts regenerated — no drift |
-| `lint` (eslint) | ✅ 0 errors | 5 pre-existing jsdoc warnings in avatarGenerator.ts |
-| `test` (fast vitest) | baseline: 24 RED = V16 specs + 1 pre-existing | RED list verified file-by-file: livingWarriorById×2, WEATHER_AI_DISPOSITION×4, Cursed Eclipse×8, AI scout reports×7, schema round-trips×2, F3b insight deposit×1 |
-| orphanScan guard | ❌ pre-existing on clean `main` | dead-export ratchet over the 157 ceiling before V16 began (verified via `git stash` on a clean tree); not a V16 regression |
-| `dead-code` (knip) | report-only | 142 unused exports / 64 unused types / 4 dup exports (V15: 139/63/4) |
-| 40w soak | ✅ 0 invariant violations | 608 ms/week, 5,721 bouts, 558 kills |
+| Gate                             | Result                                        | Notes                                                                                                                                                            |
+| -------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type-check` (tsr + tsc --build) | ✅ 0 errors                                   | routeTree.gen.ts regenerated — no drift                                                                                                                          |
+| `lint` (eslint)                  | ✅ 0 errors                                   | 5 pre-existing jsdoc warnings in avatarGenerator.ts                                                                                                              |
+| `test` (fast vitest)             | baseline: 24 RED = V16 specs + 1 pre-existing | RED list verified file-by-file: livingWarriorById×2, WEATHER_AI_DISPOSITION×4, Cursed Eclipse×8, AI scout reports×7, schema round-trips×2, F3b insight deposit×1 |
+| orphanScan guard                 | ❌ pre-existing on clean `main`               | dead-export ratchet over the 157 ceiling before V16 began (verified via `git stash` on a clean tree); not a V16 regression                                       |
+| `dead-code` (knip)               | report-only                                   | 142 unused exports / 64 unused types / 4 dup exports (V15: 139/63/4)                                                                                             |
+| 40w soak                         | ✅ 0 invariant violations                     | 608 ms/week, 5,721 bouts, 558 kills                                                                                                                              |
 
 ## Phase 1 — RED test suite
 
-| Spec | File | Status |
-| --- | --- | --- |
-| T-F1 livingWarriorById / lookup parity | `src/test/engine/core/{entityIndex,warriorLookup}.test.ts` | ✅ written → verified RED at baseline |
-| T-F2 disposition completeness + Cursed Eclipse | `src/test/engine/ai/{weatherDisposition.completeness,weatherSuitability}.test.ts` | ✅ written → verified RED at baseline |
-| T-F3 AI scout reports + schemas + insights | `src/test/engine/ai/workers/intelWorker.test.ts`, `src/test/schemas/{aiMemorySchema,scoutReportSchema}.test.ts`, `src/test/pages/scouting/useScouting.test.ts`, `src/test/state/slices/rosterSlice.test.ts`, `src/test/components/ledger/InsightManager/hooks/useInsightManager.test.ts` | ✅ written → verified RED at baseline |
-| T-F4 stableId crest | `src/test/components/avatar/AvatarForEntity.test.tsx` | ✅ written |
-| T-F5 'recruit' EventType | `src/test/components/eventLog/{EventLog.test.tsx,eventFiltering.test.ts}` union + category completeness specs | ✅ written |
+| Spec                                           | File                                                                                                                                                                                                                                                                                     | Status                                |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| T-F1 livingWarriorById / lookup parity         | `src/test/engine/core/{entityIndex,warriorLookup}.test.ts`                                                                                                                                                                                                                               | ✅ written → verified RED at baseline |
+| T-F2 disposition completeness + Cursed Eclipse | `src/test/engine/ai/{weatherDisposition.completeness,weatherSuitability}.test.ts`                                                                                                                                                                                                        | ✅ written → verified RED at baseline |
+| T-F3 AI scout reports + schemas + insights     | `src/test/engine/ai/workers/intelWorker.test.ts`, `src/test/schemas/{aiMemorySchema,scoutReportSchema}.test.ts`, `src/test/pages/scouting/useScouting.test.ts`, `src/test/state/slices/rosterSlice.test.ts`, `src/test/components/ledger/InsightManager/hooks/useInsightManager.test.ts` | ✅ written → verified RED at baseline |
+| T-F4 stableId crest                            | `src/test/components/avatar/AvatarForEntity.test.tsx`                                                                                                                                                                                                                                    | ✅ written                            |
+| T-F5 'recruit' EventType                       | `src/test/components/eventLog/{EventLog.test.tsx,eventFiltering.test.ts}` union + category completeness specs                                                                                                                                                                            | ✅ written                            |
 
 ## Phase 2 — F1 warrior-index unification
 
@@ -41,8 +41,8 @@
 ## Phase 3 — F2 AI weather disposition table
 
 - `weatherSuitability.ts`: `WEATHER_AI_DISPOSITION: Record<WeatherType,
-  WeatherDisposition>` — `{bucket, hazardous?, acceptanceBlock?, offerDecline?,
-  committeeSkip?, bidModifier?}`; all legacy rules ported verbatim, Cursed
+WeatherDisposition>` — `{bucket, hazardous?, acceptanceBlock?, offerDecline?,
+committeeSkip?, bidModifier?}`; all legacy rules ported verbatim, Cursed
   Eclipse given real arena rules (CN<12 acceptance block, CN<10 decline +
   committee skip, PR +3 / lowCN −3 / default −1 bid), all 11 offseason types
   explicit `{bucket:'offseason'}`. Five exports are thin readers — signatures
@@ -54,7 +54,7 @@
 
 - F3e: `AIAgentMemory.scoutReports`, `OpponentDossier.suspectedCompetence`,
   `ScoutReportData.suspectedTraits` + all three schemas; `AI_SCOUT_REPORT_CAP =
-  12` in `constants/ai.ts`.
+12` in `constants/ai.ts`.
 - F3d: internal `ScoutReport` interface deleted — `generateScoutReport` now
   returns `ScoutReportData` (branded `ScoutReportId` cast at construction);
   `as ScoutReportData` cast dropped at `useScouting.ts`.
@@ -85,15 +85,15 @@
 
 ## Phase 6 — full battery + docs
 
-| Gate | Result |
-| --- | --- |
-| `type-check` | ✅ 0 errors |
-| `lint` | ✅ 0 errors (5 pre-existing jsdoc warnings) |
-| `test` (fast vitest) | ✅ 849 files / 9,102 passed / 2 skipped — zero failures |
-| `dead-code` (knip) | ✅ report-only — unchanged 142/64/4, no new dead exports |
-| megaplan guards | ✅ all 23 files green (param/file/orphan/uiTokens/etc.) |
-| 40w soak ×2 identical | ✅ 0 invariant violations, `DETERMINISM: identical` |
-| e2e chromium subset | ✅ 5/5 passed (~1.0m) |
+| Gate                  | Result                                                   |
+| --------------------- | -------------------------------------------------------- |
+| `type-check`          | ✅ 0 errors                                              |
+| `lint`                | ✅ 0 errors (5 pre-existing jsdoc warnings)              |
+| `test` (fast vitest)  | ✅ 849 files / 9,102 passed / 2 skipped — zero failures  |
+| `dead-code` (knip)    | ✅ report-only — unchanged 142/64/4, no new dead exports |
+| megaplan guards       | ✅ all 23 files green (param/file/orphan/uiTokens/etc.)  |
+| 40w soak ×2 identical | ✅ 0 invariant violations, `DETERMINISM: identical`      |
+| e2e chromium subset   | ✅ 5/5 passed (~1.0m)                                    |
 
 ### Phase 6 regression fixes
 

@@ -39,14 +39,24 @@ export function finishRivalPass(
   const boutOffersWithWorld = buildWeekOffers(state, currentRivals, rng);
   impacts.push({ boutOffers: boutOffersWithWorld });
 
-  currentRivals = runRosterManagement(
-    { state: state, currentRivals: currentRivals, nextWeek: nextWeek, boutOffersWithWorld: boutOffersWithWorld, globalGazetteItems: globalGazetteItems, impacts: impacts }
-  );
+  currentRivals = runRosterManagement({
+    state: state,
+    currentRivals: currentRivals,
+    nextWeek: nextWeek,
+    boutOffersWithWorld: boutOffersWithWorld,
+    globalGazetteItems: globalGazetteItems,
+    impacts: impacts,
+  });
 
   // 3. Draft from Recruitment Pool — sole signing path; honors needsRecruit.
   //    Free agents share the draft pool; unsold veterans come back out on
   //    the free-agent shelf.
-  const draft = aiDraftFromPool({ pool: state.recruitPool, rivals: currentRivals, week: nextWeek, state: state });
+  const draft = aiDraftFromPool({
+    pool: state.recruitPool,
+    rivals: currentRivals,
+    week: nextWeek,
+    state: state,
+  });
   globalGazetteItems.push(...draft.gazetteItems);
   currentRivals = draft.updatedRivals;
 
@@ -58,9 +68,15 @@ export function finishRivalPass(
   currentRivals = poach.updatedRivals;
 
   // 3.9. Starvation fold + free-agent delta merge.
-  currentRivals = runStarvationAndFreeAgents(
-    { currentRivals: currentRivals, shardOutputs: shardOutputs, draft: draft, state: state, nextWeek: nextWeek, globalGazetteItems: globalGazetteItems, impacts: impacts }
-  );
+  currentRivals = runStarvationAndFreeAgents({
+    currentRivals: currentRivals,
+    shardOutputs: shardOutputs,
+    draft: draft,
+    state: state,
+    nextWeek: nextWeek,
+    globalGazetteItems: globalGazetteItems,
+    impacts: impacts,
+  });
 
   // 3.95. World-floor refill — starvation folds above can strand the world
   // below WORLD_RIVAL_FLOOR for a whole season; mint same-week replacements.

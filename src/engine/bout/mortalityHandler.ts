@@ -204,8 +204,7 @@ interface HandleDeathArgs {
 export function handleDeath(args: HandleDeathArgs) {
   const { s, wA, wD, outcome, week } = args;
   const { tags, rng = new SeededRNG(week * 9973 + 123), tournamentId } = args;
-  if (outcome.by !== 'Kill')
-    return { impact: {}, death: false, playerDeath: false, deathRefs: [] };
+  if (outcome.by !== 'Kill') return { impact: {}, death: false, playerDeath: false, deathRefs: [] };
 
   if (s.houseRules?.severeInjuryInsteadOfDeath) {
     return applySevereInjuryRule({ s: s, wA: wA, wD: wD, outcome: outcome, week: week, rng: rng });
@@ -224,13 +223,28 @@ export function handleDeath(args: HandleDeathArgs) {
   // the player +5 fame, and player victims on the D side never flagged.
   const isPlayerVictim = isPlayerOwned(s, victim);
 
-  const { narrative, graveyardEntry } = buildDeathArtifacts(
-    { s: s, wA: wA, wD: wD, outcome: outcome, week: week, tags: tags, victim: victim, rng: rng }
-  );
+  const { narrative, graveyardEntry } = buildDeathArtifacts({
+    s: s,
+    wA: wA,
+    wD: wD,
+    outcome: outcome,
+    week: week,
+    tags: tags,
+    victim: victim,
+    rng: rng,
+  });
 
-  return assembleDeathImpact(
-    { s: s, victim: victim, killer: killer, isPlayerVictim: isPlayerVictim, graveyardEntry: graveyardEntry, narrative: narrative, week: week, rng: rng, tournamentId: tournamentId }
-  );
+  return assembleDeathImpact({
+    s: s,
+    victim: victim,
+    killer: killer,
+    isPlayerVictim: isPlayerVictim,
+    graveyardEntry: graveyardEntry,
+    narrative: narrative,
+    week: week,
+    rng: rng,
+    tournamentId: tournamentId,
+  });
 }
 
 interface AssembleDeathImpactArgs {

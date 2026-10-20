@@ -26,14 +26,19 @@ describe('careerUpdate', () => {
     kills: number = 0,
     fame: number = 10
   ): Warrior {
-    return makeWarrior(
-      { id: undefined, name: 'TestWarrior', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: {
+    return makeWarrior({
+      id: undefined,
+      name: 'TestWarrior',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: {
         fatigue,
         career: { wins, losses, kills },
         fame,
         status: 'Active' as const,
-      }, rng: rng }
-    ) as Warrior;
+      },
+      rng: rng,
+    }) as Warrior;
   }
 
   describe('calculateCareerUpdate', () => {
@@ -292,7 +297,14 @@ describe('careerUpdate', () => {
     it('should correctly apply fame and popularity deltas along with win/kill outcomes', () => {
       const warrior = createTestWarrior(10, 5, 3, 1, 20);
       warrior.popularity = 50;
-      const updated = updateWarriorAfterBout({ warrior: warrior, fameDelta: 5, popularityDelta: 10, isWinner: true, wasKilled: true, tags: [] });
+      const updated = updateWarriorAfterBout({
+        warrior: warrior,
+        fameDelta: 5,
+        popularityDelta: 10,
+        isWinner: true,
+        wasKilled: true,
+        tags: [],
+      });
       expect(updated.fame).toBe(28);
       expect(updated.popularity).toBe(60);
       expect(updated.career.wins).toBe(6);
@@ -301,20 +313,41 @@ describe('careerUpdate', () => {
 
     it('should apply "Flashy" flair to winner if "Flashy" tag is present', () => {
       const warrior = createTestWarrior();
-      const updated = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: true, wasKilled: false, tags: ['Flashy', 'OtherTag'] });
+      const updated = updateWarriorAfterBout({
+        warrior: warrior,
+        fameDelta: 0,
+        popularityDelta: 0,
+        isWinner: true,
+        wasKilled: false,
+        tags: ['Flashy', 'OtherTag'],
+      });
       expect(updated.flair).toContain('Flashy');
     });
 
     it('should not apply "Flashy" flair to loser even if "Flashy" tag is present', () => {
       const warrior = createTestWarrior();
-      const updated = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: false, wasKilled: false, tags: ['Flashy'] });
+      const updated = updateWarriorAfterBout({
+        warrior: warrior,
+        fameDelta: 0,
+        popularityDelta: 0,
+        isWinner: false,
+        wasKilled: false,
+        tags: ['Flashy'],
+      });
       expect(updated.flair === undefined || updated.flair.length === 0).toBe(true);
     });
 
     it('should preserve existing flair when adding "Flashy"', () => {
       const warrior = createTestWarrior();
       warrior.flair = ['Veteran'];
-      const updated = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: true, wasKilled: false, tags: ['Flashy'] });
+      const updated = updateWarriorAfterBout({
+        warrior: warrior,
+        fameDelta: 0,
+        popularityDelta: 0,
+        isWinner: true,
+        wasKilled: false,
+        tags: ['Flashy'],
+      });
       expect(updated.flair).toContain('Veteran');
       expect(updated.flair).toContain('Flashy');
       expect(updated.flair?.length).toBe(2);
@@ -323,7 +356,14 @@ describe('careerUpdate', () => {
     it('should not duplicate "Flashy" flair if already present', () => {
       const warrior = createTestWarrior();
       warrior.flair = ['Flashy'];
-      const updated = updateWarriorAfterBout({ warrior: warrior, fameDelta: 0, popularityDelta: 0, isWinner: true, wasKilled: false, tags: ['Flashy'] });
+      const updated = updateWarriorAfterBout({
+        warrior: warrior,
+        fameDelta: 0,
+        popularityDelta: 0,
+        isWinner: true,
+        wasKilled: false,
+        tags: ['Flashy'],
+      });
       expect(updated.flair).toContain('Flashy');
       expect(updated.flair?.length).toBe(1);
     });
@@ -333,7 +373,13 @@ describe('careerUpdate', () => {
     it('should identify attacker as winner when winnerSide is A', () => {
       const warrior = createTestWarrior();
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: false,
+      });
 
       expect(updated.career.wins).toBe(1);
       expect(updated.career.losses).toBe(0);
@@ -342,7 +388,13 @@ describe('careerUpdate', () => {
     it('should identify attacker as loser when winnerSide is D', () => {
       const warrior = createTestWarrior();
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'D', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'D',
+        isKill: false,
+        skipFatigue: false,
+      });
 
       expect(updated.career.wins).toBe(0);
       expect(updated.career.losses).toBe(1);
@@ -351,7 +403,13 @@ describe('careerUpdate', () => {
     it('should identify defender as winner when winnerSide is D', () => {
       const warrior = createTestWarrior();
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: false, winnerSide: 'D', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: false,
+        winnerSide: 'D',
+        isKill: false,
+        skipFatigue: false,
+      });
 
       expect(updated.career.wins).toBe(1);
       expect(updated.career.losses).toBe(0);
@@ -360,7 +418,13 @@ describe('careerUpdate', () => {
     it('should apply fatigue skip for tournament bout', () => {
       const warrior = createTestWarrior(40);
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: true });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: true,
+      });
 
       expect(updated.fatigue).toBe(40); // Unchanged
       expect(updated.career.wins).toBe(1);
@@ -369,7 +433,13 @@ describe('careerUpdate', () => {
     it('should apply normal fatigue for non-tournament bout', () => {
       const warrior = createTestWarrior(40);
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: false,
+      });
 
       expect(updated.fatigue).toBe(65); // 40 + 25
     });
@@ -377,7 +447,13 @@ describe('careerUpdate', () => {
     it('should handle kill victory with fatigue skip', () => {
       const warrior = createTestWarrior(30, 5, 2, 1, 15);
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: true, skipFatigue: true });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: true,
+        skipFatigue: true,
+      });
 
       expect(updated.fatigue).toBe(30); // Unchanged
       expect(updated.career.wins).toBe(6);
@@ -389,7 +465,13 @@ describe('careerUpdate', () => {
       const warrior = createTestWarrior(50, 3, 2, 0, 10);
 
       // Defender loses and gets killed
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: false, winnerSide: 'A', isKill: true, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: false,
+        winnerSide: 'A',
+        isKill: true,
+        skipFatigue: false,
+      });
 
       expect(updated.status).toBe('Dead');
       expect(updated.fatigue).toBe(0);
@@ -495,7 +577,14 @@ describe('careerUpdate', () => {
     it('updateWarriorFromBoutOutcome threads arenaId into byArena', () => {
       const warrior = createTestWarrior();
 
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: false, arenaId: 'arena_x' });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: false,
+        arenaId: 'arena_x',
+      });
 
       expect(updated.career.byArena?.arena_x).toEqual({ wins: 1, losses: 0, kills: 0 });
     });
@@ -504,26 +593,56 @@ describe('careerUpdate', () => {
   describe('seasonPoints', () => {
     it('should accrue +2 season points for a regular win', () => {
       const warrior = createTestWarrior();
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: false,
+      });
       expect(updated.seasonPoints).toBe(2);
     });
 
     it('should accrue +5 season points for a kill win', () => {
       const warrior = createTestWarrior();
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: true, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: true,
+        skipFatigue: false,
+      });
       expect(updated.seasonPoints).toBe(5);
     });
 
     it('should accrue 0 season points for a loss', () => {
       const warrior = createTestWarrior();
-      const updated = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'D', isKill: false, skipFatigue: false });
+      const updated = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'D',
+        isKill: false,
+        skipFatigue: false,
+      });
       expect(updated.seasonPoints ?? 0).toBe(0);
     });
 
     it('should accumulate across bouts', () => {
       let warrior = createTestWarrior();
-      warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: false });
-      warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: true, skipFatigue: false });
+      warrior = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: false,
+      });
+      warrior = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: true,
+        skipFatigue: false,
+      });
       expect(warrior.seasonPoints).toBe(7); // 2 + 5
     });
   });
@@ -535,7 +654,13 @@ describe('careerUpdate', () => {
 
       // Simulate 3 tournament bouts in one week
       for (let i = 0; i < 3; i++) {
-        warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: skipFatigue });
+        warrior = updateWarriorFromBoutOutcome({
+          warrior: warrior,
+          isAttacker: true,
+          winnerSide: 'A',
+          isKill: false,
+          skipFatigue: skipFatigue,
+        });
       }
 
       // After 3 wins with fatigue skip, should still be at initial fatigue
@@ -549,7 +674,13 @@ describe('careerUpdate', () => {
 
       // Simulate 3 regular bouts
       for (let i = 0; i < 3; i++) {
-        warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: skipFatigue });
+        warrior = updateWarriorFromBoutOutcome({
+          warrior: warrior,
+          isAttacker: true,
+          winnerSide: 'A',
+          isKill: false,
+          skipFatigue: skipFatigue,
+        });
       }
 
       // After 3 wins: 10 + 25 + 25 + 25 = 85
@@ -562,8 +693,20 @@ describe('careerUpdate', () => {
       const skipFatigue = false;
 
       // Two more bouts should cap at 100, not 130
-      warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: skipFatigue });
-      warrior = updateWarriorFromBoutOutcome({ warrior: warrior, isAttacker: true, winnerSide: 'A', isKill: false, skipFatigue: skipFatigue });
+      warrior = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: skipFatigue,
+      });
+      warrior = updateWarriorFromBoutOutcome({
+        warrior: warrior,
+        isAttacker: true,
+        winnerSide: 'A',
+        isKill: false,
+        skipFatigue: skipFatigue,
+      });
 
       expect(warrior.fatigue).toBe(100);
     });

@@ -60,14 +60,28 @@ function prepareBout(args: PrepareBoutArgs) {
   const weaponD = (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
 
   // 2. Initialize fighters with weather effects
-  const { fA, fD, effectiveWeather } = initializeFighters(
-    { planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, trainers: trainers, weather: weather, arenaId: arenaId }
-  );
+  const { fA, fD, effectiveWeather } = initializeFighters({
+    planA: planA,
+    planD: planD,
+    warriorA: warriorA,
+    warriorD: warriorD,
+    trainers: trainers,
+    weather: weather,
+    arenaId: arenaId,
+  });
 
   // 3. Initialize resolution context
-  const resCtx = initializeResolutionContext(
-    { planA: planA, planD: planD, effectiveWeather: effectiveWeather, warriorA: warriorA, warriorD: warriorD, trainers: trainers, arenaId: arenaId, crowdMood: crowdMood, deathRateMult: deathRateMult }
-  );
+  const resCtx = initializeResolutionContext({
+    planA: planA,
+    planD: planD,
+    effectiveWeather: effectiveWeather,
+    warriorA: warriorA,
+    warriorD: warriorD,
+    trainers: trainers,
+    arenaId: arenaId,
+    crowdMood: crowdMood,
+    deathRateMult: deathRateMult,
+  });
   resCtx.rng = rng;
 
   return { rng, narRngService, nameA, nameD, weaponA, weaponD, fA, fD, effectiveWeather, resCtx };
@@ -95,14 +109,36 @@ function runBoutLoop(args: RunBoutLoopArgs) {
   // 4. Generate introductions
   const introLog = headless
     ? []
-    : generateIntroductions(
-        { rng: narRngService, nameA: nameA, nameD: nameD, planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, weather: effectiveWeather, arenaId: arenaId, arenaConfig: resCtx.arenaConfig }
-      );
+    : generateIntroductions({
+        rng: narRngService,
+        nameA: nameA,
+        nameD: nameD,
+        planA: planA,
+        planD: planD,
+        warriorA: warriorA,
+        warriorD: warriorD,
+        weather: effectiveWeather,
+        arenaId: arenaId,
+        arenaConfig: resCtx.arenaConfig,
+      });
 
   // 5. Run simulation loop
-  const loop = runSimulationLoop(
-    { fA: fA, fD: fD, resCtx: resCtx, nameA: nameA, nameD: nameD, weaponA: weaponA, weaponD: weaponD, warriorA: warriorA, warriorD: warriorD, planA: planA, planD: planD, crowdMood: crowdMood, headless: headless ?? false, narRng: narRngService }
-  );
+  const loop = runSimulationLoop({
+    fA: fA,
+    fD: fD,
+    resCtx: resCtx,
+    nameA: nameA,
+    nameD: nameD,
+    weaponA: weaponA,
+    weaponD: weaponD,
+    warriorA: warriorA,
+    warriorD: warriorD,
+    planA: planA,
+    planD: planD,
+    crowdMood: crowdMood,
+    headless: headless ?? false,
+    narRng: narRngService,
+  });
 
   return { ...loop, log: headless ? [] : [...introLog, ...loop.log] };
 }
@@ -142,9 +178,18 @@ export function simulateFight(args: SimulateFightArgs): FightOutcome {
   const { planA, planD, warriorA, warriorD, providedRng } = args;
   const { trainers, weather = 'Clear', arenaId = 'standard_arena', crowdMood, headless } = args;
   const { deathRateMult } = args;
-  const prep = prepareBout(
-    { planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, providedRng: providedRng, trainers: trainers, weather: weather, arenaId: arenaId, crowdMood: crowdMood, deathRateMult: deathRateMult }
-  );
+  const prep = prepareBout({
+    planA: planA,
+    planD: planD,
+    warriorA: warriorA,
+    warriorD: warriorD,
+    providedRng: providedRng,
+    trainers: trainers,
+    weather: weather,
+    arenaId: arenaId,
+    crowdMood: crowdMood,
+    deathRateMult: deathRateMult,
+  });
 
   const {
     log,
@@ -155,10 +200,32 @@ export function simulateFight(args: SimulateFightArgs): FightOutcome {
     fatalHitLocation,
     fatalExchangeIndex,
     fightMinutes,
-  } = runBoutLoop({ prep: prep, planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, arenaId: arenaId, crowdMood: crowdMood, headless: headless });
+  } = runBoutLoop({
+    prep: prep,
+    planA: planA,
+    planD: planD,
+    warriorA: warriorA,
+    warriorD: warriorD,
+    arenaId: arenaId,
+    crowdMood: crowdMood,
+    headless: headless,
+  });
 
   // 6. Process post-fight: tags, stats, and final outcome assembly
-  return processPostFight(
-    { winner: winner, by: by, fA: prep.fA, fD: prep.fD, nameA: prep.nameA, nameD: prep.nameD, rng: prep.rng, log: log, exchangeLog: exchangeLog, headless: headless ?? false, fightMinutes: fightMinutes, causeBucket: causeBucket, fatalHitLocation: fatalHitLocation, fatalExchangeIndex: fatalExchangeIndex }
-  );
+  return processPostFight({
+    winner: winner,
+    by: by,
+    fA: prep.fA,
+    fD: prep.fD,
+    nameA: prep.nameA,
+    nameD: prep.nameD,
+    rng: prep.rng,
+    log: log,
+    exchangeLog: exchangeLog,
+    headless: headless ?? false,
+    fightMinutes: fightMinutes,
+    causeBucket: causeBucket,
+    fatalHitLocation: fatalHitLocation,
+    fatalExchangeIndex: fatalExchangeIndex,
+  });
 }

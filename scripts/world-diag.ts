@@ -123,7 +123,8 @@ function onWeek(state: GameState, week: number) {
           });
   }
   stableSeries.push(state.rivals.length);
-  rosterFillSum += state.rivals.reduce((n, r) => n + r.roster.length, 0) / Math.max(1, state.rivals.length);
+  rosterFillSum +=
+    state.rivals.reduce((n, r) => n + r.roster.length, 0) / Math.max(1, state.rivals.length);
   rosterFillWeeks++;
 
   for (const b of state.arenaHistory ?? []) {
@@ -318,14 +319,20 @@ console.log('\n# Megaplan world health');
 console.log(
   `stables: start=${stableSeries[0]} end=${fs0.rivals.length} min=${Math.min(...stableSeries)} max=${Math.max(...stableSeries)}`
 );
-console.log(`roster fill: avg ${(rosterFillSum / Math.max(1, rosterFillWeeks)).toFixed(1)} warriors/stable`);
 console.log(
-  `legacy-founded stables: ${legacyFounded.length} (generations: ${Object.entries(generations)
-    .sort(([a], [b]) => Number(a) - Number(b))
-    .map(([g, n]) => `gen${g}=${n}`)
-    .join(' ') || 'none'})`
+  `roster fill: avg ${(rosterFillSum / Math.max(1, rosterFillWeeks)).toFixed(1)} warriors/stable`
 );
-console.log(`freeAgents=${fs0.freeAgents?.length ?? 0} recruitPool=${fs0.recruitPool?.length ?? 0} founderQueue=${fs0.legacyFounderQueue?.length ?? 0}`);
+console.log(
+  `legacy-founded stables: ${legacyFounded.length} (generations: ${
+    Object.entries(generations)
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([g, n]) => `gen${g}=${n}`)
+      .join(' ') || 'none'
+  })`
+);
+console.log(
+  `freeAgents=${fs0.freeAgents?.length ?? 0} recruitPool=${fs0.recruitPool?.length ?? 0} founderQueue=${fs0.legacyFounderQueue?.length ?? 0}`
+);
 console.log(
   `arena coverage: ${allArenas.length - darkArenas.length}/${allArenas.length} arenas saw a bout` +
     (darkArenas.length ? ` — dark: ${darkArenas.map((a) => a.id).join(', ')}` : '')

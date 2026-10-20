@@ -18,29 +18,28 @@ interface StatBatteryProps {
 /**
  * Stat battery.
  */
-export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(function StatBattery(
-  props,
-  ref
-) {
-  const { label, value, max = 100, labelValue, colorClass } = props;
-  const { className } = props;
-  const pct = max > 0 ? clamp((value / max) * 100, 0, 100) : 0;
-  const displayValue = labelValue !== undefined ? labelValue : value;
+export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(
+  function StatBattery(props, ref) {
+    const { label, value, max = 100, labelValue, colorClass } = props;
+    const { className } = props;
+    const pct = max > 0 ? clamp((value / max) * 100, 0, 100) : 0;
+    const displayValue = labelValue !== undefined ? labelValue : value;
 
-  return (
-    <div ref={ref} className={cn('flex items-center gap-3', className)}>
-      <span className="text-[10px] text-muted-foreground w-10 font-black uppercase tracking-widest opacity-60">
-        {label}
-      </span>
-      <div className="flex-1 relative">
-        <Progress
-          value={pct}
-          className={cn('h-[2px] bg-neutral-950/40 ring-1 ring-white/5', colorClass)}
-        />
+    return (
+      <div ref={ref} className={cn('flex items-center gap-3', className)}>
+        <span className="text-[10px] text-muted-foreground w-10 font-black uppercase tracking-widest opacity-60">
+          {label}
+        </span>
+        <div className="flex-1 relative">
+          <Progress
+            value={pct}
+            className={cn('h-[2px] bg-neutral-950/40 ring-1 ring-white/5', colorClass)}
+          />
+        </div>
+        <span className="text-[11px] font-mono font-black w-6 text-right text-foreground/80">
+          {displayValue}
+        </span>
       </div>
-      <span className="text-[11px] font-mono font-black w-6 text-right text-foreground/80">
-        {displayValue}
-      </span>
-    </div>
-  );
-});
+    );
+  }
+);

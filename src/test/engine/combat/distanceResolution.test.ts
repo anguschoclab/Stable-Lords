@@ -64,7 +64,14 @@ describe('contestDistance', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     expect(result.rangeModA).toBe(1);
     expect(result.rangeModD).toBe(-1);
     expect(result.distanceWinner).toBe('A');
@@ -84,7 +91,14 @@ describe('contestDistance', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     // Striking → Extended (one step toward Extended)
     expect(result.newRange).toBe('Extended');
   });
@@ -105,7 +119,14 @@ describe('contestDistance', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     // Both prefer Striking, so newRange stays Striking regardless of who wins
     expect(result.newRange).toBe('Striking');
   });
@@ -291,7 +312,14 @@ describe('contestDistance edge cases', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     expect(result.distanceWinner).toBe('D');
     expect(result.rangeModA).toBe(-1);
     expect(result.rangeModD).toBe(1);
@@ -311,7 +339,15 @@ describe('contestDistance edge cases', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking', sizeProfile: ARENA_SIZE_PROFILES.cramped });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+      sizeProfile: ARENA_SIZE_PROFILES.cramped,
+    });
     // A wins and prefers Extended, but cramped caps at Striking
     expect(result.newRange).toBe('Striking');
   });
@@ -330,7 +366,14 @@ describe('contestDistance edge cases', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     // A wins, prefers Tight → shift from Striking toward Tight
     expect(result.newRange).toBe('Tight');
   });
@@ -349,7 +392,14 @@ describe('contestDistance edge cases', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     expect(result.events).toHaveLength(1);
     expect(result.events[0]!.type).toBe('RANGE_SHIFT');
     expect(result.events[0]!.result).toBe('Extended');
@@ -369,7 +419,14 @@ describe('contestDistance edge cases', () => {
       recoveryDebt: 0,
       weaponId: 'broadsword',
     } as any;
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking' });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+    });
     expect(result.events).toHaveLength(0);
   });
 
@@ -392,7 +449,15 @@ describe('contestDistance edge cases', () => {
     // D's motivation: D prefers Striking (broadsword), current is Striking, so motD = 0
     // reachA = 10 + 0 + 1 - 0 = 11, reachD = 10 + 0 + 0 - 0 = 10
     // A should still win with higher reach
-    const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: 5, OE_D: 5, currentRange: 'Striking', sizeProfile: ARENA_SIZE_PROFILES.cramped });
+    const result = contestDistance({
+      rng: rng,
+      fA: fA,
+      fD: fD,
+      OE_A: 5,
+      OE_D: 5,
+      currentRange: 'Striking',
+      sizeProfile: ARENA_SIZE_PROFILES.cramped,
+    });
     expect(result.distanceWinner).toBe('A');
   });
 });

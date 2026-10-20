@@ -51,11 +51,7 @@ function stableCrumbs(id: string, s: EntityIndexState): Crumb[] {
     return [STABLE, { label: 'Roster', to: '/stable/roster' }, { label: s.player.stableName }];
   }
   const rival = (s.rivals ?? []).find((r) => r.id === id || r.owner?.id === id);
-  return [
-    WORLD,
-    SCOUTING,
-    { label: rival?.owner?.stableName ?? 'Unknown Stable' },
-  ];
+  return [WORLD, SCOUTING, { label: rival?.owner?.stableName ?? 'Unknown Stable' }];
 }
 
 function arenaCrumbs(id: string): Crumb[] {

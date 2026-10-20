@@ -46,7 +46,6 @@ describe('OPFS Archival System', () => {
     });
   });
 
-
   describe('Suite 5: Fallback & Quota Management', () => {
     it('Test 5.1: Graceful degradation on errors', async () => {
       const service = new OPFSArchiveService();
@@ -82,7 +81,6 @@ describe('OPFS Archival System', () => {
         'Invalid boutId'
       );
     });
-
 
     it('Test 6.6: valid IDs are accepted', async () => {
       const service = new OPFSArchiveService();
@@ -139,7 +137,6 @@ describe('OPFS Archival System', () => {
       delete (global as any).window;
       consoleSpy.mockRestore();
     });
-
   });
 
   describe('Suite 8: NoModificationAllowedError handling', () => {
@@ -169,7 +166,6 @@ describe('OPFS Archival System', () => {
       const result = await service.retrieveHotState('slot-missing');
       expect(result).toBeNull();
     });
-
   });
 
   describe('Suite 10: Generic / permission-level OPFS failures', () => {
@@ -212,7 +208,6 @@ describe('OPFS Archival System', () => {
 
       consoleSpy.mockRestore();
     });
-
 
     it('Test 10.6: getArchivedBoutIdsForSeason catches generic error', async () => {
       const service = new OPFSArchiveService();
@@ -264,7 +259,6 @@ describe('OPFS Archival System', () => {
 
       consoleSpy.mockRestore();
     });
-
   });
 
   describe('Suite 12: retrieveHotState JSON parse failure', () => {
@@ -390,7 +384,6 @@ describe('OPFS Archival System', () => {
       for (const c of calls) expect(c.opts?.create).toBe(false);
     });
 
-
     it('Test 14.4: retrieveHotState uses non-creating directory lookups', async () => {
       const service = new OPFSArchiveService();
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -418,7 +411,6 @@ describe('OPFS Archival System', () => {
       expect(calls.length).toBeGreaterThan(0);
       for (const c of calls) expect(c.opts?.create).toBe(true);
     });
-
 
     it('Test 14.8: archiveHotState still creates directories on the write path', async () => {
       const service = new OPFSArchiveService();

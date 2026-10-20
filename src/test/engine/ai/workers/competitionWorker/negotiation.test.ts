@@ -52,9 +52,9 @@ describe('resolveSecondRound', () => {
     expect(
       resolveSecondRound(counterOffer(0), 'CounteredVenue', rivalWith('Aggressive')).final
     ).toBe('Declined');
-    expect(
-      resolveSecondRound(counterOffer(0), 'CounteredVenue', rivalWith('Showman')).final
-    ).toBe('CounteredVenue');
+    expect(resolveSecondRound(counterOffer(0), 'CounteredVenue', rivalWith('Showman')).final).toBe(
+      'CounteredVenue'
+    );
   });
 
   it('a walk-away decline carries a reason for responseNotes', () => {

@@ -109,7 +109,13 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
     const offer = makeOffer();
 
     // Should decline due to weather — currently no weather param exists
-    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Rainy' });
+    const result = evaluateBoutOffer({
+      offer: offer,
+      rival: rival,
+      warrior: warrior,
+      currentWeek: 5,
+      weather: 'Rainy',
+    });
     expect(result).toBe('Declined');
   });
 
@@ -118,7 +124,13 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
     const rival = makeRival();
     const offer = makeOffer();
 
-    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Sweltering' });
+    const result = evaluateBoutOffer({
+      offer: offer,
+      rival: rival,
+      warrior: warrior,
+      currentWeek: 5,
+      weather: 'Sweltering',
+    });
     expect(result).toBe('Declined');
   });
 
@@ -127,7 +139,13 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
     const rival = makeRival();
     const offer = makeOffer();
 
-    const result = evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear' });
+    const result = evaluateBoutOffer({
+      offer: offer,
+      rival: rival,
+      warrior: warrior,
+      currentWeek: 5,
+      weather: 'Clear',
+    });
     expect(result).toBe('Accepted');
   });
 });

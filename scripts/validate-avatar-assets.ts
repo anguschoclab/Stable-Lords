@@ -66,9 +66,14 @@ function buildManifest(): AvatarCatalog {
       if (!file.endsWith('.png')) continue;
       const dimensions = pngDimensions(path.join(directory, file));
       if (dimensions.width !== 256 || dimensions.height !== 256) {
-        throw new Error(`${category}/${file} must be 256x256, got ${dimensions.width}x${dimensions.height}`);
+        throw new Error(
+          `${category}/${file} must be 256x256, got ${dimensions.width}x${dimensions.height}`
+        );
       }
-      const tags = file.replace(/\.png$/, '').split('_').slice(0, -1);
+      const tags = file
+        .replace(/\.png$/, '')
+        .split('_')
+        .slice(0, -1);
       categories[category].push({
         src: `/avatars/layers/${category}/${file}`,
         category,
@@ -86,5 +91,8 @@ function buildManifest(): AvatarCatalog {
 
 const manifest = buildManifest();
 writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-const count = Object.values(manifest.categories).reduce((total, entries) => total + entries.length, 0);
+const count = Object.values(manifest.categories).reduce(
+  (total, entries) => total + entries.length,
+  0
+);
 console.log(`Validated ${count} avatar assets and wrote ${manifestPath}`);

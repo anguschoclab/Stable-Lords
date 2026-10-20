@@ -22,7 +22,13 @@ const SCALAR_FIELDS = {
   string: ['phase', 'season', 'weather', 'crowdMood'],
 } as const;
 
-const OBJECT_FIELDS = ['player', 'promoters', 'boutOffers', 'realmRankings', 'progression'] as const;
+const OBJECT_FIELDS = [
+  'player',
+  'promoters',
+  'boutOffers',
+  'realmRankings',
+  'progression',
+] as const;
 
 const ARRAY_FIELDS = [
   'roster',

@@ -135,7 +135,12 @@ describe('corner advice — phase-boundary re-evaluation', () => {
       makeFighter(),
       // Stage D: boundary advice now requires a real corner — a trainer
       // must be present for the off-cadence re-check to run.
-      ctx({ exchange: 2, phase: 'MID', cornerAdvice: true, trainers: [{ tier: 'Master' } as never] }),
+      ctx({
+        exchange: 2,
+        phase: 'MID',
+        cornerAdvice: true,
+        trainers: [{ tier: 'Master' } as never],
+      }),
       1
     );
     expect(withAdvice.newPlan.OE).toBe(9); // corner spoke

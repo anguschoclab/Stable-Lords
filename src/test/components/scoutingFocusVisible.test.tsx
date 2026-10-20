@@ -34,13 +34,9 @@ describe('scouting focus-visible a11y contracts (MEGAPLAN-V10)', () => {
       // outline must now scope it to focus-visible and provide a ring.
       for (const call of cnCalls) {
         if (!/outline-none/.test(call)) continue;
-        expect(call, `${f} must scope outline suppression`).toMatch(
-          /focus-visible:outline-none/
-        );
+        expect(call, `${f} must scope outline suppression`).toMatch(/focus-visible:outline-none/);
         expect(call, `${f} must provide a focus-visible ring`).toMatch(/focus-visible:ring-2/);
-        expect(call, `${f} must keep the primary ring color`).toMatch(
-          /focus-visible:ring-primary/
-        );
+        expect(call, `${f} must keep the primary ring color`).toMatch(/focus-visible:ring-primary/);
       }
 
       // No bare `outline-none` token survives anywhere in the file.

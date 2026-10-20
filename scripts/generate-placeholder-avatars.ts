@@ -13,7 +13,12 @@ import { deflateSync } from 'node:zlib';
 const SIZE = 256;
 const OUT_DIR = path.resolve(import.meta.dirname, '../public/avatars/layers');
 
-interface Color { r: number; g: number; b: number; a: number }
+interface Color {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
 
 function transparent(): Color {
   return { r: 0, g: 0, b: 0, a: 0 };
@@ -432,7 +437,7 @@ function generateManifest(): void {
   }
 
   scan(OUT_DIR, '');
-  writeFileSync(manifestPath, JSON.stringify({ categories }, null, 2));
+  writeFileSync(manifestPath, `${JSON.stringify({ categories }, null, 2)}\n`);
   console.log(`Wrote avatar manifest with ${Object.keys(categories).length} categories.`);
 }
 

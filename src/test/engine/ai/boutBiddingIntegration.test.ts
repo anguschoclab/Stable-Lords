@@ -72,7 +72,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
 
     const rng = new SeededRNG(42);
@@ -104,7 +110,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('rival-b');
 
@@ -139,7 +151,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB, rivalC]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB, rivalC] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB, rivalC],
+    });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.maxFame).toBe(50);
 
@@ -165,7 +183,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
 
@@ -187,7 +211,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
@@ -221,7 +251,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
 
     const rng = new SeededRNG(42);
@@ -262,7 +298,13 @@ describe('convertBidsToOffers', () => {
       } as any,
     ];
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     const offers = convertBidsToOffers(
       bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
       [rivalA, rivalB],
@@ -296,7 +338,13 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('owner-b');
 
@@ -334,7 +382,13 @@ describe('convertBidsToOffers', () => {
     // targetWeek = absoluteWeek + 1 = 6; resting is out until week 10
     state.restStates = [{ warriorId: resting.id, restUntilWeek: 10 }];
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     const offers = convertBidsToOffers(
       bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
       [rivalA, rivalB],
@@ -401,7 +455,13 @@ describe('stable notoriety inflates offer hype (F1)', () => {
     });
 
     const stateK = makeMinimalState([killerStable, oppStable]);
-    const { bids: bidsK } = generateBoutBids({ rival: killerStable, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [oppStable] });
+    const { bids: bidsK } = generateBoutBids({
+      rival: killerStable,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [oppStable],
+    });
     const offersK = convertBidsToOffers(
       bidsK.map((bid) => ({ bid, rivalId: killerStable.id as string })),
       [killerStable, oppStable],
@@ -411,7 +471,13 @@ describe('stable notoriety inflates offer hype (F1)', () => {
     );
 
     const stateC = makeMinimalState([cleanStable, oppStable]);
-    const { bids: bidsC } = generateBoutBids({ rival: cleanStable, _currentWeek: 5, weather: 'Clear', crowdMood: 'Calm', rivals: [oppStable] });
+    const { bids: bidsC } = generateBoutBids({
+      rival: cleanStable,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [oppStable],
+    });
     const offersC = convertBidsToOffers(
       bidsC.map((bid) => ({ bid, rivalId: cleanStable.id as string })),
       [cleanStable, oppStable],

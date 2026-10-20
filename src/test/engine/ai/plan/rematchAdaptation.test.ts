@@ -52,12 +52,16 @@ describe('rematch adaptation', () => {
   it('a first meeting (no dossier history) matches the baseline plan', () => {
     const w = makeWarrior();
     const baseline = aiPlanForWarrior({ w, ...BASELINE });
-    const fresh = aiPlanForWarrior({ w, ...BASELINE, dossier: {
-      lastSeenWeek: 9,
-      knownStyles: [],
-      estimatedThreat: 0.5,
-      recordVs: { w: 0, l: 0, k: 0 },
-    }});
+    const fresh = aiPlanForWarrior({
+      w,
+      ...BASELINE,
+      dossier: {
+        lastSeenWeek: 9,
+        knownStyles: [],
+        estimatedThreat: 0.5,
+        recordVs: { w: 0, l: 0, k: 0 },
+      },
+    });
     expect(fresh.OE).toBe(baseline.OE);
     expect(fresh.AL).toBe(baseline.AL);
     expect(fresh.killDesire).toBe(baseline.killDesire);
@@ -66,12 +70,16 @@ describe('rematch adaptation', () => {
   it('a winning record does not trigger the loss-adaptation deltas', () => {
     const w = makeWarrior();
     const baseline = aiPlanForWarrior({ w, ...BASELINE });
-    const winning = aiPlanForWarrior({ w, ...BASELINE, dossier: {
-      lastSeenWeek: 9,
-      knownStyles: [FightingStyle.BashingAttack],
-      estimatedThreat: 0.3,
-      recordVs: { w: 3, l: 0, k: 0 },
-    }});
+    const winning = aiPlanForWarrior({
+      w,
+      ...BASELINE,
+      dossier: {
+        lastSeenWeek: 9,
+        knownStyles: [FightingStyle.BashingAttack],
+        estimatedThreat: 0.3,
+        recordVs: { w: 3, l: 0, k: 0 },
+      },
+    });
     expect(winning.OE).toBe(baseline.OE);
     expect(winning.AL).toBe(baseline.AL);
   });
@@ -97,12 +105,16 @@ describe('rematch adaptation', () => {
 
   it('a winning record keeps the canonical favorite tactics', () => {
     const w = makeWarrior();
-    const winning = aiPlanForWarrior({ w, ...BASELINE, dossier: {
-      lastSeenWeek: 9,
-      knownStyles: [FightingStyle.BashingAttack],
-      estimatedThreat: 0.3,
-      recordVs: { w: 3, l: 0, k: 0 },
-    }});
+    const winning = aiPlanForWarrior({
+      w,
+      ...BASELINE,
+      dossier: {
+        lastSeenWeek: 9,
+        knownStyles: [FightingStyle.BashingAttack],
+        estimatedThreat: 0.3,
+        recordVs: { w: 3, l: 0, k: 0 },
+      },
+    });
     expect(winning.offensiveTactic).toBe('Bash');
     expect(winning.defensiveTactic).toBe('none');
   });

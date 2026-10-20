@@ -22,7 +22,12 @@ const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
 describe('CouncilBriefingWidget', () => {
   beforeEach(() => {
     const fresh = createFreshState('test-seed');
-    const w1 = makeWarrior({ id: 'w1' as any, name: 'Aulus', style: FightingStyle.AimedBlow, attrs: baseAttrs });
+    const w1 = makeWarrior({
+      id: 'w1' as any,
+      name: 'Aulus',
+      style: FightingStyle.AimedBlow,
+      attrs: baseAttrs,
+    });
     fresh.roster = [w1];
     fresh.week = 5;
     fresh.absoluteWeek = 5;

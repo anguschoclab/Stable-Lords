@@ -72,10 +72,10 @@ export function DominantCombatantsSection({
                       className="border border-white/10 bg-neutral-950 shrink-0"
                     />
                     <WarriorNameTag
-                    id={warrior.id}
-                    name={warrior.name}
-                    epithet={warrior.epithet}
-                    isChampion={warrior.isChampion}
+                      id={warrior.id}
+                      name={warrior.name}
+                      epithet={warrior.epithet}
+                      isChampion={warrior.isChampion}
                       injuryCount={warrior.injuryCount}
                       isDead={warrior.isDead}
                     />

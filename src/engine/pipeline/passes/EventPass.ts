@@ -52,9 +52,14 @@ function rollTavernBrawl(state: GameState, events: Events, ctx: EventCtx): void 
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(
-      { rng: ctx.brawlRng, week: ctx.nextWeek, title: e.title, templates: e.newsletter, data: { name: brawler.name, fame: 5 }, category: 'event' }
-    )
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { name: brawler.name, fame: 5 },
+      category: 'event',
+    })
   );
 }
 
@@ -76,9 +81,14 @@ function rollCelestialBlessing(state: GameState, events: Events, ctx: EventCtx):
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(
-      { rng: ctx.brawlRng, week: ctx.nextWeek, title: e.title, templates: e.newsletter, data: { name: chosen.name, fame: 15, xp: 2 }, category: 'event' }
-    )
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { name: chosen.name, fame: 15, xp: 2 },
+      category: 'event',
+    })
   );
 }
 
@@ -99,9 +109,14 @@ function rollLostRelic(state: GameState, events: Events, ctx: EventCtx): void {
   });
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(
-      { rng: ctx.brawlRng, week: ctx.nextWeek, title: e.title, templates: e.newsletter, data: { name: chosen.name, fame: 10, xp: 5 }, category: 'event' }
-    )
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { name: chosen.name, fame: 10, xp: 5 },
+      category: 'event',
+    })
   );
 }
 
@@ -118,7 +133,14 @@ function rollMysteriousPatron(events: Events, ctx: EventCtx): void {
   );
 
   ctx.newsletterItems.push(
-    makeNewsletterItem({ rng: ctx.brawlRng, week: ctx.nextWeek, title: e.title, templates: e.newsletter, data: { gold }, category: 'event' })
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { gold },
+      category: 'event',
+    })
   );
 }
 
@@ -150,9 +172,14 @@ function rollGoblinMerchant(state: GameState, events: Events, ctx: EventCtx): vo
   );
 
   ctx.newsletterItems.push(
-    makeNewsletterItem(
-      { rng: ctx.brawlRng, week: ctx.nextWeek, title: e.title, templates: e.newsletter, data: { name: chosen.name, xp: 5 }, category: 'event' }
-    )
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { name: chosen.name, xp: 5 },
+      category: 'event',
+    })
   );
 }
 

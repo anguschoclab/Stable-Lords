@@ -74,11 +74,15 @@ describe('advanceWeek — dead tournament participants', () => {
     const wCorpse = makeTournamentWarrior('dead-1', 'Corpse', FightingStyle.StrikingAttack, RIVAL);
 
     const state: GameState = makeTournamentBaseState(1);
-    state.roster = [makeTournamentWarrior('p1', 'Player One', FightingStyle.StrikingAttack, PLAYER)];
+    state.roster = [
+      makeTournamentWarrior('p1', 'Player One', FightingStyle.StrikingAttack, PLAYER),
+    ];
     state.rivals = [makeTournamentRival([wLive])];
     state.graveyard = [{ ...wCorpse, status: 'Dead', isDead: true } as Warrior];
     state.deadWarriorIds = [wCorpse.id];
-    state.tournaments = [unfinishedTournament('t-sweep', [wLive, wCorpse], [{ a: wLive, d: wCorpse }])];
+    state.tournaments = [
+      unfinishedTournament('t-sweep', [wLive, wCorpse], [{ a: wLive, d: wCorpse }]),
+    ];
 
     const next = await advanceWeek(state, { headless: true });
 
@@ -89,15 +93,24 @@ describe('advanceWeek — dead tournament participants', () => {
     // One death on record — the original — not a fresh re-kill.
     expect(next.graveyard.filter((w) => w.id === 'dead-1')).toHaveLength(1);
     expect(next.killEvents.filter((e) => e.victimId === 'dead-1')).toHaveLength(0);
-    expect(next.arenaHistory.filter((b) => b.by === 'Kill' && b.tournamentId === 't-sweep')).toHaveLength(0);
+    expect(
+      next.arenaHistory.filter((b) => b.by === 'Kill' && b.tournamentId === 't-sweep')
+    ).toHaveLength(0);
   });
 
   it('cannot crown a dead finals participant', async () => {
     const wLive = makeTournamentWarrior('live-f', 'Finalist', FightingStyle.StrikingAttack, RIVAL);
-    const wCorpse = makeTournamentWarrior('dead-f', 'Dead Finalist', FightingStyle.StrikingAttack, RIVAL);
+    const wCorpse = makeTournamentWarrior(
+      'dead-f',
+      'Dead Finalist',
+      FightingStyle.StrikingAttack,
+      RIVAL
+    );
 
     const state: GameState = makeTournamentBaseState(1);
-    state.roster = [makeTournamentWarrior('p1', 'Player One', FightingStyle.StrikingAttack, PLAYER)];
+    state.roster = [
+      makeTournamentWarrior('p1', 'Player One', FightingStyle.StrikingAttack, PLAYER),
+    ];
     state.rivals = [makeTournamentRival([wLive])];
     state.graveyard = [{ ...wCorpse, status: 'Dead', isDead: true } as Warrior];
     state.deadWarriorIds = [wCorpse.id];

@@ -98,7 +98,9 @@ interface GetStrikeSeverityArgs {
  * Maps damage/health ratio to mechanical severity categories.
  * Supports the expanded 6-tier Strike system.
  */
-export function getStrikeSeverity(args: GetStrikeSeverityArgs): 'glancing' | 'solid' | 'mastery' | 'critical_human' | 'critical_supernatural' | 'fatal' {
+export function getStrikeSeverity(
+  args: GetStrikeSeverityArgs
+): 'glancing' | 'solid' | 'mastery' | 'critical_human' | 'critical_supernatural' | 'fatal' {
   const { damage, maxHp, isFatal, isCrit, isFavorite } = args;
   const { fame } = args;
   if (isFatal) return 'fatal';

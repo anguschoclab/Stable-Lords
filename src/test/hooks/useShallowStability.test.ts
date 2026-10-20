@@ -9,19 +9,18 @@ import path from 'path';
 // hazard — callbacks that allocate a fresh object each call. Primitive
 // projections like `(w) => w.id` (the #1062 pattern) are the recommended
 // useShallow idiom and are allowed.
-const MAP_TO_OBJECT_RE = /useShallow\(\s*\([^)]*\)\s*=>\s*[^;}]*\.map\(\s*\([^)]*\)\s*=>\s*\(?\s*{/g;
+const MAP_TO_OBJECT_RE =
+  /useShallow\(\s*\([^)]*\)\s*=>\s*[^;}]*\.map\(\s*\([^)]*\)\s*=>\s*\(?\s*{/g;
 const ARRAY_FROM_RE = /useShallow\(\s*\([^)]*\)\s*=>\s*[^;}]*Array\.from\(/g;
 
 describe('useShallow stability audit', () => {
   const srcDir = path.resolve(__dirname, '../../');
 
   it('audit regexes actually match their planted-positive shapes (F2)', () => {
-    expect(
-      MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => ({ id: w.id })))')
-    ).toBe(true);
-    expect(
-      MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => w.id))')
-    ).toBe(false);
+    expect(MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => ({ id: w.id })))')).toBe(
+      true
+    );
+    expect(MAP_TO_OBJECT_RE.test('useShallow((s) => s.roster.map((w) => w.id))')).toBe(false);
     expect(ARRAY_FROM_RE.test('useShallow((s) => Array.from(s.ids))')).toBe(true);
   });
 

@@ -247,13 +247,26 @@ export function processOwnerGrudges(
     if (!grudgeByPair.has(k)) grudgeByPair.set(k, g);
   }
 
-  processRivalPairs({ state: state, rivals: rivals, agg: agg, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems });
+  processRivalPairs({
+    state: state,
+    rivals: rivals,
+    agg: agg,
+    grudges: grudges,
+    grudgeByPair: grudgeByPair,
+    gazetteItems: gazetteItems,
+  });
   const deadPlayerCount = (state.graveyard ?? []).filter(
     (w) => w.stableId === state.player?.id
   ).length;
-  processPlayerPairs(
-    { state: state, rivals: rivals, agg: agg, playerWarriorCount: (state.roster || []).length + deadPlayerCount, grudges: grudges, grudgeByPair: grudgeByPair, gazetteItems: gazetteItems }
-  );
+  processPlayerPairs({
+    state: state,
+    rivals: rivals,
+    agg: agg,
+    playerWarriorCount: (state.roster || []).length + deadPlayerCount,
+    grudges: grudges,
+    grudgeByPair: grudgeByPair,
+    gazetteItems: gazetteItems,
+  });
 
   // Decay old grudges — after 4 consecutive weeks with no cross-stable fight the
   // intensity drops by 1. This replaces the old 26-week cliff.

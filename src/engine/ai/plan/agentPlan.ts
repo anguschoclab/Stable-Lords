@@ -36,9 +36,17 @@ export function agentPlanForWarrior(
 
   const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, resolvedOpponentStable ?? ''));
 
-  return aiPlanForWarrior(
-    { w: w, personality: rival.owner.personality ?? 'Pragmatic', philosophy: rival.philosophy ?? 'Opportunist', opponentStyle: opponent.style, intent: rival.strategy?.intent, grudgeIntensity: grudge?.intensity ?? 0, dossier: dossier, now: state.absoluteWeek ?? state.week, competence: rival.owner.competence }
-  );
+  return aiPlanForWarrior({
+    w: w,
+    personality: rival.owner.personality ?? 'Pragmatic',
+    philosophy: rival.philosophy ?? 'Opportunist',
+    opponentStyle: opponent.style,
+    intent: rival.strategy?.intent,
+    grudgeIntensity: grudge?.intensity ?? 0,
+    dossier: dossier,
+    now: state.absoluteWeek ?? state.week,
+    competence: rival.owner.competence,
+  });
 }
 
 /** Owners who scout well also deceive well — their committed plans are decoys. */

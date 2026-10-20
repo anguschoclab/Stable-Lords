@@ -49,15 +49,20 @@ function addTournamentParticipants(
       );
       return (
         warrior ||
-        makeWarrior({ id: id as WarriorId, name: `Warrior ${id}`, style: FightingStyle.StrikingAttack, attrs: {
-          ST: 10,
-          CN: 10,
-          SZ: 10,
-          WT: 10,
-          WL: 10,
-          SP: 10,
-          DF: 10,
-        } })
+        makeWarrior({
+          id: id as WarriorId,
+          name: `Warrior ${id}`,
+          style: FightingStyle.StrikingAttack,
+          attrs: {
+            ST: 10,
+            CN: 10,
+            SZ: 10,
+            WT: 10,
+            WL: 10,
+            SP: 10,
+            DF: 10,
+          },
+        })
       );
     })
     .filter((w): w is Warrior => w !== undefined);
@@ -121,14 +126,22 @@ describe('PromoterPass', () => {
 
     it('should apply +20% purse when both warriors have fame > 75 for Flashy promoters', () => {
       // Add high-fame warriors
-      const highFameWarrior1 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Famous Fighter 1', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 100 } }
-      );
+      const highFameWarrior1 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Famous Fighter 1',
+        style: FightingStyle.LungingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 100 },
+      });
       highFameWarrior1.id = 'high_fame_1' as WarriorId;
 
-      const highFameWarrior2 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Famous Fighter 2', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 100 } }
-      );
+      const highFameWarrior2 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Famous Fighter 2',
+        style: FightingStyle.LungingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 100 },
+      });
       highFameWarrior2.id = 'high_fame_2' as WarriorId;
 
       state.roster = [...state.roster, highFameWarrior1, highFameWarrior2];
@@ -215,13 +228,23 @@ describe('PromoterPass', () => {
 
     it('should increase hype by 10% for Honorable promoters when fame difference < 50', () => {
       // Create warriors with similar fame
-      const warrior1 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Honor Warrior 1', style: FightingStyle.StrikingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 100 } }
-      );
+      const warrior1 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Honor Warrior 1',
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 100 },
+      });
       warrior1.id = 'honor_warrior_1' as WarriorId;
 
       const warrior2 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Honor Warrior 2', style: FightingStyle.StrikingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 120 } } // Only 20 difference
+        {
+          id: generateId(undefined, 'warrior') as WarriorId,
+          name: 'Honor Warrior 2',
+          style: FightingStyle.StrikingAttack,
+          attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+          overrides: { fame: 120 },
+        } // Only 20 difference
       );
       warrior2.id = 'honor_warrior_2' as WarriorId;
 
@@ -250,15 +273,23 @@ describe('PromoterPass', () => {
 
     it('should increase hype by 25 for Sadistic promoters with high-kill warriors', () => {
       // Create warrior with kills
-      const killer = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Killer', style: FightingStyle.BashingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 50 } }
-      );
+      const killer = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Killer',
+        style: FightingStyle.BashingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 50 },
+      });
       killer.id = 'killer_warrior' as WarriorId;
       killer.career.kills = 5;
 
-      const victim = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Victim', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-      );
+      const victim = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Victim',
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: 50 },
+      });
       victim.id = 'victim_warrior' as WarriorId;
 
       state.roster = [...state.roster, killer, victim];
@@ -285,9 +316,13 @@ describe('PromoterPass', () => {
     });
 
     it('should increase hype by 15 for Flashy promoters when warriors have fame > 100', () => {
-      const famousWarrior = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Famous Fighter', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 150 } }
-      );
+      const famousWarrior = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Famous Fighter',
+        style: FightingStyle.LungingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 150 },
+      });
       famousWarrior.id = 'famous_warrior' as WarriorId;
 
       state.roster = [...state.roster, famousWarrior];
@@ -445,9 +480,13 @@ describe('PromoterPass', () => {
   describe('Sadistic promoter injury-risk matching', () => {
     it('should prefer injury-risk matchups for Sadistic promoters', () => {
       // Create injured warrior
-      const injuredWarrior = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Injured Fighter', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-      );
+      const injuredWarrior = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Injured Fighter',
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: 50 },
+      });
       injuredWarrior.id = 'injured_warrior' as WarriorId;
       injuredWarrior.injuries = [
         {
@@ -493,14 +532,22 @@ describe('PromoterPass', () => {
   describe('Flashy promoter showy-style matching', () => {
     it('should prefer showy styles (Lunging, AimedBlow, ParryLunge) for Flashy promoters', () => {
       // Create warriors with showy styles
-      const showyWarrior1 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Showy 1', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 80 } }
-      );
+      const showyWarrior1 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Showy 1',
+        style: FightingStyle.LungingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 80 },
+      });
       showyWarrior1.id = 'showy_1' as WarriorId;
 
-      const showyWarrior2 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Showy 2', style: FightingStyle.AimedBlow, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 80 } }
-      );
+      const showyWarrior2 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Showy 2',
+        style: FightingStyle.AimedBlow,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 80 },
+      });
       showyWarrior2.id = 'showy_2' as WarriorId;
 
       state.roster = [...state.roster, showyWarrior1, showyWarrior2];
@@ -519,14 +566,22 @@ describe('PromoterPass', () => {
 
     it('should apply +10% hype when both warriors have showy styles', () => {
       // Create two showy warriors
-      const showy1 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Showy A', style: FightingStyle.LungingAttack, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 80 } }
-      );
+      const showy1 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Showy A',
+        style: FightingStyle.LungingAttack,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 80 },
+      });
       showy1.id = 'showy_a' as WarriorId;
 
-      const showy2 = makeWarrior(
-        { id: generateId(undefined, 'warrior') as WarriorId, name: 'Showy B', style: FightingStyle.AimedBlow, attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, overrides: { fame: 80 } }
-      );
+      const showy2 = makeWarrior({
+        id: generateId(undefined, 'warrior') as WarriorId,
+        name: 'Showy B',
+        style: FightingStyle.AimedBlow,
+        attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+        overrides: { fame: 80 },
+      });
       showy2.id = 'showy_b' as WarriorId;
 
       state.roster = [...state.roster, showy1, showy2];
@@ -749,9 +804,13 @@ describe('Score-window matching', () => {
     scores: { id: string; score: number; style?: FightingStyle }[]
   ): GameState {
     const warriors: Warrior[] = scores.map((s) => {
-      const w = makeWarrior(
-        { id: s.id as WarriorId, name: `Warrior ${s.id}`, style: s.style ?? FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: s.score } }
-      );
+      const w = makeWarrior({
+        id: s.id as WarriorId,
+        name: `Warrior ${s.id}`,
+        style: s.style ?? FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: s.score },
+      });
       w.id = s.id as WarriorId;
       return w;
     });
@@ -853,9 +912,13 @@ describe('Edge cases for optimized matching', () => {
       meta: { gameName: '', version: '', createdAt: '' },
       week: 5,
       roster: [
-        makeWarrior(
-          { id: 'solo' as WarriorId, name: 'Solo', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-        ),
+        makeWarrior({
+          id: 'solo' as WarriorId,
+          name: 'Solo',
+          style: FightingStyle.StrikingAttack,
+          attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          overrides: { fame: 50 },
+        }),
       ],
       rivals: [],
       promoters: {
@@ -882,9 +945,13 @@ describe('Edge cases for optimized matching', () => {
     const realmRankings: Record<string, any> = {};
     for (let i = 0; i < 500; i++) {
       const id = `w_${i}`;
-      const w = makeWarrior(
-        { id: id as WarriorId, name: `Warrior ${i}`, style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 + (i % 20) * 5 } }
-      );
+      const w = makeWarrior({
+        id: id as WarriorId,
+        name: `Warrior ${i}`,
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: 50 + (i % 20) * 5 },
+      });
       w.id = id as WarriorId;
       warriors.push(w);
       realmRankings[id] = { overallRank: i + 1, classRank: 1, compositeScore: 50 + (i % 20) * 5 };
@@ -926,9 +993,13 @@ describe('PromoterPass — eligibility gating', () => {
   });
 
   it('excludes resting warriors from generated offers', () => {
-    const restingWarrior = makeWarrior(
-      { id: generateId(undefined, 'warrior') as WarriorId, name: 'Resting Fighter', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-    );
+    const restingWarrior = makeWarrior({
+      id: generateId(undefined, 'warrior') as WarriorId,
+      name: 'Resting Fighter',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: { fame: 50 },
+    });
     restingWarrior.id = 'resting_warrior' as WarriorId;
     state.roster = [...state.roster, restingWarrior];
     state.restStates = [{ warriorId: 'resting_warrior' as WarriorId, restUntilWeek: 999 }];
@@ -945,9 +1016,13 @@ describe('PromoterPass — eligibility gating', () => {
   });
 
   it('excludes severely injured warriors from generated offers', () => {
-    const injuredWarrior = makeWarrior(
-      { id: generateId(undefined, 'warrior') as WarriorId, name: 'Injured Fighter', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-    );
+    const injuredWarrior = makeWarrior({
+      id: generateId(undefined, 'warrior') as WarriorId,
+      name: 'Injured Fighter',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: { fame: 50 },
+    });
     injuredWarrior.id = 'severely_injured' as WarriorId;
     injuredWarrior.injuries = [
       {
@@ -974,9 +1049,13 @@ describe('PromoterPass — eligibility gating', () => {
   });
 
   it('excludes warriors with active training assignments from generated offers', () => {
-    const trainingWarrior = makeWarrior(
-      { id: generateId(undefined, 'warrior') as WarriorId, name: 'Training Fighter', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-    );
+    const trainingWarrior = makeWarrior({
+      id: generateId(undefined, 'warrior') as WarriorId,
+      name: 'Training Fighter',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: { fame: 50 },
+    });
     trainingWarrior.id = 'training_warrior' as WarriorId;
     state.roster = [...state.roster, trainingWarrior];
     state.trainingAssignments = [
@@ -1005,12 +1084,20 @@ describe('PromoterPass — eligibility gating', () => {
   });
 
   it('does not pair warriors who fought each other within the last 4 weeks', () => {
-    const w1 = makeWarrior(
-      { id: 'rematch_w1' as WarriorId, name: 'Rematch One', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-    );
-    const w2 = makeWarrior(
-      { id: 'rematch_w2' as WarriorId, name: 'Rematch Two', style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 } }
-    );
+    const w1 = makeWarrior({
+      id: 'rematch_w1' as WarriorId,
+      name: 'Rematch One',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: { fame: 50 },
+    });
+    const w2 = makeWarrior({
+      id: 'rematch_w2' as WarriorId,
+      name: 'Rematch Two',
+      style: FightingStyle.StrikingAttack,
+      attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      overrides: { fame: 50 },
+    });
     state.roster = [...state.roster, w1, w2];
     state.arenaHistory = [
       {
@@ -1126,9 +1213,13 @@ describe('PromoterPass — eligibility gating', () => {
 describe('sortedScores index alignment', () => {
   function makeStateWithWarriors(scores: { id: string; score: number }[]): GameState {
     const warriors: Warrior[] = scores.map((s) => {
-      const w = makeWarrior(
-        { id: s.id as WarriorId, name: `Warrior ${s.id}`, style: FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: s.score } }
-      );
+      const w = makeWarrior({
+        id: s.id as WarriorId,
+        name: `Warrior ${s.id}`,
+        style: FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: s.score },
+      });
       w.id = s.id as WarriorId;
       return w;
     });

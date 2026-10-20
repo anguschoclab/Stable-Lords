@@ -109,9 +109,12 @@ export function buildFTUEInitialState(
   deadWarriors.forEach((w) => usedNames.add(w.name));
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
-  const recruitPool = generateRecruitPool(
-    { count: 100, week: 1, usedNames: usedNames, rng: new SeededRNG(poolSeedValue + 888) }
-  );
+  const recruitPool = generateRecruitPool({
+    count: 100,
+    week: 1,
+    usedNames: usedNames,
+    rng: new SeededRNG(poolSeedValue + 888),
+  });
 
   const promotersArray = generatePromoters(30, poolSeedValue + 999);
   const promoters: Record<string, Promoter> = {};

@@ -1,11 +1,7 @@
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import type { GameState, BoutOffer } from '@/types/state.types';
-import type {
-  CampaignFocus,
-  StableEvalContext,
-  CombatDangerLevel,
-} from '../types';
+import type { CampaignFocus, StableEvalContext, CombatDangerLevel } from '../types';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getMatchupBonus } from '@/constants/combat/combat';
 import { acceptanceWeatherBlock } from '@/engine/ai/weatherSuitability';

@@ -39,7 +39,11 @@ const makeWarrior = (id: string, over: Partial<Warrior> = {}): Warrior =>
     ...over,
   });
 
-const makeRival = (id: string, roster: Warrior[], over: Partial<RivalStableData> = {}): RivalStableData =>
+const makeRival = (
+  id: string,
+  roster: Warrior[],
+  over: Partial<RivalStableData> = {}
+): RivalStableData =>
   fixtureRival({
     id: id as StableId,
     roster,

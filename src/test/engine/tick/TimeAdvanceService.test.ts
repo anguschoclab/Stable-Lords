@@ -310,9 +310,7 @@ describe('TimeAdvanceService methods', () => {
         name: 'Pending Cup',
         participants: [wA, wB],
         completed: false,
-        bracket: [
-          { round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id },
-        ],
+        bracket: [{ round: 1, matchIndex: 0, warriorIdA: wA.id, warriorIdD: wB.id }],
       };
       mockState.tournaments = [pending];
 

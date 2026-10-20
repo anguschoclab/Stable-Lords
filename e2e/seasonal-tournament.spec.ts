@@ -666,432 +666,440 @@ function collectCoverage(cov: YearlyCoverage, snap: StateSnap) {
 test(
   'seasonal tournaments: full game year + year-2 rollover tourney',
   { tag: '@slow' },
-  async ({
-    page,
-    isMobile,
-  }: {
-    page: Page;
-    isMobile: boolean;
-  }) => {
-  // A full year soak: 52 week advances + 4 tournament weeks.
-  test.setTimeout(1_500_000);
+  async ({ page, isMobile }: { page: Page; isMobile: boolean }) => {
+    // A full year soak: 52 week advances + 4 tournament weeks.
+    test.setTimeout(1_500_000);
 
-  const clickNavLink = async (name: string, opts: { exact?: boolean } = { exact: true }) => {
-    // A late-appearing blocking overlay (resolution modal, death modal) can
-    // still be up when we navigate — a single actionability wait would stall
-    // for the whole test timeout. Dismiss first, then retry the click.
-    for (let attempt = 0; attempt < 6; attempt++) {
-      await dismissBlockingOverlays(page);
-      try {
-        if (isMobile) {
-          await page
-            .getByRole('button', { name: 'Open navigation menu' })
-            .click({ timeout: 5_000 });
-          await page
-            .getByRole('dialog')
-            .getByRole('link', { name, exact: opts.exact })
-            .first()
-            .click({ timeout: 5_000 });
-        } else {
-          await page
-            .locator('nav')
-            .getByRole('link', { name, exact: opts.exact })
-            .first()
-            .click({ timeout: 5_000 });
+    const clickNavLink = async (name: string, opts: { exact?: boolean } = { exact: true }) => {
+      // A late-appearing blocking overlay (resolution modal, death modal) can
+      // still be up when we navigate — a single actionability wait would stall
+      // for the whole test timeout. Dismiss first, then retry the click.
+      for (let attempt = 0; attempt < 6; attempt++) {
+        await dismissBlockingOverlays(page);
+        try {
+          if (isMobile) {
+            await page
+              .getByRole('button', { name: 'Open navigation menu' })
+              .click({ timeout: 5_000 });
+            await page
+              .getByRole('dialog')
+              .getByRole('link', { name, exact: opts.exact })
+              .first()
+              .click({ timeout: 5_000 });
+          } else {
+            await page
+              .locator('nav')
+              .getByRole('link', { name, exact: opts.exact })
+              .first()
+              .click({ timeout: 5_000 });
+          }
+          return;
+        } catch {
+          /* covered by an overlay — retry */
         }
-        return;
-      } catch {
-        /* covered by an overlay — retry */
       }
-    }
-    // Final attempt without a catch so the real Playwright error surfaces.
-    if (isMobile) {
-      await page.getByRole('button', { name: 'Open navigation menu' }).click();
-      await page.getByRole('dialog').getByRole('link', { name, exact: opts.exact }).first().click();
-    } else {
-      await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
-    }
-  };
-
-  // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
-  await startNewGame(page, { owner: 'Tourney Owner', stable: 'Tourney Stable' });
-
-  await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
-    timeout: 15_000,
-  });
-  await dismissBlockingOverlays(page);
-
-  // ── 4. Play one tournament week through the UI ──────────────────────────
-  // Plays the active tier's tournament to completion: prep dialog →
-  // EXECUTE NEXT BOUT (round 1) → ADVANCE DAY ticks (rounds 2-6). Verifies
-  // champion + archive entry + prize payout, then returns control while the
-  // week still has day advances remaining.
-  const runTournamentWeek = async (weekSnap: StateSnap) => {
-    const activeId = weekSnap.activeTournamentId;
-    const tourneyWeek = weekSnap.week;
-    const tourneySeason = weekSnap.season;
-    if (!activeId) throw new Error('tournament week without activeTournamentId');
-
-    await clickNavLink('Tournaments');
-    await page.waitForTimeout(800);
-    await dismissBlockingOverlays(page);
-
-    // The prep dialog auto-opens when the bracket is untouched; fall back to
-    // the manual opener if it didn't. Escape clears the dialog if it opened
-    // for a leftover (already-generated but unplayed) tier.
-    const initiateBtn = page.getByRole('button', { name: /INITIATE SEASON CAMPAIGN/ });
-    try {
-      await initiateBtn.waitFor({ state: 'visible', timeout: 5_000 });
-      await initiateBtn.click();
-    } catch {
-      const openPrep = page.getByRole('button', { name: /OPEN PREPARATION CONSOLE/ });
-      if (await openPrep.isVisible().catch(() => false)) {
-        await openPrep.click();
-        await initiateBtn.waitFor({ state: 'visible', timeout: 5_000 });
-        await initiateBtn.click();
+      // Final attempt without a catch so the real Playwright error surfaces.
+      if (isMobile) {
+        await page.getByRole('button', { name: 'Open navigation menu' }).click();
+        await page
+          .getByRole('dialog')
+          .getByRole('link', { name, exact: opts.exact })
+          .first()
+          .click();
       } else {
-        await page.keyboard.press('Escape').catch(() => undefined);
+        await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
       }
-    }
-
-    // The active manifest must be present with a live bracket.
-    await expect(page.getByText('Tournament Active')).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText('LIVE PHASE')).toBeVisible();
-
-    const executeBoutBtn = page.getByRole('button', { name: /EXECUTE NEXT BOUT/ });
-    await expect(executeBoutBtn).toBeVisible({ timeout: 10_000 });
-    await executeBoutBtn.click();
-
-    const tourneyProgress = async () => {
-      const t = (await snapshotState(page)).tournaments.find((x) => x.id === activeId);
-      return {
-        done: t?.completed ?? false,
-        bouts: (t?.bracket ?? []).filter((b) => b.winner).length,
-      };
     };
 
-    // Round 1 resolves through the manifest button (32 bouts for a 64-slot bracket).
-    await expect
-      .poll(async () => (await tourneyProgress()).bouts, {
-        timeout: 60_000,
-        message: 'round 1 should resolve via EXECUTE NEXT BOUT',
-      })
-      .toBeGreaterThan(0);
+    // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────
+    await startNewGame(page, { owner: 'Tourney Owner', stable: 'Tourney Stable' });
 
-    // Remaining rounds resolve via ADVANCE DAY — the natural tournament-week
-    // flow. Each day must move the bracket forward or complete it.
-    let preFinalSnap: StateSnap | undefined;
-    for (let day = 0; day < 6; day++) {
-      await expect
-        .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
-        .not.toBe('busy');
-
-      const prog = await tourneyProgress();
-      if (prog.done) break;
-
-      const label = await advanceLabel(page, clickNavLink);
-      if (!/ADVANCE DAY/.test(label)) break; // week rolled over unexpectedly
-
-      // Snapshot before each day — the last iteration captures the pre-prizes
-      // state right before the tournament completes.
-      preFinalSnap = await snapshotState(page);
-      await clickAdvance(page, clickNavLink);
-
-      // A day tick resolves the current round and pops the resolution overlay.
-      await expect
-        .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
-        .not.toBe('busy');
-
-      await expect
-        .poll(
-          async () => {
-            const p = await tourneyProgress();
-            return p.done ? prog.bouts + 1 : p.bouts;
-          },
-          { timeout: 30_000, message: 'tournament bracket should advance each day' }
-        )
-        .toBeGreaterThan(prog.bouts);
-    }
-
-    await expect.poll(async () => (await tourneyProgress()).done, { timeout: 60_000 }).toBe(true);
-
-    // ── Champion + archives verification ──────────────────────────────────
-    // The manifest may already show the next tier's tournament, so verify
-    // through the archives + live state.
-    await clickNavLink('Tournaments');
-    await page.waitForTimeout(800);
+    await page.waitForSelector(isMobile ? 'button[aria-label="Open navigation menu"]' : 'nav', {
+      timeout: 15_000,
+    });
     await dismissBlockingOverlays(page);
-    // The prep dialog auto-opens for the leftover unplayed tier — dismiss it.
-    await page.keyboard.press('Escape').catch(() => undefined);
 
-    const postSnap = await snapshotState(page);
-    const tourney = postSnap.tournaments.find((t) => t.id === activeId);
-    if (!tourney) throw new Error('tracked seasonal tournament missing');
-    expect(tourney.completed).toBe(true);
-    expect(tourney.champion).toBeTruthy();
+    // ── 4. Play one tournament week through the UI ──────────────────────────
+    // Plays the active tier's tournament to completion: prep dialog →
+    // EXECUTE NEXT BOUT (round 1) → ADVANCE DAY ticks (rounds 2-6). Verifies
+    // champion + archive entry + prize payout, then returns control while the
+    // week still has day advances remaining.
+    const runTournamentWeek = async (weekSnap: StateSnap) => {
+      const activeId = weekSnap.activeTournamentId;
+      const tourneyWeek = weekSnap.week;
+      const tourneySeason = weekSnap.season;
+      if (!activeId) throw new Error('tournament week without activeTournamentId');
 
-    await expect(page.getByText('Champion Archives').first()).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(new RegExp(`Wk ${tourneyWeek}`)).first()).toBeVisible();
-    if (tourney.champion) {
-      await expect(page.getByText(tourney.champion).first()).toBeVisible();
+      await clickNavLink('Tournaments');
+      await page.waitForTimeout(800);
+      await dismissBlockingOverlays(page);
+
+      // The prep dialog auto-opens when the bracket is untouched; fall back to
+      // the manual opener if it didn't. Escape clears the dialog if it opened
+      // for a leftover (already-generated but unplayed) tier.
+      const initiateBtn = page.getByRole('button', { name: /INITIATE SEASON CAMPAIGN/ });
+      try {
+        await initiateBtn.waitFor({ state: 'visible', timeout: 5_000 });
+        await initiateBtn.click();
+      } catch {
+        const openPrep = page.getByRole('button', { name: /OPEN PREPARATION CONSOLE/ });
+        if (await openPrep.isVisible().catch(() => false)) {
+          await openPrep.click();
+          await initiateBtn.waitFor({ state: 'visible', timeout: 5_000 });
+          await initiateBtn.click();
+        } else {
+          await page.keyboard.press('Escape').catch(() => undefined);
+        }
+      }
+
+      // The active manifest must be present with a live bracket.
+      await expect(page.getByText('Tournament Active')).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByText('LIVE PHASE')).toBeVisible();
+
+      const executeBoutBtn = page.getByRole('button', { name: /EXECUTE NEXT BOUT/ });
+      await expect(executeBoutBtn).toBeVisible({ timeout: 10_000 });
+      await executeBoutBtn.click();
+
+      const tourneyProgress = async () => {
+        const t = (await snapshotState(page)).tournaments.find((x) => x.id === activeId);
+        return {
+          done: t?.completed ?? false,
+          bouts: (t?.bracket ?? []).filter((b) => b.winner).length,
+        };
+      };
+
+      // Round 1 resolves through the manifest button (32 bouts for a 64-slot bracket).
+      await expect
+        .poll(async () => (await tourneyProgress()).bouts, {
+          timeout: 60_000,
+          message: 'round 1 should resolve via EXECUTE NEXT BOUT',
+        })
+        .toBeGreaterThan(0);
+
+      // Remaining rounds resolve via ADVANCE DAY — the natural tournament-week
+      // flow. Each day must move the bracket forward or complete it.
+      let preFinalSnap: StateSnap | undefined;
+      for (let day = 0; day < 6; day++) {
+        await expect
+          .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
+          .not.toBe('busy');
+
+        const prog = await tourneyProgress();
+        if (prog.done) break;
+
+        const label = await advanceLabel(page, clickNavLink);
+        if (!/ADVANCE DAY/.test(label)) break; // week rolled over unexpectedly
+
+        // Snapshot before each day — the last iteration captures the pre-prizes
+        // state right before the tournament completes.
+        preFinalSnap = await snapshotState(page);
+        await clickAdvance(page, clickNavLink);
+
+        // A day tick resolves the current round and pops the resolution overlay.
+        await expect
+          .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
+          .not.toBe('busy');
+
+        await expect
+          .poll(
+            async () => {
+              const p = await tourneyProgress();
+              return p.done ? prog.bouts + 1 : p.bouts;
+            },
+            { timeout: 30_000, message: 'tournament bracket should advance each day' }
+          )
+          .toBeGreaterThan(prog.bouts);
+      }
+
+      await expect.poll(async () => (await tourneyProgress()).done, { timeout: 60_000 }).toBe(true);
+
+      // ── Champion + archives verification ──────────────────────────────────
+      // The manifest may already show the next tier's tournament, so verify
+      // through the archives + live state.
+      await clickNavLink('Tournaments');
+      await page.waitForTimeout(800);
+      await dismissBlockingOverlays(page);
+      // The prep dialog auto-opens for the leftover unplayed tier — dismiss it.
+      await page.keyboard.press('Escape').catch(() => undefined);
+
+      const postSnap = await snapshotState(page);
+      const tourney = postSnap.tournaments.find((t) => t.id === activeId);
+      if (!tourney) throw new Error('tracked seasonal tournament missing');
+      expect(tourney.completed).toBe(true);
+      expect(tourney.champion).toBeTruthy();
+
+      await expect(page.getByText('Champion Archives').first()).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByText(new RegExp(`Wk ${tourneyWeek}`)).first()).toBeVisible();
+      if (tourney.champion) {
+        await expect(page.getByText(tourney.champion).first()).toBeVisible();
+      }
+
+      if (!preFinalSnap) throw new Error('pre-final snapshot missing');
+      verifyPrizePayout(preFinalSnap, postSnap, tourney);
+
+      return { id: activeId, week: tourneyWeek, season: tourneySeason, year: weekSnap.year };
+    };
+
+    // Week-52 Grand Championship: champions-only bracket resolved purely by
+    // day ticks (no player prep manifest), crowned via recordGrandChampions —
+    // a separate award path from tier purses, so prize verification is skipped.
+    const runChampionsWeek = async (weekSnap: StateSnap) => {
+      const activeId = weekSnap.activeTournamentId;
+      if (!activeId) throw new Error('champions week without activeTournamentId');
+
+      for (let day = 0; day < 8; day++) {
+        await expect
+          .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
+          .not.toBe('busy');
+        const t = (await snapshotState(page)).tournaments.find((x) => x.id === activeId);
+        if (t?.completed) break;
+        const label = await advanceLabel(page, clickNavLink);
+        if (!/ADVANCE DAY/.test(label)) break; // week rolled over
+        await clickAdvance(page, clickNavLink);
+        await expect
+          .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
+          .not.toBe('busy');
+      }
+
+      const snap = await snapshotState(page);
+      const t = snap.tournaments.find((x) => x.id === activeId);
+      expect(t?.completed, 'champions bracket should complete').toBe(true);
+      expect(t?.champion, 'champions bracket should crown a champion').toBeTruthy();
+      return { id: activeId, week: weekSnap.week, season: weekSnap.season, year: weekSnap.year };
+    };
+
+    // ── 5. Year loop — every week of year 1 ─────────────────────────────────
+    // SEASONAL_TOURNAMENT_WEEKS are 10/20/30/42 (Spring/Summer/Fall/Winter
+    // respectively — seasons span weeks 1–13/14–26/27–39/40–52) plus the
+    // champions-only Grand Championship at week 52. The loop ends when the
+    // year rolls over to Year 2 · Week 1.
+    const CHAMPIONS_WEEK = 52;
+    const EXPECTED_SEASON: Record<number, string> = {
+      10: 'Spring',
+      20: 'Summer',
+      30: 'Fall',
+      42: 'Winter',
+      [CHAMPIONS_WEEK]: 'Winter',
+    };
+    const completedTourneys: { id: string; week: number; season?: string; year: number }[] = [];
+    let yearTwoStartSnap: StateSnap | undefined;
+
+    // World-systems coverage — merged weekly across the whole soak.
+    const cov = makeCoverage();
+    const baselineSnap = await snapshotState(page);
+    collectCoverage(cov, baselineSnap);
+    for (const ids of Object.values(baselineSnap.coverage.rivalRosterIds)) {
+      for (const id of ids) cov.baselineRosterIds.add(id);
     }
 
-    if (!preFinalSnap) throw new Error('pre-final snapshot missing');
-    verifyPrizePayout(preFinalSnap, postSnap, tourney);
-
-    return { id: activeId, week: tourneyWeek, season: tourneySeason, year: weekSnap.year };
-  };
-
-  // Week-52 Grand Championship: champions-only bracket resolved purely by
-  // day ticks (no player prep manifest), crowned via recordGrandChampions —
-  // a separate award path from tier purses, so prize verification is skipped.
-  const runChampionsWeek = async (weekSnap: StateSnap) => {
-    const activeId = weekSnap.activeTournamentId;
-    if (!activeId) throw new Error('champions week without activeTournamentId');
-
-    for (let day = 0; day < 8; day++) {
+    for (let guard = 0; guard < 160; guard++) {
+      // Wait until any in-flight resolution finishes and overlays are clear.
       await expect
         .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
         .not.toBe('busy');
-      const t = (await snapshotState(page)).tournaments.find((x) => x.id === activeId);
-      if (t?.completed) break;
+
+      const snap = await snapshotState(page);
+      collectCoverage(cov, snap);
+
+      // Capture the state right after the year rollover — every year-1
+      // tournament (played or leftover tier) must already be completed.
+      if (snap.year === 2 && snap.week === 1 && !yearTwoStartSnap) {
+        yearTwoStartSnap = snap;
+      }
+
+      // Done once year 2's spring tournament week (10) has rolled over.
+      if (snap.year === 2 && snap.week > 10) break;
+
+      const active = snap.tournaments.find((t) => t.id === snap.activeTournamentId);
+      if (snap.isTournamentWeek && active && !active.completed) {
+        // Season at each tournament week must match the quarter boundary.
+        expect(
+          snap.season,
+          `tournament week ${snap.week} should be ${EXPECTED_SEASON[snap.week]}`
+        ).toBe(EXPECTED_SEASON[snap.week]);
+        completedTourneys.push(
+          snap.week === CHAMPIONS_WEEK
+            ? await runChampionsWeek(snap)
+            : await runTournamentWeek(snap)
+        );
+        continue;
+      }
+
       const label = await advanceLabel(page, clickNavLink);
-      if (!/ADVANCE DAY/.test(label)) break; // week rolled over
       await clickAdvance(page, clickNavLink);
+
+      // Confirm the tick rolled over — the poll keeps dismissing resolution /
+      // death overlays until the header shows the next week (or tournament day).
       await expect
         .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
         .not.toBe('busy');
     }
 
-    const snap = await snapshotState(page);
-    const t = snap.tournaments.find((x) => x.id === activeId);
-    expect(t?.completed, 'champions bracket should complete').toBe(true);
-    expect(t?.champion, 'champions bracket should crown a champion').toBeTruthy();
-    return { id: activeId, week: weekSnap.week, season: weekSnap.season, year: weekSnap.year };
-  };
+    // ── 6. Year rollover assertions ─────────────────────────────────────────
+    if (!yearTwoStartSnap) throw new Error('year-2 rollover snapshot missing');
+    expect(yearTwoStartSnap.year, 'year should increment at the 52→1 boundary').toBe(2);
+    expect(yearTwoStartSnap.week, 'week should wrap to 1').toBe(1);
+    expect(yearTwoStartSnap.day, 'day should reset').toBe(0);
+    expect(yearTwoStartSnap.isTournamentWeek, 'tournament-week flag should clear').toBe(false);
+    expect(yearTwoStartSnap.season, 'season should wrap back to Spring').toBe('Spring');
 
-  // ── 5. Year loop — every week of year 1 ─────────────────────────────────
-  // SEASONAL_TOURNAMENT_WEEKS are 10/20/30/42 (Spring/Summer/Fall/Winter
-  // respectively — seasons span weeks 1–13/14–26/27–39/40–52) plus the
-  // champions-only Grand Championship at week 52. The loop ends when the
-  // year rolls over to Year 2 · Week 1.
-  const CHAMPIONS_WEEK = 52;
-  const EXPECTED_SEASON: Record<number, string> = {
-    10: 'Spring',
-    20: 'Summer',
-    30: 'Fall',
-    42: 'Winter',
-    [CHAMPIONS_WEEK]: 'Winter',
-  };
-  const completedTourneys: { id: string; week: number; season?: string; year: number }[] = [];
-  let yearTwoStartSnap: StateSnap | undefined;
+    // The week-52 rollover must have resolved every year-1 bracket — the 16
+    // seasonal tournaments (4 tiers × 4 seasonal weeks) always generate, while
+    // the champions-only Grand Championship is cancelled when fewer than
+    // MIN_FIELD arena crowns are held that year.
+    const champsRan = yearTwoStartSnap.tournaments.some((t) => t.tierId === 'Champions');
+    expect(
+      yearTwoStartSnap.tournaments.length,
+      'expected 16 year-1 tournaments (+1 when the champions bracket fields enough crowns)'
+    ).toBe(champsRan ? 17 : 16);
+    expect(
+      yearTwoStartSnap.tournaments.every((t) => t.completed),
+      'no stale incomplete tournament may survive the year boundary'
+    ).toBe(true);
 
-  // World-systems coverage — merged weekly across the whole soak.
-  const cov = makeCoverage();
-  const baselineSnap = await snapshotState(page);
-  collectCoverage(cov, baselineSnap);
-  for (const ids of Object.values(baselineSnap.coverage.rivalRosterIds)) {
-    for (const id of ids) cov.baselineRosterIds.add(id);
-  }
+    // Tournament ids must be unique across the whole run — year 2 regenerates
+    // the same season+week slots, so collisions would break find-by-id.
+    const endSnap = await snapshotState(page);
+    collectCoverage(cov, endSnap);
+    const allIds = endSnap.tournaments.map((t) => t.id);
+    expect(new Set(allIds).size, 'tournament ids must be unique across years').toBe(allIds.length);
 
-  for (let guard = 0; guard < 160; guard++) {
-    // Wait until any in-flight resolution finishes and overlays are clear.
-    await expect
-      .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 120_000 })
-      .not.toBe('busy');
+    // One played tournament per seasonal week in year 1 plus the week-52
+    // champions bracket (when it ran), plus year 2's spring tournament proving
+    // the new-year brackets resolve.
+    const yearOneWeeks = [10, 20, 30, 42, ...(champsRan ? [52] : [])];
+    expect(
+      completedTourneys.length,
+      `expected ${yearOneWeeks.length + 1} tournaments (${yearOneWeeks.length} in year 1 + year-2 spring)`
+    ).toBe(yearOneWeeks.length + 1);
+    expect(
+      completedTourneys
+        .filter((t) => t.year === 1)
+        .map((t) => t.week)
+        .sort((a, b) => a - b)
+    ).toEqual(yearOneWeeks);
+    expect(completedTourneys.filter((t) => t.year === 1).map((t) => t.season)).toEqual([
+      'Spring',
+      'Summer',
+      'Fall',
+      'Winter',
+      ...(champsRan ? ['Winter'] : []),
+    ]);
+    expect(completedTourneys.filter((t) => t.year === 2).map((t) => t.week)).toEqual([10]);
 
-    const snap = await snapshotState(page);
-    collectCoverage(cov, snap);
-
-    // Capture the state right after the year rollover — every year-1
-    // tournament (played or leftover tier) must already be completed.
-    if (snap.year === 2 && snap.week === 1 && !yearTwoStartSnap) {
-      yearTwoStartSnap = snap;
+    for (const t of completedTourneys) {
+      const tourney = endSnap.tournaments.find((x) => x.id === t.id);
+      expect(tourney?.completed, `${t.id} should be completed`).toBe(true);
+      expect(tourney?.champion, `${t.id} should have a champion`).toBeTruthy();
     }
 
-    // Done once year 2's spring tournament week (10) has rolled over.
-    if (snap.year === 2 && snap.week > 10) break;
+    // End state: year 2, week 11 — past year 2's tournament week, still in
+    // the Spring season window (weeks 1–13).
+    expect(endSnap.year).toBe(2);
+    expect(endSnap.week).toBe(11);
+    expect(endSnap.isTournamentWeek).toBe(false);
+    expect(endSnap.season).toBe('Spring');
 
-    const active = snap.tournaments.find((t) => t.id === snap.activeTournamentId);
-    if (snap.isTournamentWeek && active && !active.completed) {
-      // Season at each tournament week must match the quarter boundary.
-      expect(
-        snap.season,
-        `tournament week ${snap.week} should be ${EXPECTED_SEASON[snap.week]}`
-      ).toBe(EXPECTED_SEASON[snap.week]);
-      completedTourneys.push(
-        snap.week === CHAMPIONS_WEEK ? await runChampionsWeek(snap) : await runTournamentWeek(snap)
-      );
-      continue;
-    }
-
-    const label = await advanceLabel(page, clickNavLink);
-    await clickAdvance(page, clickNavLink);
-
-    // Confirm the tick rolled over — the poll keeps dismissing resolution /
-    // death overlays until the header shows the next week (or tournament day).
+    // Header shows the settled week-advance state.
     await expect
-      .poll(() => progressedLabel(page, clickNavLink, label), { timeout: 120_000 })
-      .not.toBe('busy');
-  }
+      .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 60_000 })
+      .toMatch(/EXECUTE WEEK 11/);
 
-  // ── 6. Year rollover assertions ─────────────────────────────────────────
-  if (!yearTwoStartSnap) throw new Error('year-2 rollover snapshot missing');
-  expect(yearTwoStartSnap.year, 'year should increment at the 52→1 boundary').toBe(2);
-  expect(yearTwoStartSnap.week, 'week should wrap to 1').toBe(1);
-  expect(yearTwoStartSnap.day, 'day should reset').toBe(0);
-  expect(yearTwoStartSnap.isTournamentWeek, 'tournament-week flag should clear').toBe(false);
-  expect(yearTwoStartSnap.season, 'season should wrap back to Spring').toBe('Spring');
-
-  // The week-52 rollover must have resolved every year-1 bracket — the 16
-  // seasonal tournaments (4 tiers × 4 seasonal weeks) always generate, while
-  // the champions-only Grand Championship is cancelled when fewer than
-  // MIN_FIELD arena crowns are held that year.
-  const champsRan = yearTwoStartSnap.tournaments.some((t) => t.tierId === 'Champions');
-  expect(
-    yearTwoStartSnap.tournaments.length,
-    'expected 16 year-1 tournaments (+1 when the champions bracket fields enough crowns)'
-  ).toBe(champsRan ? 17 : 16);
-  expect(
-    yearTwoStartSnap.tournaments.every((t) => t.completed),
-    'no stale incomplete tournament may survive the year boundary'
-  ).toBe(true);
-
-  // Tournament ids must be unique across the whole run — year 2 regenerates
-  // the same season+week slots, so collisions would break find-by-id.
-  const endSnap = await snapshotState(page);
-  collectCoverage(cov, endSnap);
-  const allIds = endSnap.tournaments.map((t) => t.id);
-  expect(new Set(allIds).size, 'tournament ids must be unique across years').toBe(allIds.length);
-
-  // One played tournament per seasonal week in year 1 plus the week-52
-  // champions bracket (when it ran), plus year 2's spring tournament proving
-  // the new-year brackets resolve.
-  const yearOneWeeks = [10, 20, 30, 42, ...(champsRan ? [52] : [])];
-  expect(
-    completedTourneys.length,
-    `expected ${yearOneWeeks.length + 1} tournaments (${yearOneWeeks.length} in year 1 + year-2 spring)`
-  ).toBe(yearOneWeeks.length + 1);
-  expect(
-    completedTourneys
-      .filter((t) => t.year === 1)
-      .map((t) => t.week)
-      .sort((a, b) => a - b)
-  ).toEqual(yearOneWeeks);
-  expect(completedTourneys.filter((t) => t.year === 1).map((t) => t.season)).toEqual([
-    'Spring',
-    'Summer',
-    'Fall',
-    'Winter',
-    ...(champsRan ? ['Winter'] : []),
-  ]);
-  expect(completedTourneys.filter((t) => t.year === 2).map((t) => t.week)).toEqual([10]);
-
-  for (const t of completedTourneys) {
-    const tourney = endSnap.tournaments.find((x) => x.id === t.id);
-    expect(tourney?.completed, `${t.id} should be completed`).toBe(true);
-    expect(tourney?.champion, `${t.id} should have a champion`).toBeTruthy();
-  }
-
-  // End state: year 2, week 11 — past year 2's tournament week, still in
-  // the Spring season window (weeks 1–13).
-  expect(endSnap.year).toBe(2);
-  expect(endSnap.week).toBe(11);
-  expect(endSnap.isTournamentWeek).toBe(false);
-  expect(endSnap.season).toBe('Spring');
-
-  // Header shows the settled week-advance state.
-  await expect
-    .poll(() => settledAdvanceLabel(page, clickNavLink), { timeout: 60_000 })
-    .toMatch(/EXECUTE WEEK 11/);
-
-  // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
-  const killRate = cov.peakKills / Math.max(1, cov.peakBouts);
-  const outcomeStr = [...cov.outcomes.entries()].map(([k, v]) => `${k}:${v}`).join(' ');
-  const newRosterIds = [...cov.rivalWarriorIds.values()]
-    .flatMap((s) => [...s])
-    .filter((id) => !cov.baselineRosterIds.has(id));
-  const totalRosterNow = [...cov.rivalRosterSize.values()].reduce((a, b) => a + b, 0);
-  console.log(
-    `[e2e] coverage: bouts=${cov.peakBouts} kills=${cov.peakKills} ` +
-      `(${(killRate * 100).toFixed(1)}%) retirements=${cov.peakRetirements} ` +
-      `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]
-        .map(([a, n]) => `${a}:${n}`)
-        .join(',')} events=${[...cov.eventTitles].join('|')} ` +
-      `offseason=${cov.offseasonAnnounced} ` +
-      `offers=${cov.offerIds.size} promoters=${cov.offerPromoters.size} ` +
-      `aiTypes=${[...cov.aiEventTypes].join(',')} aiCauses=${[...cov.aiCauses].join(',')} ` +
-      `ledgerCats=${[...cov.aiLedgerCategories].join(',')} ` +
-      `newRosterIds=${newRosterIds.length} rosterTotal=${totalRosterNow} ` +
-      `graveyard=${cov.graveyardIds.size} retired=${cov.retiredIds.size} ` +
-      `awards=${cov.awards.length} hof=${cov.hallOfFameCount} recruitPool≥${cov.minRecruitPool}`
-  );
-
-  // Arena diversity: a full year of bouts must rotate venues, not pin one.
-  expect(cov.fightIds.size, 'a full year should produce hundreds of fights').toBeGreaterThan(300);
-  expect(cov.fightsMissingArena, 'every fight should record its arena').toBe(0);
-  expect(cov.arenas.size, 'multiple arenas should host bouts over a year').toBeGreaterThanOrEqual(
-    3
-  );
-
-  // Kill rate: deaths happen (permadeath is the game's stake) but stay a
-  // rare outcome — not so common the roster churn is cartoonish.
-  expect(cov.peakBouts, 'lifetimeStats.bouts should accumulate all year').toBeGreaterThan(300);
-  expect(cov.peakKills, 'a year of combat should produce kills').toBeGreaterThan(0);
-  expect(killRate, 'kill rate should stay under 15%').toBeLessThan(0.15);
-  expect(cov.graveyardIds.size, 'kills should leave graveyard entries').toBeGreaterThan(0);
-
-  // Events: the year-rollover offseason event always surfaces a newsletter
-  // item (it carries no category, so it's matched by title), and weekly
-  // EventPass rolls add 'event'-category items — which can legitimately be
-  // zero in a year once the roster empties, since 4 of 5 rolls early-return
-  // on an empty roster and only the 5%/week patron roll remains.
-  expect(
-    cov.eventTitles.size + (cov.offseasonAnnounced ? 1 : 0),
-    'seasonal/world events should trigger during the year'
-  ).toBeGreaterThanOrEqual(1);
-
-  // Promoters: bout offers are issued during the year and resolve.
-  expect(cov.offerIds.size, 'promoters should offer bouts during the year').toBeGreaterThanOrEqual(
-    1
-  );
-  expect(cov.offerPromoters.size, 'offers should come from real promoters').toBeGreaterThanOrEqual(
-    1
-  );
-
-  // End-of-year awards exist for year 1, and the hall of fame collects
-  // fight-of-the-week/tournament entries over the year.
-  expect(
-    cov.awards.filter((a) => a.year === 1).length,
-    'year-1 annual awards should be granted at rollover'
-  ).toBeGreaterThanOrEqual(1);
-  expect(
-    cov.hallOfFameCount,
-    'hall of fame should collect entries over the year'
-  ).toBeGreaterThanOrEqual(1);
-
-  // NPC AI exercised every function category, not just the noisy ones.
-  for (const t of ['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL'] as const) {
-    expect(cov.aiEventTypes.has(t), `NPC AI should produce ${t} events during a full year`).toBe(
-      true
+    // ── 7. World-systems coverage — arenas, events, mortality, AI, economy ──
+    const killRate = cov.peakKills / Math.max(1, cov.peakBouts);
+    const outcomeStr = [...cov.outcomes.entries()].map(([k, v]) => `${k}:${v}`).join(' ');
+    const newRosterIds = [...cov.rivalWarriorIds.values()]
+      .flatMap((s) => [...s])
+      .filter((id) => !cov.baselineRosterIds.has(id));
+    const totalRosterNow = [...cov.rivalRosterSize.values()].reduce((a, b) => a + b, 0);
+    console.log(
+      `[e2e] coverage: bouts=${cov.peakBouts} kills=${cov.peakKills} ` +
+        `(${(killRate * 100).toFixed(1)}%) retirements=${cov.peakRetirements} ` +
+        `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]
+          .map(([a, n]) => `${a}:${n}`)
+          .join(',')} events=${[...cov.eventTitles].join('|')} ` +
+        `offseason=${cov.offseasonAnnounced} ` +
+        `offers=${cov.offerIds.size} promoters=${cov.offerPromoters.size} ` +
+        `aiTypes=${[...cov.aiEventTypes].join(',')} aiCauses=${[...cov.aiCauses].join(',')} ` +
+        `ledgerCats=${[...cov.aiLedgerCategories].join(',')} ` +
+        `newRosterIds=${newRosterIds.length} rosterTotal=${totalRosterNow} ` +
+        `graveyard=${cov.graveyardIds.size} retired=${cov.retiredIds.size} ` +
+        `awards=${cov.awards.length} hof=${cov.hallOfFameCount} recruitPool≥${cov.minRecruitPool}`
     );
-  }
-  // Rival ledgers must carry real economic categories — prizes, upkeep,
-  // fight income at minimum.
-  for (const c of ['fight', 'upkeep', 'prize'] as const) {
-    expect(cov.aiLedgerCategories.has(c), `rival ledgers should include '${c}' entries`).toBe(true);
-  }
 
-  // Replenishment: warriors die/retire but stables restock — new ids appear
-  // on rival rosters over the year and no stable's roster collapses to zero.
-  expect(
-    newRosterIds.length,
-    'rivals should recruit new warriors during the year'
-  ).toBeGreaterThanOrEqual(1);
-  for (const [stableId, size] of cov.rivalRosterSize) {
-    expect(size, `rival stable ${stableId} roster should not be empty`).toBeGreaterThan(0);
-  }
+    // Arena diversity: a full year of bouts must rotate venues, not pin one.
+    expect(cov.fightIds.size, 'a full year should produce hundreds of fights').toBeGreaterThan(300);
+    expect(cov.fightsMissingArena, 'every fight should record its arena').toBe(0);
+    expect(cov.arenas.size, 'multiple arenas should host bouts over a year').toBeGreaterThanOrEqual(
+      3
+    );
 
-  // Final screenshot for the report.
-  await page.screenshot({ path: 'e2e/screenshots/seasonal-tournament-final.png', fullPage: false });
-});
+    // Kill rate: deaths happen (permadeath is the game's stake) but stay a
+    // rare outcome — not so common the roster churn is cartoonish.
+    expect(cov.peakBouts, 'lifetimeStats.bouts should accumulate all year').toBeGreaterThan(300);
+    expect(cov.peakKills, 'a year of combat should produce kills').toBeGreaterThan(0);
+    expect(killRate, 'kill rate should stay under 15%').toBeLessThan(0.15);
+    expect(cov.graveyardIds.size, 'kills should leave graveyard entries').toBeGreaterThan(0);
+
+    // Events: the year-rollover offseason event always surfaces a newsletter
+    // item (it carries no category, so it's matched by title), and weekly
+    // EventPass rolls add 'event'-category items — which can legitimately be
+    // zero in a year once the roster empties, since 4 of 5 rolls early-return
+    // on an empty roster and only the 5%/week patron roll remains.
+    expect(
+      cov.eventTitles.size + (cov.offseasonAnnounced ? 1 : 0),
+      'seasonal/world events should trigger during the year'
+    ).toBeGreaterThanOrEqual(1);
+
+    // Promoters: bout offers are issued during the year and resolve.
+    expect(
+      cov.offerIds.size,
+      'promoters should offer bouts during the year'
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      cov.offerPromoters.size,
+      'offers should come from real promoters'
+    ).toBeGreaterThanOrEqual(1);
+
+    // End-of-year awards exist for year 1, and the hall of fame collects
+    // fight-of-the-week/tournament entries over the year.
+    expect(
+      cov.awards.filter((a) => a.year === 1).length,
+      'year-1 annual awards should be granted at rollover'
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      cov.hallOfFameCount,
+      'hall of fame should collect entries over the year'
+    ).toBeGreaterThanOrEqual(1);
+
+    // NPC AI exercised every function category, not just the noisy ones.
+    for (const t of ['STRATEGY', 'FINANCE', 'ROSTER', 'STAFF', 'BOUT', 'INTEL'] as const) {
+      expect(cov.aiEventTypes.has(t), `NPC AI should produce ${t} events during a full year`).toBe(
+        true
+      );
+    }
+    // Rival ledgers must carry real economic categories — prizes, upkeep,
+    // fight income at minimum.
+    for (const c of ['fight', 'upkeep', 'prize'] as const) {
+      expect(cov.aiLedgerCategories.has(c), `rival ledgers should include '${c}' entries`).toBe(
+        true
+      );
+    }
+
+    // Replenishment: warriors die/retire but stables restock — new ids appear
+    // on rival rosters over the year and no stable's roster collapses to zero.
+    expect(
+      newRosterIds.length,
+      'rivals should recruit new warriors during the year'
+    ).toBeGreaterThanOrEqual(1);
+    for (const [stableId, size] of cov.rivalRosterSize) {
+      expect(size, `rival stable ${stableId} roster should not be empty`).toBeGreaterThan(0);
+    }
+
+    // Final screenshot for the report.
+    await page.screenshot({
+      path: 'e2e/screenshots/seasonal-tournament-final.png',
+      fullPage: false,
+    });
+  }
+);

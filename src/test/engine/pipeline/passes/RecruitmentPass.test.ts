@@ -23,7 +23,11 @@ describe('runRecruitmentPass', () => {
   });
 
   const makeMockWarrior = (id: string, style: string = 'Brawler', extras = {}) => ({
-    id, name: `W_${id}`, style, level: 1, ...extras
+    id,
+    name: `W_${id}`,
+    style,
+    level: 1,
+    ...extras,
   });
 
   it('freezes pool on Blizzard weather without refreshing', () => {
@@ -37,7 +41,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toEqual([mockWarrior]);
@@ -57,7 +61,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toEqual([mockWarrior]);
@@ -81,7 +85,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
@@ -112,7 +116,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
@@ -136,14 +140,14 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
     expect(impact.recruitPool).toHaveLength(4); // 1 normal + 3 exceptional
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledTimes(3);
     expect(recruitmentModule.generateRecruit).toHaveBeenCalledWith(
-        expect.objectContaining({ forceTier: 'Exceptional' })
+      expect.objectContaining({ forceTier: 'Exceptional' })
     );
   });
 
@@ -151,7 +155,10 @@ describe('runRecruitmentPass', () => {
     const mockWarrior = makeMockWarrior('w1', 'Brawler');
     const mockWarrior2 = makeMockWarrior('w2', 'Rogue');
 
-    vi.mocked(recruitmentModule.partialRefreshPool).mockReturnValue([mockWarrior, mockWarrior2] as any);
+    vi.mocked(recruitmentModule.partialRefreshPool).mockReturnValue([
+      mockWarrior,
+      mockWarrior2,
+    ] as any);
 
     const state = {
       week: 10,
@@ -161,19 +168,23 @@ describe('runRecruitmentPass', () => {
       graveyard: [],
       retired: [],
       rivals: [
-        { id: 'rival1', roster: [], owner: { foundedByWarriorId: 'leg1', favoredStyles: ['Brawler'] } }
+        {
+          id: 'rival1',
+          roster: [],
+          owner: { foundedByWarriorId: 'leg1', favoredStyles: ['Brawler'] },
+        },
       ],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
 
-    const brawler = impact.recruitPool!.find(w => w.id === 'w1')!;
+    const brawler = impact.recruitPool!.find((w) => w.id === 'w1')!;
     expect(brawler.academyStableId).toBe('rival1');
     expect(brawler.source).toBe('academy');
 
-    const rogue = impact.recruitPool!.find(w => w.id === 'w2')!;
+    const rogue = impact.recruitPool!.find((w) => w.id === 'w2')!;
     expect(rogue.academyStableId).toBeUndefined();
   });
 
@@ -192,7 +203,7 @@ describe('runRecruitmentPass', () => {
         makePoolWarrior({ id: 'fa1', shelfWeeksRemaining: 2 }),
         makePoolWarrior({ id: 'fa2', shelfWeeksRemaining: 1 }),
       ],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
@@ -221,10 +232,14 @@ describe('runRecruitmentPass', () => {
       graveyard: [],
       retired: [],
       rivals: [
-        { id: 'rival1', roster: [], owner: { foundedByWarriorId: 'leg1', favoredStyles: [FightingStyle.BashingAttack] } }
+        {
+          id: 'rival1',
+          roster: [],
+          owner: { foundedByWarriorId: 'leg1', favoredStyles: [FightingStyle.BashingAttack] },
+        },
       ],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
@@ -259,7 +274,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [makeRival({ id: 'r-1' as StableId })],
       freeAgents: [],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));
@@ -298,7 +313,7 @@ describe('runRecruitmentPass', () => {
       retired: [],
       rivals: [], // no needy stables — the veteran retires
       freeAgents: [expiredVet],
-      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 }
+      cachedMetaDrift: { globalMetaFame: 10, fameTargetBase: 10 },
     } as unknown as GameState;
 
     const impact = runRecruitmentPass(state, new SeededRNG(12345));

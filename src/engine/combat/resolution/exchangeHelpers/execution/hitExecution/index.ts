@@ -89,9 +89,16 @@ function preHitResolved(args: PreHitResolvedArgs): boolean {
   const { events, rng, attacker, defender, attTactics } = args;
   const { defPassive, attLabel, defLabel, attKD } = args;
   if (
-    handleSurvivalStrike(
-      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, defPassive: defPassive, attLabel: attLabel, defLabel: defLabel }
-    )
+    handleSurvivalStrike({
+      events: events,
+      rng: rng,
+      attacker: attacker,
+      defender: defender,
+      attTactics: attTactics,
+      defPassive: defPassive,
+      attLabel: attLabel,
+      defLabel: defLabel,
+    })
   ) {
     return true;
   }
@@ -137,22 +144,59 @@ export function executeHit(args: ExecuteHitArgs) {
   const { phase, attKD, attOE, attAL, attMatchup } = args;
   const { ctx, defPassive } = args;
   if (
-    preHitResolved(
-      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, defPassive: defPassive, attLabel: attLabel, defLabel: defLabel, attKD: attKD }
-    )
+    preHitResolved({
+      events: events,
+      rng: rng,
+      attacker: attacker,
+      defender: defender,
+      attTactics: attTactics,
+      defPassive: defPassive,
+      attLabel: attLabel,
+      defLabel: defLabel,
+      attKD: attKD,
+    })
   ) {
     return;
   }
 
-  const { hitLoc, preArmor } = computePreArmorDamage(
-    { rng: rng, attacker: attacker, defender: defender, attTactics: attTactics, attOffMods: attOffMods, attPassive: attPassive }
-  );
+  const { hitLoc, preArmor } = computePreArmorDamage({
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    attTactics: attTactics,
+    attOffMods: attOffMods,
+    attPassive: attPassive,
+  });
   const rawDamagePreCrit = applyDamageMultipliers(preArmor, attacker, defender, ctx);
-  const { damage, rawDamage } = applyHitAndCounters(
-    { events: events, rng: rng, rawDamage: rawDamagePreCrit, hitLoc: hitLoc, attacker: attacker, defender: defender, attPassive: attPassive, attLabel: attLabel, defLabel: defLabel }
-  );
+  const { damage, rawDamage } = applyHitAndCounters({
+    events: events,
+    rng: rng,
+    rawDamage: rawDamagePreCrit,
+    hitLoc: hitLoc,
+    attacker: attacker,
+    defender: defender,
+    attPassive: attPassive,
+    attLabel: attLabel,
+    defLabel: defLabel,
+  });
 
-  afterHitEvents(
-    { events: events, rng: rng, attacker: attacker, defender: defender, hitLoc: hitLoc, damage: damage, rawDamage: rawDamage, attTactics: attTactics, attLabel: attLabel, defLabel: defLabel, stylePhase: stylePhase, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup, ctx: ctx }
-  );
+  afterHitEvents({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    hitLoc: hitLoc,
+    damage: damage,
+    rawDamage: rawDamage,
+    attTactics: attTactics,
+    attLabel: attLabel,
+    defLabel: defLabel,
+    stylePhase: stylePhase,
+    phase: phase,
+    attKD: attKD,
+    attOE: attOE,
+    attAL: attAL,
+    attMatchup: attMatchup,
+    ctx: ctx,
+  });
 }

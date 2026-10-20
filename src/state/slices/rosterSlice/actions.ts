@@ -115,9 +115,7 @@ function retireFromRoster(state: GameStore, warriorId: WarriorId): Partial<GameS
     update.avatarCache = avatarCache;
   }
 
-  const founderRng = new SeededRNG(
-    (state.absoluteWeek ?? state.week) * 977 + state.retired.length
-  );
+  const founderRng = new SeededRNG((state.absoluteWeek ?? state.week) * 977 + state.retired.length);
   if (
     isLegacyFounderCaliber(ret, collectCrownedWarriorIds(state)) &&
     founderRng.next() < LEGACY_FOUND_CHANCE
@@ -142,15 +140,17 @@ function releaseFromRoster(
   if (!warrior) return state;
 
   const releaseSeed = (state.absoluteWeek ?? state.week) * 991 + hashStr(warrior.id);
-  const poolEntry = warriorToPoolWarrior(warrior, state.week, new SeededRNG(releaseSeed), 'released');
+  const poolEntry = warriorToPoolWarrior(
+    warrior,
+    state.week,
+    new SeededRNG(releaseSeed),
+    'released'
+  );
   poolEntry.lore = `${poolEntry.lore} (${reason} from ${state.player?.stableName ?? 'the syndicate'} in week ${state.week}.)`;
 
   const update: Partial<GameStore> = {
     roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
-    freeAgents: [
-      ...(state.freeAgents ?? []).filter((p) => p.id !== poolEntry.id),
-      poolEntry,
-    ],
+    freeAgents: [...(state.freeAgents ?? []).filter((p) => p.id !== poolEntry.id), poolEntry],
   };
   if (state.avatarCache) {
     const { [warriorId]: _droppedAvatar, ...avatarCache } = state.avatarCache;
@@ -174,9 +174,7 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
         if (state.roster.some((w: Warrior) => w.id === warrior.id)) return state;
         // Dead identities can never re-enter a roster through any path.
         if (deadIdSet(state).has(warrior.id)) return state;
-        const stamped = warrior.stableId
-          ? warrior
-          : { ...warrior, stableId: state.player?.id };
+        const stamped = warrior.stableId ? warrior : { ...warrior, stableId: state.player?.id };
         return { roster: [...state.roster, stamped] };
       }),
 

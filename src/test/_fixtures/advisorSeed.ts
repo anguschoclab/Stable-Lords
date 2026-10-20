@@ -12,8 +12,18 @@ const ADVISOR_BASE_ATTRS = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF:
  */
 export function seedAdvisorScenario(over: Partial<GameState> = {}) {
   const fresh = createFreshState('test-seed');
-  const w1 = makeWarrior({ id: 'w1' as any, name: 'Aulus', style: FightingStyle.AimedBlow, attrs: ADVISOR_BASE_ATTRS });
-  const rival = makeWarrior({ id: 'r1' as any, name: 'Brutus', style: FightingStyle.WallOfSteel, attrs: ADVISOR_BASE_ATTRS });
+  const w1 = makeWarrior({
+    id: 'w1' as any,
+    name: 'Aulus',
+    style: FightingStyle.AimedBlow,
+    attrs: ADVISOR_BASE_ATTRS,
+  });
+  const rival = makeWarrior({
+    id: 'r1' as any,
+    name: 'Brutus',
+    style: FightingStyle.WallOfSteel,
+    attrs: ADVISOR_BASE_ATTRS,
+  });
   fresh.roster = [w1];
   fresh.rivals = [{ id: 'rs', roster: [rival], owner: { stableName: 'Rivals' } } as any];
   fresh.week = 5;

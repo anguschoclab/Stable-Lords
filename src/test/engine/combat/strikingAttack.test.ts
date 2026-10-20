@@ -70,9 +70,13 @@ describe('ST all-in (integration)', () => {
     let wins = 0;
     const N = 200;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(st), planD: defaultPlanForWarrior(pl), warriorA: st, warriorD: pl, providedRng: i * 9001 + 37 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(st),
+        planD: defaultPlanForWarrior(pl),
+        warriorA: st,
+        warriorD: pl,
+        providedRng: i * 9001 + 37,
+      });
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;

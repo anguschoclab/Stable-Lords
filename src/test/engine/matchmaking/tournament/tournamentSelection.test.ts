@@ -667,11 +667,7 @@ describe('sweepUnfinishedTournaments', () => {
     });
 
     const done = makeCompletedTournament([wA1, wB1, wA2, wB2]);
-    state.tournaments = [
-      done,
-      makeOpen('t-open-1', wA1, wB1),
-      makeOpen('t-open-2', wA2, wB2),
-    ];
+    state.tournaments = [done, makeOpen('t-open-1', wA1, wB1), makeOpen('t-open-2', wA2, wB2)];
 
     const swept = sweepUnfinishedTournaments(state, true);
 
@@ -726,7 +722,12 @@ describe('sweepUnfinishedTournaments', () => {
     // inside tournaments[].participants. findWarriorById checks participants
     // first, so the sweep resolves the stale snapshot and re-kills them —
     // a second kill outcome with no new graveyard entry.
-    const wAlive = makeTournamentWarrior('z-alive', 'Alive', FightingStyle.StrikingAttack, PLAYER_ID);
+    const wAlive = makeTournamentWarrior(
+      'z-alive',
+      'Alive',
+      FightingStyle.StrikingAttack,
+      PLAYER_ID
+    );
     const wDead = makeTournamentWarrior('z-dead', 'Zombie', FightingStyle.StrikingAttack, RIVAL_ID);
 
     const state = makeBaseState();
@@ -775,8 +776,18 @@ describe('sweepUnfinishedTournaments', () => {
   it('forfeits a participant who retired after selection', () => {
     // Retirement between selection and resolution is a real window — the
     // participant snapshot stays 'Active' while the live warrior retired.
-    const wAlive = makeTournamentWarrior('r-alive', 'Alive', FightingStyle.StrikingAttack, PLAYER_ID);
-    const wRetired = makeTournamentWarrior('r-ret', 'Retired', FightingStyle.StrikingAttack, RIVAL_ID);
+    const wAlive = makeTournamentWarrior(
+      'r-alive',
+      'Alive',
+      FightingStyle.StrikingAttack,
+      PLAYER_ID
+    );
+    const wRetired = makeTournamentWarrior(
+      'r-ret',
+      'Retired',
+      FightingStyle.StrikingAttack,
+      RIVAL_ID
+    );
 
     const state = makeBaseState();
     state.roster = [wAlive];
@@ -809,7 +820,9 @@ describe('sweepUnfinishedTournaments', () => {
     const bout = swept.tournaments![0]!.bracket[0]!;
     expect(bout.winner).toBe('A');
     expect(simulateFight).not.toHaveBeenCalled();
-    expect((swept.arenaHistory ?? []).filter((b) => b.tournamentId === 't-retired')).toHaveLength(0);
+    expect((swept.arenaHistory ?? []).filter((b) => b.tournamentId === 't-retired')).toHaveLength(
+      0
+    );
     expect(swept.graveyard ?? []).toHaveLength(0);
   });
 
@@ -875,9 +888,15 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
     state.tournaments = [tournament];
 
     const rng = new SeededRNG(7);
-    const next = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
-    );
+    const next = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: makeFightOutcome('A', 'Kill'),
+      tId: tournament.id,
+      tName: tournament.name,
+      rng: rng,
+    });
 
     // Unique death recorded exactly once per store.
     expect((next.graveyard ?? []).filter((g) => g.id === 'k2')).toHaveLength(1);
@@ -905,9 +924,15 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
     state.graveyard = [{ ...wD, status: 'Dead', isDead: true } as Warrior];
 
     const rng = new SeededRNG(9);
-    const next = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Kill'), tId: tournament.id, tName: tournament.name, rng: rng }
-    );
+    const next = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: makeFightOutcome('A', 'Kill'),
+      tId: tournament.id,
+      tName: tournament.name,
+      rng: rng,
+    });
 
     // The repeat outcome still surfaces as a kill event — the oracle's
     // divergence tripwire depends on seeing it — but the graveyard does not
@@ -939,9 +964,15 @@ describe('applyBoutResults — kill lifecycle bookkeeping', () => {
     })) as never;
 
     const rng = new SeededRNG(3);
-    const next = applyBoutResults(
-      { state: state, wA: wA, wD: wD, outcome: makeFightOutcome('A', 'Stoppage'), tId: tournament.id, tName: tournament.name, rng: rng }
-    );
+    const next = applyBoutResults({
+      state: state,
+      wA: wA,
+      wD: wD,
+      outcome: makeFightOutcome('A', 'Stoppage'),
+      tId: tournament.id,
+      tName: tournament.name,
+      rng: rng,
+    });
 
     // Mid-week appends must not drop head entries — the cumulative tracker
     // dedups by bout id but can only see entries that still exist.
@@ -1037,7 +1068,15 @@ describe('odd-sized fields — the tail entrant gets a real bye', () => {
       );
     }
 
-    const tourney = buildTournament({ tierId: 'Gold', tierName: 'Gold Cup', warriors: warriors, week: 10, season: 'Spring', rng: new SeededRNG(7), year: 1 });
+    const tourney = buildTournament({
+      tierId: 'Gold',
+      tierName: 'Gold Cup',
+      warriors: warriors,
+      week: 10,
+      season: 'Spring',
+      rng: new SeededRNG(7),
+      year: 1,
+    });
 
     const inBouts = new Set(
       tourney.bracket
@@ -1101,7 +1140,15 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't-gold-spring-1', tName: 'Test Cup', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't-gold-spring-1',
+      tName: 'Test Cup',
+      rng: rng,
+    });
 
     expect(updated.arenaHistory.length).toBeGreaterThan(0);
     expect(updated.arenaHistory[0]!.tournamentId).toBe('t-gold-spring-1');
@@ -1121,7 +1168,15 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Test',
+      rng: rng,
+    });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1145,7 +1200,15 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Test',
+      rng: rng,
+    });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1164,7 +1227,15 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Test',
+      rng: rng,
+    });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.id).toBe('w2');
@@ -1183,7 +1254,15 @@ describe('applyBoutResults', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Stoppage');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Test',
+      rng: rng,
+    });
 
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
@@ -1480,7 +1559,15 @@ describe('applyBoutResults — deathWeek at year boundary', () => {
 
     const rng = new SeededRNG(42);
     const outcome = makeFightOutcome('A', 'Kill');
-    const updated = applyBoutResults({ state: state, wA: w1, wD: w2, outcome: outcome, tId: 't1', tName: 'Test', rng: rng });
+    const updated = applyBoutResults({
+      state: state,
+      wA: w1,
+      wD: w2,
+      outcome: outcome,
+      tId: 't1',
+      tName: 'Test',
+      rng: rng,
+    });
 
     expect(updated.graveyard.length).toBe(1);
     expect(updated.graveyard[0]!.deathWeek).toBe(53);

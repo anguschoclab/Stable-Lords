@@ -31,7 +31,16 @@ describe('style matchup gate (F4)', () => {
       purse: 400,
       hype: 80,
     });
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent })).toBe('Declined');
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: opponent,
+      })
+    ).toBe('Declined');
   });
 
   it('a Methodical stable accepts a favorable style matchup', () => {
@@ -47,7 +56,16 @@ describe('style matchup gate (F4)', () => {
       purse: 400,
       hype: 80,
     });
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent })).toBe('Accepted');
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: opponent,
+      })
+    ).toBe('Accepted');
   });
 
   it('observed aggressive tells tighten the decline threshold to mildly unfavorable', () => {
@@ -83,7 +101,17 @@ describe('style matchup gate (F4)', () => {
       hype: 80,
     });
     const state = makeGameState({ rivals: [rival, oppStable], absoluteWeek: 5, week: 5 });
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent, state: state })).toBe('Declined');
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: opponent,
+        state: state,
+      })
+    ).toBe('Declined');
   });
 
   it('an Aggressive stable ignores an unfavorable matchup', () => {
@@ -99,6 +127,15 @@ describe('style matchup gate (F4)', () => {
       purse: 400,
       hype: 80,
     });
-    expect(evaluateBoutOffer({ offer: offer, rival: rival, warrior: warrior, currentWeek: 5, weather: 'Clear', opponent: opponent })).toBe('Accepted');
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+        currentWeek: 5,
+        weather: 'Clear',
+        opponent: opponent,
+      })
+    ).toBe('Accepted');
   });
 });

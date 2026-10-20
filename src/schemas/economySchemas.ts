@@ -368,4 +368,3 @@ export const TrainerSchema = z.object({
   specialty: TrainerSpecialtySchema.optional(),
   avatarSeed: z.number().optional(),
 });
-

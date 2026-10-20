@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { collectUsedWarriorNames, collectUsedWarriorIds,
+import {
+  collectUsedWarriorNames,
+  collectUsedWarriorIds,
   collectAllWarriors,
   collectAllActiveWarriors,
   collectBookedWarriorIds,
@@ -360,9 +362,9 @@ describe('warriorCollection edge cases', () => {
     tournaments: [{ participants: [{ id: 't1' }] }],
     deadWarriorIds: ['dead1'],
     boutOffers: {
-      'off1': { status: 'Signed', boutWeek: 10, warriorIds: ['w1', 'r1'] },
-      'off2': { status: 'Pending', boutWeek: 10, warriorIds: ['w2'] }
-    }
+      off1: { status: 'Signed', boutWeek: 10, warriorIds: ['w1', 'r1'] },
+      off2: { status: 'Pending', boutWeek: 10, warriorIds: ['w2'] },
+    },
   };
 
   it('collectUsedWarriorNames new tests', () => {

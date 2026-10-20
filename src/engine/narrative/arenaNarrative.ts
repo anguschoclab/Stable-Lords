@@ -108,7 +108,9 @@ export function describeArenaEffects(arenaId: string): string[] {
     for (const [zone, penalty] of Object.entries(mod.zoneDef ?? {})) {
       const base = arena.zoneDef[zone as keyof typeof arena.zoneDef];
       if (typeof penalty === 'number' && penalty !== base) {
-        lines.push(`In ${mod.weatherType.toLowerCase()} weather, ${zonePenaltyProse(zone, penalty)}`);
+        lines.push(
+          `In ${mod.weatherType.toLowerCase()} weather, ${zonePenaltyProse(zone, penalty)}`
+        );
       }
     }
     const s = mod.surfaceMod;

@@ -9,11 +9,7 @@ import { describe, it, expect } from 'vitest';
 import { prepareExchange } from '@/engine/combat/resolution/exchangePrep';
 import { FightPlanSchema } from '@/schemas/warriorSchemas';
 import type { CombatEvent } from '@/types/combat.types';
-import {
-  makeFighterState,
-  makeResolutionContext,
-  makePlan,
-} from '@/test/_fixtures/factories';
+import { makeFighterState, makeResolutionContext, makePlan } from '@/test/_fixtures/factories';
 
 describe('phaseShiftOn — schema', () => {
   it('round-trips through FightPlanSchema', () => {

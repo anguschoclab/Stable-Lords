@@ -88,10 +88,7 @@ describe('useExecuteTournamentRound', () => {
     vi.mocked(engineProxy.advanceDay).mockImplementationOnce(
       (s: { day?: number }) =>
         new Promise((resolve) =>
-          setTimeout(
-            () => resolve({ ...s, day: (s.day ?? 0) + 1 } as never),
-            0
-          )
+          setTimeout(() => resolve({ ...s, day: (s.day ?? 0) + 1 } as never), 0)
         )
     );
     const { result } = renderHook(() => useExecuteTournamentRound({ tournament }));

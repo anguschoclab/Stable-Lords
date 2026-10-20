@@ -31,14 +31,22 @@ describe('personality draft weights', () => {
     // position, decides.
     const pool = () => [recruit('common', 'Common', 50), recruit('prodigy', 'Prodigy', 500)];
 
-    const showman = processRecruitment(
-      { rival: makeRivalWithPersonality('Showman'), pool: pool(), week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
-    );
+    const showman = processRecruitment({
+      rival: makeRivalWithPersonality('Showman'),
+      pool: pool(),
+      week: 5,
+      rng: new SeededRNG(1),
+      isMajorDraftWeek: false,
+    });
     expect(showman.updatedRival.roster[0]?.name).toBe('Recruit prodigy');
 
-    const pragmatic = processRecruitment(
-      { rival: makeRivalWithPersonality('Pragmatic'), pool: pool(), week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
-    );
+    const pragmatic = processRecruitment({
+      rival: makeRivalWithPersonality('Pragmatic'),
+      pool: pool(),
+      week: 5,
+      rng: new SeededRNG(1),
+      isMajorDraftWeek: false,
+    });
     expect(pragmatic.updatedRival.roster[0]?.name).toBe('Recruit common');
   });
 
@@ -58,15 +66,23 @@ describe('personality draft weights', () => {
     const kid = pool()[1]!;
     (kid as any).age = 17;
 
-    const methodical = processRecruitment(
-      { rival: makeRivalWithPersonality('Methodical'), pool: [vet, kid], week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
-    );
+    const methodical = processRecruitment({
+      rival: makeRivalWithPersonality('Methodical'),
+      pool: [vet, kid],
+      week: 5,
+      rng: new SeededRNG(1),
+      isMajorDraftWeek: false,
+    });
     expect(methodical.updatedRival.roster[0]?.name).toBe('Recruit kid');
 
     // Aggressive has zero youth bonus — the veteran's career bonus wins.
-    const aggressive = processRecruitment(
-      { rival: makeRivalWithPersonality('Aggressive'), pool: [vet, kid], week: 5, rng: new SeededRNG(1), isMajorDraftWeek: false }
-    );
+    const aggressive = processRecruitment({
+      rival: makeRivalWithPersonality('Aggressive'),
+      pool: [vet, kid],
+      week: 5,
+      rng: new SeededRNG(1),
+      isMajorDraftWeek: false,
+    });
     expect(aggressive.updatedRival.roster[0]?.name).toBe('Recruit vet');
   });
 
@@ -86,9 +102,13 @@ describe('personality draft weights', () => {
     let remaining = pool;
     let signings = 0;
     for (let week = 1; week <= 6; week++) {
-      const res = processRecruitment(
-        { rival: rival, pool: remaining, week: week, rng: new SeededRNG(week), isMajorDraftWeek: false }
-      );
+      const res = processRecruitment({
+        rival: rival,
+        pool: remaining,
+        week: week,
+        rng: new SeededRNG(week),
+        isMajorDraftWeek: false,
+      });
       rival = res.updatedRival;
       remaining = res.updatedPool;
       signings = rival.roster.length;

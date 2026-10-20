@@ -94,9 +94,17 @@ export function getNPCPlan(
     grudgeIntensity = grudge?.intensity ?? 0;
   }
 
-  return aiPlanForWarrior(
-    { w: w, personality: rival.owner.personality || 'Pragmatic', philosophy: rival.philosophy || 'Opportunist', opponentStyle: opponentStyle, intent: rival.strategy?.intent, grudgeIntensity: grudgeIntensity, dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined, now: week, competence: rival.owner.competence }
-  );
+  return aiPlanForWarrior({
+    w: w,
+    personality: rival.owner.personality || 'Pragmatic',
+    philosophy: rival.philosophy || 'Opportunist',
+    opponentStyle: opponentStyle,
+    intent: rival.strategy?.intent,
+    grudgeIntensity: grudgeIntensity,
+    dossier: opponentStableId ? rival.agentMemory?.opponentDossiers?.[opponentStableId] : undefined,
+    now: week,
+    competence: rival.owner.competence,
+  });
 }
 
 function isNPCWarrior(state: GameState, w: Warrior): boolean {
@@ -132,9 +140,19 @@ function runBoutSimulation(
     ? getNPCPlan(state, validCO, validCW.style, _ctx.playerId, validCW.stableId as string)
     : getDefaultPlan(validCO, defaultPlanForWarrior);
 
-  return simulateFight(
-    { planA: planA, planD: planD, warriorA: validCW, warriorD: validCO, providedRng: boutSeed, trainers: state.trainers, weather: weather, arenaId: arenaId, crowdMood: state.crowdMood, headless: _ctx.headless, deathRateMult: state.houseRules?.deathRateMult }
-  );
+  return simulateFight({
+    planA: planA,
+    planD: planD,
+    warriorA: validCW,
+    warriorD: validCO,
+    providedRng: boutSeed,
+    trainers: state.trainers,
+    weather: weather,
+    arenaId: arenaId,
+    crowdMood: state.crowdMood,
+    headless: _ctx.headless,
+    deathRateMult: state.houseRules?.deathRateMult,
+  });
 }
 
 /**
@@ -190,18 +208,44 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
   );
   const boutArenaId = resolveBoutArenaId(ctx, boutSeed);
   impacts.push(
-    applyRecords(
-      { s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, fameA: fameA, popA: popA, fameD: fameD, popD: popD, arenaId: boutArenaId }
-    )
+    applyRecords({
+      s: state,
+      wA: validCW,
+      wD: validCO,
+      outcome: outcome,
+      tags: tags,
+      fameA: fameA,
+      popA: popA,
+      fameD: fameD,
+      popD: popD,
+      arenaId: boutArenaId,
+    })
   );
 
-  const { deathRes, injuryRes } = postResolutionImpacts(
-    { state: state, ctx: ctx, validCW: validCW, validCO: validCO, outcome: outcome, tags: tags, rng: rng, boutSeed: boutSeed, impacts: impacts }
-  );
+  const { deathRes, injuryRes } = postResolutionImpacts({
+    state: state,
+    ctx: ctx,
+    validCW: validCW,
+    validCO: validCO,
+    outcome: outcome,
+    tags: tags,
+    rng: rng,
+    boutSeed: boutSeed,
+    impacts: impacts,
+  });
 
-  const { summary, announcement } = reportBout(
-    { state: state, ctx: ctx, validCW: validCW, validCO: validCO, outcome: outcome, tags: tags, fame: { fameA, popA, fameD, popD }, rng: rng, boutSeed: boutSeed, impacts: impacts }
-  );
+  const { summary, announcement } = reportBout({
+    state: state,
+    ctx: ctx,
+    validCW: validCW,
+    validCO: validCO,
+    outcome: outcome,
+    tags: tags,
+    fame: { fameA, popA, fameD, popD },
+    rng: rng,
+    boutSeed: boutSeed,
+    impacts: impacts,
+  });
 
   return { impacts, deathRes, injuryRes, announcement, summary };
 }
@@ -222,19 +266,42 @@ interface PostResolutionImpactsArgs {
  * Death, injury, and progression resolution plus roster-update impacts.
  * RNG draw order (death pass → injury pass → progressions) is load-bearing.
  */
-function postResolutionImpacts(args: PostResolutionImpactsArgs): { deathRes: ReturnType<typeof handleDeath>; injuryRes: ReturnType<typeof handleInjuries> } {
+function postResolutionImpacts(args: PostResolutionImpactsArgs): {
+  deathRes: ReturnType<typeof handleDeath>;
+  injuryRes: ReturnType<typeof handleInjuries>;
+} {
   const { state, ctx, validCW, validCO, outcome } = args;
   const { tags, rng, boutSeed, impacts } = args;
-  const deathRes = handleDeath(
-    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, tags: tags, rng: rng, tournamentId: ctx.tournamentId }
-  );
-  const injuryRes = handleInjuries(
-    { s: state, wA: validCW, wD: validCO, outcome: outcome, week: ctx.week, seed: boutSeed }
-  );
+  const deathRes = handleDeath({
+    s: state,
+    wA: validCW,
+    wD: validCO,
+    outcome: outcome,
+    week: ctx.week,
+    tags: tags,
+    rng: rng,
+    tournamentId: ctx.tournamentId,
+  });
+  const injuryRes = handleInjuries({
+    s: state,
+    wA: validCW,
+    wD: validCO,
+    outcome: outcome,
+    week: ctx.week,
+    seed: boutSeed,
+  });
   impacts.push(
     deathRes.impact,
     injuryRes.impact,
-    handleProgressions({ s: state, wA: validCW, wD: validCO, outcome: outcome, tags: tags, week: ctx.week, rng: rng }),
+    handleProgressions({
+      s: state,
+      wA: validCW,
+      wD: validCO,
+      outcome: outcome,
+      tags: tags,
+      week: ctx.week,
+      rng: rng,
+    }),
     ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
   );
   return { deathRes, injuryRes };
@@ -261,9 +328,23 @@ function reportBout(args: ReportBoutArgs): { summary: FightSummary; announcement
   const { state, ctx, validCW, validCO, outcome } = args;
   const { tags, fame, rng, boutSeed, impacts } = args;
   const resolvedArenaId = resolveBoutArenaId(ctx, boutSeed);
-  const { summary, announcement } = handleReporting(
-    { wA: validCW, wD: validCO, outcome: outcome, tags: tags, fA: fame.fameA, pA: fame.popA, fD: fame.fameD, pD: fame.popD, week: ctx.displayWeek ?? ctx.week, isRivalry: ctx.isRivalry, rng: rng, arenaId: resolvedArenaId, weather: state.weather, absoluteWeek: ctx.week, contractId: ctx.contract?.id }
-  );
+  const { summary, announcement } = handleReporting({
+    wA: validCW,
+    wD: validCO,
+    outcome: outcome,
+    tags: tags,
+    fA: fame.fameA,
+    pA: fame.popA,
+    fD: fame.fameD,
+    pD: fame.popD,
+    week: ctx.displayWeek ?? ctx.week,
+    isRivalry: ctx.isRivalry,
+    rng: rng,
+    arenaId: resolvedArenaId,
+    weather: state.weather,
+    absoluteWeek: ctx.week,
+    contractId: ctx.contract?.id,
+  });
   // Stamp the title-bout channel — ArenaChampionshipPass resolves reigns off
   // this flag, and the UI badges the bout as a defense.
   if (ctx.contract?.titleArenaId) summary.titleArenaId = ctx.contract.titleArenaId;
@@ -290,9 +371,14 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const boutSeed = hashStr(`${ctx.week}|${cW.id}|${cO.id}`);
 
   const outcome = runBoutSimulation(state, ctx, cW, cO, boutSeed);
-  const { impacts, deathRes, injuryRes, announcement } = collectBoutImpacts(
-    { state: state, ctx: ctx, validCW: cW, validCO: cO, outcome: outcome, boutSeed: boutSeed }
-  );
+  const { impacts, deathRes, injuryRes, announcement } = collectBoutImpacts({
+    state: state,
+    ctx: ctx,
+    validCW: cW,
+    validCO: cO,
+    outcome: outcome,
+    boutSeed: boutSeed,
+  });
 
   return {
     impact: mergeImpacts(impacts),

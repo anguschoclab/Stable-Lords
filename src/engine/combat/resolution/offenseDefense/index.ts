@@ -6,10 +6,7 @@ import { prepareOffenseDefense } from './prepare';
 import { resolveContestedDefense, resolveWhiffRiposte } from './defense';
 import type { ResolveCombatOffenseDefenseArgs } from './types';
 
-export type {
-  OffenseDefenseCtx,
-  ResolveCombatOffenseDefenseArgs,
-} from './types';
+export type { OffenseDefenseCtx, ResolveCombatOffenseDefenseArgs } from './types';
 export { resolveContestedDefense, resolveWhiffRiposte } from './defense';
 
 /**

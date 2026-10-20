@@ -66,7 +66,9 @@ function GazetteMasthead({
       <div className="flex items-center justify-center gap-2 mt-1">
         <div
           className={`w-1.5 h-1.5 rounded-none ${
-            hasContent ? 'bg-primary animate-pulse motion-reduce:animate-none' : 'bg-muted-foreground/30'
+            hasContent
+              ? 'bg-primary animate-pulse motion-reduce:animate-none'
+              : 'bg-muted-foreground/30'
           }`}
         />
         <span className="text-[9px] font-black uppercase tracking-[0.15em] text-primary/50">

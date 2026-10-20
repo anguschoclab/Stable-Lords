@@ -498,9 +498,7 @@ export function makeGameState(over: Partial<GameState> | Record<string, any> = {
   state.rivalryMap = rivalryMap;
 
   const grudgeMap = new Map<string, (typeof state.ownerGrudges)[number]>();
-  (state.ownerGrudges || []).forEach((g) =>
-    grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g)
-  );
+  (state.ownerGrudges || []).forEach((g) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
   state.grudgeMap = grudgeMap;
 
   return state;

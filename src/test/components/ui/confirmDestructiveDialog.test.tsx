@@ -19,9 +19,7 @@ function DialogHarness({ onConfirm = vi.fn(), stacked = false }) {
         description={
           <>
             Permanent deletion
-            {stacked && (
-              <button onClick={() => setTopOpen(true)}>Open second dialog</button>
-            )}
+            {stacked && <button onClick={() => setTopOpen(true)}>Open second dialog</button>}
           </>
         }
         confirmLabel="Delete"

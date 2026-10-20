@@ -52,7 +52,9 @@ describe('TimeAdvanceService.advanceMonth', () => {
       const conditions: SoftStopCondition[] = [
         { type: 'custom', check: (s) => s.week === mockState.week + 2 },
       ];
-      const result = await TimeAdvanceService.advanceMonth(mockState, { stopConditions: conditions });
+      const result = await TimeAdvanceService.advanceMonth(mockState, {
+        stopConditions: conditions,
+      });
       expect(result.stopReason).toBe('custom_condition');
       expect(result.weeksCompleted).toBe(2);
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(2);

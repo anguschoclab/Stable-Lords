@@ -29,7 +29,11 @@ describe('worldgen difficulty', () => {
   it('GameState accepts worldOptions.difficulty', () => {
     // makeGameState carries two legacy-map keys the strict schema rejects —
     // pre-existing fixture gap; strip them so the assertion isolates worldOptions.
-    const { rivalryMap: _rm, grudgeMap: _gm, ...state } = makeGameState({
+    const {
+      rivalryMap: _rm,
+      grudgeMap: _gm,
+      ...state
+    } = makeGameState({
       worldOptions: { difficulty: 'Legend' },
     } as never) as unknown as Record<string, unknown>;
     const parsed = GameStateSchema.parse(state);

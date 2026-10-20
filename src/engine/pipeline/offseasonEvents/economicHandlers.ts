@@ -40,10 +40,13 @@ export function handleBlackMarketRaid(run: OffseasonEventRun) {
   ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Black Market Fines', -goldLost, 'other'));
 
   const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
-  announceOffseasonEvent({ ...run, data: {
-    name: chosen ? chosen.name : 'Someone',
-    gold: goldLost,
-  } });
+  announceOffseasonEvent({
+    ...run,
+    data: {
+      name: chosen ? chosen.name : 'Someone',
+      gold: goldLost,
+    },
+  });
 }
 
 /**
@@ -58,9 +61,12 @@ export function handleMysteriousPatron(run: OffseasonEventRun) {
     makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
   );
 
-  announceOffseasonEvent({ ...run, data: {
-    gold: goldGained,
-  } });
+  announceOffseasonEvent({
+    ...run,
+    data: {
+      gold: goldGained,
+    },
+  });
 }
 
 /**

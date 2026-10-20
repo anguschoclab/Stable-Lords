@@ -1,6 +1,10 @@
 import StepNav from '@/components/orphanage/StepNav';
 import { PlanValueSlider } from '@/components/planBuilder/sections';
-import { withPlanTactic, isPlanTactic, tacticButtonClasses } from '@/components/planBuilder/planTactics';
+import {
+  withPlanTactic,
+  isPlanTactic,
+  tacticButtonClasses,
+} from '@/components/planBuilder/planTactics';
 import { Swords, Zap, Shield, Activity, Target, Flame, Clock } from 'lucide-react';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import type { Warrior, FightPlan } from '@/types/game';

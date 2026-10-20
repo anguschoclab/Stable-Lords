@@ -156,7 +156,11 @@ interface SelectColorsArgs {
 /**
  * Select colors for the crest
  */
-function selectColors(args: SelectColorsArgs): { primaryColor: string; secondaryColor?: string; metalColor: MetalColor } {
+function selectColors(args: SelectColorsArgs): {
+  primaryColor: string;
+  secondaryColor?: string;
+  metalColor: MetalColor;
+} {
   const { rng, philosophy, fieldType, parentPrimaryColor, parentSecondaryColor } = args;
   const { parentMetalColor, generation = 0 } = args;
   const config = getInheritanceConfig(generation);
@@ -286,9 +290,15 @@ export function generateCrest(config: StableCrestConfig): CrestData {
   const fieldType = selectFieldType(rng, tier, parentCrest?.fieldType, generation);
 
   // Select colors
-  const { primaryColor, secondaryColor, metalColor } = selectColors(
-    { rng: rng, philosophy: philosophy, fieldType: fieldType, parentPrimaryColor: parentCrest?.primaryColor, parentSecondaryColor: parentCrest?.secondaryColor, parentMetalColor: parentCrest?.metalColor, generation: generation }
-  );
+  const { primaryColor, secondaryColor, metalColor } = selectColors({
+    rng: rng,
+    philosophy: philosophy,
+    fieldType: fieldType,
+    parentPrimaryColor: parentCrest?.primaryColor,
+    parentSecondaryColor: parentCrest?.secondaryColor,
+    parentMetalColor: parentCrest?.metalColor,
+    generation: generation,
+  });
 
   // Select charge
   const charge = selectCharge(rng, philosophy, tier, parentCrest?.charge.type, generation);

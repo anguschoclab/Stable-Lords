@@ -92,7 +92,10 @@ interface HandleTimeLimitArgs {
 /**
  * Handle decision logic if time limit reached.
  */
-function handleTimeLimit(args: HandleTimeLimitArgs): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
+function handleTimeLimit(args: HandleTimeLimitArgs): {
+  winner: 'A' | 'D' | null;
+  by: FightOutcomeBy | null;
+} {
   const { fA, fD, nameA, nameD, rng } = args;
   const { log, headless } = args;
   const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
@@ -141,7 +144,15 @@ export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
   // Draw) must be surfaced as-is — re-judging it would silently convert every
   // draw into a Decision and fabricate a winner.
   if (by === null) {
-    const timeLimitResult = handleTimeLimit({ fA: fA, fD: fD, nameA: nameA, nameD: nameD, rng: rng, log: log, headless: headless });
+    const timeLimitResult = handleTimeLimit({
+      fA: fA,
+      fD: fD,
+      nameA: nameA,
+      nameD: nameD,
+      rng: rng,
+      log: log,
+      headless: headless,
+    });
     const finalMinutes = fightMinutes;
 
     return {
@@ -150,9 +161,13 @@ export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
       minutes: finalMinutes,
       log,
       exchangeLog,
-      post: buildPostFightStats(
-        { winner: timeLimitResult.winner, by: timeLimitResult.by, fA: fA, fD: fD, tags: generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes) }
-      ),
+      post: buildPostFightStats({
+        winner: timeLimitResult.winner,
+        by: timeLimitResult.by,
+        fA: fA,
+        fD: fD,
+        tags: generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes),
+      }),
     };
   }
 
@@ -166,8 +181,15 @@ export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
     minutes: finalMinutes,
     log,
     exchangeLog,
-    post: buildPostFightStats(
-      { winner: winner, by: by, fA: fA, fD: fD, tags: tags, causeBucket: causeBucket, fatalHitLocation: fatalHitLocation, fatalExchangeIndex: fatalExchangeIndex }
-    ),
+    post: buildPostFightStats({
+      winner: winner,
+      by: by,
+      fA: fA,
+      fD: fD,
+      tags: tags,
+      causeBucket: causeBucket,
+      fatalHitLocation: fatalHitLocation,
+      fatalExchangeIndex: fatalExchangeIndex,
+    }),
   };
 }

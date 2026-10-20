@@ -120,11 +120,7 @@ function styleLabel(w: WarriorLike): string {
   return w.style ? (STYLE_DISPLAY_NAMES[w.style] ?? w.style) : 'Unknown Style';
 }
 
-function warriorEntry(
-  w: WarriorLike,
-  bucket: SearchBadge,
-  stableName: string
-): SearchEntry {
+function warriorEntry(w: WarriorLike, bucket: SearchBadge, stableName: string): SearchEntry {
   const record = w.career ? `${w.career.wins}W-${w.career.losses}L` : '0W-0L';
   const style = styleLabel(w);
   return {
@@ -201,9 +197,7 @@ function indexStables(
         id: rival.id,
         name: rival.owner.stableName,
         ownerName: rival.owner.name,
-        meta: [rival.tier, rival.philosophy, rival.owner.personality]
-          .filter(Boolean)
-          .join(' · '),
+        meta: [rival.tier, rival.philosophy, rival.owner.personality].filter(Boolean).join(' · '),
         badge: 'Rival',
         to: `/world/stable/${rival.id}`,
       })
@@ -246,9 +240,7 @@ function indexPeople(state: EntityIndexState, corpusById: Map<string, SearchEntr
       type: 'trainer',
       id: t.id,
       name: t.name,
-      searchText: [t.name, t.tier ?? '', t.focus ?? '', t.specialty ?? '']
-        .join(' ')
-        .toLowerCase(),
+      searchText: [t.name, t.tier ?? '', t.focus ?? '', t.specialty ?? ''].join(' ').toLowerCase(),
       subtitle: `${t.tier ?? 'Novice'} Trainer`,
       to: '/stable/trainers',
     });

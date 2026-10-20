@@ -17,26 +17,26 @@ TEST_AUDIT) treated as claims re-verified, not baseline truth.
 
 ## 0. Baseline gate matrix (recorded at `e0520ab9`)
 
-| Gate | Result | Notes |
-| --- | --- | --- |
-| `type-check` (tsr generate + tsc --build) | ✅ green | 0 errors |
-| `lint` (eslint .) | ✅ green | 0 errors / 0 warnings |
-| `test` (vitest default) | ✅ green | 788 files / 8,843 tests (2 skipped) |
-| `build` (vite) | ✅ green | PWA precache 177 entries |
-| `electron:compile` | ✅ green | 26.18 KB bundle |
-| `narrative-validate` | ✅ green | |
-| `test:slow` | ⚠️ **RED at baseline** | 26/29 files green; 4 test failures — all perf-cap/timeout, no correctness failures: `autosim.slow` 39.2s>30s cap; `pipeline.perf.slow` 12.5s>12s and 67.8s>60s caps; `killDeathDivergence.slow` 600s timeout. Pre-existing; likely machine-timing sensitive (90-rival floor raised cost vs old 8-rival caps). Not introduced by this pass. |
-| `bun run dupes` (jscpd) | report-only | 114 clones, 0.75% dup lines |
-| `dead-code` (knip) | exits 1 | **452 unused exports, 130 unused types, 7 duplicate exports** |
-| `dup-scan` | 243 clusters | 74 prod↔prod, 128 test↔test, 41 mixed |
-| `orphan-scan` | near-clean | `unreachableFromProd`: only `global.d.ts`, `vite-env.d.ts` (ambient decls — expected). `testOnlyReachable`: none. 478 deadExports (raw symbol list incl. barrels). |
-| `param-count` | ✅ 0 violations | |
-| `ui-audit-scan` | ✅ 0 hits | all five classes clean |
-| `data-array-dup-scan` | ✅ clean | |
-| `entries-in-loop` | ⚠️ 5 violations | `injurySystem.ts:208`, `arenaNarrative.ts:108`, `traits/mods.ts:20,26`, `stateInvariants.ts:380` |
-| `test-audit-scan` | ⚠️ residuals | 1 `needsDomMissingPragma` (`tacticsAdvisorBridge.test.ts`, baseline-listed), 2 dead patterns, 38 import-set clusters, 4 local-factory files |
-| `find-dupes` (name pools) | ✅ clean | |
-| `test:bun`, `test:coverage`, `e2e` | deferred | recorded in Phase 8 final battery |
+| Gate                                      | Result                 | Notes                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type-check` (tsr generate + tsc --build) | ✅ green               | 0 errors                                                                                                                                                                                                                                                                                                                                   |
+| `lint` (eslint .)                         | ✅ green               | 0 errors / 0 warnings                                                                                                                                                                                                                                                                                                                      |
+| `test` (vitest default)                   | ✅ green               | 788 files / 8,843 tests (2 skipped)                                                                                                                                                                                                                                                                                                        |
+| `build` (vite)                            | ✅ green               | PWA precache 177 entries                                                                                                                                                                                                                                                                                                                   |
+| `electron:compile`                        | ✅ green               | 26.18 KB bundle                                                                                                                                                                                                                                                                                                                            |
+| `narrative-validate`                      | ✅ green               |                                                                                                                                                                                                                                                                                                                                            |
+| `test:slow`                               | ⚠️ **RED at baseline** | 26/29 files green; 4 test failures — all perf-cap/timeout, no correctness failures: `autosim.slow` 39.2s>30s cap; `pipeline.perf.slow` 12.5s>12s and 67.8s>60s caps; `killDeathDivergence.slow` 600s timeout. Pre-existing; likely machine-timing sensitive (90-rival floor raised cost vs old 8-rival caps). Not introduced by this pass. |
+| `bun run dupes` (jscpd)                   | report-only            | 114 clones, 0.75% dup lines                                                                                                                                                                                                                                                                                                                |
+| `dead-code` (knip)                        | exits 1                | **452 unused exports, 130 unused types, 7 duplicate exports**                                                                                                                                                                                                                                                                              |
+| `dup-scan`                                | 243 clusters           | 74 prod↔prod, 128 test↔test, 41 mixed                                                                                                                                                                                                                                                                                                      |
+| `orphan-scan`                             | near-clean             | `unreachableFromProd`: only `global.d.ts`, `vite-env.d.ts` (ambient decls — expected). `testOnlyReachable`: none. 478 deadExports (raw symbol list incl. barrels).                                                                                                                                                                         |
+| `param-count`                             | ✅ 0 violations        |                                                                                                                                                                                                                                                                                                                                            |
+| `ui-audit-scan`                           | ✅ 0 hits              | all five classes clean                                                                                                                                                                                                                                                                                                                     |
+| `data-array-dup-scan`                     | ✅ clean               |                                                                                                                                                                                                                                                                                                                                            |
+| `entries-in-loop`                         | ⚠️ 5 violations        | `injurySystem.ts:208`, `arenaNarrative.ts:108`, `traits/mods.ts:20,26`, `stateInvariants.ts:380`                                                                                                                                                                                                                                           |
+| `test-audit-scan`                         | ⚠️ residuals           | 1 `needsDomMissingPragma` (`tacticsAdvisorBridge.test.ts`, baseline-listed), 2 dead patterns, 38 import-set clusters, 4 local-factory files                                                                                                                                                                                                |
+| `find-dupes` (name pools)                 | ✅ clean               |                                                                                                                                                                                                                                                                                                                                            |
+| `test:bun`, `test:coverage`, `e2e`        | deferred               | recorded in Phase 8 final battery                                                                                                                                                                                                                                                                                                          |
 
 ---
 
@@ -61,26 +61,26 @@ export aliases removed. dup-scan confirms: `fightSchemas ↔ gameStateSchema`
 
 ### A2. Backward-compat alias exports
 
-| Symbol | File | Verdict | Disposition |
-| --- | --- | --- | --- |
-| `SeededRNGService = SeededRNG` | `utils/random.ts:189` | APPROVED — alias, comment says "callers should migrate" | DELETE, repoint consumers |
-| `getStablePairKey = getPairKey` | `utils/keyUtils.ts:15` | APPROVED — "backward compatible" alias | DELETE, repoint consumers |
-| `HallOfFights` named + `default` | `lore/HallOfFights.tsx` | APPROVED — dual export | DELETE default, keep named |
-| `ST_PAR=ST_ATT`, `WT_DEF`, `WL_PAR`, `SZ_*` aliases | `warrior/skillBreakpoints.ts` | **DISPROVED as dedupe targets** — intentional canonical breakpoints (STR feeds ATT and PAR identically); aliases document game semantics | KEEP |
-| `DEFAULT_ARENA_PREFERENCES` re-export | `worldSlice/index.ts` | APPROVED barrel re-export | resolve with barrel pass |
+| Symbol                                              | File                          | Verdict                                                                                                                                  | Disposition                |
+| --------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `SeededRNGService = SeededRNG`                      | `utils/random.ts:189`         | APPROVED — alias, comment says "callers should migrate"                                                                                  | DELETE, repoint consumers  |
+| `getStablePairKey = getPairKey`                     | `utils/keyUtils.ts:15`        | APPROVED — "backward compatible" alias                                                                                                   | DELETE, repoint consumers  |
+| `HallOfFights` named + `default`                    | `lore/HallOfFights.tsx`       | APPROVED — dual export                                                                                                                   | DELETE default, keep named |
+| `ST_PAR=ST_ATT`, `WT_DEF`, `WL_PAR`, `SZ_*` aliases | `warrior/skillBreakpoints.ts` | **DISPROVED as dedupe targets** — intentional canonical breakpoints (STR feeds ATT and PAR identically); aliases document game semantics | KEEP                       |
+| `DEFAULT_ARENA_PREFERENCES` re-export               | `worldSlice/index.ts`         | APPROVED barrel re-export                                                                                                                | resolve with barrel pass   |
 
 ### A3. Dead modules / API surfaces
 
-| Finding | Verdict | Disposition |
-| --- | --- | --- |
-| `constants/core/dates.ts` dead exports | CORRECTED — ms-math chain (6 consts) + LEGACY_TOURNAMENT_WEEKS dead; epoch/era/DAYS_PER_WEEK are internal-only; tournament-week consts + timestamp fns are live | DONE: deleted MS_PER_*/HOURS/MINUTES/SECONDS chain + LEGACY_TOURNAMENT_WEEKS (test keeps the cadence inline); unexported GAME_EPOCH_YEAR/ERA_START_YEAR/DAYS_PER_WEEK |
-| `data/templates/templateCache.ts` query API — `getTemplatesByTier/Philosophy/Personality/MetaAdaptation/Backstory/Style/FameRange/RosterRange`, `searchTemplates`, `getCacheStats`, `clearTemplateCache`, `TIER_CACHES`: only `ALL_TEMPLATES` consumed (by `backstoryData.ts` → `rivalStableFactory.ts`); no prod file imports the query fns | APPROVED dead API (~180 lines) | DELETE query fns, keep `ALL_TEMPLATES` materialization |
-| ~~`data/equipment/weapons.ts` dead~~ | **DISPROVED** — `weaponStats.ts` + 6 test files import `WEAPONS`/`SHIELD_ITEM_IDS`/`SHIELD_COVERAGE` | RETAIN — removed from guard |
-| `useGameStore.ts` hooks `usePlayer`/`useRoster`/`useRivals`/`useTreasury`/`useWeek`/`useIsSimulating`/`useStyleStats`/`useReputationState` | APPROVED dead convenience hooks | DELETE re-export lines |
-| `enginePool.ts:58 processBoutShard` | verify — likely worker entry (comlink) | Phase 3 verdict |
-| `types/narrative/pbp.ts` ~13 unused interfaces + `personas.ts`/`gazette.ts`/`strikes.ts`/`uxMetadata.ts`/`root.ts`/`recruitment.ts` types (~25) | APPROVED dead types (narrative shape types unused after JSON curation passes) | DELETE |
-| `state/useGameStore.ts` types `GameStoreState/GameStoreActions` + `store.types.ts` same pair | CORRECTED — single definition in store.types + re-export line, not a duplicate | DONE: trimmed to `export type { GameStore }` (only the consumed name); unexported the two internals in store.types |
-| `tagDescriptions.ts` `FLAIR_/TITLE_/INJURY_/STATUS_DESCRIPTIONS` | DISPROVED dead — consumed via `TagBadge` tooltips (ORPHAN C2 re-verified? → re-check consumer) | Phase 3 verdict |
+| Finding                                                                                                                                                                                                                                                                                                                                      | Verdict                                                                                                                                                         | Disposition                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `constants/core/dates.ts` dead exports                                                                                                                                                                                                                                                                                                       | CORRECTED — ms-math chain (6 consts) + LEGACY_TOURNAMENT_WEEKS dead; epoch/era/DAYS_PER_WEEK are internal-only; tournament-week consts + timestamp fns are live | DONE: deleted MS_PER_*/HOURS/MINUTES/SECONDS chain + LEGACY_TOURNAMENT_WEEKS (test keeps the cadence inline); unexported GAME_EPOCH_YEAR/ERA_START_YEAR/DAYS_PER_WEEK |
+| `data/templates/templateCache.ts` query API — `getTemplatesByTier/Philosophy/Personality/MetaAdaptation/Backstory/Style/FameRange/RosterRange`, `searchTemplates`, `getCacheStats`, `clearTemplateCache`, `TIER_CACHES`: only `ALL_TEMPLATES` consumed (by `backstoryData.ts` → `rivalStableFactory.ts`); no prod file imports the query fns | APPROVED dead API (~180 lines)                                                                                                                                  | DELETE query fns, keep `ALL_TEMPLATES` materialization                                                                                                                |
+| ~~`data/equipment/weapons.ts` dead~~                                                                                                                                                                                                                                                                                                         | **DISPROVED** — `weaponStats.ts` + 6 test files import `WEAPONS`/`SHIELD_ITEM_IDS`/`SHIELD_COVERAGE`                                                            | RETAIN — removed from guard                                                                                                                                           |
+| `useGameStore.ts` hooks `usePlayer`/`useRoster`/`useRivals`/`useTreasury`/`useWeek`/`useIsSimulating`/`useStyleStats`/`useReputationState`                                                                                                                                                                                                   | APPROVED dead convenience hooks                                                                                                                                 | DELETE re-export lines                                                                                                                                                |
+| `enginePool.ts:58 processBoutShard`                                                                                                                                                                                                                                                                                                          | verify — likely worker entry (comlink)                                                                                                                          | Phase 3 verdict                                                                                                                                                       |
+| `types/narrative/pbp.ts` ~13 unused interfaces + `personas.ts`/`gazette.ts`/`strikes.ts`/`uxMetadata.ts`/`root.ts`/`recruitment.ts` types (~25)                                                                                                                                                                                              | APPROVED dead types (narrative shape types unused after JSON curation passes)                                                                                   | DELETE                                                                                                                                                                |
+| `state/useGameStore.ts` types `GameStoreState/GameStoreActions` + `store.types.ts` same pair                                                                                                                                                                                                                                                 | CORRECTED — single definition in store.types + re-export line, not a duplicate                                                                                  | DONE: trimmed to `export type { GameStore }` (only the consumed name); unexported the two internals in store.types                                                    |
+| `tagDescriptions.ts` `FLAIR_/TITLE_/INJURY_/STATUS_DESCRIPTIONS`                                                                                                                                                                                                                                                                             | DISPROVED dead — consumed via `TagBadge` tooltips (ORPHAN C2 re-verified? → re-check consumer)                                                                  | Phase 3 verdict                                                                                                                                                       |
 
 ### A4. Barrel-file unused re-exports
 
@@ -172,29 +172,29 @@ absent; most are assertion-shape similarity — `DEFERRED` low-value.
 **PHASE 4 COMPLETE** — all 17 logic targets split into directory modules
 (V13 guard unskipped, green). Splits at `a5bf3c87` + wrap-up `a4d5d597`:
 
-| File (was) | Lines | Result |
-| --- | --- | --- |
-| `competitionWorker/boutAcceptance.ts` | 611 | `boutAcceptance/` — gates / titleBout / threat / venueCounter / negotiation / index |
-| `ai/intentEngine.ts` | 573 | `intentEngine/` — context / predicates / skepticism / index |
-| `resolution/offenseDefense.ts` | 565 | `offenseDefense/` — types / defense / prepare / index |
-| `passes/RivalStrategyPass.ts` | 556 | `RivalStrategyPass/` — offers / churn / roster / finish / index |
-| `execution/hitExecution.ts` | 539 | `hitExecution/` — damage / killWindow / index |
-| `mechanics/weatherEffects.ts` | 515 | `weatherEffects/` — table (data) / index (logic) |
-| `competitionWorker/offerProcessor.ts` | 504 | `offerProcessor/` — shared / slate / counters / index |
-| `ai/plan/coreGenerator.ts` | 500 | `coreGenerator/` — modifiers / strategicLayer / index |
-| `tournamentSelection/resolution.ts` | ~628 | `resolution/` — bouts / seeding / results / index |
-| `competitionWorker/boutBidding.ts` | ~611 | `boutBidding/` — bookable / generation / conversion / index |
-| `recruitment/recruitment.ts` | 478 | `recruitment/` — types / generate / pool / freeAgents / index |
-| `pages/ArenaHub.tsx` | 466 | widgets → `pages/arenaHub/{crowdMoodWidget,leaderboard,columns}.tsx`; page shell 114 |
-| `ledger/TreasuryOverview.tsx` | 449 | `TreasuryOverview/` — matrix / trajectory / registry / index |
-| `simulate/simulationLoop.ts` | 438 | `simulationLoop/` — types / beats / outcomes / narrate / index |
-| `matchmaking/schedulingAssistant.ts` | 433 | `schedulingAssistant/` — headToHead / pairwise / matchups / index |
-| `advisor/boutOfferAdvisor.ts` | 431 | `boutOfferAdvisor/` — gates / scoring / index |
-| `layout/AppHeader.tsx` | 415 | `AppHeader/` — statusStrip / actions / index |
-| `engine/traits/defs/classTraits.ts` | 517 | data-only registry — EXEMPT (bulk is the point) |
-| `constants/arena/weather/config.ts` | 492 | data table — EXEMPT |
-| `engine/crest/chargePaths.ts` | 490 | path data — EXEMPT |
-| `data/*` corpora, `routeTree.gen.ts` | — | EXEMPT as verdicted |
+| File (was)                            | Lines | Result                                                                               |
+| ------------------------------------- | ----- | ------------------------------------------------------------------------------------ |
+| `competitionWorker/boutAcceptance.ts` | 611   | `boutAcceptance/` — gates / titleBout / threat / venueCounter / negotiation / index  |
+| `ai/intentEngine.ts`                  | 573   | `intentEngine/` — context / predicates / skepticism / index                          |
+| `resolution/offenseDefense.ts`        | 565   | `offenseDefense/` — types / defense / prepare / index                                |
+| `passes/RivalStrategyPass.ts`         | 556   | `RivalStrategyPass/` — offers / churn / roster / finish / index                      |
+| `execution/hitExecution.ts`           | 539   | `hitExecution/` — damage / killWindow / index                                        |
+| `mechanics/weatherEffects.ts`         | 515   | `weatherEffects/` — table (data) / index (logic)                                     |
+| `competitionWorker/offerProcessor.ts` | 504   | `offerProcessor/` — shared / slate / counters / index                                |
+| `ai/plan/coreGenerator.ts`            | 500   | `coreGenerator/` — modifiers / strategicLayer / index                                |
+| `tournamentSelection/resolution.ts`   | ~628  | `resolution/` — bouts / seeding / results / index                                    |
+| `competitionWorker/boutBidding.ts`    | ~611  | `boutBidding/` — bookable / generation / conversion / index                          |
+| `recruitment/recruitment.ts`          | 478   | `recruitment/` — types / generate / pool / freeAgents / index                        |
+| `pages/ArenaHub.tsx`                  | 466   | widgets → `pages/arenaHub/{crowdMoodWidget,leaderboard,columns}.tsx`; page shell 114 |
+| `ledger/TreasuryOverview.tsx`         | 449   | `TreasuryOverview/` — matrix / trajectory / registry / index                         |
+| `simulate/simulationLoop.ts`          | 438   | `simulationLoop/` — types / beats / outcomes / narrate / index                       |
+| `matchmaking/schedulingAssistant.ts`  | 433   | `schedulingAssistant/` — headToHead / pairwise / matchups / index                    |
+| `advisor/boutOfferAdvisor.ts`         | 431   | `boutOfferAdvisor/` — gates / scoring / index                                        |
+| `layout/AppHeader.tsx`                | 415   | `AppHeader/` — statusStrip / actions / index                                         |
+| `engine/traits/defs/classTraits.ts`   | 517   | data-only registry — EXEMPT (bulk is the point)                                      |
+| `constants/arena/weather/config.ts`   | 492   | data table — EXEMPT                                                                  |
+| `engine/crest/chargePaths.ts`         | 490   | path data — EXEMPT                                                                   |
+| `data/*` corpora, `routeTree.gen.ts`  | —     | EXEMPT as verdicted                                                                  |
 
 Post-split evidence: typecheck 0, eslint 0 errors, full suite 8,883 green,
 orphan dead-export count 415 (≤424 ratchet), fn>80 budget back at baseline 2,
@@ -203,13 +203,13 @@ preamble pairs registered knowingly (same Phase-3 shard-boilerplate class).
 
 ## D. Wiring / dormancy items
 
-| # | Finding | Verdict | Plan |
-| --- | --- | --- | --- |
-| D1 | `ARENA_EVENTS`/`getEventsForArena` — claimed dormant (zero prod consumers) | **DISPROVED — fully wired** (earlier grep produced a false negative; verified by direct re-scan) | Consumed by `engine/combat/mechanics/arenaEvents.ts` (`tickArenaEvents` per-exchange inside `resolveExchange`), `resolution/types.ts` ctx fields, `arenaNarrative.ts`; covered by `arenaEventTick.test.ts`. Residual: **stale comments** — `constants/arenaEvents.ts` header still says "narrative-only for v1; mechanical for v2" and `arenaEventTick.test.ts` header claims "no production consumer". Disposition: DOCUMENT (fix stale comments). |
-| D2 | Routes without nav link: `/`, `/arena-hub`, `/world/arena-leaderboards`, param routes (`/warrior/:id`, `/stable/promoter/:id`, `/world/stable/:id`, `/world/arenas/:arenaId`) | **DISPROVED as orphans** — `/` is index; `arena-hub` + `arena-leaderboards` are redirect-only routes (verified: `arena-leaderboards.tsx` `beforeLoad → redirect /world/arenas`); param routes are entity deep-links via EntityLink | No action; keep redirects |
-| D3 | `electron/main.ts` exports (`createWindow`, `createMenu`, `createTray`, `registerIPCHandlers`, `validateAndMigrateState`, window/tray accessors) | CORRECTED — consumed by `src/test/config/electronMain.test.ts` (test-only surface) | KEEP if test hooks intended; else unexport. Phase 1 verdict: test-hooks = KEEP documented |
-| D4 | State-field liveness | pending Phase 6 sweep | every GameState/Warrior/Owner field: writer+reader or delete |
-| D5 | `archives/season_*/bouts` | pending | keep-or-prune verdict |
+| #   | Finding                                                                                                                                                                       | Verdict                                                                                                                                                                                                                            | Plan                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | `ARENA_EVENTS`/`getEventsForArena` — claimed dormant (zero prod consumers)                                                                                                    | **DISPROVED — fully wired** (earlier grep produced a false negative; verified by direct re-scan)                                                                                                                                   | Consumed by `engine/combat/mechanics/arenaEvents.ts` (`tickArenaEvents` per-exchange inside `resolveExchange`), `resolution/types.ts` ctx fields, `arenaNarrative.ts`; covered by `arenaEventTick.test.ts`. Residual: **stale comments** — `constants/arenaEvents.ts` header still says "narrative-only for v1; mechanical for v2" and `arenaEventTick.test.ts` header claims "no production consumer". Disposition: DOCUMENT (fix stale comments). |
+| D2  | Routes without nav link: `/`, `/arena-hub`, `/world/arena-leaderboards`, param routes (`/warrior/:id`, `/stable/promoter/:id`, `/world/stable/:id`, `/world/arenas/:arenaId`) | **DISPROVED as orphans** — `/` is index; `arena-hub` + `arena-leaderboards` are redirect-only routes (verified: `arena-leaderboards.tsx` `beforeLoad → redirect /world/arenas`); param routes are entity deep-links via EntityLink | No action; keep redirects                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| D3  | `electron/main.ts` exports (`createWindow`, `createMenu`, `createTray`, `registerIPCHandlers`, `validateAndMigrateState`, window/tray accessors)                              | CORRECTED — consumed by `src/test/config/electronMain.test.ts` (test-only surface)                                                                                                                                                 | KEEP if test hooks intended; else unexport. Phase 1 verdict: test-hooks = KEEP documented                                                                                                                                                                                                                                                                                                                                                           |
+| D4  | State-field liveness                                                                                                                                                          | pending Phase 6 sweep                                                                                                                                                                                                              | every GameState/Warrior/Owner field: writer+reader or delete                                                                                                                                                                                                                                                                                                                                                                                        |
+| D5  | `archives/season_*/bouts`                                                                                                                                                     | pending                                                                                                                                                                                                                            | keep-or-prune verdict                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 ## E. Hygiene violations
 
@@ -238,27 +238,27 @@ preamble pairs registered knowingly (same Phase-3 shard-boilerplate class).
 
 ## G. Prior-ledger re-verification sample
 
-| Prior claim | V11 verdict | Evidence |
-| --- | --- | --- |
-| ORPHAN C2 `tagDescriptions` wired via TagBadge | re-verify in Phase 3 | knip flags all 4 — consumer path may have drifted |
-| ORPHAN D18 suitability labels wired | **APPROVED** | `SUITABILITY_LABELS` consumed by `WeaponAffinitySection`, `TacticBank`, `planBuilder/sections` |
-| ORPHAN F1 notoriety wired into offer hype | spot-check Phase 6 | |
-| V10 `ARENA_EVENTS` dormant-by-design | **DISPROVED** | wired via `tickArenaEvents` in `resolveExchange`; v2 mechanics already live — only stale comments remain |
-| `arena-hub`/`arena-leaderboards` redirects intentional | **APPROVED** | both are `beforeLoad` redirect routes |
+| Prior claim                                            | V11 verdict          | Evidence                                                                                                 |
+| ------------------------------------------------------ | -------------------- | -------------------------------------------------------------------------------------------------------- |
+| ORPHAN C2 `tagDescriptions` wired via TagBadge         | re-verify in Phase 3 | knip flags all 4 — consumer path may have drifted                                                        |
+| ORPHAN D18 suitability labels wired                    | **APPROVED**         | `SUITABILITY_LABELS` consumed by `WeaponAffinitySection`, `TacticBank`, `planBuilder/sections`           |
+| ORPHAN F1 notoriety wired into offer hype              | spot-check Phase 6   |                                                                                                          |
+| V10 `ARENA_EVENTS` dormant-by-design                   | **DISPROVED**        | wired via `tickArenaEvents` in `resolveExchange`; v2 mechanics already live — only stale comments remain |
+| `arena-hub`/`arena-leaderboards` redirects intentional | **APPROVED**         | both are `beforeLoad` redirect routes                                                                    |
 
 ---
 
 ## Disposition summary (drives Phases 2–7)
 
-| Bucket | Count | Action |
-| --- | --- | --- |
-| DELETE dead exports/types/files | ~200 knip-verified items (after barrel/schema collapse) | Phase 3 |
-| DEDUPE schema re-export matrix | ~110 aliases → canonical homes | **DONE (Phase 3)** — `gameStateSchema` barrel collapsed |
-| DEDUPE prod clusters | ~30 real clusters (B1–B3, B5) | **DONE (Phase 5)** — 77→43 prod↔prod; see below |
-| DISPROVED clusters (hook-mirror) | ~11 page↔hook pairs | no action |
-| RESTRUCTURE monoliths | 17 logic files >400 lines | **DONE (Phase 4)** |
-| WIRE/dormant decisions | dates.ts unused consts (wire-or-delete); ARENA_EVENTS = wired, DOCUMENT stale comments | Phase 6 |
-| FIX hygiene | 5 entries-in-loop, 1 pragma | Phase 5/8 |
+| Bucket                           | Count                                                                                  | Action                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| DELETE dead exports/types/files  | ~200 knip-verified items (after barrel/schema collapse)                                | Phase 3                                                 |
+| DEDUPE schema re-export matrix   | ~110 aliases → canonical homes                                                         | **DONE (Phase 3)** — `gameStateSchema` barrel collapsed |
+| DEDUPE prod clusters             | ~30 real clusters (B1–B3, B5)                                                          | **DONE (Phase 5)** — 77→43 prod↔prod; see below         |
+| DISPROVED clusters (hook-mirror) | ~11 page↔hook pairs                                                                    | no action                                               |
+| RESTRUCTURE monoliths            | 17 logic files >400 lines                                                              | **DONE (Phase 4)**                                      |
+| WIRE/dormant decisions           | dates.ts unused consts (wire-or-delete); ARENA_EVENTS = wired, DOCUMENT stale comments | Phase 6                                                 |
+| FIX hygiene                      | 5 entries-in-loop, 1 pragma                                                            | Phase 5/8                                               |
 
 ---
 
@@ -269,10 +269,10 @@ Measured: **77 → 43 prod↔prod dup clusters** (V12 ceiling 50). B1/B2/B3 all 
 - **B1 offseason handlers (13 pairs → 0):** `types.ts` slimmed to pure types;
   new `offseasonEvents/helpers.ts` hosts `OffseasonEventRun` bundle +
   `withChosenWarrior`/`withChosenWarriorNews`/`announceOffseasonEvent` runners
-  + `warriorOutcome`/`addStat`/`withAddedInjury`/`grantInsightToken` micro-helpers.
-  All 60 handlers re-signed `(state,nextWeek,e,rng,ctx)` → `(run)`; call sites
-  spread `...run`. `seasonal.ts` dispatch + ~17 test call sites updated. RNG
-  call order preserved (determinism verified by 448 pipeline tests).
+  - `warriorOutcome`/`addStat`/`withAddedInjury`/`grantInsightToken` micro-helpers.
+    All 60 handlers re-signed `(state,nextWeek,e,rng,ctx)` → `(run)`; call sites
+    spread `...run`. `seasonal.ts` dispatch + ~17 test call sites updated. RNG
+    call order preserved (determinism verified by 448 pipeline tests).
 - **B2 standings tables (17 pairs → 0):** new `components/ui/StandingsTable.tsx`
   — column-driven primitive over `ui/table` with a `classes` style bundle
   (param-budget-safe). 6 call sites migrated: RecordTable, arenaDetail/sections

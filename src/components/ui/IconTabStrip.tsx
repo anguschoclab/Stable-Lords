@@ -23,7 +23,10 @@ export function IconTabStrip<T extends string>({
   className,
 }: IconTabStripProps<T>) {
   return (
-    <div role="tablist" className={cn('flex items-center gap-8 border-b border-white/5', className)}>
+    <div
+      role="tablist"
+      className={cn('flex items-center gap-8 border-b border-white/5', className)}
+    >
       {tabs.map((tab) => (
         <button
           key={tab.id}
@@ -32,9 +35,7 @@ export function IconTabStrip<T extends string>({
           onClick={() => onChange(tab.id)}
           className={cn(
             'flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.15em] transition-all motion-reduce:transition-none motion-reduce:transform-none relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
-            activeTab === tab.id
-              ? 'text-primary'
-              : 'text-muted-foreground/40 hover:text-foreground'
+            activeTab === tab.id ? 'text-primary' : 'text-muted-foreground/40 hover:text-foreground'
           )}
         >
           <tab.icon className="h-3.5 w-3.5" />

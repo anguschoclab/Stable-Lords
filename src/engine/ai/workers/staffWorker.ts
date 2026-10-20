@@ -124,9 +124,13 @@ function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
     description: `Paid ${hireCost}g to hire ${best.name} (${best.tier}).`,
     riskTier: budgetReport.riskTier,
   });
-  pass.rival = logAgentAction(
-    { rival: pass.rival, type: 'STAFF', description: `Hired trainer ${best.name} (${best.tier}).`, riskTier: budgetReport.riskTier, week: week }
-  );
+  pass.rival = logAgentAction({
+    rival: pass.rival,
+    type: 'STAFF',
+    description: `Hired trainer ${best.name} (${best.tier}).`,
+    riskTier: budgetReport.riskTier,
+    week: week,
+  });
   pass.gazetteItems.push(
     `👔 STAFF: ${pass.rival.owner.stableName} hired ${best.name} (${best.tier}) to lead their training camp.`
   );
@@ -138,9 +142,7 @@ function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, wee
   const isRainy = state.weather === 'Rainy';
   const underPressure = pass.treasury < 500 && (isSolemn || isRainy);
 
-  if (
-    !(intent === 'RECOVERY' || intent === 'SURVIVAL' || pass.treasury < 100 || underPressure)
-  )
+  if (!(intent === 'RECOVERY' || intent === 'SURVIVAL' || pass.treasury < 100 || underPressure))
     return;
   if (pass.trainers.length === 0) return;
 
@@ -153,9 +155,13 @@ function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, wee
     : isRainy
       ? 'stormy weather risks'
       : 'budget constraints';
-  pass.rival = logAgentAction(
-    { rival: pass.rival, type: 'STAFF', description: `Released trainer ${fired.name} due to ${riskReason}.`, riskTier: 'Low', week: week }
-  );
+  pass.rival = logAgentAction({
+    rival: pass.rival,
+    type: 'STAFF',
+    description: `Released trainer ${fired.name} due to ${riskReason}.`,
+    riskTier: 'Low',
+    week: week,
+  });
   pass.gazetteItems.push(
     `📉 DOWNSIZING: ${pass.rival.owner.stableName} has released trainer ${fired.name} due to ${riskReason}.`
   );

@@ -66,8 +66,23 @@ export function generateWeeklyGazette(args: GenerateWeeklyGazetteArgs): GazetteS
   detections.tags = detectGazetteTags(fights, detections);
 
   // Generate headline and body using helper functions
-  const headline = generateGazetteHeadline({ detections: detections, fights: fights, week: week, _mood: mood, rngService: rngService, tone: tone });
-  const body = generateGazetteBody({ detections: detections, fights: fights, mood: mood, week: week, graveyard: graveyard, rngService: rngService, tone: tone });
+  const headline = generateGazetteHeadline({
+    detections: detections,
+    fights: fights,
+    week: week,
+    _mood: mood,
+    rngService: rngService,
+    tone: tone,
+  });
+  const body = generateGazetteBody({
+    detections: detections,
+    fights: fights,
+    mood: mood,
+    week: week,
+    graveyard: graveyard,
+    rngService: rngService,
+    tone: tone,
+  });
 
   return {
     id: storyId as import('@/types/shared.types').NewsId,

@@ -134,12 +134,7 @@ function sweepOrphanedReigns(state: GameState): void {
     const dead = deadIds.has(warriorId);
     const retired = retiredIds.has(warriorId);
     if (!gone && !dead && !retired) continue;
-    endReign(
-      state,
-      title,
-      dead ? 'died' : retired ? 'retired' : 'displaced',
-      state.absoluteWeek
-    );
+    endReign(state, title, dead ? 'died' : retired ? 'retired' : 'displaced', state.absoluteWeek);
   }
 }
 

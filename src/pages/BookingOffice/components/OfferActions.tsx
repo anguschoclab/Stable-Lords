@@ -31,7 +31,9 @@ export function OfferActions({
             className="flex-1 h-12 bg-primary text-primary-foreground rounded-none gap-3 font-black uppercase text-[10px] tracking-[0.15em] hover:bg-primary/90 transition-all motion-reduce:transition-none"
             onClick={onAccept}
             disabled={acceptDisabled}
-            aria-label={acceptDisabledReason ? `Accept Offer — ${acceptDisabledReason}` : 'Accept Offer'}
+            aria-label={
+              acceptDisabledReason ? `Accept Offer — ${acceptDisabledReason}` : 'Accept Offer'
+            }
             title={acceptDisabledReason}
           >
             Accept Offer

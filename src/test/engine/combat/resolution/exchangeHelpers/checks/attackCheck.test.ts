@@ -35,9 +35,21 @@ describe('attackCheck — performAttackCheck', () => {
   it('returns a boolean result', () => {
     const att = createMockFighter();
     const rng = () => 0.5;
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(typeof result).toBe('boolean');
   });
 
@@ -50,9 +62,21 @@ describe('attackCheck — performAttackCheck', () => {
       callCount++;
       return 0.0;
     }; // floor(0 * 20) + 1 = 1 → auto-success
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(true);
   });
 
@@ -61,9 +85,21 @@ describe('attackCheck — performAttackCheck', () => {
       skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
     });
     const rng = () => 0.95; // floor(0.95 * 20) + 1 = 20 → auto-fail
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(false);
   });
 
@@ -73,9 +109,21 @@ describe('attackCheck — performAttackCheck', () => {
     });
     // With high ATT and neutral modifiers, mid-range rolls should succeed
     const rng = () => 0.3; // floor(0.3 * 20) + 1 = 7
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     // skill=15, modifier includes oeAttMod(5,StrikingAttack)=floor(0*0.85)+1=1, +INITIATIVE_PRESS_BONUS=1, +GLOBAL_ATT_BONUS=2.5
     // total modifier ≈ 1 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 4.5
     // target = clamp(floor(15 + 4.5), 1, 19) = 19 → roll 7 ≤ 19 → success
@@ -93,13 +141,33 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // floor(0.5 * 20) + 1 = 11
     // Without commit: skill=5, mod≈4.5, target=clamp(floor(9.5),1,19)=9 → roll 11 > 9 → fail
-    const resultNormal = performAttackCheck(
-      { rng: rng, att: attNormal, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const resultNormal = performAttackCheck({
+      rng: rng,
+      att: attNormal,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     // With commit: skill=5, mod≈14.5, target=clamp(floor(19.5),1,19)=19 → roll 11 ≤ 19 → success
-    const resultCommitted = performAttackCheck(
-      { rng: rng, att: attCommitted, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const resultCommitted = performAttackCheck({
+      rng: rng,
+      att: attCommitted,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(resultNormal).toBe(false);
     expect(resultCommitted).toBe(true);
   });
@@ -115,13 +183,33 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without armHits: target = clamp(floor(10 + 4.5), 1, 19) = 14 → 11 ≤ 14 → success
-    const resultNoArm = performAttackCheck(
-      { rng: rng, att: attNoArmHits, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const resultNoArm = performAttackCheck({
+      rng: rng,
+      att: attNoArmHits,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     // With armHits=5: modifier = 4.5 - 5 = -0.5, target = clamp(floor(9.5), 1, 19) = 9 → 11 > 9 → fail
-    const resultArm = performAttackCheck(
-      { rng: rng, att: attWithArmHits, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const resultArm = performAttackCheck({
+      rng: rng,
+      att: attWithArmHits,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(resultNoArm).toBe(true);
     expect(resultArm).toBe(false);
   });
@@ -132,13 +220,34 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without extraBonus: target=clamp(floor(5+4.5),1,19)=9 → 11 > 9 → fail
-    const withoutExtra = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const withoutExtra = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     // With extraBonus=10: target=clamp(floor(5+14.5),1,19)=19 → 11 ≤ 19 → success
-    const withExtra = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 }, extraBonus: 10 }
-    );
+    const withExtra = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+      extraBonus: 10,
+    });
     expect(withoutExtra).toBe(false);
     expect(withExtra).toBe(true);
   });
@@ -149,9 +258,21 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11; target = 10 + 3.5 → success either way
     const check = (attPenalty: number) =>
-      performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-        attPenalty,
-      } });
+      performAttackCheck({
+        rng: rng,
+        att: att,
+        curAttOE: 5,
+        matchup: 0,
+        fat: 0,
+        curOffMods: zeroOffMods,
+        curPass: zeroPass,
+        curAntiSyn: zeroAntiSyn,
+        curBiasAtt: 0,
+        overAtt: 0,
+        _curAttWepReq: {
+          attPenalty,
+        },
+      });
     // createFighterState subtracts the requirement penalty from skills.ATT once;
     // the check itself must ignore it or the penalty doubles to −4 per point.
     expect(check(0)).toBe(true);
@@ -164,13 +285,35 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without overAtt: target=14 → success
-    const noOver = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const noOver = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     // With overAtt=10: modifier = 4.5 - 10 = -5.5, target=4 → fail
-    const withOver = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 10, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const withOver = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 10,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(noOver).toBe(true);
     expect(withOver).toBe(false);
   });
@@ -181,13 +324,35 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without bias: target=9 → fail
-    const noBias = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const noBias = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     // With bias=10: target=clamp(floor(5+14.5),1,19)=19 → success
-    const withBias = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 10, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const withBias = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 10,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(noBias).toBe(false);
     expect(withBias).toBe(true);
   });
@@ -198,13 +363,35 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without fatigue: target=14 → success
-    const noFat = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const noFat = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     // With fatigue=-10: modifier = 4.5 - 10 = -5.5, target=4 → fail
-    const withFat = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: -10, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const withFat = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: -10,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(noFat).toBe(true);
     expect(withFat).toBe(false);
   });
@@ -215,13 +402,33 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // Without matchup: target=9 → fail
-    const noMatchup = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const noMatchup = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     // With matchup=10: target=clamp(floor(5+14.5),1,19)=19 → success
-    const withMatchup = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 5, matchup: 10, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const withMatchup = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 10,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(noMatchup).toBe(false);
     expect(withMatchup).toBe(true);
   });
@@ -232,9 +439,21 @@ describe('attackCheck — performAttackCheck', () => {
     });
     const rng = () => 0.5; // roll = 11
     // skill=18, modifier≈4.5, target=clamp(floor(22.5),1,19)=19 → 11 ≤ 19 → success
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(true);
   });
 
@@ -248,9 +467,19 @@ describe('attackCheck — performAttackCheck', () => {
     // oeAttMod(10, StrikingAttack) = floor((10-5)*0.85) + 1 = 5
     // modifier = 5 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 8.5
     // target = clamp(floor(5+8.5), 1, 19) = 13 → 11 ≤ 13 → success
-    const result = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 10, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 10,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(result).toBe(true);
   });
 
@@ -264,9 +493,19 @@ describe('attackCheck — performAttackCheck', () => {
     // oeAttMod(10, TotalParry) = floor((10-5)*0.85) = 4 (no +1)
     // modifier = 4 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 7.5
     // target = clamp(floor(5+7.5), 1, 19) = 12 → 11 ≤ 12 → success
-    const result = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 10, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: { attPenalty: 0 } }
-    );
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 10,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: { attPenalty: 0 },
+    });
     expect(result).toBe(true);
   });
 
@@ -279,9 +518,21 @@ describe('attackCheck — performAttackCheck', () => {
     // Lunge for StrikingAttack (WS, mult=1.0): attBonus=2
     // modifier = 1 + 0 + 0 + 2 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 6.5
     // target = clamp(floor(5+6.5), 1, 19) = 11 → 11 ≤ 11 → success
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: offMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: offMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(true);
   });
 
@@ -295,9 +546,21 @@ describe('attackCheck — performAttackCheck', () => {
     const mockPass = { ...zeroPass, attBonus: 10 };
     // modifier = 1 + 0 + 0 + 0 + 10 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 14.5
     // target = clamp(floor(5+14.5), 1, 19) = 19 → 11 ≤ 19 → success
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: mockPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: mockPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(true);
   });
 
@@ -311,9 +574,21 @@ describe('attackCheck — performAttackCheck', () => {
     // modifier = 1 + 0 + 0 + 0 + 0 + (-3) + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 1.5
     // target = clamp(floor(10+1.5), 1, 19) = 11 → 11 ≤ 11 → success
     const badAntiSyn = { offMult: 0.3, defMult: 1.0 };
-    const result = performAttackCheck({ rng: rng, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: badAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: badAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(result).toBe(true);
   });
 
@@ -327,12 +602,36 @@ describe('attackCheck — performAttackCheck', () => {
     const att = createMockFighter();
     const rng1 = () => 0.5;
     const rng2 = () => 0.5;
-    const r1 = performAttackCheck({ rng: rng1, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
-    const r2 = performAttackCheck({ rng: rng2, att: att, curAttOE: 5, matchup: 0, fat: 0, curOffMods: zeroOffMods, curPass: zeroPass, curAntiSyn: zeroAntiSyn, curBiasAtt: 0, overAtt: 0, _curAttWepReq: {
-      attPenalty: 0,
-    } });
+    const r1 = performAttackCheck({
+      rng: rng1,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
+    const r2 = performAttackCheck({
+      rng: rng2,
+      att: att,
+      curAttOE: 5,
+      matchup: 0,
+      fat: 0,
+      curOffMods: zeroOffMods,
+      curPass: zeroPass,
+      curAntiSyn: zeroAntiSyn,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: {
+        attPenalty: 0,
+      },
+    });
     expect(r1).toBe(r2);
   });
 });
@@ -362,9 +661,19 @@ describe('attackCheck', () => {
       committed: false,
     } as unknown as FighterState;
 
-    const result = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 100, matchup: 0, fat: 0, curOffMods: defaultMods as any, curPass: defaultPassives as any, curAntiSyn: defaultAntiSynergy as any, curBiasAtt: 0, overAtt: 0, _curAttWepReq: wepReq }
-    );
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 100,
+      matchup: 0,
+      fat: 0,
+      curOffMods: defaultMods as any,
+      curPass: defaultPassives as any,
+      curAntiSyn: defaultAntiSynergy as any,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: wepReq,
+    });
 
     expect(result).toBe(true);
   });
@@ -379,9 +688,19 @@ describe('attackCheck', () => {
       committed: false,
     } as unknown as FighterState;
 
-    const result = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 1, matchup: 0, fat: 0, curOffMods: defaultMods as any, curPass: defaultPassives as any, curAntiSyn: defaultAntiSynergy as any, curBiasAtt: 0, overAtt: 0, _curAttWepReq: wepReq }
-    );
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 1,
+      matchup: 0,
+      fat: 0,
+      curOffMods: defaultMods as any,
+      curPass: defaultPassives as any,
+      curAntiSyn: defaultAntiSynergy as any,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: wepReq,
+    });
 
     expect(result).toBe(false);
   });
@@ -396,9 +715,19 @@ describe('attackCheck', () => {
       committed: true,
     } as unknown as FighterState;
 
-    const result = performAttackCheck(
-      { rng: rng, att: att, curAttOE: 100, matchup: 0, fat: 0, curOffMods: defaultMods as any, curPass: defaultPassives as any, curAntiSyn: defaultAntiSynergy as any, curBiasAtt: 0, overAtt: 0, _curAttWepReq: wepReq }
-    );
+    const result = performAttackCheck({
+      rng: rng,
+      att: att,
+      curAttOE: 100,
+      matchup: 0,
+      fat: 0,
+      curOffMods: defaultMods as any,
+      curPass: defaultPassives as any,
+      curAntiSyn: defaultAntiSynergy as any,
+      curBiasAtt: 0,
+      overAtt: 0,
+      _curAttWepReq: wepReq,
+    });
 
     // Testing logic indirectly by providing low skill and good roll vs high penalty/bonus
     // In our case we just confirm it runs correctly

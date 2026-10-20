@@ -101,9 +101,18 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
   let causeBucket: string = 'EXECUTION';
 
   if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
-    const killThreshold = gatherKillThreshold(
-      { attacker: attacker, defender: defender, ctx: ctx, hitLoc: hitLoc, killMech: killMech, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup }
-    );
+    const killThreshold = gatherKillThreshold({
+      attacker: attacker,
+      defender: defender,
+      ctx: ctx,
+      hitLoc: hitLoc,
+      killMech: killMech,
+      phase: phase,
+      attKD: attKD,
+      attOE: attOE,
+      attAL: attAL,
+      attMatchup: attMatchup,
+    });
     if (rng() < killThreshold * KILL_WINDOW.SCALE * (ctx?.deathRateMult ?? 1)) {
       defender.hp = 0;
       didKill = true;
@@ -168,9 +177,20 @@ function gatherKillThreshold(args: GatherKillThresholdArgs): number {
       }).killWindowBonus
     : 0;
   const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
-  return calculateKillWindow(
-    { hpRatio: defender.hp / defender.maxHp, enduranceRatio: defender.endurance / defender.maxEndurance, location: hitLoc, killDesire: attKD + killMech.killBonus, phaseLevel: killPos, attOE: attOE, attAL: attAL, matchupBonus: attMatchup, decSkill: effectiveDec, momentum: attacker.momentum, specialtyBonus: specKillBonus + attackerTraitKill, crowdKillBonus: crowdKillBonus }
-  );
+  return calculateKillWindow({
+    hpRatio: defender.hp / defender.maxHp,
+    enduranceRatio: defender.endurance / defender.maxEndurance,
+    location: hitLoc,
+    killDesire: attKD + killMech.killBonus,
+    phaseLevel: killPos,
+    attOE: attOE,
+    attAL: attAL,
+    matchupBonus: attMatchup,
+    decSkill: effectiveDec,
+    momentum: attacker.momentum,
+    specialtyBonus: specKillBonus + attackerTraitKill,
+    crowdKillBonus: crowdKillBonus,
+  });
 }
 
 /**
@@ -223,7 +243,21 @@ export function afterHitEvents(args: AfterHitEventsArgs) {
     });
   }
 
-  checkKillWindow(
-    { events: events, rng: rng, attacker: attacker, defender: defender, ctx: ctx, hitLoc: hitLoc, rawDamage: rawDamage, attTactics: attTactics, attLabel: attLabel, stylePhase: stylePhase, phase: phase, attKD: attKD, attOE: attOE, attAL: attAL, attMatchup: attMatchup }
-  );
+  checkKillWindow({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    ctx: ctx,
+    hitLoc: hitLoc,
+    rawDamage: rawDamage,
+    attTactics: attTactics,
+    attLabel: attLabel,
+    stylePhase: stylePhase,
+    phase: phase,
+    attKD: attKD,
+    attOE: attOE,
+    attAL: attAL,
+    attMatchup: attMatchup,
+  });
 }

@@ -42,16 +42,16 @@ function lineCount(rel: string): number | null {
 }
 
 describe('megaplan V11: monolith restructure budgets', () => {
-describe('MEGAPLAN-V13', () => {
-  it.each(TARGETS.map((t) => [t] as const))(
-    '%s is split to ≤ %d lines (or replaced by a directory)',
-    (target) => {
-      const lines = lineCount(target);
-      expect(
-        lines === null || lines <= TARGET_BUDGET,
-        `${target} is ${lines} lines — split into sibling modules (≤${TARGET_BUDGET})`
-      ).toBe(true);
-    }
-  );
-});
+  describe('MEGAPLAN-V13', () => {
+    it.each(TARGETS.map((t) => [t] as const))(
+      '%s is split to ≤ %d lines (or replaced by a directory)',
+      (target) => {
+        const lines = lineCount(target);
+        expect(
+          lines === null || lines <= TARGET_BUDGET,
+          `${target} is ${lines} lines — split into sibling modules (≤${TARGET_BUDGET})`
+        ).toBe(true);
+      }
+    );
+  });
 });

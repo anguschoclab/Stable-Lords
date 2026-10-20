@@ -19,11 +19,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   // Skepticism Tier 1: Financial Crisis — RECOVERY and SURVIVAL are the
   // crisis intents themselves; holding one while broke is correct, not stale.
-  if (
-    strategy.intent !== 'RECOVERY' &&
-    strategy.intent !== 'SURVIVAL' &&
-    rival.treasury < 150
-  ) {
+  if (strategy.intent !== 'RECOVERY' && strategy.intent !== 'SURVIVAL' && rival.treasury < 150) {
     return true;
   }
 

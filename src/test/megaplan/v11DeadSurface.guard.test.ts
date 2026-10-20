@@ -43,65 +43,63 @@ function body(rel: string): string {
 
 function referencesSymbol(symbol: string): string[] {
   const re = new RegExp(`\\b${symbol}\\b`);
-  return allSrc.filter(
-    (f) => !f.includes('megaplan') && re.test(readFileSync(f, 'utf8'))
-  );
+  return allSrc.filter((f) => !f.includes('megaplan') && re.test(readFileSync(f, 'utf8')));
 }
 
 describe('megaplan V11: dead-surface elimination', () => {
-describe('MEGAPLAN-V11', () => {
-  it('schemaObjects.ts re-export barrel is deleted', () => {
-    expect(
-      existsSync(path.join(SRC, 'schemas/schemaObjects.ts')),
-      'schemaObjects.ts still exists — repoint gameStateSchema imports to domain files'
-    ).toBe(false);
-  });
+  describe('MEGAPLAN-V11', () => {
+    it('schemaObjects.ts re-export barrel is deleted', () => {
+      expect(
+        existsSync(path.join(SRC, 'schemas/schemaObjects.ts')),
+        'schemaObjects.ts still exists — repoint gameStateSchema imports to domain files'
+      ).toBe(false);
+    });
 
-  it('gameStateSchema.ts carries no schema re-export block', () => {
-    const lines = body('src/schemas/gameStateSchema.ts').split('\n');
-    const reExports = lines.filter((l) => /^export\s*\{/.test(l.trim()));
-    expect(
-      reExports,
-      `gameStateSchema.ts still re-exports schemas:\n${reExports.join('\n')}`
-    ).toEqual([]);
-  });
+    it('gameStateSchema.ts carries no schema re-export block', () => {
+      const lines = body('src/schemas/gameStateSchema.ts').split('\n');
+      const reExports = lines.filter((l) => /^export\s*\{/.test(l.trim()));
+      expect(
+        reExports,
+        `gameStateSchema.ts still re-exports schemas:\n${reExports.join('\n')}`
+      ).toEqual([]);
+    });
 
-  it('no SeededRNGService alias anywhere in src', () => {
-    expect(referencesSymbol('SeededRNGService')).toEqual([]);
-  });
+    it('no SeededRNGService alias anywhere in src', () => {
+      expect(referencesSymbol('SeededRNGService')).toEqual([]);
+    });
 
-  it('no getStablePairKey alias anywhere in src', () => {
-    expect(referencesSymbol('getStablePairKey')).toEqual([]);
-  });
+    it('no getStablePairKey alias anywhere in src', () => {
+      expect(referencesSymbol('getStablePairKey')).toEqual([]);
+    });
 
-  it('HallOfFights has no default export', () => {
-    expect(body('src/lore/HallOfFights.tsx')).not.toMatch(/export\s+default/);
-  });
+    it('HallOfFights has no default export', () => {
+      expect(body('src/lore/HallOfFights.tsx')).not.toMatch(/export\s+default/);
+    });
 
-  it('useGameStore.ts no longer re-exports dead convenience hooks', () => {
-    // useReputationState is live (ReputationSliders/Quadrant/ControlCenter)
-    const dead = [
-      'usePlayer',
-      'useRoster',
-      'useRivals',
-      'useTreasury',
-      'useWeek',
-      'useIsSimulating',
-      'useStyleStats',
-    ];
-    const src = body('src/state/useGameStore.ts');
-    const survivors = dead.filter((h) => new RegExp(`\\b${h}\\b`).test(src));
-    expect(survivors).toEqual([]);
-  });
+    it('useGameStore.ts no longer re-exports dead convenience hooks', () => {
+      // useReputationState is live (ReputationSliders/Quadrant/ControlCenter)
+      const dead = [
+        'usePlayer',
+        'useRoster',
+        'useRivals',
+        'useTreasury',
+        'useWeek',
+        'useIsSimulating',
+        'useStyleStats',
+      ];
+      const src = body('src/state/useGameStore.ts');
+      const survivors = dead.filter((h) => new RegExp(`\\b${h}\\b`).test(src));
+      expect(survivors).toEqual([]);
+    });
 
-  it('templateCache.ts dead query API is removed', () => {
-    const p = path.join(SRC, 'data/templates/templateCache.ts');
-    if (!existsSync(p)) return; // whole-file removal also satisfies this
-    const src = readFileSync(p, 'utf8');
-    const deadFns = src.match(/export\s+(?:function|const)\s+getTemplatesBy\w+/g) ?? [];
-    expect(deadFns).toEqual([]);
-    expect(src).not.toMatch(/export\s+function\s+searchTemplates/);
-    expect(src).not.toMatch(/export\s+(?:function|const)\s+getCacheStats/);
+    it('templateCache.ts dead query API is removed', () => {
+      const p = path.join(SRC, 'data/templates/templateCache.ts');
+      if (!existsSync(p)) return; // whole-file removal also satisfies this
+      const src = readFileSync(p, 'utf8');
+      const deadFns = src.match(/export\s+(?:function|const)\s+getTemplatesBy\w+/g) ?? [];
+      expect(deadFns).toEqual([]);
+      expect(src).not.toMatch(/export\s+function\s+searchTemplates/);
+      expect(src).not.toMatch(/export\s+(?:function|const)\s+getCacheStats/);
+    });
   });
-});
 });

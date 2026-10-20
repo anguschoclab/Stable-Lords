@@ -23,9 +23,20 @@ describe('killWindowBonus scale', () => {
       // Same shape as the hit-execution call: a trait-only specialty bonus
       // must not, by itself, reach the 0.04 cap. A limb location keeps the
       // base window small so the bonus term is what decides saturation.
-      const threshold = calculateKillWindow(
-        { hpRatio: 0.45, enduranceRatio: 0.55, location: 'right arm', killDesire: 8, phaseLevel: 2, attOE: 8, attAL: 8, matchupBonus: 0, decSkill: 12, momentum: 0, specialtyBonus: bonus, crowdKillBonus: 0 }
-      );
+      const threshold = calculateKillWindow({
+        hpRatio: 0.45,
+        enduranceRatio: 0.55,
+        location: 'right arm',
+        killDesire: 8,
+        phaseLevel: 2,
+        attOE: 8,
+        attAL: 8,
+        matchupBonus: 0,
+        decSkill: 12,
+        momentum: 0,
+        specialtyBonus: bonus,
+        crowdKillBonus: 0,
+      });
       expect(threshold, `${t.id} killWindowBonus=${bonus} saturates cap`).toBeLessThan(0.04);
     }
   });

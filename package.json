@@ -32,7 +32,7 @@
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "playwright test --debug",
     "type-check": "bunx tsr generate && node node_modules/typescript7/bin/tsc --build --force",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write .",
     "oracle:daily": "bun run scripts/daily_oracle.ts",
     "bard:daily": "bunx tsx scripts/daily_bard.ts",
     "narrative-validate": "bun run scripts/narrative_validate.ts",

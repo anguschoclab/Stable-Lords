@@ -30,7 +30,13 @@ describe('generateAIRecruit — naming', () => {
 
     const seen = new Set<string>();
     for (let seed = 0; seed < 40; seed++) {
-      const w = generateAIRecruit({ rival: rival, week: seed + 1, meta: undefined, seed: seed, usedNames: usedNames });
+      const w = generateAIRecruit({
+        rival: rival,
+        week: seed + 1,
+        meta: undefined,
+        seed: seed,
+        usedNames: usedNames,
+      });
       expect(w).not.toBeNull();
       expect(usedNames.has(w!.name), `collision: ${w!.name}`).toBe(false);
       expect(seen.has(w!.name), `repeat in run: ${w!.name}`).toBe(false);

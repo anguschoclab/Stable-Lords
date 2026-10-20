@@ -23,10 +23,7 @@ vi.mock('@tanstack/react-router', async (importOriginal) => {
 });
 
 import { Breadcrumbs } from '@/components/layout/breadcrumbs/Breadcrumbs';
-import {
-  recordVisit,
-  resetNavTrail,
-} from '@/components/layout/breadcrumbs/navTrail';
+import { recordVisit, resetNavTrail } from '@/components/layout/breadcrumbs/navTrail';
 import { useGameStore } from '@/state/useGameStore';
 import { clearEntityIndexCaches } from '@/engine/core/entityIndex';
 import { makeWarrior } from '@/test/_fixtures/factories';

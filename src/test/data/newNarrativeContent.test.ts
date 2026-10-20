@@ -140,8 +140,9 @@ describe('expanded narrative content', () => {
 
   describe('hit_locations integrity', () => {
     it('contains no placeholder artifacts like "RIGHT ARM PART 9"', () => {
-      const locs = (narrativeContent as { pbp?: { hit_locations?: Record<string, string[]> } })
-        .pbp?.hit_locations ?? {};
+      const locs =
+        (narrativeContent as { pbp?: { hit_locations?: Record<string, string[]> } }).pbp
+          ?.hit_locations ?? {};
       expect(Object.keys(locs).length).toBeGreaterThan(0);
       for (const [zone, variants] of Object.entries(locs)) {
         for (const v of variants) {

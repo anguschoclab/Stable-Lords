@@ -13,49 +13,49 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 
 ## 0. Pre-implementation plan validation (pass 1)
 
-| # | Draft claim | Verdict | Evidence |
-| --- | --- | --- | --- |
-| C1 | #1017 "adds THE_FORSAKEN_BOG arena" | **DISPROVED** | Diff only refactors weather-damage multiplication in `combatMath.ts` / `hitExecution.ts`; no arena definition or registration. |
-| C2 | #1018 adds Bathhouse + Desolate Heath + weather + synergies + badges + tests | **APPROVED** | Verified full scope in branch diff. |
-| C3 | #1019 adds Crumbling Spire + Misty Pit | **CORRECTED — PR IS BROKEN** | Diff references `ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER` / `MIST_VEIL_TRIGGER` but never defines them; raw merge would fail type-check. |
-| C4 | #1020 adds lore + `orphan_scavenger` trait | **APPROVED** | Trait def and registry insertion follow existing conventions. |
-| C5 | #1021 narrative JSON curation +32/−39 | **APPROVED w/ caveat** | Branch is fresh (`behind=0`), removals are real near-dupes; PR diff introduced Unicode-escape churn that must be normalized. |
-| C6 | #1022 focus-visible scouting buttons | **APPROVED** | Identical `focus-visible:*` swap across 4 components; consistent with V9 a11y work. |
-| C7 | `narrative-content-expansion-1450…` adds a trait | **DISPROVED as unique value** | Only adds `gutter_wraith`, already landed on `main` (`edeb48fd`). |
-| C8 | `bolt/optimize-useshallow` orphan branch | **APPROVED as obsolete** | Single empty commit literally titled "The work was closed as obsolete". |
-| C9 | `wip/living-rival-world` fully superseded | **CORRECTED — real residual exists** | 33-file audit found `personalityDraft.test.ts` and `livingWorld.slow.test.ts` absent from `main` — salvageable. |
-| C10 | Arena PRs conflict on shared files and breach caps | **APPROVED, corrected arithmetic** | Union breaches `ARENA_ROSTER_LIMITS`: total 50→53, t2 24→25, t3 15→17; caps repinned with V9 precedent. |
-| C11 | #1018 badge code passes token guard | **APPROVED** | `text-blue-400` / `border-blue-500/30` are palette utilities; badge labels pass screaming-copy check. |
-| C12 | `ARENA_EVENT_CONSTANTS` split across two files | **NOTE** | Constants in root `src/constants/arenaEvents.ts`; configs in `src/constants/arena/arenaEvents.ts`. Drift hazard demonstrated by #1019. |
+| #   | Draft claim                                                                  | Verdict                              | Evidence                                                                                                                                            |
+| --- | ---------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C1  | #1017 "adds THE_FORSAKEN_BOG arena"                                          | **DISPROVED**                        | Diff only refactors weather-damage multiplication in `combatMath.ts` / `hitExecution.ts`; no arena definition or registration.                      |
+| C2  | #1018 adds Bathhouse + Desolate Heath + weather + synergies + badges + tests | **APPROVED**                         | Verified full scope in branch diff.                                                                                                                 |
+| C3  | #1019 adds Crumbling Spire + Misty Pit                                       | **CORRECTED — PR IS BROKEN**         | Diff references `ARENA_EVENT_CONSTANTS.CRUMBLING_SPIRE_FALL_TRIGGER` / `MIST_VEIL_TRIGGER` but never defines them; raw merge would fail type-check. |
+| C4  | #1020 adds lore + `orphan_scavenger` trait                                   | **APPROVED**                         | Trait def and registry insertion follow existing conventions.                                                                                       |
+| C5  | #1021 narrative JSON curation +32/−39                                        | **APPROVED w/ caveat**               | Branch is fresh (`behind=0`), removals are real near-dupes; PR diff introduced Unicode-escape churn that must be normalized.                        |
+| C6  | #1022 focus-visible scouting buttons                                         | **APPROVED**                         | Identical `focus-visible:*` swap across 4 components; consistent with V9 a11y work.                                                                 |
+| C7  | `narrative-content-expansion-1450…` adds a trait                             | **DISPROVED as unique value**        | Only adds `gutter_wraith`, already landed on `main` (`edeb48fd`).                                                                                   |
+| C8  | `bolt/optimize-useshallow` orphan branch                                     | **APPROVED as obsolete**             | Single empty commit literally titled "The work was closed as obsolete".                                                                             |
+| C9  | `wip/living-rival-world` fully superseded                                    | **CORRECTED — real residual exists** | 33-file audit found `personalityDraft.test.ts` and `livingWorld.slow.test.ts` absent from `main` — salvageable.                                     |
+| C10 | Arena PRs conflict on shared files and breach caps                           | **APPROVED, corrected arithmetic**   | Union breaches `ARENA_ROSTER_LIMITS`: total 50→53, t2 24→25, t3 15→17; caps repinned with V9 precedent.                                             |
+| C11 | #1018 badge code passes token guard                                          | **APPROVED**                         | `text-blue-400` / `border-blue-500/30` are palette utilities; badge labels pass screaming-copy check.                                               |
+| C12 | `ARENA_EVENT_CONSTANTS` split across two files                               | **NOTE**                             | Constants in root `src/constants/arenaEvents.ts`; configs in `src/constants/arena/arenaEvents.ts`. Drift hazard demonstrated by #1019.              |
 
 ## 0b. Implementation-phase validation (pass 2)
 
-| # | Finding | Verdict | Evidence |
-| --- | --- | --- | --- |
-| C13 | Arena union = 54 arenas | **CORRECTED → 53** | Measured via registry: `{t1:11, t2:25, t3:17}`; baseline was 49, not 50. Caps landed `{54, 12, 25, 17}` as ceilings. |
-| C14 | `livingWorld.slow.test.ts` ported | **INCOMPLETE → COMPLETED** | 1000-week version timed out at 10 min; adapted to 200 weeks and measured (92 rivals, floor=90, soft cap=160) — 7/7 green. |
-| C15 | traitDedup key-order bug = 1 flaw | **CORRECTED — exposed 3 latent dupes** | Canonicalizing `effectHash` unmasked `hollow_gaze`/`cornered_rat`, `orphan_street_rat`/`gallows_humor`, `iron_vein`/`rust_blooded`. All differentiated. |
-| C16 | Badge coverage complete | **PARTIAL → COMPLETED** | Added `ArenaHazardBadges` shared component, extracted duplicate JSX from `ArenaCircuit`/`ArenaDetail`, added component spec + `ArenaDetail` badge asserts. |
-| C17 | `tacticsAdvisorBridge.test.ts` missing JSDOM pragma | **EXEMPT (pre-existing)** | Listed in `auditBaseline.json` before V10; not introduced by this pass. |
-| C18 | Guard matrix | **CORRECTED** | `knip`/`dupes` are **not CI gates**; the real 9-job CI matrix is type-check, build, vitest, lint, sharded bun test, slow vitest, coverage vitest, electron:compile, playwright. |
-| C19 | Test-first discipline | **APPROVED** | Git log shows a `test:` commit before each `feat:`/`fix:` for every unit. |
-| C20 | `falling_debris` dead event | **Bug confirmed + fixed** | Required `['ruins','indoor']`; no registered arena had both tags. Fixed to `['ruins','cramped']` and guarded by orphan-event invariant. |
+| #   | Finding                                             | Verdict                                | Evidence                                                                                                                                                                        |
+| --- | --------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| C13 | Arena union = 54 arenas                             | **CORRECTED → 53**                     | Measured via registry: `{t1:11, t2:25, t3:17}`; baseline was 49, not 50. Caps landed `{54, 12, 25, 17}` as ceilings.                                                            |
+| C14 | `livingWorld.slow.test.ts` ported                   | **INCOMPLETE → COMPLETED**             | 1000-week version timed out at 10 min; adapted to 200 weeks and measured (92 rivals, floor=90, soft cap=160) — 7/7 green.                                                       |
+| C15 | traitDedup key-order bug = 1 flaw                   | **CORRECTED — exposed 3 latent dupes** | Canonicalizing `effectHash` unmasked `hollow_gaze`/`cornered_rat`, `orphan_street_rat`/`gallows_humor`, `iron_vein`/`rust_blooded`. All differentiated.                         |
+| C16 | Badge coverage complete                             | **PARTIAL → COMPLETED**                | Added `ArenaHazardBadges` shared component, extracted duplicate JSX from `ArenaCircuit`/`ArenaDetail`, added component spec + `ArenaDetail` badge asserts.                      |
+| C17 | `tacticsAdvisorBridge.test.ts` missing JSDOM pragma | **EXEMPT (pre-existing)**              | Listed in `auditBaseline.json` before V10; not introduced by this pass.                                                                                                         |
+| C18 | Guard matrix                                        | **CORRECTED**                          | `knip`/`dupes` are **not CI gates**; the real 9-job CI matrix is type-check, build, vitest, lint, sharded bun test, slow vitest, coverage vitest, electron:compile, playwright. |
+| C19 | Test-first discipline                               | **APPROVED**                           | Git log shows a `test:` commit before each `feat:`/`fix:` for every unit.                                                                                                       |
+| C20 | `falling_debris` dead event                         | **Bug confirmed + fixed**              | Required `['ruins','indoor']`; no registered arena had both tags. Fixed to `['ruins','cramped']` and guarded by orphan-event invariant.                                         |
 
 ---
 
 ## 1. Open-PR / branch disposition table
 
-| PR / Branch | Verdict | Landed as / Disposition |
-| --- | --- | --- |
-| #1017 | **REJECTED** | No code landed; close with verdict comment. |
-| #1018 | **LANDED (curated)** | `35f37fee` — 2 arenas, events, weather modifiers, arenaFit synergies, UI badges. |
-| #1019 | **LANDED (curated, repaired)** | `35f37fee` — 2 arenas; supplied missing `CRUMBLING_SPIRE_FALL_TRIGGER`/`MIST_VEIL_TRIGGER`. |
-| #1020 | **LANDED (curated)** | `15ddfe62` — `orphan_scavenger` + lore/arena-lore; stripped `.claude/backups`. |
-| #1021 | **LANDED (curated)** | `95a70de7` — narrative union +32/−32; normalized Unicode escapes; stripped `.claude/backups`. |
-| #1022 | **LANDED (near-verbatim)** | `31ea7930` — focus-visible rings on scouting selectors; stripped `.jules/palette.md`. |
-| `narrative-content-expansion-1450…` | **DELETE remote** | Fully superseded by `gutter_wraith` on `main`. |
-| `bolt/optimize-useshallow` | **DELETE remote** | Empty obsolete commit. |
-| `wip/living-rival-world` | **DELETE local** | Salvaged `personalityDraft.test.ts` (`b8ceda9d`) and adapted `livingWorld.slow.test.ts` (`c34ea89e`). Deleted after CI green. |
+| PR / Branch                         | Verdict                        | Landed as / Disposition                                                                                                       |
+| ----------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| #1017                               | **REJECTED**                   | No code landed; close with verdict comment.                                                                                   |
+| #1018                               | **LANDED (curated)**           | `35f37fee` — 2 arenas, events, weather modifiers, arenaFit synergies, UI badges.                                              |
+| #1019                               | **LANDED (curated, repaired)** | `35f37fee` — 2 arenas; supplied missing `CRUMBLING_SPIRE_FALL_TRIGGER`/`MIST_VEIL_TRIGGER`.                                   |
+| #1020                               | **LANDED (curated)**           | `15ddfe62` — `orphan_scavenger` + lore/arena-lore; stripped `.claude/backups`.                                                |
+| #1021                               | **LANDED (curated)**           | `95a70de7` — narrative union +32/−32; normalized Unicode escapes; stripped `.claude/backups`.                                 |
+| #1022                               | **LANDED (near-verbatim)**     | `31ea7930` — focus-visible rings on scouting selectors; stripped `.jules/palette.md`.                                         |
+| `narrative-content-expansion-1450…` | **DELETE remote**              | Fully superseded by `gutter_wraith` on `main`.                                                                                |
+| `bolt/optimize-useshallow`          | **DELETE remote**              | Empty obsolete commit.                                                                                                        |
+| `wip/living-rival-world`            | **DELETE local**               | Salvaged `personalityDraft.test.ts` (`b8ceda9d`) and adapted `livingWorld.slow.test.ts` (`c34ea89e`). Deleted after CI green. |
 
 ---
 
@@ -93,7 +93,7 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 ### Scouting a11y (#1022)
 
 - Replaced bare `outline-none` with `focus-visible:outline-none
-  focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset`
+focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset`
   on 4 scouting selection components.
 
 ### WIP salvage
@@ -120,12 +120,12 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 
 ## 3. New bugs found & fixed (each with failing evidence first)
 
-| # | Bug | Failing evidence | Fix |
-| --- | --- | --- | --- |
-| B-V10-1 | `falling_debris` event can never trigger | New orphan-event invariant: required tags `['ruins','indoor']` not satisfied by any registered arena. | Changed required tags to `['ruins','cramped']` — preserves enclosed-ruin semantics and is hostable by existing venues. |
-| B-V10-2 | `hollow_gaze` duplicates `cornered_rat` | Canonical `effectHash` found identical core `{attModLate:1, defModLate:1}`. | `hollow_gaze` now `{attModLate:1, parModLate:1}` (unnerving stare → opponent parries worse late). |
-| B-V10-3 | `orphan_street_rat` duplicates `gallows_humor` | Canonical `effectHash` found identical core `{decMod:1, defModLate:1}`. | `orphan_street_rat` now `{defModLate:1, defModLowHp:1}` (nimble + hard to hit when desperate). |
-| B-V10-4 | `iron_vein` duplicates `rust_blooded` core effect | Canonical `effectHash` found identical `{defMod:1, enduranceMult:0.9}` (`iron_vein` had extra `fightPlanMod` + synergies). | `rust_blooded` now `enduranceMult:0.85` (deeper exhaustion immunity). |
+| #       | Bug                                               | Failing evidence                                                                                                           | Fix                                                                                                                    |
+| ------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| B-V10-1 | `falling_debris` event can never trigger          | New orphan-event invariant: required tags `['ruins','indoor']` not satisfied by any registered arena.                      | Changed required tags to `['ruins','cramped']` — preserves enclosed-ruin semantics and is hostable by existing venues. |
+| B-V10-2 | `hollow_gaze` duplicates `cornered_rat`           | Canonical `effectHash` found identical core `{attModLate:1, defModLate:1}`.                                                | `hollow_gaze` now `{attModLate:1, parModLate:1}` (unnerving stare → opponent parries worse late).                      |
+| B-V10-3 | `orphan_street_rat` duplicates `gallows_humor`    | Canonical `effectHash` found identical core `{decMod:1, defModLate:1}`.                                                    | `orphan_street_rat` now `{defModLate:1, defModLowHp:1}` (nimble + hard to hit when desperate).                         |
+| B-V10-4 | `iron_vein` duplicates `rust_blooded` core effect | Canonical `effectHash` found identical `{defMod:1, enduranceMult:0.9}` (`iron_vein` had extra `fightPlanMod` + synergies). | `rust_blooded` now `enduranceMult:0.85` (deeper exhaustion immunity).                                                  |
 
 ---
 
@@ -152,23 +152,23 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 
 ## 5. Gate matrix (recorded at end of V10 pass)
 
-| Gate | Result | Notes |
-| --- | --- | --- |
-| `type-check` | ✅ green | `bun run type-check` passes. |
-| `lint` | ✅ green | `eslint .` passes with 0 errors. |
-| Vitest default | ✅ green | 752 test files, 8577 tests passed, 2 skipped. |
-| Bun test (sharded) | ✅ green | All shards passed via CI-equivalent loop. |
-| Vite build | ✅ green | `bun run build` passes. |
-| Electron compile | ✅ green | `bun run electron:compile` passes. |
-| Narrative validate | ✅ green | `bun run narrative-validate` passes. |
-| Vitest slow suite | ✅ green | 28 test files, 188 tests passed. |
-| Coverage vitest | ✅ green | `bun x vitest run --coverage --reporter=dot` passes with v8 thresholds. |
-| Playwright e2e (Chromium) | ✅ green on CI | Local seasonal-tournament spec timed out identically on `pre-megaplan-v10` → pre-existing local-environment flakiness. CI run `37116138933` passed 9/9. |
-| UI-audit-scan | ✅ 0 hits | No token-violation, screaming-copy, motion, RNG, or fake-chrome hits. |
-| Orphan-scan | ✅ 0 unreachable pages | No orphan routes detected. |
-| Data-array-dup-scan | ✅ clean | No duplicate data-array entries. |
-| Test-audit-scan | ⚠️ pre-existing baseline | Only flag is `tacticsAdvisorBridge.test.ts` missing JSDOM pragma, already recorded in `auditBaseline.json` before V10. |
-| `dupes` / jscpd | ✅ report-only | `--exit-code 0`; only small pre-existing blocks remain. |
+| Gate                      | Result                   | Notes                                                                                                                                                   |
+| ------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type-check`              | ✅ green                 | `bun run type-check` passes.                                                                                                                            |
+| `lint`                    | ✅ green                 | `eslint .` passes with 0 errors.                                                                                                                        |
+| Vitest default            | ✅ green                 | 752 test files, 8577 tests passed, 2 skipped.                                                                                                           |
+| Bun test (sharded)        | ✅ green                 | All shards passed via CI-equivalent loop.                                                                                                               |
+| Vite build                | ✅ green                 | `bun run build` passes.                                                                                                                                 |
+| Electron compile          | ✅ green                 | `bun run electron:compile` passes.                                                                                                                      |
+| Narrative validate        | ✅ green                 | `bun run narrative-validate` passes.                                                                                                                    |
+| Vitest slow suite         | ✅ green                 | 28 test files, 188 tests passed.                                                                                                                        |
+| Coverage vitest           | ✅ green                 | `bun x vitest run --coverage --reporter=dot` passes with v8 thresholds.                                                                                 |
+| Playwright e2e (Chromium) | ✅ green on CI           | Local seasonal-tournament spec timed out identically on `pre-megaplan-v10` → pre-existing local-environment flakiness. CI run `37116138933` passed 9/9. |
+| UI-audit-scan             | ✅ 0 hits                | No token-violation, screaming-copy, motion, RNG, or fake-chrome hits.                                                                                   |
+| Orphan-scan               | ✅ 0 unreachable pages   | No orphan routes detected.                                                                                                                              |
+| Data-array-dup-scan       | ✅ clean                 | No duplicate data-array entries.                                                                                                                        |
+| Test-audit-scan           | ⚠️ pre-existing baseline | Only flag is `tacticsAdvisorBridge.test.ts` missing JSDOM pragma, already recorded in `auditBaseline.json` before V10.                                  |
+| `dupes` / jscpd           | ✅ report-only           | `--exit-code 0`; only small pre-existing blocks remain.                                                                                                 |
 
 ---
 
@@ -203,22 +203,23 @@ bugs discovered during review. Zero save-file / backward-compatibility constrain
 18. `057b34ad` chore: regenerate test-audit baselines for new specs
 
 Final CI results:
+
 - Code push (`7b3cae14`) → run `37116138933` — 9/9 green (~28m).
 - Docs update push (`f1857ac6`) → run `37117750323` — 9/9 green (~25m).
-Jobs: lint, type-check, bun-test (sharded), electron:compile, vitest default, vite build, slow vitest, playwright e2e (chromium), coverage.
+  Jobs: lint, type-check, bun-test (sharded), electron:compile, vitest default, vite build, slow vitest, playwright e2e (chromium), coverage.
 
 ---
 
 ## 8. Branch cleanup record
 
-| Branch | Action | Status |
-| --- | --- | --- |
-| `feature/add-forsaken-bog-arena-12299480434468563509` (#1017) | close PR, delete remote | ✅ done |
-| `jules-arena-architect-5441102121484693603` (#1018) | close PR, delete remote | ✅ done |
-| `feat/new-arenas-6316601110013621996` (#1019) | close PR, delete remote | ✅ done |
-| `narrative-content-expansion-12261878026456190493` (#1020) | close PR, delete remote | ✅ done |
-| `jules-11124804984749789547-9f5700b0` (#1021) | close PR, delete remote | ✅ done |
-| `ux/scouting-focus-visible-14683235908963971442` (#1022) | close PR, delete remote | ✅ done |
-| `origin/bolt/optimize-useshallow-5591841664083074347` | delete remote | ✅ done |
-| `origin/narrative-content-expansion-14508848799275203441` | delete remote | ✅ done |
-| `wip/living-rival-world` (local) | delete after salvage verified | ✅ done |
+| Branch                                                        | Action                        | Status  |
+| ------------------------------------------------------------- | ----------------------------- | ------- |
+| `feature/add-forsaken-bog-arena-12299480434468563509` (#1017) | close PR, delete remote       | ✅ done |
+| `jules-arena-architect-5441102121484693603` (#1018)           | close PR, delete remote       | ✅ done |
+| `feat/new-arenas-6316601110013621996` (#1019)                 | close PR, delete remote       | ✅ done |
+| `narrative-content-expansion-12261878026456190493` (#1020)    | close PR, delete remote       | ✅ done |
+| `jules-11124804984749789547-9f5700b0` (#1021)                 | close PR, delete remote       | ✅ done |
+| `ux/scouting-focus-visible-14683235908963971442` (#1022)      | close PR, delete remote       | ✅ done |
+| `origin/bolt/optimize-useshallow-5591841664083074347`         | delete remote                 | ✅ done |
+| `origin/narrative-content-expansion-14508848799275203441`     | delete remote                 | ✅ done |
+| `wip/living-rival-world` (local)                              | delete after salvage verified | ✅ done |

@@ -55,7 +55,15 @@ interface AnnounceOffseasonEventArgs {
 export function announceOffseasonEvent(args: AnnounceOffseasonEventArgs): void {
   const { ctx, rng, nextWeek, e, data } = args;
   const { category } = args;
-  pushNewsletterItem({ target: ctx.newsletterItems, rng: rng, week: nextWeek, title: e.title, templates: e.newsletter, data: data, category: category });
+  pushNewsletterItem({
+    target: ctx.newsletterItems,
+    rng: rng,
+    week: nextWeek,
+    title: e.title,
+    templates: e.newsletter,
+    data: data,
+    category: category,
+  });
 }
 
 /** Outcome returned by a `withChosenWarrior` apply callback. */
@@ -83,7 +91,13 @@ export function withChosenWarrior(args: WithChosenWarriorArgs): void {
   const outcome = apply(chosen);
   if (!outcome) return;
   if (outcome.updates) ctx.rosterUpdates.set(chosen.id, outcome.updates);
-  announceOffseasonEvent({ ctx: ctx, rng: rng, nextWeek: nextWeek, e: e, data: { name: chosen.name, ...outcome.announce } });
+  announceOffseasonEvent({
+    ctx: ctx,
+    rng: rng,
+    nextWeek: nextWeek,
+    e: e,
+    data: { name: chosen.name, ...outcome.announce },
+  });
 }
 
 /** Args for {@link withChosenWarriorNews} — the run bundle plus the apply callback. */
@@ -97,7 +111,10 @@ export function addStat(value: number | undefined, delta: number): number {
 }
 
 /** `chosen.injuries` plus `injury` appended — the standard injury outcome field. */
-export function withAddedInjury(chosen: Warrior, injury: Warrior['injuries'][number]): Warrior['injuries'] {
+export function withAddedInjury(
+  chosen: Warrior,
+  injury: Warrior['injuries'][number]
+): Warrior['injuries'] {
   return [...(chosen.injuries || []), injury];
 }
 

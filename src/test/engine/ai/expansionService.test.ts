@@ -17,11 +17,17 @@ import { aiRosterMax } from '@/constants/ai';
 import { personalityFromCareer } from '@/engine/ai/legacyFounder';
 
 function makeFounder(name: string): Warrior {
-  return makeWarrior({ id: undefined, name: name, style: FightingStyle.StrikingAttack, attrs: ATTRS_10, overrides: {
-    age: 45,
-    fame: 1600,
-    career: { wins: 60, losses: 12, kills: 4 },
-  } });
+  return makeWarrior({
+    id: undefined,
+    name: name,
+    style: FightingStyle.StrikingAttack,
+    attrs: ATTRS_10,
+    overrides: {
+      age: 45,
+      fame: 1600,
+      career: { wins: 60, losses: 12, kills: 4 },
+    },
+  });
 }
 
 /** Clone a template stable `count` times with distinct branded ids/names. */
@@ -58,10 +64,7 @@ describe('ExpansionService', () => {
     });
 
     it('refills toward the floor, bounded by EXPANSION_MAX_PER_CHURN', () => {
-      const { updatedState, minted } = ExpansionService.processExpansion(
-        state,
-        new SeededRNG(1)
-      );
+      const { updatedState, minted } = ExpansionService.processExpansion(state, new SeededRNG(1));
 
       expect(minted.length).toBeGreaterThan(0);
       expect(minted.length).toBeLessThanOrEqual(EXPANSION_MAX_PER_CHURN);
@@ -174,11 +177,17 @@ describe('ExpansionService', () => {
       // minted under the template's personality cap — a career-derived
       // Tactician/Methodical founder landing on an Aggressive template must
       // not debut over aiRosterMax(8).
-      const founder = makeWarrior({ id: undefined, name: 'Wall Legend', style: FightingStyle.WallOfSteel, attrs: ATTRS_10, overrides: {
-        age: 45,
-        fame: 1600,
-        career: { wins: 60, losses: 12, kills: 1 },
-      } });
+      const founder = makeWarrior({
+        id: undefined,
+        name: 'Wall Legend',
+        style: FightingStyle.WallOfSteel,
+        attrs: ATTRS_10,
+        overrides: {
+          age: 45,
+          fame: 1600,
+          career: { wins: 60, losses: 12, kills: 1 },
+        },
+      });
       expect(personalityFromCareer(founder)).toBe('Tactician');
 
       let legacyMints = 0;

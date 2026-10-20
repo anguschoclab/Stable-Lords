@@ -79,19 +79,35 @@ export function generateRecruitPool(args: GenerateRecruitPoolArgs): PoolWarrior[
   // Guarantee at least two Promising+ warriors in a larger pool — these two
   // flagship slots are always open-market recruits, never apprentices.
   pool.push(
-    generateRecruit(
-      { rng: rngService, usedNames: usedNames, week: week, forceTier: rngService.next() < 0.3 ? 'Exceptional' : 'Promising', meta: meta, legacyCandidates: legacyCandidates, legacyChance }
-    )
+    generateRecruit({
+      rng: rngService,
+      usedNames: usedNames,
+      week: week,
+      forceTier: rngService.next() < 0.3 ? 'Exceptional' : 'Promising',
+      meta: meta,
+      legacyCandidates: legacyCandidates,
+      legacyChance,
+    })
   );
   pool.push(
-    generateRecruit(
-      { rng: rngService, usedNames: usedNames, week: week, forceTier: rngService.next() < 0.1 ? 'Prodigy' : 'Promising', meta: meta, legacyCandidates: legacyCandidates, legacyChance }
-    )
+    generateRecruit({
+      rng: rngService,
+      usedNames: usedNames,
+      week: week,
+      forceTier: rngService.next() < 0.1 ? 'Prodigy' : 'Promising',
+      meta: meta,
+      legacyCandidates: legacyCandidates,
+      legacyChance,
+    })
   );
 
   while (pool.length < count) {
     pool.push(
-      recruitForSlot(rngService, { usedNames, week, meta, legacyCandidates, legacyChance }, apprenticeChance)
+      recruitForSlot(
+        rngService,
+        { usedNames, week, meta, legacyCandidates, legacyChance },
+        apprenticeChance
+      )
     );
   }
 
@@ -137,7 +153,16 @@ export function partialRefreshPool(args: PoolRefreshArgs): PoolWarrior[] {
   const { legacyCandidates = [], stableCount = WORLD_RIVAL_FLOOR, apprenticeChance } = args;
   const targetSize = computeRecruitPoolSize(stableCount);
   if (currentPool.length === 0)
-    return generateRecruitPool({ count: targetSize, week: week, usedNames: usedNames, rng: rng, meta: meta, legacyCandidates: legacyCandidates, legacyChance, apprenticeChance });
+    return generateRecruitPool({
+      count: targetSize,
+      week: week,
+      usedNames: usedNames,
+      rng: rng,
+      meta: meta,
+      legacyCandidates: legacyCandidates,
+      legacyChance,
+      apprenticeChance,
+    });
 
   const protectedEntries = currentPool.filter((w) => isProtectedPoolEntry(w, week));
   const unprotected = currentPool
@@ -197,7 +222,8 @@ export function fullRefreshPool(args: {
   const { week, usedNames, rng } = args;
   const { currentPool = [], stableCount, meta, legacyCandidates = [] } = args;
   const rngService = resolveRng(rng, week * 1337 + 7);
-  const targetSize = stableCount === undefined ? DEFAULT_POOL_SIZE : computeRecruitPoolSize(stableCount);
+  const targetSize =
+    stableCount === undefined ? DEFAULT_POOL_SIZE : computeRecruitPoolSize(stableCount);
 
   const kept = currentPool.filter((w) => isProtectedPoolEntry(w, week));
   const keptNames = new Set(kept.map((w) => w.name));

@@ -26,7 +26,12 @@ function docStageTable(): Record<string, string[]> {
     if (!m) continue;
     table[m[1]!] = m[2]!
       .split(',')
-      .map((s) => s.trim().replace(/`/g, '').replace(/\s*\(.*\)\s*/g, ''))
+      .map((s) =>
+        s
+          .trim()
+          .replace(/`/g, '')
+          .replace(/\s*\(.*\)\s*/g, '')
+      )
       .filter(Boolean);
   }
   return table;

@@ -84,7 +84,11 @@ describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {
     // interpolated — data-driven so template additions don't break the pin.
     const recapPatterns = (narrativeContent.recap ?? []).map(
       (tpl) =>
-        new RegExp('^' + tpl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\\{\\\{\w+\\\}\\\}/g, '.+') + '$')
+        new RegExp(
+          '^' +
+            tpl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\\{\\\{\w+\\\}\\\}/g, '.+') +
+            '$'
+        )
     );
     expect(recapPatterns.length).toBeGreaterThan(0);
     expect(issue!.items.some((l) => recapPatterns.some((p) => p.test(l)))).toBe(true);

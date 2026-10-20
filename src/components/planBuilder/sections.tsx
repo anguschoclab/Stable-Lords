@@ -212,7 +212,10 @@ export function PlanValueSlider(props: {
       <div className="flex items-center justify-between">
         <Label
           htmlFor={id}
-          className={cn('text-[10px] font-black uppercase tracking-widest cursor-pointer', toneClass)}
+          className={cn(
+            'text-[10px] font-black uppercase tracking-widest cursor-pointer',
+            toneClass
+          )}
         >
           {label}
         </Label>

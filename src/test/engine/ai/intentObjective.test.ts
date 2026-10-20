@@ -62,7 +62,10 @@ describe('objective biases the weekly pick', () => {
     });
     const state = makeGameState({ rivals: [rival] });
 
-    const leanTwin = { ...rival, agentMemory: makeAgentMemory({ crownAssessment: rival.agentMemory!.crownAssessment }) };
+    const leanTwin = {
+      ...rival,
+      agentMemory: makeAgentMemory({ crownAssessment: rival.agentMemory!.crownAssessment }),
+    };
     expect(pickWeeklyIntent(leanTwin, state)).not.toBe('CROWN_CAMPAIGN');
     expect(pickWeeklyIntent(rival, state)).toBe('CROWN_CAMPAIGN');
   });

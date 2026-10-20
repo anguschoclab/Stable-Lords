@@ -37,9 +37,9 @@ Goal: freeze a measurable "before" so every later phase has quantified deltas.
 
 ## Phase 1 — Obsolescence Audit (1–2 days)
 
-Goal: find tests covering removed, deprecated, or unreachable functionality. A test is obsolete if its *subject* is dead, not merely if it fails — everything currently passes, so this is a semantic audit.
+Goal: find tests covering removed, deprecated, or unreachable functionality. A test is obsolete if its _subject_ is dead, not merely if it fails — everything currently passes, so this is a semantic audit.
 
-1. **Import-target liveness.** From `test-audit.json` records: for each test file, resolve its import targets; flag files whose *only* prod targets are (a) knip-unused modules, (b) orphan-scan "test-only reachable" modules, or (c) modules in known-deprecated areas (cross-check MEGAPLAN ledgers' deprecation notes). A test that exists solely to keep dead code alive is a delete candidate *paired with* the dead code's removal — never delete coverage of live code.
+1. **Import-target liveness.** From `test-audit.json` records: for each test file, resolve its import targets; flag files whose _only_ prod targets are (a) knip-unused modules, (b) orphan-scan "test-only reachable" modules, or (c) modules in known-deprecated areas (cross-check MEGAPLAN ledgers' deprecation notes). A test that exists solely to keep dead code alive is a delete candidate _paired with_ the dead code's removal — never delete coverage of live code.
 2. **Feature-archaeology pass.** List per-directory: grep test names/describes against feature registries — routes (`src/routes*`), nav hubs, style/fighting-style enums, arena events, UI feature flags. Flag describes referencing renamed/removed user-facing features. `e2e/residual-routes.spec.ts` intentionally covers residuals — keep but annotate.
 3. **Skip/todo/disabled sweep.** `test-audit.json` `dead` field already counts `it.todo`/`it.skip`/commented describes — 2 files flagged; triage to fix-or-delete.
 4. **Duplicate-of-history check.** For each flagged file, check `git log` for the feature removal commit; if the feature was removed but its test survived by testing mocks/fixtures only, mark for deletion.
@@ -60,7 +60,7 @@ Goal: eliminate redundant assertions and merge same-subject specs.
    - Same imports + same describe subject → merge into one file, `it.each` for parametric variants
    - Same imports + different subject → keep, but extract shared setup into `_fixtures/` or `_mocks/`
    - Overlapping assertions (same invariant asserted in N files) → keep the strongest formulation, delete the rest
-3. **Assertion-level dedup.** For engine/pipeline spec groups (the densest clusters): diff `expect()` sets across sibling files; where two files assert the same postcondition on the same fixture shape, consolidate. Preserve *distinct* invariants — dedup targets redundancy, not coverage.
+3. **Assertion-level dedup.** For engine/pipeline spec groups (the densest clusters): diff `expect()` sets across sibling files; where two files assert the same postcondition on the same fixture shape, consolidate. Preserve _distinct_ invariants — dedup targets redundancy, not coverage.
 4. **Shared-helper extraction.** Repeated local builders exceeding the delegating-adapter rule → promote to `_fixtures/factories.ts`; the audit gate enforces no regression.
 5. **Re-verify per batch:** default suite green, `test-audit-scan` regen, jscpd % re-measured into ledger.
 
@@ -80,7 +80,7 @@ Current rules (TESTING.md): tests live under `src/test/` mirroring production; `
    - `.perf.test.ts` — timing gates
    - `.guard.test.ts` — structural/consistency audits
    - `.slow.test.ts[x]` — tier suffix, composes with the above
-   Deliverable: a lint/audit guard listing legal suffix combos and flagging violations (e.g. `*.slow.test.ts` files missing a category, or `.e2e` files outside engine).
+     Deliverable: a lint/audit guard listing legal suffix combos and flagging violations (e.g. `*.slow.test.ts` files missing a category, or `.e2e` files outside engine).
 3. **Directory cleanup.** Rename/migrate flagged files with `git mv`; after every batch regenerate `runnerGroups.json`/`auditBaseline.json` via `test-audit-scan.mjs` and update `bunfig.toml` ignore list if renamed paths appear there.
 4. **e2e tree.** `e2e/` stays flat (5 specs + `helpers.ts`); add `e2e/README` notes? No — document tiers in TESTING.md only (already done).
 
@@ -91,13 +91,13 @@ Current rules (TESTING.md): tests live under `src/test/` mirroring production; `
 Goal: attack the measured cost structure: tests 36% / environment 30% / setup 15% / transform 11% / import 8%.
 
 1. **Environment (30%, ~19s).** 216 jsdom-pragma files each spin a fresh jsdom. Options, in order of safety:
-   - *Pragma audit:* verify all 216 flagged files truly need jsdom (`needsDom` signal in test-audit.json exists — re-run after pragma removals; measure delta). DOM tests that only stub `document` may not need real jsdom.
-   - *Measured & rejected:* `pool: 'vmThreads'` — verified 2026-10-08: environment→3% but wall time +20% (76.2s vs 63.5s) and 27 failures from `global.window =` assignments breaking on VM-context getter-only globals. Do not re-attempt without first fixing the window-stub pattern *and* resolving the transform-time regression.
-   - *Not expandable:* `isolate: false` is already at its provable-safe maximum (shared project); widening it breaks `vi.mock` semantics — documented in `vitest.config.ts`.
-   - *Consolidation:* merging sibling DOM specs (Phase 2) directly reduces env count — the two phases compound.
+   - _Pragma audit:_ verify all 216 flagged files truly need jsdom (`needsDom` signal in test-audit.json exists — re-run after pragma removals; measure delta). DOM tests that only stub `document` may not need real jsdom.
+   - _Measured & rejected:_ `pool: 'vmThreads'` — verified 2026-10-08: environment→3% but wall time +20% (76.2s vs 63.5s) and 27 failures from `global.window =` assignments breaking on VM-context getter-only globals. Do not re-attempt without first fixing the window-stub pattern _and_ resolving the transform-time regression.
+   - _Not expandable:_ `isolate: false` is already at its provable-safe maximum (shared project); widening it breaks `vi.mock` semantics — documented in `vitest.config.ts`.
+   - _Consolidation:_ merging sibling DOM specs (Phase 2) directly reduces env count — the two phases compound.
 2. **Setup (15%, ~9.5s).** `setup.node.ts` + `setup.dom.ts` per-file cost in the isolated project. Audit for: imports pulling broad prod graphs (the comment forbids it — verify no creep), singleton-reset work proportional to suite size vs per-file need. Target: move resettable state behind lazy dynamic imports already established pattern.
 3. **Transform (11%).** Vite transform cache — check `node_modules/.vite` cache warmth; consider `server.deps`/`optimizeDeps` for hot imports, and confirm `esbuild` target isn't re-transpiling.
-4. **Tail latency.** From the fresh TSV: demote anything regrowing past 5s (ratchet documented in TESTING.md). p90 files in `engine/pipeline`, `engine/ai` — the integration-heavy dirs — are candidates for fixture-light rewrites (seeded mini-worlds instead of full `advanceWeek` loops) *where the test isn't measuring integration*.
+4. **Tail latency.** From the fresh TSV: demote anything regrowing past 5s (ratchet documented in TESTING.md). p90 files in `engine/pipeline`, `engine/ai` — the integration-heavy dirs — are candidates for fixture-light rewrites (seeded mini-worlds instead of full `advanceWeek` loops) _where the test isn't measuring integration_.
 5. **CI-level:** bun-test shard duplicates vitest coverage (~8.9k tests run twice). Evaluate whether `bun-test` CI still earns its runtime vs a weekly parity check — decision point, record rationale either way.
 6. **e2e:** chromium smoke is the inner loop; matrix is nightly. Optional: Playwright `--shard` if smoke tier grows past ~10 min.
 

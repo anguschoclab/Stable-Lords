@@ -24,15 +24,13 @@ describe('impactsAffectWeekCaches', () => {
   });
 
   it('returns true for roster- or rival-touching impacts', () => {
-    expect(
-      impactsAffectWeekCaches([{ rosterUpdates: new Map() }] as StateImpact[])
-    ).toBe(true);
+    expect(impactsAffectWeekCaches([{ rosterUpdates: new Map() }] as StateImpact[])).toBe(true);
     expect(
       impactsAffectWeekCaches([{ treasuryDelta: 1 }, { rivalries: [] }] as StateImpact[])
     ).toBe(true);
-    expect(
-      impactsAffectWeekCaches([{ rivalWarriorPatches: new Map() }] as StateImpact[])
-    ).toBe(true);
+    expect(impactsAffectWeekCaches([{ rivalWarriorPatches: new Map() }] as StateImpact[])).toBe(
+      true
+    );
   });
 });
 

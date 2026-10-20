@@ -11,9 +11,13 @@ import { makeWarrior, makePlan } from './_helpers';
 
 describe('simulateFight — resolution phases', () => {
   it('generates log entries across multiple phases', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 7, AL: 7 }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 5 }), warriorA: makeWarrior('Striker', FightingStyle.StrikingAttack), warriorD: makeWarrior('Parrier', FightingStyle.ParryRiposte), providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 7, AL: 7 }),
+      planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 5 }),
+      warriorA: makeWarrior('Striker', FightingStyle.StrikingAttack),
+      warriorD: makeWarrior('Parrier', FightingStyle.ParryRiposte),
+      providedRng: 42,
+    });
 
     // Should have phase transition markers in the log
     const phaseMarkers = result.log.filter((e) => e.text.includes('Phase'));
@@ -37,9 +41,13 @@ describe('simulateFight — resolution phases', () => {
       },
     };
 
-    const result = simulateFight(
-      { planA: planWithPhases, planD: makePlan(FightingStyle.StrikingAttack), warriorA: makeWarrior('Phaser', FightingStyle.ParryStrike, { WT: 15, DF: 15 }), warriorD: makeWarrior('Steady', FightingStyle.StrikingAttack), providedRng: 77 }
-    );
+    const result = simulateFight({
+      planA: planWithPhases,
+      planD: makePlan(FightingStyle.StrikingAttack),
+      warriorA: makeWarrior('Phaser', FightingStyle.ParryStrike, { WT: 15, DF: 15 }),
+      warriorD: makeWarrior('Steady', FightingStyle.StrikingAttack),
+      providedRng: 77,
+    });
 
     // Should produce a valid outcome without crashing
     expect(['A', 'D', null]).toContain(result.winner);
@@ -57,12 +65,20 @@ describe('simulateFight — tactic resolution', () => {
     const trials = 30;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rBash = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 8, offensiveTactic: 'Bash' }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, defensiveTactic: 'Parry' }), warriorA: wBash, warriorD: wPar, providedRng: seed }
-      );
-      const rNormal = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, defensiveTactic: 'Parry' }), warriorA: wBash, warriorD: wPar, providedRng: seed }
-      );
+      const rBash = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 8, offensiveTactic: 'Bash' }),
+        planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, defensiveTactic: 'Parry' }),
+        warriorA: wBash,
+        warriorD: wPar,
+        providedRng: seed,
+      });
+      const rNormal = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+        planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, defensiveTactic: 'Parry' }),
+        warriorA: wBash,
+        warriorD: wPar,
+        providedRng: seed,
+      });
       bashHits += rBash.post?.hitsA ?? 0;
       normalHits += rNormal.post?.hitsA ?? 0;
     }
@@ -75,9 +91,13 @@ describe('simulateFight — tactic resolution', () => {
     const wAtt = makeWarrior('Attacker', FightingStyle.StrikingAttack, { ST: 14 });
     const wDodge = makeWarrior('Dodger', FightingStyle.LungingAttack, { SP: 18, DF: 16 });
 
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 8 }), planD: makePlan(FightingStyle.LungingAttack, { OE: 5, defensiveTactic: 'Dodge' }), warriorA: wAtt, warriorD: wDodge, providedRng: 123 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 8 }),
+      planD: makePlan(FightingStyle.LungingAttack, { OE: 5, defensiveTactic: 'Dodge' }),
+      warriorA: wAtt,
+      warriorD: wDodge,
+      providedRng: 123,
+    });
 
     // Should complete without errors and produce valid outcome
     expect(result).toHaveProperty('winner');
@@ -93,12 +113,20 @@ describe('simulateFight — tactic resolution', () => {
     const trials = 25;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rLunge = simulateFight(
-        { planA: makePlan(FightingStyle.LungingAttack, { OE: 7, offensiveTactic: 'Lunge' }), planD: makePlan(FightingStyle.WallOfSteel, { OE: 4 }), warriorA: wLung, warriorD: wDef, providedRng: seed }
-      );
-      const rNormal = simulateFight(
-        { planA: makePlan(FightingStyle.LungingAttack, { OE: 7 }), planD: makePlan(FightingStyle.WallOfSteel, { OE: 4 }), warriorA: wLung, warriorD: wDef, providedRng: seed }
-      );
+      const rLunge = simulateFight({
+        planA: makePlan(FightingStyle.LungingAttack, { OE: 7, offensiveTactic: 'Lunge' }),
+        planD: makePlan(FightingStyle.WallOfSteel, { OE: 4 }),
+        warriorA: wLung,
+        warriorD: wDef,
+        providedRng: seed,
+      });
+      const rNormal = simulateFight({
+        planA: makePlan(FightingStyle.LungingAttack, { OE: 7 }),
+        planD: makePlan(FightingStyle.WallOfSteel, { OE: 4 }),
+        warriorA: wLung,
+        warriorD: wDef,
+        providedRng: seed,
+      });
       lungeHits += rLunge.post?.hitsA ?? 0;
       normalHits += rNormal.post?.hitsA ?? 0;
     }
@@ -117,12 +145,20 @@ describe('simulateFight — tactic resolution', () => {
     const trials = 25;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rRiposte = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 3, defensiveTactic: 'Riposte' }), warriorA: wAtt, warriorD: wRip, providedRng: seed }
-      );
-      const rNormal = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 3 }), warriorA: wAtt, warriorD: wRip, providedRng: seed }
-      );
+      const rRiposte = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+        planD: makePlan(FightingStyle.ParryRiposte, { OE: 3, defensiveTactic: 'Riposte' }),
+        warriorA: wAtt,
+        warriorD: wRip,
+        providedRng: seed,
+      });
+      const rNormal = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+        planD: makePlan(FightingStyle.ParryRiposte, { OE: 3 }),
+        warriorA: wAtt,
+        warriorD: wRip,
+        providedRng: seed,
+      });
       riposteHits += rRiposte.post?.hitsD ?? 0;
       normalHits += rNormal.post?.hitsD ?? 0;
     }
@@ -138,9 +174,13 @@ describe('simulateFight — tactic overuse penalty', () => {
     // by running fights with consistent tactics
     const w = makeWarrior('Test', FightingStyle.StrikingAttack);
 
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }), warriorA: w, warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' }, providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }),
+      planD: makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }),
+      warriorA: w,
+      warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' },
+      providedRng: 42,
+    });
 
     // Should complete without errors
     expect(result).toHaveProperty('winner');
@@ -157,9 +197,13 @@ describe('simulateFight — target and protect mechanics', () => {
     const trials = 20;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.AimedBlow, { OE: 5, target: 'Head' }), planD: makePlan(FightingStyle.StrikingAttack), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.AimedBlow, { OE: 5, target: 'Head' }),
+        planD: makePlan(FightingStyle.StrikingAttack),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       // Count head mentions in log
       const headMentions = result.log.filter((e) => /head/i.test(e.text)).length;
       if (headMentions > 0) headHits++;
@@ -174,9 +218,13 @@ describe('simulateFight — target and protect mechanics', () => {
     const wDef = makeWarrior('Protected', FightingStyle.WallOfSteel, { CN: 16 });
 
     // This verifies the protect mechanic exists without directly measuring damage
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 8, target: 'Head' }), planD: makePlan(FightingStyle.WallOfSteel, { OE: 4, protect: 'Head' }), warriorA: wAtt, warriorD: wDef, providedRng: 99 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 8, target: 'Head' }),
+      planD: makePlan(FightingStyle.WallOfSteel, { OE: 4, protect: 'Head' }),
+      warriorA: wAtt,
+      warriorD: wDef,
+      providedRng: 99,
+    });
 
     expect(result).toHaveProperty('winner');
   });
@@ -194,9 +242,13 @@ describe('simulateFight — outcome termination types', () => {
 
     let kills = 0;
     for (let seed = 1; seed <= 50; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 9, killDesire: 10 }), planD: makePlan(FightingStyle.TotalParry, { OE: 1, AL: 1 }), warriorA: wKiller, warriorD: wVictim, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 9, killDesire: 10 }),
+        planD: makePlan(FightingStyle.TotalParry, { OE: 1, AL: 1 }),
+        warriorA: wKiller,
+        warriorD: wVictim,
+        providedRng: seed,
+      });
       if (result.by === 'Kill') kills++;
     }
     // Kill outcomes are rare and depend on many factors; just verify the mechanism exists
@@ -209,9 +261,13 @@ describe('simulateFight — outcome termination types', () => {
 
     let kos = 0;
     for (let seed = 1; seed <= 30; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 1 }), planD: makePlan(FightingStyle.LungingAttack, { OE: 7 }), warriorA: wStrong, warriorD: wWeak, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 1 }),
+        planD: makePlan(FightingStyle.LungingAttack, { OE: 7 }),
+        warriorA: wStrong,
+        warriorD: wWeak,
+        providedRng: seed,
+      });
       if (result.by === 'KO') kos++;
     }
     expect(kos).toBeGreaterThan(0);
@@ -224,9 +280,13 @@ describe('simulateFight — outcome termination types', () => {
 
     let exhaustions = 0;
     for (let seed = 1; seed <= 30; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }), warriorA: wLowWL1, warriorD: wLowWL2, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
+        planD: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
+        warriorA: wLowWL1,
+        warriorD: wLowWL2,
+        providedRng: seed,
+      });
       if (result.by === 'Exhaustion' || result.by === 'Stoppage') exhaustions++;
     }
     expect(exhaustions).toBeGreaterThan(0);
@@ -238,9 +298,13 @@ describe('simulateFight — outcome termination types', () => {
 
     let stoppages = 0;
     for (let seed = 1; seed <= 30; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 4 }), planD: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 10 }), warriorA: wFresh, warriorD: wTired, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 4 }),
+        planD: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 10 }),
+        warriorA: wFresh,
+        warriorD: wTired,
+        providedRng: seed,
+      });
       if (result.by === 'Stoppage') stoppages++;
     }
     expect(stoppages).toBeGreaterThan(0);
@@ -253,9 +317,13 @@ describe('simulateFight — outcome termination types', () => {
 
     let draws = 0;
     for (let seed = 1; seed <= 50; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }), planD: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }), warriorA: w1, warriorD: w2, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }),
+        planD: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }),
+        warriorA: w1,
+        warriorD: w2,
+        providedRng: seed,
+      });
       if (result.by === 'Draw') draws++;
     }
     // Draws should be possible but rare
@@ -272,9 +340,13 @@ describe('simulateFight — initiative and tempo', () => {
     const trials = 30;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rHigh = simulateFight(
-        { planA: makePlan(FightingStyle.LungingAttack, { OE: 6, AL: 10 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 6, AL: 1 }), warriorA: w, warriorD: makeWarrior('Slow', FightingStyle.StrikingAttack), providedRng: seed }
-      );
+      const rHigh = simulateFight({
+        planA: makePlan(FightingStyle.LungingAttack, { OE: 6, AL: 10 }),
+        planD: makePlan(FightingStyle.StrikingAttack, { OE: 6, AL: 1 }),
+        warriorA: w,
+        warriorD: makeWarrior('Slow', FightingStyle.StrikingAttack),
+        providedRng: seed,
+      });
       // Check first attack in log (skipping intros in minute 0)
       const firstAttack = rHigh.log.find(
         (e) =>
@@ -302,9 +374,13 @@ describe('simulateFight — style passives integration', () => {
     const trials = 25;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 9, AL: 7 }), planD: makePlan(FightingStyle.AimedBlow, { OE: 4 }), warriorA: wBash, warriorD: wWeak, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 9, AL: 7 }),
+        planD: makePlan(FightingStyle.AimedBlow, { OE: 4 }),
+        warriorA: wBash,
+        warriorD: wWeak,
+        providedRng: seed,
+      });
       // Basher momentum should lead to hit streaks
       if ((result.post?.hitsA ?? 0) >= 3) highHitCounts++;
     }
@@ -321,9 +397,13 @@ describe('simulateFight — style passives integration', () => {
     const trials = 25;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }), planD: makePlan(FightingStyle.BashingAttack, { OE: 9, AL: 7 }), warriorA: wTP, warriorD: wBA, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }),
+        planD: makePlan(FightingStyle.BashingAttack, { OE: 9, AL: 7 }),
+        warriorA: wTP,
+        warriorD: wBA,
+        providedRng: seed,
+      });
       // Check if TP either wins or fight goes to decision
       if (result.winner === 'A' || result.by === 'Stoppage' || result.by === 'Draw') {
         tpSurvives++;
@@ -359,9 +439,13 @@ describe('simulateFight — equipment modifiers', () => {
     );
 
     // Should complete without errors
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.LungingAttack, { OE: 6 }), warriorA: wHeavy, warriorD: wLight, providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+      planD: makePlan(FightingStyle.LungingAttack, { OE: 6 }),
+      warriorA: wHeavy,
+      warriorD: wLight,
+      providedRng: 42,
+    });
 
     expect(result).toHaveProperty('winner');
   });
@@ -391,9 +475,13 @@ describe('simulateFight — equipment modifiers', () => {
     const destroyed = (shielded: boolean) => {
       let count = 0;
       for (let seed = 1; seed <= trials; seed++) {
-        const result = simulateFight(
-          { planA: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 7 }), warriorA: buildWall(shielded), warriorD: wNoShield, providedRng: seed }
-        );
+        const result = simulateFight({
+          planA: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }),
+          planD: makePlan(FightingStyle.StrikingAttack, { OE: 7 }),
+          warriorA: buildWall(shielded),
+          warriorD: wNoShield,
+          providedRng: seed,
+        });
         if (result.winner === 'D' && (result.by === 'KO' || result.by === 'Kill')) count++;
       }
       return count;
@@ -405,9 +493,13 @@ describe('simulateFight — equipment modifiers', () => {
 
 describe('simulateFight — narrative log quality', () => {
   it('generates warrior introductions at minute 0', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack), planD: makePlan(FightingStyle.ParryRiposte), warriorA: makeWarrior('Hero', FightingStyle.StrikingAttack), warriorD: makeWarrior('Villain', FightingStyle.ParryRiposte), providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack),
+      planD: makePlan(FightingStyle.ParryRiposte),
+      warriorA: makeWarrior('Hero', FightingStyle.StrikingAttack),
+      warriorD: makeWarrior('Villain', FightingStyle.ParryRiposte),
+      providedRng: 42,
+    });
 
     const minute0Entries = result.log.filter((e) => e.minute === 0);
     expect(minute0Entries.length).toBeGreaterThan(0);
@@ -419,9 +511,13 @@ describe('simulateFight — narrative log quality', () => {
   });
 
   it('includes bout ending narration', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 8 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 7 }), warriorA: makeWarrior('A', FightingStyle.BashingAttack, { ST: 16 }), warriorD: makeWarrior('B', FightingStyle.StrikingAttack), providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 8 }),
+      planD: makePlan(FightingStyle.StrikingAttack, { OE: 7 }),
+      warriorA: makeWarrior('A', FightingStyle.BashingAttack, { ST: 16 }),
+      warriorD: makeWarrior('B', FightingStyle.StrikingAttack),
+      providedRng: 42,
+    });
 
     // The result should have a valid outcome type
     expect(result.by).toBeTruthy();
@@ -431,9 +527,13 @@ describe('simulateFight — narrative log quality', () => {
   });
 
   it('log entries have increasing or stable minutes', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.SlashingAttack), planD: makePlan(FightingStyle.ParryLunge), warriorA: undefined, warriorD: undefined, providedRng: 123 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.SlashingAttack),
+      planD: makePlan(FightingStyle.ParryLunge),
+      warriorA: undefined,
+      warriorD: undefined,
+      providedRng: 123,
+    });
 
     let prevMinute = 0;
     for (const entry of result.log) {
@@ -485,8 +585,20 @@ describe('simulateFight — determinism', () => {
     const planA = makePlan(FightingStyle.StrikingAttack);
     const planD = makePlan(FightingStyle.ParryRiposte);
 
-    const r1 = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: 12345 });
-    const r2 = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: 12345 });
+    const r1 = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 12345,
+    });
+    const r2 = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 12345,
+    });
 
     expect(r1.winner).toBe(r2.winner);
     expect(r1.by).toBe(r2.by);
@@ -502,9 +614,13 @@ describe('simulateFight — determinism', () => {
 
     const outcomes = new Set<string>();
     for (let seed = 1; seed <= 20; seed++) {
-      const r = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack), planD: makePlan(FightingStyle.LungingAttack), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const r = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack),
+        planD: makePlan(FightingStyle.LungingAttack),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       outcomes.add(`${r.winner}-${r.by}`);
     }
 
@@ -515,9 +631,13 @@ describe('simulateFight — determinism', () => {
 
 describe('simulateFight — post-fight stats', () => {
   it('post.tags contains outcome tags', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 10 }), planD: makePlan(FightingStyle.TotalParry, { OE: 2 }), warriorA: makeWarrior('Killer', FightingStyle.BashingAttack, { ST: 20, CN: 14 }), warriorD: makeWarrior('Victim', FightingStyle.TotalParry, { CN: 8, WL: 6 }), providedRng: 42 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 10 }),
+      planD: makePlan(FightingStyle.TotalParry, { OE: 2 }),
+      warriorA: makeWarrior('Killer', FightingStyle.BashingAttack, { ST: 20, CN: 14 }),
+      warriorD: makeWarrior('Victim', FightingStyle.TotalParry, { CN: 8, WL: 6 }),
+      providedRng: 42,
+    });
 
     expect(result.post?.tags).toBeDefined();
     expect(Array.isArray(result.post?.tags)).toBe(true);
@@ -533,9 +653,13 @@ describe('simulateFight — post-fight stats', () => {
   });
 
   it('post.gotKillA/D matches outcome', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack, { OE: 10, killDesire: 10 }), planD: makePlan(FightingStyle.AimedBlow, { OE: 3 }), warriorA: makeWarrior('Killer', FightingStyle.BashingAttack, { ST: 20 }), warriorD: makeWarrior('Victim', FightingStyle.AimedBlow, { CN: 6, WL: 5 }), providedRng: 999 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack, { OE: 10, killDesire: 10 }),
+      planD: makePlan(FightingStyle.AimedBlow, { OE: 3 }),
+      warriorA: makeWarrior('Killer', FightingStyle.BashingAttack, { ST: 20 }),
+      warriorD: makeWarrior('Victim', FightingStyle.AimedBlow, { CN: 6, WL: 5 }),
+      providedRng: 999,
+    });
 
     if (result.by === 'Kill') {
       if (result.winner === 'A') {
@@ -549,18 +673,26 @@ describe('simulateFight — post-fight stats', () => {
   });
 
   it('hit counts are non-negative', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.SlashingAttack), planD: makePlan(FightingStyle.WallOfSteel), warriorA: undefined, warriorD: undefined, providedRng: 55 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.SlashingAttack),
+      planD: makePlan(FightingStyle.WallOfSteel),
+      warriorA: undefined,
+      warriorD: undefined,
+      providedRng: 55,
+    });
 
     expect(result.post?.hitsA).toBeGreaterThanOrEqual(0);
     expect(result.post?.hitsD).toBeGreaterThanOrEqual(0);
   });
 
   it('xp values are assigned', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack), planD: makePlan(FightingStyle.ParryStrike), warriorA: undefined, warriorD: undefined, providedRng: 77 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack),
+      planD: makePlan(FightingStyle.ParryStrike),
+      warriorA: undefined,
+      warriorD: undefined,
+      providedRng: 77,
+    });
 
     expect(result.post?.xpA).toBeGreaterThanOrEqual(1);
     expect(result.post?.xpD).toBeGreaterThanOrEqual(1);
@@ -591,9 +723,13 @@ describe('simulateFight — intro narration helm assignment (Bug 3)', () => {
       }
     );
 
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack), planD: makePlan(FightingStyle.AimedBlow), warriorA: warriorA, warriorD: warriorD, providedRng: 99 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack),
+      planD: makePlan(FightingStyle.AimedBlow),
+      warriorA: warriorA,
+      warriorD: warriorD,
+      providedRng: 99,
+    });
 
     // Minute 0 contains both intros. They are separated by an empty-text entry.
     const minute0 = result.log.filter((e) => e.minute === 0).map((e) => e.text);
@@ -618,9 +754,16 @@ describe('simulateFight — arena system', () => {
     const wD = makeWarrior('MudD', FightingStyle.ParryRiposte, { WT: 13, DF: 13 });
     for (let seed = 1; seed <= 50; seed++) {
       expect(() =>
-        simulateFight(
-          { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 5, AL: 7 }), warriorA: wA, warriorD: wD, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'mudpit_arena' }
-        )
+        simulateFight({
+          planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+          planD: makePlan(FightingStyle.ParryRiposte, { OE: 5, AL: 7 }),
+          warriorA: wA,
+          warriorD: wD,
+          providedRng: seed,
+          trainers: undefined,
+          weather: 'Clear',
+          arenaId: 'mudpit_arena',
+        })
       ).not.toThrow();
     }
   });
@@ -636,10 +779,26 @@ describe('simulateFight — arena system', () => {
     const trials = 30;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rMudpit = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'mudpit_arena' });
-      const rStandard = simulateFight(
-        { planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena' }
-      );
+      const rMudpit = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'mudpit_arena',
+      });
+      const rStandard = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'standard_arena',
+      });
       mudpitTotal += rMudpit.minutes;
       standardTotal += rStandard.minutes;
     }
@@ -652,9 +811,16 @@ describe('simulateFight — arena system', () => {
   });
 
   it('non-default arena logs include arena intro line', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack), planD: makePlan(FightingStyle.ParryRiposte), warriorA: makeWarrior('A', FightingStyle.StrikingAttack), warriorD: makeWarrior('B', FightingStyle.ParryRiposte), providedRng: 42, trainers: undefined, weather: 'Clear', arenaId: 'mudpit_arena' }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack),
+      planD: makePlan(FightingStyle.ParryRiposte),
+      warriorA: makeWarrior('A', FightingStyle.StrikingAttack),
+      warriorD: makeWarrior('B', FightingStyle.ParryRiposte),
+      providedRng: 42,
+      trainers: undefined,
+      weather: 'Clear',
+      arenaId: 'mudpit_arena',
+    });
 
     const minute0 = result.log.filter((e) => e.minute === 0);
     const hasArenaIntro = minute0.some(
@@ -706,7 +872,13 @@ describe('simulateFight — distance system', () => {
 
     let hasRangeShiftText = false;
     for (let seed = 1; seed <= 15; seed++) {
-      const result = simulateFight({ planA: planExt, planD: planGrap, warriorA: wExt, warriorD: wGrap, providedRng: seed });
+      const result = simulateFight({
+        planA: planExt,
+        planD: planGrap,
+        warriorA: wExt,
+        warriorD: wGrap,
+        providedRng: seed,
+      });
       // Check for range-related narration in the log
       const rangeLines = result.log.filter((e) =>
         /grappling range|tight quarters|striking range|extended range|forces the fight|dictates the distance|seizes the spacing/i.test(
@@ -731,7 +903,13 @@ describe('simulateFight — distance system', () => {
 
     let hasFeintText = false;
     for (let seed = 1; seed <= 30; seed++) {
-      const result = simulateFight({ planA: planFeint, planD: planTarget, warriorA: wFeinter, warriorD: wTarget, providedRng: seed });
+      const result = simulateFight({
+        planA: planFeint,
+        planD: planTarget,
+        warriorA: wFeinter,
+        warriorD: wTarget,
+        providedRng: seed,
+      });
       const feintLines = result.log.filter((e) =>
         /feint|deception|misdirection|ruse/i.test(e.text)
       );
@@ -759,7 +937,16 @@ describe('spatial system integration', () => {
         rangePreference: 'Striking',
       };
       expect(() =>
-        simulateFight({ planA: plan, planD: plan, warriorA: undefined, warriorD: undefined, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'mudpit_arena' })
+        simulateFight({
+          planA: plan,
+          planD: plan,
+          warriorA: undefined,
+          warriorD: undefined,
+          providedRng: seed,
+          trainers: undefined,
+          weather: 'Clear',
+          arenaId: 'mudpit_arena',
+        })
       ).not.toThrow();
     }
   });
@@ -775,12 +962,26 @@ describe('spatial system integration', () => {
         AL: 5,
         killDesire: 5,
       };
-      const standard = simulateFight(
-        { planA: plan, planD: plan, warriorA: undefined, warriorD: undefined, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena' }
-      );
-      const mudpit = simulateFight(
-        { planA: plan, planD: plan, warriorA: undefined, warriorD: undefined, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'mudpit_arena' }
-      );
+      const standard = simulateFight({
+        planA: plan,
+        planD: plan,
+        warriorA: undefined,
+        warriorD: undefined,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'standard_arena',
+      });
+      const mudpit = simulateFight({
+        planA: plan,
+        planD: plan,
+        warriorA: undefined,
+        warriorD: undefined,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'mudpit_arena',
+      });
       standardMinAvg += standard.minutes;
       mudpitMinAvg += mudpit.minutes;
     }
@@ -806,9 +1007,16 @@ describe('spatial system integration', () => {
     };
     let foundRangeShift = false;
     for (let seed = 0; seed < 20; seed++) {
-      const outcome = simulateFight(
-        { planA: planLunger, planD: planGrappler, warriorA: undefined, warriorD: undefined, providedRng: seed, trainers: undefined, weather: 'Clear', arenaId: 'standard_arena' }
-      );
+      const outcome = simulateFight({
+        planA: planLunger,
+        planD: planGrappler,
+        warriorA: undefined,
+        warriorD: undefined,
+        providedRng: seed,
+        trainers: undefined,
+        weather: 'Clear',
+        arenaId: 'standard_arena',
+      });
       const allText = outcome.log.map((l) => l.text).join(' ');
       // narrateRangeShift produces one of these phrases:
       if (
@@ -851,7 +1059,13 @@ describe('simulateFight — yield mechanic', () => {
     let foundYield = false;
     const outcomes: Record<string, number> = {};
     for (let seed = 0; seed < 200; seed++) {
-      const result = simulateFight({ planA: planA, planD: planD, warriorA: warriorA, warriorD: warriorD, providedRng: seed });
+      const result = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: warriorA,
+        warriorD: warriorD,
+        providedRng: seed,
+      });
       const key = String(result.by);
       outcomes[key] = (outcomes[key] ?? 0) + 1;
       if (result.by === 'Yield') {
@@ -876,9 +1090,13 @@ describe('simulateFight — yield mechanic', () => {
     const warriorD = makeWarrior('Tank', FightingStyle.TotalParry, { CN: 3, ST: 3, DF: 3 });
 
     for (let seed = 0; seed < 20; seed++) {
-      const result = simulateFight(
-        { planA: planA, planD: planD, warriorA: makeWarrior('Crusher', FightingStyle.BashingAttack, { ST: 18, CN: 18 }), warriorD: warriorD, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: makeWarrior('Crusher', FightingStyle.BashingAttack, { ST: 18, CN: 18 }),
+        warriorD: warriorD,
+        providedRng: seed,
+      });
       expect(result.by).not.toBe('Yield');
     }
   });

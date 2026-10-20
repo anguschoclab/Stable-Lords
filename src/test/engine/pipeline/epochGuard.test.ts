@@ -67,10 +67,13 @@ describe('engineSession epoch guard', () => {
       engineSession.enqueue(
         () =>
           new Promise<void>((resolve) =>
-            setTimeout(() => {
-              order.push(i);
-              resolve();
-            }, (2 - i) * 10)
+            setTimeout(
+              () => {
+                order.push(i);
+                resolve();
+              },
+              (2 - i) * 10
+            )
           )
       )
     );

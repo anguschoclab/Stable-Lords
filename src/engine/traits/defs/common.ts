@@ -14,7 +14,8 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
   orphanage_survivor: {
     id: 'orphanage_survivor',
     name: 'Orphanage Survivor',
-    description: 'Survived the darkest halls of the orphanage. Has learned to fight harder when backed into a corner.',
+    description:
+      'Survived the darkest halls of the orphanage. Has learned to fight harder when backed into a corner.',
     effect: { attModLate: 1 },
     tier: 'Common',
     sign: 'positive',

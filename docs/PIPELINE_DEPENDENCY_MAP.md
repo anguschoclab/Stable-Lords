@@ -41,11 +41,11 @@ main thread persistence
 
 ## Resolution stages (pipelineStages.ts)
 
-| Stage     | Passes (order in WEEK_PIPELINE_PASSES)                                                    |
-| --------- | ----------------------------------------------------------------------------------------- |
-| `core`    | warrior, economy, equipment, recruitment                                                                        |
-| `world`   | world, system, rankings, progression, promoter, promoterLifecycle, trainer, arenaChampionship, rivalStrategy     |
-| `content` | event, narrative, seasonal                                                                                      |
+| Stage     | Passes (order in WEEK_PIPELINE_PASSES)                                                                       |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| `core`    | warrior, economy, equipment, recruitment                                                                     |
+| `world`   | world, system, rankings, progression, promoter, promoterLifecycle, trainer, arenaChampionship, rivalStrategy |
+| `content` | event, narrative, seasonal                                                                                   |
 
 Rules enforced by `validatePipelinePasses`:
 
@@ -81,13 +81,13 @@ lives in exactly one context and module-level caches never cross it.
 
 Identity-keyed caches (`WeakMap` on a state/history object):
 
-| Cache | Key | Rebuild trigger |
-| ----- | --- | --------------- |
-| `core/warriorLookup.ts` `warriorCache` | `GameState` identity | new state object (every impact resolution, and every week under `mutableInput` since `createMutableWeekContext` shallow-spreads the top level) |
-| `core/historyResolver.ts` `warriorCache`/`stableCache` | state object identity | same |
-| `matchmaking/schedulingAssistant/headToHead.ts` `h2hByHistory` | `arenaHistory` array identity | new history array (append-only-by-replacement) |
-| `matchmaking/arenaFit.ts` `underservedByHistory` | `arenaHistory` identity + week | new history or new week |
-| `advisor/stableCouncilService.ts`, `campaignFocusEvaluator.ts` | state / derived-map identity | new input identity |
+| Cache                                                          | Key                            | Rebuild trigger                                                                                                                                |
+| -------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core/warriorLookup.ts` `warriorCache`                         | `GameState` identity           | new state object (every impact resolution, and every week under `mutableInput` since `createMutableWeekContext` shallow-spreads the top level) |
+| `core/historyResolver.ts` `warriorCache`/`stableCache`         | state object identity          | same                                                                                                                                           |
+| `matchmaking/schedulingAssistant/headToHead.ts` `h2hByHistory` | `arenaHistory` array identity  | new history array (append-only-by-replacement)                                                                                                 |
+| `matchmaking/arenaFit.ts` `underservedByHistory`               | `arenaHistory` identity + week | new history or new week                                                                                                                        |
+| `advisor/stableCouncilService.ts`, `campaignFocusEvaluator.ts` | state / derived-map identity   | new input identity                                                                                                                             |
 
 Coherence contract — all of these are safe only because:
 

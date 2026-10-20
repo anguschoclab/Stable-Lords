@@ -513,7 +513,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   orphan_of_the_abyss: {
     id: 'orphan_of_the_abyss',
     name: 'Orphan of the Abyss',
-    description: '+1 Initiative in OPENING phase, +1 Damage — raised in the pitch black, they strike unseen and hit hard.',
+    description:
+      '+1 Initiative in OPENING phase, +1 Damage — raised in the pitch black, they strike unseen and hit hard.',
     effect: { iniModEarly: 1, dmgBonus: 1, fightPlanMod: { AL: 2 } },
     weight: 0.6,
     synergy: ['cunning', 'brutal'],
@@ -524,7 +525,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   ash_born_survivor: {
     id: 'ash_born_survivor',
     name: 'Ash-Born Survivor',
-    description: 'Raised amidst the choked vents of the Lower Spire, their lungs are hardened against any exertion.',
+    description:
+      'Raised amidst the choked vents of the Lower Spire, their lungs are hardened against any exertion.',
     effect: { enduranceMult: 0.88, defModLate: 1 },
     weight: 0.6,
     synergy: ['tank', 'agile'],
@@ -594,7 +596,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   orphan_shadow_step: {
     id: 'orphan_shadow_step',
     name: 'Shadow Step',
-    description: 'Learned to move silently and unpredictably to avoid abuse, granting evasive speed early in combat.',
+    description:
+      'Learned to move silently and unpredictably to avoid abuse, granting evasive speed early in combat.',
     effect: { defModEarly: 1, iniModEarly: 1 },
     weight: 0.5,
     synergy: ['agile'],
@@ -616,7 +619,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   orphan_shadow_stalker: {
     id: 'orphan_shadow_stalker',
     name: 'Shadow Stalker',
-    description: 'Perfected the art of moving unseen in the slums, making them a ghost in the arena.',
+    description:
+      'Perfected the art of moving unseen in the slums, making them a ghost in the arena.',
     effect: { defModEarly: 1, attModLate: 1 },
     tier: 'Notable',
     sign: 'positive',
@@ -634,7 +638,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   blind_spot_mapper: {
     id: 'blind_spot_mapper',
     name: 'Blind Spot Mapper',
-    description: 'Learned to map the blind spots of guards, granting a knack for avoiding opening strikes.',
+    description:
+      'Learned to map the blind spots of guards, granting a knack for avoiding opening strikes.',
     effect: { defModEarly: 1, iniModEarly: 1, decMod: 1, fightPlanMod: { AL: 1 } },
     weight: 0.5,
     synergy: ['cunning'],
@@ -655,7 +660,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   ice_numbed: {
     id: 'ice_numbed',
     name: 'Ice-Numbed',
-    description: 'Purposefully numbed their limbs to fight without pain, gaining massive resilience at low health.',
+    description:
+      'Purposefully numbed their limbs to fight without pain, gaining massive resilience at low health.',
     effect: { defModLowHp: 2, parModHighHp: 1 },
     weight: 0.5,
     tier: 'Notable',
@@ -684,7 +690,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   orphan_blood_bound: {
     id: 'orphan_blood_bound',
     name: 'Blood Bound',
-    description: 'Swore a blood oath to a fallen sibling. Fights with terrifying abandon when wounded.',
+    description:
+      'Swore a blood oath to a fallen sibling. Fights with terrifying abandon when wounded.',
     effect: { attModLowHp: 3, defModLowHp: -2, fightPlanMod: { killDesire: 3 } },
     weight: 0.5,
     synergy: ['brutal'],

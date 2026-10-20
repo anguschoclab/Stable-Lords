@@ -110,7 +110,9 @@ interface InitializeResolutionContextArgs {
 /**
  * Initialize resolution context with all modifiers.
  */
-export function initializeResolutionContext(args: InitializeResolutionContextArgs): ResolutionContext {
+export function initializeResolutionContext(
+  args: InitializeResolutionContextArgs
+): ResolutionContext {
   const { planA, planD, effectiveWeather, warriorA, warriorD } = args;
   const { trainers, arenaId = 'standard_arena', crowdMood, deathRateMult } = args;
   const weaponA = (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon;

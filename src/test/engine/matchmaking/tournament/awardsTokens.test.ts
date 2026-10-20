@@ -617,9 +617,7 @@ describe('awardTournamentPrizes — dead podium finishers', () => {
     const updated = awardTournamentPrizes(tournament, state);
     expect(updated.treasury).toBe(1000 + 5000);
     expect(
-      updated.ledger.some(
-        (l) => l.category === 'prize' && l.label === 'Imperial Gold Cup (1st)'
-      )
+      updated.ledger.some((l) => l.category === 'prize' && l.label === 'Imperial Gold Cup (1st)')
     ).toBe(true);
     // No posthumous token pool awards.
     expect(tokenTypesOf(updated)).toEqual([]);

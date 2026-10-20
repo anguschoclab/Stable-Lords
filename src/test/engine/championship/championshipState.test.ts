@@ -178,8 +178,6 @@ describe('Phase 1 — tournament calendar helpers', () => {
     expect(weeksUntilNextSeasonalTournament(52)).toBe(10); // 52 is champions, not seasonal
   });
 
-
-
   it('campaign window covers the three prep weeks plus the event week', () => {
     expect(isTournamentPrepWeek(7)).toBe(true); // 3 weeks out from week 10
     expect(isTournamentPrepWeek(10)).toBe(true); // the seasonal week itself

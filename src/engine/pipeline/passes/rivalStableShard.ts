@@ -169,9 +169,14 @@ function applyStrategyUpdate(
     verifyIntentSkepticism(rival, state);
   const strategy = updateAIStrategy(rival, state, strategySeed);
   return planIssued
-    ? logAgentAction(
-        { rival: { ...rival, strategy }, type: 'STRATEGY', description: strategy.reason ?? `Adopted ${strategy.intent}`, riskTier: 'Low', week: state.week, cause: strategy.intent }
-      )
+    ? logAgentAction({
+        rival: { ...rival, strategy },
+        type: 'STRATEGY',
+        description: strategy.reason ?? `Adopted ${strategy.intent}`,
+        riskTier: 'Low',
+        week: state.week,
+        cause: strategy.intent,
+      })
     : { ...rival, strategy };
 }
 

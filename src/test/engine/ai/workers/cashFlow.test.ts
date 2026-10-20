@@ -6,7 +6,11 @@
  * against the runway, not just this week's reserve.
  */
 import { describe, it, expect } from 'vitest';
-import { projectedWeeklyUpkeep, checkBudget, projectCashFlow } from '@/engine/ai/workers/budgetWorker';
+import {
+  projectedWeeklyUpkeep,
+  checkBudget,
+  projectCashFlow,
+} from '@/engine/ai/workers/budgetWorker';
 import {
   makeRival,
   makeWarrior,

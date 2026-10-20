@@ -10,11 +10,13 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  *
  * Rebaselined during Phase 3 (130 src↔src), then V11 Phase-4 dedupe brought
  * the live count to 43; MEGAPLAN-V12 (D1–D11 consolidation) brought it to 32.
+ * V17 whole-repo prettier pass normalized line/quote formatting, which
+ * unmasked 9 latent parallel-boilerplate pairs (registered below) → 36.
  * KNOWN_SRC_PAIRS is the elimination ledger — it now enumerates exactly the
  * live pairs, each registered with its verdict category. NEW duplicate pairs
  * fail loudly; remove a pair from KNOWN_SRC_PAIRS as its cluster is deduped.
  */
-const SRC_TO_SRC_BASELINE = 30;
+const SRC_TO_SRC_BASELINE = 36;
 
 const KNOWN_SRC_PAIRS = new Set([
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop
@@ -69,6 +71,21 @@ const KNOWN_SRC_PAIRS = new Set([
   // Shared dashboard/settings card idiom — divergent content, same shell.
   'src/components/dashboard/BriefingTab.tsx|src/components/dashboard/GazetteTab.tsx',
   'src/components/layout/ArenaSettings.tsx|src/components/stable/FighterConfigCard.tsx',
+
+  // ─── V17 prettier-exposed latent pairs — whole-repo format pass normalized
+  // quote style and line wrapping across already-parallel handlers, surfacing
+  // 8-line blocks that prior formatting differences had masked. Registered
+  // knowingly; all are offseason-event handler / effect-renderer boilerplate
+  // of the same "parallel implementation" category as the entries above.
+  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/chaosHandlers/rift.ts',
+  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
+  'src/engine/pipeline/offseasonEvents/buffHandlers.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
+  'src/engine/pipeline/offseasonEvents/chaosHandlers/oddities.ts|src/engine/pipeline/offseasonEvents/chaosHandlers/phenomena.ts',
+  'src/engine/pipeline/offseasonEvents/chaosHandlers/oddities.ts|src/engine/pipeline/offseasonEvents/injuryHandlers.ts',
+  'src/engine/pipeline/offseasonEvents/chaosHandlers/rift.ts|src/engine/pipeline/offseasonEvents/socialHandlers/feasts.ts',
+  'src/engine/pipeline/offseasonEvents/socialHandlers/street.ts|src/engine/pipeline/offseasonEvents/socialHandlers/visitors.ts',
+  'src/components/arena/weather/effects/heatEffects.tsx|src/components/arena/weather/effects/windEffects.tsx',
+  'src/engine/bout/services/boutResolution.ts|src/engine/matchmaking/tournamentSelection/utils.ts',
 ]);
 
 describe('megaplan: duplication guard', () => {

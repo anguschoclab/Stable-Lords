@@ -39,13 +39,26 @@ function simulateTutorialBout(
   const wB = poolWarriorToWarrior(poolB, { rng: new SeededRNG(boutSeed + 1) });
   const planA = playerPlan ?? defaultPlanForWarrior(wA);
   const planB = defaultPlanForWarrior(wB);
-  const outcome = simulateFight({ planA: planA, planD: planB, warriorA: wA, warriorD: wB, providedRng: boutSeed });
+  const outcome = simulateFight({
+    planA: planA,
+    planD: planB,
+    warriorA: wA,
+    warriorD: wB,
+    providedRng: boutSeed,
+  });
   const tags = outcome.post?.tags ?? [];
 
   const summary = createBoutSummary(
-    { warriorA: wA, warriorD: wB, outcome: outcome, week: 1, rng: {
-      uuid: () => generateId(undefined, 'ftue'),
-    }, arenaId: 'standard_arena' } // simulateFight defaults to the standard arena
+    {
+      warriorA: wA,
+      warriorD: wB,
+      outcome: outcome,
+      week: 1,
+      rng: {
+        uuid: () => generateId(undefined, 'ftue'),
+      },
+      arenaId: 'standard_arena',
+    } // simulateFight defaults to the standard arena
   );
   summary.flashyTags = tags;
   summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;

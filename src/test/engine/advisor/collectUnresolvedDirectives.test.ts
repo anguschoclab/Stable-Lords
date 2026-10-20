@@ -63,9 +63,7 @@ describe('collectUnresolvedDirectives', () => {
     });
     const state = makeGameState({ roster: [w], boutOffers: { o1: offer } });
 
-    const out = collectUnresolvedDirectives(
-      mkArgs({ state, cards: [card], activeWarriors: [w] })
-    );
+    const out = collectUnresolvedDirectives(mkArgs({ state, cards: [card], activeWarriors: [w] }));
 
     const item = out.find((d) => d.kind === 'unsigned-offer' && d.warriorId === 'w1');
     expect(item).toBeDefined();
@@ -76,7 +74,9 @@ describe('collectUnresolvedDirectives', () => {
   it('emits no unsigned-offer once the player response is Accepted or Declined', () => {
     const w = mkWarrior('w1');
     for (const response of ['Accepted', 'Declined'] as const) {
-      const offer = mkOffer('o1', { responses: { w1: response, r1: 'Pending' } as BoutOffer['responses'] });
+      const offer = mkOffer('o1', {
+        responses: { w1: response, r1: 'Pending' } as BoutOffer['responses'],
+      });
       const card = mkCard('w1', { payload: { boutOfferIdToAccept: 'o1' as BoutOfferId } });
       const state = makeGameState({ roster: [w], boutOffers: { o1: offer } });
 
@@ -97,9 +97,9 @@ describe('collectUnresolvedDirectives', () => {
     const unassigned = collectUnresolvedDirectives(
       mkArgs({ state, cards: [card], activeWarriors: [w] })
     );
-    expect(
-      unassigned.some((d) => d.kind === 'unassigned-training' && d.warriorId === 'w1')
-    ).toBe(true);
+    expect(unassigned.some((d) => d.kind === 'unassigned-training' && d.warriorId === 'w1')).toBe(
+      true
+    );
 
     const assigned = collectUnresolvedDirectives(
       mkArgs({
@@ -112,7 +112,7 @@ describe('collectUnresolvedDirectives', () => {
     expect(assigned.some((d) => d.kind === 'unassigned-training')).toBe(false);
   });
 
-  it('emits unapplied-tactics when a fighting warrior\'s plan diverges from the patch', () => {
+  it("emits unapplied-tactics when a fighting warrior's plan diverges from the patch", () => {
     const w = mkWarrior('w1', { plan: { OE: 3, AL: 4 } } as Partial<Warrior>);
     const card = mkCard('w1', {
       action: 'ACCEPT_OFFER',
@@ -120,24 +120,22 @@ describe('collectUnresolvedDirectives', () => {
     });
     const state = makeGameState({ roster: [w] });
 
-    const out = collectUnresolvedDirectives(
-      mkArgs({ state, cards: [card], activeWarriors: [w] })
-    );
+    const out = collectUnresolvedDirectives(mkArgs({ state, cards: [card], activeWarriors: [w] }));
     expect(out.some((d) => d.kind === 'unapplied-tactics' && d.warriorId === 'w1')).toBe(true);
   });
 
   it('does not emit unapplied-tactics when the live plan already matches the patch', () => {
     const patch = { OE: 8, AL: 4, offensiveTactic: 'Feint', defensiveTactic: 'Parry' };
-    const w = mkWarrior('w1', { plan: { ...patch, conditions: [] } } as unknown as Partial<Warrior>);
+    const w = mkWarrior('w1', {
+      plan: { ...patch, conditions: [] },
+    } as unknown as Partial<Warrior>);
     const card = mkCard('w1', {
       action: 'ACCEPT_OFFER',
       payload: { tacticsPlanPatch: patch as never },
     });
     const state = makeGameState({ roster: [w] });
 
-    const out = collectUnresolvedDirectives(
-      mkArgs({ state, cards: [card], activeWarriors: [w] })
-    );
+    const out = collectUnresolvedDirectives(mkArgs({ state, cards: [card], activeWarriors: [w] }));
     expect(out.some((d) => d.kind === 'unapplied-tactics')).toBe(false);
   });
 
@@ -156,9 +154,7 @@ describe('collectUnresolvedDirectives', () => {
     });
     const state = makeGameState({ roster: [w] });
 
-    const out = collectUnresolvedDirectives(
-      mkArgs({ state, cards: [card], activeWarriors: [w] })
-    );
+    const out = collectUnresolvedDirectives(mkArgs({ state, cards: [card], activeWarriors: [w] }));
     expect(out.some((d) => d.kind === 'unapplied-tactics' && d.warriorId === 'w1')).toBe(true);
   });
 
@@ -206,9 +202,7 @@ describe('collectUnresolvedDirectives', () => {
     });
     const state = makeGameState({ roster: [w], boutOffers: { o1: offer } });
 
-    const out = collectUnresolvedDirectives(
-      mkArgs({ state, cards: [ghost], activeWarriors: [w] })
-    );
+    const out = collectUnresolvedDirectives(mkArgs({ state, cards: [ghost], activeWarriors: [w] }));
     expect(out).toHaveLength(0);
   });
 });

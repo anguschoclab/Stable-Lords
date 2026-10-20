@@ -67,18 +67,10 @@ describe('scouting truthfulness and copy', () => {
       </TooltipProvider>
     );
 
-    expect(
-      screen.getByRole('heading', { name: 'Select a Rival Stable' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Choose a stable to inspect its active roster.')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Select a Warrior to Scout' })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Choose a warrior to order a scout report.')
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Select a Rival Stable' })).toBeInTheDocument();
+    expect(screen.getByText('Choose a stable to inspect its active roster.')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Select a Warrior to Scout' })).toBeInTheDocument();
+    expect(screen.getByText('Choose a warrior to order a scout report.')).toBeInTheDocument();
     expect(screen.queryByText(/host connection|lock-on|deep scan/i)).not.toBeInTheDocument();
   });
 

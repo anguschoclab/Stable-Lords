@@ -8,12 +8,7 @@
  * - Known injuries
  * - Suspected fight plan tendencies
  */
-import type {
-  InsightToken,
-  Owner,
-  OwnerCompetence,
-  ScoutReportData,
-} from '@/types/state.types';
+import type { InsightToken, Owner, OwnerCompetence, ScoutReportData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { ScoutReportId } from '@/types/shared.types';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from '@/types/shared.types';
@@ -268,9 +263,16 @@ export function generateScoutReport(
   const notes = generateScoutReportNotes(warrior, quality, record);
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
 
-  const newInsights = generateScoutInsights(
-    { warrior: warrior, quality: quality, week: week, rng: rng, styleName: styleName, suspectedOE: suspectedOE, suspectedAL: suspectedAL, suspectedTraits: suspectedTraits }
-  );
+  const newInsights = generateScoutInsights({
+    warrior: warrior,
+    quality: quality,
+    week: week,
+    rng: rng,
+    styleName: styleName,
+    suspectedOE: suspectedOE,
+    suspectedAL: suspectedAL,
+    suspectedTraits: suspectedTraits,
+  });
 
   return {
     report: {

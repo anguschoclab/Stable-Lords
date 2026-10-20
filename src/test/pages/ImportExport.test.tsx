@@ -41,7 +41,10 @@ describe('ImportExport page (G2)', () => {
     expect(loadGame).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: /confirm import/i }));
-    expect(loadGame).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ week: 42 }));
+    expect(loadGame).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ week: 42 })
+    );
   });
 
   it('cancel discards the pending import without replacing the session', async () => {

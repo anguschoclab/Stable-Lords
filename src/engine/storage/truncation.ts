@@ -107,10 +107,7 @@ function capWarriorHistory(w: Warrior, caps: ResolvedCaps): Warrior {
  * a bracket that can never resolve. Pending entries keep their positions;
  * the cap bounds only the completed tail.
  */
-function capCompletedTournaments(
-  tournaments: TournamentEntry[],
-  cap: number
-): TournamentEntry[] {
+function capCompletedTournaments(tournaments: TournamentEntry[], cap: number): TournamentEntry[] {
   if (tournaments.length <= cap) return tournaments;
   const completedTail = new Set(tournaments.filter((t) => t.completed).slice(-cap));
   return tournaments.filter((t) => !t.completed || completedTail.has(t));

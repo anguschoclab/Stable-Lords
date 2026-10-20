@@ -17,10 +17,7 @@ const ATTR_BONUS_ENTRIES: Record<string, [keyof Attributes, number][]> = {};
 const FIGHT_PLAN_MOD_ENTRIES: Record<string, [keyof FightPlan, number][]> = {};
 for (const [id, def] of Object.entries(TRAITS)) {
   if (def.effect.attrBonus) {
-    ATTR_BONUS_ENTRIES[id] = Object.entries(def.effect.attrBonus) as [
-      keyof Attributes,
-      number,
-    ][];
+    ATTR_BONUS_ENTRIES[id] = Object.entries(def.effect.attrBonus) as [keyof Attributes, number][];
   }
   if (def.effect.fightPlanMod) {
     FIGHT_PLAN_MOD_ENTRIES[id] = Object.entries(def.effect.fightPlanMod).filter(

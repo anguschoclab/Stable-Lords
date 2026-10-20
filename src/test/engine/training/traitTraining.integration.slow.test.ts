@@ -10,9 +10,14 @@ describe('trait training (integration)', () => {
   it('a blank warrior assigned to a Master trainer resolves after N weeks', async () => {
     let state = createFreshState('train-int');
     const rng = new SeededRNG(42);
-    const w = makeWarrior(
-      { id: rng.uuid() as any, name: 'Tyro', style: FightingStyle.WallOfSteel, attrs: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 }, overrides: { traits: [], age: 20 }, rng: rng }
-    );
+    const w = makeWarrior({
+      id: rng.uuid() as any,
+      name: 'Tyro',
+      style: FightingStyle.WallOfSteel,
+      attrs: { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 },
+      overrides: { traits: [], age: 20 },
+      rng: rng,
+    });
     state.roster = [w];
     state.trainers = [
       {

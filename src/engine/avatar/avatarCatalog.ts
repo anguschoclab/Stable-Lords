@@ -1,8 +1,4 @@
-import type {
-  AvatarCatalog,
-  AvatarCatalogEntry,
-  AvatarLayerCategory,
-} from '@/types/avatar.types';
+import type { AvatarCatalog, AvatarCatalogEntry, AvatarLayerCategory } from '@/types/avatar.types';
 
 let cachedCatalog: AvatarCatalog | null = null;
 
@@ -17,7 +13,9 @@ const REQUIRED_CATEGORIES: AvatarLayerCategory[] = [
 ];
 
 function validateAvatarCatalog(catalog: AvatarCatalog): AvatarLayerCategory[] {
-  return REQUIRED_CATEGORIES.filter((category) => (catalog.categories[category]?.length ?? 0) === 0);
+  return REQUIRED_CATEGORIES.filter(
+    (category) => (catalog.categories[category]?.length ?? 0) === 0
+  );
 }
 
 /**

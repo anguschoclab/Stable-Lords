@@ -1,6 +1,10 @@
 import type { AvatarCatalog, AvatarLayerCategory } from '@/types/avatar.types';
 
-function entry(category: AvatarLayerCategory, name: string, tags: string[] = []): {
+function entry(
+  category: AvatarLayerCategory,
+  name: string,
+  tags: string[] = []
+): {
   src: string;
   category: AvatarLayerCategory;
   tags: string[];
@@ -34,10 +38,7 @@ export function createTestAvatarCatalog(): AvatarCatalog {
         entry('hair', 'blonde_braids_01', ['blonde', 'braids']),
         entry('hair', 'gray_balding_01', ['gray', 'balding']),
       ],
-      facialHair: [
-        entry('facialHair', 'stubble_01'),
-        entry('facialHair', 'beard_black_01'),
-      ],
+      facialHair: [entry('facialHair', 'stubble_01'), entry('facialHair', 'beard_black_01')],
       markings: [
         entry('markings', 'scar_cheek_01', ['scar']),
         entry('markings', 'eyepatch_left_01', ['eyepatch']),

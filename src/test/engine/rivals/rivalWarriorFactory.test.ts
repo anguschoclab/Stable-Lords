@@ -72,9 +72,15 @@ describe('rivalWarriorFactory', () => {
 
     it('creates a warrior and passes through basic info', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior(
-        { wId: 'w1', wName: 'Rival Bob', style: FightingStyle.StrikingAttack, attrs: attrs, stableId: 's1', fameRange: [10, 20], rng: mockRNG }
-      ) as any;
+      const warrior = createRivalWarrior({
+        wId: 'w1',
+        wName: 'Rival Bob',
+        style: FightingStyle.StrikingAttack,
+        attrs: attrs,
+        stableId: 's1',
+        fameRange: [10, 20],
+        rng: mockRNG,
+      }) as any;
 
       expect(warrior.id).toBe('w1');
       expect(warrior.name).toBe('Rival Bob');
@@ -88,35 +94,59 @@ describe('rivalWarriorFactory', () => {
 
     it('rngWrapper.pick throws on empty array', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior(
-        { wId: 'w1', wName: 'Bob', style: FightingStyle.StrikingAttack, attrs: attrs, stableId: 's1', fameRange: [10, 20], rng: mockRNG }
-      ) as any;
+      const warrior = createRivalWarrior({
+        wId: 'w1',
+        wName: 'Bob',
+        style: FightingStyle.StrikingAttack,
+        attrs: attrs,
+        stableId: 's1',
+        fameRange: [10, 20],
+        rng: mockRNG,
+      }) as any;
       expect(() => warrior._rngMocked.pick([])).toThrow('Cannot pick from empty array');
     });
 
     it('rngWrapper.pick selects correctly', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior(
-        { wId: 'w1', wName: 'Bob', style: FightingStyle.StrikingAttack, attrs: attrs, stableId: 's1', fameRange: [10, 20], rng: mockRNG }
-      ) as any;
+      const warrior = createRivalWarrior({
+        wId: 'w1',
+        wName: 'Bob',
+        style: FightingStyle.StrikingAttack,
+        attrs: attrs,
+        stableId: 's1',
+        fameRange: [10, 20],
+        rng: mockRNG,
+      }) as any;
       mockRNG.next.mockReturnValueOnce(0.5);
       expect(warrior._rngMocked.pick(['a', 'b', 'c'])).toBe('b');
     });
 
     it('rngWrapper.roll rolls correctly', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior(
-        { wId: 'w1', wName: 'Bob', style: FightingStyle.StrikingAttack, attrs: attrs, stableId: 's1', fameRange: [10, 20], rng: mockRNG }
-      ) as any;
+      const warrior = createRivalWarrior({
+        wId: 'w1',
+        wName: 'Bob',
+        style: FightingStyle.StrikingAttack,
+        attrs: attrs,
+        stableId: 's1',
+        fameRange: [10, 20],
+        rng: mockRNG,
+      }) as any;
       mockRNG.next.mockReturnValueOnce(0.5);
       expect(warrior._rngMocked.roll(1, 10)).toBe(6);
     });
 
     it('rngWrapper.shuffle shuffles correctly', () => {
       const attrs = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-      const warrior = createRivalWarrior(
-        { wId: 'w1', wName: 'Bob', style: FightingStyle.StrikingAttack, attrs: attrs, stableId: 's1', fameRange: [10, 20], rng: mockRNG }
-      ) as any;
+      const warrior = createRivalWarrior({
+        wId: 'w1',
+        wName: 'Bob',
+        style: FightingStyle.StrikingAttack,
+        attrs: attrs,
+        stableId: 's1',
+        fameRange: [10, 20],
+        rng: mockRNG,
+      }) as any;
       mockRNG.next.mockReturnValue(0.5);
       const shuffled = warrior._rngMocked.shuffle(['a', 'b', 'c']);
       expect(shuffled.length).toBe(3);

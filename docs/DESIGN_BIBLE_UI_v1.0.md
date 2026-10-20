@@ -184,7 +184,7 @@ top-border: slightly lighter for depth
 Bronze-gold accented for fame and glory elements.
 
 ```css
-border: arena-gold/30 with gold glow shadow
+border: arena-gold/30 with gold glow shadow;
 ```
 
 ### `variant="blood"` — Danger/kill surfaces
@@ -192,7 +192,7 @@ border: arena-gold/30 with gold glow shadow
 Crimson accented for lethal results and warnings.
 
 ```css
-border: arena-blood/30 with blood glow shadow
+border: arena-blood/30 with blood glow shadow;
 ```
 
 ### `variant="parchment"` — Historical/archive surfaces
@@ -200,8 +200,7 @@ border: arena-blood/30 with blood glow shadow
 Aged warm surface for Gazette, Hall of Fame, chronicle content.
 
 ```css
-bg: very dark warm with parchment-texture overlay
-border-double style effect
+bg: very dark warm with parchment-texture overlay border-double style effect;
 ```
 
 ---
@@ -630,10 +629,10 @@ engine knows.
 
 `bun run` targets that back these rules:
 
-| Command | Guard |
-| --- | --- |
-| `node scripts/ui-audit-scan.mjs` | fake-chrome, screaming-copy, token/RNG/motion violations |
-| `node scripts/orphan-scan.mjs` | unreachable modules, test-only files, unlinked pages, dead exports |
+| Command                              | Guard                                                                |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| `node scripts/ui-audit-scan.mjs`     | fake-chrome, screaming-copy, token/RNG/motion violations             |
+| `node scripts/orphan-scan.mjs`       | unreachable modules, test-only files, unlinked pages, dead exports   |
 | `bun x vitest run src/test/megaplan` | ratchet guards — orphan scan, entries-in-loop, function/file budgets |
 
 ---

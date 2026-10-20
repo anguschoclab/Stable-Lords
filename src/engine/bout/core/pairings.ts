@@ -119,14 +119,7 @@ function resolveContractOffer(args: ResolveContractOfferArgs): void {
   // A signed offer that can no longer field both combatants is voided rather
   // than silently dropped — an un-voided Signed offer lingers as a ghost that
   // never resolves, never pays out, and never penalizes.
-  if (
-    !wA ||
-    !wD ||
-    !isActive(wA) ||
-    !isActive(wD) ||
-    deadIds.has(wA.id) ||
-    deadIds.has(wD.id)
-  ) {
+  if (!wA || !wD || !isActive(wA) || !isActive(wD) || deadIds.has(wA.id) || deadIds.has(wD.id)) {
     voidedOffers.push(offer);
     return;
   }
@@ -196,9 +189,16 @@ export function generatePairings(state: GameState): PairingsResult {
   );
 
   currentOffers.forEach((offer) =>
-    resolveContractOffer(
-      { offer: offer, state: state, warriorMap: warriorMap, committedWarriors: committedWarriors, activeChampionIds: activeChampionIds, deadIds: deadIds, pairings: pairings, voidedOffers: voidedOffers }
-    )
+    resolveContractOffer({
+      offer: offer,
+      state: state,
+      warriorMap: warriorMap,
+      committedWarriors: committedWarriors,
+      activeChampionIds: activeChampionIds,
+      deadIds: deadIds,
+      pairings: pairings,
+      voidedOffers: voidedOffers,
+    })
   );
 
   return { pairings: [...pairings, ...tournamentPairings], voidedOffers };

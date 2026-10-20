@@ -30,7 +30,7 @@ interface HandleInjuriesArgs {
  */
 export function handleInjuries(args: HandleInjuriesArgs) {
   const { s, wA, wD, outcome, week } = args;
-  const {seed } = args;
+  const { seed } = args;
   let injured = false;
   const refs: WarriorRef[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();

@@ -100,12 +100,34 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
-  const iniA = sumInitiative(
-    { f: fA, AL: AL_A, matchup: ctx.matchupA, fat: fatA, defMods: defModsA, pass: passA, psych: psychA, dynTraits: dynTraitsA, trainerIniMod: ctx.trainerModsA.iniMod ?? 0, masteryIni: masteryIniA, ctx: ctx, stylePhase: stylePhase }
-  );
-  const iniD = sumInitiative(
-    { f: fD, AL: AL_D, matchup: ctx.matchupD, fat: fatD, defMods: defModsD, pass: passD, psych: psychD, dynTraits: dynTraitsD, trainerIniMod: ctx.trainerModsD.iniMod ?? 0, masteryIni: masteryIniD, ctx: ctx, stylePhase: stylePhase }
-  );
+  const iniA = sumInitiative({
+    f: fA,
+    AL: AL_A,
+    matchup: ctx.matchupA,
+    fat: fatA,
+    defMods: defModsA,
+    pass: passA,
+    psych: psychA,
+    dynTraits: dynTraitsA,
+    trainerIniMod: ctx.trainerModsA.iniMod ?? 0,
+    masteryIni: masteryIniA,
+    ctx: ctx,
+    stylePhase: stylePhase,
+  });
+  const iniD = sumInitiative({
+    f: fD,
+    AL: AL_D,
+    matchup: ctx.matchupD,
+    fat: fatD,
+    defMods: defModsD,
+    pass: passD,
+    psych: psychD,
+    dynTraits: dynTraitsD,
+    trainerIniMod: ctx.trainerModsD.iniMod ?? 0,
+    masteryIni: masteryIniD,
+    ctx: ctx,
+    stylePhase: stylePhase,
+  });
 
   const aGoesFirst = contestCheck(rng, iniA, iniD);
   const attLabel = aGoesFirst ? 'A' : 'D';

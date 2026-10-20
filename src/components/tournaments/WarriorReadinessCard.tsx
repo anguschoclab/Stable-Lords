@@ -37,23 +37,23 @@ export function WarriorReadinessCard({ warrior }: WarriorReadinessCardProps) {
           className="border border-white/10 bg-neutral-950 shrink-0"
         />
         <div className="flex flex-col gap-0.5">
-        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90">
-          {warriorDisplayName(warrior)}
-        </span>
-        {injured ? (
-          <div className="flex items-center gap-1.5 text-destructive animate-pulse motion-reduce:animate-none">
-            <AlertTriangle className="h-2.5 w-2.5" />
-            <span className="text-[8px] font-black uppercase tracking-widest">
-              {countInjuries(warrior) === 1
-                ? warrior.injuries[0]?.severity
-                : `${countInjuries(warrior)} INJURIES`}
-            </span>
-          </div>
-        ) : (
-          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-            Status: Nominal
+          <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90">
+            {warriorDisplayName(warrior)}
           </span>
-        )}
+          {injured ? (
+            <div className="flex items-center gap-1.5 text-destructive animate-pulse motion-reduce:animate-none">
+              <AlertTriangle className="h-2.5 w-2.5" />
+              <span className="text-[8px] font-black uppercase tracking-widest">
+                {countInjuries(warrior) === 1
+                  ? warrior.injuries[0]?.severity
+                  : `${countInjuries(warrior)} INJURIES`}
+              </span>
+            </div>
+          ) : (
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+              Status: Nominal
+            </span>
+          )}
         </div>
       </div>
       <div className="flex flex-col items-end">

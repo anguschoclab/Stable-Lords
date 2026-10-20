@@ -49,8 +49,7 @@ const TITLE_HISTORY_COLUMNS: StandingsColumn<TitleReignRow>[] = [
   },
   {
     header: 'STABLE',
-    cellClassName:
-      'text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic',
+    cellClassName: 'text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60 italic',
     render: (r) => r.stableName ?? '—',
   },
   {

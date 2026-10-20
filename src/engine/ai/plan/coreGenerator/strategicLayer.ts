@@ -231,11 +231,7 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   // Competence compounds the WIT gate — a Novice front office authors thinner
   // adaptive plans than a Master for the same fighter (Stage B). The
   // universal ENDURANCE_BELOW safety floor is always retained.
-  const conditionCap = competenceConditionCap(
-    { competence },
-    witCap,
-    universalConditions.length
-  );
+  const conditionCap = competenceConditionCap({ competence }, witCap, universalConditions.length);
   plan.conditions = allConditions.slice(0, conditionCap);
   applyDecoyAxes(plan, w, personality);
   applyPhaseShift(plan, personality);

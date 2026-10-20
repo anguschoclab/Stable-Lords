@@ -1,9 +1,4 @@
-import type {
-  GameState,
-  RivalStableData,
-  WeatherType,
-  Warrior,
-} from '@/types/state.types';
+import type { GameState, RivalStableData, WeatherType, Warrior } from '@/types/state.types';
 import type { PromoterId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
@@ -90,7 +85,10 @@ interface GenerateBoutBidsArgs {
  * challenge/avoid marks steer contact, and per-stable training assignments
  * suppress bids.
  */
-export function generateBoutBids(args: GenerateBoutBidsArgs): { bids: BoutBid[]; updatedRival: RivalStableData } {
+export function generateBoutBids(args: GenerateBoutBidsArgs): {
+  bids: BoutBid[];
+  updatedRival: RivalStableData;
+} {
   const { rival, weather = 'Clear', crowdMood = 'Calm', rivals = [] } = args;
   const { state } = args;
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';

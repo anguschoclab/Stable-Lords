@@ -174,9 +174,14 @@ export function logFinanceEvent(
     ...rival,
     ledger: [...(rival.ledger ?? []), entry].slice(-500),
   };
-  return logAgentAction(
-    { rival: withLedger, type: 'FINANCE', description: opts.description ?? opts.label, riskTier: opts.riskTier ?? 'Low', week: opts.week, cause: 'MAINTENANCE' }
-  );
+  return logAgentAction({
+    rival: withLedger,
+    type: 'FINANCE',
+    description: opts.description ?? opts.label,
+    riskTier: opts.riskTier ?? 'Low',
+    week: opts.week,
+    cause: 'MAINTENANCE',
+  });
 }
 
 /**

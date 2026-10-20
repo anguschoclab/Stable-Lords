@@ -202,7 +202,15 @@ export function useRecruitActions({
 
       const totalCost = w.cost + (bonus ? BONUS_COST : 0);
       const label = `Recruit: ${w.name} (${w.tier})${bonus ? ' + signing bonus' : ''}`;
-      if (!chargeOrToast(deductFunds, totalCost, label, 'recruit', `Not enough funds! Need ${totalCost}g.`))
+      if (
+        !chargeOrToast(
+          deductFunds,
+          totalCost,
+          label,
+          'recruit',
+          `Not enough funds! Need ${totalCost}g.`
+        )
+      )
         return;
 
       setState((draft: GameStore) => applyRecruitDraft(draft, w, bonus, totalCost));
@@ -212,7 +220,15 @@ export function useRecruitActions({
 
   const handleScout = useCallback(
     (w: PoolWarrior) => {
-      if (!chargeOrToast(deductFunds, SCOUT_COST, `Scout Potential: ${w.name}`, 'other', 'Not enough gold to scout potential (need 25g).'))
+      if (
+        !chargeOrToast(
+          deductFunds,
+          SCOUT_COST,
+          `Scout Potential: ${w.name}`,
+          'other',
+          'Not enough gold to scout potential (need 25g).'
+        )
+      )
         return;
       setScoutedIds((s) => new Set(s).add(w.id));
       const report = revealRecruitPotential(w.id, week, w.potential);
@@ -223,7 +239,15 @@ export function useRecruitActions({
   );
 
   const handleRefresh = useCallback(() => {
-    if (!chargeOrToast(deductFunds, REFRESH_COST, 'Pool refresh', 'other', `Not enough gold! Need ${REFRESH_COST}g to refresh.`))
+    if (
+      !chargeOrToast(
+        deductFunds,
+        REFRESH_COST,
+        'Pool refresh',
+        'other',
+        `Not enough gold! Need ${REFRESH_COST}g to refresh.`
+      )
+    )
       return;
     setState(applyPoolRefreshDraft);
   }, [deductFunds, setState]);

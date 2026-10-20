@@ -180,20 +180,39 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
   const v = deriveAttackView(args);
   const { att, def, curAttOE, curOffMods, curPassA } = v;
 
-  const bonuses = computeAttackBonuses(
-    { ctx: args.ctx, aGoesFirst: args.aGoesFirst, att: att, def: def, psychA: args.psychA, psychD: args.psychD, dynTraitsA: args.dynTraitsA, dynTraitsD: args.dynTraitsD }
-  );
+  const bonuses = computeAttackBonuses({
+    ctx: args.ctx,
+    aGoesFirst: args.aGoesFirst,
+    att: att,
+    def: def,
+    psychA: args.psychA,
+    psychD: args.psychD,
+    dynTraitsA: args.dynTraitsA,
+    dynTraitsD: args.dynTraitsD,
+  });
 
-  const attSucc = performAttackCheck(
-    { rng: rng, att: att, curAttOE: curAttOE, matchup: args.aGoesFirst ? args.ctx.matchupA : args.ctx.matchupD, fat: args.aGoesFirst ? args.fatA : args.fatD, curOffMods: curOffMods, curPass: curPassA, curAntiSyn: v.curAntiSyn, curBiasAtt: v.curBiasAtt, overAtt: v.overAtt, _curAttWepReq: v.curAttWepReq, extraBonus: bonuses.momentumBonus +
+  const attSucc = performAttackCheck({
+    rng: rng,
+    att: att,
+    curAttOE: curAttOE,
+    matchup: args.aGoesFirst ? args.ctx.matchupA : args.ctx.matchupD,
+    fat: args.aGoesFirst ? args.fatA : args.fatD,
+    curOffMods: curOffMods,
+    curPass: curPassA,
+    curAntiSyn: v.curAntiSyn,
+    curBiasAtt: v.curBiasAtt,
+    overAtt: v.overAtt,
+    _curAttWepReq: v.curAttWepReq,
+    extraBonus:
+      bonuses.momentumBonus +
       bonuses.psychMod +
       (args.aGoesFirst ? args.es.rangeModA : args.es.rangeModD) +
       args.attCommit.attBonus +
       args.feintAttBonus +
       bonuses.weaponRangeMod +
       bonuses.dynTraitAtt +
-      bonuses.counterstrikeAtt }
-  );
+      bonuses.counterstrikeAtt,
+  });
 
   return { s: buildOffenseCtx(args, v, bonuses), attSucc };
 }

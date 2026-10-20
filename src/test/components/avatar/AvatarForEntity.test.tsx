@@ -33,9 +33,7 @@ describe('AvatarForEntity', () => {
       gender: 'fem',
       ageGroup: 'adult',
       primaryColor: '#000000',
-      layers: [
-        { category: 'base', src: '/cached.png', z: 0 },
-      ],
+      layers: [{ category: 'base', src: '/cached.png', z: 0 }],
     });
     const { container } = render(
       <AvatarForEntity entityId="w-1" entityType="warrior" source={warrior} size="md" />
@@ -50,7 +48,15 @@ describe('AvatarForEntity', () => {
     fresh.rivals = [
       {
         id: 'rival-9',
-        owner: { id: 'rival-9', name: 'R', stableName: 'Rivals', fame: 0, renown: 0, titles: 0, personality: 'Pragmatic' },
+        owner: {
+          id: 'rival-9',
+          name: 'R',
+          stableName: 'Rivals',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+          personality: 'Pragmatic',
+        },
         fame: 0,
         treasury: 0,
         roster: [],

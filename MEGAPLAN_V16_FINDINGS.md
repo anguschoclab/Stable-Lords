@@ -12,7 +12,7 @@
 - **A8 — `'Trait'` is schema-legal** (`InsightTokenType` + `InsightTokenSchema`); `insightTokens` persisted (gameStateSchema.ts:177).
 - **A9 — `processIntel` determinism.** `(rival, state, _perception?)` — jitter via `hashStr` only; `SeededRNG(hashStr(...))` fits.
 - **A10 — `stableId` survives death** (`retireToGraveyard` spreads `...victim`).
-- **A11 — Weather timing.** Acceptance evaluates next tick under correct bout-week weather; bid-*priority* modifier is one week stale (pre-existing, out of scope).
+- **A11 — Weather timing.** Acceptance evaluates next tick under correct bout-week weather; bid-_priority_ modifier is one week stale (pre-existing, out of scope).
 
 ## Corrected draft claims
 

@@ -143,7 +143,8 @@ export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -3,
     riposteMod: 4,
     damageMult: 1.2,
-    description: 'A cursed eclipse fills the arena with dread, quickening reflexes and amplifying blows but sapping endurance.',
+    description:
+      'A cursed eclipse fills the arena with dread, quickening reflexes and amplifying blows but sapping endurance.',
   },
   'Blood Moon': {
     staminaMult: 0.9,

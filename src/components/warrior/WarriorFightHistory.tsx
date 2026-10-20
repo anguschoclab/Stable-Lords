@@ -93,9 +93,7 @@ function FightRow(props: {
         </div>
       </button>
 
-      {isExpanded && hasTranscript && (
-        <ExpandedBout f={f} n={n} />
-      )}
+      {isExpanded && hasTranscript && <ExpandedBout f={f} n={n} />}
     </Surface>
   );
 }
@@ -113,13 +111,7 @@ function H2HBadge({ record }: { record?: H2HRecord }) {
 }
 
 /** Expanded inline BoutViewer for the fight's transcript. */
-function ExpandedBout({
-  f,
-  n,
-}: {
-  f: FightSummary;
-  n: ReturnType<typeof getNamesFromTitle>;
-}) {
+function ExpandedBout({ f, n }: { f: FightSummary; n: ReturnType<typeof getNamesFromTitle> }) {
   // ⚡ Bolt: Use targeted selectors inside the expanded component instead of passing down
   // a massive state object from the parent via useShallow. This prevents the entire
   // fight history list from re-rendering whenever any unrelated warrior state updates,

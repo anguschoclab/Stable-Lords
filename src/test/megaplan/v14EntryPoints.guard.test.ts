@@ -92,10 +92,7 @@ describe('megaplan V14: engineProxy entry-point matrix', () => {
     expect(admin, 'admin skips must use engineSession.runGuarded for timeout+cancelSim').toMatch(
       /runGuarded/
     );
-    const session = readFileSync(
-      path.join(SRC, 'engine/runtime/session.ts'),
-      'utf8'
-    );
+    const session = readFileSync(path.join(SRC, 'engine/runtime/session.ts'), 'utf8');
     const guarded = session.match(/runGuarded[\s\S]*?\n {2}\},?/)?.[0] ?? '';
     expect(guarded, 'runGuarded must retain the setTimeout → cancelSim affordance').toMatch(
       /setTimeout/

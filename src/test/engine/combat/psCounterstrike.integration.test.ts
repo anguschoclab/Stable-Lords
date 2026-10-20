@@ -10,9 +10,13 @@ describe('PS counterstrike (integration)', () => {
     let wins = 0;
     const N = 200;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(ps), planD: defaultPlanForWarrior(ba), warriorA: ps, warriorD: ba, providedRng: i * 4099 + 17 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ps),
+        planD: defaultPlanForWarrior(ba),
+        warriorA: ps,
+        warriorD: ba,
+        providedRng: i * 4099 + 17,
+      });
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;

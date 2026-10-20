@@ -18,9 +18,7 @@ describe('luckfactor', () => {
   });
 
   it('is deterministic for a given seed', () => {
-    expect(rollLuckfactor(new SeededRNG(7))).toEqual(
-      rollLuckfactor(new SeededRNG(7))
-    );
+    expect(rollLuckfactor(new SeededRNG(7))).toEqual(rollLuckfactor(new SeededRNG(7)));
   });
 
   it('produces variety (two seeds differ)', () => {

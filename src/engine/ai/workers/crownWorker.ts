@@ -275,9 +275,14 @@ function markCrownsForRelinquish(
     const permanentlyHurt = (champ.injuries ?? []).some((i) => i.permanent);
     if ((declining || permanentlyHurt) && memory.pendingRelinquish == null) {
       memory.pendingRelinquish = arenaId;
-      updatedRival = logAgentAction(
-        { rival: updatedRival, type: 'STRATEGY', description: `Signals intent to vacate the ${arenaId} crown — ${warriorDisplayName(champ)} is past defending it.`, riskTier: 'Medium', week: week, cause: 'CROWN_RELINQUISH' }
-      );
+      updatedRival = logAgentAction({
+        rival: updatedRival,
+        type: 'STRATEGY',
+        description: `Signals intent to vacate the ${arenaId} crown — ${warriorDisplayName(champ)} is past defending it.`,
+        riskTier: 'Medium',
+        week: week,
+        cause: 'CROWN_RELINQUISH',
+      });
       gazetteItems.push(
         `👑 ${updatedRival.owner.stableName} prepares to vacate the ${arenaId} crown.`
       );
@@ -307,14 +312,24 @@ function applyProtectionRests(
     const holdsCrown = crownsHeld.some(([, champId]) => champId === w.id);
     if (signed.has(w.id)) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
-      updatedRival = logAgentAction(
-        { rival: updatedRival, type: 'STRATEGY', description: `${warriorDisplayName(w)} rests ahead of a signed title bout.`, riskTier: 'Low', week: week, cause: 'CROWN_DEFENSE' }
-      );
+      updatedRival = logAgentAction({
+        rival: updatedRival,
+        type: 'STRATEGY',
+        description: `${warriorDisplayName(w)} rests ahead of a signed title bout.`,
+        riskTier: 'Low',
+        week: week,
+        cause: 'CROWN_DEFENSE',
+      });
     } else if (holdsCrown && inGrandChampPrep) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
-      updatedRival = logAgentAction(
-        { rival: updatedRival, type: 'STRATEGY', description: `${warriorDisplayName(w)} rests for the Grand Championship bracket.`, riskTier: 'Low', week: week, cause: 'CROWN_PREP' }
-      );
+      updatedRival = logAgentAction({
+        rival: updatedRival,
+        type: 'STRATEGY',
+        description: `${warriorDisplayName(w)} rests for the Grand Championship bracket.`,
+        riskTier: 'Low',
+        week: week,
+        cause: 'CROWN_PREP',
+      });
     }
   }
   if (assignments.length !== (updatedRival.trainingAssignments ?? []).length) {

@@ -30,7 +30,13 @@ describe('handlePhantomSparringPartner', () => {
 
     const ctx = makeOffseasonCtx();
 
-    handlePhantomSparringPartner({ state: state as GameState, nextWeek: 5, e: narrative, rng: mockRng, ctx });
+    handlePhantomSparringPartner({
+      state: state as GameState,
+      nextWeek: 5,
+      e: narrative,
+      rng: mockRng,
+      ctx,
+    });
 
     const update = ctx.rosterUpdates.get('w-1' as WarriorId);
     expect(update).toBeDefined();

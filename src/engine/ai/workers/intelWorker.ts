@@ -357,9 +357,14 @@ export function processIntel(
       ? 'the player stable'
       : (targetRival?.owner.stableName ?? 'an unknown stable');
   const intel = refreshed.dossier.planIntel;
-  updatedRival = logAgentAction(
-    { rival: updatedRival, type: 'INTEL', description: `Scouted ${targetName}: suspected OE ${intel?.suspectedOE}, AL ${intel?.suspectedAL}.`, riskTier: 'Low', week: state.week, cause: 'INTEL_UPDATE' }
-  );
+  updatedRival = logAgentAction({
+    rival: updatedRival,
+    type: 'INTEL',
+    description: `Scouted ${targetName}: suspected OE ${intel?.suspectedOE}, AL ${intel?.suspectedAL}.`,
+    riskTier: 'Low',
+    week: state.week,
+    cause: 'INTEL_UPDATE',
+  });
 
   return { updatedRival, gazetteItems };
 }

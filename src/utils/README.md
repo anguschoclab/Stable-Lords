@@ -23,13 +23,13 @@ Math helpers for clamping, interpolation, and rounding.
 
 Seeded RNG implementation and helpers.
 
-| Export                           | Signature                      | Purpose                             |
-| -------------------------------- | ------------------------------ | ----------------------------------- |
+| Export                    | Signature                      | Purpose                             |
+| ------------------------- | ------------------------------ | ----------------------------------- |
 | `SeededRNG` / `SeededRNG` | `class implements IRNGService` | Deterministic RNG with seed         |
-| `randomPick`                     | `(arr, rng) => T`              | Pick a random element from an array |
-| `stringToSeed`                   | `(str) => number`              | Convert a string to a numeric seed  |
-| `hashStr`                        | `(s) => number`                | Hash a string to a number           |
-| `shuffled`                       | `(arr, rng) => T[]`            | Return a shuffled copy of an array  |
+| `randomPick`              | `(arr, rng) => T`              | Pick a random element from an array |
+| `stringToSeed`            | `(str) => number`              | Convert a string to a numeric seed  |
+| `hashStr`                 | `(s) => number`                | Hash a string to a number           |
+| `shuffled`                | `(arr, rng) => T[]`            | Return a shuffled copy of an array  |
 
 ### `cryptoRandom.ts`
 
@@ -70,8 +70,8 @@ ID generation with optional mock override for testing.
 
 Key generation for pair lookups.
 
-| Export                                                  | Signature              | Purpose                                            |
-| ------------------------------------------------------- | ---------------------- | -------------------------------------------------- |
+| Export                                            | Signature              | Purpose                                            |
+| ------------------------------------------------- | ---------------------- | -------------------------------------------------- |
 | `getPairKey` / `getPairKey` / `getWarriorPairKey` | `(id1, id2) => string` | Generate a deterministic key for an unordered pair |
 
 ### `logger.ts`

@@ -4,12 +4,7 @@ import {
   evaluateBoutOffer,
   venueCounterTarget,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
-import {
-  makeWarrior,
-  makeRival,
-  makeStrategy,
-  makeBoutOffer,
-} from '@/test/_fixtures/factories';
+import { makeWarrior, makeRival, makeStrategy, makeBoutOffer } from '@/test/_fixtures/factories';
 import type { AIIntent } from '@/types/state/game';
 
 /**
@@ -54,7 +49,12 @@ describe('verifyBoutAcceptance (characterization)', () => {
 
   it('Aggressive personality still refuses lethal heat for low-CN warriors', () => {
     const frail = makeWarrior({ fame: 100, attributes: { CN: 5 } as never });
-    const r = verifyBoutAcceptance(rivalWith('CONSOLIDATION', 'Aggressive'), frail, w(), 'Sweltering');
+    const r = verifyBoutAcceptance(
+      rivalWith('CONSOLIDATION', 'Aggressive'),
+      frail,
+      w(),
+      'Sweltering'
+    );
     expect(r.accepted).toBe(false);
   });
 
@@ -70,11 +70,7 @@ describe('venueCounterTarget (characterization)', () => {
     const r = rivalWith('CONSOLIDATION');
     expect(venueCounterTarget(makeBoutOffer({ arenaId: undefined }), w, r)).toBeUndefined();
     expect(
-      venueCounterTarget(
-        makeBoutOffer({ arenaId: 'a1', conditions: ['COUNTERED_VENUE'] }),
-        w,
-        r
-      )
+      venueCounterTarget(makeBoutOffer({ arenaId: 'a1', conditions: ['COUNTERED_VENUE'] }), w, r)
     ).toBeUndefined();
   });
 

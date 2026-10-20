@@ -107,8 +107,7 @@ export function checkBudget(
   // far more cash liquid than the old flat 300 (G15). Competence scales
   // discipline: Novices under-reserve, Masters over-reserve (Stage B).
   const reserve =
-    Math.max(BASE_RESERVE, projectedWeeklyUpkeep(rival)) *
-    competenceReserveScale(rival.owner);
+    Math.max(BASE_RESERVE, projectedWeeklyUpkeep(rival)) * competenceReserveScale(rival.owner);
 
   // ⚡ Risk-Tiered Classification
   let riskTier: AIEvent['riskTier'] = 'Low';

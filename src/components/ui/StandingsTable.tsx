@@ -55,12 +55,7 @@ const DEFAULT_HEAD_CELL = 'font-black uppercase text-[10px] tracking-widest';
  * Renders `rows` as a standings/record table: a `columns`-driven header row
  * followed by one `<TableRow>` per row with a `<TableCell>` per column.
  */
-export function StandingsTable<Row>({
-  columns,
-  rows,
-  rowKey,
-  classes,
-}: StandingsTableProps<Row>) {
+export function StandingsTable<Row>({ columns, rows, rowKey, classes }: StandingsTableProps<Row>) {
   const rowClass = classes?.row;
   return (
     <Table className={classes?.root}>

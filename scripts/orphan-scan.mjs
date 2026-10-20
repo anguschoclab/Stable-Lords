@@ -60,9 +60,7 @@ function isTestFile(relPath) {
 
 const srcFiles = walk(SRC).filter(isSourceFile);
 const scriptFiles = [
-  ...walk(path.join(ROOT, 'scripts')).filter(
-    (p) => isSourceFile(p) || /\.[cm]?js$/.test(p)
-  ),
+  ...walk(path.join(ROOT, 'scripts')).filter((p) => isSourceFile(p) || /\.[cm]?js$/.test(p)),
   ...fs
     .readdirSync(ROOT)
     .filter((f) => f.endsWith('.mjs'))

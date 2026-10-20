@@ -12,11 +12,7 @@ export {
 } from './types';
 export { generateRecruit, generateApprentice } from './generate';
 export { fullRefreshPool, generateRecruitPool, partialRefreshPool } from './pool';
-export {
-  partitionAgedFreeAgents,
-  veteranSigningPatch,
-  warriorToPoolWarrior,
-} from './freeAgents';
+export { partitionAgedFreeAgents, veteranSigningPatch, warriorToPoolWarrior } from './freeAgents';
 export {
   poolWarriorToWarrior,
   signWarrior,

@@ -5,11 +5,7 @@ import { resolveExchange } from '../../combat/resolution/resolution';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
 import { getPhaseByExchange } from '@/engine/combat/phase';
 import type { FighterState, ResolutionContext } from '../../combat/resolution/types';
-import type {
-  MinuteEvent,
-  FightOutcomeBy,
-  ExchangeLogEntry,
-} from '@/types/combat.types';
+import type { MinuteEvent, FightOutcomeBy, ExchangeLogEntry } from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
@@ -49,9 +45,15 @@ function runExchange(args: RunExchangeArgs): boolean {
   // re-evaluate plan conditions regardless of WT cadence.
   resCtx.cornerAdvice = phase !== run.lastPhase;
 
-  ({ lastPhase: run.lastPhase, lastMinuteMarker: run.lastMinuteMarker } = emitProgressMarkers(
-    { c: c, fA: fA, fD: fD, phase: phase, min: min, lastPhase: run.lastPhase, lastMinuteMarker: run.lastMinuteMarker }
-  ));
+  ({ lastPhase: run.lastPhase, lastMinuteMarker: run.lastMinuteMarker } = emitProgressMarkers({
+    c: c,
+    fA: fA,
+    fD: fD,
+    phase: phase,
+    min: min,
+    lastPhase: run.lastPhase,
+    lastMinuteMarker: run.lastMinuteMarker,
+  }));
 
   const yielded = checkYieldOutcome(c, fA, fD, min);
   if (yielded) {
@@ -78,9 +80,15 @@ function runExchange(args: RunExchangeArgs): boolean {
 
   // B. Resolve Narration (Drama)
   if (!headless) {
-    ({ prevHpRatioA: run.prevHpRatioA, prevHpRatioD: run.prevHpRatioD } = narrateExchangeEvents(
-      { c: c, fA: fA, fD: fD, events: events, min: min, prevHpRatioA: run.prevHpRatioA, prevHpRatioD: run.prevHpRatioD }
-    ));
+    ({ prevHpRatioA: run.prevHpRatioA, prevHpRatioD: run.prevHpRatioD } = narrateExchangeEvents({
+      c: c,
+      fA: fA,
+      fD: fD,
+      events: events,
+      min: min,
+      prevHpRatioA: run.prevHpRatioA,
+      prevHpRatioD: run.prevHpRatioD,
+    }));
   }
 
   // C. Check for End Events — first BOUT_END in the array wins.

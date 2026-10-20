@@ -18,8 +18,7 @@ export const RIVAL_SORTS: SortOption<RivalStableData>[] = [
   {
     id: 'tier',
     label: 'Tier',
-    compare: (a, b) =>
-      (TIER_RANK[b.tier ?? 'Minor'] ?? 0) - (TIER_RANK[a.tier ?? 'Minor'] ?? 0),
+    compare: (a, b) => (TIER_RANK[b.tier ?? 'Minor'] ?? 0) - (TIER_RANK[a.tier ?? 'Minor'] ?? 0),
   },
   {
     id: 'roster',

@@ -113,13 +113,8 @@ export function useWarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();
 
-  const {
-    arenaHistory,
-    arenaChampions,
-    insightTokens,
-    setState,
-    retireWarrior,
-  } = useWarriorDetailStore();
+  const { arenaHistory, arenaChampions, insightTokens, setState, retireWarrior } =
+    useWarriorDetailStore();
 
   const [activeTab, setActiveTab] = useState('biometrics');
   const { warrior, isPlayerOwned, displayWarrior } = useWarriorIdentity({

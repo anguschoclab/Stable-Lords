@@ -21,8 +21,7 @@ function* srcFiles(dir: string): Generator<string> {
   for (const entry of readdirSync(dir)) {
     const full = path.join(dir, entry);
     if (statSync(full).isDirectory()) yield* srcFiles(full);
-    else if (/\.(ts|tsx)$/.test(entry) && !entry.includes('/test/'))
-      yield full;
+    else if (/\.(ts|tsx)$/.test(entry) && !entry.includes('/test/')) yield full;
   }
 }
 
@@ -34,33 +33,33 @@ function consumersOf(symbol: string, exclude: string): string[] {
 }
 
 describe('megaplan V11: wiring contracts', () => {
-describe('MEGAPLAN-V14', () => {
-  it('every export of constants/core/dates.ts is consumed outside the module', () => {
-    const file = path.join(SRC, 'constants/core/dates.ts');
-    if (!existsSync(file)) return; // deleted-file disposition also satisfies
-    const exports = [...readFileSync(file, 'utf8').matchAll(/export\s+const\s+(\w+)/g)]
-      .map((m) => m[1])
-      .filter((s): s is string => Boolean(s));
-    const dead = exports.filter((sym) => consumersOf(sym, file).length === 0);
-    expect(
-      dead,
-      `dead constants in dates.ts (wire into calendar/day math or delete):\n${dead.join('\n')}`
-    ).toEqual([]);
-  });
+  describe('MEGAPLAN-V14', () => {
+    it('every export of constants/core/dates.ts is consumed outside the module', () => {
+      const file = path.join(SRC, 'constants/core/dates.ts');
+      if (!existsSync(file)) return; // deleted-file disposition also satisfies
+      const exports = [...readFileSync(file, 'utf8').matchAll(/export\s+const\s+(\w+)/g)]
+        .map((m) => m[1])
+        .filter((s): s is string => Boolean(s));
+      const dead = exports.filter((sym) => consumersOf(sym, file).length === 0);
+      expect(
+        dead,
+        `dead constants in dates.ts (wire into calendar/day math or delete):\n${dead.join('\n')}`
+      ).toEqual([]);
+    });
 
-  it('processBoutShard is invoked through the worker/pool path or unexported', () => {
-    const file = path.join(SRC, 'engine/pool/enginePool.ts');
-    if (!existsSync(file)) return;
-    const consumers = consumersOf('processBoutShard', file).filter(
-      (f) => !f.includes('enginePool')
-    );
-    const stillExported = /export\s+(?:async\s+)?function\s+processBoutShard/.test(
-      readFileSync(file, 'utf8')
-    );
-    expect(
-      consumers.length > 0 || !stillExported,
-      'processBoutShard is exported but has no consumers — wire to worker path or unexport'
-    ).toBe(true);
+    it('processBoutShard is invoked through the worker/pool path or unexported', () => {
+      const file = path.join(SRC, 'engine/pool/enginePool.ts');
+      if (!existsSync(file)) return;
+      const consumers = consumersOf('processBoutShard', file).filter(
+        (f) => !f.includes('enginePool')
+      );
+      const stillExported = /export\s+(?:async\s+)?function\s+processBoutShard/.test(
+        readFileSync(file, 'utf8')
+      );
+      expect(
+        consumers.length > 0 || !stillExported,
+        'processBoutShard is exported but has no consumers — wire to worker path or unexport'
+      ).toBe(true);
+    });
   });
-});
 });

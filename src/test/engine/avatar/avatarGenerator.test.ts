@@ -60,7 +60,9 @@ describe('avatarGenerator', () => {
 
   it('adds scar/eyepatch markings for high-wear warriors', () => {
     const young = generateAvatar(baseConfig({ age: 18, kills: 0, injuries: [] }));
-    const veteran = generateAvatar(baseConfig({ age: 50, kills: 10, injuries: Array(5).fill('scar') }));
+    const veteran = generateAvatar(
+      baseConfig({ age: 50, kills: 10, injuries: Array(5).fill('scar') })
+    );
     const youngMarks = young.layers.filter((l) => l.category === 'markings');
     const vetMarks = veteran.layers.filter((l) => l.category === 'markings');
     expect(vetMarks.length).toBeGreaterThan(youngMarks.length);

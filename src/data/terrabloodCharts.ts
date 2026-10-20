@@ -204,8 +204,6 @@ export function computeEncumbranceCapacity(st: number, cn: number): number {
  */
 type EnduranceTier = 'L' | 'P' | 'N' | 'G' | 'R' | 'T' | 'A' | 'U';
 
-
-
 // Numerical endurance value per tier (for combat calculations)
 const ENDURANCE_VALUES: Record<EnduranceTier, number> = {
   L: 12,

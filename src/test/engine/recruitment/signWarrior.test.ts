@@ -175,9 +175,7 @@ describe('signWarrior', () => {
   });
 
   it('rejects when the roster is at capacity (ROSTER_FULL)', () => {
-    const roster = Array.from({ length: 10 }, (_, i) =>
-      makeWarrior({ id: `w${i}` as WarriorId })
-    );
+    const roster = Array.from({ length: 10 }, (_, i) => makeWarrior({ id: `w${i}` as WarriorId }));
     const res = signWarrior(base({ roster, maxRoster: 10 }));
     expect(res.ok).toBe(false);
     if (!res.ok) expect(res.reason).toBe('ROSTER_FULL');
@@ -215,10 +213,14 @@ describe('signWarrior', () => {
   it('drains the signed recruit id from both shelves on success', () => {
     const recruit = makePoolWarrior({ id: 'pw-9', cost: 10 });
     const pool = [makePoolWarrior({ id: 'other' }), recruit];
-    const freeAgents = [makePoolWarrior({ id: 'fa-x' }), { ...recruit, veteran: { fame: 1, popularity: 1, career: { wins: 0, losses: 0, kills: 0 }, titles: [] } }];
-    const res = signWarrior(
-      base({ recruit, pool, freeAgents, usedIds: new Set<string>() })
-    );
+    const freeAgents = [
+      makePoolWarrior({ id: 'fa-x' }),
+      {
+        ...recruit,
+        veteran: { fame: 1, popularity: 1, career: { wins: 0, losses: 0, kills: 0 }, titles: [] },
+      },
+    ];
+    const res = signWarrior(base({ recruit, pool, freeAgents, usedIds: new Set<string>() }));
     expect(res.ok).toBe(true);
     if (res.ok) {
       expect(res.updatedPool?.map((w) => w.id)).toEqual(['other']);
@@ -247,9 +249,7 @@ describe('generateApprentice', () => {
     const apprentice = generateApprentice(args(99));
     expect(apprentice.style).toBe(recruit.style);
     for (const k of ATTRIBUTE_KEYS) {
-      expect(apprentice.attributes[k]).toBe(
-        Math.max(ATTRIBUTE_MIN, recruit.attributes[k] - 2)
-      );
+      expect(apprentice.attributes[k]).toBe(Math.max(ATTRIBUTE_MIN, recruit.attributes[k] - 2));
     }
   });
 
@@ -264,9 +264,7 @@ describe('generateApprentice', () => {
     for (const k of ATTRIBUTE_KEYS) {
       // Promising headroom is [3,6] vs Common's [1,4] — every ceiling sits at
       // least +3 above the attribute unless clamped at the absolute max.
-      expect(a.potential[k]).toBeGreaterThanOrEqual(
-        Math.min(a.attributes[k] + 3, ATTRIBUTE_MAX)
-      );
+      expect(a.potential[k]).toBeGreaterThanOrEqual(Math.min(a.attributes[k] + 3, ATTRIBUTE_MAX));
     }
   });
 });

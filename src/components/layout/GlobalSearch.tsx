@@ -15,10 +15,7 @@ import { searchEntities, type SearchEntry } from '@/engine/core/entityIndex';
 
 const EMPTY: SearchEntry[] = [];
 
-const TYPE_CONFIG: Record<
-  SearchEntry['type'],
-  { label: string; icon: React.ElementType }
-> = {
+const TYPE_CONFIG: Record<SearchEntry['type'], { label: string; icon: React.ElementType }> = {
   warrior: { label: 'Warriors', icon: User },
   stable: { label: 'Stables', icon: Landmark },
   promoter: { label: 'Promoters', icon: Building2 },
@@ -150,13 +147,7 @@ interface ResultsPanelProps {
 }
 
 /** Grouped results dropdown — overlay (desktop rail) or inline (drawer). */
-function SearchResultsPanel({
-  listboxId,
-  variant,
-  query,
-  results,
-  selection,
-}: ResultsPanelProps) {
+function SearchResultsPanel({ listboxId, variant, query, results, selection }: ResultsPanelProps) {
   let flatIndex = -1;
   return (
     <div
@@ -253,9 +244,7 @@ export function GlobalSearch({ onNavigate, variant = 'overlay' }: GlobalSearchPr
 
   const q = query.trim();
   const enabled = open && q.length >= 2;
-  const results = useGameStore(
-    useShallow((s) => (enabled ? searchEntities(s, q, 12) : EMPTY))
-  );
+  const results = useGameStore(useShallow((s) => (enabled ? searchEntities(s, q, 12) : EMPTY)));
 
   // Click-outside closes the panel.
   useEffect(() => {

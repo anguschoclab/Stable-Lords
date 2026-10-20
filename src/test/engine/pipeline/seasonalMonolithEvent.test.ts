@@ -151,7 +151,9 @@ describe('unexplained_monolith offseason event', () => {
     const rng = new SeededRNG(42);
     const ctx = makeCtx();
 
-    expect(() => handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx })).not.toThrow();
+    expect(() =>
+      handleUnexplainedMonolith({ state, nextWeek: 1, e: monolithEvent, rng, ctx })
+    ).not.toThrow();
     expect(ctx.rosterUpdates.size).toBe(0);
     expect(ctx.newsletterItems).toHaveLength(0);
   });

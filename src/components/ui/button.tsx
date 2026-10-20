@@ -17,45 +17,50 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, But
 /**
  * Button.
  */
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (_props, ref) => {
-    const { className, variant, size, asChild = false, tooltip, tooltipSide = 'top', ...props } =
-      _props;
-    const Comp = asChild ? Slot : 'button';
-    const title = props.title;
-    const ariaLabel = props['aria-label'];
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((_props, ref) => {
+  const {
+    className,
+    variant,
+    size,
+    asChild = false,
+    tooltip,
+    tooltipSide = 'top',
+    ...props
+  } = _props;
+  const Comp = asChild ? Slot : 'button';
+  const title = props.title;
+  const ariaLabel = props['aria-label'];
 
-    // If tooltip is provided, or title is provided, we wrap in Tooltip
-    // We suppress the native title if we're showing a custom tooltip
-    const tooltipContent = tooltip || title;
+  // If tooltip is provided, or title is provided, we wrap in Tooltip
+  // We suppress the native title if we're showing a custom tooltip
+  const tooltipContent = tooltip || title;
 
-    const effectiveAriaLabel =
-      ariaLabel || (typeof tooltipContent === 'string' ? tooltipContent : undefined);
+  const effectiveAriaLabel =
+    ariaLabel || (typeof tooltipContent === 'string' ? tooltipContent : undefined);
 
-    const button = (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-        title={tooltipContent ? undefined : title}
-        aria-label={effectiveAriaLabel}
-      />
-    );
+  const button = (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+      title={tooltipContent ? undefined : title}
+      aria-label={effectiveAriaLabel}
+    />
+  );
 
-    if (!tooltipContent) {
-      return button;
-    }
-
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent side={tooltipSide}>
-          <p>{tooltipContent}</p>
-        </TooltipContent>
-      </Tooltip>
-    );
+  if (!tooltipContent) {
+    return button;
   }
-);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <TooltipContent side={tooltipSide}>
+        <p>{tooltipContent}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+});
 Button.displayName = 'Button';
 
 // eslint-disable-next-line react-refresh/only-export-components

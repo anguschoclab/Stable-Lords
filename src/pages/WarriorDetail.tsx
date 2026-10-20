@@ -109,8 +109,11 @@ export default function WarriorDetail() {
 
   if (!warrior || !displayWarrior) return <UnknownWarrior />;
 
-  const { currentPlan, currentLoadout, record, streakVal, streakLabel } =
-    getWarriorPresentation(warrior, displayWarrior, arenaHistory);
+  const { currentPlan, currentLoadout, record, streakVal, streakLabel } = getWarriorPresentation(
+    warrior,
+    displayWarrior,
+    arenaHistory
+  );
 
   return (
     <PageFrame maxWidth="lg" className="pb-32">
@@ -164,26 +167,28 @@ export default function WarriorDetail() {
 }
 
 /** Main column: hero header, tab strip, and the active tab body. */
-function DetailMainColumn(props: {
-  warrior: NonNullable<ReturnType<typeof useWarriorDetail>['warrior']>;
-  displayWarrior: NonNullable<ReturnType<typeof useWarriorDetail>['displayWarrior']>;
-  record: string;
-  streakLabel: string | null;
-  streakVal: number;
-  currentPlan: import('@/types/game').FightPlan;
-  currentLoadout: import('@/data/equipment').EquipmentLoadout;
-  onPlanChange: (p: import('@/types/game').FightPlan) => void;
-  onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
-} & Pick<
-  ReturnType<typeof useWarriorDetail>,
-  | 'id'
-  | 'isPlayerOwned'
-  | 'insightTokens'
-  | 'arenaCrowns'
-  | 'activeTab'
-  | 'setActiveTab'
-  | 'arenaHistory'
->) {
+function DetailMainColumn(
+  props: {
+    warrior: NonNullable<ReturnType<typeof useWarriorDetail>['warrior']>;
+    displayWarrior: NonNullable<ReturnType<typeof useWarriorDetail>['displayWarrior']>;
+    record: string;
+    streakLabel: string | null;
+    streakVal: number;
+    currentPlan: import('@/types/game').FightPlan;
+    currentLoadout: import('@/data/equipment').EquipmentLoadout;
+    onPlanChange: (p: import('@/types/game').FightPlan) => void;
+    onEquipmentChange: (l: import('@/data/equipment').EquipmentLoadout) => void;
+  } & Pick<
+    ReturnType<typeof useWarriorDetail>,
+    | 'id'
+    | 'isPlayerOwned'
+    | 'insightTokens'
+    | 'arenaCrowns'
+    | 'activeTab'
+    | 'setActiveTab'
+    | 'arenaHistory'
+  >
+) {
   const { warrior, displayWarrior, record, streakLabel, streakVal } = props;
   const { id, isPlayerOwned, insightTokens, arenaCrowns, activeTab } = props;
   const { setActiveTab, arenaHistory, currentPlan, currentLoadout, onPlanChange } = props;

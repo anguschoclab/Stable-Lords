@@ -29,14 +29,12 @@ export function RecordTable({
       cellClassName: 'pl-6 font-mono text-[10px] font-black text-muted-foreground',
       render: (row) => String(row.rank).padStart(2, '0'),
     },
-    ...head.map(
-      (h, i): StandingsColumn<RecordRow> => ({
-        header: h,
-        headClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
-        cellClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
-        render: (row) => row.cells[i],
-      })
-    ),
+    ...head.map((h, i): StandingsColumn<RecordRow> => ({
+      header: h,
+      headClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
+      cellClassName: cn(i === head.length - 1 && 'pr-6 text-right'),
+      render: (row) => row.cells[i],
+    })),
   ];
   return (
     <Surface variant="glass" className="overflow-hidden p-0">

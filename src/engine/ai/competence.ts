@@ -118,10 +118,7 @@ const TIER_COMPETENCE_WEIGHTS: Record<
  * Multipliers applied to the tier weights — 'Contender' mints an easier
  * field (Novices/Journeymen overrepresented), 'Legend' a harder one.
  */
-const DIFFICULTY_COMPETENCE_SKEW: Record<
-  WorldDifficulty,
-  [number, number, number, number]
-> = {
+const DIFFICULTY_COMPETENCE_SKEW: Record<WorldDifficulty, [number, number, number, number]> = {
   Contender: [1.8, 1.2, 0.6, 0.25],
   Challenger: [1, 1, 1, 1],
   Legend: [0.3, 0.8, 1.4, 2.0],

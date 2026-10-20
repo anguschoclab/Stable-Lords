@@ -89,10 +89,12 @@ export function MirageEffect() {
           key={`shimmer-${i}`}
           className="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              bottom: '0%',
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 30, -(80 + cryptoRandom() * 60), { durationS: { base: 2, range: 2 } }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            bottom: '0%',
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 30, -(80 + cryptoRandom() * 60), {
+              durationS: { base: 2, range: 2 },
+            }),
+          }}
         />
       ))}
     </div>
@@ -111,13 +113,16 @@ export function WildfireSmokeEffect() {
           key={`smoke-${i}`}
           className="absolute rounded-full blur-2xl animate-chaotic-drift motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              bottom: '-15%',
-              width: `${80 + cryptoRandom() * 60}px`,
-              height: `${80 + cryptoRandom() * 60}px`,
-              background: `rgba(${60 + cryptoRandom() * 40},${40 + cryptoRandom() * 30},${30 + cryptoRandom() * 20},${0.15 + cryptoRandom() * 0.1})`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 60, -(120 + cryptoRandom() * 80), { delayS: 5, durationS: { base: 4, range: 4 } }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            bottom: '-15%',
+            width: `${80 + cryptoRandom() * 60}px`,
+            height: `${80 + cryptoRandom() * 60}px`,
+            background: `rgba(${60 + cryptoRandom() * 40},${40 + cryptoRandom() * 30},${30 + cryptoRandom() * 20},${0.15 + cryptoRandom() * 0.1})`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 60, -(120 + cryptoRandom() * 80), {
+              delayS: 5,
+              durationS: { base: 4, range: 4 },
+            }),
+          }}
         />
       ))}
       {/* Ember sparks within the smoke */}
@@ -126,10 +131,12 @@ export function WildfireSmokeEffect() {
           key={`spark-${i}`}
           className="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              bottom: '0%',
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 40, -(80 + cryptoRandom() * 60), { durationS: { base: 2, range: 2 } }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            bottom: '0%',
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 40, -(80 + cryptoRandom() * 60), {
+              durationS: { base: 2, range: 2 },
+            }),
+          }}
         />
       ))}
     </div>

@@ -27,7 +27,12 @@ describe('OfferActions', () => {
     const onAccept = vi.fn();
     const onDecline = vi.fn();
     render(
-      <OfferActions isSigned={false} acceptDisabled={false} onAccept={onAccept} onDecline={onDecline} />
+      <OfferActions
+        isSigned={false}
+        acceptDisabled={false}
+        onAccept={onAccept}
+        onDecline={onDecline}
+      />
     );
 
     fireEvent.click(screen.getByRole('button', { name: /accept offer/i }));

@@ -84,9 +84,16 @@ function processTournamentPlaceAward(args: ProcessTournamentPlaceAwardArgs): Gam
       );
     }
   } else {
-    updatedState = applyRivalAward(
-      { state: updatedState, w: participant, place: place, prizeGold: prizeGold, prizeFame: prizeFame, tokens: w ? tokens : [], awardRng: awardRng, tournament: tournament }
-    );
+    updatedState = applyRivalAward({
+      state: updatedState,
+      w: participant,
+      place: place,
+      prizeGold: prizeGold,
+      prizeFame: prizeFame,
+      tokens: w ? tokens : [],
+      awardRng: awardRng,
+      tournament: tournament,
+    });
   }
 
   return updatedState;
@@ -142,10 +149,7 @@ function applyRivalAward(args: ApplyRivalAwardArgs): GameState {
         draft.baseSkills.ATT = (draft.baseSkills.ATT || 0) + 1;
       } else if (tokenType === 'Attribute') {
         const attrKey = awardRng.pick([...primaries]);
-        draft.attributes[attrKey] = Math.min(
-          ATTRIBUTE_MAX,
-          (draft.attributes[attrKey] || 10) + 1
-        );
+        draft.attributes[attrKey] = Math.min(ATTRIBUTE_MAX, (draft.attributes[attrKey] || 10) + 1);
       }
     });
   }
@@ -201,16 +205,34 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
     tournament.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   );
 
-  updatedState = processTournamentPlaceAward(
-    { state: updatedState, warriorId: first, place: 1, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
-  );
-  updatedState = processTournamentPlaceAward(
-    { state: updatedState, warriorId: second, place: 2, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
-  );
+  updatedState = processTournamentPlaceAward({
+    state: updatedState,
+    warriorId: first,
+    place: 1,
+    awardRng: awardRng,
+    basePurse: basePurse,
+    tier: tier,
+    tournament: tournament,
+  });
+  updatedState = processTournamentPlaceAward({
+    state: updatedState,
+    warriorId: second,
+    place: 2,
+    awardRng: awardRng,
+    basePurse: basePurse,
+    tier: tier,
+    tournament: tournament,
+  });
   if (third) {
-    updatedState = processTournamentPlaceAward(
-      { state: updatedState, warriorId: third, place: 3, awardRng: awardRng, basePurse: basePurse, tier: tier, tournament: tournament }
-    );
+    updatedState = processTournamentPlaceAward({
+      state: updatedState,
+      warriorId: third,
+      place: 3,
+      awardRng: awardRng,
+      basePurse: basePurse,
+      tier: tier,
+      tournament: tournament,
+    });
   }
 
   return updatedState;

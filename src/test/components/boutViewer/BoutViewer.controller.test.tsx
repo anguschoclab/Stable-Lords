@@ -84,9 +84,7 @@ describe('BoutViewer controller', () => {
 
     expect(screen.getByRole('region', { name: /Live bout/i })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: /Bout highlights/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole('region', { name: /Bout result and analysis/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: /Bout result and analysis/i })).toBeInTheDocument();
   });
 
   it('uses instant scrolling when reduced motion is preferred', () => {

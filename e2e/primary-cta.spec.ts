@@ -107,7 +107,9 @@ test('primary CTA swaps label and behavior per route', async ({
   const headerMetrics = await page.evaluate(() => {
     const box = (selector: string) => {
       const rect = document.querySelector(selector)?.getBoundingClientRect();
-      return rect ? { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left } : null;
+      return rect
+        ? { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left }
+        : null;
     };
     return {
       header: box('header'),

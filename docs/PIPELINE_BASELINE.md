@@ -15,16 +15,16 @@ bun x vitest run src/test/perf/rivalStrategyPass.perf.slow.test.ts
 
 ## Current measured values (post-refactor)
 
-| Benchmark                                                 | Source                                | Measured           |
-| --------------------------------------------------------- | ------------------------------------- | ------------------ |
-| Populated-world week tick (`RivalStrategyPass` dominant)  | `rivalStrategyPass.perf.slow.test.ts` | ~67 ms             |
+| Benchmark                                                 | Source                                | Measured                                                                                                               |
+| --------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Populated-world week tick (`RivalStrategyPass` dominant)  | `rivalStrategyPass.perf.slow.test.ts` | ~67 ms                                                                                                                 |
 | Fresh-state 13-week `advanceQuarter` (headless)           | `pipeline.perf.slow.test.ts`          | gated <20 s (catastrophic-regression ceiling, not a benchmark; ~1.43 s/wk at the 160-stable band ⇒ ~18.6 s worst case) |
-| 52-week autosim (large week count)                        | `pipeline.perf.slow.test.ts`          | ~17 s isolated / ~26 s under suite load (~330–500 ms/wk) |
-| Batch memory growth                                       | `pipeline.perf.slow.test.ts`          | within gate        |
-| `advanceYear` ≡ 52× `advanceWeek`                         | `weekDeterminism.slow.test.ts`        | ~1.7 s, equivalent |
-| Same-seed determinism (SimPulse + rivals hash)            | `sim/determinism.slow.test.ts`        | identical, ~4 s    |
-| Living-world week, 90-stable band (headless advanceWeek)  | `pipeline.perf.slow.test.ts`          | ~630 ms/week (re-measured; ~566 prior) |
-| Living-world week, 160-stable band (headless advanceWeek) | `pipeline.perf.slow.test.ts`          | ~1,430 ms/week (re-measured; ~1,378 prior) |
+| 52-week autosim (large week count)                        | `pipeline.perf.slow.test.ts`          | ~17 s isolated / ~26 s under suite load (~330–500 ms/wk)                                                               |
+| Batch memory growth                                       | `pipeline.perf.slow.test.ts`          | within gate                                                                                                            |
+| `advanceYear` ≡ 52× `advanceWeek`                         | `weekDeterminism.slow.test.ts`        | ~1.7 s, equivalent                                                                                                     |
+| Same-seed determinism (SimPulse + rivals hash)            | `sim/determinism.slow.test.ts`        | identical, ~4 s                                                                                                        |
+| Living-world week, 90-stable band (headless advanceWeek)  | `pipeline.perf.slow.test.ts`          | ~630 ms/week (re-measured; ~566 prior)                                                                                 |
+| Living-world week, 160-stable band (headless advanceWeek) | `pipeline.perf.slow.test.ts`          | ~1,430 ms/week (re-measured; ~1,378 prior)                                                                             |
 
 ## Harness soak baseline (A2 re-measure, telemetry-provider profiling)
 
@@ -35,10 +35,10 @@ Harness ms/week includes archive drain, pulse logging, and tracker overhead
 that the bare `advanceWeek` perf rows above exclude — do not compare them
 directly.
 
-| Config                        | ms/week | invariants |
-| ----------------------------- | ------- | ---------- |
-| week-mode (weekly advance)    | 292.7   | 0          |
-| day-mode (`--day-mode`, seven `advanceDay` ticks per week) | 303.1 | 0 |
+| Config                                                     | ms/week | invariants |
+| ---------------------------------------------------------- | ------- | ---------- |
+| week-mode (weekly advance)                                 | 292.7   | 0          |
+| day-mode (`--day-mode`, seven `advanceDay` ticks per week) | 303.1   | 0          |
 
 Day-mode costs ~+4% over week-mode — the seven day ticks are cheap and the
 weekly pipeline on day 7 dominates either way.
@@ -46,12 +46,12 @@ weekly pipeline on day 7 dominates either way.
 Per-pass profile (40 weeks, total ms — telemetry `pipeline_pass_timing`
 events folded by the harness provider):
 
-| pass              | stage   | total ms | avg ms/wk | share |
-| ----------------- | ------- | -------- | --------- | ----- |
-| rivalStrategy     | world   | 6,604    | 165       | ~56%  |
-| promoter          | world   | 1,098    | 27.5      | ~9%   |
-| arenaChampionship | world   | 241      | 6.0       | ~2%   |
-| all others        | —       | <52 each  | <1.3     | ~33%  |
+| pass              | stage | total ms | avg ms/wk | share |
+| ----------------- | ----- | -------- | --------- | ----- |
+| rivalStrategy     | world | 6,604    | 165       | ~56%  |
+| promoter          | world | 1,098    | 27.5      | ~9%   |
+| arenaChampionship | world | 241      | 6.0       | ~2%   |
+| all others        | —     | <52 each | <1.3      | ~33%  |
 
 ### B3 hot-path optimization outcome (post-optimization A/B)
 
@@ -71,10 +71,10 @@ shipped:
 
 A/B soak, same seed, idle machine, `--weeks 20`:
 
-| Code           | ms/week | final state         |
-| -------------- | ------- | ------------------- |
-| pre-B3         | 359.8   | reference           |
-| post-B3        | 281.3   | **byte-identical**  |
+| Code    | ms/week | final state        |
+| ------- | ------- | ------------------ |
+| pre-B3  | 359.8   | reference          |
+| post-B3 | 281.3   | **byte-identical** |
 
 ≈22% faster with provably unchanged output. Post-change CPU profile no
 longer shows `getHeadToHeadRecord` or `underservedWeights`; the remaining

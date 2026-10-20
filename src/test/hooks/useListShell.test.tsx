@@ -25,9 +25,7 @@ const rows: Row[] = [
 
 describe('useListShell', () => {
   it('returns all items sorted by the default sort', () => {
-    const { result } = renderHook(() =>
-      useListShell(rows, { searchText: (r) => [r.name], sorts })
-    );
+    const { result } = renderHook(() => useListShell(rows, { searchText: (r) => [r.name], sorts }));
     expect(result.current.filtered.map((r) => r.name)).toEqual([
       'Ash Reapers',
       'Golden Lions',

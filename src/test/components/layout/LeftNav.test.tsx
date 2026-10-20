@@ -10,7 +10,15 @@ import '@/test/_setup/setup';
 let currentPath = '/stable';
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
+  Link: ({
+    to,
+    children,
+    className,
+  }: {
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }) => (
     <a href={to} className={className}>
       {children}
     </a>
@@ -31,14 +39,8 @@ describe('LeftNav', () => {
     render(<LeftNav />);
     const nav = screen.getByRole('navigation');
 
-    expect(within(nav).getByRole('link', { name: /Stable/ })).toHaveAttribute(
-      'href',
-      '/stable'
-    );
-    expect(within(nav).getByRole('link', { name: /World/ })).toHaveAttribute(
-      'href',
-      '/world'
-    );
+    expect(within(nav).getByRole('link', { name: /Stable/ })).toHaveAttribute('href', '/stable');
+    expect(within(nav).getByRole('link', { name: /World/ })).toHaveAttribute('href', '/world');
     for (const section of ['Command', 'Roster', 'Operations', 'Tools']) {
       expect(within(nav).getByRole('heading', { name: section })).toBeInTheDocument();
     }

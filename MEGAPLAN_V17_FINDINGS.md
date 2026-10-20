@@ -69,7 +69,7 @@
   (`ONBOARDING_QUESTS.map(q => q.done(s))`) and the #1062 id-map.
 - **F3 — Legacy-founder stables could debut over the roster cap** —
   `applyLegacyFounder` (`src/engine/ai/expansionService.ts:66`) overwrites
-  `owner.personality` *after* the roster was minted under the template
+  `owner.personality` _after_ the roster was minted under the template
   personality cap. Tactician/Methodical founder (cap 8) on an Aggressive
   template mint (10) → 10 actives > cap 8 — the exact
   `roster-cap-exceeded` invariant the content-union RNG shift surfaced in

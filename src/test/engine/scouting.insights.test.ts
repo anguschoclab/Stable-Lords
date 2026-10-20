@@ -89,28 +89,56 @@ describe('createTacticInsight', () => {
   it('returns null for Basic quality', () => {
     const warrior = makeWarrior();
     const rng = new SeededRNG(1);
-    const result = createTacticInsight({ warrior: warrior, quality: 'Basic', suspectedOE: undefined, suspectedAL: undefined, week: 5, rng: rng });
+    const result = createTacticInsight({
+      warrior: warrior,
+      quality: 'Basic',
+      suspectedOE: undefined,
+      suspectedAL: undefined,
+      week: 5,
+      rng: rng,
+    });
     expect(result).toBeNull();
   });
 
   it('returns null for Detailed quality', () => {
     const warrior = makeWarrior();
     const rng = new SeededRNG(1);
-    const result = createTacticInsight({ warrior: warrior, quality: 'Detailed', suspectedOE: undefined, suspectedAL: undefined, week: 5, rng: rng });
+    const result = createTacticInsight({
+      warrior: warrior,
+      quality: 'Detailed',
+      suspectedOE: undefined,
+      suspectedAL: undefined,
+      week: 5,
+      rng: rng,
+    });
     expect(result).toBeNull();
   });
 
   it('returns null for Expert quality without a plan', () => {
     const warrior = makeWarrior({ plan: undefined });
     const rng = new SeededRNG(1);
-    const result = createTacticInsight({ warrior: warrior, quality: 'Expert', suspectedOE: 'High', suspectedAL: 'Low', week: 5, rng: rng });
+    const result = createTacticInsight({
+      warrior: warrior,
+      quality: 'Expert',
+      suspectedOE: 'High',
+      suspectedAL: 'Low',
+      week: 5,
+      rng: rng,
+    });
     expect(result).toBeNull();
   });
 
   it('returns 1 Tactic insight for Expert with plan', () => {
     const warrior = makeWarrior({ plan: { OE: 7, AL: 5, killDesire: 6 } as any });
     const rng = new SeededRNG(1);
-    const result = createTacticInsight({ warrior: warrior, quality: 'Expert', suspectedOE: 'High', suspectedAL: 'Medium', week: 5, rng: rng });
+    const result = createTacticInsight({
+      warrior: warrior,
+      quality: 'Expert',
+      suspectedOE: 'High',
+      suspectedAL: 'Medium',
+      week: 5,
+      rng: rng,
+    });
 
     expect(result).not.toBeNull();
     expect(result!.type).toBe('Tactic');

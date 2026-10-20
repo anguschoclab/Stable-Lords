@@ -40,9 +40,14 @@ export function buildWeekOffers(
     rivalId: string;
   }[] = [];
   for (const rival of currentRivals) {
-    const { bids } = generateBoutBids(
-      { rival: rival, _currentWeek: state.absoluteWeek + 1, weather: state.weather ?? 'Clear', crowdMood: state.crowdMood ?? 'Calm', rivals: currentRivals, state: state }
-    );
+    const { bids } = generateBoutBids({
+      rival: rival,
+      _currentWeek: state.absoluteWeek + 1,
+      weather: state.weather ?? 'Clear',
+      crowdMood: state.crowdMood ?? 'Calm',
+      rivals: currentRivals,
+      state: state,
+    });
     for (const bid of bids) {
       allBids.push({ bid, rivalId: rival.id as string });
     }

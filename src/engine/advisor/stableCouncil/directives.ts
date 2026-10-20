@@ -127,7 +127,9 @@ interface CollectUnresolvedDirectivesArgs {
  * state — unsigned bout offers, missing training assignments, and diverged
  * tactics plans for warriors fighting next week.
  */
-export function collectUnresolvedDirectives(args: CollectUnresolvedDirectivesArgs): CouncilDirective[] {
+export function collectUnresolvedDirectives(
+  args: CollectUnresolvedDirectivesArgs
+): CouncilDirective[] {
   const { state, cards, activeWarriors, playerWarriorIds, assignedWarriorIds } = args;
   const { upcomingAbsWeek } = args;
   const fightingIds = new Set(

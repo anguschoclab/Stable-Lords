@@ -14,9 +14,13 @@ export function populateTestState(state: GameState): GameState {
   // 1. Add to player roster (10 warriors)
   for (let i = 0; i < 10; i++) {
     newState.roster.push(
-      makeWarrior(
-        { id: `p_w_${i}` as any, name: `Player Warrior ${i}`, style: styles[i % styles.length] || FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 + i * 10 } }
-      )
+      makeWarrior({
+        id: `p_w_${i}` as any,
+        name: `Player Warrior ${i}`,
+        style: styles[i % styles.length] || FightingStyle.StrikingAttack,
+        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        overrides: { fame: 50 + i * 10 },
+      })
     );
   }
 
@@ -25,9 +29,13 @@ export function populateTestState(state: GameState): GameState {
     const rivalWorkers: Warrior[] = [];
     for (let w = 0; w < 20; w++) {
       rivalWorkers.push(
-        makeWarrior(
-          { id: `r_${r}_w_${w}` as any, name: `Rival ${r} Warrior ${w}`, style: styles[(r + w) % styles.length] || FightingStyle.StrikingAttack, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { fame: 50 + r * 10 + w * 5 } }
-        )
+        makeWarrior({
+          id: `r_${r}_w_${w}` as any,
+          name: `Rival ${r} Warrior ${w}`,
+          style: styles[(r + w) % styles.length] || FightingStyle.StrikingAttack,
+          attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          overrides: { fame: 50 + r * 10 + w * 5 },
+        })
       );
     }
 

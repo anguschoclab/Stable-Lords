@@ -68,7 +68,14 @@ export function sweepTitleRefusals(state: GameState, delta: ChampionshipDelta): 
               (id) => offer.responses?.[id] !== 'Accepted' && !isVoidDecline(id)
             );
     if (!declinerId) continue;
-    applyDecline({ state: state, delta: delta, arenaId: arenaId, championId: title.champion?.warriorId, declinerId: declinerId, now: now });
+    applyDecline({
+      state: state,
+      delta: delta,
+      arenaId: arenaId,
+      championId: title.champion?.warriorId,
+      declinerId: declinerId,
+      now: now,
+    });
   }
 }
 

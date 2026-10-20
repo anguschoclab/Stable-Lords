@@ -31,7 +31,9 @@ const EXEMPTIONS = new Set([
 ]);
 
 function collectKeys(): string[] {
-  const m = SERIALIZATION.match(/function collectStoreValues[\s\S]*?\n {2}return \{([\s\S]*?)\n {2}\};/);
+  const m = SERIALIZATION.match(
+    /function collectStoreValues[\s\S]*?\n {2}return \{([\s\S]*?)\n {2}\};/
+  );
   expect(m, 'could not locate collectStoreValues return literal').not.toBeNull();
   return [...m![1]!.matchAll(/^\s*(\w+):/gm)].map((x) => x[1]!);
 }
@@ -39,9 +41,7 @@ function collectKeys(): string[] {
 function hydratedFields(): string[] {
   const m = CREATE_STORE.match(/function hydrateDraft[\s\S]*?\n\}/);
   expect(m, 'could not locate hydrateDraft').not.toBeNull();
-  return [
-    ...new Set([...m![0].matchAll(/draft\.(\w+)\s*=/g)].map((x) => x[1]!)),
-  ];
+  return [...new Set([...m![0].matchAll(/draft\.(\w+)\s*=/g)].map((x) => x[1]!))];
 }
 
 describe('reconstruction field parity', () => {

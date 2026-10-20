@@ -21,12 +21,7 @@ interface AutosimConsoleProps {
  * Autosim console.
  * @param - { is simulating, progress, result, on start }.
  */
-export function AutosimConsole({
-  isSimulating,
-  progress,
-  result,
-  handlers,
-}: AutosimConsoleProps) {
+export function AutosimConsole({ isSimulating, progress, result, handlers }: AutosimConsoleProps) {
   const percent = progress ? Math.round((progress.current / progress.total) * 100) : 0;
   const [councilAutoPilot, setCouncilAutoPilot] = useState(false);
   const start = (weeks: number) => handlers.onStart(weeks, { councilAutoPilot });

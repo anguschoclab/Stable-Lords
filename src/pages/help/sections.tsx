@@ -131,9 +131,7 @@ export function FightingStylesSection() {
           others. Offensive styles beat other offensives but struggle against defensive styles.
           Total Parry and Wall of Steel counter most attackers but lose to each other.
         </p>
-        <ContextLinks
-          links={[{ to: '/world/style-archives', label: 'Open style archives' }]}
-        />
+        <ContextLinks links={[{ to: '/world/style-archives', label: 'Open style archives' }]} />
       </AccordionContent>
     </AccordionItem>
   );
@@ -237,9 +235,7 @@ export function EquipmentSection() {
           <strong>Preferred Weapons</strong>: Weapons marked with ⭐ are thematically suited to your
           style. Use them for optimal performance.
         </p>
-        <ContextLinks
-          links={[{ to: '/stable/equipment', label: 'Review stable equipment' }]}
-        />
+        <ContextLinks links={[{ to: '/stable/equipment', label: 'Review stable equipment' }]} />
       </AccordionContent>
     </AccordionItem>
   );

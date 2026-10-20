@@ -35,10 +35,7 @@ const PUSH_RE = /\b(?:c\.)?log\.push\s*\(/;
  * therefore must be headless-gated. If bout logging gains a new source file,
  * add it here deliberately — after confirming the site is gated.
  */
-const TRANSCRIPT_DIRS = [
-  path.join(ENGINE, 'simulate'),
-  path.join(ENGINE, 'bout'),
-];
+const TRANSCRIPT_DIRS = [path.join(ENGINE, 'simulate'), path.join(ENGINE, 'bout')];
 
 /**
  * Per-file count of `log.push` sites, each previously verified gated by
@@ -84,9 +81,10 @@ describe('headless transcript contract', () => {
       }
     }
     for (const rel of Object.keys(GATED_PUSH_COUNTS)) {
-      expect(found.has(rel), `'${rel}' no longer pushes transcript lines — drop its registry entry`).toBe(
-        true
-      );
+      expect(
+        found.has(rel),
+        `'${rel}' no longer pushes transcript lines — drop its registry entry`
+      ).toBe(true);
     }
   });
 

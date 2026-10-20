@@ -39,17 +39,29 @@ describe('AI feint modulation', () => {
 
   it('is clamped to [0,10] in both directions', () => {
     // WT 21 → baseline 10 — a deceptive stable cannot push past the cap.
-    const showman = aiPlanForWarrior({ w: withWT(21), personality: 'Showman', philosophy: 'Opportunist' });
+    const showman = aiPlanForWarrior({
+      w: withWT(21),
+      personality: 'Showman',
+      philosophy: 'Opportunist',
+    });
     expect(showman.feintTendency).toBeLessThanOrEqual(10);
 
     // WT 15 → baseline 1 — a measured stable floors at 0, never negative.
-    const methodical = aiPlanForWarrior({ w: withWT(15), personality: 'Methodical', philosophy: 'Opportunist' });
+    const methodical = aiPlanForWarrior({
+      w: withWT(15),
+      personality: 'Methodical',
+      philosophy: 'Opportunist',
+    });
     expect(methodical.feintTendency).toBeGreaterThanOrEqual(0);
   });
 
   it('low-WT fighters stay at zero regardless of personality', () => {
     const dull = withWT(10);
-    const showman = aiPlanForWarrior({ w: dull, personality: 'Showman', philosophy: 'Opportunist' });
+    const showman = aiPlanForWarrior({
+      w: dull,
+      personality: 'Showman',
+      philosophy: 'Opportunist',
+    });
     // Feint needs WT ≥ 15 to fire — boosting a dull fighter's tendency is
     // wasted ink; the modulation only shapes an existing aptitude.
     expect(showman.feintTendency ?? 0).toBe(0);

@@ -73,7 +73,7 @@ interface DecisionNarrativeArgs {
  * * @returns A formatted narrative string describing the decision
  */
 function decisionNarrative(args: DecisionNarrativeArgs): string {
-  const {winName, loseName, fW } = args;
+  const { winName, loseName, fW } = args;
   const { fL, voteType, dissenter } = args;
   const hitMargin = fW.hitsLanded - fL.hitsLanded;
   const domination = hitMargin >= 5;
@@ -129,7 +129,11 @@ interface ResolveOvertimeOrTiebreakerArgs {
 /**
  * Helper to resolve the overtime exchange or HP-based tiebreaker when judges cannot agree.
  */
-function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): { winner: 'A' | 'D' | null; by: FightOutcome['by']; narrative: string } {
+function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): {
+  winner: 'A' | 'D' | null;
+  by: FightOutcome['by'];
+  narrative: string;
+} {
   const { fA, fD, nameA, nameD, aVotes } = args;
   const { dVotes, rng } = args;
   // ── Contested / overtime ──
@@ -142,13 +146,29 @@ function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): { w
         return {
           winner: 'A',
           by: 'Decision',
-          narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'overtime' }),
+          narrative: decisionNarrative({
+            _winner: 'A',
+            _loser: 'D',
+            winName: nameA,
+            loseName: nameD,
+            fW: fA,
+            fL: fD,
+            voteType: 'overtime',
+          }),
         };
       } else {
         return {
           winner: 'D',
           by: 'Decision',
-          narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'overtime' }),
+          narrative: decisionNarrative({
+            _winner: 'D',
+            _loser: 'A',
+            winName: nameD,
+            loseName: nameA,
+            fW: fD,
+            fL: fA,
+            voteType: 'overtime',
+          }),
         };
       }
     }
@@ -210,14 +230,30 @@ export function resolveDecision(
     return {
       winner: 'A',
       by: 'Decision',
-      narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'unanimous' }),
+      narrative: decisionNarrative({
+        _winner: 'A',
+        _loser: 'D',
+        winName: nameA,
+        loseName: nameD,
+        fW: fA,
+        fL: fD,
+        voteType: 'unanimous',
+      }),
     };
   }
   if (dVotes === 3) {
     return {
       winner: 'D',
       by: 'Decision',
-      narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'unanimous' }),
+      narrative: decisionNarrative({
+        _winner: 'D',
+        _loser: 'A',
+        winName: nameD,
+        loseName: nameA,
+        fW: fD,
+        fL: fA,
+        voteType: 'unanimous',
+      }),
     };
   }
 
@@ -228,7 +264,16 @@ export function resolveDecision(
     return {
       winner: 'A',
       by: 'Decision',
-      narrative: decisionNarrative({ _winner: 'A', _loser: 'D', winName: nameA, loseName: nameD, fW: fA, fL: fD, voteType: 'split', dissenter: dissenter }),
+      narrative: decisionNarrative({
+        _winner: 'A',
+        _loser: 'D',
+        winName: nameA,
+        loseName: nameD,
+        fW: fA,
+        fL: fD,
+        voteType: 'split',
+        dissenter: dissenter,
+      }),
     };
   }
   if (dVotes === 2) {
@@ -237,10 +282,27 @@ export function resolveDecision(
     return {
       winner: 'D',
       by: 'Decision',
-      narrative: decisionNarrative({ _winner: 'D', _loser: 'A', winName: nameD, loseName: nameA, fW: fD, fL: fA, voteType: 'split', dissenter: dissenter }),
+      narrative: decisionNarrative({
+        _winner: 'D',
+        _loser: 'A',
+        winName: nameD,
+        loseName: nameA,
+        fW: fD,
+        fL: fA,
+        voteType: 'split',
+        dissenter: dissenter,
+      }),
     };
   }
 
   // ── Contested / overtime / HP Tiebreaker ──
-  return resolveOvertimeOrTiebreaker({ fA: fA, fD: fD, nameA: nameA, nameD: nameD, aVotes: aVotes, dVotes: dVotes, rng: rng });
+  return resolveOvertimeOrTiebreaker({
+    fA: fA,
+    fD: fD,
+    nameA: nameA,
+    nameD: nameD,
+    aVotes: aVotes,
+    dVotes: dVotes,
+    rng: rng,
+  });
 }

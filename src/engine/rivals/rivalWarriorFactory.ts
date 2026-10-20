@@ -103,11 +103,16 @@ export function createRivalWarrior(args: CreateRivalWarriorArgs): Warrior {
       rollWeighted(weights, rng),
   };
 
-  return makeWarrior(
-    { id: wId as import('@/types/shared.types').WarriorId, name: wName, style: style, attrs: attrs, overrides: {
+  return makeWarrior({
+    id: wId as import('@/types/shared.types').WarriorId,
+    name: wName,
+    style: style,
+    attrs: attrs,
+    overrides: {
       fame: Math.floor(rng.next() * (fameRange[1] - fameRange[0] + 1)) + fameRange[0],
       popularity: Math.floor(rng.next() * 5),
       stableId: stableId as import('@/types/shared.types').StableId,
-    }, rng: rngWrapper }
-  );
+    },
+    rng: rngWrapper,
+  });
 }

@@ -136,16 +136,30 @@ function respondForWarrior(args: RespondForWarriorArgs): void {
   const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
 
   if (
-    weatherGateDeclined(
-      { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, owningRival: owningRival, rivalWarrior: rivalWarrior, opponent: opponent }
-    )
+    weatherGateDeclined({
+      state: state,
+      currentOffers: currentOffers,
+      offer: offer,
+      trackedOffer: trackedOffer,
+      owningRival: owningRival,
+      rivalWarrior: rivalWarrior,
+      opponent: opponent,
+    })
   ) {
     return;
   }
 
-  resolveEvaluatedResponse(
-    { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, wId: wId, owningRival: owningRival, rivalWarrior: rivalWarrior, opponent: opponent, pickedWarriors: pickedWarriors }
-  );
+  resolveEvaluatedResponse({
+    state: state,
+    currentOffers: currentOffers,
+    offer: offer,
+    trackedOffer: trackedOffer,
+    wId: wId,
+    owningRival: owningRival,
+    rivalWarrior: rivalWarrior,
+    opponent: opponent,
+    pickedWarriors: pickedWarriors,
+  });
 }
 
 interface ResolveEvaluatedResponseArgs {
@@ -165,24 +179,45 @@ function resolveEvaluatedResponse(args: ResolveEvaluatedResponseArgs): void {
   const { state, currentOffers, offer, trackedOffer, wId } = args;
   const { owningRival, rivalWarrior, opponent, pickedWarriors } = args;
   const explain: { reason?: string } = {};
-  const response = boutAcceptance.evaluateBoutOffer(
-    { offer: trackedOffer, rival: owningRival, warrior: rivalWarrior, currentWeek: state.absoluteWeek, weather: state.weather as WeatherType, opponent: opponent, state: state, explain: explain }
-  );
+  const response = boutAcceptance.evaluateBoutOffer({
+    offer: trackedOffer,
+    rival: owningRival,
+    warrior: rivalWarrior,
+    currentWeek: state.absoluteWeek,
+    weather: state.weather as WeatherType,
+    opponent: opponent,
+    state: state,
+    explain: explain,
+  });
 
   if (response === 'Accepted') {
     pickedWarriors.add(wId);
   }
 
   if (response === 'Countered' || response === 'CounteredVenue') {
-    applyCounterResponse(
-      { response: response, state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, owningRival: owningRival, rivalWarrior: rivalWarrior, wId: wId }
-    );
+    applyCounterResponse({
+      response: response,
+      state: state,
+      currentOffers: currentOffers,
+      offer: offer,
+      trackedOffer: trackedOffer,
+      owningRival: owningRival,
+      rivalWarrior: rivalWarrior,
+      wId: wId,
+    });
     return;
   }
 
-  applyWarriorResponse(
-    { state: state, currentOffers: currentOffers, offer: offer, trackedOffer: trackedOffer, wId: wId, rivalWarrior: rivalWarrior, response: response, explain: explain }
-  );
+  applyWarriorResponse({
+    state: state,
+    currentOffers: currentOffers,
+    offer: offer,
+    trackedOffer: trackedOffer,
+    wId: wId,
+    rivalWarrior: rivalWarrior,
+    response: response,
+    explain: explain,
+  });
 }
 
 interface ApplyWarriorResponseArgs {
@@ -250,7 +285,14 @@ export function processRivalSlate(
     offer.warriorIds.forEach((wId) => {
       // Skip if warrior not owned by this rival
       if (!owningRosterIds.has(wId)) return;
-      respondForWarrior({ state: state, currentOffers: currentOffers, offer: offer, wId: wId, owningRival: owningRival, pickedWarriors: pickedWarriors });
+      respondForWarrior({
+        state: state,
+        currentOffers: currentOffers,
+        offer: offer,
+        wId: wId,
+        owningRival: owningRival,
+        pickedWarriors: pickedWarriors,
+      });
     });
   });
 }

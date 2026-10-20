@@ -72,9 +72,8 @@ describe('StableLedger finance runway', () => {
       'href',
       '/stable/trainers'
     );
-    expect(within(decisions).getByRole('link', { name: /recruit reinforcements/i })).toHaveAttribute(
-      'href',
-      '/stable/recruit'
-    );
+    expect(
+      within(decisions).getByRole('link', { name: /recruit reinforcements/i })
+    ).toHaveAttribute('href', '/stable/recruit');
   });
 });

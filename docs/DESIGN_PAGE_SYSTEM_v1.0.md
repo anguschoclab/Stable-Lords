@@ -25,17 +25,17 @@ Every page except `/start` and `/welcome` (FTUE) renders inside the **App Shell*
 
 **Top Bar** and **Left Nav** are identical on every route — see Control Center spec §3–4. Only the primary CTA in the top-bar swaps by context:
 
-| Route                                            | Primary CTA                              |
-| ------------------------------------------------ | ---------------------------------------- |
-| `/stable` Control Center                         | `EXECUTE WEEK N ›`                       |
-| `/stable/bouts` Booking Office                   | `BEGIN CYCLE ›`                          |
-| `/stable/arena`                                  | `VIEW CARD ›`                            |
-| `/world/tournaments`                             | `ADVANCE BRACKET ›`                      |
-| `/stable/training`, `/stable/planner`            | `COMMIT REGIMEN ›`                       |
-| `/stable/recruit`, `/world/scouting`             | `SIGN CONTRACT ›` (enabled on selection) |
-| `/stable/offseason`                              | `CLOSE SEASON ›`                         |
-| Detail pages (warrior, stable, promoter)         | Contextual secondary actions only        |
-| Chronicle rooms                                  | No primary CTA — reading rooms           |
+| Route                                    | Primary CTA                              |
+| ---------------------------------------- | ---------------------------------------- |
+| `/stable` Control Center                 | `EXECUTE WEEK N ›`                       |
+| `/stable/bouts` Booking Office           | `BEGIN CYCLE ›`                          |
+| `/stable/arena`                          | `VIEW CARD ›`                            |
+| `/world/tournaments`                     | `ADVANCE BRACKET ›`                      |
+| `/stable/training`, `/stable/planner`    | `COMMIT REGIMEN ›`                       |
+| `/stable/recruit`, `/world/scouting`     | `SIGN CONTRACT ›` (enabled on selection) |
+| `/stable/offseason`                      | `CLOSE SEASON ›`                         |
+| Detail pages (warrior, stable, promoter) | Contextual secondary actions only        |
+| Chronicle rooms                          | No primary CTA — reading rooms           |
 
 `/` redirects into `/stable`. The booking route is the week-preparation surface; `BEGIN CYCLE` runs the shared week/day pipeline and resolution is shown by the shell-level results overlay rather than a separate run-round page. Chronicle rooms are `/world/chronicle`, `/world/history`, `/world/graveyard`, and `/lore/hall-of-fights`.
 
@@ -139,40 +139,40 @@ Use when: one action is the entire point of the screen.
 
 ## 5. Route → Archetype map
 
-| Route                                  | Archetype       | Band 2 Hero?           | Event Log default |
-| -------------------------------------- | --------------- | ---------------------- | ----------------- |
-| `/stable` Control Center               | A Command Grid  | Yes (storyline)        | Open              |
-| `/stable/advisor`                      | A Command Grid  | Yes (directives)       | Collapsed         |
-| `/stable/roster` Stable Hall           | B Ledger        | Yes (stable summary)   | Collapsed         |
-| `/stable/training`                     | B Ledger        | —                      | Collapsed         |
-| `/stable/planner`                      | D Planner       | —                      | Collapsed         |
-| `/stable/arena` Arena Hub              | A Command Grid  | Yes (crowd mood)       | Open              |
-| `/stable/equipment`                    | D Planner       | —                      | Collapsed         |
-| `/stable/bouts` Booking Office         | D Planner       | Yes (offer manifest)   | Collapsed         |
-| `/stable/promoters`                    | B Ledger        | —                      | Collapsed         |
-| `/stable/promoter/:id`                 | C Dossier       | —                      | Collapsed         |
-| `/stable/trainers`                     | B Ledger        | —                      | Collapsed         |
-| `/stable/finance` Treasury             | A Command Grid  | Yes (runway alert)     | Open              |
-| `/stable/recruit`                      | B Ledger        | —                      | Collapsed         |
-| `/stable/offseason`                    | A Command Grid  | Yes (season recap)     | Open              |
-| `/world` World Overview                | B Ledger        | Yes (season standings) | Open              |
-| `/world/arenas`                        | B Ledger        | —                      | Collapsed         |
-| `/world/arenas/:arenaId`               | C Dossier       | —                      | Collapsed         |
-| `/world/tournaments`                   | A Command Grid  | Yes (bracket state)    | Open              |
-| `/world/tournament-prep`               | D Planner       | Yes (entrant status)   | Collapsed         |
-| `/world/scouting`                      | B Ledger        | —                      | Collapsed         |
-| `/world/style-archives`                | B Ledger        | —                      | Collapsed         |
-| `/world/chronicle` Gazette             | E Chronicle     | Masthead               | Hidden            |
-| `/world/history` Hall of Fame          | E Chronicle     | Masthead               | Hidden            |
-| `/world/graveyard`                     | E Chronicle     | Memorial header        | Hidden            |
-| `/world/stable/:id`                    | C Dossier       | —                      | Collapsed         |
-| `/warrior/:id`                         | C Dossier       | —                      | Collapsed         |
-| `/lore/hall-of-fights`                 | E Chronicle     | Masthead               | Hidden            |
-| `/tools/physicals-simulator`           | D Planner       | —                      | Collapsed         |
-| `/bookmarks`, `/import-export`, `/mods`| B Ledger        | —                      | Collapsed         |
-| `/admin`                               | B Ledger        | —                      | Collapsed         |
-| `/help`                                | E Chronicle     | —                      | Hidden            |
-| Title screen, `/welcome`               | bare (no shell) | —                      | —                 |
+| Route                                   | Archetype       | Band 2 Hero?           | Event Log default |
+| --------------------------------------- | --------------- | ---------------------- | ----------------- |
+| `/stable` Control Center                | A Command Grid  | Yes (storyline)        | Open              |
+| `/stable/advisor`                       | A Command Grid  | Yes (directives)       | Collapsed         |
+| `/stable/roster` Stable Hall            | B Ledger        | Yes (stable summary)   | Collapsed         |
+| `/stable/training`                      | B Ledger        | —                      | Collapsed         |
+| `/stable/planner`                       | D Planner       | —                      | Collapsed         |
+| `/stable/arena` Arena Hub               | A Command Grid  | Yes (crowd mood)       | Open              |
+| `/stable/equipment`                     | D Planner       | —                      | Collapsed         |
+| `/stable/bouts` Booking Office          | D Planner       | Yes (offer manifest)   | Collapsed         |
+| `/stable/promoters`                     | B Ledger        | —                      | Collapsed         |
+| `/stable/promoter/:id`                  | C Dossier       | —                      | Collapsed         |
+| `/stable/trainers`                      | B Ledger        | —                      | Collapsed         |
+| `/stable/finance` Treasury              | A Command Grid  | Yes (runway alert)     | Open              |
+| `/stable/recruit`                       | B Ledger        | —                      | Collapsed         |
+| `/stable/offseason`                     | A Command Grid  | Yes (season recap)     | Open              |
+| `/world` World Overview                 | B Ledger        | Yes (season standings) | Open              |
+| `/world/arenas`                         | B Ledger        | —                      | Collapsed         |
+| `/world/arenas/:arenaId`                | C Dossier       | —                      | Collapsed         |
+| `/world/tournaments`                    | A Command Grid  | Yes (bracket state)    | Open              |
+| `/world/tournament-prep`                | D Planner       | Yes (entrant status)   | Collapsed         |
+| `/world/scouting`                       | B Ledger        | —                      | Collapsed         |
+| `/world/style-archives`                 | B Ledger        | —                      | Collapsed         |
+| `/world/chronicle` Gazette              | E Chronicle     | Masthead               | Hidden            |
+| `/world/history` Hall of Fame           | E Chronicle     | Masthead               | Hidden            |
+| `/world/graveyard`                      | E Chronicle     | Memorial header        | Hidden            |
+| `/world/stable/:id`                     | C Dossier       | —                      | Collapsed         |
+| `/warrior/:id`                          | C Dossier       | —                      | Collapsed         |
+| `/lore/hall-of-fights`                  | E Chronicle     | Masthead               | Hidden            |
+| `/tools/physicals-simulator`            | D Planner       | —                      | Collapsed         |
+| `/bookmarks`, `/import-export`, `/mods` | B Ledger        | —                      | Collapsed         |
+| `/admin`                                | B Ledger        | —                      | Collapsed         |
+| `/help`                                 | E Chronicle     | —                      | Hidden            |
+| Title screen, `/welcome`                | bare (no shell) | —                      | —                 |
 
 "Hidden" = the right rail is not rendered at all on that route (reclaims the width for reading).
 
@@ -293,23 +293,23 @@ Do NOT use the App Shell. See bible §8 for their bespoke treatments. They are t
 
 Names align to component layer already in `src/components/`:
 
-| Component          | Purpose                                                  | Used by                              |
-| ------------------ | -------------------------------------------------------- | ------------------------------------ |
-| `<AppShell>`       | Top bar + left nav + event log rail + outlet             | every non-FTUE route                 |
-| `<PageFrame>`      | Bands 1/2/4 wrapper, enforces spacing                    | every non-FTUE route                 |
-| `<PageHeader>`     | icon + eyebrow + title + subtitle + hud + tabs + actions | same                                 |
-| `<GoldFameHud>`    | bronze-bordered stat pill cluster                        | top bar + selected pages             |
-| `<ControlCard>`    | glass card w/ eyebrow + title + action icon              | archetypes A, D                      |
-| `<ParchmentCard>`  | parchment-variant card shell                             | archetype E                          |
-| `<LedgerTable>`    | header+row conventions, player-row highlight             | archetype B                          |
-| `<GrooveBar>`      | stat bar per bible §7                                    | everywhere                           |
-| `<StyleSeal>`      | wax-seal badge for fighting style / tier                 | many                                 |
-| `<ImperialRing>`   | bronze-framed icon container                             | every header                         |
-| `<CodexLabel>`     | `<span>` wrapper with class                              | everywhere                           |
-| `<SectionDivider>` | codex-label + gradient line                              | every grid band                      |
-| `<EventLogRail>`   | right-rail event feed with filter tabs                   | shell                                |
-| `<FocusCard>`      | single-hero-card wrapper                                 | archetype F                          |
-| `<BoutRow>`        | canonical bout representation                            | archetypes A, C, D                   |
+| Component          | Purpose                                                  | Used by                  |
+| ------------------ | -------------------------------------------------------- | ------------------------ |
+| `<AppShell>`       | Top bar + left nav + event log rail + outlet             | every non-FTUE route     |
+| `<PageFrame>`      | Bands 1/2/4 wrapper, enforces spacing                    | every non-FTUE route     |
+| `<PageHeader>`     | icon + eyebrow + title + subtitle + hud + tabs + actions | same                     |
+| `<GoldFameHud>`    | bronze-bordered stat pill cluster                        | top bar + selected pages |
+| `<ControlCard>`    | glass card w/ eyebrow + title + action icon              | archetypes A, D          |
+| `<ParchmentCard>`  | parchment-variant card shell                             | archetype E              |
+| `<LedgerTable>`    | header+row conventions, player-row highlight             | archetype B              |
+| `<GrooveBar>`      | stat bar per bible §7                                    | everywhere               |
+| `<StyleSeal>`      | wax-seal badge for fighting style / tier                 | many                     |
+| `<ImperialRing>`   | bronze-framed icon container                             | every header             |
+| `<CodexLabel>`     | `<span>` wrapper with class                              | everywhere               |
+| `<SectionDivider>` | codex-label + gradient line                              | every grid band          |
+| `<EventLogRail>`   | right-rail event feed with filter tabs                   | shell                    |
+| `<FocusCard>`      | single-hero-card wrapper                                 | archetype F              |
+| `<BoutRow>`        | canonical bout representation                            | archetypes A, C, D       |
 
 `<BoutRow>` appears on Control Center, Arena, Booking Office, and Warrior Detail. Pages should compose these — no page should hand-roll its own header, table header, or stat bar.
 

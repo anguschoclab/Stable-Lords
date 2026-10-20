@@ -37,9 +37,14 @@ const MIRROR_STYLE = FightingStyle.StrikingAttack; // Balanced mid-tier style
 
 function buildWarrior(traits: string[] = [], style = MIRROR_STYLE) {
   const rng = new SeededRNG(42);
-  return makeWarrior(
-    { id: rng.uuid() as WarriorId, name: traits.length ? `Traited_${traits[0]}` : 'Baseline', style: style, attrs: { ...MIRROR_ATTRS }, overrides: { traits, age: 20 }, rng: rng }
-  );
+  return makeWarrior({
+    id: rng.uuid() as WarriorId,
+    name: traits.length ? `Traited_${traits[0]}` : 'Baseline',
+    style: style,
+    attrs: { ...MIRROR_ATTRS },
+    overrides: { traits, age: 20 },
+    rng: rng,
+  });
 }
 
 interface BoutStats {
@@ -67,8 +72,20 @@ function runMirrorBouts(
     // Alternate sides to neutralise first-mover bias
     const aIsTraited = i % 2 === 0;
     const outcome = aIsTraited
-      ? simulateFight({ planA: planA, planD: planB, warriorA: wA, warriorD: wB, providedRng: i * 31337 })
-      : simulateFight({ planA: planB, planD: planA, warriorA: wB, warriorD: wA, providedRng: i * 31337 });
+      ? simulateFight({
+          planA: planA,
+          planD: planB,
+          warriorA: wA,
+          warriorD: wB,
+          providedRng: i * 31337,
+        })
+      : simulateFight({
+          planA: planB,
+          planD: planA,
+          warriorA: wB,
+          warriorD: wA,
+          providedRng: i * 31337,
+        });
 
     const traitedSide = aIsTraited ? 'A' : 'D';
     const baselineSide = aIsTraited ? 'D' : 'A';

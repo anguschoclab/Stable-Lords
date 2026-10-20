@@ -14,14 +14,12 @@ describe('generateOrphanPool', () => {
       expect(pool.length).toBe(16);
       for (const orphan of pool) {
         for (const [key, value] of Object.entries(orphan.attributes)) {
-          expect(
-            value,
-            `seed ${seed} ${orphan.name} ${key} = ${value}`
-          ).toBeGreaterThanOrEqual(ATTRIBUTE_MIN);
-          expect(
-            value,
-            `seed ${seed} ${orphan.name} ${key} = ${value}`
-          ).toBeLessThanOrEqual(ATTRIBUTE_MAX);
+          expect(value, `seed ${seed} ${orphan.name} ${key} = ${value}`).toBeGreaterThanOrEqual(
+            ATTRIBUTE_MIN
+          );
+          expect(value, `seed ${seed} ${orphan.name} ${key} = ${value}`).toBeLessThanOrEqual(
+            ATTRIBUTE_MAX
+          );
         }
       }
     }

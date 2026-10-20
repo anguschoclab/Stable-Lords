@@ -131,12 +131,54 @@ export function generateWarriorStatements(
   const isGoodWit = wt > 7;
   const p = persona;
 
-  const initiative = getStatement({ skillKey: 'initiative', baseValue: skills.INI, highThreshold: 13, isGoodWit: isGoodWit, wt: wt, personaData: p });
-  const riposte = getStatement({ skillKey: 'riposte', baseValue: skills.RIP, highThreshold: 13, isGoodWit: isGoodWit, wt: wt, personaData: p });
-  const attack = getStatement({ skillKey: 'attack', baseValue: skills.ATT, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
-  const parry = getStatement({ skillKey: 'parry', baseValue: skills.PAR, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
-  const defense = getStatement({ skillKey: 'defense', baseValue: skills.DEF, highThreshold: 7, isGoodWit: isGoodWit, wt: wt, personaData: p });
-  const endurance = getStatement({ skillKey: 'endurance', baseValue: skills.DEC, highThreshold: 10, isGoodWit: isGoodWit, wt: wt, personaData: p });
+  const initiative = getStatement({
+    skillKey: 'initiative',
+    baseValue: skills.INI,
+    highThreshold: 13,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
+  const riposte = getStatement({
+    skillKey: 'riposte',
+    baseValue: skills.RIP,
+    highThreshold: 13,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
+  const attack = getStatement({
+    skillKey: 'attack',
+    baseValue: skills.ATT,
+    highThreshold: 10,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
+  const parry = getStatement({
+    skillKey: 'parry',
+    baseValue: skills.PAR,
+    highThreshold: 10,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
+  const defense = getStatement({
+    skillKey: 'defense',
+    baseValue: skills.DEF,
+    highThreshold: 7,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
+  const endurance = getStatement({
+    skillKey: 'endurance',
+    baseValue: skills.DEC,
+    highThreshold: 10,
+    isGoodWit: isGoodWit,
+    wt: wt,
+    personaData: p,
+  });
 
   // Descriptors
   const coordRating = computeCoordination(sp, df);

@@ -228,7 +228,15 @@ export function updateDossiers(
   };
 
   for (const fight of fights) {
-    foldFight({ dossiers: dossiers, fight: fight, rival: rival, selfIds: selfIds, stableOf: stableOf, observeTells: observeTells, week: week });
+    foldFight({
+      dossiers: dossiers,
+      fight: fight,
+      rival: rival,
+      selfIds: selfIds,
+      stableOf: stableOf,
+      observeTells: observeTells,
+      week: week,
+    });
   }
 
   return pruneDossiers(dossiers);

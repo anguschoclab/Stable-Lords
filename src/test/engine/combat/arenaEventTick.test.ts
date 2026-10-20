@@ -534,7 +534,12 @@ describe('arena events — narration', () => {
 describe('arena events — bout-level integration', () => {
   it('a cursed-arena bout under Blood Moon narrates the arena event', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-    const wA = makeWarrior({ id: undefined, name: 'A', style: FightingStyle.StrikingAttack, attrs });
+    const wA = makeWarrior({
+      id: undefined,
+      name: 'A',
+      style: FightingStyle.StrikingAttack,
+      attrs,
+    });
     const wD = makeWarrior({ id: undefined, name: 'D', style: FightingStyle.TotalParry, attrs });
 
     const outcome = simulateFight({
@@ -562,8 +567,7 @@ describe('arena events — bout-level integration', () => {
 
   it('same seed reproduces identical arena-event outcomes (determinism)', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-    const mk = (style: FightingStyle) =>
-      makeWarrior({ id: undefined, name: 'W', style, attrs });
+    const mk = (style: FightingStyle) => makeWarrior({ id: undefined, name: 'W', style, attrs });
     const run = (headless: boolean) => {
       const wA = mk(FightingStyle.StrikingAttack);
       const wD = mk(FightingStyle.TotalParry);

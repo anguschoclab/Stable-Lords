@@ -61,16 +61,48 @@ export function resolveExchange(
   events.push(...es.events.splice(0));
 
   // 2. Initiative Phase
-  const { aGoesFirst, event: iniEvent } = resolveInitiativePhase(
-    { ctx: ctx, fA: fA, fD: fD, OE_A: s.OE_A, AL_A: s.AL_A, OE_D: s.OE_D, AL_D: s.AL_D, fatA: s.fatA, fatD: s.fatD, defModsA: s.defModsA, defModsD: s.defModsD, passA: s.passA, passD: s.passD, psychA: s.psychA, psychD: s.psychD, dynTraitsA: s.dynTraitsA, dynTraitsD: s.dynTraitsD }
-  );
+  const { aGoesFirst, event: iniEvent } = resolveInitiativePhase({
+    ctx: ctx,
+    fA: fA,
+    fD: fD,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+    passA: s.passA,
+    passD: s.passD,
+    psychA: s.psychA,
+    psychD: s.psychD,
+    dynTraitsA: s.dynTraitsA,
+    dynTraitsD: s.dynTraitsD,
+  });
   events.push(iniEvent);
 
   // Sub-phases 2–4: Feint → Commit → Attack/Defense → Endurance costs
-  runAttackExchange({ ctx: ctx, fA: fA, fD: fD, s: s, es: es, aGoesFirst: aGoesFirst, phaseKey: phaseKey, events: events });
+  runAttackExchange({
+    ctx: ctx,
+    fA: fA,
+    fD: fD,
+    s: s,
+    es: es,
+    aGoesFirst: aGoesFirst,
+    phaseKey: phaseKey,
+    events: events,
+  });
 
   // Sub-phase 5: Recovery — write debt, handle zone transitions
-  runRecovery({ fA: fA, fD: fD, debtToWriteA: es.recoveryDebtToWriteA, debtToWriteD: es.recoveryDebtToWriteD, events: events, ctx: ctx });
+  runRecovery({
+    fA: fA,
+    fD: fD,
+    debtToWriteA: es.recoveryDebtToWriteA,
+    debtToWriteD: es.recoveryDebtToWriteD,
+    events: events,
+    ctx: ctx,
+  });
 
   updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
   tickBleedOnFighters(fA, fD, events);
@@ -116,11 +148,51 @@ function runAttackExchange(args: RunAttackExchangeArgs): void {
   es.recoveryDebtToWriteD = aGoesFirst ? defCommit.debtToWrite : attCommit.debtToWrite;
 
   // Sub-phase 4: Attack & Defense Check
-  resolveCombatOffenseDefense(
-    { ctx: ctx, fA: fA, fD: fD, aGoesFirst: aGoesFirst, OE_A: s.OE_A, AL_A: s.AL_A, OE_D: s.OE_D, AL_D: s.AL_D, fatA: s.fatA, fatD: s.fatD, offModsA: s.offModsA, offModsD: s.offModsD, defModsA: s.defModsA, defModsD: s.defModsD, passA: s.passA, passD: s.passD, biasAttA: s.biasAttA, biasDefA: s.biasDefA, biasAttD: s.biasAttD, biasDefD: s.biasDefD, tactA: s.tactA, tactD: s.tactD, psychA: s.psychA, psychD: s.psychD, dynTraitsA: s.dynTraitsA, dynTraitsD: s.dynTraitsD, feintAttBonus: feintAttBonus, feintDefBonus: feintDefBonus, attCommit: attCommit, defCommit: defCommit, es: es, phaseKey: phaseKey, stylePhase: ctx.phase as StylePhase, events: events }
-  );
+  resolveCombatOffenseDefense({
+    ctx: ctx,
+    fA: fA,
+    fD: fD,
+    aGoesFirst: aGoesFirst,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    offModsA: s.offModsA,
+    offModsD: s.offModsD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+    passA: s.passA,
+    passD: s.passD,
+    biasAttA: s.biasAttA,
+    biasDefA: s.biasDefA,
+    biasAttD: s.biasAttD,
+    biasDefD: s.biasDefD,
+    tactA: s.tactA,
+    tactD: s.tactD,
+    psychA: s.psychA,
+    psychD: s.psychD,
+    dynTraitsA: s.dynTraitsA,
+    dynTraitsD: s.dynTraitsD,
+    feintAttBonus: feintAttBonus,
+    feintDefBonus: feintDefBonus,
+    attCommit: attCommit,
+    defCommit: defCommit,
+    es: es,
+    phaseKey: phaseKey,
+    stylePhase: ctx.phase as StylePhase,
+    events: events,
+  });
 
-  applyExchangeEndurance({ events: events, ctx: ctx, fA: fA, fD: fD, s: s, aGoesFirst: aGoesFirst });
+  applyExchangeEndurance({
+    events: events,
+    ctx: ctx,
+    fA: fA,
+    fD: fD,
+    s: s,
+    aGoesFirst: aGoesFirst,
+  });
 }
 
 interface ApplyExchangeEnduranceArgs {
@@ -141,9 +213,21 @@ function applyExchangeEndurance(args: ApplyExchangeEnduranceArgs): void {
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
   const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
 
-  applyEnduranceCosts(
-    { events: events, ctx: ctx, fA: fA, fD: fD, aGoesFirst: aGoesFirst, curAttOE: curAttOE, curAttAL: curAttAL, curAttWepReq: curAttWepReq, curDefWepReq: curDefWepReq, OE_D: s.OE_D, AL_D: s.AL_D, OE_A: s.OE_A, AL_A: s.AL_A }
-  );
+  applyEnduranceCosts({
+    events: events,
+    ctx: ctx,
+    fA: fA,
+    fD: fD,
+    aGoesFirst: aGoesFirst,
+    curAttOE: curAttOE,
+    curAttAL: curAttAL,
+    curAttWepReq: curAttWepReq,
+    curDefWepReq: curDefWepReq,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+  });
 }
 
 /** Track tactic streaks for the overuse penalty. */

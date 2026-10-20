@@ -263,11 +263,7 @@ describe('testQualityAudit', () => {
         violations.push(relPath);
       }
     }
-    expectAllowlistClean(
-      violations.sort(),
-      baseline.misplacedCategoryFiles,
-      'misplaced-category'
-    );
+    expectAllowlistClean(violations.sort(), baseline.misplacedCategoryFiles, 'misplaced-category');
   });
 
   it('e2e marathon specs carry the @slow tag', () => {

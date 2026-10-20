@@ -52,5 +52,14 @@ interface PushNewsletterItemArgs {
 export function pushNewsletterItem(args: PushNewsletterItemArgs): void {
   const { target, rng, week, title, templates } = args;
   const { data, category } = args;
-  target.push(makeNewsletterItem({ rng: rng, week: week, title: title, templates: templates, data: data, category: category }));
+  target.push(
+    makeNewsletterItem({
+      rng: rng,
+      week: week,
+      title: title,
+      templates: templates,
+      data: data,
+      category: category,
+    })
+  );
 }

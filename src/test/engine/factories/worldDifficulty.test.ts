@@ -87,7 +87,9 @@ describe('createFreshState — worldOptions', () => {
   });
 
   it('difficulty shifts the minted field (Legend ≠ Contender on same seed)', () => {
-    const easy = createFreshState('cmp-seed', '2026-01-01T00:00:00.000Z', { difficulty: 'Contender' });
+    const easy = createFreshState('cmp-seed', '2026-01-01T00:00:00.000Z', {
+      difficulty: 'Contender',
+    });
     const hard = createFreshState('cmp-seed', '2026-01-01T00:00:00.000Z', { difficulty: 'Legend' });
     const score = (s: typeof easy) =>
       s.rivals.reduce(

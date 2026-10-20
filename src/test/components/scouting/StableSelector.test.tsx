@@ -38,9 +38,7 @@ describe('StableSelector — list shell', () => {
 
     expect(screen.getByLabelText('Select Iron Wolves as Stable Prime')).toBeInTheDocument();
     expect(screen.getByLabelText('Select Iron Wolves as Stable Challenger')).toBeInTheDocument();
-    expect(
-      screen.queryByLabelText('Select Ash Reapers as Stable Prime')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Select Ash Reapers as Stable Prime')).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText('Select Ash Reapers as Stable Challenger')
     ).not.toBeInTheDocument();
@@ -55,9 +53,7 @@ describe('StableSelector — list shell', () => {
         <StableSelector rivals={rivals} idA={null} setIdA={() => {}} idB={null} setIdB={() => {}} />
       </TooltipProvider>
     );
-    expect(
-      screen.queryByLabelText('Select Stable 059 as Stable Prime')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Select Stable 059 as Stable Prime')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /\+\d+ more/i }));
     expect(screen.getByLabelText('Select Stable 059 as Stable Prime')).toBeInTheDocument();
   });

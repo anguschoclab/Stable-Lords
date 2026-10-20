@@ -325,7 +325,14 @@ export function convertBidsToOffers(
     const opponent = bestCandidate.warrior;
 
     const arenaId = resolveArenaId(bid, proposer, opponent, cx);
-    const offer = buildOffer({ bid: bid, proposer: proposer, opponent: opponent, proposerStable: proposerStable, arenaId: arenaId, cx: cx });
+    const offer = buildOffer({
+      bid: bid,
+      proposer: proposer,
+      opponent: opponent,
+      proposerStable: proposerStable,
+      arenaId: arenaId,
+      cx: cx,
+    });
 
     offers.push(offer);
     cx.paired.add(bid.proposingWarriorId);

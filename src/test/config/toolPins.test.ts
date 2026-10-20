@@ -42,9 +42,7 @@ describe('package.json bunx/bun-x tool pins', () => {
   // binary — index both forms so a Windows checkout resolves the same set.
   const localBins = new Set(
     fs.existsSync(BIN_DIR)
-      ? fs
-          .readdirSync(BIN_DIR)
-          .flatMap((n) => [n, n.replace(/\.(cmd|exe|ps1)$/i, '')])
+      ? fs.readdirSync(BIN_DIR).flatMap((n) => [n, n.replace(/\.(cmd|exe|ps1)$/i, '')])
       : []
   );
 

@@ -312,7 +312,8 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     requiredTags: ['water', 'premium', 'indoor'],
     triggerCondition: 'exchange_interval',
     triggerValue: ARENA_EVENT_CONSTANTS.BATHHOUSE_SCALD_TRIGGER,
-    narrativeText: 'Scalding steam erupts from the vents, blinding the fighters and burning the skin!',
+    narrativeText:
+      'Scalding steam erupts from the vents, blinding the fighters and burning the skin!',
   },
 
   heath_apparition: {

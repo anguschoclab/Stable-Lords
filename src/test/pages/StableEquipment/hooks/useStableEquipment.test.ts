@@ -5,11 +5,7 @@ import { useStableEquipment } from '@/pages/StableEquipment/hooks/useStableEquip
 import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeTestWarrior } from '@/test/_fixtures/namedWarrior';
-import {
-  checkWeaponRequirements,
-  DEFAULT_LOADOUT,
-  validateLoadout,
-} from '@/data/equipment';
+import { checkWeaponRequirements, DEFAULT_LOADOUT, validateLoadout } from '@/data/equipment';
 import type { Warrior } from '@/types/game';
 import type { GameState } from '@/types/state.types';
 import '@/test/_setup/setup';

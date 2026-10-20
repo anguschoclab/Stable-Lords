@@ -40,9 +40,12 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
   promotersArray.forEach((p) => (promoters[p.id] = p));
 
   // 2. Generate Initial Recruit Pool — scaled to the stable count
-  const recruitPool = generateRecruitPool(
-    { count: computeRecruitPoolSize(WORLD_RIVAL_FLOOR), week: 1, usedNames: usedNames, rng: new SeededRNG(seed + 2) }
-  );
+  const recruitPool = generateRecruitPool({
+    count: computeRecruitPoolSize(WORLD_RIVAL_FLOOR),
+    week: 1,
+    usedNames: usedNames,
+    rng: new SeededRNG(seed + 2),
+  });
 
   // 3. Generate Player Roster (4 balanced warriors)
   const styles = [
@@ -62,9 +65,14 @@ export function populateInitialWorld(state: GameState, seed: number, rng?: IRNGS
       SP: 8 + Math.floor(rngService.next() * 4),
       DF: 8 + Math.floor(rngService.next() * 4),
     };
-    const w = makeWarrior(
-      { id: undefined, name: generateWarriorName({ rng: rngService, archetype: STYLE_ARCHETYPE[style], usedNames }), style: style, attrs: attrs, overrides: {}, rng: rngService }
-    );
+    const w = makeWarrior({
+      id: undefined,
+      name: generateWarriorName({ rng: rngService, archetype: STYLE_ARCHETYPE[style], usedNames }),
+      style: style,
+      attrs: attrs,
+      overrides: {},
+      rng: rngService,
+    });
     usedNames.add(w.name);
     return w;
   });

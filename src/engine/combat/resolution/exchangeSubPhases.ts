@@ -71,7 +71,15 @@ export function runApproach(args: RunApproachArgs): void {
     maxRange: ctx.maxRange,
     zoneStepBias: ctx.zoneStepBias,
   };
-  const result = contestDistance({ rng: rng, fA: fA, fD: fD, OE_A: OE_A, OE_D: OE_D, currentRange: ctx.range, sizeProfile: sizeProfile });
+  const result = contestDistance({
+    rng: rng,
+    fA: fA,
+    fD: fD,
+    OE_A: OE_A,
+    OE_D: OE_D,
+    currentRange: ctx.range,
+    sizeProfile: sizeProfile,
+  });
   // rangeModA/D are intentionally 0: the contest winner shifts the range (which
   // matters for weapon range mods), but does NOT grant a flat ATT bonus. A flat
   // bonus is correlated with OE and double-stacks with commit level, breaking balance.

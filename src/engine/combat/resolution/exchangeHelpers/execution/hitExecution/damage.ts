@@ -53,7 +53,10 @@ interface ComputePreArmorDamageArgs {
 /**
  *
  */
-export function computePreArmorDamage(args: ComputePreArmorDamageArgs): { hitLoc: HitLocation; preArmor: number } {
+export function computePreArmorDamage(args: ComputePreArmorDamageArgs): {
+  hitLoc: HitLocation;
+  preArmor: number;
+} {
   const { rng, attacker, defender, attTactics, attOffMods } = args;
   const { attPassive } = args;
   let hitLoc: HitLocation = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
@@ -152,7 +155,11 @@ interface ApplyHitAndCountersArgs {
 /**
  *
  */
-export function applyHitAndCounters(args: ApplyHitAndCountersArgs): { damage: number; isCrit: boolean; rawDamage: number } {
+export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
+  damage: number;
+  isCrit: boolean;
+  rawDamage: number;
+} {
   const { events, rng, hitLoc, attacker } = args;
   let { rawDamage } = args;
   const { defender, attPassive, attLabel, defLabel } = args;

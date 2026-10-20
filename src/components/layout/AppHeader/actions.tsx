@@ -39,7 +39,9 @@ function EventLogButton() {
           aria-label={eventLogOpen ? 'Close arena feed' : 'Open arena feed'}
           aria-pressed={eventLogOpen}
         >
-          <ScrollText className={cn('h-4 w-4', eventLogOpen ? 'text-primary' : 'text-muted-foreground')} />
+          <ScrollText
+            className={cn('h-4 w-4', eventLogOpen ? 'text-primary' : 'text-muted-foreground')}
+          />
         </Button>
       </TooltipTrigger>
       <TooltipContent
@@ -240,9 +242,13 @@ function SessionControlsSheet({
       </SheetTrigger>
       <SheetContent side="right" className="w-80 border-l border-white/10 bg-background">
         <SheetHeader>
-          <SheetTitle className="font-display uppercase tracking-widest">Session Controls</SheetTitle>
+          <SheetTitle className="font-display uppercase tracking-widest">
+            Session Controls
+          </SheetTitle>
           <SheetDescription>
-            {lastSavedAt ? `Auto-saved ${new Date(lastSavedAt).toLocaleTimeString()}` : 'Not saved yet'}
+            {lastSavedAt
+              ? `Auto-saved ${new Date(lastSavedAt).toLocaleTimeString()}`
+              : 'Not saved yet'}
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6 flex flex-col gap-2">

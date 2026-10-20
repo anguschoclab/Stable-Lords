@@ -21,21 +21,16 @@ const CRUMB_TEXT = 'text-[10px] font-black uppercase tracking-[0.15em]';
 export function Breadcrumbs() {
   const pathname = useLocation().pathname;
   const crumbState = useGameStore(
-    useShallow(
-      (s): EntityIndexState => ({
-        player: s.player,
-        roster: s.roster,
-        graveyard: s.graveyard,
-        retired: s.retired,
-        rivals: s.rivals,
-        promoters: s.promoters,
-      })
-    )
+    useShallow((s): EntityIndexState => ({
+      player: s.player,
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      promoters: s.promoters,
+    }))
   );
-  const crumbs = useMemo(
-    () => getCanonicalCrumbs(pathname, crumbState),
-    [pathname, crumbState]
-  );
+  const crumbs = useMemo(() => getCanonicalCrumbs(pathname, crumbState), [pathname, crumbState]);
   const trail = useSyncExternalStore(subscribeNavTrail, getNavTrailSnapshot);
   const referrer = useMemo(() => getReferrer(trail, pathname), [trail, pathname]);
 
@@ -45,10 +40,7 @@ export function Breadcrumbs() {
   const showReferrer = referrer !== undefined && referrer.pathname !== parent?.to;
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={`flex flex-wrap items-center gap-2 ${CRUMB_TEXT}`}
-    >
+    <nav aria-label="Breadcrumb" className={`flex flex-wrap items-center gap-2 ${CRUMB_TEXT}`}>
       {showReferrer && (
         <>
           <Link
@@ -59,19 +51,14 @@ export function Breadcrumbs() {
             <ArrowLeft className="h-3 w-3" />
             {referrer.label}
           </Link>
-          <ChevronRight
-            className="h-3 w-3 text-muted-foreground/30"
-            aria-hidden
-          />
+          <ChevronRight className="h-3 w-3 text-muted-foreground/30" aria-hidden />
         </>
       )}
       {crumbs.map((crumb, i) => {
         const isLeaf = i === crumbs.length - 1;
         return (
           <Fragment key={`${crumb.label}-${i}`}>
-            {i > 0 && (
-              <ChevronRight className="h-3 w-3 text-muted-foreground/30" aria-hidden />
-            )}
+            {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/30" aria-hidden />}
             {isLeaf || !crumb.to ? (
               <span aria-current="page" className="text-foreground/80">
                 {crumb.label}

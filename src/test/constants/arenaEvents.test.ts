@@ -125,9 +125,7 @@ describe('arena events — new entries', () => {
       // riposte_mod was a dead union member — no event emitted it, so the
       // marker/echo path in defense.ts was inert. Every declared effect
       // type must have at least one live producer.
-      const types = new Set(
-        Object.values(ARENA_EVENTS).map((e) => e.mechanicalEffect?.type)
-      );
+      const types = new Set(Object.values(ARENA_EVENTS).map((e) => e.mechanicalEffect?.type));
       for (const t of ['damage', 'initiative_mod', 'riposte_mod', 'endurance_drain']) {
         expect(types.has(t as never), `no registry event emits ${t}`).toBe(true);
       }
@@ -146,9 +144,7 @@ describe('arena events — new entries', () => {
           ).toBe(true);
         }
         // Stronger: at least one arena carries ALL of the event's required tags.
-        const hostable = arenas.some((a) =>
-          event.requiredTags.every((t) => a.tags.includes(t))
-        );
+        const hostable = arenas.some((a) => event.requiredTags.every((t) => a.tags.includes(t)));
         expect(hostable, `${event.id} can never trigger — no arena has all requiredTags`).toBe(
           true
         );

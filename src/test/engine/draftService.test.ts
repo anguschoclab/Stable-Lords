@@ -122,7 +122,12 @@ describe('aiDraftFromPool', () => {
         ],
       }); // 5 active
 
-      const result = aiDraftFromPool({ pool: pool, rivals: [rivalA, rivalB, rivalC], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: [rivalA, rivalB, rivalC],
+        week: 4,
+        state: state,
+      });
 
       // Rival A should get first pick (fewest warriors)
       expect(result.updatedRivals.length).toBe(3);
@@ -145,7 +150,12 @@ describe('aiDraftFromPool', () => {
         roster: [{ status: 'Active' } as any, { status: 'Active' } as any],
       });
 
-      const result = aiDraftFromPool({ pool: pool, rivals: [rivalA, rivalB, rivalC], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: [rivalA, rivalB, rivalC],
+        week: 4,
+        state: state,
+      });
 
       expect(result.updatedRivals.length).toBe(3);
     });
@@ -196,7 +206,12 @@ describe('aiDraftFromPool', () => {
       cachedMeta[FightingStyle.StrikingAttack] = 5;
       const stateWithCache = makeMinimalGameState({ cachedMetaDrift: cachedMeta });
 
-      const result = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: stateWithCache });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: stateWithCache,
+      });
 
       expect(result.updatedRivals.length).toBe(2);
     });
@@ -220,7 +235,12 @@ describe('aiDraftFromPool', () => {
         cachedMetaDrift: undefined,
       });
 
-      const result = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: stateWithHistory });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: stateWithHistory,
+      });
 
       expect(result.updatedRivals.length).toBe(2);
     });
@@ -231,7 +251,12 @@ describe('aiDraftFromPool', () => {
         cachedMetaDrift: undefined,
       });
 
-      const result = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: stateWithEmptyHistory });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: stateWithEmptyHistory,
+      });
 
       expect(result.updatedRivals.length).toBe(2);
     });
@@ -255,8 +280,18 @@ describe('aiDraftFromPool', () => {
     it('major week increases recruitment likelihood', () => {
       const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
 
-      const majorWeekResult = aiDraftFromPool({ pool: pool, rivals: richRivals, week: 4, state: state });
-      const normalWeekResult = aiDraftFromPool({ pool: pool, rivals: richRivals, week: 5, state: state });
+      const majorWeekResult = aiDraftFromPool({
+        pool: pool,
+        rivals: richRivals,
+        week: 4,
+        state: state,
+      });
+      const normalWeekResult = aiDraftFromPool({
+        pool: pool,
+        rivals: richRivals,
+        week: 5,
+        state: state,
+      });
 
       // Major week should have at least as many recruits signed
       const majorWeekRecruits = majorWeekResult.updatedRivals.reduce(
@@ -282,15 +317,34 @@ describe('aiDraftFromPool', () => {
     });
 
     it('uses custom seed override', () => {
-      const result1 = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: state, seed: 12345 });
-      const result2 = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: state, seed: 12345 });
+      const result1 = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: state,
+        seed: 12345,
+      });
+      const result2 = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: state,
+        seed: 12345,
+      });
 
       expect(result1.updatedRivals.length).toBe(result2.updatedRivals.length);
     });
 
     it('uses custom RNG service override', () => {
       const customRng = new SeededRNG(999);
-      const result = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: state, seed: undefined, rng: customRng });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: state,
+        seed: undefined,
+        rng: customRng,
+      });
 
       expect(result.updatedRivals.length).toBe(2);
     });
@@ -299,8 +353,20 @@ describe('aiDraftFromPool', () => {
       const rivalsCopy = JSON.parse(JSON.stringify(rivals));
       const poolCopy = JSON.parse(JSON.stringify(pool));
 
-      const result1 = aiDraftFromPool({ pool: poolCopy, rivals: rivalsCopy, week: 1, state: state, seed: 42 });
-      const result2 = aiDraftFromPool({ pool: pool, rivals: rivals, week: 1, state: state, seed: 42 });
+      const result1 = aiDraftFromPool({
+        pool: poolCopy,
+        rivals: rivalsCopy,
+        week: 1,
+        state: state,
+        seed: 42,
+      });
+      const result2 = aiDraftFromPool({
+        pool: pool,
+        rivals: rivals,
+        week: 1,
+        state: state,
+        seed: 42,
+      });
 
       expect(result1.updatedPool.length).toBe(result2.updatedPool.length);
       expect(result1.updatedRivals.length).toBe(result2.updatedRivals.length);
@@ -318,9 +384,12 @@ describe('aiDraftFromPool', () => {
 
       const mintedIds = (s: GameState) =>
         new Set(
-          aiDraftFromPool({ pool: pool, rivals: richRivals, week: 4, state: s }).updatedRivals.flatMap((r) =>
-            r.roster.map((w) => w.id)
-          )
+          aiDraftFromPool({
+            pool: pool,
+            rivals: richRivals,
+            week: 4,
+            state: s,
+          }).updatedRivals.flatMap((r) => r.roster.map((w) => w.id))
         );
 
       const idsOne = mintedIds(yearOne);
@@ -394,7 +463,12 @@ describe('aiDraftFromPool', () => {
     it('respects rival treasury limits', () => {
       const poorRival = makeMinimalRival({ treasury: 50 });
       const expensivePool = [makePoolWarrior({ cost: 100 })];
-      const result = aiDraftFromPool({ pool: expensivePool, rivals: [poorRival], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: expensivePool,
+        rivals: [poorRival],
+        week: 4,
+        state: state,
+      });
 
       expect(result.updatedRivals[0]?.roster.length).toBe(0);
     });
@@ -408,7 +482,12 @@ describe('aiDraftFromPool', () => {
           .map(() => ({ status: 'Active' }) as any),
       });
       if (!aggressiveRival.owner) throw new Error('Owner missing');
-      const result = aiDraftFromPool({ pool: pool, rivals: [aggressiveRival], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: [aggressiveRival],
+        week: 4,
+        state: state,
+      });
 
       // Should not recruit beyond 10
       expect(result.updatedRivals[0]?.roster.length).toBe(10);
@@ -423,7 +502,12 @@ describe('aiDraftFromPool', () => {
           .map(() => ({ status: 'Active' }) as any),
       });
       if (!pragmaticRival.owner) throw new Error('Owner missing');
-      const result = aiDraftFromPool({ pool: pool, rivals: [pragmaticRival], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: pool,
+        rivals: [pragmaticRival],
+        week: 4,
+        state: state,
+      });
 
       // Should not recruit beyond 8
       expect(result.updatedRivals[0]?.roster.length).toBe(8);
@@ -443,7 +527,12 @@ describe('aiDraftFromPool', () => {
         makePoolWarrior({ id: 'recruit2', style: FightingStyle.ParryStrike }),
       ];
 
-      const result = aiDraftFromPool({ pool: stylePool, rivals: [aggressiveRival], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: stylePool,
+        rivals: [aggressiveRival],
+        week: 4,
+        state: state,
+      });
 
       expect(result.updatedRivals.length).toBe(1);
     });
@@ -463,7 +552,12 @@ describe('aiDraftFromPool', () => {
         makePoolWarrior({ id: 'recruit2', style: FightingStyle.ParryStrike }),
       ];
 
-      const result = aiDraftFromPool({ pool: stylePool, rivals: [rivalWithStriking], week: 4, state: state });
+      const result = aiDraftFromPool({
+        pool: stylePool,
+        rivals: [rivalWithStriking],
+        week: 4,
+        state: state,
+      });
 
       expect(result.updatedRivals.length).toBe(1);
     });
@@ -524,11 +618,16 @@ describe('aiDraftFromPool', () => {
       const deadRecruit = makePoolWarrior({ id: 'grave-pool', name: 'Grave Pool' });
       const richRival = makeMinimalRival({ treasury: 10_000 });
 
-      const result = aiDraftFromPool({ pool: [deadRecruit], rivals: [richRival], week: 4, state: st });
+      const result = aiDraftFromPool({
+        pool: [deadRecruit],
+        rivals: [richRival],
+        week: 4,
+        state: st,
+      });
 
-      expect(
-        result.updatedRivals.flatMap((r) => r.roster).some((w) => w.id === 'grave-pool')
-      ).toBe(false);
+      expect(result.updatedRivals.flatMap((r) => r.roster).some((w) => w.id === 'grave-pool')).toBe(
+        false
+      );
       expect(result.updatedPool.some((w) => w.id === 'grave-pool')).toBe(false);
     });
   });

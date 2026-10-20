@@ -7,8 +7,7 @@ import type { GameState, RankingEntry, SeasonalGrowth } from '@/types/state.type
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { worldHandlers } from '@/engine/impacts/world';
 
-const { week, day, season, weather, recruitPool, seasonalGrowth, realmRankings } =
-  worldHandlers;
+const { week, day, season, weather, recruitPool, seasonalGrowth, realmRankings } = worldHandlers;
 import { makeAiTestState } from '@/test/_fixtures/aiTestState';
 
 function createMockState(overrides: Partial<GameState> = {}): GameState {
@@ -291,9 +290,7 @@ describe('world impacts — worldHandlers map', () => {
 describe('world impacts — freeAgentAdditions', () => {
   it('skips ids already shelved or still rostered (freed-vs-survived dedup)', async () => {
     const { freeAgentAdditions } = (await import('@/engine/impacts/world')).worldHandlers;
-    const { makePoolWarrior, makeRival, makeWarrior } = await import(
-      '@/test/_fixtures/factories'
-    );
+    const { makePoolWarrior, makeRival, makeWarrior } = await import('@/test/_fixtures/factories');
     const rostered = makeWarrior({ id: 'w-rostered' as never });
     const state = createMockState({
       freeAgents: [makePoolWarrior({ id: 'w-shelved' })],

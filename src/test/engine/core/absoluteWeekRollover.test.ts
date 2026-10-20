@@ -59,7 +59,13 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const rivalB = makeRival('rB', [wB]);
     const state = makeState(52, [rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 52, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 52,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
 
     const rng = new SeededRNG(42);
@@ -81,7 +87,13 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const rivalB = makeRival('rB', [wB]);
     const state = makeState(104, [rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 104, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 104,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     expect(bids.length).toBeGreaterThan(0);
 
     const rng = new SeededRNG(42);
@@ -106,7 +118,13 @@ describe('absoluteWeek rollover — generatePairings', () => {
     const state = makeState(52, [rivalA, rivalB]);
 
     // Generate offers at absoluteWeek=52 → boutOfferAbsoluteWeek = 54
-    const { bids } = generateBoutBids({ rival: rivalA, _currentWeek: 52, weather: 'Clear', crowdMood: 'Calm', rivals: [rivalB] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      _currentWeek: 52,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rivalB],
+    });
     const rng = new SeededRNG(42);
     const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
     const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());

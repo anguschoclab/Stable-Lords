@@ -16,8 +16,20 @@ describe('simulateFight — determinism', () => {
     const planA = makePlan(FightingStyle.StrikingAttack);
     const planD = makePlan(FightingStyle.ParryRiposte);
 
-    const r1 = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: 42 });
-    const r2 = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: 42 });
+    const r1 = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 42,
+    });
+    const r2 = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 42,
+    });
 
     expect(r1.winner).toBe(r2.winner);
     expect(r1.by).toBe(r2.by);
@@ -35,7 +47,13 @@ describe('simulateFight — determinism', () => {
 
     const results = new Set<string>();
     for (let seed = 1; seed <= 20; seed++) {
-      const r = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: seed });
+      const r = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       results.add(`${r.winner}-${r.by}-${r.minutes}`);
     }
     // With 20 different seeds, we should see at least 2 distinct outcomes
@@ -48,7 +66,13 @@ describe('simulateFight — outcome structure', () => {
     const planA = makePlan(FightingStyle.SlashingAttack);
     const planD = makePlan(FightingStyle.WallOfSteel);
 
-    const result = simulateFight({ planA: planA, planD: planD, warriorA: undefined, warriorD: undefined, providedRng: 123 });
+    const result = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: undefined,
+      warriorD: undefined,
+      providedRng: 123,
+    });
 
     expect(result).toHaveProperty('winner');
     expect(result).toHaveProperty('by');
@@ -63,9 +87,13 @@ describe('simulateFight — outcome structure', () => {
   });
 
   it('log entries have valid minute and text', () => {
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack), planD: makePlan(FightingStyle.ParryStrike), warriorA: undefined, warriorD: undefined, providedRng: 99 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack),
+      planD: makePlan(FightingStyle.ParryStrike),
+      warriorA: undefined,
+      warriorD: undefined,
+      providedRng: 99,
+    });
 
     for (const entry of result.log) {
       expect(entry.minute).toBeGreaterThanOrEqual(0); // minute 0 = pre-bout intro
@@ -78,9 +106,13 @@ describe('simulateFight — outcome structure', () => {
     const wA = makeWarrior('Hero', FightingStyle.BashingAttack, { ST: 20, CN: 15 });
     const wD = makeWarrior('Foe', FightingStyle.TotalParry, { CN: 20, WL: 18 });
 
-    const result = simulateFight(
-      { planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 8 }), planD: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }), warriorA: wA, warriorD: wD, providedRng: 555 }
-    );
+    const result = simulateFight({
+      planA: makePlan(FightingStyle.BashingAttack, { OE: 9, killDesire: 8 }),
+      planD: makePlan(FightingStyle.TotalParry, { OE: 2, AL: 2 }),
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 555,
+    });
 
     expect(result.post?.hitsA).toBeGreaterThanOrEqual(0);
     expect(result.post?.hitsD).toBeGreaterThanOrEqual(0);
@@ -119,9 +151,13 @@ describe('simulateFight — kill logic', () => {
     let koCount = 0;
     const trials = 50;
     for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1 }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10 }),
+        planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1 }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (result.by === 'Kill') killCount++;
       if (result.by === 'KO') koCount++;
     }
@@ -139,12 +175,20 @@ describe('simulateFight — kill logic', () => {
     const trials = 30;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rHigh = simulateFight(
-        { planA: makePlan(FightingStyle.StrikingAttack, { OE: 9, killDesire: 10 }), planD: makePlan(FightingStyle.LungingAttack, { OE: 3 }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
-      const rLow = simulateFight(
-        { planA: makePlan(FightingStyle.StrikingAttack, { OE: 9, killDesire: 1 }), planD: makePlan(FightingStyle.LungingAttack, { OE: 3 }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rHigh = simulateFight({
+        planA: makePlan(FightingStyle.StrikingAttack, { OE: 9, killDesire: 10 }),
+        planD: makePlan(FightingStyle.LungingAttack, { OE: 3 }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
+      const rLow = simulateFight({
+        planA: makePlan(FightingStyle.StrikingAttack, { OE: 9, killDesire: 1 }),
+        planD: makePlan(FightingStyle.LungingAttack, { OE: 3 }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rHigh.by === 'Kill') killsHigh++;
       if (rLow.by === 'Kill') killsLow++;
     }
@@ -164,9 +208,13 @@ describe('simulateFight — style matchups', () => {
     let wallWins = 0;
     const trials = 25;
     for (let seed = 1; seed <= trials; seed++) {
-      const result = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }), planD: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const result = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+        planD: makePlan(FightingStyle.WallOfSteel, { OE: 4, AL: 5 }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (result.winner === 'D') wallWins++;
     }
     // WoS has +2 matchup vs BA, should win a meaningful portion
@@ -205,7 +253,13 @@ describe('simulateFight — phase strategies', () => {
     };
 
     // Should not crash and should produce a valid outcome
-    const result = simulateFight({ planA: planA, planD: makePlan(FightingStyle.StrikingAttack), warriorA: wA, warriorD: wD, providedRng: 77 });
+    const result = simulateFight({
+      planA: planA,
+      planD: makePlan(FightingStyle.StrikingAttack),
+      warriorA: wA,
+      warriorD: wD,
+      providedRng: 77,
+    });
     expect(['A', 'D', null]).toContain(result.winner);
     expect(result.log.length).toBeGreaterThan(1);
   });
@@ -216,12 +270,20 @@ describe('simulateFight — endurance and exhaustion', () => {
     // Two identical warriors, one with max OE+AL
     const w = makeWarrior('Test', FightingStyle.StrikingAttack);
 
-    const rConservative = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }), warriorA: w, warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' }, providedRng: 42 }
-    );
-    const rAggressive = simulateFight(
-      { planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }), warriorA: w, warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' }, providedRng: 42 }
-    );
+    const rConservative = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }),
+      planD: makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }),
+      warriorA: w,
+      warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' },
+      providedRng: 42,
+    });
+    const rAggressive = simulateFight({
+      planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
+      planD: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
+      warriorA: w,
+      warriorD: { ...w, id: 'test2' as WarriorId, name: 'Test2' },
+      providedRng: 42,
+    });
 
     // High OE drains endurance faster. With symmetric warriors, both exhaust
     // simultaneously → mutual Draw (vs conservative Stoppage where one outlasts the other).
@@ -245,19 +307,42 @@ describe('simulateFight — hit-location lethality', () => {
     const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rHead = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10, target: 'Head' }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: 'Any' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rHead = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, {
+          OE: 10,
+          AL: 8,
+          killDesire: 10,
+          target: 'Head',
+        }),
+        planD: makePlan(FightingStyle.StrikingAttack, {
+          OE: 5,
+          AL: 5,
+          killDesire: 1,
+          protect: 'Any',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rHead.by === 'Kill' && rHead.winner === 'A') killsHead++;
 
-      const rLimb = simulateFight(
-        { planA: makePlan(FightingStyle.BashingAttack, {
+      const rLimb = simulateFight({
+        planA: makePlan(FightingStyle.BashingAttack, {
           OE: 10,
           AL: 8,
           killDesire: 10,
           target: 'Left Arm',
-        }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: 'Any' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+        }),
+        planD: makePlan(FightingStyle.StrikingAttack, {
+          OE: 5,
+          AL: 5,
+          killDesire: 1,
+          protect: 'Any',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rLimb.by === 'Kill' && rLimb.winner === 'A') killsLimb++;
     }
 
@@ -276,14 +361,42 @@ describe('simulateFight — hit-location lethality', () => {
     const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rUnarmored = simulateFight(
-        { planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: 'Head' }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: 'Any' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rUnarmored = simulateFight({
+        planA: makePlan(FightingStyle.StrikingAttack, {
+          OE: 10,
+          AL: 8,
+          killDesire: 10,
+          target: 'Head',
+        }),
+        planD: makePlan(FightingStyle.StrikingAttack, {
+          OE: 5,
+          AL: 5,
+          killDesire: 1,
+          protect: 'Any',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rUnarmored.by === 'Kill' && rUnarmored.winner === 'A') killsUnarmored++;
 
-      const rArmored = simulateFight(
-        { planA: makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: 'Head' }), planD: makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: 'Head' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rArmored = simulateFight({
+        planA: makePlan(FightingStyle.StrikingAttack, {
+          OE: 10,
+          AL: 8,
+          killDesire: 10,
+          target: 'Head',
+        }),
+        planD: makePlan(FightingStyle.StrikingAttack, {
+          OE: 5,
+          AL: 5,
+          killDesire: 1,
+          protect: 'Head',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rArmored.by === 'Kill' && rArmored.winner === 'A') killsArmored++;
     }
 
@@ -300,14 +413,42 @@ describe('simulateFight — hit-location lethality', () => {
     const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
-      const rChest = simulateFight(
-        { planA: makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: 'Chest' }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: 'Any' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rChest = simulateFight({
+        planA: makePlan(FightingStyle.LungingAttack, {
+          OE: 9,
+          AL: 7,
+          killDesire: 10,
+          target: 'Chest',
+        }),
+        planD: makePlan(FightingStyle.ParryRiposte, {
+          OE: 4,
+          AL: 6,
+          killDesire: 1,
+          protect: 'Any',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rChest.by === 'Kill' && rChest.winner === 'A') killsChest++;
 
-      const rLeg = simulateFight(
-        { planA: makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: 'Left Leg' }), planD: makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: 'Any' }), warriorA: wA, warriorD: wD, providedRng: seed }
-      );
+      const rLeg = simulateFight({
+        planA: makePlan(FightingStyle.LungingAttack, {
+          OE: 9,
+          AL: 7,
+          killDesire: 10,
+          target: 'Left Leg',
+        }),
+        planD: makePlan(FightingStyle.ParryRiposte, {
+          OE: 4,
+          AL: 6,
+          killDesire: 1,
+          protect: 'Any',
+        }),
+        warriorA: wA,
+        warriorD: wD,
+        providedRng: seed,
+      });
       if (rLeg.by === 'Kill' && rLeg.winner === 'A') killsLeg++;
     }
 

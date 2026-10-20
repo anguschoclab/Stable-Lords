@@ -215,9 +215,15 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     // only in state.graveyard (stableId preserved) when grudges process.
     const state: any = {
       week: 10,
-      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' }],
+      arenaHistory: [
+        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' },
+      ],
       rivals: [
-        { id: 'r1', owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
+        {
+          id: 'r1',
+          owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' },
+          roster: [{ id: 'w1', stableId: 'r1' }],
+        },
         { id: 'r2', owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [] },
       ],
       graveyard: [{ id: 'w2', stableId: 'r2', status: 'Dead' }],
@@ -231,10 +237,20 @@ describe('ownerGrudges - processOwnerGrudges', () => {
   it('should not attribute a kill when the dead victim belonged to a defunct stable', () => {
     const state: any = {
       week: 10,
-      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' }],
+      arenaHistory: [
+        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' },
+      ],
       rivals: [
-        { id: 'r1', owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
-        { id: 'r2', owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w3', stableId: 'r2' }] },
+        {
+          id: 'r1',
+          owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' },
+          roster: [{ id: 'w1', stableId: 'r1' }],
+        },
+        {
+          id: 'r2',
+          owner: { id: 'o2', personality: 'Tactician', stableName: 'B' },
+          roster: [{ id: 'w3', stableId: 'r2' }],
+        },
       ],
       graveyard: [{ id: 'w2', stableId: 'defunct_stable', status: 'Dead' }],
     };
@@ -247,9 +263,15 @@ describe('ownerGrudges - processOwnerGrudges', () => {
       week: 10,
       player: { id: 'p1' },
       roster: [],
-      arenaHistory: [{ id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'wp', winner: 'A', by: 'Kill' }],
+      arenaHistory: [
+        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'wp', winner: 'A', by: 'Kill' },
+      ],
       rivals: [
-        { id: 'r1', owner: { id: 'o1', personality: 'Pragmatic', stableName: 'A' }, roster: [{ id: 'w1', stableId: 'r1' }] },
+        {
+          id: 'r1',
+          owner: { id: 'o1', personality: 'Pragmatic', stableName: 'A' },
+          roster: [{ id: 'w1', stableId: 'r1' }],
+        },
       ],
       graveyard: [{ id: 'wp', stableId: 'p1', status: 'Dead' }],
     };

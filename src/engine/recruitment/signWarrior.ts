@@ -20,10 +20,7 @@ import type { PoolWarrior } from './recruitment/types';
 
 /** Reasons a signing can fail — stable machine-readable codes. */
 export type SignWarriorFailure =
-  | 'ROSTER_FULL'
-  | 'INSUFFICIENT_FUNDS'
-  | 'DEAD_IDENTITY'
-  | 'DUPLICATE_ID';
+  'ROSTER_FULL' | 'INSUFFICIENT_FUNDS' | 'DEAD_IDENTITY' | 'DUPLICATE_ID';
 
 /** Inputs to the signing funnel — everything the gates need to decide. */
 export interface SignWarriorArgs {
@@ -106,10 +103,7 @@ function mintWarriorId(
  * baselines layered on top. Veterans keep identity, fame, and career through
  * veteranSigningPatch; apprentices get their style-primary attribute bump.
  */
-export function poolWarriorToWarrior(
-  recruit: PoolWarrior,
-  opts: PoolToWarriorOpts
-): Warrior {
+export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOpts): Warrior {
   const rng = resolveRng(opts.rng, hashStr(String(recruit.id)));
 
   // Academy graduate flair: +1 to the style's primary attribute (recomputed
@@ -121,7 +115,10 @@ export function poolWarriorToWarrior(
   if (recruit.source === 'apprentice') {
     const primary = ARCHETYPE_STAT_WEIGHTS[STYLE_ARCHETYPE[recruit.style]].high[0];
     if (primary) {
-      attributes = { ...attributes, [primary]: Math.min(ATTRIBUTE_MAX, (attributes[primary] ?? 0) + 1) };
+      attributes = {
+        ...attributes,
+        [primary]: Math.min(ATTRIBUTE_MAX, (attributes[primary] ?? 0) + 1),
+      };
       const recalc = computeWarriorStats(attributes, recruit.style);
       baseSkills = recalc.baseSkills;
       derivedStats = recalc.derivedStats;
@@ -238,4 +235,3 @@ export function signWarrior(args: SignWarriorArgs): SignWarriorResult {
     updatedFreeAgents: drain(freeAgents),
   };
 }
-

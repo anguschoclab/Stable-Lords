@@ -116,7 +116,10 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
           />
         </div>
 
-        <section aria-labelledby="sandbox-projection-heading" className="mt-8 border-t border-white/10 pt-6">
+        <section
+          aria-labelledby="sandbox-projection-heading"
+          className="mt-8 border-t border-white/10 pt-6"
+        >
           <h5
             id="sandbox-projection-heading"
             className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground"

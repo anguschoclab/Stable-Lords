@@ -15,10 +15,7 @@ import { readFileInput } from '@/utils/fileInput';
 import type { GameStore } from '@/state/store.types';
 import { ContentPacksSection, HouseRulesSection } from '@/pages/mods/sections';
 
-function useContentPackActions(
-  installedPacks: ContentPack[],
-  setState: GameStore['setState']
-) {
+function useContentPackActions(installedPacks: ContentPack[], setState: GameStore['setState']) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [pendingPack, setPendingPack] = useState<string | null>(null);
   const [packError, setPackError] = useState<string | null>(null);

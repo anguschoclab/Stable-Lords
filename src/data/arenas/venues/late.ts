@@ -251,7 +251,8 @@ export const THE_BATHHOUSE_ARENA: ArenaConfig = {
   tags: ['indoor', 'premium', 'water', 'cramped'],
   tier: 3,
   size: 'cramped',
-  description: 'An ancient, opulent bathhouse. The air is thick with steam and the marble floors are treacherous.',
+  description:
+    'An ancient, opulent bathhouse. The air is thick with steam and the marble floors are treacherous.',
   zoneDef: { Edge: -3, Corner: -5 },
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.2 },
 };
@@ -262,7 +263,8 @@ export const THE_DESOLATE_HEATH: ArenaConfig = {
   tags: ['outdoor', 'cursed', 'open', 'uneven'],
   tier: 2,
   size: 'open',
-  description: 'A sprawling, cursed heath where the dead are said to walk. Uneven ground and a chilling aura sap the strength of all who fight here.',
+  description:
+    'A sprawling, cursed heath where the dead are said to walk. Uneven ground and a chilling aura sap the strength of all who fight here.',
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.15 },
 };

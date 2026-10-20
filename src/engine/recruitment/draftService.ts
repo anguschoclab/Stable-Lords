@@ -41,7 +41,10 @@ function rivalDraftMeta(
  * don't always pick first, then need-sort (stable sort keeps the rotation
  * inside each need tier — fewest active warriors still pick first).
  */
-export function orderRivalsForSnakeDraft(rivals: RivalStableData[], week: number): RivalStableData[] {
+export function orderRivalsForSnakeDraft(
+  rivals: RivalStableData[],
+  week: number
+): RivalStableData[] {
   const rotated = [...rivals];
   if (rotated.length > 0) {
     const rot = week % rotated.length;
@@ -108,9 +111,17 @@ export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
 
   for (const rival of sortedRivals) {
     const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
-    const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
-      { rival: rival, pool: currentPool, week: week, rng: rngService, isMajorDraftWeek: isMajorDraftWeek, meta: customMeta, usedNames: usedNames, usedIds: usedIds, deadIds: deadIds }
-    );
+    const { updatedRival, updatedPool, gazetteItems } = processRecruitment({
+      rival: rival,
+      pool: currentPool,
+      week: week,
+      rng: rngService,
+      isMajorDraftWeek: isMajorDraftWeek,
+      meta: customMeta,
+      usedNames: usedNames,
+      usedIds: usedIds,
+      deadIds: deadIds,
+    });
 
     draftResults[updatedRival.owner.id] = updatedRival;
     currentPool = updatedPool;

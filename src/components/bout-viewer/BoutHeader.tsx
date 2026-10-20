@@ -82,7 +82,10 @@ function FighterPanel(props: FighterPanelProps) {
       </div>
       <div className="space-y-1">
         <h4
-          className={cn('text-[9px] font-black tracking-[0.15em] uppercase opacity-40', accentClass)}
+          className={cn(
+            'text-[9px] font-black tracking-[0.15em] uppercase opacity-40',
+            accentClass
+          )}
         >
           {label}
         </h4>

@@ -67,21 +67,37 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     ctx.weather,
     ctx.arenaConfig.tags
   ).riposteMod;
-  const ripCheck = performRiposteCheck(
-    { rng: rng, def: def, matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA, fat: aGoesFirst ? s.fatD : s.fatA, penaltyOrBonus: s.curOffMods.defPenalty -
+  const ripCheck = performRiposteCheck({
+    rng: rng,
+    def: def,
+    matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
+    fat: aGoesFirst ? s.fatD : s.fatA,
+    penaltyOrBonus:
+      s.curOffMods.defPenalty -
       WHIFF_RIPOSTE_DEF_PENALTY +
       styleRip.ripBonus +
       ctx.weatherEffect.riposteMod +
       (ctx.arenaEventMods?.riposteMod ?? 0) +
-      styleWeatherRipMod, curPass: aGoesFirst ? s.passD : s.passA, curAntiSynDef: curAntiSynDef }
-  );
+      styleWeatherRipMod,
+    curPass: aGoesFirst ? s.passD : s.passA,
+    curAntiSynDef: curAntiSynDef,
+  });
   if (def.style === FightingStyle.ParryRiposte) {
     def.riposteStreak = ripCheck ? (def.riposteStreak ?? 0) + 1 : 0;
   }
   if (ripCheck) {
-    executeRiposte(
-      { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: 1.0, extraDmg: styleRip.dmgBonus }
-    );
+    executeRiposte({
+      events: events,
+      rng: rng,
+      attacker: att,
+      defender: def,
+      defTactics: aGoesFirst ? s.tactD : s.tactA,
+      defPassive: aGoesFirst ? s.passD : s.passA,
+      attLabel: attLabel,
+      defLabel: defLabel,
+      specialtyRiposteMult: 1.0,
+      extraDmg: styleRip.dmgBonus,
+    });
     stampRiposteSources(s);
   } else {
     stampFailedRiposte(s, defLabel);
@@ -156,13 +172,20 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
     ctx.weather,
     ctx.arenaConfig.tags
   ).riposteMod;
-  const ripPostParry = performRiposteCheck(
-    { rng: rng, def: def, matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA, fat: aGoesFirst ? s.fatD : s.fatA, penaltyOrBonus: (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
+  const ripPostParry = performRiposteCheck({
+    rng: rng,
+    def: def,
+    matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
+    fat: aGoesFirst ? s.fatD : s.fatA,
+    penaltyOrBonus:
+      (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
       ctx.weatherEffect.riposteMod +
       (ctx.arenaEventMods?.riposteMod ?? 0) +
       styleRip.ripBonus +
-      styleWeatherRipMod, curPass: aGoesFirst ? s.passD : s.passA, curAntiSynDef: undefined }
-  );
+      styleWeatherRipMod,
+    curPass: aGoesFirst ? s.passD : s.passA,
+    curAntiSynDef: undefined,
+  });
   const specRiposteMult = aGoesFirst
     ? (ctx.trainerModsD.riposteDamageMult ?? 1.0)
     : (ctx.trainerModsA.riposteDamageMult ?? 1.0);
@@ -170,9 +193,18 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
     def.riposteStreak = ripPostParry ? (def.riposteStreak ?? 0) + 1 : 0;
   }
   if (ripPostParry) {
-    executeRiposte(
-      { events: events, rng: rng, attacker: att, defender: def, defTactics: aGoesFirst ? s.tactD : s.tactA, defPassive: aGoesFirst ? s.passD : s.passA, attLabel: attLabel, defLabel: defLabel, specialtyRiposteMult: specRiposteMult, extraDmg: styleRip.dmgBonus }
-    );
+    executeRiposte({
+      events: events,
+      rng: rng,
+      attacker: att,
+      defender: def,
+      defTactics: aGoesFirst ? s.tactD : s.tactA,
+      defPassive: aGoesFirst ? s.passD : s.passA,
+      attLabel: attLabel,
+      defLabel: defLabel,
+      specialtyRiposteMult: specRiposteMult,
+      extraDmg: styleRip.dmgBonus,
+    });
     stampRiposteSources(s);
   } else {
     stampFailedRiposte(s, defLabel);
@@ -207,9 +239,23 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
 
   const extraDefPenalty = computeExtraDefPenalty(s);
 
-  const defCheck = performDefenseCheck(
-    { rng: rng, def: def, curDefOE: curDefOE, matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA, fat: aGoesFirst ? s.fatD : s.fatA, curDefMods: curDefMods, curPassD: curPassD, curBiasDef: curBiasDef, overDef: overDef, isDodge: isDodge, curAntiSynDef: curAntiSynDef, curOffMods: s.curOffMods, ctx: ctx, attacker: att, extraDefPenalty: extraDefPenalty }
-  );
+  const defCheck = performDefenseCheck({
+    rng: rng,
+    def: def,
+    curDefOE: curDefOE,
+    matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
+    fat: aGoesFirst ? s.fatD : s.fatA,
+    curDefMods: curDefMods,
+    curPassD: curPassD,
+    curBiasDef: curBiasDef,
+    overDef: overDef,
+    isDodge: isDodge,
+    curAntiSynDef: curAntiSynDef,
+    curOffMods: s.curOffMods,
+    ctx: ctx,
+    attacker: att,
+    extraDefPenalty: extraDefPenalty,
+  });
 
   if (defCheck.success) {
     events.push({ type: 'DEFENSE', actor: defLabel, result: defCheck.type });
@@ -221,8 +267,24 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
     const killDesire = aGoesFirst
       ? (s.fA.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fA.activePlan.killDesire ?? 5)
       : (s.fD.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fD.activePlan.killDesire ?? 5);
-    executeHit(
-      { events: events, rng: rng, attacker: att, defender: def, attTactics: aGoesFirst ? s.tactA : s.tactD, attOffMods: s.curOffMods, attPassive: s.curPassA, attLabel: attLabel, defLabel: defLabel, stylePhase: s.stylePhase, phase: phase, attKD: killDesire, attOE: s.curAttOE, attAL: s.curAttAL, attMatchup: aGoesFirst ? ctx.matchupA : ctx.matchupD, ctx: ctx, defPassive: curPassD }
-    );
+    executeHit({
+      events: events,
+      rng: rng,
+      attacker: att,
+      defender: def,
+      attTactics: aGoesFirst ? s.tactA : s.tactD,
+      attOffMods: s.curOffMods,
+      attPassive: s.curPassA,
+      attLabel: attLabel,
+      defLabel: defLabel,
+      stylePhase: s.stylePhase,
+      phase: phase,
+      attKD: killDesire,
+      attOE: s.curAttOE,
+      attAL: s.curAttAL,
+      attMatchup: aGoesFirst ? ctx.matchupA : ctx.matchupD,
+      ctx: ctx,
+      defPassive: curPassD,
+    });
   }
 }

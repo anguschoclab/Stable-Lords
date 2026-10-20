@@ -123,9 +123,17 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     solvencyWarning,
   } = computeSummarySignals(state, activeWarriors, playerWarriorIds);
 
-  const { stableDirectives, unresolvedDirectives, lookahead } = buildCouncilSections(
-    { state: state, cards: cards, kpis: kpis, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, assignedWarriorIds: assignedWarriorIds, unassignedTrainingCount: unassignedTrainingCount, projectedTrainingCost: projectedTrainingCost, treasury: treasury }
-  );
+  const { stableDirectives, unresolvedDirectives, lookahead } = buildCouncilSections({
+    state: state,
+    cards: cards,
+    kpis: kpis,
+    activeWarriors: activeWarriors,
+    playerWarriorIds: playerWarriorIds,
+    assignedWarriorIds: assignedWarriorIds,
+    unassignedTrainingCount: unassignedTrainingCount,
+    projectedTrainingCost: projectedTrainingCost,
+    treasury: treasury,
+  });
 
   const allActionPayloads = cards.map((c) => c.actionPayload);
 
@@ -172,23 +180,38 @@ function buildCouncilSections(args: BuildCouncilSectionsArgs): {
 } {
   const { state, cards, kpis, activeWarriors, playerWarriorIds } = args;
   const { assignedWarriorIds, unassignedTrainingCount, projectedTrainingCost, treasury } = args;
-  const stableDirectives = buildStableDirectives(
-    { state: state, cards: cards, kpis: kpis, unassignedTrainingCount: unassignedTrainingCount, projectedTrainingCost: projectedTrainingCost, treasury: treasury }
-  );
+  const stableDirectives = buildStableDirectives({
+    state: state,
+    cards: cards,
+    kpis: kpis,
+    unassignedTrainingCount: unassignedTrainingCount,
+    projectedTrainingCost: projectedTrainingCost,
+    treasury: treasury,
+  });
 
   const currentAbsWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
   const upcomingAbsWeek = currentAbsWeek + 1;
 
-  const unresolvedDirectives = collectUnresolvedDirectives(
-    { state: state, cards: cards, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, assignedWarriorIds: assignedWarriorIds, upcomingAbsWeek: upcomingAbsWeek }
-  );
+  const unresolvedDirectives = collectUnresolvedDirectives({
+    state: state,
+    cards: cards,
+    activeWarriors: activeWarriors,
+    playerWarriorIds: playerWarriorIds,
+    assignedWarriorIds: assignedWarriorIds,
+    upcomingAbsWeek: upcomingAbsWeek,
+  });
 
   return {
     stableDirectives,
     unresolvedDirectives,
-    lookahead: buildLookahead(
-      { state: state, cards: cards, activeWarriors: activeWarriors, playerWarriorIds: playerWarriorIds, currentAbsWeek: currentAbsWeek, upcomingAbsWeek: upcomingAbsWeek }
-    ),
+    lookahead: buildLookahead({
+      state: state,
+      cards: cards,
+      activeWarriors: activeWarriors,
+      playerWarriorIds: playerWarriorIds,
+      currentAbsWeek: currentAbsWeek,
+      upcomingAbsWeek: upcomingAbsWeek,
+    }),
   };
 }
 

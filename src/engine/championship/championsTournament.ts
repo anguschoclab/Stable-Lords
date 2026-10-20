@@ -69,9 +69,15 @@ export function buildChampionsTournament(
     ]);
   }
 
-  const tournament = TournamentSelectionService.buildTournament(
-    { tierId: CHAMPIONS_TOURNEY.TIER_ID, tierName: CHAMPIONS_TOURNEY.NAME, warriors: field, week: week, season: state.season, rng: new SeededRNG(((state.absoluteWeek ?? week - 1) + 1) * 733), year: state.year ?? 1 }
-  );
+  const tournament = TournamentSelectionService.buildTournament({
+    tierId: CHAMPIONS_TOURNEY.TIER_ID,
+    tierName: CHAMPIONS_TOURNEY.NAME,
+    warriors: field,
+    week: week,
+    season: state.season,
+    rng: new SeededRNG(((state.absoluteWeek ?? week - 1) + 1) * 733),
+    year: state.year ?? 1,
+  });
 
   return mergeImpacts([
     { tournaments: [...(state.tournaments || []), tournament] },

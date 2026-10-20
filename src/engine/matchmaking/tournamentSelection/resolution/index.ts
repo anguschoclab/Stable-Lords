@@ -46,9 +46,15 @@ export function resolveRound(
   // returning isComplete:false, which left such entries unfinished and
   // re-scanned at every week boundary forever.
   if (currentRound !== null) {
-    updatedState = resolveRoundBouts(
-      { updatedState: updatedState, resolvedTournament: resolvedTournament, roundBouts: roundBouts, rng: rng, headless: headless, winners: winners, losers: losers }
-    );
+    updatedState = resolveRoundBouts({
+      updatedState: updatedState,
+      resolvedTournament: resolvedTournament,
+      roundBouts: roundBouts,
+      rng: rng,
+      headless: headless,
+      winners: winners,
+      losers: losers,
+    });
 
     seedNextRound(bracket, currentRound, winners, losers);
   }
@@ -66,9 +72,14 @@ export function resolveRound(
     resolvedTournament
   );
 
-  return finalizeRound(
-    { updatedState: updatedState, resolvedTournament: resolvedTournament, tournamentId: tournamentId, bracket: bracket, isComplete: isComplete, championWarrior: championWarrior }
-  );
+  return finalizeRound({
+    updatedState: updatedState,
+    resolvedTournament: resolvedTournament,
+    tournamentId: tournamentId,
+    bracket: bracket,
+    isComplete: isComplete,
+    championWarrior: championWarrior,
+  });
 }
 
 interface FinalizeRoundArgs {
@@ -158,10 +169,7 @@ export function resolveCompleteTournament(
  * seed with tournament i+1's round s — identical RNG streams, identical bout
  * ids and correlated fight draws.
  */
-export function sweepUnfinishedTournaments(
-  state: GameState,
-  headless?: boolean
-): GameState {
+export function sweepUnfinishedTournaments(state: GameState, headless?: boolean): GameState {
   const list = state.tournaments ?? [];
   let current = state;
 

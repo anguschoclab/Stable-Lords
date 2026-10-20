@@ -40,7 +40,13 @@ describe('handleSuspiciousMushroomStew', () => {
 
     const mockRng = new SeededRNG(123);
 
-    handleSuspiciousMushroomStew({ state: mockState, nextWeek: 1, e: mockNarrative, rng: mockRng, ctx: mockCtx });
+    handleSuspiciousMushroomStew({
+      state: mockState,
+      nextWeek: 1,
+      e: mockNarrative,
+      rng: mockRng,
+      ctx: mockCtx,
+    });
 
     const update = mockCtx.rosterUpdates.get(warrior.id as WarriorId);
     expect(update).toBeDefined();

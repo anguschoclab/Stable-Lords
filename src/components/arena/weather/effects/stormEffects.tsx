@@ -45,10 +45,10 @@ export function ArcaneStormEffect() {
           key={i}
           className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              top: `${cryptoRandom() * 100}%`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 140, (cryptoRandom() - 0.5) * 140),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 100}%`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 140, (cryptoRandom() - 0.5) * 140),
+          }}
         />
       ))}
     </div>
@@ -80,10 +80,13 @@ export function AetherStormEffect() {
           key={i}
           className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              top: `${cryptoRandom() * 100}%`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 160, (cryptoRandom() - 0.5) * 160, { delayS: 4, durationS: { base: 2, range: 2 } }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 100}%`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 160, (cryptoRandom() - 0.5) * 160, {
+              delayS: 4,
+              durationS: { base: 2, range: 2 },
+            }),
+          }}
         />
       ))}
       {/* Violet secondary particles for prismatic effect */}
@@ -92,10 +95,12 @@ export function AetherStormEffect() {
           key={`v-${i}`}
           className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark motion-reduce:animate-none"
           style={{
-              left: `${cryptoRandom() * 100}%`,
-              top: `${cryptoRandom() * 100}%`,
-              ...driftParticleStyle((cryptoRandom() - 0.5) * 120, (cryptoRandom() - 0.5) * 120, { durationS: { base: 2.5, range: 2 } }),
-            }}
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 100}%`,
+            ...driftParticleStyle((cryptoRandom() - 0.5) * 120, (cryptoRandom() - 0.5) * 120, {
+              durationS: { base: 2.5, range: 2 },
+            }),
+          }}
         />
       ))}
     </div>

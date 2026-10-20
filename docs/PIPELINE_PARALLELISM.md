@@ -95,21 +95,22 @@ verified byte-identical in `shardInputSize.test.ts`.
 
 Measured re-run (52 weeks, seed 20260919, pool=4):
 
-| run                  | wall-clock                        |
-| -------------------- | --------------------------------- |
-| pool=1 (sequential)  | 15,630 ms                         |
-| pool=4 (distributed) | 47,546 ms                         |
-| **speedup**          | **0.33× — gate requires ≥1.30×**  |
+| run                  | wall-clock                       |
+| -------------------- | -------------------------------- |
+| pool=1 (sequential)  | 15,630 ms                        |
+| pool=4 (distributed) | 47,546 ms                        |
+| **speedup**          | **0.33× — gate requires ≥1.30×** |
 
 The narrowing roughly doubled throughput vs the pre-attempt estimate but the
 mandatory read surface (roster + rivals + graveyard + retired + arenaHistory
-+ tournaments + offers) is still most of the state's serialized weight —
-structuredClone cost remains far above the ~17 ms/week of rival compute each
-shard displaces. Bouts were left on the full-state ctx (deeper transitive
-read set, smaller payload share).
+
+- tournaments + offers) is still most of the state's serialized weight —
+  structuredClone cost remains far above the ~17 ms/week of rival compute each
+  shard displaces. Bouts were left on the full-state ctx (deeper transitive
+  read set, smaller payload share).
 
 **Decision (unchanged, now stronger):** `poolSize=1` stays the default. The
-next viable step is not payload dieting but *persistent shard state* — shard
+next viable step is not payload dieting but _persistent shard state_ — shard
 workers holding a synced world copy updated by weekly deltas — a much larger
 architectural change, only worth it if rival-strategy compute outgrows it.
 

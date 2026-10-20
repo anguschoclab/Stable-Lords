@@ -47,7 +47,11 @@ const SEASON_ACTIONS = [
   },
 ];
 
-function ChecklistStatus({ ready, readyLabel, reviewLabel }: {
+function ChecklistStatus({
+  ready,
+  readyLabel,
+  reviewLabel,
+}: {
   ready: boolean;
   readyLabel: string;
   reviewLabel: string;

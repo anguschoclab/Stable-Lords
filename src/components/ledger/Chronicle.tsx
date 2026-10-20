@@ -102,7 +102,6 @@ function TimelineEntryList({ entries }: { entries: string[] }) {
   );
 }
 
-
 function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: number }) {
   return (
     <motion.div

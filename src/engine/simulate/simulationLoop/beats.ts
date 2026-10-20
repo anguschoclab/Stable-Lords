@@ -32,7 +32,14 @@ function emitMinuteMarker(c: LoopCtx, fA: FighterState, fD: FighterState, min: n
   c.log.push({ minute: min, text: `MINUTE ${min}.` });
   c.log.push({
     minute: min,
-    text: minuteStatusLine({ rng: c.flavorRng, _minute: min, nameA: c.nameA, nameD: c.nameD, hitsA: fA.hitsLanded, hitsD: fD.hitsLanded }),
+    text: minuteStatusLine({
+      rng: c.flavorRng,
+      _minute: min,
+      nameA: c.nameA,
+      nameD: c.nameD,
+      hitsA: fA.hitsLanded,
+      hitsD: fD.hitsLanded,
+    }),
   });
 }
 
@@ -50,7 +57,10 @@ interface EmitProgressMarkersArgs {
 }
 
 /** Emits phase-header and minute-marker beats; returns updated markers. */
-export function emitProgressMarkers(args: EmitProgressMarkersArgs): { lastPhase: string | null; lastMinuteMarker: number } {
+export function emitProgressMarkers(args: EmitProgressMarkersArgs): {
+  lastPhase: string | null;
+  lastMinuteMarker: number;
+} {
   const { c, fA, fD, phase, min } = args;
   let { lastPhase, lastMinuteMarker } = args;
   if (phase !== lastPhase) {

@@ -112,9 +112,14 @@ const narrateAttackEvent: EventNarrator = (event, h, minute) => {
   return [
     {
       minute,
-      text: narrateAttack(
-        { rng: h.rng, attackerName: h.displayName(event.actor), weaponId: h.getWeapon(event.actor), _isMastery: false, defenderName: h.getOpponentName(event.actor), style: h.getStyle(event.actor) }
-      ),
+      text: narrateAttack({
+        rng: h.rng,
+        attackerName: h.displayName(event.actor),
+        weaponId: h.getWeapon(event.actor),
+        _isMastery: false,
+        defenderName: h.getOpponentName(event.actor),
+        style: h.getStyle(event.actor),
+      }),
     },
     {
       minute,
@@ -152,9 +157,14 @@ const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
     return [
       {
         minute,
-        text: narrateAttack(
-          { rng: h.rng, attackerName: h.getOpponentName(event.actor), weaponId: h.getWeapon(event.actor === 'A' ? 'D' : 'A'), _isMastery: false, defenderName: actorName, style: h.getStyle(event.actor === 'A' ? 'D' : 'A') }
-        ),
+        text: narrateAttack({
+          rng: h.rng,
+          attackerName: h.getOpponentName(event.actor),
+          weaponId: h.getWeapon(event.actor === 'A' ? 'D' : 'A'),
+          _isMastery: false,
+          defenderName: actorName,
+          style: h.getStyle(event.actor === 'A' ? 'D' : 'A'),
+        }),
       },
       { minute, text: narrateParry(h.rng, actorName, weapon, opponentName) },
     ];
@@ -208,9 +218,14 @@ function hitAttackLead(args: HitAttackLeadArgs): MinuteEvent[] {
   return [
     {
       minute,
-      text: narrateAttack(
-        { rng: h.rng, attackerName: h.displayName(event.actor), weaponId: weapon, _isMastery: isMastery, defenderName: opponentName, style: h.getStyle(event.actor) }
-      ),
+      text: narrateAttack({
+        rng: h.rng,
+        attackerName: h.displayName(event.actor),
+        weaponId: weapon,
+        _isMastery: isMastery,
+        defenderName: opponentName,
+        style: h.getStyle(event.actor),
+      }),
     },
   ];
 }
@@ -220,20 +235,11 @@ function hitAttackLead(args: HitAttackLeadArgs): MinuteEvent[] {
  * emitted line marks the victim; later hits in the same exchange (weapon +
  * environmental seeing the same crossing) don't repeat it.
  */
-function stateChangeOnce(
-  event: CombatEvent,
-  h: NarrateHelpers,
-  victimName: string
-): string | null {
+function stateChangeOnce(event: CombatEvent, h: NarrateHelpers, victimName: string): string | null {
   const target = event.target as Actor;
   if (h.stateChangesIssued.has(target)) return null;
   const prevRatio = target === 'A' ? h.ctx.prevHpRatioA : h.ctx.prevHpRatioD;
-  const line = stateChangeLine(
-    h.rng,
-    victimName,
-    h.getPostHitRatio(target, event),
-    prevRatio
-  );
+  const line = stateChangeLine(h.rng, victimName, h.getPostHitRatio(target, event), prevRatio);
   if (line) h.stateChangesIssued.add(target);
   return line;
 }
@@ -267,11 +273,7 @@ function hitReactions(
  * Environmental-damage hp-ratio check: state-change line when the hit
  * carries the victim across a severity threshold (desperate/severe/…).
  */
-function hazardStateChange(
-  event: CombatEvent,
-  h: NarrateHelpers,
-  minute: number
-): MinuteEvent[] {
+function hazardStateChange(event: CombatEvent, h: NarrateHelpers, minute: number): MinuteEvent[] {
   const line = stateChangeOnce(event, h, h.getName(event.target as Actor));
   return line ? [{ minute, text: line }] : [];
 }
@@ -311,9 +313,7 @@ function narrateHazardHit(
   const pool =
     peekArchive(['pbp', 'arena_events', id, 'damage']) ??
     peekArchive(['pbp', 'arena_fx', 'damage']);
-  const source = events.find(
-    (e) => e.type === 'ARENA_EVENT' && e.metadata?.arenaEventId === id
-  );
+  const source = events.find((e) => e.type === 'ARENA_EVENT' && e.metadata?.arenaEventId === id);
   const out: MinuteEvent[] = [];
   if (pool) {
     out.push({
@@ -343,7 +343,15 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
       events.some((e) => e.type === 'BOUT_END'));
 
   const out: MinuteEvent[] = [
-    ...hitAttackLead({ event: event, h: h, minute: minute, events: events, isMastery: isMastery, opponentName: opponentName, weapon: weapon }),
+    ...hitAttackLead({
+      event: event,
+      h: h,
+      minute: minute,
+      events: events,
+      isMastery: isMastery,
+      opponentName: opponentName,
+      weapon: weapon,
+    }),
   ];
 
   const isFatal = !!event.metadata?.lethal;
@@ -355,9 +363,21 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
 
   out.push({
     minute,
-    text: narrateHit(
-      { rng: rng, defenderName: opponentName, location: event.location, _isMastery: isMastery, isSuperFlashy: isSuperFlashy, attackerName: actorName, weaponId: weapon, damage: event.value, maxHp: h.getMaxHp(event.target as 'A' | 'D'), isFatal: isFatal, attackerFame: h.getFame(event.actor as 'A' | 'D'), isFavorite: h.getIsFavorite(event.actor as 'A' | 'D'), style: h.getStyle(event.actor as 'A' | 'D') }
-    ),
+    text: narrateHit({
+      rng: rng,
+      defenderName: opponentName,
+      location: event.location,
+      _isMastery: isMastery,
+      isSuperFlashy: isSuperFlashy,
+      attackerName: actorName,
+      weaponId: weapon,
+      damage: event.value,
+      maxHp: h.getMaxHp(event.target as 'A' | 'D'),
+      isFatal: isFatal,
+      attackerFame: h.getFame(event.actor as 'A' | 'D'),
+      isFavorite: h.getIsFavorite(event.actor as 'A' | 'D'),
+      style: h.getStyle(event.actor as 'A' | 'D'),
+    }),
     emphasis: isHeavyHit,
   });
 

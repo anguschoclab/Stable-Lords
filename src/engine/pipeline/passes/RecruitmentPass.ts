@@ -36,11 +36,7 @@ import {
  * styles. Apprentices are claimed before open-market recruits — academies
  * raised them. Claims rotate each week so one academy can't lock the intake.
  */
-function applyAcademyClaims(
-  pool: PoolWarrior[],
-  state: GameState,
-  week: number
-): PoolWarrior[] {
+function applyAcademyClaims(pool: PoolWarrior[], state: GameState, week: number): PoolWarrior[] {
   const academies = (state.rivals ?? [])
     .filter((r) => r.owner.foundedByWarriorId)
     .sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -246,9 +242,11 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
   // bloodline odds (0.05 base + 0.05 per newly retired veteran, capped 0.25).
   const crowned = collectCrownedWarriorIds(state);
   const legacyRng = new SeededRNG((state.absoluteWeek ?? state.week) * 977 + 13);
-  const legacyCandidates = [...(state.graveyard || []), ...(state.retired || []), ...newlyRetired].filter(
-    (w) => w.fame > 1000
-  );
+  const legacyCandidates = [
+    ...(state.graveyard || []),
+    ...(state.retired || []),
+    ...newlyRetired,
+  ].filter((w) => w.fame > 1000);
   for (const ret of newlyRetired) {
     if (isLegacyFounderCaliber(ret, crowned) && legacyRng.next() < LEGACY_FOUND_CHANCE) {
       (impact.legacyFounderEnqueue ??= []).push(buildLegacyFounderQueueEntry(ret));
@@ -271,9 +269,17 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
     // and could strand the world with an unusable pool.
     recruitPool = [...(state.recruitPool ?? [])];
   } else {
-    recruitPool = partialRefreshPool(
-      { currentPool: state.recruitPool || [], week: state.week, usedNames: usedNames, rng: rng, meta: state.cachedMetaDrift, legacyCandidates: legacyCandidates, stableCount: stableCount, legacyChance, apprenticeChance }
-    );
+    recruitPool = partialRefreshPool({
+      currentPool: state.recruitPool || [],
+      week: state.week,
+      usedNames: usedNames,
+      rng: rng,
+      meta: state.cachedMetaDrift,
+      legacyCandidates: legacyCandidates,
+      stableCount: stableCount,
+      legacyChance,
+      apprenticeChance,
+    });
 
     recruitPool = applyIntakeBoosts(recruitPool, state, {
       usedNames,

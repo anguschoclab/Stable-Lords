@@ -120,10 +120,7 @@ export function createFreshState(
 }
 
 /** Seeded selection of the initial rival stables. */
-function generateInitialRivals(
-  rng: IRNGService,
-  difficulty?: WorldDifficulty
-): RivalStableData[] {
+function generateInitialRivals(rng: IRNGService, difficulty?: WorldDifficulty): RivalStableData[] {
   const RIVAL_NAMES = (narrativeContent as NarrativeContent).recruitment.rival_stable_names;
   // Every seeded owner must map to a trait policy — the canonical list lives
   // in ai/traitPolicy so personalities can never drift out of coverage.
@@ -200,9 +197,14 @@ function generateInitialRecruitPool(rng: IRNGService): PoolWarrior[] {
         DF: attrBase(),
       };
 
-      const baseWarrior = makeWarrior(
-        { id: rng.uuid() as WarriorId, name: `Recruit ${i + 1}`, style: style, attrs: attrs, overrides: {}, rng: rng }
-      );
+      const baseWarrior = makeWarrior({
+        id: rng.uuid() as WarriorId,
+        name: `Recruit ${i + 1}`,
+        style: style,
+        attrs: attrs,
+        overrides: {},
+        rng: rng,
+      });
       return {
         ...baseWarrior,
         cost: 150 + Math.floor(rng.next() * 150),

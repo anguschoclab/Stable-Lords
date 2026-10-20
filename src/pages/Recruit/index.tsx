@@ -173,7 +173,8 @@ function ScoutMarketTab({
  */
 export default function Recruit() {
   const recruit = useRecruit();
-  const { activeRosterSize, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } = recruit;
+  const { activeRosterSize, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } =
+    recruit;
 
   // Contract selection drives the top-bar SIGN CONTRACT CTA — disabled until
   // a recruit is picked, then signs that recruit (base contract, no bonus).

@@ -88,7 +88,8 @@ describe('megaplan V12: duplicate consolidation', () => {
     const text = fileText(found!);
     expect(
       /export (function|const) trainerBonusToMods/.test(text) ||
-        candidates.filter((p) => p !== found && fileText(p).includes('trainerBonusToMods')).length > 0,
+        candidates.filter((p) => p !== found && fileText(p).includes('trainerBonusToMods')).length >
+          0,
       'trainerBonusToMods not found in trainers domain'
     ).toBe(true);
   });
@@ -103,9 +104,20 @@ describe('megaplan V12: duplicate consolidation', () => {
     );
     const fieldLike = [...literals].filter((l) =>
       [
-        'solid', 'fess', 'pale', 'bend', 'bend-sinister', 'chevron',
-        'chevron-inverted', 'cross', 'saltire', 'per-pale', 'per-fess',
-        'pale-environ', 'gyronny', 'quarterly',
+        'solid',
+        'fess',
+        'pale',
+        'bend',
+        'bend-sinister',
+        'chevron',
+        'chevron-inverted',
+        'cross',
+        'saltire',
+        'per-pale',
+        'per-fess',
+        'pale-environ',
+        'gyronny',
+        'quarterly',
       ].includes(l)
     );
     for (const l of fieldLike) {

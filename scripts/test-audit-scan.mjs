@@ -273,7 +273,7 @@ fs.writeFileSync(
     },
     null,
     2
-  )
+  ) + '\n'
 );
 
 // Test-dir → prod-domain conformance: a test under src/test/<cat>/ should
@@ -330,7 +330,7 @@ const baseline = {
 };
 fs.writeFileSync(
   path.join(SRC, 'test', '_setup', 'auditBaseline.json'),
-  JSON.stringify(baseline, null, 2)
+  JSON.stringify(baseline, null, 2) + '\n'
 );
 
 // Worker-sharing groups for vitest.config.ts scoped isolation: files listed
@@ -350,7 +350,7 @@ fs.writeFileSync(
     },
     null,
     2
-  )
+  ) + '\n'
 );
 
 console.log('=== TEST AUDIT SCAN ===');

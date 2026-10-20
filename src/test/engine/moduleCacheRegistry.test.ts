@@ -80,8 +80,10 @@ const REGISTRY: Record<string, string> = {
 // annotated constructors mutate without hitting the old pattern.
 // (opfsArchiver's `pendingRetries` and newsletter feed's `current` escaped the
 // old collection-constructor-only pattern.)
-const DECL_RE = /^(?:export\s+)?(let|var)\s+([A-Za-z_$][\w$]*)|^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*(?::[^=\n]+)?=\s*(?:new\s+(?:Map|Set|WeakMap|WeakSet|Array)\s*[<(]|\[\s*\]|\{\s*\})/gm;
-const MUTATION_RE = (id: string) => new RegExp(`\\b${id}\\.(set|add|delete|push|clear|pop|shift|splice)\\(`);
+const DECL_RE =
+  /^(?:export\s+)?(let|var)\s+([A-Za-z_$][\w$]*)|^(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*(?::[^=\n]+)?=\s*(?:new\s+(?:Map|Set|WeakMap|WeakSet|Array)\s*[<(]|\[\s*\]|\{\s*\})/gm;
+const MUTATION_RE = (id: string) =>
+  new RegExp(`\\b${id}\\.(set|add|delete|push|clear|pop|shift|splice)\\(`);
 
 describe('engine module-level mutable registry', () => {
   it('every module-level mutable under src/engine is registered', () => {

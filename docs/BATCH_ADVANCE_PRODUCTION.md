@@ -42,20 +42,20 @@ sequential code path for every scale of advancement.
 
 Install a provider via `setTelemetryProvider`. Emitted events:
 
-| Event                                                               | Kind                   | Emitted by                                  |
-| ------------------------------------------------------------------- | ---------------------- | ------------------------------------------- |
-| `advance_week`                                                      | timing                 | `advanceWeek` (per week)                    |
-| `advance_day`                                                       | timing                 | `TickOrchestrator.advanceDay`               |
-| `advance_month` / `advance_quarter` / `advance_year`                  | timing                 | `TimeAdvanceService`                        |
-| `advance_*_success`/`advance_*_error`                               | counter                | `TimeAdvanceService`                        |
-| `stop_condition_triggered`                                          | counter                | `TimeAdvanceService` / autosim              |
-| `pipeline_pass_timing`                                              | timing (tags: `pass`, `stage`) | per-pass, when `__SL_PIPELINE_PROF` is set  |
-| `parallel_shard_ms`                                                 | timing (tag: `shards`) | `EnginePool.distributed`                    |
-| `serialization_clone_ms`                                            | timing                 | week-context clone (telemetry-enabled only) |
-| `serialization_payload_bytes`                                       | gauge                  | `doAdvanceWeek`/`doAdvanceDay`              |
-| `engine_roundtrip_ms`                                               | timing (tag: `op`)     | worker call boundary                        |
-| `engine_job_queue_depth`                                            | gauge                  | `jobQueue` on enqueue/dequeue               |
-| `flush_deferred_archives`, `deferred_logs_count`                    | timing / gauge         | archive drain                               |
+| Event                                                | Kind                           | Emitted by                                  |
+| ---------------------------------------------------- | ------------------------------ | ------------------------------------------- |
+| `advance_week`                                       | timing                         | `advanceWeek` (per week)                    |
+| `advance_day`                                        | timing                         | `TickOrchestrator.advanceDay`               |
+| `advance_month` / `advance_quarter` / `advance_year` | timing                         | `TimeAdvanceService`                        |
+| `advance_*_success`/`advance_*_error`                | counter                        | `TimeAdvanceService`                        |
+| `stop_condition_triggered`                           | counter                        | `TimeAdvanceService` / autosim              |
+| `pipeline_pass_timing`                               | timing (tags: `pass`, `stage`) | per-pass, when `__SL_PIPELINE_PROF` is set  |
+| `parallel_shard_ms`                                  | timing (tag: `shards`)         | `EnginePool.distributed`                    |
+| `serialization_clone_ms`                             | timing                         | week-context clone (telemetry-enabled only) |
+| `serialization_payload_bytes`                        | gauge                          | `doAdvanceWeek`/`doAdvanceDay`              |
+| `engine_roundtrip_ms`                                | timing (tag: `op`)             | worker call boundary                        |
+| `engine_job_queue_depth`                             | gauge                          | `jobQueue` on enqueue/dequeue               |
+| `flush_deferred_archives`, `deferred_logs_count`     | timing / gauge                 | archive drain                               |
 
 ## Rollback
 

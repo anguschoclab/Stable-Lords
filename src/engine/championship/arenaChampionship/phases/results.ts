@@ -65,7 +65,17 @@ export function resolveTitleBoutResults(state: GameState, delta: ChampionshipDel
       continue;
     }
 
-    transferCrown({ state: state, delta: delta, title: title, arenaId: arenaId, champId: champId, winnerId: winnerId, loserId: loserId, summary: summary, now: now });
+    transferCrown({
+      state: state,
+      delta: delta,
+      title: title,
+      arenaId: arenaId,
+      champId: champId,
+      winnerId: winnerId,
+      loserId: loserId,
+      summary: summary,
+      now: now,
+    });
   }
 }
 

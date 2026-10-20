@@ -93,7 +93,14 @@ function evaluateObjectives(args: EvaluateObjectivesArgs): boolean {
     if (obj.completed) continue;
 
     if (
-      !objectiveMet({ id: obj.id, state: state, nextWeek: nextWeek, stableStanding: stableStanding, playerWarriorIds: playerWarriorIds, playerWarriorNames: playerWarriorNames })
+      !objectiveMet({
+        id: obj.id,
+        state: state,
+        nextWeek: nextWeek,
+        stableStanding: stableStanding,
+        playerWarriorIds: playerWarriorIds,
+        playerWarriorNames: playerWarriorNames,
+      })
     )
       continue;
 
@@ -169,9 +176,14 @@ export function runProgressionPass(
   const newsletterItems: NewsletterItem[] = [];
   const gazettes: GazetteStory[] = [];
 
-  const realmChampionCompleted = evaluateObjectives(
-    { current: current, state: state, nextWeek: nextWeek, stableStanding: stableStanding, newsletterItems: newsletterItems, gazettes: gazettes }
-  );
+  const realmChampionCompleted = evaluateObjectives({
+    current: current,
+    state: state,
+    nextWeek: nextWeek,
+    stableStanding: stableStanding,
+    newsletterItems: newsletterItems,
+    gazettes: gazettes,
+  });
 
   if (realmChampionCompleted && current.status !== 'continued') {
     current.status = 'won';

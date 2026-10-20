@@ -158,8 +158,6 @@ export const DefensiveTacticSchema = z.enum(DEFENSIVE_TACTICS);
  */
 export const ConditionTriggerTypeSchema = z.enum(CONDITION_TRIGGERS);
 
-
-
 /**
  * DistanceRange enum schema
  */
@@ -168,7 +166,6 @@ export const DistanceRangeSchema = z.enum(DISTANCE_RANGES);
 /**
  * ArenaZone enum schema
  */
-
 
 /**
  * ShieldShape enum schema
@@ -194,12 +191,6 @@ export const ChargeTypeSchema = z.enum(CHARGE_TYPES);
  * BeastPosture enum schema
  */
 export const BeastPostureSchema = z.enum(BEAST_POSTURES);
-
-
-
-
-
-
 
 /**
  * BoutOfferStatus enum schema

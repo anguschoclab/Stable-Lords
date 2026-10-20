@@ -167,7 +167,13 @@ describe('weekly vs tournament bout split', () => {
     ];
     state.killEvents = [
       { id: 'ke1', week: 1, victimId: 'v1' as never, killerId: 'wA' as never },
-      { id: 'ke2', week: 1, victimId: 'v2' as never, killerId: 'wA' as never, tournamentId: 't1' as never },
+      {
+        id: 'ke2',
+        week: 1,
+        victimId: 'v2' as never,
+        killerId: 'wA' as never,
+        tournamentId: 't1' as never,
+      },
     ];
 
     const s = createCumulativeTracker(state).snapshot();
@@ -186,7 +192,13 @@ describe('weekly vs tournament bout split', () => {
     const state = createFreshState('tracker-event-ledger');
     state.killEvents = [
       { id: 'ke1', week: 1, victimId: 'v1' as never, killerId: 'wA' as never },
-      { id: 'ke2', week: 2, victimId: 'v2' as never, killerId: 'wA' as never, tournamentId: 't9' as never },
+      {
+        id: 'ke2',
+        week: 2,
+        victimId: 'v2' as never,
+        killerId: 'wA' as never,
+        tournamentId: 't9' as never,
+      },
     ];
     const tracker = createCumulativeTracker(state);
 

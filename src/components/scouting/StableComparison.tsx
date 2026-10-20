@@ -68,23 +68,25 @@ export function StableComparison({ rivals }: StableComparisonProps) {
 }
 
 /** Full comparison surface once both stables resolve. */
-function ComparisonBody(props: Pick<
-  ReturnType<typeof useStableComparison>,
-  | 'grudge'
-  | 'clashes'
-  | 'modsA'
-  | 'modsB'
-  | 'maxWins'
-  | 'maxKills'
-  | 'maxFame'
-  | 'maxRoster'
-  | 'maxAttr'
-> & {
-  rivalA: RivalStableData;
-  rivalB: RivalStableData;
-  statsA: NonNullable<StableStats>;
-  statsB: NonNullable<StableStats>;
-}) {
+function ComparisonBody(
+  props: Pick<
+    ReturnType<typeof useStableComparison>,
+    | 'grudge'
+    | 'clashes'
+    | 'modsA'
+    | 'modsB'
+    | 'maxWins'
+    | 'maxKills'
+    | 'maxFame'
+    | 'maxRoster'
+    | 'maxAttr'
+  > & {
+    rivalA: RivalStableData;
+    rivalB: RivalStableData;
+    statsA: NonNullable<StableStats>;
+    statsB: NonNullable<StableStats>;
+  }
+) {
   const { rivalA, rivalB, statsA, statsB, grudge } = props;
   const { clashes, modsA, modsB, maxWins, maxKills } = props;
   const { maxFame, maxRoster, maxAttr } = props;

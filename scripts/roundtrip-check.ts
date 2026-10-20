@@ -19,7 +19,9 @@ const { finalState } = await runSimulation({
 });
 
 const json = JSON.stringify(stripNonSerializable(finalState));
-console.log(`serialized ${(json.length / 1024 / 1024).toFixed(1)} MB at week ${finalState.absoluteWeek}`);
+console.log(
+  `serialized ${(json.length / 1024 / 1024).toFixed(1)} MB at week ${finalState.absoluteWeek}`
+);
 
 const result = GameStateSchema.safeParse(JSON.parse(json));
 if (!result.success) {
@@ -33,14 +35,20 @@ if (!result.success) {
 const rt = result.data;
 const founded = rt.rivals.filter((r) => r.owner?.foundedByWarriorId);
 console.log('SCHEMA OK');
-console.log(`  rivals=${rt.rivals.length} legacyFounded=${founded.length} founderQueue=${rt.legacyFounderQueue?.length ?? 0}`);
-console.log(`  freeAgents=${rt.freeAgents?.length ?? 0} recruitPool=${rt.recruitPool?.length ?? 0}`);
+console.log(
+  `  rivals=${rt.rivals.length} legacyFounded=${founded.length} founderQueue=${rt.legacyFounderQueue?.length ?? 0}`
+);
+console.log(
+  `  freeAgents=${rt.freeAgents?.length ?? 0} recruitPool=${rt.recruitPool?.length ?? 0}`
+);
 const gens = founded.reduce((m: Map<number, number>, r) => {
   const g = r.owner.generation ?? 1;
   m.set(g, (m.get(g) ?? 0) + 1);
   return m;
 }, new Map<number, number>());
-console.log(`  generations=${[...gens.entries()].map(([g, n]) => `gen${g}:${n}`).join(' ') || 'none'}`);
+console.log(
+  `  generations=${[...gens.entries()].map(([g, n]) => `gen${g}:${n}`).join(' ') || 'none'}`
+);
 
 // OUT=file.json writes an importable save (start screen → import slot).
 if (process.env.OUT) {

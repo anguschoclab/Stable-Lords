@@ -14,11 +14,7 @@ import {
 } from '@/engine/ai/competence';
 import { applyDecoyMask, emitDecoyReveal } from '@/engine/combat/resolution/decoyShift';
 import type { CombatEvent } from '@/types/combat.types';
-import {
-  makeFighterState,
-  makePlan,
-  makeWarrior,
-} from '@/test/_fixtures/factories';
+import { makeFighterState, makePlan, makeWarrior } from '@/test/_fixtures/factories';
 
 const FLAGS = ['AI_COMPETENCE', 'AI_SEASON_PLANS', 'AI_READS', 'AI_DECOY'] as const;
 
@@ -82,14 +78,10 @@ describe('AI_READS gate', () => {
       now: 10,
     };
     const on = aiPlanForWarrior(args);
-    expect(
-      on.conditions?.some((c) => c.trigger.type === 'OPPONENT_TACTIC_STREAK')
-    ).toBe(true);
+    expect(on.conditions?.some((c) => c.trigger.type === 'OPPONENT_TACTIC_STREAK')).toBe(true);
     (globalThis as Record<string, unknown>).AI_READS = false;
     const off = aiPlanForWarrior(args);
-    expect(
-      off.conditions?.some((c) => c.trigger.type === 'OPPONENT_TACTIC_STREAK')
-    ).toBe(false);
+    expect(off.conditions?.some((c) => c.trigger.type === 'OPPONENT_TACTIC_STREAK')).toBe(false);
   });
 });
 

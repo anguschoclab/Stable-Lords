@@ -61,24 +61,44 @@ function cullRivalRoster(args: CullRivalRosterArgs): number {
     culledThisTick++;
   };
 
-  cullByPersonality({ r: r, personality: personality, isOnWinStreak: isOnWinStreak, retire: retire, gazetteItems: gazetteItems, championIds: championIds });
+  cullByPersonality({
+    r: r,
+    personality: personality,
+    isOnWinStreak: isOnWinStreak,
+    retire: retire,
+    gazetteItems: gazetteItems,
+    championIds: championIds,
+  });
 
   // Liability-based culling: release flaw-loaded warriors per personality threshold
   const traitPolicy = policyFor(r.owner.personality);
-  cullWhere(
-    { r: r, matches: (w) => {
+  cullWhere({
+    r: r,
+    matches: (w) => {
       const liability = computeWarriorLiability(w);
       return (
         liability.score >= traitPolicy.cutLiabilityThreshold ||
         liability.recommendation === 'Release'
       );
-    }, isOnWinStreak: isOnWinStreak, retire: retire, gazetteItems: gazetteItems, describe: (c) =>
-      `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`, championIds: championIds }
-  );
+    },
+    isOnWinStreak: isOnWinStreak,
+    retire: retire,
+    gazetteItems: gazetteItems,
+    describe: (c) =>
+      `📋 ${r.owner.name} (${r.owner.stableName}) releases ${warriorDisplayName(c)} — too many flaws.`,
+    championIds: championIds,
+  });
 
-  retireElderlyWarrior(
-    { r: r, state: state, rngSnapshot: rngSnapshot, gazetteItems: gazetteItems, retiredWarriors: retiredWarriors, championIds: championIds, founderQueue: founderQueue, crownedIds: crownedIds }
-  );
+  retireElderlyWarrior({
+    r: r,
+    state: state,
+    rngSnapshot: rngSnapshot,
+    gazetteItems: gazetteItems,
+    retiredWarriors: retiredWarriors,
+    championIds: championIds,
+    founderQueue: founderQueue,
+    crownedIds: crownedIds,
+  });
 
   return culledThisTick;
 }
@@ -130,20 +150,33 @@ function cullByPersonality(args: CullByPersonalityArgs): void {
   const { r, personality, isOnWinStreak, retire, gazetteItems } = args;
   const { championIds } = args;
   if (personality === 'Methodical' || personality === 'Tactician') {
-    cullWhere(
-      { r: r, matches: (w) =>
+    cullWhere({
+      r: r,
+      matches: (w) =>
         w.career.wins + w.career.losses >= 5 &&
         w.career.wins / Math.max(1, w.career.wins + w.career.losses) < 0.3 &&
-        (w.age ?? 18) >= 25, isOnWinStreak: isOnWinStreak, retire: retire, gazetteItems: gazetteItems, describe: (c) =>
-        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`, championIds: championIds }
-    );
+        (w.age ?? 18) >= 25,
+      isOnWinStreak: isOnWinStreak,
+      retire: retire,
+      gazetteItems: gazetteItems,
+      describe: (c) =>
+        `📋 ${r.owner.name} (${r.owner.stableName}) retires ${warriorDisplayName(c)} — "Not meeting expectations."`,
+      championIds: championIds,
+    });
   }
 
   if (personality === 'Aggressive') {
-    cullWhere(
-      { r: r, matches: (w) => w.career.kills === 0 && w.career.wins + w.career.losses >= 8 && (w.age ?? 18) >= 24, isOnWinStreak: isOnWinStreak, retire: retire, gazetteItems: gazetteItems, describe: (c) =>
-        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`, championIds: championIds }
-    );
+    cullWhere({
+      r: r,
+      matches: (w) =>
+        w.career.kills === 0 && w.career.wins + w.career.losses >= 8 && (w.age ?? 18) >= 24,
+      isOnWinStreak: isOnWinStreak,
+      retire: retire,
+      gazetteItems: gazetteItems,
+      describe: (c) =>
+        `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${warriorDisplayName(c)} — "No killer instinct."`,
+      championIds: championIds,
+    });
   }
 }
 
@@ -203,9 +236,16 @@ export function processAIRosterManagement(
   const crownedIds = collectCrownedWarriorIds(state);
 
   const updatedRivals = (state.rivals || []).map((rival) =>
-    manageOneRival(
-      { rival: rival, state: state, rngSnapshot: rngSnapshot, gazetteItems: gazetteItems, retiredWarriors: retiredWarriors, legacyFounders: legacyFounders, championIds: championIds, crownedIds: crownedIds }
-    )
+    manageOneRival({
+      rival: rival,
+      state: state,
+      rngSnapshot: rngSnapshot,
+      gazetteItems: gazetteItems,
+      retiredWarriors: retiredWarriors,
+      legacyFounders: legacyFounders,
+      championIds: championIds,
+      crownedIds: crownedIds,
+    })
   );
 
   return { updatedRivals, gazetteItems, retiredWarriors, legacyFounders };
@@ -260,9 +300,17 @@ function manageOneRival(args: ManageOneRivalArgs): RivalStableData {
   const isOnWinStreak = winStreakGuard(state.arenaHistory);
 
   // 1) Retirement / Culling Logic
-  const culledThisTick = cullRivalRoster(
-    { r: r, state: state, isOnWinStreak: isOnWinStreak, rngSnapshot: rngSnapshot, gazetteItems: gazetteItems, retiredWarriors: retiredWarriors, championIds: championIds, founderQueue: legacyFounders, crownedIds: crownedIds }
-  );
+  const culledThisTick = cullRivalRoster({
+    r: r,
+    state: state,
+    isOnWinStreak: isOnWinStreak,
+    rngSnapshot: rngSnapshot,
+    gazetteItems: gazetteItems,
+    retiredWarriors: retiredWarriors,
+    championIds: championIds,
+    founderQueue: legacyFounders,
+    crownedIds: crownedIds,
+  });
 
   // 2) Recruitment flag — signing is unified in aiDraftFromPool /
   // processRecruitment (G9). Management only declares the need; the draft

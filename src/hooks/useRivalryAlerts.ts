@@ -119,10 +119,7 @@ export function useRivalryAlerts() {
   const state = useWorldState();
 
   const rosterRawIds = useGameStore(useShallow((s) => (s.roster ?? []).map((w) => w.id)));
-  const rosterIds = useMemo(
-    () => new Set<WarriorId>(rosterRawIds),
-    [rosterRawIds]
-  );
+  const rosterIds = useMemo(() => new Set<WarriorId>(rosterRawIds), [rosterRawIds]);
 
   const allRosterIds = useMemo(
     () => new Set<WarriorId>([...rosterIds].concat(state.graveyard?.map((w) => w.id) ?? [])),

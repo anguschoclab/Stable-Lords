@@ -11,9 +11,7 @@ describe('Style Archives page', () => {
     const search = screen.getByRole('searchbox', { name: 'Search styles' });
 
     fireEvent.change(search, { target: { value: 'no such discipline' } });
-    expect(screen.getByRole('status')).toHaveTextContent(
-      'No disciplines match your query'
-    );
+    expect(screen.getByRole('status')).toHaveTextContent('No disciplines match your query');
 
     fireEvent.click(screen.getByRole('button', { name: 'Clear search' }));
     expect(search).toHaveValue('');

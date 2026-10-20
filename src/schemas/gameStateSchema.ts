@@ -89,9 +89,7 @@ export const GameStateSchema = z
         severeInjuryInsteadOfDeath: z.boolean(),
       })
       .optional(),
-    worldOptions: z
-      .object({ difficulty: WorldDifficultySchema.optional() })
-      .optional(),
+    worldOptions: z.object({ difficulty: WorldDifficultySchema.optional() }).optional(),
     contentPacks: z
       .array(
         z.object({
@@ -215,4 +213,3 @@ export const SaveSlotMetaSchema = z.object({
   timestamp: z.string(),
   version: z.string(),
 });
-

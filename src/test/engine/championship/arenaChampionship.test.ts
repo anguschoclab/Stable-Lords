@@ -472,7 +472,7 @@ describe('resolveTitleBoutResults', () => {
     expect(effTitle(state, delta, arenaId)!.champion?.warriorId).toBe('w-a');
   });
 
-  it('vacant-title win relinquishes the winner\'s other crown (single crown)', () => {
+  it("vacant-title win relinquishes the winner's other crown (single crown)", () => {
     // Regression: a warrior booked into a vacant-title bout who has since
     // taken another arena's crown must not hold two reigns.
     const otherArena = 'sky_platform';
@@ -530,7 +530,7 @@ describe('resolveTitleBoutResults', () => {
     expect(title.history[0]!.endReason).toBe('died');
   });
 
-  it('coronation cancels the new champion\'s open ordinary offers — but not title offers', () => {
+  it("coronation cancels the new champion's open ordinary offers — but not title offers", () => {
     const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
     const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
     const proposed = makeBoutOffer({

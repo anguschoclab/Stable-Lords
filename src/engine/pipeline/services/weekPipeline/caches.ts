@@ -44,7 +44,8 @@ const CACHE_TOUCHING_KEYS = new Set<keyof StateImpact>([
 export function impactsAffectWeekCaches(impacts: StateImpact[]): boolean {
   return impacts.some(
     (impact) =>
-      impact != null && Object.keys(impact).some((k) => CACHE_TOUCHING_KEYS.has(k as keyof StateImpact))
+      impact != null &&
+      Object.keys(impact).some((k) => CACHE_TOUCHING_KEYS.has(k as keyof StateImpact))
   );
 }
 
@@ -86,8 +87,6 @@ export function buildWeekCaches(state: GameState): void {
   state.rivalryMap = rivalryMap;
 
   const grudgeMap = new Map<string, OwnerGrudge>();
-  (state.ownerGrudges || []).forEach((g) =>
-    grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g)
-  );
+  (state.ownerGrudges || []).forEach((g) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
   state.grudgeMap = grudgeMap;
 }

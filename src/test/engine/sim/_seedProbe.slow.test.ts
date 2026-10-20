@@ -21,31 +21,35 @@ const med = (xs: number[]) => {
 // Skipped unless PROBE_SEEDS is set — a diagnostic harness, not a CI gate.
 // Audits require a literal describe()/expect() — the wrapper keeps both.
 describe('F.6 competence-gradient seed probe', () => {
-  it.skipIf(!process.env.PROBE_SEEDS)('measures the treasury gradient for PROBE_SEEDS', async () => {
-    const seeds = (process.env.PROBE_SEEDS ?? '31337').split(',').map(Number);
-    for (const seed of seeds) {
-      let n = 0;
-      setMockIdGenerator(() => `id_${++n}`);
-      engineEventBus.clear();
-      const { finalState } = await runSimulation({
-        weeks: 104,
-        seed,
-        logFrequency: 104, // gradient only needs finalState
-        ignoreBankruptcy: true,
-      });
-      const byTier = new Map<string, number[]>();
-      for (const r of finalState.rivals) {
-        const tier = r.owner?.competence;
-        if (!tier) continue;
-        (byTier.get(tier) ?? byTier.set(tier, []).get(tier)!).push(r.treasury);
+  it.skipIf(!process.env.PROBE_SEEDS)(
+    'measures the treasury gradient for PROBE_SEEDS',
+    async () => {
+      const seeds = (process.env.PROBE_SEEDS ?? '31337').split(',').map(Number);
+      for (const seed of seeds) {
+        let n = 0;
+        setMockIdGenerator(() => `id_${++n}`);
+        engineEventBus.clear();
+        const { finalState } = await runSimulation({
+          weeks: 104,
+          seed,
+          logFrequency: 104, // gradient only needs finalState
+          ignoreBankruptcy: true,
+        });
+        const byTier = new Map<string, number[]>();
+        for (const r of finalState.rivals) {
+          const tier = r.owner?.competence;
+          if (!tier) continue;
+          (byTier.get(tier) ?? byTier.set(tier, []).get(tier)!).push(r.treasury);
+        }
+        const top = [...(byTier.get('Master') ?? []), ...(byTier.get('Veteran') ?? [])];
+        const nov = byTier.get('Novice') ?? [];
+        const gradient = med(top) / Math.max(1, med(nov));
+        console.log(
+          `PROBE seed=${seed} topMed=${med(top)} novMed=${med(nov)} n=${top.length}/${nov.length} gradient=${gradient.toFixed(4)}`
+        );
+        expect(gradient).toBeGreaterThan(0);
       }
-      const top = [...(byTier.get('Master') ?? []), ...(byTier.get('Veteran') ?? [])];
-      const nov = byTier.get('Novice') ?? [];
-      const gradient = med(top) / Math.max(1, med(nov));
-      console.log(
-        `PROBE seed=${seed} topMed=${med(top)} novMed=${med(nov)} n=${top.length}/${nov.length} gradient=${gradient.toFixed(4)}`
-      );
-      expect(gradient).toBeGreaterThan(0);
-    }
-  }, 3600000);
+    },
+    3600000
+  );
 });

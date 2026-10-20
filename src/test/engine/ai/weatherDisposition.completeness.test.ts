@@ -63,9 +63,7 @@ describe('AI weather disposition — union coverage (V16/F2)', () => {
   it('HAZARDOUS_WEATHER lists exactly the disposition-flagged set', () => {
     // The disposition table flags hazardous entries; the exported list must
     // equal that set — no hand-maintained drift between table and export.
-    const flagged = WEATHER_TYPES.filter(
-      (w) => HAZARDOUS_WEATHER.includes(w)
-    );
+    const flagged = WEATHER_TYPES.filter((w) => HAZARDOUS_WEATHER.includes(w));
     expect([...HAZARDOUS_WEATHER].sort()).toEqual(flagged.sort());
   });
 });

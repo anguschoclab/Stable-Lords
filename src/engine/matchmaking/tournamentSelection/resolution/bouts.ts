@@ -1,9 +1,4 @@
-import type {
-  GameState,
-  Warrior,
-  TournamentBout,
-  TournamentEntry,
-} from '@/types/state.types';
+import type { GameState, Warrior, TournamentBout, TournamentEntry } from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
@@ -51,7 +46,10 @@ interface SimulateTournamentBoutArgs {
  * force a winner via sudden-death overtime on draws (tournament bouts cannot
  * end drawn).
  */
-function simulateTournamentBout(args: SimulateTournamentBoutArgs): { outcome: FightOutcome; arenaId: string } {
+function simulateTournamentBout(args: SimulateTournamentBoutArgs): {
+  outcome: FightOutcome;
+  arenaId: string;
+} {
   const { updatedState, resolvedTournament, wA, wD, rng } = args;
   const { headless } = args;
   const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
@@ -63,9 +61,19 @@ function simulateTournamentBout(args: SimulateTournamentBoutArgs): { outcome: Fi
     resolvedTournament.tierId === CHAMPIONS_TOURNEY.TIER_ID
       ? CHAMPIONS_TOURNEY.ARENA_ID
       : selectArenaForTournamentBout(() => rng.next());
-  const outcome = simulateFight(
-    { planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: rng.roll(0, 1000000), trainers: updatedState.trainers, weather: updatedState.weather ?? 'Clear', arenaId: arenaId, crowdMood: updatedState.crowdMood, headless: headless, deathRateMult: updatedState.houseRules?.deathRateMult }
-  );
+  const outcome = simulateFight({
+    planA: planA,
+    planD: planD,
+    warriorA: wA,
+    warriorD: wD,
+    providedRng: rng.roll(0, 1000000),
+    trainers: updatedState.trainers,
+    weather: updatedState.weather ?? 'Clear',
+    arenaId: arenaId,
+    crowdMood: updatedState.crowdMood,
+    headless: headless,
+    deathRateMult: updatedState.houseRules?.deathRateMult,
+  });
 
   // Tournament bouts cannot end in a draw — the bracket needs a winner.
   // Sudden-death overtime: the busier fighter (more hits landed) advances;
@@ -137,9 +145,14 @@ function resolveBout(args: ResolveBoutArgs): GameState {
   const cA = liveA;
   const cD = liveD;
 
-  const { outcome, arenaId } = simulateTournamentBout(
-    { updatedState: updatedState, resolvedTournament: resolvedTournament, wA: cA, wD: cD, rng: rng, headless: headless }
-  );
+  const { outcome, arenaId } = simulateTournamentBout({
+    updatedState: updatedState,
+    resolvedTournament: resolvedTournament,
+    wA: cA,
+    wD: cD,
+    rng: rng,
+    headless: headless,
+  });
 
   bout.winner = outcome.winner;
   bout.by = outcome.by;
@@ -148,9 +161,17 @@ function resolveBout(args: ResolveBoutArgs): GameState {
   if (advancesWinner) {
     recordAdvancement(outcome, cA, cD, winners, losers);
   }
-  return applyBoutResults(
-    { state: updatedState, wA: cA, wD: cD, outcome: outcome, tId: resolvedTournament.id, tName: resolvedTournament.name, rng: rng, skipFatigue: undefined, arenaId: arenaId }
-  );
+  return applyBoutResults({
+    state: updatedState,
+    wA: cA,
+    wD: cD,
+    outcome: outcome,
+    tId: resolvedTournament.id,
+    tName: resolvedTournament.name,
+    rng: rng,
+    skipFatigue: undefined,
+    arenaId: arenaId,
+  });
 }
 
 /**
@@ -196,9 +217,15 @@ export function resolveRoundBouts(args: ResolveRoundBoutsArgs): GameState {
   let { updatedState } = args;
   const { winners, losers } = args;
   for (const bout of roundBouts) {
-    updatedState = resolveBout(
-      { bout: bout, updatedState: updatedState, resolvedTournament: resolvedTournament, rng: rng, headless: headless, winners: winners, losers: losers }
-    );
+    updatedState = resolveBout({
+      bout: bout,
+      updatedState: updatedState,
+      resolvedTournament: resolvedTournament,
+      rng: rng,
+      headless: headless,
+      winners: winners,
+      losers: losers,
+    });
   }
   return updatedState;
 }

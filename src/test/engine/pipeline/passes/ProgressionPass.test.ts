@@ -151,9 +151,12 @@ describe('ProgressionPass', () => {
 
   describe('FIRST_TOURNAMENT_WIN', () => {
     it('completes when champion is player warrior (by NAME)', () => {
-      const warrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Slasher Sam', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const warrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Slasher Sam',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [warrior];
       state.tournaments = [
         {
@@ -176,9 +179,12 @@ describe('ProgressionPass', () => {
     });
 
     it('does NOT complete when champion is rival warrior', () => {
-      const playerWarrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Player One', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const playerWarrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Player One',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [playerWarrior];
       state.tournaments = [
         {
@@ -224,9 +230,12 @@ describe('ProgressionPass', () => {
 
   describe('HALL_OF_FAMER', () => {
     it('completes when player warrior has WARRIOR_OF_YEAR award', () => {
-      const warrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Champ', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const warrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Champ',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [warrior];
       state.awards = [
         {
@@ -248,9 +257,12 @@ describe('ProgressionPass', () => {
     });
 
     it('completes when player warrior has KILLER_OF_YEAR award', () => {
-      const warrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Killer', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const warrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Killer',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [warrior];
       state.awards = [
         {
@@ -272,9 +284,12 @@ describe('ProgressionPass', () => {
     });
 
     it('does NOT complete for rival warrior award', () => {
-      const playerWarrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Player', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const playerWarrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Player',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [playerWarrior];
       state.awards = [
         {
@@ -296,9 +311,12 @@ describe('ProgressionPass', () => {
     });
 
     it('does NOT complete for CLASS_MVP award', () => {
-      const warrior = makeWarrior(
-        { id: 'w1' as WarriorId, name: 'Champ', style: FightingStyle.StrikingAttack, attrs: ATTRS_10 }
-      );
+      const warrior = makeWarrior({
+        id: 'w1' as WarriorId,
+        name: 'Champ',
+        style: FightingStyle.StrikingAttack,
+        attrs: ATTRS_10,
+      });
       state.roster = [warrior];
       state.awards = [
         {

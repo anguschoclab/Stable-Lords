@@ -1,8 +1,4 @@
-import {
-  type BaseSkills,
-  type DerivedStats,
-  type WarriorId,
-} from '@/types/shared.types';
+import { type BaseSkills, type DerivedStats, type WarriorId } from '@/types/shared.types';
 import { type Warrior } from '@/types/warrior.types';
 import { rollLuckfactor } from '../../warrior/skillCalc';
 import { generatePotential } from '../../warrior/potential';

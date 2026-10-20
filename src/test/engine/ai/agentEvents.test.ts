@@ -11,21 +11,39 @@ import { makeRival } from '@/test/_fixtures/factories';
 describe('logAgentAction — typed cause', () => {
   it('sets currentIntent from a typed cause, not description text', () => {
     const rival = makeRival({ actionHistory: [] });
-    const out = logAgentAction({ rival: rival, type: 'STRATEGY', description: 'Routine weekly review', riskTier: 'Low', week: 5, cause: 'VENDETTA' });
+    const out = logAgentAction({
+      rival: rival,
+      type: 'STRATEGY',
+      description: 'Routine weekly review',
+      riskTier: 'Low',
+      week: 5,
+      cause: 'VENDETTA',
+    });
     expect(out.agentMemory!.currentIntent).toBe('VENDETTA');
   });
 
   it('does NOT infer intent from description substrings anymore', () => {
     const rival = makeRival({ actionHistory: [] });
-    const out = logAgentAction(
-      { rival: rival, type: 'STRATEGY', description: 'Pursuing aggressive dominance via better scouting', riskTier: 'Low', week: 5 }
-    );
+    const out = logAgentAction({
+      rival: rival,
+      type: 'STRATEGY',
+      description: 'Pursuing aggressive dominance via better scouting',
+      riskTier: 'Low',
+      week: 5,
+    });
     expect(out.agentMemory!.currentIntent).not.toBe('AGGRESSIVE_EXPANSION');
   });
 
   it('stores the cause on the event itself', () => {
     const rival = makeRival({ actionHistory: [] });
-    const out = logAgentAction({ rival: rival, type: 'BOUT', description: 'Won by KO', riskTier: 'Low', week: 5, cause: 'BOUT_OUTCOME' });
+    const out = logAgentAction({
+      rival: rival,
+      type: 'BOUT',
+      description: 'Won by KO',
+      riskTier: 'Low',
+      week: 5,
+      cause: 'BOUT_OUTCOME',
+    });
     expect(out.actionHistory![0]!.cause).toBe('BOUT_OUTCOME');
     expect(out.actionHistory![0]!.type).toBe('BOUT');
   });
@@ -33,7 +51,14 @@ describe('logAgentAction — typed cause', () => {
   it('leaves currentIntent untouched when cause is not an intent', () => {
     const rival = makeRival({ actionHistory: [] });
     rival.agentMemory = { ...rival.agentMemory!, currentIntent: 'RECOVERY' };
-    const out = logAgentAction({ rival: rival, type: 'STAFF', description: 'Hired trainer', riskTier: 'Low', week: 5, cause: 'MAINTENANCE' });
+    const out = logAgentAction({
+      rival: rival,
+      type: 'STAFF',
+      description: 'Hired trainer',
+      riskTier: 'Low',
+      week: 5,
+      cause: 'MAINTENANCE',
+    });
     expect(out.agentMemory!.currentIntent).toBe('RECOVERY');
   });
 });
@@ -42,7 +67,13 @@ describe('logAgentAction — daemon limits', () => {
   it('prunes history at 40 entries keeping the newest', () => {
     let rival = makeRival({ actionHistory: [] });
     for (let i = 0; i < 45; i++) {
-      rival = logAgentAction({ rival: rival, type: 'STAFF', description: `Action ${i}`, riskTier: 'Low', week: i + 1 });
+      rival = logAgentAction({
+        rival: rival,
+        type: 'STAFF',
+        description: `Action ${i}`,
+        riskTier: 'Low',
+        week: i + 1,
+      });
     }
     expect(rival.actionHistory).toHaveLength(40);
     expect(rival.actionHistory![0]!.description).toBe('Action 44');
@@ -53,9 +84,23 @@ describe('logAgentAction — daemon limits', () => {
     // The 40-deep cap exists so high-volume INTEL/BOUT events can't evict a
     // scarce STRATEGY/FINANCE decision within an audit horizon.
     let rival = makeRival({ actionHistory: [] });
-    rival = logAgentAction({ rival: rival, type: 'STRATEGY', description: 'Adopted VENDETTA', riskTier: 'Low', week: 1, cause: 'VENDETTA' });
+    rival = logAgentAction({
+      rival: rival,
+      type: 'STRATEGY',
+      description: 'Adopted VENDETTA',
+      riskTier: 'Low',
+      week: 1,
+      cause: 'VENDETTA',
+    });
     for (let i = 0; i < 39; i++) {
-      rival = logAgentAction({ rival: rival, type: 'INTEL', description: `Intel ping ${i}`, riskTier: 'Low', week: i + 2, cause: 'INTEL_UPDATE' });
+      rival = logAgentAction({
+        rival: rival,
+        type: 'INTEL',
+        description: `Intel ping ${i}`,
+        riskTier: 'Low',
+        week: i + 2,
+        cause: 'INTEL_UPDATE',
+      });
     }
     expect(rival.actionHistory).toHaveLength(40);
     const strategyEvents = rival.actionHistory!.filter((e) => e.type === 'STRATEGY');

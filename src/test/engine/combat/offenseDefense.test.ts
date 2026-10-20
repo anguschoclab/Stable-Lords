@@ -169,9 +169,42 @@ function setupExchange(
 function callResolveCombatOffenseDefense(s: SetupResult, aGoesFirst: boolean) {
   const attCommit = runCommit(aGoesFirst ? s.fA : s.fD, aGoesFirst ? s.OE_A : s.OE_D);
   const defCommit = runCommit(aGoesFirst ? s.fD : s.fA, aGoesFirst ? s.OE_D : s.OE_A);
-  resolveCombatOffenseDefense(
-    { ctx: s.ctx, fA: s.fA, fD: s.fD, aGoesFirst: aGoesFirst, OE_A: s.OE_A, AL_A: s.AL_A, OE_D: s.OE_D, AL_D: s.AL_D, fatA: s.fatA, fatD: s.fatD, offModsA: s.offModsA, offModsD: s.offModsD, defModsA: s.defModsA, defModsD: s.defModsD, passA: s.passA, passD: s.passD, biasAttA: s.biasAttA, biasDefA: s.biasDefA, biasAttD: s.biasAttD, biasDefD: s.biasDefD, tactA: s.tactA, tactD: s.tactD, psychA: s.psychA, psychD: s.psychD, dynTraitsA: s.dynTraitsA, dynTraitsD: s.dynTraitsD, feintAttBonus: 0, feintDefBonus: 0, attCommit: attCommit, defCommit: defCommit, es: s.es, phaseKey: 'opening', stylePhase: 'OPENING', events: s.events }
-  );
+  resolveCombatOffenseDefense({
+    ctx: s.ctx,
+    fA: s.fA,
+    fD: s.fD,
+    aGoesFirst: aGoesFirst,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    offModsA: s.offModsA,
+    offModsD: s.offModsD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+    passA: s.passA,
+    passD: s.passD,
+    biasAttA: s.biasAttA,
+    biasDefA: s.biasDefA,
+    biasAttD: s.biasAttD,
+    biasDefD: s.biasDefD,
+    tactA: s.tactA,
+    tactD: s.tactD,
+    psychA: s.psychA,
+    psychD: s.psychD,
+    dynTraitsA: s.dynTraitsA,
+    dynTraitsD: s.dynTraitsD,
+    feintAttBonus: 0,
+    feintDefBonus: 0,
+    attCommit: attCommit,
+    defCommit: defCommit,
+    es: s.es,
+    phaseKey: 'opening',
+    stylePhase: 'OPENING',
+    events: s.events,
+  });
 }
 
 describe('resolveCombatOffenseDefense — attack whiff path', () => {

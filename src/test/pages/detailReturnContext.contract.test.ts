@@ -24,8 +24,6 @@ describe('detail-page return context contract', () => {
     // The canonical fallback now lives in the route registry — unknown
     // warrior ids chain to World › Scouting (asserted behaviorally in
     // routeCrumbs.test.ts).
-    expect(source('components/layout/breadcrumbs/routeCrumbs.ts')).toContain(
-      "'/world/scouting'"
-    );
+    expect(source('components/layout/breadcrumbs/routeCrumbs.ts')).toContain("'/world/scouting'");
   });
 });

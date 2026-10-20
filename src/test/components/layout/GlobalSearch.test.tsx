@@ -93,9 +93,7 @@ describe('GlobalSearch', () => {
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: 'iron' } });
     fireEvent.click(screen.getByText('Iron Wolves'));
-    expect(mockNavigate).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/world/stable/r1' })
-    );
+    expect(mockNavigate).toHaveBeenCalledWith(expect.objectContaining({ to: '/world/stable/r1' }));
     expect(onNavigate).toHaveBeenCalled();
   });
 

@@ -20,12 +20,18 @@ export const makePlanWarrior = (name: string): PoolWarrior =>
     source: 'orphanage',
   });
 
-const FTUE_W_A = makeWarrior(
-  { id: 'w-a' as any, name: 'Varak', style: FightingStyle.LungingAttack, attrs: FTUE_BASE_ATTRS }
-);
-const FTUE_W_D = makeWarrior(
-  { id: 'w-d' as any, name: 'Dren', style: FightingStyle.TotalParry, attrs: FTUE_BASE_ATTRS }
-);
+const FTUE_W_A = makeWarrior({
+  id: 'w-a' as any,
+  name: 'Varak',
+  style: FightingStyle.LungingAttack,
+  attrs: FTUE_BASE_ATTRS,
+});
+const FTUE_W_D = makeWarrior({
+  id: 'w-d' as any,
+  name: 'Dren',
+  style: FightingStyle.TotalParry,
+  attrs: FTUE_BASE_ATTRS,
+});
 
 /** make Ftue Result. */
 export const makeFtueResult = (

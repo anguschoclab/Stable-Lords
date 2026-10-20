@@ -4,7 +4,6 @@
  */
 import type { FightSummary } from '@/types/combat.types';
 
-
 /**
  * Crowd mood states — kept in sync with the schema-canonical CROWD_MOOD_VALUES tuple.
  */

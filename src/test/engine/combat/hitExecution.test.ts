@@ -86,9 +86,25 @@ function callExecuteHit(opts: CallOpts = {}): {
     defender.maxEndurance
   );
 
-  executeHit(
-    { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: opts.attLabel ?? 'A', defLabel: opts.defLabel ?? 'D', stylePhase: opts.stylePhase ?? 'OPENING', phase: opts.phase ?? 'OPENING', attKD: opts.attKD ?? attacker.activePlan.killDesire ?? 5, attOE: opts.attOE ?? 5, attAL: opts.attAL ?? 5, attMatchup: opts.attMatchup ?? 0, ctx: ctx, defPassive: passD }
-  );
+  executeHit({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    attTactics: tactA,
+    attOffMods: offModsA,
+    attPassive: passA,
+    attLabel: opts.attLabel ?? 'A',
+    defLabel: opts.defLabel ?? 'D',
+    stylePhase: opts.stylePhase ?? 'OPENING',
+    phase: opts.phase ?? 'OPENING',
+    attKD: opts.attKD ?? attacker.activePlan.killDesire ?? 5,
+    attOE: opts.attOE ?? 5,
+    attAL: opts.attAL ?? 5,
+    attMatchup: opts.attMatchup ?? 0,
+    ctx: ctx,
+    defPassive: passD,
+  });
 
   return { events, attacker, defender, ctx };
 }
@@ -239,9 +255,23 @@ describe('executeHit — AimedBlow logic', () => {
     const ctx = makeCtx();
 
     executeHit({
-      events, rng, attacker, defender, attTactics: tactA, attOffMods: offModsA,
-      attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING',
-      phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx, defPassive: passD
+      events,
+      rng,
+      attacker,
+      defender,
+      attTactics: tactA,
+      attOffMods: offModsA,
+      attPassive: passA,
+      attLabel: 'A',
+      defLabel: 'D',
+      stylePhase: 'OPENING',
+      phase: 'OPENING',
+      attKD: 5,
+      attOE: 5,
+      attAL: 5,
+      attMatchup: 0,
+      ctx,
+      defPassive: passD,
     });
 
     const hitEvents = events.filter((e) => e.type === 'HIT' && e.actor === 'A');
@@ -296,9 +326,25 @@ describe('executeHit — hit counters', () => {
     // Run multiple hits to accumulate arm hits
     const attacker = makeFighter({ style: FightingStyle.StrikingAttack });
     for (let i = 0; i < 20; i++) {
-      executeHit(
-        { events: events, rng: rng, attacker: { ...attacker, hitsLanded: i, consecutiveHits: 0 }, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING', phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx: ctx, defPassive: passD }
-      );
+      executeHit({
+        events: events,
+        rng: rng,
+        attacker: { ...attacker, hitsLanded: i, consecutiveHits: 0 },
+        defender: defender,
+        attTactics: tactA,
+        attOffMods: offModsA,
+        attPassive: passA,
+        attLabel: 'A',
+        defLabel: 'D',
+        stylePhase: 'OPENING',
+        phase: 'OPENING',
+        attKD: 5,
+        attOE: 5,
+        attAL: 5,
+        attMatchup: 0,
+        ctx: ctx,
+        defPassive: passD,
+      });
       if (defender.armHits > 0) break;
     }
     // With 20 hits, at least one should hit an arm
@@ -487,7 +533,7 @@ describe('executeHit — contextual multipliers', () => {
       phase: 'LATE',
       attacker: { label: 'A', style: FightingStyle.StrikingAttack },
       defender: { label: 'D', hp: 1, maxHp: 100 },
-      rng: () => 0.01 // ensure kill check fires
+      rng: () => 0.01, // ensure kill check fires
     });
 
     const boutEnd = events.filter((e) => e.type === 'BOUT_END');
@@ -498,7 +544,7 @@ describe('executeHit — contextual multipliers', () => {
     const { events } = callExecuteHit({
       phase: 'MID',
       defender: { hp: 1, maxHp: 100 },
-      rng: () => 0.01
+      rng: () => 0.01,
     });
     const boutEnd = events.filter((e) => e.type === 'BOUT_END');
     expect(boutEnd.length).toBeGreaterThan(0);
@@ -516,9 +562,25 @@ describe('executeHit — no crash without ctx', () => {
     const passA = getPassive(attacker.style);
     const passD = getPassive(defender.style);
 
-    executeHit(
-      { events: events, rng: rng, attacker: attacker, defender: defender, attTactics: tactA, attOffMods: offModsA, attPassive: passA, attLabel: 'A', defLabel: 'D', stylePhase: 'OPENING', phase: 'OPENING', attKD: 5, attOE: 5, attAL: 5, attMatchup: 0, ctx: undefined, defPassive: passD }
-    );
+    executeHit({
+      events: events,
+      rng: rng,
+      attacker: attacker,
+      defender: defender,
+      attTactics: tactA,
+      attOffMods: offModsA,
+      attPassive: passA,
+      attLabel: 'A',
+      defLabel: 'D',
+      stylePhase: 'OPENING',
+      phase: 'OPENING',
+      attKD: 5,
+      attOE: 5,
+      attAL: 5,
+      attMatchup: 0,
+      ctx: undefined,
+      defPassive: passD,
+    });
     expect(events.length).toBeGreaterThan(0);
   });
 });

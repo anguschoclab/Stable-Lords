@@ -1,9 +1,14 @@
-
-
 import { makeInjury } from '@/engine/injuries/utils';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import { TRAITS, type TraitDef } from '@/engine/traits';
-import { pickActiveWarrior, withChosenWarrior, type OffseasonEventRun, withAddedInjury, warriorOutcome, grantInsightToken } from '../helpers';
+import {
+  pickActiveWarrior,
+  withChosenWarrior,
+  type OffseasonEventRun,
+  withAddedInjury,
+  warriorOutcome,
+  grantInsightToken,
+} from '../helpers';
 
 /** Handler for the Shadow Tournament offseason event — unsanctioned fights with injury risk. */
 export function handleShadowTournament(run: OffseasonEventRun) {
@@ -98,19 +103,29 @@ export function handleChaosWeaversGame(run: OffseasonEventRun) {
 /** Handler for the Chaos Weaver Visit offseason event — bestows or removes traits. */
 export function handleChaosWeaverVisit(run: OffseasonEventRun) {
   const { rng } = run;
-  withChosenWarrior({ ...run, apply: (chosen) => {
-    const positiveTraits = Object.values(TRAITS).filter(
-      (td): td is TraitDef => td !== undefined && td.sign === 'positive'
-    );
-    const grantedTrait = rng.pick(positiveTraits);
-    if (!grantedTrait) return;
+  withChosenWarrior({
+    ...run,
+    apply: (chosen) => {
+      const positiveTraits = Object.values(TRAITS).filter(
+        (td): td is TraitDef => td !== undefined && td.sign === 'positive'
+      );
+      const grantedTrait = rng.pick(positiveTraits);
+      if (!grantedTrait) return;
 
-    grantInsightToken(run, chosen, { type: 'Style', detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`, origin: 'Chaos Weaver' });
+      grantInsightToken(run, chosen, {
+        type: 'Style',
+        detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
+        origin: 'Chaos Weaver',
+      });
 
-    return warriorOutcome({
-        traits: [...(chosen.traits || []), grantedTrait.id]
-      }, { trait: grantedTrait.name });
-  } });
+      return warriorOutcome(
+        {
+          traits: [...(chosen.traits || []), grantedTrait.id],
+        },
+        { trait: grantedTrait.name }
+      );
+    },
+  });
 }
 
 /** Handler for the Chaos Weaver's Prophecy offseason event — foretells a warrior's destiny. */

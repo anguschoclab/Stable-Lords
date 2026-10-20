@@ -55,7 +55,12 @@ export function emitDecoyReveal(
   events: CombatEvent[]
 ): void {
   const d = fighter.plan.decoyAxes;
-  if (!aiFeature('AI_DECOY') || !d || fighter.decoyRevealed || !phaseReached(phaseKey, d.untilPhase))
+  if (
+    !aiFeature('AI_DECOY') ||
+    !d ||
+    fighter.decoyRevealed ||
+    !phaseReached(phaseKey, d.untilPhase)
+  )
     return;
   fighter.decoyRevealed = true;
   events.push({ type: 'STATE_CHANGE', actor: fighter.label, result: 'DECOY_REVEAL' });
@@ -132,12 +137,8 @@ function applyPhaseShiftBoundary(
         OE: decl.OE,
         AL: decl.AL,
         killDesire: decl.killDesire ?? prior?.killDesire ?? fighter.plan.killDesire ?? 5,
-        ...(prior?.offensiveTactic !== undefined
-          ? { offensiveTactic: prior.offensiveTactic }
-          : {}),
-        ...(prior?.defensiveTactic !== undefined
-          ? { defensiveTactic: prior.defensiveTactic }
-          : {}),
+        ...(prior?.offensiveTactic !== undefined ? { offensiveTactic: prior.offensiveTactic } : {}),
+        ...(prior?.defensiveTactic !== undefined ? { defensiveTactic: prior.defensiveTactic } : {}),
         ...(prior?.target !== undefined ? { target: prior.target } : {}),
         ...(decl.aggressionBias !== undefined
           ? { aggressionBias: decl.aggressionBias }

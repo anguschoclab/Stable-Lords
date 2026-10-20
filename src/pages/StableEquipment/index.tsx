@@ -26,11 +26,7 @@ function PendingLoadoutReview({
   if (!pending) return null;
   const slots = ['weapon', 'armor', 'shield', 'helm'] as const;
   return (
-    <Surface
-      variant="glass"
-      aria-live="polite"
-      className="p-5 border-primary/30 space-y-4"
-    >
+    <Surface variant="glass" aria-live="polite" className="p-5 border-primary/30 space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">

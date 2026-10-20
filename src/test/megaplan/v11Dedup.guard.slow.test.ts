@@ -25,55 +25,53 @@ const REPORT = path.join(REPO, 'scripts/out/dup-scan.json');
 const PROD_CLUSTER_CEILING = 50;
 
 describe('megaplan V11: duplicate consolidation', () => {
-describe('MEGAPLAN-V11', () => {
-  it('a shared offseason-event runner/helper exists', () => {
-    const hits = [
-      'src/engine/pipeline/offseasonEvents/runEvent.ts',
-      'src/engine/pipeline/offseasonEvents/shared.ts',
-      'src/engine/pipeline/offseasonEvents/helpers.ts',
-    ].some((p) => {
-      try {
-        return readFileSync(path.join(REPO, p), 'utf8').length > 0;
-      } catch {
-        return false;
-      }
+  describe('MEGAPLAN-V11', () => {
+    it('a shared offseason-event runner/helper exists', () => {
+      const hits = [
+        'src/engine/pipeline/offseasonEvents/runEvent.ts',
+        'src/engine/pipeline/offseasonEvents/shared.ts',
+        'src/engine/pipeline/offseasonEvents/helpers.ts',
+      ].some((p) => {
+        try {
+          return readFileSync(path.join(REPO, p), 'utf8').length > 0;
+        } catch {
+          return false;
+        }
+      });
+      expect(hits, 'no shared offseason-event helper module found').toBe(true);
     });
-    expect(hits, 'no shared offseason-event helper module found').toBe(true);
-  });
 
-  it('a shared standings/record-table primitive exists under components/', () => {
-    const candidates = [
-      'src/components/ui/StandingsTable.tsx',
-      'src/components/ui/standingsTable.tsx',
-      'src/components/ledger/StandingsTable.tsx',
-      'src/components/world/StandingsTable.tsx',
-    ];
-    const found = candidates.some((p) => {
-      try {
-        return readFileSync(path.join(REPO, p), 'utf8').length > 0;
-      } catch {
-        return false;
-      }
+    it('a shared standings/record-table primitive exists under components/', () => {
+      const candidates = [
+        'src/components/ui/StandingsTable.tsx',
+        'src/components/ui/standingsTable.tsx',
+        'src/components/ledger/StandingsTable.tsx',
+        'src/components/world/StandingsTable.tsx',
+      ];
+      const found = candidates.some((p) => {
+        try {
+          return readFileSync(path.join(REPO, p), 'utf8').length > 0;
+        } catch {
+          return false;
+        }
+      });
+      expect(found, 'no shared standings-table primitive found').toBe(true);
     });
-    expect(found, 'no shared standings-table primitive found').toBe(true);
-  });
 
-  it(`prod↔prod dup clusters ratchet to ≤ ${PROD_CLUSTER_CEILING}`, () => {
-    execFileSync('node', [path.join(REPO, 'scripts/dup-scan.mjs')], {
-      cwd: REPO,
-      stdio: 'pipe',
+    it(`prod↔prod dup clusters ratchet to ≤ ${PROD_CLUSTER_CEILING}`, () => {
+      execFileSync('node', [path.join(REPO, 'scripts/dup-scan.mjs')], {
+        cwd: REPO,
+        stdio: 'pipe',
+      });
+      const report = JSON.parse(readFileSync(REPORT, 'utf8')) as {
+        clusters: { pair: [string, string] }[];
+      };
+      const prod = report.clusters.filter((c) => c.pair.every((p) => !p.includes('/test/')));
+      expect(
+        prod.length,
+        `${prod.length} prod↔prod dup clusters remain (ceiling ${PROD_CLUSTER_CEILING}):\n` +
+          prod.map((c) => `  ${c.pair.join(' ↔ ')}`).join('\n')
+      ).toBeLessThanOrEqual(PROD_CLUSTER_CEILING);
     });
-    const report = JSON.parse(readFileSync(REPORT, 'utf8')) as {
-      clusters: { pair: [string, string] }[];
-    };
-    const prod = report.clusters.filter((c) =>
-      c.pair.every((p) => !p.includes('/test/'))
-    );
-    expect(
-      prod.length,
-      `${prod.length} prod↔prod dup clusters remain (ceiling ${PROD_CLUSTER_CEILING}):\n` +
-        prod.map((c) => `  ${c.pair.join(' ↔ ')}`).join('\n')
-    ).toBeLessThanOrEqual(PROD_CLUSTER_CEILING);
   });
-});
 });

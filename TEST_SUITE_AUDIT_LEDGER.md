@@ -5,17 +5,17 @@ described in `TEST_SUITE_AUDIT_PLAN.md`. Date: 2026-10-08.
 
 ## Baseline vs after
 
-| Metric | Before | After |
-| --- | --- | --- |
-| Default-suite files | 802 | 799 |
-| Default-suite tests | 8,881 | 8,867 |
-| Slow-suite files | 41 | 41 |
-| `bunx vitest run` wall time | 63.5s | 52.9s |
-| jscpd clones inside src/test | 0 | 0 |
-| knip unused test files | 0 | 0 |
-| orphan-scan test-only-reachable prod modules | 0 | 0 |
-| Category-misplaced test files | 22 | 2 (allowlisted) |
-| Audit guards | 8 | 11 |
+| Metric                                       | Before | After           |
+| -------------------------------------------- | ------ | --------------- |
+| Default-suite files                          | 802    | 799             |
+| Default-suite tests                          | 8,881  | 8,867           |
+| Slow-suite files                             | 41     | 41              |
+| `bunx vitest run` wall time                  | 63.5s  | 52.9s           |
+| jscpd clones inside src/test                 | 0      | 0               |
+| knip unused test files                       | 0      | 0               |
+| orphan-scan test-only-reachable prod modules | 0      | 0               |
+| Category-misplaced test files                | 22     | 2 (allowlisted) |
+| Audit guards                                 | 8      | 11              |
 
 ## Phase 1 — Obsolescence
 

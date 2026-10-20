@@ -113,63 +113,58 @@ const ChartTooltipContent = React.forwardRef<
     labelKey?: string;
     labelClassName?: string;
   }
->(
-  (
-    props,
-    ref
-  ) => {
-    const { active, payload, className, indicator = 'dot', hideLabel = false } = props;
-    const { hideIndicator = false, label, labelFormatter, labelClassName, formatter } = props;
-    const { color, nameKey, labelKey } = props;
-    const { config } = useChart();
+>((props, ref) => {
+  const { active, payload, className, indicator = 'dot', hideLabel = false } = props;
+  const { hideIndicator = false, label, labelFormatter, labelClassName, formatter } = props;
+  const { color, nameKey, labelKey } = props;
+  const { config } = useChart();
 
-    const tooltipLabel = useTooltipLabel({
-      hideLabel,
-      payload,
-      labelKey,
-      label,
-      labelFormatter,
-      labelClassName,
-      config,
-    });
+  const tooltipLabel = useTooltipLabel({
+    hideLabel,
+    payload,
+    labelKey,
+    label,
+    labelFormatter,
+    labelClassName,
+    config,
+  });
 
-    if (!active || !payload?.length) {
-      return null;
-    }
-
-    const nestLabel = payload.length === 1 && indicator !== 'dot';
-
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          'grid min-w-[8rem] items-start gap-1.5 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl backdrop-blur-md',
-          className
-        )}
-      >
-        {!nestLabel ? tooltipLabel : null}
-        <div className="grid gap-1.5">
-          {payload.map((item, index) => (
-            <ChartTooltipItem
-              key={item.dataKey}
-              item={item}
-              index={index}
-              payload={payload}
-              config={config}
-              indicator={indicator}
-              nestLabel={nestLabel}
-              tooltipLabel={tooltipLabel}
-              hideIndicator={hideIndicator}
-              formatter={formatter}
-              color={color}
-              nameKey={nameKey}
-            />
-          ))}
-        </div>
-      </div>
-    );
+  if (!active || !payload?.length) {
+    return null;
   }
-);
+
+  const nestLabel = payload.length === 1 && indicator !== 'dot';
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        'grid min-w-[8rem] items-start gap-1.5 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl backdrop-blur-md',
+        className
+      )}
+    >
+      {!nestLabel ? tooltipLabel : null}
+      <div className="grid gap-1.5">
+        {payload.map((item, index) => (
+          <ChartTooltipItem
+            key={item.dataKey}
+            item={item}
+            index={index}
+            payload={payload}
+            config={config}
+            indicator={indicator}
+            nestLabel={nestLabel}
+            tooltipLabel={tooltipLabel}
+            hideIndicator={hideIndicator}
+            formatter={formatter}
+            color={color}
+            nameKey={nameKey}
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
 ChartTooltipContent.displayName = 'ChartTooltip';
 
 type TooltipItem = TooltipPayload[number];

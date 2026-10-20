@@ -122,7 +122,13 @@ beforeAll(async () => {
 
       for (let i = 0; i < FIGHTS_PER_MATCHUP; i++) {
         const seed = (idxA * 10 + idxD) * 100000 + i * 7919 + 42;
-        const outcome = simulateFight({ planA: planA, planD: planD, warriorA: wA, warriorD: wD, providedRng: seed });
+        const outcome = simulateFight({
+          planA: planA,
+          planD: planD,
+          warriorA: wA,
+          warriorD: wD,
+          providedRng: seed,
+        });
 
         styleFights[styleA]!++;
         styleFights[styleD]!++;
@@ -241,7 +247,13 @@ describe('OE/KD Variability', () => {
     let wins = 0;
     let kills = 0;
     for (let i = 0; i < n; i++) {
-      const outcome = simulateFight({ planA: planA, planD: planD, warriorA: la, warriorD: pr, providedRng: i * 3317 + 7 });
+      const outcome = simulateFight({
+        planA: planA,
+        planD: planD,
+        warriorA: la,
+        warriorD: pr,
+        providedRng: i * 3317 + 7,
+      });
       if (outcome.winner === 'A') wins++;
       if (outcome.by === 'Kill') kills++;
     }
@@ -339,9 +351,13 @@ describe('Realistic population baseline (philosophy-biased ~70pt recruits)', () 
         for (let i = 0; i < REAL_FIGHTS_PER_MATCHUP; i++) {
           const wA = pools[styleA]![i % pools[styleA]!.length]!;
           const wD = pools[styleD]![i % pools[styleD]!.length]!;
-          const outcome = simulateFight(
-            { planA: defaultPlanForWarrior(wA), planD: defaultPlanForWarrior(wD), warriorA: wA, warriorD: wD, providedRng: (ai * 10 + di) * 30011 + i * 104729 + 7 }
-          );
+          const outcome = simulateFight({
+            planA: defaultPlanForWarrior(wA),
+            planD: defaultPlanForWarrior(wD),
+            warriorA: wA,
+            warriorD: wD,
+            providedRng: (ai * 10 + di) * 30011 + i * 104729 + 7,
+          });
           realFights[styleA]!++;
           realFights[styleD]!++;
           realTotal++;

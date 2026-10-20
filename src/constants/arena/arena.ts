@@ -302,7 +302,8 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
   'premium:Dense Fog': {
     riposteMod: WEATHER_PENALTIES.BATHHOUSE_STEAM_RIPOSTE,
-    description: 'Thick, premium steam heavily obscures strikes, creating prime counter-attack opportunities.',
+    description:
+      'Thick, premium steam heavily obscures strikes, creating prime counter-attack opportunities.',
   },
   'cursed:Spooky Night': {
     initiativeMod: WEATHER_PENALTIES.HEATH_APPARITION_INITIATIVE,

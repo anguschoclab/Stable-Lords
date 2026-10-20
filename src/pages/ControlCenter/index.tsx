@@ -120,11 +120,7 @@ function TabContent({ state }: { state: ControlCenterState }) {
             />
           </CommandSection>
 
-          <CommandSection
-            id="last-week"
-            label="Last Week's Consequences"
-            className="md:col-span-2"
-          >
+          <CommandSection id="last-week" label="Last Week's Consequences" className="md:col-span-2">
             <RecentBoutsWidget />
           </CommandSection>
         </div>

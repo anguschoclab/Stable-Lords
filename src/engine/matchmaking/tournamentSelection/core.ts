@@ -36,9 +36,15 @@ export function generateSeasonalTiers(
     // Update locked IDs for the next tier
     updatedLockedIds.forEach((id) => lockedWarriorIds.add(id));
 
-    const tournament = buildTournament(
-      { tierId: tierConfig.id, tierName: tierConfig.name, warriors: warriors, week: week, season: season, rng: rng, year: state.year ?? 1 }
-    );
+    const tournament = buildTournament({
+      tierId: tierConfig.id,
+      tierName: tierConfig.name,
+      warriors: warriors,
+      week: week,
+      season: season,
+      rng: rng,
+      year: state.year ?? 1,
+    });
     tournaments.push(tournament);
   });
 

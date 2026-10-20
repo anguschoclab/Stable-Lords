@@ -8,11 +8,7 @@ import {
 } from '@/engine/equipment/equipmentOptimizer';
 import { toast } from 'sonner';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import {
-  checkWeaponRequirements,
-  validateLoadout,
-  type EquipmentLoadout,
-} from '@/data/equipment';
+import { checkWeaponRequirements, validateLoadout, type EquipmentLoadout } from '@/data/equipment';
 
 function usePendingLoadout(props: {
   activeWarriors: ReturnType<typeof useGameStore.getState>['roster'];

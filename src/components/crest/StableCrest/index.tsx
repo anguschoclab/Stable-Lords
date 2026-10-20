@@ -100,7 +100,12 @@ function CrestSvg(props: {
 /** Heraldic crest renderer — SVG shield + optional generation badge. */
 export function StableCrest(props: StableCrestProps): React.ReactElement {
   const { crest, size = 'md', showMantling, showHelmet, animate = false } = props;
-  const { className = '', selected = false, showTooltip = true, showGenerationBadge = true } = props;
+  const {
+    className = '',
+    selected = false,
+    showTooltip = true,
+    showGenerationBadge = true,
+  } = props;
   const pixelSize = typeof size === 'number' ? size : SIZE_MAP[size];
   const shieldPath = SHIELD_PATHS[crest.shieldShape] || SHIELD_PATHS.heater;
   const metalColor = crest.metalColor === 'gold' ? '#D4AF37' : '#C0C0C0';

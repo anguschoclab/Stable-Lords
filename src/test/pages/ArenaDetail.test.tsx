@@ -71,7 +71,9 @@ describe('ArenaDetail page (region pinning)', () => {
   });
 
   it('renders no lore section for arenas without entries', () => {
-    const arena = getAllArenas().find((a) => a.id !== 'mudpit_arena' && getArenaLore(a.id).length === 0);
+    const arena = getAllArenas().find(
+      (a) => a.id !== 'mudpit_arena' && getArenaLore(a.id).length === 0
+    );
     if (!arena) return; // all arenas carry lore — nothing to assert
     mockArenaId = arena.id;
     render(<ArenaDetail />);

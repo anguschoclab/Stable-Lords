@@ -89,9 +89,13 @@ export function makeTournamentWarrior(
   stableId: StableId = TOURNEY_PLAYER_ID,
   overrides: Partial<Warrior> = {}
 ): Warrior {
-  return makeWarrior(
-    { id: id as WarriorId, name: name, style: style, attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, overrides: { stableId, ...overrides } }
-  );
+  return makeWarrior({
+    id: id as WarriorId,
+    name: name,
+    style: style,
+    attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+    overrides: { stableId, ...overrides },
+  });
 }
 
 /** Builds a completed tournament bracket fixture with winners decided. */

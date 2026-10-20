@@ -142,9 +142,7 @@ export function computePoachBid(
     AI_GENERATED_RECRUIT_COST +
       target.traitValue -
       Math.round(target.liabilityScore / 2) +
-      Math.round(
-        competenceJitter(buyer.owner, `poach|${target.warrior.id}|${seasonIndex}`, 30)
-      )
+      Math.round(competenceJitter(buyer.owner, `poach|${target.warrior.id}|${seasonIndex}`, 30))
   );
 
   const budget = checkBudget(buyer, price, 'ROSTER');
@@ -191,13 +189,29 @@ export function processPoachMarket(state: GameState, rivals: RivalStableData[]):
         `Poach bid on your warrior ${target ? warriorDisplayName(target) : String(bid.warriorId)} — ` +
         `${rival.owner.name} offers ${bid.price}g (publicized, awaits your decision)`;
       gazetteItems.push(`[POACH] ${desc}`);
-      byId.set(rival.id, logAgentAction({ rival: stamped, type: 'ROSTER', description: desc, riskTier: 'Medium', week: state.absoluteWeek }));
+      byId.set(
+        rival.id,
+        logAgentAction({
+          rival: stamped,
+          type: 'ROSTER',
+          description: desc,
+          riskTier: 'Medium',
+          week: state.absoluteWeek,
+        })
+      );
       if (isAIDebugEnabled())
         console.debug(`[poach] ${rival.id} -> player ${bid.warriorId} @ ${bid.price}g`);
       continue;
     }
 
-    settleAIPoach({ byId: byId, bid: bid, buyerId: rival.id, stamped: stamped, state: state, gazetteItems: gazetteItems });
+    settleAIPoach({
+      byId: byId,
+      bid: bid,
+      buyerId: rival.id,
+      stamped: stamped,
+      state: state,
+      gazetteItems: gazetteItems,
+    });
   }
 
   return { updatedRivals: rivals.map((r) => byId.get(r.id) ?? r), gazetteItems };
@@ -258,7 +272,16 @@ function settleAIPoach(args: SettleAIPoachArgs): void {
 
   const desc = `Poached ${warriorDisplayName(target)} from ${seller.owner.name} for ${bid.price}g`;
   gazetteItems.push(`[POACH] ${desc}`);
-  byId.set(buyerId, logAgentAction({ rival: buyerAfter, type: 'ROSTER', description: desc, riskTier: 'Medium', week: state.absoluteWeek }));
+  byId.set(
+    buyerId,
+    logAgentAction({
+      rival: buyerAfter,
+      type: 'ROSTER',
+      description: desc,
+      riskTier: 'Medium',
+      week: state.absoluteWeek,
+    })
+  );
   if (isAIDebugEnabled())
     console.debug(`[poach] ${buyerId} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
 }

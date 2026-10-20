@@ -167,7 +167,13 @@ interface SubPageListProps {
  *
  */
 export function SubPageList(props: SubPageListProps) {
-  const { activeHubId, currentPath, LinkComponent = Link, pageLinkClassName, iconClassName } = props;
+  const {
+    activeHubId,
+    currentPath,
+    LinkComponent = Link,
+    pageLinkClassName,
+    iconClassName,
+  } = props;
   const { useMotionIndicator = true, animationDuration = 0.3 } = props;
   const pages = HUBS.find((h) => h.id === activeHubId)?.pages ?? [];
 
@@ -189,7 +195,8 @@ export function SubPageList(props: SubPageListProps) {
               : currentPath === page.to || currentPath.startsWith(`${page.to}/`);
             const PageIcon = page.icon;
             const previous = pages[index - 1] as { section?: string } | undefined;
-            const startsSection = pageAny.section !== undefined && pageAny.section !== previous?.section;
+            const startsSection =
+              pageAny.section !== undefined && pageAny.section !== previous?.section;
 
             return (
               <Fragment key={page.to}>

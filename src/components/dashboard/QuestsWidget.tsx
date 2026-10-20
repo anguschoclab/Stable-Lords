@@ -13,9 +13,7 @@ import { useShallow } from 'zustand/react/shallow';
 export const QuestsWidget = React.memo(function QuestsWidget() {
   const setState = useGameStore((s) => s.setState);
 
-  const questCompletions = useGameStore(
-    useShallow((s) => ONBOARDING_QUESTS.map((q) => q.done(s)))
-  );
+  const questCompletions = useGameStore(useShallow((s) => ONBOARDING_QUESTS.map((q) => q.done(s))));
   const isDismissed = useGameStore((s) => (s.coachDismissed ?? []).includes(QUESTS_DISMISSED));
 
   if (isDismissed || questCompletions.every(Boolean)) return null;

@@ -107,9 +107,7 @@ describe('serialization — outbound worker payload', () => {
     // pendingRetries registry cannot cover after a restart.
     const state = {
       ...createFreshState('strip-logs'),
-      deferredBoutLogs: [
-        { year: 1, season: 0, boutId: 'b-1', transcript: ['t1'] },
-      ],
+      deferredBoutLogs: [{ year: 1, season: 0, boutId: 'b-1', transcript: ['t1'] }],
     };
     const stripped = stripNonSerializable(state);
     expect(stripped.deferredBoutLogs).toHaveLength(1);

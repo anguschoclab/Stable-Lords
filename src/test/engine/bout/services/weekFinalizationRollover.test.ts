@@ -9,8 +9,7 @@ vi.mock('@/engine/core/EventBus', () => ({
 }));
 
 describe('finalizeWeekSideEffectsToImpact — year boundary', () => {
-  beforeEach(() => {
-  });
+  beforeEach(() => {});
 
   const makeState = (absoluteWeek: number): GameState =>
     fixtureGameState({

@@ -80,9 +80,11 @@ describe('arena/bleed damage narration', () => {
 
     // Weapon hits run through attacks.* / strikes.* pools — none of those
     // templates may appear for a cause-tagged tick.
-    expect(log.every((l) => !/\b(slash|blow|strike|thrust|swing)\b/i.test(l.text) || l.text.includes('Lightning'))).toBe(
-      true
-    );
+    expect(
+      log.every(
+        (l) => !/\b(slash|blow|strike|thrust|swing)\b/i.test(l.text) || l.text.includes('Lightning')
+      )
+    ).toBe(true);
     expect(log.every((l) => noRawTokens(l.text))).toBe(true);
   });
 

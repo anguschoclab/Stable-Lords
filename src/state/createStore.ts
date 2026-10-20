@@ -275,12 +275,17 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
       const raw = processedState || reconstructGameState(store);
       const cleanState = stripNonSerializable(raw) as GameState;
       const currentWeek = cleanState.week;
-      await runEngineJob(
-        { set: set, get: get, cleanState: cleanState, currentWeek: currentWeek, job: () =>
+      await runEngineJob({
+        set: set,
+        get: get,
+        cleanState: cleanState,
+        currentWeek: currentWeek,
+        job: () =>
           cleanState.isTournamentWeek
             ? engineProxy.skipToWeekEnd(cleanState)
-            : engineProxy.advanceWeek(cleanState), opName: cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek' }
-      );
+            : engineProxy.advanceWeek(cleanState),
+        opName: cleanState.isTournamentWeek ? 'skipToWeekEnd' : 'advanceWeek',
+      });
     },
 
     doAdvanceDay: async (processedState?: GameState) => {
@@ -289,9 +294,14 @@ function createCoreActions(set: StoreSet, get: StoreGet): Pick<GameStore, CoreAc
       const raw = processedState || reconstructGameState(store);
       const cleanState = stripNonSerializable(raw) as GameState;
       const currentWeek = cleanState.week;
-      await runEngineJob(
-        { set: set, get: get, cleanState: cleanState, currentWeek: currentWeek, job: () => engineProxy.advanceDay(cleanState), opName: 'advanceDay' }
-      );
+      await runEngineJob({
+        set: set,
+        get: get,
+        cleanState: cleanState,
+        currentWeek: currentWeek,
+        job: () => engineProxy.advanceDay(cleanState),
+        opName: 'advanceDay',
+      });
     },
 
     saveCurrentState: async () => {

@@ -76,9 +76,7 @@ function processRivalryUpdates(
   week: number,
   rng: IRNGService
 ): void {
-  const rivalryMap = new Map(
-    rivalries.map((rv) => [getPairKey(rv.stableIdA, rv.stableIdB), rv])
-  );
+  const rivalryMap = new Map(rivalries.map((rv) => [getPairKey(rv.stableIdA, rv.stableIdB), rv]));
   for (const [, data] of pairs.entries()) {
     const existing = rivalryMap.get(getPairKey(data.stableIdA, data.stableIdB));
 

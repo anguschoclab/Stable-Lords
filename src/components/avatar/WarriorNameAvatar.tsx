@@ -21,7 +21,12 @@ interface WarriorNameAvatarProps {
  * threading entity objects through every prop layer. Renders nothing when the
  * warrior cannot be resolved.
  */
-export function WarriorNameAvatar({ warriorId, name, size = 'xs', className }: WarriorNameAvatarProps) {
+export function WarriorNameAvatar({
+  warriorId,
+  name,
+  size = 'xs',
+  className,
+}: WarriorNameAvatarProps) {
   // Null-safe: mocked or uninitialized stores may pass undefined state.
   const nameState = useGameStore(
     useShallow((s): NameResolutionState | null =>

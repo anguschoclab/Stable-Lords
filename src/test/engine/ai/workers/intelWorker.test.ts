@@ -236,7 +236,9 @@ describe('intelWorker — AI scout reports (V16/F3)', () => {
   }
 
   /** Tactician + Master scout → 0.9 blended quality → Expert reports. */
-  function scoutPair(opts: { warrior?: Partial<Warrior>; targetOwner?: Record<string, unknown> } = {}) {
+  function scoutPair(
+    opts: { warrior?: Partial<Warrior>; targetOwner?: Record<string, unknown> } = {}
+  ) {
     const targetWarrior = makeWarrior({
       name: 'Reported Ruth',
       style: FightingStyle.StrikingAttack,
@@ -288,9 +290,9 @@ describe('intelWorker — AI scout reports (V16/F3)', () => {
       week: 5,
       quality: 'Expert',
     });
-    expect(
-      updatedRival.agentMemory!.opponentDossiers[target.id]!.knownStyles
-    ).toContain(targetWarrior.style);
+    expect(updatedRival.agentMemory!.opponentDossiers[target.id]!.knownStyles).toContain(
+      targetWarrior.style
+    );
   });
 
   it('is deterministic — identical inputs produce identical reports', () => {
@@ -355,9 +357,9 @@ describe('intelWorker — AI scout reports (V16/F3)', () => {
       targetOwner: { competence: 'Veteran' },
     });
     const { updatedRival } = processIntel(scout, state, buildPerceptionSnapshot(state));
-    expect(
-      updatedRival.agentMemory!.opponentDossiers[target.id]!.suspectedCompetence
-    ).toBe('Veteran');
+    expect(updatedRival.agentMemory!.opponentDossiers[target.id]!.suspectedCompetence).toBe(
+      'Veteran'
+    );
   });
 
   it('scouts the player stable — reports file without a competence read', () => {
@@ -383,11 +385,7 @@ describe('intelWorker — AI scout reports (V16/F3)', () => {
       }),
     });
     const withScout = { ...state, rivals: [...(state.rivals ?? []), scout] };
-    const { updatedRival } = processIntel(
-      scout,
-      withScout,
-      buildPerceptionSnapshot(withScout)
-    );
+    const { updatedRival } = processIntel(scout, withScout, buildPerceptionSnapshot(withScout));
     const reports = updatedRival.agentMemory!.scoutReports!;
     expect(reports.at(-1)!.warriorId).toBe(playerWarrior.id);
     expect(

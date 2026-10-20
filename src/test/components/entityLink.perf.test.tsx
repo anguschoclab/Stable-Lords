@@ -43,9 +43,7 @@ vi.mock('@/state/useGameStore', async () => {
 });
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, children }: { to: string; children: ReactNode }) => (
-    <a href={to}>{children}</a>
-  ),
+  Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));
 
 vi.mock('@/components/ui/sheet', () => ({

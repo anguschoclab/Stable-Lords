@@ -11,35 +11,35 @@ constraints. Verdict vocabulary: **APPROVED** / **CORRECTED** / **DISPROVED** /
 
 ## 0. Draft-plan validation ledger (claims audited before implementation)
 
-| # | Draft claim | Verdict | Evidence |
-| --- | --- | --- | --- |
-| P1 | ~739 modified files in working tree | **CORRECTED** | True residual after upstream commits: ~27–33 changed paths; the living-world feature had partially landed (`beeeea6c` etc.) mid-session |
-| P2 | Main CI green baseline | **DISPROVED** | `type-check`, `test`, `bun-test` red on `f8577854`; dependent jobs skipped. Root causes: committed scratch `scripts/_tmp.ts` (30+ TS2307), stale world-spec expectations, stale guard baselines |
-| P3 | CI has 7 jobs | **CORRECTED** | 9 jobs: type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e |
-| P4 | PR #999's failing bun-test is a real defect | **DISPROVED** | Stale-branch noise — branch ~146 commits behind, predates the `environmentNodeCanary` bunfig ignore |
-| P5 | #1009 `{{defender}}`→`{{name}}` needs engine verification | **APPROVED (verified)** | `narrateKnockdown` interpolates `{name}` only; `{{defender}}` renders literal "the opponent" |
-| P6 | #1008 is the best EntityLink approach | **CORRECTED** | #999 preferred: primitive selectors + memo on all three exports; #1008's object selector + custom equality is more machinery than needed |
-| P7 | #1003 and #1005 differ | **DISPROVED** | Byte-identical on `ViewModeToggle.tsx`; #1003 adds TokenCard/WarriorTargetCard/accordion/toast |
-| P8 | #1009's styleArchives fix is the right one | **DISPROVED** | Early-return silently passes w/o routeTree; #1005's `existsSync` variant cleaner. Moot: spec landed for real |
+| #   | Draft claim                                               | Verdict                 | Evidence                                                                                                                                                                                        |
+| --- | --------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1  | ~739 modified files in working tree                       | **CORRECTED**           | True residual after upstream commits: ~27–33 changed paths; the living-world feature had partially landed (`beeeea6c` etc.) mid-session                                                         |
+| P2  | Main CI green baseline                                    | **DISPROVED**           | `type-check`, `test`, `bun-test` red on `f8577854`; dependent jobs skipped. Root causes: committed scratch `scripts/_tmp.ts` (30+ TS2307), stale world-spec expectations, stale guard baselines |
+| P3  | CI has 7 jobs                                             | **CORRECTED**           | 9 jobs: type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e                                                                                                            |
+| P4  | PR #999's failing bun-test is a real defect               | **DISPROVED**           | Stale-branch noise — branch ~146 commits behind, predates the `environmentNodeCanary` bunfig ignore                                                                                             |
+| P5  | #1009 `{{defender}}`→`{{name}}` needs engine verification | **APPROVED (verified)** | `narrateKnockdown` interpolates `{name}` only; `{{defender}}` renders literal "the opponent"                                                                                                    |
+| P6  | #1008 is the best EntityLink approach                     | **CORRECTED**           | #999 preferred: primitive selectors + memo on all three exports; #1008's object selector + custom equality is more machinery than needed                                                        |
+| P7  | #1003 and #1005 differ                                    | **DISPROVED**           | Byte-identical on `ViewModeToggle.tsx`; #1003 adds TokenCard/WarriorTargetCard/accordion/toast                                                                                                  |
+| P8  | #1009's styleArchives fix is the right one                | **DISPROVED**           | Early-return silently passes w/o routeTree; #1005's `existsSync` variant cleaner. Moot: spec landed for real                                                                                    |
 
 ---
 
 ## 1. Open-PR disposition table (all 12)
 
-| PR | Branch | Cluster | Verdict | Disposition |
-| --- | --- | --- | --- | --- |
-| #998 | chore/expand-weather-coverage-… | tests | **APPROVED** | Extracted wholesale — 4 test files, all 34 specs green (commit `d12016cc`) |
-| #999 | bolt/memoize-entity-links-… | EntityLink | **APPROVED (winner)** | Synthesized: atomic primitive selectors + `React.memo` on WarriorLink/StableLink/LinkifiedText (`2c94f990`) |
-| #1000 | jules-narrative-audit-… | narrative | **PARTIAL** | Narrative adds unioned; `.claude/backups/` stripped; buildConfigIntegrity/env-canary hunks superseded by tsconfig refactor |
-| #1001 | bolt-optimize-entitylink-… | EntityLink | **SUPERSEDED** | Two-subscription variant; #999's single-subscription approach landed |
-| #1002 | narrative-curator-expansion-… | narrative | **PARTIAL** | Union additions landed (incl. correct `{{name}}` knockdown additions); `.claude/backups/removed.json` stripped |
-| #1003 | ui-polisher-accessibility-… | a11y | **APPROVED** | Landed: `focus-visible:outline-none` + accordion/toast `motion-reduce:animate-none` (`e5e96776`) |
-| #1004 | bolt/optimize-entity-link-… | EntityLink | **SUPERSEDED** | Same family as #1001 |
-| #1005 | fix/outline-none-accessibility-… | a11y | **APPROVED (merged via #1003)** | Identical ViewModeToggle hunk; cleaner styleArchives variant noted but spec now live |
-| #1006 | bolt-perf-entity-links-… | EntityLink | **SUPERSEDED** | Same family as #1001 |
-| #1007 | narrative-expansion-… | narrative | **PARTIAL** | Union additions landed |
-| #1008 | bolt-optimize-entity-link-… | EntityLink | **SUPERSEDED** | Object selector + custom equality — correct direction, more machinery than #999 |
-| #1009 | jules-17407150068756957735-… | narrative | **PARTIAL** | Narrative adds + `{{defender}}`→`{{name}}` knockdown fix unioned. REJECTED hunks: `e2e/seasonal-tournament.spec.ts` weakened `toBeGreaterThan(0)` → `toBeGreaterThanOrEqual(0)` (vacuous assertion on NPC podium check); ws-diag/ws-ladder superseded (ws-ladder deleted in `beeeea6c`, ws-diag renamed world-diag); styleArchives early-return anti-pattern rejected |
+| PR    | Branch                           | Cluster    | Verdict                         | Disposition                                                                                                                                                                                                                                                                                                                                                           |
+| ----- | -------------------------------- | ---------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #998  | chore/expand-weather-coverage-…  | tests      | **APPROVED**                    | Extracted wholesale — 4 test files, all 34 specs green (commit `d12016cc`)                                                                                                                                                                                                                                                                                            |
+| #999  | bolt/memoize-entity-links-…      | EntityLink | **APPROVED (winner)**           | Synthesized: atomic primitive selectors + `React.memo` on WarriorLink/StableLink/LinkifiedText (`2c94f990`)                                                                                                                                                                                                                                                           |
+| #1000 | jules-narrative-audit-…          | narrative  | **PARTIAL**                     | Narrative adds unioned; `.claude/backups/` stripped; buildConfigIntegrity/env-canary hunks superseded by tsconfig refactor                                                                                                                                                                                                                                            |
+| #1001 | bolt-optimize-entitylink-…       | EntityLink | **SUPERSEDED**                  | Two-subscription variant; #999's single-subscription approach landed                                                                                                                                                                                                                                                                                                  |
+| #1002 | narrative-curator-expansion-…    | narrative  | **PARTIAL**                     | Union additions landed (incl. correct `{{name}}` knockdown additions); `.claude/backups/removed.json` stripped                                                                                                                                                                                                                                                        |
+| #1003 | ui-polisher-accessibility-…      | a11y       | **APPROVED**                    | Landed: `focus-visible:outline-none` + accordion/toast `motion-reduce:animate-none` (`e5e96776`)                                                                                                                                                                                                                                                                      |
+| #1004 | bolt/optimize-entity-link-…      | EntityLink | **SUPERSEDED**                  | Same family as #1001                                                                                                                                                                                                                                                                                                                                                  |
+| #1005 | fix/outline-none-accessibility-… | a11y       | **APPROVED (merged via #1003)** | Identical ViewModeToggle hunk; cleaner styleArchives variant noted but spec now live                                                                                                                                                                                                                                                                                  |
+| #1006 | bolt-perf-entity-links-…         | EntityLink | **SUPERSEDED**                  | Same family as #1001                                                                                                                                                                                                                                                                                                                                                  |
+| #1007 | narrative-expansion-…            | narrative  | **PARTIAL**                     | Union additions landed                                                                                                                                                                                                                                                                                                                                                |
+| #1008 | bolt-optimize-entity-link-…      | EntityLink | **SUPERSEDED**                  | Object selector + custom equality — correct direction, more machinery than #999                                                                                                                                                                                                                                                                                       |
+| #1009 | jules-17407150068756957735-…     | narrative  | **PARTIAL**                     | Narrative adds + `{{defender}}`→`{{name}}` knockdown fix unioned. REJECTED hunks: `e2e/seasonal-tournament.spec.ts` weakened `toBeGreaterThan(0)` → `toBeGreaterThanOrEqual(0)` (vacuous assertion on NPC podium check); ws-diag/ws-ladder superseded (ws-ladder deleted in `beeeea6c`, ws-diag renamed world-diag); styleArchives early-return anti-pattern rejected |
 
 ### Closed-PR salvage scan (#968–#997)
 
@@ -57,7 +57,7 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 
 ### Narrative union (4-PR cluster)
 
-- Merger: union-additions per leaf in PR order (1000→1002→1007→1009), token-fix applied *before* diffing so `{{defender}}`→`{{name}}` churn cancels; dedupe by normalized text; removals only on ≥2-PR consensus (9 removed).
+- Merger: union-additions per leaf in PR order (1000→1002→1007→1009), token-fix applied _before_ diffing so `{{defender}}`→`{{name}}` churn cancels; dedupe by normalized text; removals only on ≥2-PR consensus (9 removed).
 - Post-pass: cross-leaf template dedupe (keep first occurrence), `pbp.knockdowns` token-normalized (dead pool; `{{defender}}` variants dropped).
 - Overlay: 8 working-tree-only strings carried into their authored leaves.
 - Result: killText 694→721, pbp 3034→3226, strikes 1042→1089 unique string leaves. `narrative-validate` green; `narrativeUnionV9` gate green.
@@ -77,44 +77,44 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 
 ## 3. New bugs found & fixed (each with failing evidence first)
 
-| # | Finding | Verdict | Fix |
-| --- | --- | --- | --- |
-| B1 | `scripts/_tmp.ts` committed scratch file broke `type-check` (30+ TS2307) | **APPROVED** | Deleted (`d7298a97`) |
-| B2 | `buildConfigIntegrity` JSONC stripper ate `"@/*"` path mappings as comments | **APPROVED** | Replaced regex with string-aware state-machine stripper (both `readJson` copies) |
-| B3 | `WarriorPass.test` trainer specs hard-coded old fame floor (500) — actual `LEGACY_FOUNDER_FAME_MIN=90` | **APPROVED** | Repinned to constants; boundary semantics (`0179da61`) |
-| B4 | Stale world-spec expectations across ~15 test files (population floor 45→90, handler count 7→12, truncation caps, warrior costs) | **APPROVED** | Repinned batch (`3c19f364`) |
-| B5 | `fileBudget` guard: 18 fns >80 lines from landed world work | **APPROVED** | Real decomposition (management.ts, MatchCard, PaperDoll, AttributeRow, WarriorTrainingCard, RosterSnapshot, BookingOffice, HallOfFights, refusals/results, rivalStableShard, finalize, draftService, recruitmentWorker, coreGenerator) |
-| B6 | dup-scan new pair `groupBookmarks\|useBookmarkGroups` | **APPROVED** | Registered as extraction-seam pair in `duplication.guard` baseline |
-| B7 | Cross-project test pollution suspicion (WarriorPass CI-only failure) | **DISPROVED** | Not pollution — genuinely stale spec (isolation pass predated constant landing). No global-state leak found |
-| B8 | `pbp.knockdowns` dead pool held `{{defender}}` + duplicate `{{name}}` variants | **APPROVED** | Token-normalized + deduped in union |
-| B9 | `simulation_hardening` death-rate bound 1.0 stale for living world (measured ~1.04) | **APPROVED (repin)** | Bound 1.2 w/ documented justification — density guards prove restock works |
-| B10 | `rivalStrategyPass.perf` 664ms vs 500ms bound under concurrent bun-test load | **NOTE** | Contention flake — rerun on quiet machine |
+| #   | Finding                                                                                                                          | Verdict              | Fix                                                                                                                                                                                                                                    |
+| --- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1  | `scripts/_tmp.ts` committed scratch file broke `type-check` (30+ TS2307)                                                         | **APPROVED**         | Deleted (`d7298a97`)                                                                                                                                                                                                                   |
+| B2  | `buildConfigIntegrity` JSONC stripper ate `"@/*"` path mappings as comments                                                      | **APPROVED**         | Replaced regex with string-aware state-machine stripper (both `readJson` copies)                                                                                                                                                       |
+| B3  | `WarriorPass.test` trainer specs hard-coded old fame floor (500) — actual `LEGACY_FOUNDER_FAME_MIN=90`                           | **APPROVED**         | Repinned to constants; boundary semantics (`0179da61`)                                                                                                                                                                                 |
+| B4  | Stale world-spec expectations across ~15 test files (population floor 45→90, handler count 7→12, truncation caps, warrior costs) | **APPROVED**         | Repinned batch (`3c19f364`)                                                                                                                                                                                                            |
+| B5  | `fileBudget` guard: 18 fns >80 lines from landed world work                                                                      | **APPROVED**         | Real decomposition (management.ts, MatchCard, PaperDoll, AttributeRow, WarriorTrainingCard, RosterSnapshot, BookingOffice, HallOfFights, refusals/results, rivalStableShard, finalize, draftService, recruitmentWorker, coreGenerator) |
+| B6  | dup-scan new pair `groupBookmarks\|useBookmarkGroups`                                                                            | **APPROVED**         | Registered as extraction-seam pair in `duplication.guard` baseline                                                                                                                                                                     |
+| B7  | Cross-project test pollution suspicion (WarriorPass CI-only failure)                                                             | **DISPROVED**        | Not pollution — genuinely stale spec (isolation pass predated constant landing). No global-state leak found                                                                                                                            |
+| B8  | `pbp.knockdowns` dead pool held `{{defender}}` + duplicate `{{name}}` variants                                                   | **APPROVED**         | Token-normalized + deduped in union                                                                                                                                                                                                    |
+| B9  | `simulation_hardening` death-rate bound 1.0 stale for living world (measured ~1.04)                                              | **APPROVED (repin)** | Bound 1.2 w/ documented justification — density guards prove restock works                                                                                                                                                             |
+| B10 | `rivalStrategyPass.perf` 664ms vs 500ms bound under concurrent bun-test load                                                     | **NOTE**             | Contention flake — rerun on quiet machine                                                                                                                                                                                              |
 
 ---
 
 ## 4. Deferred / optional / out-of-scope items — all implemented
 
-| Ticket | Spec | Status |
-| --- | --- | --- |
-| MEGAPLAN-G1 | Style Archives browser | **DONE** — `src/pages/StyleArchives.tsx`, routed `/world/style-archives`, nav-linked; spec green |
-| MEGAPLAN-G2 | Favorites charting toolkit | **DONE** — `FavoritesCharting` surface exists; spec green |
-| MEGAPLAN-G3 | Tournament prep mode | **DONE** — `src/pages/TournamentPrep`, nav `/world/tournament-prep`; spec green |
-| MEGAPLAN-L1 | Per-route primary CTA | **DONE** — `primaryCta.ts` `PRIMARY_CTA_BY_ROUTE` + `resolvePrimaryCta`; spec green |
-| MEGAPLAN-L2 | PageFrame/PageHeader conformance | **DONE** — all non-exempt routed pages conform; spec green |
+| Ticket      | Spec                             | Status                                                                                           |
+| ----------- | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| MEGAPLAN-G1 | Style Archives browser           | **DONE** — `src/pages/StyleArchives.tsx`, routed `/world/style-archives`, nav-linked; spec green |
+| MEGAPLAN-G2 | Favorites charting toolkit       | **DONE** — `FavoritesCharting` surface exists; spec green                                        |
+| MEGAPLAN-G3 | Tournament prep mode             | **DONE** — `src/pages/TournamentPrep`, nav `/world/tournament-prep`; spec green                  |
+| MEGAPLAN-L1 | Per-route primary CTA            | **DONE** — `primaryCta.ts` `PRIMARY_CTA_BY_ROUTE` + `resolvePrimaryCta`; spec green              |
+| MEGAPLAN-L2 | PageFrame/PageHeader conformance | **DONE** — all non-exempt routed pages conform; spec green                                       |
 
 ---
 
 ## 5. Orphan-route adjudication (7 flagged)
 
-| Route | Verdict | Reason |
-| --- | --- | --- |
-| `/arena-hub` | **EXEMPT** | intentional legacy redirect → `/stable/arena` |
-| `/world/arena-leaderboards` | **EXEMPT** | intentional legacy redirect → `/world/arenas` |
-| `/` | **NOTE** | linked from AppHeader logo |
-| `/warrior/:id` | **NOTE** | detail route — reached via WarriorLink/roster |
-| `/world/stable/:id` | **NOTE** | detail route — reached via StableLink/rankings |
-| `/world/arenas/:arenaId` | **NOTE** | detail route — reached via arenas list |
-| `/stable/promoter/:id` | **NOTE** | detail route — reached via promoter directory |
+| Route                       | Verdict    | Reason                                         |
+| --------------------------- | ---------- | ---------------------------------------------- |
+| `/arena-hub`                | **EXEMPT** | intentional legacy redirect → `/stable/arena`  |
+| `/world/arena-leaderboards` | **EXEMPT** | intentional legacy redirect → `/world/arenas`  |
+| `/`                         | **NOTE**   | linked from AppHeader logo                     |
+| `/warrior/:id`              | **NOTE**   | detail route — reached via WarriorLink/roster  |
+| `/world/stable/:id`         | **NOTE**   | detail route — reached via StableLink/rankings |
+| `/world/arenas/:arenaId`    | **NOTE**   | detail route — reached via arenas list         |
+| `/stable/promoter/:id`      | **NOTE**   | detail route — reached via promoter directory  |
 
 ## 6. Prior-finding re-adjudication (V5–V8)
 
@@ -126,34 +126,34 @@ All map to prior V7 dispositions (`CONSOLIDATION_FINDINGS_V7.md` curated-extract
 
 ## 7. Architectural verdicts
 
-| Choice | Verdict |
-| --- | --- |
-| `legacyFounderQueue`/`freeAgents` in `GameState` (not module state) | **APPROVED** |
+| Choice                                                                                                  | Verdict                                                                         |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `legacyFounderQueue`/`freeAgents` in `GameState` (not module state)                                     | **APPROVED**                                                                    |
 | Append-delta impacts (`legacyFounderEnqueue`, `freeAgentAdditions/Removals`) over wholesale replacement | **APPROVED** — prevents same-stage snapshot clobbering; covered by impact tests |
-| `findWarrior`/`findStableId` WeakMap caches keyed on state | **APPROVED** — `clearHistoryCaches` keeps test isolation honest |
-| `#scripts/*` alias + scripts out of `src/` | **APPROVED** — fixes tsconfig pollution class B1 |
-| Atomic selectors over `useShallow` slices in hot-path leaf components | **APPROVED** |
-| No save-version migration layer | **APPROVED** per mandate (zero back-compat constraints) |
-| Vacuous e2e assertions (`>=0` on a meaningful count) | **DISPROVED** — rejected #1009's hunk |
+| `findWarrior`/`findStableId` WeakMap caches keyed on state                                              | **APPROVED** — `clearHistoryCaches` keeps test isolation honest                 |
+| `#scripts/*` alias + scripts out of `src/`                                                              | **APPROVED** — fixes tsconfig pollution class B1                                |
+| Atomic selectors over `useShallow` slices in hot-path leaf components                                   | **APPROVED**                                                                    |
+| No save-version migration layer                                                                         | **APPROVED** per mandate (zero back-compat constraints)                         |
+| Vacuous e2e assertions (`>=0` on a meaningful count)                                                    | **DISPROVED** — rejected #1009's hunk                                           |
 
 ---
 
 ## 8. Final gate matrix (recorded at completion)
 
-| Gate | Result |
-| --- | --- |
-| `bun run type-check` | PASS (tsc --build --force clean) |
-| `bun run lint` | PASS (0 errors) |
-| `bun run test` (vitest, 735 files) | PASS — 8447 tests, 2 sanctioned skips |
-| `bun run build` (vite+PWA) | PASS |
-| `bun run electron:compile` | PASS |
-| `bun run narrative-validate` | PASS |
-| `bun run test:slow` | 4 fails → fixed: B2 stripper, B9 bound, traitedShare bound already repinned; perf flake contention |
-| `bun run test:bun` | PASS — 8405 tests / 0 fail / 1 skip (144s local); CI job sharded per-directory after 3 consecutive runner OOM kills |
-| `bunx playwright test --project=chromium` | PASS — 4/4 (seasonal year-sim ~16.5min; CI job timeout raised 15→45min) |
-| megaplan guards (fileBudget/dup/orphan/skip/uiTokens/typeSurface) | all PASS |
-| `git fsck --full` | recorded in ledger |
-| **GitHub CI (run 36930071236 @ `218712fc`)** | **9/9 green** — type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e |
+| Gate                                                              | Result                                                                                                              |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `bun run type-check`                                              | PASS (tsc --build --force clean)                                                                                    |
+| `bun run lint`                                                    | PASS (0 errors)                                                                                                     |
+| `bun run test` (vitest, 735 files)                                | PASS — 8447 tests, 2 sanctioned skips                                                                               |
+| `bun run build` (vite+PWA)                                        | PASS                                                                                                                |
+| `bun run electron:compile`                                        | PASS                                                                                                                |
+| `bun run narrative-validate`                                      | PASS                                                                                                                |
+| `bun run test:slow`                                               | 4 fails → fixed: B2 stripper, B9 bound, traitedShare bound already repinned; perf flake contention                  |
+| `bun run test:bun`                                                | PASS — 8405 tests / 0 fail / 1 skip (144s local); CI job sharded per-directory after 3 consecutive runner OOM kills |
+| `bunx playwright test --project=chromium`                         | PASS — 4/4 (seasonal year-sim ~16.5min; CI job timeout raised 15→45min)                                             |
+| megaplan guards (fileBudget/dup/orphan/skip/uiTokens/typeSurface) | all PASS                                                                                                            |
+| `git fsck --full`                                                 | recorded in ledger                                                                                                  |
+| **GitHub CI (run 36930071236 @ `218712fc`)**                      | **9/9 green** — type-check, build, test, lint, bun-test, slow-tests, coverage, electron, e2e                        |
 
 CI-only fixes landed during verification: styleArchives wired test now asserts on the tracked route source instead of generated `routeTree.gen.ts` (`3b3050ec`); e2e timeout (`706f6df3`, `218712fc`); bun-test sharding + `--smol`/`--timeout=30s` (`3849091b`, `73617b45`, `13b73482`).
 
@@ -167,12 +167,12 @@ CI-only fixes landed during verification: styleArchives wired test now asserts o
 A second wave of four bot PRs opened after the V9 cleanup. Reviewed, curated, and
 dispositioned under the same workflow:
 
-| PR | Subject | Verdict | Landed |
-| --- | --- | --- | --- |
-| #1010 | Disabled-state tooltip on ExecuteWeekButton | **Partially approved — implementation disproved** | Corrected in `8ce23368` |
-| #1011 | Combat narrative pool curation | **Approved** | `4a55a1eb` (artifact stripped) |
-| #1012 | `useShallow` on primitive selectors | **Approved (selectors); dep hunk rejected** | `5e9d09fe` |
-| #1013 | Narrative/lore expansion | **Partially approved — hollow_born disproved** | Lore only, `b14ed902` |
+| PR    | Subject                                     | Verdict                                           | Landed                         |
+| ----- | ------------------------------------------- | ------------------------------------------------- | ------------------------------ |
+| #1010 | Disabled-state tooltip on ExecuteWeekButton | **Partially approved — implementation disproved** | Corrected in `8ce23368`        |
+| #1011 | Combat narrative pool curation              | **Approved**                                      | `4a55a1eb` (artifact stripped) |
+| #1012 | `useShallow` on primitive selectors         | **Approved (selectors); dep hunk rejected**       | `5e9d09fe`                     |
+| #1013 | Narrative/lore expansion                    | **Partially approved — hollow_born disproved**    | Lore only, `b14ed902`          |
 
 ### #1010 — corrected, not rejected
 
@@ -213,11 +213,11 @@ dispositioned under the same workflow:
 
 ## 12. Third PR wave (1014–1016) — dispositions
 
-| PR | Subject | Verdict | Landed |
-| --- | --- | --- | --- |
-| #1014 | `gutter_wraith` notable trait | **Approved** | `edeb48fd` |
+| PR    | Subject                                   | Verdict                               | Landed     |
+| ----- | ----------------------------------------- | ------------------------------------- | ---------- |
+| #1014 | `gutter_wraith` notable trait             | **Approved**                          | `edeb48fd` |
 | #1015 | Two new arenas + water/uneven fit penalty | **Approved — registration gap fixed** | `dc51b3b4` |
-| #1016 | Wandering Blacksmith offseason event | **Approved** | `a5ea12cb` |
+| #1016 | Wandering Blacksmith offseason event      | **Approved**                          | `a5ea12cb` |
 
 ### #1014 — approved
 

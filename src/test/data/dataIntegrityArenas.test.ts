@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getAllArenas,
-  getArenaById,
-  getNormalArenas,
-  STANDARD_ARENA,
-} from '@/data/arenas';
+import { getAllArenas, getArenaById, getNormalArenas, STANDARD_ARENA } from '@/data/arenas';
 import { ARENA_ROSTER_LIMITS, SPECIAL_ARENA_IDS } from '@/constants/arena';
 
 describe('dataIntegrityArenas', () => {

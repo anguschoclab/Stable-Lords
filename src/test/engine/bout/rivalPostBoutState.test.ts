@@ -54,7 +54,14 @@ describe('rival post-bout state — impact composition', () => {
     const killer = warrior('ra', 's1');
     const s = makeState([rival('s1', [killer]), rival('s2', [victim])]);
 
-    const res = handleDeath({ s: s, wA: killer, wD: victim, outcome: killOutcome('A'), week: 7, tags: [] });
+    const res = handleDeath({
+      s: s,
+      wA: killer,
+      wD: victim,
+      outcome: killOutcome('A'),
+      week: 7,
+      tags: [],
+    });
     expect(res.death).toBe(true);
     expect(res.impact.rivalRosterRemovals).toEqual(['rd']);
 
@@ -68,7 +75,14 @@ describe('rival post-bout state — impact composition', () => {
     const killer = warrior('rd', 's2');
     const s = makeState([rival('s1', [victim]), rival('s2', [killer])]);
 
-    const res = handleDeath({ s: s, wA: victim, wD: killer, outcome: killOutcome('D'), week: 7, tags: [] });
+    const res = handleDeath({
+      s: s,
+      wA: victim,
+      wD: killer,
+      outcome: killOutcome('D'),
+      week: 7,
+      tags: [],
+    });
     expect(res.death).toBe(true);
     expect(res.impact.rivalRosterRemovals).toEqual(['ra']);
 
@@ -83,7 +97,14 @@ describe('rival post-bout state — impact composition', () => {
     const killer = warrior('rd', 's2');
     const s = makeState([rival('s1', [victim]), rival('s2', [killer])]);
 
-    const res = handleDeath({ s: s, wA: victim, wD: killer, outcome: killOutcome('D'), week: 7, tags: [] });
+    const res = handleDeath({
+      s: s,
+      wA: victim,
+      wD: killer,
+      outcome: killOutcome('D'),
+      week: 7,
+      tags: [],
+    });
 
     expect(res.playerDeath).toBe(false);
     expect(res.impact.fameDelta ?? 0).toBe(0);
@@ -98,7 +119,14 @@ describe('rival post-bout state — impact composition', () => {
     // rival stable.
     const s = makeState([rival('s1', [killer])], [playerVictim]);
 
-    const res = handleDeath({ s: s, wA: killer, wD: playerVictim, outcome: killOutcome('A'), week: 7, tags: [] });
+    const res = handleDeath({
+      s: s,
+      wA: killer,
+      wD: playerVictim,
+      outcome: killOutcome('A'),
+      week: 7,
+      tags: [],
+    });
 
     expect(res.playerDeath).toBe(true);
     expect(res.impact.fameDelta).toBe(5);
@@ -112,7 +140,17 @@ describe('rival post-bout state — impact composition', () => {
     const wD = warrior('rd', 's2');
     const s = makeState([rival('s1', [wA]), rival('s2', [wD])]);
 
-    const impact = applyRecords({ s: s, wA: wA, wD: wD, outcome: winOutcome('A'), tags: [], fameA: 4, popA: 0, fameD: 2, popD: 0 });
+    const impact = applyRecords({
+      s: s,
+      wA: wA,
+      wD: wD,
+      outcome: winOutcome('A'),
+      tags: [],
+      fameA: 4,
+      popA: 0,
+      fameD: 2,
+      popD: 0,
+    });
     const out = resolveImpacts(s, [impact]);
 
     const a = out.rivals[0]!.roster.find((w) => w.id === 'ra')!;
@@ -133,7 +171,14 @@ describe('rival post-bout state — impact composition', () => {
     // Scan seeds until the generator produces an injury for side D.
     let applied = false;
     for (let seed = 1; seed < 200 && !applied; seed++) {
-      const res = handleInjuries({ s: s, wA: wA, wD: wD, outcome: winOutcome('A'), week: 7, seed: seed });
+      const res = handleInjuries({
+        s: s,
+        wA: wA,
+        wD: wD,
+        outcome: winOutcome('A'),
+        week: 7,
+        seed: seed,
+      });
       const patch = res.impact.rivalWarriorPatches?.get('rd' as WarriorId);
       if (patch?.injuries?.length) {
         const out = resolveImpacts(s, [res.impact]);
@@ -149,7 +194,15 @@ describe('rival post-bout state — impact composition', () => {
     const wD = warrior('rd', 's2');
     const s = makeState([rival('s1', [wA]), rival('s2', [wD])]);
 
-    const impact = handleProgressions({ s: s, wA: wA, wD: wD, outcome: winOutcome('A'), tags: [], week: 7, rng: new SeededRNG(11) });
+    const impact = handleProgressions({
+      s: s,
+      wA: wA,
+      wD: wD,
+      outcome: winOutcome('A'),
+      tags: [],
+      week: 7,
+      rng: new SeededRNG(11),
+    });
     const out = resolveImpacts(s, [impact]);
 
     const a = out.rivals[0]!.roster.find((w) => w.id === 'ra')!;
@@ -180,9 +233,15 @@ describe('rival post-bout state — impact composition', () => {
     const s = makeState([rival('s1', [killer]), rival('s2', [victim])]);
     s.houseRules = { severeInjuryInsteadOfDeath: true } as GameState['houseRules'];
 
-    const res = handleDeath(
-      { s: s, wA: killer, wD: victim, outcome: killOutcome('A'), week: 7, tags: [], rng: new SeededRNG(3) }
-    );
+    const res = handleDeath({
+      s: s,
+      wA: killer,
+      wD: victim,
+      outcome: killOutcome('A'),
+      week: 7,
+      tags: [],
+      rng: new SeededRNG(3),
+    });
     expect(res.death).toBe(false);
 
     const out = resolveImpacts(s, [res.impact]);

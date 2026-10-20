@@ -79,9 +79,13 @@ describe('PR riposte master (integration)', () => {
     let wins = 0;
     const N = 200;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(
-        { planA: defaultPlanForWarrior(pr), planD: defaultPlanForWarrior(st), warriorA: pr, warriorD: st, providedRng: i * 8209 + 31 }
-      );
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(pr),
+        planD: defaultPlanForWarrior(st),
+        warriorA: pr,
+        warriorD: st,
+        providedRng: i * 8209 + 31,
+      });
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;

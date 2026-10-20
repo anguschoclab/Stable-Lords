@@ -1,9 +1,5 @@
 import type { FighterState } from '../../combat/resolution/types';
-import type {
-  DeathCauseBucket,
-  FightOutcomeBy,
-  CombatEvent,
-} from '@/types/combat.types';
+import type { DeathCauseBucket, FightOutcomeBy, CombatEvent } from '@/types/combat.types';
 import { narrateBoutEnd } from '../../narrative';
 import type { LoopCtx } from './types';
 
@@ -36,9 +32,16 @@ export function checkYieldOutcome(
     const narWinner = yields === 'A' ? c.nameD : c.nameA;
     const narLoser = yields === 'A' ? c.nameA : c.nameD;
     const winnerWeapon = yields === 'A' ? c.weaponD : c.weaponA;
-    const boutEndLines = narrateBoutEnd({ rng: c.flavorRng, by: 'Yield', winnerName: narWinner, loserName: narLoser, weaponId: winnerWeapon, ctx: {
-      mood: c.crowdMood,
-    } });
+    const boutEndLines = narrateBoutEnd({
+      rng: c.flavorRng,
+      by: 'Yield',
+      winnerName: narWinner,
+      loserName: narLoser,
+      weaponId: winnerWeapon,
+      ctx: {
+        mood: c.crowdMood,
+      },
+    });
     boutEndLines.forEach((line) => c.log.push({ minute: min, text: line, emphasis: true }));
   }
   return { winner, by: 'Yield' };
@@ -56,7 +59,12 @@ interface BoutEndResult {
 }
 
 /** Resolves a BOUT_END event into outcome + narration. */
-export function resolveBoutEnd(c: LoopCtx, boutEnd: CombatEvent, ex: number, min: number): BoutEndResult {
+export function resolveBoutEnd(
+  c: LoopCtx,
+  boutEnd: CombatEvent,
+  ex: number,
+  min: number
+): BoutEndResult {
   const by = boutEnd.result as FightOutcomeBy;
   const causeBucket = boutEnd.metadata?.cause as DeathCauseBucket;
   const fatalHitLocation = boutEnd.metadata?.location as string;
@@ -94,13 +102,18 @@ export function resolveBoutEnd(c: LoopCtx, boutEnd: CombatEvent, ex: number, min
       : boutEnd.actor === 'A'
         ? c.weaponD
         : c.weaponA;
-    const boutEndLines = narrateBoutEnd(
-      { rng: c.flavorRng, by: by as string, winnerName: narWinner, loserName: narLoser, weaponId: winnerWeapon, ctx: {
+    const boutEndLines = narrateBoutEnd({
+      rng: c.flavorRng,
+      by: by as string,
+      winnerName: narWinner,
+      loserName: narLoser,
+      weaponId: winnerWeapon,
+      ctx: {
         cause: causeBucket,
         style: winnerStyle,
         mood: c.crowdMood,
-      } }
-    );
+      },
+    });
     boutEndLines.forEach((line) => c.log.push({ minute: min, text: line, emphasis: true }));
   }
   return { by, winner, causeBucket, fatalHitLocation, fatalExchangeIndex: ex };

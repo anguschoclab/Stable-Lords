@@ -58,17 +58,15 @@ function RivalIntelLine(props: {
   const { rivals, playerId } = world;
   if (!viewer || !opponent) return null;
   const owner =
-    (rivals ?? []).find(
-      (r) => r.id === (viewer as { stableId?: string }).stableId
-    ) ?? (rivals ?? []).find((r) => r.roster?.some((w) => w.id === viewer.id));
+    (rivals ?? []).find((r) => r.id === (viewer as { stableId?: string }).stableId) ??
+    (rivals ?? []).find((r) => r.roster?.some((w) => w.id === viewer.id));
   const memory = owner?.agentMemory;
   if (!owner || !memory) return null;
 
   const latestReport = (memory.scoutReports ?? [])
     .filter((r) => matchesScoutTarget(r, opponent))
     .at(-1);
-  const dossierKey =
-    (opponent as { stableId?: string }).stableId ?? playerId ?? '';
+  const dossierKey = (opponent as { stableId?: string }).stableId ?? playerId ?? '';
   const dossier = memory.opponentDossiers?.[dossierKey];
   if (!latestReport && !dossier) return null;
 
@@ -92,9 +90,7 @@ function RivalIntelLine(props: {
           ? ` · planIntel OE ${dossier.planIntel.suspectedOE ?? '?'} / AL ${dossier.planIntel.suspectedAL ?? '?'}`
           : ''}
         {dossier?.suspectedCompetence ? ` · owner ${dossier.suspectedCompetence}` : ''}
-        {dossier?.knownStyles?.length
-          ? ` · styles ${dossier.knownStyles.length}`
-          : ''}
+        {dossier?.knownStyles?.length ? ` · styles ${dossier.knownStyles.length}` : ''}
       </span>
     </div>
   );

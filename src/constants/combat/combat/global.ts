@@ -56,7 +56,6 @@ export const OE_DEF_SCALING = 0.5;
  */
 export const AL_INI_SCALING = 0.7;
 
-
 /**
  * Defender endurance discount
  */
@@ -149,7 +148,6 @@ export const CRIT_DAMAGE_MULT = 1.7;
  * Decision hit margin
  */
 export const DECISION_HIT_MARGIN = 3;
-
 
 // ─── Default Max HP ───────────────────────────────────────────────────────
 

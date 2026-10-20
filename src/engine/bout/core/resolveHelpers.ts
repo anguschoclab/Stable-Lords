@@ -155,9 +155,16 @@ export function processContractPayouts(
     stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
   impacts.push(
-    ...buildPurseImpacts(
-      { state: state, contract: contract, purse: purse, showFee: showFee, winnerId: winnerId, currentWId: currentWId, currentOId: currentOId, isRivalBout: rivalA != null }
-    )
+    ...buildPurseImpacts({
+      state: state,
+      contract: contract,
+      purse: purse,
+      showFee: showFee,
+      winnerId: winnerId,
+      currentWId: currentWId,
+      currentOId: currentOId,
+      isRivalBout: rivalA != null,
+    })
   );
 
   if (rivalsUpdates.size > 0) {

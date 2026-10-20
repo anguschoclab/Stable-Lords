@@ -14,25 +14,23 @@ interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceVari
 /**
  * Surface.
  */
-const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
-  (_props, ref) => {
-    const { className, variant, padding, rounded, glow } = _props;
-    const { ...props } = _props;
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          surfaceVariants({ variant, padding, rounded }),
-          glow && variant === 'gold' && 'glow-gold',
-          glow && variant === 'blood' && 'glow-blood',
-          glow && variant === 'glass' && 'glow-torch',
-          className
-        )}
-        {...props}
-      />
-    );
-  }
-);
+const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>((_props, ref) => {
+  const { className, variant, padding, rounded, glow } = _props;
+  const { ...props } = _props;
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        surfaceVariants({ variant, padding, rounded }),
+        glow && variant === 'gold' && 'glow-gold',
+        glow && variant === 'blood' && 'glow-blood',
+        glow && variant === 'glass' && 'glow-torch',
+        className
+      )}
+      {...props}
+    />
+  );
+});
 
 Surface.displayName = 'Surface';
 

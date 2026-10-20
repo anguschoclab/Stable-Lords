@@ -104,9 +104,16 @@ interface ArenaViewProps {
 /** Arena animation + event/crowd/trail/status derivation for one bout view. */
 function useArenaScene(p: ArenaViewProps & { isComplete: boolean; weather: WeatherType }) {
   const { log, visibleCount, maxHpA, maxHpD, winner, isComplete, nameA, nameD } = p;
-  const anim = useArenaAnimation(
-    { log: log, visibleCount: visibleCount, maxHpA: maxHpA ?? DEFAULT_MAX_HP, maxHpD: maxHpD ?? DEFAULT_MAX_HP, winner: winner, isComplete: isComplete, fighterNameA: nameA, fighterNameD: nameD }
-  );
+  const anim = useArenaAnimation({
+    log: log,
+    visibleCount: visibleCount,
+    maxHpA: maxHpA ?? DEFAULT_MAX_HP,
+    maxHpD: maxHpD ?? DEFAULT_MAX_HP,
+    winner: winner,
+    isComplete: isComplete,
+    fighterNameA: nameA,
+    fighterNameD: nameD,
+  });
 
   // Event tracking and crowd state
   const lastEventType = useLastEventType(log, visibleCount);

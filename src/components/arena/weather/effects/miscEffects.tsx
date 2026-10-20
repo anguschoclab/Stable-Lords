@@ -1,5 +1,5 @@
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { driftParticleStyle } from './particles';
+import { DriftParticles } from './DriftParticles';
 
 /** Sandstorm with sandy haze and multiply blend. */
 export function SandstormEffect() {
@@ -48,19 +48,18 @@ export function ManaSurgeEffect() {
           animation: 'bronzeShimmer 5s linear infinite',
         }}
       />
-      {Array.from({ length: 25 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 100}%`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 100, (cryptoRandom() - 0.5) * 100, {
-              delayS: 4,
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={25}
+        keyPrefix=""
+        particleClassName="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 100}%`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 100}
+        ty={() => (cryptoRandom() - 0.5) * 100}
+        delayS={4}
+      />
     </div>
   );
 }
@@ -70,17 +69,17 @@ export function LocustSwarmEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div className="absolute inset-0 bg-arena-gold/10 mix-blend-multiply" />
-      {Array.from({ length: 60 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 100}%`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 80, (cryptoRandom() - 0.5) * 80),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={60}
+        keyPrefix=""
+        particleClassName="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 100}%`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 80}
+        ty={() => (cryptoRandom() - 0.5) * 80}
+      />
     </div>
   );
 }

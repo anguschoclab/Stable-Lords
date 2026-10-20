@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactElement } from 'react';
+import { driftParticleStyle } from './particles';
 
 /** Props for {@link DriftParticles}. */
 export interface DriftParticlesProps {
@@ -23,9 +24,25 @@ export interface DriftParticlesProps {
 /**
  * Render `count` drifting particle divs — the shared `Array.from().map()` +
  * `driftParticleStyle` idiom duplicated across weather effects.
- * NOT IMPLEMENTED — signature stub for the test-first commit; replaced in the
- * weather-dedup commit.
  */
-export function DriftParticles(_props: DriftParticlesProps): never {
-  throw new Error('DriftParticles: not implemented');
+export function DriftParticles({
+  count,
+  keyPrefix = 'p-',
+  particleClassName,
+  position,
+  tx,
+  ty,
+  durationS,
+  delayS,
+}: DriftParticlesProps): ReactElement[] {
+  return Array.from({ length: count }).map((_, i) => (
+    <div
+      key={`${keyPrefix}${i}`}
+      className={particleClassName}
+      style={{
+        ...position?.(i),
+        ...driftParticleStyle(tx(), ty(), { delayS, durationS }),
+      }}
+    />
+  ));
 }

@@ -1,5 +1,5 @@
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { driftParticleStyle } from './particles';
+import { DriftParticles } from './DriftParticles';
 
 /** Thunderstorm with rain, lightning flashes, and darkening. */
 export function ThunderstormEffect() {
@@ -40,17 +40,17 @@ export function ArcaneStormEffect() {
       {/* Lightning flashes */}
       <div className="absolute inset-0 bg-primary/10 animate-pulse motion-reduce:animate-none" />
       {/* Crackling arcane sparks */}
-      {Array.from({ length: 35 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 100}%`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 140, (cryptoRandom() - 0.5) * 140),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={35}
+        keyPrefix=""
+        particleClassName="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 100}%`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 140}
+        ty={() => (cryptoRandom() - 0.5) * 140}
+      />
     </div>
   );
 }
@@ -75,34 +75,32 @@ export function AetherStormEffect() {
         style={{ animationDuration: '1.5s' }}
       />
       {/* Aether particles - more numerous and chaotic than Arcane Storm */}
-      {Array.from({ length: 40 }).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 100}%`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 160, (cryptoRandom() - 0.5) * 160, {
-              delayS: 4,
-              durationS: { base: 2, range: 2 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={40}
+        keyPrefix=""
+        particleClassName="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 100}%`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 160}
+        ty={() => (cryptoRandom() - 0.5) * 160}
+        delayS={4}
+        durationS={{ base: 2, range: 2 }}
+      />
       {/* Violet secondary particles for prismatic effect */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={`v-${i}`}
-          className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 100}%`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 120, (cryptoRandom() - 0.5) * 120, {
-              durationS: { base: 2.5, range: 2 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={20}
+        keyPrefix="v-"
+        particleClassName="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 100}%`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 120}
+        ty={() => (cryptoRandom() - 0.5) * 120}
+        durationS={{ base: 2.5, range: 2 }}
+      />
     </div>
   );
 }

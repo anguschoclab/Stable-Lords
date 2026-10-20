@@ -1,5 +1,5 @@
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { driftParticleStyle } from './particles';
+import { DriftParticles } from './DriftParticles';
 
 /** Heat shimmer effect overlay. */
 export function HeatEffect() {
@@ -84,19 +84,15 @@ export function MirageEffect() {
         />
       ))}
       {/* Shimmering heat particles rising */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={`shimmer-${i}`}
-          className="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            bottom: '0%',
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 30, -(80 + cryptoRandom() * 60), {
-              durationS: { base: 2, range: 2 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={20}
+        keyPrefix="shimmer-"
+        particleClassName="absolute w-1 h-1 bg-arena-gold/30 rounded-full animate-chaotic-drift motion-reduce:animate-none"
+        position={() => ({ left: `${cryptoRandom() * 100}%`, bottom: '0%' })}
+        tx={() => (cryptoRandom() - 0.5) * 30}
+        ty={() => -(80 + cryptoRandom() * 60)}
+        durationS={{ base: 2, range: 2 }}
+      />
     </div>
   );
 }
@@ -108,37 +104,32 @@ export function WildfireSmokeEffect() {
       {/* Dark smoky haze */}
       <div className="absolute inset-0 bg-neutral-900/30 mix-blend-multiply" />
       {/* Billowing smoke clouds — large, slow, rising */}
-      {Array.from({ length: 12 }).map((_, i) => (
-        <div
-          key={`smoke-${i}`}
-          className="absolute rounded-full blur-2xl animate-chaotic-drift motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            bottom: '-15%',
-            width: `${80 + cryptoRandom() * 60}px`,
-            height: `${80 + cryptoRandom() * 60}px`,
-            background: `rgba(${60 + cryptoRandom() * 40},${40 + cryptoRandom() * 30},${30 + cryptoRandom() * 20},${0.15 + cryptoRandom() * 0.1})`,
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 60, -(120 + cryptoRandom() * 80), {
-              delayS: 5,
-              durationS: { base: 4, range: 4 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={12}
+        keyPrefix="smoke-"
+        particleClassName="absolute rounded-full blur-2xl animate-chaotic-drift motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          bottom: '-15%',
+          width: `${80 + cryptoRandom() * 60}px`,
+          height: `${80 + cryptoRandom() * 60}px`,
+          background: `rgba(${60 + cryptoRandom() * 40},${40 + cryptoRandom() * 30},${30 + cryptoRandom() * 20},${0.15 + cryptoRandom() * 0.1})`,
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 60}
+        ty={() => -(120 + cryptoRandom() * 80)}
+        delayS={5}
+        durationS={{ base: 4, range: 4 }}
+      />
       {/* Ember sparks within the smoke */}
-      {Array.from({ length: 15 }).map((_, i) => (
-        <div
-          key={`spark-${i}`}
-          className="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            bottom: '0%',
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 40, -(80 + cryptoRandom() * 60), {
-              durationS: { base: 2, range: 2 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={15}
+        keyPrefix="spark-"
+        particleClassName="absolute w-0.5 h-0.5 bg-arena-blood/80 rounded-full animate-chaotic-drift motion-reduce:animate-none"
+        position={() => ({ left: `${cryptoRandom() * 100}%`, bottom: '0%' })}
+        tx={() => (cryptoRandom() - 0.5) * 40}
+        ty={() => -(80 + cryptoRandom() * 60)}
+        durationS={{ base: 2, range: 2 }}
+      />
     </div>
   );
 }

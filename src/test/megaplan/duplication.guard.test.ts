@@ -86,8 +86,7 @@ const EXEMPT_PAIRS = new Set([
 const DEBT_PAIRS = new Set([
   // warriorOutcome/addStat + makeInjury boilerplate across offseason handlers —
   // DRAINED by statGrantOutcome/makeMinorInjury (7 pairs eliminated).
-  // driftParticleStyle particle-JSX idiom
-  'src/components/arena/weather/effects/heatEffects.tsx|src/components/arena/weather/effects/windEffects.tsx',
+  // driftParticleStyle particle-JSX idiom — DRAINED by DriftParticles
   // grudge lookup + aiPlanForWarrior tail
   'src/engine/bout/services/boutResolution.ts|src/engine/matchmaking/tournamentSelection/utils.ts',
 ]);

@@ -1,5 +1,5 @@
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { driftParticleStyle } from './particles';
+import { DriftParticles } from './DriftParticles';
 
 /** Aurora Borealis with dancing colored bands and starfield. */
 export function AuroraBorealisEffect() {
@@ -51,20 +51,16 @@ export function GravityAnomalyEffect() {
         }}
       />
       {/* Floating debris — particles drifting upward (reversed gravity) */}
-      {Array.from({ length: 30 }).map((_, i) => (
-        <div
-          key={`debris-${i}`}
-          className="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            bottom: '0%',
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 80, -(100 + cryptoRandom() * 120), {
-              delayS: 4,
-              durationS: { base: 3, range: 3 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={30}
+        keyPrefix="debris-"
+        particleClassName="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
+        position={() => ({ left: `${cryptoRandom() * 100}%`, bottom: '0%' })}
+        tx={() => (cryptoRandom() - 0.5) * 80}
+        ty={() => -(100 + cryptoRandom() * 120)}
+        delayS={4}
+        durationS={{ base: 3, range: 3 }}
+      />
       {/* Gravitational distortion rings */}
       {Array.from({ length: 3 }).map((_, i) => (
         <div
@@ -94,22 +90,21 @@ export function RainbowEffect() {
         }}
       />
       {/* Subtle prismatic sparkle particles */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={`sparkle-${i}`}
-          className="absolute w-1 h-1 rounded-full animate-mana-spark motion-reduce:animate-none"
-          style={{
-            left: `${cryptoRandom() * 100}%`,
-            top: `${cryptoRandom() * 60}%`,
-            background: `hsl(${cryptoRandom() * 360}, 80%, 70%)`,
-            opacity: '0.4',
-            ...driftParticleStyle((cryptoRandom() - 0.5) * 40, (cryptoRandom() - 0.5) * 40, {
-              delayS: 4,
-              durationS: { base: 3, range: 3 },
-            }),
-          }}
-        />
-      ))}
+      <DriftParticles
+        count={20}
+        keyPrefix="sparkle-"
+        particleClassName="absolute w-1 h-1 rounded-full animate-mana-spark motion-reduce:animate-none"
+        position={() => ({
+          left: `${cryptoRandom() * 100}%`,
+          top: `${cryptoRandom() * 60}%`,
+          background: `hsl(${cryptoRandom() * 360}, 80%, 70%)`,
+          opacity: '0.4',
+        })}
+        tx={() => (cryptoRandom() - 0.5) * 40}
+        ty={() => (cryptoRandom() - 0.5) * 40}
+        delayS={4}
+        durationS={{ base: 3, range: 3 }}
+      />
       {/* Soft golden glow at the horizon */}
       <div
         className="absolute bottom-0 inset-x-0 h-1/3 animate-pulse-slow motion-reduce:animate-none"

@@ -67,21 +67,14 @@ function buildFTUEWarrior(opts: {
   return w;
 }
 
-/** Builds the post-FTUE game state: seeded roster, bout outcome, pool seed. */
-export function buildFTUEInitialState(
-  baseState: GameState,
-  selectedWarriors: SelectedWarrior[],
+type BuiltWarrior = ReturnType<typeof buildFTUEWarrior>;
+
+/** Splits the built roster at the bout's kill line, stamping death metadata. */
+function splitByBoutDeath(
+  warriors: BuiltWarrior[],
   boutResult: BoutResult | null,
-  poolSeedValue: number,
-  playerPlan?: FightPlan | null
-) {
-  const finishRng = new SeededRNG(poolSeedValue + 999);
-  const stableId = baseState.player?.id;
-
-  const warriors = selectedWarriors.map((pw, idx) =>
-    buildFTUEWarrior({ pw, idx, boutResult, playerPlan, finishRng, stableId })
-  );
-
+  season: GameState['season']
+): { aliveWarriors: BuiltWarrior[]; deadWarriors: BuiltWarrior[] } {
   const deadWarriorName =
     boutResult?.outcome.by === 'Kill'
       ? boutResult.outcome.winner === 'A'
@@ -99,14 +92,20 @@ export function buildFTUEInitialState(
       deathCause: 'Killed in first arena bout',
       killedBy: boutResult?.outcome.winner === 'A' ? boutResult.a.name : boutResult?.d.name,
       isDead: true,
-      dateOfDeath: `Week 1, ${baseState.season}`,
+      dateOfDeath: `Week 1, ${season}`,
     }));
+  return { aliveWarriors, deadWarriors };
+}
 
+/** Seeds the world around the new stable: rivals, recruit pool, promoters. */
+function seedWorld(
+  poolSeedValue: number,
+  allWarriors: BuiltWarrior[]
+): { rivals: ReturnType<typeof generateRivalStables>; recruitPool: PoolWarrior[]; promoters: Record<string, Promoter> } {
   const rivals = generateRivalStables(23, poolSeedValue + 777);
 
   const usedNames = new Set<string>();
-  aliveWarriors.forEach((w) => usedNames.add(w.name));
-  deadWarriors.forEach((w) => usedNames.add(w.name));
+  allWarriors.forEach((w) => usedNames.add(w.name));
   rivals.forEach((r) => r.roster.forEach((w) => usedNames.add(w.name)));
 
   const recruitPool = generateRecruitPool({
@@ -121,6 +120,29 @@ export function buildFTUEInitialState(
   promotersArray.forEach((p) => {
     promoters[p.id] = p;
   });
+  return { rivals, recruitPool, promoters };
+}
+
+/** Builds the post-FTUE game state: seeded roster, bout outcome, pool seed. */
+export function buildFTUEInitialState(
+  baseState: GameState,
+  selectedWarriors: SelectedWarrior[],
+  boutResult: BoutResult | null,
+  poolSeedValue: number,
+  playerPlan?: FightPlan | null
+) {
+  const finishRng = new SeededRNG(poolSeedValue + 999);
+  const stableId = baseState.player?.id;
+
+  const warriors = selectedWarriors.map((pw, idx) =>
+    buildFTUEWarrior({ pw, idx, boutResult, playerPlan, finishRng, stableId })
+  );
+
+  const { aliveWarriors, deadWarriors } = splitByBoutDeath(
+    warriors, boutResult, baseState.season
+  );
+
+  const { rivals, recruitPool, promoters } = seedWorld(poolSeedValue, warriors);
 
   // Build a minimal state snapshot to seed rankings + offers. baseState can
   // lack absoluteWeek pre-game — NaN offer weeks serialise to null on export.

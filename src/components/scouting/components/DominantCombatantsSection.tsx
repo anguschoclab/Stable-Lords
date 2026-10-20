@@ -21,6 +21,68 @@ interface DominantCombatantsSectionProps {
   topWarriorB: TopWarrior | null;
 }
 
+/** One side's top-warrior card: identity row plus age/fame/status vitals. */
+function CombatantCard({
+  warrior,
+  color,
+  borderColor,
+  bgColor,
+}: {
+  warrior: TopWarrior | null;
+  color: string;
+  borderColor: string;
+  bgColor: string;
+}) {
+  if (!warrior) return null;
+  return (
+    <div className={`p-4 border rounded-none ${borderColor} ${bgColor}`}>
+      <div className="space-y-3">
+        <div
+          className={`text-[9px] font-black uppercase tracking-widest mb-3 opacity-60 ${color}`}
+        >
+          Top Warrior
+        </div>
+
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <WarriorNameAvatar
+              warriorId={warrior.id}
+              size="xs"
+              className="border border-white/10 bg-neutral-950 shrink-0"
+            />
+            <WarriorNameTag
+              id={warrior.id}
+              name={warrior.name}
+              epithet={warrior.epithet}
+              isChampion={warrior.isChampion}
+              injuryCount={warrior.injuryCount}
+              isDead={warrior.isDead}
+            />
+          </div>
+          <div className={`text-[10px] font-mono font-black ${color}`}>
+            {warrior.career.wins}W-{warrior.career.losses}L
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex justify-between text-[9px]">
+            <span className="text-muted-foreground/50">Age</span>
+            <span className="text-foreground/80">{warrior.age}y</span>
+          </div>
+          <div className="flex justify-between text-[9px]">
+            <span className="text-muted-foreground/50">Fame</span>
+            <span className="text-foreground/80">{warrior.fame ?? 0}</span>
+          </div>
+          <div className="flex justify-between text-[9px]">
+            <span className="text-muted-foreground/50">Status</span>
+            <span className="text-foreground/80">{warrior.status}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -40,69 +102,18 @@ export function DominantCombatantsSection({
       </div>
 
       <div className="p-6 grid grid-cols-2 gap-8">
-        {[
-          {
-            warrior: topWarriorA,
-            color: 'text-primary',
-            borderColor: 'border-primary/20',
-            bgColor: 'bg-primary/5',
-          },
-          {
-            warrior: topWarriorB,
-            color: 'text-accent',
-            borderColor: 'border-accent/20',
-            bgColor: 'bg-accent/5',
-          },
-        ].map(({ warrior, color, borderColor, bgColor }) => {
-          if (!warrior) return null;
-          return (
-            <div key={warrior.id} className={`p-4 border rounded-none ${borderColor} ${bgColor}`}>
-              <div className="space-y-3">
-                <div
-                  className={`text-[9px] font-black uppercase tracking-widest mb-3 opacity-60 ${color}`}
-                >
-                  Top Warrior
-                </div>
-
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <WarriorNameAvatar
-                      warriorId={warrior.id}
-                      size="xs"
-                      className="border border-white/10 bg-neutral-950 shrink-0"
-                    />
-                    <WarriorNameTag
-                      id={warrior.id}
-                      name={warrior.name}
-                      epithet={warrior.epithet}
-                      isChampion={warrior.isChampion}
-                      injuryCount={warrior.injuryCount}
-                      isDead={warrior.isDead}
-                    />
-                  </div>
-                  <div className={`text-[10px] font-mono font-black ${color}`}>
-                    {warrior.career.wins}W-{warrior.career.losses}L
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[9px]">
-                    <span className="text-muted-foreground/50">Age</span>
-                    <span className="text-foreground/80">{warrior.age}y</span>
-                  </div>
-                  <div className="flex justify-between text-[9px]">
-                    <span className="text-muted-foreground/50">Fame</span>
-                    <span className="text-foreground/80">{warrior.fame ?? 0}</span>
-                  </div>
-                  <div className="flex justify-between text-[9px]">
-                    <span className="text-muted-foreground/50">Status</span>
-                    <span className="text-foreground/80">{warrior.status}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        <CombatantCard
+          warrior={topWarriorA}
+          color="text-primary"
+          borderColor="border-primary/20"
+          bgColor="bg-primary/5"
+        />
+        <CombatantCard
+          warrior={topWarriorB}
+          color="text-accent"
+          borderColor="border-accent/20"
+          bgColor="bg-accent/5"
+        />
       </div>
     </Surface>
   );

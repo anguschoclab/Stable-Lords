@@ -19,6 +19,79 @@ interface WarriorDossierHeaderProps {
   isPlayerOwned?: boolean;
 }
 
+/** Right-hand action cluster: challenge/avoid toggles, bookmark, style + rank badges. */
+function HeaderActions({
+  warrior,
+  rankings,
+  isPlayerOwned,
+}: {
+  warrior: Warrior;
+  rankings: WarriorDossierHeaderProps['rankings'];
+  isPlayerOwned: boolean;
+}) {
+  const playerChallenges = useGameStore((s) => s.playerChallenges);
+  const playerAvoids = useGameStore((s) => s.playerAvoids);
+  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
+  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
+
+  const isChallenged = playerChallenges?.includes(warrior.id) ?? false;
+  const isAvoided = playerAvoids?.includes(warrior.id) ?? false;
+  return (
+    <div className="flex flex-col items-end gap-2">
+      <div className="flex items-center gap-3">
+        {!isPlayerOwned && (
+          <>
+            <Button
+              variant={isChallenged ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => toggleChallenge(warrior.id)}
+              className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+            >
+              {isChallenged ? 'Challenged' : 'Challenge'}
+            </Button>
+            <Button
+              variant={isAvoided ? 'destructive' : 'outline'}
+              size="sm"
+              onClick={() => toggleAvoid(warrior.id)}
+              className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+            >
+              {isAvoided ? 'Avoided' : 'Avoid'}
+            </Button>
+          </>
+        )}
+        <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
+        <StatBadge styleName={warrior.style} />
+      </div>
+      {rankings && <RankBadges rankings={rankings} />}
+    </div>
+  );
+}
+
+/** Rank + composite-score badge pair under the action cluster. */
+function RankBadges({ rankings }: { rankings: NonNullable<WarriorDossierHeaderProps['rankings']> }) {
+  return (
+    <div className="flex items-center gap-2">
+      <Badge
+        variant="outline"
+        className={cn(
+          'text-[10px] font-black uppercase tracking-tighter border-primary/20',
+          rankings.overallRank <= 64
+            ? 'text-arena-gold bg-arena-gold/5'
+            : 'text-primary bg-primary/5'
+        )}
+      >
+        RANK #{rankings.overallRank}
+      </Badge>
+      <Badge
+        variant="secondary"
+        className="text-[10px] font-black uppercase tracking-tighter bg-neutral-900 border border-white/5 opacity-80"
+      >
+        {Math.round(rankings.compositeScore)} PTS
+      </Badge>
+    </div>
+  );
+}
+
 /**
  * Warrior dossier header.
  * @param - { warrior, record, rankings }.
@@ -29,13 +102,6 @@ export function WarriorDossierHeader({
   rankings,
   isPlayerOwned = true,
 }: WarriorDossierHeaderProps) {
-  const playerChallenges = useGameStore((s) => s.playerChallenges);
-  const playerAvoids = useGameStore((s) => s.playerAvoids);
-  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
-  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
-
-  const isChallenged = playerChallenges?.includes(warrior.id) ?? false;
-  const isAvoided = playerAvoids?.includes(warrior.id) ?? false;
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -58,53 +124,7 @@ export function WarriorDossierHeader({
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end gap-2">
-        <div className="flex items-center gap-3">
-          {!isPlayerOwned && (
-            <>
-              <Button
-                variant={isChallenged ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => toggleChallenge(warrior.id)}
-                className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
-              >
-                {isChallenged ? 'Challenged' : 'Challenge'}
-              </Button>
-              <Button
-                variant={isAvoided ? 'destructive' : 'outline'}
-                size="sm"
-                onClick={() => toggleAvoid(warrior.id)}
-                className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
-              >
-                {isAvoided ? 'Avoided' : 'Avoid'}
-              </Button>
-            </>
-          )}
-          <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
-          <StatBadge styleName={warrior.style} />
-        </div>
-        {rankings && (
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className={cn(
-                'text-[10px] font-black uppercase tracking-tighter border-primary/20',
-                rankings.overallRank <= 64
-                  ? 'text-arena-gold bg-arena-gold/5'
-                  : 'text-primary bg-primary/5'
-              )}
-            >
-              RANK #{rankings.overallRank}
-            </Badge>
-            <Badge
-              variant="secondary"
-              className="text-[10px] font-black uppercase tracking-tighter bg-neutral-900 border border-white/5 opacity-80"
-            >
-              {Math.round(rankings.compositeScore)} PTS
-            </Badge>
-          </div>
-        )}
-      </div>
+      <HeaderActions warrior={warrior} rankings={rankings} isPlayerOwned={isPlayerOwned} />
     </div>
   );
 }

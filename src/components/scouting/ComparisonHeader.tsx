@@ -34,13 +34,74 @@ function SideColumn({
   );
 }
 
+interface ComparisonSideProps {
+  props: ComparisonHeaderProps;
+  label: string;
+  colorClass: string;
+  title: string;
+  side: 'A' | 'B';
+}
+
+const SIDE_CLASSES = {
+  primary: {
+    color: 'text-primary',
+    avatar: 'border border-primary/20 bg-neutral-950',
+    badge:
+      'text-[10px] font-black tracking-widest uppercase border-primary/20 bg-primary/10 text-primary py-1 px-3 rounded-none',
+  },
+  accent: {
+    color: 'text-accent',
+    avatar: 'border border-accent/20 bg-neutral-950',
+    badge:
+      'text-[10px] font-black tracking-widest uppercase border-accent/20 bg-accent/10 text-accent py-1 px-3 rounded-none',
+  },
+} as const;
+
+/** One side of the versus header: avatar + tier badge / warrior vitals. */
+function ComparisonSide({ props, label, colorClass, title, side }: ComparisonSideProps) {
+  const rival = props.kind === 'stable' ? (side === 'A' ? props.rivalA : props.rivalB) : undefined;
+  const warrior =
+    props.kind === 'warrior' ? (side === 'A' ? props.warriorA : props.warriorB) : undefined;
+  const source = props.kind === 'stable' ? rival?.owner : warrior;
+  const entityType = props.kind === 'stable' ? 'owner' : 'warrior';
+  const cls = SIDE_CLASSES[colorClass === 'text-primary' ? 'primary' : 'accent'];
+
+  return (
+    <SideColumn label={label} colorClass={cls.color} title={title}>
+      {source && (
+        <div className="flex justify-center">
+          <AvatarForEntity
+            entityId={source.id}
+            entityType={entityType}
+            source={source}
+            size="md"
+            className={cls.avatar}
+          />
+        </div>
+      )}
+      {rival ? (
+        <div className="flex justify-center">
+          <Badge variant="outline" className={cls.badge}>
+            {rival.tier}
+          </Badge>
+        </div>
+      ) : (
+        warrior && (
+          <div className="flex justify-center">
+            <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">
+              {warrior.age} years · {warrior.status}
+            </span>
+          </div>
+        )
+      )}
+    </SideColumn>
+  );
+}
+
 /**
  *
  */
 export function ComparisonHeader(props: ComparisonHeaderProps) {
-  const sourceA = props.kind === 'stable' ? props.rivalA.owner : props.warriorA;
-  const sourceB = props.kind === 'stable' ? props.rivalB.owner : props.warriorB;
-  const entityType = props.kind === 'stable' ? 'owner' : 'warrior';
   const leftTitle =
     props.kind === 'stable'
       ? props.rivalA.owner.stableName
@@ -58,37 +119,13 @@ export function ComparisonHeader(props: ComparisonHeaderProps) {
     >
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />
 
-      <SideColumn label="Challenger" colorClass="text-primary" title={leftTitle}>
-        {sourceA && (
-          <div className="flex justify-center">
-            <AvatarForEntity
-              entityId={sourceA.id}
-              entityType={entityType}
-              source={sourceA}
-              size="md"
-              className="border border-primary/20 bg-neutral-950"
-            />
-          </div>
-        )}
-        {props.kind === 'stable' ? (
-          <div className="flex justify-center">
-            <Badge
-              variant="outline"
-              className="text-[10px] font-black tracking-widest uppercase border-primary/20 bg-primary/10 text-primary py-1 px-3 rounded-none"
-            >
-              {props.rivalA.tier}
-            </Badge>
-          </div>
-        ) : (
-          props.warriorA && (
-            <div className="flex justify-center">
-              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">
-                {props.warriorA.age} years · {props.warriorA.status}
-              </span>
-            </div>
-          )
-        )}
-      </SideColumn>
+      <ComparisonSide
+        props={props}
+        label="Challenger"
+        colorClass="text-primary"
+        title={leftTitle}
+        side="A"
+      />
 
       <div className="flex flex-col items-center justify-center mx-12 relative z-10">
         <div className="p-3 rounded-full bg-neutral-900 border border-white/5 shadow-inner">
@@ -99,37 +136,13 @@ export function ComparisonHeader(props: ComparisonHeaderProps) {
         </span>
       </div>
 
-      <SideColumn label="Defender" colorClass="text-accent" title={rightTitle}>
-        {sourceB && (
-          <div className="flex justify-center">
-            <AvatarForEntity
-              entityId={sourceB.id}
-              entityType={entityType}
-              source={sourceB}
-              size="md"
-              className="border border-accent/20 bg-neutral-950"
-            />
-          </div>
-        )}
-        {props.kind === 'stable' ? (
-          <div className="flex justify-center">
-            <Badge
-              variant="outline"
-              className="text-[10px] font-black tracking-widest uppercase border-accent/20 bg-accent/10 text-accent py-1 px-3 rounded-none"
-            >
-              {props.rivalB.tier}
-            </Badge>
-          </div>
-        ) : (
-          props.warriorB && (
-            <div className="flex justify-center">
-              <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">
-                {props.warriorB.age} years · {props.warriorB.status}
-              </span>
-            </div>
-          )
-        )}
-      </SideColumn>
+      <ComparisonSide
+        props={props}
+        label="Defender"
+        colorClass="text-accent"
+        title={rightTitle}
+        side="B"
+      />
     </Surface>
   );
 }

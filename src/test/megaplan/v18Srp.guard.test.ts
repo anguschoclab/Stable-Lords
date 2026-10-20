@@ -50,7 +50,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/pages/Recruit/hooks/useRecruitActions.ts'), 'split src/pages/Recruit/hooks/useRecruitActions.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S4: ComparisonHeader decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S4', () => {
+  it('S4: ComparisonHeader decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S4', () => {
     expect(budgetFor('src/components/scouting/ComparisonHeader.tsx'), 'split src/components/scouting/ComparisonHeader.tsx into orchestrator + named siblings').toEqual([]);
   });
 
@@ -70,11 +70,11 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/championship/arenaChampionship/phases/scheduling.ts'), 'split src/engine/championship/arenaChampionship/phases/scheduling.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S9: RosterWarriorRow decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S9', () => {
+  it('S9: RosterWarriorRow decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S9', () => {
     expect(budgetFor('src/components/stable/RosterWarriorRow.tsx'), 'split src/components/stable/RosterWarriorRow.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S10: WarriorDossierHeader decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S10', () => {
+  it('S10: WarriorDossierHeader decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S10', () => {
     expect(budgetFor('src/components/warrior/dossier/WarriorDossierHeader.tsx'), 'split src/components/warrior/dossier/WarriorDossierHeader.tsx into orchestrator + named siblings').toEqual([]);
   });
 
@@ -86,11 +86,11 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/data/warriorStatements.ts'), 'split src/data/warriorStatements.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S13: ftueStateBuilder decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S13', () => {
+  it('S13: ftueStateBuilder decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S13', () => {
     expect(budgetFor('src/components/orphanage/ftueStateBuilder.ts'), 'split src/components/orphanage/ftueStateBuilder.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S14: DominantCombatantsSection decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S14', () => {
+  it('S14: DominantCombatantsSection decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S14', () => {
     expect(budgetFor('src/components/scouting/components/DominantCombatantsSection.tsx'), 'split src/components/scouting/components/DominantCombatantsSection.tsx into orchestrator + named siblings').toEqual([]);
   });
 
@@ -106,7 +106,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/ai/workers/recruitmentWorker.ts'), 'split src/engine/ai/workers/recruitmentWorker.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S18: MathStep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S18', () => {
+  it('S18: MathStep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S18', () => {
     expect(budgetFor('src/components/resolution-reveal/MathStep.tsx'), 'split src/components/resolution-reveal/MathStep.tsx into orchestrator + named siblings').toEqual([]);
   });
 

@@ -84,6 +84,54 @@ function RecordStats({ winRate, kills }: { winRate: number; kills: number }) {
   );
 }
 
+/** Personnel block: avatar, name tag, contender chip, and badge row. */
+function PersonnelBlock({
+  warrior,
+  contenderBadge,
+  injuryCount,
+}: {
+  warrior: RosterWarriorRowProps['warrior'];
+  contenderBadge: RosterWarriorRowProps['contenderBadge'];
+  injuryCount: number;
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      <AvatarForEntity
+        entityId={warrior.id}
+        entityType="warrior"
+        source={warrior as Warrior}
+        size="sm"
+        className="border border-white/10"
+      />
+      <div className="space-y-1.5">
+        <WarriorNameTag
+          id={warrior.id}
+          name={warrior.name}
+          epithet={warrior.epithet}
+          isChampion={warrior.champion}
+          injuryCount={injuryCount}
+          useCrown
+        />
+        {!warrior.champion && contenderBadge && (
+          <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-arena-gold/80">
+            <Crown className="h-2.5 w-2.5" />
+            Contender #{contenderBadge.rank} · {contenderBadge.arenaName}
+          </span>
+        )}
+        <div className="flex items-center gap-3">
+          <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
+          <FameChip fame={warrior.fame} />
+          <PotentialBadge potential={warrior.potential} />
+          {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
+          {warrior.traits?.slice(0, 3).map((t) => (
+            <TraitBadge key={t} traitId={t} className="text-[8px]" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  *
  */
@@ -123,40 +171,11 @@ export function RosterWarriorRow({
           {/* Personnel Info */}
           <div className="flex-1 min-w-0 space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <AvatarForEntity
-                  entityId={warrior.id}
-                  entityType="warrior"
-                  source={warrior as Warrior}
-                  size="sm"
-                  className="border border-white/10"
-                />
-                <div className="space-y-1.5">
-                  <WarriorNameTag
-                    id={warrior.id}
-                    name={warrior.name}
-                    epithet={warrior.epithet}
-                    isChampion={warrior.champion}
-                    injuryCount={injuryCount}
-                    useCrown
-                  />
-                  {!warrior.champion && contenderBadge && (
-                    <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest text-arena-gold/80">
-                      <Crown className="h-2.5 w-2.5" />
-                      Contender #{contenderBadge.rank} · {contenderBadge.arenaName}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
-                    <FameChip fame={warrior.fame} />
-                    <PotentialBadge potential={warrior.potential} />
-                    {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
-                    {warrior.traits?.slice(0, 3).map((t) => (
-                      <TraitBadge key={t} traitId={t} className="text-[8px]" />
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <PersonnelBlock
+                warrior={warrior}
+                contenderBadge={contenderBadge}
+                injuryCount={injuryCount}
+              />
 
               <div className="flex items-center gap-4">
                 <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />

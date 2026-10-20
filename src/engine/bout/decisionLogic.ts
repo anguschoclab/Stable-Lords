@@ -126,64 +126,42 @@ interface ResolveOvertimeOrTiebreakerArgs {
  * Three judges with different archetypes score the bout.
  * Close (1-1-1 with ties) triggers an overtime exchange via rng.
  */
-/**
- * Helper to resolve the overtime exchange or HP-based tiebreaker when judges cannot agree.
- */
-function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): {
+/** Rolls the overtime exchange, weighting the winner by remaining HP share. */
+function overtimeRoll(args: ResolveOvertimeOrTiebreakerArgs): {
   winner: 'A' | 'D' | null;
   by: FightOutcome['by'];
   narrative: string;
-} {
-  const { fA, fD, nameA, nameD, aVotes } = args;
-  const { dVotes, rng } = args;
-  // ── Contested / overtime ──
-  if (rng) {
-    const hpA = fA.hp / fA.maxHp;
-    const hpD = fD.hp / fD.maxHp;
-    const total = hpA + hpD;
-    if (total > 0) {
-      if (rng() < hpA / total) {
-        return {
-          winner: 'A',
-          by: 'Decision',
-          narrative: decisionNarrative({
-            _winner: 'A',
-            _loser: 'D',
-            winName: nameA,
-            loseName: nameD,
-            fW: fA,
-            fL: fD,
-            voteType: 'overtime',
-          }),
-        };
-      } else {
-        return {
-          winner: 'D',
-          by: 'Decision',
-          narrative: decisionNarrative({
-            _winner: 'D',
-            _loser: 'A',
-            winName: nameD,
-            loseName: nameA,
-            fW: fD,
-            fL: fA,
-            voteType: 'overtime',
-          }),
-        };
-      }
-    }
-  }
+} | null {
+  const { fA, fD, nameA, nameD, rng } = args;
+  if (!rng) return null;
+  const hpA = fA.hp / fA.maxHp;
+  const hpD = fD.hp / fD.maxHp;
+  const total = hpA + hpD;
+  if (total <= 0) return null;
+  const aWins = rng() < hpA / total;
+  const winner = aWins ? 'A' : 'D';
+  return {
+    winner,
+    by: 'Decision',
+    narrative: decisionNarrative({
+      _winner: winner,
+      _loser: aWins ? 'D' : 'A',
+      winName: aWins ? nameA : nameD,
+      loseName: aWins ? nameD : nameA,
+      fW: aWins ? fA : fD,
+      fL: aWins ? fD : fA,
+      voteType: 'overtime',
+    }),
+  };
+}
 
-  // Pure draw fallback
-  if (aVotes === 1 && dVotes === 1) {
-    return {
-      winner: null,
-      by: 'Draw',
-      narrative: `Time! The judges are divided. The Arenamaster rules a draw.`,
-    };
-  }
-
-  // Tiebreaker by raw HP remaining
+/** Breaks an unresolved contest on raw HP remaining; dead-even HP is a draw. */
+function hpTiebreaker(
+  fA: FighterState,
+  fD: FighterState,
+  nameA: string,
+  nameD: string
+): { winner: 'A' | 'D' | null; by: FightOutcome['by']; narrative: string } {
   if (fA.hp > fD.hp) {
     return {
       winner: 'A',
@@ -199,6 +177,75 @@ function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): {
     };
   }
   return { winner: null, by: 'Draw', narrative: `Time! The Arenamaster declares a draw.` };
+}
+
+/**
+ * Helper to resolve the overtime exchange or HP-based tiebreaker when judges cannot agree.
+ */
+function resolveOvertimeOrTiebreaker(args: ResolveOvertimeOrTiebreakerArgs): {
+  winner: 'A' | 'D' | null;
+  by: FightOutcome['by'];
+  narrative: string;
+} {
+  const { fA, fD, nameA, nameD, aVotes } = args;
+  const { dVotes } = args;
+
+  // ── Contested / overtime ──
+  const rolled = overtimeRoll(args);
+  if (rolled) return rolled;
+
+  // Pure draw fallback
+  if (aVotes === 1 && dVotes === 1) {
+    return {
+      winner: null,
+      by: 'Draw',
+      narrative: `Time! The judges are divided. The Arenamaster rules a draw.`,
+    };
+  }
+
+  // Tiebreaker by raw HP remaining
+  return hpTiebreaker(fA, fD, nameA, nameD);
+}
+
+interface MajorityDecisionArgs {
+  winner: 'A' | 'D';
+  voteType: 'unanimous' | 'split';
+  votes: ('A' | 'D' | null)[];
+  archetypes: JudgeArchetype[];
+  fA: FighterState;
+  fD: FighterState;
+  nameA: string;
+  nameD: string;
+}
+
+/** Emits the verdict for a fighter carrying a majority of the judges' cards. */
+function majorityDecision(args: MajorityDecisionArgs): {
+  winner: 'A' | 'D' | null;
+  by: FightOutcome['by'];
+  narrative: string;
+} {
+  const { winner, voteType, votes, archetypes, fA, fD, nameA, nameD } = args;
+  const isA = winner === 'A';
+  let dissenter: string | undefined;
+  if (voteType === 'split') {
+    const other = isA ? 'D' : 'A';
+    const dissentIdx = votes.indexOf(other) >= 0 ? votes.indexOf(other) : votes.indexOf(null);
+    dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
+  }
+  return {
+    winner,
+    by: 'Decision',
+    narrative: decisionNarrative({
+      _winner: winner,
+      _loser: isA ? 'D' : 'A',
+      winName: isA ? nameA : nameD,
+      loseName: isA ? nameD : nameA,
+      fW: isA ? fA : fD,
+      fL: isA ? fD : fA,
+      voteType,
+      dissenter,
+    }),
+  };
 }
 
 /**
@@ -225,75 +272,15 @@ export function resolveDecision(
     { aVotes: 0, dVotes: 0 }
   );
 
+  const base = { votes, archetypes, fA, fD, nameA, nameD };
+
   // ── Unanimous ──
-  if (aVotes === 3) {
-    return {
-      winner: 'A',
-      by: 'Decision',
-      narrative: decisionNarrative({
-        _winner: 'A',
-        _loser: 'D',
-        winName: nameA,
-        loseName: nameD,
-        fW: fA,
-        fL: fD,
-        voteType: 'unanimous',
-      }),
-    };
-  }
-  if (dVotes === 3) {
-    return {
-      winner: 'D',
-      by: 'Decision',
-      narrative: decisionNarrative({
-        _winner: 'D',
-        _loser: 'A',
-        winName: nameD,
-        loseName: nameA,
-        fW: fD,
-        fL: fA,
-        voteType: 'unanimous',
-      }),
-    };
-  }
+  if (aVotes === 3) return majorityDecision({ ...base, winner: 'A', voteType: 'unanimous' });
+  if (dVotes === 3) return majorityDecision({ ...base, winner: 'D', voteType: 'unanimous' });
 
   // ── Split 2-1 ──
-  if (aVotes === 2) {
-    const dissentIdx = votes.indexOf('D') >= 0 ? votes.indexOf('D') : votes.indexOf(null);
-    const dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
-    return {
-      winner: 'A',
-      by: 'Decision',
-      narrative: decisionNarrative({
-        _winner: 'A',
-        _loser: 'D',
-        winName: nameA,
-        loseName: nameD,
-        fW: fA,
-        fL: fD,
-        voteType: 'split',
-        dissenter: dissenter,
-      }),
-    };
-  }
-  if (dVotes === 2) {
-    const dissentIdx = votes.indexOf('A') >= 0 ? votes.indexOf('A') : votes.indexOf(null);
-    const dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
-    return {
-      winner: 'D',
-      by: 'Decision',
-      narrative: decisionNarrative({
-        _winner: 'D',
-        _loser: 'A',
-        winName: nameD,
-        loseName: nameA,
-        fW: fD,
-        fL: fA,
-        voteType: 'split',
-        dissenter: dissenter,
-      }),
-    };
-  }
+  if (aVotes === 2) return majorityDecision({ ...base, winner: 'A', voteType: 'split' });
+  if (dVotes === 2) return majorityDecision({ ...base, winner: 'D', voteType: 'split' });
 
   // ── Contested / overtime / HP Tiebreaker ──
   return resolveOvertimeOrTiebreaker({

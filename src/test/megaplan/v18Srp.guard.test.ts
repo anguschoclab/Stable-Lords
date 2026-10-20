@@ -42,7 +42,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/components/WarriorBuilder/index.tsx'), 'split src/components/WarriorBuilder/index.tsx into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S2: decisionLogic decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S2', () => {
+  it('S2: decisionLogic decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S2', () => {
     expect(budgetFor('src/engine/bout/decisionLogic.ts'), 'split src/engine/bout/decisionLogic.ts into orchestrator + named siblings').toEqual([]);
   });
 

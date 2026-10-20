@@ -38,7 +38,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
   const budgetFor = (file: string) =>
     functions.filter((f) => f.file === file && f.len > FN_BUDGET).map((f) => `${f.name} (${f.len})`);
 
-  it.skip('S1: index decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S1', () => {
+  it('S1: index decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S1', () => {
     expect(budgetFor('src/components/WarriorBuilder/index.tsx'), 'split src/components/WarriorBuilder/index.tsx into orchestrator + named siblings').toEqual([]);
   });
 
@@ -46,7 +46,7 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/bout/decisionLogic.ts'), 'split src/engine/bout/decisionLogic.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it.skip('S3: useRecruitActions decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S3', () => {
+  it('S3: useRecruitActions decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S3', () => {
     expect(budgetFor('src/pages/Recruit/hooks/useRecruitActions.ts'), 'split src/pages/Recruit/hooks/useRecruitActions.ts into orchestrator + named siblings').toEqual([]);
   });
 

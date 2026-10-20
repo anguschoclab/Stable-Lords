@@ -561,6 +561,33 @@ describe('aiDraftFromPool', () => {
     });
   });
 
+  // 10d. Generated-fallback pool preservation
+
+  describe('Generated-fallback pool preservation', () => {
+    it('keeps undrafted pool and free-agent shelf entries when the generated fallback signs', () => {
+      // Both shelves hold only unaffordable entries, so signings === 0 and a
+      // needsRecruit stable takes the generated-recruit fallback. The
+      // fallback mints a recruit out of thin air — it must not drain the
+      // shelves it never touched.
+      const rival = makeMinimalRival({ treasury: 5000, needsRecruit: true, roster: [] });
+      const pricey = makePoolWarrior({ id: 'pw-pricey', cost: 999_999 });
+      const freeAgent = makePoolWarrior({
+        id: 'fa-1',
+        name: 'Wire Vet',
+        cost: 999_999,
+        source: 'freeAgent',
+      } as any);
+      const st = makeMinimalGameState({ freeAgents: [freeAgent] });
+
+      const result = aiDraftFromPool({ pool: [pricey], rivals: [rival], week: 1, state: st });
+
+      expect(result.updatedRivals[0]?.roster).toHaveLength(1);
+      expect(result.gazetteItems.some((g) => g.includes('MARKET'))).toBe(true);
+      expect(result.updatedPool.map((w) => w.id)).toEqual(['pw-pricey']);
+      expect(result.updatedFreeAgents.map((w) => w.id)).toEqual(['fa-1']);
+    });
+  });
+
   // 11. Edge Cases
 
   describe('Edge Cases', () => {

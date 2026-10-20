@@ -142,11 +142,12 @@ describe('processRecruitment — cap and funnel invariants', () => {
       isMajorDraftWeek: false,
     });
 
-    if (updatedRival.roster.length > 0) {
-      // If the generated fallback signed, it paid the flat generated fee —
-      // and the pool recruit was never consumed.
-      expect(updatedRival.roster[0]?.id).not.toBe('pw-pricey');
-    }
+    // The fallback always signs here — generateAIRecruit cannot return null
+    // and 60g clears the reserve-adjusted budget.
+    expect(updatedRival.roster).toHaveLength(1);
+    expect(updatedRival.roster[0]?.id).not.toBe('pw-pricey');
+    expect(updatedRival.treasury).toBe(5000 - AI_GENERATED_RECRUIT_COST);
+    expect(updatedRival.needsRecruit).toBe(false);
     expect(updatedPool.map((w) => w.id)).toEqual(['pw-pricey']);
     expect(AI_GENERATED_RECRUIT_COST).toBe(60);
   });

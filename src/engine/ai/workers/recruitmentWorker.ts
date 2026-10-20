@@ -20,10 +20,8 @@ import type { FightingStyle } from '@/types/shared.types';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 
-/**
- * RecruitmentWorker: Handles drafting warriors from the pool.
- * Implements "Context Isolation" and "Risk-Tiered Execution".
-/** Return type shared by processRecruitment and its signing helpers. */
+/** Return type of processRecruitment — updatedPool is the authoritative
+ * draft shelf handed to the next rival. */
 type RecruitmentResult = {
   updatedRival: RivalStableData;
   updatedPool: PoolWarrior[];
@@ -44,9 +42,10 @@ interface SignGeneratedRecruitArgs {
  * Pool-empty fallback: generates a recruit out of thin air ONLY when the
  * stable declared a need and can afford the signing fee through the same
  * budget check as pool drafts (G9 — generateAIRecruit is no longer a
- * parallel recruitment path).
+ * parallel recruitment path). Consumes no pool entry, so it returns only
+ * the updated stable — the caller's remainingPool passes through untouched.
  */
-function signGeneratedRecruit(args: SignGeneratedRecruitArgs): RecruitmentResult | null {
+function signGeneratedRecruit(args: SignGeneratedRecruitArgs): { updatedRival: RivalStableData } | null {
   const { week, meta, gazetteItems, usedNames } = args;
   let { updatedRival } = args;
   const { usedIds, deadIds } = args;
@@ -79,7 +78,7 @@ function signGeneratedRecruit(args: SignGeneratedRecruitArgs): RecruitmentResult
   gazetteItems.push(
     `📣 MARKET: ${updatedRival.owner.stableName} signed ${generated.name} for ${AI_GENERATED_RECRUIT_COST}g.`
   );
-  return { updatedRival, updatedPool: [], gazetteItems };
+  return { updatedRival };
 }
 
 interface ScoreCandidatesArgs {

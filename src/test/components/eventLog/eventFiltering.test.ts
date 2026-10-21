@@ -49,7 +49,7 @@ describe('event filtering', () => {
     ]);
   });
 
-  it('every EventType lands in a player-facing category (V16/F5)', () => {
+  it('every EventType lands in a player-facing category', () => {
     const allTypes: GameEvent['type'][] = [
       'fight',
       'kill',

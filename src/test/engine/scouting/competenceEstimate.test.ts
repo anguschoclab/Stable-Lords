@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * competence as a scouted estimate (veil-of-war).
+ * Competence as a scouted estimate (veil-of-war).
  * Scouting a rival's fighter also reads the stablemaster — but only as well
  * as the report quality allows. Expert scouts name the real competence tier,
  * Detailed reports may be a tier off, Basic scouts can't read the corner at

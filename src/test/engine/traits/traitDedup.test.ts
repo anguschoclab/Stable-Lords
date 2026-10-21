@@ -134,7 +134,7 @@ describe('Trait deduplication', () => {
       expect(seen.size).toBe(generic.length);
     });
 
-    it('effectHash is key-order insensitive (V9 follow-up)', () => {
+    it('effectHash is key-order insensitive (follow-up)', () => {
       expect(effectHash({ enduranceMult: 0.96, iniModFresh: 1 })).toBe(
         effectHash({ iniModFresh: 1, enduranceMult: 0.96 })
       );

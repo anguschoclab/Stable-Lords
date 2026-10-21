@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 4 — weekly title-bout cap scales with the arena roster so
+ * Weekly title-bout cap scales with the arena roster so
  * 47 venues can't sit dormant behind a fixed cap of 3 defenses.
  */
 import { describe, it, expect } from 'vitest';

@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 5 — magic-number sweep guard. Asserts the world-population
+ * Magic-number sweep guard. Asserts the world-population
  * files that used to carry bare literals now read the named constants, and
  * that the constants themselves carry the megaplan values.
  */

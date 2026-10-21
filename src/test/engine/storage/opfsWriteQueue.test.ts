@@ -11,7 +11,7 @@ function makeMinimalState(overrides: Partial<GameState> = {}): GameState {
     player: { id: 'p1', name: 'Test', stableName: 'Test', crest: {} as any, generation: 0 },
     rivals: [],
     activeTournamentId: null,
-    crowdMood: 'Neutral',
+    crowdMood: 'Calm',
     isFTUE: false,
     deferredBoutLogs: [],
     ...overrides,

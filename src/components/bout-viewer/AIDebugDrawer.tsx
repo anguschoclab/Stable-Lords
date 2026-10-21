@@ -46,7 +46,7 @@ function PlanLine({
 
 /** What the rival owning `viewer` believes about `opponent` — its filed
  *  scout reports plus the matching dossier. Dev-only surface for the AI
- *  scouting loop (V16/F3). */
+ *  scouting loop. */
 function RivalIntelLine(props: {
   testId: string;
   label: string;

@@ -185,7 +185,7 @@ function finalizePersistence(state: GameState, ctx: WeekContext): GameState {
       console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
     }
   }
-  // V14 B1: truncate at EVERY week boundary — previously only batch spans and
+  // Truncate at EVERY week boundary — previously only batch spans and
   // autosim (every 50w) truncated, so sequential in-session play accumulated
   // unbounded history and diverged from batch worlds once a cap was crossed
   // (capped arrays feed rivalStrategy/PromoterPass/championship reads). One

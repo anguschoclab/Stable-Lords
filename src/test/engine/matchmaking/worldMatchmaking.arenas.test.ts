@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 4 — world matchmaking respects `eligibleArenasFor`: a bout's
+ * World matchmaking respects `eligibleArenasFor`: a bout's
  * venue must be legal for BOTH warriors, not just the promoter pool.
  */
 import { describe, it, expect } from 'vitest';

@@ -8,8 +8,8 @@ import { makeWarrior, makeRival, makeStrategy, makeBoutOffer } from '@/test/_fix
 import type { AIIntent } from '@/types/state/game';
 
 /**
- * V11 characterization spec — pins the public surface of boutAcceptance.ts
- * before the Phase-4 split into boutAcceptance/ submodules. These assert
+ * Characterization spec — pins the public surface of boutAcceptance.ts
+ * before the split into boutAcceptance/ submodules. These assert
  * current behavior so the extraction must preserve every gate.
  */
 

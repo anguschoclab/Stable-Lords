@@ -53,7 +53,7 @@ describe('AIAgentMemorySchema — perception fields', () => {
     expect(() => AIAgentMemorySchema.parse(bad)).toThrow();
   });
 
-  it('round-trips rival-filed scout reports and dossier suspectedCompetence (V16/F3)', () => {
+  it('round-trips rival-filed scout reports and dossier suspectedCompetence', () => {
     const memory = {
       ...baseMemory,
       opponentDossiers: {

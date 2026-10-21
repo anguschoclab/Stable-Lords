@@ -1,5 +1,5 @@
 /**
- * Plan D.3 (deferred) — scout reports must render uncertainty, not confident
+ * Scout reports must render uncertainty, not confident
  * lies, when the target stable masks its committed plan. The report flags the
  * plan section's provenance as suspect rather than presenting decoy numbers
  * as verified intel.

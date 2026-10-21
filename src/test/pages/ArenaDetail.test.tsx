@@ -8,7 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import '@/test/_setup/setup';
 
 /**
- * Region-pinning spec for ArenaDetail (420-line component — Phase-3/6
+ * Region-pinning spec for ArenaDetail (420-line component —
  * decomposition target). Pins the rendered landmark regions so extraction
  * of sub-components stays behavior-identical.
  */
@@ -47,14 +47,14 @@ describe('ArenaDetail page (region pinning)', () => {
     expect(screen.getByText('Top Warriors')).toBeTruthy();
   });
 
-  it('renders tag-driven WATER HAZARD badge in header actions (V10 #1018)', () => {
+  it('renders tag-driven WATER HAZARD badge in header actions (#1018)', () => {
     const arena = getAllArenas().find((a) => a.tags.includes('water'))!;
     mockArenaId = arena.id;
     render(<ArenaDetail />);
     expect(screen.getByText('WATER HAZARD')).toBeTruthy();
   });
 
-  it('renders tag-driven CURSED GROUND badge in header actions (V10 #1018)', () => {
+  it('renders tag-driven CURSED GROUND badge in header actions (#1018)', () => {
     const arena = getAllArenas().find((a) => a.tags.includes('cursed'))!;
     mockArenaId = arena.id;
     render(<ArenaDetail />);

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 /**
- * MEGAPLAN-V14 A7 — reconstruction field-parity guard (characterization):
+ * Reconstruction field-parity guard (characterization):
  *
  * `reconstructGameState` memoizes on `collectStoreValues`'s tracked fields;
  * `hydrateDraft` is where worker-returned/loaded states write the store.

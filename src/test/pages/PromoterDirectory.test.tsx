@@ -7,7 +7,7 @@ import { useGameStore } from '@/state/useGameStore';
 import '@/test/_setup/setup';
 
 /**
- * Region-pinning spec for PromoterDirectory (Phase-6 decomposition + L2
+ * Region-pinning spec for PromoterDirectory (decomposition +
  * PageFrame gap). Pins header + list rendering + tier sort.
  */
 

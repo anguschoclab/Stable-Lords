@@ -1,5 +1,5 @@
 /**
- * intents service the season objective. `pickWeeklyIntent`
+ * Intents service the season objective. `pickWeeklyIntent`
  * remains the weekly cascade, but a live `seasonObjective` biases the
  * pick toward its servicing intent (TREASURY → WEALTH_ACCUMULATION,
  * CROWN → CROWN_CAMPAIGN), and `verifyIntentSkepticism` gains an

@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * new opponent-state triggers, percent normalization, and
+ * New opponent-state triggers, percent normalization, and
  * phase-boundary corner advice.
  */
 import { describe, it, expect } from 'vitest';
@@ -133,7 +133,7 @@ describe('corner advice — phase-boundary re-evaluation', () => {
     const withAdvice = evaluateConditions(
       fighter,
       makeFighter(),
-      // boundary advice now requires a real corner — a trainer
+      // Boundary advice now requires a real corner — a trainer
       // must be present for the off-cadence re-check to run.
       ctx({
         exchange: 2,

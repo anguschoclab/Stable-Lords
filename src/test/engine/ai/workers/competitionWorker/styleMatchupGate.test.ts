@@ -1,5 +1,5 @@
 /**
- * F4 — fightForecast → bid evaluation.
+ * fightForecast → bid evaluation.
  * A cautious rival uses the same matchup forecast the player sees on an offer
  * card: a strongly unfavorable style matchup declines, a favorable one is
  * business as usual, and desperate/aggressive stables don't care.

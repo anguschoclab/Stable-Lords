@@ -6,7 +6,7 @@ import { runAutosim } from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
 /**
- * MEGAPLAN-V14 headless-transcript contract (L3/A9):
+ * Headless-transcript contract:
  *
  * Headless execution (autosim, batch spans, `skipTo*`) must produce ZERO bout
  * transcripts — autosim has no `pendingArchives` field, so any ungated
@@ -39,7 +39,7 @@ const TRANSCRIPT_DIRS = [path.join(ENGINE, 'simulate'), path.join(ENGINE, 'bout'
 
 /**
  * Per-file count of `log.push` sites, each previously verified gated by
- * `headless` (audit A9, Oct 2026). A new site in a known file, or a push in
+ * `headless` (audited Oct 2026). A new site in a known file, or a push in
  * an unlisted file, fails loudly for review.
  */
 const GATED_PUSH_COUNTS: Record<string, number> = {

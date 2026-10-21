@@ -8,8 +8,8 @@ import { useGameStore } from '@/state/useGameStore';
 import '@/test/_setup/setup';
 
 /**
- * Region-pinning spec for PromoterDetail (297-line component — Phase-6
- * decomposition + L2 PageFrame gap).
+ * Region-pinning spec for PromoterDetail (297-line component —
+ * decomposition + PageFrame gap).
  */
 
 let mockId = '';

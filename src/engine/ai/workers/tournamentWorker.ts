@@ -3,7 +3,7 @@
  *
  * Preparation only: the season's top-2 fame warriors get rest ('recovery')
  * training assignments, which suppress their bout bids through the same
- * isBookable gate every other assignment uses (G19 wiring). Committee
+ * isBookable gate every other assignment uses. Committee
  * selection stays rank-based — this worker cannot influence entry, only
  * how fresh the stable's contenders are when the bracket lands.
  */

@@ -117,7 +117,7 @@ describe('Determinism vs Performance Trade-offs', () => {
   });
 });
 
-// ─── Living-world scale bands (megaplan Phase 5) ─────────────────────────────
+// ─── Living-world scale bands ──────────────────────────────────────────────
 // Time a populated world at the floor (90 stables) and near the soft cap
 // (160 stables). Timings are recorded to the console and gated generously —
 // the assertion is "no pathological regression", sub-ms precision lives in

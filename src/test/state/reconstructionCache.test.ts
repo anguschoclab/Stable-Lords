@@ -9,7 +9,7 @@ describe('#8c clearReconstructionCache invalidates cached result', () => {
       player: { id: 'p1', name: 'Test', stableName: 'Test', crest: {}, generation: 0 },
       rivals: [],
       activeTournamentId: null,
-      crowdMood: 'Neutral',
+      crowdMood: 'Calm',
       isFTUE: false,
       lastSavedAt: null,
     });
@@ -30,7 +30,7 @@ describe('#8c clearReconstructionCache invalidates cached result', () => {
       player: { id: 'p1', name: 'Test', stableName: 'Test', crest: {}, generation: 0 },
       rivals: [],
       activeTournamentId: null,
-      crowdMood: 'Neutral',
+      crowdMood: 'Calm',
       isFTUE: false,
       lastSavedAt: null,
       deferredBoutLogs: logs,

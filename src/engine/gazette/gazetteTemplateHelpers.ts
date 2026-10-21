@@ -22,6 +22,27 @@ const MOOD_TONE: Record<
 export { MOOD_TONE };
 
 /**
+ * Defined default used whenever a mood has no tone record.
+ */
+export const DEFAULT_CROWD_MOOD: CrowdMoodType = 'Calm';
+
+/**
+ * Normalizes any value to a valid CrowdMoodType, falling back to the default.
+ */
+export function resolveCrowdMood(mood: string): CrowdMoodType {
+  return Object.prototype.hasOwnProperty.call(MOOD_TONE, mood)
+    ? (mood as CrowdMoodType)
+    : DEFAULT_CROWD_MOOD;
+}
+
+/**
+ * Returns the mood-tone record for a mood, falling back to the default's record.
+ */
+export function resolveMoodTone(mood: string) {
+  return MOOD_TONE[resolveCrowdMood(mood)];
+}
+
+/**
  * Template data type for substitution.
  */
 type TemplateData = Record<string, string | number | boolean | undefined>;

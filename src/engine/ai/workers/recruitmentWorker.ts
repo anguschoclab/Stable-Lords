@@ -488,6 +488,14 @@ function runPoolDraft(args: {
   return { updatedRival: drafted.updatedRival, signings: drafted.signings, minRoster };
 }
 
+/**
+ * Per-rival recruitment entry point (called once per stable inside
+ * draftService's snake-draft loop). Skips drafting entirely once the
+ * personality-based roster cap is reached, drafts from the shared pool
+ * first, then falls back to a generated recruit when the stable declared
+ * needsRecruit and still came up short. The returned updatedPool is the
+ * authoritative shelf threaded to the next rival.
+ */
 export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentResult {
   const { rival, pool, week, rng, isMajorDraftWeek } = args;
   const { meta, usedNames, usedIds, deadIds } = args;

@@ -1,7 +1,7 @@
 /**
  * Grudges AND rivalries must update even when the player is
  * stopped/headless. Both currently live in NarrativePass, which the pipeline
- * skips in that mode. After C.1 they live in WorldPass.
+ * skips in that mode. They now live in WorldPass.
  */
 import { describe, it, expect } from 'vitest';
 import { runWorldPass } from '@/engine/pipeline/passes/WorldPass';

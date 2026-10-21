@@ -1,5 +1,5 @@
 /**
- * Stage H structural guard — AIEventCause sync.
+ * Structural guard — AIEventCause sync.
  * The union is hand-maintained with no auto-check; this file pins it both
  * ways: adding a member without a row here fails typecheck (missing key),
  * removing one fails too (excess key). The runtime assertions verify the

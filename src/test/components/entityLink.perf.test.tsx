@@ -1,5 +1,5 @@
 /**
- * MEGAPLAN-V9 gate — EntityLink render stability.
+ * EntityLink render stability — perf gate.
  *
  * Characterizes the perf contract the EntityLink synthesis must meet
  * (authored test-first, live since the V9 atomic-selector synthesis
@@ -89,7 +89,7 @@ const onStableRender = () => {
   renderCounts.stable++;
 };
 
-describe('EntityLink render stability (MEGAPLAN-V9)', () => {
+describe('EntityLink render stability', () => {
   it('WarriorLink resolves and does not re-render on unrelated slice churn', () => {
     renderCounts.warrior = 0;
     render(

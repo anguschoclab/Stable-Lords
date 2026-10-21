@@ -27,7 +27,7 @@ function makeMinimalState(overrides: Partial<GameState> = {/* empty */}): GameSt
     rivals: [],
     activeTournamentId: null,
     realmRankings: {/* empty */},
-    crowdMood: 'Neutral',
+    crowdMood: 'Calm',
     isFTUE: false,
     deferredBoutLogs: [],
     ...overrides,

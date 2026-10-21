@@ -53,7 +53,7 @@ describe('Bookmarks Persistence', () => {
       day: 1,
       rivals: [],
       activeTournamentId: undefined,
-      crowdMood: 'Neutral',
+      crowdMood: 'Calm',
       isFTUE: false,
       lastSimulationReport: undefined,
       bookmarks: [
@@ -89,7 +89,7 @@ describe('Bookmarks Persistence', () => {
       day: 1,
       rivals: [],
       activeTournamentId: undefined,
-      crowdMood: 'Neutral',
+      crowdMood: 'Calm',
       isFTUE: false,
       lastSimulationReport: undefined,
       atTitleScreen: false,

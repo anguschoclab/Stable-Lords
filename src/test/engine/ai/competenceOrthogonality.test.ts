@@ -1,5 +1,5 @@
 /**
- * axis orthogonality, the anti-collapse invariant.
+ * Axis orthogonality, the anti-collapse invariant.
  * Competence scales *decision quality*; personality/metaAdaptation decide
  * *what the stable wants*. The two axes must never merge:
  *   - same personality, different tier → different quality, same choices

@@ -86,7 +86,7 @@ describe('Promoter Generator', () => {
     }
   });
 
-  it('V10: promoter pools include the four new venues', () => {
+  it('promoter pools include the four new venues', () => {
     const promoters = generatePromoters(100, 111);
     const allPools = new Set(promoters.flatMap((p) => p.arenaPool));
     for (const id of [
@@ -100,7 +100,7 @@ describe('Promoter Generator', () => {
   });
 
   it('gives each tier an arenaPool covering the venues it can promote', () => {
-    // Megaplan Phase 4 — promoter pools must span tiers so mid/high venues
+    // Promoter pools must span tiers so mid/high venues
     // have carriers; Local stays grounded in tier-1.
     const promoters = generatePromoters(30, 555);
     const tiersOf = (p: (typeof promoters)[number]) =>

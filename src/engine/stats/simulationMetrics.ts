@@ -44,7 +44,7 @@ export interface SimPulse {
   offerCount: number;
   /** Standing offers carrying a counter purse bump — the numerator. */
   counteredOfferCount: number;
-  // ─── Championship metrics (Phase-2 megaplan Stage A baselines) ───
+  // ─── Championship metrics (baselines) ───
   /** Arena crowns currently held by rival stables vs the player. */
   aiCrownsHeld: number;
   playerCrownsHeld: number;
@@ -54,7 +54,7 @@ export interface SimPulse {
   reignEndings: Record<string, number>;
   /** Grand Champions crowned so far (one per completed Champions tournament). */
   grandChampionsCount: number;
-  // ─── Stage H: AI-depth + championship liveness metrics ───
+  // ─── AI-depth + championship liveness metrics ───
   /** Rivals currently running the CROWN_CAMPAIGN intent. */
   crownCampaignsActive: number;
   /** Standing title offers tallied by status (Proposed/Signed/Declined/…). */
@@ -72,7 +72,7 @@ export interface SimPulse {
   avgChampionFatigue: number;
   /** CONDITION_*@CORNER firings across lastWeekBoutDisplay's exchange logs. */
   cornerAdviceEvents: number;
-  // ─── Stage B: owner-competence liveness metrics ───
+  // ─── Owner-competence liveness metrics ───
   /** Rival count per owner-competence tier this sampled week. */
   competenceDistribution: Record<string, number>;
 }
@@ -127,7 +127,7 @@ function collectTraitMetrics(state: GameState, activeRivals: GameState['rivals']
   };
 }
 
-/** Stage I AI-behavior metrics: intent distribution, dossier coverage, offers. */
+/** AI-behavior metrics: intent distribution, dossier coverage, offers. */
 function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['rivals']) {
   const intentDistribution: Record<string, number> = {};
   const competenceDistribution: Record<string, number> = {};
@@ -168,7 +168,7 @@ function collectAiBehaviorMetrics(state: GameState, activeRivals: GameState['riv
   };
 }
 
-/** Championship metrics (Phase-2 megaplan Stage A baselines). */
+/** Championship metrics (baselines). */
 function collectChampionshipMetrics(state: GameState) {
   let aiCrownsHeld = 0;
   let playerCrownsHeld = 0;
@@ -189,7 +189,7 @@ function collectChampionshipMetrics(state: GameState) {
   return { aiCrownsHeld, playerCrownsHeld, reignEndings, liveTitleOffers };
 }
 
-/** Stage H: AI-depth + championship liveness metrics. */
+/** AI-depth + championship liveness metrics. */
 function collectStageHMetrics(state: GameState, activeRivals: GameState['rivals']) {
   const titleOfferStatuses: Record<string, number> = {};
   for (const o of Object.values(state.boutOffers ?? {})) {

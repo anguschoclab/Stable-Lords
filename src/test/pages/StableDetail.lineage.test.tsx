@@ -1,6 +1,6 @@
 /**
  * StableDetail lineage card — legacy-founded stables must show their
- * founder and parent stable (megaplan Phase 6 contract).
+ * founder and parent stable.
  * @vitest-environment jsdom
  */
 import { describe, it, expect, beforeEach } from 'vitest';

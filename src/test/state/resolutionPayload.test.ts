@@ -28,7 +28,7 @@ describe('buildResolutionPayload', () => {
     expect(payload.bouts).toEqual([]);
   });
 
-  it('tolerates an undefined newsletter array (F1 — worker round-trip gap)', () => {
+  it('tolerates an undefined newsletter array (worker round-trip gap)', () => {
     const payload = buildResolutionPayload(undefined, undefined, 5);
 
     expect(payload.gazette).toEqual([]);

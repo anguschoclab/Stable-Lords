@@ -1,6 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { t, styleName } from '@/engine/gazette/gazetteTemplateHelpers';
+import {
+  t,
+  styleName,
+  MOOD_TONE,
+  DEFAULT_CROWD_MOOD,
+  resolveCrowdMood,
+  resolveMoodTone,
+} from '@/engine/gazette/gazetteTemplateHelpers';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
+import { CROWD_MOODS } from '@/types/enumSources';
+import { defaultWorldState } from '@/state/slices/worldSlice/initialState';
 
 describe('gazetteTemplateHelpers — t()', () => {
   it('substitutes simple string values', () => {
@@ -110,5 +119,46 @@ describe('styleName', () => {
 
   it('passes through numeric-looking strings unchanged', () => {
     expect(styleName('123')).toBe('123');
+  });
+});
+
+describe('mood tone coverage', () => {
+  it('provides a mood_tone record for every canonical CROWD_MOODS member', () => {
+    for (const mood of CROWD_MOODS) {
+      expect(MOOD_TONE).toHaveProperty(mood);
+    }
+  });
+
+  it('defaultWorldState.crowdMood is a valid crowd mood', () => {
+    expect(CROWD_MOODS).toContain(defaultWorldState.crowdMood);
+  });
+});
+
+describe('resolveCrowdMood', () => {
+  it('returns every canonical mood unchanged', () => {
+    for (const mood of CROWD_MOODS) {
+      expect(resolveCrowdMood(mood)).toBe(mood);
+    }
+  });
+
+  it('falls back to the defined default for unknown moods', () => {
+    expect(resolveCrowdMood('Neutral')).toBe(DEFAULT_CROWD_MOOD);
+    expect(resolveCrowdMood('InvalidMood')).toBe(DEFAULT_CROWD_MOOD);
+    expect(resolveCrowdMood('')).toBe(DEFAULT_CROWD_MOOD);
+  });
+
+  it('does not match inherited prototype keys', () => {
+    expect(resolveCrowdMood('constructor')).toBe(DEFAULT_CROWD_MOOD);
+    expect(resolveCrowdMood('hasOwnProperty')).toBe(DEFAULT_CROWD_MOOD);
+  });
+});
+
+describe('resolveMoodTone', () => {
+  it('returns the mood-tone record for a valid mood', () => {
+    expect(resolveMoodTone('Bloodthirsty')).toBe(MOOD_TONE.Bloodthirsty);
+  });
+
+  it('returns the default tone record for an unknown mood', () => {
+    expect(resolveMoodTone('Neutral')).toBe(MOOD_TONE[DEFAULT_CROWD_MOOD]);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * retirement timing.
+ * Retirement timing.
  * Retirement is career-aware, not pure age probability:
  *  - permanent injuries shorten careers (broken bodies exit early)
  *  - reigning champions defer retirement while defending the crown

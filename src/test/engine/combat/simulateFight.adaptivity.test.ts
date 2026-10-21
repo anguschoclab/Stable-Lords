@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * mid-bout adaptivity, directional integration assertions.
+ * Mid-bout adaptivity, directional integration assertions.
  * The opponent-state triggers must actually move fight outcomes, not just
  * fire telemetry: a kill-window press raises finish rate vs a paired-seed
  * control, and condition firings surface in the bout's exchange telemetry.

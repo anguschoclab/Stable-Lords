@@ -101,7 +101,7 @@ describe('#14 useInsightManager timer cleanup on re-reveal', () => {
     expect(consumeInsightToken).not.toHaveBeenCalled();
   });
 
-  it('Trait token reveal surfaces the suspected trait, not Unknown (V16/F3c)', () => {
+  it('Trait token reveal surfaces the suspected trait, not Unknown', () => {
     const consumeInsightToken = vi.fn();
     const tokens = [
       { id: 't-trait', type: 'Trait', detail: 'Suspected trait: Iron Skin', week: 1 },

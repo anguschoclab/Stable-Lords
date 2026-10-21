@@ -1,5 +1,5 @@
 /**
- * debug-drawer telemetry completeness.
+ * Debug-drawer telemetry completeness.
  * buildExchangeLogEntry projects the CombatEvent stream into ExchangeLogEntry
  * reasonCodes; STATE_CHANGE events (psych transitions, desperate-plan
  * activation) and condition-trigger annotations are real telemetry the

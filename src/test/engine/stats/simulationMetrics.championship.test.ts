@@ -1,5 +1,5 @@
 /**
- * championship/AI depth metrics on SimPulse.
+ * Championship/AI depth metrics on SimPulse.
  * The validation protocol needs the harness to *see* the new behaviors:
  * crown campaigns running, intel aging, masked plans circulating, corner
  * advice firing, and the Grand Championship field/cancellation record.

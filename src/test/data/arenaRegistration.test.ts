@@ -23,7 +23,7 @@ describe('arena registration — new arenas from PR #791', () => {
   });
 });
 
-describe('arena registration — V7 union (PR #988 arenas + PR #984/#991/#995 lore)', () => {
+describe('arena registration (PR #988 arenas + PR #984/#991/#995 lore)', () => {
   it.each(['the_jagged_peak', 'the_murky_depths', 'the_smoldering_pits', 'the_crystal_spire'])(
     'arena %s is registered',
     (id) => {

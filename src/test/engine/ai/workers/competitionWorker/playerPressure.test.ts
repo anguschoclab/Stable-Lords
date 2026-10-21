@@ -1,5 +1,5 @@
 /**
- * dominant-player pressure in bout acceptance.
+ * Dominant-player pressure in bout acceptance.
  * When the player stable dominates the realm rankings, rival owners adjust
  * how they treat player-bound offers: calculating camps avoid feeding the
  * dominant stable, Showmen chase the upset, and everyone negotiates harder

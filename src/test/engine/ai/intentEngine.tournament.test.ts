@@ -71,7 +71,7 @@ describe('TOURNAMENT_CAMPAIGN', () => {
     expect(next.intent).not.toBe('TOURNAMENT_CAMPAIGN');
   });
 
-  it('crisis stables decline tournament conscription (G13 decline hook)', async () => {
+  it('crisis stables decline tournament conscription (decline hook)', async () => {
     const { committeeSelection } =
       await import('@/engine/matchmaking/tournamentSelection/committee');
     const crisis = makeRival({

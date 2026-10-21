@@ -1,5 +1,5 @@
 /**
- * title posture surfacing.
+ * Title posture surfacing.
  * ArenaDetail needs the *queue* behind the throne, not just its holder:
  * `topContenders` exposes the same eligible-contender ordering the
  * championship pass uses to book title bouts — never a fabricated list.

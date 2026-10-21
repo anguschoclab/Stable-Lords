@@ -9,8 +9,7 @@ import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
 /**
- * MEGAPLAN-V14 B1 — truncation-cadence determinism (authored test-first,
- * live since Phase 5b):
+ * Truncation-cadence determinism (authored test-first):
  *
  * `truncateState` runs at EVERY week boundary on the sequential
  * `advanceWeek` path (see finalize.ts), matching batch spans and autosim —

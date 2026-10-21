@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import type { FightSummary, FightOutcomeBy } from '@/types/game';
@@ -200,9 +200,13 @@ describe('generateFightNarrative', () => {
   });
 
   it('handles missing mood gracefully by falling back to Calm', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const fight = createFight('A', 'KO');
     const narrative = generateFightNarrative(fight, 'InvalidMood' as CrowdMoodType);
     expect(narrative).toBeDefined();
     expect(typeof narrative).toBe('string');
+    expect(narrative.length).toBeGreaterThan(0);
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });

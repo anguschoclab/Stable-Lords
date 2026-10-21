@@ -104,7 +104,7 @@ describe('intelWorker', () => {
   });
 
   it('prefers the upcoming title opponent over a merely-famous stable', () => {
-    // Plan D.4: scout order vendetta > threat > upcoming title opponent > player.
+    // Scout order vendetta > threat > upcoming title opponent > player.
     const challenger = makeWarrior({ id: 'sw1' as never });
     const champWarrior = makeWarrior({ id: 'cw1' as never });
     const champStable = makeRival({
@@ -217,7 +217,7 @@ describe('intelWorker', () => {
   });
 });
 
-describe('intelWorker — AI scout reports (V16/F3)', () => {
+describe('intelWorker — AI scout reports', () => {
   /** Stale report stub for dedupe/eviction fixtures. */
   function makeReport(over: Partial<ScoutReportData> = {}): ScoutReportData {
     return {

@@ -288,7 +288,7 @@ describe('RosterSlice', () => {
     expect(w.flair).toContain('Tactical Insight');
   });
 
-  it('should consume insight token of type Trait — no longer a silent no-op (V16/F3c)', () => {
+  it('should consume insight token of type Trait — no longer a silent no-op', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
       useTestStore.setState({

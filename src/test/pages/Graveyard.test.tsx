@@ -8,7 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import '@/test/_setup/setup';
 
 /**
- * Region-pinning spec for Graveyard (L2 PageFrame gap + tabs structure).
+ * Region-pinning spec for Graveyard (PageFrame gap + tabs structure).
  * Pins header title, world/stable counters, and the two memorial tabs.
  */
 

@@ -125,7 +125,7 @@ describe('useScouting controller', () => {
     expect(reports.map((r) => r.warriorId).sort()).toEqual([warriorA.id, warriorB.id].sort());
   });
 
-  it('deposits generated insight tokens into state.insightTokens (V16/F3b)', () => {
+  it('deposits generated insight tokens into state.insightTokens', () => {
     // generateScoutInsights emits a Style token on every report — they were
     // previously discarded at the purchase call site.
     const warrior = makeTestWarrior('rival-w1', 'Cassius');

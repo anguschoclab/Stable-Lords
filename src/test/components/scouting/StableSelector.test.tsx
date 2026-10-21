@@ -1,6 +1,6 @@
 /**
  * StableSelector — the two-column comparison picker shares one list shell:
- * a single search/sort narrows both columns (megaplan Phase 6 contract).
+ * a single search/sort narrows both columns.
  * @vitest-environment jsdom
  */
 import { describe, it, expect } from 'vitest';

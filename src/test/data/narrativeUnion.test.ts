@@ -163,7 +163,7 @@ describe('V7 narrative union — curated merge of PRs #983/#989/#993/#994', () =
   });
 });
 
-describe('narrative union V9 gate', () => {
+describe('narrative union (#1000/#1002/#1007/#1009 batch)', () => {
   const all = new Set<string>();
   for (const j of Object.values(files)) allStrings(j, all);
 
@@ -220,7 +220,7 @@ describe('narrative union V9 gate', () => {
   });
 });
 
-describe('narrative union V10 gate (#1021)', () => {
+describe('narrative union (#1021)', () => {
   const all = allStrings(kill, allStrings(pbp, allStrings(strikes)));
 
   // Verified-unique additions extracted from the #1021 diff (one per leaf).

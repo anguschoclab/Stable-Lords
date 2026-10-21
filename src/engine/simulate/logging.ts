@@ -25,7 +25,7 @@ export function buildExchangeLogEntry(
 }
 
 /**
- * project the first condition fire into a side-attributed
+ * Project the first condition fire into a side-attributed
  * structure — the reasonCode string alone loses the actor.
  */
 function projectConditionFire(e: CombatEvent, entry: ExchangeLogEntry): void {

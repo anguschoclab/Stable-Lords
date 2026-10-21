@@ -1,5 +1,5 @@
 /**
- * AI feature flags (Phase-3 plan §8, V10 `__AI_DEBUG` precedent):
+ * AI feature flags (`__AI_DEBUG` precedent):
  * `globalThis` toggles for soak bisection and controlled rollout.
  *
  * Unset means enabled — the flags preserve shipped behavior; setting a flag

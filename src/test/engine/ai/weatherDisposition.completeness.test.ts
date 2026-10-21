@@ -1,5 +1,5 @@
 /**
- * V16/F2 — AI weather-disposition completeness guard.
+ * AI weather-disposition completeness guard.
  *
  * The disposition table is a `Record<WeatherType, …>` so exhaustiveness is
  * compile-enforced; this suite locks the runtime contract on top: every
@@ -27,7 +27,7 @@ const subject = (cn: number, style = FightingStyle.StrikingAttack) =>
     attributes: { ST: 10, CN: cn, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
   });
 
-describe('AI weather disposition — union coverage (V16/F2)', () => {
+describe('AI weather disposition — union coverage', () => {
   it('every WeatherType resolves through all four gates without throwing', () => {
     const w = subject(8);
     for (const weather of WEATHER_TYPES) {

@@ -1,5 +1,5 @@
 /**
- * IconTabStrip accessibility contract (V15) — proper tab semantics:
+ * IconTabStrip accessibility contract — proper tab semantics:
  * tablist container, tab roles, aria-selected tracking, visible focus ring.
  */
 // @vitest-environment jsdom

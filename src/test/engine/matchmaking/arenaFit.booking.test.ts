@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 4 — `selectArenaForMatchup` honors the eligibility
+ * `selectArenaForMatchup` honors the eligibility
  * intersection: no warrior is ever booked at a venue they can't fight in,
  * venue draws spread across the eligible set, and the home-venue bonus stays
  * inside its cap.

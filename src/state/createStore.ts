@@ -105,7 +105,7 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.trainingAssignments = state.trainingAssignments || [];
   draft.seasonalGrowth = state.seasonalGrowth || [];
   draft.restStates = state.restStates || [];
-  draft.crowdMood = state.crowdMood || 'Neutral';
+  draft.crowdMood = state.crowdMood || 'Calm';
   draft.moodHistory = state.moodHistory || [];
   draft.newsletter = state.newsletter || [];
   draft.hallOfFame = state.hallOfFame || [];

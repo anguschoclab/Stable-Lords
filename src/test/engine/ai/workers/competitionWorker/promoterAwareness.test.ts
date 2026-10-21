@@ -1,5 +1,5 @@
 /**
- * promoter-aware rival evaluation.
+ * Promoter-aware rival evaluation.
  * Rivals read the promoter's reputation the way the advisor does:
  * a Sadistic promoter + a killer opponent is a death-show booking cautious
  * stables decline; a Greedy promoter's lowball pricing earns a counter.

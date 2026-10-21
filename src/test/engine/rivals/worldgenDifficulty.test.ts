@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * worldgen difficulty skew.
+ * Worldgen difficulty skew.
  * `GameState.worldOptions.difficulty` is chosen at world creation and
  * plumbed into `generateRivalStables`: a harder world mints more
  * Veteran/Master stablemasters; an easier one more Novices. Mid-game

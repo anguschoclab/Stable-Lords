@@ -112,7 +112,7 @@ const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
   Ashfall: { bucket: 'arena', bidModifier: (w) => (CN_LT(14)(w) ? -3 : 0) },
   'Eldritch Eclipse': OFFSEASON,
   'Cursed Eclipse': {
-    // V16 — was registered as seasonable Fall weather with zero AI rules.
+    // Was registered as seasonable Fall weather with zero AI rules.
     bucket: 'arena',
     acceptanceBlock: (w) => (CN_LT(12)(w) ? 'The eclipse saps weak constitutions.' : null),
     offerDecline: CN_LT(10),

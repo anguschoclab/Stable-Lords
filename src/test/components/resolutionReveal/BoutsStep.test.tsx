@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * A4 — BoutsStep renders the salvaged run-round result components:
+ * BoutsStep renders the salvaged run-round result components:
  * a casualty summary (RunResultsSummary) and collapsible BoutRow entries
  * whose BoutViewer only mounts once expanded.
  */
@@ -38,7 +38,7 @@ function makeResult(by: 'Kill' | 'KO' | 'Decision', a: string, d: string): BoutR
   };
 }
 
-describe('BoutsStep (A4 run-round salvage)', () => {
+describe('BoutsStep', () => {
   it('renders the casualty summary from real bout outcomes', () => {
     render(
       <BoutsStep

@@ -1,5 +1,5 @@
 /**
- * venue counters (single round).
+ * Venue counters (single round).
  * A rival counters the VENUE of a Proposed offer when the booking puts their
  * warrior on a losing stage — the counterer nominates a better arena, the
  * offer is tagged COUNTERED_VENUE, and the negotiation closes: no chained

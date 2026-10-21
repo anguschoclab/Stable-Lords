@@ -74,7 +74,7 @@ interface ApplyStrategicLayerArgs {
 /**
  * Dossier- and read-driven counter-conditions appended onto the base plan:
  * shell up against a known killer (dossier), punish a predictable opponent
- * (Stage D repetition read for sharp-eyed stables on high-WT fighters).
+ * (repetition read for sharp-eyed stables on high-WT fighters).
  */
 function collectAdaptations(
   plan: FightPlan,
@@ -93,7 +93,7 @@ function collectAdaptations(
     });
   }
 
-  // Stage D — repetition read: sharp-eyed stables (Tactician/Methodical)
+  // Repetition read: sharp-eyed stables (Tactician/Methodical)
   // teach their high-WT fighters to punish a predictable opponent — the
   // plan switches to a counter-posture once the streak counter climbs.
   if (

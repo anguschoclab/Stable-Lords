@@ -8,7 +8,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GazetteStory } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
-import { MOOD_TONE } from './gazetteTemplateHelpers';
+import { MOOD_TONE, resolveCrowdMood } from './gazetteTemplateHelpers';
 import {
   computeFightAnalysis,
   detectRivalryMatchup,
@@ -42,8 +42,8 @@ export function generateWeeklyGazette(args: GenerateWeeklyGazetteArgs): GazetteS
   const { rng } = args;
   const rngService = resolveRng(rng, week * 7919 + 55);
   const storyId = rngService.uuid();
-  const moodKey = mood && MOOD_TONE[mood] ? mood : 'Calm';
-  const tone = MOOD_TONE[moodKey];
+  const resolvedMood = resolveCrowdMood(mood);
+  const tone = MOOD_TONE[resolvedMood];
 
   // Run all detections — single pass over allFights via computeFightAnalysis
   const ctx = allFights ? computeFightAnalysis(fights, allFights) : null;
@@ -70,14 +70,14 @@ export function generateWeeklyGazette(args: GenerateWeeklyGazetteArgs): GazetteS
     detections: detections,
     fights: fights,
     week: week,
-    _mood: mood,
+    _mood: resolvedMood,
     rngService: rngService,
     tone: tone,
   });
   const body = generateGazetteBody({
     detections: detections,
     fights: fights,
-    mood: mood,
+    mood: resolvedMood,
     week: week,
     graveyard: graveyard,
     rngService: rngService,
@@ -88,7 +88,7 @@ export function generateWeeklyGazette(args: GenerateWeeklyGazetteArgs): GazetteS
     id: storyId as import('@/types/shared.types').NewsId,
     headline,
     body,
-    mood,
+    mood: resolvedMood,
     tags: detections.tags,
     week,
   };

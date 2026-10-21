@@ -111,7 +111,7 @@ describe('ArenaCircuit', () => {
     expect(screen.getByText('RE-ENGAGING')).toBeInTheDocument();
   });
 
-  it('renders tag-driven WATER HAZARD / CURSED GROUND badges (V10 #1018)', () => {
+  it('renders tag-driven WATER HAZARD / CURSED GROUND badges (#1018)', () => {
     render(<ArenaCircuit />);
     // Badges derive from real arena tags — both exist now that the tagged
     // venues are registered.

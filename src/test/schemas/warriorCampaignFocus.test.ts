@@ -1,5 +1,5 @@
 /**
- * Plan H.7 — `campaignFocus` must survive the persistence schema. Rival
+ * `campaignFocus` must survive the persistence schema. Rival
  * campaign roles (CROWN_BID et al.) are written onto warriors by the shard
  * pass; a stripped field would silently drop the role on save/load.
  */

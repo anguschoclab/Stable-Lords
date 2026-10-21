@@ -1,5 +1,5 @@
 /**
- * competence-gradient seed probe — scratch diagnostic, not a CI gate.
+ * Competence-gradient seed probe — scratch diagnostic, not a CI gate.
  * Replicates the gradient computation from worldLiveness.integration.slow.test.ts
  * so a re-baseline after a world-trajectory change (new arena event, purse change,
  * etc.) can measure multiple seeds cheaply. Run:

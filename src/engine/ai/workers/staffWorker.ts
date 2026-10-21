@@ -21,7 +21,7 @@ const DEFENSIVE_STYLES: ReadonlySet<FightingStyle> = new Set([
 ] as FightingStyle[]);
 
 /**
- * G21 — Dossier-driven trainer preference. Reads the stable's intel picture:
+ * Dossier-driven trainer preference. Reads the stable's intel picture:
  * an opponent field dominated by offensive styles calls for a Defense camp;
  * a turtle-heavy field calls for Aggression. Returns null on weak intel —
  * callers fall back to the intent-based preference.

@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * structured condition-fire telemetry.
+ * Structured condition-fire telemetry.
  * `reasonCodes` carries CONDITION_* strings for telemetry, but the fighter
  * side is lost in the code string. `buildExchangeLogEntry` now projects a
  * structured `conditionFire` field so the Corner Analysis panel can

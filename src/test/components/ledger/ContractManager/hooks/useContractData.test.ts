@@ -22,7 +22,7 @@ function mkTrainer(id: string, overrides?: Partial<Trainer>): Trainer {
   } as Trainer;
 }
 
-describe('useContractData (V7 characterization — PR #986 extraction)', () => {
+describe('useContractData (characterization — PR #986 extraction)', () => {
   it('returns empty aggregates for no trainers', () => {
     applyStore({ trainers: [] });
     const { result } = renderHook(() => useContractData());

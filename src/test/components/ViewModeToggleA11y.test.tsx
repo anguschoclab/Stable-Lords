@@ -1,5 +1,5 @@
 /**
- * MEGAPLAN-V9 gate — focus-ring a11y contracts (PRs #1003/#1005 union).
+ * Focus-ring a11y contracts.
  *
  * The synthesis swaps bare `outline-none` for `focus-visible:outline-none` on
  * keyboard-focusable controls that already show a `focus-visible:ring-*`
@@ -23,7 +23,7 @@ vi.mock('@/components/ui/Surface', () => ({
 
 const hasToken = (cls: string, token: string) => cls.split(/\s+/).includes(token);
 
-describe('focus-ring a11y contracts (MEGAPLAN-V9)', () => {
+describe('focus-ring a11y contracts', () => {
   it('ViewModeToggle buttons use focus-visible:outline-none, keep ring', () => {
     const { getByLabelText } = render(<ViewModeToggle mode="log" onChange={() => {}} />);
     for (const label of ['Switch to Combat Log view', 'Switch to Arena Replay view']) {

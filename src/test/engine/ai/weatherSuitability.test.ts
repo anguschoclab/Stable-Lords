@@ -18,7 +18,7 @@ import {
 } from '@/engine/ai/weatherSuitability';
 import { makeWarrior } from '@/test/_fixtures/factories';
 
-// V16: sweep the full WeatherType union — newly registered weather can no
+// Sweep the full WeatherType union — newly registered weather can no
 // longer escape the parity matrix silently.
 const ALL_WEATHER: readonly WeatherType[] = WEATHER_TYPES;
 const ALL_STYLES = Object.values(FightingStyle);
@@ -125,7 +125,7 @@ function legacyBidModifier(warrior: Warrior, weather: WeatherType): number {
     weatherModifier = -2;
     if (warrior.style === FightingStyle.LungingAttack) weatherModifier = -4;
   } else if (weather === 'Cursed Eclipse') {
-    // V16 — intended behavior: riposters thrive under the eclipse; fragile
+    // Intended behavior: riposters thrive under the eclipse; fragile
     // warriors fade; everyone else is mildly unsettled.
     weatherModifier = -1;
     if (warrior.attributes.CN < 12) weatherModifier = -3;
@@ -144,7 +144,7 @@ const LEGACY_HAZARDOUS = [
   'Acid Rain',
 ];
 
-describe('weatherSuitability consolidation (G16 parity)', () => {
+describe('weatherSuitability consolidation parity', () => {
   it('acceptance gate matches verifyBoutAcceptance across the full matrix', () => {
     for (const weather of ALL_WEATHER) {
       for (const style of ALL_STYLES) {
@@ -213,7 +213,7 @@ describe('weatherSuitability consolidation (G16 parity)', () => {
   });
 });
 
-describe('Cursed Eclipse — seasonable weather with explicit AI rules (V16)', () => {
+describe('Cursed Eclipse — seasonable weather with explicit AI rules', () => {
   const cn = (v: number, style = FightingStyle.StrikingAttack) =>
     makeWarrior({
       style,

@@ -230,7 +230,7 @@ describe('getWarriorIndex / cache identity', () => {
   });
 });
 
-describe('livingWarriorById — combat-eligible lookup (V16/F1)', () => {
+describe('livingWarriorById — combat-eligible lookup', () => {
   beforeEach(() => clearEntityIndexCaches());
 
   it('indexes player roster and rival rosters only', () => {

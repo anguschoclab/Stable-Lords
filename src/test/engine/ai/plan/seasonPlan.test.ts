@@ -1,5 +1,5 @@
 /**
- * season plan-of-record. `pickSeasonObjective` chooses one
+ * Season plan-of-record. `pickSeasonObjective` chooses one
  * strategic objective per ~quarter above the weekly intent cascade:
  * CROWN when a throne assessment is live, REBUILD when the roster or
  * treasury can't sustain campaigning, TREASURY when the stable can bank.

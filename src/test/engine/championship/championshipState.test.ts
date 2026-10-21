@@ -33,7 +33,7 @@ function makeTitle(overrides: Partial<ArenaTitle> = {}): ArenaTitle {
   };
 }
 
-describe('Phase 1 — championship state plumbing', () => {
+describe('championship state plumbing', () => {
   it('fresh state initializes empty championship collections', () => {
     const state = createFreshState('championship-init');
     expect(state.arenaChampions).toEqual({});
@@ -91,7 +91,7 @@ describe('Phase 1 — championship state plumbing', () => {
   });
 });
 
-describe('Phase 1 — schema & legacy save compatibility', () => {
+describe('schema & legacy save compatibility', () => {
   it('ArenaTitleSchema round-trips a fully populated title', () => {
     const title = makeTitle({
       history: [
@@ -146,7 +146,7 @@ describe('Phase 1 — schema & legacy save compatibility', () => {
   });
 });
 
-describe('Phase 1 — tournament calendar helpers', () => {
+describe('tournament calendar helpers', () => {
   it('identifies seasonal tournament weeks', () => {
     expect(isSeasonalTournamentWeek(10)).toBe(true);
     expect(isSeasonalTournamentWeek(20)).toBe(true);
@@ -190,7 +190,7 @@ describe('Phase 1 — tournament calendar helpers', () => {
   });
 });
 
-describe('Phase 1 — constants sanity', () => {
+describe('constants sanity', () => {
   it('defense cadence approximates the normal bout cadence', () => {
     expect(ARENA_TITLE.DEFENSE_INTERVAL_WEEKS).toBeGreaterThanOrEqual(3);
     expect(ARENA_TITLE.DEFENSE_INTERVAL_WEEKS).toBeLessThanOrEqual(5);

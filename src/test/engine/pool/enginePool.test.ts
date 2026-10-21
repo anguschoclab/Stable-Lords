@@ -102,7 +102,7 @@ describe('createEnginePool — distributed path', () => {
   });
 
   it('terminate() mid-flight: in-flight chunks still resolve; later calls go in-line', async () => {
-    // D3 — shutdownEnginePool during an in-flight week must not strand or
+    // shutdownEnginePool during an in-flight week must not strand or
     // corrupt the awaiting map. Workers are reference-dropped, not killed,
     // so dispatched jobs complete; only NEW work takes the in-line path.
     let release!: () => void;

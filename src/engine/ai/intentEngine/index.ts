@@ -51,7 +51,7 @@ export function pickWeeklyIntent(
   // the season plan-of-record, or a TREASURY/REBUILD program buries it every
   // week and TOURNAMENT_CAMPAIGN can never fire.
   if (tournamentCampaignApplies(ctx)) return 'TOURNAMENT_CAMPAIGN';
-  // a live season objective is serviced by its intent — a CROWN
+  // A live season objective is serviced by its intent — a CROWN
   // plan campaigns even through a lean week the bare cascade would skip.
   const servicing = objectiveServicingIntent(ctx);
   if (servicing) return servicing;

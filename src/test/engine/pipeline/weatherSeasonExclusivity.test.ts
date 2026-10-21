@@ -91,7 +91,7 @@ describe('Weather season exclusivity', () => {
   });
 });
 
-describe('weather fixture-union completeness (V15)', () => {
+describe('weather fixture-union completeness', () => {
   it('every WeatherType is consciously bucketed: seasonable or offseason-only', () => {
     const bucketed = new Set<string>([...SEASONABLE_WEATHER_TYPES, ...OFFSEASON_WEATHER_TYPES]);
     for (const w of WEATHER_TYPES) {

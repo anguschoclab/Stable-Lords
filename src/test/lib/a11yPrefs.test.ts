@@ -8,7 +8,7 @@ import {
   type A11yPrefs,
 } from '@/lib/a11yPrefs';
 
-describe('a11yPrefs (G3 theme/accessibility pack)', () => {
+describe('a11yPrefs (theme/accessibility pack)', () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.removeAttribute('data-contrast');

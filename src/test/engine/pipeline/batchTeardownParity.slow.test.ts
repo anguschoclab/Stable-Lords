@@ -4,7 +4,7 @@ import { runAutosim } from '@/engine/autosim/autosim';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance/service';
 
 /**
- * MEGAPLAN-V14 span-teardown parity (characterization):
+ * Span-teardown parity (characterization):
  *
  * Every multi-week entry point must end with the same teardown guarantees:
  * terminal tournament sweep (no unresolved brackets escape a batch), archive

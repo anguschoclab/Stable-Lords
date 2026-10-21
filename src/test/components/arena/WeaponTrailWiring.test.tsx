@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * A5 — WeaponTrail wiring: ArenaView flashes a weapon trail on attack events,
+ * WeaponTrail wiring: ArenaView flashes a weapon trail on attack events,
  * typed by the attacker's equipped weapon and directed by the actor side.
  */
 import { describe, it, expect, vi } from 'vitest';
@@ -68,7 +68,7 @@ describe('weaponTrailTypeFor', () => {
   });
 });
 
-describe('ArenaView weapon trail (A5)', () => {
+describe('ArenaView weapon trail', () => {
   it('renders a trail on an attack event from side A', () => {
     const { container } = render(<ArenaView {...baseProps} log={[hitEvent('A')]} />);
     const path = container.querySelector('svg path');

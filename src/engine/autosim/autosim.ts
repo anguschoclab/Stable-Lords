@@ -224,7 +224,7 @@ export async function runAutosim(
     weeksSimmed++;
 
     // NF3: historical arrays are truncated by finalizeState at EVERY week
-    // boundary (V14 B1 — one cadence for all time scales), so no periodic
+    // boundary (one cadence for all time scales), so no periodic
     // truncation is needed here. deferredBoutLogs needs no flush — headless
     // bouts produce no transcripts (pinned by headlessTranscriptContract).
 

@@ -105,7 +105,7 @@ export const SPECIAL_ARENA_IDS: readonly string[] = ['bloodsands_arena', 'the_ir
  * championship venues). NORMAL_CAP applies to normal arenas only.
  *
  * Bump history: t3 14→15 (Acid Bog), total 50→54 + t2 24→25 + t3 15→17
- * (V10 union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
+ * (union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
  * Cap revision: total 54→52 + normal 50 (arena curation; normal-pool t2
  * count is now 21 — TIER_CAPS deliberately unchanged).
  */

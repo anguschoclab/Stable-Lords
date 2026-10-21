@@ -215,7 +215,7 @@ describe('new arena lore entries', () => {
   });
 });
 
-describe('V10 arena lore entries (PR #1020)', () => {
+describe('arena lore entries (PR #1020)', () => {
   const validArenaIds = new Set(getAllArenas().map((a) => a.id));
 
   for (const [id, arenaId] of [

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * Plan D.3 — masked-plan uncertainty display. A scout report on a deceptive
+ * Masked-plan uncertainty display. A scout report on a deceptive
  * stable must show the plan section as suspect rather than presenting decoy
  * tendencies as verified intel.
  */

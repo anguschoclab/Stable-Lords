@@ -114,7 +114,7 @@ describe('runSimulation — historical array truncation', () => {
       truncateIntervalWeeks: 0,
     });
 
-    // V14 B1: finalizeState truncates at every week boundary with the
+    // finalizeState truncates at every week boundary with the
     // default caps — the flag now only governs the harness's own extra
     // periodic pass. Retained arrays sit at the cap; all-time truth lives
     // in the cumulative tracker and lifetimeStats.

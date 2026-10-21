@@ -1,5 +1,5 @@
 /**
- * Phase-3 plan §8 — AI feature flags: globalThis toggles for soak
+ * AI feature flags: globalThis toggles for soak
  * bisection. Unset = enabled (shipped behavior); explicit `false` makes the
  * feature inert. Each flag gates BOTH authoring and resolution where
  * applicable, so a disabled feature is truly dark.

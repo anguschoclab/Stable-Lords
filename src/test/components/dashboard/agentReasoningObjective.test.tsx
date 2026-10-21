@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * plan-of-record surfacing in AgentReasoningWidget.
+ * Plan-of-record surfacing in AgentReasoningWidget.
  * `agentMemory.seasonObjective` is the rival's quarter-length strategic
  * goal; the weekly intent only services it. The widget must show
  * the objective — kind, rationale, remaining weeks — not just the intent.

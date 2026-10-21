@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 5 — the name pool must sustain a 2× hard-cap world:
+ * The name pool must sustain a 2× hard-cap world:
  * WORLD_RIVAL_HARD_CAP * 2 stables generated from templates must produce
  * unique stable names AND unique owner names (Roman-numeral suffixes cover
  * over-sampling past the authored template count).

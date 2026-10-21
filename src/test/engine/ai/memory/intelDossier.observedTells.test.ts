@@ -1,5 +1,5 @@
 /**
- * Plan D.2 (deferred) — persisted observed tells.
+ * Persisted observed tells.
  * A stable that witnesses a fight reads the participants' committed plans;
  * those tells persist on the opponent dossier as a running mean and feed
  * downstream consumers (crown targeting, offer eval, intelWorker blending).

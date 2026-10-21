@@ -86,7 +86,7 @@ function proposerCanFund(
 }
 
 /**
- * one bounded escalation — a second-round counter may stand
+ * One bounded escalation — a second-round counter may stand
  * (negotiationRound 0→1) when the stable tolerates haggling; after that
  * the offer is take-it-or-leave-it.
  */

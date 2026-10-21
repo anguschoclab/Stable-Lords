@@ -86,11 +86,11 @@ export interface FighterState {
   recoveryDebt: number;
   /** True when fighter was knocked down by a heavy hit — cleared on RECOVERY next exchange. */
   knockedDown?: boolean;
-  /** Last emitted in-bout AI intent (Stage F telemetry). Label only — names
+  /** Last emitted in-bout AI intent. Label only — names
    *  which existing plan/state selection is active; dedups AI_INTENT events
    *  to transitions. Never read by combat math. */
   lastIntent?: BoutIntent;
-  /** Stage D.2b: set when this fighter's decoyAxes mask has dropped —
+  /** Set when this fighter's decoyAxes mask has dropped —
    *  ensures DECOY_REVEAL emits exactly once per bout. */
   decoyRevealed?: boolean;
 }

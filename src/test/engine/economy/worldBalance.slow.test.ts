@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Megaplan Phase 4/5 verification — world balance bands over one year.
+ * World balance bands over one year — verification.
  * A 90-stable seeded world must hold its floor, grow organically, keep
  * solvent rosters filled, mint legacy founders, and keep its kill rate
  * inside the historical band. Thresholds are honest world-shape assertions.

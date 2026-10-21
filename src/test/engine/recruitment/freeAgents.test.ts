@@ -1,5 +1,5 @@
 /**
- * Free-agent lifecycle (megaplan Phase 3): displaced veterans are priced by
+ * Free-agent lifecycle: displaced veterans are priced by
  * `computeFreeAgentCost`, carry a bounded shelf life, and surface to the
  * player's recruit list alongside the orphanage pool.
  */

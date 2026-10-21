@@ -12,12 +12,14 @@ vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
 
 let spyAdvanceWeek: any;
 
-import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
+import { TickOrchestrator, tournamentDaySeed } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameState, TournamentEntry } from '@/types/state.types';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
+import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
+import { SeededRNG } from '@/utils/random';
 
 let mockState: GameState;
 
@@ -94,6 +96,59 @@ describe('TickOrchestrator', () => {
       expect(nextState.newsletter!.length).toBeGreaterThan(0);
       expect(nextState.newsletter![0]!.items).toContain('Fighter A beat Fighter B');
     });
+
+    it('forwards opts.headless to resolveRound on a tournament day', async () => {
+      mockState.day = 2;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.tournaments = [{ id: 'test-tournament', completed: false }] as never;
+
+      await TickOrchestrator.advanceDay(mockState, { headless: true });
+
+      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledWith(
+        mockState,
+        'test-tournament',
+        expect.any(Number),
+        true,
+        expect.anything()
+      );
+    });
+
+    it('seeds the tournament-day newsletter id from tournamentDaySeed', async () => {
+      mockState.year = 3;
+      mockState.week = 9;
+      mockState.day = 2;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.tournaments = [{ id: 'test-tournament', completed: false }] as never;
+
+      const nextState = await TickOrchestrator.advanceDay(mockState);
+
+      // The newsletter id comes from a SeededRNG keyed on the resolved day —
+      // deterministic per calendar day, matching the resolveRound seed.
+      expect(nextState.newsletter![0]!.id).toBe(
+        new SeededRNG(tournamentDaySeed(3, 9, 3)).uuid()
+      );
+    });
+
+    it('records ADVANCE_DAY timing with the tournament tag', async () => {
+      const timingSpy = vi.spyOn(telemetry, 'timing');
+      mockState.day = 2;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.tournaments = [{ id: 'test-tournament', completed: false }] as never;
+
+      await TickOrchestrator.advanceDay(mockState);
+
+      expect(timingSpy).toHaveBeenCalledWith(
+        TelemetryEvents.ADVANCE_DAY,
+        expect.any(Number),
+        { tournament: 'true' }
+      );
+    });
   });
 
   describe('skipToWeekEnd', () => {
@@ -110,6 +165,20 @@ describe('TickOrchestrator', () => {
       expect(nextState.day).toBe(0);
       expect(nextState.treasury).toBe(999);
       expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
+    });
+
+    it('leaves an existing newsletter untouched on a non-tournament week', async () => {
+      mockState.day = 1;
+      mockState.isTournamentWeek = false;
+      const existing = [{ id: 'keep', week: 1, title: 'prev', items: ['x'] }];
+      mockState.newsletter = existing as never;
+      spyAdvanceWeek.mockImplementation(async (state: any) => state);
+
+      const nextState = await TickOrchestrator.skipToWeekEnd(mockState);
+
+      // No recap item is appended — the pre-existing array passes through
+      // with identity intact.
+      expect(nextState.newsletter).toBe(existing);
     });
 
     it('should resolve remaining tournament rounds before advancing week', async () => {

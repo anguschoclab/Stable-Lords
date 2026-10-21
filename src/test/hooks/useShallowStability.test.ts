@@ -3,7 +3,7 @@ import { readDirRecursive } from '@/test/_setup/fsHelpers';
 import fs from 'fs';
 import path from 'path';
 
-// F2: the original regexes required `)=>` with no space — Prettier always
+// The original regexes required `)=>` with no space — Prettier always
 // emits `) =>`, so both guards could never match (dead since inception).
 // Repaired to allow whitespace; the .map rule is also narrowed to the real
 // hazard — callbacks that allocate a fresh object each call. Primitive

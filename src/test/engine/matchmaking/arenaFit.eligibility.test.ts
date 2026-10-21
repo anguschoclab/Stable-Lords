@@ -1,5 +1,5 @@
 /**
- * Megaplan Phase 4 — `eligibleArenasFor`: tier/fame gating, tournament-ground
+ * `eligibleArenasFor`: tier/fame gating, tournament-ground
  * exclusion, and hazardous-weather indoor fallback for world bookings.
  */
 import { describe, it, expect } from 'vitest';

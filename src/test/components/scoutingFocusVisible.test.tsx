@@ -1,5 +1,5 @@
 /**
- * MEGAPLAN-V10 gate — scouting focus-ring a11y contracts (PR #1022).
+ * Scouting focus-ring a11y contracts.
  *
  * Selection buttons on the scouting surfaces swapped bare `outline-none`
  * for `focus-visible:outline-none` + a `focus-visible:ring-2` indicator —
@@ -10,7 +10,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
 // Rival*List selection buttons were consolidated into the shared
-// SelectableCard primitive (MEGAPLAN-V12 D6) — the a11y surface lives there.
+// SelectableCard primitive — the a11y surface lives there.
 const SCOUTING_FILES = [
   'src/components/ui/SelectableCard.tsx',
   'src/components/scouting/StableSelector.tsx',
@@ -23,7 +23,7 @@ const buttonClassNames = (src: string): string[] => {
   return [...src.matchAll(/className=\{cn\(([^)]*)\)\}/g)].map((m) => m[1]!);
 };
 
-describe('scouting focus-visible a11y contracts (MEGAPLAN-V10)', () => {
+describe('scouting focus-visible a11y contracts', () => {
   for (const f of SCOUTING_FILES) {
     it(`${f} scopes outline suppression to focus-visible and keeps a ring`, () => {
       const src = readFileSync(f, 'utf8');

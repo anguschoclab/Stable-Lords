@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Phase 4 — NPC-AI, leaderboards, narrative, progression for arena titles.
+ * NPC-AI, leaderboards, narrative, progression for arena titles.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import {

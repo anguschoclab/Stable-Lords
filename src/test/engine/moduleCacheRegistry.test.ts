@@ -71,10 +71,10 @@ const REGISTRY: Record<string, string> = {
     'Environment-selected service singleton; assigned once at module init.',
 
   // ── Context-guarded caches (no-op where the backing store is absent) ────
-  // (stats/styleRollups.ts removed in V14 — dead write-only subsystem.)
+  // (stats/styleRollups.ts removed — dead write-only subsystem.)
 };
 
-// V14 A1: the const branch also catches `= []`, `= {}`, `new Array()`, and
+// The const branch also catches `= []`, `= {}`, `new Array()`, and
 // type-annotated constructors (`const x: Set<T> = new Set()` escaped the old
 // `name =` adjacency requirement — deathNotifier's `handlers`). Literals and
 // annotated constructors mutate without hitting the old pattern.

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { BIBLE_DOCS, searchBibleDocs } from '@/lib/bibleIndex';
 
-describe('bibleIndex (G5 design bible search)', () => {
+describe('bibleIndex (design bible search)', () => {
   it('loads the design bible spec corpus', () => {
     expect(BIBLE_DOCS.length).toBeGreaterThan(5);
     const titles = BIBLE_DOCS.map((d) => d.title);

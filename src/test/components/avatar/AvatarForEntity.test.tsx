@@ -41,7 +41,7 @@ describe('AvatarForEntity', () => {
     expect(container.querySelector('img')?.getAttribute('src')).toBe('/cached.png');
   });
 
-  it('resolves a dead/retired rival warrior to its stable crest, not the player crest (V16/F4)', () => {
+  it('resolves a dead/retired rival warrior to its stable crest, not the player crest', () => {
     // The roster scan only sees live rosters — a fallen rival warrior must
     // still resolve its stable's colors through `stableId`.
     const fresh = createFreshState('test-crest');

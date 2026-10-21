@@ -32,7 +32,7 @@ describe('world liveness — 104 weeks', () => {
       // Seed chosen so the two-year world exercises the refusal→strip path —
       // strips remain seed-dependent, and post-death-lifecycle fixes dead
       // champions end reigns as 'died' rather than accruing refusals as ghosts.
-      // Re-baselined V14: weekly-boundary truncation re-rolled trajectories
+      // Re-baselined: weekly-boundary truncation re-rolled trajectories
       // (31337 now yields stripped:0 — endings {displaced:8, defeated:60,
       // died:29, retired:1}). 6-seed probe on the V14 tree: 777/31337/42/555/
       // 1234/2024 → stripped 6/0/0/0/1/1. Seed 777 measures stripped:6,

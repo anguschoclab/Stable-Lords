@@ -103,7 +103,7 @@ function computeTopMovers(
 }
 
 /**
- * Newsletter feed — pure issue generation. V14 A2: the module-level `current`
+ * Newsletter feed — pure issue generation. The module-level `current`
  * accumulator (`appendFightResult`/`closeWeekToIssue`/`clear`) was dead
  * mutable surface — the only production caller (NarrativePass) supplies the
  * week's cards directly to `generateIssue`.

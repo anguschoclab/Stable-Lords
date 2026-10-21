@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * plan masking. Deceptive stables (Tactician/Methodical) commit a
+ * Plan masking. Deceptive stables (Tactician/Methodical) commit a
  * decoy `w.plan` at signing — that's the artifact Expert scouting reads —
  * while `planMasked` forces bout resolution to recompute the real plan.
  */

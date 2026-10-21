@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * Content packs (G7 / Design Bible #36) — narrative overlays.
+ * Content packs — narrative overlays.
  */
 import { describe, it, expect } from 'vitest';
 import {

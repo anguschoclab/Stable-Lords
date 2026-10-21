@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * the player-facing condition editor exposes the new
+ * The player-facing condition editor exposes the new
  * opponent-state and psych triggers, with the correct value input per type.
  */
 import { describe, it, expect, vi } from 'vitest';

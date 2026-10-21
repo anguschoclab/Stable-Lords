@@ -3,7 +3,7 @@
  * Centralized warrior finding with caching to eliminate DRY violations
  * Consolidated from tournamentSelection/utils.ts and tournament/tournamentStateMutator.ts
  *
- * V16: the roster index is no longer private to this module — it delegates to
+ * The roster index is no longer private to this module — it delegates to
  * `entityIndex.livingWarriorById`, the single canonical warrior index shared
  * with search/history resolution. The tournament overlay and dead-registry
  * filtering below are unchanged.

@@ -5,8 +5,8 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import type { FightSummary } from '@/types/combat.types';
 
 /**
- * MEGAPLAN-V14 finalize behavior gates (characterization — must stay green
- * through the Phase-5 perf refactors of `deferBoutArchives` and
+ * Finalize behavior gates (characterization — must stay green
+ * through the perf refactors of `deferBoutArchives` and
  * `sweepOrphanedReigns`):
  *
  *  - `deferBoutArchives` drains exactly this-week's transcript-bearing

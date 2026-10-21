@@ -8,7 +8,7 @@ import type { EventType } from '@/types/eventLog';
 import type { FightSummary } from '@/types/game';
 import { makeFightSummary } from '@/test/_fixtures/factories';
 
-/** The live EventType union — 'recruit' was removed (V16/F5: zero producers). */
+/** The live EventType union — 'recruit' was removed (zero producers). */
 const ALL_EVENT_TYPES: readonly EventType[] = [
   'fight',
   'kill',
@@ -41,7 +41,7 @@ describe('EVENT_ICONS', () => {
     }
   });
 
-  it('covers exactly the EventType union — no dead entries (V16/F5)', () => {
+  it('covers exactly the EventType union — no dead entries', () => {
     expect(Object.keys(EVENT_ICONS).sort()).toEqual([...ALL_EVENT_TYPES].sort());
   });
 

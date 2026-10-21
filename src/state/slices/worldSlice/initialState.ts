@@ -45,7 +45,7 @@ export const defaultWorldState: Omit<
   grandChampions: [],
   newsletter: [],
   hallOfFame: [],
-  crowdMood: 'Neutral' as CrowdMoodType,
+  crowdMood: 'Calm' as CrowdMoodType,
   moodHistory: [],
   arenaPreferences: DEFAULT_ARENA_PREFERENCES,
   isFTUE: false,

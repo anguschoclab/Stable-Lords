@@ -2,7 +2,7 @@
  * Disarm mechanic — arm hits can knock the weapon loose; the fighter falls
  * back to a backup weapon, then fists, until a retrieve roll re-arms them.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import {
   rollDisarmChance,
   isArmLocation,
@@ -326,5 +326,78 @@ describe('narration — disarm/rearm', () => {
     );
     expect(log).toHaveLength(2);
     for (const line of log) expect(line.text).not.toContain('{{');
+  });
+});
+
+// ── Integration: full simulateFight pipeline ───────────────────────────────
+import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { loadCombatNarrative } from '@/data/narrative';
+import { makeComputedWarrior } from '@/test/_fixtures/factories';
+import { FightingStyle } from '@/types/game';
+
+const STD_ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
+const stMirror = (overA: object = {}, overD: object = {}) => {
+  const wA = makeComputedWarrior(STD_ATTRS, FightingStyle.StrikingAttack, {
+    id: 'A_ST' as never,
+    name: 'A_ST',
+    fame: 0,
+    age: 20,
+    ...overA,
+  });
+  const wD = makeComputedWarrior(STD_ATTRS, FightingStyle.StrikingAttack, {
+    id: 'D_ST' as never,
+    name: 'D_ST',
+    fame: 0,
+    age: 20,
+    ...overD,
+  });
+  return { wA, wD };
+};
+const runBout = (seed: number, overA: object = {}, overD: object = {}) => {
+  const { wA, wD } = stMirror(overA, overD);
+  return simulateFight({
+    planA: defaultPlanForWarrior(wA),
+    planD: defaultPlanForWarrior(wD),
+    warriorA: wA,
+    warriorD: wD,
+    providedRng: seed,
+    deathRateMult: 0,
+  });
+};
+
+describe('simulateFight — disarm integration', () => {
+  beforeAll(async () => {
+    await loadCombatNarrative();
+  });
+
+  it('disarms surface in real bouts — projected into exchangeLog + reasonCodes', () => {
+    // Seed 113355 (ST mirror): A is disarmed on exchange 0 and never re-arms.
+    const out = runBout(113355);
+    const log = out.exchangeLog ?? [];
+    const disarmEntry = log.find((e) => e.disarm);
+    expect(disarmEntry?.disarm).toBe('A');
+    expect(disarmEntry?.reasonCodes).toContain('DISARM');
+    expect(log.some((e) => e.rearm === 'A')).toBe(false);
+  });
+
+  it('the swap is mechanical, not cosmetic — post-disarm attacks use the fist pool', () => {
+    // Same bout: after the drop, A_ST's strikes come out of pbp.attacks.fist
+    // (knuckles/haymakers/uppercuts) — only reachable via weaponId === 'fist'.
+    const out = runBout(113355);
+    const texts = (out.log ?? []).map((l) => l.text ?? '');
+    expect(texts.some((t) => /fist|knuckle|haymaker|uppercut|punch/i.test(t))).toBe(true);
+  });
+
+  it('a fist-armed build can never be disarmed', () => {
+    const FISTS = { weapon: 'fist', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' };
+    for (const seed of [113355, 50000, 50312, 7700042, 42, 7]) {
+      const out = runBout(seed, { equipment: FISTS }, { equipment: FISTS });
+      expect((out.exchangeLog ?? []).some((e) => e.disarm)).toBe(false);
+      expect(
+        (out.log ?? []).some((l) =>
+          /disarm|clatters to the ground|skittering across|spins from nerveless/i.test(l.text ?? '')
+        )
+      ).toBe(false);
+    }
   });
 });

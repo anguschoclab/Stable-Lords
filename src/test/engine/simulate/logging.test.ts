@@ -88,6 +88,23 @@ describe('buildExchangeLogEntry — telemetry completeness', () => {
 
     expect(entry.reasonCodes).toContain('ARENA_GEYSER_ERUPTION');
   });
+
+  it('projects DISARM/REARM into structured fields and reasonCodes', () => {
+    const events: CombatEvent[] = [
+      {
+        type: 'DISARM',
+        actor: 'D',
+        metadata: { weaponId: 'broadsword', toWeapon: 'fist', backup: false },
+      },
+      { type: 'REARM', actor: 'D', metadata: { weaponId: 'broadsword' } },
+    ];
+    const entry = buildExchangeLogEntry(5, 2, 'MID', events);
+
+    expect(entry.disarm).toBe('D');
+    expect(entry.rearm).toBe('D');
+    expect(entry.reasonCodes).toContain('DISARM');
+    expect(entry.reasonCodes).toContain('REARM');
+  });
 });
 
 describe('exchangeLog — endDeltas telemetry', () => {

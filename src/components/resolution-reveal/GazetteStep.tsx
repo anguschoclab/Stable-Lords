@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Newspaper } from 'lucide-react';
 import type { NewsletterItem } from '@/types/shared.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { StepHeader } from './StepHeader';
+import { StepShell } from './StepShell';
 
 interface GazetteStepProps {
   gazette: NewsletterItem[];
@@ -15,13 +15,7 @@ interface GazetteStepProps {
  */
 export function GazetteStep({ gazette }: GazetteStepProps) {
   return (
-    <motion.div
-      key="gazette"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="h-full p-6"
-    >
+    <StepShell variant="rise">
       <StepHeader
         icon={Newspaper}
         iconClassName="text-primary"
@@ -56,6 +50,6 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
           </div>
         )}
       </ScrollArea>
-    </motion.div>
+    </StepShell>
   );
 }

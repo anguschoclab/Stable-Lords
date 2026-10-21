@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +6,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 import type { GameState } from '@/types/state.types';
 import { WarriorNameAvatar } from '@/components/avatar';
 import { StepHeader } from './StepHeader';
+import { StepShell } from './StepShell';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
@@ -93,13 +93,7 @@ function GranularBreakdown({ lastSimulationReport }: MathStepProps) {
  */
 export function MathStep({ lastSimulationReport }: MathStepProps) {
   return (
-    <motion.div
-      key="math"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="h-full p-6 space-y-6"
-    >
+    <StepShell className="space-y-6">
       <StepHeader
         icon={Activity}
         iconClassName="text-muted-foreground"
@@ -108,6 +102,6 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
 
       <SummaryCards lastSimulationReport={lastSimulationReport} />
       <GranularBreakdown lastSimulationReport={lastSimulationReport} />
-    </motion.div>
+    </StepShell>
   );
 }

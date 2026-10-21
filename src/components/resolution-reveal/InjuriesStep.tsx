@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
 import { Activity, Skull, type LucideIcon } from 'lucide-react';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { WarriorNameAvatar } from '@/components/avatar';
 import type { WarriorRef } from '@/types/shared.types';
 import { StepHeader } from './StepHeader';
+import { StepShell } from './StepShell';
 
 interface InjuriesStepProps {
   injuries: WarriorRef[];
@@ -73,13 +73,7 @@ function CasualtySection({
  */
 export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
   return (
-    <motion.div
-      key="injuries"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="h-full p-6 flex flex-col gap-6"
-    >
+    <StepShell className="flex flex-col gap-6">
       <StepHeader icon={Activity} iconClassName="text-arena-gold" title={uiMeta.fanfare.report_medical} />
 
       {deaths.length > 0 && (
@@ -89,6 +83,6 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
       {injuries.length > 0 && (
         <CasualtySection title="Injured Roster" icon={Activity} items={injuries} tone="gold" />
       )}
-    </motion.div>
+    </StepShell>
   );
 }

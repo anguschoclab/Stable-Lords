@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Skull } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import type { Warrior } from '@/types/warrior.types';
@@ -6,6 +5,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 import { hashStr } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { AvatarForEntity } from '@/components/avatar';
+import { StepShell } from './StepShell';
 
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
@@ -23,12 +23,9 @@ function pickTribute(name: string): string | null {
 /** Memorial step of the resolution reveal, honoring warriors who died this season. */
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {
   return (
-    <motion.div
-      key="memorial"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 1.05 }}
-      className="h-full p-6 flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden"
+    <StepShell
+      variant="zoom"
+      className="flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--blood-bright-rgb), 0.05)_0,transparent_100%)] mix-blend-screen" />
       <div className="z-10 flex flex-col items-center max-w-full">
@@ -91,6 +88,6 @@ export function MemorialStep({ deadWarriors }: MemorialStepProps) {
           })}
         </div>
       </div>
-    </motion.div>
+    </StepShell>
   );
 }

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Swords } from 'lucide-react';
 import type { BoutResult } from '@/engine/bout';
 import { RunResults } from '@/components/run-round/RunResults';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import { StepHeader } from './StepHeader';
+import { StepShell } from './StepShell';
 
 interface BoutsStepProps {
   bouts: BoutResult[];
@@ -19,13 +19,7 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
-    <motion.div
-      key="bouts"
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="h-full p-6 flex flex-col"
-    >
+    <StepShell className="flex flex-col">
       <StepHeader
         icon={Swords}
         iconClassName="text-primary"
@@ -41,6 +35,6 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
           </div>
         )}
       </ScrollArea>
-    </motion.div>
+    </StepShell>
   );
 }

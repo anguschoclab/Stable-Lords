@@ -90,6 +90,12 @@ V18 numbering formalizes work already on `main` so the ledger is honest
 | determinismAudit | ✅ pass | in fast suite |
 | `dead-code` (knip) | report-only | 147 exports (+3 drift: `HUBS`, `HubId`, `SCOUT_COST`) / 68 types / 4 dup — not gating |
 | `dupes` (jscpd) | report-only | 108 clones (115→108 improved) / 0.79% lines |
-| `test:slow` / e2e | deferred | adhoc tier per user direction |
+| `test:slow` | ✅ 40 files / 268 pass / 1 skip | run post-close-out 2026-10-21; 1 load-flake — `batchTeardownParity` `advanceYear` hit its 60s timeout under full-suite concurrency, passes isolated in 16.2s; V18 untouched path (`pipeline/tick/` clean since V14) |
+| `e2e` (chromium smoke) | ✅ 5/5 | run post-close-out 2026-10-21 (~1.2m) |
 | codemod scripts | n/a | no one-shot scripts created — all edits hand-verified |
 | ident-w16 deep tier | ✅ triaged | 832 live clusters classified; ~830 EXEMPT; 2 clones drained (`makeStubGameState`, `deferred` helper); residual debt inherits w8 registration |
+
+**Tag note:** `post-megaplan-v18` points at `ea682b28` (Phase 5+6
+close-out); the deferred ident-w16 triage `167449c7` landed one commit
+after the tag was pushed — recorded here rather than re-tagging a
+published ref.

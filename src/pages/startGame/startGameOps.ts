@@ -51,7 +51,7 @@ export function importSaveFile(
   reader.readAsText(file);
 }
 
-export interface CreateNewGameArgs {
+interface CreateNewGameArgs {
   ownerName: string;
   stableName: string;
   playerCrest: CrestData;

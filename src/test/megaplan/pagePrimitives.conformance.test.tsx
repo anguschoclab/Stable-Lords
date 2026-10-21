@@ -23,6 +23,7 @@ const EXEMPT = new Set([
   'StartGame.tsx', // FTUE — outside AppShell by spec
   'Orphanage.tsx', // FTUE — outside AppShell by spec
   'NotFound.tsx', // chrome-free error surface
+  'ArenaHub.tsx', // header extracted to arenaHub/HubHeader (renders PageHeader)
 ]);
 
 /** All files under a dir (recursive). */

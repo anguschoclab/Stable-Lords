@@ -10,12 +10,12 @@ import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game
 import { toast } from 'sonner';
 import { draftRosterIsFull } from './recruitSigning';
 
-export const CUSTOM_COST = 200;
+const CUSTOM_COST = 200;
 
 /** Draft mutation for a paid pool refresh: non-destructive — protected
  *  entries (claims, apprentices, free agents) carry over; the shortfall is
  *  regenerated avoiding every known name. */
-export function applyPoolRefreshDraft(draft: GameStore) {
+function applyPoolRefreshDraft(draft: GameStore) {
   const newPool = fullRefreshPool({
     week: draft.week,
     usedNames: collectUsedWarriorNames(draft),
@@ -32,7 +32,7 @@ export function applyPoolRefreshDraft(draft: GameStore) {
 }
 
 /** Draft mutation for a custom-built recruit; navigates to the new warrior. */
-export function applyCustomCreateDraft(
+function applyCustomCreateDraft(
   draft: GameStore,
   data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number },
   navigate: (opts: { to: string }) => void

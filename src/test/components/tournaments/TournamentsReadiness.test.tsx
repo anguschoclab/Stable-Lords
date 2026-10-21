@@ -7,7 +7,7 @@ import {
   WarriorReadinessBanner,
   ActiveTournamentManifest,
 } from '@/components/tournaments';
-import type { TournamentEntry, Warrior, FightSummary } from '@/types/game';
+import type { Warrior, FightSummary } from '@/types/game';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 import { makeTournament } from '@/test/_fixtures/tournamentState';
 

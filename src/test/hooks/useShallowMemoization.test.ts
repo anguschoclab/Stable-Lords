@@ -9,7 +9,6 @@ import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import type { Warrior } from '@/types/game';
-import type { WarriorId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
 const defaultStoreState = {

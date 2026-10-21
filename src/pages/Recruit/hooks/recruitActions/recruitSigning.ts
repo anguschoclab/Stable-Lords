@@ -12,14 +12,14 @@ import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
 import { deadIdSet, isActive } from '@/engine/warrior/warriorStatus';
 import { toast } from 'sonner';
 
-export const BONUS_COST = 50;
+const BONUS_COST = 50;
 
 /** Active-roster cap for the player stable. */
-export function playerRosterCap(state: Pick<GameStore, 'rosterBonus'>): number {
+function playerRosterCap(state: Pick<GameStore, 'rosterBonus'>): number {
   return BASE_ROSTER_CAP + (state.rosterBonus ?? 0);
 }
 
-export const FAILURE_TOAST: Record<string, string> = {
+const FAILURE_TOAST: Record<string, string> = {
   ROSTER_FULL: 'Roster full! Retire or release a warrior first.',
   INSUFFICIENT_FUNDS: 'Not enough funds!',
   DEAD_IDENTITY: 'That recruit is no longer available.',
@@ -31,7 +31,7 @@ export const FAILURE_TOAST: Record<string, string> = {
  * converts, enforces the cap against the draft, drains both shelves, and
  * writes the newsletter entry.
  */
-export function applyRecruitDraft(
+function applyRecruitDraft(
   draft: GameStore,
   w: PoolWarrior,
   bonus: boolean,
@@ -78,7 +78,7 @@ export function applyRecruitDraft(
 
 /** Gate a signing against live store state before any funds move — the
  *  funnel checks capacity, dead identities, and duplicates. */
-export function preflightPoolSigning(w: PoolWarrior, bonus: boolean): SignWarriorResult {
+function preflightPoolSigning(w: PoolWarrior, bonus: boolean): SignWarriorResult {
   const live = useGameStore.getState();
   return signWarrior({
     recruit: w,

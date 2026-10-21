@@ -182,7 +182,7 @@ commits RED first. No Phase-3+ commit may precede it.
 enumerates every parked ticket; guards fail loudly on all untouched
 targets.
 
-## Phase 3 — SRP decomposition batches
+## Phase 3 — SRP decomposition batches — ✅ DONE (34/34, `50e442dc`…`63cb08d8`)
 
 Order: **engine → state → pages/components → hooks/lib.**
 
@@ -195,7 +195,7 @@ Order: **engine → state → pages/components → hooks/lib.**
   `MEGAPLAN-S*` ticket un-skips in the same commit; ledger row per commit.
 - God-hooks split fetch / derive / render into separately named units.
 
-## Phase 4 — Harmonize-not-delete consolidation
+## Phase 4 — Harmonize-not-delete consolidation — ✅ DONE (D1–D14, `d8277870`…`62139863`)
 
 Per §D cluster, one at a time:
 
@@ -215,7 +215,7 @@ Per §D cluster, one at a time:
 One cluster per commit; deletes never mixed with moves; characterization
 tests green before **and** after.
 
-## Phase 5 — Unique-code preservation protocol
+## Phase 5 — Unique-code preservation protocol — ✅ DONE (guard reconciled, orphan-scan ≤157)
 
 - Preservation manifest per touched file: before/after export-surface
   parity asserted by spec.
@@ -225,7 +225,7 @@ tests green before **and** after.
 - `orphan-scan` stays 0; the knip export delta is the preserved-logic
   smoke alarm — any unexpected export disappearance stops the line.
 
-## Phase 6 — Validation battery & close-out
+## Phase 6 — Validation battery & close-out — ✅ DONE (see LEDGER close-out matrix)
 
 - Full gates green: `bun run test` (fast), `bun run type-check`,
   `bun run lint`, `bun run build`, `bun run narrative-validate`, all

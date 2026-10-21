@@ -12,7 +12,7 @@ import { getArenaById } from '@/data/arenas';
 import type { GameState } from '@/types/state.types';
 import type { useActiveRoster } from '@/hooks/useActiveRoster';
 
-export function EmptyRosterState() {
+function EmptyRosterState() {
   return (
     <Surface
       variant="glass"

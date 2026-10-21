@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { makeStatWarrior } from '@/test/_fixtures/statWarrior';

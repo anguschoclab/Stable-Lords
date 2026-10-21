@@ -123,12 +123,15 @@ type DraftWeights = typeof DEFAULT_DRAFT_WEIGHTS;
 function scoreCandidate(
   w: PoolWarrior,
   weights: DraftWeights,
-  prefsSet: Set<FightingStyle>,
-  activeStyleCounts: Map<string, number>,
-  meta: StyleMeta | undefined,
-  owner: Pick<RivalStableData['owner'], 'id' | 'competence'> | undefined,
-  week: number
+  ctx: {
+    prefsSet: Set<FightingStyle>;
+    activeStyleCounts: Map<string, number>;
+    meta: StyleMeta | undefined;
+    owner: Pick<RivalStableData['owner'], 'id' | 'competence'> | undefined;
+    week: number;
+  }
 ): number {
+  const { prefsSet, activeStyleCounts, meta, owner, week } = ctx;
   let score = 0;
   score += weights.tierBonus[w.tier] ?? 0;
   if (prefsSet.has(w.style)) score += weights.styleMatchBonus;
@@ -194,7 +197,7 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
     const w = pool[i];
     if (!w) continue;
     const score = scoreCandidate(
-      w, weights, prefsSet, activeStyleCounts, meta, args.owner, week
+      w, weights, { prefsSet, activeStyleCounts, meta, owner: args.owner, week }
     );
     if (score > bestScore) {
       bestScore = score;

@@ -309,12 +309,14 @@ function resolvePsychAndSpecialty(
   fA: FighterState,
   fD: FighterState,
   ctx: ResolutionContext,
-  condResultA: ReturnType<typeof evaluateConditions>,
-  condResultD: ReturnType<typeof evaluateConditions>,
+  conds: {
+    condResultA: ReturnType<typeof evaluateConditions>;
+    condResultD: ReturnType<typeof evaluateConditions>;
+  },
   events: CombatEvent[]
 ): { psychA: ReturnType<typeof getPsychStateMods>['psychA']; psychD: ReturnType<typeof getPsychStateMods>['psychD'] } {
   // ── Psych state evaluation ──
-  events.push(...evaluatePsychState(fA, fD, ctx, condResultA, condResultD));
+  events.push(...evaluatePsychState(fA, fD, ctx, conds.condResultA, conds.condResultD));
 
   // ── Per-exchange specialty mods ──
   applySpecialtyMods(ctx, fA, fD);
@@ -341,7 +343,7 @@ export function prepareExchange(
     phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
 
   const { condResultA, condResultD } = recoverAndAdaptPlans(fA, fD, ctx, phaseKey, events);
-  const { psychA, psychD } = resolvePsychAndSpecialty(fA, fD, ctx, condResultA, condResultD, events);
+  const { psychA, psychD } = resolvePsychAndSpecialty(fA, fD, ctx, { condResultA, condResultD }, events);
 
   emitIntentTelemetry({
     fA: fA,

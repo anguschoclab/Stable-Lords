@@ -4,7 +4,6 @@ import { makeStrikingWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import type { Warrior } from '@/types/warrior.types';
-import { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
 const mockStore = vi.hoisted(() => ({ roster: [] as Warrior[] }));

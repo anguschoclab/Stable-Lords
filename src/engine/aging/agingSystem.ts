@@ -254,12 +254,15 @@ function routeAgingOutcome(
   acc: AgingAccumulators,
   result: AgingResult,
   w: Warrior,
-  isPlayer: boolean,
-  rivalId: string | undefined,
-  crownedIds: ReturnType<typeof collectCrownedWarriorIds>,
-  state: GameState,
-  rng: IRNGService
+  ctx: {
+    isPlayer: boolean;
+    rivalId: string | undefined;
+    crownedIds: ReturnType<typeof collectCrownedWarriorIds>;
+    state: GameState;
+    rng: IRNGService;
+  }
 ): void {
+  const { isPlayer, rivalId, crownedIds, state, rng } = ctx;
   if (result.ageEvent) {
     acc.ageEvents.push(result.ageEvent);
   }
@@ -313,7 +316,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       isAgeTick,
       isChampion: championIds.has(w.id),
     });
-    routeAgingOutcome(acc, result, w, isPlayer, rivalId, crownedIds, state, rng);
+    routeAgingOutcome(acc, result, w, { isPlayer, rivalId, crownedIds, state, rng });
   }
 
   const { ageEvents, rosterUpdates, rivalsUpdates, toRetire, retiredWarriors, founderEnqueued } = acc;

@@ -82,7 +82,8 @@ describe('megaplan V18: unique-logic preservation (§U)', () => {
     const shapes: [string, string[]][] = [
       ['src/pages/AdminTools/hooks/useAdminTools.ts', ['skipWeek', 'skipMonth', 'skipSeason']],
       ['src/pages/ControlCenter/hooks/useControlCenter.ts', ['arenaHistory', 'boutOffers']],
-      ['src/pages/orphanage/useFtueFlow.ts', ['step', 'orphanPool']],
+      ['src/pages/orphanage/useFtueFlow.ts', ['step', 'useOrphanSelection']],
+      ['src/pages/orphanage/ftueFlow/useOrphanSelection.ts', ['orphanPool', 'selectedWarriors']],
       ['src/pages/startGame/useStartGame.ts', ['screen', 'slots']],
     ];
     for (const [file, fields] of shapes) {

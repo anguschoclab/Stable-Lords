@@ -14,7 +14,7 @@ function makeIdleWarrior(): Warrior {
     name: 'Idle Warrior',
     style: FightingStyle.LungingAttack,
     attributes: { ST: 50, CN: 50, SZ: 50, WT: 50, WL: 50, SP: 50, DF: 50 },
-    baseSkills: { OE: 50, KD: 50, DE: 50, AG: 50, IN: 50, HE: 50 },
+    baseSkills: { OE: 50, KD: 50, DE: 50, AG: 50, IN: 50, HE: 50 } as any,
     derivedStats: { AP: 10, DP: 10, HP: 100, SP: 10, IN: 10, HE: 10 } as any,
     fame: 0,
     age: 20,

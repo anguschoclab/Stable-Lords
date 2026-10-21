@@ -45,7 +45,7 @@ had hidden. V18 retroactively formalizes the drain:
 Live rescan confirms: exactly 27 src↔src pairs, all registered, `DEBT_PAIRS`
 empty, zero stale entries (live-ledger test enforces this going forward).
 
-## §A SRP targets — function-level queue
+## §A SRP targets — function-level queue — ✅ all 34 tickets landed (Phase 3)
 
 **Correction (validated):** the monolith-by-size list was disproved.
 `narrateEvents/handlers.ts` (562) is a uniform ~20-handler dispatch table —
@@ -132,11 +132,11 @@ Classified-by-reading verdicts:
   dup ledger); a lone flag is weak evidence of responsibility-mix. Revisit if
   any grows a second signal.
 
-## §D Dup clusters — per-tier verdict tables (Phase-1 triage complete)
+## §D Dup clusters — per-tier verdict tables (Phase-1 triage complete — D1–D14 drained)
 
 | Tier | src↔src | test↔test | mixed | Disposition |
 | ---- | ------- | --------- | ----- | ----------- |
-| exact w8 | 27 — all EXEMPT (registered) | 150 → **4 EXEMPT + 146 DEBT** | 27 — all EXEMPT (literal pins) | gate tier — `duplication.guard.test.ts` |
+| exact w8 | 27 — all EXEMPT (registered) | 150 → **74 live** (4 EXEMPT + 70 residual DEBT) after D1–D14 drains | 27 → **17 live** EXEMPT | gate tier — `duplication.guard.test.ts` |
 | exact w12 | 7 — subset of the 27, same verdicts | 18 — verdicts inherit w8 clusters | 4 — literal pins | secondary audit tier |
 | ident w20 | 181 — **all EXEMPT** (read-verified) | 50 — cluster verdicts inherit + enum-list echoes EXEMPT | 139 — all EXEMPT | audit queue — verdicts recorded here |
 | ident w16 | 484 | 125 | 286 | deep tier — staged after w20 drains; never a raw-count gate |
@@ -169,13 +169,17 @@ Classified-by-reading verdicts:
 | D13 | `_fixtures/*`↔spec echoes (statWarrior×7, storeState×3, arenaTitle, bidRoster×2, factories×2, signedBout, advisorSeed) | spec files carrying verbatim copies of fixture content | repoint to the fixture they clone |
 | D14 | misc cloned helpers | `walk()` dir-crawler (envSafety↔moduleCacheRegistry), `mockWorkerCtor`+comlink mock, `championsTourney`, `makeInjury`, `signedOfferFor`/`setup`, `getPassive`, `makeArena`, BookmarkButton store-inject, recruit/promoter/potential/equipment/digest literals | per-pair repoint to `_fixtures`/`_mocks`/`_helpers` |
 
-### exact-w8 mixed — 27 pairs, all EXEMPT
+### exact-w8 mixed — 27 → 17 live pairs, all EXEMPT
 
-Tests intentionally pinning production literals: `warriorDefaults`
-zero-state (8 specs), `gameStateFactory` shape (2), `enumSources`↔schema
-tests (4), `resolution`↔combat ctx pins (2), `weaponStyles`/`weapons`
-tables (3), `MobileNav`↔routerLink/LeftNav mocks (2), narrative/trait/
-weather registry pins (5), `enumSources`↔fixture/section echoes (3).
+Post-drain, ten literal pins fell off the scan (specs now import the
+fixture/factory they pinned: `warriorDefaults`×7, `gameStateFactory`×2,
+`MobileNav`↔`LeftNav.test`). Live ledger ratcheted `MIXED_BASELINE` 27→17.
+
+Live pins: `warriorDefaults`↔`statWarrior` (1 — the drained specs now
+import the fixture), `enumSources`↔schema tests (4),
+`resolution`↔combat ctx pins (2), `weaponStyles`/`weapons` tables (3),
+`MobileNav`↔`routerLink` mock (1), narrative/trait/weather registry pins
+(3), `enumSources`↔fixture/section echoes (2), `typeSurface` pin (1).
 Registered in `MIXED_EXEMPT_PAIRS`; `MIXED_DEBT_PAIRS` empty.
 
 ### ident-w20 verdicts (audit queue — not gate-tier)

@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { makeHookWarrior } from '@/test/_fixtures/factories';
 import { renderHook } from '@testing-library/react';
 import type { Warrior, GameState } from '@/types/game';
-import type { WarriorId } from '@/types/shared.types';
 import '@/test/_setup/setup';
 
 vi.mock('sonner', () => __SHARED_MOCKS.sonner);

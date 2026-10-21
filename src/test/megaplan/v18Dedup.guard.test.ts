@@ -23,7 +23,6 @@ import {
 const CW = 'src/test/engine/ai/workers/competitionWorker';
 
 describe('megaplan V18: test-tier deduplication', () => {
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D1: shared competitionWorker eval-harness + dominant-rankings fixture exist — MEGAPLAN-D1', async () => {
     const found = candidateExists([
       `${CW}/_helpers.ts`,
@@ -43,7 +42,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(mod, 'factories module must import').not.toBeNull();
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D2: warrior wrapper clones repointed — no per-file createMockWarrior/makeWarrior-wrap literals — MEGAPLAN-D2', () => {
     const offenders = [
       'src/test/hooks/useActiveRoster.test.ts',
@@ -61,7 +59,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'local warrior-factory wrappers still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D3: zero-state GameState literal tails repointed to makeGameState — MEGAPLAN-D3', () => {
     const re = /scoutReports:\s*\[\],\s*\n\s*restStates:\s*\[\]/g;
     const offenders = [
@@ -73,7 +70,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'zero-state GameState literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D4: ArenaTitle literals + title() clones repointed to makeArenaTitle — MEGAPLAN-D4', () => {
     const re = /noContenderStreak:\s*0,\s*\n\s*declinedContenders:\s*\{\}/g;
     const offenders = [
@@ -91,7 +87,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'ArenaTitle literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D5: statWarrior-shaped warrior literals repointed — MEGAPLAN-D5', () => {
     const re = /career:\s*\{\s*wins:\s*0,\s*losses:\s*0,\s*kills:\s*0\s*\},\s*\n\s*champion:\s*false,\s*\n\s*status:\s*'Active'/g;
     const offenders = [
@@ -110,7 +105,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'statWarrior literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D6: inline react-router mocks repointed to _mocks/routerLink — MEGAPLAN-D6', () => {
     const offenders = [
       'src/test/components/dashboard/CouncilBriefingWidget.test.tsx',
@@ -130,7 +124,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'inline react-router mocks still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D7: shared component-mock entries exist in __SHARED_MOCKS and boilerplate sites repointed — MEGAPLAN-D7', () => {
     const sm = fileText('src/test/_setup/sharedMocks.ts');
     for (const key of ['uiBadge', 'paperDoll', 'sonner', 'workerProxy', 'orphanPool']) {
@@ -138,7 +131,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     }
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D8: shared determinism harness exists (run-twice + compare) — MEGAPLAN-D8', () => {
     const text =
       fileText('src/test/_helpers/determinism.ts') +
@@ -150,7 +142,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     ).toBe(true);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D9: shared stubbed weather-roll helper exists — MEGAPLAN-D9', () => {
     const text =
       fileText('src/test/_fixtures/weather.ts') +
@@ -162,7 +153,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     ).toBe(true);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D10: offseason specs repointed to makeOffseasonCtx (verbatim ctx literals drained) — MEGAPLAN-D10', () => {
     const re = /rosterUpdates:\s*new Map(?:<[^>]*>)?\(\),\s*\n\s*newsletterItems:\s*\[\],\s*\n\s*ledgerEntries:\s*\[\]/g;
     const offenders = [
@@ -177,7 +167,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'verbatim offseason ctx literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D11: fight-summary literals repointed to makeFightSummary — MEGAPLAN-D11', () => {
     const offenders = [
       'src/test/components/awards/Awards.test.tsx',
@@ -188,7 +177,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'spec files not repointed to makeFightSummary').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D12: rival/rivalMap literals repointed to makeRival/makeOwner — MEGAPLAN-D12', () => {
     const re = /rivalMap:\s*new Map\(\[\s*\n?\s*\['rival-/g;
     const offenders = [
@@ -200,7 +188,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'rivalMap literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D13: _fixtures echo clones repointed — Dragon\'s Hearth player literal drained — MEGAPLAN-D13', () => {
     const re = /stableName:\s*["']Dragon's Hearth["']/g;
     const offenders = [
@@ -213,7 +200,6 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'storeState player literals still inline').toEqual([]);
   });
 
-  // eslint-disable-next-line vitest/no-disabled-tests
   it('D14: misc cloned helpers extracted — walk crawler, comlink/worker mock, injury + tourney factories — MEGAPLAN-D14', () => {
     const helpers = fileText('src/test/_helpers/fsWalk.ts') + fileText('src/test/_fixtures/fsWalk.ts');
     expect(

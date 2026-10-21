@@ -2,7 +2,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
 

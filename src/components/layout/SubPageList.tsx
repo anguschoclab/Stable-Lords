@@ -26,20 +26,20 @@ function NavPageLink({
   currentPath,
   isFirstInSection,
   LinkComponent,
-  pageLinkClassName,
-  iconClassName,
-  useMotionIndicator,
-  animationDuration,
+  appearance,
 }: {
   page: { to: string; exact?: boolean; section?: string; icon: React.ElementType; label: string };
   currentPath: string;
   isFirstInSection: boolean;
   LinkComponent: LinkComp;
-  pageLinkClassName?: string;
-  iconClassName?: string;
-  useMotionIndicator: boolean;
-  animationDuration: number;
+  appearance: {
+    pageLinkClassName?: string;
+    iconClassName?: string;
+    useMotionIndicator: boolean;
+    animationDuration: number;
+  };
 }) {
+  const { pageLinkClassName, iconClassName, useMotionIndicator, animationDuration } = appearance;
   const isActive = page.exact
     ? currentPath === page.to
     : currentPath === page.to || currentPath.startsWith(`${page.to}/`);
@@ -126,10 +126,7 @@ export function SubPageList(props: SubPageListProps) {
                 currentPath={currentPath}
                 isFirstInSection={startsSection}
                 LinkComponent={LinkComponent}
-                pageLinkClassName={pageLinkClassName}
-                iconClassName={iconClassName}
-                useMotionIndicator={useMotionIndicator}
-                animationDuration={animationDuration}
+                appearance={{ pageLinkClassName, iconClassName, useMotionIndicator, animationDuration }}
               />
             );
           })}

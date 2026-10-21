@@ -7,7 +7,7 @@ import {
   isBookable,
 } from '@/engine/warrior/warriorStatus';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
-import type { WarriorId, InjuryId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { RestState, TrainingAssignment } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior as fixtureWarrior, makeInjury as sharedMakeInjury } from '@/test/_fixtures/factories';

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import PlanBuilder from '@/components/PlanBuilder';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import { describe, it, expect, vi } from 'vitest';
@@ -178,7 +178,7 @@ describe('PlanBuilder Style Presets', () => {
 
   it('renders Restore Default button when warrior is provided', () => {
     const warrior = makeWarrior({
-      id: 'test-id',
+      id: 'test-id' as WarriorId,
       name: 'Test Warrior',
       style: FightingStyle.AimedBlow,
       fame: 0,

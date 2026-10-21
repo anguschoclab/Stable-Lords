@@ -146,7 +146,7 @@ export interface ResolutionContext {
   crowdKillBonus?: number;
   /** House-rule kill-probability multiplier (1 = canonical; 0 = no-death). */
   deathRateMult?: number;
-  /** When true, prepareExchange emits AI_INTENT transition events (Stage F).
+  /** When true, prepareExchange emits AI_INTENT transition events.
    *  Set by runSimulationLoop: non-headless, or headless + __AI_DEBUG. */
   aiIntentTelemetry?: boolean;
   /**

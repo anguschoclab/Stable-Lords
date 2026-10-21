@@ -4,7 +4,7 @@
  * Asserts the boundary shows a generic user-facing message, logs the raw
  * error to the console, offers a retry that resets the boundary, and never
  * exposes the raw error text to the user — visibly or inside collapsed
- * markup (PR #967 extraction target + reload-button honesty fix).
+ * markup.
  */
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

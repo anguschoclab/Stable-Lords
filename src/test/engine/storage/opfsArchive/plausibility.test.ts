@@ -287,7 +287,7 @@ describe('isPlausibleGameState', () => {
     expect(isPlausibleGameState(state)).toBe(false);
   });
 
-  // ── Death-registry arrays (kill/death divergence fix) ─────────────────
+  // ── Death-registry arrays ────────────────────────────────────────────
   it('46. Missing deadWarriorIds → false', () => {
     const state = makeMinimalGameState();
     delete (state as Record<string, unknown>).deadWarriorIds;

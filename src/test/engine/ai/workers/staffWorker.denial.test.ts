@@ -1,5 +1,5 @@
 /**
- * D.0 — Dossier-driven preemptive hiring (G21 redesign).
+ * Dossier-driven preemptive hiring.
  * When the intel picture shows the observed opponent field concentrated in a
  * style group, the stable prefers the trainer focus that counters it —
  * hiring for the field it expects, ahead of the player.

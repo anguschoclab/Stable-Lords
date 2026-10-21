@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 /**
- * Stage E — plan-of-record surfacing in AgentReasoningWidget.
+ * plan-of-record surfacing in AgentReasoningWidget.
  * `agentMemory.seasonObjective` is the rival's quarter-length strategic
- * goal (Stage C); the weekly intent only services it. The widget must show
+ * goal; the weekly intent only services it. The widget must show
  * the objective — kind, rationale, remaining weeks — not just the intent.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';

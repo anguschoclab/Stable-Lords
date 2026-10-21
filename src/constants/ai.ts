@@ -1,5 +1,5 @@
 /**
- * AI roster caps — single source of truth for rival stable sizes (G9).
+ * AI roster caps — single source of truth for rival stable sizes.
  * The deliberate personality asymmetry (Aggressive fields larger stables) is
  * preserved, but every consumer now reads the same config.
  */

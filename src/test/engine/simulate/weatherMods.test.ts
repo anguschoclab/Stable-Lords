@@ -6,7 +6,7 @@ import { getZonePenalty } from '@/engine/combat/mechanics/distanceResolution';
 import { makeArena, makePlan, makeWarrior } from '@/test/_fixtures/factories';
 
 /**
- * V2-04 — `ArenaConfig.weatherMods` per-weather spatial overrides.
+ * `ArenaConfig.weatherMods` per-weather spatial overrides.
  *
  * The field is declared (`types/shared/spatial.ts`), schema-validated, and
  * spec'd by the spatial-system doc, but no reader exists: the resolution
@@ -14,7 +14,7 @@ import { makeArena, makePlan, makeWarrior } from '@/test/_fixtures/factories';
  * merge contract — matching weather applies the overrides, any other weather
  * leaves the base config untouched.
  */
-describe('arena weatherMods — weather-conditional spatial overrides (V2-04)', () => {
+describe('arena weatherMods — weather-conditional spatial overrides', () => {
   // setup.node.ts restores the builtin registry in a global afterEach, so the
   // fixture arena must be re-registered before every test.
   beforeEach(() => {

@@ -25,7 +25,7 @@ export function buildExchangeLogEntry(
 }
 
 /**
- * Stage E: project the first condition fire into a side-attributed
+ * project the first condition fire into a side-attributed
  * structure — the reasonCode string alone loses the actor.
  */
 function projectConditionFire(e: CombatEvent, entry: ExchangeLogEntry): void {
@@ -75,7 +75,7 @@ function projectEvent(e: CombatEvent, entry: ExchangeLogEntry, reasonCodes: stri
       entry.killWindow ??= e.result === 'Kill';
       break;
     case 'AI_INTENT':
-      // Stage F: metadata.cause is already 'AI_INTENT_*' — surface verbatim.
+      // metadata.cause is already 'AI_INTENT_*' — surface verbatim.
       if (e.metadata?.cause) reasonCodes.push(String(e.metadata.cause));
       break;
     case 'STATE_CHANGE': {

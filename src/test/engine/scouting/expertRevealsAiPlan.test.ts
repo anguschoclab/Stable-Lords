@@ -1,5 +1,5 @@
 /**
- * E.0 — Expert scouting reveals persisted NPC plans (G8).
+ * Expert scouting reveals persisted NPC plans.
  * `warrior.plan` is never written for rival stables at baseline, so Expert
  * scout reports silently omit suspectedOE/AL. Once signed-bout plans persist,
  * the Expert report surfaces real plan buckets — and still reports only

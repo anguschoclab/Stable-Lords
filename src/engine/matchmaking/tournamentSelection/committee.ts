@@ -81,7 +81,7 @@ function collectEligiblePool(
     for (const w of roster) {
       if (!isActive(w)) continue;
       if (!lockedIds.has(w.id)) {
-        // 🌩️ Tournament Entry Skepticism: Weather Check — consolidated gate (G16)
+        // 🌩️ Tournament Entry Skepticism: Weather Check — consolidated gate
         if (committeeWeatherSkip(w, state.weather)) continue;
 
         const r = rankings[w.id];

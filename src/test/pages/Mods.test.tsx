@@ -6,7 +6,7 @@ import Mods from '@/pages/Mods';
 import { useGameStore } from '@/state/useGameStore';
 import { makeGameState } from '@/test/_fixtures/factories';
 
-describe('Mods page (G1/G7)', () => {
+describe('Mods page', () => {
   beforeEach(() => {
     useGameStore.setState({ ...makeGameState() } as never);
   });

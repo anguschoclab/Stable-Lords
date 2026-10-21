@@ -1,5 +1,5 @@
 /**
- * Owner ambition arcs (Stage C): ASCENDANT / PRIME / DECLINING — where the
+ * Owner ambition arcs: ASCENDANT / PRIME / DECLINING — where the
  * owner sits in their competitive lifecycle. Derived from competence,
  * generation, age, and the current season's track record; consumed by the
  * season-plan pick (DECLINING stables consolidate rather than campaign)

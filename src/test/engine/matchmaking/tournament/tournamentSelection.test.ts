@@ -355,7 +355,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     expect(r1Bouts.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
 
     // A 4-man round-1 IS the semifinal, so round 2 carries the finals bout
-    // plus the flagged bronze playoff (M6 small-bracket fix).
+    // plus a bronze playoff (flagged isBronzeMatch) between the semifinal losers.
     const r2Bouts = updatedState.tournaments[0]!.bracket.filter(
       (b: TournamentBout) => b.round === 2
     );
@@ -1662,7 +1662,7 @@ describe('resolveRound — full bracket completes in 6 rounds', () => {
     expect(tour.champion).toBe(champWarrior?.name);
   });
 
-  it('8-man bracket still produces a flagged bronze playoff (M6 small brackets)', () => {
+  it('8-man bracket produces a flagged bronze playoff', () => {
     vi.mocked(simulateFight).mockReturnValue(stopOutcome as any);
     const warriors = makeBracketWarriors(8);
     let state = makeBracketState(warriors);

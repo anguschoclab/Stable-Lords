@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * Stage E — player-facing Corner Analysis panel.
+ * player-facing Corner Analysis panel.
  * Condition firings are real engine facts already in the exchange log;
  * the panel renders them honestly — which side shifted plans, on which
  * trigger, and whether a corner forced the re-check at a phase boundary.

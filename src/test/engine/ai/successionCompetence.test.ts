@@ -1,5 +1,5 @@
 /**
- * Stage B — competence inheritance on owner succession.
+ * competence inheritance on owner succession.
  * When an owner retires (`handleOwnerLifecycle`), the successor's competence
  * drifts by at most one tier from the predecessor — dynasties evolve, they
  * don't reroll wholesale. Non-succession ticks never touch competence.

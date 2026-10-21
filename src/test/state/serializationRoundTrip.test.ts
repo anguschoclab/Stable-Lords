@@ -91,7 +91,7 @@ describe('serializationRoundTrip', () => {
     expect(result2.treasury).toBe(5000);
   });
 
-  it('N2: lastSimulationReport survives serialization round-trip', () => {
+  it('lastSimulationReport survives serialization round-trip', () => {
     clearReconstructionCache();
 
     const report = {

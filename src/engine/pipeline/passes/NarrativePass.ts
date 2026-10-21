@@ -86,7 +86,7 @@ export function runNarrativePass(
   const cappedGazettes = gazettes.slice(-50);
 
   // 2. Owner grudges and rivalries are world state — they were relocated to
-  // WorldPass (G5) so they keep updating in headless/player-stopped runs.
+  // WorldPass so they keep updating in headless/player-stopped runs.
 
   const impact: StateImpact = {
     gazettes: cappedGazettes,

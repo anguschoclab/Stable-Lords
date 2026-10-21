@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Stage H — 104-week world-liveness invariants.
+ * 104-week world-liveness invariants.
  * The AI behaviors shipped in Stages B–G must keep the championship
  * ecosystem *alive* over a two-year horizon: crowns change hands, rival
  * campaigns actually launch, the refusal→strip machinery prevents
@@ -18,7 +18,7 @@ import type { GameState } from '@/types/state.types';
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 
-describe('world liveness — 104 weeks (Stage H)', () => {
+describe('world liveness — 104 weeks', () => {
   beforeAll(() => {
     let n = 0;
     setMockIdGenerator(() => `id_${++n}`);
@@ -84,7 +84,7 @@ describe('world liveness — 104 weeks (Stage H)', () => {
     }
 
     // 5. Champions reach year-end rested on average — the prep machinery
-    //    (Stage B) exists precisely so w52 fields aren't exhausted. Fatigue
+    // exists precisely so w52 fields aren't exhausted. Fatigue
     //    scale is 0–100; >70 average would mean the prep never engages.
     const yearEndPulse = pulses.filter((p) => p.avgChampionFatigue > 0).at(-1);
     if (yearEndPulse) {

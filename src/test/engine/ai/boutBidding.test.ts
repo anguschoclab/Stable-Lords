@@ -773,7 +773,7 @@ describe('boutBidding VENDETTA targeting', () => {
     expect(bids[0]!.targetStableId).toBe('nonexistent');
   });
 
-  it('does not structuredClone a mock GameState per rival (G17)', () => {
+  it('does not structuredClone a mock GameState per rival', () => {
     const spy = vi.spyOn(globalThis, 'structuredClone');
     const rival = makePerfRival({
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },

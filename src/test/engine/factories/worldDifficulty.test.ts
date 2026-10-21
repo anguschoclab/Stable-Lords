@@ -6,7 +6,7 @@ import { WORLD_DIFFICULTIES } from '@/types/enumSources';
 import { SeededRNG } from '@/utils/random';
 
 /**
- * Stage E — WorldDifficulty skew on the minted stablemaster field.
+ * WorldDifficulty skew on the minted stablemaster field.
  * Pins the seeder semantics before V11 refactors touch gameStateFactory:
  * worldOptions is read ONLY by the seeder; mid-game refills ignore it.
  */

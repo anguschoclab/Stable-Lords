@@ -76,7 +76,7 @@ export function getNPCPlan(
   if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
 
   // E.2 — a committed plan written for THIS opponent THIS week is honored
-  // verbatim; a stale or opponent-mismatched plan is recomputed (G8).
+  // verbatim; a stale or opponent-mismatched plan is recomputed.
   const week = state.absoluteWeek ?? state.week;
   if (
     w.plan &&

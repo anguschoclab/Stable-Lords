@@ -41,7 +41,7 @@ interface SignGeneratedRecruitArgs {
 /**
  * Pool-empty fallback: generates a recruit out of thin air ONLY when the
  * stable declared a need and can afford the signing fee through the same
- * budget check as pool drafts (G9 — generateAIRecruit is no longer a
+ * budget check as pool drafts (generateAIRecruit is no longer a
  * parallel recruitment path). Consumes no pool entry, so it returns only
  * the updated stable — the caller's remainingPool passes through untouched.
  */
@@ -165,7 +165,7 @@ function scoreCandidate(
   score -= (w.cost * weights.priceSensitivity) / 100;
 
   // Competence noise — a Novice front office misevaluates candidates while
-  // a Master nearly always spots the best value (Stage B). Deterministic
+  // a Master nearly always spots the best value. Deterministic
   // per (owner, candidate, week) so shard order can't change the pick.
   score += competenceJitter(owner, `draft|${w.id}|${week}`, 25);
 
@@ -500,13 +500,13 @@ export function processRecruitment(args: ProcessRecruitmentArgs): RecruitmentRes
 
   // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
   // is deliberately decoupled from the player's `BASE_ROSTER_CAP` constant.
-  // Single config source: src/constants/ai.ts (G9).
+  // Single config source: src/constants/ai.ts.
   const maxRoster = aiRosterMax(updatedRival.owner.personality);
   if (activeCount >= maxRoster) {
     return { updatedRival, updatedPool: remainingPool, gazetteItems };
   }
 
-  // G9: a stable flagged needsRecruit always drafts — the flag is set by
+  // A stable flagged needsRecruit always drafts — the flag is set by
   // processAIRosterManagement (unified path) and cleared on a successful sign.
   const needsRecruit = updatedRival.needsRecruit === true;
 

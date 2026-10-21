@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Stage D — plan intelligence. The rival intel worker writes dossier
+ * plan intelligence. The rival intel worker writes dossier
  * `planIntel` (suspected OE/AL bands + freshness stamp); the plan generator
  * consumes fresh intel to counter-plan, and scouting blends *observed*
  * committed plans into the estimate instead of pure personality priors.

@@ -1,5 +1,5 @@
 /**
- * Stage D — AI feint modulation (N3). `feintTendency` already exists and
+ * AI feint modulation. `feintTendency` already exists and
  * `runFeint` is live; the AI only ever inherited the WT-derived baseline.
  * `aiPlanForWarrior` now shapes it by personality: deceptive stables
  * (Showman, Tactician) feint more, measured ones (Methodical, Pragmatic)

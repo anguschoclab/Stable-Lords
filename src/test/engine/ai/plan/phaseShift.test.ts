@@ -1,5 +1,5 @@
 /**
- * Stage D.4 — `FightPlan.phaseShiftOn`. `buildPhasePlan` produces static,
+ * `FightPlan.phaseShiftOn`. `buildPhasePlan` produces static,
  * personality-tweaked phase curves; phaseShiftOn makes the curve *reactive*:
  * at the declared phase boundary, if the momentum/HP read holds, the phase's
  * axes shift — committed for the rest of that phase, unlike per-exchange

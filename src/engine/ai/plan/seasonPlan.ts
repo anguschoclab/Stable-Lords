@@ -1,5 +1,5 @@
 /**
- * Season plan-of-record (Stage C): one strategic objective per ~quarter
+ * Season plan-of-record: one strategic objective per ~quarter
  * that sits ABOVE the weekly intent cascade. `pickSeasonObjective` reads
  * the stable's position and commits to CROWN / TOURNAMENT / TREASURY /
  * REBUILD; `applySeasonPlan` ticks the runway weekly and re-picks on

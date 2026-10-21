@@ -137,7 +137,7 @@ export function computePoachBid(
 
   // Price: base recruit cost plus the recoverable trait upside, discounted by
   // how badly the seller wants rid of the warrior — plus competence noise:
-  // a Novice over/underpays by up to ~20g, a Master prices tight (Stage B).
+  // a Novice over/underpays by up to ~20g, a Master prices tight.
   const price = clampPrice(
     AI_GENERATED_RECRUIT_COST +
       target.traitValue -

@@ -7,7 +7,7 @@ import { A11Y_KEY } from '@/lib/a11yPrefs';
 
 vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
-describe('Help — accessibility settings (G3)', () => {
+describe('Help — accessibility settings', () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.removeAttribute('data-contrast');
@@ -35,7 +35,7 @@ describe('Help — accessibility settings (G3)', () => {
   });
 });
 
-describe('Help — design bible search (G5)', () => {
+describe('Help — design bible search', () => {
   it('renders a search input and returns spec hits', () => {
     render(<Help />);
     fireEvent.click(screen.getByRole('button', { name: /design bible/i }));

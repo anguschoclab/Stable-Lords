@@ -1,5 +1,5 @@
 /**
- * Stage G — roster crown chips.
+ * roster crown chips.
  * A player warrior ranked on a title ladder gets an honest "Contender #N"
  * chip on the roster wall; a reigning champion's crown stays the stronger
  * signal. The rank comes from the same contender index the AI campaigns

@@ -68,7 +68,7 @@ export interface GameState {
    * permadeath is a non-canonical house rule and must be labeled as such in UI.
    */
   houseRules?: HouseRules;
-  /** World-creation options (Stage E) — set at worldgen; read once by the
+  /** World-creation options — set at worldgen; read once by the
    *  seeder, ignored by mid-game refills. */
   worldOptions?: WorldOptions;
   /** Installed content packs (Design Bible #36) — narrative overlays only. */

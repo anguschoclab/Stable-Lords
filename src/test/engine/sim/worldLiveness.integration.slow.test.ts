@@ -62,7 +62,8 @@ describe('world liveness over a long sim (26 weeks)', () => {
     // that < 25% reach 3 traits. Here we only assert presence + a floor.
     const traitedShare = end.traitedWarriors / Math.max(1, allWarriors.length);
     expect(traitedShare).toBeGreaterThan(0.2); // traits do emerge
-    // …but the world is NOT saturated (was 0.99 before the acquisition fix).
+    // …but the world is NOT saturated (was 0.99 before rival trait
+    // development was soft-capped).
     // Band re-based to 0.85 for the 90-stable subsidized world: AI trait
     // development is gold-gated, so solvent stables develop more — measured
     // ~0.83 at 26 weeks post-subsidy (seed 4242, ~800 warriors).
@@ -75,7 +76,7 @@ describe('world liveness over a long sim (26 weeks)', () => {
   }, 120000);
 });
 
-describe('AI liveness invariants over 104 weeks (I.2)', () => {
+describe('AI liveness invariants over 104 weeks', () => {
   beforeEach(reset, 120000);
 
   it('every intent fires, memory persists, dossiers cover the world, player gets challenged', async () => {
@@ -154,7 +155,7 @@ describe('AI liveness invariants over 104 weeks (I.2)', () => {
   }, 1200000);
 });
 
-describe('slow invariants — competence gradient & intent/objective coherence (F.6)', () => {
+describe('slow invariants — competence gradient & intent/objective coherence', () => {
   beforeEach(reset, 120000);
 
   it('top competence tiers out-earn bottom tiers and objectives steer weekly intents', async () => {
@@ -186,7 +187,7 @@ describe('slow invariants — competence gradient & intent/objective coherence (
       },
     });
 
-    // Competence outcome gradient (Stage B): decision quality compounds in
+    // Competence outcome gradient: decision quality compounds in
     // the treasury. Win-rate stays flat BY DESIGN — competence never
     // touches combat rolls. Means are whale-skewed (a few 7000g Masters
     // dominate), so the invariant uses medians.
@@ -199,11 +200,12 @@ describe('slow invariants — competence gradient & intent/objective coherence (
     // bouts on both trees), so the seed-11 inversion was a chaotic re-roll
     // of bout trajectories, not systematic economic damage.
     //
-    // Post-refactor re-baseline (V11 Phase 8): the single-crown fix
-    // (d95dcca0) removed the multi-crown purse concentration that inflated
+    // Post-refactor re-baseline: enforcing a single crown on vacant-title
+    // coronations removed the multi-crown purse concentration that inflated
     // top-tier medians — bisected: reverting it alone moves seed 555 from
-    // 0.568 → 1.145 — and arena-event mechanics + the dead-podium purse fix
-    // (343df514) re-rolled the remaining trajectory. 12-seed probe on the
+    // 0.568 → 1.145 — and arena-event mechanics plus paying purses to
+    // stables of podium finishers killed in finals re-rolled the remaining
+    // trajectory. 12-seed probe on the
     // final tree: 555/42/1234/777/2024/31337/7/21/314/1337/8675309/90210 →
     // 1.145/1.546/1.035/1.088/1.049/2.000/0.273/1.095/0.206/0.836/0.382/0.256.
     // Re-baselined to seed 31337 (measured 2.000) — the distribution keeps
@@ -215,12 +217,12 @@ describe('slow invariants — competence gradient & intent/objective coherence (
     // 42/777/31337/555 → 1.581/2.196/1.110/1.383. Re-baselined to seed 777
     // (measured 2.196); the 1.3 bar is preserved.
     //
-    // V14 re-baseline: weekly-boundary truncation (finalizeState) made
+    // Re-baseline: weekly-boundary truncation (finalizeState) made
     // sequential worlds match the batch/autosim cadence — capped arrays feed
     // rivalStrategy/PromoterPass/championship reads, so trajectories
-    // re-rolled again. 6-seed probe on the V14 tree: 777/31337/42/555/1234/
+    // re-rolled again. 6-seed probe on that tree: 777/31337/42/555/1234/
     // 2024 → 0.815/0.148/3.272/1.320/0.702/0.920 — same fat tail as the
-    // documented pre-V14 spread (0.11–2.35). Re-baselined to seed 42
+    // documented pre-truncation spread (0.11–2.35). Re-baselined to seed 42
     // (measured 3.272); the 1.3 bar is preserved.
     const med = (xs: number[]) => {
       const s = [...xs].sort((a, b) => a - b);
@@ -239,7 +241,7 @@ describe('slow invariants — competence gradient & intent/objective coherence (
     const gradient = med(topTreas) / Math.max(1, med(noviceTreas));
     expect(gradient).toBeGreaterThan(1.3); // seed 42 measured 3.27 — ratchet below
 
-    // Intent ↔ objective coherence (Stage C): while a seasonObjective lives,
+    // Intent ↔ objective coherence: while a seasonObjective lives,
     // its servicing intent should fire a meaningful share of weeks. Crisis
     // and opportunistic intents legitimately override — measured 0.185,
     // ratcheted at 0.12.

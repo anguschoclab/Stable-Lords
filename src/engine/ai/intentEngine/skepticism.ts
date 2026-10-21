@@ -46,7 +46,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
     return true;
   }
 
-  // Skepticism Tier 2.8 (Stage C): the season objective is infeasible —
+  // Skepticism Tier 2.8: the season objective is infeasible —
   // whatever intent it spawned gets re-picked.
   if (rival.agentMemory?.seasonObjective && !objectiveStillViable(rival, state)) {
     return true;

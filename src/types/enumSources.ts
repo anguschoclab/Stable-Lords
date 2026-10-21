@@ -286,7 +286,7 @@ export const META_ADAPTATIONS = [
 export const OWNER_COMPETENCES = ['Novice', 'Journeyman', 'Veteran', 'Master'] as const;
 
 /**
- * World-generation difficulty (Stage E): picked at world creation, skews
+ * World-generation difficulty: picked at world creation, skews
  * the stablemaster field minted by the rival factory — 'Contender' is an
  * easier world, 'Legend' a harder one. 'Challenger' is the canonical field.
  */

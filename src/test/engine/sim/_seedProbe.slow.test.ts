@@ -1,7 +1,7 @@
 /**
- * F.6 competence-gradient seed probe — scratch diagnostic, not a CI gate.
+ * competence-gradient seed probe — scratch diagnostic, not a CI gate.
  * Replicates the gradient computation from worldLiveness.integration.slow.test.ts
- * so a re-baseline after a world-trajectory change (new arena event, purse fix,
+ * so a re-baseline after a world-trajectory change (new arena event, purse change,
  * etc.) can measure multiple seeds cheaply. Run:
  *   PROBE_SEEDS=42,777,1337 bun x vitest run --config vitest.config.slow.ts \
  *     src/test/engine/sim/_seedProbe.slow.test.ts
@@ -20,7 +20,7 @@ const med = (xs: number[]) => {
 
 // Skipped unless PROBE_SEEDS is set — a diagnostic harness, not a CI gate.
 // Audits require a literal describe()/expect() — the wrapper keeps both.
-describe('F.6 competence-gradient seed probe', () => {
+describe('competence-gradient seed probe', () => {
   it.skipIf(!process.env.PROBE_SEEDS)(
     'measures the treasury gradient for PROBE_SEEDS',
     async () => {

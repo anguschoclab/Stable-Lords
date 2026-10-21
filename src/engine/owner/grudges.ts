@@ -176,7 +176,7 @@ interface ProcessPlayerPairsArgs {
 }
 
 /**
- * Player × rival pairs (G5b): kills/upsets against the player's roster
+ * Player × rival pairs: kills/upsets against the player's roster
  * create real grudges. Unlike rival×rival pairs these need no personality
  * clash — bloodshed is reason enough.
  */

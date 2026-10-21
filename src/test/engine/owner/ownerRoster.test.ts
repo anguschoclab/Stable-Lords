@@ -151,7 +151,7 @@ describe('Owner Roster Worker', () => {
   describe('Recruitment Logic', () => {
     it('should flag needsRecruit if roster size is below min (signing is unified in the draft path)', () => {
       // Showman min is 7. Current active is 3. Management declares the need;
-      // aiDraftFromPool/processRecruitment does the signing (G9).
+      // aiDraftFromPool/processRecruitment does the signing.
       const r1 = createRival('r1', 'Showman', 500, [
         { status: 'Active' },
         { status: 'Active' },
@@ -181,7 +181,7 @@ describe('Owner Roster Worker', () => {
     });
 
     it('should apply meta drift for intense rivalries during recruitment', () => {
-      // Counter-meta moved to the unified draft path (G9): a rival in a
+      // Counter-meta moved to the unified draft path: a rival in a
       // heated feud with the player drafts the style the player wins with.
       const r1 = createRival('r1', 'Showman', 5000, [
         { status: 'Active', style: FightingStyle.TotalParry },

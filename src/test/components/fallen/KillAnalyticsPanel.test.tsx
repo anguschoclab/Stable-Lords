@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { KillAnalyticsPanel } from '@/components/fallen/KillAnalyticsPanel';
 import { makeFightSummary, makeWarrior } from '@/test/_fixtures/factories';
 
-describe('KillAnalyticsPanel (G6)', () => {
+describe('KillAnalyticsPanel', () => {
   it('renders kill metrics from persisted fight + graveyard telemetry', () => {
     const fights = [
       makeFightSummary({

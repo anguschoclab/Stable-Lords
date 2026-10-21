@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import { writeFileSync, mkdirSync, unlinkSync, rmdirSync, existsSync } from 'fs';
 import { join } from 'path';
 
-describe('narrative_validate.ts rejects mock/placeholder markers (N1)', () => {
+describe('narrative_validate.ts rejects mock/placeholder markers', () => {
   it('validator script exits 0 on current content (after mock removal)', () => {
     let exitCode = 0;
     try {

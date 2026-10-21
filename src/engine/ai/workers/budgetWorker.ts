@@ -48,7 +48,7 @@ export function projectedWeeklyUpkeep(rival: RivalStableData): number {
 }
 
 /**
- * Multi-week cash-flow forecast (Stage C): recurring upkeep every week of
+ * Multi-week cash-flow forecast: recurring upkeep every week of
  * the horizon plus one-time committed purses from signed bout offers where
  * this stable is the paying side (or the proposer is unrecorded). Pure —
  * same inputs, same projection, so shards agree.
@@ -104,8 +104,8 @@ export function checkBudget(
   const personality = rival.owner.personality ?? 'Pragmatic';
   const burnRate = rival.agentMemory?.burnRate || 0;
   // Reserve scales with real projected upkeep — a bloated roster must keep
-  // far more cash liquid than the old flat 300 (G15). Competence scales
-  // discipline: Novices under-reserve, Masters over-reserve (Stage B).
+  // far more cash liquid than the old flat 300. Competence scales
+  // discipline: Novices under-reserve, Masters over-reserve.
   const reserve =
     Math.max(BASE_RESERVE, projectedWeeklyUpkeep(rival)) * competenceReserveScale(rival.owner);
 

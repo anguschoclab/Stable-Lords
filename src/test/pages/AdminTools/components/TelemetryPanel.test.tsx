@@ -5,7 +5,7 @@ import { TelemetryPanel } from '@/pages/AdminTools/components/TelemetryPanel';
 import '@/test/_setup/setup';
 
 /**
- * V2-13 / V2-14 — dead engine instrumentation wired into the admin data
+ * Dead engine instrumentation wired into the admin data
  * report. `getEngineEpoch`, `engineQueueDepth` (runtime session) and
  * `getPendingArchiveRetries` (opfs archiver) must surface as real rows in the
  * TelemetryPanel report — the values are read from the engine modules, not
@@ -19,7 +19,7 @@ vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
   getPendingArchiveRetries: () => [{ id: 'log_1' }, { id: 'log_2' }],
 }));
 
-describe('TelemetryPanel — engine telemetry rows (V2-13/V2-14)', () => {
+describe('TelemetryPanel — engine telemetry rows', () => {
   const props = {
     week: 5,
     season: 'Spring',

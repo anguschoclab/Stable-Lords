@@ -1,5 +1,5 @@
 /**
- * In-bout AI intent layer (Stage F).
+ * In-bout AI intent layer.
  *
  * A pure labeling layer over the plan/state selection the engine already
  * performs each exchange: conditional overrides (conditionEngine), psych

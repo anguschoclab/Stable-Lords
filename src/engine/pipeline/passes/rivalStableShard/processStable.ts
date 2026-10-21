@@ -72,7 +72,7 @@ export function processRivalStable(
   const gazetteItems: string[] = [];
 
   const strategySeed = state.absoluteWeek * 31 + index * 997 + (rival.owner.id || '').length;
-  // Season plan-of-record (Stage C): tick or re-pick the objective BEFORE
+  // Season plan-of-record: tick or re-pick the objective BEFORE
   // the weekly intent pick so the cascade can service it.
   const rivalWithObjective = applySeasonPlan(rival, state);
   const rivalWithStrategy = applyStrategyUpdate(rivalWithObjective, state, strategySeed);

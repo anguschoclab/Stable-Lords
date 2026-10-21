@@ -19,7 +19,7 @@ function collectAllStrings(obj: unknown, path: string = ''): { text: string; pat
   return out;
 }
 
-describe('narrative content has no mock/placeholder markers (N1)', () => {
+describe('narrative content has no mock/placeholder markers', () => {
   it('no string in narrative content contains a placeholder marker', () => {
     const allStrings = collectAllStrings(narrativeContent);
     const offenders: { text: string; path: string; marker: string }[] = [];

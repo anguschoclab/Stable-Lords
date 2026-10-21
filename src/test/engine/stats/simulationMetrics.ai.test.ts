@@ -41,7 +41,7 @@ function offer(warriorIds: WarriorId[], over: Partial<BoutOffer> = {}): BoutOffe
   };
 }
 
-describe('SimPulse AI metrics (I.1)', () => {
+describe('SimPulse AI metrics', () => {
   it('reports the rival intent distribution', () => {
     const rivals = [
       rivalWith('VENDETTA'),

@@ -1,5 +1,5 @@
 /**
- * Stage C — season plan-of-record. `pickSeasonObjective` chooses one
+ * season plan-of-record. `pickSeasonObjective` chooses one
  * strategic objective per ~quarter above the weekly intent cascade:
  * CROWN when a throne assessment is live, REBUILD when the roster or
  * treasury can't sustain campaigning, TREASURY when the stable can bank.
@@ -125,7 +125,7 @@ describe('objectiveStillViable', () => {
   });
 });
 
-describe('lastLossFactors — objective re-planning (N2 consumption)', () => {
+describe('lastLossFactors — objective re-planning', () => {
   it('recurring structural losses downgrade a CROWN campaign to banking', () => {
     const rival = crownRival();
     rival.agentMemory!.lastLossFactors = ['ATT edge', 'Damage output', 'Style matchup'];

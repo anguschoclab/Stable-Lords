@@ -169,7 +169,7 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
     .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
   // Legacy fallback (brackets serialized before `isBronzeMatch` existed): the
   // positional (round 6, matchIndex 1) slot is only a bronze playoff when it
-  // sits in the championship round. Anywhere else it's an ordinary bout (M6).
+  // sits in the championship round. Anywhere else it's an ordinary bout.
   const bronze =
     bracket.find((b) => b.isBronzeMatch) ??
     bracket.find(

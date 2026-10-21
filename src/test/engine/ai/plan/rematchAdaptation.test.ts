@@ -1,5 +1,5 @@
 /**
- * E.0 — Rematch learning (G11).
+ * Rematch learning.
  * `aiPlanForWarrior` accepts an optional opponent dossier: a warrior with a
  * losing record against this opponent generates a measurably different plan
  * (patient — lower OE / higher AL bias) than the first-meeting baseline.

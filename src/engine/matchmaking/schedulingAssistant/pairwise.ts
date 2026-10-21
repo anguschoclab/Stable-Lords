@@ -5,7 +5,7 @@ import { getPairKey } from '@/utils/keyUtils';
 import { headToHeadFor, type PairwiseHeadToHead } from './headToHead';
 
 /**
- * Player-agnostic context for pairwise matchup scoring (G18).
+ * Player-agnostic context for pairwise matchup scoring.
  * Everything `scoreMatchup` reads except the player-specific
  * challenge/avoid marks — those stay in the `scoreMatchup` wrapper so
  * AI-vs-AI scoring can never see player intent.

@@ -8,7 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { QUESTS_DISMISSED } from '@/engine/onboarding/quests';
 import { makeGameState, makeFightSummary } from '@/test/_fixtures/factories';
 
-describe('QuestsWidget (G4)', () => {
+describe('QuestsWidget', () => {
   beforeEach(() => {
     useGameStore.setState({ ...makeGameState({}) } as never);
   });

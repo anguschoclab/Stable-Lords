@@ -71,10 +71,10 @@ describe('runNarrativePass — weekly newsletter issue (D15 wiring)', () => {
     expect(issue?.items.some((l) => l.includes('style table'))).toBe(true);
   });
 
-  // V2-05 — the announcer `recap` pool + `recapLine` were dead content. The
+  // The announcer `recap` pool + `recapLine` were dead content. The
   // Week in Review issue must emit a recap line for the headline bout,
   // interpolated from the announcer recap templates (winner/loser/minutes).
-  it('emits an announcer recap line for the headline bout (V2-05)', () => {
+  it('emits an announcer recap line for the headline bout', () => {
     const state = makeState([makeFight()]);
     const impact = runNarrativePass(state, 5, 6, new SeededRNG(42) as never);
 

@@ -1,5 +1,5 @@
 /**
- * Bounded second negotiation round (Stage C). The first counter is
+ * Bounded second negotiation round. The first counter is
  * `evaluateBoutOffer`'s job; when the OTHER side's re-evaluation on a
  * countered offer is itself a counter, `resolveSecondRound` decides
  * whether that escalation stands (round 0 → 1) or the stable walks.

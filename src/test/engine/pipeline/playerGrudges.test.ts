@@ -1,5 +1,5 @@
 /**
- * Stage C.0 — G5b: rival-vs-player bloodshed must produce player×rival
+ * Rival-vs-player bloodshed must produce player×rival
  * OwnerGrudges. Today processOwnerGrudges only pairs rival×rival, so the
  * player can be killed with zero social consequence.
  */

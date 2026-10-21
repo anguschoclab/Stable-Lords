@@ -79,7 +79,7 @@ function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
   if (affordable.length === 0) return;
 
   // Specialty preference: the dossier's observed opponent field wins over
-  // the intent default — the stable hires for the field it expects (G21).
+  // the intent default — the stable hires for the field it expects.
   const intelFocus = preferredTrainerFocus(dossierObservedStyles(pass.rival));
   const preferredFocus =
     intelFocus ??

@@ -1,6 +1,6 @@
 /**
- * Stage B.0 — refreshKnownRivals: knownRivals is set once at init and never
- * updated (G3). The world churns — expansions add stables, bankruptcy/retirement
+ * refreshKnownRivals: knownRivals is set once at init and never
+ * updated. The world churns — expansions add stables, bankruptcy/retirement
  * removes them — memory must track it.
  */
 import { describe, it, expect } from 'vitest';

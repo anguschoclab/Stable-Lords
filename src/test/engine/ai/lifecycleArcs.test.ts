@@ -1,5 +1,5 @@
 /**
- * Stage C — owner ambition arcs. `deriveAmbitionArc` maps an owner's
+ * owner ambition arcs. `deriveAmbitionArc` maps an owner's
  * lifecycle position onto ASCENDANT / PRIME / DECLINING from competence,
  * generation, age, and recent track record. The arc colors season
  * objectives and retirement posture: ASCENDANT stables reach for crowns,

@@ -1,5 +1,5 @@
 /**
- * E.0 — NPC plan persistence (G8).
+ * NPC plan persistence.
  * NPC warriors in signed bouts get `w.plan` computed and persisted (tagged
  * `planWeek` + `planForStableId`); bout resolution prefers a fresh persisted
  * plan; a stale or opponent-mismatched plan is recomputed.

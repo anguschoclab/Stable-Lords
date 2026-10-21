@@ -1,8 +1,8 @@
 /**
- * D.0 — Tournament worker.
+ * Tournament worker.
  * TOURNAMENT_CAMPAIGN shapes preparation only: top-2 fame warriors get rest
  * (recovery) assignments that suppress bids via isBookable, plus a typed
- * TOURNAMENT_PREP event. Committee selection stays rank-based (G13).
+ * TOURNAMENT_PREP event. Committee selection stays rank-based.
  */
 import { describe, it, expect } from 'vitest';
 import { processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';

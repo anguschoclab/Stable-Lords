@@ -17,7 +17,7 @@ import { computePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
 
 /**
- * Feint modulation by personality (Stage D, N3): the WT-derived baseline
+ * Feint modulation by personality: the WT-derived baseline
  * in `defaultPlanForWarrior` is shaped — deceptive stables sharpen it,
  * measured ones blunt it. Only an existing aptitude is touched: WT < 15
  * fighters stay at 0 since `runFeint` can never fire for them.
@@ -42,7 +42,7 @@ interface AiPlanForWarriorArgs {
   grudgeIntensity?: number;
   dossier?: OpponentDossier;
   now?: number;
-  /** Owner competence tier — scales adaptive-condition density (Stage B). */
+  /** Owner competence tier — scales adaptive-condition density. */
   competence?: OwnerCompetence;
 }
 

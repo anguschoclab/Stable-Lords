@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { ONBOARDING_QUESTS } from '@/engine/onboarding/quests';
 import { makeGameState, makeFightSummary, makeWarrior } from '@/test/_fixtures/factories';
 
-describe('onboarding quests (G4)', () => {
+describe('onboarding quests', () => {
   it('starts with all quests incomplete on a fresh state', () => {
     const s = makeGameState({});
     expect(ONBOARDING_QUESTS.every((q) => !q.done(s))).toBe(true);

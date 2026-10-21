@@ -1,5 +1,5 @@
 /**
- * Stage B — competence primitives.
+ * competence primitives.
  * `competenceQuality` is the single knob every worker consumes: a 0..1
  * decision-quality score by tier. `blendQuality` folds it into an existing
  * personality-scaled quality so both axes stay meaningful, and

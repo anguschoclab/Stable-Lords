@@ -1,5 +1,5 @@
 /**
- * Player-facing corner analysis (Stage E). Renders every plan shift the
+ * Player-facing corner analysis. Renders every plan shift the
  * condition engine fired during the bout — which side shifted, on which
  * trigger, and whether a corner forced the re-check at a phase boundary.
  * Purely presentational: reads the structured `conditionFire` projection

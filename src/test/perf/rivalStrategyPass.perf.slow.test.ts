@@ -18,7 +18,7 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { SeededRNG } from '@/utils/random';
 import { setMockIdGenerator } from '@/utils/idUtils';
 
-describe('RivalStrategyPass perf gate (I.2)', () => {
+describe('RivalStrategyPass perf gate', () => {
   it('builds perception exactly once per tick and stays under the time bound', async () => {
     let n = 0;
     setMockIdGenerator(() => `id_${++n}`);

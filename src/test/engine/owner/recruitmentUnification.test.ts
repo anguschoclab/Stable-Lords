@@ -1,5 +1,5 @@
 /**
- * D.0 — Recruitment unification (G9).
+ * Recruitment unification.
  * `processAIRosterManagement` no longer conjures recruits — it flags
  * `needsRecruit` and `aiDraftFromPool` (via processRecruitment) is the sole
  * signing path. `generateAIRecruit` survives only as the pool-empty fallback,

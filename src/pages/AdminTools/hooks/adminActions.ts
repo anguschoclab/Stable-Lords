@@ -85,7 +85,7 @@ async function runAdminSkip(
     // Batch advancement never does I/O — flush drained transcripts here on
     // the main thread where the Electron/OPFS switch is visible.
     archiveBoutLogs((result.pendingArchives ?? []) as Parameters<typeof archiveBoutLogs>[0]);
-    // WorldPass already computed the new season each week — no post-hoc fix needed.
+    // WorldPass already computed the new season each week — no post-hoc correction needed.
     store.loadGame(store.activeSlotId || 'autosave', result.state);
     toast.success(messages.success);
   } catch (err) {

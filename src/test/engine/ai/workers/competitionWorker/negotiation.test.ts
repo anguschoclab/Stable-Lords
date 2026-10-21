@@ -1,5 +1,5 @@
 /**
- * Stage C — bounded second negotiation round. Today a countered offer is
+ * bounded second negotiation round. Today a countered offer is
  * take-it-or-leave-it (`resolveCounteredOffers` maps a second counter
  * verdict straight to Declined). The new rule: one escalation is allowed
  * (`negotiationRound` 0 → 1), gated by personality — walk-away tolerance

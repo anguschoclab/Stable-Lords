@@ -228,7 +228,7 @@ function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGS
 }
 
 /**
- * Scouted read on the stablemaster's competence (Stage E): Expert scouts
+ * Scouted read on the stablemaster's competence: Expert scouts
  * name the real tier, Detailed reports land on the real or an adjacent
  * tier, Basic reports carry no read at all.
  */

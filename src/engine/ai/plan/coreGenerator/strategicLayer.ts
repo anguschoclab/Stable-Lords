@@ -33,7 +33,7 @@ import type { PlanModifiers } from './modifiers';
 const DECOY_MIN_WT = 13;
 
 /**
- * Stage D.4 — boundary-reactive phase shifts, authored per personality.
+ * Boundary-reactive phase shifts, authored per personality.
  * Deltas are applied to the plan's real axes at authoring time so the
  * declared shift stays inside validator bounds. `when` reads are evaluated
  * once at the named phase boundary (see resolution/decoyShift).
@@ -111,7 +111,7 @@ function collectAdaptations(
 }
 
 /**
- * Stage D.2b — committed in-bout deception: deceptive stables send smart
+ * Committed in-bout deception: deceptive stables send smart
  * fighters out performing a false tempo until the mid boundary. The mask
  * is a real performance cost — opponent streak/momentum reads build on
  * the decoy — so it stays gated to deceptive stables on high-WT fighters.
@@ -142,7 +142,7 @@ function applyDecoyAxes(plan: FightPlan, w: Warrior, personality: OwnerPersonali
 }
 
 /**
- * Stage D.4 — boundary-reactive curve: one committed shift per
+ * Boundary-reactive curve: one committed shift per
  * personality, evaluated once at the phase boundary. Distinct from
  * per-exchange conditions — a swing back does not revoke it.
  */
@@ -216,7 +216,7 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
     ...(collectAdaptations(plan, w, personality, dossier) ?? []),
   ];
   const allConditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
-  // WIT-gated condition density (F.3): low-WIT warriors carry sparse,
+  // WIT-gated condition density: low-WIT warriors carry sparse,
   // "mistake-shaped" plans — few adaptive branches — mirroring the
   // evaluationInterval tiers that already gate re-evaluation cadence in
   // conditionEngine (WT>=7 every exchange, 4-6 every 3, <4 every 5).
@@ -229,7 +229,7 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
         ? universalConditions.length + 1
         : universalConditions.length;
   // Competence compounds the WIT gate — a Novice front office authors thinner
-  // adaptive plans than a Master for the same fighter (Stage B). The
+  // adaptive plans than a Master for the same fighter. The
   // universal ENDURANCE_BELOW safety floor is always retained.
   const conditionCap = competenceConditionCap({ competence }, witCap, universalConditions.length);
   plan.conditions = allConditions.slice(0, conditionCap);

@@ -1,5 +1,5 @@
 /**
- * Decoy mask + boundary phase-shift helpers (Stage D.2b / D.4).
+ * Decoy mask + boundary phase-shift helpers.
  *
  * `applyDecoyMask` returns the plan a decoying fighter *performs* during the
  * masked window — the axes are real fight behavior, which is exactly what

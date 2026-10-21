@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Stage E — the AI emits conditions grounded in real state: vendetta
+ * the AI emits conditions grounded in real state: vendetta
  * blood-scenting, recovery shells, and dossier-driven counter-conditions.
  */
 import { describe, it, expect, beforeEach } from 'vitest';

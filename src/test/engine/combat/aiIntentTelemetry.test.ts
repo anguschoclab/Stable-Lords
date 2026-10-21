@@ -31,7 +31,7 @@ function makeFighters(seed: number) {
   return { A, D };
 }
 
-describe('AI_INTENT telemetry (Stage F)', () => {
+describe('AI_INTENT telemetry', () => {
   afterEach(() => {
     (globalThis as { __AI_DEBUG?: boolean }).__AI_DEBUG = false;
   });

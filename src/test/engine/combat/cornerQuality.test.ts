@@ -1,5 +1,5 @@
 /**
- * Stage D — corner advice quality. `ctx.cornerAdvice` fires at every phase
+ * corner advice quality. `ctx.cornerAdvice` fires at every phase
  * boundary and bypasses the WT evaluation cadence unconditionally: a
  * cornerless fighter currently gets the same sideline guidance as a
  * Master-trained one. The trainer gate: no corner staff → keep the WT

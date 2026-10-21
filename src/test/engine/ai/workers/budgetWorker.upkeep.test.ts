@@ -1,5 +1,5 @@
 /**
- * Stage C.0 — G15: budget reserve must scale with projected weekly upkeep
+ * Budget reserve must scale with projected weekly upkeep
  * (roster upkeep + trainer wages), not a flat 300.
  */
 import { describe, it, expect } from 'vitest';

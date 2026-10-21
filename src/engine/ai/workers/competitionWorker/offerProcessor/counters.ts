@@ -26,7 +26,7 @@ interface EscalateCounterArgs {
 }
 
 /**
- * Stamp the bounded second-round counter (Stage C): the contract mutations
+ * Stamp the bounded second-round counter: the contract mutations
  * are one-round-only by design, so the escalation edits the live offer
  * directly — counterer marked, other side re-pended, `negotiationRound`
  * bumped. Purse escalations sweeten by the same multiplier; venue
@@ -86,7 +86,7 @@ function proposerCanFund(
 }
 
 /**
- * Stage C: one bounded escalation — a second-round counter may stand
+ * one bounded escalation — a second-round counter may stand
  * (negotiationRound 0→1) when the stable tolerates haggling; after that
  * the offer is take-it-or-leave-it.
  */

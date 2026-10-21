@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 
-describe('ImportExport page (G2)', () => {
+describe('ImportExport page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useGameStore.setState({ ...makeGameState() } as never);

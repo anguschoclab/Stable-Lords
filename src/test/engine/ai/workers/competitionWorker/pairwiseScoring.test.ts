@@ -1,5 +1,5 @@
 /**
- * D.0 — Pairwise matchup scoring (G18).
+ * Pairwise matchup scoring.
  * `scorePairwiseMatchup` must equal legacy `scoreMatchup` for player context
  * (no challenges/avoids) and must be immune to player challenge/avoid marks
  * leaking into AI-vs-AI scoring.

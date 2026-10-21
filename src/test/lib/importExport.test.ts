@@ -3,7 +3,7 @@ import { exportPack, importPack } from '@/lib/importExport';
 import { makeGameState } from '@/test/_fixtures/factories';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 
-describe('importExport (G2)', () => {
+describe('importExport', () => {
   it('exports a state pack as JSON', () => {
     const s = makeGameState();
     const out = exportPack(s, 'json');

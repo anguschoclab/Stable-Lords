@@ -37,7 +37,7 @@ export async function runBoutPhase(state: GameState, ctx: WeekContext): Promise<
   // Resync all week caches only when the bout impact could have replaced
   // warrior/rival identities — a quiet week (no pairings) leaves every map
   // still accurate. (Supersedes the old invalidateDeadWarriors + manual
-  // rivalMap rebuild — NF2 fix.)
+  // rivalMap rebuild.)
   if (impactsAffectWeekCaches([boutImpact])) buildWeekCaches(settledState);
 
   return settledState;

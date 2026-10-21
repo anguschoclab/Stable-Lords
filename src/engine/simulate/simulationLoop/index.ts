@@ -141,7 +141,7 @@ export function runSimulationLoop(args: RunSimulationLoopArgs): {
   const { fA, fD, resCtx, nameA, nameD } = args;
   const { weaponA, weaponD, warriorA, warriorD, planA } = args;
   const { planD, crowdMood, headless, narRng } = args;
-  // Stage F: AI_INTENT telemetry + exchangeLog surface when narrated, or when
+  // AI_INTENT telemetry + exchangeLog surface when narrated, or when
   // the __AI_DEBUG escape hatch is set (headless debugging without narration).
   const telemetry = !headless || isAIDebugEnabled();
   resCtx.aiIntentTelemetry = telemetry;

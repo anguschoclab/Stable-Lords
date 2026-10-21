@@ -29,7 +29,7 @@ export interface SimPulse {
   cumulativeBouts?: number;
   cumulativeDeaths?: number;
   cumulativeRetired?: number;
-  // ─── AI behavior metrics (Stage I) ───
+  // ─── AI behavior metrics ───
   /** Rival count per active strategy intent this week. */
   intentDistribution: Record<string, number>;
   /** 1 when ≥1 Proposed offer targets a player warrior this sampled week, else 0. */

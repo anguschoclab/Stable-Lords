@@ -15,7 +15,7 @@ function rivalsHash(state: { rivals: unknown }): string {
   return createHash('sha256').update(JSON.stringify(state.rivals)).digest('hex');
 }
 
-describe('harness determinism (I.2)', () => {
+describe('harness determinism', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.useRealTimers();

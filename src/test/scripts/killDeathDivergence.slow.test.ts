@@ -7,8 +7,8 @@
  *     and — the historical zombie habitat — tournaments[].participants);
  *   - the death-lifecycle invariants hold.
  * At the end: kill outcomes (resolution-time killEvents) must equal unique
- * deaths exactly. Pre-fix this run measured divergence +11 to +21 driven by
- * stale tournament participant snapshots being re-killed at week boundaries.
+ * deaths exactly. Before this change the run measured divergence +11 to +21
+ * driven by stale tournament participant snapshots re-killed at week boundaries.
  *
  * Note: `arena-champions` violations are deliberately out of this test's
  * scope — a pre-existing single-crown bug reproduces at HEAD on this seed

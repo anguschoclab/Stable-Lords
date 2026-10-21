@@ -1,5 +1,5 @@
 /**
- * Stage C — multi-week cash-flow forecast. `projectCashFlow` generalizes
+ * multi-week cash-flow forecast. `projectCashFlow` generalizes
  * `projectedWeeklyUpkeep` across an N-week horizon: recurring upkeep each
  * week, committed bout purses once, and a projected treasury floor.
  * `checkBudget` gains an optional `horizonWeeks` so big spends are judged

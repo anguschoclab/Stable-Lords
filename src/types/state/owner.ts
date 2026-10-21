@@ -25,13 +25,13 @@ export type MetaAdaptation = (typeof META_ADAPTATIONS)[number];
 export type OwnerCompetence = (typeof OWNER_COMPETENCES)[number];
 
 /**
- * World-generation difficulty (Stage E) — picked at world creation, skews
+ * World-generation difficulty — picked at world creation, skews
  * the minted stablemaster competence field.
  */
 export type WorldDifficulty = (typeof WORLD_DIFFICULTIES)[number];
 
 /**
- * World-creation options persisted on GameState (Stage E). Read once at
+ * World-creation options persisted on GameState. Read once at
  * world seeding — mid-game refills ignore it.
  */
 export interface WorldOptions {
@@ -60,7 +60,7 @@ export interface Owner {
   parentStableId?: StableId;
   age?: number; // 🎂 1.0 Hardening: Owner age for retirement
   ageRetired?: number; // Week the previous owner retired
-  /** Management skill tier — scales AI decision noise (Stage B). */
+  /** Management skill tier — scales AI decision noise. */
   competence?: OwnerCompetence;
   /** Deterministic seed for the owner's portrait. */
   avatarSeed?: number;

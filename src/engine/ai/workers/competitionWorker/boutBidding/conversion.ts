@@ -319,7 +319,7 @@ export function convertBidsToOffers(
     candidates = fameFilter(candidates, bid, cx.paired);
     if (candidates.length === 0) continue;
 
-    // Pick the best matchup opponent (pairwise — player marks never leak, G18)
+    // Pick the best matchup opponent (pairwise — player marks never leak)
     const bestCandidate = pickBestCandidate(proposer, candidates, proposerStable.stableId, cx);
     if (!bestCandidate) continue;
     const opponent = bestCandidate.warrior;

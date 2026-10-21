@@ -24,7 +24,7 @@ export function hardGates(
     return 'Declined';
   }
 
-  // Weather Skepticism — consolidated gate (G16)
+  // Weather Skepticism — consolidated gate
   if (offerWeatherDecline(warrior, weather)) {
     if (explain) explain.reason = 'weather-risk';
     return 'Declined';

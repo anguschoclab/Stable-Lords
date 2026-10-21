@@ -56,7 +56,7 @@ export function buildIntentContext(rival: RivalStableData, state: GameState): In
     { activeRoster: [] as typeof rival.roster, injuryCount: 0, lungeCount: 0 }
   );
 
-  // ⚡ Environmental Awareness — consolidated hazard list (G16)
+  // ⚡ Environmental Awareness — consolidated hazard list
   const isHazardousWeather = HAZARDOUS_WEATHER.includes(state.weather ?? 'Clear');
 
   // ⚡ Continuous Alignment: Meta-Drift Awareness — the agent reasons over its

@@ -141,7 +141,7 @@ function scoreThrone(
   }
   // Competence noise — a Novice reads the throne map noisily and occasionally
   // campaigns for the wrong arena; a Master nearly always spots the softest
-  // crown (Stage B). Deterministic per (owner, warrior, arena).
+  // crown. Deterministic per (owner, warrior, arena).
   const jitter = competenceJitter(ctx.rival.owner, `crown|${w.id}|${arenaId}`, 2);
   return { score: score + ctx.rankBonus + jitter, reason };
 }

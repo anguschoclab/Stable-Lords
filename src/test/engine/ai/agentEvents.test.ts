@@ -1,6 +1,6 @@
 /**
- * Stage B.0 — logAgentAction must take a typed `cause` instead of inferring
- * intent from English description substrings (G10). Also locks the 40-cap
+ * logAgentAction must take a typed `cause` instead of inferring
+ * intent from English description substrings. Also locks the 40-cap
  * pruning and schema acceptance of `cause`.
  */
 import { describe, it, expect } from 'vitest';

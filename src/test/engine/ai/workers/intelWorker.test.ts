@@ -1,5 +1,5 @@
 /**
- * D.0 — Intel worker.
+ * Intel worker.
  * Weekly seeded scouting refreshes dossier planIntel on the most relevant
  * opponent (vendetta target > highest threat > player); scout quality varies
  * by owner personality; the player dossier can feed challenge selection.

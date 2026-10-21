@@ -1,5 +1,5 @@
 /**
- * Stage B — OwnerCompetence schema + factory wiring.
+ * OwnerCompetence schema + factory wiring.
  * The competence tier is a third owner axis (orthogonal to personality and
  * metaAdaptation): it must round-trip through OwnerSchema and be stamped by
  * the rival factory with a weighted, Masters-rare distribution.

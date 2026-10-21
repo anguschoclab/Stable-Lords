@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * Stage E — responseNotes generalized to ALL rival offer verdicts.
+ * responseNotes generalized to ALL rival offer verdicts.
  * Today `explain.reason` is only persisted for title bouts; a rival's
  * ordinary accept/decline is silent on the offer card. Every evaluated
  * response now records its reason so the UI can show the player why a

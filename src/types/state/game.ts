@@ -188,7 +188,7 @@ export interface OpponentDossier {
 }
 
 /**
- * A rival stable's season plan-of-record (Stage C): one strategic objective
+ * A rival stable's season plan-of-record: one strategic objective
  * per ~quarter that the weekly intent cascade services. Picked by
  * `seasonPlan.pickSeasonObjective`, ticked weekly, re-picked on expiry,
  * and disproved by `objectiveStillViable` when the world moves on.
@@ -313,7 +313,7 @@ export interface ScoutReportData {
   /** True when the target stable is known to mask its committed plan —
    *  the report's plan section may reflect a decoy. */
   possiblyMaskedPlan?: boolean;
-  /** Scouted read on the stablemaster's competence (Stage E) — absent on
+  /** Scouted read on the stablemaster's competence — absent on
    *  Basic reports; may be a tier off on Detailed ones. */
   suspectedCompetence?: import('./owner').OwnerCompetence;
   notes: string;

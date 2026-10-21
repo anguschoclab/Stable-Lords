@@ -1,5 +1,5 @@
 /**
- * Stage B.0 — intelDossier: per-rival perception of other stables.
+ * intelDossier: per-rival perception of other stables.
  * Observed facts (fights, styles) vs inferred beliefs (threat estimates that
  * decay toward uncertainty with staleness).
  */

@@ -1,5 +1,5 @@
 /**
- * Stage C.0 — G1: with seasonRecord now populated (Stage B), the
+ * With seasonRecord now populated, the
  * seasonWinRate-driven intent branches must actually fire.
  */
 import { describe, it, expect } from 'vitest';

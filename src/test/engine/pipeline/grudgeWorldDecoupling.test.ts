@@ -1,5 +1,5 @@
 /**
- * Stage C.0 — G5: grudges AND rivalries must update even when the player is
+ * Grudges AND rivalries must update even when the player is
  * stopped/headless. Both currently live in NarrativePass, which the pipeline
  * skips in that mode. After C.1 they live in WorldPass.
  */
@@ -44,7 +44,7 @@ function killBetween(week: number) {
   });
 }
 
-describe('grudge/rivalry world decoupling (G5)', () => {
+describe('grudge/rivalry world decoupling', () => {
   it('WorldPass processes owner grudges (previously NarrativePass-only)', () => {
     const { a, b } = clashingPair();
     const state = makeGameState({

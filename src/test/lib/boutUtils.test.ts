@@ -211,7 +211,7 @@ describe('classifyEvent', () => {
     });
   });
 
-  // V2-20 — ARENA_EVENT lines carry their source CombatEvent so the bout log
+  // ARENA_EVENT lines carry their source CombatEvent so the bout log
   // classifies them spatially (arena phenomena) instead of generic 'status'.
   describe('arena events', () => {
     it('classifies a minute carrying an ARENA_EVENT as spatial', () => {

@@ -213,7 +213,7 @@ interface EmitIntentTelemetryArgs {
 }
 
 /**
- * AI intent telemetry (Stage F) — labels which existing plan/state
+ * AI intent telemetry — labels which existing plan/state
  * selection is active (condition override / psych / desperate / kill
  * window). Pure annotation: emits on transitions only, touches no math.
  */
@@ -285,7 +285,7 @@ function recoverAndAdaptPlans(
     events.push({ type: 'RECOVERY', actor: 'D' });
   }
 
-  // ── Boundary-reactive phase shifts (Stage D.4) — evaluated on fighter.plan
+  // ── Boundary-reactive phase shifts — evaluated on fighter.plan
   // BEFORE conditions so the shifted curve lands in this exchange's plan too.
   // Only at a real phase boundary (cornerAdvice marks the first exchange).
   if (ctx.cornerAdvice && phaseKey !== 'opening') applyBoundaryPhaseShifts(fA, fD, phaseKey);
@@ -296,7 +296,7 @@ function recoverAndAdaptPlans(
   fA.activePlan = condResultA.newPlan;
   fD.activePlan = condResultD.newPlan;
 
-  // ── Decoy mask (Stage D.2b): reveal first (emits once), then mask the
+  // ── Decoy mask: reveal first (emits once), then mask the
   // resolved plan while the window still holds. The decoy is real fight
   // behavior — resolved tactics and OE/AL read the masked plan.
   resolveDecoyMasks(fA, fD, phaseKey, events);

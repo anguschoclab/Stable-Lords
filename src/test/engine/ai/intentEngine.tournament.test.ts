@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 /**
- * Stage C.0 — TOURNAMENT_CAMPAIGN intent: fires in the run-up to each
+ * TOURNAMENT_CAMPAIGN intent: fires in the run-up to each
  * seasonal tournament (the prep window plus the event week) for stables
  * healthy enough to contend. It shapes preparation only — committee
  * selection stays rank-based.

@@ -33,7 +33,7 @@ export function verifyBoutAcceptance(
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const isTitleBout = opts?.isTitleBout === true;
 
-  // Weather Skepticism — consolidated gate (G16)
+  // Weather Skepticism — consolidated gate
   const weatherReason = acceptanceWeatherBlock(warrior, weather);
   if (weatherReason !== null) {
     return { accepted: false, reason: weatherReason };
@@ -77,12 +77,12 @@ export function verifyBoutAcceptance(
 /**
  * Evaluate a bout offer for a rival-owned warrior.
  * Hard safety refusals (blocking injuries, weather, RECOVERY risk) run BEFORE
- * the desperation gate — an empty treasury never overrides them (G14).
+ * the desperation gate — an empty treasury never overrides them.
  * Marginal purses may be 'Countered' once per offer.
  *
  * `explain` is an optional out-param: the reason bucket for every verdict
  * is written into `explain.reason` so the offer processor can persist it
- * onto the offer for UI transparency (Stage E — all offers, not just title).
+ * onto the offer for UI transparency (all offers, not just title).
  */
 export interface EvaluateBoutOfferArgs {
   offer: BoutOffer;

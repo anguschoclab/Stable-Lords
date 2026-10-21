@@ -107,7 +107,7 @@ export function derivePsychState(fighter: FighterState, opponent: FighterState):
 }
 
 /**
- * How much of a plan the corner can act on at a phase boundary (Stage D —
+ * How much of a plan the corner can act on at a phase boundary (
  * corner quality): no staff means no off-cadence re-check at all; Novice
  * corners reach the first condition, Seasoned the first two, a Master's
  * voice covers the whole plan. On-cadence evaluations are never limited —

@@ -31,7 +31,7 @@ function matchupSkepticism(args: MatchupSkepticismArgs): BoutEvaluation | null {
     const edge = buildFightForecast(warrior, opponent).styleMatchup.edge;
     // Methodical camps refuse to feed a dominant player on a coin flip —
     // anything short of a clear edge is a pass. Competence loosens the floor:
-    // a Novice stable books matchups a Master would duck (Stage B).
+    // a Novice stable books matchups a Master would duck.
     const skepticismFloor =
       (personality === 'Methodical' && playerThreat === 'Dominant' ? 0 : observedDanger ? -1 : -2) -
       (owner?.competence == null ? 0 : Math.floor((1 - competenceQuality(owner)) * 3));

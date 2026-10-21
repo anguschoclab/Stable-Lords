@@ -30,7 +30,7 @@ interface MatchupContext {
 
 /**
  * Scheduling Assistant: best pairwise matchup score across the intent-
- * appropriate opponent pool (G18 — no player semantics in the scoring itself).
+ * appropriate opponent pool (no player semantics in the scoring itself).
  */
 function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
   let matchupModifier = -Infinity;

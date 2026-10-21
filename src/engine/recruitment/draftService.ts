@@ -8,7 +8,7 @@ import { getPairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 
 /**
- * Rivalry counter-meta (moved from processAIRosterManagement, G9): a rival
+ * Rivalry counter-meta (moved from processAIRosterManagement): a rival
  * locked in a heated feud with the player drafts to counter the player's
  * observed style mix rather than the global meta.
  */
@@ -74,7 +74,7 @@ interface AiDraftFromPoolArgs {
  * AI Draft Service
  * Refactored to delegate to isolated RecruitmentWorkers.
  * Implements "Context Isolation" and "Risk-Tiered Execution".
- * Sole recruitment path for AI stables (G9) — processAIRosterManagement
+ * Sole recruitment path for AI stables — processAIRosterManagement
  * only flags `needsRecruit`.
  */
 export function aiDraftFromPool(args: AiDraftFromPoolArgs): {

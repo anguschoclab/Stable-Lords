@@ -61,10 +61,10 @@ describe('ArenaDetail page (region pinning)', () => {
     expect(screen.getByText('CURSED GROUND')).toBeTruthy();
   });
 
-  // V2-01 — ARENA_LORE regressed dead when the ArenaLeaderboards surface was
+  // ARENA_LORE regressed dead when the ArenaLeaderboards surface was
   // removed; the arena detail page is the canonical venue surface and must
   // render the venue's lore entries (title + narrative from ARENA_LORE).
-  it('renders ARENA_LORE narrative entries for the venue (V2-01)', () => {
+  it('renders ARENA_LORE narrative entries for the venue', () => {
     mockArenaId = 'mudpit_arena';
     render(<ArenaDetail />);
     expect(screen.getByText('The Drowning Grasp')).toBeTruthy();
@@ -80,9 +80,9 @@ describe('ArenaDetail page (region pinning)', () => {
     expect(screen.queryByText('The Drowning Grasp')).toBeNull();
   });
 
-  // V2-02 — content packs overlay arena lore (G7). The /mods-installed pack
+  // Content packs overlay arena lore. The /mods-installed pack
   // entries must render alongside canonical ARENA_LORE on the venue page.
-  it('renders content-pack arena lore alongside canonical entries (V2-02)', () => {
+  it('renders content-pack arena lore alongside canonical entries', () => {
     useGameStore.setState(
       makeGameState({
         contentPacks: [

@@ -15,7 +15,7 @@ interface RunRosterManagementArgs {
 
 /**
  * AI Roster Management — culling/retirement first, then flag `needsRecruit`
- * so the unified draft can fill same-tick (G9). Returns the managed rivals;
+ * so the unified draft can fill same-tick. Returns the managed rivals;
  * appends gazette items and routes culled warriors into `state.retired` —
  * without the retired impact they vanish from the world entirely (and the
  * vacancy phase can only guess 'retired').

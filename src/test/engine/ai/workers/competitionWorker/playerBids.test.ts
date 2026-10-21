@@ -1,5 +1,5 @@
 /**
- * D.0 — Player-directed bout bids (G4).
+ * Player-directed bout bids.
  * Vendetta stables must be able to bid on the player's warriors; player
  * avoids/challenges steer contact; player-bound offers are capped
  * (≤1 per rival, ≤3 globally); isBookable is honored on both sides.

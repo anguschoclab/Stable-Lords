@@ -34,8 +34,8 @@ const makeState = (rivals: RivalStableData[]): GameState =>
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);
 
-describe('NF2: rivalMap staleness after bout phase', () => {
-  it('rivalMap should reflect updated roster after resolveImpacts (currently fails — bug)', () => {
+describe('rivalMap staleness after bout phase', () => {
+  it('rivalMap reflects the updated roster after resolveImpacts', () => {
     const rivalWarrior = makeWarrior('rw1', 'Rival Fighter');
     const rival = makeRival('rival-1', [rivalWarrior]);
     const state = makeState([rival]);
@@ -56,14 +56,13 @@ describe('NF2: rivalMap staleness after bout phase', () => {
       graveyard: graveyardImpact,
     };
 
-    // Apply impacts — this updates state.rivals but NOT state.rivalMap
+    // Apply impacts — updates state.rivals and rebuilds the rivalMap cache.
     resolveImpacts(state, [impact]);
 
     // state.rivals should reflect the updated roster (empty)
     expect(state.rivals![0]!.roster.length).toBe(0);
 
-    // CORRECT behavior: rivalMap should also reflect the updated roster (empty)
-    // This currently FAILS because rivalMap is not rebuilt after impacts.
+    // rivalMap is rebuilt alongside rivals, so the cache holds the empty roster
     const cachedRival = state.rivalMap!.get('rival-1');
     expect(cachedRival!.roster.length).toBe(0);
   });
@@ -84,8 +83,7 @@ describe('NF2: rivalMap staleness after bout phase', () => {
 
     resolveImpacts(state, [{ rivalsUpdates, graveyard: [{ ...rivalWarrior, isDead: true }] }]);
 
-    // CORRECT behavior: rivalMap should not contain the dead warrior
-    // This currently FAILS because rivalMap is not rebuilt.
+    // rivalMap is rebuilt alongside rivals, so the dead warrior leaves the cache
     const cachedRival = state.rivalMap!.get('rival-1');
     const hasDeadWarrior = cachedRival!.roster.some((w) => w.id === 'rw1');
     expect(hasDeadWarrior).toBe(false);

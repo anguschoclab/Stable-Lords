@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 
 /**
  * Directional head-to-head record between two warriors, with wins and
- * losses counted from side A's perspective (G18).
+ * losses counted from side A's perspective.
  */
 export interface PairwiseHeadToHead {
   /** Wins from side A's perspective. */

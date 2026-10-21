@@ -20,7 +20,7 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 
 /**
- * SURVIVAL — the deeper crisis tier below RECOVERY (revived N1).
+ * SURVIVAL — the deeper crisis tier below RECOVERY.
  * A stable that cannot cover its burn *and* is losing is past belt-tightening:
  * it hunkers — no proactive bids, accepts only bouts it is favored to win,
  * freezes staff moves — until the treasury climbs back out of the runway.

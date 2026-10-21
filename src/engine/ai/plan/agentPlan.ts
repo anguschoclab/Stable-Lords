@@ -1,5 +1,5 @@
 /**
- * Agent plan persistence (G8/G11).
+ * Agent plan persistence.
  *
  * When a rival warrior signs a bout, the stable's tactical staff commits a
  * fight plan for that specific opponent — `w.plan` + `planWeek` +

@@ -46,7 +46,7 @@ export interface PhaseStrategy {
 }
 
 /**
- * In-bout deception (Stage D.2b): the fighter really performs these axes
+ * In-bout deception: the fighter really performs these axes
  * (and optional tactics) until `untilPhase`, then snaps to the real plan —
  * a `DECOY_REVEAL` reason code marks the reveal. Unlike `planMasked`
  * (scouting-level), the decoy costs real performance: the opponent's
@@ -63,7 +63,7 @@ export interface DecoyAxes {
 }
 
 /**
- * Boundary-reactive phase curve (Stage D.4): evaluated once at the named
+ * Boundary-reactive phase curve: evaluated once at the named
  * phase boundary — unlike per-exchange condition overrides, a fired shift
  * is committed for the rest of that phase even if the read swings back.
  */

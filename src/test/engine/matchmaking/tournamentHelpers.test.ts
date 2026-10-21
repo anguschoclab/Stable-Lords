@@ -28,7 +28,7 @@ describe('tournamentHelpers', () => {
 
     it('accepts the legacy positional slot only in the championship round', () => {
       expect(isBronzeMatch(t(6, 1), 6)).toBe(true);
-      // 7-round bracket: a round-6 slot-1 bout is a semi-final, not bronze (M6)
+      // 7-round bracket: a round-6 slot-1 bout is a semi-final, not bronze
       expect(isBronzeMatch(t(6, 1), 7)).toBe(false);
     });
 

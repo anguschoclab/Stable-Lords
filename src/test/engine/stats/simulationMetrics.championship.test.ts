@@ -1,5 +1,5 @@
 /**
- * Stage H — championship/AI depth metrics on SimPulse.
+ * championship/AI depth metrics on SimPulse.
  * The validation protocol needs the harness to *see* the new behaviors:
  * crown campaigns running, intel aging, masked plans circulating, corner
  * advice firing, and the Grand Championship field/cancellation record.
@@ -57,7 +57,7 @@ function championsTourney(participants: number, completed = true): TournamentEnt
   };
 }
 
-describe('SimPulse championship metrics (Stage H)', () => {
+describe('SimPulse championship metrics', () => {
   it('counts rivals actively campaigning for crowns', () => {
     const rivals = [
       rivalWith('CROWN_CAMPAIGN'),

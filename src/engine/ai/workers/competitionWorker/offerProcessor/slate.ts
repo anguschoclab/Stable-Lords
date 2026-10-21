@@ -243,7 +243,7 @@ function applyWarriorResponse(args: ApplyWarriorResponseArgs): void {
   );
   applyOfferImpact(currentOffers, impact);
   // Every rival verdict: persist the reason so the offer card can show
-  // why the stable answered the way they did (Stage E — was title-only).
+  // why the stable answered the way they did (was title-only).
   if (explain.reason) {
     const updated = currentOffers[offer.id];
     if (updated) {

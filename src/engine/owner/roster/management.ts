@@ -313,7 +313,7 @@ function manageOneRival(args: ManageOneRivalArgs): RivalStableData {
   });
 
   // 2) Recruitment flag — signing is unified in aiDraftFromPool /
-  // processRecruitment (G9). Management only declares the need; the draft
+  // processRecruitment. Management only declares the need; the draft
   // path owns caps, budgets, and pool-vs-generated sourcing.
   let currentActive = 0;
   for (const w of r.roster) {

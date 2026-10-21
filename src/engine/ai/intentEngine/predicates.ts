@@ -60,7 +60,7 @@ export function vendettaApplies(ctx: IntentContext, rngService: IRNGService): bo
 }
 
 /**
- * Stage C — the season objective's servicing intent. Crisis picks
+ * the season objective's servicing intent. Crisis picks
  * (weather/vendetta/recovery) outrank it; below them the plan-of-record
  * steers the week: CROWN campaigns bypass the 400g crown floor while the
  * assessment lives, TREASURY banks, REBUILD recruits.
@@ -83,7 +83,7 @@ export function objectiveServicingIntent(ctx: IntentContext): AIIntent | undefin
   }
 }
 
-/** TOURNAMENT_CAMPAIGN: healthy stables peak in the tournament run-up (G13). */
+/** TOURNAMENT_CAMPAIGN: healthy stables peak in the tournament run-up. */
 export function tournamentCampaignApplies(ctx: IntentContext): boolean {
   return (
     isTournamentPrepWeek(ctx.state.week) &&

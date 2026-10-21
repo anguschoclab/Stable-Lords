@@ -1,5 +1,5 @@
 /**
- * Owner competence — the quality axis (Stage B).
+ * Owner competence — the quality axis.
  *
  * Orthogonal to personality (what a stable wants) and metaAdaptation (how it
  * adapts): competence scales the *error term* in AI decision scoring — a
@@ -114,7 +114,7 @@ const TIER_COMPETENCE_WEIGHTS: Record<
 };
 
 /**
- * World-difficulty skew on the minted stablemaster field (Stage E).
+ * World-difficulty skew on the minted stablemaster field.
  * Multipliers applied to the tier weights — 'Contender' mints an easier
  * field (Novices/Journeymen overrepresented), 'Legend' a harder one.
  */

@@ -3,7 +3,7 @@ import { isBookable } from '@/engine/warrior/warriorStatus';
 
 /**
  * Whether a warrior is free to be booked: active, uninjured, and not holding
- * a training assignment on its owning stable's list (G19 — rival assignment
+ * a training assignment on its owning stable's list (rival assignment
  * lists are consulted for rival-owned warriors).
  */
 export function bookable(

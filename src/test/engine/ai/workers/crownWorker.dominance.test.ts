@@ -1,5 +1,5 @@
 /**
- * Stage F — dominant-player pressure.
+ * dominant-player pressure.
  * When the player stable dominates the realm rankings, rival crown campaigns
  * preferentially target the thrones the PLAYER holds — dethroning the top
  * stable is worth more than taking an easier rival crown.

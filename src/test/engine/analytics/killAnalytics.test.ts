@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { computeKillAnalytics } from '@/engine/analytics/killAnalytics';
 import { makeFightSummary, makeWarrior } from '@/test/_fixtures/factories';
 
-describe('computeKillAnalytics (G6)', () => {
+describe('computeKillAnalytics', () => {
   it('returns zeroed analytics for empty history', () => {
     const a = computeKillAnalytics([]);
     expect(a.totalFights).toBe(0);

@@ -1,7 +1,7 @@
 /**
- * D.0 — Desperation gate fix (G14).
- * A critically low treasury must not override hard safety refusals:
- * blocking injuries always decline; a RECOVERY stable still declines killers.
+ * Desperation gate: a critically low treasury must not override hard
+ * safety refusals — blocking injuries always decline; a RECOVERY stable
+ * still declines killers.
  */
 import { describe, it, expect } from 'vitest';
 import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';

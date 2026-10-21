@@ -1,5 +1,5 @@
 /**
- * Stage G — advisor crown card data.
+ * advisor crown card data.
  * computeStableCouncilReport stamps each card with the warrior's real crown
  * standing: which ladder they're ranked on and their position — the same
  * contender index rivals campaign against, never a fabricated label.

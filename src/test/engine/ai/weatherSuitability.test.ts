@@ -1,5 +1,5 @@
 /**
- * D.0 — Weather suitability consolidation parity.
+ * Weather suitability consolidation parity.
  * Characterizes the five legacy weather gate implementations (verifyBoutAcceptance,
  * evaluateBoutOffer, committeeSelection, boutBidding modifiers, intentEngine hazard
  * list) as truth tables and sweeps every WeatherType × style × CN cell to prove the

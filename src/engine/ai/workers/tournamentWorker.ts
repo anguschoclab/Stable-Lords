@@ -1,5 +1,5 @@
 /**
- * Tournament worker — TOURNAMENT_CAMPAIGN preparation shaping (G13).
+ * Tournament worker — TOURNAMENT_CAMPAIGN preparation shaping.
  *
  * Preparation only: the season's top-2 fame warriors get rest ('recovery')
  * training assignments, which suppress their bout bids through the same

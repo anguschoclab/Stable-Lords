@@ -1,5 +1,5 @@
 /**
- * Stage B.0 — updateSeasonRecord must roll up real bout outcomes into
+ * updateSeasonRecord must roll up real bout outcomes into
  * agentMemory.seasonRecord (currently dead: never incremented anywhere).
  * Also covers the week-1 boundary reset + BOUT event rollup.
  */

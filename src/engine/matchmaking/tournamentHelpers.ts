@@ -5,7 +5,7 @@ import type { TournamentBout } from '@/types/game';
  * the current engine) it is authoritative. For brackets serialized before the
  * flag existed, the positional (round 6, matchIndex 1) slot only counts when
  * it actually sits in the championship round — in a larger bracket that slot
- * is an ordinary bout (M6). Callers with bracket context should pass
+ * is an ordinary bout. Callers with bracket context should pass
  * `finalsRound` (= max round); without it the check is flag-only.
  */
 export function isBronzeMatch(bout: TournamentBout, finalsRound?: number): boolean {

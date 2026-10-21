@@ -1,7 +1,7 @@
 // @vitest-environment node
 // @vitest-environment jsdom
 /**
- * Stage D.2b — `FightPlan.decoyAxes`. A committed in-bout deception: the
+ * `FightPlan.decoyAxes`. A committed in-bout deception: the
  * fighter really performs the decoy axes (and optional decoy tactics) until
  * the named phase boundary, so the opponent's adaptive reads — tactic
  * streaks, momentum reads, streak triggers — build on the decoy pattern.

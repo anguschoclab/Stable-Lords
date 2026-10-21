@@ -1,5 +1,5 @@
 /**
- * Stage C.0 — strategy hysteresis: when a plan expires near a decision
+ * Strategy hysteresis: when a plan expires near a decision
  * boundary, the engine must not flip-flop intents week to week. A relaxed
  * "still applies" check keeps the current intent within a margin.
  */

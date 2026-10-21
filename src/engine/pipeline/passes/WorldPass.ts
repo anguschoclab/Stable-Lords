@@ -34,7 +34,7 @@ export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGServ
   const nextSeason = computeNextSeason(nextWeek);
   const nextWeather = rollWeather(rngService, nextSeason);
 
-  // ── World-facing social layer (relocated from NarrativePass — G5):
+  // ── World-facing social layer (relocated from NarrativePass):
   // grudges and rivalries are world state, not player-facing narrative, so
   // they must keep updating in headless mode and when the player is stopped.
   const weekFights = getFightsForWeek(_state.arenaHistory, _state.absoluteWeek);

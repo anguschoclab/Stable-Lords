@@ -1,5 +1,5 @@
 /**
- * Stage D — OPPONENT_TACTIC_STREAK trigger. The engine already tracks
+ * OPPONENT_TACTIC_STREAK trigger. The engine already tracks
  * `tacticStreakA`/`tacticStreakD` for the overuse penalty and narration;
  * this trigger lets a plan read the OPPONENT's streak and adapt — the
  * first plan-expressible counter-repetition read. Value N fires when the

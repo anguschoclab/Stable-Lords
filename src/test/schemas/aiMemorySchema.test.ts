@@ -1,5 +1,5 @@
 /**
- * Stage B.0 — AIAgentMemorySchema must round-trip the new perception fields:
+ * AIAgentMemorySchema must round-trip the new perception fields:
  * opponentDossiers (required), lastSeasonRecord, lastLossFactors.
  */
 import { describe, it, expect } from 'vitest';

@@ -1,6 +1,6 @@
 /**
  * Plan axis modifiers — intent shaping, grudge escalation, scouted-plan
- * counter-deltas, and rematch (G11) adaptation.
+ * counter-deltas, and rematch adaptation.
  */
 import type { AIIntent, OpponentDossier } from '@/types/state.types';
 
@@ -27,7 +27,7 @@ export interface PlanModifiers {
 
 /**
  * Computes the contextual axis modifiers: intent shaping, grudge escalation,
- * scouted-plan counter-deltas, and rematch (G11) adaptation.
+ * scouted-plan counter-deltas, and rematch adaptation.
  */
 export function computePlanModifiers(
   intent: AIIntent | undefined,
@@ -109,7 +109,7 @@ function intelModifiers(dossier: OpponentDossier | undefined, now: number | unde
 }
 
 /**
- * Rematch adaptation (G11): a losing record against this specific opponent
+ * Rematch adaptation: a losing record against this specific opponent
  * makes the stable fight more patiently — patience scales with how lopsided
  * the record is; a kill suffered adds personal edge to killDesire.
  */

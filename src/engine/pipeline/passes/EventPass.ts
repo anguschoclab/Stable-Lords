@@ -183,6 +183,45 @@ function rollGoblinMerchant(state: GameState, events: Events, ctx: EventCtx): vo
   );
 }
 
+/** 🗡️ Mysterious Trader Event */
+function rollMysteriousTrader(state: GameState, events: Events, ctx: EventCtx): void {
+  if (
+    ctx.brawlRng.next() >= 0.04 ||
+    (state.treasury || 0) + ctx.treasuryDelta < 30 ||
+    state.roster.length === 0
+  ) {
+    return;
+  }
+  const activeWarriors = filterActive(state.roster);
+  if (activeWarriors.length === 0) return;
+  const chosen = ctx.brawlRng.pick(activeWarriors);
+  const e = events.mysterious_trader;
+  if (!chosen || !e) return;
+
+  const existingUpdate = ctx.rosterUpdates.get(chosen.id) || {};
+  const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : chosen.xp || 0;
+  ctx.rosterUpdates.set(chosen.id, {
+    ...existingUpdate,
+    xp: currentXp + 8,
+  });
+
+  ctx.treasuryDelta -= 30;
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(ctx.brawlRng, ctx.nextWeek, 'Mysterious Trader', -30, 'other')
+  );
+
+  ctx.newsletterItems.push(
+    makeNewsletterItem({
+      rng: ctx.brawlRng,
+      week: ctx.nextWeek,
+      title: e.title,
+      templates: e.newsletter,
+      data: { name: chosen.name, xp: 8 },
+      category: 'event',
+    })
+  );
+}
+
 /**
  * Run event pass.
  * @param state -
@@ -209,6 +248,7 @@ export function runEventPass(
   rollLostRelic(state, events, ctx);
   rollMysteriousPatron(events, ctx);
   rollGoblinMerchant(state, events, ctx);
+  rollMysteriousTrader(state, events, ctx);
 
   return {
     rosterUpdates: ctx.rosterUpdates,

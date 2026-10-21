@@ -159,4 +159,49 @@ describe('EventPass', () => {
     expect(newsletter?.title).toBe('Goblin Merchant');
     expect(newsletter?.items[0]).toContain('traded some scrap');
   });
+
+  it('should trigger the Mysterious Trader event, deduct 30 gold, and award +8 XP', () => {
+    const rng = new SeededRNG(42);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 0.5; // fail Tavern Brawl
+      if (callCount === 2) return 0.5; // fail Star-crossed Blessing
+      if (callCount === 3) return 0.5; // fail Lost Relic
+      if (callCount === 4) return 0.5; // fail Mysterious Patron
+      if (callCount === 5) return 0.5; // fail Goblin Merchant
+      if (callCount === 6) return 0.01; // succeed Mysterious Trader
+      return originalNext();
+    };
+    (rng as any).next = mockNext;
+
+    const w: Partial<Warrior> = {
+      id: 'w-trader' as WarriorId,
+      name: 'Swordsman',
+      status: 'Active',
+      xp: 10,
+    };
+    const state: Partial<GameState> = {
+      roster: [w as Warrior],
+      newsletter: [],
+      treasury: 100,
+    };
+
+    const impact = runEventPass(state as GameState, 5, rng);
+    const nextState = resolveImpacts(state as GameState, [impact]);
+
+    // Impact checks
+    expect(impact.treasuryDelta).toBe(-30);
+    expect(impact.ledgerEntries?.[0]?.amount).toBe(-30);
+
+    // State checks
+    const warrior = nextState.roster.find((r: Warrior) => r.id === 'w-trader');
+    expect(warrior?.xp).toBe(18);
+    expect(nextState.treasury).toBe(70);
+
+    const newsletter = nextState.newsletter?.[0];
+    expect(newsletter?.title).toBe('Mysterious Trader');
+    expect(newsletter?.items[0]).toContain('adjusted');
+  });
 });

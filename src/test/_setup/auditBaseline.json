@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T22:59:38.954Z",
+  "generatedAt": "2026-10-21T22:46:14.288Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
     "src/test/engine/grudgeMap.test.ts",
@@ -9,8 +9,7 @@
   "localFactoryFiles": [
     "src/test/engine/combat/aiIntentTelemetry.test.ts",
     "src/test/engine/combat/conditionEngine.triggers.test.ts",
-    "src/test/engine/combat/equipmentIntegration.test.ts",
-    "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts"
+    "src/test/engine/combat/equipmentIntegration.test.ts"
   ],
   "missingJsdomPragma": []
 }

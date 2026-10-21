@@ -30,8 +30,12 @@ import * as skillCalc from '@/test/_mocks/skillCalc';
 import * as sonner from '@/test/_mocks/sonner';
 import * as stateSelectors from '@/test/_mocks/stateSelectors';
 import * as tooltip from '@/test/_mocks/tooltip';
+import * as tournamentEngine from '@/test/_mocks/tournamentEngine';
 import * as tournamentHooks from '@/test/_mocks/tournamentHooks';
 import * as tournamentScheduleUi from '@/test/_mocks/tournamentScheduleUi';
+import * as tournamentSimulate from '@/test/_mocks/tournamentSimulate';
+import * as tournamentWarriorLookup from '@/test/_mocks/tournamentWarriorLookup';
+import * as patronTokenService from '@/test/_mocks/patronTokenService';
 import * as uiBadge from '@/test/_mocks/uiBadge';
 import * as uiImperialRing from '@/test/_mocks/uiImperialRing';
 import * as uiSectionDivider from '@/test/_mocks/uiSectionDivider';
@@ -59,8 +63,12 @@ const registry = {
   sonner,
   stateSelectors,
   tooltip,
+  tournamentEngine,
   tournamentHooks,
   tournamentScheduleUi,
+  tournamentSimulate,
+  tournamentWarriorLookup,
+  patronTokenService,
   uiBadge,
   uiImperialRing,
   uiSectionDivider,

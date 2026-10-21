@@ -98,7 +98,10 @@ const DEBT_PAIRS = new Set<string>([]);
 // `_helpers` per the V18 §D table — MEGAPLAN-D1…D14.
 // Post-V18 close-out: drained pairs fell off the scan → live 74 (4 exempt +
 // 70 residual debt), baseline ratcheted 150→74 and debt budget 146→70.
-const TEST_TO_TEST_BASELINE = 74;
+// The 1,804-line tournamentSelection spec was split into 8 sibling files —
+// their shared vi.mock/import preambles surface 6 new exempt pair-clusters
+// (same category as the retired awardsTokens↔tournamentSelection entry) → 79.
+const TEST_TO_TEST_BASELINE = 79;
 const TEST_DEBT_BUDGET = 70;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -108,9 +111,16 @@ const TEST_EXEMPT_PAIRS = new Set([
   // Characterization spec deliberately re-pins the weapon→style tables
   // verbatim — the pin is the test.
   'src/test/data/equipment/weaponStyles.characterization.test.ts|src/test/data/equipment/weaponStyles.test.ts',
-  // Both specs import the same makeTournamentBaseState fixture block — a
-  // shared import preamble, not a clone.
-  'src/test/engine/matchmaking/tournament/awardsTokens.test.ts|src/test/engine/matchmaking/tournament/tournamentSelection.test.ts',
+  // Sibling specs split out of the old 1,804-line tournamentSelection file
+  // share its mock-registration + fixture-import preamble — a shared import
+  // preamble, not a clone. Same category as the retired
+  // awardsTokens↔tournamentSelection pair this replaced.
+  'src/test/engine/matchmaking/tournamentSelection/awards.test.ts|src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/awards.test.ts|src/test/engine/matchmaking/tournamentSelection/sweep.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/bracket.test.ts|src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/completion.test.ts|src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/generation.test.ts|src/test/engine/matchmaking/tournamentSelection/results.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts|src/test/engine/matchmaking/tournamentSelection/sweep.test.ts',
   // Shared weatherSuitability import preamble + derived OFFSEASON set echo.
   'src/test/engine/ai/weatherDisposition.completeness.test.ts|src/test/engine/ai/weatherSuitability.test.ts',
 ]);

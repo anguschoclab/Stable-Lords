@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T22:59:38.954Z",
+  "generatedAt": "2026-10-21T22:46:14.289Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -174,7 +174,14 @@
     "src/test/engine/deathNotifier.test.ts",
     "src/test/engine/economy/worldBalance.slow.test.ts",
     "src/test/engine/history/arenaHistory.test.ts",
-    "src/test/engine/matchmaking/tournament/tournamentSelection.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/awards.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/bracket.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/completion.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/generation.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/results.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/sweep.test.ts",
+    "src/test/engine/matchmaking/tournamentSelection/utils.test.ts",
     "src/test/engine/metaDrift.test.ts",
     "src/test/engine/owner/ownerGrudges.test.ts",
     "src/test/engine/pipeline/boutSimulationReportLeakage.test.ts",

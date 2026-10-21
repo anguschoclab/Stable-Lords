@@ -1,13 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { engineSession, bumpEngineEpoch, engineQueueDepth } from '@/engine/runtime/session';
-
-function deferred<T>() {
-  let resolve!: (v: T) => void;
-  const promise = new Promise<T>((res) => {
-    resolve = res;
-  });
-  return { promise, resolve };
-}
+import { deferred } from '@/test/_helpers/deferred';
 
 describe('engineSession', () => {
   it('serializes jobs — overlapping callers cannot interleave', async () => {

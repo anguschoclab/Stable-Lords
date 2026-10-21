@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeStableReputation, computeRivalReputation } from '@/engine/stable/stableReputation';
-import type { GameState, Warrior, FightSummary } from '@/types/game';
+import type { Warrior, FightSummary } from '@/types/game';
+import { makeStubGameState } from '@/test/_fixtures/storeState';
 
 function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
@@ -14,19 +15,7 @@ function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {
   } as any as Warrior;
 }
 
-function createMockGameState(overrides: Partial<GameState> = {}): GameState {
-  return {
-    player: { stableName: 'Player Stable' },
-    roster: [],
-    graveyard: [],
-    newsletter: [],
-    arenaHistory: [],
-    fame: 0,
-    trainingAssignments: [],
-    trainers: [],
-    ...overrides,
-  } as any as GameState;
-}
+const createMockGameState = makeStubGameState;
 
 function createMockFightSummary(overrides: Partial<FightSummary> = {}): FightSummary {
   return {

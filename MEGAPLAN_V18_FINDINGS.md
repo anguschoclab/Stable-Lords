@@ -139,7 +139,7 @@ Classified-by-reading verdicts:
 | exact w8 | 27 — all EXEMPT (registered) | 150 → **74 live** (4 EXEMPT + 70 residual DEBT) after D1–D14 drains | 27 → **17 live** EXEMPT | gate tier — `duplication.guard.test.ts` |
 | exact w12 | 7 — subset of the 27, same verdicts | 18 — verdicts inherit w8 clusters | 4 — literal pins | secondary audit tier |
 | ident w20 | 181 — **all EXEMPT** (read-verified) | 50 — cluster verdicts inherit + enum-list echoes EXEMPT | 139 — all EXEMPT | audit queue — verdicts recorded here |
-| ident w16 | 484 | 125 | 286 | deep tier — staged after w20 drains; never a raw-count gate |
+| ident w16 | 484 → **430 live** (all triaged) | 125 | 286 → **277 live** | deep tier — triage complete, verdicts below; never a raw-count gate |
 
 ### exact-w8 test↔test — 4 EXEMPT pairs
 
@@ -207,10 +207,36 @@ Registered in `MIXED_EXEMPT_PAIRS`; `MIXED_DEBT_PAIRS` empty.
   keys, `sharedMocks` registry, `typeSurface` imports) colliding with the
   src string-list tables.
 
-### ident-w16 (staged)
+### ident-w16 verdicts (deep tier — triage complete)
 
-484 src↔src / 125 test↔test / 286 mixed — staged as the deep tier after the
-w20 tier's verdict work lands; ident tiers are never raw-count gates.
+Live scan post-drain: **430 src↔src / 125 test↔test / 277 mixed** (832 total;
+the D1–D14 drains also dropped 54 src / 9 mixed pairs off the seeded 484/286).
+
+All 832 clusters dumped and classified-by-reading (`scripts/out/triage-w16.json`,
+`suspect` review set: every non-data/non-preamble block read — 233 clusters).
+Verdicts:
+
+- **~830 EXEMPT** — the same classes as w20, plus two new ident-normalized
+  families: **record-shape echoes** (`return {k: v}` literals that collide on
+  *shape*, not content — e.g. `seasonal.ts` shares a 51L block with
+  `offenseDefense/prepare.ts` yet contains zero `OffenseDefense` fields) and
+  **engine-factory call-shape echoes** (`makeWarrior({…attrs…})` arg blocks
+  with divergent params, e.g. `aiIntentTelemetry`↔`narrationDeterminism`).
+  Other recurring classes: name/trait/template/arena data tables, import
+  preambles, `useShallow`/return-object hook echoes (§U5), schema/key-list
+  pins, `useGameStore` selector field lists, shadcn vendor + card/row/page-
+  shell idioms, weather-effect particles (§U2), event-label tables incl.
+  `ChargeComponent` (§U1 family), `deferred`/harness pins.
+- **2 DEBT clones drained this campaign:**
+  `stableReputation`↔`useQuadrantDots` `createMockGameState` sparse-state
+  clone → `_fixtures/storeState.makeStubGameState` (fame 0 vs 42 preserved as
+  per-site override; sparse `as any` semantics retained); `jobQueue`↔
+  `session` `deferred<T>()` helper clone → `_helpers/deferred.ts`
+  (resolve-only sites ignore `reject`).
+- **Residual DEBT — inherits w8:** the w8 `TEST_DEBT_PAIRS` live pairs also
+  appear at w16 (N-loop combat win-rate family, competitionWorker scenario
+  scaffolds, `combat|simulate`, `BookmarkButton` pair) — already registered;
+  no new gate-tier debt found.
 
 ## §U Unique-logic register
 

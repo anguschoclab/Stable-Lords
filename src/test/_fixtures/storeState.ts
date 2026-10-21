@@ -1,3 +1,24 @@
+import type { GameState } from '@/types/state.types';
+
+/**
+ * Sparse GameState stub — intentionally partial (cast `as any`) for specs that
+ * only exercise a handful of fields; do NOT swap for `makeGameState` (full
+ * `createFreshState`) — the missing fields are the point.
+ */
+export function makeStubGameState(over: Partial<GameState> = {}): GameState {
+  return {
+    player: { stableName: 'Player Stable' },
+    roster: [],
+    graveyard: [],
+    newsletter: [],
+    arenaHistory: [],
+    fame: 0,
+    trainingAssignments: [],
+    trainers: [],
+    ...over,
+  } as any as GameState;
+}
+
 /** Shared page-test store state — the common GameStore-shaped literal. */
 export function makePageStoreState(over: Record<string, unknown> = {}) {
   return {

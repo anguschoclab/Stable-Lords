@@ -5,6 +5,7 @@ import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import * as stableReputation from '@/engine/stable/stableReputation';
 import type { StableReputationInput } from '@/engine/stable/stableReputation';
+import { makeStubGameState } from '@/test/_fixtures/storeState';
 
 beforeEach(() => {
   vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation(
@@ -27,19 +28,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function createMockGameState(overrides: Partial<GameState> = {}): GameState {
-  return {
-    player: { stableName: 'Player Stable' },
-    roster: [],
-    graveyard: [],
-    newsletter: [],
-    arenaHistory: [],
-    fame: 42,
-    trainingAssignments: [],
-    trainers: [],
-    ...overrides,
-  } as any as GameState;
-}
+const createMockGameState = (overrides: Partial<GameState> = {}): GameState =>
+  makeStubGameState({ fame: 42, ...overrides });
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return {

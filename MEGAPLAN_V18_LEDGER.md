@@ -92,3 +92,4 @@ V18 numbering formalizes work already on `main` so the ledger is honest
 | `dupes` (jscpd) | report-only | 108 clones (115→108 improved) / 0.79% lines |
 | `test:slow` / e2e | deferred | adhoc tier per user direction |
 | codemod scripts | n/a | no one-shot scripts created — all edits hand-verified |
+| ident-w16 deep tier | ✅ triaged | 832 live clusters classified; ~830 EXEMPT; 2 clones drained (`makeStubGameState`, `deferred` helper); residual debt inherits w8 registration |

@@ -95,13 +95,18 @@ export function resolveBoutEnd(
         ? c.nameA
         : c.nameD;
     const winnerStyle = boutEnd.actor === 'A' ? c.planA?.style : c.planD?.style;
-    const winnerWeapon = boutActorIsWinner
-      ? boutEnd.actor === 'A'
-        ? c.weaponA
-        : c.weaponD
-      : boutEnd.actor === 'A'
-        ? c.weaponD
-        : c.weaponA;
+    // The kill event carries the weapon actually in hand (fist/backup while
+    // disarmed); static c.weaponA/D is only the fallback for events that
+    // don't tag one (decision/stoppage/exhaustion paths).
+    const winnerWeapon =
+      (boutEnd.metadata?.weaponId as string | undefined) ??
+      (boutActorIsWinner
+        ? boutEnd.actor === 'A'
+          ? c.weaponA
+          : c.weaponD
+        : boutEnd.actor === 'A'
+          ? c.weaponD
+          : c.weaponA);
     const boutEndLines = narrateBoutEnd({
       rng: c.flavorRng,
       by: by as string,

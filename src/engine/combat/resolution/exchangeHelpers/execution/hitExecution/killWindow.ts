@@ -131,14 +131,14 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
         type: 'BOUT_END',
         actor: attLabel,
         result: 'Kill',
-        metadata: { location: hitLoc, cause: causeBucket },
+        metadata: { location: hitLoc, cause: causeBucket, weaponId: attacker.weaponId },
       });
     } else {
       events.push({
         type: 'BOUT_END',
         actor: attLabel,
         result: 'KO',
-        metadata: { location: hitLoc, cause: 'FATAL_DAMAGE' },
+        metadata: { location: hitLoc, cause: 'FATAL_DAMAGE', weaponId: attacker.weaponId },
       });
     }
   }

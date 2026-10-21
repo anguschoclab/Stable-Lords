@@ -161,3 +161,66 @@ describe('Health System Boundary Testing', () => {
     expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 2 recovered from bruise.');
   });
 });
+
+describe('generateInjury — limb-hit coupling', () => {
+  const warrior = makeWarrior({
+    id: 'limb-test' as WarriorId,
+    name: 'Limb Test',
+    style: FightingStyle.StrikingAttack,
+    age: 20,
+  });
+
+  const basePost = {
+    hitsA: 10,
+    hitsD: 10,
+    xpA: 10,
+    xpD: 10,
+    gotKillA: false,
+    gotKillD: false,
+  };
+
+  const outcome = (post: Record<string, number>): FightOutcome => ({
+    winner: 'D',
+    by: 'KO',
+    minutes: 5,
+    log: [],
+    post: { ...basePost, ...post },
+  });
+
+  /** Collect generated injuries across a deterministic seed sweep. */
+  const collect = (out: FightOutcome, side: 'A' | 'D', seeds: number) => {
+    const found: InjuryData[] = [];
+    for (let s = 0; s < seeds; s++) {
+      const inj = generateInjury(warrior, out, side, s);
+      if (inj) found.push(inj);
+    }
+    return found;
+  };
+
+  it('high arm-hit attrition yields only arm injuries', () => {
+    const injuries = collect(outcome({ armHitsA: 6 }), 'A', 400);
+    expect(injuries.length).toBeGreaterThan(0);
+    for (const inj of injuries) {
+      expect(['Right Arm', 'Left Arm']).toContain(inj.location);
+    }
+  });
+
+  it('high leg-hit attrition yields leg injuries where the tier has them', () => {
+    const injuries = collect(outcome({ legHitsA: 6 }), 'A', 400);
+    expect(injuries.length).toBeGreaterThan(0);
+    expect(injuries.some((i) => ['Right Leg', 'Left Leg'].includes(i.location ?? ''))).toBe(true);
+    // Severity tiers with no leg entry fall back to the full pool — only
+    // assert that the bias actually produced leg injuries at all.
+    for (const inj of injuries) {
+      if (['Minor', 'Severe'].includes(inj.severity)) {
+        expect(['Right Leg', 'Left Leg']).toContain(inj.location);
+      }
+    }
+  });
+
+  it('without limb attrition the pool is unweighted (non-arm injuries appear)', () => {
+    const injuries = collect(outcome({}), 'A', 400);
+    expect(injuries.length).toBeGreaterThan(0);
+    expect(injuries.some((i) => !['Right Arm', 'Left Arm'].includes(i.location ?? ''))).toBe(true);
+  });
+});

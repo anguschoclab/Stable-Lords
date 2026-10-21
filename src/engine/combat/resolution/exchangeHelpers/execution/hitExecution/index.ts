@@ -62,7 +62,7 @@ function handleSurvivalStrike(args: HandleSurvivalStrikeArgs): boolean {
       type: 'BOUT_END',
       actor: defLabel,
       result: 'KO',
-      metadata: { location: freeRipLoc, cause: 'SURVIVAL_STRIKE' },
+      metadata: { location: freeRipLoc, cause: 'SURVIVAL_STRIKE', weaponId: defender.weaponId },
     });
   }
   return true;
@@ -171,6 +171,7 @@ export function executeHit(args: ExecuteHitArgs) {
   const { damage, rawDamage } = applyHitAndCounters({
     events: events,
     rng: rng,
+    disarmRng: ctx?.disarmRng,
     rawDamage: rawDamagePreCrit,
     hitLoc: hitLoc,
     attacker: attacker,

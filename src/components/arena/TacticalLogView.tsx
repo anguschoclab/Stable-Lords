@@ -11,6 +11,7 @@ import {
   Target,
   Activity,
   MoveHorizontal,
+  Hand,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -48,6 +49,8 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>) {
       return <Target className="h-3 w-3 text-primary/60" />;
     case 'spatial':
       return <MoveHorizontal className="h-3 w-3 text-accent" />;
+    case 'disarm':
+      return <Hand className="h-3 w-3 text-arena-fame" />;
     default:
       return <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />;
   }
@@ -75,6 +78,8 @@ function getEventColor(type: ReturnType<typeof classifyEvent>) {
       return 'border-primary/40 bg-primary/10 py-3 my-2';
     case 'spatial':
       return 'border-accent/20 bg-accent/5';
+    case 'disarm':
+      return 'border-arena-fame/30 bg-arena-fame/5';
     default:
       return 'border-white/5 bg-transparent';
   }

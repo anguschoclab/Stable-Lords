@@ -86,6 +86,14 @@ export interface FighterState {
   recoveryDebt: number;
   /** True when fighter was knocked down by a heavy hit — cleared on RECOVERY next exchange. */
   knockedDown?: boolean;
+  /** Set while this fighter is disarmed: the id of the weapon currently on
+   *  the sand. `weaponId` holds what they're fighting with meanwhile — their
+   *  `backupWeaponId` if one was carried, else 'fist'. Cleared by a
+   *  successful REARM retrieve roll at exchange start. */
+  droppedWeaponId?: string;
+  /** Backup weapon drawn the first time this fighter is disarmed (from
+   *  `equipment.backup`). Consumed on draw — a second disarm goes to fists. */
+  backupWeaponId?: string;
   /** Last emitted in-bout AI intent. Label only — names
    *  which existing plan/state selection is active; dedups AI_INTENT events
    *  to transitions. Never read by combat math. */
@@ -100,6 +108,9 @@ export interface FighterState {
  */
 export interface ResolutionContext {
   rng: () => number;
+  /** Dedicated disarm/rearm stream — isolated like narRng so the mechanic's
+   *  conditional rolls never perturb the shared combat stream's draw order. */
+  disarmRng?: () => number;
   phase: 'OPENING' | 'MID' | 'LATE';
   /** True on the first exchange of a new phase — the corner speaks, so
    *  condition re-evaluation bypasses the WT cadence gate. */

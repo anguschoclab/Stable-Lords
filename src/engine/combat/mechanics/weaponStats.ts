@@ -10,6 +10,7 @@
  */
 import type { FightingStyle } from '@/types/shared.types';
 import { WEAPONS } from '@/data/equipment/weapons';
+import { DISARM_UNARMED_WEAPON_ID } from '@/constants/combat';
 import {
   getWeaponSuitability,
   weaponSuitabilityDamageMod,
@@ -50,4 +51,15 @@ export function getWeaponInitiativeMod(weaponId?: string): number {
   const w = WEAPON_BY_ID.get(weaponId);
   if (!w) return 0;
   return -Math.round((w.weight - 3) * 0.5);
+}
+
+/**
+ * Whether the item in the weapon slot can be knocked loose by a disarm.
+ * Bare fists can never be "dropped"; anything else defaults to droppable
+ * unless the item data opts out via `disarmable: false`.
+ */
+export function isDisarmable(weaponId?: string): boolean {
+  if (!weaponId || weaponId === DISARM_UNARMED_WEAPON_ID) return false;
+  const w = WEAPON_BY_ID.get(weaponId);
+  return !!w && w.disarmable !== false;
 }

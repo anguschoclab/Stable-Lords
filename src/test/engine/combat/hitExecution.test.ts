@@ -584,3 +584,44 @@ describe('executeHit — no crash without ctx', () => {
     expect(events.length).toBeGreaterThan(0);
   });
 });
+
+describe('executeHit — disarm', () => {
+  // rng 0.44: rollHitLocation lands 'right arm' (floor(0.44*7)=3) and the
+  // disarm roll passes once armHits push the chance past 0.44.
+  it('DISARM fires and swaps the defender to fists on an arm hit', () => {
+    const { events, defender } = callExecuteHit({
+      rng: () => 0.44,
+      defender: { weaponId: 'broadsword', armHits: 5, hp: 500, maxHp: 500 },
+    });
+    expect(defender.armHits).toBeGreaterThan(5);
+    expect(events.some((e) => e.type === 'DISARM')).toBe(true);
+    expect(defender.weaponId).toBe('fist');
+    expect(defender.droppedWeaponId).toBe('broadsword');
+  });
+
+  it('draws the backup weapon on disarm instead of going to fists', () => {
+    const { events, defender } = callExecuteHit({
+      rng: () => 0.44,
+      defender: {
+        weaponId: 'broadsword',
+        backupWeaponId: 'dagger',
+        armHits: 5,
+        hp: 500,
+        maxHp: 500,
+      },
+    });
+    expect(events.some((e) => e.type === 'DISARM')).toBe(true);
+    expect(defender.weaponId).toBe('dagger');
+    expect(defender.droppedWeaponId).toBe('broadsword');
+  });
+
+  it('never disarms on a leg hit even at high rng windows', () => {
+    // rng 0.9 → floor(0.9*7)=6 → 'left leg'; disarm roll would fail anyway.
+    const { events, defender } = callExecuteHit({
+      rng: () => 0.9,
+      defender: { weaponId: 'broadsword', armHits: 9, hp: 500, maxHp: 500 },
+    });
+    expect(events.some((e) => e.type === 'DISARM')).toBe(false);
+    expect(defender.weaponId).toBe('broadsword');
+  });
+});

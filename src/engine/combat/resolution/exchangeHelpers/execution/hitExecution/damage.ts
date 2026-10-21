@@ -30,6 +30,7 @@ import {
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../../guardBreak';
 import { accumulateBleed } from '../../../bleed';
+import { tryDisarm } from '../../../disarm';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../../tempoMechanics';
 import {
   getFrontloadMult,
@@ -143,6 +144,8 @@ export function applyDamageMultipliers(
 interface ApplyHitAndCountersArgs {
   events: CombatEvent[];
   rng: () => number;
+  /** Isolated disarm-roll stream (ctx.disarmRng); falls back to rng. */
+  disarmRng?: () => number;
   rawDamage: number;
   hitLoc: HitLocation;
   attacker: FighterState;
@@ -201,6 +204,15 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
   defender.consecutiveHits = 0;
   if (hitLoc.includes('arm')) defender.armHits++;
   if (hitLoc.includes('leg')) defender.legHits++;
+  tryDisarm({
+    events: events,
+    rng: args.disarmRng ?? rng,
+    defender: defender,
+    defLabel: defLabel,
+    hitLoc: hitLoc,
+    damage: damage,
+    isCrit: isCrit,
+  });
 
   return { damage, isCrit, rawDamage };
 }

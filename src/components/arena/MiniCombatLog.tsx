@@ -86,6 +86,8 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>): string {
       return 'PHS';
     case 'spatial':
       return 'SPT';
+    case 'disarm':
+      return 'DIS';
     default:
       return '•';
   }

@@ -69,6 +69,11 @@ function buildPostFightStats(args: BuildPostFightStatsArgs) {
     hitsD: fD.hitsLanded,
     gotKillA: winner === 'A' && by === 'Kill',
     gotKillD: winner === 'D' && by === 'Kill',
+    // Limb attrition — feeds location-weighted post-bout injury selection.
+    armHitsA: fA.armHits,
+    armHitsD: fD.armHits,
+    legHitsA: fA.legHits,
+    legHitsD: fD.legHits,
     tags,
     causeBucket,
     fatalHitLocation,

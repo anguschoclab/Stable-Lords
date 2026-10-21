@@ -137,6 +137,33 @@ export function narrateRecovery(
 }
 
 /**
+ * Narrates a disarm — the victim's weapon is knocked from their grip.
+ * `weaponId` is the weapon that was dropped, not what they're left holding.
+ */
+export function narrateDisarm(rng: IRNGService, name: string, weaponId?: string): string {
+  const template = getFromArchive(rng, ['pbp', 'disarm']);
+  return interpolateTemplate(template, { name, weapon: getWeaponDisplayName(weaponId) });
+}
+
+/**
+ * Narrates the backup-weapon draw that can follow a disarm — one line when
+ * a reserve weapon comes out instead of bare fists.
+ */
+export function narrateBackupDraw(rng: IRNGService, name: string, weaponId?: string): string {
+  const pool = peekArchive(['pbp', 'backup_draw']);
+  const template = pool ? rng.pick(pool) : '{{name}} draws a backup {{weapon}} and fights on!';
+  return interpolateTemplate(template, { name, weapon: getWeaponDisplayName(weaponId) });
+}
+
+/**
+ * Narrates a rearm — the fighter retrieves their dropped weapon off the sand.
+ */
+export function narrateRearm(rng: IRNGService, name: string, weaponId?: string): string {
+  const template = getFromArchive(rng, ['pbp', 'rearm']);
+  return interpolateTemplate(template, { name, weapon: getWeaponDisplayName(weaponId) });
+}
+
+/**
  * Gets an epithet for alternate warrior naming.
  */
 export function getEpithet(

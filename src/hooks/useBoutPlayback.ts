@@ -27,6 +27,7 @@ export function useBoutPlayback(log: MinuteEvent[]) {
           else if (type === 'crit') audioManager.play('crit');
           else if (type === 'death') audioManager.play('death');
           else if (type === 'riposte') audioManager.play('clash');
+          else if (type === 'disarm') audioManager.play('clash');
         }
       }
       return next;

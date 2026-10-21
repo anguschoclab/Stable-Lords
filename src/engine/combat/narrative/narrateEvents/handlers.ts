@@ -21,7 +21,13 @@ import {
   narrateFeint,
   narrateZoneShift,
 } from '../../../narrative';
-import { narrateKnockdown, narrateRecovery } from '../../../narrative/combatNarrators';
+import {
+  narrateKnockdown,
+  narrateRecovery,
+  narrateDisarm,
+  narrateBackupDraw,
+  narrateRearm,
+} from '../../../narrative/combatNarrators';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { NarrationContext } from '../types';
@@ -146,6 +152,35 @@ const narrateRecoveryEvent: EventNarrator = (event, h, minute) => [
       h.getSpeed(event.actor),
       h.getOpponentName(event.actor)
     ),
+  },
+];
+
+const narrateDisarmEvent: EventNarrator = (event, h, minute) => {
+  const name = h.getName(event.actor);
+  const out: MinuteEvent[] = [
+    {
+      minute,
+      text: narrateDisarm(h.rng, name, event.metadata?.weaponId as string | undefined),
+      events: [event],
+      emphasis: true,
+    },
+  ];
+  // Backup draw is a second beat — the weapon goes down, a reserve comes out.
+  if (event.metadata?.backup) {
+    out.push({
+      minute,
+      text: narrateBackupDraw(h.rng, name, event.metadata?.toWeapon as string | undefined),
+      events: [event],
+    });
+  }
+  return out;
+};
+
+const narrateRearmEvent: EventNarrator = (event, h, minute) => [
+  {
+    minute,
+    text: narrateRearm(h.rng, h.getName(event.actor), event.metadata?.weaponId as string | undefined),
+    events: [event],
   },
 ];
 
@@ -546,6 +581,8 @@ export const EVENT_NARRATORS: Partial<Record<CombatEvent['type'], EventNarrator>
   ATTACK: narrateAttackEvent,
   KNOCKDOWN: narrateKnockdownEvent,
   RECOVERY: narrateRecoveryEvent,
+  DISARM: narrateDisarmEvent,
+  REARM: narrateRearmEvent,
   DEFENSE: narrateDefenseEvent,
   HIT: narrateHitEvent,
   FATIGUE: narrateFatigueEvent,

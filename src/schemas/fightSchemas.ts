@@ -205,6 +205,8 @@ const ExchangeLogEntrySchema = z.object({
     .optional(),
   knockdown: fighterSideSchema.optional(),
   recovery: fighterSideSchema.optional(),
+  disarm: fighterSideSchema.optional(),
+  rearm: fighterSideSchema.optional(),
   momentumShift: z
     .object({ actor: fighterSideSchema, to: z.number(), from: z.number() })
     .optional(),
@@ -227,6 +229,10 @@ const FightOutcomeSchema = z.object({
       hitsD: z.number().optional(),
       gotKillA: z.boolean().optional(),
       gotKillD: z.boolean().optional(),
+      armHitsA: z.number().optional(),
+      armHitsD: z.number().optional(),
+      legHitsA: z.number().optional(),
+      legHitsD: z.number().optional(),
       causeBucket: DeathCauseBucketSchema.optional(),
       fatalHitLocation: z.string().optional(),
       fatalExchangeIndex: z.number().optional(),

@@ -311,6 +311,8 @@ export const COMBAT_EVENT_TYPES = [
   'ZONE_SHIFT',
   'KNOCKDOWN',
   'RECOVERY',
+  'DISARM',
+  'REARM',
   'AI_INTENT',
   'ARENA_EVENT',
 ] as const;

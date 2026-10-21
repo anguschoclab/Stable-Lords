@@ -18,6 +18,7 @@ import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
+import { tryRearm } from './disarm';
 import type { FighterState, ResolutionContext } from './types';
 
 /**
@@ -284,6 +285,12 @@ function recoverAndAdaptPlans(
     fD.knockedDown = false;
     events.push({ type: 'RECOVERY', actor: 'D' });
   }
+
+  // ── Rearm: a disarmed fighter scrambles for the dropped weapon. The
+  // retrieve rolls draw from the isolated disarm stream when available.
+  const disarmRng = ctx.disarmRng ?? ctx.rng;
+  tryRearm({ events: events, rng: disarmRng, fighter: fA, label: 'A' });
+  tryRearm({ events: events, rng: disarmRng, fighter: fD, label: 'D' });
 
   // ── Boundary-reactive phase shifts — evaluated on fighter.plan
   // BEFORE conditions so the shifted curve lands in this exchange's plan too.

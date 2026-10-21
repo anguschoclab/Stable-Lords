@@ -7,14 +7,14 @@
 import { useMemo } from 'react';
 import type { MinuteEvent } from '@/types/combat.types';
 import { cn } from '@/lib/utils';
-import { Skull, Zap, Activity, Shield, Swords, Flame } from 'lucide-react';
+import { Skull, Zap, Activity, Shield, Swords, Flame, Hand } from 'lucide-react';
 
 interface Props {
   log: MinuteEvent[];
   visibleCount?: number;
 }
 
-type Kind = 'kill' | 'ko' | 'fatigue' | 'bighit' | 'armor' | 'momentum';
+type Kind = 'kill' | 'ko' | 'fatigue' | 'bighit' | 'armor' | 'momentum' | 'disarm';
 
 interface Highlight {
   minute: number;
@@ -53,9 +53,16 @@ const KIND_META: Record<Kind, { label: string; color: string; icon: React.ReactN
     color: 'text-primary border-primary/30 bg-primary/10',
     icon: <Swords className="h-3 w-3" />,
   },
+  disarm: {
+    label: 'DISARM',
+    color: 'text-arena-fame border-arena-fame/40 bg-arena-fame/10',
+    icon: <Hand className="h-3 w-3" />,
+  },
 };
 
 function classify(evt: MinuteEvent): Kind | null {
+  // Structured disarm/rearm beats are reel-worthy regardless of prose.
+  if (evt.events?.some((e) => e.type === 'DISARM' || e.type === 'REARM')) return 'disarm';
   const t = (evt.text || '').toLowerCase();
   if (
     t.includes('kill') ||

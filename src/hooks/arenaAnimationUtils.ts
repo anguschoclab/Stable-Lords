@@ -259,6 +259,15 @@ export function processArenaEvent(
       setFighter(actor, { x: toward(att.x, vic.x, 5, actor), stance: 'advancing' });
       break;
 
+    case 'disarm': {
+      // The named fighter is the one who lost/retrieved the weapon — the
+      // disarmed drop to a defensive posture; a rearmer darts forward to
+      // scoop the weapon back up.
+      const isRearm = event.events?.some((e) => e.type === 'REARM');
+      setFighter(actor, isRearm ? { stance: 'advancing' } : { stance: 'defending' });
+      break;
+    }
+
     default:
       driftTowardNeutralSpacing(prev, newState);
       break;

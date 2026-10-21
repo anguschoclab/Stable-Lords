@@ -58,6 +58,9 @@ export interface EquipmentItem {
   shieldParryBonus?: number;
   // Shield-only: ATT penalty applied when wielding this shield (e.g. large_shield = -1).
   shieldAttPenalty?: number;
+  // Weapon-slot items only: false opts the item out of the disarm mechanic
+  // (default true — reserved for strapped/cestus-type gear; nothing opts out yet).
+  disarmable?: boolean;
 }
 
 /**
@@ -68,6 +71,9 @@ export interface EquipmentLoadout {
   armor: string;
   shield: string;
   helm: string;
+  // Optional backup weapon: drawn when the primary is disarmed mid-bout,
+  // before falling back to bare fists. Not exposed in loadout UI — data-driven.
+  backup?: string;
 }
 
 /** Check weapon stat requirements against warrior attributes. Returns penalty details. */

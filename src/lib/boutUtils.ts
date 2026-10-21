@@ -11,7 +11,8 @@ type EventClass =
   | 'riposte'
   | 'initiative'
   | 'phase'
-  | 'spatial';
+  | 'spatial'
+  | 'disarm';
 
 /**
  * Ordered keyword rules — first match wins, so lethal/exhaust/crit patterns
@@ -38,6 +39,25 @@ const TEXT_RULES: readonly (readonly [EventClass, readonly string[]])[] = [
       'center of',
     ],
   ],
+  [
+    'disarm',
+    [
+      'disarm',
+      'from nerveless fingers',
+      'out of their grip',
+      'from their grasp',
+      'skittering across',
+      'clatters to the ground',
+      'goes flying',
+      'backup ',
+      'reserve ',
+      'spare ',
+      'snatches the',
+      'scoops up the',
+      'armed once more',
+      'in hand once more',
+    ],
+  ],
   ['hit', ['damage', 'strikes', 'hits', 'lands', 'striking']],
   ['miss', ['miss', 'parr', 'dodge', 'turns', 'no opening', 'blocks']],
 ];
@@ -57,6 +77,9 @@ export function classifyEvent(event: MinuteEvent | string): EventClass {
     // Arena phenomena are spatial by nature — tag-venue hazards narrated
     // via ARENA_EVENT carry their source CombatEvent for classification.
     if (event.events?.some((e) => e.type === 'ARENA_EVENT')) return 'spatial';
+    // Disarm/rearm lines carry their CombatEvent — classify on the event
+    // type, not the prose (weapon-drop verbs would land as generic hits).
+    if (event.events?.some((e) => e.type === 'DISARM' || e.type === 'REARM')) return 'disarm';
   }
 
   const t = text.toLowerCase();

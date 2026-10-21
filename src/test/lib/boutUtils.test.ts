@@ -252,3 +252,34 @@ describe('classifyEvent', () => {
     });
   });
 });
+
+describe('classifyEvent — disarm', () => {
+  it('classifies lines carrying a DISARM or REARM CombatEvent', () => {
+    const disarm: MinuteEvent = {
+      minute: 1,
+      text: 'The strike lands flush — the Broadsword goes flying!',
+      events: [
+        {
+          type: 'DISARM',
+          actor: 'D',
+          metadata: { weaponId: 'broadsword', toWeapon: 'fist', backup: false },
+        } as CombatEvent,
+      ],
+    } as MinuteEvent;
+    expect(classifyEvent(disarm)).toBe('disarm');
+
+    const rearm: MinuteEvent = {
+      minute: 2,
+      text: 'Beta snatches the Broadsword back up in one fluid motion!',
+      events: [{ type: 'REARM', actor: 'D', metadata: { weaponId: 'broadsword' } } as CombatEvent],
+    } as MinuteEvent;
+    expect(classifyEvent(rearm)).toBe('disarm');
+  });
+
+  it('classifies weapon-drop prose by keywords', () => {
+    expect(classifyEvent("The Broadsword is batted clean out of their grip")).toBe('disarm');
+    expect(classifyEvent('fingers spasm open — the Maul clatters to the ground')).toBe('disarm');
+    expect(classifyEvent('snatches the Broadsword back up in one fluid motion')).toBe('disarm');
+    expect(classifyEvent('a backup Dagger is already in their fist')).toBe('disarm');
+  });
+});

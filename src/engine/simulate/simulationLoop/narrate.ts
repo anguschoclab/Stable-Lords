@@ -37,8 +37,10 @@ export function narrateExchangeEvents(args: NarrateExchangeEventsArgs): {
     rng: c.flavorRng,
     nameA: c.nameA,
     nameD: c.nameD,
-    weaponA: c.weaponA,
-    weaponD: c.weaponD,
+    // Live weapon ids — a disarmed fighter's fist/backup narrates as such
+    // rather than the primary that pre-bout c.weaponA/D still names.
+    weaponA: fA.weaponId ?? c.weaponA,
+    weaponD: fD.weaponId ?? c.weaponD,
     styleA: fA.style,
     styleD: fD.style,
     maxHpA: fA.maxHp,

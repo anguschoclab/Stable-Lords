@@ -1,5 +1,6 @@
 import { defaultPlanForWarrior } from '../bout/planDefaults';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
+import { DISARM_RNG_SEED_XOR } from '@/constants/combat';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG } from '@/utils/random';
 import type { Trainer } from '@/types/state.types';
@@ -53,6 +54,10 @@ function prepareBout(args: PrepareBoutArgs) {
   // Narration-only RNG — isolated from combat resolution so flavor
   // draws never shift the mechanical outcome stream.
   const narRngService = new SeededRNG(boutSeed ^ 0x5f3759df);
+  // Disarm-only RNG — the mechanic's conditional rolls draw from their own
+  // stream so adding the disarm mechanic does not reshuffle every downstream
+  // combat roll (mirror-match drift is measured against the shared stream).
+  const disarmRngService = new SeededRNG(boutSeed ^ DISARM_RNG_SEED_XOR);
 
   const nameA = warriorA?.name ?? 'Attacker';
   const nameD = warriorD?.name ?? 'Defender';
@@ -83,6 +88,7 @@ function prepareBout(args: PrepareBoutArgs) {
     deathRateMult: deathRateMult,
   });
   resCtx.rng = rng;
+  resCtx.disarmRng = () => disarmRngService.next();
 
   return { rng, narRngService, nameA, nameD, weaponA, weaponD, fA, fD, effectiveWeather, resCtx };
 }

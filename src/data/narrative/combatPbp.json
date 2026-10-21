@@ -3711,6 +3711,52 @@
       "The sand greedily drinks the blood spilling from {{name}}.",
       "{{name}} leaves a gruesome trail of red with every step."
     ],
+    "disarm": [
+      "The blow smashes into {{name}}'s arm — the {{weapon}} spins from nerveless fingers!",
+      "{{name}}'s {{weapon}} is batted clean out of their grip, skittering across the sand!",
+      "A crack across the forearm sends {{name}}'s {{weapon}} flying end over end!",
+      "{{name}} howls as the strike numbs their arm — the {{weapon}} clatters to the ground!",
+      "Steel rings on bone and {{name}} loses hold of the {{weapon}} entirely!",
+      "The {{weapon}} is torn from {{name}}'s grasp, sent spinning into the dust!",
+      "{{name}}'s fingers spasm open — the {{weapon}} hits the sand and slides away!",
+      "A jarring hit to the arm wrenches the {{weapon}} free of {{name}}'s hold!",
+      "{{name}}'s {{weapon}} is knocked skyward, landing several paces off!",
+      "The strike lands flush on {{name}}'s wrist — the {{weapon}} goes flying!",
+      "{{name}} reels, grip shattered, their {{weapon}} left lying in the dirt!",
+      "A numbing blow to the forearm and the {{weapon}} is simply gone from {{name}}'s hand!",
+      "{{name}}'s {{weapon}} is wrenched away, spinning toward the arena wall!",
+      "The crowd gasps as {{name}}'s {{weapon}} is knocked clean out of their hand!",
+      "{{name}}'s battered arm can't keep its grip — the {{weapon}} drops into the sand!",
+      "A savage shot to the elbow and {{name}} watches the {{weapon}} tumble away!",
+      "{{name}}'s {{weapon}} is swatted aside so hard it leaves their hand entirely!",
+      "The impact shudders up {{name}}'s arm — the {{weapon}} leaps from their grasp!"
+    ],
+    "rearm": [
+      "{{name}} snatches the {{weapon}} back up in one fluid motion!",
+      "Diving low, {{name}} recovers the {{weapon}} and rises ready!",
+      "{{name}} kicks the {{weapon}} up off the sand and catches it mid-arc!",
+      "A quick scramble and {{name}} has the {{weapon}} in hand once more!",
+      "{{name}} retrieves the {{weapon}}, wiping sand from the grip with a snarl!",
+      "Spotting an opening, {{name}} darts in and scoops up the {{weapon}}!",
+      "{{name}} rolls across the dropped {{weapon}} and comes up holding it!",
+      "{{name}}'s hand closes around the {{weapon}} again — armed once more!",
+      "With a desperate lunge {{name}} grabs the fallen {{weapon}}!",
+      "{{name}} plants a foot, stoops, and comes back up gripping the {{weapon}}!",
+      "{{name}} scoops the {{weapon}} off the ground before their foe can react!",
+      "The {{weapon}} is back in {{name}}'s hand — the reprieve is over!",
+      "{{name}} lunges for the dropped {{weapon}} and closes their fist around it!"
+    ],
+    "backup_draw": [
+      "Undaunted, {{name}} rips a backup {{weapon}} from its sheath and fights on!",
+      "{{name}} draws a reserve {{weapon}} from their belt — still in this!",
+      "A practiced hand dips to a hidden {{weapon}} — {{name}} isn't finished yet!",
+      "{{name}} snarls and pulls a backup {{weapon}} — the bout isn't over!",
+      "From a boot sheath comes a backup {{weapon}} — {{name}} fights on!",
+      "{{name}} wastes no time — a spare {{weapon}} is already in their fist!",
+      "Snatching a reserve {{weapon}} from their harness, {{name}} squares up again!",
+      "{{name}} produces a second {{weapon}} from somewhere about their person!",
+      "A fresh {{weapon}} appears in {{name}}'s hand — they came armed for this!"
+    ],
     "arena_fx": {
       "damage": [
         "The arena itself lashes out at {{name}}!",

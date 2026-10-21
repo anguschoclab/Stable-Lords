@@ -129,6 +129,16 @@ export interface ExchangeLogEntry {
    * This is the RECOVERY emitted at the start of this exchange for the prior exchange's knockdown.
    */
   recovery?: 'A' | 'D';
+  /**
+   * Which fighter was disarmed during this exchange (weaponId swapped to
+   * their backup, or 'fist' when no backup is carried).
+   */
+  disarm?: 'A' | 'D';
+  /**
+   * Which fighter retrieved their dropped weapon during this exchange
+   * (cleared droppedWeaponId at exchange start).
+   */
+  rearm?: 'A' | 'D';
   /** Momentum shift that occurred during this exchange (first shift wins if multiple). */
   momentumShift?: { actor: 'A' | 'D'; to: number; from: number };
 }
@@ -151,6 +161,10 @@ export interface FightOutcome {
     hitsD?: number;
     gotKillA?: boolean;
     gotKillD?: boolean;
+    armHitsA?: number;
+    armHitsD?: number;
+    legHitsA?: number;
+    legHitsD?: number;
     causeBucket?: DeathCauseBucket;
     fatalHitLocation?: string;
     fatalExchangeIndex?: number;

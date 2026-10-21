@@ -266,6 +266,7 @@ export function createFighterState(
     armorId: equip.armor,
     shieldId: equip.shield,
     helmId: equip.helm,
+    backupWeaponId: equip.backup,
     bleedStacks: 0,
     momentum: 0,
     riposteStreak: 0,

@@ -11,6 +11,11 @@ import type { Warrior, InjuryData, InjurySeverity } from '@/types/warrior.types'
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
+import {
+  INJURY_LOCATION_BIAS_HITS,
+  INJURY_ARM_LOCATIONS,
+  INJURY_LEG_LOCATIONS,
+} from '@/constants/combat';
 
 const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
   // Minor (1-3 weeks)
@@ -18,30 +23,35 @@ const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
     name: 'Bruised Ribs',
     description: 'Painful but manageable.',
     severity: 'Minor',
+    location: 'Chest',
     penalties: { CN: -1 },
   },
   {
     name: 'Sprained Wrist',
     description: 'Weapon control slightly impaired.',
     severity: 'Minor',
+    location: 'Right Arm',
     penalties: { ATT: -1, DF: -1 },
   },
   {
     name: 'Black Eye',
     description: 'Vision slightly obscured.',
     severity: 'Minor',
+    location: 'Head',
     penalties: { DEF: -1 },
   },
   {
     name: 'Strained Shoulder',
     description: 'Swings lack full power.',
     severity: 'Minor',
+    location: 'Left Arm',
     penalties: { ST: -1 },
   },
   {
     name: 'Twisted Ankle',
     description: 'Footwork compromised.',
     severity: 'Minor',
+    location: 'Right Leg',
     penalties: { SP: -1 },
   },
   // Moderate (3-6 weeks)
@@ -49,30 +59,35 @@ const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
     name: 'Broken Nose',
     description: 'Hard to breathe during exertion.',
     severity: 'Moderate',
+    location: 'Head',
     penalties: { CN: -2, SP: -1 },
   },
   {
     name: 'Cracked Ribs',
     description: 'Every blow sends agony.',
     severity: 'Moderate',
+    location: 'Chest',
     penalties: { CN: -2, ST: -1 },
   },
   {
     name: 'Concussion',
     description: 'Reactions slowed, judgment impaired.',
     severity: 'Moderate',
+    location: 'Head',
     penalties: { SP: -2, DF: -1, DEF: -1 },
   },
   {
     name: 'Deep Laceration',
     description: 'A wound that weakens with every movement.',
     severity: 'Moderate',
+    location: 'Abdomen',
     penalties: { ST: -1, CN: -2 },
   },
   {
     name: 'Dislocated Shoulder',
     description: 'Arm can barely hold a weapon.',
     severity: 'Moderate',
+    location: 'Right Arm',
     penalties: { ST: -2, ATT: -2 },
   },
   // Severe (6-12 weeks)
@@ -80,24 +95,28 @@ const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
     name: 'Broken Arm',
     description: 'Arm in a sling. Fighting ability devastated.',
     severity: 'Severe',
+    location: 'Left Arm',
     penalties: { ST: -3, ATT: -3, PAR: -2 },
   },
   {
     name: 'Shattered Kneecap',
     description: 'Mobility severely restricted.',
     severity: 'Severe',
+    location: 'Left Leg',
     penalties: { SP: -4, DEF: -3 },
   },
   {
     name: 'Skull Fracture',
     description: 'Lucky to be alive. Everything is slower.',
     severity: 'Severe',
+    location: 'Head',
     penalties: { SP: -3, DF: -3, CN: -2 },
   },
   {
     name: 'Severed Tendon',
     description: 'A career-threatening wound.',
     severity: 'Severe',
+    location: 'Right Arm',
     penalties: { ST: -3, SP: -2, ATT: -2 },
   },
 ];
@@ -158,8 +177,27 @@ export function generateInjury(
   else if (severityRoll > 0.5) severity = 'Moderate';
   else severity = 'Minor';
 
-  // Pick a random injury of the right severity
-  const candidates = INJURY_TABLE.filter((i) => i.severity === severity);
+  // Pick a random injury of the right severity. Heavy limb attrition biases
+  // the pool toward that limb — a fighter whose arm was beaten on all bout
+  // comes out with arm injuries, not random black eyes. Falls back to the
+  // full severity pool when the limb has no injuries at that tier.
+  let candidates = INJURY_TABLE.filter((i) => i.severity === severity);
+  const limbHits =
+    side === 'A'
+      ? { arm: outcome.post?.armHitsA ?? 0, leg: outcome.post?.legHitsA ?? 0 }
+      : { arm: outcome.post?.armHitsD ?? 0, leg: outcome.post?.legHitsD ?? 0 };
+  const biasLocs =
+    limbHits.arm >= INJURY_LOCATION_BIAS_HITS
+      ? INJURY_ARM_LOCATIONS
+      : limbHits.leg >= INJURY_LOCATION_BIAS_HITS
+        ? INJURY_LEG_LOCATIONS
+        : null;
+  if (biasLocs) {
+    const biased = candidates.filter(
+      (i) => i.location && (biasLocs as readonly string[]).includes(i.location)
+    );
+    if (biased.length > 0) candidates = biased;
+  }
   if (candidates.length === 0) return null;
 
   const template = rngService.pick(candidates);

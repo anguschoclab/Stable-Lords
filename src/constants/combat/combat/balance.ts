@@ -98,6 +98,37 @@ export const KNOCKDOWN_CHANCE_CAP = 0.35;
 /** Knockdown probability bonus per existing leg hit on the defender. */
 export const KNOCKDOWN_LEG_BONUS = 0.05;
 
+// ─── Disarm ───────────────────────────────────────────────────────────────
+/** Base disarm probability per landed arm hit. Balance knob. */
+export const DISARM_BASE_CHANCE = 0.08;
+/** Disarm probability bonus per cumulative arm hit on the defender (wounded arm). */
+export const DISARM_PER_ARMHIT = 0.07;
+/** Disarm probability bonus per unit of damage-to-maxHP ratio on the triggering hit. */
+export const DISARM_DAMAGE_COEFF = 0.4;
+/** Extra disarm probability when the arm hit crits. */
+export const DISARM_CRIT_BONUS = 0.1;
+/** Cap on the disarm probability per landed arm hit. */
+export const DISARM_CHANCE_CAP = 0.5;
+/** Flat per-exchange chance a disarmed fighter retrieves their weapon at exchange start. */
+export const DISARM_RECOVER_CHANCE = 0.5;
+/** Weapon id a disarmed fighter falls back to once backup is gone (or none carried). */
+export const DISARM_UNARMED_WEAPON_ID = 'fist';
+/** Hit locations that can carry a disarm — the weapon-bearing limbs. */
+export const DISARM_ARM_LOCATIONS = ['right arm', 'left arm'] as const;
+/** XOR salt for the dedicated disarm RNG stream — keeps disarm/rearm rolls
+ *  off the shared combat stream so the mechanic doesn't reshuffle
+ *  downstream rolls (guardrail samples are stream-deterministic). */
+export const DISARM_RNG_SEED_XOR = 0xd15a01;
+
+// ─── Post-Bout Injury Coupling ────────────────────────────────────────────
+/** Limb hits on one side at/above which post-bout injury selection is
+ *  biased toward that limb's injuries (arms take priority over legs). */
+export const INJURY_LOCATION_BIAS_HITS = 3;
+/** InjuryData.location values treated as "arm" for the bias pool. */
+export const INJURY_ARM_LOCATIONS = ['Right Arm', 'Left Arm'] as const;
+/** InjuryData.location values treated as "leg" for the bias pool. */
+export const INJURY_LEG_LOCATIONS = ['Right Leg', 'Left Leg'] as const;
+
 // ─── Hit Side-Effects ─────────────────────────────────────────────────────
 /** Chance per damaging hit to grant an insight token. */
 export const INSIGHT_CHANCE = 0.2;

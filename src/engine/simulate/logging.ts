@@ -94,6 +94,17 @@ function projectEvent(e: CombatEvent, entry: ExchangeLogEntry, reasonCodes: stri
       // actor is the fighter who recovers (clears knockedDown at start of exchange)
       entry.recovery ??= e.actor;
       break;
+    case 'DISARM':
+      // actor is the fighter who lost the weapon; reasonCodes is what the
+      // debug drawer reads, the structured field is parity with knockdown.
+      entry.disarm ??= e.actor;
+      reasonCodes.push('DISARM');
+      break;
+    case 'REARM':
+      // actor is the fighter who retrieved the dropped weapon
+      entry.rearm ??= e.actor;
+      reasonCodes.push('REARM');
+      break;
     case 'ARENA_EVENT':
       // Tag-venue hazards surface as ARENA_<ID> so the debug drawer can
       // tell a mist-veil exchange from a clean one.

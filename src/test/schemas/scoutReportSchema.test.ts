@@ -1,5 +1,5 @@
 /**
- * V16/F3d — ScoutReportDataSchema must round-trip every field
+ * ScoutReportDataSchema must round-trip every field
  * `generateScoutReport` emits; `suspectedTraits` in particular was silently
  * stripped on save because it existed only on the internal ScoutReport type.
  */

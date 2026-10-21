@@ -71,7 +71,7 @@ describe('Trait deduplication', () => {
     }
   });
 
-  describe('V7 union traits exist', () => {
+  describe('union traits exist', () => {
     for (const id of [
       'orphan_street_rat',
       'orphan_pit_fighter',

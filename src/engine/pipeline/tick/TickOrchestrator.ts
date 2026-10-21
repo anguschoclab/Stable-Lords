@@ -1,10 +1,4 @@
 import type { GameState } from '@/types/state.types';
-import { SeededRNG } from '@/utils/random';
-import {
-  advanceWeek as runWeeklyPipeline,
-  type WeekAdvanceOptions,
-} from '@/engine/pipeline/services/weekPipelineService';
-import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import {
   TimeAdvanceService,
   type QuarterAdvanceResult,
@@ -12,112 +6,28 @@ import {
   type YearAdvanceResult,
   type AdvanceOptions,
 } from './timeAdvance';
-import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
+import { advanceDay, _advanceDayInner } from './dayAdvance';
+import { skipToWeekEnd } from './weekSkip';
 
-/**
- * Canonical tournament-day RNG seed. Both the interactive day tick
- * (advanceDay) and the batched skip (skipToWeekEnd) MUST use this — they
- * previously diverged (week*100+day vs year*10000+week*100+day), producing
- * different tournament outcomes for identical game days.
- */
-export function tournamentDaySeed(year: number, week: number, day: number): number {
-  return year * 10000 + week * 100 + day;
-}
-
-/**
- * Resolve a single tournament day. Shared by advanceDay (single step) and
- * skipToWeekEnd (batched loop) so the two paths can never drift apart —
- * same seed formula, same tournament-entry threading, same headless flag.
- */
-function resolveTournamentDay(
-  state: GameState,
-  tournamentId: string,
-  day: number,
-  headless: boolean | undefined,
-  tournament?: GameState['tournaments'][number]
-) {
-  return TournamentSelectionService.resolveRound(
-    state,
-    tournamentId,
-    tournamentDaySeed(state.year, state.week, day),
-    headless,
-    tournament
-  );
-}
+export { tournamentDaySeed } from './tournamentDay';
 
 /**
  * Stable Lords — Unified Tick Orchestrator
  * Central point for all time-based progression logic.
+ * Implementation lives in per-granularity modules: dayAdvance (single day),
+ * weekSkip (batched week end), weekTransition (shared weekly boundary),
+ * tournamentDay (shared tournament-round resolution), timeAdvance (spans).
  */
 export const TickOrchestrator = {
   /**
    * Advances a single day including tournament resolution.
    */
-  async advanceDay(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
-    const dayStarted = performance.now();
-    const result = await TickOrchestrator._advanceDayInner(state, opts);
-    telemetry.timing(TelemetryEvents.ADVANCE_DAY, performance.now() - dayStarted, {
-      tournament: String(Boolean(state.isTournamentWeek)),
-    });
-    return result;
-  },
+  advanceDay,
 
   /**
    * Inner day-advance implementation (telemetry is measured by advanceDay).
    */
-  async _advanceDayInner(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
-    const currentDay = state.day || 0;
-    const nextDay = currentDay + 1;
-    // Standardize seed generation
-    const seed = tournamentDaySeed(state.year, state.week, nextDay);
-    const rng = new SeededRNG(seed);
-
-    // 1. Weekly Transition (Day 7)
-    if (nextDay >= 7) {
-      // Correct for 52-week year wrap-around logic moved to SystemPass
-      const finalState = await runWeeklyPipeline(state, {
-        headless: opts?.headless,
-        mutableInput: opts?.mutableInput,
-        pool: opts?.pool,
-      });
-      return {
-        ...finalState,
-        day: 0,
-        isTournamentWeek: false,
-        activeTournamentId: undefined,
-      };
-    }
-
-    // 2. Tournament Day (Skip to End Mode not active)
-    if (state.isTournamentWeek && state.activeTournamentId) {
-      const tour = (state.tournaments || []).find((t) => t.id === state.activeTournamentId);
-      const { updatedState, roundResults } = resolveTournamentDay(
-        state,
-        state.activeTournamentId,
-        nextDay,
-        opts?.headless,
-        tour
-      );
-
-      const nextState = { ...updatedState, day: nextDay };
-
-      if (roundResults.length > 0) {
-        nextState.newsletter = [
-          ...(nextState.newsletter || []),
-          {
-            id: rng.uuid(),
-            week: state.week,
-            title: `Empire Day ${nextDay}: Tournament Results`,
-            items: roundResults,
-          },
-        ];
-      }
-      return nextState;
-    }
-
-    // 3. Regular Day
-    return { ...state, day: nextDay };
-  },
+  _advanceDayInner,
 
   /**
    * High-performance: Skips to the end of the current week.
@@ -125,62 +35,7 @@ export const TickOrchestrator = {
    * `opts` are forwarded to the weekly pipeline — the worker entry point
    * passes `mutableInput: true` so worker-owned input is not re-cloned.
    */
-  async skipToWeekEnd(state: GameState, opts?: WeekAdvanceOptions): Promise<GameState> {
-    let currentState = { ...state };
-    const currentDay = state.day || 0;
-    const weeklyNewsItems: string[] = [];
-
-    // 1. Resolve Tournament Rounds (Batched)
-    if (state.isTournamentWeek && state.activeTournamentId) {
-      const tournamentId = state.activeTournamentId;
-      // Locate the tournament once and thread the updated entry through each
-      // round instead of re-scanning state.tournaments per day.
-      let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
-      for (let day = currentDay + 1; day < 7; day++) {
-        if (!tour || tour.completed) break;
-        const { updatedState, roundResults, isComplete, updatedTournament } = resolveTournamentDay(
-          currentState,
-          tournamentId,
-          day,
-          true,
-          tour
-        );
-        currentState = updatedState;
-        tour = updatedTournament ?? tour;
-        if (roundResults.length > 0) {
-          weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
-        }
-        if (isComplete) break;
-      }
-    }
-
-    // 2. Collect Batched Summary (Already done by resolving rounds sequentially in a loop)
-    // Add the batched newsletter item
-    if (weeklyNewsItems.length > 0) {
-      currentState.newsletter = [
-        ...(currentState.newsletter || []),
-        {
-          id: new SeededRNG(state.week).uuid(),
-          week: state.week,
-          title: `Empire News: Tournament Week ${state.week} Recap`,
-          items: weeklyNewsItems,
-        },
-      ];
-    }
-
-    // 3. Run final weekly pipeline
-    const finalState = await runWeeklyPipeline(currentState, {
-      headless: opts?.headless,
-      mutableInput: opts?.mutableInput,
-      pool: opts?.pool,
-    });
-    return {
-      ...finalState,
-      day: 0,
-      isTournamentWeek: false,
-      activeTournamentId: undefined,
-    };
-  },
+  skipToWeekEnd,
 
   /**
    * Advance a quarter (13 weeks) with progress tracking.

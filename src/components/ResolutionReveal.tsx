@@ -102,10 +102,11 @@ function ResolutionDialog(props: {
   lastSimulationReport: GameStore['lastSimulationReport'];
   deadWarriors: ReturnType<typeof useDeadWarriors>;
   hasInjuriesOrDeaths: boolean;
+  hasDeaths: boolean;
   onNext: () => void;
   onDismiss: () => void;
 }) {
-  const { step, data, week, lastSimulationReport, deadWarriors } = props;
+  const { step, data, week, lastSimulationReport, deadWarriors, hasDeaths } = props;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-2 sm:p-4">
       <Card
@@ -129,7 +130,7 @@ function ResolutionDialog(props: {
             <StepBadges
               step={step}
               hasInjuriesOrDeaths={props.hasInjuriesOrDeaths}
-              hasDeaths={data.deaths.length > 0}
+              hasDeaths={hasDeaths}
             />
           </div>
         </CardHeader>
@@ -144,7 +145,7 @@ function ResolutionDialog(props: {
           </AnimatePresence>
         </CardContent>
 
-        <NextButton step={step} hasDeaths={data.deaths.length > 0} onNext={props.onNext} />
+        <NextButton step={step} hasDeaths={hasDeaths} onNext={props.onNext} />
       </Card>
     </div>
   );
@@ -181,7 +182,8 @@ export default function ResolutionReveal() {
       );
     });
   };
-  const hasInjuriesOrDeaths = data.injuries.length > 0 || data.deaths.length > 0;
+  const hasDeaths = data.deaths.length > 0;
+  const hasInjuriesOrDeaths = data.injuries.length > 0 || hasDeaths;
 
   const handleNext = () => {
     audioManager.play('ui_click');
@@ -191,7 +193,7 @@ export default function ResolutionReveal() {
       setStep('bouts');
     } else if (step === 'bouts') {
       setStep('math');
-    } else if (step === 'math' && data.deaths.length > 0) {
+    } else if (step === 'math' && hasDeaths) {
       setStep('memorial');
     } else {
       doClearResolution();
@@ -206,6 +208,7 @@ export default function ResolutionReveal() {
       lastSimulationReport={state.lastSimulationReport}
       deadWarriors={deadWarriors}
       hasInjuriesOrDeaths={hasInjuriesOrDeaths}
+      hasDeaths={hasDeaths}
       onNext={handleNext}
       onDismiss={doClearResolution}
     />

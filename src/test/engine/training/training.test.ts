@@ -130,7 +130,7 @@ describe('Training System', () => {
     });
   });
 
-  describe('computeTrainingImpact (deprecated processTraining equivalent)', () => {
+  describe('computeTrainingImpact', () => {
     it('should return state unchanged if no assignments', () => {
       const state = makeState();
       const rng = new SeededRNG(1);

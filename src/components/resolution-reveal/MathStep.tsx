@@ -6,6 +6,7 @@ import { Activity } from 'lucide-react';
 import uiMeta from '@/data/narrative/uiMeta.json';
 import type { GameState } from '@/types/state.types';
 import { WarriorNameAvatar } from '@/components/avatar';
+import { StepHeader } from './StepHeader';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
@@ -99,10 +100,11 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
       exit={{ opacity: 0, x: -20 }}
       className="h-full p-6 space-y-6"
     >
-      <div className="flex items-center gap-2">
-        <Activity className="h-6 w-6 text-muted-foreground" />
-        <h3 className="text-xl font-semibold">{uiMeta.fanfare.report_math}</h3>
-      </div>
+      <StepHeader
+        icon={Activity}
+        iconClassName="text-muted-foreground"
+        title={uiMeta.fanfare.report_math}
+      />
 
       <SummaryCards lastSimulationReport={lastSimulationReport} />
       <GranularBreakdown lastSimulationReport={lastSimulationReport} />

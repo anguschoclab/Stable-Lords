@@ -3,6 +3,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Newspaper } from 'lucide-react';
 import type { NewsletterItem } from '@/types/shared.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
+import { StepHeader } from './StepHeader';
 
 interface GazetteStepProps {
   gazette: NewsletterItem[];
@@ -21,10 +22,12 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
       exit={{ opacity: 0, x: -20 }}
       className="h-full p-6"
     >
-      <div className="flex items-center gap-2 mb-6">
-        <Newspaper className="h-6 w-6 text-primary" />
-        <h3 className="text-xl font-semibold">The Weekly Gazette</h3>
-      </div>
+      <StepHeader
+        icon={Newspaper}
+        iconClassName="text-primary"
+        title="The Weekly Gazette"
+        className="mb-6"
+      />
       <ScrollArea className="h-[calc(100%-4rem)] pr-4">
         {gazette.length > 0 ? (
           <div className="space-y-6">

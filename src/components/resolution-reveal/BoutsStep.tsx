@@ -5,6 +5,7 @@ import { Swords } from 'lucide-react';
 import type { BoutResult } from '@/engine/bout';
 import { RunResults } from '@/components/run-round/RunResults';
 import uiMeta from '@/data/narrative/uiMeta.json';
+import { StepHeader } from './StepHeader';
 
 interface BoutsStepProps {
   bouts: BoutResult[];
@@ -25,10 +26,12 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
       exit={{ opacity: 0, x: -20 }}
       className="h-full p-6 flex flex-col"
     >
-      <div className="flex items-center gap-2 mb-6 shrink-0">
-        <Swords className="h-6 w-6 text-primary" />
-        <h3 className="text-xl font-semibold">{uiMeta.fanfare.report_combat}</h3>
-      </div>
+      <StepHeader
+        icon={Swords}
+        iconClassName="text-primary"
+        title={uiMeta.fanfare.report_combat}
+        className="mb-6 shrink-0"
+      />
       <ScrollArea className="flex-1 pr-4">
         {bouts.length > 0 ? (
           <RunResults results={bouts} expandedId={expandedId} onToggleExpand={setExpandedId} />

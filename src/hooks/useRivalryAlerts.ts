@@ -7,7 +7,7 @@ import { cryptoRandom } from '@/utils/cryptoRandom';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import type { WarriorId } from '@/types/shared.types';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { clamp } from '@/utils/math';
 
 interface RivalrySnapshot {
@@ -207,13 +207,16 @@ function fireEscalation(r: RivalrySnapshot) {
     playImpactSFX(r.intensity);
   }
 
-  toast({
-    title:
-      r.intensity >= 5 ? `💀 BLOOD FEUD: ${r.stableName}` : `🔥 Rivalry Escalated: ${r.stableName}`,
-    description:
-      r.intensity >= 5
-        ? `The hatred between your stables has reached its peak. There will be no mercy.`
-        : `Your feud with ${r.stableName} has intensified to "${label}" (${r.intensity}/5)!`,
-    variant: r.intensity >= 4 ? 'destructive' : 'default',
-  });
+  const title =
+    r.intensity >= 5 ? `💀 BLOOD FEUD: ${r.stableName}` : `🔥 Rivalry Escalated: ${r.stableName}`;
+  const description =
+    r.intensity >= 5
+      ? `The hatred between your stables has reached its peak. There will be no mercy.`
+      : `Your feud with ${r.stableName} has intensified to "${label}" (${r.intensity}/5)!`;
+
+  if (r.intensity >= 4) {
+    toast.error(title, { description });
+  } else {
+    toast(title, { description });
+  }
 }

@@ -48,8 +48,8 @@ describe('focus-ring a11y contracts', () => {
     }
   });
 
-  it('accordion and toast vendored primitives honor motion-reduce', () => {
-    for (const f of ['src/components/ui/accordion.tsx', 'src/components/ui/toast.tsx']) {
+  it('accordion vendored primitive honors motion-reduce', () => {
+    for (const f of ['src/components/ui/accordion.tsx']) {
       const src = readFileSync(f, 'utf8');
       expect(src, `${f} must disable animations under motion-reduce`).toMatch(
         /motion-reduce:animate-none/

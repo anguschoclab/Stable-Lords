@@ -225,6 +225,7 @@
     "src/test/hooks/useListShell.test.tsx",
     "src/test/hooks/useQuadrantDots.test.ts",
     "src/test/hooks/useRivalries.test.ts",
+    "src/test/hooks/useRivalryAlerts.test.ts",
     "src/test/hooks/useShallowMemoization.test.ts",
     "src/test/hooks/useStableAdvisor.test.ts",
     "src/test/hooks/useStableComparison.test.ts",

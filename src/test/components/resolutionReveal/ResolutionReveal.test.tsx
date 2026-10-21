@@ -92,6 +92,25 @@ describe('InjuriesStep', () => {
     );
     expect(screen.getByText('Alice injured')).toBeInTheDocument();
   });
+
+  it('renders both casualty sections when deaths and injuries present', () => {
+    render(
+      <InjuriesStep
+        injuries={[{ id: 'w1' as WarriorId, name: 'Alice injured' }]}
+        deaths={[{ id: 'w2' as WarriorId, name: 'Bob fell' }]}
+      />
+    );
+    expect(screen.getByText('Fallen Warriors')).toBeInTheDocument();
+    expect(screen.getByText('Bob fell')).toBeInTheDocument();
+    expect(screen.getByText('Injured Roster')).toBeInTheDocument();
+    expect(screen.getByText('Alice injured')).toBeInTheDocument();
+  });
+
+  it('renders neither casualty section when both lists are empty', () => {
+    render(<InjuriesStep injuries={[]} deaths={[]} />);
+    expect(screen.queryByText('Fallen Warriors')).not.toBeInTheDocument();
+    expect(screen.queryByText('Injured Roster')).not.toBeInTheDocument();
+  });
 });
 
 describe('MemorialStep', () => {

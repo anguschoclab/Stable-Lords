@@ -10,8 +10,10 @@
  * Defaults: scripts/out/default-suite-timings.json →
  *           scripts/out/baseline-test-timings.tsv
  *
- * The default-suite report has no *.slow rows; existing slow rows in the TSV
- * are preserved until a slow-suite report is converted the same way.
+ * Merge is bidirectional: rows in the existing TSV for files absent from the
+ * fresh report are preserved (so a default-suite report keeps slow rows and a
+ * slow-suite report keeps default rows), provided the file still exists on
+ * disk — rows for deleted/renamed specs are pruned.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,7 +34,9 @@ for (const r of report.testResults ?? []) {
 if (fs.existsSync(OUT)) {
   for (const line of fs.readFileSync(OUT, 'utf8').split('\n')) {
     const [ms, file] = line.split('\t');
-    if (file && file.includes('.slow.test.') && !rows.has(file)) rows.set(file, Number(ms));
+    if (file && !rows.has(file) && fs.existsSync(path.resolve(ROOT, file))) {
+      rows.set(file, Number(ms));
+    }
   }
 }
 

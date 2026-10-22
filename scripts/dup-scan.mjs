@@ -224,7 +224,13 @@ function main() {
   });
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  const outFile = path.join(OUT_DIR, IDENT ? 'dup-scan-ident.json' : 'dup-scan.json');
+  // Non-default windows write a suffixed report so a --window 12/ident run
+  // cannot clobber the w8 baseline `dup-scan.json` (MEGAPLAN-V19 B2).
+  const wSuffix = WINDOW === 8 ? '' : `-w${WINDOW}`;
+  const outFile = path.join(
+    OUT_DIR,
+    IDENT ? `dup-scan-ident${wSuffix}.json` : `dup-scan${wSuffix}.json`
+  );
   fs.writeFileSync(outFile, JSON.stringify({ window: WINDOW, ident: IDENT, clusters }, null, 2));
 
   console.log(

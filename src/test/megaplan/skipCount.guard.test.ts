@@ -34,6 +34,16 @@ const REGISTERED_SKIP_TICKETS = new Set<string>([
   ...Array.from({ length: 14 }, (_, i) => `MEGAPLAN-D${i + 1}`),
   // Wave-2 test-suite audit contracts — un-skip per batch (Phases 3–6).
   ...Array.from({ length: 8 }, (_, i) => `MEGAPLAN-A${i + 1}`),
+  // V19 ticket namespace — S35–S40 SRP, D15–D20 dedup, and the
+  // wiring/dead-code/perf/css/bug/preservation letters.
+  ...Array.from({ length: 6 }, (_, i) => `MEGAPLAN-S${35 + i}`),
+  ...Array.from({ length: 6 }, (_, i) => `MEGAPLAN-D${15 + i}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-W${i + 1}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-K${i + 1}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-P${i + 1}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-C${i + 1}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-B${i + 1}`),
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-U${i + 1}`),
 ]);
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;

@@ -47,6 +47,7 @@ In-flight at baseline: scan-in-loop drain (`217c1b7c`, `f9c9dc8a`) —
 | working-tree | 3 (§W) | code-level deadExport classification complete (109 test-only / 18 scanner-blind / 22 Radix / 4 drain); feature-level spec re-audit — no new gaps | wiring closed |
 | working-tree | 6 (§P) | `rivalStrategyPass.perf` gate — best-of-3 min sampling + 2s bound (was single-sample 500ms; flaked at 641–1141ms under concurrent 104-week sims vs ~250–310ms isolated); spy-count per-tick contract preserved | stabilized |
 | working-tree | 4 (test-audit wave) | `TEST_AUDIT_FINDINGS`/`TEST_SUITE_AUDIT_LEDGER`/`TEST_SUITE_AUDIT_PLAN` landed; narrativeUnion merged, hitLocation folded, layout specs rehomed, `fsWalk` shared, 11 audit guards | recorded |
+| `2d79b9c1` | 2/8 residual drain | `v19Preservation.guard.test.ts` (U1–U7) — the deferred Phase-2 §U inventory item; V19 ticket namespace registered in skipCount guard (`S35–S40`, `D15–D20`, `W*/K*/P*/C*/B*/U* ×10`); B2 fixed — per-tier dup-scan report filenames (`dup-scan-w12`, `-ident-w20`, `-ident-w16`); last 2 fast-suite >2s stragglers demoted (`truncationCadence` 4.7s + `enginePool` 2.0s → `.slow`); srp-census re-run (142→135); ident tiers re-scanned to dedicated reports | deferred items drained |
 
 ## Close-out matrix — measured post-campaign (2026-10-22)
 
@@ -70,3 +71,15 @@ In-flight at baseline: scan-in-loop drain (`217c1b7c`, `f9c9dc8a`) —
 | narrative-validate | ✓ | ✓ | ✓ |
 | jscpd | 102 clones / 0.63% | 87 clones / 0.63% | −15 |
 | knip (report-only) | 150 exp / 68 types / 4 dup | 152 exp / 68 types / 4 dup | +2 exp |
+
+## Residual-drain addendum — verified 2026-10-22 (post `post-megaplan-v19`)
+
+| Gate | Final | Note |
+| ---- | ----- | ---- |
+| over2s fast stragglers | 0 (8 >2s files, all `.slow`) | last two demoted this session |
+| srp-census | 135 candidates / 1,282 files | re-run post-drain |
+| dup w12 / ident w20 / ident w16 | 10 / 354 / 855 | per-tier report files (B2 fix) |
+| fn band 60–80 | 286 | mild regrowth, 0 >80 holds |
+| soak 40w | 0 violations @ 500.7 ms/week | measured under concurrent slow-suite load |
+| determinismAudit | 4/4 | ✓ |
+| megaplan guard suite | 31 files / 188 tests | incl. new `v19Preservation.guard` (7) |

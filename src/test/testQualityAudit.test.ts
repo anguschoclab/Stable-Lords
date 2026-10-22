@@ -182,6 +182,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'v18Preservation.guard.test.ts': 'LIVE_RATCHET',
   'v18Srp.guard.test.ts': 'LIVE_RATCHET',
   'v19Dedup.guard.test.ts': 'LIVE_RATCHET',
+  'v19Preservation.guard.test.ts': 'LIVE_RATCHET',
   'v19Srp.guard.test.ts': 'LIVE_RATCHET',
   'wiring.wired.test.tsx': 'LIVE_RATCHET',
 };

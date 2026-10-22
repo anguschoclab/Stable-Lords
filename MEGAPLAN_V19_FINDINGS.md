@@ -78,9 +78,9 @@ V8–V18 wiring drains hold. No §W feature tickets needed.
 | Tier | src↔src | test↔test | mixed | Disposition |
 | ---- | ------- | --------- | ----- | ----------- |
 | exact w8 | 27 (all EXEMPT-registered, re-verified) | 79 → 4 EXEMPT + 70 DEBT + ~5 residual-to-triage | 17 EXEMPT | gate |
-| exact w12 | 6 | 12 | 3 | audit |
-| ident w20 | 170 | 52 | 135 | audit queue |
-| ident w16 | 454 | 128 | 288 | audit queue |
+| exact w12 | 6 → **6** | 12 → **1** | 3 → **3** | audit — fresh 2026-10-22 wave-2 (10 total; `dup-scan-w12.json`) |
+| ident w20 | 170 → **170** | 52 → **49** | 135 → **135** | audit queue — fresh (354; `dup-scan-ident-w20.json`) |
+| ident w16 | 454 → **453** | 128 → **117** | 288 → **285** | audit queue — fresh (855; `dup-scan-ident-w16.json`) |
 
 `TEST_DEBT_PAIRS` (70) re-verified pair-by-pair against live scan —
 all 70 still duplicate. Cluster assignment for drain:
@@ -112,9 +112,12 @@ canonical zeroed summary) → registered EXEMPT, baseline 17 → **18**.
 | S39 | `createFighterState` | `engine/bout/fighterState.ts:212` | 81 | ~50-line return literal → extract `buildFighterStateFields` | **DRAINED** — `assembleFighterState` extracted, params bundled to an options object (paramBudget), `FRESH_COMBAT_COUNTERS` constant hoisted |
 | S40 | `recordGrandChampions` | `engine/championship/championsTournament.ts:109` | 81 | detect→award→newsletter pipeline → extract `applyGrandChampionAward` | **DRAINED** — `applyGrandChampionAward` extracted (options-bundled, 7 params → 1) |
 
-Band (60–80): 268 fns — no second-tier promotions this campaign
+Band (60–80): 268 fns → **286** fresh (2026-10-22 wave-2 — mild regrowth,
+still 0 >80) — no second-tier promotions this campaign
 (classify-by-reading found no convergent signals beyond the queue;
-watch-list re-review recorded NOTE).
+watch-list re-review recorded NOTE). Fresh `srp-census` re-run:
+**135 candidates / 1,282 files scanned** (was 142 —
+the six >80 drains shrank the census).
 
 ## §K Dead code — final verdicts
 
@@ -141,8 +144,11 @@ watch-list re-review recorded NOTE).
   (`inj.penalties`, `zoneDef`, `attrBonus`, `fightPlanMod`,
   `declinedContenders`) — EXEMPT, verified.
 - Perf band: 257.7 ms/week @ 40w (vs. ~270 documented band) — healthy.
-- `over2s` 23 specs — re-tier candidates recorded; not blocking
-  (runnerGroups already isolates them).
+- `over2s` 23 → **8, all `.slow`-tiered** (fresh `test-audit-scan`
+  2026-10-22 wave-2): the two last fast-suite stragglers —
+  `truncationCadence` (4.7s) and `enginePool` (2.0s) — demoted to
+  `*.slow.test.ts`; `runnerGroups.json`/`auditBaseline.json` regenerated.
+  **DRAINED.**
 
 ## §C CSS / design-bible conformance — sweep verdicts
 
@@ -165,7 +171,7 @@ component class usage vs `DESIGN_BIBLE_UI_v1.0.md`:
 | # | Bug | Evidence | Fix | Final |
 | - | --- | -------- | --- | ----- |
 | B1 | `glow-neon-blue` undefined CSS class | `GrowthHelpers.ts:45`; only `glow-neon-purple` defined (`index.css:825`) | remove dead class; keep `text-accent drop-shadow-md` | **FIXED** + `animate-avatar-fade-in`, `animate-progress`, `animate-shimmer` minted to their orphan keyframes; 4 dead keyframes deleted; `radius-violation`/`undefined-class`/`dead-keyframe` scanner rules ratcheted to 0 |
-| B2 | `dup-scan.json` overwrite hazard — running the scanner at w12/ident clobbers the w8 report | observed this campaign | NOTE — operational caveat, not code debt | recorded |
+| B2 | `dup-scan.json` overwrite hazard — running the scanner at w12/ident clobbers the w8 report | observed this campaign | per-tier report filenames: non-default windows write `dup-scan-w{N}.json` / `dup-scan-ident-w{N}.json`; w8 keeps `dup-scan.json` (v11Dedup contract) | **FIXED** |
 | B3 | `import tytme` + `\n, name }` mangled imports left by the earlier mechanical repoint pass | `playerPressure.test.ts:21` parse error; `planMasking`/`PromoterPass` `,\n,` imports; `training.test.ts` nested literal | repaired — type-check 0 | **FIXED** |
 | B4 | `rivalStrategyPass.perf` gate single-sample 500ms bound flakes under concurrent slow-suite load (641–1141ms observed vs ~250–310ms isolated) | full `test:slow` run 2026-10-22 | best-of-3 min + 2000ms bound; spy-count contract unchanged | **FIXED** |
 
@@ -183,6 +189,12 @@ component class usage vs `DESIGN_BIBLE_UI_v1.0.md`:
 
 V18 U1–U10 re-verified: all still hold (no consolidation attempted on
 those clusters since).
+
+**Phase-2 artifact landed:** `src/test/megaplan/v19Preservation.guard.test.ts`
+— one assertion per U1–U7 (the deferred Phase-2 §U inventory item). V19
+ticket namespace registered in `skipCount.guard.test.ts`
+(`S35–S40`, `D15–D20`, `W1–W10`, `K1–K10`, `P1–P10`, `C1–C10`, `B1–B10`,
+`U1–U10`).
 
 ## Scanner-interface reference
 

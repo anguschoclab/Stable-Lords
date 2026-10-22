@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T18:35:48.143Z",
+  "generatedAt": "2026-10-22T21:53:04.725Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -193,7 +193,7 @@
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
     "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
-    "src/test/engine/pipeline/truncationCadence.test.ts",
+    "src/test/engine/pipeline/truncationCadence.slow.test.ts",
     "src/test/engine/pipeline/worldEvolvesWhenPlayerStopped.integration.slow.test.ts",
     "src/test/engine/pipeline/yearRollover.integration.slow.test.ts",
     "src/test/engine/promoters/offerMatchmaking.test.ts",

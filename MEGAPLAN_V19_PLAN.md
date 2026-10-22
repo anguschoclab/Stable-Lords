@@ -139,7 +139,7 @@ wiring, `S35+` SRP, `D15+` dedup, `K*` dead code, `P*` perf, `C*` CSS,
 | §K | Export-surface parity specs per touched module (`typeSurface` precedent) |
 | §P | Guard-ceiling delta specs; re-tier `*.slow.test.ts` for drained >2s specs |
 | §C | Contract specs only for statically-enforceable violation classes (new `ui-audit-scan` rules) |
-| §U | `v19Preservation.guard.test.ts` — one assertion per entry |
+| §U | `v19Preservation.guard.test.ts` — one assertion per entry (landed wave-2: 7 assertions U1–U7) |
 | §B | Failing characterization spec per confirmed bug before fix |
 
 Placement per `docs/TESTING.md`; regen `runnerGroups.json`/
@@ -189,6 +189,13 @@ knip/jscpd zero-regression vs. Phase-0 baseline; skip registry drained;
 ledgers ratcheted; LEDGER close-out matrix; `git tag post-megaplan-v19`;
 one-shot scripts deleted; out-of-scope recorded (raw ident counts stay
 audit-queues).
+
+**Residual-drain addendum (wave-2, 2026-10-22):** deferred/out-of-scope
+items closed — `v19Preservation.guard.test.ts` (§U); V19 ticket namespace
+registered; B2 fixed via per-tier dup-scan report filenames; final two
+>2s fast-suite specs demoted to `.slow` (over2s queue → 0); srp-census
+re-run (135); ident-tier audit queues re-scanned into dedicated report
+files. See LEDGER residual-drain matrix.
 
 ## Quality-metric mapping
 

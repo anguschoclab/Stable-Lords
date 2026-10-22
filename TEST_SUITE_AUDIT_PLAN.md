@@ -1,6 +1,6 @@
 # Test Suite Audit, Optimization & Reorganization — Implementation Plan
 
-**Status:** Wave 1 executed 2026-10-08 (results in `TEST_SUITE_AUDIT_LEDGER.md` wave-1 tables). **Wave 2 validated & planned 2026-10-22** — the live campaign is §"Wave 2" below; wave-1 phases are retained under §"Wave 1 (executed — archived)" for audit-trail completeness. Findings: `TEST_AUDIT_FINDINGS.md` §5.
+**Status:** Wave 1 executed 2026-10-08. **Wave 2 validated 2026-10-22, executed same day** — per-phase results and final metrics are in `TEST_SUITE_AUDIT_LEDGER.md` §"Wave 2" (0 TEST_DEBT pairs, 0 CI-shard gap, 0 files >5s, 16 audit checks). Wave-1 phases retained under §"Wave 1 (executed — archived)" for audit-trail completeness. Findings: `TEST_AUDIT_FINDINGS.md` §5.
 
 **Wave-2 scope (user-approved):** `src/test/` (921 vitest files, 9,469 tests), `e2e/` (5 Playwright specs + helpers), test infrastructure (`vitest.config*.ts`, `bunfig.toml`, `playwright.config.ts`), CI runner parity (`.github/workflows/*.yml`), paired dead production code, and the `src/test/megaplan/` guard-spec lifecycle.
 

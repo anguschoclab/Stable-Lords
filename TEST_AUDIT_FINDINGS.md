@@ -417,3 +417,15 @@ register going forward.
 - Residual allowlists (2 misplaced, 3 localFactory) re-verified — judgment
   calls stand.
 
+
+### 5h. Wave-2 outcome (2026-10-22)
+
+Campaign executed; per-phase record and final metrics live in
+`TEST_SUITE_AUDIT_LEDGER.md` §"Wave 2". Headline: TEST_DEBT_PAIRS 70→0,
+test↔test baseline 79→12 (all EXEMPT), jscpd 88→73 clones (1.02%→0.86%),
+CI bun-test shard gap 70→0 (find-driven enumeration), default-suite tail
+0 files >5s (was 11), p99 6.2s→1.4s, suite 9,469→9,493 tests green.
+Setup-surgery (avatar-stub relocation) measured-and-rejected — node-env
+specs legitimately consume the catalog; sentinel A5 pins the decision.
+All T1–T9 contracts and A1–A5 guard tickets green; GUARD_REGISTRY is the
+live lifecycle ledger for megaplan guards.

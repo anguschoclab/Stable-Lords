@@ -1,6 +1,8 @@
 import { test, expect, type Page } from '@playwright/test';
 import { startNewGame } from './helpers';
 
+import { logger } from '../src/utils/logger';
+
 /**
  * Seasonal Tournament E2E — full game year soak:
  * 1. Start a new game (title → new game form → orphanage FTUE)
@@ -91,7 +93,7 @@ async function dismissBlockingOverlays(page: Page, maxPasses = 12) {
             return `btnRect=${JSON.stringify({ x: r.x, y: r.y, w: r.width, h: r.height })} covers=${at ? `${at.tagName}.${(at as HTMLElement).className?.toString().slice(0, 120)}` : 'none'}`;
           })
           .catch(() => 'unreadable');
-        console.log(`[e2e] click-fail ${pattern}: ${String(e).split('\n')[0]} :: ${info}`);
+        logger.log(`[e2e] click-fail ${pattern}: ${String(e).split('\n')[0]} :: ${info}`);
         // A covered-but-visible button is usually blocked by a transient or
         // stacked toast — dispatch the click programmatically. The goal here
         // is dismissing the overlay, not hit-testing the toast layer.
@@ -114,7 +116,7 @@ async function dismissBlockingOverlays(page: Page, maxPasses = 12) {
           const text = await el
             .evaluate((n) => (n as HTMLElement).innerText)
             .catch(() => '(unreadable)');
-          console.log(`[e2e] undismissed overlay probe=${probe}:\n${text?.slice(0, 400)}`);
+          logger.log(`[e2e] undismissed overlay probe=${probe}:\n${text?.slice(0, 400)}`);
           break;
         }
       }
@@ -1012,7 +1014,7 @@ test(
       .flatMap((s) => [...s])
       .filter((id) => !cov.baselineRosterIds.has(id));
     const totalRosterNow = [...cov.rivalRosterSize.values()].reduce((a, b) => a + b, 0);
-    console.log(
+    logger.log(
       `[e2e] coverage: bouts=${cov.peakBouts} kills=${cov.peakKills} ` +
         `(${(killRate * 100).toFixed(1)}%) retirements=${cov.peakRetirements} ` +
         `outcomes=[${outcomeStr}] arenas=${[...cov.arenas.entries()]

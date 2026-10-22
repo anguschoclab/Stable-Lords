@@ -316,9 +316,9 @@ export const FightSummarySchema = z.object({
 });
 
 /**
- * SimulationReport schema
+ * StewardReport schema
  */
-export const SimulationReportSchema = z.object({
+export const StewardReportSchema = z.object({
   id: z.string(),
   week: z.number(),
   treasuryChange: z.number(),

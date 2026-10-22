@@ -165,8 +165,8 @@ describe('narrativeContent split — utility functions work on assembled data', 
 });
 
 describe('narrativeContent split — direct accessors work on assembled data', () => {
-  it('fanfare.report_math is a string', () => {
-    expect(typeof (assembledContent as any).fanfare.report_math).toBe('string');
+  it('fanfare.report_steward is a string', () => {
+    expect(typeof (assembledContent as any).fanfare.report_steward).toBe('string');
   });
 
   it('recruitment.names is a non-empty array', () => {

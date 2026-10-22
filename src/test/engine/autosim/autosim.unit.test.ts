@@ -221,7 +221,7 @@ describe('processPlayerOffers', () => {
 describe('extractWeekSummary', () => {
   it('extracts death names from kill bouts', () => {
     const state = makeState();
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'report-1' as any,
       week: 5,
       treasuryChange: 0,
@@ -243,7 +243,7 @@ describe('extractWeekSummary', () => {
 
   it('no kills → empty death names', () => {
     const state = makeState();
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'report-1' as any,
       week: 5,
       treasuryChange: 0,
@@ -263,7 +263,7 @@ describe('extractWeekSummary', () => {
 
   it('no bouts → empty summary', () => {
     const state = makeState();
-    state.lastSimulationReport = undefined;
+    state.stewardReport = undefined;
 
     const summary = extractWeekSummary(state, 5);
     expect(summary.bouts).toBe(0);
@@ -273,7 +273,7 @@ describe('extractWeekSummary', () => {
 
   it('no bouts — empty array', () => {
     const state = makeState();
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'report-1' as any,
       week: 5,
       treasuryChange: 0,
@@ -291,7 +291,7 @@ describe('extractWeekSummary', () => {
 
   it('correct bout count', () => {
     const state = makeState();
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'report-1' as any,
       week: 5,
       treasuryChange: 0,
@@ -311,7 +311,7 @@ describe('extractWeekSummary', () => {
 
   it('week number passed through', () => {
     const state = makeState();
-    state.lastSimulationReport = undefined;
+    state.stewardReport = undefined;
 
     const summary = extractWeekSummary(state, 42);
     expect(summary.week).toBe(42);
@@ -319,7 +319,7 @@ describe('extractWeekSummary', () => {
 
   it('handles missing vs in title', () => {
     const state = makeState();
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'report-1' as any,
       week: 5,
       treasuryChange: 0,

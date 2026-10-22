@@ -9,12 +9,12 @@ const makeState = (lastSimReport?: any): GameState =>
     fame: 50,
     rivals: [],
     recruitPool: [],
-    lastSimulationReport: lastSimReport,
+    stewardReport: lastSimReport,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);
 
-describe('NF1: lastSimulationReport leakage', () => {
-  it('lastSimulationReport is replaced (not merged) by impact system', () => {
+describe('NF1: stewardReport leakage', () => {
+  it('stewardReport is replaced (not merged) by impact system', () => {
     const oldReport = {
       id: 'old-report' as any,
       week: 1,
@@ -28,7 +28,7 @@ describe('NF1: lastSimulationReport leakage', () => {
 
     const state = makeState(oldReport);
 
-    // Apply a new lastSimulationReport impact
+    // Apply a new stewardReport impact
     const newReport = {
       id: 'new-report' as any,
       week: 2,
@@ -41,19 +41,19 @@ describe('NF1: lastSimulationReport leakage', () => {
     };
 
     const impact: StateImpact = {
-      lastSimulationReport: newReport as any,
+      stewardReport: newReport as any,
     };
 
     resolveImpacts(state, [impact]);
 
     // The new report should completely replace the old one
-    expect(state.lastSimulationReport).toBe(newReport);
-    expect(state.lastSimulationReport?.week).toBe(2);
-    expect(state.lastSimulationReport?.bouts?.length).toBe(1);
-    expect(state.lastSimulationReport?.bouts?.[0]?.title).toBe('New Fight');
+    expect(state.stewardReport).toBe(newReport);
+    expect(state.stewardReport?.week).toBe(2);
+    expect(state.stewardReport?.bouts?.length).toBe(1);
+    expect(state.stewardReport?.bouts?.[0]?.title).toBe('New Fight');
   });
 
-  it('lastSimulationReport does not accumulate bouts across weeks', () => {
+  it('stewardReport does not accumulate bouts across weeks', () => {
     const week1Report = {
       id: 'week1' as any,
       week: 1,
@@ -79,14 +79,14 @@ describe('NF1: lastSimulationReport leakage', () => {
       bouts: [{ title: 'Week 2 Fight' } as any],
     };
 
-    resolveImpacts(state, [{ lastSimulationReport: week2Report } as any]);
+    resolveImpacts(state, [{ stewardReport: week2Report } as any]);
 
     // Should only have week 2's bouts, not accumulated
-    expect(state.lastSimulationReport?.bouts?.length).toBe(1);
-    expect(state.lastSimulationReport?.bouts?.[0]?.title).toBe('Week 2 Fight');
+    expect(state.stewardReport?.bouts?.length).toBe(1);
+    expect(state.stewardReport?.bouts?.[0]?.title).toBe('Week 2 Fight');
   });
 
-  it('lastSimulationReport with undefined impact does not clear existing report', () => {
+  it('stewardReport with undefined impact does not clear existing report', () => {
     const existingReport = {
       id: 'existing' as any,
       week: 1,
@@ -100,10 +100,10 @@ describe('NF1: lastSimulationReport leakage', () => {
 
     const state = makeState(existingReport);
 
-    // Apply an impact that does NOT include lastSimulationReport
+    // Apply an impact that does NOT include stewardReport
     resolveImpacts(state, [{ treasuryDelta: 100 }]);
 
     // The existing report should still be there
-    expect(state.lastSimulationReport).toBe(existingReport);
+    expect(state.stewardReport).toBe(existingReport);
   });
 });

@@ -48,7 +48,7 @@ vi.mock('@/components/resolution-reveal', () => ({
   GazetteStep: () => <div data-testid="gazette">Gazette</div>,
   InjuriesStep: () => <div data-testid="injuries">Injuries</div>,
   BoutsStep: () => <div data-testid="bouts">Bouts</div>,
-  MathStep: () => <div data-testid="math">Math</div>,
+  StewardStep: () => <div data-testid="steward">Steward</div>,
   MemorialStep: ({ deadWarriors }: any) => (
     <div data-testid="memorial">
       Memorial:{(deadWarriors ?? []).map((w: any) => w?.name ?? 'undefined').join(',')}
@@ -103,7 +103,7 @@ interface TestStore {
   arenaHistory: any[];
   graveyard: any[];
   week: number;
-  lastSimulationReport: any;
+  stewardReport: any;
   treasury: number;
   setState: (fn: (draft: TestStore) => void) => void;
 }
@@ -113,7 +113,7 @@ useTestStore = create<TestStore>()(
     arenaHistory: [],
     graveyard: [],
     week: 1,
-    lastSimulationReport: undefined,
+    stewardReport: undefined,
     treasury: 0,
     setState: (fn) => set(fn),
   }))
@@ -127,7 +127,7 @@ describe('ResolutionReveal narrowed selector', () => {
       arenaHistory: [],
       graveyard: [],
       week: 1,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       treasury: 0,
     });
   });
@@ -238,7 +238,7 @@ describe('ResolutionReveal deadWarriors resolution', () => {
   const dead = (id: string, name: string) => ({ id, name, age: 30, fame: 5 });
 
   function stepThrough(times: number) {
-    // gazette → injuries → bouts → math → memorial (4 clicks to memorial)
+    // gazette → injuries → bouts → steward → memorial (4 clicks to memorial)
     for (let i = 0; i < times; i++) {
       fireEvent.click(screen.getByRole('button', { name: /next|honor|planning/i }));
     }
@@ -249,7 +249,7 @@ describe('ResolutionReveal deadWarriors resolution', () => {
       arenaHistory: [],
       graveyard: [],
       week: 1,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       treasury: 0,
     });
   });
@@ -261,7 +261,7 @@ describe('ResolutionReveal deadWarriors resolution', () => {
       week: 2,
     });
     render(<ResolutionReveal />);
-    stepThrough(4); // gazette → injuries → bouts → math → memorial
+    stepThrough(4); // gazette → injuries → bouts → steward → memorial
     expect(screen.getByTestId('memorial')).toHaveTextContent('Memorial:Bravo,Alpha');
   });
 

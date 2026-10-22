@@ -129,7 +129,7 @@ function processPlayerOffersScan(state: GameState): GameState {
  * Extract week summary from state after advancement.
  */
 export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
-  const boutSummaries = state.lastSimulationReport?.bouts ?? [];
+  const boutSummaries = state.stewardReport?.bouts ?? [];
   const deathNames: string[] = [];
   for (let i = 0; i < boutSummaries.length; i++) {
     const b = boutSummaries[i];

@@ -19,7 +19,7 @@ import type {
   AnnualAward,
   SeasonalGrowth,
   TrainingAssignment,
-  SimulationReport,
+  StewardReport,
   GazetteStory,
   HallEntry,
   MatchRecord,
@@ -165,7 +165,7 @@ export interface StateImpact {
   gazettes?: GazetteStory[];
   scoutReports?: ScoutReportData[];
   insightTokens?: InsightToken[];
-  lastSimulationReport?: SimulationReport;
+  stewardReport?: StewardReport;
 
   // Social
   ownerGrudges?: OwnerGrudge[];

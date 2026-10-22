@@ -44,7 +44,7 @@ export function narrowRivalShardState(state: GameState): GameState {
     deferredBoutLogs: [],
     pendingResolutionData: undefined,
     lastWeekBoutDisplay: undefined,
-    lastSimulationReport: undefined,
+    stewardReport: undefined,
     worldOptions: undefined,
     contentPacks: [],
     promoters: {},

@@ -39,7 +39,7 @@ const makeState = (week: number, year: number): GameState =>
     absoluteWeek: (year - 1) * 52 + week,
     rivals: [],
     recruitPool: [],
-    lastSimulationReport: undefined,
+    stewardReport: undefined,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);
 
@@ -50,7 +50,7 @@ describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
     const state = makeState(1, 2);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     expect(report).toBeDefined();
     expect(report.bouts).toHaveLength(1);
 
@@ -66,7 +66,7 @@ describe('NF7: BoutSimulationPass hardcoded 2024 timestamp', () => {
     const state = makeState(1, 1);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     const createdAt = report.bouts[0].createdAt as string;
     const date = new Date(createdAt);
 

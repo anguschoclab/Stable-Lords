@@ -28,9 +28,9 @@ describe('autosimOfferProcessing', () => {
     expect(result).toBeDefined();
   });
 
-  it('extractWeekSummary handles missing lastSimulationReport gracefully', async () => {
+  it('extractWeekSummary handles missing stewardReport gracefully', async () => {
     const state = createFreshState('autosim-summary-missing-test');
-    state.lastSimulationReport = undefined;
+    state.stewardReport = undefined;
 
     const summary = extractWeekSummary(state, 1);
     expect(summary.bouts).toBe(0);
@@ -38,9 +38,9 @@ describe('autosimOfferProcessing', () => {
     expect(summary.deathNames).toEqual([]);
   });
 
-  it('extractWeekSummary correctly counts kills from lastSimulationReport', async () => {
+  it('extractWeekSummary correctly counts kills from stewardReport', async () => {
     const state = createFreshState('autosim-summary-kills-test');
-    state.lastSimulationReport = {
+    state.stewardReport = {
       id: 'test-report' as any,
       week: 1,
       absoluteWeek: 1,

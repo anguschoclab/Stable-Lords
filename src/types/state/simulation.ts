@@ -1,12 +1,12 @@
-import type { SimulationReportId, StableId, TournamentId, WarriorId } from '../shared.types';
+import type { StewardReportId, StableId, TournamentId, WarriorId } from '../shared.types';
 import type { Attributes, FightingStyle } from '../warrior.types';
 
 /**
- * Defines the shape of simulation report.
+ * Defines the shape of the steward's report.
  */
-export interface SimulationReport {
+export interface StewardReport {
   absoluteWeek?: number;
-  id: SimulationReportId;
+  id: StewardReportId;
   week: number;
   treasuryChange: number;
   trainingGains: {

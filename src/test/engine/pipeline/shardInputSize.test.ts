@@ -51,7 +51,7 @@ describe('narrowRivalShardState', () => {
     expect(narrowed.deferredBoutLogs).toEqual([]);
     expect(narrowed.pendingResolutionData).toBeUndefined();
     expect(narrowed.lastWeekBoutDisplay).toBeUndefined();
-    expect(narrowed.lastSimulationReport).toBeUndefined();
+    expect(narrowed.stewardReport).toBeUndefined();
   });
 
   it('preserves the read surface (identities, not copies)', () => {

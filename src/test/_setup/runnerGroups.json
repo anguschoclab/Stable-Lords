@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T07:01:47.109Z",
+  "generatedAt": "2026-10-22T11:18:59.986Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -184,7 +184,7 @@
     "src/test/engine/matchmaking/tournamentSelection/utils.test.ts",
     "src/test/engine/metaDrift.test.ts",
     "src/test/engine/owner/ownerGrudges.test.ts",
-    "src/test/engine/pipeline/boutSimulationReportLeakage.test.ts",
+    "src/test/engine/pipeline/boutStewardReportLeakage.test.ts",
     "src/test/engine/pipeline/deadLifecycle.test.ts",
     "src/test/engine/pipeline/opfsArchiverFlush.test.ts",
     "src/test/engine/pipeline/parallelDeterminism.slow.test.ts",

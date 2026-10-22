@@ -41,7 +41,7 @@ describe('NF3: autosim memory growth', () => {
     });
   });
 
-  it('extractWeekSummary reads from lastSimulationReport', async () => {
+  it('extractWeekSummary reads from stewardReport', async () => {
     const state = createFreshState('autosim-summary-test');
     const next = await advanceWeek(state, { headless: true });
 

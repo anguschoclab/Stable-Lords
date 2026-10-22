@@ -55,7 +55,7 @@ describe('Bookmarks Persistence', () => {
       activeTournamentId: undefined,
       crowdMood: 'Calm',
       isFTUE: false,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       bookmarks: [
         { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
         { entityType: 'scoutReport', entityId: 'sr1', createdAt: '2026-01-02' },
@@ -91,7 +91,7 @@ describe('Bookmarks Persistence', () => {
       activeTournamentId: undefined,
       crowdMood: 'Calm',
       isFTUE: false,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       atTitleScreen: false,
       lastSavedAt: null,
       activeSlotId: null,

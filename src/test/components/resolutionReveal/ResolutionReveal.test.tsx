@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { GazetteStep } from '@/components/resolution-reveal/GazetteStep';
-import { MathStep } from '@/components/resolution-reveal/MathStep';
+import { StewardStep } from '@/components/resolution-reveal/StewardStep';
 import { InjuriesStep } from '@/components/resolution-reveal/InjuriesStep';
 import { MemorialStep } from '@/components/resolution-reveal/MemorialStep';
 import { BoutsStep } from '@/components/resolution-reveal/BoutsStep';
@@ -46,7 +46,7 @@ vi.mock('@/lib/AudioManager', () => ({
 vi.mock('@/data/narrative/uiMeta.json', () => ({
   default: {
     fanfare: {
-      report_math: "The Steward's Report",
+      report_steward: "The Steward's Report",
       report_combat: 'Bout Results',
       report_combat_empty: 'No bouts this week.',
       report_medical: 'The Infirmary Report',
@@ -80,22 +80,22 @@ describe('GazetteStep', () => {
   });
 });
 
-describe('MathStep', () => {
+describe('StewardStep', () => {
   it('renders without crashing with null report', () => {
-    const { container } = render(<MathStep lastSimulationReport={undefined} />);
+    const { container } = render(<StewardStep stewardReport={undefined} />);
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders the steward title and empty-state copy when there is nothing to report', () => {
-    render(<MathStep lastSimulationReport={undefined} />);
+    render(<StewardStep stewardReport={undefined} />);
     expect(screen.getByText("The Steward's Report")).toBeInTheDocument();
     expect(screen.getByText('No training gains or age marks this week.')).toBeInTheDocument();
   });
 
   it('renders the empty-state copy when the report has no gains or aging events', () => {
     render(
-      <MathStep
-        lastSimulationReport={
+      <StewardStep
+        stewardReport={
           { treasuryChange: 0, trainingGains: [], agingEvents: [] } as never
         }
       />
@@ -105,8 +105,8 @@ describe('MathStep', () => {
 
   it('lists training gains instead of the empty state when present', () => {
     render(
-      <MathStep
-        lastSimulationReport={
+      <StewardStep
+        stewardReport={
           {
             treasuryChange: 40,
             trainingGains: [{ warriorId: 'w1', warriorName: 'Alice', attr: 'ATK', gain: 2 }],
@@ -172,7 +172,7 @@ describe('ResolutionReveal controller', () => {
     mockResolutionState = {
       week: 3,
       graveyard: [],
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       arenaHistory: [
         {
           pendingResolutionData: {

@@ -106,8 +106,8 @@ describe('megaplan V18: single-responsibility decomposition', () => {
     expect(budgetFor('src/engine/ai/workers/recruitmentWorker.ts'), 'split src/engine/ai/workers/recruitmentWorker.ts into orchestrator + named siblings').toEqual([]);
   });
 
-  it('S18: MathStep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S18', () => {
-    expect(budgetFor('src/components/resolution-reveal/MathStep.tsx'), 'split src/components/resolution-reveal/MathStep.tsx into orchestrator + named siblings').toEqual([]);
+  it('S18: StewardStep decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S18', () => {
+    expect(budgetFor('src/components/resolution-reveal/StewardStep.tsx'), 'split src/components/resolution-reveal/StewardStep.tsx into orchestrator + named siblings').toEqual([]);
   });
 
   it('S19: trainingImpact decomposed — no function exceeds ${FN_BUDGET} lines — MEGAPLAN-S19', () => {

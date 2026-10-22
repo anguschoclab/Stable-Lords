@@ -7,7 +7,7 @@ import type { GameState } from '@/types/state.types';
  *
  * Does NOT check optional/computed fields that are stripped before serialization:
  * pendingResolutionData, lastWeekBoutDisplay, ftueStep, activeTournamentId,
- * lastSimulationReport, cachedMetaDrift, warriorMap, warriorToStableMap, rivalMap,
+ * stewardReport, cachedMetaDrift, warriorMap, warriorToStableMap, rivalMap,
  * rivalryMap, grudgeMap, deferredBoutLogs, warriorToOfferIds
  */
 

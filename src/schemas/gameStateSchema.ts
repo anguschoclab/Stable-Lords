@@ -37,7 +37,7 @@ import {
   RankingEntrySchema,
   ArenaTitleSchema,
   GrandChampionEntrySchema,
-  SimulationReportSchema,
+  StewardReportSchema,
   BoutResultSchema,
   PendingResolutionDataSchema,
   WarriorRefSchema,
@@ -186,7 +186,7 @@ export const GameStateSchema = z
     grandChampions: z.array(GrandChampionEntrySchema).optional(),
     realmRankings: z.record(z.string(), RankingEntrySchema),
     awards: z.array(AnnualAwardSchema),
-    lastSimulationReport: SimulationReportSchema.optional(),
+    stewardReport: StewardReportSchema.optional(),
     cachedMetaDrift: z.any().optional(), // Passthrough for computed field
     warriorMap: z.any().optional(), // Passthrough for Map field
     warriorToStableMap: z.any().optional(), // Passthrough for Map field

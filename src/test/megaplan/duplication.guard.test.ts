@@ -173,7 +173,7 @@ const TEST_DEBT_PAIRS = new Set([
   'src/test/engine/ai/workers/rosterWorker.test.ts|src/test/engine/training/training.test.ts',
   'src/test/engine/autosim/sequentialMemoryGrowth.slow.test.ts|src/test/engine/sim/harnessTruncation.slow.test.ts',
   'src/test/engine/bout/reportingHandler.test.ts|src/test/engine/bout/resolveHelpers.test.ts',
-  'src/test/engine/boutSimulationTimestamp.test.ts|src/test/engine/pipeline/boutSimulationReportLeakage.test.ts',
+  'src/test/engine/boutSimulationTimestamp.test.ts|src/test/engine/pipeline/boutStewardReportLeakage.test.ts',
   'src/test/engine/championship/arenaChampionship.test.ts|src/test/engine/championship/arenaChampionshipPass.test.ts',
   'src/test/engine/combat/aiIntentTelemetry.test.ts|src/test/engine/narrative/narrationDeterminism.test.ts',
   'src/test/engine/combat/combat.test.ts|src/test/engine/combat/simulate.test.ts',

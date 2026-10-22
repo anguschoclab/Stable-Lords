@@ -76,7 +76,7 @@ const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
   'ownerGrudges',
   'rivalries',
   'trainingAssignments',
-  'lastSimulationReport',
+  'stewardReport',
   'isTournamentWeek',
   'activeTournamentId',
   'day',

@@ -30,7 +30,7 @@ const makeState = (rivals: RivalStableData[]): GameState =>
     rivals,
     recruitPool: [],
     activeTournamentId: undefined,
-    lastSimulationReport: undefined,
+    stewardReport: undefined,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);
 

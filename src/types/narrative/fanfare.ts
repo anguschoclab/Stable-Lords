@@ -8,7 +8,7 @@ export interface Fanfare {
   report_medical: string;
   report_combat: string;
   report_combat_empty: string;
-  report_math: string;
+  report_steward: string;
   report_steward_empty: string;
   step_gazette: string;
   step_infirmary: string;

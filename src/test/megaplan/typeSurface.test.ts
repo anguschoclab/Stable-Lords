@@ -66,7 +66,7 @@ import type {
   InsightTokenType,
   InsightToken,
   HallEntry,
-  SimulationReport,
+  StewardReport,
   AnnualAwardType,
   AnnualAward,
   ObjectiveId,
@@ -96,7 +96,7 @@ import type {
   RivalryId,
   InsightId,
   HallEntryId,
-  SimulationReportId,
+  StewardReportId,
   Attributes,
   BaseSkills,
   DerivedStats,
@@ -173,7 +173,7 @@ type _StateSurface =
   | InsightTokenType
   | InsightToken
   | HallEntry
-  | SimulationReport
+  | StewardReport
   | AnnualAwardType
   | AnnualAward
   | ObjectiveId
@@ -203,7 +203,7 @@ type _SharedSurface =
   | RivalryId
   | InsightId
   | HallEntryId
-  | SimulationReportId
+  | StewardReportId
   | Attributes
   | BaseSkills
   | DerivedStats

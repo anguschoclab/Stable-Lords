@@ -87,6 +87,6 @@ export type InsightId = Brand<string, 'InsightId'>;
 export type HallEntryId = Brand<string, 'HallEntryId'>;
 
 /**
- * Simulation report id type.
+ * Steward report id type.
  */
-export type SimulationReportId = Brand<string, 'SimulationReportId'>;
+export type StewardReportId = Brand<string, 'StewardReportId'>;

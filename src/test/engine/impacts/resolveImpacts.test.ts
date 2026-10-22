@@ -50,7 +50,7 @@ function makeMinimalGameState(): GameState {
     rivals: [],
     recruitPool: [],
     activeTournamentId: undefined,
-    lastSimulationReport: undefined,
+    stewardReport: undefined,
   });
 }
 
@@ -480,13 +480,13 @@ describe('resolveImpacts', () => {
     expect(newState.activeTournamentId).toBe('t1');
   });
 
-  it('handles lastSimulationReport - replaces simulation report', () => {
+  it('handles stewardReport - replaces the steward report', () => {
     const state = makeInitialState();
     const report = { treasuryChange: 100, trainingGains: [], agingEvents: [] };
-    const impact: StateImpact = { lastSimulationReport: report as any };
+    const impact: StateImpact = { stewardReport: report as any };
     const newState = resolveImpacts(state, [impact]);
 
-    expect(newState.lastSimulationReport).toEqual(report);
+    expect(newState.stewardReport).toEqual(report);
   });
 
   it('handles promoters - replaces promoters object', () => {

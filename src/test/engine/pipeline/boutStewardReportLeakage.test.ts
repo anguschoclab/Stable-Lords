@@ -30,11 +30,11 @@ const makeState = (week: number, year: number, prevReport?: any): GameState =>
     absoluteWeek: (year - 1) * 52 + week,
     rivals: [],
     recruitPool: [],
-    lastSimulationReport: prevReport,
+    stewardReport: prevReport,
     meta: { gameName: 'Stable Lords', version: '1.0', createdAt: '' },
   } as any);
 
-describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
+describe('NF1: BoutSimulationPass stewardReport leakage', () => {
   const rng = new SeededRNG(42);
 
   it('week 2 report should NOT contain week 1 trainingGains', () => {
@@ -52,7 +52,7 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
     const state = makeState(2, 1, week1Report);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     expect(report).toBeDefined();
     expect(report.trainingGains, 'trainingGains should be empty for week 2').toEqual([]);
     expect(report.agingEvents, 'agingEvents should be empty for week 2').toEqual([]);
@@ -74,7 +74,7 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
     const state = makeState(2, 1, week1Report);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     expect(report.week, 'week should be 2, not 1 from old report').toBe(2);
     expect(report.absoluteWeek, 'absoluteWeek should be 2, not 1 from old report').toBe(2);
   });
@@ -94,7 +94,7 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
     const state = makeState(2, 1, week1Report);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     expect(
       report.treasuryChange,
       'treasuryChange should be 0 for week 2, not 500 from week 1'
@@ -116,7 +116,7 @@ describe('NF1: BoutSimulationPass lastSimulationReport leakage', () => {
     const state = makeState(2, 1, week1Report);
     const { impact } = runBoutSimulationPass(state, rng, true);
 
-    const report = impact.lastSimulationReport as any;
+    const report = impact.stewardReport as any;
     expect(report.bouts, 'bouts should be empty for week 2 (no warriors)').toEqual([]);
   });
 });

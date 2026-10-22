@@ -1,13 +1,13 @@
 /**
  * Narrative Domain Impacts
- * Handles gazettes, scout reports, insight tokens, and last simulation report.
+ * Handles gazettes, scout reports, insight tokens, and the steward report.
  */
 import type {
   GameState,
   GazetteStory,
   ScoutReportData,
   InsightToken,
-  SimulationReport,
+  StewardReport,
 } from '@/types/state.types';
 
 /**
@@ -32,10 +32,10 @@ const insightTokens = (state: GameState, value: InsightToken[]) => {
 };
 
 /**
- * Apply last simulation report to state.
+ * Apply the steward report to state.
  */
-const lastSimulationReport = (state: GameState, value: SimulationReport) => {
-  state.lastSimulationReport = value;
+const stewardReport = (state: GameState, value: StewardReport) => {
+  state.stewardReport = value;
 };
 
 /**
@@ -45,5 +45,5 @@ export const narrativeHandlers = {
   gazettes,
   scoutReports,
   insightTokens,
-  lastSimulationReport,
+  stewardReport,
 };

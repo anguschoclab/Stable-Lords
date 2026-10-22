@@ -52,7 +52,7 @@ describe('megaplan: file & function budgets', () => {
     // a new 81+ fn must be decomposed or the budget consciously revisited.
     // Drifted to 7 (WarriorBuilder, ComparisonHeader, RosterWarriorRow,
     // WarriorDossierHeader, createRosterActions, DominantCombatantsSection,
-    // MathStep) — the ratchet still forbids growth beyond that.
+    // StewardStep) — the ratchet still forbids growth beyond that.
     // V17 whole-repo prettier pass expanded compact one-liners (`if (x) return y;`,
     // inline arrows) into multi-line bodies — 12 more fns crossed 80 lines with
     // zero over the 120 ceiling (resolveDecision, useRecruitActions,

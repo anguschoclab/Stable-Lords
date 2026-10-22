@@ -49,7 +49,7 @@ describe('serializationRoundTrip', () => {
       recruitPool: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
       activeTournamentId: undefined,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       progression: undefined,
       lastSavedAt: '',
     });
@@ -72,7 +72,7 @@ describe('serializationRoundTrip', () => {
       recruitPool: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
       activeTournamentId: undefined,
-      lastSimulationReport: undefined,
+      stewardReport: undefined,
       progression: undefined,
       lastSavedAt: '',
     });
@@ -91,7 +91,7 @@ describe('serializationRoundTrip', () => {
     expect(result2.treasury).toBe(5000);
   });
 
-  it('lastSimulationReport survives serialization round-trip', () => {
+  it('stewardReport survives serialization round-trip', () => {
     clearReconstructionCache();
 
     const report = {
@@ -106,13 +106,13 @@ describe('serializationRoundTrip', () => {
       recruitPool: [],
       player: { id: 'p1', name: 'Test', stableName: 'Test', fame: 0, renown: 0, titles: 0 },
       activeTournamentId: undefined,
-      lastSimulationReport: report,
+      stewardReport: report,
       progression: undefined,
       lastSavedAt: '',
     });
 
     const result = reconstructGameState(store);
-    expect(result.lastSimulationReport).toEqual(report);
-    expect(result.lastSimulationReport).not.toBeUndefined();
+    expect(result.stewardReport).toEqual(report);
+    expect(result.stewardReport).not.toBeUndefined();
   });
 });

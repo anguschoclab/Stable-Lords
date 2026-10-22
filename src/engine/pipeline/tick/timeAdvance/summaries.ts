@@ -5,8 +5,8 @@ import type { WeekSummary, QuarterSummary, QuarterAdvanceResult, YearAdvanceResu
  *
  */
 export function extractWeekSummary(state: GameState): WeekSummary {
-  // Read from lastSimulationReport instead of scanning arenaHistory (O(1) vs O(n))
-  const report = state.lastSimulationReport;
+  // Read from stewardReport instead of scanning arenaHistory (O(1) vs O(n))
+  const report = state.stewardReport;
   const bouts = report?.bouts?.length || 0;
   const deaths = report?.bouts?.filter((b) => b.by === 'Kill').length || 0;
 

@@ -39,7 +39,7 @@ import type {
   KillEvent,
   LifetimeStats,
   ProgressionState,
-  SimulationReport,
+  StewardReport,
 } from './simulation';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { ContentPack } from '@/lib/contentPacks';
@@ -144,7 +144,7 @@ export interface GameState {
   grandChampions?: GrandChampionEntry[];
   realmRankings: Record<WarriorId, RankingEntry>;
   awards: AnnualAward[];
-  lastSimulationReport?: SimulationReport;
+  stewardReport?: StewardReport;
   cachedMetaDrift?: import('@/engine/analytics/metaDrift').StyleMeta;
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;

@@ -14,7 +14,7 @@ interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
   activeSlotId: string | null;
-  lastSimulationReport?: GameState['lastSimulationReport'];
+  stewardReport?: GameState['stewardReport'];
   lastWeekBoutDisplay?: GameState['lastWeekBoutDisplay'];
   /** Bout transcripts queued for off-thread archive flush; carried across worker round-trips so retries survive. */
   deferredBoutLogs?: GameState['deferredBoutLogs'];

@@ -8,12 +8,12 @@ import { WarriorNameAvatar } from '@/components/avatar';
 import { StepHeader } from './StepHeader';
 import { StepShell } from './StepShell';
 
-interface MathStepProps {
-  lastSimulationReport: GameState['lastSimulationReport'];
+interface StewardStepProps {
+  stewardReport: GameState['stewardReport'];
 }
 
-/** The two headline cards: treasury delta + training-outcome count. */
-function SummaryCards({ lastSimulationReport }: MathStepProps) {
+/** The two headline cards: treasury change + training-outcome count. */
+function SummaryCards({ stewardReport }: StewardStepProps) {
   return (
     <div className="grid grid-cols-2 gap-4">
       <Card className="bg-secondary/10">
@@ -22,12 +22,12 @@ function SummaryCards({ lastSimulationReport }: MathStepProps) {
         </CardHeader>
         <CardContent className="py-2 px-4">
           <div
-            className={`text-2xl font-mono font-bold ${(lastSimulationReport?.treasuryChange ?? 0) >= 0 ? 'text-primary' : 'text-arena-gold'}`}
+            className={`text-2xl font-mono font-bold ${(stewardReport?.treasuryChange ?? 0) >= 0 ? 'text-primary' : 'text-arena-gold'}`}
           >
-            {lastSimulationReport?.treasuryChange && lastSimulationReport.treasuryChange > 0
+            {stewardReport?.treasuryChange && stewardReport.treasuryChange > 0
               ? '+'
               : ''}
-            {lastSimulationReport?.treasuryChange ?? 0} GC
+            {stewardReport?.treasuryChange ?? 0} GC
           </div>
         </CardContent>
       </Card>
@@ -38,7 +38,7 @@ function SummaryCards({ lastSimulationReport }: MathStepProps) {
         </CardHeader>
         <CardContent className="py-2 px-4">
           <div className="text-2xl font-mono font-bold text-primary">
-            {lastSimulationReport?.trainingGains.length ?? 0} Improvements
+            {stewardReport?.trainingGains.length ?? 0} Improvements
           </div>
         </CardContent>
       </Card>
@@ -47,11 +47,11 @@ function SummaryCards({ lastSimulationReport }: MathStepProps) {
 }
 
 /** Scrolling ledger of per-warrior gains plus aging-event flags. */
-function GranularBreakdown({ lastSimulationReport }: MathStepProps) {
+function TrainingAndAging({ stewardReport }: StewardStepProps) {
   const isEmpty =
-    !lastSimulationReport ||
-    (lastSimulationReport.trainingGains.length === 0 &&
-      lastSimulationReport.agingEvents.length === 0);
+    !stewardReport ||
+    (stewardReport.trainingGains.length === 0 &&
+      stewardReport.agingEvents.length === 0);
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
@@ -64,7 +64,7 @@ function GranularBreakdown({ lastSimulationReport }: MathStepProps) {
           </div>
         ) : (
           <div className="space-y-4">
-            {lastSimulationReport.trainingGains.map(
+            {stewardReport.trainingGains.map(
               (
                 g: { warriorId?: string; warriorName: string; gain: number; attr: string },
                 i: number
@@ -85,7 +85,7 @@ function GranularBreakdown({ lastSimulationReport }: MathStepProps) {
                 </div>
               )
             )}
-            {lastSimulationReport.agingEvents.map((e: string, i: number) => (
+            {stewardReport.agingEvents.map((e: string, i: number) => (
               <div key={`age-${i}`} className="text-sm text-arena-gold">
                 <span className="font-bold mr-2">!</span> {e}
               </div>
@@ -98,20 +98,20 @@ function GranularBreakdown({ lastSimulationReport }: MathStepProps) {
 }
 
 /**
- * Math step.
- * @param - { last simulation report }.
+ * Steward step.
+ * @param - { steward report }.
  */
-export function MathStep({ lastSimulationReport }: MathStepProps) {
+export function StewardStep({ stewardReport }: StewardStepProps) {
   return (
     <StepShell className="space-y-6">
       <StepHeader
         icon={Activity}
         iconClassName="text-muted-foreground"
-        title={uiMeta.fanfare.report_math}
+        title={uiMeta.fanfare.report_steward}
       />
 
-      <SummaryCards lastSimulationReport={lastSimulationReport} />
-      <GranularBreakdown lastSimulationReport={lastSimulationReport} />
+      <SummaryCards stewardReport={stewardReport} />
+      <TrainingAndAging stewardReport={stewardReport} />
     </StepShell>
   );
 }

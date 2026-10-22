@@ -11,9 +11,9 @@ import type { FightSummary } from '@/types/combat.types';
 import type { WarriorRef } from '@/types/shared.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
-import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
+import { GazetteStep, InjuriesStep, BoutsStep, StewardStep, MemorialStep } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'steward' | 'memorial';
 
 /** Ordered header badges; medical dims when nothing happened, graveyard only on deaths. */
 function StepBadges({
@@ -39,7 +39,7 @@ function StepBadges({
       <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>
         3. {uiMeta.fanfare.step_bouts}
       </Badge>
-      <Badge variant={step === 'math' ? 'default' : 'secondary'}>
+      <Badge variant={step === 'steward' ? 'default' : 'secondary'}>
         4. {uiMeta.fanfare.step_steward}
       </Badge>
       {hasDeaths && (
@@ -69,9 +69,9 @@ function NextButton({
         size="lg"
         variant={step === 'memorial' ? 'destructive' : 'default'}
       >
-        {step === 'math' && hasDeaths
+        {step === 'steward' && hasDeaths
           ? uiMeta.fanfare.btn_honor
-          : step === 'math' || step === 'memorial'
+          : step === 'steward' || step === 'memorial'
             ? uiMeta.fanfare.btn_planning
             : uiMeta.fanfare.btn_next}
         <ChevronRight className="h-4 w-4" />
@@ -107,14 +107,14 @@ function ResolutionDialog(props: {
   step: RevealStep;
   data: NonNullable<FightSummary['pendingResolutionData']>;
   week: number;
-  lastSimulationReport: GameStore['lastSimulationReport'];
+  stewardReport: GameStore['stewardReport'];
   deadWarriors: ReturnType<typeof useDeadWarriors>;
   hasInjuriesOrDeaths: boolean;
   hasDeaths: boolean;
   onNext: () => void;
   onDismiss: () => void;
 }) {
-  const { step, data, week, lastSimulationReport, deadWarriors, hasDeaths } = props;
+  const { step, data, week, stewardReport, deadWarriors, hasDeaths } = props;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-2 sm:p-4">
       <Card
@@ -148,7 +148,7 @@ function ResolutionDialog(props: {
             {step === 'gazette' && <GazetteStep gazette={data.gazette} />}
             {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
             {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
-            {step === 'math' && <MathStep lastSimulationReport={lastSimulationReport} />}
+            {step === 'steward' && <StewardStep stewardReport={stewardReport} />}
             {step === 'memorial' && <MemorialStep deadWarriors={deadWarriors} />}
           </AnimatePresence>
         </CardContent>
@@ -169,7 +169,7 @@ export default function ResolutionReveal() {
       arenaHistory: s.arenaHistory,
       graveyard: s.graveyard,
       week: s.week,
-      lastSimulationReport: s.lastSimulationReport,
+      stewardReport: s.stewardReport,
     }))
   );
   const setState = useGameStore((s) => s.setState);
@@ -200,8 +200,8 @@ export default function ResolutionReveal() {
     } else if (step === 'injuries') {
       setStep('bouts');
     } else if (step === 'bouts') {
-      setStep('math');
-    } else if (step === 'math' && hasDeaths) {
+      setStep('steward');
+    } else if (step === 'steward' && hasDeaths) {
       setStep('memorial');
     } else {
       doClearResolution();
@@ -213,7 +213,7 @@ export default function ResolutionReveal() {
       step={step}
       data={data}
       week={state.week}
-      lastSimulationReport={state.lastSimulationReport}
+      stewardReport={state.stewardReport}
       deadWarriors={deadWarriors}
       hasInjuriesOrDeaths={hasInjuriesOrDeaths}
       hasDeaths={hasDeaths}

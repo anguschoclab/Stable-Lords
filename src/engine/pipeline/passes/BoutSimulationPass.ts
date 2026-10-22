@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
-import type { FightId, SimulationReportId } from '@/types/shared.types';
+import type { FightId, StewardReportId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import {
   processWeekBouts,
@@ -82,8 +82,8 @@ export function runBoutSimulationPass(
       createdAt: gameYearWeekToTimestamp(state.year || 1, state.week),
     }));
 
-    boutImpact.lastSimulationReport = {
-      id: _rng.uuid() as SimulationReportId,
+    boutImpact.stewardReport = {
+      id: _rng.uuid() as StewardReportId,
       week: state.week,
       absoluteWeek: state.absoluteWeek || state.week,
       treasuryChange: 0,

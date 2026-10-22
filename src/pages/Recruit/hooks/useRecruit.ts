@@ -34,9 +34,12 @@ export function useRecruit() {
   const canRefresh = canTransact(treasury, REFRESH_COST);
 
   // One market: free-agent veterans and orphanage recruits share the list.
-  const combinedPool = [...(freeAgents ?? []), ...(recruitPool ?? [])].filter(
-    (w, i, all) => all.findIndex((x) => x.id === w.id) === i
-  );
+  const seenIds = new Set<string>();
+  const combinedPool = [...(freeAgents ?? []), ...(recruitPool ?? [])].filter((w) => {
+    if (seenIds.has(w.id)) return false;
+    seenIds.add(w.id);
+    return true;
+  });
 
   const filters = useRecruitFilters(combinedPool, week);
   const actions = useRecruitActions({

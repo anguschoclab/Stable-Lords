@@ -141,10 +141,21 @@ function OfferGrid(props: {
   if (offers.length === 0) {
     return <EmptyOffers title={emptyTitle} hint={emptyHint} />;
   }
+  // warriorId → roster position, indexed once per render — the per-offer
+  // pick preserves the previous roster.find (first in roster order wins).
+  const rosterPos = new Map(roster.map((w, i) => [w.id, i] as const));
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
       {offers.map((o) => {
-        const playerWarrior = roster.find((w) => o.warriorIds.includes(w.id));
+        let playerWarrior: Warrior | undefined;
+        let bestPos = Infinity;
+        for (const wid of o.warriorIds) {
+          const pos = rosterPos.get(wid);
+          if (pos !== undefined && pos < bestPos) {
+            bestPos = pos;
+            playerWarrior = roster[pos];
+          }
+        }
         const advisorCard = playerWarrior ? advisorCardMap.get(playerWarrior.id) : undefined;
         const isCouncilPick = advisorCard?.fightAdvice.recommendedOfferId === o.id;
         const isWarning =

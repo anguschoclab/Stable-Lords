@@ -13,6 +13,7 @@ import {
 } from '@/constants/world';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
+import { keySet } from '@/utils/collections';
 import type { RivalShardOutput } from '../rivalStableShard';
 import { generateRivalStables, uniqueOwnerName, uniqueStableName } from '@/engine/rivals';
 
@@ -135,8 +136,9 @@ export function runStarvationAndFreeAgents(
   impacts.push({
     recruitPool: draft.updatedPool ?? state.recruitPool ?? [],
   });
+  const updatedFreeAgentIds = keySet(draft.updatedFreeAgents ?? [], (u) => u.id);
   const draftedOut = (state.freeAgents ?? [])
-    .filter((w) => !(draft.updatedFreeAgents ?? []).some((u) => u.id === w.id))
+    .filter((w) => !updatedFreeAgentIds.has(w.id))
     .map((w) => w.id);
   if (draftedOut.length > 0) impacts.push({ freeAgentRemovals: draftedOut });
   const freed = [

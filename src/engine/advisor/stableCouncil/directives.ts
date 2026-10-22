@@ -3,6 +3,7 @@ import type { WarriorAdvisorCard, CouncilDirective } from '../types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { getOpponentIntel } from '../intelAdvisor';
 import { getScoutCost } from '@/engine/scouting/scouting';
+import { keySet } from '@/utils/collections';
 /** Stable-wide KPI counters, computed in a single pass over the cards. */
 export function computeCardKpis(cards: WarriorAdvisorCard[]): {
   combatReadyCount: number;
@@ -178,8 +179,9 @@ export function collectUnresolvedDirectives(
       const patch = card.actionPayload.tacticsPlanPatch;
       // A suggested condition counts as unapplied only when no authored
       // condition already covers the same trigger type.
+      const coveredTriggers = keySet(plan?.conditions ?? [], (p) => p.trigger.type);
       const uncoveredSuggestion = (patch.conditions ?? []).some(
-        (c) => !(plan?.conditions ?? []).some((p) => p.trigger.type === c.trigger.type)
+        (c) => !coveredTriggers.has(c.trigger.type)
       );
       const diverged =
         !plan ||

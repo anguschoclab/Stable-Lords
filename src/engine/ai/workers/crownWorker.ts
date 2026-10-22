@@ -32,6 +32,7 @@ import { competenceJitter } from '../competence';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import type { ArenaTitle } from '@/types/state/championship';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { indexBy, keySet } from '@/utils/collections';
 
 /** Weeks before the Grand Championship bracket in which champions rest. */
 const GRAND_CHAMP_PREP_WEEKS = 2;
@@ -177,6 +178,15 @@ export function assessCrownOpportunity(
   // built once instead of once per warrior.
   const titleEntries = Object.entries(titles);
 
+  // warriorId → rank per arena, inverted once from the shared contender
+  // index — replaces a per-(warrior × arena) indexOf scan.
+  const rankByArena = new Map<string, Map<string, number>>();
+  if (perception?.contenderIndexByArena) {
+    for (const [arenaId, ids] of perception.contenderIndexByArena) {
+      rankByArena.set(arenaId, new Map(ids.map((id, i) => [id as string, i] as const)));
+    }
+  }
+
   let best: CrownCandidate | undefined;
   for (const w of rival.roster) {
     if (!isActive(w)) continue;
@@ -193,7 +203,7 @@ export function assessCrownOpportunity(
 
       // Contender-rank bonus only for already-eligible warriors, read off the
       // shared index when present so this stays O(arenas) per stable.
-      const rank = perception?.contenderIndexByArena.get(arenaId)?.indexOf(w.id);
+      const rank = rankByArena.get(arenaId)?.get(w.id);
       const rankBonus = rank != null && rank >= 0 ? (rank === 0 ? 2 : rank <= 2 ? 1 : 0) : 0;
 
       const champion = title.champion ? warriorById.get(title.champion.warriorId) : undefined;
@@ -236,10 +246,12 @@ export function assignCampaignRoles(
 ): RivalStableData {
   const index = perception?.contenderIndexByArena ?? buildContenderIndex(state);
   const assignments: TrainingAssignment[] = [...(rival.trainingAssignments ?? [])];
+  const assignedIds = keySet(assignments, (a) => a.warriorId);
   const roster = rival.roster.map((w) => {
     if (!isActive(w)) return w;
     const focus = evaluateCampaignFocus(w, state, index);
-    if (focus === 'REHABILITATION' && !assignments.some((a) => a.warriorId === w.id)) {
+    if (focus === 'REHABILITATION' && !assignedIds.has(w.id)) {
+      assignedIds.add(w.id);
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
     }
     return w.campaignFocus === focus ? w : { ...w, campaignFocus: focus };
@@ -266,9 +278,16 @@ function markCrownsForRelinquish(
   gazetteItems: string[]
 ): RivalStableData {
   const seasonRecord = memory.seasonRecord;
+  // roster index — rebuilt if a logAgentAction swaps the roster array.
+  let rosterSource = updatedRival.roster;
+  let rosterById = indexBy(rosterSource, (w) => w.id);
   for (const [arenaId, champId] of crownsHeld) {
     if (!champId) continue;
-    const champ = updatedRival.roster.find((w) => w.id === champId);
+    if (updatedRival.roster !== rosterSource) {
+      rosterSource = updatedRival.roster;
+      rosterById = indexBy(rosterSource, (w) => w.id);
+    }
+    const champ = rosterById.get(champId as WarriorId);
     if (!champ) continue;
     const declining =
       (champ.age ?? 0) >= RELINQUISH_AGE && (seasonRecord?.losses ?? 0) > (seasonRecord?.wins ?? 0);
@@ -306,12 +325,15 @@ function applyProtectionRests(
     weeksUntilChampionsTournament(state.week) <= GRAND_CHAMP_PREP_WEEKS &&
     weeksUntilChampionsTournament(state.week) > 0;
   const assignments: TrainingAssignment[] = [...(updatedRival.trainingAssignments ?? [])];
+  const assignedIds = keySet(assignments, (a) => a.warriorId);
+  const crownIds = new Set(crownsHeld.map(([, champId]) => champId).filter(Boolean));
   for (const w of updatedRival.roster) {
     if (!isActive(w)) continue;
-    if (assignments.some((a) => a.warriorId === w.id)) continue;
-    const holdsCrown = crownsHeld.some(([, champId]) => champId === w.id);
+    if (assignedIds.has(w.id)) continue;
+    const holdsCrown = crownIds.has(w.id);
     if (signed.has(w.id)) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
+      assignedIds.add(w.id);
       updatedRival = logAgentAction({
         rival: updatedRival,
         type: 'STRATEGY',
@@ -322,6 +344,7 @@ function applyProtectionRests(
       });
     } else if (holdsCrown && inGrandChampPrep) {
       assignments.push({ warriorId: w.id, type: 'recovery' } as TrainingAssignment);
+      assignedIds.add(w.id);
       updatedRival = logAgentAction({
         rival: updatedRival,
         type: 'STRATEGY',

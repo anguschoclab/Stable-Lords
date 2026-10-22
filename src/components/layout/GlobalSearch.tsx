@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
+import { groupBy } from '@/utils/collections';
 import { Search, User, Landmark, Building2, GraduationCap } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -74,10 +75,11 @@ interface GlobalSearchProps {
 
 function groupByType(results: SearchEntry[]): [SearchEntry['type'], SearchEntry[]][] {
   const order: SearchEntry['type'][] = ['warrior', 'stable', 'promoter', 'trainer'];
+  const byType = groupBy(results, (r) => r.type);
   const groups: [SearchEntry['type'], SearchEntry[]][] = [];
   for (const type of order) {
-    const entries = results.filter((r) => r.type === type);
-    if (entries.length > 0) groups.push([type, entries]);
+    const entries = byType.get(type);
+    if (entries && entries.length > 0) groups.push([type, entries]);
   }
   return groups;
 }

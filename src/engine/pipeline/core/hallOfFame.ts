@@ -17,6 +17,7 @@ import { resolveRng } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { groupBy } from '@/utils/collections';
 
 interface WarriorStats {
   w: Warrior;
@@ -233,8 +234,11 @@ function awardClassMvps(
   completedYear: number,
   ledger: AwardLedger
 ): void {
+  // One grouping pass — buckets preserve eligible order, so each style's
+  // pickBest argmax is identical to filtering per style.
+  const eligibleByStyle = groupBy(eligible, (e) => e.w.style);
   for (const style of Object.values(FightingStyle)) {
-    const styleEligible = eligible.filter((e) => e.w.style === style);
+    const styleEligible = eligibleByStyle.get(style) ?? [];
     const mvp = pickBest(
       styleEligible,
       (e) => e.wins,

@@ -12,14 +12,16 @@ import { ageGroupForAge } from '@/engine/avatar/avatarGenerator';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
+import { indexBy } from '@/utils/collections';
 
 /**
  * Apply roster updates to state.
  */
 const rosterUpdates = (state: GameState, value: Map<WarriorId, Partial<Warrior>>) => {
   if (value.size === 0) return;
+  const rosterById = indexBy(state.roster, (w) => w.id);
   for (const [id, update] of value) {
-    const currentAge = state.roster.find((warrior) => warrior.id === id)?.age;
+    const currentAge = rosterById.get(id)?.age;
     if (update.age !== undefined && ageGroupForAge(currentAge) !== ageGroupForAge(update.age)) {
       delete state.avatarCache?.[id];
     }
@@ -148,14 +150,19 @@ const retired = (state: GameState, value: Warrior[]) => {
  * after same-tick roster replacements).
  */
 const warriorEpithets = (state: GameState, value: readonly WarriorEpithetAward[]) => {
+  // One index across all three collections — precedence roster → rivals →
+  // tournament participants, matching the previous find() chain exactly.
+  const warriorById = new Map<string, Warrior>();
+  const seed = (warriors: readonly Warrior[] | undefined) => {
+    for (const w of warriors ?? []) {
+      if (!warriorById.has(w.id)) warriorById.set(w.id, w);
+    }
+  };
+  seed(state.roster);
+  for (const r of state.rivals ?? []) seed(r.roster);
+  for (const t of state.tournaments ?? []) seed(t.participants);
   for (const { warriorId, epithet } of value) {
-    const w =
-      state.roster.find((x) => x.id === warriorId) ??
-      (state.rivals ?? []).flatMap((r) => r.roster).find((x) => x.id === warriorId) ??
-      // Tournament-only warriors (emergency freelancers) can hold titles.
-      (state.tournaments ?? [])
-        .flatMap((t) => t.participants ?? [])
-        .find((x) => x.id === warriorId);
+    const w = warriorById.get(warriorId);
     if (!w) continue;
     if (epithetRankOf(epithet) > epithetRankOf(w.epithet)) w.epithet = epithet;
   }

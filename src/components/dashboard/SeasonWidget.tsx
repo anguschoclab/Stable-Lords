@@ -8,6 +8,13 @@ import { WeatherBadge } from './WeatherBadge';
 import { SeasonProgressBar } from './SeasonProgressBar';
 import { SeasonPhaseTicks } from './SeasonPhaseTicks';
 
+/** Newsletter titles that count as offseason events. */
+const OFFSEASON_EVENT_TITLES = new Set([
+  'Festival of Blades',
+  'A Bitter Winter',
+  "Wandering Merchant's Favor",
+]);
+
 /** Season name + week counter headline row. */
 function SeasonMetaRow({ season, week }: { season: string; week: number }) {
   return (
@@ -119,11 +126,7 @@ export function SeasonWidget() {
 
   const isOffseason = week === 1;
   const latestOffseasonEvent = state.newsletter
-    ?.filter(
-      (item) =>
-        item.week === state.week &&
-        ['Festival of Blades', 'A Bitter Winter', "Wandering Merchant's Favor"].includes(item.title)
-    )
+    ?.filter((item) => item.week === state.week && OFFSEASON_EVENT_TITLES.has(item.title))
     .pop();
 
   const weather = state.weather || 'Clear';

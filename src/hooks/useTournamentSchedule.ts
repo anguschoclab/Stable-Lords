@@ -24,21 +24,29 @@ function filterRounds(
 
   if (filter === 'all') return rounds;
 
-  return rounds.filter(([round, bouts]) => {
-    const hasCompleted = bouts.some((b) => b.winner !== undefined);
-    const hasPending = bouts.some((b) => b.winner === undefined);
+  // One pass: per-round status flags plus the first round still pending —
+  // scanned in roundsMap insertion order, matching the previous find().
+  const roundFlags = new Map<number, { completed: boolean; pending: boolean }>();
+  let firstPendingRound: number | undefined;
+  for (const [round, bouts] of roundsMap) {
+    const flags = { completed: false, pending: false };
+    for (const b of bouts) {
+      if (b.winner === undefined) flags.pending = true;
+      else flags.completed = true;
+    }
+    roundFlags.set(round, flags);
+    if (flags.pending && firstPendingRound === undefined) firstPendingRound = round;
+  }
 
+  return rounds.filter(([round]) => {
+    const flags = roundFlags.get(round);
     switch (filter) {
       case 'completed':
-        return hasCompleted;
+        return flags?.completed ?? false;
       case 'upcoming':
-        return hasPending;
-      case 'current-round': {
-        const firstPendingRound = Array.from(roundsMap.entries()).find(([_, bs]) =>
-          bs.some((b) => b.winner === undefined)
-        );
-        return round === firstPendingRound?.[0];
-      }
+        return flags?.pending ?? false;
+      case 'current-round':
+        return round === firstPendingRound;
       default:
         return true;
     }

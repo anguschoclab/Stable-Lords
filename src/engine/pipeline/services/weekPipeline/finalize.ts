@@ -89,9 +89,9 @@ function deferBoutArchives(state: GameState, currentWeek: number): void {
     boutId: string;
     transcript: string[];
   }> = [];
+  const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
   for (const summary of state.arenaHistory || []) {
     if (summary.transcript && summary.transcript.length > 0 && summary.week === currentWeek) {
-      const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
       pendingArchives.push({
         year: state.year,
         season: seasonIdx >= 0 ? seasonIdx : 0,

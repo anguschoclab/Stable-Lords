@@ -1,5 +1,8 @@
 // Split from data/arenas.ts — arena registry + query helpers
 import { SPECIAL_ARENA_IDS } from '@/constants/arena';
+
+/** Set form of SPECIAL_ARENA_IDS for O(1) exclusion checks. */
+const SPECIAL_ARENA_ID_SET = new Set<string>(SPECIAL_ARENA_IDS);
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 
 const registry = new Map<string, ArenaConfig>();
@@ -77,7 +80,7 @@ export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
  * @returns Array of normal ArenaConfig entries.
  */
 export function getNormalArenas(): ArenaConfig[] {
-  return getAllArenas().filter((a) => !SPECIAL_ARENA_IDS.includes(a.id));
+  return getAllArenas().filter((a) => !SPECIAL_ARENA_ID_SET.has(a.id));
 }
 
 /**

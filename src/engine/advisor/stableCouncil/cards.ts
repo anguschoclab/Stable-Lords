@@ -12,6 +12,8 @@ export interface CardBuildContext {
   state: GameState;
   contenderIndex: Map<string, WarriorId[]>;
   championArenaByWarrior: Map<string, string>;
+  /** warriorId → best ladder position across arenas (lowest rank wins; ties keep the first arena in index order). */
+  standingByWarrior: Map<WarriorId, { arenaId: string; rank: number }>;
 }
 
 /**
@@ -64,16 +66,8 @@ function resolveCrownStanding(
 ): WarriorAdvisorCard['crownStanding'] {
   const championArena = ctx.championArenaByWarrior.get(warriorId);
   if (championArena) return { arenaId: championArena, isChampion: true };
-  let bestArena: string | undefined;
-  let bestRank = Infinity;
-  for (const [arenaId, ids] of ctx.contenderIndex) {
-    const idx = ids.indexOf(warriorId);
-    if (idx >= 0 && idx + 1 < bestRank) {
-      bestRank = idx + 1;
-      bestArena = arenaId;
-    }
-  }
-  if (bestArena) return { arenaId: bestArena, rank: bestRank, isChampion: false };
+  const standing = ctx.standingByWarrior.get(warriorId);
+  if (standing) return { arenaId: standing.arenaId, rank: standing.rank, isChampion: false };
   return undefined;
 }
 

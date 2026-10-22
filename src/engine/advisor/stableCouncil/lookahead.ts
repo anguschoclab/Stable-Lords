@@ -3,6 +3,7 @@ import type { WarriorAdvisorCard, CouncilLookahead } from '../types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { ARENA_TITLE } from '@/constants/arena';
+import { indexBy } from '@/utils/collections';
 /** Signed/accepted future bout commitments beyond the upcoming week. */
 export function listFutureCommitments(
   state: GameState,
@@ -10,6 +11,7 @@ export function listFutureCommitments(
   playerWarriorIds: Set<string>,
   upcomingAbsWeek: number
 ): CouncilLookahead['futureCommitments'] {
+  const cardByWarriorId = indexBy(cards, (c) => c.warriorId);
   return Object.values(state.boutOffers || {})
     .filter((o) => {
       const playerId = o.warriorIds.find((wid) => playerWarriorIds.has(wid));
@@ -26,7 +28,7 @@ export function listFutureCommitments(
       return {
         offerId: o.id,
         warriorId: playerId,
-        warriorName: cards.find((c) => c.warriorId === playerId)?.warriorName ?? playerId,
+        warriorName: cardByWarriorId.get(playerId)?.warriorName ?? playerId,
         opponentName: opponentId
           ? (findWarriorById(state, opponentId)?.name ?? 'Unknown Opponent')
           : 'Unknown Opponent',
@@ -68,6 +70,7 @@ export function listTitleDefenses(
   cards: WarriorAdvisorCard[],
   playerWarriorIds: Set<string>
 ): CouncilLookahead['titleDefenses'] {
+  const cardByWarriorId = indexBy(cards, (c) => c.warriorId);
   return Object.entries(state.arenaChampions ?? {})
     .flatMap(([arenaId, t]) => {
       const champ = t.champion;
@@ -76,8 +79,7 @@ export function listTitleDefenses(
         {
           arenaId,
           warriorId: champ.warriorId,
-          warriorName:
-            cards.find((c) => c.warriorId === champ.warriorId)?.warriorName ?? champ.warriorId,
+          warriorName: cardByWarriorId.get(champ.warriorId)?.warriorName ?? champ.warriorId,
           dueAbsoluteWeek: champ.lastActivityWeek + ARENA_TITLE.DEFENSE_INTERVAL_WEEKS,
         },
       ];

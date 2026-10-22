@@ -6,12 +6,15 @@ import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { StateImpact, type WarriorEpithetAward } from '@/engine/impacts';
 import { updateWarriorAfterBout } from './warriorStateUpdater';
 
-/** Check if a warrior is a participant in any active tournament */
-function isTournamentParticipant(state: GameState, warriorId: string): boolean {
-  if (!state.isTournamentWeek || !state.tournaments) return false;
-  return state.tournaments.some(
-    (t) => !t.completed && t.participants?.some((p) => p.id === warriorId)
-  );
+/** Participant ids across all active tournaments — built once per bout. */
+function tournamentParticipantIds(state: GameState): Set<string> {
+  const ids = new Set<string>();
+  if (!state.isTournamentWeek || !state.tournaments) return ids;
+  for (const t of state.tournaments) {
+    if (t.completed) continue;
+    for (const p of t.participants ?? []) ids.add(p.id);
+  }
+  return ids;
 }
 
 /**
@@ -57,8 +60,9 @@ export function applyRecords(args: ApplyRecordsArgs): StateImpact {
   };
 
   // 🔒 Tournament fatigue exemption: Check if warriors are tournament participants
-  const skipFatigueA = isTournamentParticipant(s, wA.id);
-  const skipFatigueD = isTournamentParticipant(s, wD.id);
+  const participantIds = tournamentParticipantIds(s);
+  const skipFatigueA = participantIds.has(wA.id);
+  const skipFatigueD = participantIds.has(wD.id);
 
   // Either side may be player- or rival-owned (world bouts are rival vs
   // rival). Player warriors keep the rosterUpdates path; rival warriors get a

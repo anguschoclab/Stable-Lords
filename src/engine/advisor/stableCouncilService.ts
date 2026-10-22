@@ -1,4 +1,5 @@
 import type { GameState, BoutOffer } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import type {
   WarriorAdvisorCard,
   StableAdvisorSummary,
@@ -108,7 +109,19 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     if (t?.champion) championArenaByWarrior.set(t.champion.warriorId, arenaId);
   }
 
-  const ctx: CardBuildContext = { state, contenderIndex, championArenaByWarrior };
+  // warriorId → best ladder standing across all arenas — the inverted
+  // contenderIndex each card would otherwise re-scan per arena.
+  const standingByWarrior = new Map<WarriorId, { arenaId: string; rank: number }>();
+  for (const [arenaId, ids] of contenderIndex) {
+    ids.forEach((id, idx) => {
+      const existing = standingByWarrior.get(id);
+      if (!existing || idx + 1 < existing.rank) {
+        standingByWarrior.set(id, { arenaId, rank: idx + 1 });
+      }
+    });
+  }
+
+  const ctx: CardBuildContext = { state, contenderIndex, championArenaByWarrior, standingByWarrior };
   const cards: WarriorAdvisorCard[] = activeWarriors.map((w) => buildWarriorCard(w, ctx));
 
   const kpis = computeCardKpis(cards);

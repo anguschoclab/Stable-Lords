@@ -44,7 +44,8 @@ const ADAPTATION_STYLE_PICKERS: Record<MetaAdaptation, AdaptationStyleFn> = {
       const sorted = allStyles.slice().sort((a, b) => (meta[a] ?? 0) - (meta[b] ?? 0));
       return rng.pick(sorted.slice(0, 4));
     }
-    const nonStandard = allStyles.filter((s) => !philosophyStyles.includes(s));
+    const philosophyStyleSet = new Set(philosophyStyles);
+    const nonStandard = allStyles.filter((s) => !philosophyStyleSet.has(s));
     return rng.pick(nonStandard);
   },
   Opportunist: (philosophyStyles, favoredStyles, allStyles, meta, rng) => {

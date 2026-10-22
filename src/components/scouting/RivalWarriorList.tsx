@@ -5,7 +5,7 @@ import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { Warrior, ScoutReportData } from '@/types/game';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { AvatarForEntity } from '@/components/avatar';
-import { matchesScoutTarget } from '@/engine/scouting/scouting';
+
 import { ListToolbar } from '@/components/ui/ListToolbar';
 import { useListShell } from '@/hooks/useListShell';
 import { warriorSearchText, WARRIOR_SORTS } from '@/components/warrior/warriorListUtils';
@@ -107,6 +107,11 @@ export function RivalWarriorList({
     pageSize: 25,
   });
 
+  // Id- and (legacy) name-keyed report indexes — matchesScoutTarget matches
+  // on warriorId when present, else falls back to warriorName.
+  const reportedIds = new Set(reports.flatMap((r) => (r.warriorId ? [r.warriorId] : [])));
+  const reportedNames = new Set(reports.flatMap((r) => (r.warriorId ? [] : [r.warriorName])));
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-2">
@@ -130,7 +135,7 @@ export function RivalWarriorList({
           <WarriorListItem
             key={w.id}
             warrior={w}
-            hasReport={reports.some((r) => matchesScoutTarget(r, w))}
+            hasReport={reportedIds.has(w.id) || reportedNames.has(w.name)}
             isSelected={selectedWarriorId === w.id}
             onSelect={() => onSelectWarrior(w.id)}
           />

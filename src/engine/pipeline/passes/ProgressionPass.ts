@@ -8,6 +8,7 @@ import type { StateImpact } from '@/engine/impacts';
 import type { NewsId } from '@/types/shared.types';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { championsHeldByStable, owningStableOf } from '@/engine/championship/arenaChampionship';
+import { keySet } from '@/utils/collections';
 
 interface StableEntry {
   id: string;
@@ -145,9 +146,11 @@ export function runProgressionPass(
 
   // Backfill objectives added after a save was created (e.g. arena title
   // objectives on legacy saves) — completed flags carry over by id.
+  const knownObjectiveIds = keySet(current.objectives, (o) => o.id);
   for (const def of DEFAULT_PROGRESSION.objectives) {
-    if (!current.objectives.some((o) => o.id === def.id)) {
+    if (!knownObjectiveIds.has(def.id)) {
       current.objectives.push({ ...def });
+      knownObjectiveIds.add(def.id);
     }
   }
 

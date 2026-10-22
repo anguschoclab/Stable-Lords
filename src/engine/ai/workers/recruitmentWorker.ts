@@ -17,6 +17,7 @@ import { signWarrior } from '@/engine/recruitment/recruitment';
 import { competenceJitter } from '../competence';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 import type { FightingStyle } from '@/types/shared.types';
+import { keySet } from '@/utils/collections';
 
 // NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
 
@@ -241,11 +242,10 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): {
   let { updatedRival } = args;
   const { meta, personality, favoredStyles, ctx } = args;
   let signings = 0;
-  let activeCount = 0;
-  for (const w of updatedRival.roster) {
-    if (isActive(w)) activeCount++;
-  }
-
+  let activeCount = updatedRival.roster.reduce((n, w) => n + (isActive(w) ? 1 : 0), 0);
+  // Membership tracker for remainingPool — removals are deferred and the
+  // array compacted in place once after the loop (order preserved).
+  const remainingIds = keySet(remainingPool, (p) => p.id);
   for (let slot = 0; slot < ctx.slotsAvailable; slot++) {
     const { bestIdx, bestScore } = scoreCandidates({
       pool: visible,
@@ -278,19 +278,31 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): {
     if (!signed) {
       // Can't afford the best candidate — remove it and try the next-best
       // (a Pragmatic stable should still find value buys further down).
-      const vIdx = visible.findIndex((p) => p.id === recruit.id);
-      if (vIdx >= 0) visible.splice(vIdx, 1);
-      if (remainingPool.some((p) => p.id === recruit.id)) continue;
+      visible.splice(bestIdx, 1);
+      if (remainingIds.has(recruit.id)) continue;
       break;
     }
     updatedRival = signed;
-    const idx = remainingPool.findIndex((p) => p.id === recruit.id);
-    if (idx >= 0) remainingPool.splice(idx, 1);
+    remainingIds.delete(recruit.id);
     visible.splice(bestIdx, 1);
     signings++;
     activeCount++;
   }
+  // Compaction: splice out everything dropped from remainingIds, preserving
+  // order and the caller's array identity.
+  compactPoolInPlace(remainingPool, remainingIds);
   return { updatedRival, signings };
+}
+
+/** Splices a mutating candidate pool down to surviving ids, in place. */
+function compactPoolInPlace(
+  remainingPool: PoolWarrior[],
+  remainingIds: ReadonlySet<PoolWarrior['id']>
+): void {
+  const kept = remainingPool.filter((p) => remainingIds.has(p.id));
+  if (kept.length !== remainingPool.length) {
+    remainingPool.splice(0, remainingPool.length, ...kept);
+  }
 }
 
 interface SignPoolRecruitArgs {

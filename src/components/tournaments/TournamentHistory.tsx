@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Trophy, ChevronDown, ChevronRight, Swords } from 'lucide-react';
 import type { TournamentEntry } from '@/types/game';
+import type { Season } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { getFightsForTournament } from '@/engine/core/historyUtils';
 import { Surface } from '@/components/ui/Surface';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { groupBy } from '@/utils/collections';
 import { cn } from '@/lib/utils';
 
 interface TournamentHistoryProps {
@@ -153,13 +155,14 @@ export function TournamentHistory({
   arenaHistory = [],
 }: TournamentHistoryProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const bySeason = groupBy(pastTournaments, (t) => t.season);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {['Spring', 'Summer', 'Fall', 'Winter'].map((s) => (
+      {(['Spring', 'Summer', 'Fall', 'Winter'] as Season[]).map((s) => (
         <SeasonCard
           key={s}
           season={s}
-          tournaments={pastTournaments.filter((t) => t.season === s)}
+          tournaments={bySeason.get(s) ?? []}
           seasonIcons={seasonIcons}
           seasonNames={seasonNames}
           isCurrent={s === currentSeason}

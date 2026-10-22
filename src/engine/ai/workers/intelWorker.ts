@@ -22,6 +22,7 @@ import { hashStr, SeededRNG } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import { blendQuality } from '../competence';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { keySet } from '@/utils/collections';
 import {
   generateScoutReport,
   matchesScoutTarget,
@@ -91,6 +92,7 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
   // Upcoming title opponent — a pending/signed title bout involving one of
   // our warriors makes the other side's stable the most relevant read.
   const selfIds = new Set(rival.roster.map((w) => w.id));
+  const playerIds = keySet(state.roster, (w) => w.id);
   for (const offer of Object.values(state.boutOffers ?? {})) {
     if (!offer.titleArenaId) continue;
     if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
@@ -100,7 +102,7 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
     if (!otherId) continue;
     const oppStable =
       state.warriorToStableMap?.get(otherId)?.stableId ??
-      (state.roster?.some((w) => w.id === otherId) ? state.player.id : undefined);
+      (playerIds.has(otherId) ? state.player.id : undefined);
     if (oppStable) return oppStable;
   }
 
@@ -165,6 +167,7 @@ function pickReportWarrior(
   state: GameState
 ): Warrior | undefined {
   const selfIds = new Set(rival.roster.map((w) => w.id));
+  const playerIds = keySet(state.roster, (w) => w.id);
   for (const offer of Object.values(state.boutOffers ?? {})) {
     if (!offer.titleArenaId) continue;
     if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
@@ -174,7 +177,7 @@ function pickReportWarrior(
     if (!otherId) continue;
     const oppStable =
       state.warriorToStableMap?.get(otherId)?.stableId ??
-      (state.roster?.some((w) => w.id === otherId) ? state.player.id : undefined);
+      (playerIds.has(otherId) ? state.player.id : undefined);
     if (oppStable === targetId) return findWarriorById(state, otherId);
   }
 

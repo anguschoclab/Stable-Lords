@@ -1,4 +1,5 @@
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { indexBy } from '@/utils/collections';
 import type { Warrior, RivalStableData } from '@/types/game';
 import type { StableRow, WarriorRow } from '@/types/leaderboard';
 import type { getStableTemplates } from '@/engine/rivals';
@@ -64,6 +65,9 @@ export function buildStableRows(
     isPlayer: true,
   });
 
+  // stableName → template, first match wins — same pick as the find it
+  // replaces when two templates share a stableName.
+  const templateByStable = indexBy(templates, (t) => t.stableName);
   for (const r of state.rivals || []) {
     let rWins = 0;
     let rLosses = 0;
@@ -76,7 +80,7 @@ export function buildStableRows(
       if (isActive(w)) rActive++;
     }
     const rTotal = rWins + rLosses;
-    const tmpl = templates.find((t) => t.stableName === r.owner.stableName);
+    const tmpl = templateByStable.get(r.owner.stableName);
     rows.push({
       id: r.owner.id,
       name: r.owner.stableName,

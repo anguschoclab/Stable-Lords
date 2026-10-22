@@ -80,9 +80,10 @@ export function fitWeapon(
   const classic = getStyleDefaultLoadout(style).weapon;
   // A shield in the weapon hand is Total Parry's art alone (its classic weapon).
   const shieldIds: readonly string[] = SHIELD_ITEM_IDS;
-  const shieldFighter = shieldIds.includes(classic);
+  const shieldIdSet = new Set<string>(shieldIds);
+  const shieldFighter = shieldIdSet.has(classic);
   const candidates = getAvailableItems('weapon', style).filter(
-    (w) => !(hasShield && w.twoHanded) && (shieldFighter || !shieldIds.includes(w.id))
+    (w) => !(hasShield && w.twoHanded) && (shieldFighter || !shieldIdSet.has(w.id))
   );
 
   // The weapon in hand is the incumbent only if it is itself a legal choice;

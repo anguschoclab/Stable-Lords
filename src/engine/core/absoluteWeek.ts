@@ -6,6 +6,9 @@ import {
 } from '@/constants/core/dates';
 import type { BoutOffer } from '@/types/state.types';
 
+/** Set form of SEASONAL_TOURNAMENT_WEEKS for O(1) membership checks. */
+const SEASONAL_TOURNAMENT_WEEK_SET = new Set<number>(SEASONAL_TOURNAMENT_WEEKS);
+
 /**
  * The monotonic week counter. `state.week` resets 52→1 every year, which breaks
  * any cross-week arithmetic at the boundary (offers booked in week 52 for "week
@@ -74,7 +77,7 @@ export function isTournamentWeekOfYear(week: number): boolean {
 export function weeksUntilNextSeasonalTournament(week: number): number {
   const dw = displayWeek(week);
   for (let ahead = 0; ahead < WEEKS_PER_YEAR; ahead++) {
-    if (SEASONAL_TOURNAMENT_WEEKS.includes(displayWeek(dw + ahead))) return ahead;
+    if (SEASONAL_TOURNAMENT_WEEK_SET.has(displayWeek(dw + ahead))) return ahead;
   }
   return WEEKS_PER_YEAR;
 }

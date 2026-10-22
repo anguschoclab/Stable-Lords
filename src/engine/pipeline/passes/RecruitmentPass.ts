@@ -46,14 +46,17 @@ function applyAcademyClaims(pool: PoolWarrior[], state: GameState, week: number)
   const ordered = academies.slice(rot).concat(academies.slice(0, rot));
 
   const out = pool.map((w) => (w.academyStableId || w.veteran ? w : { ...w }));
+  // Partition once — claimed entries are already skipped by the
+  // academyStableId/veteran guard below, so re-filtering per academy
+  // selected the same candidates every pass.
+  const claimable = [
+    ...out.filter((w) => w.source === 'apprentice'),
+    ...out.filter((w) => w.source !== 'apprentice'),
+  ];
   for (const academy of ordered) {
     const favored = new Set(academy.owner.favoredStyles ?? []);
     if (favored.size === 0) continue;
     let claimed = 0;
-    const claimable = [
-      ...out.filter((w) => w.source === 'apprentice'),
-      ...out.filter((w) => w.source !== 'apprentice'),
-    ];
     for (const w of claimable) {
       if (claimed >= AI_ACADEMY_BONUS_RECRUITS) break;
       if (w.academyStableId || w.veteran) continue;
@@ -93,13 +96,18 @@ function drainExpiredFreeAgents(
   // Working copy — a rival that signs one clearance veteran is less needy
   // for the next one on the wire.
   const rivalsById = new Map((state.rivals ?? []).map((r) => [r.id, r] as const));
+  // Active-roster counts tracked alongside rivalsById so the needy filter
+  // doesn't re-scan every roster for every clearance veteran.
+  const activeCounts = new Map(
+    (state.rivals ?? []).map((r) => [r.id, r.roster.filter(isActive).length] as const)
+  );
   const clearanceItems: string[] = [];
 
   for (const recruit of expired) {
     const clearanceCost = Math.max(25, Math.floor(recruit.cost * 0.5));
     const needy = orderRivalsForClearance([...rivalsById.values()], state.week).filter(
       (r) =>
-        r.roster.filter((w) => isActive(w)).length < aiRosterMin(r.owner?.personality) ||
+        (activeCounts.get(r.id) ?? 0) < aiRosterMin(r.owner?.personality) ||
         r.needsRecruit === true
     );
 
@@ -127,6 +135,7 @@ function drainExpiredFreeAgents(
         needsRecruit: false,
       };
       rivalsById.set(rival.id, updated);
+      activeCounts.set(rival.id, (activeCounts.get(rival.id) ?? 0) + 1);
       (impact.rivalsUpdates ??= new Map()).set(rival.id, updated);
       clearanceItems.push(
         `📣 CLEARANCE: ${rival.owner.stableName} signed veteran ${recruit.name} off the free-agent wire for ${signed.costPaid}g.`

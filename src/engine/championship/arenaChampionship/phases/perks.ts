@@ -1,6 +1,7 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState, RivalStableData } from '@/types/state.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { keySet } from '@/utils/collections';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, effectiveOffers, isOpenOffer, sortedTitleKeys } from '../core';
 
@@ -16,6 +17,15 @@ export function applyChampionPerks(state: GameState, delta: ChampionshipDelta): 
   const arenasWithLiveOffer = new Set(
     offers.flatMap((o) => (o.titleArenaId && isOpenOffer(o) ? [o.titleArenaId] : []))
   );
+  const playerRosterIds = keySet(state.roster ?? [], (w) => w.id);
+  // First-rival-wins: a warrior id owned by two stables resolves to the
+  // first, matching the previous rivals.find scan.
+  const stableByWarrior = new Map<string, RivalStableData>();
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster ?? []) {
+      if (!stableByWarrior.has(w.id)) stableByWarrior.set(w.id, r);
+    }
+  }
 
   for (const arenaId of sortedTitleKeys(state, delta)) {
     const title = titleOf(state, delta, arenaId);
@@ -26,8 +36,7 @@ export function applyChampionPerks(state: GameState, delta: ChampionshipDelta): 
     if (!recentActivity) continue;
 
     const id = title.champion.warriorId;
-    const isPlayerWarrior = (state.roster ?? []).some((w) => w.id === id);
-    if (isPlayerWarrior) {
+    if (playerRosterIds.has(id)) {
       const existing = delta.rosterUpdates.get(id) ?? {};
       delta.rosterUpdates.set(id, {
         ...existing,
@@ -39,7 +48,7 @@ export function applyChampionPerks(state: GameState, delta: ChampionshipDelta): 
           ARENA_TITLE.CHAMPION_POPULARITY_PER_WEEK,
       });
     } else {
-      const rival = (state.rivals ?? []).find((r) => (r.roster ?? []).some((w) => w.id === id));
+      const rival = stableByWarrior.get(id);
       if (!rival) continue;
       const roster = rival.roster.map((x) =>
         x.id === id

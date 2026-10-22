@@ -19,6 +19,7 @@ import { assessBurnRisks } from '@/engine/training/burnAnalysis';
 import { computeGainChance } from '@/engine/training';
 import { FOCUS_ATTR_MAP } from '@/engine/training/coachLogic';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
+import { keySet } from '@/utils/collections';
 
 const STYLE_PRIMARY_ATTRIBUTES: Record<FightingStyle, (keyof Attributes)[]> = {
   [FightingStyle.AimedBlow]: ['DF', 'WT', 'SP', 'CN'],
@@ -94,15 +95,16 @@ function chooseTrainableAttr(
   season: GameState['season']
 ): keyof Attributes | undefined {
   // Seasonal affinity bonus
-  if (season === 'Spring' && trainableKeys.includes('CN') && stylePrimaries.includes('CN')) {
+  const trainable = keySet(trainableKeys, (a) => a);
+  if (season === 'Spring' && trainable.has('CN') && stylePrimaries.includes('CN')) {
     return 'CN';
   }
-  if (season === 'Summer' && trainableKeys.includes('ST') && stylePrimaries.includes('ST')) {
+  if (season === 'Summer' && trainable.has('ST') && stylePrimaries.includes('ST')) {
     return 'ST';
   }
 
   // Fallback to highest priority style primary
-  const primary = stylePrimaries.find((attr) => trainableKeys.includes(attr));
+  const primary = stylePrimaries.find((attr) => trainable.has(attr));
   if (primary) return primary;
 
   // Fallback to any remaining trainable attribute

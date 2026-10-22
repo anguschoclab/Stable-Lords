@@ -371,8 +371,9 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
  *
  */
 export function getEventsForArena(tags: ArenaTag[]): ArenaEventConfig[] {
+  const tagSet = new Set<ArenaTag>(tags);
   return Object.values(ARENA_EVENTS).filter((event) =>
-    event.requiredTags.every((tag) => tags.includes(tag))
+    event.requiredTags.every((tag) => tagSet.has(tag))
   );
 }
 

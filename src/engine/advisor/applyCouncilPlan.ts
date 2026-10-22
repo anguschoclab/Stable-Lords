@@ -7,25 +7,44 @@
  * Callers that mutate state in place (autosim's mutableInput loop) own the
  * state object, so payloads are applied imperatively for speed.
  */
-import type { GameState } from '@/types/state.types';
+import type { GameState, Warrior } from '@/types/state.types';
 import type { StableCouncilReport, WarriorActionPayload } from './types';
 import { computeStableCouncilReport } from './stableCouncilService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from '@/engine/impacts';
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
+import { indexBy } from '@/utils/collections';
+
+/**
+ * Shared per-applyCouncilPlan context. `rosterById` caches the roster index;
+ * `rosterIndexState` records which state object it was built from —
+ * resolveImpacts may return a new GameState mid-loop, and a stale index
+ * would patch pre-impact warrior objects nobody reads.
+ */
+interface ApplyCtx {
+  state?: GameState;
+  rosterById?: Map<string, Warrior>;
+}
 
 /** Apply one warrior's council payload (training, bout response, plan patch). */
-export function applyWarriorPayload(state: GameState, payload: WarriorActionPayload): GameState {
+export function applyWarriorPayload(
+  state: GameState,
+  payload: WarriorActionPayload,
+  ctx?: ApplyCtx
+): GameState {
   // 1. Training assignment — replace any existing assignment for the warrior.
   // A payload with no assignment clears a stale one so the warrior stays
-  // bookable for the next promoter/challenge pass.
-  const assignments = (state.trainingAssignments ?? []).filter(
-    (a) => a.warriorId !== payload.warriorId
-  );
-  if (payload.trainingAssignment) {
-    assignments.push(payload.trainingAssignment);
+  // bookable for the next promoter/challenge pass. Skipped when a caller is
+  // batching assignment overrides across payloads (applyCouncilPlan).
+  if (!ctx) {
+    const assignments = (state.trainingAssignments ?? []).filter(
+      (a) => a.warriorId !== payload.warriorId
+    );
+    if (payload.trainingAssignment) {
+      assignments.push(payload.trainingAssignment);
+    }
+    state.trainingAssignments = assignments;
   }
-  state.trainingAssignments = assignments;
 
   // 2. Bout offer acceptance.
   if (payload.boutOfferIdToAccept) {
@@ -46,7 +65,15 @@ export function applyWarriorPayload(state: GameState, payload: WarriorActionPayl
   // plan already covers that trigger type — the council advises, the authored
   // plan wins ties.
   if (payload.tacticsPlanPatch) {
-    const warrior = state.roster.find((w) => w.id === payload.warriorId);
+    const byId =
+      ctx && ctx.state === state && ctx.rosterById
+        ? ctx.rosterById
+        : indexBy(state.roster, (w) => w.id);
+    if (ctx) {
+      ctx.state = state;
+      ctx.rosterById = byId;
+    }
+    const warrior = byId.get(payload.warriorId);
     if (warrior) {
       const basePlan = warrior.plan ?? defaultStylePreset(warrior.style).plan;
       const { conditions: suggested, ...restPatch } = payload.tacticsPlanPatch;
@@ -67,8 +94,29 @@ export function applyWarriorPayload(state: GameState, payload: WarriorActionPayl
 
 /** Apply every payload in a council report to the state. */
 export function applyCouncilPlan(state: GameState, report: StableCouncilReport): GameState {
+  // Batch assignment overrides — per payload, the new assignment replaces
+  // all prior entries for that warrior (last payload wins), then surviving
+  // originals keep their order followed by overrides in payload order.
+  // Nothing in the payload loop reads trainingAssignments, so deferring the
+  // write until after it preserves semantics across resolveImpacts swaps.
+  const overrides = new Map<string, (typeof report.summary.allActionPayloads)[number]['trainingAssignment']>();
   for (const payload of report.summary.allActionPayloads) {
-    state = applyWarriorPayload(state, payload);
+    // delete+set keeps last-payload position, matching sequential re-push.
+    overrides.delete(payload.warriorId);
+    overrides.set(payload.warriorId, payload.trainingAssignment);
+  }
+
+  const ctx: ApplyCtx = {};
+  for (const payload of report.summary.allActionPayloads) {
+    state = applyWarriorPayload(state, payload, ctx);
+  }
+
+  const kept = (state.trainingAssignments ?? []).filter((a) => !overrides.has(a.warriorId));
+  const applied = [...overrides.values()].filter(
+    (a): a is NonNullable<typeof a> => a != null
+  );
+  if (kept.length > 0 || applied.length > 0 || state.trainingAssignments !== undefined) {
+    state.trainingAssignments = [...kept, ...applied];
   }
   return state;
 }

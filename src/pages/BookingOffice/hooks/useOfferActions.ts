@@ -5,7 +5,7 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import { isExhausted, getFatigueBand } from '@/engine/core/fatigueUtils';
 import { toast } from 'sonner';
-import type { InjuryData } from '@/types/warrior.types';
+import type { InjuryData, Warrior } from '@/types/warrior.types';
 import { Heart, Clock, AlertTriangle } from 'lucide-react';
 
 /**
@@ -41,18 +41,25 @@ export function getFatigueStatus(fatigue: number): {
 /**
  *
  */
+/** Severities that block bout acceptance. */
+const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
+
+/** Severity → rank for worst-injury selection (unknown severities rank -1). */
+const SEVERITY_RANK = new Map(
+  ['Minor', 'Moderate', 'Severe', 'Critical', 'Permanent'].map((s, i) => [s, i] as const)
+);
+
 export function getInjuryBadge(
   injuries: InjuryData[]
 ): { label: string; color: string; count: number } | null {
-  const blocking = injuries.filter((i) =>
-    ['Moderate', 'Severe', 'Critical', 'Permanent'].includes(i.severity)
-  );
+  const blocking = injuries.filter((i) => BLOCKING_SEVERITIES.has(i.severity));
   if (blocking.length === 0) return null;
   const first = blocking[0];
   if (!first) return null;
   const severest = blocking.reduce<InjuryData>((max, i) => {
-    const order = ['Minor', 'Moderate', 'Severe', 'Critical', 'Permanent'];
-    return order.indexOf(i.severity) > order.indexOf(max.severity) ? i : max;
+    return (SEVERITY_RANK.get(i.severity) ?? -1) > (SEVERITY_RANK.get(max.severity) ?? -1)
+      ? i
+      : max;
   }, first);
   const colorMap: Record<string, string> = {
     Moderate: 'text-arena-gold',
@@ -122,9 +129,21 @@ export function useOfferActions(
     const honorableOffers = thisWeekOffers.filter(
       (o) => promoters[o.promoterId]?.personality === 'Honorable'
     );
+    // warriorId → roster position: the per-offer pick keeps the previous
+    // roster.find semantics (first in roster order wins when both sides of
+    // a bout are our own warriors).
+    const rosterPos = new Map(roster.map((w, i) => [w.id, i] as const));
     let accepted = 0;
     honorableOffers.forEach((offer) => {
-      const warrior = roster.find((w) => offer.warriorIds.includes(w.id));
+      let warrior: Warrior | undefined;
+      let bestPos = Infinity;
+      for (const wid of offer.warriorIds) {
+        const pos = rosterPos.get(wid);
+        if (pos !== undefined && pos < bestPos) {
+          bestPos = pos;
+          warrior = roster[pos];
+        }
+      }
       if (
         warrior &&
         !isExhausted(warrior.fatigue ?? 0) &&

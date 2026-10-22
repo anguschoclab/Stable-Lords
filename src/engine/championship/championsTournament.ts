@@ -10,7 +10,7 @@
  * (consumed by ArenaChampionshipPass); bracket emission returns a StateImpact
  * (consumed by RivalStrategyPass at week 52).
  */
-import type { GameState } from '@/types/state.types';
+import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -111,6 +111,14 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
     ...(state.grandChampions ?? []).map((g) => g.tournamentId),
     ...delta.grandChampions.map((g) => g.tournamentId),
   ]);
+  // First-rival-wins warrior→stable index — same semantics as the
+  // per-tournament rivals.find it replaces.
+  const stableByWarrior = new Map<WarriorId, RivalStableData>();
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster ?? []) {
+      if (!stableByWarrior.has(w.id)) stableByWarrior.set(w.id, r);
+    }
+  }
 
   for (const t of state.tournaments ?? []) {
     if (t.tierId !== CHAMPIONS_TOURNEY.TIER_ID || !t.completed || recorded.has(t.id)) continue;
@@ -144,7 +152,7 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
         champion: true,
       });
     } else {
-      const rival = (state.rivals ?? []).find((r) => (r.roster ?? []).some((x) => x.id === w.id));
+      const rival = stableByWarrior.get(w.id);
       if (rival) {
         const pending = delta.rivalsUpdates.get(rival.id);
         const baseRoster = pending?.roster ?? rival.roster;

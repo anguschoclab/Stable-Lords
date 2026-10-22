@@ -50,9 +50,12 @@ export function orderRivalsForSnakeDraft(
     const rot = week % rotated.length;
     rotated.push(...rotated.splice(0, rot));
   }
+  // Active counts once per stable — the comparator can't rescan rosters
+  // O(log n) times each.
+  const activeCounts = new Map(rotated.map((r) => [r.id, r.roster.filter(isActive).length]));
   return rotated.sort((a, b) => {
-    const aActive = a.roster.filter((w) => isActive(w)).length;
-    const bActive = b.roster.filter((w) => isActive(w)).length;
+    const aActive = activeCounts.get(a.id) ?? 0;
+    const bActive = activeCounts.get(b.id) ?? 0;
     if (aActive !== bActive) return aActive - bActive;
     return a.treasury - b.treasury;
   });

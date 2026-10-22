@@ -99,13 +99,24 @@ export function CurrentStaffTab({
           >
             <div className="absolute top-0 left-0 w-1 h-full bg-arena-gold/40" />
             <div className="p-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-12">
-              {TRAINER_FOCUSES.map((focus) => {
-                const total = currentTrainers
-                  .filter((t) => t.focus === focus && t.contractWeeksLeft > 0)
-                  .reduce((sum, t) => sum + (TIER_BONUS[t.tier as TrainerTier] ?? 1), 0);
-
-                return total > 0 && <FocusBonus key={focus} focus={focus} total={total} />;
-              })}
+              {(() => {
+                // focus → summed tier bonus, accumulated in one roster pass
+                // instead of a filter+reduce per focus column.
+                const bonusByFocus = new Map<string, number>();
+                for (const t of currentTrainers) {
+                  if (t.contractWeeksLeft > 0) {
+                    bonusByFocus.set(
+                      t.focus,
+                      (bonusByFocus.get(t.focus) ?? 0) +
+                        (TIER_BONUS[t.tier as TrainerTier] ?? 1)
+                    );
+                  }
+                }
+                return TRAINER_FOCUSES.map((focus) => {
+                  const total = bonusByFocus.get(focus) ?? 0;
+                  return total > 0 && <FocusBonus key={focus} focus={focus} total={total} />;
+                });
+              })()}
             </div>
           </Surface>
         </div>

@@ -21,12 +21,15 @@ export function AssetRegistry({
   selectedWarriorId,
   onSelect,
 }: AssetRegistryProps) {
+  // Warriors with a Signed bout — inverted once from the offers instead of
+  // re-scanning every offer per roster row.
+  const signedWarriorIds = new Set(
+    Object.values(boutOffers).flatMap((o) => (o.status === 'Signed' ? o.warriorIds : []))
+  );
   return (
     <div className="grid grid-cols-1 gap-3">
       {roster.map((warrior) => {
-        const hasAccepted = Object.values(boutOffers).some(
-          (o) => o.warriorIds.includes(warrior.id) && o.status === 'Signed'
-        );
+        const hasAccepted = signedWarriorIds.has(warrior.id);
         const isSelected = selectedWarriorId === warrior.id;
         const fatigueConfig = getFatigueStatus(warrior.fatigue ?? 0);
 

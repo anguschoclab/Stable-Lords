@@ -12,6 +12,7 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { competenceJitter } from '../competence';
 
 import { logger } from '@/utils/logger';
+import { indexBy } from '@/utils/collections';
 
 /** A tabled poach bid: the buyer pays `price` to `sellerStableId` for `warriorId`. */
 interface PoachBid {
@@ -173,6 +174,9 @@ export function processPoachMarket(state: GameState, rivals: RivalStableData[]):
   // Shared across every buyer in the sweep: liability is recomputed at most
   // once per warrior instead of once per (buyer × warrior).
   const liabilityCache: LiabilityCache = new Map();
+  // Lazy roster index — only built if a player-bound bid needs the
+  // warriorMap fallback path.
+  let rosterById: Map<string, Warrior> | undefined;
 
   for (const rival of rivals) {
     const bid = computePoachBid(rival, rivals, state, seasonIndex, liabilityCache);
@@ -185,8 +189,8 @@ export function processPoachMarket(state: GameState, rivals: RivalStableData[]):
     byId.set(rival.id, stamped);
 
     if (bid.playerBound) {
-      const target =
-        state.warriorMap?.get(bid.warriorId) ?? state.roster.find((w) => w.id === bid.warriorId);
+      rosterById ??= indexBy(state.roster, (w) => w.id);
+      const target = state.warriorMap?.get(bid.warriorId) ?? rosterById.get(bid.warriorId);
       const desc =
         `Poach bid on your warrior ${target ? warriorDisplayName(target) : String(bid.warriorId)} — ` +
         `${rival.owner.name} offers ${bid.price}g (publicized, awaits your decision)`;

@@ -56,10 +56,10 @@ export function useTrainers(showBookmarkedOnly: boolean) {
     setConvertDialogOpen,
   });
 
-  const convertableRetired = useMemo(
-    () => retired.filter((w) => !currentTrainers.some((t) => t.retiredFromWarrior === w.name)),
-    [retired, currentTrainers]
-  );
+  const convertableRetired = useMemo(() => {
+    const convertedNames = new Set(currentTrainers.map((t) => t.retiredFromWarrior));
+    return retired.filter((w) => !convertedNames.has(w.name));
+  }, [retired, currentTrainers]);
 
   return {
     graveyard,

@@ -100,6 +100,24 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
     ...Array(2).fill('Legendary'),
   ];
 
+  // arenaPool depends only on the max bookable tier (1|2|3) — memoize so
+  // the venue scan + special-arena exclusion runs once per tier, not once
+  // per promoter.
+  const specialArenaIds = new Set<string>(SPECIAL_ARENA_IDS);
+  const arenaPoolCache = new Map<number, string[]>();
+  const arenaPoolForMaxTier = (maxTier: number): string[] => {
+    let pool = arenaPoolCache.get(maxTier);
+    if (!pool) {
+      pool = [1, 2, 3]
+        .filter((t) => t <= maxTier)
+        .flatMap((t) => getArenasByTier(t as 1 | 2 | 3))
+        .filter((a) => !specialArenaIds.has(a.id))
+        .map((a) => a.id);
+      arenaPoolCache.set(maxTier, pool);
+    }
+    return pool;
+  };
+
   for (let i = 0; i < count; i++) {
     const id = rngService.uuid();
     const firstName = rngService.pick(PROMOTER_FIRST_NAMES);
@@ -117,11 +135,9 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
       // Promoters book any venue at or below their tier: Local → 1,
       // Regional → 1–2, National/Legendary → 1–3. Mid/high venues need a
       // carrier tier, or they sit dark the whole season.
-      arenaPool: [1, 2, 3]
-        .filter((t) => t <= (tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3))
-        .flatMap((t) => getArenasByTier(t as 1 | 2 | 3))
-        .filter((a) => !SPECIAL_ARENA_IDS.includes(a.id))
-        .map((a) => a.id),
+      arenaPool: [
+        ...arenaPoolForMaxTier(tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3),
+      ],
       history: {
         totalPursePaid: 0,
         notableBouts: [],

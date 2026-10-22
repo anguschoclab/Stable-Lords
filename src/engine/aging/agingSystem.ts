@@ -25,6 +25,7 @@ import {
   collectCrownedWarriorIds,
 } from '@/engine/ai/legacyFounder';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
+import { groupBy } from '@/utils/collections';
 
 // Retirement window tuned 2026-04 against measured ~17 bouts/warrior/year and
 // ~6% per-bout kill rate (lifespan ~0.7y in calendar terms even after lethality
@@ -173,19 +174,22 @@ function removeRetiredFromRivalRosters(
   retiredWarriors: Warrior[],
   rivalsUpdates: Map<StableId, Partial<RivalStableData>>
 ): void {
-  retiredWarriors.forEach((rw) => {
-    if (rw.stableId && rw.stableId !== state.player.id) {
-      const rivalId = rw.stableId as unknown as StableId;
-      const currentRival = state.rivalMap?.get(rivalId);
-      if (currentRival) {
-        const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
-        if (rUpdate.roster) {
-          rUpdate.roster = rUpdate.roster.filter((w) => w.id !== rw.id);
-        }
-        rivalsUpdates.set(rivalId, rUpdate);
-      }
+  // Group retirees by owning stable so each rival roster is filtered once.
+  const retiredByStable = groupBy(
+    retiredWarriors.filter((rw) => rw.stableId && rw.stableId !== state.player.id),
+    (rw) => rw.stableId as string
+  );
+  for (const [stableId, retirees] of retiredByStable) {
+    const rivalId = stableId as unknown as StableId;
+    const currentRival = state.rivalMap?.get(rivalId);
+    if (!currentRival) continue;
+    const retiredIds = new Set(retirees.map((rw) => rw.id));
+    const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
+    if (rUpdate.roster) {
+      rUpdate.roster = rUpdate.roster.filter((w) => !retiredIds.has(w.id));
     }
-  });
+    rivalsUpdates.set(rivalId, rUpdate);
+  }
 }
 
 /** Route a per-warrior aging update onto its rival stable's roster delta. */

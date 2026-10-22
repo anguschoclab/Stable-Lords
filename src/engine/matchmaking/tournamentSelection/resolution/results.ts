@@ -131,11 +131,14 @@ function applyTournamentKill(
     ];
   }
 
-  updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
-  updatedState.rivals = updatedState.rivals.map((r) => ({
-    ...r,
-    roster: r.roster.filter((w) => w.id !== victim.id),
-  }));
+  if (updatedState.roster.some((w) => w.id === victim.id)) {
+    updatedState.roster = updatedState.roster.filter((w) => w.id !== victim.id);
+  }
+  updatedState.rivals = updatedState.rivals.map((r) =>
+    r.roster.some((w) => w.id === victim.id)
+      ? { ...r, roster: r.roster.filter((w) => w.id !== victim.id) }
+      : r
+  );
 
   updatedState.tournaments = (updatedState.tournaments || []).map((t) => ({
     ...t,

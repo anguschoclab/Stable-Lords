@@ -9,6 +9,7 @@ import { aiRosterMin } from '@/constants/ai';
 import { isActive, isRetired } from '@/engine/warrior/warriorStatus';
 import { retireWithHonors } from '@/engine/warrior/retirement';
 import { filterActive } from '@/utils/roster';
+import { keySet } from '@/utils/collections';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import {
   isLegacyFounderCaliber,
@@ -325,16 +326,19 @@ function manageOneRival(args: ManageOneRivalArgs): RivalStableData {
 
   const seen = new Set(retiredWarriors.map((w) => w.id));
   const queued = new Set((state.legacyFounderQueue ?? []).map((w) => w.id));
+  const founderIds = keySet(legacyFounders, (f) => f.id);
   for (const w of r.roster) {
     if (isRetired(w) && !seen.has(w.id)) {
       retiredWarriors.push(w);
       if (
         !queued.has(w.id) &&
-        !legacyFounders.some((f) => f.id === w.id) &&
+        !founderIds.has(w.id) &&
         isLegacyFounderCaliber(w, crownedIds) &&
         rngSnapshot.next() < LEGACY_FOUND_CHANCE
       ) {
-        legacyFounders.push(buildLegacyFounderQueueEntry(w));
+        const entry = buildLegacyFounderQueueEntry(w);
+        founderIds.add(entry.id);
+        legacyFounders.push(entry);
       }
     }
   }

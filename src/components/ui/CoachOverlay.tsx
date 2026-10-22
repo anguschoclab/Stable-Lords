@@ -18,6 +18,9 @@ interface CoachWarning {
 
 type CoachState = ReturnType<typeof useGameStore.getState>;
 
+/** Styles fast enough that heavy gear drags them below their endurance. */
+const FAST_STYLES = new Set(['LUNGING ATTACK', 'SLASHING ATTACK']);
+
 /** Computes the active coach warnings: insolvency, critical injuries, gear mismatches. */
 function buildWarnings(
   state: Pick<CoachState, 'roster' | 'arenaHistory'>,
@@ -41,11 +44,14 @@ function buildWarnings(
   }
 
   // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
+  const inActiveBoutIds = new Set(
+    (state.arenaHistory ?? []).flatMap((f) =>
+      f.winner === null ? [f.warriorIdA, f.warriorIdD] : []
+    )
+  );
   const { injuredActive } = state.roster.reduce(
     (acc, w) => {
-      const inActiveBout = state.arenaHistory.some(
-        (f) => (f.warriorIdA === w.id || f.warriorIdD === w.id) && f.winner === null
-      );
+      const inActiveBout = inActiveBoutIds.has(w.id);
       if (!inActiveBout) return acc;
       acc.activeFighters.push(w);
       if ((w.derivedStats?.hp || 0) < 30) acc.injuredActive.push(w);
@@ -69,7 +75,7 @@ function buildWarnings(
 
   // ⚖️ Encumbrance Check (Heavy gear on fast style) - needs full roster for derivedStats
   const mismatchedSprints = state.roster.filter((w) => {
-    const isFast = ['LUNGING ATTACK', 'SLASHING ATTACK'].includes(w.style);
+    const isFast = FAST_STYLES.has(w.style);
     const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
     return isFast && isHeavy;
   });

@@ -190,6 +190,8 @@ function MatchupColumn(props: {
 }) {
   const { label, variant, matchups, type, emptyText } = props;
   const { flags } = props;
+  const challengedIds = new Set(flags.playerChallenges ?? []);
+  const avoidedIds = new Set(flags.playerAvoids ?? []);
   return (
     <div className="space-y-6">
       <SectionDivider label={label} variant={variant} />
@@ -200,8 +202,8 @@ function MatchupColumn(props: {
               key={m.rivalWarrior.id}
               matchup={m}
               type={type}
-              isChallenged={flags.playerChallenges?.includes(m.rivalWarrior.id) ?? false}
-              isAvoided={flags.playerAvoids?.includes(m.rivalWarrior.id) ?? false}
+              isChallenged={challengedIds.has(m.rivalWarrior.id)}
+              isAvoided={avoidedIds.has(m.rivalWarrior.id)}
               onToggleChallenge={() => flags.toggleChallenge(m.rivalWarrior.id)}
               onToggleAvoid={() => flags.toggleAvoid(m.rivalWarrior.id)}
             />

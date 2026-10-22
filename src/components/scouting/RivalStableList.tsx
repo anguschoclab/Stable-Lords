@@ -59,6 +59,13 @@ function RivalRow({
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
   const ownerGrudges = useGameStore((s) => s.ownerGrudges) ?? [];
+  // ownerId → grudge, first match wins on either side — same pick the
+  // per-row ownerGrudges.find scan made.
+  const grudgeByOwner = new Map<string, OwnerGrudge>();
+  for (const g of ownerGrudges) {
+    if (!grudgeByOwner.has(g.ownerIdA)) grudgeByOwner.set(g.ownerIdA, g);
+    if (!grudgeByOwner.has(g.ownerIdB)) grudgeByOwner.set(g.ownerIdB, g);
+  }
   const list = useListShell(rivals, {
     searchText: rivalSearchText,
     sorts: RIVAL_SORTS,
@@ -82,9 +89,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
             key={rival.owner.id}
             rival={rival}
             isSelected={selectedRivalId === rival.owner.id}
-            grudge={ownerGrudges.find(
-              (g) => g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id
-            )}
+            grudge={grudgeByOwner.get(rival.owner.id)}
             onSelectRival={onSelectRival}
           />
         ))}

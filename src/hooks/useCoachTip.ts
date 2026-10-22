@@ -261,7 +261,7 @@ export function useCoachTip(pathname: string) {
     const entry = matchRoute(pathname);
     if (!entry) return;
 
-    const dismissed = coachDismissed ?? [];
+    const dismissed = new Set(coachDismissed ?? []);
     const currentState = stateRef.current;
 
     // Build context for dynamic routes
@@ -272,7 +272,7 @@ export function useCoachTip(pathname: string) {
     }
 
     const tip = entry.tips.find(
-      (t) => !dismissed.includes(t.id) && (!t.condition || t.condition(currentState, context))
+      (t) => !dismissed.has(t.id) && (!t.condition || t.condition(currentState, context))
     );
 
     if (!tip) return;

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Swords, Activity, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
-import { WEAPONS } from '@/data/equipment';
+import { getItemById } from '@/data/equipment';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { Warrior } from '@/types/game';
 
@@ -46,7 +46,7 @@ interface FavoritesChart {
 }
 
 /** Aggregates discovered favorites across the active roster. */
-function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
+export function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
   const withFavorites = warriors.filter((w) => isActive(w) && w.favorites);
   const weaponCounts = new Map<string, number>();
   const rhythmBands = new Map<string, number>();
@@ -70,7 +70,7 @@ function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
   const weaponRows: WeaponCount[] = [...weaponCounts.entries()]
     .map(([weaponId, count]) => ({
       weaponId,
-      name: WEAPONS.find((x) => x.id === weaponId)?.name ?? weaponId,
+      name: getItemById(weaponId)?.name ?? weaponId,
       count,
     }))
     .sort((a, b) => b.count - a.count);

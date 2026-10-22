@@ -2,6 +2,7 @@ import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import { WarriorLink, StableLink } from '@/components/EntityLink';
+import { escapeHtml } from '@/utils/escapeHtml';
 
 interface MarkdownReaderProps {
   content: string;
@@ -20,7 +21,17 @@ function linkifyMarkdown(content: string, warriorNames?: string[], stableNames?:
   const allNames = [...(warriorNames ?? []), ...(stableNames ?? [])];
   if (allNames.length === 0) return content;
 
-  const sorted = [...allNames].sort((a, b) => b.length - a.length);
+  // Gazette templates HTML-escape interpolated names (t() → &#39; etc.), so a
+  // name containing ' or & appears escaped in body text — match both forms,
+  // mapping each surface variant back to the raw name for the entity href.
+  const rawByVariant = new Map<string, string>();
+  for (const name of allNames) {
+    rawByVariant.set(name, name);
+    const htmlVariant = escapeHtml(name);
+    if (!rawByVariant.has(htmlVariant)) rawByVariant.set(htmlVariant, name);
+  }
+
+  const sorted = [...rawByVariant.keys()].sort((a, b) => b.length - a.length);
   const escaped = sorted.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const pattern = new RegExp(`(${escaped.join('|')})`, 'g');
 
@@ -28,10 +39,11 @@ function linkifyMarkdown(content: string, warriorNames?: string[], stableNames?:
     // Link text is markdown — a stored name containing `[`, `]`, or `\` would
     // otherwise corrupt the generated `[name](#entity:...)` link syntax.
     const linkText = match.replace(/([\\[\]])/g, '\\$1');
-    if (stableSet.has(match)) {
-      return `[${linkText}](#entity:stable:${encodeURIComponent(match)})`;
+    const raw = rawByVariant.get(match) ?? match;
+    if (stableSet.has(raw)) {
+      return `[${linkText}](#entity:stable:${encodeURIComponent(raw)})`;
     }
-    return `[${linkText}](#entity:warrior:${encodeURIComponent(match)})`;
+    return `[${linkText}](#entity:warrior:${encodeURIComponent(raw)})`;
   });
 }
 

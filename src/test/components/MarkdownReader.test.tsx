@@ -56,6 +56,21 @@ describe('MarkdownReader', () => {
     expect(screen.getAllByTestId('stable-link').length).toBeGreaterThan(0);
   });
 
+  it('linkifies names that template interpolation HTML-escaped (apostrophe → &#39;)', () => {
+    // Gazette bodies pass names through t()/escapeHtml — "Dragon's Hearth"
+    // arrives as "Dragon&#39;s Hearth" and must still resolve to StableLink.
+    // (Expression container: JSX attribute literals would decode &#39; → '.)
+    const { container } = render(
+      <MarkdownReader
+        content={'Dragon&#39;s Hearth hosted the bout'}
+        stableNames={["Dragon's Hearth"]}
+      />
+    );
+    const link = container.querySelector('[data-testid="stable-link"]');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('data-name', "Dragon's Hearth");
+  });
+
   it('non-entity links still render as normal anchor tags', () => {
     render(<MarkdownReader content="[Link text](https://example.com)" />);
     const link = screen.getByRole('link', { name: 'Link text' });

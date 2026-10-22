@@ -377,4 +377,10 @@ export const ORIGINS: string[] = [
   'Survived the mass exile of the Weeping Dispossessed',
   'Found swaddled in beggar’s cloth in the shadows of the High Court',
   'Abandoned during the frantic exodus from the Cinder Wards',
+  'Found shivering in the rusted ventilation shafts of the Iron Convent',
+  'Raised by the blind beggar-priests of the Sunken Cathedral',
+  'Abandoned in a blood-stained basket at the gates of the Slaughterhouse District',
+  'Survived the brutal winter by hiding among the warm corpses of the Plague Carts',
+  'Found wandering the Ash Dunes with nothing but a rusted shiv and a name scratched into their arm',
+  'Sold to the lowest bidding pit-boss in the lightless fighting rings of the Sump',
 ];

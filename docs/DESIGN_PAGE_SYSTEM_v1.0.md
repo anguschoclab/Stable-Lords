@@ -200,7 +200,7 @@ Grid cards:
 Band 1: `Bout Offers` header with the current week and live offer count.
 Band 2 (status strip): roster readiness and unbooked warriors.
 Band 3: left roster rail + right tabbed offer lists (`THIS WEEK`, `UPCOMING`) wired to real offer state. `BEGIN CYCLE ›` remains the shell CTA; it starts the week/day pipeline and opens the shared resolution sequence instead of routing to a retired focus page.
-After results: ResolutionReveal presents gazette, medical, combat, simulation, and memorial stages with win/kill/death color weight.
+After results: ResolutionReveal presents gazette, infirmary, bouts, steward's report, and memorial stages with win/kill/death color weight.
 
 ### 6.3 `/world/tournaments` — Archetype A
 

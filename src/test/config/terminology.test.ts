@@ -9,6 +9,7 @@ import { join } from 'path';
 
 const srcDir = 'src';
 const e2eDir = 'e2e';
+const dataDir = 'src/data';
 
 // Files/dirs exempt from display-text rules (debug tools, engine internals)
 const EXEMPT = ['debug/', '.test.', 'routeTree.gen.ts'];
@@ -41,6 +42,23 @@ function getE2eTsFiles(dir = e2eDir): string[] {
     if (statSync(fullPath).isDirectory()) {
       files.push(...getE2eTsFiles(fullPath));
     } else if (normalized.endsWith('.ts')) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
+// Narrative JSON carries player-facing copy (uiMeta.fanfare etc.) that never
+// appears in .tsx, so the banned-terms scan must cover it too.
+function getJsonFiles(dir = dataDir): string[] {
+  const files: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const fullPath = join(dir, entry);
+    const normalized = normalizePath(fullPath);
+    if (EXEMPT.some((e) => normalized.includes(e))) continue;
+    if (statSync(fullPath).isDirectory()) {
+      files.push(...getJsonFiles(fullPath));
+    } else if (normalized.endsWith('.json')) {
       files.push(fullPath);
     }
   }
@@ -154,6 +172,15 @@ const bannedTerms = [
   'CLASSIFIED',
   'Hardware Authentication Required',
   'target matching',
+
+  // Sim-speak that leaked into the cycle-resolution reveal — player-facing
+  // copy names in-world documents, never dev vocabulary.
+  'Simulation Math',
+  'Combat Logs',
+  'Weekly Treasury Delta',
+  'Granular Breakdown',
+  'Cycle Resolution',
+  'Medical Report',
 ];
 
 describe('Terminology compliance', () => {
@@ -236,6 +263,23 @@ describe('Terminology compliance', () => {
   it('no banned sci-fi terms in e2e specs', () => {
     const matches: string[] = [];
     for (const file of getE2eTsFiles()) {
+      const lines = readLines(file);
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        for (const term of bannedTerms) {
+          if (line.includes(term)) {
+            matches.push(`${file}:${i + 1}:${line.trim()}`);
+          }
+        }
+      }
+    }
+    expect(matches.join('\n')).toBe('');
+  });
+
+  it('no banned sci-fi terms in narrative data JSON', () => {
+    const matches: string[] = [];
+    for (const file of getJsonFiles()) {
       const lines = readLines(file);
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];

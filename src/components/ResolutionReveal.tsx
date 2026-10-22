@@ -27,17 +27,25 @@ function StepBadges({
 }) {
   return (
     <div className="flex flex-wrap justify-end gap-2">
-      <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>1. The Gazette</Badge>
+      <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>
+        1. {uiMeta.fanfare.step_gazette}
+      </Badge>
       <Badge
         variant={step === 'injuries' ? 'default' : 'secondary'}
         className={!hasInjuriesOrDeaths ? 'opacity-30' : ''}
       >
-        2. Medical Report
+        2. {uiMeta.fanfare.step_infirmary}
       </Badge>
-      <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>3. Combat Logs</Badge>
-      <Badge variant={step === 'math' ? 'default' : 'secondary'}>4. Simulation Math</Badge>
+      <Badge variant={step === 'bouts' ? 'default' : 'secondary'}>
+        3. {uiMeta.fanfare.step_bouts}
+      </Badge>
+      <Badge variant={step === 'math' ? 'default' : 'secondary'}>
+        4. {uiMeta.fanfare.step_steward}
+      </Badge>
       {hasDeaths && (
-        <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>5. The Graveyard</Badge>
+        <Badge variant={step === 'memorial' ? 'destructive' : 'secondary'}>
+          5. {uiMeta.fanfare.step_memorial}
+        </Badge>
       )}
     </div>
   );
@@ -125,7 +133,7 @@ function ResolutionDialog(props: {
               <CardTitle className="text-2xl font-display font-bold">
                 {uiMeta.fanfare.resolution_title}
               </CardTitle>
-              <CardDescription>Week {week - 1} Results</CardDescription>
+              <CardDescription>Week {week - 1}</CardDescription>
             </div>
             <StepBadges
               step={step}
@@ -152,8 +160,8 @@ function ResolutionDialog(props: {
 }
 
 /**
- * Resolution reveal — the weekly results stepper (gazette → medical →
- * combat logs → math → graveyard).
+ * Resolution reveal — the weekly results stepper (gazette → infirmary →
+ * bouts → steward's report → graveyard).
  */
 export default function ResolutionReveal() {
   const state = useGameStore(

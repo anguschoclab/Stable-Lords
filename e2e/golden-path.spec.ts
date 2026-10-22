@@ -119,8 +119,8 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   await advanceWeekBtn.click();
 
   // Wait for the week advancement to complete (resolution modal appears)
-  // The ResolutionReveal modal has "Cycle Resolution" as its title
-  await page.waitForSelector('text=Cycle Resolution', { timeout: 30_000 });
+  // The ResolutionReveal modal has "Week in Review" as its title
+  await page.waitForSelector('text=Week in Review', { timeout: 30_000 });
 
   // ── 6. Dismiss Resolution Modal ─────────────────────────────────────────
   // Click through all resolution steps: gazette → injuries → bouts → math → (memorial) → close

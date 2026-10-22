@@ -19,7 +19,7 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
       <StepHeader
         icon={Newspaper}
         iconClassName="text-primary"
-        title="The Weekly Gazette"
+        title={uiMeta.fanfare.report_gazette}
         className="mb-6"
       />
       <ScrollArea className="h-[calc(100%-4rem)] pr-4">

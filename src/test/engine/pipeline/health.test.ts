@@ -263,7 +263,7 @@ describe('pipeline/health', () => {
       const impact = computeHealthImpact(state, makeMockRNG());
 
       expect(impact.newsletterItems?.[0]?.week).toBe(7);
-      expect(impact.newsletterItems?.[0]?.title).toBe('Medical Report');
+      expect(impact.newsletterItems?.[0]?.title).toBe('The Infirmary Report');
     });
   });
 

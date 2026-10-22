@@ -29,6 +29,11 @@ vi.mock('@/data/narrative/uiMeta.json', () => ({
       btn_honor: 'Honor',
       btn_planning: 'Planning',
       btn_next: 'Next',
+      step_gazette: 'The Gazette',
+      step_infirmary: 'The Infirmary',
+      step_bouts: 'The Bouts',
+      step_steward: "Steward's Report",
+      step_memorial: 'The Graveyard',
     },
     memorials: {
       tributes: ['The arena grows colder with the loss of {{name}}.'],

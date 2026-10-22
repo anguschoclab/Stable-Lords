@@ -27,7 +27,7 @@ import { startNewGame } from './helpers';
 /**
  * Buttons that dismiss the various full-screen overlays that can appear.
  * Ordered topmost-first: DeathModal / WinScreen render at z-100 above the
- * Cycle Resolution overlay (z-50), so they must be dismissed first —
+ * Week in Review overlay (z-50), so they must be dismissed first —
  * Playwright would otherwise stall waiting for click actionability on a
  * covered button.
  */
@@ -46,7 +46,7 @@ const DISMISS_PATTERNS = [
  * the stable overview) can't masquerade as a modal.
  */
 const OVERLAY_PROBES = [
-  'div.fixed.inset-0:has-text("Cycle Resolution")',
+  'div.fixed.inset-0:has-text("Week in Review")',
   'div.fixed.inset-0:has-text("THE SANDS CLAIM ANOTHER")',
   'div.fixed.inset-0:has-text("Realm Champion")',
 ];
@@ -157,7 +157,7 @@ async function advanceLabel(page: Page, nav: NavFn): Promise<string> {
  * "Resolving Bouts…") or the button isn't in an advance state.
  */
 async function settledAdvanceLabel(page: Page, nav: NavFn): Promise<string> {
-  // Full pass budget: a death-bearing Cycle Resolution needs 5 sequential
+  // Full pass budget: a death-bearing Week in Review needs 5 sequential
   // step clicks alone, so a shallow pass count can leave it stuck on the
   // memorial step while the advance label already reads as settled.
   await dismissBlockingOverlays(page);

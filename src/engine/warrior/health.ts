@@ -46,7 +46,7 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
     rosterUpdates,
     newsletterItems:
       injuryNews.length > 0
-        ? [{ id: rng.uuid(), week: state.week, title: 'Medical Report', items: injuryNews }]
+        ? [{ id: rng.uuid(), week: state.week, title: 'The Infirmary Report', items: injuryNews }]
         : [],
   };
 }

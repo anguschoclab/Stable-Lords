@@ -523,6 +523,11 @@ The game uses a dual-voice system:
 - Stat labels: Short, ALL CAPS, 2-4 characters preferred (`ATK`, `END`, `HP`)
 - Numbers: Never spell out numbers for stats — always numerals
 - Empty states: Use evocative language: _"The Presses Are Silent"_ not _"No data available"_
+- No sim-speak in player-facing copy: reports and surfaces are named for the
+  in-world document or place they represent ("The Steward's Report", "The
+  Infirmary"), never for the mechanism behind them ("Simulation Math",
+  "Metrics", "Logs", "Delta", "Breakdown"). Enforced by
+  `src/test/config/terminology.test.ts` — add banned phrases there.
 
 ---
 

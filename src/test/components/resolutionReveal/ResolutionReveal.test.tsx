@@ -46,17 +46,24 @@ vi.mock('@/lib/AudioManager', () => ({
 vi.mock('@/data/narrative/uiMeta.json', () => ({
   default: {
     fanfare: {
-      report_math: 'Math Report',
-      report_combat: 'Combat Report',
+      report_math: "The Steward's Report",
+      report_combat: 'Bout Results',
       report_combat_empty: 'No bouts this week.',
-      report_medical: 'Medical Report',
+      report_medical: 'The Infirmary Report',
+      report_gazette: 'The Weekly Gazette',
+      report_steward_empty: 'No training gains or age marks this week.',
       gazette_empty: 'Nothing to report.',
-      resolution_title: 'Week Results',
+      resolution_title: 'Week in Review',
       btn_honor: 'Honor the Fallen',
       btn_planning: 'Planning Phase',
       btn_next: 'Next',
       memorial_title: 'In Memoriam',
       memorial_default: 'Fallen in combat.',
+      step_gazette: 'The Gazette',
+      step_infirmary: 'The Infirmary',
+      step_bouts: 'The Bouts',
+      step_steward: "Steward's Report",
+      step_memorial: 'The Graveyard',
     },
     memorials: {
       tributes: ['The arena grows colder with the loss of {{name}}.'],
@@ -77,6 +84,39 @@ describe('MathStep', () => {
   it('renders without crashing with null report', () => {
     const { container } = render(<MathStep lastSimulationReport={undefined} />);
     expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('renders the steward title and empty-state copy when there is nothing to report', () => {
+    render(<MathStep lastSimulationReport={undefined} />);
+    expect(screen.getByText("The Steward's Report")).toBeInTheDocument();
+    expect(screen.getByText('No training gains or age marks this week.')).toBeInTheDocument();
+  });
+
+  it('renders the empty-state copy when the report has no gains or aging events', () => {
+    render(
+      <MathStep
+        lastSimulationReport={
+          { treasuryChange: 0, trainingGains: [], agingEvents: [] } as never
+        }
+      />
+    );
+    expect(screen.getByText('No training gains or age marks this week.')).toBeInTheDocument();
+  });
+
+  it('lists training gains instead of the empty state when present', () => {
+    render(
+      <MathStep
+        lastSimulationReport={
+          {
+            treasuryChange: 40,
+            trainingGains: [{ warriorId: 'w1', warriorName: 'Alice', attr: 'ATK', gain: 2 }],
+            agingEvents: [],
+          } as never
+        }
+      />
+    );
+    expect(screen.getByText('Alice')).toBeInTheDocument();
+    expect(screen.queryByText('No training gains or age marks this week.')).not.toBeInTheDocument();
   });
 });
 
@@ -150,8 +190,27 @@ describe('ResolutionReveal controller', () => {
   it('presents results as a labelled modal dialog', () => {
     render(<ResolutionReveal />);
 
-    expect(screen.getByRole('dialog', { name: 'Week Results' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Week in Review' })).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toHaveAttribute('aria-modal', 'true');
+  });
+
+  it('labels the step badges with their in-world report names', () => {
+    render(<ResolutionReveal />);
+
+    expect(screen.getByText('1. The Gazette')).toBeInTheDocument();
+    expect(screen.getByText('2. The Infirmary')).toBeInTheDocument();
+    expect(screen.getByText('3. The Bouts')).toBeInTheDocument();
+    expect(screen.getByText("4. Steward's Report")).toBeInTheDocument();
+    expect(screen.queryByText('5. The Graveyard')).not.toBeInTheDocument();
+  });
+
+  it('adds the graveyard badge only when the week produced deaths', () => {
+    mockResolutionState.arenaHistory[0].pendingResolutionData.deaths = [
+      { id: 'w9', name: 'Fallen One' },
+    ];
+    render(<ResolutionReveal />);
+
+    expect(screen.getByText('5. The Graveyard')).toBeInTheDocument();
   });
 
   it('dismisses the resolution with Escape after clearing pending data', () => {

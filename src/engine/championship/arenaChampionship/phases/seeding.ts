@@ -56,15 +56,19 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
   for (const [warriorId, c] of claimed) {
     claimedByArena.set(c.arenaId, warriorId as WarriorId);
   }
+  // Single crown — fallback picks must join `picked` too, or the same
+  // runner-up is crowned at every vacant arena they rank at.
+  const picked = new Set<string>(claimed.keys());
   for (const arenaId of arenas) {
     const title = titleOf(state, delta, arenaId);
     if (title?.champion) continue;
     const rows = rankedByArena.get(arenaId) ?? [];
     const pickId =
-      claimedByArena.get(arenaId) ?? rows.find((r) => !claimed.has(r.warrior.id))?.warrior.id;
+      claimedByArena.get(arenaId) ?? rows.find((r) => !picked.has(r.warrior.id))?.warrior.id;
     if (!pickId) continue;
     const t = ensureTitle(state, delta, arenaId);
     crown(t, pickId, state.absoluteWeek);
+    picked.add(pickId);
     awardEpithet(state, delta, pickId, 'arena_champion');
   }
 }

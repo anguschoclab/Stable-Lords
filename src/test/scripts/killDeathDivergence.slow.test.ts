@@ -10,10 +10,9 @@
  * deaths exactly. Before this change the run measured divergence +11 to +21
  * driven by stale tournament participant snapshots re-killed at week boundaries.
  *
- * Note: `arena-champions` violations are deliberately out of this test's
- * scope — a pre-existing single-crown bug reproduces at HEAD on this seed
- * (verified: wk218 warrior-cad1d1f31cc2 double-crowned) and belongs to the
- * title system, not the death lifecycle.
+ * `arena-champions` is checked too — the historical single-crown hole
+ * (seedChampions pass-2 fallback re-crowning the same contender at multiple
+ * vacant arenas in one pass) is fixed in the championship seeding step.
  */
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { runSimulation } from '#scripts/simulation-harness';
@@ -78,9 +77,6 @@ describe('kill/death divergence regression (slow)', () => {
       onWeek: (state, w) => {
         for (const s of deadIdSightings(state)) sightings.push(`wk${w} ${s}`);
         for (const v of validateStateInvariants(state)) {
-          // Death-lifecycle checks only — `arena-champions` is a known
-          // pre-existing title-system bug (see file header).
-          if (v.id === 'arena-champions') continue;
           invariantViolations.push(`wk${w} ${v.id}: ${v.message}`);
         }
       },

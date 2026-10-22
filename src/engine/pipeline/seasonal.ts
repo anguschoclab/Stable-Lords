@@ -16,7 +16,7 @@ import * as offseason from './offseasonEvents';
 import type { OffseasonEventNarrative, OffseasonEventContext } from './offseasonEvents';
 import type { OffseasonEventRun } from './offseasonEvents/helpers';
 
-const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = {
+export const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = {
   chaos_rift: offseason.handleChaosRift,
   unexplained_monolith: offseason.handleUnexplainedMonolith,
   chaotic_weather_experiment: offseason.handleChaoticWeatherExperiment,

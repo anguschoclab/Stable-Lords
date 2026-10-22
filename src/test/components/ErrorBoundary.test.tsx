@@ -88,9 +88,39 @@ describe('ErrorBoundary', () => {
 
     // The recovery action resets the boundary; it must not pretend to reload
     // the page — label honesty: "Try Again", not "Reload Page".
+    expect(screen.queryByRole('button', { name: /reload|refresh/i })).toBeNull();
+    expect(document.body.innerHTML).not.toMatch(/reload page|refresh page/i);
     const retry = screen.getByRole('button', { name: /try again/i });
+    // Accessible name honesty — the aria-label matches the visible text.
+    expect(retry).toHaveAttribute('aria-label', 'Try Again');
+    expect(retry).toHaveTextContent('Try Again');
     shouldThrow = false;
     fireEvent.click(retry);
     expect(screen.getByText('recovered')).toBeInTheDocument();
+  });
+
+  it('re-arms after a successful retry — a second crash shows the fallback again', () => {
+    let shouldThrow = true;
+    function MaybeBomb() {
+      if (shouldThrow) throw new Error('transient');
+      return <div>recovered</div>;
+    }
+    const { rerender } = render(
+      <ErrorBoundary>
+        <MaybeBomb />
+      </ErrorBoundary>
+    );
+    shouldThrow = false;
+    fireEvent.click(screen.getByRole('button', { name: /try again/i }));
+    expect(screen.getByText('recovered')).toBeInTheDocument();
+
+    // A later crash must trip the boundary again, not render the raw error.
+    shouldThrow = true;
+    rerender(
+      <ErrorBoundary>
+        <MaybeBomb />
+      </ErrorBoundary>
+    );
+    expect(screen.getByText('Fatal Error')).toBeInTheDocument();
   });
 });

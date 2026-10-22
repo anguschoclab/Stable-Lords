@@ -14,6 +14,7 @@ import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 import {
   handleSecretFightClub,
   handleChaosWeaversGame,
+  handleFeyTrickster,
   type OffseasonEventNarrative,
   type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents';
@@ -137,6 +138,48 @@ describe('chaos weaver event handlers', () => {
     // Access the internal EVENT_HANDLERS — may need to export it or test indirectly
     // For now, verify the module loads without error
     expect(seasonalModule).toBeDefined();
+  });
+
+  const feyEvent: OffseasonEventNarrative = {
+    title: 'Fey Trickster',
+    effectType: 'fey_trickster',
+    newsletter: ['{name} was quizzed by a fey trickster.'],
+  };
+
+  it('handleFeyTrickster riddle-solved path grants XP and a Style insight token', () => {
+    const state = makeTestState();
+    // seed 42: pick consumes 1 next(), then next() = 0.448 < 0.6 → solved
+    const rng = new SeededRNG(42);
+    const ctx = makeCtx();
+
+    handleFeyTrickster({ state, nextWeek: 1, e: feyEvent, rng, ctx });
+
+    const update = ctx.rosterUpdates.get('w-test' as WarriorId);
+    expect(update).toBeDefined();
+    expect(update!.xp!).toBeGreaterThan(0);
+    expect(update!.injuries).toBeUndefined();
+    expect(ctx.insightTokens).toHaveLength(1);
+    expect(ctx.insightTokens[0]!.origin).toBe('Fey Trickster');
+    expect(ctx.insightTokens[0]!.type).toBe('Style');
+    expect(ctx.newsletterItems).toHaveLength(1);
+  });
+
+  it('handleFeyTrickster tricked path applies a Fey Prank Minor injury', () => {
+    const state = makeTestState();
+    // seed 5: pick consumes 1 next(), then next() = 0.773 >= 0.6 → tricked
+    const rng = new SeededRNG(5);
+    const ctx = makeCtx();
+
+    handleFeyTrickster({ state, nextWeek: 1, e: feyEvent, rng, ctx });
+
+    const update = ctx.rosterUpdates.get('w-test' as WarriorId);
+    expect(update).toBeDefined();
+    expect(update!.injuries).toHaveLength(1);
+    expect(update!.injuries![0]!.severity).toBe('Minor');
+    expect(update!.injuries![0]!.name).toBe('Fey Prank');
+    expect(update!.xp).toBeUndefined();
+    expect(ctx.insightTokens).toHaveLength(0);
+    expect(ctx.newsletterItems).toHaveLength(1);
   });
 
   it('seasonal module exports runSeasonalPass', async () => {

@@ -218,6 +218,49 @@ describe('seedChampions', () => {
     seedChampions(state, delta);
     expect(delta.arenaChampions['the_iron_cage']?.champion ?? null).toBeNull();
   });
+
+  it('never crowns the same fallback contender at two venues in one pass (single crown)', () => {
+    // w-ace leads all three venues; claimed at mudpit_arena (lone contender →
+    // largest margin). w-v is the first unclaimed row at BOTH other venues —
+    // the fallback pick must still obey single crown or it double-reigns.
+    const a = 'mudpit_arena';
+    const b = 'standard_arena';
+    const c = 'underpit_arena';
+    const wAce = makeWarrior({
+      id: 'w-ace' as WarriorId,
+      career: career({
+        byArena: {
+          [a]: { wins: 9, losses: 0, kills: 0 },
+          [b]: { wins: 9, losses: 0, kills: 0 },
+          [c]: { wins: 9, losses: 0, kills: 0 },
+        },
+      }),
+    });
+    const wV = makeWarrior({
+      id: 'w-v' as WarriorId,
+      career: career({
+        byArena: {
+          [b]: { wins: 7, losses: 0, kills: 0 },
+          [c]: { wins: 7, losses: 0, kills: 0 },
+        },
+      }),
+    });
+    const wX = warriorAtArena('w-x', c, { wins: 3, losses: 0 });
+    const state = makeGameState({ roster: [wAce, wV, wX] });
+    const delta = createChampionshipDelta();
+    seedChampions(state, delta);
+
+    const crownsOf = (id: string) =>
+      Object.entries(delta.arenaChampions).filter(
+        ([, t]) => t.champion?.warriorId === (id as WarriorId)
+      );
+    expect(crownsOf('w-ace')).toHaveLength(1);
+    expect(crownsOf('w-v').length).toBeLessThanOrEqual(1);
+    // No starvation — every seeded venue still crowns someone (w-x backfills).
+    for (const arenaId of [a, b, c]) {
+      expect(delta.arenaChampions[arenaId]?.champion?.warriorId).toBeDefined();
+    }
+  });
 });
 
 // ─── Contender selection ────────────────────────────────────────────────────

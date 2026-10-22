@@ -181,6 +181,26 @@ describe('arena mod echo narration', () => {
     }
   });
 
+  it('emits only echo lines when the flavor gate is forced shut (deterministic)', () => {
+    // rng.next() pinned above the 0.3 gate — the flavor line can never fire,
+    // so every emitted line must be an attribution echo (named + channel).
+    const rng = new SeededRNG(0);
+    rng.next = () => 0.99;
+    const ctx = { ...createNarrCtx(), rng };
+    const { log } = narrateEvents([initiativeEvent(['Monolith Pulse'])], ctx, 6);
+
+    const echoLines = ['named', 'initiative'].flatMap(
+      (k) => peekArchive(['pbp', 'arena_fx', 'echo', k]) ?? []
+    );
+    expect(echoLines.length).toBeGreaterThan(0);
+    // 1 named echo per source + 1 channel echo — nothing else survives the gate.
+    expect(log).toHaveLength(2);
+    const stripped = (t: string) =>
+      t.replaceAll('Monolith Pulse', '{{name}}').replaceAll('Thunderstrike', '{{name}}');
+    expect(log.every((l) => echoLines.includes(stripped(l.text)))).toBe(true);
+    expect(log.some((l) => l.text.includes('Monolith Pulse'))).toBe(true);
+  });
+
   it('echoes a riposte mod source on the riposte defense line', () => {
     const events: CombatEvent[] = [
       { type: 'ATTACK', actor: 'A', result: 'swing' },

@@ -1,31 +1,48 @@
 /**
- * Seasonal event handler coverage — verifies every JSON offseason event
- * has a handler and every handler has JSON data (except fey_trickster).
+ * Seasonal event handler coverage — bidirectional: every JSON offseason
+ * event dispatches to a registered handler and every registered handler is
+ * reachable from a JSON event's effectType.
  */
 import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
+import { EVENT_HANDLERS } from '@/engine/pipeline/seasonal';
 
 describe('seasonal event handler coverage', () => {
-  const jsonEvents = Object.keys(narrativeContent.offseason_events ?? {});
+  const jsonEvents = (narrativeContent.offseason_events ?? {}) as Record<
+    string,
+    { effectType?: string }
+  >;
+  const jsonKeys = Object.keys(jsonEvents);
+  const jsonEffectTypes = jsonKeys.map((key) => jsonEvents[key]?.effectType);
 
   it('every offseason_events key has a non-empty effectType', () => {
-    for (const key of jsonEvents) {
-      const entry = (narrativeContent.offseason_events as any)[key];
-      expect(entry.effectType, `Event "${key}" missing effectType`).toBeTruthy();
+    for (const key of jsonKeys) {
+      expect(jsonEvents[key]?.effectType, `Event "${key}" missing effectType`).toBeTruthy();
     }
   });
 
   it('no duplicate effectTypes in offseason_events', () => {
-    const effectTypes = jsonEvents.map(
-      (key) => (narrativeContent.offseason_events as any)[key].effectType
-    );
-    const uniqueTypes = new Set(effectTypes);
-    expect(uniqueTypes.size, 'Duplicate effectTypes found').toBe(effectTypes.length);
+    const uniqueTypes = new Set(jsonEffectTypes);
+    expect(uniqueTypes.size, 'Duplicate effectTypes found').toBe(jsonEffectTypes.length);
   });
 
-  it('fey_trickster is a known exception (handler exists, no JSON entry)', () => {
-    // fey_trickster has a handler in EVENT_HANDLERS but no JSON entry
-    // This is a pre-existing issue, not a merge bug
-    expect(jsonEvents).not.toContain('fey_trickster');
+  it('every JSON effectType resolves to a registered handler', () => {
+    for (const key of jsonKeys) {
+      const effectType = jsonEvents[key]?.effectType;
+      expect(
+        effectType && EVENT_HANDLERS[effectType],
+        `Event "${key}" has effectType "${effectType}" with no handler`
+      ).toBeTypeOf('function');
+    }
+  });
+
+  it('every registered handler is reachable from a JSON event', () => {
+    const reachable = new Set(jsonEffectTypes);
+    for (const handlerKey of Object.keys(EVENT_HANDLERS)) {
+      expect(
+        reachable.has(handlerKey),
+        `Handler "${handlerKey}" has no offseason_events entry — dead code`
+      ).toBe(true);
+    }
   });
 });

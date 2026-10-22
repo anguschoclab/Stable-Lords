@@ -12,6 +12,7 @@ import {
   makeFightSummary,
   makeGameState,
 } from '@/test/_fixtures/factories';
+import { selfVsOppState } from '@/test/_fixtures/intelDossier';
 import type { StableId, WarriorId } from '@/types/shared.types';
 
 describe('updateDossiers — observedTells', () => {
@@ -22,10 +23,8 @@ describe('updateDossiers — observedTells', () => {
       plan: { OE: 9, AL: 2 } as never,
       lastBoutWeek: 5,
     });
-    const opp = makeRival({ id: 'opp-1' as StableId, roster: [oppWarrior] });
-    const state = makeGameState({
-      rivals: [self, opp],
-      absoluteWeek: 5,
+    const { state } = selfVsOppState({
+      opp: makeRival({ id: 'opp-1' as StableId, roster: [oppWarrior] }),
       arenaHistory: [
         makeFightSummary({
           warriorIdA: 'ow1' as WarriorId,
@@ -92,24 +91,7 @@ describe('updateDossiers — observedTells', () => {
       plan: { OE: 10, AL: 10 } as never,
       lastBoutWeek: 5,
     });
-    const self = makeRival({ id: 'self-1' as StableId, roster: [mine] });
-    const opp = makeRival({
-      id: 'opp-1' as StableId,
-      roster: [makeWarrior({ id: 'ow1' as WarriorId })],
-    });
-    const state = makeGameState({
-      rivals: [self, opp],
-      absoluteWeek: 5,
-      arenaHistory: [
-        makeFightSummary({
-          warriorIdA: 'rw1' as WarriorId,
-          warriorIdD: 'ow1' as WarriorId,
-          stableIdA: 'self-1' as StableId,
-          stableIdD: 'opp-1' as StableId,
-          absoluteWeek: 5,
-        }),
-      ],
-    });
+    const { self, state } = selfVsOppState({ selfWarrior: mine });
 
     const out = updateDossiers(self, state);
     expect(out['self-1']).toBeUndefined();

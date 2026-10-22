@@ -9,12 +9,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 // Mock framer-motion
-vi.mock('framer-motion', () => ({
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-  motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  },
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 // Mock audio
 vi.mock('@/lib/AudioManager', () => ({
@@ -29,17 +24,10 @@ vi.mock('@/data/narrative/uiMeta.json', () => ({
       btn_honor: 'Honor',
       btn_planning: 'Planning',
       btn_next: 'Next',
-      step_gazette: 'The Gazette',
-      step_infirmary: 'The Infirmary',
-      step_bouts: 'The Bouts',
-      step_steward: "Steward's Report",
-      step_memorial: 'The Graveyard',
+      ...__SHARED_MOCKS.uiMeta.UI_META_STEPS,
     },
-    memorials: {
-      tributes: ['The arena grows colder with the loss of {{name}}.'],
-    },
-    meta: { flair: {}, title: {}, injury: {}, status: {} },
-    persona: { good: {}, bad: {}, descriptors: { coordination: {} } },
+    memorials: __SHARED_MOCKS.uiMeta.UI_META_MEMORIALS,
+    ...__SHARED_MOCKS.uiMeta.UI_META_TAIL,
   },
 }));
 

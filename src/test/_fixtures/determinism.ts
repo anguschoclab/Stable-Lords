@@ -1,5 +1,8 @@
 import { expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { SeededRNG } from '@/utils/random';
+import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/game';
 
 /**
@@ -31,4 +34,22 @@ export function expectDeterministic<T>(fn: () => T, label = 'run'): T {
   const r2 = fn();
   expect(r1, `${label} diverged between identical runs`).toEqual(r2);
   return r1;
+}
+
+/** Flat-attribute deterministic fighter — the A/D twins pinned by the
+ * determinism/narration specs (all attrs equal, seeded rng, no id). */
+export function makeFlatWarrior(
+  name: string,
+  style: FightingStyle,
+  flat = 15,
+  seed = 1
+): Warrior {
+  return makeWarrior({
+    id: undefined,
+    name,
+    style,
+    attrs: { ST: flat, CN: flat, SZ: flat, WT: flat, WL: flat, SP: flat, DF: flat },
+    overrides: undefined,
+    rng: new SeededRNG(seed),
+  });
 }

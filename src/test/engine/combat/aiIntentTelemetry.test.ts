@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { makeFlatWarrior } from '@/test/_fixtures/determinism';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
@@ -12,22 +13,8 @@ function collectIntentCodes(entries: ExchangeLogEntry[] | undefined): string[] {
 }
 
 function makeFighters(seed: number) {
-  const A = makeWarrior({
-    id: undefined,
-    name: 'A',
-    style: FightingStyle.LungingAttack,
-    attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
-    overrides: undefined,
-    rng: new SeededRNG(seed),
-  });
-  const D = makeWarrior({
-    id: undefined,
-    name: 'D',
-    style: FightingStyle.TotalParry,
-    attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
-    overrides: undefined,
-    rng: new SeededRNG(seed + 100),
-  });
+  const A = makeFlatWarrior('A', FightingStyle.LungingAttack, 15, seed);
+  const D = makeFlatWarrior('D', FightingStyle.TotalParry, 15, seed + 100);
   return { A, D };
 }
 

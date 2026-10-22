@@ -3,7 +3,7 @@ import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { GameState } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import * as recruitmentModule from '@/engine/recruitment/recruitment';
-import { makePoolWarrior, makeRival } from '@/test/_fixtures/factories';
+import { makePoolWarrior, makeRival , VETERAN_60 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { StableId } from '@/types/shared.types';
 
@@ -297,12 +297,7 @@ describe('runRecruitmentPass', () => {
       source: 'freeAgent',
       cost: 400,
       shelfWeeksRemaining: 1,
-      veteran: {
-        fame: 60,
-        popularity: 20,
-        career: { wins: 5, losses: 2, kills: 0 },
-        titles: [],
-      },
+      veteran: VETERAN_60,
     });
     const state = {
       week: 10,

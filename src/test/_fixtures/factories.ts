@@ -5,7 +5,7 @@
  * Replaces the per-suite local `makeWarrior`/`makeRival` copies. Every builder
  * returns objects that parse cleanly through the matching Zod schema.
  */
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { Warrior, InjuryData, AttributePotential } from '@/types/warrior.types';
 import type { FighterState } from '@/engine/combat/resolution/types';
 import type { ResolutionContext } from '@/engine/combat/resolution/types';
 import type { WeatherType } from '@/types/shared.types';
@@ -166,6 +166,120 @@ export function makeOwner(over: Partial<Owner> = {}): Owner {
     renown: 50,
     titles: 0,
     personality: 'Pragmatic',
+    ...over,
+  };
+}
+
+/** Pinned player-stable Owner record shared across test-state literals. */
+export const TEST_PLAYER: Owner = makeOwner({
+  id: 'player-1' as StableId,
+  name: 'Player',
+  stableName: 'Player Stable',
+  fame: 0,
+  renown: 0,
+  titles: 0,
+});
+
+/** The p1/Player-Stable owner with personality unset — pinned by
+ * collection/scheduling specs that build the owner inline. */
+export const TEST_PLAYER_P1: Owner = makeOwner({
+  id: 'p1' as StableId,
+  name: 'Player',
+  stableName: 'Player Stable',
+  fame: 0,
+  renown: 0,
+  personality: undefined,
+});
+
+/** Shared meta pin for test-state literals. */
+export const TEST_META = { gameName: 'test', version: '1', createdAt: '2024-01-01' };
+
+/** Pinned meter-test attribute ramp shared by StyleMeterTable/arenaFit. */
+export const TEST_ATTRS: Attributes = { ST: 10, CN: 12, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 };
+
+/** Flat AttributePotential pin — v across every attribute. */
+export const makeFlatPotential = (v: number): AttributePotential => ({
+  ST: v,
+  CN: v,
+  SZ: v,
+  WT: v,
+  WL: v,
+  SP: v,
+  DF: v,
+});
+
+/** Pinned veteran record shared by freeAgent/recruitment pool literals. */
+export const VETERAN_60 = {
+  fame: 60,
+  popularity: 20,
+  career: { wins: 5, losses: 2, kills: 0 },
+  titles: [],
+};
+
+/** Schema-loose 'Alpha vs Beta' filler bout for history/truncation bounds. */
+export const makeStubBout = (id: string, week = 1): FightSummary =>
+  ({
+    id,
+    week,
+    title: 'Alpha vs Beta',
+    warriorIdA: 'wA',
+    warriorIdD: 'wD',
+    winner: 'A',
+    by: 'KO',
+    styleA: 'X',
+    styleD: 'Y',
+    createdAt: '2025-01-01T00:00:00.000Z',
+  }) as unknown as FightSummary;
+
+/** Pinned 'Test Fight' w1-vs-w2 KO summary shared by impact/truncation specs. */
+export function makeStubFight(over: Partial<FightSummary> = {}): FightSummary {
+  return makeFightSummary({
+    week: 1,
+    warriorIdA: 'w1' as WarriorId,
+    warriorIdD: 'w2' as WarriorId,
+    stableIdA: 's-a' as StableId,
+    stableIdD: 's-d' as StableId,
+    styleA: FightingStyle.StrikingAttack,
+    styleD: FightingStyle.TotalParry,
+    winner: 'A',
+    by: 'KO',
+    title: 'Test Fight',
+    transcript: [],
+    ...over,
+  } as Partial<FightSummary>);
+}
+
+/** Signed bout offer — both warriors accepted (plan-masking/persistence specs). */
+export function makeSignedOffer(proposerId: string, aId: string, dId: string): BoutOffer {
+  return makeBoutOffer({
+    warriorIds: [aId as never, dId as never],
+    proposerStableId: proposerId as never,
+    status: 'Signed',
+    responses: { [aId]: 'Accepted', [dId]: 'Accepted' } as never,
+  });
+}
+
+/** Minimal plausible-state fields shared by storage plausibility/archive specs. */
+export const TINY_STATE_FIELDS = {
+  ftueComplete: true,
+  isFTUE: false,
+  treasury: 100,
+  player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
+  progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
+  rivals: [],
+  recruitPool: [],
+} as unknown as Partial<GameState>;
+
+/** Zeroed processWeekBouts summary shared by bout-pipeline mock returns. */
+export function makeBoutSummary(over: Record<string, unknown> = {}) {
+  return {
+    bouts: 0,
+    deaths: 0,
+    injuries: 0,
+    deathRefs: [],
+    injuryRefs: [],
+    hadPlayerDeath: false,
+    hadRivalryEscalation: false,
     ...over,
   };
 }
@@ -484,6 +598,55 @@ export function makeFightSummary(over: Partial<FightSummary> = {}): FightSummary
   };
 }
 
+/** Named fight: Alice vs Bob — shared across awards/event-log specs. */
+export function makeAliceBobFight(): FightSummary {
+  return makeFightSummary({
+    id: 'f1' as never,
+    title: 'Alice vs Bob',
+    winner: 'A',
+    by: 'KO',
+    week: 1,
+    warriorIdA: 'w1' as never,
+    warriorIdD: 'w2' as never,
+    styleA: 'Bashing Attack',
+    styleD: 'Parry',
+    createdAt: '2024-01-01',
+  });
+}
+
+/** Named fight: Carol vs Dave (kill) — shared across awards/event-log specs. */
+export function makeCarolDaveFight(): FightSummary {
+  return makeFightSummary({
+    id: 'f2' as never,
+    title: 'Carol vs Dave',
+    winner: 'D',
+    by: 'Kill',
+    week: 2,
+    warriorIdA: 'w3' as never,
+    warriorIdD: 'w4' as never,
+    styleA: 'Striking Attack',
+    styleD: 'Evasion',
+    createdAt: '2024-01-02',
+  });
+}
+
+/** Named digest fight — shared across digest-mini / useDigestSummary specs. */
+export function makeDigestFight(over: Partial<FightSummary> = {}): FightSummary {
+  return makeFightSummary({
+    id: 'fight-1' as FightId,
+    title: 'Test Fight',
+    warriorIdA: 'wa' as WarriorId,
+    warriorIdD: 'wd' as WarriorId,
+    winner: 'A',
+    by: 'KO',
+    styleA: 'Brawler',
+    styleD: 'Technician',
+    createdAt: '2026-01-01T00:00:00Z',
+    ...over,
+    absoluteWeek: over.absoluteWeek ?? over.week ?? 10,
+  } as FightSummary);
+}
+
 /**
  * GameState built on `createFreshState`, with overrides applied and the
  * per-week lookup caches (warriorMap / warriorToStableMap / rivalMap /
@@ -720,3 +883,16 @@ export function makeInjury(over: Partial<InjuryData> = {}): InjuryData {
     ...over,
   };
 }
+
+/** 'Iron Wolves' rival r1 shared by entity-index/route-crumbs specs. */
+export const makeIronWolvesRival = (): RivalStableData =>
+  makeRival({
+    id: 'r1' as StableId,
+    owner: makeOwner({ id: 'r1' as StableId, stableName: 'Iron Wolves' }),
+  });
+
+/** Minimal FightOutcome for reporting/resolve specs. */
+export function makeOutcome(over: Partial<FightOutcome> = {}): FightOutcome {
+  return { winner: 'A', by: 'KO', minutes: 5, log: [], ...over };
+}
+

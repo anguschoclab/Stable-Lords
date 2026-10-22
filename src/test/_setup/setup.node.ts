@@ -9,7 +9,10 @@ import { enableMapSet } from 'immer';
 enableMapSet();
 
 // Ensure the avatar catalog is always available in tests so components that
-// render portraits don't crash waiting for an async manifest load.
+// render portraits don't crash waiting for an async manifest load. Required
+// in BOTH projects — node-env specs exercise the catalog too (avatarGenerator,
+// avatarCatalog, avatarLifecycle, avatarSlice; wave-2 measured: a dom-only
+// stub breaks 16 node-env tests, and the per-test cost is a cached no-op).
 beforeEach(async () => {
   const { loadAvatarCatalog } = await import('@/engine/avatar/avatarCatalog');
   const { createTestAvatarCatalog } = await import('@/test/_fixtures/avatarCatalog');

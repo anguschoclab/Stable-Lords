@@ -10,6 +10,7 @@ import {
 import type { Attributes } from '@/types/shared.types';
 import type { AttributePotential } from '@/types/warrior.types';
 import { SeededRNG } from '@/utils/random';
+import { makeFlatPotential } from '@/test/_fixtures/factories';
 
 describe('Potential System', () => {
   const mockAttrs: Attributes = {
@@ -125,15 +126,7 @@ describe('Potential System', () => {
 
   describe('potentialRating and grade', () => {
     it('should calculate rating correctly based on max possible (175)', () => {
-      const mockPotential: AttributePotential = {
-        ST: 25,
-        CN: 25,
-        SZ: 25,
-        WT: 25,
-        WL: 25,
-        SP: 25,
-        DF: 25,
-      };
+      const mockPotential: AttributePotential = makeFlatPotential(25);
       // Total 175 / 175 = 100%
       expect(potentialRating(mockPotential)).toBe(100);
     });

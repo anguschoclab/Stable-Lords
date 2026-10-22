@@ -27,6 +27,7 @@ import { FightingStyle, ATTRIBUTE_MAX } from '@/types/shared.types';
 import {
   makeComputedWarrior as fixtureComputedWarrior,
   makeRival as fixtureRival,
+  makeInjury,
 } from '@/test/_fixtures/factories';
 
 const makeWarrior = (
@@ -168,14 +169,7 @@ describe('processRoster', () => {
       {},
       {
         injuries: [
-          {
-            id: 'i1' as any,
-            name: 'Sprain',
-            description: 'Ouch',
-            severity: 'Minor',
-            weeksRemaining: 2,
-            penalties: {},
-          },
+          makeInjury({ id: 'i1' as any, name: 'Sprain', description: 'Ouch', weeksRemaining: 2 }),
         ],
       }
     );

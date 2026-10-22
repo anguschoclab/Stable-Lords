@@ -12,13 +12,7 @@ import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 import { makeTournament } from '@/test/_fixtures/tournamentState';
 
 // ─── Shared mocks (mirror src/test/components/tournaments/Tournaments.test.tsx) ──
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreEmpty }));
 

@@ -2,7 +2,7 @@ import type { GameState, BoutOffer, Promoter } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, makePromoter } from '@/test/_fixtures/factories';
 
 /**
  * Minimal week state carrying one signed bout: Fighter A (player roster) vs
@@ -30,16 +30,13 @@ export function makeSignedBoutState(): GameState {
     rng: rng,
   });
 
-  const promoter: Promoter = {
+  const promoter: Promoter = makePromoter({
     id: 'promoter-1' as import('@/types/shared.types').PromoterId,
     name: 'Test Promoter',
     age: 40,
-    personality: 'Honorable',
-    tier: 'Local',
     capacity: 5,
     biases: [],
-    history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 },
-  };
+  });
 
   const offer: BoutOffer = {
     id: 'offer-1' as import('@/types/shared.types').BoutOfferId,

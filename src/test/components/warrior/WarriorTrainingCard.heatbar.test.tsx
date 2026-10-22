@@ -4,19 +4,9 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { makeTrainingWarrior, makeTrainingCardProps } from '@/test/_fixtures/trainingCard';
 
-vi.mock('@/engine/training', () => ({
-  computeGainChance: vi.fn(() => 0),
-}));
-
-vi.mock('@/engine/warrior/potential', () => ({
-  canGrow: vi.fn(() => true),
-}));
-
-vi.mock('@/engine/training/trainingGains/traitTraining', () => ({
-  traitTrainingPool: vi.fn(() => []),
-  canAcquireTrait: vi.fn(() => false),
-  TRAIT_CAP: 3,
-}));
+vi.mock('@/engine/training', () => __SHARED_MOCKS.warriorTrainingDeps.training(0));
+vi.mock('@/engine/warrior/potential', () => __SHARED_MOCKS.warriorTrainingDeps.potential);
+vi.mock('@/engine/training/trainingGains/traitTraining', () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining);
 
 import { computeGainChance } from '@/engine/training';
 import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';

@@ -2,7 +2,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
   verifyBoutAcceptance,
-  evaluateBoutOffer,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
 import {
@@ -17,6 +16,7 @@ import { makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { ARENA_COMMISSION_ID, ARENA_TITLE } from '@/constants/arena';
 import type { ArenaTitle, BoutOffer, GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+import { evalBoutOffer } from '@/test/_fixtures/competitionWorker';
 
 beforeEach(() => resetFixtureIds());
 
@@ -109,12 +109,10 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: offer,
         rival: rival,
         warrior: champ,
-        currentWeek: 5,
-        weather: 'Clear',
         opponent: killer('k1'),
         state: state,
       })
@@ -133,12 +131,10 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(0);
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: offer,
         rival: rival,
         warrior: champ,
-        currentWeek: 5,
-        weather: 'Clear',
         opponent: makeWarrior({ id: 'k1' as WarriorId }),
         state: state,
       })
@@ -156,12 +152,10 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('w1', 'k1');
     const state = stateWithTitle(ARENA_TITLE.REFUSALS_TO_STRIP - 1);
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: offer,
         rival: rival,
         warrior: champ,
-        currentWeek: 5,
-        weather: 'Clear',
         opponent: killer('k1'),
         state: state,
       })
@@ -177,12 +171,10 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: offer,
         rival: rival,
         warrior: challenger,
-        currentWeek: 5,
-        weather: 'Clear',
         opponent: killer('champ_x'),
         state: state,
       })
@@ -198,12 +190,10 @@ describe('evaluateBoutOffer — reign management', () => {
     const offer = titleOffer('champ_x', 'w1');
     const state = stateWithTitle(0, 'champ_x');
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: offer,
         rival: rival,
         warrior: challenger,
-        currentWeek: 5,
-        weather: 'Clear',
         opponent: killer('champ_x'),
         state: state,
       })

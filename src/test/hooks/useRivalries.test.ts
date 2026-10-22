@@ -2,27 +2,18 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useRivalriesList, useRivalWarriorStable, useNameResolver } from '@/hooks/useRivalries';
-import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 
-import { FightingStyle } from '@/types/shared.types';
 import '@/test/_setup/setup';
 import {
-  makeWarrior as fixtureWarrior,
+  makeStrikingWarrior,
   makeFightSummary as fixtureFightSummary,
   makeGameState as fixtureGameState,
 } from '@/test/_fixtures/factories';
 
 type RivalryStateSlice = Parameters<typeof useRivalriesList>[0];
 
-const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: id as Warrior['id'],
-    name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    fame: 0,
-    ...overrides,
-  } as any);
+const makeWarrior = makeStrikingWarrior;
 
 const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
   fixtureFightSummary({

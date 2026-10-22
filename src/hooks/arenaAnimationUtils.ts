@@ -187,6 +187,88 @@ function roleContext(
   return { actor, victim, dir, att, vic, setFighter };
 }
 
+type EventKind = ReturnType<typeof classifyEvent>;
+type SetFighter = (side: 'A' | 'D', patch: Partial<FighterPose>) => void;
+
+interface PoseCtx {
+  prev: ArenaState;
+  event: MinuteEvent;
+  text: string;
+  nameA: string;
+  actor: 'A' | 'D';
+  victim: 'A' | 'D';
+  dir: 1 | -1;
+  att: FighterPose;
+  vic: FighterPose;
+  setFighter: SetFighter;
+}
+
+// Actor lunges forward, victim flinches.
+function poseHit(c: PoseCtx) {
+  c.setFighter(c.actor, { x: toward(c.att.x, c.vic.x, 8, c.actor), y: -3, stance: 'lunging' });
+  c.setFighter(c.victim, {
+    x: clampMove(c.vic.x, 2, c.dir, c.dir === 1 ? 95 : 5),
+    stance: 'defending',
+  });
+}
+
+// Actor overextends, victim retreats slightly.
+function poseMiss(c: PoseCtx) {
+  c.setFighter(c.actor, {
+    x: clampMove(c.att.x, 5, c.dir, c.dir === 1 ? 45 : 55),
+    stance: 'advancing',
+  });
+  c.setFighter(c.victim, {
+    x: clampMove(c.vic.x, 3, c.dir, c.dir === 1 ? 95 : 5),
+    stance: 'retreating',
+  });
+}
+
+// Both exchange positions — the victim counters back into the actor.
+function poseRiposte(c: PoseCtx) {
+  c.setFighter(c.actor, { x: toward(c.att.x, c.vic.x, 4, c.actor), stance: 'defending' });
+  c.setFighter(c.victim, { x: toward(c.vic.x, c.att.x, 6, c.victim), y: -2, stance: 'lunging' });
+}
+
+// Victor stands triumphantly, victim falls.
+function poseFinish(c: PoseCtx) {
+  c.setFighter(c.victim, { y: 15, stance: 'defeated' });
+  c.setFighter(c.actor, { stance: 'victorious' });
+}
+
+// Fighter slows down — the named fighter drops to stunned.
+function poseExhaust(c: PoseCtx) {
+  if (c.text.includes(c.nameA?.toLowerCase() ?? '')) {
+    c.setFighter('A', { stance: 'stunned' });
+  } else {
+    c.setFighter('D', { stance: 'stunned' });
+  }
+}
+
+// Fighter seizes initiative — advances.
+function poseInitiative(c: PoseCtx) {
+  c.setFighter(c.actor, { x: toward(c.att.x, c.vic.x, 5, c.actor), stance: 'advancing' });
+}
+
+// The named fighter is the one who lost/retrieved the weapon — the disarmed
+// drop to a defensive posture; a rearmer darts forward to scoop it back up.
+function poseDisarm(c: PoseCtx) {
+  const isRearm = c.event.events?.some((e) => e.type === 'REARM');
+  c.setFighter(c.actor, isRearm ? { stance: 'advancing' } : { stance: 'defending' });
+}
+
+const POSE_HANDLERS: Partial<Record<EventKind, (c: PoseCtx) => void>> = {
+  hit: poseHit,
+  crit: poseHit,
+  miss: poseMiss,
+  riposte: poseRiposte,
+  death: poseFinish,
+  ko: poseFinish,
+  exhaust: poseExhaust,
+  initiative: poseInitiative,
+  disarm: poseDisarm,
+};
+
 /**
  * Updates fighter poses for one bout event. The animation is side-mirrored:
  * the actor advances rightward when fighting as A and leftward as D, so each
@@ -203,74 +285,13 @@ export function processArenaEvent(
   const type = classifyEvent(event);
   const text = event.text.toLowerCase();
   const newState = { ...prev };
-  const { actor, victim, dir, att, vic, setFighter } = roleContext(
-    prev,
-    newState,
-    text,
-    nameA,
-    nameD
-  );
+  const roles = roleContext(prev, newState, text, nameA, nameD);
 
-  // Update poses based on event type
-  switch (type) {
-    case 'hit':
-    case 'crit':
-      // Actor lunges forward, victim flinches
-      setFighter(actor, { x: toward(att.x, vic.x, 8, actor), y: -3, stance: 'lunging' });
-      setFighter(victim, { x: clampMove(vic.x, 2, dir, dir === 1 ? 95 : 5), stance: 'defending' });
-      break;
-
-    case 'miss':
-      // Actor overextends, victim retreats slightly
-      setFighter(actor, {
-        x: clampMove(att.x, 5, dir, dir === 1 ? 45 : 55),
-        stance: 'advancing',
-      });
-      setFighter(victim, {
-        x: clampMove(vic.x, 3, dir, dir === 1 ? 95 : 5),
-        stance: 'retreating',
-      });
-      break;
-
-    case 'riposte':
-      // Both exchange positions — the victim counters back into the actor
-      setFighter(actor, { x: toward(att.x, vic.x, 4, actor), stance: 'defending' });
-      setFighter(victim, { x: toward(vic.x, att.x, 6, victim), y: -2, stance: 'lunging' });
-      break;
-
-    case 'death':
-    case 'ko':
-      // Victor stands triumphantly, victim falls
-      setFighter(victim, { y: 15, stance: 'defeated' });
-      setFighter(actor, { stance: 'victorious' });
-      break;
-
-    case 'exhaust':
-      // Fighter slows down
-      if (text.includes(nameA?.toLowerCase() ?? '')) {
-        setFighter('A', { stance: 'stunned' });
-      } else {
-        setFighter('D', { stance: 'stunned' });
-      }
-      break;
-
-    case 'initiative':
-      // Fighter seizes initiative - advances
-      setFighter(actor, { x: toward(att.x, vic.x, 5, actor), stance: 'advancing' });
-      break;
-
-    case 'disarm': {
-      // The named fighter is the one who lost/retrieved the weapon — the
-      // disarmed drop to a defensive posture; a rearmer darts forward to
-      // scoop the weapon back up.
-      const isRearm = event.events?.some((e) => e.type === 'REARM');
-      setFighter(actor, isRearm ? { stance: 'advancing' } : { stance: 'defending' });
-      break;
-    }
-
-    default:
-      driftTowardNeutralSpacing(prev, newState);
-      break;
+  const handler = POSE_HANDLERS[type];
+  if (handler) {
+    handler({ prev, event, text, nameA, ...roles });
+  } else {
+    driftTowardNeutralSpacing(prev, newState);
   }
 
   // Add speech bubble if appropriate

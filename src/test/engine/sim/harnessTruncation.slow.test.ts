@@ -6,22 +6,11 @@ import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { DeferredBoutLog } from '@/types/state.types';
 import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
+import { makeStubBout } from '@/test/_fixtures/factories';
 
 // Minimal valid FightSummary shape — the weekly pipeline parses `title`
 // (getNamesFromTitle) and reads warriorIdA/D, winner, styleA/D.
-const makeBout = (id: string) =>
-  ({
-    id,
-    week: 1,
-    title: 'Alpha vs Beta',
-    warriorIdA: 'wA',
-    warriorIdD: 'wD',
-    winner: 'A',
-    by: 'KO',
-    styleA: 'X',
-    styleD: 'Y',
-    createdAt: '2025-01-01T00:00:00.000Z',
-  }) as any;
+const makeBout = (id: string) => makeStubBout(id) as any;
 
 vi.mock('@/engine/storage/opfsArchive', () => ({ ...__SHARED_MOCKS.opfsArchive }));
 

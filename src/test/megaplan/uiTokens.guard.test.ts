@@ -14,6 +14,12 @@ import { collectUiAudit } from '../../../scripts/ui-audit-scan.mjs';
  * and const refs caught by a loose `(['"\`>])` trigger). The rule now only
  * counts SCREAMING_SNAKE in display positions (JSX text children, display
  * attributes) — verified zero real occurrences — so the ceiling is 0.
+ *
+ * V19 design-bible conformance sweep (§C): four new classes at ceiling 0 —
+ *   radius-violation    0px structural radius (rounded-none/rounded-full exempt)
+ *   undefined-class     glow-/animate- tokens must resolve (dead-class bait)
+ *   italic-tabular      numbers never render italic
+ *   tracking-overflow   letter-spacing never exceeds 0.15em
  */
 const CEILINGS = {
   'token-violation': 0,
@@ -21,6 +27,11 @@ const CEILINGS = {
   'motion-violation': 0,
   'rng-violation': 0,
   'fake-chrome': 0,
+  'radius-violation': 0,
+  'undefined-class': 0,
+  'italic-tabular': 0,
+  'tracking-overflow': 0,
+  'dead-keyframe': 0,
 } as const;
 
 describe('megaplan: design-token guard', () => {

@@ -11,10 +11,10 @@ import { FightingStyle, type GameState, type Warrior } from '@/types/game';
 import { resolveImpacts } from '@/engine/impacts';
 import { vi } from 'vitest';
 import { SeededRNG } from '@/utils/random';
-import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
-import {
+import { makeInjury,
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
 } from '@/test/_fixtures/factories';
@@ -91,14 +91,7 @@ describe('Training System', () => {
         { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
         {
           injuries: [
-            {
-              id: 'i1' as InjuryId,
-              name: 'Cut',
-              description: 'Ouch',
-              severity: 'Minor',
-              weeksRemaining: 2,
-              penalties: {},
-            },
+            makeInjury({ id: 'i1' as any, name: 'Cut', description: 'Ouch', weeksRemaining: 2 }),
           ],
         }
       );

@@ -65,7 +65,7 @@ export function PersonalityGuide() {
         {(Object.keys(PERSONALITY_CONFIG) as PromoterPersonality[]).map((p) => (
           <div
             key={p}
-            className={`p-2 rounded border text-[10px] space-y-1 ${PERSONALITY_CONFIG[p].color}`}
+            className={`p-2 rounded-none border text-[10px] space-y-1 ${PERSONALITY_CONFIG[p].color}`}
           >
             <div className="flex items-center gap-1.5 font-bold">
               {PERSONALITY_CONFIG[p].icon}

@@ -11,12 +11,12 @@ import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 import {
   handleSecretFightClub,
   handleChaosWeaversGame,
   handleFeyTrickster,
   type OffseasonEventNarrative,
-  type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents';
 
 const makeTestState = (): GameState =>
@@ -33,15 +33,7 @@ const makeTestState = (): GameState =>
     ],
   });
 
-function makeCtx(): OffseasonEventContext {
-  return {
-    rosterUpdates: new Map<WarriorId, Partial<any>>(),
-    newsletterItems: [],
-    ledgerEntries: [],
-    insightTokens: [],
-    treasuryDelta: 0,
-  };
-}
+const makeCtx = makeOffseasonCtx;
 
 const fightClubEvent: OffseasonEventNarrative = {
   title: 'Secret Fight Club',

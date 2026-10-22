@@ -173,8 +173,11 @@ describe('megaplan V18: test-tier deduplication', () => {
       'src/test/components/eventLog/EventLog.test.tsx',
       'src/test/engine/impacts/resolveImpacts.test.ts',
       'src/test/engine/storage/truncationBounds.test.ts',
-    ].filter((f) => !/makeFightSummary/.test(fileText(f)));
-    expect(offenders, 'spec files not repointed to makeFightSummary').toEqual([]);
+    ].filter(
+      (f) =>
+        !/makeFightSummary|makeAliceBobFight|makeCarolDaveFight|makeStubFight/.test(fileText(f))
+    );
+    expect(offenders, 'spec files not repointed to a shared fight-summary factory').toEqual([]);
   });
 
   it('D12: rival/rivalMap literals repointed to makeRival/makeOwner — MEGAPLAN-D12', () => {

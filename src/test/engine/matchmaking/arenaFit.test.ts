@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { ArenaConfig, FightPlan } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -13,7 +12,8 @@ import { ARENA_FIT, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 import * as arenasModule from '@/data/arenas';
 import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
 import type { ArenaSizeProfile } from '@/engine/combat/mechanics/distanceResolution';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeArena } from '@/test/_fixtures/factories';
+import { makeMidWarrior } from '@/test/_fixtures/statWarrior';
 
 // Test-only fourth arena size — a "pit" tight enough that even Striking range
 // is unreachable (maxRange=Tight, idx1). No real profile caps below Striking,
@@ -33,30 +33,7 @@ afterAll(() => {
 
 // ─── Factory Helpers ──────────────────────────────────────────────────────────
 
-const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: 'w1' as WarriorId,
-    name: 'TestWarrior',
-    style: FightingStyle.StrikingAttack,
-    attributes: { ST: 10, CN: 12, SZ: 8, WT: 15, WL: 14, SP: 11, DF: 9 },
-    fame: 0,
-    ...overrides,
-  } as any);
-
-function makeArena(overrides: Partial<ArenaConfig> = {}): ArenaConfig {
-  return {
-    id: 'test_arena',
-    name: 'Test Arena',
-    tags: [],
-    tier: 1,
-    description: 'Test arena',
-    size: 'standard',
-    zoneDef: { Edge: -2, Corner: -4 },
-    surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
-    startingZone: 'Center',
-    ...overrides,
-  };
-}
+const makeWarrior = makeMidWarrior;
 
 // 'pit' resolves only while this file's beforeAll-installed profile is present
 // (see top of file); without it, ARENA_SIZE_PROFILES['pit'] is undefined.

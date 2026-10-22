@@ -39,6 +39,7 @@ import {
   makeTournamentWarrior,
   makeTournamentRival,
 } from '@/test/_fixtures/tournamentState';
+import { makePromoter } from '@/test/_fixtures/factories';
 
 const PLAYER = 'stable-player' as StableId;
 const RIVAL = 'stable-rival-1' as StableId;
@@ -134,16 +135,13 @@ describe('advanceWeek — player victim cleanup', () => {
     const wKiller = makeTournamentWarrior('rk-1', 'Killer', FightingStyle.StrikingAttack, RIVAL);
     const wRival2 = makeTournamentWarrior('rk-2', 'Rival Two', FightingStyle.StrikingAttack, RIVAL);
 
-    const promoter: Promoter = {
+    const promoter: Promoter = makePromoter({
       id: 'promoter-1' as PromoterId,
       name: 'P',
       age: 40,
-      personality: 'Honorable',
-      tier: 'Local',
       capacity: 5,
       biases: [],
-      history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 },
-    };
+    });
     const offer: BoutOffer = {
       id: 'offer-kill' as BoutOfferId,
       promoterId: promoter.id,

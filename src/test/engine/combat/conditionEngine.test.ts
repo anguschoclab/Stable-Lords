@@ -9,19 +9,13 @@ import {
 } from '@/engine/combat/mechanics/conditionEngine';
 import type { FighterState } from '@/engine/combat/resolution/types';
 import type { ResolutionContext } from '@/engine/combat/resolution/types';
+import { BASE_FIGHTER_STATS } from '@/test/_fixtures/combatFighter';
 
 describe('conditionEngine', () => {
   const createMockFighter = (overrides: Partial<FighterState> = {}): FighterState =>
     ({
       label: 'A',
-      hp: 100,
-      maxHp: 100,
-      endurance: 100,
-      maxEndurance: 100,
-      momentum: 0,
-      consecutiveHits: 0,
-      hitsLanded: 0,
-      hitsTaken: 0,
+      ...BASE_FIGHTER_STATS,
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       psychState: 'Neutral',
       plan: {

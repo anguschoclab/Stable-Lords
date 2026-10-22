@@ -46,7 +46,7 @@ function RecoveryButton({
       {advisorRecommended && (
         <span
           data-testid="advisor-recovery-badge"
-          className="ml-auto text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
+          className="ml-auto text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
         >
           <ShieldCheck className="h-2.5 w-2.5" />
           Council Pick

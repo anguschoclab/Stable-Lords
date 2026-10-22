@@ -4,23 +4,10 @@ import { render, screen } from '@testing-library/react';
 import { WeekDivider } from '@/components/eventLog/WeekDivider';
 import { EVENT_ICONS } from '@/components/eventLog/constants';
 import { processFightEvents } from '@/components/eventLog/eventProcessors';
-import type { EventType } from '@/types/eventLog';
+import { ALL_EVENT_TYPES } from '@/test/_fixtures/eventLog';
 import type { FightSummary } from '@/types/game';
-import { makeFightSummary } from '@/test/_fixtures/factories';
+import { makeAliceBobFight, makeCarolDaveFight } from '@/test/_fixtures/factories';
 
-/** The live EventType union — 'recruit' was removed (zero producers). */
-const ALL_EVENT_TYPES: readonly EventType[] = [
-  'fight',
-  'kill',
-  'death',
-  'tournament',
-  'news',
-  'injury',
-  'retirement',
-  'training',
-  'event',
-  'recovery',
-];
 
 describe('WeekDivider', () => {
   it('renders week number', () => {
@@ -61,18 +48,7 @@ describe('processFightEvents', () => {
 
   it('processes fight events correctly', () => {
     const fights: FightSummary[] = [
-      makeFightSummary({
-        id: 'f1' as never,
-        title: 'Alice vs Bob',
-        winner: 'A',
-        by: 'KO',
-        week: 1,
-        warriorIdA: 'w1' as never,
-        warriorIdD: 'w2' as never,
-        styleA: 'Bashing Attack',
-        styleD: 'Parry',
-        createdAt: '2024-01-01',
-      }),
+      makeAliceBobFight(),
     ];
     const result = processFightEvents(fights);
     expect(result).toHaveLength(1);
@@ -82,18 +58,7 @@ describe('processFightEvents', () => {
 
   it('marks kill events correctly', () => {
     const fights: FightSummary[] = [
-      makeFightSummary({
-        id: 'f2' as never,
-        title: 'Carol vs Dave',
-        winner: 'D',
-        by: 'Kill',
-        week: 2,
-        warriorIdA: 'w3' as never,
-        warriorIdD: 'w4' as never,
-        styleA: 'Striking Attack',
-        styleD: 'Evasion',
-        createdAt: '2024-01-02',
-      }),
+      makeCarolDaveFight(),
     ];
     const result = processFightEvents(fights);
     expect(result[0]!.type).toBe('kill');

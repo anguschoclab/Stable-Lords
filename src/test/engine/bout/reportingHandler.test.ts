@@ -7,6 +7,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeOutcome } from '@/test/_fixtures/factories';
 
 describe('reportingHandler', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -18,13 +19,7 @@ describe('reportingHandler', () => {
       ...overrides,
     }) as Warrior;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
-    winner: 'A',
-    by: 'KO',
-    minutes: 5,
-    log: [],
-    ...overrides,
-  });
+  const createMockOutcome = makeOutcome;
 
   describe('handleReporting', () => {
     it('generates FightSummary for bout outcome', () => {

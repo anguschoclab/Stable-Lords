@@ -7,7 +7,7 @@ import {
   makeFightSummary,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
-import { makeVenueWarrior, makeArenaTitle, makeCareerRecord } from '@/test/_fixtures/arenaTitle';
+import { makeVenueWarriorAt, makeArenaTitle, makeCareerRecord } from '@/test/_fixtures/arenaTitle';
 import {
   isReigningChampion,
   isActiveChampion,
@@ -43,18 +43,6 @@ function career(over: Partial<CareerRecord> = {}): CareerRecord {
   return makeCareerRecord(over);
 }
 
-function warriorAtArena(
-  id: string,
-  arenaId: string,
-  rec: { wins: number; losses: number; kills?: number }
-) {
-  return makeVenueWarrior(id, {
-    wins: rec.wins,
-    losses: rec.losses,
-    kills: rec.kills ?? 0,
-    arenaId,
-  });
-}
 
 function makeTitleAt(
   _arenaId: string,
@@ -141,8 +129,8 @@ describe('champion status queries', () => {
 describe('seedChampions', () => {
   it('crowns the warrior with the best venue record meeting MIN_BOUTS', () => {
     const arenaId = 'standard_arena';
-    const wTop = warriorAtArena('w-top', arenaId, { wins: 5, losses: 1 });
-    const wMid = warriorAtArena('w-mid', arenaId, { wins: 4, losses: 2 });
+    const wTop = makeVenueWarriorAt('w-top', arenaId, { wins: 5, losses: 1 });
+    const wMid = makeVenueWarriorAt('w-mid', arenaId, { wins: 4, losses: 2 });
     const state = makeGameState({ roster: [wTop, wMid] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -154,7 +142,7 @@ describe('seedChampions', () => {
 
   it('skips warriors under the MIN_BOUTS threshold', () => {
     const arenaId = 'underpit_arena';
-    const wThin = warriorAtArena('w-thin', arenaId, { wins: 2, losses: 0 });
+    const wThin = makeVenueWarriorAt('w-thin', arenaId, { wins: 2, losses: 0 });
     const state = makeGameState({ roster: [wThin] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -174,8 +162,8 @@ describe('seedChampions', () => {
         },
       }),
     });
-    const wB = warriorAtArena('w-b', a, { wins: 3, losses: 1 });
-    const wC = warriorAtArena('w-c', b, { wins: 3, losses: 1 });
+    const wB = makeVenueWarriorAt('w-b', a, { wins: 3, losses: 1 });
+    const wC = makeVenueWarriorAt('w-c', b, { wins: 3, losses: 1 });
     const state = makeGameState({ roster: [wAce, wB, wC] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -196,7 +184,7 @@ describe('seedChampions', () => {
   it('is idempotent — does not overwrite existing reigns', () => {
     const arenaId = 'standard_arena';
     const existing = makeTitleAt(arenaId, 'w-reigning');
-    const wTop = warriorAtArena('w-top', arenaId, { wins: 9, losses: 0 });
+    const wTop = makeVenueWarriorAt('w-top', arenaId, { wins: 9, losses: 0 });
     const state = makeGameState({ roster: [wTop], arenaChampions: { [arenaId]: existing } });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -204,7 +192,7 @@ describe('seedChampions', () => {
   });
 
   it('does not crown a champion for the reserved tournament venue', () => {
-    const w = warriorAtArena('w1', 'bloodsands_arena', { wins: 10, losses: 0 });
+    const w = makeVenueWarriorAt('w1', 'bloodsands_arena', { wins: 10, losses: 0 });
     const state = makeGameState({ roster: [w] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -212,7 +200,7 @@ describe('seedChampions', () => {
   });
 
   it('does not crown a champion at the Grand Championship venue', () => {
-    const w = warriorAtArena('w1', 'the_iron_cage', { wins: 10, losses: 0 });
+    const w = makeVenueWarriorAt('w1', 'the_iron_cage', { wins: 10, losses: 0 });
     const state = makeGameState({ roster: [w] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -245,7 +233,7 @@ describe('seedChampions', () => {
         },
       }),
     });
-    const wX = warriorAtArena('w-x', c, { wins: 3, losses: 0 });
+    const wX = makeVenueWarriorAt('w-x', c, { wins: 3, losses: 0 });
     const state = makeGameState({ roster: [wAce, wV, wX] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);
@@ -269,9 +257,9 @@ describe('selectTitleContender', () => {
   const arenaId = 'standard_arena';
 
   it('ranks contenders by wins, then win rate, then kills', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const wMoreWins = warriorAtArena('w-a', arenaId, { wins: 6, losses: 3 });
-    const wFewerWins = warriorAtArena('w-b', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const wMoreWins = makeVenueWarriorAt('w-a', arenaId, { wins: 6, losses: 3 });
+    const wFewerWins = makeVenueWarriorAt('w-b', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       roster: [champ, wMoreWins, wFewerWins],
       arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
@@ -280,7 +268,7 @@ describe('selectTitleContender', () => {
   });
 
   it('excludes reigning champions at other arenas (single crown)', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const otherChamp = makeWarrior({
       id: 'w-other-champ' as WarriorId,
       career: career({ byArena: { [arenaId]: { wins: 9, losses: 0, kills: 0 } } }),
@@ -296,9 +284,9 @@ describe('selectTitleContender', () => {
   });
 
   it('excludes warriors in a contender cooldown window', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const wCool = warriorAtArena('w-cool', arenaId, { wins: 5, losses: 0 });
-    const wOk = warriorAtArena('w-ok', arenaId, { wins: 4, losses: 1 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const wCool = makeVenueWarriorAt('w-cool', arenaId, { wins: 5, losses: 0 });
+    const wOk = makeVenueWarriorAt('w-ok', arenaId, { wins: 4, losses: 1 });
     const state = makeGameState({
       week: 10,
       absoluteWeek: 10,
@@ -313,10 +301,10 @@ describe('selectTitleContender', () => {
   });
 
   it('excludes dead warriors and warriors below MIN_BOUTS', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const wDead = warriorAtArena('w-dead', arenaId, { wins: 9, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const wDead = makeVenueWarriorAt('w-dead', arenaId, { wins: 9, losses: 0 });
     wDead.status = 'Dead';
-    const wThin = warriorAtArena('w-thin', arenaId, { wins: 1, losses: 0 });
+    const wThin = makeVenueWarriorAt('w-thin', arenaId, { wins: 1, losses: 0 });
     const state = makeGameState({
       roster: [champ, wDead, wThin],
       arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },
@@ -331,7 +319,7 @@ describe('enforceVacancies', () => {
   const arenaId = 'standard_arena';
 
   it('ends the reign when the champion is in the graveyard', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     champ.status = 'Dead';
     const state = makeGameState({
       graveyard: [champ],
@@ -347,7 +335,7 @@ describe('enforceVacancies', () => {
   });
 
   it('ends the reign when the champion retires', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     champ.status = 'Retired';
     const state = makeGameState({
       retired: [champ],
@@ -380,8 +368,8 @@ describe('resolveTitleBoutResults', () => {
   const arenaId = 'standard_arena';
 
   it('champion win increments defenses and refreshes activity', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
@@ -417,8 +405,8 @@ describe('resolveTitleBoutResults', () => {
   it('a won defense decays refusals by one rather than resetting them', () => {
     // refusals accrue only while the champion keeps ducking — each completed
     // defense erodes one refusal instead of wiping the slate clean.
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
@@ -444,8 +432,8 @@ describe('resolveTitleBoutResults', () => {
   });
 
   it('a won defense never pushes refusals below zero', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
@@ -467,8 +455,8 @@ describe('resolveTitleBoutResults', () => {
   });
 
   it('challenger win ends the reign and crowns the challenger', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       week: 50,
@@ -494,8 +482,8 @@ describe('resolveTitleBoutResults', () => {
   });
 
   it('crowns a winner on a vacant title bout', () => {
-    const a = warriorAtArena('w-a', arenaId, { wins: 5, losses: 0 });
-    const b = warriorAtArena('w-b', arenaId, { wins: 4, losses: 0 });
+    const a = makeVenueWarriorAt('w-a', arenaId, { wins: 5, losses: 0 });
+    const b = makeVenueWarriorAt('w-b', arenaId, { wins: 4, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       roster: [a, b],
@@ -519,8 +507,8 @@ describe('resolveTitleBoutResults', () => {
     // Regression: a warrior booked into a vacant-title bout who has since
     // taken another arena's crown must not hold two reigns.
     const otherArena = 'sky_platform';
-    const a = warriorAtArena('w-a', arenaId, { wins: 5, losses: 0 });
-    const b = warriorAtArena('w-b', arenaId, { wins: 4, losses: 0 });
+    const a = makeVenueWarriorAt('w-a', arenaId, { wins: 5, losses: 0 });
+    const b = makeVenueWarriorAt('w-b', arenaId, { wins: 4, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       roster: [a, b],
@@ -547,8 +535,8 @@ describe('resolveTitleBoutResults', () => {
   });
 
   it('champion death in a title bout vacates the crown for the killer', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0, kills: 1 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0, kills: 1 });
     const state = makeGameState({
       absoluteWeek: 50,
       roster: [cont],
@@ -574,8 +562,8 @@ describe('resolveTitleBoutResults', () => {
   });
 
   it("coronation cancels the new champion's open ordinary offers — but not title offers", () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const proposed = makeBoutOffer({
       id: 'o-prop' as BoutOfferId,
       warriorIds: ['w-cont' as WarriorId, 'w-x' as WarriorId],
@@ -631,7 +619,7 @@ describe('applyLifecycleTransitions', () => {
   const arenaId = 'standard_arena';
 
   it('drops an active title to dormant after DORMANCY_STREAK no-contender weeks', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 20,
       roster: [champ],
@@ -649,8 +637,8 @@ describe('applyLifecycleTransitions', () => {
   });
 
   it('resets the streak while a contender exists', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 20,
       roster: [champ, cont],
@@ -666,8 +654,8 @@ describe('applyLifecycleTransitions', () => {
   });
 
   it('moves dormant → pendingReengagement when a contender emerges and cancels unsigned offers', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const unsigned = makeBoutOffer({
       id: 'o-unsigned' as BoutOfferId,
       warriorIds: ['w-champ' as WarriorId, 'w-x' as WarriorId],
@@ -692,8 +680,8 @@ describe('applyLifecycleTransitions', () => {
   });
 
   it('stays pending while the champion has signed ordinary offers; goes active when drained', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
 
     // With a signed ordinary offer outstanding → stays pending.
     const signed = makeBoutOffer({
@@ -731,7 +719,7 @@ describe('applyLifecycleTransitions', () => {
   });
 
   it('falls back to dormant when the pending contender disappears', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 20,
       roster: [champ],
@@ -751,8 +739,8 @@ describe('sweepTitleRefusals', () => {
   const arenaId = 'standard_arena';
 
   it('increments refusals when the champion declines; strips at REFUSALS_TO_STRIP', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Rejected',
       responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],
@@ -788,7 +776,7 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('a blocking-injury decline is a postponement, not a refusal', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     champ.injuries = [
       {
         id: 'inj-1',
@@ -799,7 +787,7 @@ describe('sweepTitleRefusals', () => {
         penalties: {},
       },
     ] as Warrior['injuries'];
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Rejected',
       responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],
@@ -818,8 +806,8 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('challenger decline applies a contender cooldown', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Rejected',
       responses: { 'w-champ': 'Accepted', 'w-cont': 'Declined' } as BoutOffer['responses'],
@@ -838,8 +826,8 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('a voided champion decline (stable dissolved) is operational — no refusal, no strip', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Rejected',
       responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],
@@ -863,8 +851,8 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('a voided challenger decline carries no contender cooldown', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Rejected',
       responses: { 'w-champ': 'Accepted', 'w-cont': 'Declined' } as BoutOffer['responses'],
@@ -883,8 +871,8 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('a lapsed offer does not count a voided champion response as a refusal', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     // Offer still Proposed past its expiration — the void-marked Declined was
     // written by the offer processor before the stable vanished from rosters.
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
@@ -910,8 +898,8 @@ describe('sweepTitleRefusals', () => {
   it('a lapsed offer where a live champion never answered still accrues a refusal', () => {
     // Guard rail: the void marker only exempts operationally-dead offers —
     // genuine silence from a rostered champion is still ducking.
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Proposed',
       boutWeek: 5,
@@ -933,8 +921,8 @@ describe('sweepTitleRefusals', () => {
     // Repeat-duck leak: signing a defense offer is not defending. A champion
     // who refuses, signs the next offer, then refuses again must accumulate
     // toward the strip threshold instead of resetting at each signature.
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Signed',
       responses: { 'w-champ': 'Accepted', 'w-cont': 'Accepted' } as BoutOffer['responses'],
@@ -951,9 +939,9 @@ describe('sweepTitleRefusals', () => {
   });
 
   it('repeat ducks accumulate: a refusal after a signed-but-unfought defense still strips', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
-    const cont2 = warriorAtArena('w-cont2', arenaId, { wins: 4, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
+    const cont2 = makeVenueWarriorAt('w-cont2', arenaId, { wins: 4, losses: 0 });
     const signedOffer = titleOffer('w-champ', 'w-cont', arenaId, {
       status: 'Signed',
       responses: { 'w-champ': 'Accepted', 'w-cont': 'Accepted' } as BoutOffer['responses'],
@@ -983,8 +971,8 @@ describe('scheduleTitleBouts', () => {
   const arenaId = 'standard_arena';
 
   it('books a defense when cadence elapsed and a contender exists', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 29,
       week: 29,
@@ -1012,8 +1000,8 @@ describe('scheduleTitleBouts', () => {
   });
 
   it('does not book while inside the defense interval', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 29,
       week: 29,
@@ -1035,8 +1023,8 @@ describe('scheduleTitleBouts', () => {
   });
 
   it('skips dormant and pending titles entirely for booking', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     for (const status of ['dormant', 'pendingReengagement'] as const) {
       const state = makeGameState({
         absoluteWeek: 29,
@@ -1061,8 +1049,8 @@ describe('scheduleTitleBouts', () => {
   });
 
   it('does not double-book when a title offer is already outstanding', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const existing = titleOffer('w-champ', 'w-cont', arenaId);
     const state = makeGameState({
       absoluteWeek: 29,
@@ -1086,8 +1074,8 @@ describe('scheduleTitleBouts', () => {
   });
 
   it('books a top-2 vacant title bout when there is no champion', () => {
-    const a = warriorAtArena('w-a', arenaId, { wins: 6, losses: 0 });
-    const b = warriorAtArena('w-b', arenaId, { wins: 5, losses: 0 });
+    const a = makeVenueWarriorAt('w-a', arenaId, { wins: 6, losses: 0 });
+    const b = makeVenueWarriorAt('w-b', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 29,
       week: 29,
@@ -1101,8 +1089,8 @@ describe('scheduleTitleBouts', () => {
   });
 
   it.each([10, 20, 30, 42, 52])('slides defenses during tournament week %i', (week) => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: week,
       week,
@@ -1132,7 +1120,7 @@ describe('scheduleTitleBouts', () => {
 describe('relinquishCrown', () => {
   it('ends the reign and records the ex-champion cooldown', () => {
     const arenaId = 'standard_arena';
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 29,
       roster: [champ],
@@ -1155,9 +1143,9 @@ describe('applyChampionPerks', () => {
   const arenaId = 'standard_arena';
 
   it('trickles fame/pop only for active, recently-fighting champions', () => {
-    const champActive = warriorAtArena('w-active', arenaId, { wins: 8, losses: 0 });
-    const champStale = warriorAtArena('w-stale', 'underpit_arena', { wins: 8, losses: 0 });
-    const champDormant = warriorAtArena('w-dormant', 'highplain_arena', { wins: 8, losses: 0 });
+    const champActive = makeVenueWarriorAt('w-active', arenaId, { wins: 8, losses: 0 });
+    const champStale = makeVenueWarriorAt('w-stale', 'underpit_arena', { wins: 8, losses: 0 });
+    const champDormant = makeVenueWarriorAt('w-dormant', 'highplain_arena', { wins: 8, losses: 0 });
     const now = 30;
     const state = makeGameState({
       absoluteWeek: now,
@@ -1206,8 +1194,8 @@ describe('coronation epithets', () => {
   const arenaId = 'standard_arena';
 
   it('crowns a challenger with an arena_champion epithet', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       absoluteWeek: 50,
       roster: [champ, cont],
@@ -1232,7 +1220,7 @@ describe('coronation epithets', () => {
   });
 
   it('seeded champions earn an arena_champion epithet', () => {
-    const wTop = warriorAtArena('w-top', arenaId, { wins: 5, losses: 1 });
+    const wTop = makeVenueWarriorAt('w-top', arenaId, { wins: 5, losses: 1 });
     const state = makeGameState({ roster: [wTop] });
     const delta = createChampionshipDelta();
     seedChampions(state, delta);

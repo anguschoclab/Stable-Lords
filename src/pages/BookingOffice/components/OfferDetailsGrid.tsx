@@ -76,7 +76,7 @@ function ArenaDetailRow({
           {venueCountered && (
             <span
               data-testid="venue-counter-badge"
-              className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm border border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
+              className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none border border-arena-gold/30 bg-arena-gold/10 text-arena-gold"
             >
               Venue countered
             </span>
@@ -86,7 +86,7 @@ function ArenaDetailRow({
           {arena.tags.map((tag) => (
             <span
               key={tag}
-              className="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-sm border border-white/10 bg-white/5 text-muted-foreground"
+              className="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-none border border-white/10 bg-white/5 text-muted-foreground"
             >
               {tag}
             </span>

@@ -57,7 +57,7 @@ export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
       {pendingCount > 0 && !running && (
         <span
           aria-label={`${pendingCount} unresolved council directives`}
-          className="ml-1 px-1.5 py-0.5 bg-arena-gold/20 text-arena-gold text-[9px] font-black rounded-sm"
+          className="ml-1 px-1.5 py-0.5 bg-arena-gold/20 text-arena-gold text-[9px] font-black rounded-none"
         >
           {pendingCount}
         </span>

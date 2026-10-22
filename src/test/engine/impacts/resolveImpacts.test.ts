@@ -28,7 +28,7 @@ import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import {
   makeWarrior as fixtureWarrior,
   makeRival as fixtureRival,
-  makeFightSummary as fixtureFightSummary,
+  makeStubFight,
   makeGameState,
 } from '@/test/_fixtures/factories';
 
@@ -55,21 +55,7 @@ function makeMinimalGameState(): GameState {
 }
 
 const makeFightSummary = (id: string = 'fight-1'): FightSummary =>
-  fixtureFightSummary({
-    id: id as any,
-    week: 1,
-    warriorIdA: 'w1' as any,
-    warriorIdD: 'w2' as any,
-    stableIdA: 's-a' as any,
-    stableIdD: 's-d' as any,
-    styleA: FightingStyle.StrikingAttack,
-    styleD: FightingStyle.TotalParry,
-    winner: 'A',
-    by: 'KO',
-    title: 'Test Fight',
-    transcript: [],
-    createdAt: new Date().toISOString(),
-  } as any);
+  makeStubFight({ id: id as any, createdAt: new Date().toISOString() });
 
 function makeTrainer(id: string = 'trainer-1'): Trainer {
   return {

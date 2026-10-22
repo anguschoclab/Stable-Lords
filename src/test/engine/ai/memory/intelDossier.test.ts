@@ -7,12 +7,11 @@ import { describe, it, expect } from 'vitest';
 import { updateDossiers, decayDossiers, DOSSIER_CAP } from '@/engine/ai/memory/intelDossier';
 import {
   makeRival,
-  makeWarrior,
-  makeFightSummary,
   makeGameState,
 } from '@/test/_fixtures/factories';
+import { selfVsOppState } from '@/test/_fixtures/intelDossier';
 import type { OpponentDossier } from '@/types/state.types';
-import type { StableId, WarriorId } from '@/types/shared.types';
+import type { StableId } from '@/types/shared.types';
 
 const dossier = (over: Partial<OpponentDossier> = {}): OpponentDossier => ({
   lastSeenWeek: 1,
@@ -24,27 +23,8 @@ const dossier = (over: Partial<OpponentDossier> = {}): OpponentDossier => ({
 
 describe('updateDossiers — fight observation', () => {
   it('writes exact recordVs for fights involving the stable', () => {
-    const w1 = makeWarrior({ id: 'rw1' as WarriorId });
-    const self = makeRival({ id: 'self-1' as StableId, roster: [w1] });
-    const opp = makeRival({
-      id: 'opp-1' as StableId,
-      roster: [makeWarrior({ id: 'ow1' as WarriorId })],
-    });
-    const state = makeGameState({
-      rivals: [self, opp],
-      absoluteWeek: 5,
-      arenaHistory: [
-        makeFightSummary({
-          warriorIdA: 'rw1' as WarriorId,
-          warriorIdD: 'ow1' as WarriorId,
-          stableIdA: 'self-1' as StableId,
-          stableIdD: 'opp-1' as StableId,
-          winner: 'A',
-          by: 'Kill',
-          styleD: 'LungingAttack',
-          absoluteWeek: 5,
-        }),
-      ],
+    const { self, state } = selfVsOppState({
+      fight: { winner: 'A', by: 'Kill', styleD: 'LungingAttack' },
     });
 
     const out = updateDossiers(self, state);

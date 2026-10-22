@@ -19,14 +19,10 @@ import {
 } from '@/constants/combat/combat';
 import { accumulateGuardBreak } from '@/engine/combat/resolution/guardBreak';
 import { accumulateBleed } from '@/engine/combat/resolution/bleed';
-import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
+import { makeResolutionContext } from '@/test/_fixtures/factories';
+import { makeCombatFighter } from '@/test/_fixtures/combatFighter';
 
-const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
-  makeFighterState({
-    plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
-    activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
-    ...overrides,
-  });
+const makeFighter = makeCombatFighter;
 const makeCtx = makeResolutionContext;
 
 function getPassive(style: FightingStyle, hp = 100, maxHp = 100, end = 100, maxEnd = 100) {

@@ -1,5 +1,5 @@
 import { makeBidWarrior, makeBidRival } from '@/test/_fixtures/bidRoster';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, TEST_PLAYER } from '@/test/_fixtures/factories';
 import { describe, it, expect, vi } from 'vitest';
 import type { RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -439,14 +439,7 @@ describe('generateBoutBids is called from RivalStrategyPass', () => {
       absoluteWeek: 5,
       rivals: [rival1, rival2],
       recruitPool: [],
-      player: {
-        id: 'player-1' as any,
-        name: 'Player',
-        stableName: 'Player Stable',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
+      player: TEST_PLAYER,
     });
 
     const impact = runRivalStrategyPass(state, 6, undefined as any, true);

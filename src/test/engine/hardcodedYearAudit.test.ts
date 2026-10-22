@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readDirRecursive } from '@/test/_setup/fsHelpers';
+import { listFiles as readDirRecursive } from '@/test/_helpers/fsWalk';
 import * as fs from 'fs';
 import * as path from 'path';
 

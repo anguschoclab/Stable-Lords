@@ -10,22 +10,16 @@ import {
   collectAllKnownWarriors,
 } from '@/engine/core/warriorCollection';
 import { getWarriorIndex } from '@/engine/core/entityIndex';
-import { FightingStyle } from '@/types/shared.types';
 import {
-  makeWarrior as fixtureWarrior,
+  makeStrikingWarrior,
+  TEST_META,
+  TEST_PLAYER_P1,
   makeRival as fixtureRival,
   makeBoutOffer as fixtureBoutOffer,
   makeGameState as fixtureGameState,
 } from '@/test/_fixtures/factories';
 
-const makeWarrior = (id: string, overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: id as Warrior['id'],
-    name: `Warrior ${id}`,
-    style: FightingStyle.StrikingAttack,
-    fame: 0,
-    ...overrides,
-  } as any);
+const makeWarrior = makeStrikingWarrior;
 
 const makeRival = (id: string, warriors: Warrior[]): RivalStableData =>
   fixtureRival({
@@ -51,16 +45,9 @@ const makeState = (
   boutOffers: Record<string, BoutOffer> = {}
 ): GameState =>
   fixtureGameState({
-    meta: { gameName: 'test', version: '1', createdAt: '2024-01-01' },
+    meta: TEST_META,
     ftueComplete: true,
-    player: {
-      id: 'p1' as any,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
+    player: TEST_PLAYER_P1,
     treasury: 0,
     roster,
     rivals,

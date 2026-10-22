@@ -22,3 +22,12 @@ export function createTestAvatarData(overrides?: Partial<AvatarData>): AvatarDat
     ...overrides,
   };
 }
+
+/** Shared AvatarConfig for store/component avatar specs. */
+export const TEST_AVATAR_CONFIG = {
+  entityId: 'w-1',
+  entityType: 'warrior',
+  seed: 12345,
+  name: 'Aulus',
+  age: 25,
+} as const;

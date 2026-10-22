@@ -5,17 +5,17 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorId, BoutOfferId, StableId } from '@/types/shared.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
+import type { RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
 import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
+import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 import {
-  makeWarrior as fixtureWarrior,
-  makeRival as fixtureRival,
-  makeBoutOffer as fixtureBoutOffer,
-  makeGameState as fixtureGameState,
-} from '@/test/_fixtures/factories';
+  makeOfferRival,
+  makePendingOffer,
+  offerState,
+} from '@/test/_fixtures/competitionWorker';
 
 const makeWarrior = (
   id: string,
@@ -32,8 +32,7 @@ const makeWarrior = (
   } as any);
 
 const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
-  fixtureRival({
-    id: id as StableId,
+  makeOfferRival(id, roster, {
     owner: {
       id: `owner-${id}` as any,
       name: `Owner ${id}`,
@@ -43,41 +42,16 @@ const makeRival = (id: string, roster: Warrior[]): RivalStableData =>
       titles: 0,
       personality: 'Pragmatic',
     },
-    roster,
-    treasury: 1000,
     fame: 100,
     ledger: [],
     trainingAssignments: [],
-    strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
   } as any);
 
-const makeOffer = (id: string, warriorIds: string[], opts: Partial<BoutOffer> = {}): BoutOffer =>
-  fixtureBoutOffer({
-    id: id as BoutOfferId,
-    promoterId: 'prom-1' as any,
-    warriorIds: warriorIds as WarriorId[],
-    boutWeek: 10,
-    expirationWeek: 11,
-    purse: 100,
-    hype: 50,
-    status: 'Proposed',
-    responses: Object.fromEntries(warriorIds.map((w) => [w, 'Pending'])),
-    ...opts,
-  } as any);
+const makeOffer = makePendingOffer;
 
 // fixtureGameState builds warriorMap / warriorToStableMap / rivalMap
 // (roster → player stable, rivals[].roster → rival id) plus boutOffers.
-const makeState = (
-  offers: BoutOffer[],
-  rivals: RivalStableData[],
-  playerWarriors: Warrior[] = []
-): GameState =>
-  fixtureGameState({
-    roster: playerWarriors,
-    rivals,
-    boutOffers: Object.fromEntries(offers.map((o) => [o.id, o])),
-    absoluteWeek: 5,
-  });
+const makeState = offerState;
 
 describe('processAllRivalsBoutOffers', () => {
   it('returns empty boutOffers when no pending offers exist', () => {

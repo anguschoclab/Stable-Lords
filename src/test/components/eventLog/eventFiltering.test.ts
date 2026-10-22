@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Sword } from 'lucide-react';
 import { filterEventsByCategory, EVENT_FILTER_CATEGORIES } from '@/components/eventLog/filters';
 import type { GameEvent } from '@/types/eventLog';
+import { ALL_EVENT_TYPES } from '@/test/_fixtures/eventLog';
 
 function event(id: string, type: GameEvent['type']): GameEvent {
   return {
@@ -50,18 +51,7 @@ describe('event filtering', () => {
   });
 
   it('every EventType lands in a player-facing category', () => {
-    const allTypes: GameEvent['type'][] = [
-      'fight',
-      'kill',
-      'death',
-      'tournament',
-      'news',
-      'injury',
-      'retirement',
-      'training',
-      'event',
-      'recovery',
-    ];
+    const allTypes: GameEvent['type'][] = [...ALL_EVENT_TYPES];
     const feed = allTypes.map((type) => event(`e-${type}`, type));
     const covered = new Set(
       [

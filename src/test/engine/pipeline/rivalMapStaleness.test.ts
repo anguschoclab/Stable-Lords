@@ -2,24 +2,14 @@ import { describe, it, expect } from 'vitest';
 import { resolveImpacts } from '@/engine/impacts';
 import type { StateImpact } from '@/engine/impacts';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
-import { FightingStyle } from '@/types/shared.types';
+import type { StableId } from '@/types/shared.types';
 import {
-  makeWarrior as fixtureWarrior,
-  makeGameState as fixtureGameState,
+    makeGameState as fixtureGameState,
   makeRivalStable,
 } from '@/test/_fixtures/factories';
+import { makeBareWarrior } from '@/test/_fixtures/statWarrior';
 
-const makeWarrior = (id: string, name: string): Warrior =>
-  fixtureWarrior({
-    id: id as WarriorId,
-    name,
-    style: FightingStyle.StrikingAttack,
-    baseSkills: {} as any,
-    derivedStats: {} as any,
-    fame: 0,
-    age: 20,
-  } as any);
+const makeWarrior = makeBareWarrior;
 
 const makeRival = (id: string, roster: Warrior[]): RivalStableData => makeRivalStable(id, roster);
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeStubRng, makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
+import { seasonalCallArgs, makeStubRng, makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 import { handleDreamweaversMist } from '@/engine/pipeline/offseasonEvents/chaosHandlers';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -30,13 +30,7 @@ describe('handleDreamweaversMist', () => {
 
     const ctx = makeOffseasonCtx();
 
-    handleDreamweaversMist({
-      state: state as GameState,
-      nextWeek: 5,
-      e: narrative,
-      rng: mockRng,
-      ctx,
-    });
+    handleDreamweaversMist(seasonalCallArgs(state, narrative, mockRng, ctx));
 
     const update = ctx.rosterUpdates.get('w-1' as WarriorId);
     expect(update).toBeDefined();

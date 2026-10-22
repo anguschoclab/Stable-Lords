@@ -100,6 +100,58 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   };
 }
 
+type SkillMods = ReturnType<typeof gatherSkillModifiers>;
+
+/** Per-skill addend table — every flat modifier's contribution by skill. */
+function skillAddends(m: SkillMods): BaseSkills {
+  return {
+    ATT:
+      (m.trainerMods?.attMod ?? 0) +
+      m.mastery.att +
+      m.classicBonus +
+      m.weaponReq.attPenalty +
+      m.totalShieldAtt +
+      (m.drills.ATT ?? 0) +
+      m.traitMods.attMod +
+      (m.injuryPenalties['ATT'] ?? 0),
+    PAR:
+      (m.trainerMods?.parMod ?? 0) +
+      m.totalShieldDef +
+      m.encPenalties.parPenalty +
+      (m.drills.PAR ?? 0) +
+      m.traitMods.parMod +
+      (m.injuryPenalties['PAR'] ?? 0),
+    DEF:
+      (m.trainerMods?.defMod ?? 0) +
+      m.totalShieldDef +
+      m.armorDefMod +
+      m.helmDefMod +
+      m.encPenalties.defPenalty +
+      m.veteranDef +
+      m.mastery.def +
+      (m.drills.DEF ?? 0) +
+      m.traitMods.defMod +
+      (m.injuryPenalties['DEF'] ?? 0),
+    INI:
+      (m.trainerMods?.iniMod ?? 0) +
+      m.encPenalties.iniPenalty +
+      m.mastery.ini +
+      (m.drills.INI ?? 0) +
+      m.traitMods.iniMod +
+      (m.injuryPenalties['INI'] ?? 0),
+    RIP:
+      m.mastery.rip +
+      (m.drills.RIP ?? 0) +
+      m.traitMods.ripMod +
+      (m.injuryPenalties['RIP'] ?? 0),
+    DEC:
+      (m.trainerMods?.decMod ?? 0) +
+      (m.drills.DEC ?? 0) +
+      m.traitMods.decMod +
+      (m.injuryPenalties['DEC'] ?? 0),
+  };
+}
+
 /** Aggregate every flat modifier into the fighter's effective skill scores. */
 function computeEffectiveSkills(ctx: ModifierContext): {
   effSkills: BaseSkills;
@@ -108,79 +160,23 @@ function computeEffectiveSkills(ctx: ModifierContext): {
   encPenalties: ReturnType<typeof getEncumbrancePenalties>;
   weaponMods: { att: number; par: number; def: number };
 } {
-  const { skills } = ctx;
   const m = gatherSkillModifiers(ctx);
-  const {
-    trainerMods,
-    mastery,
-    veteranDef,
-    totalShieldDef,
-    totalShieldAtt,
-    weaponReq,
-    encPenalties,
-    armorDefMod,
-    helmDefMod,
-    classicBonus,
-    weaponMods,
-    drills,
-    traitMods,
-    injuryPenalties,
-  } = m;
-
+  const a = skillAddends(m);
   const effSkills: BaseSkills = {
-    ATT:
-      skills.ATT +
-      (trainerMods?.attMod ?? 0) +
-      mastery.att +
-      classicBonus +
-      weaponReq.attPenalty +
-      totalShieldAtt +
-      (drills.ATT ?? 0) +
-      traitMods.attMod +
-      (injuryPenalties['ATT'] ?? 0),
-    PAR:
-      skills.PAR +
-      (trainerMods?.parMod ?? 0) +
-      totalShieldDef +
-      encPenalties.parPenalty +
-      (drills.PAR ?? 0) +
-      traitMods.parMod +
-      (injuryPenalties['PAR'] ?? 0),
-    DEF:
-      skills.DEF +
-      (trainerMods?.defMod ?? 0) +
-      totalShieldDef +
-      armorDefMod +
-      helmDefMod +
-      encPenalties.defPenalty +
-      veteranDef +
-      mastery.def +
-      (drills.DEF ?? 0) +
-      traitMods.defMod +
-      (injuryPenalties['DEF'] ?? 0),
-    INI:
-      skills.INI +
-      (trainerMods?.iniMod ?? 0) +
-      encPenalties.iniPenalty +
-      mastery.ini +
-      (drills.INI ?? 0) +
-      traitMods.iniMod +
-      (injuryPenalties['INI'] ?? 0),
-    RIP:
-      skills.RIP +
-      mastery.rip +
-      (drills.RIP ?? 0) +
-      traitMods.ripMod +
-      (injuryPenalties['RIP'] ?? 0),
-    DEC:
-      skills.DEC +
-      (trainerMods?.decMod ?? 0) +
-      (drills.DEC ?? 0) +
-      traitMods.decMod +
-      (injuryPenalties['DEC'] ?? 0),
+    ATT: ctx.skills.ATT + a.ATT,
+    PAR: ctx.skills.PAR + a.PAR,
+    DEF: ctx.skills.DEF + a.DEF,
+    INI: ctx.skills.INI + a.INI,
+    RIP: ctx.skills.RIP + a.RIP,
+    DEC: ctx.skills.DEC + a.DEC,
   };
-
-  return { effSkills, mastery, traitMods, encPenalties, weaponMods };
+  return {
+    effSkills,
+    mastery: m.mastery,
+    traitMods: m.traitMods,
+    encPenalties: m.encPenalties,
+    weaponMods: m.weaponMods,
+  };
 }
 
 /**
@@ -206,6 +202,76 @@ function applyTraitPlanMods(plan: FightPlan, warrior?: Warrior): FightPlan {
   return traitPlan;
 }
 
+/** Zero/false combat-counter fields — identical on every fresh fighter. */
+const FRESH_COMBAT_COUNTERS = {
+  hitsLanded: 0,
+  hitsTaken: 0,
+  ripostes: 0,
+  consecutiveHits: 0,
+  armHits: 0,
+  legHits: 0,
+  bleedStacks: 0,
+  momentum: 0,
+  riposteStreak: 0,
+  parDegrade: 0,
+  committed: false,
+  survivalStrike: false,
+  counterstrikePrimed: false,
+  recoveryDebt: 0,
+} as const;
+
+/** Assemble the FighterState literal from its computed inputs. */
+function assembleFighterState(args: {
+  label: 'A' | 'D';
+  traitPlan: FightPlan;
+  attrs: Warrior['attributes'];
+  derived: NonNullable<Warrior['derivedStats']>;
+  equip: NonNullable<Warrior['equipment']>;
+  warrior: Warrior | undefined;
+  trainerMods: ReturnType<typeof getTrainerMods> | null;
+  computed: ReturnType<typeof computeEffectiveSkills>;
+}): FighterState {
+  const { label, traitPlan, attrs, derived, equip, warrior, trainerMods, computed } = args;
+  const { effSkills, mastery, traitMods, encPenalties, weaponMods } = computed;
+  const endBonus = trainerMods?.endMod ?? 0;
+  return {
+    label,
+    style: traitPlan.style,
+    attributes: attrs,
+    skills: effSkills,
+    derived: {
+      ...derived,
+      damage: derived.damage + mastery.dmg + traitMods.dmgBonus,
+    },
+    plan: traitPlan,
+    activePlan: { ...traitPlan },
+    psychState: 'Neutral',
+    hp: derived.hp,
+    maxHp: derived.hp,
+    endurance: derived.endurance + endBonus,
+    maxEndurance: derived.endurance + endBonus,
+    ...FRESH_COMBAT_COUNTERS,
+    favorites: warrior?.favorites,
+    traits: warrior?.traits,
+    staticEnduranceMult: traitMods.enduranceMult,
+    totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
+    encumbrancePenalty: {
+      iniPenalty: encPenalties.iniPenalty,
+      defPenalty: encPenalties.defPenalty,
+      parPenalty: encPenalties.parPenalty,
+      enduranceMult: encPenalties.enduranceMult,
+    },
+    weaponId: equip.weapon,
+    armorId: equip.armor,
+    shieldId: equip.shield,
+    helmId: equip.helm,
+    backupWeaponId: equip.backup,
+    disarmResist: traitMods.disarmResist || undefined,
+    unarmedDmgBonus: traitMods.unarmedDmgBonus || undefined,
+    weaponMods,
+  };
+}
+
 /**
  * Prepares the combat state for a single fighter.
  */
@@ -229,64 +295,17 @@ export function createFighterState(
   const equip = warrior?.equipment ?? getStyleDefaultLoadout(plan.style);
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
 
-  const { effSkills, mastery, traitMods, encPenalties, weaponMods } = computeEffectiveSkills({
-    warrior,
-    trainers,
-    plan,
-    attrs,
-    skills,
-    equip,
-  });
-
+  const computed = computeEffectiveSkills({ warrior, trainers, plan, attrs, skills, equip });
   const traitPlan = applyTraitPlanMods(plan, warrior);
 
-  return {
+  return assembleFighterState({
     label,
-    style: traitPlan.style,
-    attributes: attrs,
-    skills: effSkills,
-    derived: {
-      ...derived,
-      damage: derived.damage + mastery.dmg + traitMods.dmgBonus,
-    },
-    plan: traitPlan,
-    activePlan: { ...traitPlan },
-    psychState: 'Neutral',
-    hp: derived.hp,
-    maxHp: derived.hp,
-    endurance: derived.endurance + (trainerMods?.endMod ?? 0),
-    maxEndurance: derived.endurance + (trainerMods?.endMod ?? 0),
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    armHits: 0,
-    legHits: 0,
-    favorites: warrior?.favorites,
-    traits: warrior?.traits,
-    staticEnduranceMult: traitMods.enduranceMult,
-    totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
-    encumbrancePenalty: {
-      iniPenalty: encPenalties.iniPenalty,
-      defPenalty: encPenalties.defPenalty,
-      parPenalty: encPenalties.parPenalty,
-      enduranceMult: encPenalties.enduranceMult,
-    },
-    weaponId: equip.weapon,
-    armorId: equip.armor,
-    shieldId: equip.shield,
-    helmId: equip.helm,
-    backupWeaponId: equip.backup,
-    disarmResist: traitMods.disarmResist || undefined,
-    unarmedDmgBonus: traitMods.unarmedDmgBonus || undefined,
-    weaponMods,
-    bleedStacks: 0,
-    momentum: 0,
-    riposteStreak: 0,
-    parDegrade: 0,
-    committed: false,
-    survivalStrike: false,
-    counterstrikePrimed: false,
-    recoveryDebt: 0,
-  };
+    traitPlan,
+    attrs,
+    derived,
+    equip,
+    warrior,
+    trainerMods,
+    computed,
+  });
 }

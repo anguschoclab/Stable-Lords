@@ -11,7 +11,7 @@ import {
 } from '@/engine/recruitment/recruitment';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { SeededRNG } from '@/utils/random';
-import { makeWarrior, makePoolWarrior, makeGameState, makeRival } from '@/test/_fixtures/factories';
+import { makeWarrior, makePoolWarrior, makeGameState, makeRival , VETERAN_60 } from '@/test/_fixtures/factories';
 import { FREE_AGENT_SHELF_WEEKS } from '@/constants/world';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { StableId } from '@/types/shared.types';
@@ -114,12 +114,7 @@ describe('free-agent shelf expiry', () => {
       source: 'freeAgent',
       cost: 200,
       shelfWeeksRemaining: 1,
-      veteran: {
-        fame: 60,
-        popularity: 20,
-        career: { wins: 5, losses: 2, kills: 0 },
-        titles: [],
-      },
+      veteran: VETERAN_60,
     });
     const needyRival = makeRival({
       id: 'r-needy' as StableId,
@@ -149,12 +144,7 @@ describe('free-agent shelf expiry', () => {
       source: 'freeAgent',
       cost: 500,
       shelfWeeksRemaining: 1,
-      veteran: {
-        fame: 60,
-        popularity: 20,
-        career: { wins: 5, losses: 2, kills: 0 },
-        titles: [],
-      },
+      veteran: VETERAN_60,
     });
     const brokeRival = makeRival({
       id: 'r-broke' as StableId,
@@ -179,12 +169,7 @@ describe('free-agent shelf expiry', () => {
       id: 'dead-fa',
       source: 'freeAgent',
       shelfWeeksRemaining: 1,
-      veteran: {
-        fame: 60,
-        popularity: 20,
-        career: { wins: 5, losses: 2, kills: 0 },
-        titles: [],
-      },
+      veteran: VETERAN_60,
     });
     const needyRival = makeRival({
       id: 'r-needy' as StableId,

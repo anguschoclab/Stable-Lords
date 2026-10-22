@@ -1,10 +1,11 @@
 {
-  "generatedAt": "2026-10-22T17:08:29.084Z",
+  "generatedAt": "2026-10-22T18:20:55.538Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
     "src/test/engine/grudgeMap.test.ts",
     "src/test/state/lastWeekBoutDisplay.test.ts"
   ],
+  "unregisteredTestDirs": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
     "src/test/engine/combat/aiIntentTelemetry.test.ts",

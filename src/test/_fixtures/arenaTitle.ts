@@ -24,6 +24,25 @@ export function makeVenueWarrior(
   });
 }
 
+/** standard_arena venue contender (age 22) — the advisor-spec default warrior. */
+export function makeArenaContender(id: string, wins: number, losses = 0) {
+  return makeVenueWarrior(id, { wins, losses, arenaId: 'standard_arena', age: 22 });
+}
+
+/** Positional venue-warrior builder — arena + record, used by championship specs. */
+export function makeVenueWarriorAt(
+  id: string,
+  arenaId: string,
+  rec: { wins: number; losses: number; kills?: number }
+) {
+  return makeVenueWarrior(id, {
+    wins: rec.wins,
+    losses: rec.losses,
+    kills: rec.kills ?? 0,
+    arenaId,
+  });
+}
+
 /** make Arena Title. */
 export function makeArenaTitle(
   championId: string | null,

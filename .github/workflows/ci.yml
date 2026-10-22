@@ -64,14 +64,28 @@ jobs:
       - name: Run bun test suite (sharded)
         run: |
           set -e
-          for d in src/test/engine/*/ src/test/components src/test/config src/test/data src/test/hooks src/test/integration src/test/lib src/test/megaplan src/test/pages src/test/routes src/test/schemas src/test/scripts src/test/state src/test/ui src/test/utils; do
-            # Skip dirs whose only tests are .slow/bun-ignored — a zero-match
-            # filter makes bun exit 1.
-            find "$d" -name '*.test.ts' -o -name '*.test.tsx' | grep -v '\.slow\.test\.' | grep -qv . || continue
-            echo "=== bun shard: $d"
-            bun --smol test --isolate --timeout 30000 "$d"
-          done
+          # Enumerate dirs dynamically — a hardcoded list drifted before (70
+          # non-slow files silently unsharded: engine-root specs, constants/,
+          # layout/, lore/, vite/, _setup/, _fixtures/). Engine is ~55% of the
+          # suite — keep its per-subdir split + a root-files shard for memory.
           shopt -s nullglob
+          for d in $(find src/test -mindepth 1 -maxdepth 1 -type d | sort); do
+            if [ "$d" = "src/test/engine" ]; then
+              for sub in $(find "$d" -mindepth 1 -maxdepth 1 -type d | sort); do
+                find "$sub" -name '*.test.ts' -o -name '*.test.tsx' | grep -v '\.slow\.test\.' | grep -qv . || continue
+                echo "=== bun shard: $sub"
+                bun --smol test --isolate --timeout 30000 "$sub"
+              done
+              engine_root=(src/test/engine/*.test.ts src/test/engine/*.test.tsx)
+              [ ${#engine_root[@]} -gt 0 ] && bun --smol test --isolate --timeout 30000 "${engine_root[@]}"
+            else
+              # Skip dirs whose only tests are .slow/bun-ignored — a
+              # zero-match filter makes bun exit 1.
+              find "$d" -name '*.test.ts' -o -name '*.test.tsx' | grep -v '\.slow\.test\.' | grep -qv . || continue
+              echo "=== bun shard: $d"
+              bun --smol test --isolate --timeout 30000 "$d"
+            fi
+          done
           root_files=(src/test/*.test.ts src/test/*.test.tsx)
           [ ${#root_files[@]} -gt 0 ] && bun --smol test --isolate --timeout 30000 "${root_files[@]}"
 

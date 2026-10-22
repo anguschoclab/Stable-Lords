@@ -605,6 +605,7 @@ describe('simulateFight — determinism', () => {
     expect(r1.minutes).toBe(r2.minutes);
     expect(r1.post?.hitsA).toBe(r2.post?.hitsA);
     expect(r1.post?.hitsD).toBe(r2.post?.hitsD);
+    expect(r1.post?.tags).toEqual(r2.post?.tags);
     expect(r1.log.length).toBe(r2.log.length);
   });
 

@@ -6,13 +6,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState } from '@/types/state.types';
 
 // loadGame() calls archiveService.archiveHotState — keep it inert
-vi.mock('@/engine/storage/archiveService', () => ({
-  archiveService: {
-    archiveHotState: vi.fn(),
-    retrieveHotState: vi.fn(),
-    deleteHotState: vi.fn(),
-  },
-}));
+vi.mock('@/engine/storage/archiveService', () => ({ ...__SHARED_MOCKS.archiveService }));
 
 vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 

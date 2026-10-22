@@ -38,3 +38,35 @@ In-flight at baseline: scan-in-loop drain (`217c1b7c`, `f9c9dc8a`) —
 
 | Commit | Phase | Batch | Disposition |
 | ------ | ----- | ----- | ----------- |
+| `ebf61111` | 0 | tag `pre-megaplan-v19` + LEDGER/FINDINGS/PLAN docs | docs |
+| working-tree | 2 | `v19Dedup.guard.test.ts` (D15–D19) + `v19Srp.guard.test.ts` (S35–S40) + `uiTokens`/`duplication`/`paramBudget` contract extensions — 14 RED tests | test-first RED |
+| working-tree | 4 (§D) | D15–D19 full drain — 58 test↔test pairs drained via `_fixtures/{competitionWorker,bidRoster,arenaTitle,determinism,statWarrior,equipmentLoadout,intelDossier,dashboardTabState,offseasonCtx,offerCard,factories}` + `_mocks/{framerMotion,archiveService,bookmarkStore,uiButton,uiMeta,entityLinkDeps}` + `_helpers/windowSnapshot`; 5 preamble pairs → EXEMPT | DEBT → 0 |
+| working-tree | 6 (§A) | S35–S40 decompositions (`POSE_HANDLERS`, `buildCrownIndexes`, `PROJECTORS`, `assembleFighterState` options bundle + `FRESH_COMBAT_COUNTERS`, `applyGrandChampionAward` options bundle) | fns >80 → 0 |
+| working-tree | 5 (§K) | K1–K10 triage — 4 true unexports (`CROWD_KILL_BONUS`, `RivalFightPlanOpts`, `ChosenWarriorOutcome`, `GrantableStat`); 6 reversed via TS4058 | deadExports 159→155 |
+| working-tree | 7 (§C/§B) | `radius-violation` + `undefined-class` + `dead-keyframe` scanner rules; 17 radius repairs, `glow-neon-blue` dropped, 3 missing `animate-*` classes minted, 4 orphan keyframes deleted; `weatherMods` verdict REVERSED (live) | ui-audit 0 |
+| working-tree | 3 (§W) | code-level deadExport classification complete (109 test-only / 18 scanner-blind / 22 Radix / 4 drain); feature-level spec re-audit — no new gaps | wiring closed |
+| working-tree | 6 (§P) | `rivalStrategyPass.perf` gate — best-of-3 min sampling + 2s bound (was single-sample 500ms; flaked at 641–1141ms under concurrent 104-week sims vs ~250–310ms isolated); spy-count per-tick contract preserved | stabilized |
+| working-tree | 4 (test-audit wave) | `TEST_AUDIT_FINDINGS`/`TEST_SUITE_AUDIT_LEDGER`/`TEST_SUITE_AUDIT_PLAN` landed; narrativeUnion merged, hitLocation folded, layout specs rehomed, `fsWalk` shared, 11 audit guards | recorded |
+
+## Close-out matrix — measured post-campaign (2026-10-22)
+
+| Gate | Baseline | Final | Δ |
+| ---- | -------- | ----- | - |
+| type-check | 0 errors | 0 errors | ✓ |
+| lint | 0 err / 22 warn | 0 err / 25 warn (+3 new-fixture jsdoc) | ✓ |
+| fast tests | 880 files / 9,467 | 883 files / 9,491 / 2 skipped | +3 files / +24 tests |
+| dup w8 test↔test | 79 | 12 | −67 |
+| dup w8 mixed | 17 | 18 (+1 registered literal pin) | +1 exempt |
+| dup w8 src↔src | 27 | 27 (all exempt) | 0 |
+| function-length >80 | 6 | 0 | −6 |
+| param-budget | 0 | 0 | ✓ |
+| orphan deadExports | 215 | 211 (−4 unexports) | −4 |
+| ui-audit | 0 (5 rules) | 0 (8 rules incl. radius/undefined/dead-keyframe) | +3 rules |
+| TEST_DEBT_PAIRS | 70 | 0 | −70 |
+| TEST_DEBT_BUDGET | 25 | 0 | ratcheted |
+| slow suite | — | 40/40 files, 268 tests (incl. stabilized rivalStrategyPass perf gate under load) | ✓ |
+| e2e chromium | — | 5/5 | ✓ |
+| build | ✓ | ✓ (6.8s) | ✓ |
+| narrative-validate | ✓ | ✓ | ✓ |
+| jscpd | 102 clones / 0.63% | 87 clones / 0.63% | −15 |
+| knip (report-only) | 150 exp / 68 types / 4 dup | 152 exp / 68 types / 4 dup | +2 exp |

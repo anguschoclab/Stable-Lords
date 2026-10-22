@@ -12,10 +12,7 @@ import { render } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import ViewModeToggle from '@/components/arena/ViewModeToggle';
 
-vi.mock('framer-motion', () => ({
-  motion: { div: (p: any) => <div {...p} /> },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('@/components/ui/Surface', () => ({
   Surface: ({ children, ...p }: any) => <div {...p}>{children}</div>,

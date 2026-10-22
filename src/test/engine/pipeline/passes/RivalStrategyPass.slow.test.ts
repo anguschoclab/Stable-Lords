@@ -14,10 +14,10 @@ import { resolveImpacts } from '@/engine/impacts';
 import { WORLD_RIVAL_FLOOR } from '@/constants/world';
 import {
   makeWarrior as fixtureWarrior,
-  makeRival as fixtureRival,
   makeGameState as fixtureGameState,
   makeBoutOffer as fixtureBoutOffer,
 } from '@/test/_fixtures/factories';
+import { makeBidRival as makeRival } from '@/test/_fixtures/bidRoster';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -28,27 +28,6 @@ const makeWarrior = (id: string, name: string, overrides: Partial<Warrior> = {})
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     fame: 0,
-    ...overrides,
-  } as any);
-
-const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'rival-1' as any,
-      name: 'Owner One',
-      stableName: 'Stable One',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
     ...overrides,
   } as any);
 
@@ -153,7 +132,7 @@ describe('handleOwnerLifecycle', () => {
 
     const { updatedRival, gazetteItems } = handleOwnerLifecycle(rival, 5, rng as any, index);
 
-    expect(updatedRival.owner.name).toBe('Owner One');
+    expect(updatedRival.owner.name).toBe('Owner');
     expect(gazetteItems.length).toBe(0);
   });
 

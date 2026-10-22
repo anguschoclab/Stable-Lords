@@ -9,57 +9,8 @@ import { makeWarrior, makePlan } from './_helpers';
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
-describe('simulateFight — determinism', () => {
-  it('produces identical results with the same seed', () => {
-    const wA = makeWarrior('Alpha', FightingStyle.StrikingAttack);
-    const wD = makeWarrior('Beta', FightingStyle.ParryRiposte);
-    const planA = makePlan(FightingStyle.StrikingAttack);
-    const planD = makePlan(FightingStyle.ParryRiposte);
-
-    const r1 = simulateFight({
-      planA: planA,
-      planD: planD,
-      warriorA: wA,
-      warriorD: wD,
-      providedRng: 42,
-    });
-    const r2 = simulateFight({
-      planA: planA,
-      planD: planD,
-      warriorA: wA,
-      warriorD: wD,
-      providedRng: 42,
-    });
-
-    expect(r1.winner).toBe(r2.winner);
-    expect(r1.by).toBe(r2.by);
-    expect(r1.minutes).toBe(r2.minutes);
-    expect(r1.post?.hitsA).toBe(r2.post?.hitsA);
-    expect(r1.post?.hitsD).toBe(r2.post?.hitsD);
-    expect(r1.post?.tags).toEqual(r2.post?.tags);
-  });
-
-  it('produces different results with different seeds', () => {
-    const wA = makeWarrior('Alpha', FightingStyle.BashingAttack, { ST: 18, CN: 15 });
-    const wD = makeWarrior('Beta', FightingStyle.LungingAttack, { SP: 18, DF: 15 });
-    const planA = makePlan(FightingStyle.BashingAttack, { OE: 9, AL: 4 });
-    const planD = makePlan(FightingStyle.LungingAttack, { OE: 6, AL: 8 });
-
-    const results = new Set<string>();
-    for (let seed = 1; seed <= 20; seed++) {
-      const r = simulateFight({
-        planA: planA,
-        planD: planD,
-        warriorA: wA,
-        warriorD: wD,
-        providedRng: seed,
-      });
-      results.add(`${r.winner}-${r.by}-${r.minutes}`);
-    }
-    // With 20 different seeds, we should see at least 2 distinct outcomes
-    expect(results.size).toBeGreaterThanOrEqual(1);
-  });
-});
+// Determinism pins live in simulate.test.ts ('simulateFight — determinism');
+// the tags-equality assertion from this file's copy moved there.
 
 describe('simulateFight — outcome structure', () => {
   it('always returns a valid FightOutcome', () => {

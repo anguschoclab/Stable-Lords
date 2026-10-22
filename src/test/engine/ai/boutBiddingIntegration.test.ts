@@ -1,15 +1,13 @@
-import { makeBidWarrior, makeBidRival } from '@/test/_fixtures/bidRoster';
+import { makeBidWarrior, makeBidRival, generateTestBids, convertToTestOffers, bidContext } from '@/test/_fixtures/bidRoster';
 import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData, GameState } from '@/types/state.types';
 import {
   generateBoutBids,
-  convertBidsToOffers,
   BID_MATCHMAKING_ID,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
-import { SeededRNG } from '@/utils/random';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, TEST_PLAYER } from '@/test/_fixtures/factories';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -36,14 +34,7 @@ function makeMinimalState(rivals: RivalStableData[]): GameState {
     meta: { gameName: '', version: '', createdAt: '' },
     ftueComplete: true,
     ftueStep: undefined,
-    player: {
-      id: 'player-1' as any,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
+    player: TEST_PLAYER,
     week: 5,
     absoluteWeek: 5,
     rivals,
@@ -72,18 +63,10 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -110,19 +93,11 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('rival-b');
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -151,19 +126,11 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB, rivalC]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB, rivalC],
-    });
+    const { bids } = generateBoutBids({ rival: rivalA, ...bidContext(5), rivals: [rivalB, rivalC] });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.maxFame).toBe(50);
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB, rivalC], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB, rivalC], state);
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -183,19 +150,10 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-
-    // warriorA already has an offer — should not be paired again
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
+        // warriorA already has an offer — should not be paired again
     const existing = new Set<string>([warriorA.id]);
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, existing);
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state, existing);
 
     expect(offers.length).toBe(0);
   });
@@ -211,16 +169,8 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -251,18 +201,10 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     const offer = offers[0]!;
@@ -298,20 +240,8 @@ describe('convertBidsToOffers', () => {
       } as any,
     ];
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
-    const offers = convertBidsToOffers(
-      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
-      [rivalA, rivalB],
-      state,
-      new SeededRNG(42),
-      new Set()
-    );
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     expect(offers[0]!.warriorIds).toContain(proposer.id);
@@ -338,23 +268,11 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.targetStableId).toBe('owner-b');
 
-    const offers = convertBidsToOffers(
-      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
-      [rivalA, rivalB],
-      state,
-      new SeededRNG(42),
-      new Set()
-    );
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     expect(offers[0]!.warriorIds).toContain(proposer.id);
@@ -382,20 +300,8 @@ describe('convertBidsToOffers', () => {
     // targetWeek = absoluteWeek + 1 = 6; resting is out until week 10
     state.restStates = [{ warriorId: resting.id, restUntilWeek: 10 }];
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
-    const offers = convertBidsToOffers(
-      bids.map((bid) => ({ bid, rivalId: rivalA.id as string })),
-      [rivalA, rivalB],
-      state,
-      new SeededRNG(42),
-      new Set()
-    );
+    const { bids } = generateTestBids(rivalA, rivalB, 5);
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     expect(offers[0]!.warriorIds).toContain(proposer.id);
@@ -455,36 +361,12 @@ describe('stable notoriety inflates offer hype (F1)', () => {
     });
 
     const stateK = makeMinimalState([killerStable, oppStable]);
-    const { bids: bidsK } = generateBoutBids({
-      rival: killerStable,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [oppStable],
-    });
-    const offersK = convertBidsToOffers(
-      bidsK.map((bid) => ({ bid, rivalId: killerStable.id as string })),
-      [killerStable, oppStable],
-      stateK,
-      new SeededRNG(42),
-      new Set()
-    );
+    const { bids: bidsK } = generateTestBids(killerStable, oppStable, 5);
+    const offersK = convertToTestOffers(bidsK, killerStable, [killerStable, oppStable], stateK);
 
     const stateC = makeMinimalState([cleanStable, oppStable]);
-    const { bids: bidsC } = generateBoutBids({
-      rival: cleanStable,
-      _currentWeek: 5,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [oppStable],
-    });
-    const offersC = convertBidsToOffers(
-      bidsC.map((bid) => ({ bid, rivalId: cleanStable.id as string })),
-      [cleanStable, oppStable],
-      stateC,
-      new SeededRNG(42),
-      new Set()
-    );
+    const { bids: bidsC } = generateTestBids(cleanStable, oppStable, 5);
+    const offersC = convertToTestOffers(bidsC, cleanStable, [cleanStable, oppStable], stateC);
 
     expect(offersK.length).toBeGreaterThan(0);
     expect(offersC.length).toBeGreaterThan(0);

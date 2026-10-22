@@ -10,6 +10,7 @@ import { createFighterState } from '@/engine/bout/fighterState';
 import { getEncumbranceTier, getEncumbranceRatio } from '@/data/equipment/encumbrance';
 import { getItemById } from '@/data/equipment';
 import type { EquipmentLoadout } from '@/data/equipment';
+import { LIGHT_LOADOUT, HEAVY_LOADOUT } from '@/test/_fixtures/equipmentLoadout';
 
 const ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
@@ -28,12 +29,7 @@ function makeWarriorWithLoadout(style: FightingStyle, loadout: EquipmentLoadout)
 describe('T10: Equipment → FighterState → Combat integration', () => {
   describe('createFighterState reflects equipment stats', () => {
     it('plate_armor + full_helm yields high mitigation via flat mitigation', () => {
-      const heavyLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'plate_armor',
-        shield: 'large_shield',
-        helm: 'full_helm',
-      };
+      const heavyLoadout: EquipmentLoadout = HEAVY_LOADOUT;
       const w = makeWarriorWithLoadout(FightingStyle.ParryStrike, heavyLoadout);
       const plan = defaultPlanForWarrior(w);
       const fs = createFighterState('A', plan, w);
@@ -46,12 +42,7 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     });
 
     it('none_armor + none_helm yields no encumbrance penalty', () => {
-      const lightLoadout: EquipmentLoadout = {
-        weapon: 'dagger',
-        armor: 'none_armor',
-        shield: 'none_shield',
-        helm: 'none_helm',
-      };
+      const lightLoadout: EquipmentLoadout = LIGHT_LOADOUT;
       const w = makeWarriorWithLoadout(FightingStyle.AimedBlow, lightLoadout);
       const plan = defaultPlanForWarrior(w);
       const fs = createFighterState('A', plan, w);
@@ -64,12 +55,7 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     });
 
     it('plate_armor + large_shield + full_helm yields HEAVY or OVER tier', () => {
-      const heavyLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'plate_armor',
-        shield: 'large_shield',
-        helm: 'full_helm',
-      };
+      const heavyLoadout: EquipmentLoadout = HEAVY_LOADOUT;
       const w = makeWarriorWithLoadout(FightingStyle.ParryStrike, heavyLoadout);
       const plan = defaultPlanForWarrior(w);
       const fs = createFighterState('A', plan, w);
@@ -105,18 +91,8 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     it('heavy armor fighter takes less damage than unarmored fighter (same seed)', () => {
       const ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 
-      const lightLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'none_armor',
-        shield: 'none_shield',
-        helm: 'none_helm',
-      };
-      const heavyLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'plate_armor',
-        shield: 'large_shield',
-        helm: 'full_helm',
-      };
+      const lightLoadout: EquipmentLoadout = { ...LIGHT_LOADOUT, weapon: 'longsword' };
+      const heavyLoadout: EquipmentLoadout = HEAVY_LOADOUT;
 
       const attacker = makeWarrior({
         id: undefined,
@@ -153,18 +129,8 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     it('enduranceCostMod causes armored fighter to exhaust faster', () => {
       const ATTRS = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
 
-      const lightLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'none_armor',
-        shield: 'none_shield',
-        helm: 'none_helm',
-      };
-      const heavyLoadout: EquipmentLoadout = {
-        weapon: 'longsword',
-        armor: 'plate_armor',
-        shield: 'large_shield',
-        helm: 'full_helm',
-      };
+      const lightLoadout: EquipmentLoadout = { ...LIGHT_LOADOUT, weapon: 'longsword' };
+      const heavyLoadout: EquipmentLoadout = HEAVY_LOADOUT;
 
       const lightWarrior = makeWarriorWithLoadout(FightingStyle.StrikingAttack, lightLoadout);
       const heavyWarrior = makeWarriorWithLoadout(FightingStyle.StrikingAttack, heavyLoadout);

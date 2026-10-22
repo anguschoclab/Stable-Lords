@@ -5,23 +5,16 @@ import {
   type StableEconomyInput,
 } from '@/engine/economy';
 import { resolveImpacts } from '@/engine/impacts';
-import type { GameState, Warrior, WarriorId } from '@/types/game';
-import { FightingStyle, type FightSummary } from '@/types/game';
+import type { GameState, WarriorId } from '@/types/game';
+import { type FightSummary } from '@/types/game';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { generateId } from '@/utils/idUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { makeFightSummary as fixtureFightSummary } from '@/test/_fixtures/factories';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeFightSummary as fixtureFightSummary,
+  makeTrainer,
+} from '@/test/_fixtures/factories';
+import { makeEconomyWarrior } from '@/test/_fixtures/statWarrior';
 
-const makeTestWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: overrides.id ?? (generateId(undefined, 'w') as Warrior['id']),
-    name: 'TestWarrior',
-    style: FightingStyle.StrikingAttack,
-    fame: 5,
-    age: 20,
-    ...overrides,
-  });
+const makeTestWarrior = makeEconomyWarrior;
 
 function makeEconomyInput(overrides: Partial<StableEconomyInput> = {}): StableEconomyInput {
   return {
@@ -708,15 +701,7 @@ describe('Economy Engine', () => {
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
         weather: 'Blizzard',
         trainers: [
-          {
-            id: 't1',
-            name: 'T',
-            tier: 'Novice',
-            focus: 'Aggression',
-            fame: 1,
-            age: 40,
-            contractWeeksLeft: 5,
-          },
+          makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 }),
         ],
         trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
@@ -853,15 +838,7 @@ describe('Economy Engine', () => {
           makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' }),
         ],
         trainers: [
-          {
-            id: 't1',
-            name: 'T',
-            tier: 'Novice',
-            focus: 'Aggression',
-            fame: 1,
-            age: 40,
-            contractWeeksLeft: 5,
-          },
+          makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 }),
         ],
         trainingAssignments: [{ warriorId: 'p1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });

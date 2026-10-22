@@ -18,13 +18,7 @@ import { ActiveTournamentManifest } from '@/components/tournaments/ActiveTournam
 import type { TournamentEntry, TournamentBout } from '@/types/game';
 import { makeTournament } from '@/test/_fixtures/tournamentState';
 
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreEmpty }));
 

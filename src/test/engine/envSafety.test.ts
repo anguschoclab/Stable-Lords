@@ -1,16 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { walkTsFiles as walk } from '@/test/_helpers/fsWalk';
 
 const ENGINE_ROOT = join(__dirname, '../../engine');
 
-function* walk(dir: string): Generator<string> {
-  for (const entry of readdirSync(dir)) {
-    const path = join(dir, entry);
-    if (statSync(path).isDirectory()) yield* walk(path);
-    else if (path.endsWith('.ts')) yield path;
-  }
-}
 
 /**
  * Engine code runs inside Web Workers and the Electron renderer where the

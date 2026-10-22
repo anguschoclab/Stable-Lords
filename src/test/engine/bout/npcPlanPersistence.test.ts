@@ -7,16 +7,9 @@
 import { describe, it, expect } from 'vitest';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { getNPCPlan } from '@/engine/bout/services/boutResolution';
-import { makeGameState, makeRival, makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeWarrior, makeBoutOffer , makeSignedOffer } from '@/test/_fixtures/factories';
 
-function signedOfferFor(proposerId: string, aId: string, dId: string) {
-  return makeBoutOffer({
-    warriorIds: [aId as never, dId as never],
-    proposerStableId: proposerId as never,
-    status: 'Signed',
-    responses: { [aId]: 'Accepted', [dId]: 'Accepted' } as never,
-  });
-}
+const signedOfferFor = makeSignedOffer;
 
 describe('NPC plan persistence', () => {
   it('writes w.plan tagged with planWeek + planForStableId for signed-bout warriors', () => {

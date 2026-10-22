@@ -7,17 +7,11 @@ import { describe, it, expect } from 'vitest';
 import { evaluateConditions } from '@/engine/combat/mechanics/conditionEngine';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import type { PlanCondition } from '@/types/shared.types';
+import { BASE_FIGHTER_STATS } from '@/test/_fixtures/combatFighter';
 
 function makeFighter(over: Partial<FighterState> = {}): FighterState {
   return {
-    hp: 100,
-    maxHp: 100,
-    endurance: 100,
-    maxEndurance: 100,
-    momentum: 0,
-    consecutiveHits: 0,
-    hitsLanded: 0,
-    hitsTaken: 0,
+    ...BASE_FIGHTER_STATS,
     attributes: { WT: 10 } as never,
     plan: { OE: 5, AL: 5 } as never,
     activePlan: { OE: 5, AL: 5 } as never,

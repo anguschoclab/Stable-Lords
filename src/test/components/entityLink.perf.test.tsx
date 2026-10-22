@@ -62,16 +62,11 @@ vi.mock('@/components/ui/tooltip', () => ({
   TooltipTrigger: ({ children }: any) => <>{children}</>,
 }));
 
-vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-}));
+vi.mock('@/components/ui/button', () => ({ ...__SHARED_MOCKS.entityLinkDeps.button }));
 
-vi.mock('@/components/WarriorDossier', () => ({
-  WarriorDossier: () => <div>Warrior Dossier</div>,
-}));
-vi.mock('@/components/StableDossier', () => ({
-  StableDossier: () => <div>Stable Dossier</div>,
-}));
+vi.mock('@/components/WarriorDossier', () => ({ ...__SHARED_MOCKS.entityLinkDeps.warriorDossier }));
+
+vi.mock('@/components/StableDossier', () => ({ ...__SHARED_MOCKS.entityLinkDeps.stableDossier }));
 
 // Real historyResolver — the synthesis must preserve real resolution.
 vi.mock('@/engine/core/historyResolver', async () => {

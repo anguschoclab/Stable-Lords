@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { convertBidsToOffers, generateBoutBids } from '@/engine/ai/workers/competitionWorker';
+import { convertToTestOffers, generateTestBids } from '@/test/_fixtures/bidRoster';
 import type { GameState, RivalStableData, Warrior } from '@/types/state.types';
 import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNG } from '@/utils/random';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import {
   makeWarrior as fixtureWarrior,
@@ -59,18 +58,10 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const rivalB = makeRival('rB', [wB]);
     const state = makeState(52, [rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 52,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 52);
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     // displayWeek(52 + 2) = displayWeek(54) = 2 (wraps to year 2 week 2)
@@ -87,18 +78,10 @@ describe('absoluteWeek rollover — convertBidsToOffers', () => {
     const rivalB = makeRival('rB', [wB]);
     const state = makeState(104, [rivalA, rivalB]);
 
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 104,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
+    const { bids } = generateTestBids(rivalA, rivalB, 104);
     expect(bids.length).toBeGreaterThan(0);
 
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
     // displayWeek(104 + 2) = displayWeek(106) = 2
@@ -118,16 +101,8 @@ describe('absoluteWeek rollover — generatePairings', () => {
     const state = makeState(52, [rivalA, rivalB]);
 
     // Generate offers at absoluteWeek=52 → boutOfferAbsoluteWeek = 54
-    const { bids } = generateBoutBids({
-      rival: rivalA,
-      _currentWeek: 52,
-      weather: 'Clear',
-      crowdMood: 'Calm',
-      rivals: [rivalB],
-    });
-    const rng = new SeededRNG(42);
-    const allBids = bids.map((bid) => ({ bid, rivalId: rivalA.id as string }));
-    const offers = convertBidsToOffers(allBids, [rivalA, rivalB], state, rng, new Set());
+    const { bids } = generateTestBids(rivalA, rivalB, 52);
+    const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state);
 
     expect(offers.length).toBeGreaterThan(0);
 

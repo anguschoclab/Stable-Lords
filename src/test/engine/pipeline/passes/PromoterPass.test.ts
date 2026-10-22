@@ -16,6 +16,7 @@ import {
   makePromoter as fixturePromoter,
   makeGameState as fixtureGameState,
   makeGameState,
+  ATTRS_10,
 } from '@/test/_fixtures/factories';
 
 // Helper to create a promoter with specific personality
@@ -53,15 +54,7 @@ function addTournamentParticipants(
           id: id as WarriorId,
           name: `Warrior ${id}`,
           style: FightingStyle.StrikingAttack,
-          attrs: {
-            ST: 10,
-            CN: 10,
-            SZ: 10,
-            WT: 10,
-            WL: 10,
-            SP: 10,
-            DF: 10,
-          },
+          attrs: ATTRS_10,
         })
       );
     })

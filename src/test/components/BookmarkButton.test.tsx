@@ -2,22 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { useGameStore } from '@/state/useGameStore';
+import { bookmarkedIds, mockToggleBookmark as mockToggle, resetBookmarkState } from '@/test/_mocks/bookmarkStore';
 
-const bookmarkedIds = new Set<string>();
-const mockToggle = vi.fn();
 
 describe('BookmarkButton', () => {
-  beforeEach(() => {
-    bookmarkedIds.clear();
-    mockToggle.mockClear();
-    // Inject fake state into the real store — vi.mock's importOriginal arg
-    // does not exist under bun:test.
-    useGameStore.setState({
-      isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),
-      toggleBookmark: mockToggle,
-    } as never);
-  });
+  beforeEach(() => resetBookmarkState());
 
   it('renders an unfilled bookmark icon when not bookmarked', () => {
     render(<BookmarkButton entityType="warrior" entityId="w1" />);

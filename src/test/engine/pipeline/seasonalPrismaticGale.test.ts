@@ -10,6 +10,7 @@ import type {
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import narrativeContent from '@/data/narrative/offseason.json';
+import { ATTRS_10 } from '@/test/_fixtures/factories';
 
 describe('prismatic_gale_exposure offseason event', () => {
   let mockState: GameState;
@@ -22,15 +23,7 @@ describe('prismatic_gale_exposure offseason event', () => {
       id: 'w1' as any,
       name: 'Test Warrior',
       style: FightingStyle.StrikingAttack,
-      attrs: {
-        ST: 10,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
-      },
+      attrs: ATTRS_10,
     });
     warrior.status = 'Active';
     warrior.injuries = [];

@@ -16,6 +16,16 @@
  *                     motion-reduce sibling on the same line (WCAG).
  *   fake-chrome       decorative telemetry-style strings (SECTOR/LIVE SECURE/
  *                     SYS. patterns) with no data binding — honesty audit bait.
+ *   radius-violation  rounded-(xs|sm|md|lg|xl|2xl|3xl) utilities, bare `rounded`,
+ *                     or `*:rounded` prose modifiers — bible mandates 0px
+ *                     structural radius (rounded-none/rounded-full exempt).
+ *   undefined-class   glow-/text-glow- tokens never defined in index.css, or
+ *                     animate- tokens defined in neither index.css, tailwind
+ *                     config, builtins, nor the animate plugin — silently dead.
+ *   italic-tabular    `italic` combined with `tabular-nums` — the bible's
+ *                     "numbers are never italic" legibility rule.
+ *   tracking-overflow tracking-[Nem] wider than 0.15em — past the small-caps
+ *                     legibility ceiling.
  *
  * Output: scripts/out/ui-audit.json + per-class summary.
  * Run: `node scripts/ui-audit-scan.mjs`
@@ -74,6 +84,88 @@ const FAKE_CHROME_COPY_RE =
   /\b(Scouts at work|host connection|lock-on|deep scan|SCAN COMPLETED|LIVE ARENA FEED)\b/i;
 const isFakeChrome = (l) => FAKE_CHROME_UPPER_RE.test(l) || FAKE_CHROME_COPY_RE.test(l);
 
+// radius-violation: `rounded-<size>` utility tokens are unambiguously classes
+// (can't occur in prose). Bare `rounded` / `*:rounded` modifiers only count on
+// lines that also carry a class-bearing attribute or class list, so English
+// prose like "rounded shoulders" stays exempt.
+const RADIUS_SIZE_RE = /\brounded-(?:xs|sm|md|lg|xl|2xl|3xl)\b/;
+const RADIUS_BARE_RE = /(?:^|[\s'"`{:=])rounded(?=$|[\s'"`},;)])/;
+const CLASS_CONTEXT_RE = /\bclass(?:Name)?\s*=|ClassName\s*=|particleClassName|extraClass|className:/;
+const isRadiusViolation = (l) =>
+  RADIUS_SIZE_RE.test(l) || (RADIUS_BARE_RE.test(l) && CLASS_CONTEXT_RE.test(l));
+
+// italic-tabular + tracking-overflow: same class-context gate.
+const isItalicTabular = (l) => /\bitalic\b/.test(l) && /tabular-nums/.test(l);
+const TRACKING_RE = /\btracking-\[(\d*\.?\d+)em\]/g;
+const trackingOverflows = (l) => {
+  for (const m of l.matchAll(TRACKING_RE)) if (parseFloat(m[1]) > 0.15) return true;
+  return false;
+};
+
+// undefined-class: project-prefixed class tokens must resolve. Defined set is
+// parsed once from index.css class selectors + tailwind.config animation keys
+// + builtin/plugin animate vocabulary.
+// Lookbehind keeps `--gold-glow-rgb` var names and longer identifiers out.
+const PROJECT_CLASS_RE =
+  /(?<![a-zA-Z0-9_-])(?:text-glow|glow|animate)-[a-z][a-z0-9-]*(?:\/\d+)?\b/g;
+const ANIMATE_BUILTINS = new Set([
+  'animate-none', 'animate-spin', 'animate-ping', 'animate-pulse', 'animate-bounce',
+]);
+const ANIMATE_PLUGIN_RE =
+  /^animate-(?:in|out|fade(?:-in|-out)?(?:-\d+)?|zoom-(?:in|out)(?:-\d+)?|spin-(?:in|out)(?:-\d+)?|slide-in-from-\S+|slide-out-to-\S+|accordion-(?:down|up))$/;
+function definedProjectClasses() {
+  const defined = new Set();
+  const cssPath = path.join(ROOT, 'src', 'index.css');
+  if (fs.existsSync(cssPath)) {
+    const css = fs.readFileSync(cssPath, 'utf8');
+    for (const m of css.matchAll(/\.((?:text-glow|glow|animate)-[a-z][a-z0-9-]*)\b/g))
+      defined.add(m[1]);
+  }
+  const cfgPath = path.join(ROOT, 'tailwind.config.ts');
+  if (fs.existsSync(cfgPath)) {
+    const cfg = fs.readFileSync(cfgPath, 'utf8');
+    const animBlock = cfg.match(/animation:\s*\{([\s\S]*?)\},?\s*\n\s*\}/);
+    if (animBlock)
+      for (const m of animBlock[1].matchAll(/'([a-z][a-z0-9-]*)'\s*:/g))
+        defined.add(`animate-${m[1]}`);
+  }
+  return defined;
+}
+const isUndefinedClass = (token, defined) =>
+  token.includes('/') || // opacity modifier on a non-utility custom class
+  (!defined.has(token) && !ANIMATE_BUILTINS.has(token) && !ANIMATE_PLUGIN_RE.test(token));
+
+// dead-keyframe: an @keyframes block unreferenced by css animation props,
+// .animate-* classes, tailwind config, or TSX animation strings is dead CSS.
+function deadKeyframes() {
+  const cssPath = path.join(ROOT, 'src', 'index.css');
+  if (!fs.existsSync(cssPath)) return new Set();
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const names = new Set();
+  for (const m of css.matchAll(/@keyframes\s+([a-zA-Z0-9_-]+)/g)) names.add(m[1]);
+  const live = new Set();
+  for (const m of css.matchAll(/animation(?:-name)?:\s*([^;}]+)/g))
+    for (const id of m[1].matchAll(/[a-zA-Z][a-zA-Z0-9_-]*/g)) live.add(id[0]);
+  for (const m of css.matchAll(/\.animate-([a-zA-Z0-9_-]+)/g)) live.add(m[1]);
+  const cfgPath = path.join(ROOT, 'tailwind.config.ts');
+  const cfg = fs.existsSync(cfgPath) ? fs.readFileSync(cfgPath, 'utf8') : '';
+  for (const file of walk(SRC)) {
+    const r = rel(file);
+    if (/\/test\//.test(r)) continue;
+    const text = fs.readFileSync(file, 'utf8');
+    for (const m of text.matchAll(/animation(?:-name)?:\s*['"`]([^'"`}]+)['"`]/g))
+      for (const id of m[1].matchAll(/[a-zA-Z][a-zA-Z0-9_-]*/g)) live.add(id[0]);
+    for (const m of text.matchAll(/animation(?:Name)?:\s*['"`]([^'"`}]+)['"`]/g))
+      for (const id of m[1].matchAll(/[a-zA-Z][a-zA-Z0-9_-]*/g)) live.add(id[0]);
+    // `animate-<kf>` class tokens count as live refs — the class binds it.
+    for (const m of text.matchAll(/animate-([a-z][a-z0-9-]*)/g)) live.add(m[1]);
+  }
+  for (const name of names)
+    if (live.has(name) || cfg.includes(`'${name}'`) || cfg.includes(`"${name}"`))
+      names.delete(name);
+  return names;
+}
+
 /** Collect classified UI violations. Returns { findings, filesAffected }. */
 export function collectUiAudit() {
   const findings = {
@@ -82,7 +174,13 @@ export function collectUiAudit() {
     'rng-violation': [],
     'motion-violation': [],
     'fake-chrome': [],
+    'radius-violation': [],
+    'undefined-class': [],
+    'italic-tabular': [],
+    'tracking-overflow': [],
+    'dead-keyframe': [],
   };
+  const defined = definedProjectClasses();
 
   for (const dir of SCAN_DIRS) {
     const base = path.join(SRC, dir);
@@ -133,6 +231,33 @@ export function collectUiAudit() {
           text: lines[i].trim().slice(0, 140),
         });
   }
+
+  // bible-structure rules sweep all of src/ minus tests — radius, dead-class
+  // and legibility violations aren't confined to components/pages/hooks.
+  for (const file of walk(SRC)) {
+    const r = rel(file);
+    if (/\/test\//.test(r) || /\/_[^/]*\//.test(r)) continue;
+    const lines = fs.readFileSync(file, 'utf8').split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      const n = i + 1;
+      const trimmed = l.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*'))
+        continue;
+      if (isRadiusViolation(l))
+        findings['radius-violation'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
+      if (isItalicTabular(l))
+        findings['italic-tabular'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
+      if (trackingOverflows(l))
+        findings['tracking-overflow'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
+      for (const m of l.matchAll(PROJECT_CLASS_RE))
+        if (isUndefinedClass(m[0], defined))
+          findings['undefined-class'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
+    }
+  }
+
+  for (const name of deadKeyframes())
+    findings['dead-keyframe'].push({ file: 'src/index.css', line: 0, text: name });
 
   const byFile = new Map();
   for (const [cls, rows] of Object.entries(findings))

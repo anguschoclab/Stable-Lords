@@ -2,22 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { FightingStyle } from '@/types/shared.types';
 import {
-  makeWarrior as fixtureWarrior,
   makeGameState as fixtureGameState,
 } from '@/test/_fixtures/factories';
+import { makeBareWarrior } from '@/test/_fixtures/statWarrior';
 
-const makeWarrior = (id: string): Warrior =>
-  fixtureWarrior({
-    id: id as WarriorId,
-    name: id,
-    style: FightingStyle.StrikingAttack,
-    baseSkills: {} as any,
-    derivedStats: {} as any,
-    fame: 0,
-    age: 20,
-  } as any);
+const makeWarrior = makeBareWarrior;
 
 const makeState = (): GameState =>
   fixtureGameState({

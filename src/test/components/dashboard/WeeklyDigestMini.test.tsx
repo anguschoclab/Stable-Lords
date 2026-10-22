@@ -4,9 +4,9 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
-import type { FightId, BoutOfferId, PromoterId } from '@/types/shared.types';
+import type { BoutOfferId, PromoterId } from '@/types/shared.types';
 import {
-  makeFightSummary as fixtureFightSummary,
+  makeDigestFight,
   makeBoutOffer as fixtureBoutOffer,
 } from '@/test/_fixtures/factories';
 
@@ -21,20 +21,7 @@ vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 import { WeeklyDigestMini } from '@/components/dashboard/WeeklyDigestMini';
 
 const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
-  fixtureFightSummary({
-    id: 'fight-1' as FightId,
-    week: 5,
-    absoluteWeek: 5,
-    title: 'Test Fight',
-    warriorIdA: 'wa' as WarriorId,
-    warriorIdD: 'wd' as WarriorId,
-    winner: 'A' as const,
-    by: 'KO',
-    styleA: 'Brawler',
-    styleD: 'Technician',
-    createdAt: '2026-01-01T00:00:00Z',
-    ...overrides,
-  } as any);
+  makeDigestFight({ week: 5, absoluteWeek: 5, ...overrides });
 
 const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
   fixtureBoutOffer({

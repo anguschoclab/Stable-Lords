@@ -7,9 +7,7 @@
  */
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 import {
-  makeBoutOffer,
   makeGameState,
   makeOwner,
   makeRival,
@@ -18,9 +16,14 @@ import {
 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
+// Subject under test (evaluated via the shared competitionWorker harness).
+import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 import {
+  verdict,
   dominantRankings,
   playerPressureState,
+  evalBoutOffer,
+  rivalOffer,
 } from '@/test/_fixtures/competitionWorker';
 
 beforeEach(() => resetFixtureIds());
@@ -38,32 +41,29 @@ describe('dominant-player offer pressure', () => {
       fame: 55,
       style: FightingStyle.AimedBlow,
     });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }),
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Methodical' }) },
+      offerOver: { purse: 400, hype: 80 },
     });
-    const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 400, hype: 80 });
 
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, true),
       })
     ).toBe('Declined');
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, false),
       })
     ).toBe('Accepted');
@@ -78,32 +78,29 @@ describe('dominant-player offer pressure', () => {
       fame: 55,
       style: FightingStyle.StrikingAttack,
     });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Showman' }),
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Showman' }) },
+      offerOver: { purse: 40, hype: 90 },
     });
-    const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 40, hype: 90 });
 
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, true),
       })
     ).toBe('Accepted');
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, false),
       })
     ).toBe('Countered');
@@ -118,32 +115,29 @@ describe('dominant-player offer pressure', () => {
       fame: 55,
       style: FightingStyle.StrikingAttack,
     });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Pragmatic' }),
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Pragmatic' }) },
+      offerOver: { purse: 60, hype: 80 },
     });
-    const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 60, hype: 80 });
 
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, true),
       })
     ).toBe('Countered');
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
         state: playerPressureState(opponent, false),
       })
     ).toBe('Accepted');
@@ -158,13 +152,14 @@ describe('dominant-player offer pressure', () => {
       fame: 55,
       style: FightingStyle.StrikingAttack,
     });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Pragmatic' }),
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Pragmatic' }) },
+      offerOver: { purse: 60, hype: 80 },
     });
     const oppStable = makeRival({ roster: [opponent] });
-    const offer = makeBoutOffer({ warriorIds: [warrior.id, opponent.id], purse: 60, hype: 80 });
 
     const state = makeGameState({
       week: 5,
@@ -173,16 +168,6 @@ describe('dominant-player offer pressure', () => {
       rivals: [rival, oppStable],
       realmRankings: dominantRankings('pw1'),
     });
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
-      })
-    ).toBe('Accepted');
+    expect<ReturnType<typeof evaluateBoutOffer>>(verdict(offer, rival, warrior, opponent, state)).toBe('Accepted');
   });
 });

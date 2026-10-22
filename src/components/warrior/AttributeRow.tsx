@@ -91,7 +91,7 @@ function AdvisorBadge() {
   return (
     <span
       data-testid="advisor-attribute-badge"
-      className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1 shrink-0"
+      className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1 shrink-0"
     >
       <ShieldCheck className="h-2.5 w-2.5" />
       Council Pick

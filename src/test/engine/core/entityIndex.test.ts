@@ -16,6 +16,7 @@ import {
   makeOwner,
   makePromoter,
   makeTrainer,
+  makeIronWolvesRival,
 } from '@/test/_fixtures/factories';
 import type { WarriorId, StableId, PromoterId } from '@/types/shared.types';
 
@@ -61,10 +62,7 @@ describe('entityIndex — corpus coverage', () => {
   it('indexes player and rival stables', () => {
     const s = makeState({
       rivals: [
-        makeRival({
-          id: 'r1' as StableId,
-          owner: makeOwner({ id: 'r1' as StableId, stableName: 'Iron Wolves' }),
-        }),
+        makeIronWolvesRival(),
       ],
     });
     const index = ensureEntityIndex(s as never);

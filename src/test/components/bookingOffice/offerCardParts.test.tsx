@@ -7,6 +7,7 @@ import { OfferMatchupPanel } from '@/pages/BookingOffice/components/OfferMatchup
 import { OfferCardHeader } from '@/pages/BookingOffice/components/OfferCardHeader';
 import { OfferDetailsGrid } from '@/pages/BookingOffice/components/OfferDetailsGrid';
 import { makeBoutOffer, makeWarrior } from '@/test/_fixtures/factories';
+import { unsignedActionProps } from '@/test/_fixtures/offerCard';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/state.types';
@@ -32,14 +33,7 @@ describe('OfferActions', () => {
   it('wires accept and decline handlers', () => {
     const onAccept = vi.fn();
     const onDecline = vi.fn();
-    render(
-      <OfferActions
-        isSigned={false}
-        acceptDisabled={false}
-        onAccept={onAccept}
-        onDecline={onDecline}
-      />
-    );
+    render(<OfferActions {...unsignedActionProps(onAccept, onDecline)} />);
     fireEvent.click(screen.getByText('Accept Offer'));
     fireEvent.click(screen.getAllByRole('button')[1]!);
     expect(onAccept).toHaveBeenCalledTimes(1);

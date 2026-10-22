@@ -3,6 +3,7 @@ import '@/test/_setup/setup';
 import { runAutosim } from '@/engine/autosim/autosim';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { truncateState } from '@/engine/storage/truncation';
+import { makeStubBout } from '@/test/_fixtures/factories';
 
 describe('NF3: sequential autosim memory growth', () => {
   it('sequential autosim calls truncateState periodically (every 50 weeks)', () => {
@@ -88,18 +89,7 @@ describe('NF3: sequential autosim memory growth', () => {
     state.treasury = 100000;
     // Oversized history already in state — the every-50-weeks checkpoint never
     // fires on a 2-week run, so only the final truncateState can bound it.
-    state.arenaHistory = new Array(600).fill(null).map((_, i) => ({
-      id: `pre_bout_${i}`,
-      week: i + 1,
-      title: 'Alpha vs Beta',
-      warriorIdA: 'wA',
-      warriorIdD: 'wD',
-      winner: 'A',
-      by: 'KO',
-      styleA: 'X',
-      styleD: 'Y',
-      createdAt: '2025-01-01T00:00:00.000Z',
-    })) as any;
+    state.arenaHistory = new Array(600).fill(null).map((_, i) => makeStubBout(`pre_bout_${i}`, i + 1)) as any;
     state.ledger = new Array(600).fill(null).map((_, i) => ({
       week: i + 1,
       type: 'income',
@@ -116,18 +106,7 @@ describe('NF3: sequential autosim memory growth', () => {
 
   it('returns a bounded finalState on the bankruptcy early-return', () => {
     const state = createFreshState('seq-bankrupt-trunc-test', '2025-01-01T00:00:00.000Z');
-    state.arenaHistory = new Array(600).fill(null).map((_, i) => ({
-      id: `pre_bout_${i}`,
-      week: i + 1,
-      title: 'Alpha vs Beta',
-      warriorIdA: 'wA',
-      warriorIdD: 'wD',
-      winner: 'A',
-      by: 'KO',
-      styleA: 'X',
-      styleD: 'Y',
-      createdAt: '2025-01-01T00:00:00.000Z',
-    })) as any;
+    state.arenaHistory = new Array(600).fill(null).map((_, i) => makeStubBout(`pre_bout_${i}`, i + 1)) as any;
     // Far below BANKRUPTCY_THRESHOLD (-500) — one week of income can't recover.
     state.treasury = -100000;
 

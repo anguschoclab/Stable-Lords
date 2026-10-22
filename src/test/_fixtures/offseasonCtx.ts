@@ -1,6 +1,10 @@
 import { vi } from 'vitest';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { OffseasonEventContext } from '@/engine/pipeline/offseasonEvents/types';
+import type {
+  OffseasonEventContext,
+  OffseasonEventNarrative,
+} from '@/engine/pipeline/offseasonEvents/types';
+import type { GameState } from '@/types/state.types';
 
 /** Deterministic stub RNG for offseason handler tests (pick→first, next→0.5, roll→min). */
 export const makeStubRng = (over: Record<string, unknown> = {}): IRNGService =>
@@ -24,3 +28,11 @@ export const makeOffseasonCtx = (
     treasuryDelta: 0,
     ...over,
   }) as OffseasonEventContext;
+
+/** Shared handler-arg spread for offseason narrative handlers (nextWeek 5). */
+export const seasonalCallArgs = (
+  state: unknown,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) => ({ state: state as GameState, nextWeek: 5, e, rng, ctx });

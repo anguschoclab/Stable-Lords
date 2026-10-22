@@ -11,6 +11,7 @@ import {
   makeOwner,
   makePromoter,
   makeGameState,
+  makeIronWolvesRival,
 } from '@/test/_fixtures/factories';
 import type { WarriorId, StableId, PromoterId } from '@/types/shared.types';
 
@@ -79,10 +80,7 @@ describe('getCanonicalCrumbs — other detail routes', () => {
   it('/world/stable/$id → World › Scouting › stable name', () => {
     const s = makeState({
       rivals: [
-        makeRival({
-          id: 'r1' as StableId,
-          owner: makeOwner({ id: 'r1' as StableId, stableName: 'Iron Wolves' }),
-        }),
+        makeIronWolvesRival(),
       ],
     });
     const crumbs = getCanonicalCrumbs('/world/stable/r1', s as never)!;

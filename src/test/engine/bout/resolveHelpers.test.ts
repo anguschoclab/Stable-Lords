@@ -9,10 +9,10 @@ import {
   getWinnerId,
 } from '@/engine/bout/core/resolveHelpers';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
+import { makeOutcome } from '@/test/_fixtures/factories';
 
 describe('resolveHelpers', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -25,13 +25,7 @@ describe('resolveHelpers', () => {
       ...overrides,
     }) as Warrior;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
-    winner: 'A',
-    by: 'KO',
-    minutes: 5,
-    log: [],
-    ...overrides,
-  });
+  const createMockOutcome = makeOutcome;
 
   describe('validateBoutCombatants', () => {
     it('returns true for active warriors', () => {

@@ -67,7 +67,7 @@ export function announceOffseasonEvent(args: AnnounceOffseasonEventArgs): void {
 }
 
 /** Outcome returned by a `withChosenWarrior` apply callback. */
-export interface ChosenWarriorOutcome {
+interface ChosenWarriorOutcome {
   updates?: Partial<Warrior>;
   announce?: Record<string, string | number>;
 }
@@ -127,7 +127,7 @@ export function warriorOutcome(
 }
 
 /** Warrior counters a {@link statGrantOutcome} grant can bump. */
-export type GrantableStat = 'xp' | 'fame' | 'popularity' | 'fatigue';
+type GrantableStat = 'xp' | 'fame' | 'popularity' | 'fatigue';
 
 /** Options for {@link statGrantOutcome}. */
 export interface StatGrantOutcomeOpts {

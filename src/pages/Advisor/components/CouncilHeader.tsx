@@ -65,7 +65,7 @@ function PurseProjection({ summary }: { summary: StableAdvisorSummary }) {
       {summary.solvencyWarning && (
         <span
           data-testid="solvency-warning"
-          className="mt-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40"
+          className="mt-1 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-destructive/20 text-destructive border border-destructive/40"
         >
           Insolvent
         </span>

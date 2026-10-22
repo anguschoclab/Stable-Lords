@@ -292,7 +292,32 @@ const CATEGORY_DOMAIN = {
   schemas: ['src/schemas'],
   state: ['src/state'],
   hooks: ['src/hooks'],
+  lore: ['src/lore'],
 };
+// Non-mirror dirs: suite infrastructure and repo-audit homes (docs/TESTING.md).
+// The category check above only evaluates dirs present in CATEGORY_DOMAIN, so
+// any dir not in either set escapes conformance silently — emit them for the
+// testQualityAudit registration guard (shrink-only baseline list).
+const NON_MIRROR_DIRS = new Set([
+  '_fixtures',
+  '_helpers',
+  '_mocks',
+  '_setup',
+  'config',
+  'integration',
+  'megaplan',
+  'perf',
+  'scripts',
+  'ui',
+  'vite',
+]);
+const unregisteredTestDirs = [
+  ...new Set(
+    records
+      .map((r) => /^src\/test\/([^/]+)\//.exec(r.file)?.[1])
+      .filter((cat) => cat && !CATEGORY_DOMAIN[cat] && !NON_MIRROR_DIRS.has(cat))
+  ),
+].sort();
 const misplacedCategoryFiles = records
   .filter((r) => {
     const cat = /^src\/test\/([^/]+)\//.exec(r.file)?.[1];
@@ -314,6 +339,7 @@ const baseline = {
     .map((r) => r.file)
     .sort(),
   misplacedCategoryFiles,
+  unregisteredTestDirs,
   sameModuleBasenamePairs: basenameCollisions
     .filter((g) => g.sharedTargets.length > 0)
     .map((g) => g.files.sort())

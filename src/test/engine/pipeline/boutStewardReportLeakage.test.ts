@@ -1,19 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeBoutSummary, makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 
 vi.mock('@/engine/bout/services/boutProcessorService', () => ({
   processWeekBouts: vi.fn(() => ({
     impact: {},
     results: [],
-    summary: {
-      bouts: 0,
-      deaths: 0,
-      injuries: 0,
-      deathRefs: [],
-      injuryRefs: [],
-      hadPlayerDeath: false,
-      hadRivalryEscalation: false,
-    },
+    summary: makeBoutSummary({ bouts: 0 }),
   })),
 }));
 

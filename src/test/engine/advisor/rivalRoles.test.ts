@@ -11,32 +11,25 @@ import {
   makeOwner,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
-import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
-import type { ArenaTitle } from '@/types/state.types';
+import { makeArenaContender, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import type { WarriorId } from '@/types/shared.types';
 
 beforeEach(() => resetFixtureIds());
 
 const ARENA = 'standard_arena';
 
-function venueWarrior(id: string, wins: number, losses = 0) {
-  return makeVenueWarrior(id, { wins, losses, arenaId: ARENA, age: 22 });
-}
 
-function titleAt(championId: string | null): ArenaTitle {
-  return makeArenaTitle(championId);
-}
 
 describe('assignCampaignRoles — rival per-warrior roles', () => {
   it('stamps the shared campaignFocus field on rival warriors', () => {
-    const contender = venueWarrior('w1', 5);
+    const contender = makeArenaContender('w1', 5);
     const prospect = makeWarrior({ id: 'w2' as WarriorId, age: 19 });
     const rival = makeRival({ roster: [contender, prospect] });
     const state = makeGameState({
       week: 5,
       absoluteWeek: 5,
       rivals: [rival],
-      arenaChampions: { [ARENA]: titleAt('champ_x') },
+      arenaChampions: { [ARENA]: makeArenaTitle('champ_x') },
     });
     const updated = assignCampaignRoles(rival, state);
     expect(updated.roster.find((w) => w.id === contender.id)?.campaignFocus).toBe('CROWN_BID');
@@ -44,7 +37,7 @@ describe('assignCampaignRoles — rival per-warrior roles', () => {
   });
 
   it('rehab-focused warriors carry a recovery assignment', () => {
-    const exhausted = venueWarrior('w1', 5);
+    const exhausted = makeArenaContender('w1', 5);
     exhausted.fatigue = 55;
     const rival = makeRival({ roster: [exhausted] });
     const state = makeGameState({ week: 5, absoluteWeek: 5, rivals: [rival] });

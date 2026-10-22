@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mockStateRef } from '@/test/_mocks/gameStoreSelector';
+import { seedBriefingMockState } from '@/test/_mocks/gameStoreSelector';
 
 vi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreSelector }));
 import { render, screen } from '@testing-library/react';
@@ -22,16 +22,7 @@ import { GazetteArticle } from '@/components/gazette/GazetteArticle';
 
 describe('GazetteArticle', () => {
   beforeEach(() => {
-    mockStateRef.current = {
-      roster: [
-        { id: 'w1', name: 'Brutus' },
-        { id: 'w2', name: 'Cassius' },
-      ],
-      graveyard: [],
-      retired: [],
-      rivals: [{ owner: { stableName: 'Wolf Pack' }, roster: [] }],
-      player: { stableName: "Dragon's Hearth" },
-    };
+    seedBriefingMockState();
   });
 
   it('mainHeadline rendered with LinkifiedText (warrior names clickable)', () => {

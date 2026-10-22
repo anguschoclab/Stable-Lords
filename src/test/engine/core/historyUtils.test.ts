@@ -142,39 +142,3 @@ describe('buildRecentFightPairs edge cases', () => {
     expect(narrowPairs.has('w1|w8')).toBe(true);
   });
 });
-
-describe('buildRecentFightPairs edge cases', () => {
-  it('builds recent fight pairs', () => {
-    const createFight = (overrides: any) => ({
-      absoluteWeek: 1,
-      week: 1,
-      warriorIdA: 'a' as any,
-      warriorIdD: 'b' as any,
-      arenaId: 'arena1',
-      ...overrides,
-    });
-    const history = [
-      createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1' as any, warriorIdD: 'w2' as any }),
-      createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3' as any, warriorIdD: 'w4' as any }),
-      createFight({
-        absoluteWeek: 2,
-        week: 2,
-        warriorIdA: 'w1' as any,
-        warriorIdD: 'w5' as any,
-        arenaId: 'arena2',
-        tournamentId: 't1' as any,
-      }),
-      createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6' as any, warriorIdD: 'w7' as any }),
-      createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1' as any, warriorIdD: 'w8' as any }),
-    ];
-
-    const pairs = buildRecentFightPairs(history, 3, 3);
-    expect(pairs.size).toBe(5);
-    expect(pairs.has('w1|w2')).toBe(true);
-    expect(pairs.has('w6|w7')).toBe(true);
-
-    const narrowPairs = buildRecentFightPairs(history, 4, 1);
-    expect(narrowPairs.size).toBe(2);
-    expect(narrowPairs.has('w1|w8')).toBe(true);
-  });
-});

@@ -140,50 +140,72 @@ export function recordGrandChampions(state: GameState, delta: ChampionshipDelta)
       stableName: owner?.stableName,
     });
 
-    const titles = [...(w.titles ?? []), CHAMPIONS_TOURNEY.TITLE];
-    if (owner?.isPlayer) {
-      delta.treasuryDelta += CHAMPIONS_TOURNEY.PURSE;
-      const existing = delta.rosterUpdates.get(w.id) ?? {};
-      delta.rosterUpdates.set(w.id, {
-        ...existing,
-        fame: (existing.fame ?? w.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
-        popularity: (existing.popularity ?? w.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
-        titles,
-        champion: true,
-      });
-    } else {
-      const rival = stableByWarrior.get(w.id);
-      if (rival) {
-        const pending = delta.rivalsUpdates.get(rival.id);
-        const baseRoster = pending?.roster ?? rival.roster;
-        delta.rivalsUpdates.set(rival.id, {
-          ...(pending ?? {}),
-          treasury: (rival.treasury ?? 0) + CHAMPIONS_TOURNEY.PURSE,
-          roster: baseRoster.map((x) =>
-            x.id === w.id
-              ? {
-                  ...x,
-                  fame: (x.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
-                  popularity: (x.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
-                  titles,
-                  champion: true,
-                }
-              : x
-          ),
-        });
-      }
-    }
-
-    awardEpithet(state, delta, winnerId, 'grand_champion');
-
-    delta.newsletterItems.push({
-      id: `champ-gc-${t.id}`,
-      week: state.week,
-      title: `Grand Champion Crowned`,
-      items: [
-        `${w.name} of ${owner?.stableName ?? 'an unknown stable'} is the ${CHAMPIONS_TOURNEY.TITLE} — last warrior standing at ${CHAMPIONS_TOURNEY.NAME}.`,
-        `Purse: ${CHAMPIONS_TOURNEY.PURSE}g. The arena crowns them immortal.`,
-      ],
+    applyGrandChampionAward({
+      state,
+      delta,
+      tournamentId: t.id as TournamentId,
+      w,
+      winnerId,
+      owner,
+      stableByWarrior,
     });
   }
+}
+
+/** Apply purse/fame/title/epithet/newsletter effects for one crowned winner. */
+function applyGrandChampionAward(opts: {
+  state: GameState;
+  delta: ChampionshipDelta;
+  tournamentId: TournamentId;
+  w: Warrior;
+  winnerId: WarriorId;
+  owner: ReturnType<typeof owningStableOf>;
+  stableByWarrior: Map<WarriorId, RivalStableData>;
+}): void {
+  const { state, delta, tournamentId, w, winnerId, owner, stableByWarrior } = opts;
+  const titles = [...(w.titles ?? []), CHAMPIONS_TOURNEY.TITLE];
+  if (owner?.isPlayer) {
+    delta.treasuryDelta += CHAMPIONS_TOURNEY.PURSE;
+    const existing = delta.rosterUpdates.get(w.id) ?? {};
+    delta.rosterUpdates.set(w.id, {
+      ...existing,
+      fame: (existing.fame ?? w.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
+      popularity: (existing.popularity ?? w.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
+      titles,
+      champion: true,
+    });
+  } else {
+    const rival = stableByWarrior.get(w.id);
+    if (rival) {
+      const pending = delta.rivalsUpdates.get(rival.id);
+      const baseRoster = pending?.roster ?? rival.roster;
+      delta.rivalsUpdates.set(rival.id, {
+        ...(pending ?? {}),
+        treasury: (rival.treasury ?? 0) + CHAMPIONS_TOURNEY.PURSE,
+        roster: baseRoster.map((x) =>
+          x.id === w.id
+            ? {
+                ...x,
+                fame: (x.fame ?? 0) + CHAMPIONS_TOURNEY.WINNER_FAME,
+                popularity: (x.popularity ?? 0) + CHAMPIONS_TOURNEY.WINNER_POP,
+                titles,
+                champion: true,
+              }
+            : x
+        ),
+      });
+    }
+  }
+
+  awardEpithet(state, delta, winnerId, 'grand_champion');
+
+  delta.newsletterItems.push({
+    id: `champ-gc-${tournamentId}`,
+    week: state.week,
+    title: `Grand Champion Crowned`,
+    items: [
+      `${w.name} of ${owner?.stableName ?? 'an unknown stable'} is the ${CHAMPIONS_TOURNEY.TITLE} — last warrior standing at ${CHAMPIONS_TOURNEY.NAME}.`,
+      `Purse: ${CHAMPIONS_TOURNEY.PURSE}g. The arena crowns them immortal.`,
+    ],
+  });
 }

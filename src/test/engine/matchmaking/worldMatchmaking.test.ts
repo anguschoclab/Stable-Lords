@@ -7,9 +7,9 @@ import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import {
   makeWarrior as fixtureWarrior,
-  makeRival as fixtureRival,
   makeGameState as fixtureGameState,
 } from '@/test/_fixtures/factories';
+import { makeBidRival } from '@/test/_fixtures/bidRoster';
 
 // ─── Lightweight Test Factories ──────────────────────────────────────────────
 
@@ -35,23 +35,10 @@ const makeTestRival = (
   warriors: Warrior[],
   strategy?: RivalStableData['strategy']
 ): RivalStableData =>
-  fixtureRival({
-    id: id as StableId,
-    owner: {
-      id: `owner_${id}` as StableId,
-      name: `Owner ${id}`,
-      stableName: `Stable ${id}`,
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Pragmatic',
-    },
-    fame: 100,
-    roster: warriors,
-    treasury: 1000,
-    tier: 'Established',
-    strategy,
-  } as any);
+  makeBidRival(
+    { id: id as StableId, roster: warriors, tier: 'Established', strategy },
+    { id: `owner_${id}` as StableId, name: `Owner ${id}`, stableName: `Stable ${id}` }
+  );
 
 const makeTestState = (rivals: RivalStableData[], week: number = 1): GameState =>
   fixtureGameState({ week, absoluteWeek: week, rivals });

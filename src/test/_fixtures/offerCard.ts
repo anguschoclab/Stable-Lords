@@ -6,6 +6,14 @@ import { makeWarrior, makeBoutOffer } from '@/test/_fixtures/factories';
 /** Shared OfferCard test setup — player warrior, pending offer, base props. */
 export const playerWarrior = makeWarrior({ id: 'pw-1' as WarriorId, name: 'My Fighter' });
 
+/** The isSigned=false OfferActions props shared by offer-action specs. */
+export const unsignedActionProps = (onAccept: () => void, onDecline: () => void) => ({
+  isSigned: false,
+  acceptDisabled: false,
+  onAccept,
+  onDecline,
+});
+
 /** make Offer. */
 export const makeOffer = (over: Partial<BoutOffer> = {}): BoutOffer =>
   makeBoutOffer({

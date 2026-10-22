@@ -33,6 +33,18 @@ describe('setup.ts regression — OPFS file text reset between tests', () => {
   });
 });
 
+describe('setup.ts regression — DOM-tier avatar stub (T9)', () => {
+  // This file runs under jsdom (pragma above, isolated project) — the avatar
+  // catalog fetch stub must be installed by setup.dom.ts so components render
+  // portraits without network access.
+  it('avatar catalog loads via the stubbed fetch', async () => {
+    const res = await fetch('/avatars/catalog.json');
+    expect(res.ok).toBe(true);
+    const { loadAvatarCatalog } = await import('@/engine/avatar/avatarCatalog');
+    await expect(loadAvatarCatalog()).resolves.not.toThrow();
+  });
+});
+
 describe('setup.ts regression — localStorage normal operation', () => {
   it('setItem does not throw and getItem retrieves value', () => {
     localStorage.setItem('regression-key', 'regression-val');

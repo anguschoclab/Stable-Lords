@@ -169,4 +169,3 @@ export function initializeResolutionContext(
   };
 }
 
-export { CROWD_KILL_BONUS };

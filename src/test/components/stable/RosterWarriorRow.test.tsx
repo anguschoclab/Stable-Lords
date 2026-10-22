@@ -4,7 +4,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Attributes } from '@/types/shared.types';
 import type { Warrior, AttributePotential } from '@/types/warrior.types';
-import { makeSpartacusWarrior } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior , makeFlatPotential } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 
@@ -142,15 +142,7 @@ describe('PotentialBadge', () => {
 
   it('applies arena-gold class for S grade', () => {
     vi.mocked(potentialGrade).mockReturnValue('S');
-    const potential: AttributePotential = {
-      ST: 25,
-      CN: 25,
-      SZ: 25,
-      WT: 25,
-      WL: 25,
-      SP: 25,
-      DF: 25,
-    };
+    const potential: AttributePotential = makeFlatPotential(25);
     const { container } = render(<PotentialBadge potential={potential} />);
     expect(container.innerHTML).toContain('arena-gold');
   });

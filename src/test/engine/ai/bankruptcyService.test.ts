@@ -2,22 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import type { GameState } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
 import { SeededRNG } from '@/utils/random';
-import { FightingStyle } from '@/types/shared.types';
 import { MIN_BANKRUPTCY_ROSTER, DEBT_FLOOR, EMERGENCY_LOAN } from '@/constants/economy';
-import { generateId } from '@/utils/idUtils';
-import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
+import { makeEconomyWarrior } from '@/test/_fixtures/statWarrior';
 
-const makeTestWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-  fixtureWarrior({
-    id: overrides.id ?? (generateId(undefined, 'w') as Warrior['id']),
-    name: 'TestWarrior',
-    style: FightingStyle.StrikingAttack,
-    fame: 5,
-    age: 20,
-    ...overrides,
-  });
+const makeTestWarrior = makeEconomyWarrior;
 
 describe('BankruptcyService', () => {
   let state: GameState;

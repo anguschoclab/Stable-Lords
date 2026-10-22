@@ -6,7 +6,6 @@
  */
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 import {
   makeWarrior,
   makeRival,
@@ -16,6 +15,9 @@ import {
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
 import type { PromoterId } from '@/types/shared.types';
+import { evalBoutOffer } from '@/test/_fixtures/competitionWorker';
+// Subject under test (evaluated via the shared competitionWorker harness).
+import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 
 beforeEach(() => resetFixtureIds());
 
@@ -49,15 +51,13 @@ describe('promoter-aware rival evaluation', () => {
   it('a Methodical stable declines a Sadistic promoter booking against a killer', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Sadistic' });
     rival.owner.personality = 'Methodical';
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
+    expect<ReturnType<typeof evaluateBoutOffer>>(
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
         opponent: killer,
-        state: state,
+        state,
       })
     ).toBe('Declined');
   });
@@ -66,14 +66,12 @@ describe('promoter-aware rival evaluation', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Honorable' });
     rival.owner.personality = 'Methodical';
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
         opponent: killer,
-        state: state,
+        state,
       })
     ).toBe('Accepted');
   });
@@ -82,14 +80,12 @@ describe('promoter-aware rival evaluation', () => {
     const { warrior, killer, offer, state, rival } = setup({ personality: 'Sadistic' });
     rival.owner.personality = 'Aggressive';
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
         opponent: killer,
-        state: state,
+        state,
       })
     ).toBe('Accepted');
   });
@@ -119,25 +115,21 @@ describe('promoter-aware rival evaluation', () => {
       hype: 90,
     });
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: honestOffer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
+        rival,
+        warrior,
+        opponent,
+        state,
       })
     ).toBe('Accepted');
     expect(
-      evaluateBoutOffer({
+      evalBoutOffer({
         offer: greedyOffer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
+        rival,
+        warrior,
+        opponent,
+        state,
       })
     ).toBe('Countered');
   });

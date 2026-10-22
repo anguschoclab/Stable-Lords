@@ -9,14 +9,7 @@ import { BoutsStep } from '@/components/resolution-reveal/BoutsStep';
 import ResolutionReveal from '@/components/ResolutionReveal';
 import type { WarriorId } from '@/types/shared.types';
 
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('@/components/ui/scroll-area', () => ({ ...__SHARED_MOCKS.scrollArea }));
 
@@ -59,17 +52,10 @@ vi.mock('@/data/narrative/uiMeta.json', () => ({
       btn_next: 'Next',
       memorial_title: 'In Memoriam',
       memorial_default: 'Fallen in combat.',
-      step_gazette: 'The Gazette',
-      step_infirmary: 'The Infirmary',
-      step_bouts: 'The Bouts',
-      step_steward: "Steward's Report",
-      step_memorial: 'The Graveyard',
+      ...__SHARED_MOCKS.uiMeta.UI_META_STEPS,
     },
-    memorials: {
-      tributes: ['The arena grows colder with the loss of {{name}}.'],
-    },
-    meta: { flair: {}, title: {}, injury: {}, status: {} },
-    persona: { good: {}, bad: {}, descriptors: { coordination: {} } },
+    memorials: __SHARED_MOCKS.uiMeta.UI_META_MEMORIALS,
+    ...__SHARED_MOCKS.uiMeta.UI_META_TAIL,
   },
 }));
 

@@ -42,7 +42,7 @@ export function growthNarrative(
     };
   return {
     label: 'Raw talent',
-    color: 'text-accent glow-neon-blue drop-shadow-md',
+    color: 'text-accent drop-shadow-md',
     tooltip: 'Tremendous untapped potential. This warrior could become exceptional.',
   };
 }

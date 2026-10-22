@@ -5,7 +5,7 @@ import {
   makeBoutOffer,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
-import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
+import { makeVenueWarriorAt, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
 import { runArenaChampionshipPass } from '@/engine/pipeline/passes/ArenaChampionshipPass';
 import { resolveImpacts } from '@/engine/impacts';
 import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipelineService';
@@ -34,18 +34,6 @@ const ctx: WeekPipelineContext = {
   rootRng: rng,
 };
 
-function warriorAtArena(
-  id: string,
-  arenaId: string,
-  rec: { wins: number; losses: number; kills?: number }
-) {
-  return makeVenueWarrior(id, {
-    wins: rec.wins,
-    losses: rec.losses,
-    kills: rec.kills ?? 0,
-    arenaId,
-  });
-}
 
 function activeTitle(champId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
   return makeArenaTitle(champId, over);
@@ -68,7 +56,7 @@ describe('ArenaChampionshipPass registration', () => {
 
   it('writes only declared StateImpact keys', () => {
     const arenaId = 'standard_arena';
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const state = makeGameState({
       week: 29,
       absoluteWeek: 29,
@@ -93,7 +81,7 @@ describe('ArenaChampionshipPass registration', () => {
 describe('ArenaChampionshipPass behavior', () => {
   it('seeds champions into state via resolveImpacts', () => {
     const arenaId = 'standard_arena';
-    const w = warriorAtArena('w-top', arenaId, { wins: 5, losses: 1 });
+    const w = makeVenueWarriorAt('w-top', arenaId, { wins: 5, losses: 1 });
     const state = makeGameState({ week: 29, absoluteWeek: 29, roster: [w] });
     const impact = runArenaChampionshipPass(state, ctx);
     const next = resolveImpacts(state, [impact]);
@@ -103,8 +91,8 @@ describe('ArenaChampionshipPass behavior', () => {
 
   it('books a defense offer when cadence elapsed', () => {
     const arenaId = 'standard_arena';
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       week: 29,
       absoluteWeek: 29,
@@ -129,8 +117,8 @@ describe('ArenaChampionshipPass behavior', () => {
 
   it('pendingReengagement → active lands a defense offer in the same pass', () => {
     const arenaId = 'standard_arena';
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const state = makeGameState({
       week: 29,
       absoluteWeek: 29,
@@ -172,8 +160,8 @@ describe('generatePairings champion choke point', () => {
   }
 
   it('voids a signed non-title offer involving an ACTIVE champion', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const other = warriorAtArena('w-other', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const other = makeVenueWarriorAt('w-other', arenaId, { wins: 5, losses: 0 });
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
@@ -188,8 +176,8 @@ describe('generatePairings champion choke point', () => {
   });
 
   it('lets a dormant champion’s signed ordinary offer resolve', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const other = warriorAtArena('w-other', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const other = makeVenueWarriorAt('w-other', arenaId, { wins: 5, losses: 0 });
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
@@ -206,8 +194,8 @@ describe('generatePairings champion choke point', () => {
   });
 
   it('a pendingReengagement champion’s signed offer still resolves', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const other = warriorAtArena('w-other', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const other = makeVenueWarriorAt('w-other', arenaId, { wins: 5, losses: 0 });
     const offer = signedOffer('o1', 'w-champ', 'w-other');
     const state = makeGameState({
       week: 29,
@@ -223,8 +211,8 @@ describe('generatePairings champion choke point', () => {
   });
 
   it('a signed title offer for an active champion is not voided by the choke point', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
-    const cont = warriorAtArena('w-cont', arenaId, { wins: 5, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
+    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });
     const offer = signedOffer('o-title', 'w-champ', 'w-cont', arenaId);
     const state = makeGameState({
       week: 29,
@@ -241,9 +229,9 @@ describe('generatePairings champion choke point', () => {
   it('title offer wins the dedupe over an ordinary offer for the same warrior', () => {
     // Note: under the champion choke this scenario can't arise for champions,
     // but contenders can be double-booked — the title bout wins the slot.
-    const a = warriorAtArena('w-a', arenaId, { wins: 8, losses: 0 });
-    const b = warriorAtArena('w-b', arenaId, { wins: 5, losses: 0 });
-    const c = warriorAtArena('w-c', arenaId, { wins: 4, losses: 0 });
+    const a = makeVenueWarriorAt('w-a', arenaId, { wins: 8, losses: 0 });
+    const b = makeVenueWarriorAt('w-b', arenaId, { wins: 5, losses: 0 });
+    const c = makeVenueWarriorAt('w-c', arenaId, { wins: 4, losses: 0 });
     const titleOffer = signedOffer('z-ordinary-id', 'w-a', 'w-b', arenaId);
     const ordinary = signedOffer('a-early-id', 'w-a', 'w-c');
     const state = makeGameState({
@@ -279,7 +267,7 @@ describe('producer exclusion of booking-locked champions', () => {
   });
 
   it('planWorldBouts never produces an offer for a locked champion', () => {
-    const champ = warriorAtArena('w-champ', arenaId, { wins: 8, losses: 0 });
+    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });
     const w1 = makeWarrior({ id: 'w-1' as WarriorId });
     const w2 = makeWarrior({ id: 'w-2' as WarriorId });
     const rival = makeRival({ roster: [champ, w1, w2] });

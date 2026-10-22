@@ -38,13 +38,7 @@ vi.mock('@/state/useGameStore', () => ({
   }),
 }));
 
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));
 

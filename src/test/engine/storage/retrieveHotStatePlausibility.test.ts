@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { setMockOPFSFileText } from '@/test/_setup/setup';
 import { SAVE_STATE_VERSION } from '@/constants/core';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, TINY_STATE_FIELDS } from '@/test/_fixtures/factories';
 
 describe('retrieveHotState plausibility check', () => {
   beforeEach(() => {
@@ -18,13 +18,7 @@ describe('retrieveHotState plausibility check', () => {
 
   const validState: any = makeGameState({
     meta: { gameName: 'Stable Lords', version: SAVE_STATE_VERSION, createdAt: '2024-01-01' },
-    ftueComplete: true,
-    isFTUE: false,
-    treasury: 100,
-    player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
-    progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
-    rivals: [],
-    recruitPool: [],
+    ...TINY_STATE_FIELDS,
   });
 
   it('returns parsed state when JSON passes plausibility check', async () => {

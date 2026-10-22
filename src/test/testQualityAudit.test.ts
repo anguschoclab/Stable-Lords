@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { listTsFiles } from '@/test/_helpers/fsWalk';
 import baseline from './_setup/auditBaseline.json';
 import runnerGroups from './_setup/runnerGroups.json';
 
@@ -64,30 +65,12 @@ function hasLocalFactory(content: string): boolean {
   return false;
 }
 
-function readDirRecursive(
-  dir: string,
-  pred: (name: string) => boolean,
-  results: string[] = []
-): string[] {
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      if (item.name === 'node_modules' || item.name.startsWith('.')) continue;
-      readDirRecursive(fullPath, pred, results);
-    } else if (pred(item.name)) {
-      results.push(fullPath);
-    }
-  }
-  return results;
-}
-
 function rel(file: string): string {
   return path.relative(REPO_ROOT, file).split(path.sep).join('/');
 }
 
 function allVitestTestFiles(): string[] {
-  return readDirRecursive(SRC_DIR, (n) => TEST_FILE_RE.test(n));
+  return listTsFiles(SRC_DIR, TEST_FILE_RE);
 }
 
 function extractImportTargets(file: string): Set<string> {
@@ -132,9 +115,80 @@ function expectAllowlistClean(current: string[], allowed: readonly string[], rul
   ).toEqual([]);
 }
 
+// Mirrors scripts/test-audit-scan.mjs — category → production domain map and
+// the registered non-mirror infrastructure dirs. Keep the two in sync.
+const CATEGORY_DOMAIN: Record<string, string[]> = {
+  components: ['src/components', 'src/pages'],
+  pages: ['src/pages'],
+  routes: ['src/routes'],
+  engine: ['src/engine'],
+  data: ['src/data'],
+  lib: ['src/lib'],
+  utils: ['src/utils'],
+  constants: ['src/constants'],
+  schemas: ['src/schemas'],
+  state: ['src/state'],
+  hooks: ['src/hooks'],
+  lore: ['src/lore'],
+};
+// Non-mirror dirs: suite infrastructure and repo-audit homes that exist by
+// design (see docs/TESTING.md). Any other src/test/<dir>/ is drift — the
+// category check below skips unlisted dirs entirely, so registration here is
+// what keeps a stray dir from silently escaping conformance.
+const NON_MIRROR_DIRS = new Set([
+  '_fixtures',
+  '_helpers',
+  '_mocks',
+  '_setup',
+  'config',
+  'integration',
+  'megaplan',
+  'perf',
+  'scripts',
+  'ui',
+  'vite',
+]);
+// Registered dispositions for src/test/megaplan/ guard specs — every guard
+// must declare LIVE_RATCHET (fails on regression) or RETIRE→successor. All 28
+// current guards pin regressable invariants (T6 wave-2 audit); new guards
+// must register here.
+const GUARD_REGISTRY: Record<string, string> = {
+  'appShell.cta.test.tsx': 'LIVE_RATCHET',
+  'documentationParity.test.ts': 'LIVE_RATCHET',
+  'duplication.guard.test.ts': 'LIVE_RATCHET',
+  'entriesInLoop.guard.test.ts': 'LIVE_RATCHET',
+  'fileBudget.test.ts': 'LIVE_RATCHET',
+  'informationArchitecture.test.ts': 'LIVE_RATCHET',
+  'legibility.contract.test.ts': 'LIVE_RATCHET',
+  'markdownSanitize.guard.test.ts': 'LIVE_RATCHET',
+  'orphanScan.guard.test.ts': 'LIVE_RATCHET',
+  'pagePrimitives.conformance.test.tsx': 'LIVE_RATCHET',
+  'paramBudget.guard.test.ts': 'LIVE_RATCHET',
+  'scanInLoop.guard.test.ts': 'LIVE_RATCHET',
+  'skipCount.guard.test.ts': 'LIVE_RATCHET',
+  'styleArchives.wired.test.tsx': 'LIVE_RATCHET',
+  'testSuiteAudit.guard.test.ts': 'LIVE_RATCHET',
+  'typeSurface.test.ts': 'LIVE_RATCHET',
+  'uiTokens.guard.test.ts': 'LIVE_RATCHET',
+  'v11DeadSurface.guard.test.ts': 'LIVE_RATCHET',
+  'v11Dedup.guard.slow.test.ts': 'LIVE_RATCHET',
+  'v11Restructure.guard.test.ts': 'LIVE_RATCHET',
+  'v11Wiring.contract.test.ts': 'LIVE_RATCHET',
+  'v12Dedup.guard.test.ts': 'LIVE_RATCHET',
+  'v12Srp.guard.test.ts': 'LIVE_RATCHET',
+  'v14EntryPoints.guard.test.ts': 'LIVE_RATCHET',
+  'v14PipelineDocs.guard.test.ts': 'LIVE_RATCHET',
+  'v18Dedup.guard.test.ts': 'LIVE_RATCHET',
+  'v18Preservation.guard.test.ts': 'LIVE_RATCHET',
+  'v18Srp.guard.test.ts': 'LIVE_RATCHET',
+  'v19Dedup.guard.test.ts': 'LIVE_RATCHET',
+  'v19Srp.guard.test.ts': 'LIVE_RATCHET',
+  'wiring.wired.test.tsx': 'LIVE_RATCHET',
+};
+
 describe('testQualityAudit', () => {
   it('no test file uses Date.now() for deterministic logic', () => {
-    const files = readDirRecursive(TEST_DIR, (n) => n.endsWith('.test.ts'));
+    const files = listTsFiles(TEST_DIR, /\.test\.ts$/);
     const violations: string[] = [];
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf-8');
@@ -152,7 +206,7 @@ describe('testQualityAudit', () => {
   });
 
   it('all test files have at least one describe block', () => {
-    const files = readDirRecursive(TEST_DIR, (n) => n.endsWith('.test.ts'));
+    const files = listTsFiles(TEST_DIR, /\.test\.ts$/);
     const violations: string[] = [];
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf-8');
@@ -237,19 +291,6 @@ describe('testQualityAudit', () => {
     // A test under src/test/<cat>/ should import ≥1 module from that domain —
     // otherwise its subjects live elsewhere and the file is misfiled.
     // Zero-prod-import files are scanner-style audits and exempt.
-    const CATEGORY_DOMAIN: Record<string, string[]> = {
-      components: ['src/components', 'src/pages'],
-      pages: ['src/pages'],
-      routes: ['src/routes'],
-      engine: ['src/engine'],
-      data: ['src/data'],
-      lib: ['src/lib'],
-      utils: ['src/utils'],
-      constants: ['src/constants'],
-      schemas: ['src/schemas'],
-      state: ['src/state'],
-      hooks: ['src/hooks'],
-    };
     const violations: string[] = [];
     for (const f of allVitestTestFiles()) {
       const relPath = rel(f);
@@ -272,7 +313,7 @@ describe('testQualityAudit', () => {
     // Sub-5min bumps for slow mobile nav are smoke-tier and stay untagged.
     const e2eDir = path.join(REPO_ROOT, 'e2e');
     const violations: string[] = [];
-    for (const f of readDirRecursive(e2eDir, (n) => n.endsWith('.spec.ts'))) {
+    for (const f of listTsFiles(e2eDir, /\.spec\.ts$/)) {
       const content = fs.readFileSync(f, 'utf8');
       const maxTimeout = Math.max(
         0,
@@ -311,6 +352,97 @@ describe('testQualityAudit', () => {
     expect(
       extra,
       `stale runnerGroups.json entries — rerun scripts/test-audit-scan.mjs:\n${extra.join('\n')}`
+    ).toEqual([]);
+  });
+
+  it('filename qualifiers follow the suffix taxonomy', () => {
+    // Grammar: <subject>[.<category>…][.<subject-qualifier>][.slow].test.{ts,tsx}
+    //   category qualifiers: integration | e2e | perf | guard (any position)
+    //   subject qualifier:   ≤1 token matching ^[a-z][a-zA-Z]*$ (free-form area
+    //                        hints like .crown, .helpers, .contract — validated
+    //                        wave-2: all 41 live qualifiers fit)
+    //   .slow:               terminal only (separate check, restated here)
+    const CATEGORY_QUALIFIERS = new Set(['integration', 'e2e', 'perf', 'guard']);
+    const violations: string[] = [];
+    for (const f of allVitestTestFiles()) {
+      const base = path.basename(f).replace(/\.test\.(ts|tsx)$/, '');
+      const qualifiers = base.split('.').slice(1);
+      let subjectCount = 0;
+      for (let i = 0; i < qualifiers.length; i++) {
+        const q = qualifiers[i]!;
+        if (q === 'slow') {
+          if (i !== qualifiers.length - 1)
+            violations.push(`${rel(f)} — .slow must be terminal`);
+        } else if (!CATEGORY_QUALIFIERS.has(q)) {
+          if (!/^[a-z][a-zA-Z]*$/.test(q)) {
+            violations.push(`${rel(f)} — malformed qualifier '.${q}'`);
+          } else if (++subjectCount > 1) {
+            violations.push(`${rel(f)} — more than one subject qualifier`);
+          }
+        }
+      }
+    }
+    expect(violations, `suffix-taxonomy violations:\n${violations.join('\n')}`).toEqual([]);
+  });
+
+  it('every src/test subdir is registered (domain map or non-mirror list)', () => {
+    // The category-conformance check only evaluates dirs present in
+    // CATEGORY_DOMAIN — an unlisted dir escapes it silently (that is how
+    // src/test/layout/ drifted in). Every dir must be declared: mirror domain
+    // or registered non-mirror infrastructure.
+    const unregistered = new Set<string>();
+    for (const f of allVitestTestFiles()) {
+      const cat = /^src\/test\/([^/]+)\//.exec(rel(f))?.[1];
+      if (cat && !CATEGORY_DOMAIN[cat] && !NON_MIRROR_DIRS.has(cat)) unregistered.add(cat);
+    }
+    expectAllowlistClean(
+      [...unregistered].sort(),
+      baseline.unregisteredTestDirs ?? [],
+      'unregistered-src-test-dir'
+    );
+  });
+
+  it('CI bun-test shard enumerates all test dirs dynamically (no coverage drift)', () => {
+    // The shard loop hardcoded `src/test/engine/*/ + 15 dirs — engine-root
+    // files (51) and unlisted dirs (19 more) silently never ran under bun in
+    // CI (wave-2 finding V7: 70 files, incl. the bunViCompat canary itself).
+    // Require filesystem-driven enumeration — a literal dir list drifts.
+    const ci = fs.readFileSync(
+      path.join(REPO_ROOT, '.github/workflows/ci.yml'),
+      'utf8'
+    );
+    const shard = ci.slice(ci.indexOf('name: Run bun test suite'));
+    expect(
+      /for d in src\/test\//.test(shard),
+      'bun-test shard enumerates a hardcoded src/test dir list — use `for d in $(find src/test …)`'
+    ).toBe(false);
+    expect(
+      /find src\/test/.test(shard),
+      'bun-test shard must enumerate src/test dynamically (find src/test …)'
+    ).toBe(true);
+  });
+
+  it('bunfig.toml ignores every *.slow.test.* file (slow tier sync)', () => {
+    const bunfig = fs.readFileSync(path.join(REPO_ROOT, 'bunfig.toml'), 'utf8');
+    expect(bunfig).toContain('**/*.slow.test.ts');
+    expect(bunfig).toContain('**/*.slow.test.tsx');
+    const outside = allVitestTestFiles()
+      .map(rel)
+      .filter((f) => f.includes('.slow.test.') && !f.startsWith('src/test/'));
+    expect(outside, `slow tests outside src/test/: ${outside.join(', ')}`).toEqual([]);
+  });
+
+  it('every megaplan guard is registered in GUARD_REGISTRY', () => {
+    const guards = listTsFiles(path.join(TEST_DIR, 'megaplan'), /\.test\.tsx?$/).map((f) => path.basename(f));
+    const unregistered = guards.filter((g) => !(g in GUARD_REGISTRY));
+    const stale = Object.keys(GUARD_REGISTRY).filter((g) => !guards.includes(g));
+    expect(
+      unregistered,
+      `megaplan guards missing from GUARD_REGISTRY — register a disposition:\n${unregistered.join('\n')}`
+    ).toEqual([]);
+    expect(
+      stale,
+      `GUARD_REGISTRY entries for deleted guards — remove them:\n${stale.join('\n')}`
     ).toEqual([]);
   });
 });

@@ -19,14 +19,10 @@ import {
   runCommit,
   type ExchangeState,
 } from '@/engine/combat/resolution/exchangeSubPhases';
-import { makeFighterState, makeResolutionContext } from '@/test/_fixtures/factories';
+import { makeResolutionContext } from '@/test/_fixtures/factories';
+import { makeCombatFighter } from '@/test/_fixtures/combatFighter';
 
-const makeFighter = (overrides: Partial<FighterState> = {}): FighterState =>
-  makeFighterState({
-    plan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
-    activePlan: { style: FightingStyle.StrikingAttack, OE: 5, AL: 5, killDesire: 5 } as any,
-    ...overrides,
-  });
+const makeFighter = makeCombatFighter;
 const makeCtx = makeResolutionContext;
 
 interface SetupResult {

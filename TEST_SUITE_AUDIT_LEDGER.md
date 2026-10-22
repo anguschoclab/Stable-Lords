@@ -99,3 +99,35 @@ New `testQualityAudit.test.ts` checks (3):
 
 Docs updated: `docs/TESTING.md` (layout/conformance/suffix rules, audit list),
 `.claude/CLAUDE.md` (Testing Discipline → domain filing).
+
+---
+
+## Wave 2 — 2026-10-22
+
+Baseline (fresh scans; plan `TEST_SUITE_AUDIT_PLAN.md` §"Wave 2"; findings
+`TEST_AUDIT_FINDINGS.md` §5). Restore tag: `pre-test-audit-v2`.
+
+| Metric | Before (wave-1 close) | Wave-2 baseline | Target |
+| ------ | --------------------- | --------------- | ------ |
+| Default-suite files | 799 | **880** | — |
+| Default-suite tests | 8,867 | **9,469** (0 fail, 2 deliberate pending) | green |
+| `bunx vitest run` wall | 52.9s | ~66s (V18 baseline 10-21) | measured wins, no hard target |
+| Files >2s / >5s | 23 >2s (stale TSV) | **52 / 11** | tail drained or demoted |
+| jscpd clones in `src/test` | 0 (repo-wide run) | **88** (scoped run — new canonical measure) | 0 or EXEMPT-registered |
+| dup-scan TEST_DEBT pairs | 150 registered → budget 70 | **70 remaining** | 0 |
+| importSetClusters | 37 | 37 | distinct-subject groups only |
+| basenameCollisions / missingPragma | 0 / 0 | 0 / 0 | hold |
+| Category-misplaced files | 2 allowlisted | 2 + **layout/ dir drift (2 files, unguarded)** | conform |
+| Non-taxonomy qualifier files | unguarded | **48** | ratcheted via word rule |
+| CI bun-test shard coverage | unknown | **70 non-slow files unsharded** | 0 |
+| megaplan guards | — | **28, all LIVE_RATCHET** | registered via T6 |
+| Audit guards (testQualityAudit checks) | 11 | 11 | +T1–T5 (+T6 registry) |
+
+Per-phase results to be recorded below as the campaign executes.
+
+### Phase 0 — baseline freeze
+
+- Tag `pre-test-audit-v2`; `scripts/timings-to-tsv.mjs` landed;
+  `baseline-test-timings.tsv` regenerated → 888 rows (880 fresh default rows +
+  8 preserved slow rows pending a slow-suite refresh).
+- Gate matrix: _(recorded as executed)_

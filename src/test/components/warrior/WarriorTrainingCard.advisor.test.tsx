@@ -7,19 +7,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import type { WarriorTrainingAdvice } from '@/engine/advisor/types';
 import { makeTrainingWarrior, makeTrainingCardProps } from '@/test/_fixtures/trainingCard';
 
-vi.mock('@/engine/training', () => ({
-  computeGainChance: vi.fn(() => 50),
-}));
-
-vi.mock('@/engine/warrior/potential', () => ({
-  canGrow: vi.fn(() => true),
-}));
-
-vi.mock('@/engine/training/trainingGains/traitTraining', () => ({
-  traitTrainingPool: vi.fn(() => []),
-  canAcquireTrait: vi.fn(() => false),
-  TRAIT_CAP: 3,
-}));
+vi.mock('@/engine/training', () => __SHARED_MOCKS.warriorTrainingDeps.training(50));
+vi.mock('@/engine/warrior/potential', () => __SHARED_MOCKS.warriorTrainingDeps.potential);
+vi.mock('@/engine/training/trainingGains/traitTraining', () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining);
 
 const makeWarrior = makeTrainingWarrior;
 

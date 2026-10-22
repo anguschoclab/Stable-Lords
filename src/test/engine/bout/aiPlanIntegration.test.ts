@@ -10,10 +10,11 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import {
-  makeRival as fixtureRival,
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
+  TEST_PLAYER,
 } from '@/test/_fixtures/factories';
+import { makeBidRival } from '@/test/_fixtures/bidRoster';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -33,25 +34,10 @@ const makeWarrior = (
   });
 
 const makeRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-  fixtureRival({
-    id: 'rival-1' as any,
-    owner: {
-      id: 'owner-1' as any,
-      name: 'Rival Owner',
-      stableName: 'Rival Stable',
-      fame: 100,
-      renown: 50,
-      titles: 0,
-      personality: 'Aggressive',
-    },
-    roster: [],
-    treasury: 1000,
-    fame: 100,
-    ledger: [],
-    trainingAssignments: [],
-    philosophy: 'Brute Force',
-    ...overrides,
-  } as any);
+  makeBidRival(
+    { philosophy: 'Brute Force', ...overrides },
+    { name: 'Rival Owner', stableName: 'Rival Stable', personality: 'Aggressive' }
+  );
 
 const makeBaseState = (overrides: Partial<GameState> = {}): GameState =>
   fixtureGameState({
@@ -60,14 +46,7 @@ const makeBaseState = (overrides: Partial<GameState> = {}): GameState =>
     absoluteWeek: 5,
     rivals: [],
     recruitPool: [],
-    player: {
-      id: 'player-1' as any,
-      name: 'Player',
-      stableName: 'Player Stable',
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    } as any,
+    player: TEST_PLAYER as any,
     ftueComplete: true,
     isFTUE: false,
     ...overrides,
@@ -126,19 +105,14 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     const npcWarrior = makeWarrior('NPCFighter', FightingStyle.StrikingAttack, 'rival-1');
     const playerWarrior = makeWarrior('PlayerFighter', FightingStyle.ParryRiposte, 'player-1');
 
-    const rival = makeRival({
-      owner: {
-        id: 'owner-1' as any,
+    const rival = makeBidRival(
+      { roster: [npcWarrior], philosophy: 'Brute Force' },
+      {
         name: 'Aggressive Owner',
         stableName: 'Aggressive Stable',
-        fame: 100,
-        renown: 50,
-        titles: 0,
         personality: 'Aggressive',
-      },
-      roster: [npcWarrior],
-      philosophy: 'Brute Force',
-    });
+      }
+    );
 
     const state = setupStateWithOffer(playerWarrior, npcWarrior, rival);
 
@@ -266,19 +240,7 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     const npcWarrior = makeWarrior('NPCBasher', FightingStyle.BashingAttack, 'rival-1');
     const playerWarrior = makeWarrior('PlayerLunger', FightingStyle.LungingAttack, 'player-1');
 
-    const rival = makeRival({
-      owner: {
-        id: 'owner-1' as any,
-        name: 'Owner',
-        stableName: 'Stable',
-        fame: 100,
-        renown: 50,
-        titles: 0,
-        personality: 'Pragmatic',
-      },
-      roster: [npcWarrior],
-      philosophy: 'Opportunist',
-    });
+    const rival = makeBidRival({ roster: [npcWarrior], philosophy: 'Opportunist' });
 
     const state = setupStateWithOffer(playerWarrior, npcWarrior, rival);
 

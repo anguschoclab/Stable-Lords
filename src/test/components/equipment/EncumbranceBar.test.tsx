@@ -4,29 +4,12 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import '@/test/_setup/setup';
 import { EncumbranceBar } from '@/components/equipment/EncumbranceBar';
-import type { EquipmentLoadout } from '@/data/equipment';
 import { getLoadoutWeight } from '@/data/equipment';
+import { LIGHT_LOADOUT, MEDIUM_LOADOUT, HEAVY_LOADOUT } from '@/test/_fixtures/equipmentLoadout';
 
-const lightLoadout: EquipmentLoadout = {
-  weapon: 'dagger',
-  armor: 'none_armor',
-  shield: 'none_shield',
-  helm: 'none_helm',
-};
-
-const mediumLoadout: EquipmentLoadout = {
-  weapon: 'longsword',
-  armor: 'leather',
-  shield: 'small_shield',
-  helm: 'none_helm',
-};
-
-const heavyLoadout: EquipmentLoadout = {
-  weapon: 'longsword',
-  armor: 'plate_armor',
-  shield: 'large_shield',
-  helm: 'full_helm',
-};
+const lightLoadout = LIGHT_LOADOUT;
+const mediumLoadout = MEDIUM_LOADOUT;
+const heavyLoadout = HEAVY_LOADOUT;
 
 describe('EncumbranceBar', () => {
   it('renders the encumbrance label and weight/carry display', () => {

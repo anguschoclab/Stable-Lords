@@ -54,7 +54,7 @@ export function GravityAnomalyEffect() {
       <DriftParticles
         count={30}
         keyPrefix="debris-"
-        particleClassName="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift motion-reduce:animate-none"
+        particleClassName="absolute w-1 h-1 bg-neutral-400/60 rounded-none animate-chaotic-drift motion-reduce:animate-none"
         position={() => ({ left: `${cryptoRandom() * 100}%`, bottom: '0%' })}
         drift={{
           tx: () => (cryptoRandom() - 0.5) * 80,

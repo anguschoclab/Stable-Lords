@@ -8,7 +8,7 @@ const BASE_URL = 'http://localhost:8080';
  * after each navigation. Hub links embed alert badges, so their accessible
  * names carry a suffix like "Stable 3 alerts for Stable" — match loosely.
  */
-export async function clickNavLink(
+async function clickNavLink(
   page: Page,
   isMobile: boolean,
   name: string,

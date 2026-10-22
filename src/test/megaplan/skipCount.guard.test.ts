@@ -32,6 +32,8 @@ const REGISTERED_SKIP_TICKETS = new Set<string>([
   ...Array.from({ length: 34 }, (_, i) => `MEGAPLAN-S${i + 1}`),
   // V18 test-tier dedup contracts — un-skip per cluster drain (Phase 4).
   ...Array.from({ length: 14 }, (_, i) => `MEGAPLAN-D${i + 1}`),
+  // Wave-2 test-suite audit contracts — un-skip per batch (Phases 3–6).
+  ...Array.from({ length: 8 }, (_, i) => `MEGAPLAN-A${i + 1}`),
 ]);
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;

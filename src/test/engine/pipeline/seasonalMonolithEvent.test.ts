@@ -16,11 +16,11 @@ import { narrativeContent } from '@/data/narrative';
 import {
   handleUnexplainedMonolith,
   type OffseasonEventNarrative,
-  type OffseasonEventContext,
 } from '@/engine/pipeline/offseasonEvents';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
 import { makeSeasonalTestState } from '@/test/_fixtures/seasonalState';
+import { makeOffseasonCtx } from '@/test/_fixtures/offseasonCtx';
 
 const makeWarrior = (name: string, overrides: Partial<Warrior> = {}): Warrior =>
   fixtureWarrior({
@@ -35,15 +35,7 @@ const makeWarrior = (name: string, overrides: Partial<Warrior> = {}): Warrior =>
 
 const makeState = (roster: Warrior[] = []): GameState => makeSeasonalTestState(roster);
 
-function makeCtx(): OffseasonEventContext {
-  return {
-    rosterUpdates: new Map<WarriorId, Partial<any>>(),
-    newsletterItems: [],
-    ledgerEntries: [],
-    insightTokens: [],
-    treasuryDelta: 0,
-  };
-}
+const makeCtx = makeOffseasonCtx;
 
 const monolithEvent: OffseasonEventNarrative = {
   title: 'The Unexplained Monolith',

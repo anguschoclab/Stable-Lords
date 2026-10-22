@@ -14,20 +14,13 @@ import {
   makeRival,
   makeOwner,
   makeGameState,
-  makeBoutOffer,
   resetFixtureIds,
+  makeSignedOffer,
 } from '@/test/_fixtures/factories';
 
 beforeEach(() => resetFixtureIds());
 
-function signedOfferFor(proposerId: string, aId: string, dId: string) {
-  return makeBoutOffer({
-    warriorIds: [aId as never, dId as never],
-    proposerStableId: proposerId as never,
-    status: 'Signed',
-    responses: { [aId]: 'Accepted', [dId]: 'Accepted' } as never,
-  });
-}
+const signedOfferFor = makeSignedOffer;
 
 function setup(personality: 'Tactician' | 'Methodical' | 'Pragmatic') {
   const npcW = makeWarrior({ id: 'nw' as never, fame: 80 });

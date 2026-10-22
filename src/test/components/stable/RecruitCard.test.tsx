@@ -2,10 +2,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { PoolWarrior, RecruitTier } from '@/engine/recruitment/recruitment';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import type { PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
-import { FightingStyle } from '@/types/shared.types';
-import type { Attributes, BaseSkills, DerivedStats } from '@/types/game';
+import { makePoolWarrior as fixturePoolWarrior } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/Surface', () => ({ ...__SHARED_MOCKS.uiSurface }));
 
@@ -26,33 +25,13 @@ vi.mock('@/components/avatar', () => ({
 
 import { RecruitCard } from '@/components/stable/RecruitCard';
 
-const baseAttrs: Attributes = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-const baseSkills: BaseSkills = { ATT: 10, DEF: 10, INI: 10, PAR: 10, RIP: 10, DEC: 10 };
-const derivedStats: DerivedStats = { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
-
 function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
-  return {
+  return fixturePoolWarrior({
     id: 'pw1',
     name: 'TestRecruit',
-    style: FightingStyle.StrikingAttack,
-    attributes: { ...baseAttrs },
     potential: { ST: 20, CN: 20, SZ: 10, WT: 20, WL: 20, SP: 20, DF: 20 },
-    baseSkills: { ...baseSkills },
-    derivedStats: { ...derivedStats },
-    tier: 'Common' as RecruitTier,
-    cost: 50,
-    age: 20,
-    lore: 'A young fighter.',
-    traits: [],
-    addedWeek: 1,
-    favorites: {
-      weaponId: 'shortsword',
-      rhythm: { oe: 5, al: 5 },
-      discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
-    },
-    luckfactor: { ...baseSkills },
     ...overrides,
-  };
+  });
 }
 
 const baseProps = {

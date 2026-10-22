@@ -147,16 +147,22 @@ function scoreThrone(
   return { score: score + ctx.rankBonus + jitter, reason };
 }
 
-/** Scores the rival's best crown-bid opportunity across arenas. */
-export function assessCrownOpportunity(
-  rival: RivalStableData,
-  state: GameState,
-  perception?: PerceptionSnapshot
-): CrownAssessment | undefined {
-  const titles = state.arenaChampions ?? {};
-  if (Object.keys(titles).length === 0) return undefined;
+interface CrownScanContext {
+  now: number;
+  signed: ReturnType<typeof signedTitleBoutIds>;
+  warriorById: Map<WarriorId, Warrior>;
+  dethroneBonus: number;
+  playerWarriorIds: Set<WarriorId>;
+  titleEntries: [string, NonNullable<GameState['arenaChampions']>[string]][];
+  rankByArena: Map<string, Map<string, number>>;
+}
 
-  const now = state.absoluteWeek ?? state.week;
+/** Builds the invariant indexes for the roster×arena crown scan once. */
+function buildCrownScanContext(
+  state: GameState,
+  titles: NonNullable<GameState['arenaChampions']>,
+  perception?: PerceptionSnapshot
+): CrownScanContext {
   const signed = signedTitleBoutIds(state);
   const warriorById = new Map<WarriorId, Warrior>();
   for (const w of state.roster ?? []) warriorById.set(w.id, w);
@@ -172,10 +178,9 @@ export function assessCrownOpportunity(
       : playerThreat === 'Moderate'
         ? DETHRONE_BONUS.Moderate
         : 0;
-  const playerWarriorIds = new Set((state.roster ?? []).map((w) => w.id));
 
-  // Hoisted: `titles` is invariant for the whole roster scan — entries are
-  // built once instead of once per warrior.
+  // `titles` is invariant for the whole roster scan — entries are built once
+  // instead of once per warrior.
   const titleEntries = Object.entries(titles);
 
   // warriorId → rank per arena, inverted once from the shared contender
@@ -187,32 +192,55 @@ export function assessCrownOpportunity(
     }
   }
 
+  return {
+    now: state.absoluteWeek ?? state.week,
+    signed,
+    warriorById,
+    dethroneBonus,
+    playerWarriorIds: new Set((state.roster ?? []).map((w) => w.id)),
+    titleEntries,
+    rankByArena,
+  };
+}
+
+/** Scores the rival's best crown-bid opportunity across arenas. */
+export function assessCrownOpportunity(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: PerceptionSnapshot
+): CrownAssessment | undefined {
+  const titles = state.arenaChampions ?? {};
+  if (Object.keys(titles).length === 0) return undefined;
+  const ctx = buildCrownScanContext(state, titles, perception);
+
   let best: CrownCandidate | undefined;
   for (const w of rival.roster) {
     if (!isActive(w)) continue;
     if (isReigningChampion(state, w.id)) continue; // single crown
-    if (signed.has(w.id)) continue; // already has a shot booked
+    if (ctx.signed.has(w.id)) continue; // already has a shot booked
 
-    for (const [arenaId, title] of titleEntries) {
+    for (const [arenaId, title] of ctx.titleEntries) {
       const rec = w.career?.byArena?.[arenaId];
       const venueBouts = (rec?.wins ?? 0) + (rec?.losses ?? 0);
       if (venueBouts < ARENA_TITLE.MIN_BOUTS - 1) continue;
       const eligible = venueBouts >= ARENA_TITLE.MIN_BOUTS;
       const cooldownUntil = title.declinedContenders?.[w.id];
-      if (cooldownUntil != null && cooldownUntil > now) continue;
+      if (cooldownUntil != null && cooldownUntil > ctx.now) continue;
 
       // Contender-rank bonus only for already-eligible warriors, read off the
       // shared index when present so this stays O(arenas) per stable.
-      const rank = rankByArena.get(arenaId)?.get(w.id);
+      const rank = ctx.rankByArena.get(arenaId)?.get(w.id);
       const rankBonus = rank != null && rank >= 0 ? (rank === 0 ? 2 : rank <= 2 ? 1 : 0) : 0;
 
-      const champion = title.champion ? warriorById.get(title.champion.warriorId) : undefined;
+      const champion = title.champion
+        ? ctx.warriorById.get(title.champion.warriorId)
+        : undefined;
       const { score, reason } = scoreThrone(w, arenaId, title, {
         eligible,
         rankBonus,
         champion,
-        dethroneBonus,
-        playerWarriorIds,
+        dethroneBonus: ctx.dethroneBonus,
+        playerWarriorIds: ctx.playerWarriorIds,
         rival,
         state,
       });

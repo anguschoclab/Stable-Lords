@@ -2,36 +2,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { CouncilBriefingWidget } from '@/pages/ControlCenter/components/CouncilBriefingWidget';
-import { useGameStore } from '@/state/useGameStore';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import { FightingStyle } from '@/types/shared.types';
-import type { GameState } from '@/types/state.types';
+import { seedAdvisorScenario } from '@/test/_fixtures/advisorSeed';
 import '@/test/_setup/setup';
 
 vi.mock('@tanstack/react-router', () => ({ ...__SHARED_MOCKS.routerLink }));
 
-const baseAttrs = { ST: 14, CN: 14, SZ: 11, WT: 12, WL: 11, SP: 14, DF: 11 };
-
 describe('CouncilBriefingWidget', () => {
   beforeEach(() => {
-    const fresh = createFreshState('test-seed');
-    const w1 = makeWarrior({
-      id: 'w1' as any,
-      name: 'Aulus',
-      style: FightingStyle.AimedBlow,
-      attrs: baseAttrs,
-    });
-    fresh.roster = [w1];
-    fresh.week = 5;
-    fresh.absoluteWeek = 5;
-    fresh.year = 1;
-    fresh.season = 'Spring';
-    fresh.weather = 'Clear';
-    fresh.realmRankings = {};
-    fresh.boutOffers = {};
-    fresh.trainingAssignments = [];
-    useGameStore.getState().loadGame('test-slot', fresh as GameState);
+    seedAdvisorScenario();
   });
 
   it('renders War Council briefing card with link to /stable/advisor', () => {

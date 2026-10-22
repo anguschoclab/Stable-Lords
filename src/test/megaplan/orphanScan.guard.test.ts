@@ -78,12 +78,18 @@ describe('megaplan: orphan guard', () => {
   // Relaxed 158 → 159: buildFavoritesChart (FavoritesCharting) is a
   // deliberate test-visible export — extracted for the scan-in-loop
   // characterization pins; its component caller uses it internally.
+  // Tightened 159 → 155 (V19 §K): unexported 4 verified zero-ref
+  // internal-use symbols — CROWD_KILL_BONUS, RivalFightPlanOpts,
+  // ChosenWarriorOutcome, GrantableStat. Six further candidates proved live
+  // via TS4058 declaration-emit (their types flow through exported hook
+  // return signatures): StableReputation, BookmarkRow, GearRecommendation,
+  // ArenaWarriorEntry, ArenaLeaderboardData, ArenaStableEntry.
   it('dead-export count does not grow past the V2 audit level', () => {
     const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
     expect(
       srcDead.length,
-      `dead exports grew past the V2 audit level (${srcDead.length} > 159) — ` +
+      `dead exports grew past the V2 audit level (${srcDead.length} > 155) — ` +
         `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
-    ).toBeLessThanOrEqual(159);
+    ).toBeLessThanOrEqual(155);
   });
 });

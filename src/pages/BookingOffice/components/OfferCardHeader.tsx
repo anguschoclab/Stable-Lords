@@ -32,7 +32,7 @@ function OfferBadges({
       {offer.titleArenaId && (
         <span
           data-testid="title-bout-badge"
-          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40"
+          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-arena-gold/20 text-arena-gold border border-arena-gold/40"
         >
           Title Bout
         </span>
@@ -40,7 +40,7 @@ function OfferBadges({
       {offer.proposerStableId && (
         <span
           data-testid="rival-challenge-badge"
-          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/10 text-destructive border border-destructive/20"
+          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-destructive/10 text-destructive border border-destructive/20"
         >
           Rival challenge
         </span>
@@ -48,7 +48,7 @@ function OfferBadges({
       {!!offer.counterPurseBump && (
         <span
           data-testid="counter-offer-badge"
-          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/10 text-arena-gold border border-arena-gold/20 tabular-nums"
+          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-arena-gold/10 text-arena-gold border border-arena-gold/20 tabular-nums"
         >
           Countered +{offer.counterPurseBump}G
         </span>
@@ -63,7 +63,7 @@ function OfferBadges({
       {isCouncilPick && (
         <span
           data-testid="council-pick-badge"
-          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
+          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-arena-gold/20 text-arena-gold border border-arena-gold/40 flex items-center gap-1"
         >
           <ShieldCheck className="h-2.5 w-2.5" />
           Council Pick
@@ -72,7 +72,7 @@ function OfferBadges({
       {councilWarning && !isCouncilPick && (
         <span
           data-testid="council-warning-badge"
-          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-destructive/20 text-destructive border border-destructive/40 flex items-center gap-1"
+          className="text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-none bg-destructive/20 text-destructive border border-destructive/40 flex items-center gap-1"
           title={councilWarning}
         >
           <AlertTriangle className="h-2.5 w-2.5" />

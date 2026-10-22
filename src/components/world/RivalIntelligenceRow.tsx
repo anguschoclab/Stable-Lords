@@ -183,7 +183,7 @@ function RowHeader({
         <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
         <span
           data-testid="intel-quality-chip"
-          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
+          className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground/70 tabular-nums"
         >
           {dossierCount > 0 ? `${dossierCount} dossiers` : 'No intel'}
         </span>

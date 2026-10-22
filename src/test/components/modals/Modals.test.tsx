@@ -7,14 +7,7 @@ import { DeathModalWarriorInfo } from '@/components/modals/death-modal/DeathModa
 import { DeathModalPaperDoll } from '@/components/modals/death-modal/DeathModalPaperDoll';
 import type { Warrior } from '@/types/warrior.types';
 
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: { children?: React.ReactNode } & Record<string, unknown>) => (
-      <div {...props}>{children}</div>
-    ),
-  },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-}));
+vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));
 
 vi.mock('@/components/ui/PaperDoll', () => __SHARED_MOCKS.paperDoll);
 

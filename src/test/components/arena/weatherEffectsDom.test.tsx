@@ -59,7 +59,7 @@ describe('weather effects DOM characterization (pre-DriftParticles)', () => {
     const html = render(createElement(TornadoEffect));
     expect(html).toContain('animate-spin-slow');
     expect(count(html, 'animate-wind')).toBe(30);
-    expect(count(html, 'bg-neutral-600/60 rounded-sm animate-mana-spark')).toBe(25);
+    expect(count(html, 'bg-neutral-600/60 rounded-none animate-mana-spark')).toBe(25);
   });
 
   it('ChaoticWindsEffect keeps bi-directional streaks + vortex + 35 debris', () => {

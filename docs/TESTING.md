@@ -46,6 +46,21 @@ Rules:
   `foo.integration.slow.test.ts`, never `foo.slow.integration.test.ts`
   (enforced).
 
+## Guard specs (`src/test/megaplan/`)
+
+`megaplan/` is the permanent home for structural/architectural guard specs —
+scanner-style audits that pin repo invariants (duplication ledgers, file
+budgets, wiring contracts, campaign preservation checks).
+
+- **Every guard must register** in `GUARD_REGISTRY`
+  (`src/test/testQualityAudit.test.ts`) with a disposition:
+  `LIVE_RATCHET` (fails on regression; normal state) or `RETIRE` (names the
+  successor invariant-owner that takes over the check).
+- The registry is enforced — an unregistered guard file fails the suite.
+- Duplication ledgers (`duplication.guard.test.ts`) are live and
+  shrink-only: removing duplication removes the registered pair, and
+  baselines ratchet down but never up.
+
 ## Environments
 
 `vitest.config.ts` uses `environment: 'node'` globally.

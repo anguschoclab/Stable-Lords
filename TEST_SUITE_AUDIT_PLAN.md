@@ -1,5 +1,149 @@
 # Test Suite Audit, Optimization & Reorganization — Implementation Plan
 
+**Status:** Wave 1 executed 2026-10-08 (results in `TEST_SUITE_AUDIT_LEDGER.md` wave-1 tables). **Wave 2 validated & planned 2026-10-22** — the live campaign is §"Wave 2" below; wave-1 phases are retained under §"Wave 1 (executed — archived)" for audit-trail completeness. Findings: `TEST_AUDIT_FINDINGS.md` §5.
+
+**Wave-2 scope (user-approved):** `src/test/` (921 vitest files, 9,469 tests), `e2e/` (5 Playwright specs + helpers), test infrastructure (`vitest.config*.ts`, `bunfig.toml`, `playwright.config.ts`), CI runner parity (`.github/workflows/*.yml`), paired dead production code, and the `src/test/megaplan/` guard-spec lifecycle.
+
+**Wave-2 baseline (2026-10-22, fresh scans):** default suite = **880 files / 9,469 tests / 0 fail / 2 pending** (deliberate `bunViCompat` conditional skips); slow suite = 41 files; e2e = 5 specs. Per-file timings refreshed into `scripts/out/baseline-test-timings.tsv` (888 rows): p50 38ms, p90 1.49s, p99 6.2s; **52 files >2s, 11 files >5s** (documented demote threshold ~5s). `test-audit.json`: 254 jsdom pragmas / 49 node / 248 needsDom / 0 missing-pragma / 0 basename collisions / 3 localFactory (allowlisted) / **37 importSetClusters**. jscpd scoped `src/test`: **88 clones / 1.02% dup lines**. dup-scan registered: test↔test 70 DEBT pairs (budget) + 9 EXEMPT; mixed 17 EXEMPT; ident queues w20=50, w16=125 test↔test.
+
+**Existing machinery to reuse (do not rebuild):** same as wave 1 — `test-audit-scan.mjs`, `testQualityAudit.test.ts`, jscpd/knip/orphan-scan, `baseline-test-timings.tsv` — plus `scripts/timings-to-tsv.mjs` (wave-2 Phase 0) and `scripts/dup-scan.mjs` tier ledgers.
+
+---
+
+# Wave 2 — Validated Campaign Plan (2026-10-22)
+
+## Validation ledger — draft claims re-verified against the codebase
+
+| #   | Claim                                                                      | Verdict             | Evidence / correction                                                                                                                                                                            |
+| --- | -------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| V1  | Default suite 880 files / 9,469 tests / 0 fail / 2 pending                 | **APPROVED**        | Fresh `bunx vitest run --reporter=json` → `scripts/out/default-suite-timings.json`                                                                                                                 |
+| V2  | Timing TSV stale (Oct-8, 809 rows vs 921 files)                            | **APPROVED**        | Refreshed 2026-10-22 → 888 rows (880 default + 8 slow preserved)                                                                                                                                 |
+| V3  | 52 files >2s, 11 >5s                                                     | **APPROVED**        | >5s: truncationCadence 10.3, enginePool 10.2, namePool 9.4, simulateArenaBalance 9.1, mutableInput 8.9, championsTournament 8.6, expansionService 6.8, VirtualizedFallenGrid 6.2, eslintSmoke 6.2, skipToWeekEndOwnership 5.0, finalizeContracts 5.0 (s) |
+| V4  | test-audit summary numbers                                                 | **APPROVED**        | `test-audit.json` regen 2026-10-22                                                                                                                                                               |
+| V5  | jscpd `src/test` 88 clones — "regrown from wave-1's 0"                     | **CORRECTED**       | 88 is ground truth via scoped `bunx jscpd src/test`; wave-1's 0 was measured repo-wide — record both, no regrowth claim                                                                            |
+| V6  | TEST_DEBT ≈70                                                            | **APPROVED (70)**   | `duplication.guard.test.ts`: DEBT=70/budget=70, TEST_EXEMPT=9, EXEMPT=27, MIXED_EXEMPT=17                                                                                                        |
+| V7  | ~69 files uncovered by CI bun-test shard                                   | **CORRECTED → 70, CI-only** | `ci.yml` loop covers `src/test/engine/*/` subdirs + 15 dirs; missed: 51 engine-root + constants 10 + layout 2 + lore 2 + vite 1 + _setup 3 + _fixtures 1. Local `bun run test:bun` (no path arg) covers all — a **CI-enumeration gap**, incl. the `bunViCompat` canary itself |
+| V8  | knip: `e2e/helpers.ts:clickNavLink` dead                                   | **CORRECTED**       | Unused *export* — `navigateNavLink` (:60) calls it internally (:74). Fix = un-export, not delete                                                                                                   |
+| V9  | 48 files with non-taxonomy dotted qualifiers                               | **APPROVED — zero renames needed** | 41 distinct qualifiers, all match `^[a-z][a-zA-Z]*$`; single-word subject-qualifier rule admits all 48                                                                                |
+| V10 | `CATEGORY_DOMAIN` missing lore/layout                                       | **APPROVED — sharper** | Unlisted dirs escape conformance **silently** (how `layout/` drifted in). Fix = map entries + non-mirror registration guard                                                                        |
+| V11 | Parallel fs-walk helpers                                                   | **APPROVED — triple** | `_setup/fsHelpers.ts` (5 consumers), `_helpers/fsWalk.ts` (5), inline copy in `testQualityAudit.test.ts`                                                                                           |
+| V12 | `setup.node.ts` beforeEach fetch-stub + avatar catalog for all ~9.4k tests | **APPROVED**        | `setup.node.ts:13-39`; `setup.dom.ts` (43 lines, isolated-project-only) is the move target                                                                                                         |
+| V13 | 28 megaplan guards / ~3.6k LOC need lifecycle audit                        | **APPROVED**        | LIVE-RATCHET vs RETIRE→successor classification in FINDINGS §5e                                                                                                                                  |
+| V14 | "demote >5s files to .slow"                                                | **CORRECTED — coverage risk** | `.slow` files excluded from `test:coverage` AND `bun test`; demotion requires per-file coverage-delta measurement; fixture-light rewrite is default where unique coverage is carried                |
+| V15 | orphan-scan 0 test-only / 0 unreachable                                    | **APPROVED**        | `orphan-scan.json` regen 2026-10-22 — obsolescence is semantic, not mechanical                                                                                                                    |
+| V16 | `src/test/scripts/` needs CATEGORY_DOMAIN entry                            | **DISPROVED**       | Imports `#scripts/…` → resolveImport null → zero-prod-import → scanner-exempt; register as non-mirror instead                                                                                      |
+| V17 | `e2e/screenshots` tracked                                                  | **DISPROVED**       | `git ls-files` empty — untracked; no policy needed                                                                                                                                               |
+| V18 | jsdom-pragma lever exhausted                                               | **APPROVED**        | 6 no-signal files all indirect renderers (same set as wave-1); env cost falls only via DOM-spec consolidation                                                                                      |
+| V19 | `scripts/timings-to-tsv.mjs` missing                                       | **APPROVED**        | wave-1 suggestion still unimplemented → Phase 0 deliverable                                                                                                                                       |
+| V20 | Skip-ticket registry free for wave-2                                       | **CORRECTED**       | `S1–S34`/`D1–D14` permanently registered by V18; wave-2 uses **`MEGAPLAN-A*`** (`MEGAPLAN-[A-Z]\d+` regex)                                                                                        |
+
+## Test inventory — specs that must land RED before implementation (strict test-first)
+
+Every Phase-3+ change is validated by a spec authored in **Phase 2**. Phases 3–6 may not commit a deletion/merge/move/perf change whose validating spec hasn't landed.
+
+| ID  | Spec / mechanism                                                                                                                                                                                                                                                                          | Validates                          |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| T1  | `testQualityAudit` suffix-taxonomy check: `.slow` terminal-only; category qualifiers ∈ {integration, e2e, perf, guard}; ≤1 subject qualifier matching `^[a-z][a-zA-Z]*$`                                                                                                                     | Phase-5 naming ratchet             |
+| T2  | `testQualityAudit` dir-registration check: every `src/test/<dir>/` ∈ `CATEGORY_DOMAIN` ∪ `NON_MIRROR_DIRS` (\_fixtures, \_helpers, \_mocks, \_setup, config, integration, megaplan, perf, scripts, ui, vite)                                                                                   | closes the V10 silent-drift hole   |
+| T3  | `CATEGORY_DOMAIN` += `lore: ['src/lore']` → conformance check flags `src/test/layout/*` (they import `@/components/layout/*`)                                                                                                                                                                | Phase-5 `git mv` target            |
+| T4  | `testQualityAudit` CI-shard coverage check: parse `ci.yml` bun-test enumeration, assert every non-slow test file falls under a shard                                                                                                                                                          | Phase-5 CI fix (70-file gap)       |
+| T5  | `testQualityAudit` bunfig↔slow sync: every `*.slow.test.*` matches `bunfig.toml` `pathIgnorePatterns` glob and default-config excludes                                                                                                                                                        | Phase-6 demotions                  |
+| T6  | `guardLifecycle` registry: all `src/test/megaplan/` guards enumerated `LIVE_RATCHET \| RETIRE→<successor>`; RETIRE requires a named surviving spec/guard for the invariant                                                                                                                    | Phase-3 retirements                |
+| T7  | Merge-parity mechanism: per Phase-4 batch, capture `vitest --reporter=json` titles pre/post; post-merge titles ⊇ pre-merge minus ledger-listed drops                                                                                                                                         | Phase-4 merges lose no test        |
+| T8  | `_fixtures/factories.test.ts` assertions for each planned extraction, parked as `it.skip` under `MEGAPLAN-A*` tickets registered in `REGISTERED_SKIP_TICKETS`                                                                                                                                | Phase-4 shared-builder extractions |
+| T9  | `setup.regression`/`stateReset` sentinels: jsdom project retains fetch-stub+avatar catalog post-surgery; shared project no longer pays avatar load; `bunViCompat` surface unchanged                                                                                                            | Phase-6 setup surgery              |
+| T10 | Existing gates reused: coverage thresholds (84/74/78/85.5), runnerGroups drift guard, shrink-only allowlists                                                                                                                                                                                  | all phases                         |
+
+## Phase 0 — Safety, baseline & findings freeze (0.5 day)
+
+1. `git tag pre-test-audit-v2` at start HEAD; open LEDGER wave-2 block.
+2. `bunx tsr generate` before baselining (stale route tree must not contaminate).
+3. Land `scripts/timings-to-tsv.mjs` (vitest JSON → TSV, preserving stale slow rows); refresh `baseline-test-timings.tsv` (done: 888 rows).
+4. Gate matrix recorded: type-check, lint, `bun run test`, build, narrative-validate, dup-scan all tiers, knip, jscpd `src/test`, orphan-scan, test-audit-scan regen.
+
+**Exit:** tag exists; ledger baseline row committed.
+
+## Phase 1 — Detection & disposition (no changes; 1 day)
+
+Build the complete disposition ledger before anything moves:
+
+1. Obsolescence triage: import-liveness via test-audit.json + orphan-scan + knip (clean today → semantic archaeology vs routes/features; `e2e/residual-routes.spec.ts` keep+annotate; `v13-surfaces.spec.ts` relevance check).
+2. Classify all 28 `megaplan/` guards LIVE-RATCHET vs RETIRE→successor (feeds T6 — FINDINGS §5e).
+3. Triage 88 jscpd clones + 37 importSetClusters + 70 TEST_DEBT pairs into merge/extract/keep queues with named harmonization targets (feeds T8 tickets).
+4. Enumerate the 70-file shard-gap list and 48-qualifier list (feeds T2–T4).
+5. e2e surface: un-export `clickNavLink` (internal-live per V8); spec inventory.
+
+**Exit:** FINDINGS §5 tables fully populated; every Phase-3+ commit derivable from it.
+
+## Phase 2 — Contract & guard construction, committed RED (hard gate; 1–2 days)
+
+Land T1–T9 before any implementation:
+
+1. T1 suffix-taxonomy check (lands GREEN — ratchet; any violating file renamed in-commit).
+2. T2 dir-registration + `NON_MIRROR_DIRS` allowlist (RED on `layout`/`lore`).
+3. T3 `lore: ['src/lore']` map entry (RED listing `src/test/layout/*`).
+4. T4 CI-shard coverage check (RED on the 70 uncovered files).
+5. T5 bunfig↔slow sync assertion.
+6. T6 `guardLifecycle` registry with full dispositions.
+7. T7 merge-parity harness (scripted title diff per batch).
+8. T8 ticketed `.skip` extraction contracts under `MEGAPLAN-A*` in `_fixtures/factories.test.ts`.
+9. T9 setup sentinels in `setup.regression`/`stateReset`.
+10. Regen `runnerGroups.json`/`auditBaseline.json` via `test-audit-scan.mjs`.
+
+**Exit (hard gate):** T1–T9 committed; RED checks enumerate every planned target; skip registry enumerates every parked ticket.
+
+## Phase 3 — Obsolescence deletions & guard retirements (1 day)
+
+Per Phase-1 dispositions, small mechanical commits:
+
+- Delete dead tests **paired with** test-only prod subjects (same commit; coverage floor is the gate — never delete coverage of live code).
+- Retire guards only where T6 names a successor invariant-owner.
+- Un-export `clickNavLink` in `e2e/helpers.ts`.
+- Re-run full suite + `test-audit-scan` regen per batch; coverage thresholds hold.
+
+## Phase 4 — Duplication & consolidation (2–3 days)
+
+- Drain jscpd `src/test` 88 clones → 0 or registered EXEMPT (canonical measurement: `bunx jscpd src/test`).
+- Drain `TEST_DEBT_PAIRS` 70 → budget ratcheted to 0 (`_fixtures/` extraction, `it.each` merges).
+- 37 importSetClusters per triage matrix (merge same-subject / extract shared setup / keep distinct-subject).
+- Ident-tier queues staged: ident-w20 (50 test↔test) then w16 (125).
+- Merge `_setup/fsHelpers` + `_helpers/fsWalk` + `testQualityAudit`'s inline walker → `_helpers/fsWalk.ts`.
+- Mixed pairs (17) → EXEMPT verdicts recorded, not churn.
+- Per batch: T7 parity check, T8 tickets un-skip, ledger row, suite green.
+
+## Phase 5 — Structural moves & CI fix (1 day)
+
+- `git mv src/test/layout/breadcrumbs/*` → `src/test/components/layout/breadcrumbs/` (T3 GREEN).
+- Fix `ci.yml` bun-test shard enumeration — prefer `find`-driven walk over hardcoded dirs so the gap can't regrow (T4 GREEN).
+- Formalize `megaplan/` as permanent structural-guard home in TESTING.md.
+- Regen `runnerGroups.json`/`auditBaseline.json`; update `bunfig.toml` ignores if renamed paths appear.
+
+## Phase 6 — Execution profiling & optimization (1–2 days; measured wins, no hard target)
+
+1. Tail: demote-or-rewrite the 11 >5s files — **coverage-delta measured before each demotion** (`.slow` files are excluded from `test:coverage`; fixture-light rewrite is default where unique coverage is carried).
+2. `setup.node.ts` surgery: move fetch-stub/avatar-catalog `beforeEach` + unconditional `loadCombatNarrative` `beforeAll` toward `setup.dom.ts` or demand-gating → T9 sentinels GREEN.
+3. DOM-spec consolidation compounding Phase 4 (only remaining env lever — pragma removal exhausted, V18).
+4. Runner knobs measured-and-logged accept/reject: `maxWorkers`/`minWorkers`, `sequence.concurrent`, `poolOptions`. **`vmThreads` and `isolate:false` widening remain measured-and-rejected** (Oct-8 data; retry only after fixing the window-stub pattern AND transform regression).
+5. e2e: chromium smoke stays inner loop; Playwright `--shard`/`fullyParallel` only if smoke >~10min.
+6. All decisions incl. rejects recorded in the ledger.
+
+## Phase 7 — Close-out (0.5 day)
+
+- `docs/TESTING.md`: qualifier rule, lore/layout filing, NON_MIRROR_DIRS registry, shard-coverage note, `bunx jscpd src/test` as canonical dup measurement.
+- LEDGER wave-2 finalized per-phase before/after.
+- `git tag post-test-audit-v2`; one-shot scripts deleted.
+
+## Cross-cutting rules
+
+- **Ordering:** measure → detect → contracts RED → delete → merge → move → perf → docs.
+- **Per-commit verification:** `bunx vitest run` green · `test-audit-scan` regen clean · `bun --smol test --isolate` on touched dirs · lint on changed files · `tsc -p tsconfig.e2e.json` if e2e touched.
+- `git mv` for renames; deletes never mixed with moves; `auditBaseline.json` shrink-only; rollback via `pre-test-audit-v2` tag + small commits.
+- **Non-goals:** framework rewrites, prod semantic changes beyond approved paired dead-code deletion, lowering coverage thresholds, deleting `.slow` coverage for wall-clock.
+
+---
+
+# Wave 1 (executed 2026-10-08 — archived)
+
 **Status:** Executed 2026-10-08 — results and dispositions in `TEST_SUITE_AUDIT_LEDGER.md`. **Scope:** `src/test/` (843 vitest files, ~8,900 tests), `e2e/` (5 Playwright specs), test infrastructure (`vitest.config*.ts`, `bunfig.toml`, `playwright.config.ts`, CI workflows).
 
 **Baseline (2026-10-08):** default suite = 802 files / 8,881 tests / ~63.5s wall (tests 36%, environment 30%, setup 15%, transform 11%, import 8%); slow suite = 41 `*.slow.test.*` files; e2e = 5 specs tiered chromium-smoke vs `@slow` full matrix.
@@ -12,8 +156,6 @@
 - `src/test/testQualityAudit.test.ts` — structural gate (no colocation, basename pairs, local factories, jsdom pragma, bun-deadlock patterns, slow-suite containment, runnerGroups drift)
 - `bun run dupes` (jscpd ≥10 lines/100 tokens), `bun run dead-code` (knip), `bun scripts/orphan-scan.mjs` (domain liveness incl. test-only reachability)
 - `scripts/out/baseline-test-timings.tsv` — per-file wall times, refreshed 2026-10-08
-
----
 
 ## Phase 0 — Baseline & Metrics Capture (0.5 day)
 

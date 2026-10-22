@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import type { GameState } from '@/types/state.types';
-import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
+import { makeGameState as fixtureGameState,
+  makeTrainer,
+} from '@/test/_fixtures/factories';
 
 // Minimal GameState builder
 const makeState = (over: Partial<GameState> = {}): GameState =>
@@ -107,15 +109,7 @@ describe('computeWeeklyBreakdown — Full Integration', () => {
       weather: 'Blizzard',
       roster: [{ id: 'w1', name: 'A', fame: 0 } as any, { id: 'w2', name: 'B', fame: 20 } as any],
       trainers: [
-        {
-          id: 't1',
-          name: 'T',
-          tier: 'Novice',
-          focus: 'Aggression',
-          fame: 1,
-          age: 40,
-          contractWeeksLeft: 5,
-        } as any,
+        makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 }) as any,
       ],
       trainingAssignments: [{ warriorId: 'w1' as any, type: 'attribute', attribute: 'ST' }],
     });

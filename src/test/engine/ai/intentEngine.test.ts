@@ -6,8 +6,7 @@ import {
 } from '@/engine/ai/intentEngine';
 import type { GameState, RivalStableData } from '@/types/state.types';
 
-describe('pickWeeklyIntent', () => {
-  const createMockRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
+const createMockRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
     ({
       id: 'rival-1',
       owner: {
@@ -88,21 +87,22 @@ describe('pickWeeklyIntent', () => {
       ...overrides,
     }) as RivalStableData;
 
-  const createMockState = (overrides: Partial<GameState> = {}): GameState =>
-    ({
-      week: 1,
-      season: 'Spring',
-      year: 1,
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 500,
-      popularity: 500,
-      roster: [],
-      rivals: [],
-      arenaHistory: [],
-      ...overrides,
-    }) as any as GameState;
+const createMockState = (overrides: Partial<GameState> = {}): GameState =>
+  ({
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    weather: 'Clear',
+    treasury: 1000,
+    fame: 500,
+    popularity: 500,
+    roster: [],
+    rivals: [],
+    arenaHistory: [],
+    ...overrides,
+  }) as any as GameState;
 
+describe('pickWeeklyIntent', () => {
   it('returns RECOVERY when treasury is low', () => {
     const rival = createMockRival({ treasury: 100 });
     const state = createMockState();
@@ -199,41 +199,6 @@ describe('pickWeeklyIntent', () => {
 });
 
 describe('verifyIntentSkepticism', () => {
-  const createMockRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-    ({
-      id: 'rival-1',
-      owner: {
-        id: 'owner-1',
-        name: 'Test Owner',
-        stableName: 'Test Stable',
-        personality: 'Pragmatic',
-        favoredStyles: [],
-        fame: 500,
-        renown: 50,
-        titles: 0,
-      },
-      roster: [],
-      treasury: 1000,
-      fame: 500,
-      strategy: undefined,
-      ...overrides,
-    }) as RivalStableData;
-
-  const createMockState = (overrides: Partial<GameState> = {}): GameState =>
-    ({
-      week: 1,
-      season: 'Spring',
-      year: 1,
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 500,
-      popularity: 500,
-      roster: [],
-      rivals: [],
-      arenaHistory: [],
-      ...overrides,
-    }) as any as GameState;
-
   it('returns true when no strategy exists', () => {
     const rival = createMockRival({ strategy: undefined });
     const state = createMockState();
@@ -295,41 +260,6 @@ describe('verifyIntentSkepticism', () => {
 });
 
 describe('updateAIStrategy', () => {
-  const createMockRival = (overrides: Partial<RivalStableData> = {}): RivalStableData =>
-    ({
-      id: 'rival-1',
-      owner: {
-        id: 'owner-1',
-        name: 'Test Owner',
-        stableName: 'Test Stable',
-        personality: 'Pragmatic',
-        favoredStyles: [],
-        fame: 500,
-        renown: 50,
-        titles: 0,
-      },
-      roster: [],
-      treasury: 1000,
-      fame: 500,
-      strategy: undefined,
-      ...overrides,
-    }) as RivalStableData;
-
-  const createMockState = (overrides: Partial<GameState> = {}): GameState =>
-    ({
-      week: 1,
-      season: 'Spring',
-      year: 1,
-      weather: 'Clear',
-      treasury: 1000,
-      fame: 500,
-      popularity: 500,
-      roster: [],
-      rivals: [],
-      arenaHistory: [],
-      ...overrides,
-    }) as any as GameState;
-
   it('creates new strategy when none exists', () => {
     const rival = createMockRival({ strategy: undefined });
     const state = createMockState();

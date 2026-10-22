@@ -10,7 +10,7 @@ import {
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { SeededRNG, hashStr } from '@/utils/random';
-import { makePoolWarrior, makeWarrior } from '@/test/_fixtures/factories';
+import { makePoolWarrior, makeWarrior , ATTRS_10 } from '@/test/_fixtures/factories';
 import {
   FightingStyle,
   ATTRIBUTE_KEYS,
@@ -146,13 +146,8 @@ describe('poolWarriorToWarrior', () => {
       source: 'apprentice',
       style: FightingStyle.StrikingAttack,
       attributes: {
+        ...ATTRS_10,
         ST: ATTRIBUTE_MAX,
-        CN: 10,
-        SZ: 10,
-        WT: 10,
-        WL: 10,
-        SP: 10,
-        DF: 10,
       },
     });
     const w = poolWarriorToWarrior(r, {});

@@ -4,27 +4,15 @@ import { renderHook } from '@testing-library/react';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
-import type { FightId, BoutOfferId, PromoterId } from '@/types/shared.types';
+import type {
+  BoutOfferId, PromoterId } from '@/types/shared.types';
 import {
-  makeFightSummary as fixtureFightSummary,
+  makeDigestFight,
   makeBoutOffer as fixtureBoutOffer,
 } from '@/test/_fixtures/factories';
 
 const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
-  fixtureFightSummary({
-    id: 'fight-1' as FightId,
-    week: 10,
-    title: 'Test Fight',
-    warriorIdA: 'wa' as WarriorId,
-    warriorIdD: 'wd' as WarriorId,
-    winner: 'A' as const,
-    by: 'KO',
-    styleA: 'Brawler',
-    styleD: 'Technician',
-    createdAt: '2026-01-01T00:00:00Z',
-    ...overrides,
-    absoluteWeek: overrides.absoluteWeek ?? overrides.week ?? 10,
-  } as any);
+  makeDigestFight(overrides);
 
 const makeOffer = (overrides: Partial<BoutOffer> = {}): BoutOffer =>
   fixtureBoutOffer({

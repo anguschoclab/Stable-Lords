@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   verifyBoutAcceptance,
-  evaluateBoutOffer,
   venueCounterTarget,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import { makeWarrior, makeRival, makeStrategy, makeBoutOffer } from '@/test/_fixtures/factories';
 import type { AIIntent } from '@/types/state/game';
+import { evalBoutOffer } from '@/test/_fixtures/competitionWorker';
 
 /**
  * Characterization spec — pins the public surface of boutAcceptance.ts
@@ -85,7 +85,7 @@ describe('evaluateBoutOffer (characterization)', () => {
   it('declines on a blocking injury with the explain reason', () => {
     const explain: { reason?: string } = {};
     const w = makeWarrior({ injuries: [{ severity: 'Severe' }] as never });
-    const v = evaluateBoutOffer({
+    const v = evalBoutOffer({
       offer: makeBoutOffer(),
       rival: rivalWith('CONSOLIDATION'),
       warrior: w,
@@ -98,7 +98,7 @@ describe('evaluateBoutOffer (characterization)', () => {
 
   it('accepts when treasury is below the desperation floor', () => {
     const explain: { reason?: string } = {};
-    const v = evaluateBoutOffer({
+    const v = evalBoutOffer({
       offer: makeBoutOffer(),
       rival: rivalWith('CONSOLIDATION', 'Pragmatic', 100),
       warrior: makeWarrior(),

@@ -14,13 +14,7 @@ import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 import type { GameState } from '@/types/state.types';
 
-vi.mock('@/engine/storage/archiveService', () => ({
-  archiveService: {
-    archiveHotState: vi.fn(),
-    retrieveHotState: vi.fn(),
-    deleteHotState: vi.fn(),
-  },
-}));
+vi.mock('@/engine/storage/archiveService', () => ({ ...__SHARED_MOCKS.archiveService }));
 
 describe('saveSlots', () => {
   beforeEach(() => {

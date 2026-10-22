@@ -65,7 +65,7 @@ export function MarkdownReader({ content, warriorNames, stableNames }: MarkdownR
   const processedContent = linkifyMarkdown(content, warriorNames, stableNames);
 
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded prose-pre:bg-secondary prose-pre:border prose-pre:border-border">
+    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded-none prose-pre:bg-secondary prose-pre:border prose-pre:border-border">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeSanitize]}

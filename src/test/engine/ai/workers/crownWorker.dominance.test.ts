@@ -9,7 +9,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { assessCrownOpportunity } from '@/engine/ai/workers/crownWorker';
 import { makeRival, makeWarrior, makeGameState, resetFixtureIds } from '@/test/_fixtures/factories';
 import { makeVenueWarrior, makeArenaTitle } from '@/test/_fixtures/arenaTitle';
-import type { ArenaTitle, GameState, RankingEntry } from '@/types/state.types';
+import { dominantRankings } from '@/test/_fixtures/competitionWorker';
+import type { ArenaTitle, GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 
 beforeEach(() => resetFixtureIds());
@@ -20,21 +21,6 @@ function venueWarrior(id: string, arenaId: string, wins: number, losses: number)
 
 function titleAt(championId: string): ArenaTitle {
   return makeArenaTitle(championId, { defenses: 2 });
-}
-
-/** Rankings where the player's warrior is #1 of ten — 'Dominant' threat. */
-function dominantRankings(playerWarriorId: string): Record<WarriorId, RankingEntry> {
-  const entries: Record<WarriorId, RankingEntry> = {
-    [playerWarriorId as WarriorId]: { overallRank: 1, classRank: 1, compositeScore: 100 },
-  };
-  for (let i = 2; i <= 10; i++) {
-    entries[`dummy-${i}` as WarriorId] = {
-      overallRank: i,
-      classRank: i,
-      compositeScore: 100 - i,
-    };
-  }
-  return entries;
 }
 
 /**

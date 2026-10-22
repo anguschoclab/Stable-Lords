@@ -5,40 +5,37 @@
  * business as usual, and desperate/aggressive stables don't care.
  */
 import { describe, it, expect } from 'vitest';
-import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 import {
   makeAgentMemory,
-  makeBoutOffer,
   makeGameState,
   makeOwner,
   makeRival,
   makeWarrior,
 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
+import { verdict, evalBoutOffer, rivalOffer } from '@/test/_fixtures/competitionWorker';
+// Subject under test (evaluated via the shared competitionWorker harness).
+import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 
 // MATCHUP_MATRIX: getMatchupBonus(WS, AB) === -3, getMatchupBonus(AB, WS) === +3
 describe('style matchup gate (F4)', () => {
   it('a Methodical stable declines a strongly unfavorable style matchup', () => {
     const warrior = makeWarrior({ fame: 50, style: FightingStyle.WallOfSteel });
     const opponent = makeWarrior({ fame: 55, style: FightingStyle.AimedBlow });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }),
-    });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      purse: 400,
-      hype: 80,
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Methodical' }) },
+      offerOver: { purse: 400,
+      hype: 80 },
     });
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
       })
     ).toBe('Declined');
   });
@@ -46,24 +43,20 @@ describe('style matchup gate (F4)', () => {
   it('a Methodical stable accepts a favorable style matchup', () => {
     const warrior = makeWarrior({ fame: 50, style: FightingStyle.AimedBlow });
     const opponent = makeWarrior({ fame: 55, style: FightingStyle.WallOfSteel });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }),
-    });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      purse: 400,
-      hype: 80,
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Methodical' }) },
+      offerOver: { purse: 400,
+      hype: 80 },
     });
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
       })
     ).toBe('Accepted');
   });
@@ -79,9 +72,10 @@ describe('style matchup gate (F4)', () => {
       style: FightingStyle.AimedBlow,
     });
     const oppStable = makeRival({ id: 'opp_stable' as never, roster: [opponent] });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
       owner: makeOwner({ personality: 'Methodical' }),
       agentMemory: makeAgentMemory({
         opponentDossiers: {
@@ -93,48 +87,31 @@ describe('style matchup gate (F4)', () => {
             observedTells: { oe: 0.9, al: 0.2, samples: 4, lastSeenWeek: 4 },
           },
         },
-      }),
-    });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      purse: 400,
-      hype: 80,
+      }) },
+      offerOver: { purse: 400,
+      hype: 80 },
     });
     const state = makeGameState({ rivals: [rival, oppStable], absoluteWeek: 5, week: 5 });
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
-      })
-    ).toBe('Declined');
+    expect<ReturnType<typeof evaluateBoutOffer>>(verdict(offer, rival, warrior, opponent, state)).toBe('Declined');
   });
 
   it('an Aggressive stable ignores an unfavorable matchup', () => {
     const warrior = makeWarrior({ fame: 50, style: FightingStyle.WallOfSteel });
     const opponent = makeWarrior({ fame: 55, style: FightingStyle.AimedBlow });
-    const rival = makeRival({
-      roster: [warrior],
-      treasury: 5000,
-      owner: makeOwner({ personality: 'Aggressive' }),
-    });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      purse: 400,
-      hype: 80,
+    const { rival, offer } = rivalOffer({
+      warrior,
+      opponent,
+      rivalOver: { treasury: 5000,
+      owner: makeOwner({ personality: 'Aggressive' }) },
+      offerOver: { purse: 400,
+      hype: 80 },
     });
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
+      evalBoutOffer({
+        offer,
+        rival,
+        warrior,
+        opponent,
       })
     ).toBe('Accepted');
   });

@@ -5,15 +5,10 @@ import { AvatarRerollButton } from '@/components/avatar/AvatarRerollButton';
 import { useGameStore } from '@/state/useGameStore';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { AvatarConfig } from '@/types/avatar.types';
+import { TEST_AVATAR_CONFIG } from '@/test/_fixtures/avatarData';
 
 describe('AvatarRerollButton', () => {
-  const config: AvatarConfig = {
-    entityId: 'w-1',
-    entityType: 'warrior',
-    seed: 12345,
-    name: 'Aulus',
-    age: 25,
-  };
+  const config: AvatarConfig = TEST_AVATAR_CONFIG;
 
   beforeEach(() => {
     const fresh = createFreshState('test');

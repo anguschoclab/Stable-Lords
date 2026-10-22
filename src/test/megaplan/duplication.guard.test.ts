@@ -101,8 +101,14 @@ const DEBT_PAIRS = new Set<string>([]);
 // The 1,804-line tournamentSelection spec was split into 8 sibling files —
 // their shared vi.mock/import preambles surface 6 new exempt pair-clusters
 // (same category as the retired awardsTokens↔tournamentSelection entry) → 79.
-const TEST_TO_TEST_BASELINE = 79;
-const TEST_DEBT_BUDGET = 70;
+// V19 (D15–D19) drained the entire 22-pair residual: verbatim offer-eval arg
+// blocks → shared bidRoster/competitionWorker helpers, venue/flat/bare-warrior
+// wrappers → statWarrior/arenaTitle/determinism fixtures, loadout/state/injury/
+// fight-summary literals → shared pins, mock preambles → __SHARED_MOCKS. The 5
+// pairs left live are preamble/call-shape echoes registered knowingly below —
+// same exemption category as the V18 tournamentSelection preambles.
+const TEST_TO_TEST_BASELINE = 12;
+const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
   // enumSourcesSync re-enumerates the weather union — re-listing the
@@ -123,86 +129,27 @@ const TEST_EXEMPT_PAIRS = new Set([
   'src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts|src/test/engine/matchmaking/tournamentSelection/sweep.test.ts',
   // Shared weatherSuitability import preamble + derived OFFSEASON set echo.
   'src/test/engine/ai/weatherDisposition.completeness.test.ts|src/test/engine/ai/weatherSuitability.test.ts',
+  // ─── V19 — post-drain residue: identical import/fixture preambles and
+  // call-shape idioms left after the real logic moved into shared helpers.
+  // resolveImpactsCoverage↔impactMergeOrder both alias makeBareWarrior and
+  // import the same fixture set — an import preamble, not shared logic.
+  'src/test/engine/impacts/resolveImpactsCoverage.test.ts|src/test/engine/pipeline/impactMergeOrder.test.ts',
+  // ChronicleTab↔MissionControlTab share the jsdom/render/uiSurface mock
+  // preamble only; their bodies test different components.
+  'src/test/components/warrior/ChronicleTab.test.tsx|src/test/components/warrior/MissionControlTab.test.tsx',
+  // grudgeWorldDecoupling↔playerGrudges share only the factory-import list.
+  'src/test/engine/pipeline/grudgeWorldDecoupling.test.ts|src/test/engine/pipeline/playerGrudges.test.ts',
 ]);
 
-const TEST_DEBT_PAIRS = new Set([
-  'src/test/_fixtures/advisorSeed.ts|src/test/components/dashboard/CouncilBriefingWidget.test.tsx',
-  'src/test/_fixtures/bidRoster.ts|src/test/engine/bout/aiPlanIntegration.test.ts',
-  'src/test/_fixtures/bidRoster.ts|src/test/engine/pipeline/passes/RivalStrategyPass.slow.test.ts',
-  'src/test/_fixtures/competitionWorker.ts|src/test/engine/ai/workers/crownWorker.dominance.test.ts',
-  'src/test/_fixtures/factories.ts|src/test/components/stable/RecruitCard.test.tsx',
-  'src/test/_fixtures/factories.ts|src/test/engine/matchmaking/arenaFit.test.ts',
-  'src/test/_fixtures/signedBout.ts|src/test/engine/pipeline/deadLifecycle.test.ts',
-  'src/test/components/BookmarkButton.test.tsx|src/test/components/BookmarkButtonA11y.test.tsx',
-  'src/test/components/EntityLink.test.tsx|src/test/components/entityLink.perf.test.tsx',
-  'src/test/components/ResolutionReveal.selector.test.tsx|src/test/components/resolutionReveal/ResolutionReveal.test.tsx',
-  'src/test/components/avatar/AvatarRerollButton.test.tsx|src/test/state/avatarSlice.test.ts',
-  'src/test/components/awards/Awards.test.tsx|src/test/components/eventLog/EventLog.test.tsx',
-  'src/test/components/bookingOffice/OfferActions.test.tsx|src/test/components/bookingOffice/offerCardParts.test.tsx',
-  'src/test/components/charts/StyleMeterTable.test.tsx|src/test/engine/matchmaking/arenaFit.test.ts',
-  'src/test/components/dashboard/BriefingTab.test.tsx|src/test/components/dashboard/GazetteTab.test.tsx',
-  'src/test/components/dashboard/BriefingTab.test.tsx|src/test/components/gazette/GazetteArticle.test.tsx',
-  'src/test/components/dashboard/CouncilBriefingWidget.test.tsx|src/test/pages/Advisor.test.tsx',
-  'src/test/components/dashboard/GazetteTab.test.tsx|src/test/components/gazette/GazetteArticle.test.tsx',
-  'src/test/components/dashboard/WeeklyDigestMini.test.tsx|src/test/hooks/useDigestSummary.test.ts',
-  'src/test/components/equipment/EncumbranceBar.test.tsx|src/test/engine/combat/equipmentIntegration.test.ts',
-  'src/test/components/eventLog/EventLog.test.tsx|src/test/components/eventLog/eventFiltering.test.ts',
-  'src/test/components/modals/Modals.test.tsx|src/test/components/resolutionReveal/ResolutionReveal.test.tsx',
-  'src/test/components/stable/RosterWarriorRow.test.tsx|src/test/engine/potential.test.ts',
-  'src/test/components/tournaments/TournamentComponents.test.tsx|src/test/components/tournaments/TournamentsReadiness.test.tsx',
-  'src/test/components/warrior/ChronicleTab.test.tsx|src/test/components/warrior/MissionControlTab.test.tsx',
-  'src/test/components/warrior/WarriorTrainingCard.advisor.test.tsx|src/test/components/warrior/WarriorTrainingCard.heatbar.test.tsx',
-  'src/test/engine/advisor/crownBidFocus.test.ts|src/test/engine/advisor/rivalRoles.test.ts',
-  'src/test/engine/ai/bankruptcyService.test.ts|src/test/engine/economy/economy.test.ts',
-  'src/test/engine/ai/boutBidding.test.ts|src/test/engine/ai/boutBiddingIntegration.test.ts',
-  'src/test/engine/ai/boutBidding.test.ts|src/test/engine/bout/aiPlanIntegration.test.ts',
-  'src/test/engine/ai/boutBiddingIntegration.test.ts|src/test/engine/core/absoluteWeekRollover.test.ts',
-  'src/test/engine/ai/memory/intelDossier.observedTells.test.ts|src/test/engine/ai/memory/intelDossier.test.ts',
-  'src/test/engine/ai/plan/planMasking.test.ts|src/test/engine/bout/npcPlanPersistence.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/responseNotes.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts|src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/offerProcessor.test.ts|src/test/engine/ai/workers/competitionWorker/responseNotes.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/offerProcessor.test.ts|src/test/engine/matchmaking/weatherAwareMatchmaking.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/promoterAwareness.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
-  'src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts|src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts',
-  'src/test/engine/ai/workers/rosterWorker.test.ts|src/test/engine/training/training.test.ts',
-  'src/test/engine/autosim/sequentialMemoryGrowth.slow.test.ts|src/test/engine/sim/harnessTruncation.slow.test.ts',
-  'src/test/engine/bout/reportingHandler.test.ts|src/test/engine/bout/resolveHelpers.test.ts',
-  'src/test/engine/boutSimulationTimestamp.test.ts|src/test/engine/pipeline/boutStewardReportLeakage.test.ts',
-  'src/test/engine/championship/arenaChampionship.test.ts|src/test/engine/championship/arenaChampionshipPass.test.ts',
-  'src/test/engine/combat/aiIntentTelemetry.test.ts|src/test/engine/narrative/narrationDeterminism.test.ts',
-  'src/test/engine/combat/combat.test.ts|src/test/engine/combat/simulate.test.ts',
-  'src/test/engine/combat/conditionEngine.test.ts|src/test/engine/combat/conditionEngine.triggers.test.ts',
-  'src/test/engine/combat/hitExecution.test.ts|src/test/engine/combat/offenseDefense.test.ts',
-  'src/test/engine/core/entityIndex.test.ts|src/test/layout/breadcrumbs/routeCrumbs.test.ts',
-  'src/test/engine/core/warriorCollection.test.ts|src/test/engine/matchmaking/schedulingAssistant.test.ts',
-  'src/test/engine/core/warriorCollection.test.ts|src/test/hooks/useRivalries.test.ts',
-  'src/test/engine/economy/economy.test.ts|src/test/engine/economy/economyScaling.test.ts',
-  'src/test/engine/envSafety.test.ts|src/test/engine/moduleCacheRegistry.test.ts',
-  'src/test/engine/impacts/resolveImpacts.test.ts|src/test/engine/storage/truncationBounds.test.ts',
-  'src/test/engine/impacts/resolveImpactsCoverage.test.ts|src/test/engine/pipeline/impactMergeOrder.test.ts',
-  'src/test/engine/pipeline/grudgeWorldDecoupling.test.ts|src/test/engine/pipeline/playerGrudges.test.ts',
-  'src/test/engine/pipeline/impactMergeOrder.test.ts|src/test/engine/pipeline/rivalMapStaleness.test.ts',
-  'src/test/engine/pipeline/passes/PromoterPass.test.ts|src/test/engine/pipeline/seasonalPrismaticGale.test.ts',
-  'src/test/engine/pipeline/passes/RecruitmentPass.test.ts|src/test/engine/recruitment/freeAgents.test.ts',
-  'src/test/engine/pipeline/seasonalChaosWeaver.test.ts|src/test/engine/pipeline/seasonalMonolithEvent.test.ts',
-  'src/test/engine/pipeline/seasonalDreamweaversMist.test.ts|src/test/engine/pipeline/seasonalPhantomSparring.test.ts',
-  'src/test/engine/pipeline/seasonalPrismaticGale.test.ts|src/test/engine/recruitment/signWarrior.test.ts',
-  'src/test/engine/storage/electronArchive.test.ts|src/test/engine/storage/electronIPCBounds.test.ts',
-  'src/test/engine/storage/opfsArchive.test.ts|src/test/engine/storage/retrieveHotStatePlausibility.test.ts',
-  'src/test/pages/AdminTools/hooks/useAdminTools.test.ts|src/test/state/saveSlots.test.ts',
-]);
+// V19 close-out: all registered debt pairs drained — set stays empty and the
+// live-ledger invariant keeps it that way (budget 0).
+const TEST_DEBT_PAIRS = new Set<string>([]);
 
 // ═══ V18 — mixed src↔test ledger (exact-normalized w8). All 27 pairs are
 // intentional literal pins: specs re-stating canonical production literals
 // (zero-state objects, enum unions, ctx key lists, barrel/mocks surfaces)
 // as assertion data — the duplication is the point.
-const MIXED_BASELINE = 17;
+const MIXED_BASELINE = 18;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   'src/components/layout/MobileNav.tsx|src/test/_mocks/routerLink.tsx',
@@ -222,6 +169,9 @@ const MIXED_EXEMPT_PAIRS = new Set([
   'src/test/megaplan/typeSurface.test.ts|src/types/state.types.ts',
   'src/test/schemas/enumSourcesSync.test.ts|src/types/enumSources.ts',
   'src/test/schemas/schemaCharacterization.test.ts|src/types/enumSources.ts',
+  // makeBoutSummary in _fixtures re-states WeekStatsService's zeroed
+  // summary shape — a canonical production-literal pin for mock returns.
+  'src/engine/bout/services/WeekStatsService.ts|src/test/_fixtures/factories.ts',
 ]);
 
 const MIXED_DEBT_PAIRS = new Set<string>([]);

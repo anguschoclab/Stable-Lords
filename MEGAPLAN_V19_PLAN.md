@@ -44,7 +44,7 @@ quality-metric gates including the UI design bible
 | LOC baselines | CORRECTED | 1,283 src/141,711 LOC; 994 test/149,849 LOC |
 | doc-guard couplings | NEW | `documentationParity` gates design-doc route tokens; `v14PipelineDocs` pins pipeline stage docs to `WEEK_PIPELINE_PASSES` |
 
-## Phase 0 — Safety, baseline & tag
+## Phase 0 — Safety, baseline & tag ✅ DONE
 
 1. `git tag pre-megaplan-v19` at start HEAD (`217c1b7c`). Open
    `MEGAPLAN_V19_LEDGER.md` §0.
@@ -80,7 +80,7 @@ quality-metric gates including the UI design bible
 
 **Exit:** tag exists; LEDGER §0 filled; FINDINGS §0 seeded.
 
-## Phase 1 — Detection & inventory, full re-baseline (no code changes)
+## Phase 1 — Detection & inventory, full re-baseline (no code changes) ✅ DONE
 
 Re-run every scanner at every tier; rebuild each verdict table from
 scratch. Registered ledger pairs are re-verified class-by-class; stale
@@ -123,7 +123,7 @@ entries are findings. Every DEBT row gets a named harmonization target.
 **Exit:** FINDINGS populated with fresh evidence; zero production code
 changed.
 
-## Phase 2 — Complete test inventory, RED, before ANY implementation (hard gate)
+## Phase 2 — Complete test inventory, RED, before ANY implementation (hard gate) ✅ DONE
 
 `skipCount.guard` rules: `.skip` only under `src/test/megaplan/`, only on
 a line naming a registered `MEGAPLAN-[A-Z]\d+` ticket. S1–S34/D1–D14 are
@@ -148,40 +148,40 @@ Placement per `docs/TESTING.md`; regen `runnerGroups.json`/
 **Exit (hard gate):** entire inventory committed RED; skip registry
 enumerates every parked ticket.
 
-## Phase 3 — Wire / patch / hook up (§W)
+## Phase 3 — Wire / patch / hook up (§W) ✅ DONE
 
 Per §W verdict, one cluster per commit: connect genuinely-disconnected
 systems (route/nav/registry/store), complete partial implementations per
 spec, or delete after a divergence diff proves unique logic has a named
 home — **never delete before harmonization check**.
 
-## Phase 4 — Harmonize-not-delete dedup (§D)
+## Phase 4 — Harmonize-not-delete dedup (§D) ✅ DONE
 
 Variation-point diff per cluster → EXEMPT/DEBT recorded. DEBT: extract
 shared parameterized unit into correct domain; safe-codemod repoint with
 explicit keep-set; revert-and-redo on corruption; ledger ratcheted same
 commit.
 
-## Phase 5 — Dead-code drain + unique-code preservation (§K/§U)
+## Phase 5 — Dead-code drain + unique-code preservation (§K/§U) ✅ DONE
 
 Zero-ref exports removed or repointed; test-only exports relocated;
 export-surface parity specs prove no unique logic lost; orphan-scan
 stays 0 unreachable; knip delta is the smoke alarm.
 
-## Phase 6 — Perf + SRP batches (§P/§A)
+## Phase 6 — Perf + SRP batches (§P/§A) ✅ DONE
 
 indexBy/Set/Map hoists for confirmed §P drains (HEAD precedent);
 function decompositions and god-unit splits behind barrels per §A
 contracts; budgets per ticket.
 
-## Phase 7 — Design-bible remediation (§C)
+## Phase 7 — Design-bible remediation (§C) ✅ DONE
 
 Token/typography/radius/motion/data-integrity fixes strictly per
 `DESIGN_BIBLE_UI_v1.0.md`; recurring violation classes get new
 `ui-audit-scan` rules; doc edits never reintroduce retired route tokens
 (`documentationParity`).
 
-## Phase 8 — Validation battery & close-out
+## Phase 8 — Validation battery & close-out ✅ DONE
 
 Full gates green; 40-week soak + `determinismAudit` clean; coverage
 floors held (84/74/78/85.5); `test:slow`/e2e per covered paths;

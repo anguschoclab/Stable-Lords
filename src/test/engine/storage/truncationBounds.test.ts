@@ -2,24 +2,17 @@ import { describe, it, expect } from 'vitest';
 import { truncateState } from '@/engine/storage/truncation';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { FightSummary } from '@/types/state.types';
-import { FightingStyle, PromoterId } from '@/types/shared.types';
+import { makeStubFight } from '@/test/_fixtures/factories';
+import {
+  PromoterId } from '@/types/shared.types';
 
 function makeFightSummary(id: string, week: number): FightSummary {
-  return {
+  return makeStubFight({
     id: id as any,
     week,
-    warriorIdA: 'w1' as any,
-    warriorIdD: 'w2' as any,
-    stableIdA: 's-a' as any,
-    stableIdD: 's-d' as any,
-    styleA: FightingStyle.StrikingAttack,
-    styleD: FightingStyle.TotalParry,
-    winner: 'A',
-    by: 'KO',
-    title: 'Test Fight',
     transcript: ['line1', 'line2'],
     createdAt: new Date().toISOString(),
-  };
+  });
 }
 
 describe('truncationBounds', () => {

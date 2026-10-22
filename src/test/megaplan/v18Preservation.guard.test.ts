@@ -60,7 +60,9 @@ describe('megaplan V18: unique-logic preservation (§U)', () => {
       'promoterAwareness.test.ts',
     ]) {
       const text = fileText(`src/test/engine/ai/workers/competitionWorker/${f}`);
-      expect(text, `${f} lost its scenario assertions`).toContain('evaluateBoutOffer');
+      expect(text, `${f} lost its scenario assertions`).toMatch(
+        /eval(uate)?BoutOffer/
+      );
       expect(text, `${f} lost its expectations`).toContain('expect(');
     }
   });

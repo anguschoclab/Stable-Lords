@@ -13,7 +13,7 @@ import { aiPlanForWarrior } from './coreGenerator';
 import { getPairKey } from '@/utils/keyUtils';
 
 /** Options for {@link rivalFightPlan}. */
-export interface RivalFightPlanOpts {
+interface RivalFightPlanOpts {
   /** Opponent fighting style, when known. */
   opponentStyle?: FightingStyle;
   /**

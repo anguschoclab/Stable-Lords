@@ -18,7 +18,7 @@ import { headToHeadFor } from '@/engine/matchmaking/schedulingAssistant/headToHe
 import { getPairKey } from '@/utils/keyUtils';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
-import { makeGameState } from '@/test/_fixtures/factories';
+import { makeGameState, TEST_META, TEST_PLAYER_P1 } from '@/test/_fixtures/factories';
 
 describe('Scheduling Assistant Engine', () => {
   // Helper to generate minimal mock warrior
@@ -71,16 +71,9 @@ describe('Scheduling Assistant Engine', () => {
     ];
 
     return makeGameState({
-      meta: { gameName: 'test', version: '1', createdAt: 'now' },
+      meta: { ...TEST_META, createdAt: 'now' },
       ftueComplete: true,
-      player: {
-        id: 'p1' as any,
-        name: 'Player',
-        stableName: 'Player Stable',
-        fame: 0,
-        renown: 0,
-        titles: 0,
-      },
+      player: TEST_PLAYER_P1,
       treasury: 0,
       day: 1,
       rivals: rivalData,

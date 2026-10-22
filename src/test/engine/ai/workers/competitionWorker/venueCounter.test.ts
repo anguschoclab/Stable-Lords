@@ -7,10 +7,7 @@
  */
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  evaluateBoutOffer,
-  processAllRivalsBoutOffers,
-} from '@/engine/ai/workers/competitionWorker';
+import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
 import {
   counterBoutVenue,
   COUNTERED_VENUE_CONDITION,
@@ -22,6 +19,7 @@ import {
   makeBoutOffer,
   resetFixtureIds,
 } from '@/test/_fixtures/factories';
+import { evalBoutOffer } from '@/test/_fixtures/competitionWorker';
 
 beforeEach(() => resetFixtureIds());
 
@@ -31,56 +29,37 @@ function traveler(opts: { arenaId: string; wins: number; losses: number }[]) {
   return makeWarrior({ fame: 300, career: { wins: 10, losses: 8, kills: 0, byArena } });
 }
 
+function verdictFor(
+  warrior: ReturnType<typeof makeWarrior>,
+  offerOver: Parameters<typeof makeBoutOffer>[0] = {},
+  configure?: (rival: ReturnType<typeof makeRival>) => void
+) {
+  const rival = makeRival({ roster: [warrior], treasury: 5000 });
+  configure?.(rival);
+  const opponent = makeWarrior({ fame: 200 });
+  const offer = makeBoutOffer({
+    warriorIds: [warrior.id, opponent.id],
+    arenaId: 'the_gallows_tree',
+    purse: 400,
+    hype: 90,
+    ...offerOver,
+  });
+  const state = makeGameState({ rivals: [rival] });
+  return evalBoutOffer({ offer, rival, warrior, opponent, state });
+}
+
 describe('venue counter', () => {
   it("counters toward the warrior's best arena when the offered venue is a losing one", () => {
     const warrior = traveler([
       { arenaId: 'the_gallows_tree', wins: 1, losses: 5 },
       { arenaId: 'standard_arena', wins: 6, losses: 1 },
     ]);
-    const rival = makeRival({ roster: [warrior], treasury: 5000 });
-    const opponent = makeWarrior({ fame: 200 });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      arenaId: 'the_gallows_tree',
-      purse: 400,
-      hype: 90,
-    });
-    const state = makeGameState({ rivals: [rival] });
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
-      })
-    ).toBe('CounteredVenue');
+    expect(verdictFor(warrior)).toBe('CounteredVenue');
   });
 
   it('accepts a losing-venue booking when no better arena exists', () => {
     const warrior = traveler([{ arenaId: 'the_gallows_tree', wins: 1, losses: 5 }]);
-    const rival = makeRival({ roster: [warrior], treasury: 5000 });
-    const opponent = makeWarrior({ fame: 200 });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      arenaId: 'the_gallows_tree',
-      purse: 400,
-      hype: 90,
-    });
-    const state = makeGameState({ rivals: [rival] });
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
-      })
-    ).toBe('Accepted');
+    expect(verdictFor(warrior)).toBe('Accepted');
   });
 
   it('counterBoutVenue swaps the arena, tags the offer, and re-pends the other side', () => {
@@ -137,30 +116,14 @@ describe('venue counter', () => {
       { arenaId: 'standard_arena', wins: 3, losses: 1 },
     ]);
     warrior.campaignFocus = 'CROWN_BID';
-    const rival = makeRival({ roster: [warrior], treasury: 5000 });
-    rival.strategy = {
-      intent: 'CROWN_CAMPAIGN',
-      planWeeksRemaining: 6,
-      targetArenaId: 'standard_arena',
-      reason: 'crown campaign',
-    };
-    const opponent = makeWarrior({ fame: 200 });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      arenaId: 'the_gallows_tree',
-      purse: 400,
-      hype: 90,
-    });
-    const state = makeGameState({ rivals: [rival] });
     expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
+      verdictFor(warrior, {}, (r) => {
+        r.strategy = {
+          intent: 'CROWN_CAMPAIGN',
+          planWeeksRemaining: 6,
+          targetArenaId: 'standard_arena',
+          reason: 'crown campaign',
+        };
       })
     ).toBe('CounteredVenue');
   });
@@ -170,25 +133,7 @@ describe('venue counter', () => {
       { arenaId: 'the_gallows_tree', wins: 1, losses: 5 },
       { arenaId: 'standard_arena', wins: 6, losses: 1 },
     ]);
-    const rival = makeRival({ roster: [warrior], treasury: 5000 });
-    const opponent = makeWarrior({ fame: 200 });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      arenaId: 'the_gallows_tree',
-      purse: 400,
-      hype: 90,
-      conditions: [COUNTERED_VENUE_CONDITION],
-    });
-    const state = makeGameState({ rivals: [rival] });
-    const verdict = evaluateBoutOffer({
-      offer: offer,
-      rival: rival,
-      warrior: warrior,
-      currentWeek: 5,
-      weather: 'Clear',
-      opponent: opponent,
-      state: state,
-    });
+    const verdict = verdictFor(warrior, { conditions: [COUNTERED_VENUE_CONDITION] });
     expect(verdict).not.toBe('CounteredVenue');
     expect(verdict).not.toBe('Countered');
   });
@@ -198,26 +143,6 @@ describe('venue counter', () => {
       { arenaId: 'the_gallows_tree', wins: 1, losses: 5 },
       { arenaId: 'standard_arena', wins: 6, losses: 1 },
     ]);
-    const rival = makeRival({ roster: [warrior], treasury: 5000 });
-    const opponent = makeWarrior({ fame: 200 });
-    const offer = makeBoutOffer({
-      warriorIds: [warrior.id, opponent.id],
-      arenaId: 'the_gallows_tree',
-      titleArenaId: 'the_gallows_tree',
-      purse: 400,
-      hype: 90,
-    });
-    const state = makeGameState({ rivals: [rival] });
-    expect(
-      evaluateBoutOffer({
-        offer: offer,
-        rival: rival,
-        warrior: warrior,
-        currentWeek: 5,
-        weather: 'Clear',
-        opponent: opponent,
-        state: state,
-      })
-    ).toBe('Accepted');
+    expect(verdictFor(warrior, { titleArenaId: 'the_gallows_tree' })).toBe('Accepted');
   });
 });

@@ -12,11 +12,14 @@
  * Loaded via setup.node.ts — vitest loads it for every project and bun-setup
  * pulls it in through setup.ts, so both runners see the same registry.
  */
+import * as archiveService from '@/test/_mocks/archiveService';
 import * as bookmarkButton from '@/test/_mocks/bookmarkButton';
 import * as engineProxy from '@/test/_mocks/engineProxy';
+import * as entityLinkDeps from '@/test/_mocks/entityLinkDeps';
 import * as entityLinks from '@/test/_mocks/entityLinks';
 import * as fightForecast from '@/test/_mocks/fightForecast';
 import * as fightForecastEngine from '@/test/_mocks/fightForecastEngine';
+import * as framerMotion from '@/test/_mocks/framerMotion';
 import * as gameStoreEmpty from '@/test/_mocks/gameStoreEmpty';
 import * as gameStoreSelector from '@/test/_mocks/gameStoreSelector';
 import * as opfsArchive from '@/test/_mocks/opfsArchive';
@@ -37,19 +40,24 @@ import * as tournamentSimulate from '@/test/_mocks/tournamentSimulate';
 import * as tournamentWarriorLookup from '@/test/_mocks/tournamentWarriorLookup';
 import * as patronTokenService from '@/test/_mocks/patronTokenService';
 import * as uiBadge from '@/test/_mocks/uiBadge';
+import * as uiMeta from '@/test/_mocks/uiMeta';
 import * as uiImperialRing from '@/test/_mocks/uiImperialRing';
 import * as uiSectionDivider from '@/test/_mocks/uiSectionDivider';
 import * as uiSurface from '@/test/_mocks/uiSurface';
 import * as useShallow from '@/test/_mocks/useShallow';
+import * as warriorTrainingDeps from '@/test/_mocks/warriorTrainingDeps';
 import * as weekPipeline from '@/test/_mocks/weekPipeline';
 import * as workerProxy from '@/test/_mocks/workerProxy';
 
 const registry = {
+  archiveService,
   bookmarkButton,
   engineProxy,
+  entityLinkDeps,
   entityLinks,
   fightForecast,
   fightForecastEngine,
+  framerMotion,
   gameStoreEmpty,
   gameStoreSelector,
   opfsArchive,
@@ -70,10 +78,12 @@ const registry = {
   tournamentWarriorLookup,
   patronTokenService,
   uiBadge,
+  uiMeta,
   uiImperialRing,
   uiSectionDivider,
   uiSurface,
   useShallow,
+  warriorTrainingDeps,
   weekPipeline,
   workerProxy,
 };

@@ -57,7 +57,7 @@ export function TornadoEffect() {
       <DriftParticles
         count={25}
         keyPrefix="d"
-        particleClassName="absolute w-1 h-1 bg-neutral-600/60 rounded-sm animate-mana-spark motion-reduce:animate-none"
+        particleClassName="absolute w-1 h-1 bg-neutral-600/60 rounded-none animate-mana-spark motion-reduce:animate-none"
         position={() => ({
           left: `${30 + cryptoRandom() * 40}%`,
           top: `${cryptoRandom() * 100}%`,

@@ -5,22 +5,19 @@
  * responses for payloads exceeding size limits (10MB state, 50k log entries,
  * 1MB store value).
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi,
+  afterEach } from 'vitest';
 import { ElectronArchiveService } from '@/engine/storage/electronArchive';
 import '@/test/_setup/setup';
 import { createMockElectronAPI } from '@/test/_fixtures/electronApi';
+import { archiveServiceEach } from '@/test/_helpers/windowSnapshot';
 
 describe('Electron IPC payload bounds', () => {
   let service: ElectronArchiveService;
-  let originalWindow: typeof window;
 
-  beforeEach(() => {
-    originalWindow = (global as any).window;
-    service = new ElectronArchiveService();
-  });
+  archiveServiceEach(() => new ElectronArchiveService(), (s) => (service = s));
 
   afterEach(() => {
-    (global as any).window = originalWindow;
     vi.restoreAllMocks();
   });
 

@@ -3,6 +3,7 @@
  * Horizontal bar chart ranked by win rate.
  */
 import { useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -26,15 +27,29 @@ interface StyleRow {
  * @param - { class name }.
  */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
-  const roster = useGameStore((s) => s.roster);
+  // ⚡ Bolt: Prevent heavy re-renders on every warrior state change by extracting
+  // only the static fields needed for the style aggregation into a 1D primitive array.
+  // Using flatMap avoids string concatenation bugs (e.g. pipe chars in styles)
+  // while ensuring useShallow performs a 1-level deep primitive comparison.
+  const rosterStats = useGameStore(
+    useShallow((s) =>
+      s.roster.flatMap((w) => [w.style, w.career?.wins ?? 0, w.career?.losses ?? 0])
+    )
+  );
 
   const rows: StyleRow[] = useMemo(() => {
     const map = new Map<string, { wins: number; losses: number }>();
-    for (const w of roster) {
-      const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
-      entry.wins += w.career?.wins ?? 0;
-      entry.losses += w.career?.losses ?? 0;
-      map.set(w.style, entry);
+    for (let i = 0; i < rosterStats.length; i += 3) {
+      const style = rosterStats[i] as string;
+      const wins = rosterStats[i + 1] as number;
+      const losses = rosterStats[i + 2] as number;
+
+      if (!style) continue;
+
+      const entry = map.get(style) ?? { wins: 0, losses: 0 };
+      entry.wins += wins;
+      entry.losses += losses;
+      map.set(style, entry);
     }
     const result: StyleRow[] = [];
     for (const [style, { wins, losses }] of map) {
@@ -48,7 +63,7 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
     }
     result.sort((a, b) => b.winRate - a.winRate);
     return result;
-  }, [roster]);
+  }, [rosterStats]);
 
   return (
     <Surface variant="glass" className={cn('p-4 flex flex-col gap-3', className)}>

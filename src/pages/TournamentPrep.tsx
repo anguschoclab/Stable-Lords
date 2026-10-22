@@ -60,18 +60,19 @@ export default function TournamentPrep() {
     return map;
   }, [player, rivals]);
 
-  const yourEntrantCount = useMemo(
+  const { totalEntrants, yourEntrantCount } = useMemo(
     () =>
       pendingTournaments.reduce(
-        (n, t) => n + t.participants.filter((w) => w.stableId === player?.id).length,
-        0
+        (acc, t) => {
+          acc.totalEntrants += t.participants.length;
+          acc.yourEntrantCount += t.participants.filter(
+            (w) => w.stableId === player?.id
+          ).length;
+          return acc;
+        },
+        { totalEntrants: 0, yourEntrantCount: 0 }
       ),
     [pendingTournaments, player]
-  );
-
-  const totalEntrants = useMemo(
-    () => pendingTournaments.reduce((n, t) => n + t.participants.length, 0),
-    [pendingTournaments]
   );
 
   return (

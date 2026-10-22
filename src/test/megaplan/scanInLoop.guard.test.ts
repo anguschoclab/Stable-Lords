@@ -456,7 +456,7 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
   },
   {
     file: 'src/pages/TournamentPrep.tsx',
-    match: "t.participants.filter((w) => w.stableId === player?.id)",
+    match: 't.participants.filter( (w) => w.stableId === player?.id )',
     why: 'per-iteration collection — each tournament\'s own participants',
   },
 ];

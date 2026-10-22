@@ -26,6 +26,7 @@ import {
   AB_ARMOR_BYPASS_MAX,
   AB_ARMOR_BYPASS_DF_DIVISOR,
   COMMIT_DAMAGE_MULT,
+  DISARM_UNARMED_WEAPON_ID,
 } from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../../guardBreak';
@@ -72,7 +73,8 @@ export function computePreArmorDamage(args: ComputePreArmorDamageArgs): {
     attacker.derived.damage +
       attOffMods.dmgBonus +
       attPassive.dmgBonus +
-      weaponDamageBonus(attacker.weaponId, attacker.style),
+      weaponDamageBonus(attacker.weaponId, attacker.style) +
+      (attacker.weaponId === DISARM_UNARMED_WEAPON_ID ? (attacker.unarmedDmgBonus ?? 0) : 0),
     hitLoc
   );
 
@@ -146,6 +148,8 @@ interface ApplyHitAndCountersArgs {
   rng: () => number;
   /** Isolated disarm-roll stream (ctx.disarmRng); falls back to rng. */
   disarmRng?: () => number;
+  /** Resolution context — the disarm swap refreshes ctx.weaponReq*. */
+  ctx?: ResolutionContext;
   rawDamage: number;
   hitLoc: HitLocation;
   attacker: FighterState;
@@ -212,6 +216,7 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
     hitLoc: hitLoc,
     damage: damage,
     isCrit: isCrit,
+    ctx: args.ctx,
   });
 
   return { damage, isCrit, rawDamage };

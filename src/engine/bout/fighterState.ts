@@ -71,6 +71,7 @@ function gatherSkillModifiers(ctx: ModifierContext) {
     getEncumbranceTier(getEncumbranceRatio(equip, warrior?.derivedStats?.encumbrance ?? 0))
   );
 
+  const classicBonus = warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0;
   return {
     trainerMods,
     mastery,
@@ -82,7 +83,14 @@ function gatherSkillModifiers(ctx: ModifierContext) {
     // Equipment defense modifiers (armor + helm)
     armorDefMod: getItemById(equip.armor)?.defenseMod ?? 0,
     helmDefMod: getItemById(equip.helm)?.defenseMod ?? 0,
-    classicBonus: warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0,
+    classicBonus,
+    // Weapon-linked slice of the bakes above — subtracted/re-added when the
+    // held weapon swaps (disarm/rearm).
+    weaponMods: {
+      att: classicBonus + weaponReq.attPenalty + wShield.att,
+      par: wShield.def,
+      def: wShield.def,
+    },
     // Skill drilling bonuses — flat additive modifiers from dedicated drill training.
     drills: warrior?.skillDrills ?? {},
     // Static trait mods (Quick, Heavy-Handed, Agile, etc.). Conditional traits
@@ -98,6 +106,7 @@ function computeEffectiveSkills(ctx: ModifierContext): {
   mastery: ReturnType<typeof getMasteryBonus>;
   traitMods: ReturnType<typeof getStaticTraitMods>;
   encPenalties: ReturnType<typeof getEncumbrancePenalties>;
+  weaponMods: { att: number; par: number; def: number };
 } {
   const { skills } = ctx;
   const m = gatherSkillModifiers(ctx);
@@ -112,6 +121,7 @@ function computeEffectiveSkills(ctx: ModifierContext): {
     armorDefMod,
     helmDefMod,
     classicBonus,
+    weaponMods,
     drills,
     traitMods,
     injuryPenalties,
@@ -170,7 +180,7 @@ function computeEffectiveSkills(ctx: ModifierContext): {
       (injuryPenalties['DEC'] ?? 0),
   };
 
-  return { effSkills, mastery, traitMods, encPenalties };
+  return { effSkills, mastery, traitMods, encPenalties, weaponMods };
 }
 
 /**
@@ -219,7 +229,7 @@ export function createFighterState(
   const equip = warrior?.equipment ?? getStyleDefaultLoadout(plan.style);
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
 
-  const { effSkills, mastery, traitMods, encPenalties } = computeEffectiveSkills({
+  const { effSkills, mastery, traitMods, encPenalties, weaponMods } = computeEffectiveSkills({
     warrior,
     trainers,
     plan,
@@ -267,6 +277,9 @@ export function createFighterState(
     shieldId: equip.shield,
     helmId: equip.helm,
     backupWeaponId: equip.backup,
+    disarmResist: traitMods.disarmResist || undefined,
+    unarmedDmgBonus: traitMods.unarmedDmgBonus || undefined,
+    weaponMods,
     bleedStacks: 0,
     momentum: 0,
     riposteStreak: 0,

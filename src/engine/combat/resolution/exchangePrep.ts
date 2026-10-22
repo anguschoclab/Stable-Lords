@@ -289,8 +289,8 @@ function recoverAndAdaptPlans(
   // ── Rearm: a disarmed fighter scrambles for the dropped weapon. The
   // retrieve rolls draw from the isolated disarm stream when available.
   const disarmRng = ctx.disarmRng ?? ctx.rng;
-  tryRearm({ events: events, rng: disarmRng, fighter: fA, label: 'A' });
-  tryRearm({ events: events, rng: disarmRng, fighter: fD, label: 'D' });
+  tryRearm({ events: events, rng: disarmRng, fighter: fA, label: 'A', ctx: ctx });
+  tryRearm({ events: events, rng: disarmRng, fighter: fD, label: 'D', ctx: ctx });
 
   // ── Boundary-reactive phase shifts — evaluated on fighter.plan
   // BEFORE conditions so the shifted curve lands in this exchange's plan too.

@@ -16,6 +16,8 @@ describe('traitMods', () => {
         decMod: 0,
         dmgBonus: 0,
         enduranceMult: 1.0,
+        disarmResist: 0,
+        unarmedDmgBonus: 0,
       });
     });
 

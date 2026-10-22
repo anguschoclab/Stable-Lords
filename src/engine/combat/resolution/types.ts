@@ -94,6 +94,16 @@ export interface FighterState {
   /** Backup weapon drawn the first time this fighter is disarmed (from
    *  `equipment.backup`). Consumed on draw — a second disarm goes to fists. */
   backupWeaponId?: string;
+  /** 0-1 multiplicative reduction of disarm chance against this fighter
+   *  (e.g. iron_knuckles). Baked from traits at fighter build. */
+  disarmResist?: number;
+  /** Flat damage bonus while wielding 'fist' (e.g. iron_knuckles). */
+  unarmedDmgBonus?: number;
+  /** Weapon-linked skill contributions of the currently held weapon —
+   *  classicWeaponBonus + weaponReq.attPenalty + weapon-slot shield mods.
+   *  Recomputed on every disarm/rearm weapon swap so a dropped weapon's
+   *  bonuses and penalties leave with it. */
+  weaponMods?: { att: number; par: number; def: number };
   /** Last emitted in-bout AI intent. Label only — names
    *  which existing plan/state selection is active; dedups AI_INTENT events
    *  to transitions. Never read by combat math. */

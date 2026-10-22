@@ -116,6 +116,19 @@ describe('Trait deduplication', () => {
     });
   });
 
+  describe('iron_knuckles disarm effects are real', () => {
+    it('carries disarmResist and unarmedDmgBonus — matching its description', () => {
+      expect(TRAITS.iron_knuckles?.effect.disarmResist).toBeCloseTo(0.4);
+      expect(TRAITS.iron_knuckles?.effect.unarmedDmgBonus).toBe(2);
+    });
+
+    it('getStaticTraitMods surfaces both for an iron_knuckles warrior', () => {
+      const mods = getStaticTraitMods({ traits: ['iron_knuckles'] } as any);
+      expect(mods.disarmResist).toBeCloseTo(0.4);
+      expect(mods.unarmedDmgBonus).toBe(2);
+    });
+  });
+
   describe('no duplicate effects in generic positive Common/Notable pool', () => {
     it('no two generic positive Common/Notable traits share the same core effect', () => {
       const generic = Object.values(TRAITS).filter(

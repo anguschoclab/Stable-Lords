@@ -215,6 +215,47 @@ describe('tryDisarm', () => {
     ).toBe(false);
     expect(defender.weaponId).toBe('broadsword');
   });
+
+  it('full disarmResist (1.0) can never be disarmed', () => {
+    const defender = armed({ hp: 80, armHits: 5, disarmResist: 1 });
+    const events: CombatEvent[] = [];
+    expect(
+      tryDisarm({
+        events: events,
+        rng: () => 0,
+        defender: defender,
+        defLabel: 'D',
+        hitLoc: 'right arm',
+        damage: 30,
+        isCrit: true,
+      })
+    ).toBe(false);
+    expect(defender.weaponId).toBe('broadsword');
+    expect(events.some((e) => e.type === 'DISARM')).toBe(false);
+  });
+
+  it('partial disarmResist multiplies the chance down', () => {
+    // armHits 9 + damage + crit → chance is at the 0.5 cap; a 0.4 resist
+    // cuts it to 0.3. rng 0.35 passes unresisted, fails resisted.
+    const unresisted = armed({ hp: 80, armHits: 9 });
+    const resisted = armed({ hp: 80, armHits: 9, disarmResist: 0.4 });
+    const ev1: CombatEvent[] = [];
+    const ev2: CombatEvent[] = [];
+    const roll = (defender: FighterState, events: CombatEvent[]) =>
+      tryDisarm({
+        events: events,
+        rng: () => 0.35,
+        defender: defender,
+        defLabel: 'D',
+        hitLoc: 'right arm',
+        damage: 30,
+        isCrit: true,
+      });
+    expect(roll(unresisted, ev1)).toBe(true);
+    expect(roll(resisted, ev2)).toBe(false);
+    expect(unresisted.weaponId).toBe(DISARM_UNARMED_WEAPON_ID);
+    expect(resisted.weaponId).toBe('broadsword');
+  });
 });
 
 describe('tryRearm', () => {
@@ -399,5 +440,112 @@ describe('simulateFight — disarm integration', () => {
         )
       ).toBe(false);
     }
+  });
+});
+
+describe('weapon-linked mods unbake on swap', () => {
+  it('dropping the weapon removes its skill contribution and refreshes ctx.weaponReq', () => {
+    const ctx = makeResolutionContext();
+    // SA + broadsword (classic +1, reqST 11 vs attrs-10 → attPenalty −2) → linked att −1.
+    const defender = armed({
+      hp: 80,
+      armHits: 9,
+      style: FightingStyle.StrikingAttack,
+      weaponMods: { att: -1, par: 0, def: 0 },
+    });
+    ctx.weaponReqD = { endurancePenalty: 1.1, attPenalty: -2 };
+    const attBefore = defender.skills.ATT;
+    const events: CombatEvent[] = [];
+    tryDisarm({
+      events: events,
+      rng: () => 0,
+      defender: defender,
+      defLabel: 'D',
+      hitLoc: 'right arm',
+      damage: 10,
+      isCrit: false,
+      ctx: ctx,
+    });
+    expect(defender.weaponId).toBe(DISARM_UNARMED_WEAPON_ID);
+    // Fist has no linked mods — the −1 contribution lifts.
+    expect(defender.skills.ATT).toBe(attBefore + 1);
+    expect(defender.weaponMods).toEqual({ att: 0, par: 0, def: 0 });
+    expect(ctx.weaponReqD).toEqual({ endurancePenalty: 1, attPenalty: 0 });
+  });
+
+  it('a weapon-slot shield stops protecting when dropped (TP honesty)', () => {
+    const ctx = makeResolutionContext();
+    // TP + medium_shield: classic +1 att, shieldParryBonus 2 → linked {1,2,2}.
+    const defender = armed({
+      hp: 80,
+      armHits: 9,
+      style: FightingStyle.TotalParry,
+      weaponId: 'medium_shield',
+      weaponMods: { att: 1, par: 2, def: 2 },
+    });
+    const { ATT, PAR, DEF } = { ...defender.skills };
+    const events: CombatEvent[] = [];
+    tryDisarm({
+      events: events,
+      rng: () => 0,
+      defender: defender,
+      defLabel: 'D',
+      hitLoc: 'left arm',
+      damage: 10,
+      isCrit: false,
+      ctx: ctx,
+    });
+    expect(defender.weaponId).toBe(DISARM_UNARMED_WEAPON_ID);
+    expect(defender.skills.ATT).toBe(ATT - 1);
+    expect(defender.skills.PAR).toBe(PAR - 2);
+    expect(defender.skills.DEF).toBe(DEF - 2);
+  });
+
+  it('rearm restores the dropped weapon’s linked mods', () => {
+    const ctx = makeResolutionContext();
+    const fighter = armed({
+      weaponId: DISARM_UNARMED_WEAPON_ID,
+      droppedWeaponId: 'broadsword',
+      style: FightingStyle.StrikingAttack,
+      weaponMods: { att: 0, par: 0, def: 0 },
+      label: 'A',
+    });
+    const attBefore = fighter.skills.ATT;
+    const events: CombatEvent[] = [];
+    tryRearm({ events: events, rng: () => 0, fighter: fighter, label: 'A', ctx: ctx });
+    expect(fighter.weaponId).toBe('broadsword');
+    // Recomputed from live data: classic +1, attPenalty −2 (attrs-10 vs reqST 11).
+    expect(fighter.skills.ATT).toBe(attBefore - 1);
+    expect(fighter.weaponMods?.att).toBe(-1);
+    expect(ctx.weaponReqA.attPenalty).toBe(-2);
+    expect(ctx.weaponReqA.endurancePenalty).toBeCloseTo(1.1);
+  });
+
+  it('a drawn backup takes on its own linked mods', () => {
+    const ctx = makeResolutionContext();
+    // BA fighter (classic war_hammer, not broadsword) with a dagger backup.
+    const defender = armed({
+      hp: 80,
+      armHits: 9,
+      style: FightingStyle.BashingAttack,
+      backupWeaponId: 'dagger',
+      weaponMods: { att: -2, par: 0, def: 0 },
+    });
+    const attBefore = defender.skills.ATT;
+    const events: CombatEvent[] = [];
+    tryDisarm({
+      events: events,
+      rng: () => 0,
+      defender: defender,
+      defLabel: 'D',
+      hitLoc: 'right arm',
+      damage: 10,
+      isCrit: false,
+      ctx: ctx,
+    });
+    expect(defender.weaponId).toBe('dagger');
+    // Dagger: not classic for BA, reqST 3 met → linked att 0 → the −2 lifts.
+    expect(defender.skills.ATT).toBe(attBefore + 2);
+    expect(defender.weaponMods?.att).toBe(0);
   });
 });

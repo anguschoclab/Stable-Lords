@@ -625,3 +625,28 @@ describe('executeHit — disarm', () => {
     expect(defender.weaponId).toBe('broadsword');
   });
 });
+
+describe('executeHit — unarmed damage bonus (iron_knuckles)', () => {
+  const hpDelta = (defender: { hp: number; maxHp: number }) => defender.maxHp - defender.hp;
+
+  it('applies while wielding fists', () => {
+    const withBonus = callExecuteHit({
+      rng: () => 0.44,
+      attacker: { weaponId: 'fist', unarmedDmgBonus: 2 },
+    });
+    const without = callExecuteHit({ rng: () => 0.44, attacker: { weaponId: 'fist' } });
+    expect(hpDelta(withBonus.defender)).toBeGreaterThan(hpDelta(without.defender));
+  });
+
+  it('does not apply while armed — the bonus is gated on the fist weapon', () => {
+    const armedBonus = callExecuteHit({
+      rng: () => 0.44,
+      attacker: { weaponId: 'broadsword', unarmedDmgBonus: 2 },
+    });
+    const armedNoBonus = callExecuteHit({
+      rng: () => 0.44,
+      attacker: { weaponId: 'broadsword' },
+    });
+    expect(hpDelta(armedBonus.defender)).toBe(hpDelta(armedNoBonus.defender));
+  });
+});

@@ -57,6 +57,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
   decMod: number;
   dmgBonus: number;
   enduranceMult: number;
+  disarmResist: number;
+  unarmedDmgBonus: number;
 } {
   const acc = {
     attMod: 0,
@@ -67,6 +69,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
     decMod: 0,
     dmgBonus: 0,
     enduranceMult: 1.0,
+    disarmResist: 0,
+    unarmedDmgBonus: 0,
   };
   if (!warrior?.traits) return acc;
   for (const id of warrior.traits) {
@@ -80,6 +84,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
     acc.decMod += t.effect.decMod ?? 0;
     acc.dmgBonus += t.effect.dmgBonus ?? 0;
     if (t.effect.enduranceMult != null) acc.enduranceMult *= t.effect.enduranceMult;
+    acc.disarmResist += t.effect.disarmResist ?? 0;
+    acc.unarmedDmgBonus += t.effect.unarmedDmgBonus ?? 0;
   }
   return acc;
 }

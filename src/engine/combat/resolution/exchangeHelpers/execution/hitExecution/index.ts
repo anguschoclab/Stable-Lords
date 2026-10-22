@@ -179,6 +179,7 @@ export function executeHit(args: ExecuteHitArgs) {
     attPassive: attPassive,
     attLabel: attLabel,
     defLabel: defLabel,
+    ctx: ctx,
   });
 
   afterHitEvents({

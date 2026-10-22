@@ -44,6 +44,10 @@ export interface TraitEffect {
   // Special: kill-streak / hit-streak based
   attModConsecutiveHits?: number; // when consecutiveHits >= 2
 
+  // Disarm interactions (DISARM mechanic)
+  disarmResist?: number; // 0-1 multiplicative reduction of disarm chance against this fighter
+  unarmedDmgBonus?: number; // flat damage bonus while wielding 'fist' (disarmed or fist-built)
+
   // Personality / Combat AI modifiers (from FTUE)
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;

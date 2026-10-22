@@ -35,7 +35,7 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     name: 'Iron Knuckles',
     description:
       'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
-    effect: { attModEarly: 1, ripMod: 1 },
+    effect: { ripMod: 1, unarmedDmgBonus: 2, disarmResist: 0.4 },
     tier: 'Common',
     sign: 'positive',
     weight: 0.8,

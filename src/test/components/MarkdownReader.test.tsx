@@ -92,4 +92,53 @@ describe('MarkdownReader', () => {
       expect(img.getAttribute('src')).not.toContain('javascript:');
     }
   });
+
+  it('XSS: drops raw HTML entirely rather than rendering it as text', () => {
+    const { container } = render(<MarkdownReader content="<script>alert('xss')</script>" />);
+    expect(container.querySelector('script')).toBeNull();
+    expect(container.textContent).not.toContain("alert('xss')");
+  });
+
+  it('XSS: sanitizes javascript: URLs in markdown images', () => {
+    const { container } = render(<MarkdownReader content="![img](javascript:alert(1))" />);
+    const img = container.querySelector('img');
+    if (img) {
+      expect(img.getAttribute('src') ?? '').not.toContain('javascript:');
+    }
+  });
+
+  it('XSS: strips file: protocol URLs from markdown links', () => {
+    render(<MarkdownReader content="[Click](file:///etc/passwd)" />);
+    const link = screen.queryByRole('link', { name: 'Click' });
+    if (link) {
+      expect(link.getAttribute('href') ?? '').not.toContain('file:');
+    }
+  });
+
+  it('does not crash on malformed entity hrefs', () => {
+    const { container } = render(<MarkdownReader content="[x](#entity:warrior:%)" />);
+    // decodeURIComponent('%') would throw URIError — the fallback must render
+    // the raw slice as an unresolved entity link instead of crashing the page.
+    expect(container.querySelector('[data-testid="warrior-link"]')).toHaveAttribute(
+      'data-name',
+      '%'
+    );
+  });
+
+  it('linkifies stored names containing markdown metacharacters without producing dangerous links', () => {
+    const { container } = render(
+      <MarkdownReader
+        content="The newcomer Evil](javascript:alert(1))[x debuted"
+        warriorNames={['Evil](javascript:alert(1))[x']}
+      />
+    );
+    for (const a of container.querySelectorAll('a')) {
+      expect(a.getAttribute('href') ?? '').not.toContain('javascript:');
+    }
+  });
+
+  it('renders GFM strikethrough through the sanitize schema', () => {
+    const { container } = render(<MarkdownReader content="~~retired~~" />);
+    expect(container.querySelector('del')).toBeInTheDocument();
+  });
 });

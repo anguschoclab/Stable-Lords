@@ -1,5 +1,6 @@
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeSanitize from 'rehype-sanitize';
 import { WarriorLink, StableLink } from '@/components/EntityLink';
 
 interface MarkdownReaderProps {
@@ -24,11 +25,24 @@ function linkifyMarkdown(content: string, warriorNames?: string[], stableNames?:
   const pattern = new RegExp(`(${escaped.join('|')})`, 'g');
 
   return content.replace(pattern, (match) => {
+    // Link text is markdown — a stored name containing `[`, `]`, or `\` would
+    // otherwise corrupt the generated `[name](#entity:...)` link syntax.
+    const linkText = match.replace(/([\\[\]])/g, '\\$1');
     if (stableSet.has(match)) {
-      return `[${match}](#entity:stable:${encodeURIComponent(match)})`;
+      return `[${linkText}](#entity:stable:${encodeURIComponent(match)})`;
     }
-    return `[${match}](#entity:warrior:${encodeURIComponent(match)})`;
+    return `[${linkText}](#entity:warrior:${encodeURIComponent(match)})`;
   });
+}
+
+/** Decodes an entity-href payload, falling back to the raw slice when the
+ *  encoding is malformed (decodeURIComponent throws URIError on e.g. '%'). */
+function decodeEntityName(encoded: string): string {
+  try {
+    return decodeURIComponent(encoded);
+  } catch {
+    return encoded;
+  }
 }
 
 /**
@@ -42,16 +56,17 @@ export function MarkdownReader({ content, warriorNames, stableNames }: MarkdownR
     <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-display prose-headings:text-primary prose-a:text-arena-blue hover:prose-a:text-arena-gold prose-code:text-accent prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded prose-pre:bg-secondary prose-pre:border prose-pre:border-border">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeSanitize]}
         urlTransform={defaultUrlTransform}
         components={{
           a: ({ node, ...props }) => {
             const href = props.href ?? '';
             if (href.startsWith('#entity:warrior:')) {
-              const name = decodeURIComponent(href.slice('#entity:warrior:'.length));
+              const name = decodeEntityName(href.slice('#entity:warrior:'.length));
               return <WarriorLink name={name} />;
             }
             if (href.startsWith('#entity:stable:')) {
-              const name = decodeURIComponent(href.slice('#entity:stable:'.length));
+              const name = decodeEntityName(href.slice('#entity:stable:'.length));
               return <StableLink name={name} />;
             }
             const isExternal = href.startsWith('http');

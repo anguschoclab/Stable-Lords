@@ -13,6 +13,7 @@ import {
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { clamp } from '@/utils/math';
+import { sanitizeEntityName } from '@/utils/entityName';
 
 interface UseWarriorBuilderStateDeps {
   onCreateWarrior: (data: {
@@ -61,7 +62,7 @@ export function useWarriorBuilderState({
 
   const total = useMemo(() => ATTRIBUTE_KEYS.reduce((s, k) => s + attrs[k], 0), [attrs]);
   const remaining = ATTRIBUTE_TOTAL - total;
-  const isValid = remaining === 0 && name.trim().length >= 2;
+  const isValid = remaining === 0 && sanitizeEntityName(name).length >= 2;
   const rosterFull = currentRosterSize >= maxRoster;
   const stats = useMemo(() => computeWarriorStats(attrs, style), [attrs, style]);
 
@@ -88,7 +89,12 @@ export function useWarriorBuilderState({
 
   const handleCreate = useCallback(() => {
     if (!isValid || rosterFull) return;
-    onCreateWarrior({ name: name.trim().toUpperCase(), style, attributes: attrs, avatarSeed });
+    onCreateWarrior({
+      name: sanitizeEntityName(name).toUpperCase(),
+      style,
+      attributes: attrs,
+      avatarSeed,
+    });
     setName('');
     setAttrs({ ...DEFAULT_ATTRS });
     setAvatarSeed(cryptoRandomInt(0, 999999));

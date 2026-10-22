@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import WarriorBuilder from '@/components/WarriorBuilder';
 import { CreateButton } from '@/components/WarriorBuilder/components/CreateButton';
 import { SkillsPreview } from '@/components/WarriorBuilder/components/SkillsPreview';
@@ -101,6 +101,27 @@ describe('WarriorBuilder', () => {
     const { container, getByTestId } = render(<WarriorBuilder onCreateWarrior={vi.fn()} />);
     expect(container.firstChild).toBeInTheDocument();
     expect(getByTestId('builder-avatar')).toBeInTheDocument();
+  });
+
+  it('sanitizes markdown/HTML metacharacters out of created warrior names', () => {
+    const onCreate = vi.fn();
+    const { container, getByRole } = render(<WarriorBuilder onCreateWarrior={onCreate} />);
+    const nameInput = container.querySelector('#warrior-name')!;
+    fireEvent.change(nameInput, { target: { value: 'Evil](javascript:x)[n' } });
+    fireEvent.click(getByRole('button', { name: /recruit warrior/i }));
+    expect(onCreate).toHaveBeenCalledOnce();
+    const created = onCreate.mock.calls[0]![0] as { name: string };
+    expect(created.name).toBe('EVILJAVASCRIPTXN');
+  });
+
+  it('keeps Create disabled for symbol-only names', () => {
+    const onCreate = vi.fn();
+    const { container, getByRole } = render(<WarriorBuilder onCreateWarrior={onCreate} />);
+    fireEvent.change(container.querySelector('#warrior-name')!, {
+      target: { value: '<>:[](){}' },
+    });
+    expect(getByRole('button', { name: /name required/i })).toBeDisabled();
+    expect(onCreate).not.toHaveBeenCalled();
   });
 });
 

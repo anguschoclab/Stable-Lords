@@ -16,6 +16,7 @@ import {
   DistanceRangeSchema,
   AnnualAwardTypeSchema,
 } from './schemaEnums';
+import { EntityNameSchema } from './entityNameSchema';
 
 /**
  * AnnualAward schema — lives here (not fightSchemas) so Warrior.awards and
@@ -25,9 +26,9 @@ export const AnnualAwardSchema = z.object({
   year: z.number(),
   type: AnnualAwardTypeSchema,
   warriorId: z.string().optional(),
-  warriorName: z.string().optional(),
+  warriorName: EntityNameSchema.optional(),
   stableId: z.string().optional(),
-  stableName: z.string().optional(),
+  stableName: EntityNameSchema.optional(),
   style: FightingStyleSchema.optional(),
   value: z.number(),
   reason: z.string(),
@@ -119,7 +120,7 @@ const WarriorLineageSchema = z.object({
   stableId: z.string().optional(),
   generation: z.number(),
   pedigree: z.enum(['Commoner', 'Second Generation', 'Legacy', 'Noble Blood', 'Exiled Legend']),
-  mentorName: z.string().optional(),
+  mentorName: EntityNameSchema.optional(),
 });
 
 /**
@@ -263,7 +264,7 @@ export const FightPlanSchema = z.object({
  */
 export const WarriorSchema = z.object({
   id: z.string(), // WarriorId branded type - runtime string
-  name: z.string(),
+  name: EntityNameSchema,
   style: FightingStyleSchema,
   attributes: AttributesSchema,
   potential: z.record(z.string(), z.number()).optional(),
@@ -272,7 +273,7 @@ export const WarriorSchema = z.object({
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),
-  epithet: z.string().optional(),
+  epithet: EntityNameSchema.optional(),
   titles: z.array(z.string()),
   injuries: z.array(InjuryDataSchema),
   flair: z.array(z.string()),
@@ -329,7 +330,7 @@ export const WarriorSchema = z.object({
  */
 export const PoolWarriorSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
   style: FightingStyleSchema,
   attributes: AttributesSchema,
   potential: z.record(z.string(), z.number()),
@@ -397,7 +398,7 @@ export const InsightTokenSchema = z.object({
   id: z.string(),
   type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic', 'Trait']),
   warriorId: z.string(),
-  warriorName: z.string(),
+  warriorName: EntityNameSchema,
   detail: z.string(),
   targetKey: z.string().optional(),
   origin: z.string().optional(),

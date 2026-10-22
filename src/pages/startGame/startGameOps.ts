@@ -15,6 +15,7 @@ import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNG } from '@/utils/random';
+import { sanitizeEntityName } from '@/utils/entityName';
 
 export type LoadGame = ReturnType<typeof useGameStore.getState>['loadGame'];
 
@@ -64,8 +65,8 @@ interface CreateNewGameArgs {
 export async function createNewGame(args: CreateNewGameArgs): Promise<void> {
   const { ownerName, stableName, playerCrest, backstoryId, difficulty, loadGame } = args;
   let fresh = createFreshState('alpha-prime-10', undefined, { difficulty });
-  fresh.player.name = ownerName.trim();
-  fresh.player.stableName = stableName.trim();
+  fresh.player.name = sanitizeEntityName(ownerName) || fresh.player.name;
+  fresh.player.stableName = sanitizeEntityName(stableName) || fresh.player.stableName;
   fresh.player.crest = playerCrest;
   fresh.player.generation = 0;
   fresh.player.avatarSeed = cryptoRandomInt(0, 999999);

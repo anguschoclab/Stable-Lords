@@ -331,6 +331,26 @@ describe('WorldSlice', () => {
     expect(useTestStore.getState().player.name).toBe('Julius');
   });
 
+  it('sanitizes markdown/HTML metacharacters out of stable and owner names', () => {
+    act(() => {
+      useTestStore.getState().initializeStable('<img src=x>', 'St[ab](javascript:x)le');
+    });
+    const { player } = useTestStore.getState();
+    expect(player.name).toBe('img srcx');
+    expect(player.stableName).toBe('Stabjavascriptxle');
+  });
+
+  it('sanitizes renameStable and renamePlayer, ignoring symbol-only input', () => {
+    act(() => {
+      useTestStore.getState().initializeStable('Amau', 'Lions');
+      useTestStore.getState().renameStable('Evil](javascript:x)[n');
+      useTestStore.getState().renamePlayer('<>:[](){}');
+    });
+    const { player } = useTestStore.getState();
+    expect(player.stableName).toBe('Eviljavascriptxn');
+    expect(player.name).toBe('Amau');
+  });
+
   it('should have updatePromoterHistory function', () => {
     expect(typeof useTestStore.getState().updatePromoterHistory).toBe('function');
   });

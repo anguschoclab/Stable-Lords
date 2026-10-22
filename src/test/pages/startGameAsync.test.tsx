@@ -147,6 +147,41 @@ describe('#5 StartGame handleNewGame awaits saveToSlot', () => {
       mockLoadGame.mock.invocationCallOrder[0]!
     );
   });
+
+  it('sanitizes dirty stable names before saving', async () => {
+    render(<StartGame />);
+
+    fireEvent.click(screen.getByLabelText('New Game'));
+    fireEvent.change(screen.getByLabelText('Owner Name'), { target: { value: 'TestOwner' } });
+    fireEvent.change(screen.getByLabelText('Stable Name'), {
+      target: { value: 'St[ab](javascript:x)le' },
+    });
+    fireEvent.click(screen.getByLabelText('Select Backstory'));
+    fireEvent.click(screen.getByLabelText('Create Game'));
+
+    await waitFor(() => {
+      expect(saveToSlot).toHaveBeenCalledOnce();
+    });
+
+    const slotName = vi.mocked(saveToSlot).mock.calls[0]![1];
+    const state = vi.mocked(saveToSlot).mock.calls[0]![2] as {
+      player: { stableName: string; name: string };
+    };
+    expect(slotName).toBe('Stabjavascriptxle');
+    expect(state.player.stableName).toBe('Stabjavascriptxle');
+  });
+
+  it('keeps Create disabled for symbol-only stable names', () => {
+    render(<StartGame />);
+
+    fireEvent.click(screen.getByLabelText('New Game'));
+    fireEvent.change(screen.getByLabelText('Owner Name'), { target: { value: 'TestOwner' } });
+    fireEvent.change(screen.getByLabelText('Stable Name'), { target: { value: '<>:[](){}' } });
+    fireEvent.click(screen.getByLabelText('Select Backstory'));
+
+    expect(screen.getByLabelText('Create Game')).toBeDisabled();
+    expect(saveToSlot).not.toHaveBeenCalled();
+  });
 });
 
 describe('StartGame loadSlot failure handling', () => {

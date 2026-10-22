@@ -22,6 +22,7 @@ import {
   AIIntentSchema,
 } from './schemaEnums';
 import { WarriorSchema } from './warriorSchemas';
+import { EntityNameSchema } from './entityNameSchema';
 
 /**
  * CrestCharge schema
@@ -52,8 +53,8 @@ const CrestDataSchema = z.object({
  */
 export const OwnerSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  stableName: z.string(),
+  name: EntityNameSchema,
+  stableName: EntityNameSchema,
   fame: z.number(),
   renown: z.number(),
   titles: z.number(),
@@ -65,7 +66,7 @@ export const OwnerSchema = z.object({
   crest: CrestDataSchema.optional(),
   backstoryId: z.string().optional(),
   foundedByWarriorId: z.string().optional(),
-  foundedByWarriorName: z.string().optional(),
+  foundedByWarriorName: EntityNameSchema.optional(),
   parentStableId: z.string().optional(),
   age: z.number().optional(),
   ageRetired: z.number().optional(),
@@ -77,7 +78,7 @@ export const OwnerSchema = z.object({
  */
 export const PromoterSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
   age: z.number(),
   personality: PromoterPersonalitySchema,
   tier: PromoterTierSchema,
@@ -264,7 +265,7 @@ export const RivalStableDataSchema = z.object({
 export const ScoutReportDataSchema = z.object({
   id: z.string(),
   warriorId: z.string(),
-  warriorName: z.string(),
+  warriorName: EntityNameSchema,
   style: z.string(),
   quality: ScoutQualitySchema,
   week: z.number(),
@@ -354,7 +355,7 @@ export const BookmarkSchema = z.object({
  */
 export const TrainerSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
   tier: TrainerTierSchema,
   focus: TrainerFocusSchema,
   fame: z.number(),

@@ -132,6 +132,15 @@ HTML escaping utility.
 | ------------ | ----------------- | ------------------------------------------ |
 | `escapeHtml` | `(str) => string` | Escape HTML special characters in a string |
 
+### `entityName.ts`
+
+Entity-name sanitization for user-controlled names (warriors, stables, owners)
+at every input boundary, preventing markdown/HTML injection into the gazette.
+
+| Export               | Signature         | Purpose                                                       |
+| -------------------- | ----------------- | ------------------------------------------------------------- |
+| `sanitizeEntityName` | `(raw) => string` | Allowlist-strip to letters/digits/`'`-.,`, cap 40 chars; `''` when empty |
+
 ## Usage Guidelines
 
 - Import via the `@/utils/` alias: `import { clamp } from '@/utils/math'`

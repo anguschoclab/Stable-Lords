@@ -222,6 +222,28 @@ describe('RosterSlice', () => {
     expect(useTestStore.getState().retired[0]!.name).toBe('NewName3');
   });
 
+  it('sanitizes markdown/HTML metacharacters out of renamed warriors', () => {
+    act(() => {
+      useTestStore.setState({
+        roster: [{ ...mockWarrior, id: 'w1', name: 'OldName1' } as any],
+      });
+      useTestStore.getState().renameWarrior('w1' as any, 'Evil](javascript:x)[n');
+    });
+    const renamed = useTestStore.getState().roster[0]!.name;
+    expect(renamed).not.toMatch(/[[\]()]/);
+    expect(renamed).toBe('Eviljavascriptxn');
+  });
+
+  it('ignores symbol-only warrior renames', () => {
+    act(() => {
+      useTestStore.setState({
+        roster: [{ ...mockWarrior, id: 'w1', name: 'OldName1' } as any],
+      });
+      useTestStore.getState().renameWarrior('w1' as any, '<>:[](){}');
+    });
+    expect(useTestStore.getState().roster[0]!.name).toBe('OldName1');
+  });
+
   it('should acknowledge death', () => {
     act(() => {
       useTestStore.setState({ unacknowledgedDeaths: ['w1', 'w2'] as any });

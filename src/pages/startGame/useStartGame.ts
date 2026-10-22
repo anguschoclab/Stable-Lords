@@ -7,6 +7,7 @@ import type { WorldDifficulty } from '@/types/state.types';
 import type { BackstoryId } from '@/data/backstories';
 import { useSaveSlots } from './hooks/useSaveSlots';
 import { createNewGame } from './startGameOps';
+import { sanitizeEntityName } from '@/utils/entityName';
 
 /** Which start screen is currently shown. */
 type Screen = 'title' | 'newGame';
@@ -26,7 +27,9 @@ function useNewGameForm() {
   const [difficulty, setDifficulty] = useState<WorldDifficulty>('Challenger');
 
   const canCreate =
-    ownerName.trim().length >= 2 && stableName.trim().length >= 2 && backstoryId != null;
+    sanitizeEntityName(ownerName).length >= 2 &&
+    sanitizeEntityName(stableName).length >= 2 &&
+    backstoryId != null;
 
   return {
     ownerName,

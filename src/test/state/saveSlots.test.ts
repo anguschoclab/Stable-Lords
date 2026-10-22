@@ -176,11 +176,13 @@ describe('saveSlots', () => {
       await saveToSlot('slot_new', 'New Save', state);
 
       // First attempt wrote all 4 metas and threw; recovery re-reads the OLD
-      // stored array and retries with only the most recent existing slot.
+      // stored array and retries with only the most recent existing slot —
+      // re-serialized through SaveSlotMetaSchema, so 'slot_3' → 'slot3'.
+      const cleanedMeta3 = { ...metas[2], name: 'Save slot3' };
       expect(setItemSpy).toHaveBeenCalledTimes(2);
       expect(setItemSpy).toHaveBeenLastCalledWith(
         STORE_KEYS.SAVE_SLOTS,
-        JSON.stringify([metas[2]])
+        JSON.stringify([cleanedMeta3])
       );
       expect(consoleSpy).toHaveBeenCalledWith(
         'localStorage quota exceeded when saving save slot metadata',
@@ -188,7 +190,7 @@ describe('saveSlots', () => {
       );
 
       const stored = JSON.parse(localStorage.getItem(STORE_KEYS.SAVE_SLOTS) || '[]');
-      expect(stored).toEqual([metas[2]]);
+      expect(stored).toEqual([cleanedMeta3]);
     });
 
     it('deleteSlot applies the same quota recovery', async () => {
@@ -202,10 +204,12 @@ describe('saveSlots', () => {
 
       await deleteSlot('slot_1');
 
+      // Recovery re-serializes surviving metas through SaveSlotMetaSchema,
+      // so 'slot_3' → 'slot3'.
       expect(setItemSpy).toHaveBeenCalledTimes(2);
       expect(setItemSpy).toHaveBeenLastCalledWith(
         STORE_KEYS.SAVE_SLOTS,
-        JSON.stringify([metas[2]])
+        JSON.stringify([{ ...metas[2], name: 'Save slot3' }])
       );
     });
 

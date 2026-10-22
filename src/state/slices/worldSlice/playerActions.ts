@@ -2,6 +2,7 @@ import type { GameStore } from '@/state/useGameStore';
 import type { GameState } from '@/types/state.types';
 import { STARTING_TREASURY } from '@/constants/economy';
 import { createChampionshipDelta, relinquishCrown } from '@/engine/championship/arenaChampionship';
+import { sanitizeEntityName } from '@/utils/entityName';
 import type { ArenaPreferences } from './types';
 
 /**
@@ -21,23 +22,27 @@ export function createPlayerActions(set: (fn: (state: GameStore) => Partial<Game
       set((state) => ({
         player: {
           ...state.player,
-          name,
-          stableName,
+          name: sanitizeEntityName(name) || state.player?.name || 'Unknown',
+          stableName: sanitizeEntityName(stableName) || state.player?.stableName || 'Unknown',
         },
         treasury: STARTING_TREASURY,
       }));
     },
 
     renameStable: (newName: string) => {
-      set((state) => ({
-        player: { ...state.player, stableName: newName },
-      }));
+      set((state) => {
+        const clean = sanitizeEntityName(newName);
+        if (!clean) return state;
+        return { player: { ...state.player, stableName: clean } };
+      });
     },
 
     renamePlayer: (newName: string) => {
-      set((state) => ({
-        player: { ...state.player, name: newName },
-      }));
+      set((state) => {
+        const clean = sanitizeEntityName(newName);
+        if (!clean) return state;
+        return { player: { ...state.player, name: clean } };
+      });
     },
 
     toggleChallenge: (warriorId: string) => {

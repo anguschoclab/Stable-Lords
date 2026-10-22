@@ -17,6 +17,7 @@ import {
   WorldDifficultySchema,
 } from './schemaEnums';
 import { AvatarDataSchema } from './avatarSchemas';
+import { EntityNameSchema } from './entityNameSchema';
 import {
   WarriorSchema,
   RestStateSchema,
@@ -94,7 +95,7 @@ export const GameStateSchema = z
       .array(
         z.object({
           id: z.string().min(1),
-          name: z.string().min(1),
+          name: EntityNameSchema,
           arenaLore: z
             .array(
               z.object({
@@ -207,7 +208,7 @@ export const GameStateSchema = z
  */
 export const SaveSlotMetaSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
   week: z.number(),
   year: z.number(),
   timestamp: z.string(),

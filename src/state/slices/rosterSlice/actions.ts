@@ -14,6 +14,7 @@ import {
   collectCrownedWarriorIds,
 } from '@/engine/ai/legacyFounder';
 import { SeededRNG, hashStr } from '@/utils/random';
+import { sanitizeEntityName } from '@/utils/entityName';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
 
 /** Apply an insight token's effect to a warrior draft. */
@@ -247,8 +248,10 @@ function rosterMetaActions(set: SetFn) {
 
     renameWarrior: (warriorId: WarriorId, newName: string) => {
       set((state) => {
+        const clean = sanitizeEntityName(newName);
+        if (!clean) return state;
         const updateList = (list: Warrior[]) =>
-          updateEntityInList(list, warriorId, (w) => ({ ...w, name: newName }));
+          updateEntityInList(list, warriorId, (w) => ({ ...w, name: clean }));
 
         return {
           roster: updateList(state.roster),

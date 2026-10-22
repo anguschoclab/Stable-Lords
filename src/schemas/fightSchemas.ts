@@ -13,6 +13,7 @@ import {
   DeathCauseBucketSchema,
 } from './schemaEnums';
 import { WarriorSchema, DeathEventSchema } from './warriorSchemas';
+import { EntityNameSchema } from './entityNameSchema';
 
 /**
  * NewsletterItem schema
@@ -82,7 +83,7 @@ export const TournamentEntrySchema = z.object({
   season: SeasonSchema,
   week: z.number(),
   tierId: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
   bracket: z.array(TournamentBoutSchema),
   participants: z.array(WarriorSchema),
   champion: z.string().optional(),
@@ -261,7 +262,7 @@ export const BoutResultSchema = z.object({
  */
 export const WarriorRefSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: EntityNameSchema,
 });
 
 /**
@@ -324,7 +325,7 @@ export const SimulationReportSchema = z.object({
   trainingGains: z.array(
     z.object({
       warriorId: z.string(),
-      warriorName: z.string(),
+      warriorName: EntityNameSchema,
       attr: z.enum(['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF']),
       gain: z.number(),
     })
@@ -354,9 +355,9 @@ const ArenaTitleReignSchema = z.object({
 
 const ArenaReignRecordSchema = z.object({
   warriorId: z.string(),
-  warriorName: z.string(),
-  warriorEpithet: z.string().optional(),
-  stableName: z.string().optional(),
+  warriorName: EntityNameSchema,
+  warriorEpithet: EntityNameSchema.optional(),
+  stableName: EntityNameSchema.optional(),
   startedAbsoluteWeek: z.number(),
   endedAbsoluteWeek: z.number(),
   endReason: ArenaReignEndReasonSchema,
@@ -377,7 +378,7 @@ export const GrandChampionEntrySchema = z.object({
   tournamentId: z.string(),
   year: z.number(),
   warriorId: z.string(),
-  warriorName: z.string(),
-  warriorEpithet: z.string().optional(),
-  stableName: z.string().optional(),
+  warriorName: EntityNameSchema,
+  warriorEpithet: EntityNameSchema.optional(),
+  stableName: EntityNameSchema.optional(),
 });

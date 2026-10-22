@@ -219,6 +219,30 @@ All of T1–T9 landed before implementation began:
   p99 6.2s → 1.4s, wall ~66s → ~53s.
 - e2e: chromium smoke (5 specs) remains the push-tier inner loop; matrix +
   @slow marathons live in nightly — no shard needed at current size.
+- **Runner knobs measured 2026-10-22** (882-file default suite, vitest-level
+  Duration; baseline ~48–54s, config override via temporary env-injected
+  `vitest.config.knobs.ts` — deleted after use):
+
+  | Variant | Wall | Verdict |
+  | ------- | ---- | ------- |
+  | `--maxWorkers=5` | 57s | REJECT — −15% slower; cores under-subscribed |
+  | `--maxWorkers=8` | 51s | no gain — default already saturates |
+  | `minWorkers=10, maxWorkers=10` | 54s | no gain — pool warm-up is not the bottleneck |
+  | `--sequence.concurrent` | 70s + 501 fails | REJECT — in-file concurrency defeats state-reset ordering (isolation sentinels fail wholesale) |
+  | `poolOptions.threads.singleThread` | 50s | no gain — thread-per-worker parity, more processes |
+
+  All measured on a clean tree (worktree at HEAD for the two contaminated
+  variants — a concurrent narrative regen had left `gazette.json` empty in
+  the main tree). **Default configuration stands; no knob change landed.**
+- **Timing TSV completed:** slow suite re-run
+  (`bunx vitest run --config vitest.config.slow.ts --reporter=json` →
+  `scripts/out/slow-suite-timings.json`; 41 files / 268 pass / 0 fail / 1
+  pending) and `timings-to-tsv.mjs` generalized — merge now preserves
+  existing rows for any file absent from the fresh report (was: `.slow`
+  rows only), so a slow-suite report can be converted without clobbering
+  default rows; rows for deleted/renamed specs are pruned. TSV at **924
+  rows** (881 default + 43 slow incl. the two stragglers demoted in V19
+  commit `8320c11e`) — no stale rows remain.
 
 ### Phase 7 — close-out
 

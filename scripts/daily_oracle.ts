@@ -5,6 +5,8 @@ import { runSimulation } from './simulation-harness';
 import { formatPulseTable } from '@/engine/stats/simulationMetrics';
 import { NodeArchiveService } from './nodeArchiveService';
 
+import { logger } from '@/utils/logger';
+
 const WEEKS_TO_SIMULATE = 1000;
 
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
@@ -150,7 +152,7 @@ ${recommendations}
 }
 
 async function main() {
-  console.log(`Starting Autobalance Simulation for ${WEEKS_TO_SIMULATE} weeks...`);
+  logger.log(`Starting Autobalance Simulation for ${WEEKS_TO_SIMULATE} weeks...`);
 
   const result = await runSimulation({
     weeks: WEEKS_TO_SIMULATE,
@@ -165,32 +167,32 @@ async function main() {
     archiveService: process.env.ORACLE_ARCHIVE ? new NodeArchiveService(ARCHIVE_DIR) : undefined,
   });
 
-  console.log('Simulation complete. Analyzing data...');
+  logger.log('Simulation complete. Analyzing data...');
 
   const metrics = computeMetrics(result);
   const { pulses } = result;
 
-  console.log('=== Autobalance Engine Metrics ===');
-  console.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
-  console.log(
+  logger.log('=== Autobalance Engine Metrics ===');
+  logger.log(formatPulseTable(pulses.slice(-20))); // trailing 20-week pulse window
+  logger.log(
     `Weekly Kill Rate: ${(metrics.killRate * 100).toFixed(2)}% (${metrics.weeklyKills}/${metrics.weeklyBouts})`
   );
-  console.log(
+  logger.log(
     `Unique Deaths: ${metrics.deaths} (kill-death divergence: ${metrics.killDeathDivergence})`
   );
-  console.log(
+  logger.log(
     `Rival Economy: mean ${metrics.rivalTreasuryMean} / median ${metrics.rivalTreasuryMedian} gold`
   );
-  console.log(`Win Rates:`);
+  logger.log(`Win Rates:`);
   for (const [style, rate] of Object.entries(metrics.styleWinRates).sort((a, b) => b[1] - a[1])) {
-    console.log(`- ${style}: ${(rate * 100).toFixed(2)}%`);
+    logger.log(`- ${style}: ${(rate * 100).toFixed(2)}%`);
   }
 
   const recommendations = buildRecommendations(metrics);
   const report = buildReport(metrics, recommendations);
 
   await fs.writeFile(REPORT_FILE, report);
-  console.log(`\nWrote Daily_Balance_Report.md`);
+  logger.log(`\nWrote Daily_Balance_Report.md`);
 }
 
 // Guard like daily_bard.ts — importing this module under a test runner must

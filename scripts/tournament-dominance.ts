@@ -10,6 +10,8 @@ import { loadCombatNarrative } from '@/data/narrative';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import type { GameState, TournamentEntry } from '@/types/state.types';
 
+import { logger } from '@/utils/logger';
+
 const TIER_PURSE: Record<string, number> = { GOLD: 5000, SILVER: 2500, BRONZE: 1200, IRON: 600 };
 const PLACE_MULT = [1.0, 0.5, 0.25] as const;
 
@@ -89,33 +91,33 @@ async function main() {
   for (const r of state.rivals ?? []) for (const w of r.roster) countStyle(w);
   for (const w of state.roster ?? []) countStyle(w);
 
-  console.log('\n================ TOURNAMENT DOMINANCE (52 weeks) ================');
-  console.log(`Completed tournaments: ${tournaments.length} (champions recorded: ${sweptCount})`);
-  console.log('\n  Style               Titles  Podiums  Purse(g)  1st/2nd/3rd   Living');
+  logger.log('\n================ TOURNAMENT DOMINANCE (52 weeks) ================');
+  logger.log(`Completed tournaments: ${tournaments.length} (champions recorded: ${sweptCount})`);
+  logger.log('\n  Style               Titles  Podiums  Purse(g)  1st/2nd/3rd   Living');
   const rows = [...perStyle.entries()].sort(
     (a, b) => b[1].championships - a[1].championships || b[1].podiums - a[1].podiums
   );
   for (const [style, t] of rows) {
     const places = `${t.places[0]}/${t.places[1]}/${t.places[2]}`;
-    console.log(
+    logger.log(
       `  ${style.padEnd(20)} ${String(t.championships).padStart(4)} ${String(t.podiums).padStart(8)} ${String(t.purse).padStart(9)} ${places.padStart(12)} ${String(population.get(style) ?? 0).padStart(8)}`
     );
   }
 
   // Per-tournament champion listing.
-  console.log('\n  Per-tournament champions:');
+  logger.log('\n  Per-tournament champions:');
   for (const t of tournaments) {
     const podium = podiumOf(t);
     const champId = podium[0];
     const cw = champId ? findWarriorById(state, champId, t) : undefined;
-    console.log(
+    logger.log(
       `    ${t.name ?? t.id} [${tierOf(t)}]  champion: ${t.champion ?? '?'} (${cw?.style ?? '?'})`
     );
   }
-  console.log('===============================================================\n');
+  logger.log('===============================================================\n');
 }
 
 main().catch((e) => {
-  console.error(e);
+  logger.error(e);
   process.exit(1);
 });

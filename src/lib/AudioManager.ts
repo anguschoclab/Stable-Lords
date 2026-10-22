@@ -1,6 +1,8 @@
 import { Howl } from 'howler';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 
+import { logger } from '@/utils/logger';
+
 /**
  * AudioManager — Central sound controller for the stable.
  * Uses Howler for high-performance audio playback.
@@ -105,17 +107,17 @@ export class AudioManager {
       try {
         await window.electronAPI.storeSet(STORE_KEYS.AUDIO_MUTED, String(muted));
       } catch (error) {
-        console.error('Failed to save mute state to electron-store', error);
+        logger.error('Failed to save mute state to electron-store', error);
       }
     } else if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(STORE_KEYS.AUDIO_MUTED, String(muted));
       } catch (error) {
         if ((error as Error)?.name === 'QuotaExceededError') {
-          console.error('localStorage quota exceeded when saving mute state', error);
+          logger.error('localStorage quota exceeded when saving mute state', error);
           // Mute state is not critical, just log and continue
         } else {
-          console.error('Failed to save mute state', error);
+          logger.error('Failed to save mute state', error);
         }
       }
     }
@@ -162,16 +164,16 @@ export class AudioManager {
       try {
         await window.electronAPI.storeSet(STORE_KEYS.AUDIO_VOLUME, raw);
       } catch (error) {
-        console.error('Failed to save volume to electron-store', error);
+        logger.error('Failed to save volume to electron-store', error);
       }
     } else if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(STORE_KEYS.AUDIO_VOLUME, raw);
       } catch (error) {
         if ((error as Error)?.name === 'QuotaExceededError') {
-          console.error('localStorage quota exceeded when saving volume', error);
+          logger.error('localStorage quota exceeded when saving volume', error);
         } else {
-          console.error('Failed to save volume', error);
+          logger.error('Failed to save volume', error);
         }
       }
     }

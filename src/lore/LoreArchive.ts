@@ -4,6 +4,8 @@
 import type { FightSummary, HallEntry } from '@/types/game';
 import { handleLocalStorageQuotaError } from '@/utils/storage';
 
+import { logger } from '@/utils/logger';
+
 const KEY_FIGHTS = 'sl.lore.fights';
 const KEY_HALL = 'sl.lore.hall';
 
@@ -21,7 +23,7 @@ function saveArray<T>(key: string, arr: T[]) {
   try {
     handleLocalStorageQuotaError(key, arr);
   } catch (error) {
-    console.error(`Failed to save ${key}`, error);
+    logger.error(`Failed to save ${key}`, error);
   }
 }
 

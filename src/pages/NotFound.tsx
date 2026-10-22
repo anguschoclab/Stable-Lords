@@ -1,6 +1,8 @@
 import { useLocation, Link } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Render the NotFound component.
  */
@@ -8,7 +10,7 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
+    logger.error('404 Error: User attempted to access non-existent route:', location.pathname);
   }, [location.pathname]);
 
   return (

@@ -13,6 +13,8 @@ import { loadCombatNarrative } from '@/data/narrative';
 import { makeWarrior } from '@/test/engine/combat/_helpers';
 import type { Warrior } from '@/types/warrior.types';
 
+import { logger } from '@/utils/logger';
+
 // The app lazy-loads combat narrative templates at startup; do the same so
 // PBP lines resolve to real archive text instead of the generic fallback.
 await loadCombatNarrative();
@@ -47,7 +49,7 @@ const outcome = simulateFight({
   headless: false,
 });
 
-console.log(
+logger.log(
   `=== ${warriorA.name} (${styleA}) vs ${warriorD.name} (${styleD}) — seed ${seed} ===\n`
 );
 
@@ -55,17 +57,17 @@ let lastMinute = 0;
 for (const e of outcome.log) {
   if (e.minute !== lastMinute) {
     lastMinute = e.minute;
-    console.log();
+    logger.log();
   }
-  console.log(e.text);
+  logger.log(e.text);
 }
 
 const winnerName =
   outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'nobody';
-console.log(
+logger.log(
   `\n=== Result: ${winnerName} wins by ${outcome.by} in ${outcome.minutes} minute(s) ===`
 );
-console.log(
+logger.log(
   `hits: A=${outcome.post?.hitsA ?? 0} D=${outcome.post?.hitsD ?? 0}` +
     (outcome.post?.tags?.length ? ` | tags: ${outcome.post.tags.join(', ')}` : '')
 );

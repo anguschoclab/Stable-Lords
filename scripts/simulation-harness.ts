@@ -18,6 +18,8 @@ import { createCumulativeTracker, type CumulativeStats } from '@/engine/stats/cu
 import { truncateState, type TruncationCaps } from '@/engine/storage/truncation';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
+import { logger } from '@/utils/logger';
+
 export type { CumulativeStats } from '@/engine/stats/cumulativeTracker';
 
 /**
@@ -120,7 +122,7 @@ async function flushDeferredLogs(
         await archive.archiveBoutLog(log.year, log.season, log.boutId, log.transcript, true);
         return null;
       } catch (err) {
-        console.error(`Failed to archive bout ${log.boutId}:`, err);
+        logger.error(`Failed to archive bout ${log.boutId}:`, err);
         return log;
       }
     })
@@ -316,7 +318,7 @@ async function runWeek(
   state.rivals.forEach((r) => (totalWarriors += r.roster.length));
 
   if (w % logFrequency === 0) {
-    console.log(
+    logger.log(
       `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
     );
     const cumulative = tracker.snapshot();
@@ -337,7 +339,7 @@ async function runWeek(
 
   // Stop Conditions (Optional)
   if (!config.ignoreBankruptcy && state.treasury < -5000) {
-    console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
+    logger.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
     return { state, bankrupt: true };
   }
   return { state, bankrupt: false };
@@ -367,7 +369,7 @@ export async function runSimulation(config: SimulationConfig): Promise<Simulatio
   const tracker = createCumulativeTracker(state);
 
   // 2. Main Loop
-  console.log(`[Harness] Starting simulation for ${weeks} weeks...`);
+  logger.log(`[Harness] Starting simulation for ${weeks} weeks...`);
 
   // Per-pass profiling is opt-in: the flag is checked once per pass, so the
   // steady-state cost is a single property read per pass per week.

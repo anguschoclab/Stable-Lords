@@ -33,6 +33,8 @@ import { createProgressionSlice } from './slices/progressionSlice';
 import { createAvatarSlice } from './slices/avatarSlice';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Post-process a worker-returned state and commit it to the store.
  * Shared by doAdvanceWeek/doAdvanceDay — previously duplicated inline.
@@ -126,7 +128,7 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.playerAvoids = state.playerAvoids || [];
   draft.bookmarks = state.bookmarks || [];
   draft.progression = state.progression || DEFAULT_PROGRESSION;
-  draft.lastSimulationReport = state.lastSimulationReport;
+  draft.stewardReport = state.stewardReport;
   draft.deferredBoutLogs = state.deferredBoutLogs || [];
   draft.avatarCache = state.avatarCache || {};
 
@@ -185,7 +187,7 @@ async function runEngineJob(args: RunEngineJobArgs) {
     }
     commitWorkerResult(store, next, currentWeek);
   } catch (err) {
-    console.error('Worker advancement failed:', err);
+    logger.error('Worker advancement failed:', err);
     set((draft) => {
       draft.isSimulating = false;
     });

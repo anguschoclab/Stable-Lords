@@ -14,6 +14,8 @@ import { readFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import { logger } from '@/utils/logger';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const NARRATIVE_DIR = resolve(__dirname, '../src/data/narrative');
 
@@ -131,15 +133,15 @@ try {
   walkStrings(data, '');
 
   if (errors.length === 0) {
-    console.log('narrative domain files validation passed — no errors found.');
+    logger.log('narrative domain files validation passed — no errors found.');
   } else {
-    console.error(`Validation failed with ${errors.length} error(s):`);
+    logger.error(`Validation failed with ${errors.length} error(s):`);
     for (const e of errors) {
-      console.error(`  ${e.path}: ${e.message}`);
+      logger.error(`  ${e.path}: ${e.message}`);
     }
     process.exit(1);
   }
 } catch (err) {
-  console.error('Failed to parse narrative domain files:', err);
+  logger.error('Failed to parse narrative domain files:', err);
   process.exit(1);
 }

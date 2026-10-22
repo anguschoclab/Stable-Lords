@@ -8,6 +8,8 @@ import { engineProxy } from '@/engine/runtime/workerProxy';
 import { engineSession } from '@/engine/runtime/session';
 import type { AutosimResult } from '@/engine/autosim/autosim';
 
+import { logger } from '@/utils/logger';
+
 /** Reads the post-advance store state into bout results + death toasts. */
 function applyPostAdvanceState(setResults: (r: BoutResult[]) => void): void {
   const storeState = useGameStore.getState();
@@ -50,7 +52,7 @@ async function runAutosimSession(
     );
     return result ?? 'epoch-moved';
   } catch (err) {
-    console.error('Autosim failed', err);
+    logger.error('Autosim failed', err);
     toast.error('Auto-simulation failed.');
     return 'failed';
   }

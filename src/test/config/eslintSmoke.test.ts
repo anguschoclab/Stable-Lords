@@ -30,4 +30,24 @@ describe('eslint config smoke test', () => {
     expect(tsConfig).toBeDefined();
     expect(tsConfig?.rules).toBeDefined();
   });
+
+  it('enforces no-console as error on ts/tsx and exempts the logger sink', async () => {
+    const configPath = path.join(projectRoot, 'eslint.config.js');
+    const configUrl = `file://${configPath}`;
+    const mod = await import(configUrl);
+    const configs = mod.default as Array<{
+      files?: string[];
+      rules?: Record<string, unknown>;
+    }>;
+
+    const tsConfig = configs.find(
+      (c) => c.files?.some((f) => f === '**/*.{ts,tsx}') && c.rules?.['no-console'] === 'error'
+    );
+    expect(tsConfig).toBeDefined();
+
+    const loggerConfig = configs.find(
+      (c) => c.files?.some((f) => f === 'src/utils/logger.ts')
+    );
+    expect(loggerConfig?.rules?.['no-console']).toBe('off');
+  });
 });

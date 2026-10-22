@@ -5,6 +5,8 @@ import type { ArchiveService } from './types';
 import { isPlausibleGameState } from './plausibility';
 import { SAVE_STATE_VERSION } from '@/constants/core';
 
+import { logger } from '@/utils/logger';
+
 /** OPFS-based archive service implementing the ArchiveService interface for persistent storage. */
 export class OPFSArchiveService implements ArchiveService {
   private writeQueue: Promise<void> = Promise.resolve();
@@ -39,7 +41,7 @@ export class OPFSArchiveService implements ArchiveService {
       return await seasonHandle.getDirectoryHandle(type, { create });
     } catch (error) {
       if (!create && (error as Error)?.name === 'NotFoundError') return null;
-      console.warn(
+      logger.warn(
         'Failed to get directory handle (OPFS may be restricted in this environment):',
         error
       );
@@ -54,7 +56,7 @@ export class OPFSArchiveService implements ArchiveService {
       return await rootHandle.getDirectoryHandle('hot_state', { create });
     } catch (error) {
       if (!create && (error as Error)?.name === 'NotFoundError') return null;
-      console.warn(
+      logger.warn(
         'Failed to get hot_state directory handle (OPFS may be restricted in this environment):',
         error
       );
@@ -76,7 +78,7 @@ export class OPFSArchiveService implements ArchiveService {
         await writable.write(JSON.stringify(stateData));
       } catch (error) {
         if ((error as Error)?.name === 'QuotaExceededError') {
-          console.error('OPFS Quota Exceeded during hot state archival', error);
+          logger.error('OPFS Quota Exceeded during hot state archival', error);
           if (typeof window !== 'undefined')
             window.dispatchEvent(
               new CustomEvent('OPFS_QUOTA_EXCEEDED', {
@@ -90,7 +92,7 @@ export class OPFSArchiveService implements ArchiveService {
           try {
             await writable.close();
           } catch (closeError) {
-            console.warn('Failed to close writable stream:', closeError);
+            logger.warn('Failed to close writable stream:', closeError);
           }
         }
       }
@@ -110,7 +112,7 @@ export class OPFSArchiveService implements ArchiveService {
         const text = await file.text();
         const parsed: unknown = JSON.parse(text);
         if (!isPlausibleGameState(parsed)) {
-          console.error('corrupt/incompatible save: failed plausibility check', { slotId });
+          logger.error('corrupt/incompatible save: failed plausibility check', { slotId });
           return null;
         }
         if (parsed.meta.version !== SAVE_STATE_VERSION) {
@@ -120,9 +122,9 @@ export class OPFSArchiveService implements ArchiveService {
             await bakWritable.write(text);
             await bakWritable.close();
           } catch (bakError) {
-            console.error('Failed to write .bak backup:', bakError);
+            logger.error('Failed to write .bak backup:', bakError);
           }
-          console.error(
+          logger.error(
             `incompatible save version: expected ${SAVE_STATE_VERSION}, got ${parsed.meta.version}`,
             { slotId }
           );
@@ -132,7 +134,7 @@ export class OPFSArchiveService implements ArchiveService {
           const { GameStateSchema } = await import('@/schemas/gameStateSchema');
           const r = GameStateSchema.safeParse(parsed);
           if (!r.success) {
-            console.error('dev schema drift in retrieveHotState', r.error.issues);
+            logger.error('dev schema drift in retrieveHotState', r.error.issues);
           }
         }
         return parsed as GameState;
@@ -142,7 +144,7 @@ export class OPFSArchiveService implements ArchiveService {
       if ((error as Error)?.name === 'NotFoundError') {
         return null;
       }
-      console.warn('Error retrieving hot state:', error);
+      logger.warn('Error retrieving hot state:', error);
       return null;
     }
   }
@@ -184,7 +186,7 @@ export class OPFSArchiveService implements ArchiveService {
           throw error;
         }
         if ((error as Error)?.name === 'QuotaExceededError') {
-          console.error('OPFS Quota Exceeded during bout log archival', error);
+          logger.error('OPFS Quota Exceeded during bout log archival', error);
           if (typeof window !== 'undefined')
             window.dispatchEvent(
               new CustomEvent('OPFS_QUOTA_EXCEEDED', {
@@ -196,13 +198,13 @@ export class OPFSArchiveService implements ArchiveService {
         if ((error as Error)?.name === 'NoModificationAllowedError') {
           throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
         }
-        console.error('Unknown error during bout log archival', error);
+        logger.error('Unknown error during bout log archival', error);
       } finally {
         if (writable) {
           try {
             await writable.close();
           } catch (closeError) {
-            console.warn('Failed to close writable stream:', closeError);
+            logger.warn('Failed to close writable stream:', closeError);
           }
         }
       }
@@ -230,7 +232,7 @@ export class OPFSArchiveService implements ArchiveService {
       if ((error as Error)?.name === 'NotFoundError') {
         return null;
       }
-      console.warn('Error retrieving bout log:', error);
+      logger.warn('Error retrieving bout log:', error);
       return null;
     }
   }
@@ -249,7 +251,7 @@ export class OPFSArchiveService implements ArchiveService {
       }
       return boutIds;
     } catch (error) {
-      console.warn('Error getting archived bout ids:', error);
+      logger.warn('Error getting archived bout ids:', error);
       return [];
     }
   }

@@ -4,6 +4,8 @@ import { audioManager } from '@/lib/AudioManager';
 import { useGameStore } from '@/state/useGameStore';
 import type { TournamentEntry } from '@/types/state.types';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Resolves the next round of the live tournament bracket.
  *
@@ -39,7 +41,7 @@ export function useExecuteTournamentRound({
       audioManager.play('clash');
       toast.success(updated?.completed ? 'Tournament complete.' : 'Round resolved.');
     } catch (error) {
-      console.error('Tournament resolution failed:', error);
+      logger.error('Tournament resolution failed:', error);
       toast.error('Resolution failed.');
     }
   }, [tournament]);

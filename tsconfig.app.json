@@ -29,6 +29,7 @@
   "include": [
     "src",
     "electron/main.ts",
+    "electron/logger.ts",
     "scripts/daily_bard.ts",
     "scripts/daily_oracle.ts",
     "scripts/nodeArchiveService.ts",

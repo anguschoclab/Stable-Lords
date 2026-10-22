@@ -2,6 +2,8 @@ import type { GameState } from '@/types/state.types';
 import { ArchiveConflictError } from './ArchiveConflictError';
 import type { ArchiveService } from './opfsArchive/types';
 
+import { logger } from '@/utils/logger';
+
 export { ArchiveConflictError };
 export type { ArchiveService };
 
@@ -37,10 +39,10 @@ export class ElectronArchiveService implements ArchiveService {
       try {
         const result = await window.electronAPI.saveGame(slotId, stateData);
         if (!result.success) {
-          console.error('Failed to archive hot state:', result.error);
+          logger.error('Failed to archive hot state:', result.error);
         }
       } catch (error) {
-        console.error('Error archiving hot state:', error);
+        logger.error('Error archiving hot state:', error);
       }
     });
   }
@@ -57,11 +59,11 @@ export class ElectronArchiveService implements ArchiveService {
         return result.data as GameState;
       }
       if (!result.success) {
-        console.error('Failed to retrieve hot state:', result.error);
+        logger.error('Failed to retrieve hot state:', result.error);
       }
       return null;
     } catch (error) {
-      console.error('Error retrieving hot state:', error);
+      logger.error('Error retrieving hot state:', error);
       return null;
     }
   }
@@ -87,10 +89,10 @@ export class ElectronArchiveService implements ArchiveService {
       try {
         const result = await window.electronAPI.archiveBoutLog(year, season, boutId, logData);
         if (!result.success) {
-          console.error('Failed to archive bout log:', result.error);
+          logger.error('Failed to archive bout log:', result.error);
         }
       } catch (error) {
-        console.error('Error archiving bout log:', error);
+        logger.error('Error archiving bout log:', error);
       }
     });
   }
@@ -108,7 +110,7 @@ export class ElectronArchiveService implements ArchiveService {
       }
       return null;
     } catch (error) {
-      console.error('Error retrieving bout log:', error);
+      logger.error('Error retrieving bout log:', error);
       return null;
     }
   }

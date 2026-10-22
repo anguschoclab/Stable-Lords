@@ -17,6 +17,8 @@ import { veteranSigningPatch } from '../src/engine/recruitment/recruitment';
 import type { GameState } from '../src/types/state.types';
 import type { Warrior } from '../src/types/warrior.types';
 
+import { logger } from '@/utils/logger';
+
 function resetGlobalState() {
   let idCounter = 0;
   setMockIdGenerator(() => `id_${++idCounter}`);
@@ -205,20 +207,20 @@ async function main() {
   R.push(
     '\n========================================================================================\n'
   );
-  console.log(R.join('\n'));
+  logger.log(R.join('\n'));
 
   if (state.week <= 0) {
-    console.error('FAIL: sim never advanced');
+    logger.error('FAIL: sim never advanced');
     process.exit(1);
   }
   if ((state.deferredBoutLogs ?? []).length > 0) {
-    console.error('FAIL: deferred bout logs left undrained');
+    logger.error('FAIL: deferred bout logs left undrained');
     process.exit(1);
   }
-  console.log(`OK: ${WEEKS} weeks simulated, week=${state.week}`);
+  logger.log(`OK: ${WEEKS} weeks simulated, week=${state.week}`);
 }
 
 main().catch((err) => {
-  console.error(err);
+  logger.error(err);
   process.exit(1);
 });

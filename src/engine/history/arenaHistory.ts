@@ -5,6 +5,8 @@ import type { FightSummary } from '@/types/combat.types';
 import { FightSummarySchema } from '@/schemas/fightSchemas';
 import { handleLocalStorageQuotaError } from '@/utils/storage';
 
+import { logger } from '@/utils/logger';
+
 const KEY = 'sl.arenaHistory';
 
 function load(): FightSummary[] {
@@ -22,7 +24,7 @@ function save(arr: FightSummary[]) {
   try {
     handleLocalStorageQuotaError(KEY, arr);
   } catch (error) {
-    console.error('Failed to save arena history', error);
+    logger.error('Failed to save arena history', error);
   }
 }
 

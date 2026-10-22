@@ -1,3 +1,4 @@
+import { logger } from '@/utils/logger';
 /**
  * Storage Utility Functions
  * Provides common operations for localStorage with quota error handling
@@ -13,7 +14,7 @@ export function handleLocalStorageQuotaError(operation: string, data: unknown): 
     localStorage.setItem(operation, JSON.stringify(data));
   } catch (error) {
     if ((error as Error)?.name !== 'QuotaExceededError') throw error;
-    console.error(`localStorage quota exceeded when saving ${operation}`, error);
+    logger.error(`localStorage quota exceeded when saving ${operation}`, error);
 
     // Attempt to recover by trimming the specific array data being saved
     // rather than indiscriminately deleting unrelated localStorage keys
@@ -31,7 +32,7 @@ export function handleLocalStorageQuotaError(operation: string, data: unknown): 
         });
       }
     } catch (retryError) {
-      console.error(`Failed to recover from localStorage quota error for ${operation}`, retryError);
+      logger.error(`Failed to recover from localStorage quota error for ${operation}`, retryError);
 
       throw new Error(`Unable to save ${operation} to localStorage due to quota limits`, {
         cause: retryError,

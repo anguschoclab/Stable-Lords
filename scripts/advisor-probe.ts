@@ -10,6 +10,8 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import type { WarriorId } from '@/types/shared.types';
 
+import { logger } from '@/utils/logger';
+
 let state = createFreshState('alpha-prime-10');
 state.player.name = 'Probe';
 state.player.stableName = 'Probe Stable';
@@ -50,11 +52,11 @@ for (let i = 0; i < 10; i++) {
   const mine = Object.values(state.boutOffers ?? {}).filter((o) =>
     o.warriorIds.some((id) => ids.has(id as WarriorId))
   );
-  console.log(
+  logger.log(
     `absWeek=${state.absoluteWeek} treasury=${state.treasury}G offers=${Object.keys(state.boutOffers ?? {}).length} mine=${mine.length} challenges=${(state.playerChallenges ?? []).length}`
   );
   for (const o of mine.slice(0, 5)) {
-    console.log(
+    logger.log(
       `    ${o.id} boutAbsWk=${boutOfferAbsoluteWeek(o)} status=${o.status} purse=${o.purse} hype=${o.hype} responses=${JSON.stringify(o.responses)}`
     );
   }

@@ -23,6 +23,8 @@ import type { Warrior } from '@/types/warrior.types';
 
 import { applyLabOverrides, STYLE_CODE, tweakPlan } from './lab-overrides';
 
+import { logger } from '@/utils/logger';
+
 applyLabOverrides();
 const styles = Object.values(FightingStyle) as FightingStyle[];
 const abbr = (s: string) => (STYLE_CODE[s as FightingStyle] ?? s).padEnd(3);
@@ -64,22 +66,22 @@ function record(
 }
 function report(name: string, t: Tally, matrix = false) {
   const rates = styles.map((s) => (100 * (t.w[s] ?? 0)) / Math.max(1, t.n[s] ?? 0));
-  console.log(
+  logger.log(
     `${name.padEnd(5)} ` +
       styles.map((s, i) => `${abbr(s)}${rates[i]!.toFixed(1).padStart(5)}`).join('  ') +
       `  | kill ${pct(t.kills, t.fights)}%  spread ${Math.min(...rates).toFixed(1)}–${Math.max(...rates).toFixed(1)}`
   );
   if (matrix) {
-    console.log(
+    logger.log(
       '      by: ' +
         Object.entries(t.by)
           .sort((x, y) => y[1] - x[1])
           .map(([k, v]) => `${k} ${pct(v, t.fights).trim()}%`)
           .join('  ')
     );
-    console.log('      ' + ''.padEnd(4) + styles.map((s) => abbr(s).padStart(5)).join(''));
+    logger.log('      ' + ''.padEnd(4) + styles.map((s) => abbr(s).padStart(5)).join(''));
     for (const a of styles)
-      console.log(
+      logger.log(
         '      ' +
           abbr(a).padEnd(4) +
           styles
@@ -125,7 +127,7 @@ const MATRIX = !!process.env.LAB_MATRIX;
       }
       if (a === d && Math.abs(aw - 50) > 10) mirror.push(`${abbr(a).trim()} ${aw}`);
     }
-  console.log(`FLAT  mirror drift >10: ${mirror.join(', ') || 'none'}`);
+  logger.log(`FLAT  mirror drift >10: ${mirror.join(', ') || 'none'}`);
   report('FLAT', t, MATRIX);
 }
 

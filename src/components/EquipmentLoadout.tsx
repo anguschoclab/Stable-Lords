@@ -32,9 +32,7 @@ const SLOT_CONFIG: { slot: EquipmentSlot; label: string; icon: React.ReactNode }
   { slot: 'helm', label: 'Helm', icon: <HardHat className="h-4 w-4" /> },
 ];
 
-/**
- *
- */
+/** Renders the slot-based equipment loadout card with validation warnings. */
 export default function EquipmentLoadoutUI({
   loadout,
   style,

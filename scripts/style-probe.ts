@@ -16,6 +16,8 @@ import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { applyLabOverrides, STYLE_CODE, tweakPlan } from './lab-overrides';
 
+import { logger } from '@/utils/logger';
+
 applyLabOverrides();
 (globalThis as Record<string, unknown>).__AI_DEBUG = true;
 const styles = Object.values(FightingStyle) as FightingStyle[];
@@ -136,7 +138,7 @@ for (let i = 0; i < N; i++) {
   }
 }
 const f = (n: number, d: number, p = 1) => (n / Math.max(1, d)).toFixed(p).padStart(6);
-console.log(
+logger.log(
   '     win%  exch  ini%  atk✓%  def✓%  hits/f  rip/f dmg/hit |  eATT  ePAR  eDEF  eINI  eRIP    hp   end  dcls |   OE    AL    KD | wins by / losses by'
 );
 for (const st of styles) {
@@ -150,15 +152,15 @@ for (const st of styles) {
           `${k.slice(0, 4)} ${Math.round((100 * v) / Object.values(r).reduce((x, y) => x + y, 0))}`
       )
       .join(' ');
-  console.log(
+  logger.log(
     `${STYLE_CODE[st]}  ${f(100 * s.wins, s.fights)}${f(s.ex, s.fights)}${f(100 * s.ini, s.ex)}${f(100 * s.attOk, s.att)} ${f(100 * s.defOk, s.defd)} ${f(s.landed, s.fights, 2)} ${f(s.rip, s.fights, 2)} ${f(s.dmg, s.landed)}  |` +
       `${f(s.eATT, s.fights)}${f(s.ePAR, s.fights)}${f(s.eDEF, s.fights)}${f(s.eINI, s.fights)}${f(s.eRIP, s.fights)}${f(s.hp, s.fights)}${f(s.end, s.fights)}${f(s.dcls, s.fights)} |${f(s.oe, s.fights)}${f(s.al, s.fights)}${f(s.kd, s.fights)} | ${top(s.by)} / ${top(s.lossBy)}`
   );
 }
 
-console.log('\nweapons carried:');
+logger.log('\nweapons carried:');
 for (const st of styles)
-  console.log(
+  logger.log(
     STYLE_CODE[st],
     Object.entries(gear[st] ?? {})
       .sort((a, b) => b[1] - a[1])

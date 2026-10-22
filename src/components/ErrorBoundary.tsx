@@ -1,5 +1,7 @@
 import { Component, type PropsWithChildren, type ErrorInfo } from 'react';
 
+import { logger } from '@/utils/logger';
+
 interface State {
   hasError: boolean;
   error: Error | null;
@@ -28,7 +30,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
    * Component did catch.
    */
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[ErrorBoundary] Unhandled render error:', error, info.componentStack);
+    logger.error('[ErrorBoundary] Unhandled render error:', error, info.componentStack);
   }
 
   /**

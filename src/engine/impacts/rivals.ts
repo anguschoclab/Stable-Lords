@@ -7,6 +7,8 @@ import type { StableId, WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { ageGroupForAge } from '@/engine/avatar/avatarGenerator';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Apply rivals updates to state.
  */
@@ -21,11 +23,11 @@ const rivalsUpdates = (state: GameState, value: Map<StableId, Partial<RivalStabl
         if (w.epithet) {
           const next = updatedById.get(w.id);
           if (next && !next.epithet)
-            console.error(
+            logger.error(
               `[roster-wipe] wk${state.absoluteWeek} ${r.owner?.stableName}: ${w.name} loses '${w.epithet}'`
             );
           else if (!next)
-            console.error(
+            logger.error(
               `[roster-drop] wk${state.absoluteWeek} ${r.owner?.stableName}: ${w.name} removed (had '${w.epithet}')`
             );
         }

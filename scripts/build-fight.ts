@@ -7,6 +7,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { logger } from '@/utils/logger';
+
 // Bun-only build API — this repo doesn't depend on @types/bun, so declare the
 // slice of Bun.build this script actually uses.
 declare const Bun: {
@@ -45,7 +47,7 @@ const result = await Bun.build({
       setup(build) {
         build.onResolve({ filter: /^[^./@]/ }, (args) => {
           if (STUBS[args.path]) return { path: STUBS[args.path] };
-          console.log(`  [import] ${args.path}  <-  ${path.relative(root, args.importer)}`);
+          logger.log(`  [import] ${args.path}  <-  ${path.relative(root, args.importer)}`);
           return undefined;
         });
       },
@@ -54,7 +56,7 @@ const result = await Bun.build({
 });
 
 if (!result.success) {
-  for (const m of result.logs) console.error(m);
+  for (const m of result.logs) logger.error(m);
   process.exit(1);
 }
-console.log('built:', result.outputs.map((o) => o.path).join('\n'));
+logger.log('built:', result.outputs.map((o) => o.path).join('\n'));

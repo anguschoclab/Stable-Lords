@@ -11,6 +11,8 @@ import { isAIDebugEnabled } from '@/engine/ai/debug';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { competenceJitter } from '../competence';
 
+import { logger } from '@/utils/logger';
+
 /** A tabled poach bid: the buyer pays `price` to `sellerStableId` for `warriorId`. */
 interface PoachBid {
   buyerStableId: StableId;
@@ -200,7 +202,7 @@ export function processPoachMarket(state: GameState, rivals: RivalStableData[]):
         })
       );
       if (isAIDebugEnabled())
-        console.debug(`[poach] ${rival.id} -> player ${bid.warriorId} @ ${bid.price}g`);
+        logger.debug(`[poach] ${rival.id} -> player ${bid.warriorId} @ ${bid.price}g`);
       continue;
     }
 
@@ -283,5 +285,5 @@ function settleAIPoach(args: SettleAIPoachArgs): void {
     })
   );
   if (isAIDebugEnabled())
-    console.debug(`[poach] ${buyerId} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
+    logger.debug(`[poach] ${buyerId} -> ${seller.id} ${bid.warriorId} @ ${bid.price}g`);
 }

@@ -13,6 +13,8 @@
 import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { logger } from '@/utils/logger';
+
 const DRY = process.argv.includes('--dry');
 const ROOT = 'src';
 
@@ -113,6 +115,6 @@ for (const file of walk(ROOT)) {
   }
 }
 
-console.log(
+logger.log(
   `${DRY ? '[DRY] ' : ''}files changed: ${filesChanged}, junk lines removed: ${linesRemoved}, empty blocks removed: ${blocksRemoved}`
 );

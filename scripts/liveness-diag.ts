@@ -3,6 +3,8 @@ import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { GameState } from '@/types/state.types';
 
+import { logger } from '@/utils/logger';
+
 async function main() {
   let n = 0;
   setMockIdGenerator(() => `id_${++n}`);
@@ -14,7 +16,7 @@ async function main() {
     ignoreBankruptcy: true,
   });
   const s = finalState as GameState;
-  console.log(
+  logger.log(
     'SIG',
     s.treasury,
     s.week,

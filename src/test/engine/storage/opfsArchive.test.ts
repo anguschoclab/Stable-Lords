@@ -193,7 +193,7 @@ describe('OPFS Archival System', () => {
       expect(result).toEqual([]);
     });
 
-    it('Test 10.4: archiveBoutLog logs unknown errors via console.error', async () => {
+    it('Test 10.4: archiveBoutLog logs unknown errors via logger', async () => {
       const service = new OPFSArchiveService();
       setMockOPFSError('UnknownError', 'write');
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});

@@ -1,5 +1,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { logger } from '@/utils/logger';
+
 type AvatarLayerCategory =
   | 'base'
   | 'skinTone'
@@ -95,4 +97,4 @@ const count = Object.values(manifest.categories).reduce(
   (total, entries) => total + entries.length,
   0
 );
-console.log(`Validated ${count} avatar assets and wrote ${manifestPath}`);
+logger.log(`Validated ${count} avatar assets and wrote ${manifestPath}`);

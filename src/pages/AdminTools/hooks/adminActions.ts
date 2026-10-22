@@ -8,6 +8,8 @@ import { engineSession } from '@/engine/runtime/session';
 import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
 import { stripNonSerializable } from '@/state/serialization';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Serialize the live store state to a downloadable JSON file.
  */
@@ -49,7 +51,7 @@ export function importSaveFile(
     } catch (err) {
       if (err instanceof Error && err.name === 'ZodError') {
         toast.error('Invalid save data: schema validation failed');
-        console.error('Zod validation error:', err);
+        logger.error('Zod validation error:', err);
       } else {
         toast.error(err instanceof Error ? err.message : 'Failed to load save.');
       }
@@ -89,7 +91,7 @@ async function runAdminSkip(
     store.loadGame(store.activeSlotId || 'autosave', result.state);
     toast.success(messages.success);
   } catch (err) {
-    console.error('Admin fast-forward failed:', err);
+    logger.error('Admin fast-forward failed:', err);
     toast.error(messages.failure);
   } finally {
     store.setSimulating(false);

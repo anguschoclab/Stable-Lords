@@ -25,6 +25,8 @@ import { stripNonSerializable } from '@/state/serialization';
 import type { WarriorId } from '@/types/shared.types';
 import type { GameState } from '@/types/state.types';
 
+import { logger } from '@/utils/logger';
+
 function playerOffersOf(state: GameState) {
   const ids = new Set(state.roster.map((w) => w.id));
   return Object.values(state.boutOffers ?? {}).filter((o) =>
@@ -34,19 +36,19 @@ function playerOffersOf(state: GameState) {
 
 function printCouncil(state: GameState, label: string) {
   const report = computeStableCouncilReport(state);
-  console.log(`\n═══ COUNCIL REPORT (${label}) ═══`);
-  console.log(
+  logger.log(`\n═══ COUNCIL REPORT (${label}) ═══`);
+  logger.log(
     `summary: warriors=${report.summary.totalWarriors} ready=${report.summary.combatReadyCount} ` +
       `rehab=${report.summary.rehabCount} contenders=${report.summary.tournamentContenderCount} ` +
       `unassigned=${report.summary.unassignedTrainingCount} pendingOffers=${report.summary.pendingBoutOffersCount} ` +
       `projPurse=${report.summary.projectedPurseGold}G projCost=${report.summary.projectedTrainingCost}G treasury=${report.summary.treasury}G`
   );
-  if (report.summary.solvencyWarning) console.log(`solvency: ${report.summary.solvencyWarning}`);
-  for (const d of report.summary.stableDirectives) console.log(`  directive: ${d}`);
+  if (report.summary.solvencyWarning) logger.log(`solvency: ${report.summary.solvencyWarning}`);
+  for (const d of report.summary.stableDirectives) logger.log(`  directive: ${d}`);
   for (const c of report.cards) {
     const intel = c.fightAdvice.reasoning.filter((r) => /scout intel/i.test(r));
     const rematch = c.fightAdvice.warnings.filter((w) => /rematch/i.test(w));
-    console.log(
+    logger.log(
       `  ${c.warriorName} [${c.style}] focus=${c.campaignFocus}` +
         `${c.suggestedCampaignFocus !== c.campaignFocus ? ` (suggested:${c.suggestedCampaignFocus})` : ''}` +
         ` fight=${c.fightAdvice.action}${c.fightAdvice.recommendedOfferId ? '→' + c.fightAdvice.recommendedOfferId : ''}` +
@@ -56,20 +58,20 @@ function printCouncil(state: GameState, label: string) {
         ` OE=${c.tacticsAdvice.suggestedOE} AL=${c.tacticsAdvice.suggestedAL}` +
         `${c.tacticsAdvice.fallbackCondition ? ' fb=' + c.tacticsAdvice.fallbackCondition : ''}`
     );
-    for (const r of intel) console.log(`      ${r}`);
-    for (const w of rematch) console.log(`      ⚠ ${w}`);
+    for (const r of intel) logger.log(`      ${r}`);
+    for (const w of rematch) logger.log(`      ⚠ ${w}`);
   }
   return report;
 }
 
 function printRun(result: AutosimResult, label: string) {
-  console.log(`\n═══ ${label} ═══`);
-  console.log(
+  logger.log(`\n═══ ${label} ═══`);
+  logger.log(
     `weeksSimmed=${result.weeksSimmed} stop=${result.stopReason} (${result.stopDetail}) ` +
       `finalWeek=${result.finalState.week} absWeek=${result.finalState.absoluteWeek} treasury=${result.finalState.treasury}G`
   );
   for (const s of result.weekSummaries) {
-    console.log(
+    logger.log(
       `  wk${s.week}: bouts=${s.bouts} deaths=${s.deaths}${s.deathNames.length ? ' (' + s.deathNames.join(', ') + ')' : ''}`
     );
   }
@@ -77,18 +79,18 @@ function printRun(result: AutosimResult, label: string) {
   const accepted = offers.filter((o) =>
     result.finalState.roster.some((w) => o.responses?.[w.id] === 'Accepted')
   );
-  console.log(
+  logger.log(
     `  playerOffers=${offers.length} accepted=${accepted.length} ` +
       `arenaHistory=${result.finalState.arenaHistory?.length ?? 0} ` +
       `assignments=${(result.finalState.trainingAssignments ?? []).length}`
   );
   for (const o of offers.slice(0, 8)) {
-    console.log(
+    logger.log(
       `    offer ${o.id} wk${o.boutWeek} status=${o.status} purse=${o.purse} hype=${o.hype}`
     );
   }
   for (const w of result.finalState.roster) {
-    console.log(
+    logger.log(
       `    ${w.name} status=${w.status ?? 'n/a'} fatigue=${w.fatigue ?? 0} injuries=${(w.injuries ?? []).length} ` +
         `career=${w.career?.wins ?? 0}-${w.career?.losses ?? 0} plan=${w.plan ? `${w.plan.offensiveTactic}/${w.plan.defensiveTactic} OE${w.plan.OE}/AL${w.plan.AL}` : 'none'}`
     );
@@ -103,8 +105,8 @@ state.player.stableName = 'E2E Verification Stable';
 const identitySeed = 'slot_e2e'.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
 applyBackstoryToPlayer(state, BACKSTORY_IDS[0]!, new SeededRNG(identitySeed));
 state = resolveImpacts(state, [runRankingsPass(state), runPromoterPass(state)]);
-console.log(`\n═══ NEW GAME ═══`);
-console.log(
+logger.log(`\n═══ NEW GAME ═══`);
+logger.log(
   `stable="${state.player.stableName}" treasury=${state.treasury}G week=${state.week} absWeek=${state.absoluteWeek} rivals=${state.rivals.length} recruitPool=${state.recruitPool.length}`
 );
 
@@ -128,7 +130,7 @@ for (const w of pool) {
   state.treasury -= w.cost;
   state.recruitPool = (state.recruitPool ?? []).filter((p) => p.id !== w.id);
 }
-console.log(
+logger.log(
   `recruited ${state.roster.length} warriors (treasury now ${state.treasury}G): ` +
     state.roster.map((w) => `${w.name}[${w.style}]`).join(', ')
 );
@@ -136,7 +138,7 @@ console.log(
 // ─── 3. Council report on the fresh stable ────────────────────────────────
 const report1 = printCouncil(state, 'week 1, pre-autopilot');
 applyCouncilPlan(state, report1);
-console.log(
+logger.log(
   `\napplyCouncilPlan: assignments=${(state.trainingAssignments ?? []).length} ` +
     `plansPatched=${state.roster.filter((w) => w.plan).length}/${state.roster.length}`
 );
@@ -152,7 +154,7 @@ const issueChallenges = (s: GameState) => {
     );
   });
   s.playerChallenges = challengeable.map((w) => w.id);
-  console.log(`  challenges → ${challengeable.length} eligible rival warriors`);
+  logger.log(`  challenges → ${challengeable.length} eligible rival warriors`);
 };
 
 // Warm-up: two weeks to populate rival rosters, then challenge.
@@ -198,12 +200,12 @@ const fought = state.roster.filter((w) => (w.career?.wins ?? 0) + (w.career?.los
 const playerBouts = (state.arenaHistory ?? []).filter((f) =>
   state.roster.some((w) => w.id === f.warriorIdA || w.id === f.warriorIdD)
 );
-console.log(
+logger.log(
   `\nplayer warriors with career bouts: ${fought.length}/${state.roster.length} — ` +
     `player fights in arenaHistory: ${playerBouts.length}`
 );
 for (const f of playerBouts.slice(0, 5)) {
-  console.log(`  fight wk${f.week}: ${f.title} winner=${f.winner} by=${f.by}`);
+  logger.log(`  fight wk${f.week}: ${f.title} winner=${f.winner} by=${f.by}`);
 }
 
 printCouncil(state, `week ${state.week}, final`);
@@ -215,7 +217,7 @@ if (savePath) {
   // Mirror exportSlot: truncate for size, strip runtime-only Map caches that
   // GameStateSchema rejects on import.
   writeFileSync(savePath, JSON.stringify(stripNonSerializable(truncateState(state))));
-  console.log(`\nsave written → ${savePath}`);
+  logger.log(`\nsave written → ${savePath}`);
 }
 
-console.log(`\n✔ Advisor E2E complete`);
+logger.log(`\n✔ Advisor E2E complete`);

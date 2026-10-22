@@ -68,4 +68,23 @@ describe('logger', () => {
       expect(logger.warn('test')).toBeUndefined();
     });
   });
+
+  describe('logger.debug', () => {
+    it('delegates to console.debug', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      logger.debug('trace');
+      expect(spy).toHaveBeenCalledWith('trace');
+    });
+
+    it('delegates with multiple args', () => {
+      const spy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      logger.debug('d1', 'd2');
+      expect(spy).toHaveBeenCalledWith('d1', 'd2');
+    });
+
+    it('returns undefined', () => {
+      vi.spyOn(console, 'debug').mockImplementation(() => {});
+      expect(logger.debug('test')).toBeUndefined();
+    });
+  });
 });

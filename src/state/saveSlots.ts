@@ -4,6 +4,8 @@ import { truncateState } from '@/engine/storage/truncation';
 import { STORE_KEYS } from '@/constants/core/storeKeys';
 import { GameStateSchema, SaveSlotMetaSchema } from '@/schemas/gameStateSchema';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Defines the shape of save slot meta.
  */
@@ -30,7 +32,7 @@ async function getStoredMeta(): Promise<SaveSlotMeta[]> {
       const stored = await window.electronAPI.storeGet(STORAGE_KEY);
       if (stored) return SaveSlotMetaSchema.array().parse(stored);
     } catch (e) {
-      console.error('Failed to parse save slot metadata from electron-store', e);
+      logger.error('Failed to parse save slot metadata from electron-store', e);
     }
     return [];
   }
@@ -41,7 +43,7 @@ async function getStoredMeta(): Promise<SaveSlotMeta[]> {
   try {
     return SaveSlotMetaSchema.array().parse(JSON.parse(stored));
   } catch (e) {
-    console.error('Failed to parse save slot metadata from localStorage', e);
+    logger.error('Failed to parse save slot metadata from localStorage', e);
     return [];
   }
 }
@@ -52,7 +54,7 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
     try {
       await window.electronAPI.storeSet(STORAGE_KEY, meta);
     } catch (error) {
-      console.error('Failed to save save slot metadata to electron-store', error);
+      logger.error('Failed to save save slot metadata to electron-store', error);
     }
     return;
   }
@@ -62,7 +64,7 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(meta));
   } catch (error) {
     if ((error as Error)?.name === 'QuotaExceededError') {
-      console.error('localStorage quota exceeded when saving save slot metadata', error);
+      logger.error('localStorage quota exceeded when saving save slot metadata', error);
       // Attempt to clear old save slots to free up space
       try {
         const existing = await getStoredMeta();
@@ -72,10 +74,10 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(mostRecent));
         }
       } catch (retryError) {
-        console.error('Failed to recover from localStorage quota error', retryError);
+        logger.error('Failed to recover from localStorage quota error', retryError);
       }
     } else {
-      console.error('Failed to save save slot metadata', error);
+      logger.error('Failed to save save slot metadata', error);
     }
   }
 }
@@ -136,7 +138,7 @@ export async function deleteSlot(slotId: string) {
     try {
       await window.electronAPI.deleteSave(slotId);
     } catch (error) {
-      console.error('Failed to delete save file from disk:', error);
+      logger.error('Failed to delete save file from disk:', error);
     }
   }
 }
@@ -171,7 +173,7 @@ export async function importSaveToNewSlot(data: unknown): Promise<string | null>
     await saveToSlot(slotId, `Imported: ${validatedState.player.stableName}`, validatedState);
     return slotId;
   } catch (e) {
-    console.error('Import failed', e);
+    logger.error('Import failed', e);
     return null;
   }
 }

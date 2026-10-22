@@ -16,6 +16,8 @@ import * as fs from 'fs/promises';
 import * as os from 'os';
 import { fileURLToPath } from 'url';
 
+import { logger } from './logger';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -70,7 +72,7 @@ let configSaveTimeout: NodeJS.Timeout | null = null;
 // Load config from file
 async function loadConfig() {
   if (!configPath) {
-    console.warn('Config path not initialized yet');
+    logger.warn('Config path not initialized yet');
     return;
   }
   try {
@@ -83,7 +85,7 @@ async function loadConfig() {
     const parsed = JSON.parse(data);
     Object.keys(parsed).forEach((key) => store.set(key, parsed[key]));
   } catch (e) {
-    console.error('Failed to load config:', e);
+    logger.error('Failed to load config:', e);
   }
 }
 
@@ -94,7 +96,7 @@ function saveConfig() {
   }
   configSaveTimeout = setTimeout(async () => {
     if (!configPath) {
-      console.warn('Config path not initialized yet');
+      logger.warn('Config path not initialized yet');
       return;
     }
     try {
@@ -104,7 +106,7 @@ function saveConfig() {
       });
       await fs.writeFile(configPath, JSON.stringify(data, null, 2));
     } catch (e) {
-      console.error('Failed to save config:', e);
+      logger.error('Failed to save config:', e);
     }
   }, 500); // Debounce for 500ms
 }
@@ -191,36 +193,36 @@ export function createWindow() {
 
   // Load the app
   if (isDev) {
-    console.log(`Loading from http://localhost:${devPort}`);
+    logger.log(`Loading from http://localhost:${devPort}`);
     mainWindow
       .loadURL(`http://localhost:${devPort}`)
-      .catch((err) => console.error('Failed to load URL:', err));
+      .catch((err) => logger.error('Failed to load URL:', err));
     mainWindow.webContents.openDevTools();
   } else {
-    console.log(`Loading from ${path.join(__dirname, '../dist/index.html')}`);
+    logger.log(`Loading from ${path.join(__dirname, '../dist/index.html')}`);
     mainWindow
       .loadFile(path.join(__dirname, '../dist/index.html'))
-      .catch((err) => console.error('Failed to load file:', err));
+      .catch((err) => logger.error('Failed to load file:', err));
   }
 
   // Log any loading errors
   mainWindow.webContents.on(
     'did-fail-load',
     (_event, errorCode, errorDescription, validatedURL) => {
-      console.error('Failed to load:', errorCode, errorDescription, validatedURL);
+      logger.error('Failed to load:', errorCode, errorDescription, validatedURL);
     }
   );
 
   mainWindow.webContents.on('did-finish-load', () => {
-    console.log('Page loaded successfully');
+    logger.log('Page loaded successfully');
   });
 
   mainWindow.webContents.on('console-message', (_event, level, message, line, sourceId) => {
-    console.log(`Renderer [${level}]: ${message} (${sourceId}:${line})`);
+    logger.log(`Renderer [${level}]: ${message} (${sourceId}:${line})`);
   });
 
   mainWindow.webContents.on('render-process-gone', (_event, details) => {
-    console.error('Renderer process gone:', details);
+    logger.error('Renderer process gone:', details);
   });
 
   // Check if preload script loaded
@@ -229,8 +231,8 @@ export function createWindow() {
     if (!win) return;
     win.webContents
       .executeJavaScript('window.electronAPI ? "preload loaded" : "preload NOT loaded"')
-      .then((result: string) => console.log('Preload script status:', result))
-      .catch((err: Error) => console.error('Failed to check preload:', err));
+      .then((result: string) => logger.log('Preload script status:', result))
+      .catch((err: Error) => logger.error('Failed to check preload:', err));
   });
 
   // Save window bounds on resize/move
@@ -507,7 +509,7 @@ export function registerIPCHandlers() {
       await fs.writeFile(filePath, stateStr);
       return { success: true };
     } catch (error) {
-      console.error('Error saving game:', error);
+      logger.error('Error saving game:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -537,11 +539,11 @@ export function registerIPCHandlers() {
       try {
         await fs.writeFile(bakPath, data);
       } catch (backupError) {
-        console.error('Failed to write .bak backup:', backupError);
+        logger.error('Failed to write .bak backup:', backupError);
       }
       return { success: false, error: 'Incompatible save version' };
     } catch (error) {
-      console.error('Error loading game:', error);
+      logger.error('Error loading game:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -561,7 +563,7 @@ export function registerIPCHandlers() {
         .filter(validateSlotId);
       return { success: true, data: saveIds };
     } catch (error) {
-      console.error('Error listing saves:', error);
+      logger.error('Error listing saves:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -583,7 +585,7 @@ export function registerIPCHandlers() {
       }
       return { success: true };
     } catch (error) {
-      console.error('Error deleting save:', error);
+      logger.error('Error deleting save:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -625,7 +627,7 @@ export function registerIPCHandlers() {
       await fs.writeFile(filePath, JSON.stringify(logData, null, 2));
       return { success: true };
     } catch (error) {
-      console.error('Error archiving bout log:', error);
+      logger.error('Error archiving bout log:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -659,7 +661,7 @@ export function registerIPCHandlers() {
       const data = await fs.readFile(filePath, 'utf-8');
       return { success: true, data: JSON.parse(data) };
     } catch (error) {
-      console.error('Error retrieving bout log:', error);
+      logger.error('Error retrieving bout log:', error);
       return { success: false, error: (error as Error).message };
     }
   });
@@ -732,7 +734,7 @@ export function registerIPCHandlers() {
 app.whenReady().then(async () => {
   // Deny arbitrary permission requests by default to reduce attack surface
   session.defaultSession.setPermissionRequestHandler((_webContents, permission, callback) => {
-    console.warn(`Blocked permission request for: ${permission}`);
+    logger.warn(`Blocked permission request for: ${permission}`);
     callback(false);
   });
 
@@ -760,12 +762,12 @@ app.on('web-contents-created', (_event, contents) => {
     // In dev, only allow localhost. In prod, only allow file: protocol
     if (isDev) {
       if (parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
-        console.warn('Blocked arbitrary navigation to:', navigationUrl);
+        logger.warn('Blocked arbitrary navigation to:', navigationUrl);
         event.preventDefault();
       }
     } else {
       if (parsedUrl.protocol !== 'file:') {
-        console.warn('Blocked arbitrary navigation to:', navigationUrl);
+        logger.warn('Blocked arbitrary navigation to:', navigationUrl);
         event.preventDefault();
       }
     }
@@ -779,12 +781,12 @@ app.on('web-contents-created', (_event, contents) => {
       if (safeProtocols.includes(parsedUrl.protocol)) {
         shell.openExternal(url);
       } else {
-        console.warn(
+        logger.warn(
           `Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`
         );
       }
     } catch {
-      console.error(`Invalid URL in windowOpenHandler: ${url}`);
+      logger.error(`Invalid URL in windowOpenHandler: ${url}`);
     }
     return { action: 'deny' };
   });
@@ -792,7 +794,7 @@ app.on('web-contents-created', (_event, contents) => {
   // Block creation of webviews globally
   contents.on('will-attach-webview', (e) => {
     e.preventDefault();
-    console.warn('Blocked attempt to attach webview');
+    logger.warn('Blocked attempt to attach webview');
   });
 });
 

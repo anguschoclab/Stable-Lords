@@ -3,6 +3,8 @@ import { archiveService } from '@/engine/storage/archiveService';
 import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
 import { drainDeferredBoutLogs } from '@/engine/storage/deferredBoutLogs';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Non-blocking flush: extracts deferred bout logs from state, clears them
  * immediately, and dispatches archiving.
@@ -47,7 +49,7 @@ function notifyRetry(log: DeferredBoutLog): void {
     try {
       listener(log);
     } catch (err) {
-      console.error('Archive retry listener threw:', err);
+      logger.error('Archive retry listener threw:', err);
     }
   }
 }
@@ -66,7 +68,7 @@ function archiveDirectly(logs: DeferredBoutLog[]): Promise<void> {
       archiveService.archiveBoutLog(log.year, log.season, log.boutId, log.transcript, true).then(
         () => null,
         (err) => {
-          console.error(`Failed to archive bout ${log.boutId}:`, err);
+          logger.error(`Failed to archive bout ${log.boutId}:`, err);
           return log;
         }
       )
@@ -96,7 +98,7 @@ export function archiveBoutLogs(logs: DeferredBoutLog[]): void {
   }
 
   archiveWorkerProxy.flushLogs(batch).catch((err) => {
-    console.error('Archive worker proxy: flush failed — retrying on the main thread', err);
+    logger.error('Archive worker proxy: flush failed — retrying on the main thread', err);
     void archiveDirectly(batch);
   });
 }

@@ -33,9 +33,8 @@ import {
 import { countUnreadEvents } from './eventLog/readState';
 import { cn } from '@/lib/utils';
 import type { GameEvent } from '@/types/eventLog';
-/**
- *
- */
+
+/** Renders the arena feed sidebar of game events derived from state. */
 export default function EventLog() {
   const state = useGameStore(
     useShallow((s) => ({

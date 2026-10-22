@@ -10,6 +10,8 @@ import { validateStateInvariants } from '@/engine/validate/stateInvariants';
 import { truncateState } from '@/engine/storage/truncation';
 import { buildWeekCaches } from './caches';
 import type { WeekContext } from './context';
+import { logger } from '@/utils/logger';
+
 /**
  * Check whether the treasury would fall below the bankruptcy threshold after applying core impacts.
  */
@@ -182,7 +184,7 @@ function finalizePersistence(state: GameState, ctx: WeekContext): GameState {
   if (import.meta.env.DEV) {
     const violations = validateStateInvariants(state);
     if (violations.length > 0) {
-      console.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
+      logger.error(`finalizeState invariant violations (week ${ctx.nextWeek}):`, violations);
     }
   }
   // Truncate at EVERY week boundary — previously only batch spans and

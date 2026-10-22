@@ -3,6 +3,8 @@ import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { z } from 'zod';
 
+import { logger } from '@/utils/logger';
+
 const NARRATIVE_DIR = path.join(process.cwd(), 'src/data/narrative');
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Bard_Report.md');
 
@@ -243,12 +245,12 @@ Context: You are writing for ${deficitPath}. ${context}`;
       );
       return result.response.text();
     } catch (error: unknown) {
-      console.error('Gemini API Error:', error instanceof Error ? error.message : String(error));
+      logger.error('Gemini API Error:', error instanceof Error ? error.message : String(error));
       return '{}';
     }
   } else {
     // Mock for local testing
-    console.log(`[MOCK] Generating for ${deficitPath}`);
+    logger.log(`[MOCK] Generating for ${deficitPath}`);
     return JSON.stringify({
       new_templates: [
         `%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)`,
@@ -282,7 +284,7 @@ export async function validate_with_retry(
       return templates;
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      console.warn(`Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${errMsg}`);
+      logger.warn(`Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${errMsg}`);
       errorContext = `Your previous response failed validation: ${errMsg}. Fix the variables and regenerate. Ensure you only use %A, %D, %W, %BP.`;
     }
   }
@@ -316,9 +318,9 @@ export async function commit_to_archive(newTemplatesMap: Record<string, string[]
   if (addedCount > 0) {
     await writeSplitNarrative(data);
     await fs.writeFile(REPORT_FILE, report, 'utf-8');
-    console.log(`Successfully added ${addedCount} new templates.`);
+    logger.log(`Successfully added ${addedCount} new templates.`);
   } else {
-    console.log('No new templates were added.');
+    logger.log('No new templates were added.');
   }
 }
 
@@ -387,24 +389,24 @@ export function deduplicate_full_archive(data: ValidatedJSON) {
 
 async function main() {
   if (!DRY_RUN && !process.env.GEMINI_API_KEY) {
-    console.error('GEMINI_API_KEY environment variable is required.');
+    logger.error('GEMINI_API_KEY environment variable is required.');
     process.exit(1);
   }
 
-  console.log('📜 The Bard of the Blood Sands is waking up...');
+  logger.log('📜 The Bard of the Blood Sands is waking up...');
 
   const rawData = await readMergedNarrative();
   const data: ValidatedJSON = NarrativeSchema.parse(rawData);
 
   // 1. Deficit Detection
   const deficits = fetch_narrative_deficits(data);
-  console.log(`Found ${deficits.length} deficit paths.`);
+  logger.log(`Found ${deficits.length} deficit paths.`);
 
   // 2. Generation Loop
   const newTemplatesMap: Record<string, string[]> = {};
   const targetDeficits = deficits.slice(0, 5);
 
-  console.log(`Processing ${targetDeficits.length} paths in parallel...`);
+  logger.log(`Processing ${targetDeficits.length} paths in parallel...`);
   const results = await Promise.all(
     targetDeficits.map(async (path) => {
       const validated = await validate_with_retry(path);
@@ -427,7 +429,7 @@ async function main() {
   deduplicate_full_archive(freshData);
   await writeSplitNarrative(freshData);
 
-  console.log('✅ Bardic duties complete.');
+  logger.log('✅ Bardic duties complete.');
 }
 
 if (!process.env.VITEST) {

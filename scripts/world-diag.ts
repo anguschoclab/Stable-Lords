@@ -17,6 +17,8 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
 
+import { logger } from '@/utils/logger';
+
 const WEEKS = Number(process.argv[2] ?? 1000);
 const SEED = Number(process.argv[3] ?? 12345);
 
@@ -176,12 +178,12 @@ console.log = origLog;
 
 const styles = Object.keys(mm).sort();
 const c = result.cumulative;
-console.log(`\n=== weeks=${WEEKS} seed=${SEED} bouts=${c.totalBouts} ===`);
-console.log('\n# Overall win rate');
+logger.log(`\n=== weeks=${WEEKS} seed=${SEED} bouts=${c.totalBouts} ===`);
+logger.log('\n# Overall win rate');
 for (const s of styles) {
   const w = c.styleWins[s] ?? 0;
   const l = c.styleLosses[s] ?? 0;
-  console.log(s.padEnd(18), ((100 * w) / (w + l)).toFixed(2), `n=${w + l}`);
+  logger.log(s.padEnd(18), ((100 * w) / (w + l)).toFixed(2), `n=${w + l}`);
 }
 
 const cols = [
@@ -211,33 +213,33 @@ for (const [title, table] of [
   ['Fighter profile AT BOUT TIME (bout-weighted)', atBout],
   ['Living rival population (warrior-week weighted)', pop],
 ] as const) {
-  console.log(`\n# ${title}`);
-  console.log(''.padEnd(18), cols.map((k) => k.padStart(6)).join(''));
+  logger.log(`\n# ${title}`);
+  logger.log(''.padEnd(18), cols.map((k) => k.padStart(6)).join(''));
   for (const s of styles)
-    if (table[s]) console.log(s.padEnd(18), cols.map((k) => avg(table[s]!, k)).join(''));
+    if (table[s]) logger.log(s.padEnd(18), cols.map((k) => avg(table[s]!, k)).join(''));
 }
 
-console.log('\n# World matchup matrix: row style win% vs column style (n)');
-console.log(''.padEnd(18), styles.map((s) => s.slice(0, 11).padStart(12)).join(''));
+logger.log('\n# World matchup matrix: row style win% vs column style (n)');
+logger.log(''.padEnd(18), styles.map((s) => s.slice(0, 11).padStart(12)).join(''));
 for (const s of styles)
-  console.log(s.padEnd(18), styles.map((o) => pct(mm[s]?.[o]).padStart(12)).join(''));
+  logger.log(s.padEnd(18), styles.map((o) => pct(mm[s]?.[o]).padStart(12)).join(''));
 
 for (const [title, table, keys] of [
   ['Win% by own career fights', byExp, ['0-3', '4-10', '11-25', '26+']],
   ['Win% by experience vs opponent (±5 fights)', byExpDiff, ['greener', 'even', 'veteran']],
   ['Win% by era', byEra, ['w1-100', 'w101-300', 'w301-600', 'w601+']],
 ] as const) {
-  console.log(`\n# ${title}`);
-  console.log(''.padEnd(18), keys.map((k) => k.padStart(14)).join(''));
+  logger.log(`\n# ${title}`);
+  logger.log(''.padEnd(18), keys.map((k) => k.padStart(14)).join(''));
   for (const s of styles)
-    console.log(s.padEnd(18), keys.map((k) => pct(table[s]?.[k]).padStart(14)).join(''));
+    logger.log(s.padEnd(18), keys.map((k) => pct(table[s]?.[k]).padStart(14)).join(''));
 }
 
-console.log('\n# Loss method share');
+logger.log('\n# Loss method share');
 for (const s of styles) {
   const t = lossBy[s] ?? {};
   const n = Object.values(t).reduce((x, y) => x + y, 0);
-  console.log(
+  logger.log(
     s.padEnd(18),
     Object.entries(t)
       .sort((x, y) => y[1] - x[1])
@@ -246,7 +248,7 @@ for (const s of styles) {
   );
 }
 
-console.log('\n# Development at equal experience: TOT / WT / SK / drills / age');
+logger.log('\n# Development at equal experience: TOT / WT / SK / drills / age');
 for (const s of [
   'WALL OF STEEL',
   'TOTAL PARRY',
@@ -255,7 +257,7 @@ for (const s of [
   'PARRY-LUNGE',
   'LUNGING ATTACK',
 ]) {
-  console.log(
+  logger.log(
     s.padEnd(18),
     ['0-3', '4-10', '11-25', '26+']
       .map((k) => {
@@ -268,11 +270,11 @@ for (const s of [
   );
 }
 
-console.log('\n# Population share by era (%) — the emergent meta');
+logger.log('\n# Population share by era (%) — the emergent meta');
 const eras = ['w1-100', 'w101-300', 'w301-600', 'w601+'];
-console.log(''.padEnd(18), eras.map((k) => k.padStart(10)).join(''));
+logger.log(''.padEnd(18), eras.map((k) => k.padStart(10)).join(''));
 for (const s of styles)
-  console.log(
+  logger.log(
     s.padEnd(18),
     eras
       .map((e) => {
@@ -283,10 +285,10 @@ for (const s of styles)
   );
 const lastPulse = result.pulses[result.pulses.length - 1];
 const living = result.finalState.rivals.reduce((n, r) => n + r.roster.length, 0);
-console.log(
+logger.log(
   `\n# Kills: weekly ${c.weeklyKills}/${c.weeklyBouts} = ${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)}%  tournament ${c.tournamentKills}/${c.tournamentBouts} = ${((100 * c.tournamentKills) / Math.max(1, c.tournamentBouts)).toFixed(2)}%  deaths=${c.deaths} retired=${c.retired} rivals=${result.finalState.rivals.length} living=${living} rivalGoldMean=${lastPulse?.avgRivalTreasury}`
 );
-console.log(
+logger.log(
   '# Kill share of wins by style: ' +
     styles
       .map(
@@ -315,14 +317,14 @@ for (const t of Object.values(fs0.arenaChampions ?? {})) {
 }
 const maxCrowns = Math.max(0, ...crownCounts.values());
 
-console.log('\n# Megaplan world health');
-console.log(
+logger.log('\n# Megaplan world health');
+logger.log(
   `stables: start=${stableSeries[0]} end=${fs0.rivals.length} min=${Math.min(...stableSeries)} max=${Math.max(...stableSeries)}`
 );
-console.log(
+logger.log(
   `roster fill: avg ${(rosterFillSum / Math.max(1, rosterFillWeeks)).toFixed(1)} warriors/stable`
 );
-console.log(
+logger.log(
   `legacy-founded stables: ${legacyFounded.length} (generations: ${
     Object.entries(generations)
       .sort(([a], [b]) => Number(a) - Number(b))
@@ -330,27 +332,27 @@ console.log(
       .join(' ') || 'none'
   })`
 );
-console.log(
+logger.log(
   `freeAgents=${fs0.freeAgents?.length ?? 0} recruitPool=${fs0.recruitPool?.length ?? 0} founderQueue=${fs0.legacyFounderQueue?.length ?? 0}`
 );
-console.log(
+logger.log(
   `arena coverage: ${allArenas.length - darkArenas.length}/${allArenas.length} arenas saw a bout` +
     (darkArenas.length ? ` — dark: ${darkArenas.map((a) => a.id).join(', ')}` : '')
 );
-console.log(
+logger.log(
   `crowns: ${occupiedCrowns} reigning / ${crownCounts.size} unique champions / max ${maxCrowns} per warrior`
 );
-console.log(`perf: ${(simMs / WEEKS).toFixed(0)} ms/week (${(simMs / 1000).toFixed(1)}s total)`);
+logger.log(`perf: ${(simMs / WEEKS).toFixed(0)} ms/week (${(simMs / 1000).toFixed(1)}s total)`);
 
 const wr = styles.map(
   (s) => (100 * (c.styleWins[s] ?? 0)) / ((c.styleWins[s] ?? 0) + (c.styleLosses[s] ?? 0))
 );
-console.log(
+logger.log(
   `SUMMARY seed=${SEED} weeks=${WEEKS} kill=${((100 * c.weeklyKills) / c.weeklyBouts).toFixed(2)} min=${Math.min(...wr).toFixed(1)} max=${Math.max(...wr).toFixed(1)} | ` +
     styles.map((s, i) => `${STYLE_CODE[s as never]} ${wr[i]!.toFixed(1)}`).join(' ')
 );
 if (process.env.SNAP) {
   const fs = await import('fs');
   fs.writeFileSync(process.env.SNAP, JSON.stringify(snapshots));
-  console.log(`snapshot: ${snapshots.length} warriors -> ${process.env.SNAP}`);
+  logger.log(`snapshot: ${snapshots.length} warriors -> ${process.env.SNAP}`);
 }

@@ -20,6 +20,8 @@ import { assertSafeFileNamePart } from '@/engine/storage/opfsArchive/validation'
 import { isPlausibleGameState } from '@/engine/storage/opfsArchive/plausibility';
 import type { GameState } from '@/types/state.types';
 
+import { logger } from '@/utils/logger';
+
 /**
  * The NodeArchiveService class.
  */
@@ -118,7 +120,7 @@ export class NodeArchiveService implements ArchiveService {
       const text = await readFile(filePath, 'utf8');
       const parsed: unknown = JSON.parse(text);
       if (!isPlausibleGameState(parsed)) {
-        console.error('corrupt/incompatible save: failed plausibility check', { slotId });
+        logger.error('corrupt/incompatible save: failed plausibility check', { slotId });
         return null;
       }
       return parsed as GameState;

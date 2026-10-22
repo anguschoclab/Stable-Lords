@@ -10,6 +10,8 @@ import { writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { deflateSync } from 'node:zlib';
 
+import { logger } from '@/utils/logger';
+
 const SIZE = 256;
 const OUT_DIR = path.resolve(import.meta.dirname, '../public/avatars/layers');
 
@@ -438,7 +440,7 @@ function generateManifest(): void {
 
   scan(OUT_DIR, '');
   writeFileSync(manifestPath, `${JSON.stringify({ categories }, null, 2)}\n`);
-  console.log(`Wrote avatar manifest with ${Object.keys(categories).length} categories.`);
+  logger.log(`Wrote avatar manifest with ${Object.keys(categories).length} categories.`);
 }
 
 function main(): void {
@@ -456,7 +458,7 @@ function main(): void {
   generateShoulders();
 
   generateManifest();
-  console.log('Placeholder avatar assets generated.');
+  logger.log('Placeholder avatar assets generated.');
 }
 
 main();

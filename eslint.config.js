@@ -50,6 +50,9 @@ export default tseslint.config(
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/check-tag-names': ['warn', { definedTags: ['vitest-environment'] }],
       'jsdoc/check-alignment': 'warn',
+      /* LOGGING POLICY: all console output routes through the logger util
+         (src/utils/logger.ts; electron/logger.ts for the main process). */
+      'no-console': 'error',
       /* RNG POLICY: Math.random is banned repo-wide. Deterministic contexts use
          SeededRNG/resolveRng from @/utils/random; non-deterministic variety uses
          cryptoRandom/cryptoRandomInt from @/utils/cryptoRandom. */
@@ -123,28 +126,43 @@ export default tseslint.config(
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
-    /* BY-DESIGN: Logger utility intentionally uses console */
-    files: ['src/utils/logger.ts'],
+    /* BY-DESIGN: Logger utilities intentionally use console */
+    files: ['src/utils/logger.ts', 'electron/logger.ts'],
     rules: { 'no-console': 'off' },
   },
   {
-    /* TEST FILES: Allow non-null assertions, 'any', and unused vars for convenience in tests */
+    /* ELECTRON MAIN: Node process — console is the intended stdout channel.
+       Call sites still prefer electron/logger.ts for consistency. */
+    files: ['electron/**/*.{ts,tsx}'],
+    rules: { 'no-console': 'off' },
+  },
+  {
+    /* E2E SPECS: Playwright diagnostics write to stdout by design. */
+    files: ['e2e/**/*.{ts,tsx}'],
+    rules: { 'no-console': 'off' },
+  },
+  {
+    /* TEST FILES: Allow non-null assertions, 'any', and unused vars for convenience in tests.
+       console.* permitted for test diagnostics and console-spy plumbing. */
     files: ['src/test/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+      'no-console': 'off',
     },
   },
   {
     /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions.
        scripts/stubs are intentionally minimal headless shims — JSDoc and
-       constructor-shape rules add no value there. */
+       constructor-shape rules add no value there. CLI scripts write to
+       stdout by design (incl. intentional console.log patching). */
     files: ['scratch/**/*.{ts,tsx}', 'scripts/**/*.{ts,tsx}', '*.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',
       'jsdoc/require-jsdoc': 'off',
       '@typescript-eslint/no-useless-constructor': 'off',
+      'no-console': 'off',
     },
   },
   {

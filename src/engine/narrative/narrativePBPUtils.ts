@@ -6,6 +6,8 @@ import { narrativeContent } from '@/data/narrative';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { escapeHtml } from '@/utils/escapeHtml';
 
+import { logger } from '@/utils/logger';
+
 /**
  * Defines the shape of combat context.
  */
@@ -151,7 +153,7 @@ export function getFromArchive(rng: IRNGService, path: string[]): string {
       return rng.pick(current);
     }
   } catch {
-    console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
+    logger.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
   }
   return 'A fierce exchange occurs.';
 }

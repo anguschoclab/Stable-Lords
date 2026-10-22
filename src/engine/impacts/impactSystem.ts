@@ -12,6 +12,8 @@ import { socialHandlers } from './social';
 import { awardsHandlers } from './awards';
 import { progressionHandlers } from './progression';
 
+import { logger } from '@/utils/logger';
+
 // Re-export types for backward compatibility
 export type { StateImpact, ImpactHandler } from './types';
 
@@ -78,7 +80,7 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
     (state.roster ?? []).forEach(scan);
     (state.rivals ?? []).forEach((r) => r.roster.forEach(scan));
     if (count < before) {
-      console.error(
+      logger.error(
         `[epithet-drop] wk${state.absoluteWeek}: ${before}→${count} keys=${impacts.flatMap((i) => Object.keys(i ?? {})).join(',')}`
       );
     }
@@ -145,7 +147,7 @@ const MERGE_CONFIG: MergeConfig = {
   ownerGrudges: { strategy: 'replace', defaultValue: undefined },
   rivalries: { strategy: 'replace', defaultValue: undefined },
   trainingAssignments: { strategy: 'replace', defaultValue: undefined },
-  lastSimulationReport: { strategy: 'replace', defaultValue: undefined },
+  stewardReport: { strategy: 'replace', defaultValue: undefined },
   isTournamentWeek: { strategy: 'replace', defaultValue: undefined },
   activeTournamentId: { strategy: 'replace', defaultValue: undefined },
   day: { strategy: 'replace', defaultValue: undefined },

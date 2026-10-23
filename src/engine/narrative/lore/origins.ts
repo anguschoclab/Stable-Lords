@@ -383,4 +383,12 @@ export const ORIGINS: string[] = [
   'Survived the brutal winter by hiding among the warm corpses of the Plague Carts',
   'Found wandering the Ash Dunes with nothing but a rusted shiv and a name scratched into their arm',
   'Sold to the lowest bidding pit-boss in the lightless fighting rings of the Sump',
+  'Raised by silent sentinels in the crumbling towers of the Ashen Convent',
+  'Survived the slow starvation of the Drowned Ward Orphanage by catching rats in the dark',
+  'Left bound and shivering at the iron gates of the Whispering Vaults',
+  'Found clutching a rusted dagger in the charnel pits of the Lower Wards',
+  'Raised in the soot-choked rafters above the Ember Forges, breathing fire and smoke',
+  'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
+  'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
+  'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
 ];

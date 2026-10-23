@@ -227,4 +227,9 @@ export const CHILDHOOD_TRAITS: string[] = [
   'would intentionally draw first blood just to smell the iron and focus their rage',
   'developed a terrifying habit of humming a lullaby while snapping rat traps with their bare hands',
   'learned to map out an entire brawl in their head before throwing the first punch',
+  'learned to map the exact rhythm of a guard’s patrol just by the sound of their boots on cobblestone',
+  'would purposely walk with a severe limp to bait overconfident thieves into lethal counterattacks',
+  'spent their youth silently climbing the sheer outer walls of the colosseum to watch the bloodletting',
+  'developed an uncanny ability to gauge the exact weight of a makeshift weapon merely by looking at it',
+  'learned to feign unconsciousness under a pile of corpses to survive the winter cullings',
 ];

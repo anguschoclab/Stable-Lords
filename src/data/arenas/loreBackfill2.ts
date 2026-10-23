@@ -205,5 +205,29 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Traitor\'s Gutter',
     narrative:
       'The drainage ditches running along the walls are intentionally deep, designed to quickly clear blood, but often serve as deadly pitfalls for fighters backed into the corners.',
+  },
+  {
+    id: 'standard_arena_blood_soaked_sands',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Blood-Soaked Sands',
+    narrative:
+      'The sand in the eastern quadrant is permanently stained a deep, rusty red—the lasting remnant of a legendary fifty-man free-for-all that raged for two straight days.',
+  },
+  {
+    id: 'mudpit_arena_sunken_colossus',
+    arenaId: 'mudpit_arena',
+    type: 'hazard',
+    title: 'The Sunken Colossus',
+    narrative:
+      'Hidden deep beneath the mud lies the jagged, rusted remains of a colossal automaton. Unlucky fighters occasionally impale themselves on its upward-facing spikes when thrown.',
+  },
+  {
+    id: 'lantern_hall_arena_extinguished_flame',
+    arenaId: 'lantern_hall_arena',
+    type: 'famous_death',
+    title: 'The Extinguished Flame',
+    narrative:
+      'A beloved champion met their end when a massive, suspended lantern was severed from its chain by a stray throwing axe, crushing them in a burst of glass and burning oil.',
   }
 ];

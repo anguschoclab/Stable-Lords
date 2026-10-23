@@ -11,7 +11,7 @@ import { TRAITS } from '@/engine/traits';
  * loudly here.
  */
 describe('MEGAPLAN-V5: V20 narrative traits (PR #1068)', () => {
-  it.skip('dark_survivor is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
+  it('dark_survivor is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
     const t = TRAITS['dark_survivor'];
     expect(t, 'dark_survivor missing from TRAITS').toBeDefined();
     expect(t!.tier).toBe('Notable');
@@ -22,7 +22,7 @@ describe('MEGAPLAN-V5: V20 narrative traits (PR #1068)', () => {
     expect(t!.weight).toBe(0.5);
   });
 
-  it.skip('gutter_brawler is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
+  it('gutter_brawler is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
     const t = TRAITS['gutter_brawler'];
     expect(t, 'gutter_brawler missing from TRAITS').toBeDefined();
     expect(t!.tier).toBe('Notable');
@@ -33,7 +33,7 @@ describe('MEGAPLAN-V5: V20 narrative traits (PR #1068)', () => {
     expect(t!.weight).toBe(0.5);
   });
 
-  it.skip('street_specter is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
+  it('street_specter is registered Notable/positive with its curated effect (MEGAPLAN-V5)', () => {
     const t = TRAITS['street_specter'];
     expect(t, 'street_specter missing from TRAITS').toBeDefined();
     expect(t!.tier).toBe('Notable');
@@ -44,7 +44,7 @@ describe('MEGAPLAN-V5: V20 narrative traits (PR #1068)', () => {
     expect(t!.weight).toBe(0.5);
   });
 
-  it.skip('the three V20 traits follow ash_choked_fury in registry order (MEGAPLAN-V5)', () => {
+  it('the three V20 traits follow ash_choked_fury in registry order (MEGAPLAN-V5)', () => {
     // registry.ts derives TRAITS key order from LEGACY_TRAIT_ORDER and
     // throws at import on drift — ordering assertion guards the tail slot.
     const keys = Object.keys(TRAITS);

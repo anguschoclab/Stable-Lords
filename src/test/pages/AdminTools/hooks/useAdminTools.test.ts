@@ -13,6 +13,7 @@ vi.mock('sonner', () => __SHARED_MOCKS.sonner);
 vi.mock('@/engine/runtime/workerProxy', () => ({
   engineProxy: {
     skipToQuarterEnd: vi.fn(),
+    skipToMonthEnd: vi.fn(),
   },
 }));
 
@@ -27,28 +28,11 @@ import { toast } from 'sonner';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { generateRivalStables } from '@/engine/rivals';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
+import { mockFileReader } from '@/test/_helpers/mockFileReader';
 
 const seedStore = () => {
   useGameStore.getState().loadGame('test-slot', createFreshState('test-seed') as GameState);
   useGameStore.setState({ atTitleScreen: false, isInitialized: true });
-};
-
-const mockFileReader = (result: string | null, opts: { error?: boolean } = {}) => {
-  window.FileReader = vi.fn().mockImplementation(function () {
-    return {
-      // `function` (not arrow) so `this` binds to the reader instance the hook
-      // assigns onload/onerror to — same pattern as StartGame.test.tsx.
-      readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {
-        if (opts.error) {
-          this.onerror?.(new Error('read failed'));
-        } else if (this.onload) {
-          this.onload({ target: { result } });
-        }
-      }),
-      onload: null,
-      onerror: null,
-    };
-  }) as any;
 };
 
 describe('useAdminTools', () => {
@@ -131,6 +115,23 @@ describe('useAdminTools', () => {
     expect(loadGame).not.toHaveBeenCalled();
     expect(toast.error).toHaveBeenCalledWith('Season rollover failed.');
     expect(consoleSpy).toHaveBeenCalledWith('Admin fast-forward failed:', expect.any(Error));
+  });
+
+  it('skipMonth posts an error toast when the engine call fails', async () => {
+    const loadGame = vi.fn();
+    useGameStore.setState({ loadGame } as never);
+    vi.mocked(engineProxy.skipToMonthEnd).mockRejectedValue(new Error('engine down'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { result } = renderHook(() => useAdminTools());
+    await act(async () => {
+      await result.current.skipMonth();
+    });
+
+    expect(loadGame).not.toHaveBeenCalled();
+    expect(toast.error).toHaveBeenCalledWith('Month advance failed.');
+    expect(useGameStore.getState().isSimulating).toBe(false);
+    consoleSpy.mockRestore();
   });
 
   it('skipFTUE marks the FTUE complete and preserves the seeded player', () => {

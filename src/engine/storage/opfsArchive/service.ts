@@ -87,6 +87,7 @@ export class OPFSArchiveService implements ArchiveService {
             );
           return;
         }
+        logger.error('Unknown error during hot state archival', error);
       } finally {
         if (writable) {
           try {

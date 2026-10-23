@@ -146,4 +146,22 @@ describe('store guards — behavioral tests', () => {
       } as any);
     });
   });
+
+  describe('doAdvanceDay worker rejection', () => {
+    it('logs the failure and resets isSimulating when the engine job rejects', async () => {
+      const boom = new Error('engine blew up');
+      vi.mocked(engineProxy.advanceDay).mockRejectedValueOnce(boom);
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const state = makeMinimalState({ week: 3 });
+      useGameStore.getState().loadGame('test-slot', state);
+      await useGameStore.getState().doAdvanceDay();
+
+      expect(consoleSpy).toHaveBeenCalledWith('Worker advancement failed:', boom);
+      expect(useGameStore.getState().isSimulating).toBe(false);
+      expect(useGameStore.getState().week).toBe(3);
+
+      consoleSpy.mockRestore();
+    });
+  });
 });

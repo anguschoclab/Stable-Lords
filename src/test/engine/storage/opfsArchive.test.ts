@@ -438,4 +438,73 @@ describe('OPFS Archival System', () => {
       warnSpy.mockRestore();
     });
   });
+
+  describe('Suite 15: remaining error paths', () => {
+    it('Test 15.1: version mismatch still returns null when the .bak write fails', async () => {
+      const service = new OPFSArchiveService();
+      const oldState = {
+        ...makeGameState({
+          meta: { gameName: 'Test', version: '0.9.0-old', createdAt: '2024-01-01' },
+          ...TINY_STATE_FIELDS,
+        }),
+      };
+      setMockOPFSFileText(JSON.stringify(oldState));
+      // Only the .bak path calls write() inside retrieveHotState.
+      setMockOPFSError('UnknownError', 'write');
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-bak-fail');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to write .bak backup:', expect.any(Error));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('incompatible save version'),
+        expect.objectContaining({ slotId: 'slot-bak-fail' })
+      );
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 15.2: archiveHotState logs non-quota write failures', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSError('UnknownError', 'write');
+      const dispatchSpy = vi.fn().mockReturnValue(true);
+      (global as any).window = { dispatchEvent: dispatchSpy };
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(service.archiveHotState('slot1', {} as any)).resolves.toBeUndefined();
+      expect(dispatchSpy).not.toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Unknown error during hot state archival',
+        expect.any(Error)
+      );
+
+      delete (global as any).window;
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 15.3: archiveBoutLog throws ArchiveConflictError when the bout exists and overwrite is false', async () => {
+      const service = new OPFSArchiveService();
+      // The mock getFileHandle(create:false) always succeeds, so the bout
+      // "exists" — archiveBoutLog must surface ArchiveConflictError.
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-exists', ['line'], false)
+      ).rejects.toBeInstanceOf(ArchiveConflictError);
+    });
+
+    it('Test 15.4: archiveBoutLog warns when the create-path directory lookup fails', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSError('SecurityError', 'getDirectoryHandle');
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-nodir', ['line'], true)
+      ).resolves.toBeUndefined();
+      expect(warnSpy).toHaveBeenCalledWith(
+        'Failed to get directory handle (OPFS may be restricted in this environment):',
+        expect.any(Error)
+      );
+
+      warnSpy.mockRestore();
+    });
+  });
 });

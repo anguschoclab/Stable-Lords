@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T21:53:04.725Z",
+  "generatedAt": "2026-10-23T05:38:03.426Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -172,6 +172,7 @@
     "src/test/engine/combat/hitExecution.test.ts",
     "src/test/engine/combat/strikingAttack.test.ts",
     "src/test/engine/deathNotifier.test.ts",
+    "src/test/engine/economy/arenaTierFallback.test.ts",
     "src/test/engine/economy/worldBalance.slow.test.ts",
     "src/test/engine/history/arenaHistory.test.ts",
     "src/test/engine/matchmaking/tournamentSelection/awards.test.ts",
@@ -198,6 +199,7 @@
     "src/test/engine/pipeline/yearRollover.integration.slow.test.ts",
     "src/test/engine/promoters/offerMatchmaking.test.ts",
     "src/test/engine/rivals/rivalWarriorFactory.test.ts",
+    "src/test/engine/session.test.ts",
     "src/test/engine/sim/_seedProbe.slow.test.ts",
     "src/test/engine/sim/determinism.slow.test.ts",
     "src/test/engine/sim/harnessTruncation.slow.test.ts",
@@ -311,6 +313,7 @@
     "src/test/state/useShallowAdoption.test.ts",
     "src/test/testQualityAudit.test.ts",
     "src/test/utils/cryptoRandom.test.ts",
+    "src/test/utils/fileInput.test.ts",
     "src/test/utils/idUtils.test.ts",
     "src/test/utils/storage.test.ts"
   ]

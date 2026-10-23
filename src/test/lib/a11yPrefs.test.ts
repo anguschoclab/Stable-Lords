@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   loadA11yPrefs,
   saveA11yPrefs,
@@ -46,5 +46,17 @@ describe('a11yPrefs (theme/accessibility pack)', () => {
   it('tolerates malformed stored prefs', () => {
     localStorage.setItem(A11Y_KEY, '{"contrast":"bogus","textScale":"big"}');
     expect(loadA11yPrefs()).toEqual({ contrast: 'standard', textScale: 100 });
+  });
+
+  it('returns defaults when stored prefs are unparseable JSON', () => {
+    localStorage.setItem(A11Y_KEY, '{{{not json');
+    expect(loadA11yPrefs()).toEqual({ contrast: 'standard', textScale: 100 });
+  });
+
+  it('swallows localStorage write failures (e.g. quota) without throwing', () => {
+    vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+    expect(() => saveA11yPrefs({ contrast: 'high', textScale: 125 })).not.toThrow();
   });
 });

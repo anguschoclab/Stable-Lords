@@ -118,4 +118,41 @@ describe('flushDeferredArchivesOffThread', () => {
       unsubscribe();
     }
   });
+
+  it('a throwing retry listener does not block other listeners and logs the failure', async () => {
+    // pendingRetries is module-level and earlier tests may have left parked
+    // logs behind — drain the registry before asserting listener call counts.
+    flushLogs.mockResolvedValue(undefined);
+    flushDeferredArchivesOffThread(stateWithLogs(0));
+    vi.clearAllMocks();
+
+    const throwing = vi.fn(() => {
+      throw new Error('listener exploded');
+    });
+    const listener = vi.fn();
+    const offThrowing = onArchiveRetry(throwing);
+    const offListener = onArchiveRetry(listener);
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      flushLogs.mockRejectedValue(new Error('worker died'));
+      archiveBoutLog.mockRejectedValue(new Error('disk full'));
+      flushDeferredArchivesOffThread(stateWithLogs(2));
+      await vi.waitFor(() => {
+        expect(listener).toHaveBeenCalledTimes(2);
+      });
+      expect(listener.mock.calls[0]?.[0]?.boutId).toBe('bout_0');
+      expect(listener.mock.calls[1]?.[0]?.boutId).toBe('bout_1');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Archive retry listener threw:',
+        expect.any(Error)
+      );
+    } finally {
+      offThrowing();
+      offListener();
+      consoleSpy.mockRestore();
+      // Leave the registry clean for any later tests in this file.
+      flushLogs.mockResolvedValue(undefined);
+      flushDeferredArchivesOffThread(stateWithLogs(0));
+    }
+  });
 });

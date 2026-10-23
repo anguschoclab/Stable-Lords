@@ -7,6 +7,9 @@ import { useGameStore } from '@/state/useGameStore';
 import { engineProxy } from '@/engine/runtime/workerProxy';
 import { bumpEngineEpoch } from '@/engine/runtime/session';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { audioManager } from '@/lib/AudioManager';
+import { toast } from 'sonner';
+import { logger } from '@/utils/logger';
 import type { TournamentEntry } from '@/types/state.types';
 
 vi.mock('@/engine/runtime/workerProxy', () => ({
@@ -23,6 +26,16 @@ vi.mock('@/engine/runtime/workerProxy', () => ({
 
 vi.mock('@/engine/storage/archiveService', () => ({
   archiveService: { archiveHotState: vi.fn(async () => undefined) },
+}));
+
+vi.mock('sonner', () => __SHARED_MOCKS.sonner);
+
+vi.mock('@/lib/AudioManager', () => ({
+  audioManager: { play: vi.fn() },
+}));
+
+vi.mock('@/utils/logger', () => ({
+  logger: { log: vi.fn(), error: vi.fn(), warn: vi.fn() },
 }));
 
 /**
@@ -111,5 +124,38 @@ describe('useExecuteTournamentRound', () => {
     });
 
     expect(engineProxy.advanceDay).not.toHaveBeenCalled();
+  });
+
+  it('logs and posts "Resolution failed." when the day tick throws', async () => {
+    const boom = new Error('engine died');
+    useGameStore.setState({ doAdvanceDay: vi.fn().mockRejectedValue(boom) } as never);
+    const { result } = renderHook(() => useExecuteTournamentRound({ tournament }));
+
+    await act(async () => {
+      await result.current();
+    });
+
+    expect(logger.error).toHaveBeenCalledWith('Tournament resolution failed:', boom);
+    expect(toast.error).toHaveBeenCalledWith('Resolution failed.');
+    expect(toast.success).not.toHaveBeenCalled();
+  });
+
+  it('logs and posts "Resolution failed." when audio playback throws after a successful advance', async () => {
+    const boom = new Error('audio device gone');
+    vi.mocked(audioManager.play).mockImplementation(() => {
+      throw boom;
+    });
+    const { result } = renderHook(() => useExecuteTournamentRound({ tournament }));
+
+    await act(async () => {
+      await result.current();
+    });
+
+    // The advance committed (day ticked) but the catch boundary still owns the
+    // user-visible outcome — no success toast may follow a thrown post-step.
+    expect(useGameStore.getState().day).toBe(3);
+    expect(logger.error).toHaveBeenCalledWith('Tournament resolution failed:', boom);
+    expect(toast.error).toHaveBeenCalledWith('Resolution failed.');
+    expect(toast.success).not.toHaveBeenCalled();
   });
 });

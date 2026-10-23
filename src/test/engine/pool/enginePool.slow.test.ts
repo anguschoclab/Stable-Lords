@@ -156,6 +156,43 @@ describe('createEnginePool — distributed path', () => {
   });
 });
 
+describe('worker spawn failure', () => {
+  it('falls back to in-line execution with identical output when a shard worker cannot be spawned', async () => {
+    const state = seededWorld(555);
+    const ctx = rivalShardCtx(state);
+    const inputs = rivalInputs(state);
+    expect(inputs.length).toBeGreaterThan(1); // distributed path requires >1 input
+
+    const expected = runRivalShardChunk(structuredClone(inputs), structuredClone(ctx));
+    const pool = createEnginePool(4, {
+      spawnShardWorker: () => {
+        throw new Error('module workers unavailable');
+      },
+    });
+    const actual = await pool.mapRivalShards(inputs, ctx);
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('spawn failure is sticky — subsequent maps never retry the spawn', async () => {
+    const spawn = vi.fn((): ShardWorkerApi => {
+      throw new Error('module workers unavailable');
+    });
+    const pool = createEnginePool(4, { spawnShardWorker: spawn });
+    const state = seededWorld(556);
+    const ctx = rivalShardCtx(state);
+    const inputs = rivalInputs(state);
+
+    const expected = runRivalShardChunk(structuredClone(inputs), structuredClone(ctx));
+    await pool.mapRivalShards(inputs, ctx);
+    expect(spawn).toHaveBeenCalledTimes(1); // first failure latches spawnFailed
+
+    const second = await pool.mapRivalShards(inputs, ctx);
+    expect(spawn).toHaveBeenCalledTimes(1); // no retry storm on later weeks
+    expect(second).toEqual(expected);
+  });
+});
+
 describe('bout shard chunking', () => {
   it('runBoutShardChunk output order matches input order', () => {
     const state = seededWorld(5);

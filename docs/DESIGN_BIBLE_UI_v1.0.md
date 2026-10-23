@@ -628,7 +628,7 @@ engine knows.
 6. **Every wired surface must be reachable.** A component that renders
    real state but is unreachable from navigation or any parent is dead
    code, not a feature. (Enforced by `scripts/orphan-scan.mjs` +
-   `src/test/megaplan/orphanScan.guard.test.ts`.)
+   `src/test/megaplan/orphanScan.guard.slow.test.ts`.)
 
 ### Scanner enforcement
 

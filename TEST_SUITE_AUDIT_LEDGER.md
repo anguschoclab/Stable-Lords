@@ -281,3 +281,83 @@ under concurrent-suite CPU starvation (`rivalStrategyPass.perf`,
 `advanceWeekPerformance`, `killDeathDivergence`) **all pass in isolation**
 (perf gates against the best-of-3 min <2s bound; kill/death 234s clean).
 Restore tag: `pre-test-audit-v2` → close-out tag `post-test-audit-v2`.
+
+## Curation pass — fast/slow re-tier (2026-10-23)
+
+Post-addition curation of the vitest fast/slow split after the recent
+test-file wave (~50 new files since the wave-2 refresh). Both tiers were
+audited against the promote/demote rules in `docs/TESTING.md`; e2e
+`@slow` tags verified as part of the same pass.
+
+### Moves
+
+| File | Direction | Rule applied |
+| --- | --- | --- |
+| `megaplan/orphanScan.guard.test.ts` → `.guard.slow.test.ts` | fast → slow | `execFileSync`s `orphan-scan.mjs` (~5s subprocess); also moved `runScan()` from describe scope into `beforeAll` so the exec no longer fires at collection |
+| `engine/simulateArenaBalance.test.ts` → `.slow.test.ts` | fast → slow | ~1,800 `simulateFight` calls in a win-rate band check — balance harness (closes the stale `TEST_AUDIT_FINDINGS` "likely .slow" recommendation from the original audit) |
+
+`GUARD_REGISTRY` key updated to `orphanScan.guard.slow.test.ts`
+(LIVE_RATCHET). The rename was verified RED→GREEN through the guard
+suite: renaming alone failed both the unregistered- and stale-basename
+assertions; the key update + baseline regen restored green.
+
+### Reviewed, kept slow (sub-2s but categorical)
+
+| File | ms | Category |
+| --- | --- | --- |
+| `pipeline/truncationCadence` | 1,712 | 4-week ×2-path byte-compare |
+| `megaplan/v11Dedup.guard` | 1,504 | dup-scan subprocess |
+| `pool/enginePool` | 1,465 | timing-sensitive worker orchestration (deliberate keep) |
+| `perf/rivalStrategyPass.perf` | 1,302 | timing gate — flake-prone under fast parallelism |
+| `scripts/narrativeValidate` | 1,088 | `execSync('npx tsx …')` |
+| `engine/simulateArenaBalance` | 1,156 | moved in this pass |
+| `megaplan/orphanScan.guard` | (wall ~5s) | moved in this pass |
+| `combat/styleWinConditions` | 463 | `simulateFight` style-matrix harness |
+| `scripts/narrativeValidatorExtension` | 313 | `execSync` |
+| `config/electronCompile` | 277 | `execSync('bun build')` |
+| `integration/livingWorld` | 95* | `runSimulation({weeks:1000})` in `beforeAll` |
+| `sim/_seedProbe` | 0 | env-gated manual probe, not a gate |
+
+*Under-reported: the TSV records per-test windows, so `beforeAll`-heavy
+files show near-zero rows.
+
+### Reviewed, kept fast
+
+- Zero fast files >5s. One fast file crossed ~2s on this run:
+  `engine/rivals/namePool` (2,226ms vs 1,754ms prior baseline) —
+  single-sample boundary reading, non-categorical; kept fast, top of the
+  watchlist.
+- Watchlist (1.3–2s band): `VirtualizedFallenGrid`, `namePool`,
+  `mutableInput`, `skipToWeekEndOwnership`, `championsTournament`,
+  `WarriorLeaderboardVirtualized`, `testQualityAudit`, `ArenaCircuit`,
+  `expansionService`.
+
+### e2e tier — verified, no moves
+
+- `seasonal-tournament.spec.ts` — lone `@slow` spec (25-min full-year
+  soak) correctly excluded from `bun run e2e`.
+- All other specs run 120–240s timeouts, under the enforced >5min tag
+  rule; fast chromium tier stands.
+
+### Consequences accepted
+
+- `bun run test:bun` no longer runs the orphanScan guard (`bunfig.toml`
+  excludes `*.slow.test.*`) — consistent with every other slow-tier
+  guard.
+- `test:coverage` lost `simulateArenaBalance`'s ~1,800 `simulateFight`
+  calls — coverage re-run green: 87.7% stmts / 76.6% branches /
+  84.1% funcs / 89.2% lines vs the 84/74/78/85.5 floors.
+- Timing caveat recorded in `docs/TESTING.md`: TSV rows measure
+  per-test windows — hook-heavy files under-report; tier by category
+  first, timing second.
+
+### Metrics
+
+| Metric | Before | After |
+| --- | --- | --- |
+| Default-suite files | 884 | 882 |
+| Default-suite tests | 9,515 | 9,509 |
+| Slow-suite files | 43 | 45 |
+| `bunx vitest run` wall | ~54s | ~49s |
+| `baseline-test-timings.tsv` | 924 rows | 927 rows (882 default + 45 slow) |
+| Collection-time subprocess in fast suite | orphan-scan (~5s) | none |

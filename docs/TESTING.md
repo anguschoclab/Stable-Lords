@@ -96,10 +96,20 @@ The default suite is the fast inner loop — keep it fast. Promote a test to
 `.slow` when it:
 
 - simulates many weeks / runs a balance or determinism harness
-- `execSync`s a subprocess (build, validator script, `npx tsx`, …)
+- `execSync`s a subprocess (build, validator script, `npx tsx`, …) —
+  keep the spawn inside `it`/`beforeAll`; a describe-scope subprocess
+  fires during collection, runs on every filtered run, and escapes the
+  timing baseline (the `orphanScan.guard` failure mode)
 - exceeds ~2s wall time (the suite is audited periodically for >5s
   stragglers — demote by renaming to `.slow.test.ts`, then regenerate
   `runnerGroups.json` via `bun scripts/test-audit-scan.mjs`)
+
+Tier by category first, timing second: `baseline-test-timings.tsv`
+records per-test windows, so `beforeAll`-heavy files (multi-week sims,
+subprocesses) under-report — `livingWorld` reads 95ms despite a
+1000-week `beforeAll`. Last curated 2026-10-23: zero fast files >5s;
+files in the 1.3–2s band are watchlisted until they cross consistently
+(see `TEST_SUITE_AUDIT_LEDGER.md`).
 
 The slow suite is **not** a per-PR gate. It runs nightly and on
 `workflow_dispatch` in `.github/workflows/nightly.yml`; run it locally when

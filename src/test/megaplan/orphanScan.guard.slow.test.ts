@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -43,7 +43,12 @@ function runScan(): ScanReport {
 }
 
 describe('megaplan: orphan guard', () => {
-  const report = runScan();
+  // beforeAll, not describe scope: a describe-level subprocess fires during
+  // collection — even for targeted runs that filter these tests out.
+  let report: ScanReport;
+  beforeAll(() => {
+    report = runScan();
+  });
 
   it('no new production-unreachable files', () => {
     const novel = report.unreachableFromProd.filter((f) => !ALLOWED_UNREACHABLE.has(f));

@@ -8,17 +8,19 @@ import { useDigestSummary } from '@/hooks/useDigestSummary';
  *
  */
 export function WeeklyDigestMini() {
-  const { week, absoluteWeek, arenaHistory, boutOffers, roster } = useGameStore(
+  const { week, absoluteWeek, arenaHistory, boutOffers } = useGameStore(
     useShallow((s) => ({
       week: s.week,
       absoluteWeek: s.absoluteWeek,
       arenaHistory: s.arenaHistory,
       boutOffers: s.boutOffers,
-      roster: s.roster,
     }))
   );
 
-  const playerWarriorIds = useMemo(() => new Set<WarriorId>(roster.map((w) => w.id)), [roster]);
+  // ⚡ Bolt: Extract only primitive IDs using useShallow to prevent unnecessary
+  // re-renders when unrelated warrior properties (HP, fatigue) change.
+  const rosterIds = useGameStore(useShallow((s) => s.roster.map((w) => w.id)));
+  const playerWarriorIds = useMemo(() => new Set<WarriorId>(rosterIds), [rosterIds]);
 
   const summary = useDigestSummary({
     arenaHistory,

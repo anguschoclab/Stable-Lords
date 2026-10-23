@@ -123,6 +123,10 @@ const COMBAT_TRAITS = [
   'agile',
   'precise',
   'comboartist',
+  // V20 additions (PR #1068): direct-mod traits also carry fightPlanMod.
+  'dark_survivor',
+  'gutter_brawler',
+  'street_specter',
 ];
 const NEGATIVE_TRAITS = ['fragile', 'slow'];
 const PERSONALITY_TRAITS = [
@@ -136,6 +140,10 @@ const PERSONALITY_TRAITS = [
   'resilient',
   'evasive',
   'brutal',
+  // V20 additions (PR #1068): all three carry fightPlanMod fields.
+  'dark_survivor',
+  'gutter_brawler',
+  'street_specter',
 ];
 
 describe('Combat Balance: Trait System', () => {

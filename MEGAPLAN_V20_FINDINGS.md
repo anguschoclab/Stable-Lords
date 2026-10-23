@@ -18,16 +18,32 @@ Recorded in `MEGAPLAN_V20_LEDGER.md` §0. Notable:
   fns >80 = 0 held; scan-in-loop 88 = exceptions held; over2s = 0 held.
 - Test suite grew +17 files / +259 LOC since V19 (post-campaign commits).
 
-## §1 Branch & PR adjudication matrix
+## §1 Branch & PR adjudication matrix — FINAL (2026-10-23, measured)
 
 | Ref | PR | Delta | Files | Adjudication | Evidence |
 | --- | -- | ----- | ----- | ------------ | -------- |
-| `bolt-optimizations-…9677480171` | #1069 | +22/−7 | StyleMeterTable.tsx | MERGE | useShallow flatMap primitive projection correct; stride `as` casts cleaned at merge |
-| `jules-4911…30946e39` | #1067 | +5/−3 | WeeklyDigestMini.tsx | MERGE | roster only fed `playerWarriorIds` (:21); primitive id-array selector valid |
-| `feat/chaos-weaver-events-…598412` | #1066 | +113/−1 | offseason.json + engine wiring + test | MERGE | wiring verified end-to-end (see V5); ships trader spec, no squall spec (gap closed Phase 3) |
-| `jules-narrative-lore-update-…960867` | #1068 | +102/−10 | 11 files; 3 traits + generated files | MERGE-WITH-FIXES | trait keys all consumed (V8); strip generated hunks, regenerate |
-| `jules-narrative-expansion-…481766` | #1065 | +42/−0 | 4 lore files | MERGE | union-resolve vs #1068; dedupe-verify |
-| `chore/narrative-curation-…19609` | #1059 CLOSED | +208/−13 | 3 combat narrative JSONs | REJECT (pending Phase-1 dry-run) | verbatim intra-array duplication visible in diff |
+| `bolt-optimizations-…9677480171` | #1069 | +22/−7 | StyleMeterTable.tsx | **MERGE** | useShallow flatMap primitive projection correct; stride `as` casts cleaned at merge |
+| `jules-4911…30946e39` | #1067 | +5/−3 | WeeklyDigestMini.tsx | **MERGE** | roster only fed `playerWarriorIds` (:21); primitive id-array selector valid |
+| `feat/chaos-weaver-events-…598412` | #1066 | +113/−1 | offseason.json + engine wiring + test | **MERGE** | wiring verified end-to-end (see V5); ships trader spec, no squall spec (gap closed Phase 3) |
+| `jules-narrative-lore-update-…960867` | #1068 | +102/−10 | 11 files; 3 traits + generated files | **MERGE-WITH-FIXES** | trait keys all consumed (V8); strip generated hunks, regenerate |
+| `jules-narrative-expansion-…481766` | #1065 | +42/−0 | 4 lore files | **MERGE** | union-resolve vs #1068; dedupe-verified (below) |
+| `chore/narrative-curation-…19609` | #1059 CLOSED | +208/−13 | 3 combat narrative JSONs | **REJECT — zero salvage** | measured: 192 verbatim intra-array dups + 10 near-dupes (lev 0.80–0.91) |
+
+### Dedupe dry-run evidence (Phase 1)
+
+- **Orphan `7dd7225c`:** intra-array duplicate-string count main 0 →
+  branch 39 (killText) / 89 (pbp) / 64 (strikes). 10 strings not present
+  verbatim on main were similarity-checked against each file's pool —
+  best-match Levenshtein 0.80–0.91 (all ≥0.80 near-dupes, e.g.
+  `"...chest caves in under the primal, brutal force..."` vs existing
+  `"...skull caves in under the raw, primal force..."` 0.87). **Zero
+  salvageable content.**
+- **#1065 ∪ #1068 union:** appended sets disjoint across all 4 files —
+  origins +8/+6, childhoodTraits +5/+4, definingMoments +5/+4,
+  loreBackfill2 +3/+3 ids; zero cross-PR overlap; no fuzzy match ≥0.75
+  vs existing pools (childhoodTraits max sim 0.56).
+- **#1068 traits:** no `effect`-signature collisions across the 75-entry
+  `notable.ts` table; `killWindowBonus:0.01` inside the <0.05 scale guard.
 
 Comment audit: all 5 open PRs carry Jules boilerplate only; zero inline
 review comments (`gh api pulls/N/comments` → empty). DISPROVES any

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T11:06:46.593Z",
+  "generatedAt": "2026-10-23T11:14:59.157Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -245,6 +245,7 @@
     "src/test/megaplan/appShell.cta.test.tsx",
     "src/test/megaplan/pagePrimitives.conformance.test.tsx",
     "src/test/megaplan/styleArchives.wired.test.tsx",
+    "src/test/megaplan/v20Components.guard.test.tsx",
     "src/test/megaplan/wiring.wired.test.tsx",
     "src/test/pages/AdminTools.test.tsx",
     "src/test/pages/AdminTools/components/TelemetryPanel.test.tsx",

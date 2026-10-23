@@ -44,11 +44,18 @@ const REGISTERED_SKIP_TICKETS = new Set<string>([
   ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-C${i + 1}`),
   ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-B${i + 1}`),
   ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-U${i + 1}`),
+  // V20 consolidation tickets — V1 canonical effect-type tuple, V2/V3
+  // #1066 event specs, V4 #1069 component pin, V5 #1068 traits, V6
+  // union-merged lore pools.
+  ...Array.from({ length: 10 }, (_, i) => `MEGAPLAN-V${i + 1}`),
 ]);
 
 const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\(/;
 
-
+// walkTsFiles yields OS-native separators — normalize before substring
+// checks so the megaplan-dir exemption works on Windows as well as POSIX.
+const isMegaplanFile = (file: string): boolean =>
+  file.replace(/\\/g, '/').includes('/megaplan/');
 
 describe('megaplan: skip-count guard', () => {
   const SELF = __filename;
@@ -56,7 +63,7 @@ describe('megaplan: skip-count guard', () => {
   it('no hard skips outside src/test/megaplan', () => {
     const offenders: string[] = [];
     for (const file of walkTsFiles(TEST_ROOT, /\.(?:test|spec)\.[tj]sx?$/)) {
-      if (file.includes('/megaplan/') || file === SELF) continue;
+      if (isMegaplanFile(file) || file === SELF) continue;
       readFileSync(file, 'utf8')
         .split('\n')
         .forEach((line, i) => {

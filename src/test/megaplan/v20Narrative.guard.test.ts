@@ -38,7 +38,7 @@ describe('narrative pool uniqueness (live guard)', () => {
 });
 
 describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
-  it.skip('origins contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
+  it('origins contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
     for (const s of [
       'Raised by silent sentinels in the crumbling towers of the Ashen Convent',
       'Found shivering in the rusted ventilation shafts of the Iron Convent',
@@ -48,17 +48,17 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     expect(ORIGINS.length).toBe(387); // 373 baseline + 8 (#1065) + 6 (#1068)
   });
 
-  it.skip('childhoodTraits contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
+  it('childhoodTraits contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
     for (const s of [
       'learned to feign unconsciousness under a pile of corpses to survive the winter cullings',
       'learned to map out an entire brawl in their head before throwing the first punch',
     ]) {
       expect(CHILDHOOD_TRAITS).toContain(s);
     }
-    expect(CHILDHOOD_TRAITS.length).toBe(226); // 217 + 5 (#1065) + 4 (#1068)
+    expect(CHILDHOOD_TRAITS.length).toBe(228); // 219 + 5 (#1065) + 4 (#1068)
   });
 
-  it.skip('definingMoments contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
+  it('definingMoments contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
     for (const s of [
       'until they locked eyes with a dying champion and understood that glory was just another word for survival',
       'until they fought off three armed thugs with nothing but a rusted chain, claiming it as their birthright',
@@ -68,7 +68,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     expect(DEFINING_MOMENTS.length).toBe(205); // 196 + 5 (#1065) + 4 (#1068)
   });
 
-  it.skip('loreBackfill2 contains all six V20 arena lore ids (MEGAPLAN-V6)', () => {
+  it('loreBackfill2 contains all six V20 arena lore ids (MEGAPLAN-V6)', () => {
     const ids = new Set(ARENA_LORE_BACKFILL_2.map((e) => e.id));
     for (const id of [
       'standard_arena_blood_soaked_sands',

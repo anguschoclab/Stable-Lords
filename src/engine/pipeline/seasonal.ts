@@ -13,10 +13,17 @@ import { narrativeContent } from '@/data/narrative';
 import { StateImpact } from '@/engine/impacts';
 import { type WarriorId } from '@/types/shared.types';
 import * as offseason from './offseasonEvents';
-import type { OffseasonEventNarrative, OffseasonEventContext } from './offseasonEvents';
+import type {
+  OffseasonEventNarrative,
+  OffseasonEventContext,
+  OffseasonEffectType,
+} from './offseasonEvents';
 import type { OffseasonEventRun } from './offseasonEvents/helpers';
 
-export const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = {
+// satisfies checks the registry against OFFSEASON_EFFECT_TYPES in both
+// directions: a handler keyed on a non-canonical effectType, or a
+// canonical effectType with no handler, fails to compile.
+export const EVENT_HANDLERS = {
   chaos_rift: offseason.handleChaosRift,
   unexplained_monolith: offseason.handleUnexplainedMonolith,
   chaotic_weather_experiment: offseason.handleChaoticWeatherExperiment,
@@ -79,7 +86,7 @@ export const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = 
   prismatic_gale_exposure: offseason.handlePrismaticGaleExposure,
   wandering_blacksmith: offseason.handleWanderingBlacksmith,
   chaos_squall_exposure: offseason.handleChaosSquallExposure,
-};
+} satisfies Record<OffseasonEffectType, (run: OffseasonEventRun) => void>;
 
 /**
  * Runs the seasonal (offseason) pipeline pass.
@@ -97,10 +104,12 @@ export function runSeasonalPass(
 
   const seasonRng = resolveRng(rootRng, state.year * 999 + 1);
 
-  // Safe cast for our dynamic offseason data
-  const events = (
-    narrativeContent as unknown as { offseason_events: Record<string, OffseasonEventNarrative> }
-  ).offseason_events;
+  // JSON boundary cast — NarrativeContent.offseason_events is
+  // Record<string, unknown>; the megaplan wiring guard asserts every
+  // effectType in the data is a member of OFFSEASON_EFFECT_TYPES.
+  const events = narrativeContent.offseason_events as
+    | Record<string, OffseasonEventNarrative>
+    | undefined;
 
   if (!events) {
     return {};

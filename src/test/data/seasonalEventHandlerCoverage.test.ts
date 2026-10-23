@@ -30,7 +30,7 @@ describe('seasonal event handler coverage', () => {
     for (const key of jsonKeys) {
       const effectType = jsonEvents[key]?.effectType;
       expect(
-        effectType && EVENT_HANDLERS[effectType],
+        effectType && EVENT_HANDLERS[effectType as keyof typeof EVENT_HANDLERS],
         `Event "${key}" has effectType "${effectType}" with no handler`
       ).toBeTypeOf('function');
     }

@@ -5,7 +5,7 @@ import { resolveRng } from '@/utils/random';
 import { narrativeContent } from '@/data/narrative';
 import { StateImpact } from '@/engine/impacts';
 import { type WarriorId, type InjuryId } from '@/types/shared.types';
-import type { EventNarrative } from '@/types/narrative.types';
+import type { Events } from '@/types/narrative.types';
 import { rollRange } from '@/engine/core/rng/rollRange';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
@@ -15,8 +15,6 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 /**
  * Stable Lords — Random Event Pipeline Pass
  */
-
-type Events = Record<string, EventNarrative>;
 
 interface EventCtx {
   brawlRng: IRNGService;
@@ -233,7 +231,7 @@ export function runEventPass(
   nextWeek: number,
   rootRng?: IRNGService
 ): StateImpact {
-  const events = narrativeContent.events as unknown as Events;
+  const events = narrativeContent.events;
   const ctx: EventCtx = {
     brawlRng: resolveRng(rootRng, nextWeek * 999 + 1),
     nextWeek,

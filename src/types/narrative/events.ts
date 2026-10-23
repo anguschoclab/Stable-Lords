@@ -9,12 +9,11 @@ export interface EventNarrative {
 }
 
 /**
- * Defines the shape of events.
+ * Defines the shape of the weekly random-event pool. Keyed by event id —
+ * the pool grows as new events land in offseason.json's "events" section,
+ * so the canonical type is a record rather than a fixed key list (the
+ * previous interface drifted behind the data by several events).
  */
-export interface Events {
-  tavern_brawl: EventNarrative;
-  celestial_blessing: EventNarrative;
-  mysterious_trader: EventNarrative;
-}
+export type Events = Record<string, EventNarrative>;
 
 // ─── Gazette Narratives ───────────────────────────────────────────────────

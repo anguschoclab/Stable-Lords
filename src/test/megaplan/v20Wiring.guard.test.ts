@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { narrativeContent } from '@/data/narrative';
 import offseasonData from '@/data/narrative/offseason.json';
 import { EVENT_HANDLERS } from '@/engine/pipeline/seasonal';
+import { OFFSEASON_EFFECT_TYPES } from '@/engine/pipeline/offseasonEvents';
 
 /**
  * V20 wiring guards — event registration parity.
@@ -28,7 +29,7 @@ const offseasonEvents = offseasonData.offseason_events as Record<
 describe('offseason event wiring parity (live guard)', () => {
   it('every offseason_events JSON effectType resolves to a registered handler', () => {
     const missing = Object.entries(offseasonEvents)
-      .filter(([, e]) => !EVENT_HANDLERS[e.effectType ?? ''])
+      .filter(([, e]) => !(e.effectType && e.effectType in EVENT_HANDLERS))
       .map(([key]) => key);
     expect(
       missing,
@@ -69,12 +70,7 @@ describe('weekly events surface (live guard)', () => {
 });
 
 describe('MEGAPLAN-V1: canonical OFFSEASON_EFFECT_TYPES tuple', () => {
-  it.skip('OFFSEASON_EFFECT_TYPES contains every JSON effectType (MEGAPLAN-V1)', async () => {
-    // `as unknown` — the const tuple doesn't exist until the F4 fix lands;
-    // the parked spec encodes the post-merge export surface.
-    const { OFFSEASON_EFFECT_TYPES } = (await import(
-      '@/engine/pipeline/offseasonEvents/types'
-    )) as unknown as { OFFSEASON_EFFECT_TYPES: readonly string[] };
+  it('OFFSEASON_EFFECT_TYPES contains every JSON effectType (MEGAPLAN-V1)', () => {
     const canonical = new Set<string>(OFFSEASON_EFFECT_TYPES);
     const missing = Object.values(offseasonEvents)
       .map((e) => e.effectType ?? '')
@@ -84,10 +80,7 @@ describe('MEGAPLAN-V1: canonical OFFSEASON_EFFECT_TYPES tuple', () => {
     expect(canonical.has('cursed_treasure_discovery')).toBe(true);
   });
 
-  it.skip('EVENT_HANDLERS keys are a subset of OFFSEASON_EFFECT_TYPES (MEGAPLAN-V1)', async () => {
-    const { OFFSEASON_EFFECT_TYPES } = (await import(
-      '@/engine/pipeline/offseasonEvents/types'
-    )) as unknown as { OFFSEASON_EFFECT_TYPES: readonly string[] };
+  it('EVENT_HANDLERS keys are a subset of OFFSEASON_EFFECT_TYPES (MEGAPLAN-V1)', () => {
     const canonical = new Set<string>(OFFSEASON_EFFECT_TYPES);
     const extra = Object.keys(EVENT_HANDLERS).filter((k) => !canonical.has(k));
     expect(extra).toEqual([]);

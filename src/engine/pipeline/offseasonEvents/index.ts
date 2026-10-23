@@ -64,3 +64,4 @@ export { handlePhantomSparringPartner } from './chaosHandlers';
 export { handleDreamweaversMist } from './chaosHandlers';
 export { handlePrismaticGaleExposure } from './chaosHandlers';
 export { handleWanderingBlacksmith } from './buffHandlers';
+export { handleChaosSquallExposure } from './chaosHandlers';

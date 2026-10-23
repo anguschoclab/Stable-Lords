@@ -38,6 +38,16 @@ export function handlePhantomSparringPartner(run: OffseasonEventRun) {
   });
 }
 
+/** Handler for the Chaos Squall Exposure offseason event. */
+export function handleChaosSquallExposure(run: OffseasonEventRun) {
+  withChosenWarrior({
+    ...run,
+    apply: (chosen) => {
+      return statGrantOutcome(chosen, { xp: 30, fatigue: 15 });
+    },
+  });
+}
+
 /** Handler for the Dreamweavers Mist offseason event — grants XP but causes a minor magic burn. */
 export function handleDreamweaversMist(run: OffseasonEventRun) {
   const { rng } = run;

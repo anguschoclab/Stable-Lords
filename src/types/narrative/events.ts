@@ -14,6 +14,7 @@ export interface EventNarrative {
 export interface Events {
   tavern_brawl: EventNarrative;
   celestial_blessing: EventNarrative;
+  mysterious_trader: EventNarrative;
 }
 
 // ─── Gazette Narratives ───────────────────────────────────────────────────

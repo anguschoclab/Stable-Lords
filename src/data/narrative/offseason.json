@@ -425,6 +425,13 @@
         "A mischievous fey creature visited the stable, posing riddles and tricks to {{name}}...",
         "{{name}} was drawn into a battle of wits by a grinning fey trickster."
       ]
+    },
+    "chaos_squall_exposure": {
+      "title": "Caught in a Chaos Squall",
+      "effectType": "chaos_squall_exposure",
+      "newsletter": [
+        "A sudden Chaos Squall swept through the training grounds. {{name}} stood their ground and learned to anticipate the erratic winds, though the effort was exhausting. (+30 XP, Minor Fatigue)"
+      ]
     }
   },
   "events": {
@@ -458,6 +465,12 @@
       "title": "Goblin Merchant",
       "newsletter": [
         "A shady goblin merchant visited the stables! {{name}} traded some scrap for a curious trinket. (+{{xp}} XP, -20 Gold)"
+      ]
+    },
+    "mysterious_trader": {
+      "title": "Mysterious Trader",
+      "newsletter": [
+        "A mysterious trader visited the stables and adjusted {{name}}'s weapon grip for a small fee. (+{{xp}} XP, -30 Gold)"
       ]
     }
   }

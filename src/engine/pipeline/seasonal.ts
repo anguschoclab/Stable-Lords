@@ -78,6 +78,7 @@ export const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = 
   dreamweavers_mist: offseason.handleDreamweaversMist,
   prismatic_gale_exposure: offseason.handlePrismaticGaleExposure,
   wandering_blacksmith: offseason.handleWanderingBlacksmith,
+  chaos_squall_exposure: offseason.handleChaosSquallExposure,
 };
 
 /**

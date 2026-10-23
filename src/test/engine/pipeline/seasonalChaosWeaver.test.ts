@@ -5,7 +5,8 @@
  * Tests 10-11 verify chaotic_weather_experiment handler.
  */
 import { describe, it, expect } from 'vitest';
-import { runSeasonalPass } from '@/engine/pipeline/seasonal';
+import { runSeasonalPass, EVENT_HANDLERS } from '@/engine/pipeline/seasonal';
+import { OFFSEASON_EFFECT_TYPES } from '@/engine/pipeline/offseasonEvents';
 import { SeededRNG } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
@@ -180,54 +181,14 @@ describe('chaos weaver event handlers', () => {
   });
 
   it('OffseasonEventNarrative effectType union includes all current handler keys', () => {
-    // Type-level test: if this compiles, the union is correct
-    const validEffectTypes = [
-      'chaos_rift',
-      'fame_boost',
-      'winter_chill',
-      'merchant_blessing',
-      'epiphany',
-      'tavern_brawl',
-      'bards_song',
-      'plague_outbreak',
-      'black_market_raid',
-      'grand_feast',
-      'wandering_healer',
-      'mystic_vision',
-      'wild_animal_attack',
-      'strange_dream',
-      'street_performance',
-      'chaotic_spells',
-      'mysterious_patron',
-      'loyal_stray',
-      'midnight_feast',
-      'shadow_training',
-      'gladiator_olympics',
-      'meteor_shower',
-      'underground_pit_fight',
-      'rogue_alchemist',
-      'tavern_brawl_surprise',
-      'chaos_spores',
-      'dreamweaver_visit',
-      'abyssal_bargain',
-      'goblin_raid',
-      'fey_trickster',
-      'shadow_tournament',
-      'wandering_fortune_teller',
-      'chaos_weaver_visit',
-      'traveling_circus',
-      'bounty_hunter_visit',
-      'loyal_stray_dog',
-      'midnight_market',
-      'shadow_market_run',
-      'moonlight_duel',
-      'chaotic_weather_experiment',
-      'chaos_weavers_game',
-      'secret_fight_club',
-    ] as const;
-    // Each string must be a valid effectType
-    for (const t of validEffectTypes) {
-      expect(typeof t).toBe('string');
+    // The canonical OFFSEASON_EFFECT_TYPES tuple is the single source of
+    // truth: every registered handler key must be a member (registry
+    // completeness is already enforced by the `satisfies` in seasonal.ts).
+    for (const key of Object.keys(EVENT_HANDLERS)) {
+      expect(
+        (OFFSEASON_EFFECT_TYPES as readonly string[]).includes(key),
+        `handler key "${key}" missing from OFFSEASON_EFFECT_TYPES`
+      ).toBe(true);
     }
   });
 

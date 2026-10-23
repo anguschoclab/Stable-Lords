@@ -37,6 +37,9 @@ const makeState = (
       injuries: (w.injuries ?? []) as Warrior['injuries'],
       fame: 0,
       xp: 0,
+      // Warrior.attributes is required — handlers like goblin_merchant read
+      // attrs.CN/WL unconditionally, so the fixture must carry real values.
+      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     })) as any[],
     rivals: [],
   } as any);

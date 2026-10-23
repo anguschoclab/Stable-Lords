@@ -107,7 +107,9 @@ const DEBT_PAIRS = new Set<string>([]);
 // fight-summary literals → shared pins, mock preambles → __SHARED_MOCKS. The 5
 // pairs left live are preamble/call-shape echoes registered knowingly below —
 // same exemption category as the V18 tournamentSelection preambles.
-const TEST_TO_TEST_BASELINE = 12;
+// V20: +1 — v20Components.guard shares StyleMeterTable's mock preamble
+// (registered exempt below), → 13.
+const TEST_TO_TEST_BASELINE = 13;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -139,6 +141,9 @@ const TEST_EXEMPT_PAIRS = new Set([
   'src/test/components/warrior/ChronicleTab.test.tsx|src/test/components/warrior/MissionControlTab.test.tsx',
   // grudgeWorldDecoupling↔playerGrudges share only the factory-import list.
   'src/test/engine/pipeline/grudgeWorldDecoupling.test.ts|src/test/engine/pipeline/playerGrudges.test.ts',
+  // V20 component guard re-uses StyleMeterTable's useGameStore/useShallow
+  // mock preamble only — its body pins a different post-merge behavior.
+  'src/test/components/charts/StyleMeterTable.test.tsx|src/test/megaplan/v20Components.guard.test.tsx',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

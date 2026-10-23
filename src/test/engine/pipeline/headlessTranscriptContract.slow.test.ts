@@ -57,7 +57,9 @@ describe('headless transcript contract', () => {
       for (const file of walk(dir)) {
         const src = readFileSync(file, 'utf8');
         const hits = src.split('\n').filter((l) => PUSH_RE.test(l)).length;
-        if (hits > 0) found.set(path.relative(ENGINE, file), hits);
+        // Normalize to '/' — registry keys are POSIX-style, path.relative
+        // returns '\' separators on Windows.
+        if (hits > 0) found.set(path.relative(ENGINE, file).replace(/\\/g, '/'), hits);
       }
     }
     for (const [rel, count] of found) {

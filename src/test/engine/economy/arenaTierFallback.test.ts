@@ -1,12 +1,13 @@
 /**
- * weeklyBreakdown.arenaTier error path — an arena lookup that throws (e.g. a
- * registry with no default) must fall back to tier-1 fight economics instead
- * of sinking the weekly ledger.
+ * weeklyBreakdown.arenaTier fallback contract.
  *
- * getArenaById cannot throw for an unknown id in production — index.ts pins
- * `defaultArena` — so the catch is exercised by mocking the module. Kept as
- * regression armor: if the default-arena fallback is ever removed, this guard
- * is the only thing between a legacy arenaId and a thrown week.
+ * A missing arenaId resolves to tier-1 fight economics without touching the
+ * arena registry. Unknown ids resolve through getArenaById's defaultArena
+ * fallback (pinned at data/arenas/index.ts), so the lookup cannot throw in
+ * production — the defensive catch that once lived here was removed as dead
+ * code, consistent with every other getArenaById caller. These specs pin the
+ * contract that remains: the early return and the honest propagation of a
+ * genuinely broken registry.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -34,20 +35,9 @@ function economyInput(arenaHistory: FightSummary[]): StableEconomyInput {
   };
 }
 
-describe('computeWeeklyBreakdown — arenaTier catch fallback', () => {
+describe('computeWeeklyBreakdown — arenaTier lookup contract', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-  });
-
-  it('falls back to tier-1 economics when the arena lookup throws', () => {
-    const input = economyInput([
-      makeFightSummary({ week: 1, warriorIdA: 'p1' as never, winner: 'A', arenaId: 'ghost_arena', fameA: 0 }),
-    ]);
-
-    const b = computeWeeklyBreakdown(input);
-    const purse = b.income.find((i) => i.label === 'Fight purses (1)');
-    const expected = computeFightEconomics({ fame: 0, arenaTier: 1, won: true });
-    expect(purse?.amount).toBe(expected.purse);
   });
 
   it('skips the lookup entirely for a missing arenaId', async () => {
@@ -61,5 +51,13 @@ describe('computeWeeklyBreakdown — arenaTier catch fallback', () => {
     const expected = computeFightEconomics({ fame: 0, arenaTier: 1, won: true });
     expect(purse?.amount).toBe(expected.purse);
     expect(vi.mocked(getArenaById)).not.toHaveBeenCalled();
+  });
+
+  it('propagates a registry failure instead of silently degrading to tier 1', () => {
+    const input = economyInput([
+      makeFightSummary({ week: 1, warriorIdA: 'p1' as never, winner: 'A', arenaId: 'ghost_arena', fameA: 0 }),
+    ]);
+
+    expect(() => computeWeeklyBreakdown(input)).toThrow('arena registry unavailable');
   });
 });

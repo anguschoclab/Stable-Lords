@@ -83,11 +83,7 @@ export interface StableEconomyInput {
 
 function arenaTier(arenaId?: string): 1 | 2 | 3 {
   if (!arenaId) return 1;
-  try {
-    return getArenaById(arenaId).tier;
-  } catch {
-    return 1; // unknown/legacy arena id → treat as tier 1
-  }
+  return getArenaById(arenaId).tier;
 }
 
 interface PurseTotals {

@@ -182,4 +182,28 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     narrative:
       'A legendary rogue used the naturally toxic thorns of the labyrinth to coat their blades mid-fight, winning a grueling battle of attrition.',
   },
+  {
+    id: 'charnel_pits_bone_splinters',
+    arenaId: 'charnel_pits',
+    type: 'hazard',
+    title: 'The Splintering Floor',
+    narrative:
+      'Generations of crushed bones have formed a compacted layer beneath the sand, known to suddenly splinter upwards under heavy footfalls to pierce the soles of unwary combatants.',
+  },
+  {
+    id: 'lantern_hall_arena_shadow_duel',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Duel of Shadows',
+    narrative:
+      'A famous rogue once extinguished every lantern in the hall with precise throwing knives before the bout began, hunting down their terrified opponent in pitch darkness.',
+  },
+  {
+    id: 'walled_court_arena_blood_gutter',
+    arenaId: 'walled_court_arena',
+    type: 'architectural_quirk',
+    title: 'The Traitor\'s Gutter',
+    narrative:
+      'The drainage ditches running along the walls are intentionally deep, designed to quickly clear blood, but often serve as deadly pitfalls for fighters backed into the corners.',
+  }
 ];

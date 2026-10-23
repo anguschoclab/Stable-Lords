@@ -95,14 +95,14 @@ describe('MEGAPLAN-V1: canonical OFFSEASON_EFFECT_TYPES tuple', () => {
 });
 
 describe('MEGAPLAN-V2: mysterious_trader weekly event (PR #1066)', () => {
-  it.skip('narrativeContent.events includes mysterious_trader (MEGAPLAN-V2)', () => {
+  it('narrativeContent.events includes mysterious_trader (MEGAPLAN-V2)', () => {
     const events = narrativeContent.events as unknown as Record<string, unknown>;
     expect(events['mysterious_trader']).toBeDefined();
   });
 });
 
 describe('MEGAPLAN-V3: chaos_squall_exposure offseason event (PR #1066)', () => {
-  it.skip('chaos_squall_exposure is a rollable JSON entry with a registered handler (MEGAPLAN-V3)', () => {
+  it('chaos_squall_exposure is a rollable JSON entry with a registered handler (MEGAPLAN-V3)', () => {
     const entry = offseasonEvents['chaos_squall_exposure'];
     expect(entry, 'chaos_squall_exposure missing from offseason_events').toBeDefined();
     expect(
@@ -111,7 +111,7 @@ describe('MEGAPLAN-V3: chaos_squall_exposure offseason event (PR #1066)', () => 
     ).toBeDefined();
   });
 
-  it.skip('handleChaosSquallExposure grants +30 xp and +15 fatigue to an active warrior (MEGAPLAN-V3)', async () => {
+  it('handleChaosSquallExposure grants +30 xp and +15 fatigue to an active warrior (MEGAPLAN-V3)', async () => {
     const { handleChaosSquallExposure } = (await import(
       '@/engine/pipeline/offseasonEvents'
     )) as unknown as { handleChaosSquallExposure: (run: unknown) => void };

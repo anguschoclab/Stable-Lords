@@ -30,7 +30,7 @@ describe('MEGAPLAN-V4: StyleMeterTable roster projection (PR #1069)', () => {
     mockState = { roster: [] };
   });
 
-  it.skip('skips warriors with a falsy style instead of rendering a ghost row (MEGAPLAN-V4)', () => {
+  it('skips warriors with a falsy style instead of rendering a ghost row (MEGAPLAN-V4)', () => {
     mockState = {
       roster: [
         makeMidWarrior({

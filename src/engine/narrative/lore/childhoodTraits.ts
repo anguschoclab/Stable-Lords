@@ -223,4 +223,8 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to gauge an adversary’s exhaustion by the trembling of their weapon hand',
   'always carried a piece of fractured mirror to watch their own back',
   'would meticulously catalog the dying breaths of strays to understand the final moments of life',
+  'learned to gauge an opponent\'s reach solely by the sound of their shifting weight',
+  'would intentionally draw first blood just to smell the iron and focus their rage',
+  'developed a terrifying habit of humming a lullaby while snapping rat traps with their bare hands',
+  'learned to map out an entire brawl in their head before throwing the first punch',
 ];

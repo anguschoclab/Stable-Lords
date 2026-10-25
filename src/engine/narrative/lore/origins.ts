@@ -391,4 +391,9 @@ export const ORIGINS: string[] = [
   'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
   'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
   'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
+  'Tossed into the corpse carts during the Red Fever, only to crawl back out days later',
+  'Raised by silent crypt-keepers in the bone-choked catacombs of the Old City',
+  'Found nursing from a feral direhound in the frozen gutters of the North Ward',
+  'Left bound in iron chains at the doorstep of the Merciful Sisters Orphanage',
+  'Sold to the fighting pits for a handful of silver to pay a father\'s gambling debt',
 ];

@@ -2,6 +2,7 @@ import type { GameState, RivalStableData, WeatherType, Warrior } from '@/types/s
 import type { PromoterId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
+import { canonTargetingBias } from '@/engine/ai/matchup/canonTargeting';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
 import type { BoutBid } from '../types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
@@ -49,17 +50,23 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
             ? (ctx.state.player.id as string)
             : ((opponent.stableId ?? ctx.targetStableId) as string),
       });
-      const score = clamp((matchupScore - 100) / 20, -5, 5);
+      const attFights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+      const score =
+        clamp((matchupScore - 100) / 20, -5, 5) +
+        canonTargetingBias(warrior.style, opponent.style, attFights);
       matchupModifier = Math.max(matchupModifier, score);
       foundOpponent = true;
     }
   } else if (ctx.intent !== 'VENDETTA') {
+    const attFights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
     for (const opponent of ctx.nonVendettaOpponents) {
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
         aStableId,
         bStableId: opponent.stableId as string,
       });
-      const score = clamp((matchupScore - 100) / 20, -5, 5);
+      const score =
+        clamp((matchupScore - 100) / 20, -5, 5) +
+        canonTargetingBias(warrior.style, opponent.style, attFights);
       matchupModifier = Math.max(matchupModifier, score);
       foundOpponent = true;
     }

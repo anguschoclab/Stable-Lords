@@ -8,6 +8,7 @@ import type {
 import { weeksUntilNextSeasonalTournament } from '@/engine/core/absoluteWeek';
 import { acceptanceWeatherBlock } from '@/engine/ai/weatherSuitability';
 import { fightingCondition } from '@/engine/warrior/condition';
+import { canonTargetingBias } from '@/engine/ai/matchup/canonTargeting';
 import { hardGates, riskRefusal, survivabilityGates, type BoutEvaluation } from './gates';
 import { resolveTitleBout } from './titleBout';
 import { buildThreatContext } from './threat';
@@ -52,6 +53,16 @@ export function verifyBoutAcceptance(
   if (!isTitleBout && intent === 'SURVIVAL') {
     if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0)) {
       return { accepted: false, reason: 'Survival — only bouts we are favored to win.' };
+    }
+  }
+
+  // Canon nemesis refusal — veteran managers *know* some styles eat theirs.
+  // A TP refusing an aimer (90-95% canon loss) or an AB ducking a lunger is
+  // doctrine, not cowardice. Vendetta overrides: grudges make fools of us all.
+  if (!isTitleBout && intent !== 'VENDETTA') {
+    const attFights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+    if (canonTargetingBias(warrior.style, opponent.style, attFights) <= -3) {
+      return { accepted: false, reason: 'Manager knows this style beats ours — declined.' };
     }
   }
 

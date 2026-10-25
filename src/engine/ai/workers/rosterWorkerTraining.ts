@@ -60,6 +60,10 @@ export const FLAW_EXPOSURE_CHANCE = 0.02;
  *  Signature — rather than thinly. Floors the personality trainAppetite. Knob. */
 export const QUALIFIED_DEV_APPETITE = 0.5;
 
+/** Canon scum-TP stat-train order: endurance/HP package first, breakpoints
+ *  late, speed last (it never pays a shell). */
+const TP_SCUM_TRAIN_ORDER: (keyof Attributes)[] = ['WL', 'CN', 'ST', 'DF', 'WT', 'SP'];
+
 /**
  * Select which attribute the AI should train this week.
  * Uses seasonal priority (Spring→CN, Summer→ST), falling back to the lowest trainable stat.
@@ -73,6 +77,19 @@ export function selectTrainingFocus(
   const trainableKeys = ATTRIBUTE_KEYS.filter(
     (k) => k !== 'SZ' && !exclude?.has(k)
   ) as (keyof Attributes)[];
+
+  // Canon scum train order (Consortium doctrine): physicals before skills —
+  // WL/CN/ST two-to-three deep, then DF for parry breakpoints; SP dead last
+  // ("does not help a scum at all"). Un-Scum builds (WT≥15 & DF≥11) keep the
+  // generic focus — their edge is skill-learning, not burning.
+  if (
+    w.style === FightingStyle.TotalParry &&
+    !(w.attributes.WT >= 15 && w.attributes.DF >= 11)
+  ) {
+    for (const k of TP_SCUM_TRAIN_ORDER) {
+      if (trainableKeys.includes(k) && w.attributes[k] < ATTRIBUTE_MAX) return k;
+    }
+  }
 
   let chosen: keyof Attributes | undefined;
   if (season === 'Spring') chosen = 'CN';

@@ -314,8 +314,12 @@ export const STYLE_SKILL_FLOORS: Record<
   [FightingStyle.ParryRiposte]: /*PR*/ [1, 1, 1, 1, 1, 1],
   [FightingStyle.ParryStrike]: /*PS*/ [1, 1, 1, 1, 1, 1],
   [FightingStyle.ParryLunge]: /*PL*/ [1, 1, 1, 1, 1, 1],
-  [FightingStyle.LungingAttack]: /*LU*/ [1, 1, 1, 1, 1, 1],
-  [FightingStyle.SlashingAttack]: /*SL*/ [1, 1, 1, 1, 1, 1],
+  // Lunging: the first-strike is drilled tempo — attack speed and accuracy come
+  // from the drill, not from raw speed. Lifts world-only weakness (42.0%).
+  [FightingStyle.LungingAttack]: /*LU*/ [10, 1, 1, 10, 1, 1],
+  // Slashing: the flurry's initiative is drilled. Leaves the fixture (INI 13)
+  // untouched; lifts world-only weakness (43.6%).
+  [FightingStyle.SlashingAttack]: /*SL*/ [1, 1, 1, 11, 1, 1],
   // Brutal: the style is built on getting the blow in first and landing it.
   [FightingStyle.BashingAttack]: /*BA*/ [6, 1, 1, 9, 1, 1],
   [FightingStyle.StrikingAttack]: /*ST*/ [6, 1, 1, 9, 1, 1],

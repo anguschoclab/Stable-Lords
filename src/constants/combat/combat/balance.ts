@@ -38,11 +38,11 @@ export const TP_FATIGUE_SEVERE_RATIO = 0.25;
 /** Total Parry fatigue-exploit: endurance ratio below which the moderate tier applies. */
 export const TP_FATIGUE_MODERATE_RATIO = 0.5;
 /** Total Parry fatigue-exploit: severe-tier riposte bonus. */
-export const TP_FATIGUE_SEVERE_RIP = 5;
+export const TP_FATIGUE_SEVERE_RIP = 2;
 /** Total Parry fatigue-exploit: severe-tier damage bonus. */
-export const TP_FATIGUE_SEVERE_DMG = 2;
+export const TP_FATIGUE_SEVERE_DMG = 1;
 /** Total Parry fatigue-exploit: moderate-tier riposte bonus. */
-export const TP_FATIGUE_MODERATE_RIP = 2;
+export const TP_FATIGUE_MODERATE_RIP = 1;
 /** Total Parry fatigue-exploit: moderate-tier damage bonus. */
 export const TP_FATIGUE_MODERATE_DMG = 1;
 

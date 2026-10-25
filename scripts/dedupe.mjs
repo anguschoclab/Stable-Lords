@@ -1,100 +1,95 @@
 #!/usr/bin/env node
 /**
- * Deduplicate narrative content arrays.
- * Scans narrative domain JSON files for duplicate strings within each array
- * and reports/removes them.
+ * dedupe.mjs — deduplicate narrative string pools.
+ *
+ * Recursively scans every JSON file under src/data/narrative for exact
+ * duplicate strings inside each pure string array. Default mode is a
+ * scan-only report; `--fix` rewrites the files preserving first-occurrence
+ * order.
+ *
+ * Scope guardrails:
+ * - Exact matches only. Near-duplicates are narrative variety, not dupes —
+ *   use fuzzy_dedupe.mjs for that (destructive, backup-gated).
+ * - Arrays are deduped independently per file/path. The same string appearing
+ *   in two different pools is reported but NOT removed — cross-pool sharing
+ *   can be intentional (different selection contexts).
+ * - Arrays containing non-string members are traversed, never deduped, so
+ *   seeded-order-sensitive structures (event tables, effect objects) are
+ *   never touched.
+ *
+ * Run: `node scripts/dedupe.mjs [--fix]`
  */
 import { readFileSync, writeFileSync, readdirSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const NARRATIVE_DIR = resolve(__dirname, '../src/data/narrative');
-
-const files = readdirSync(NARRATIVE_DIR).filter((f) => f.endsWith('.json'));
-const data = {};
-for (const file of files) {
-  const parsed = JSON.parse(readFileSync(resolve(NARRATIVE_DIR, file), 'utf-8'));
-  for (const [key, val] of Object.entries(parsed)) {
-    data[key] = val;
-  }
-}
+const FIX = process.argv.includes('--fix');
 
 let totalRemoved = 0;
+let totalArrays = 0;
+const crossPool = new Map(); // string -> Set of "file:path" locations
 
-function dedupeArray(arr, label) {
-  const seen = new Set();
-  const unique = [];
-  let removed = 0;
-  for (const item of arr) {
-    if (seen.has(item)) {
-      removed++;
-    } else {
-      seen.add(item);
-      unique.push(item);
-    }
-  }
-  if (removed > 0) {
-    console.log(`  ${label}: removed ${removed} duplicate(s)`);
-    totalRemoved += removed;
-  }
-  return unique;
-}
-
-if (data.executions) {
-  data.executions = dedupeArray(data.executions, 'executions');
-}
-
-if (data.combat) {
-  for (const [key, section] of Object.entries(data.combat)) {
-    if (Array.isArray(section)) {
-      data.combat[key] = dedupeArray(section, `combat.${key}`);
-    } else if (typeof section === 'object') {
-      for (const [subKey, subArr] of Object.entries(section)) {
-        if (Array.isArray(subArr)) {
-          data.combat[key][subKey] = dedupeArray(subArr, `combat.${key}.${subKey}`);
+function walk(node, path) {
+  if (Array.isArray(node)) {
+    if (node.length > 0 && node.every((i) => typeof i === 'string')) {
+      totalArrays++;
+      const seen = new Set();
+      const unique = [];
+      let removed = 0;
+      for (const item of node) {
+        if (seen.has(item)) {
+          removed++;
+          totalRemoved++;
+        } else {
+          seen.add(item);
+          unique.push(item);
         }
+        if (!crossPool.has(item)) crossPool.set(item, new Set());
+        crossPool.get(item).add(path);
       }
+      if (removed > 0) {
+        console.log(`  ${path}: ${removed} duplicate(s) [${node.length} -> ${unique.length}]`);
+      }
+      return unique;
+    }
+    return node.map((item, i) => walk(item, `${path}[${i}]`));
+  }
+  if (node !== null && typeof node === 'object') {
+    const out = {};
+    for (const [key, val] of Object.entries(node)) {
+      out[key] = walk(val, path ? `${path}.${key}` : key);
+    }
+    return out;
+  }
+  return node;
+}
+
+const files = readdirSync(NARRATIVE_DIR).filter((f) => f.endsWith('.json'));
+for (const file of files) {
+  const filePath = join(NARRATIVE_DIR, file);
+  const data = JSON.parse(readFileSync(filePath, 'utf-8'));
+  const before = totalRemoved;
+  const cleaned = walk(data, file);
+  if (totalRemoved > before) {
+    if (FIX) {
+      writeFileSync(filePath, JSON.stringify(cleaned, null, 2) + '\n', 'utf-8');
+      console.log(`  ^ wrote ${file}`);
     }
   }
 }
 
-if (data.meta) {
-  for (const [key, section] of Object.entries(data.meta)) {
-    if (typeof section === 'object') {
-      for (const [subKey, subArr] of Object.entries(section)) {
-        if (Array.isArray(subArr)) {
-          data.meta[key][subKey] = dedupeArray(subArr, `meta.${key}.${subKey}`);
-        }
-      }
-    }
-  }
-}
+console.log(
+  `${FIX ? 'Removed' : 'Found'} ${totalRemoved} exact duplicate(s) across ${totalArrays} string arrays in ${files.length} files.${FIX ? '' : ' (run with --fix to apply)'}`
+);
 
-if (totalRemoved === 0) {
-  console.log('No duplicates found.');
-} else {
-  // Write back to domain files
-  const DOMAIN_FILES = {
-    combatPbp: ['pbp', 'crowd_reactions'],
-    combatStrikes: ['strikes'],
-    combatKillText: ['kill_text'],
-    combatConclusions: ['conclusions'],
-    combatPassives: ['passives'],
-    gazette: ['gazette', 'ux_metadata'],
-    recruitment: ['recruitment'],
-    offseason: ['offseason_events', 'events'],
-    announcer: ['blurbs', 'commentary', 'recap'],
-    uiMeta: ['fanfare', 'meta', 'persona', 'memorials'],
-  };
-  for (const [file, keys] of Object.entries(DOMAIN_FILES)) {
-    const filePath = resolve(NARRATIVE_DIR, `${file}.json`);
-    const existing = JSON.parse(readFileSync(filePath, 'utf-8'));
-    for (const key of keys) {
-      if (data[key] !== undefined) existing[key] = data[key];
-    }
-    writeFileSync(filePath, JSON.stringify(existing, null, 2) + '\n', 'utf-8');
+const shared = [...crossPool.entries()].filter(([, locs]) => locs.size > 1);
+if (shared.length > 0) {
+  console.log(`\n${shared.length} string(s) shared across multiple files (reported, not removed):`);
+  for (const [str, locs] of shared.slice(0, 10)) {
+    const preview = str.length > 70 ? str.slice(0, 70) + '…' : str;
+    console.log(`  "${preview}" in ${[...locs].join(', ')}`);
   }
-  console.log(`Total duplicates removed: ${totalRemoved}`);
-  console.log('Domain files updated.');
+  if (shared.length > 10) console.log(`  …and ${shared.length - 10} more`);
 }

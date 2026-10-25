@@ -24,7 +24,7 @@ Validates the Stable Lords narrative system for integrity, tag reference resolut
 | status         | src/test/engine/narrative/statusNarrator.test.ts                                     |
 | bout           | src/test/engine/narrative/boutNarrator.test.ts                                       |
 | template       | src/test/engine/narrative/narrativeTemplateEngine.test.ts                            |
-| archive        | scripts/validateNarrativeArchive.ts (tag reference validation)                       |
+| archive        | scripts/narrative_validate.ts (tag reference validation)                             |
 
 ## Commands
 
@@ -43,7 +43,7 @@ bun run test --reporter=verbose -- <filter>
 **Run narrative archive validation (tag reference check):**
 
 ```bash
-bun scripts/validateNarrativeArchive.ts
+bun scripts/narrative_validate.ts
 ```
 
 **Run specific mood tone validation:**
@@ -58,5 +58,5 @@ bun run test --reporter=verbose -t "mood.*Bloodthirsty"
 - Narrative archive (narrativeContent.json) is 96KB with complex template structure
 - Tag references use {{TAG}} syntax that must resolve to dictionary entries
 - Mood tones affect narrative voice: Calm, Bloodthirsty, Theatrical, Solemn, Festive
-- The validateNarrativeArchive script exits non-zero on failure for CI/CD gating
+- The narrative_validate script exits non-zero on failure for CI/CD gating
 - Narrative generation tests cover combat narration, gazette stories, status updates, and bout summaries

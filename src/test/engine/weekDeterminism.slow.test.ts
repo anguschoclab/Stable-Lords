@@ -170,14 +170,13 @@ describe('Quarter/Year Advancement Determinism', () => {
   it('should stop early when stop condition is met', async () => {
     const state = createFreshState('stop-condition-test', '2026-04-11T09:00:00Z');
 
-    // Custom stop condition: treasury below starting value (1000)
-    // Roster floor adds a warrior → upkeep > stipend → treasury drops
+    // Custom stop condition fires mid-quarter. Week-keyed (not treasury-keyed)
+    // so the test stays decoupled from balance/economy drift.
     const result = await TimeAdvanceService.advanceQuarter(state, {
-      stopConditions: [{ type: 'custom', check: (s) => s.treasury < 1000 }],
+      stopConditions: [{ type: 'custom', check: (s) => s.week >= 5 }],
     });
 
     expect(result.stopReason).toBe('custom_condition');
-    // Roster floor adds a warrior, upkeep eventually drops treasury below 1000
     expect(result.weeksCompleted).toBeGreaterThanOrEqual(2);
     expect(result.weeksCompleted).toBeLessThanOrEqual(13);
   });

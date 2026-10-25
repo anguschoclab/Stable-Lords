@@ -19,11 +19,11 @@ Validates the Stable Lords narrative system for integrity, tag reference resolut
 | Filter keyword | What it targets                                                                      |
 | -------------- | ------------------------------------------------------------------------------------ |
 | (none)         | All narrative validation tests                                                       |
-| combat         | src/test/engine/narrative/combatNarrator.test.ts                                     |
-| gazette        | src/test/engine/gazetteNarrative.test.ts + src/test/engine/gazetteDetections.test.ts |
-| status         | src/test/engine/narrative/statusNarrator.test.ts                                     |
-| bout           | src/test/engine/narrative/boutNarrator.test.ts                                       |
-| template       | src/test/engine/narrative/narrativeTemplateEngine.test.ts                            |
+| combat         | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts          |
+| gazette        | src/test/engine/gazette/gazetteNarrative.test.ts + gazetteDetections.test.ts         |
+| status         | src/test/engine/narrative/narrativeStatus.test.ts                                    |
+| bout           | src/test/engine/narrative/narrativePostBout.test.ts                                  |
+| template       | src/test/engine/narrative/templateHelpers.test.ts                                    |
 | archive        | scripts/narrative_validate.ts (tag reference validation)                             |
 
 ## Commands
@@ -31,7 +31,7 @@ Validates the Stable Lords narrative system for integrity, tag reference resolut
 **Run all narrative tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/narrative/ src/test/engine/gazetteNarrative.test.ts src/test/engine/gazetteDetections.test.ts
+bun run test --reporter=verbose src/test/engine/narrative/ src/test/engine/gazette/
 ```
 
 **Run with a filter (e.g. /narrative-validate combat):**
@@ -49,8 +49,8 @@ bun scripts/narrative_validate.ts
 **Run specific mood tone validation:**
 
 ```bash
-bun run test --reporter=verbose -t "mood.*Calm"
-bun run test --reporter=verbose -t "mood.*Bloodthirsty"
+bun run test --reporter=verbose -t "Calm"
+bun run test --reporter=verbose -t "Bloodthirsty"
 ```
 
 ## Notes

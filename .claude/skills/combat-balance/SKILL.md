@@ -7,7 +7,7 @@ description: >-
   passives, weapon/favorite effects, the balance harness, or adding / tuning /
   nerfing / buffing any per-style combat mechanic — even when the user only says
   "rebalance X", "make style Y stronger", "why is Z overpowered", "add a mechanic
-  to <style>", or is editing src/engine/combat, src/engine/skillCalc.ts, or
+  to <style>", or is editing src/engine/combat, src/engine/warrior/skillCalc.ts, or
   src/constants/combat. Reach for it before writing any combat-engine change so
   the two balance layers stay decoupled and the guardrail harness stays green.
 ---

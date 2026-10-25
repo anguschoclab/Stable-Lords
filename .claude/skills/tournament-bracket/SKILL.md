@@ -19,11 +19,12 @@ Tests the tournament system including bracket generation, round resolution, bron
 | Filter keyword | What it targets                                                             |
 | -------------- | --------------------------------------------------------------------------- |
 | (none)         | All tournament system tests                                                 |
-| resolution     | src/test/engine/matchmaking/tournament/tournamentResolver.test.ts           |
+| resolution     | src/test/engine/matchmaking/tournamentResolution.test.ts + tournamentSelection/resolveRound.test.ts + completion.test.ts |
 | selection      | src/test/engine/matchmaking/tournamentSelection/\*.test.ts                  |
-| builder        | src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts     |
-| state          | src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts       |
-| committee      | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts |
+| builder        | src/test/engine/matchmaking/tournamentSelection/bracket.test.ts + generation.test.ts + tournament/bracketUtils.test.ts |
+| state          | src/test/state/slices/tournamentSlice.test.ts                               |
+| committee      | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts + ncaaCommittee.test.ts |
+| champions      | src/test/engine/championship/championsTournament.test.ts (week-52 Grand Championship) |
 | matchmaking    | src/test/engine/matchmaking/\*.test.ts                                      |
 
 ## Commands
@@ -31,7 +32,7 @@ Tests the tournament system including bracket generation, round resolution, bron
 **Run all tournament tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/matchmaking/tournament/ src/test/engine/matchmaking/tournamentSelection/ src/test/engine/matchmaking/tournamentSelectionCommittee.test.ts src/test/engine/matchmaking/worldMatchmaking.test.ts src/test/engine/matchmaking/historyLogic.test.ts src/test/engine/matchmaking/rivalryLogic.test.ts
+bun run test --reporter=verbose src/test/engine/matchmaking/tournament/ src/test/engine/matchmaking/tournamentSelection/ src/test/engine/matchmaking/tournamentResolution.test.ts src/test/engine/matchmaking/tournamentArenaSelection.test.ts src/test/engine/matchmaking/worldMatchmaking.test.ts src/test/engine/matchmaking/historyLogic.test.ts src/test/engine/matchmaking/rivalryLogic.test.ts src/test/engine/championship/championsTournament.test.ts
 ```
 
 **Run with a filter (e.g. /tournament-bracket resolution):**
@@ -43,13 +44,13 @@ bun run test --reporter=verbose -- <filter>
 **Run tournament resolution tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/matchmaking/tournament/tournamentResolver.test.ts
+bun run test --reporter=verbose src/test/engine/matchmaking/tournamentResolution.test.ts src/test/engine/matchmaking/tournamentSelection/resolveRound.test.ts src/test/engine/matchmaking/tournamentSelection/completion.test.ts
 ```
 
 **Run bracket builder tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts
+bun run test --reporter=verbose src/test/engine/matchmaking/tournamentSelection/bracket.test.ts src/test/engine/matchmaking/tournamentSelection/generation.test.ts src/test/engine/matchmaking/tournament/bracketUtils.test.ts
 ```
 
 **Run tournament selection tests:**

@@ -18,19 +18,19 @@ Tests end-to-end autosimulation including week advancement, stop conditions, det
 
 | Filter keyword | What it targets                                    |
 | -------------- | -------------------------------------------------- |
-| (none)         | Full integration test suite (13-week season smoke) |
-| determinism    | Determinism check (same seed = same result)        |
+| (none)         | Full integration suite (slow tier)                 |
+| determinism    | src/test/engine/determinismAudit.test.ts (+ sim/determinism.slow.test.ts) |
 | long           | Long simulation (100 weeks)                        |
-| autosim        | src/test/integration/autosim.test.ts               |
-| week           | src/test/integration/weekAdvancement.test.ts       |
-| smoke          | scripts/season_smoke.ts (season smoke test)        |
+| autosim        | src/test/integration/autosim.slow.test.ts + src/test/engine/autosim/ |
+| week           | src/test/integration/weekAdvancement.slow.test.ts + src/test/engine/weekPipeline.test.ts |
+| smoke          | src/test/integration/autosim.slow.test.ts + weekAdvancement.slow.test.ts (SLOW tier) |
 
 ## Commands
 
-**Run full integration test (13 weeks):**
+**Run full integration test (slow tier):**
 
 ```bash
-bun scripts/season_smoke.ts
+bun run test:slow src/test/integration/autosim.slow.test.ts src/test/integration/weekAdvancement.slow.test.ts src/test/integration/livingWorld.slow.test.ts src/test/integration/worldLiveness.slow.test.ts
 ```
 
 **Run with a filter (e.g. /integration-autosim autosim):**
@@ -42,24 +42,27 @@ bun run test --reporter=verbose -- <filter>
 **Run determinism check:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/determinism.test.ts
+bun run test --reporter=verbose src/test/engine/determinismAudit.test.ts
+bun run test:slow src/test/engine/sim/determinism.slow.test.ts
 ```
 
 **Run autosim integration tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/integration/autosim.test.ts src/test/integration/weekAdvancement.test.ts
+bun run test:slow src/test/integration/autosim.slow.test.ts src/test/integration/weekAdvancement.slow.test.ts
+bun run test --reporter=verbose src/test/engine/autosim/
 ```
 
 **Run week advancement tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/advanceWeek.test.ts src/test/engine/weekPipeline.test.ts
+bun run test --reporter=verbose src/test/engine/weekPipeline.test.ts src/test/engine/autosim/
+bun run test:slow src/test/integration/weekAdvancement.slow.test.ts src/test/integration/championshipAdvanceWeek.slow.test.ts
 ```
 
 ## Notes
 
-- Season smoke test validates simulation integrity over 13 weeks and determinism
+- Multi-week simulations are `*.slow.test.ts` — excluded from `bun run test`; use `bun run test:slow <path>` (they gate nightly CI, not every PR)
 - Autosim supports both sequential (week-by-week) and batch (quarter) advancement modes
 - Stop conditions: roster_empty, no_pairings, bankruptcy (treasury < -500)
 - Determinism check runs simulation twice with same seed and verifies identical results

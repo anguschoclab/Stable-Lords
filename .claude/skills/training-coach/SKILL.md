@@ -23,7 +23,7 @@ Tests the training system including training gains, injury risks, coach logic, f
 | injuries           | src/test/engine/injuries.test.ts                |
 | facility           | src/test/engine/training/facilityUpkeep.test.ts |
 | coach              | src/test/engine/training/coachLogic.test.ts     |
-| training           | src/test/engine/training.test.ts                |
+| training           | src/test/engine/training/training.test.ts       |
 | trainers           | src/test/engine/trainers.test.ts                |
 | trainerSpecialties | src/test/engine/trainerSpecialties.test.ts      |
 
@@ -32,7 +32,7 @@ Tests the training system including training gains, injury risks, coach logic, f
 **Run all training tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/training/ src/test/engine/training.test.ts src/test/engine/trainers.test.ts src/test/engine/trainerSpecialties.test.ts src/test/engine/injuries.test.ts
+bun run test --reporter=verbose src/test/engine/training/ src/test/engine/trainers.test.ts src/test/engine/trainerSpecialties.test.ts src/test/engine/injuries.test.ts
 ```
 
 **Run with a filter (e.g. /training-coach gains):**

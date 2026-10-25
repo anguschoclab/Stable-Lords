@@ -20,10 +20,10 @@ Runs economic balance simulations to track treasury health, lethality rates, and
 | -------------- | ------------------------------------------------- |
 | (none)         | Full 100-week balance simulation via daily oracle |
 | quick          | Quick 50-week balance check                       |
-| meta           | Meta-drift analysis only                          |
-| economy        | src/test/engine/economy.test.ts                   |
-| balance        | src/test/balance.test.ts                          |
-| hardening      | src/test/simulation_hardening.test.ts             |
+| meta           | src/test/engine/metaDrift.test.ts                 |
+| economy        | src/test/engine/economy/                          |
+| balance        | src/test/engine/economy/balance.slow.test.ts (SLOW tier) |
+| hardening      | src/test/engine/combat/simulation_hardening.slow.test.ts (SLOW tier) |
 
 ## Commands
 
@@ -39,16 +39,16 @@ bun scripts/daily_oracle.ts
 bun run test --reporter=verbose -- <filter>
 ```
 
-**Run balance tests:**
+**Run balance tests (slow tier):**
 
 ```bash
-bun run test --reporter=verbose src/test/balance.test.ts src/test/simulation_hardening.test.ts
+bun run test:slow src/test/engine/economy/balance.slow.test.ts src/test/engine/combat/simulation_hardening.slow.test.ts
 ```
 
 **Run economy tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/economy.test.ts
+bun run test --reporter=verbose src/test/engine/economy/
 ```
 
 **Run meta-drift analysis:**
@@ -65,4 +65,4 @@ bun run test --reporter=verbose src/test/engine/metaDrift.test.ts
 - Lethality rate should stay below 10% to prevent rapid roster depletion
 - Economic constants tracked: FIGHT_PURSE, WIN_BONUS, WARRIOR_UPKEEP_BASE, FAME_DIVIDEND
 - If treasury inflates >100k, consider increasing WARRIOR_UPKEEP_BASE or reducing FIGHT_PURSE
-- Test timeout is 30s (set in vitest.config.ts) — simulation_hardening.test.ts may be slow
+- Test timeout is 30s (set in vitest.config.ts) — balance and simulation_hardening are `*.slow.test.ts`, excluded from `bun run test`; run them via `bun run test:slow`

@@ -24,14 +24,14 @@ Tests the Stable Lords AI agent system including intent recognition, skepticism 
 | expansion      | src/test/engine/ai/expansionService.test.ts          |
 | retirement     | src/test/engine/ai/seasonalRetirementService.test.ts |
 | workers        | src/test/engine/ai/workers/\*.test.ts                |
-| architecture   | src/test/engine/agentArchitecture.test.ts            |
+| architecture   | src/test/engine/ai/agentArchitecture.test.ts         |
 
 ## Commands
 
 **Run all AI agent tests:**
 
 ```bash
-bun run test --reporter=verbose src/test/engine/ai/ src/test/engine/agentArchitecture.test.ts
+bun run test --reporter=verbose src/test/engine/ai/
 ```
 
 **Run with a filter (e.g. /ai-agent intent):**

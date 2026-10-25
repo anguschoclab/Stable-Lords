@@ -18,8 +18,8 @@ This engine reached a stable state by separating two concerns that used to be
 tangled. Almost every balance mistake here comes from re-tangling them, or from
 skipping the regression gate. This skill keeps you on the rails.
 
-**Tooling:** Bun, not npm/node. Run one test file with `npx vitest run <path>`;
-typecheck with `bunx tsc --noEmit --project tsconfig.app.json`. Wrap paths with
+**Tooling:** Bun, not npm/node. Run one test file with `bun run test <path>`;
+typecheck with `bun run type-check`. Wrap paths with
 spaces in double quotes.
 
 ## The one idea: two orthogonal layers
@@ -27,7 +27,7 @@ spaces in double quotes.
 | Concern                                                    | Lives in                                                                                                                                     | Means                              |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
 | **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` (+ `STYLE_SKILL_FLOORS` for the world) in `src/engine/warrior/skillBreakpoints.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is _on average_ |
-| **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts`                                                                                         | the rock-paper-scissors edges      |
+| **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat/matchup.ts`                                                                                 | the rock-paper-scissors edges      |
 
 The matrix is kept **near-antisymmetric** (if A beats B by +x, B is −x vs A). Its
 job is _only_ relative matchups. The moment you encode "style X is weak" by making
@@ -59,7 +59,7 @@ skills mostly sit _below_ the penalty, on the clamp floor. Consequences:
   minimum a style's signature skills take whatever the attributes. A floor only
   touches warriors below it, so it leaves the fixture exactly unchanged — keep
   every floor below the fixture's value for that skill (a test enforces this).
-- A **passive** (`stylePassives/strategies.ts`) moves both surfaces.
+- A **passive** (`src/engine/stylePassives/strategies.ts`) moves both surfaces.
 
 So: lift a style that is weak only in the world with a floor; move a style
 that is off on both surfaces with its penalty row or passive; re-ratchet the
@@ -79,7 +79,7 @@ fixture with penalties.
 
 Before tuning a weak style, rule out the non-balance causes that were behind
 the 2026-09 pass: warriors carrying a weapon they cannot wield
-(`loadoutFitting.ts` now fits one), a modifier applied twice, or a stat being
+(`src/engine/equipment/loadoutFitting.ts` now fits one), a modifier applied twice, or a stat being
 read with the wrong meaning (`derivedStats.hp` is max HP, not a health %).
 
 ## The fixture harness
@@ -125,7 +125,7 @@ it keeps changes small, testable, and reversible:
 
 1. **Ground first.** Read the real hook before writing. `references/hook-map.md`
    has the file/symbol map; confirm line numbers with `grep` (they drift).
-2. **Constant** for every magnitude → `src/constants/combat/combat.ts`. No bare
+2. **Constant** for every magnitude → `src/constants/combat/combat/` (`global.ts`, `matchup.ts`, `balance.ts`, `meta.ts` — `combat.ts` is just the barrel). No bare
    numbers in logic; magnitudes are knobs the harness tunes.
 3. **Pure helper** in `src/engine/combat/resolution/` (e.g. `guardBreak.ts`,
    `bleed.ts`, `strikingAttack.ts`). Style-gated, returns the no-op value for
@@ -156,10 +156,10 @@ suite.
 
 So, before calling any balance change done:
 
-- Run the **whole** suite: `npx vitest run` (not just your new file). Other code
+- Run the **whole** suite: `bun run test` (not just your new file). Other code
   consumes `getMatchupBonus`, damage magnitudes, and HP timing.
-- `bunx tsc --noEmit --project tsconfig.app.json` → 0 errors.
-- Run the slow suite too: `npx vitest run --config vitest.config.slow.ts` — the
+- `bun run type-check` → 0 errors.
+- Run the slow suite too: `bun run test:slow` — the
   fixture and world guardrails both live there.
 - Confirm all four harness guardrails pass, and that **all ten** styles are in the
   40–60% band (not just the one you touched) — on the fixture **and** in the world.

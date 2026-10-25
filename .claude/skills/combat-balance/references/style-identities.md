@@ -4,7 +4,7 @@ Each style wins on a _different axis_. When re-ratcheting after a change, move t
 **level** (deepen/lighten penalties) but keep the **shape** — the relative
 ordering of `[ATT,PAR,DEF,INI,RIP,DEC]` that encodes the style. The penalty rows
 below are the reference shape (confirm current values in `STYLE_PENALTIES`,
-`src/engine/skillCalc.ts` — they get tuned).
+`src/engine/warrior/skillCalc.ts` — they get tuned).
 
 Archetypes (drive attribute generation + trait synergy): **Cunning** (AB/PR/PS/PL,
 WT·DF·WL) · **Agile** (LU/SL, SP·DF·WT) · **Brutal** (BA/ST, ST·CN·SZ) · **Tank**

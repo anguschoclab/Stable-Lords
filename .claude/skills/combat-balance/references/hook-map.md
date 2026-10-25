@@ -8,13 +8,13 @@ if a symbol here no longer exists, the engine moved — re-ground before editing
 | What                                 | File                                     | Symbol                                                                                                                                                                                                                               |
 | ------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Absolute power (per-style level)     | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_PENALTIES` — `[ATT,PAR,DEF,INI,RIP,DEC]` per style; applied in `computeBaseSkills`                                                                                                                                            |
-| Matchup matrix (rock-paper-scissors) | `src/constants/combat/combat.ts`         | `MATCHUP_MATRIX`, `getMatchupBonus(att, def)`, `findAntisymmetryViolations(tol)`, `STYLE_ORDER`                                                                                                                                      |
+| Matchup matrix (rock-paper-scissors) | `src/constants/combat/combat/matchup.ts` | `MATCHUP_MATRIX`, `getMatchupBonus(att, def)`, `findAntisymmetryViolations(tol)`, `STYLE_ORDER`                                                                                                                                      |
 | World-only level (per-style floor)   | `src/engine/warrior/skillBreakpoints.ts` | `STYLE_SKILL_FLOORS` — `[ATT,PAR,DEF,INI,RIP,DEC]` minimum per style; applied in `computeBaseSkills`' clamp. Does not touch the all-15s fixture.                                                                                     |
 | Kill rate                            | `src/constants/combat/combat/global.ts`  | `KILL_WINDOW` — every magnitude of `calculateKillWindow`; `SCALE` is the world dial (applied at the kill roll in `hitExecution.ts`, next to `deathRateMult`)                                                                         |
 | Weapon choice                        | `src/engine/equipment/loadoutFitting.ts` | `fitWeapon` / `getFittedLoadout` / `refitWeapon` — best wieldable weapon for a warrior; canon requirement + suitability data is read, never edited                                                                                   |
-| All tunable magnitudes               | `src/constants/combat/combat.ts`         | constants live here (e.g. `ABSOLUTE_POWER_LOW/HIGH`, `MIRROR_MATCH_BAND`, `BA_PARDEGRADE_*`, `SL_BLEED_*`, `ST_*`, `PR_*`, `PS_COUNTERSTRIKE_ATT`, `WS_ATTRITION_FLOOR`, `LU_MOMENTUM_DMG_COEFF`, `CRIT_DAMAGE_MULT`, `KNOCKDOWN_*`) |
+| All tunable magnitudes               | `src/constants/combat/combat/`           | constants live in `global.ts`/`balance.ts`/`meta.ts` (`combat.ts` is the barrel) (e.g. `ABSOLUTE_POWER_LOW/HIGH`, `MIRROR_MATCH_BAND`, `BA_PARDEGRADE_*`, `SL_BLEED_*`, `ST_*`, `PR_*`, `PS_COUNTERSTRIKE_ATT`, `WS_ATTRITION_FLOOR`, `LU_MOMENTUM_DMG_COEFF`, `CRIT_DAMAGE_MULT`, `KNOCKDOWN_*`) |
 
-`getMatchupBonus` is also consumed by `src/engine/matchmaking/schedulingAssistant.ts`
+`getMatchupBonus` is also consumed by `src/engine/matchmaking/schedulingAssistant/`
 and `src/engine/narrative/fightAnalysis.ts` — changing the matrix can break their
 tests. Run the full suite.
 
@@ -40,7 +40,7 @@ The balance test builds `styleWins`/`styleFights`/`matchupWins` once with identi
 
 ## The damage pipeline — `executeHit`
 
-`src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts`, function
+`src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/` (index.ts, damage.ts, killWindow.ts), function
 `executeHit` (the **landed-hit** path; called from `resolution.ts` only when the
 defender's defense fails). Order of the pipeline, with the style hooks already in place:
 
@@ -92,7 +92,7 @@ Called at two sites in `resolution.ts`: the **whiff** path (`resolveWhiffRiposte
 
 ## The main fight loop
 
-`src/engine/simulate/simulationLoop.ts` calls `resolveExchange` per exchange and
+`src/engine/simulate/simulationLoop/` (index.ts) calls `resolveExchange` per exchange and
 reads `fA.hp`/`fD.hp` after — so a bleed/DoT tick that drives HP to 0 ends the
 fight via this check (no extra death handling needed in `resolveExchange`).
 

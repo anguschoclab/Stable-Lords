@@ -50,6 +50,33 @@ export const AI_PRESTIGE_CAP_RATE = 0.05;
 /** Max scout reports a rival keeps in `agentMemory.scoutReports` — oldest evict first. */
 export const AI_SCOUT_REPORT_CAP = 12;
 
+// ─── Stable-level avoids (canon "avoid team numbers") ──────────────────────
+/** A rival stops proposing into a stable it is dominated by: no wins and at
+ *  least this many losses on the dossier's recordVs. */
+export const AI_STABLE_AVOID_MIN_LOSSES = 3;
+/** Personalities that honor a dominated dossier — Aggressive/Showman
+ *  stables fight anyone; VENDETTA intent bypasses entirely. */
+export const AI_STABLE_AVOID_PERSONALITIES: ReadonlySet<string> = new Set([
+  'Pragmatic',
+  'Methodical',
+  'Tactician',
+]);
+
+// ─── Learning-seek targeting (canon: challenge experienced warriors to learn) ─
+/** A proposer with fewer than this many career bouts is "young" enough to
+ *  deliberately seek experienced opponents for the learning XP. */
+export const AI_LEARN_SEEK_MAX_BOUTS = 10;
+/** Pairwise score bonus per {@link AI_LEARN_SEEK_GAP_DIVISOR} career bouts the
+ *  candidate has over the proposer (scales: bigger gap → bigger pull). */
+export const AI_LEARN_SEEK_GAP_DIVISOR = 2;
+/** Cap on the learning-seek score bonus. */
+export const AI_LEARN_SEEK_CAP = 20;
+/** Personalities that book "learning" fights deliberately. */
+export const AI_LEARN_SEEK_PERSONALITIES: ReadonlySet<string> = new Set([
+  'Methodical',
+  'Tactician',
+]);
+
 // ─── Personality draft weights ────────────────────────────────────────────
 // Extended scorer inputs for the unified draft (megaplan): each personality
 // buys what it values — Showman pays for Prodigies, Pragmatic hunts value,

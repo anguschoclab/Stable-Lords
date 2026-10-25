@@ -20,6 +20,14 @@ export interface MatchupScore {
   notes: string[];
   rankDiff?: number;
   headToHead?: HeadToHeadRecord;
+  /** Canon: challenge/avoid marks only bind once the warrior is listed in
+   *  the arena records (≥1 career fight — draws count as losses). */
+  listed: boolean;
+}
+
+/** A warrior is "listed" once they have fought at least once. */
+export function isWarriorListed(w: Warrior): boolean {
+  return ((w.career?.wins ?? 0) + (w.career?.losses ?? 0)) > 0;
 }
 
 /**
@@ -50,12 +58,18 @@ export function scoreMatchup(
     week: state.week,
   });
 
-  // Player challenge/avoid modifiers
-  if (state.playerChallenges?.includes(rivalWarrior.id)) {
-    score += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
-  }
-  if (state.playerAvoids?.includes(rivalWarrior.id)) {
-    score += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
+  // Player challenge/avoid modifiers — inert until the warrior is listed.
+  if (isWarriorListed(rivalWarrior)) {
+    if (state.playerChallenges?.includes(rivalWarrior.id)) {
+      score += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+    }
+    if (
+      state.playerAvoids?.includes(rivalWarrior.id) ||
+      (rivalWarrior.stableId !== undefined &&
+        state.playerStableAvoids?.includes(rivalWarrior.stableId as string))
+    ) {
+      score += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
+    }
   }
 
   return score;
@@ -159,5 +173,6 @@ export function buildMatchupScore(
     notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
     rankDiff,
     headToHead,
+    listed: isWarriorListed(r.warrior),
   };
 }

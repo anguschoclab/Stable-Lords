@@ -602,4 +602,157 @@ describe('WorldSlice', () => {
       expect(useTestStore.getState().playerChallenges).toEqual(['w3']);
     });
   });
+
+  describe('toggleStableAvoid', () => {
+    const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({
+      id: stableId,
+      owner: { id: stableId, name: 'Rival', stableName: stableId, fame: 0, renown: 0, titles: 0 },
+      roster: warriors.map(
+        (w) =>
+          ({
+            id: w.id,
+            stableId,
+            career: { wins: w.wins, losses: w.losses, kills: 0 },
+          }) as any
+      ),
+    });
+
+    it('should add stableId to playerStableAvoids when not present', () => {
+      act(() => {
+        useTestStore.setState({ playerStableAvoids: [] });
+        useTestStore.getState().toggleStableAvoid('stable-x');
+      });
+      expect(useTestStore.getState().playerStableAvoids).toEqual(['stable-x']);
+    });
+
+    it('should remove stableId when already present (toggle off)', () => {
+      act(() => {
+        useTestStore.setState({ playerStableAvoids: ['stable-x'] });
+        useTestStore.getState().toggleStableAvoid('stable-x');
+      });
+      expect(useTestStore.getState().playerStableAvoids).toEqual([]);
+    });
+
+    it('should clear warrior-level challenges/avoids belonging to that stable', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 2, losses: 1 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: ['w1'],
+          playerAvoids: ['w1'],
+          playerStableAvoids: [],
+        });
+        useTestStore.getState().toggleStableAvoid('stable-x');
+      });
+      expect(useTestStore.getState().playerStableAvoids).toEqual(['stable-x']);
+      expect(useTestStore.getState().playerChallenges).toEqual([]);
+      expect(useTestStore.getState().playerAvoids).toEqual([]);
+    });
+
+    it('should keep marks on warriors of other stables', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 2, losses: 1 }]);
+      const other = rivalWith('stable-y', [{ id: 'w9', wins: 1, losses: 0 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any, other as any],
+          playerChallenges: ['w9'],
+          playerAvoids: ['w1'],
+          playerStableAvoids: [],
+        });
+        useTestStore.getState().toggleStableAvoid('stable-x');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w9']);
+      expect(useTestStore.getState().playerAvoids).toEqual([]);
+    });
+
+    it('marking a warrior lifts the blanket stable avoid', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 2, losses: 1 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: [],
+          playerAvoids: [],
+          playerStableAvoids: ['stable-x'],
+        });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerStableAvoids).toEqual([]);
+      expect(useTestStore.getState().playerChallenges).toEqual(['w1']);
+    });
+  });
+
+  describe('newsletter-listing gate (canon: marks need ≥1 career fight)', () => {
+    const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({
+      id: stableId,
+      owner: { id: stableId, name: 'Rival', stableName: stableId, fame: 0, renown: 0, titles: 0 },
+      roster: warriors.map(
+        (w) =>
+          ({
+            id: w.id,
+            stableId,
+            career: { wins: w.wins, losses: w.losses, kills: 0 },
+          }) as any
+      ),
+    });
+
+    it('toggleChallenge no-ops on a rival warrior with no career fights', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 0, losses: 0 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: [],
+          playerAvoids: [],
+        });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual([]);
+    });
+
+    it('toggleAvoid no-ops on a rival warrior with no career fights', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 0, losses: 0 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: [],
+          playerAvoids: [],
+        });
+        useTestStore.getState().toggleAvoid('w1');
+      });
+      expect(useTestStore.getState().playerAvoids).toEqual([]);
+    });
+
+    it('toggleChallenge works once the warrior has a career fight', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 0, losses: 1 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: [],
+          playerAvoids: [],
+        });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['w1']);
+    });
+
+    it('allows marks on ids not resolvable to a rival warrior (defensive default)', () => {
+      act(() => {
+        useTestStore.setState({ rivals: [], playerChallenges: [], playerAvoids: [] });
+        useTestStore.getState().toggleChallenge('ghost-id');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual(['ghost-id']);
+    });
+
+    it('toggling off a mark on an unlisted warrior still works', () => {
+      const rival = rivalWith('stable-x', [{ id: 'w1', wins: 0, losses: 0 }]);
+      act(() => {
+        useTestStore.setState({
+          rivals: [rival as any],
+          playerChallenges: ['w1'],
+          playerAvoids: [],
+        });
+        useTestStore.getState().toggleChallenge('w1');
+      });
+      expect(useTestStore.getState().playerChallenges).toEqual([]);
+    });
+  });
 });

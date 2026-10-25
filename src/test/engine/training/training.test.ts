@@ -59,14 +59,31 @@ describe('Training System', () => {
       expect(chance).toBeLessThan(0.85);
     });
 
-    it('should increase chance with high WT', () => {
-      const lowWT = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 8, WL: 12, SP: 12, DF: 12 });
-      const highWT = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 16, WL: 12, SP: 12, DF: 12 });
+    it('should increase chance with high WL (canon: stat trains are WL-driven)', () => {
+      const lowWL = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 8, SP: 12, DF: 12 });
+      const highWL = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 16, SP: 12, DF: 12 });
+
+      const chanceL = computeGainChance(lowWL, 'ST', []);
+      const chanceH = computeGainChance(highWL, 'ST', []);
+
+      expect(chanceH).toBeGreaterThan(chanceL);
+    });
+
+    it('should approach the canon 5%×WL shape (WL 15 ≈ 75%)', () => {
+      const w = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 10, WL: 15, SP: 12, DF: 12 });
+      const chance = computeGainChance(w, 'ST', []);
+      expect(chance).toBeGreaterThan(0.6);
+      expect(chance).toBeLessThanOrEqual(0.85);
+    });
+
+    it('should not change with WT (WT governs skill learning, not stat training)', () => {
+      const lowWT = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 6, WL: 12, SP: 12, DF: 12 });
+      const highWT = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 18, WL: 12, SP: 12, DF: 12 });
 
       const chanceL = computeGainChance(lowWT, 'ST', []);
       const chanceH = computeGainChance(highWT, 'ST', []);
 
-      expect(chanceH).toBeGreaterThan(chanceL);
+      expect(chanceH).toBe(chanceL);
     });
 
     it('should decrease chance with age penalty', () => {
@@ -100,6 +117,61 @@ describe('Training System', () => {
       const chanceI = computeGainChance(injured, 'ST', []);
 
       expect(chanceI).toBeLessThan(chanceH);
+    });
+
+    it('should halve the gain chance on a repeat raise of the same stat in a season', () => {
+      // Canon: 2nd+ stat raise of a stat is halved (5%×WL×0.5).
+      const warrior = makeWarrior(
+        { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 15, SP: 12, DF: 12 },
+        { potential: { ST: 25, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 } }
+      );
+      const state = makeState({ season: 'Spring' });
+      const firstGrowth = [
+        {
+          warriorId: warrior.id,
+          season: 'Spring' as const,
+          gains: { ST: 1 },
+        },
+      ];
+      // rng roll that succeeds at full chance but fails at halved chance:
+      // WL15 → ~0.75 chance; halved ~0.375. A 0.5 roll lands between them.
+      const midRollRng = { next: () => 0.5, uuid: () => 'x', pick: <T,>(a: T[]) => a[0]!, roll: () => 1, shuffle: <T,>(a: T[]) => a, rollWeighted: () => 'x', chance: () => false } as any;
+      const first = trainingGains.processAttributeTraining(
+        warrior,
+        'ST',
+        state,
+        [],
+        midRollRng
+      );
+      const repeat = trainingGains.processAttributeTraining(
+        warrior,
+        'ST',
+        state,
+        firstGrowth,
+        midRollRng
+      );
+      expect(first.result.type).toBe('gain'); // full odds pass at 0.5 roll
+      expect(repeat.result.type).toBe('blocked'); // halved odds fail the same roll
+    });
+
+    it('should not halve a different stat that has no prior seasonal gain', () => {
+      const warrior = makeWarrior(
+        { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 15, SP: 12, DF: 12 },
+        { potential: { ST: 25, CN: 25, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 } }
+      );
+      const state = makeState({ season: 'Spring' });
+      const priorGrowth = [
+        { warriorId: warrior.id, season: 'Spring' as const, gains: { ST: 1 } },
+      ];
+      const midRollRng = { next: () => 0.5, uuid: () => 'x', pick: <T,>(a: T[]) => a[0]!, roll: () => 1, shuffle: <T,>(a: T[]) => a, rollWeighted: () => 'x', chance: () => false } as any;
+      const cnAttempt = trainingGains.processAttributeTraining(
+        warrior,
+        'CN',
+        state,
+        priorGrowth,
+        midRollRng
+      );
+      expect(cnAttempt.result.type).toBe('gain'); // CN unraised → full odds
     });
 
     it('should apply diminishing returns near potential ceiling', () => {

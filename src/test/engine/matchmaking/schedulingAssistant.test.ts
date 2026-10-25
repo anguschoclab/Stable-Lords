@@ -1217,6 +1217,90 @@ describe('Scheduling Assistant Engine', () => {
       // rivalB should be first (lowest score) due to -500 avoid penalty
       expect(avoids[0]?.rivalWarrior.id).toBe(rivalB.id);
     });
+
+    it('applies AVOID_PENALTY to any warrior whose stable is in playerStableAvoids', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1');
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerStableAvoids = ['rival1'];
+      const avoided = scoreMatchup(player, rival, state);
+
+      expect(avoided - baseline).toBe(MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY);
+    });
+
+    it('stable avoid applies to a different warrior of the same stable too', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalA = mockWarrior('rA', FightingStyle.TotalParry, 10, 5, 5, 'rival1');
+      const rivalB = mockWarrior('rB', FightingStyle.TotalParry, 10, 5, 5, 'rival1');
+
+      const state = mockState([rivalA, rivalB]);
+      state.playerStableAvoids = ['rival1'];
+
+      const scoreA = scoreMatchup(player, rivalA, state);
+      const scoreB = scoreMatchup(player, rivalB, state);
+      // Both warriors of the avoided stable carry the penalty
+      expect(scoreA).toBeLessThan(0);
+      expect(scoreB).toBeLessThan(0);
+    });
+
+    it('stable avoid stacks with a warrior-level avoid', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1');
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerAvoids = [rival.id as any];
+      state.playerStableAvoids = ['rival1'];
+      const both = scoreMatchup(player, rival, state);
+
+      // Both marks active — the avoid penalty applies (not doubled)
+      expect(both - baseline).toBe(MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY);
+    });
+
+    it('marks have no scoring effect on an unlisted warrior (0 career fights)', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rookie = mockWarrior('r1', FightingStyle.TotalParry, 10, 0, 0, 'rival1');
+
+      const state = mockState([rookie]);
+      const baseline = scoreMatchup(player, rookie, state);
+
+      state.playerChallenges = [rookie.id as any];
+      state.playerAvoids = [rookie.id as any];
+      state.playerStableAvoids = ['rival1'];
+      const marked = scoreMatchup(player, rookie, state);
+
+      expect(marked).toBe(baseline);
+    });
+
+    it('marks score normally once the warrior has a career fight', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 1, 0, 'rival1');
+
+      const state = mockState([rival]);
+      const baseline = scoreMatchup(player, rival, state);
+
+      state.playerChallenges = [rival.id as any];
+      const challenged = scoreMatchup(player, rival, state);
+
+      expect(challenged - baseline).toBe(MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS);
+    });
+
+    it('MatchupScore reports listed=false for unlisted warriors', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rookie = mockWarrior('r1', FightingStyle.TotalParry, 10, 0, 0, 'rival1');
+      const veteran = mockWarrior('r2', FightingStyle.TotalParry, 10, 3, 2, 'rival1');
+
+      const state = mockState([rookie, veteran]);
+      const recs = getRecommendedChallenges(state, player, 5);
+      const byId = Object.fromEntries(recs.map((m) => [m.rivalWarrior.id, m]));
+
+      expect(byId[rookie.id]?.listed).toBe(false);
+      expect(byId[veteran.id]?.listed).toBe(true);
+    });
   });
 
   describe('Head-to-head memoization', () => {

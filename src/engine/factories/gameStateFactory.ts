@@ -78,6 +78,7 @@ function baseFreshState(createdAt: string): GameState {
     matchHistory: [],
     playerChallenges: [],
     playerAvoids: [],
+    playerStableAvoids: [],
     recruitPool: [],
     rosterBonus: 0,
     ownerGrudges: [],

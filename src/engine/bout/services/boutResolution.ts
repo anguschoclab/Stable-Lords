@@ -27,6 +27,9 @@ import { isPlayerOwned } from '../warriorRouting';
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import { handleInjuries } from '../injuryHandler';
 import { handleProgressions } from '../progressionHandler';
+import { applyChallengeContext } from '../challengePlans';
+import { arenaIsHonorBound, isDownChallenge } from '@/engine/politics/honorCulture';
+import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { handleReporting } from '../reportingHandler';
 import type { BoutContext, BoutImpact } from './boutProcessorTypes';
 
@@ -124,12 +127,20 @@ function runBoutSimulation(
   // the owner-namespace grudge key (player stables fall through to their own
   // id). Passing ctx.playerId as the grudge key here used to leak player
   // grudges into rival-vs-rival bouts.
-  const planA = isNPCWarrior(state, validCW)
-    ? getNPCPlan(state, validCW, validCO.style, undefined, validCO.stableId as string)
-    : getDefaultPlan(validCW, defaultPlanForWarrior);
-  const planD = isNPCWarrior(state, validCO)
-    ? getNPCPlan(state, validCO, validCW.style, undefined, validCW.stableId as string)
-    : getDefaultPlan(validCO, defaultPlanForWarrior);
+  const planA = applyChallengeContext(
+    validCW,
+    isNPCWarrior(state, validCW)
+      ? getNPCPlan(state, validCW, validCO.style, undefined, validCO.stableId as string)
+      : getDefaultPlan(validCW, defaultPlanForWarrior),
+    _ctx.contract
+  );
+  const planD = applyChallengeContext(
+    validCO,
+    isNPCWarrior(state, validCO)
+      ? getNPCPlan(state, validCO, validCW.style, undefined, validCW.stableId as string)
+      : getDefaultPlan(validCO, defaultPlanForWarrior),
+    _ctx.contract
+  );
 
   return simulateFight({
     planA: planA,
@@ -340,6 +351,36 @@ function reportBout(args: ReportBoutArgs): { summary: FightSummary; announcement
   // this flag, and the UI badges the bout as a defense.
   if (ctx.contract?.titleArenaId) summary.titleArenaId = ctx.contract.titleArenaId;
   impacts.push({ arenaHistory: [summary] });
+
+  // Arena honor culture: a player-initiated down-challenge in an honor-bound
+  // venue earns a public-stigma note in the gazette.
+  if (
+    ctx.contract?.proposerStableId === ctx.playerId &&
+    arenaIsHonorBound(ctx.contract.arenaId ?? resolvedArenaId)
+  ) {
+    const proposer = validCW.stableId === ctx.playerId ? validCW : validCO;
+    const challenged = proposer === validCW ? validCO : validCW;
+    if (isDownChallenge(proposer, challenged)) {
+      impacts.push({
+        newsletterItems: [
+          makeNewsletterItem({
+            rng: rng,
+            week: ctx.week,
+            title: 'Arena Politics',
+            templates: [
+              'The crowd turns on {{proposer}} of {{stable}} — picking on {{target}}, a warrior well below their standing, is bad form in this venue.',
+            ],
+            data: {
+              proposer: proposer.name,
+              stable: 'the challenger stable',
+              target: challenged.name,
+            },
+            category: 'news',
+          }),
+        ],
+      });
+    }
+  }
 
   if (!ctx.headless) {
     engineEventBus.emit({

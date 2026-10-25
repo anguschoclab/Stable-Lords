@@ -8,6 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { AvatarForEntity } from '@/components/avatar';
+import { isWarriorListed } from '@/engine/matchmaking/schedulingAssistant/matchups';
 
 interface WarriorDossierHeaderProps {
   warrior: Warrior;
@@ -17,6 +18,62 @@ interface WarriorDossierHeaderProps {
     compositeScore: number;
   };
   isPlayerOwned?: boolean;
+}
+
+/** Challenge/avoid mark buttons for non-player warriors. */
+function MarkButtons({ warrior }: { warrior: Warrior }) {
+  const playerChallenges = useGameStore((s) => s.playerChallenges);
+  const playerAvoids = useGameStore((s) => s.playerAvoids);
+  const playerStableAvoids = useGameStore((s) => s.playerStableAvoids);
+  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
+  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
+  const toggleStableAvoid = useGameStore((s) => s.toggleStableAvoid);
+
+  const isChallenged = playerChallenges?.includes(warrior.id) ?? false;
+  const isAvoided =
+    (playerAvoids?.includes(warrior.id) ??
+      playerStableAvoids?.includes(warrior.stableId as string)) ??
+    false;
+  const isStableAvoided =
+    warrior.stableId !== undefined &&
+    (playerStableAvoids?.includes(warrior.stableId as string) ?? false);
+  const listed = isWarriorListed(warrior);
+  const unlistedTip = 'Unlisted — marks bind after this warrior has fought once';
+  return (
+    <>
+      <Button
+        variant={isChallenged ? 'default' : 'outline'}
+        size="sm"
+        onClick={() => toggleChallenge(warrior.id)}
+        disabled={!listed}
+        tooltip={!listed ? unlistedTip : undefined}
+        className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+      >
+        {isChallenged ? 'Challenged' : 'Challenge'}
+      </Button>
+      <Button
+        variant={isAvoided ? 'destructive' : 'outline'}
+        size="sm"
+        onClick={() => toggleAvoid(warrior.id)}
+        disabled={!listed}
+        tooltip={!listed ? unlistedTip : undefined}
+        className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+      >
+        {isAvoided ? 'Avoided' : 'Avoid'}
+      </Button>
+      {warrior.stableId !== undefined && (
+        <Button
+          variant={isStableAvoided ? 'destructive' : 'outline'}
+          size="sm"
+          onClick={() => toggleStableAvoid(warrior.stableId as string)}
+          tooltip="Avoid the whole stable — vetoes inbound offers from all its warriors"
+          className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
+        >
+          {isStableAvoided ? 'Stable Avoided' : 'Avoid Stable'}
+        </Button>
+      )}
+    </>
+  );
 }
 
 /** Right-hand action cluster: challenge/avoid toggles, bookmark, style + rank badges. */
@@ -29,36 +86,10 @@ function HeaderActions({
   rankings: WarriorDossierHeaderProps['rankings'];
   isPlayerOwned: boolean;
 }) {
-  const playerChallenges = useGameStore((s) => s.playerChallenges);
-  const playerAvoids = useGameStore((s) => s.playerAvoids);
-  const toggleChallenge = useGameStore((s) => s.toggleChallenge);
-  const toggleAvoid = useGameStore((s) => s.toggleAvoid);
-
-  const isChallenged = playerChallenges?.includes(warrior.id) ?? false;
-  const isAvoided = playerAvoids?.includes(warrior.id) ?? false;
   return (
     <div className="flex flex-col items-end gap-2">
       <div className="flex items-center gap-3">
-        {!isPlayerOwned && (
-          <>
-            <Button
-              variant={isChallenged ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => toggleChallenge(warrior.id)}
-              className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
-            >
-              {isChallenged ? 'Challenged' : 'Challenge'}
-            </Button>
-            <Button
-              variant={isAvoided ? 'destructive' : 'outline'}
-              size="sm"
-              onClick={() => toggleAvoid(warrior.id)}
-              className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
-            >
-              {isAvoided ? 'Avoided' : 'Avoid'}
-            </Button>
-          </>
-        )}
+        {!isPlayerOwned && <MarkButtons warrior={warrior} />}
         <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
         <StatBadge styleName={warrior.style} />
       </div>

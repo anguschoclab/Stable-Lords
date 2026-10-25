@@ -67,6 +67,9 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
       style: warriorA.style,
       attributes: warriorA.attributes,
       skills: warriorA.baseSkills ?? zeroSkills,
+      plan: warriorA.plan ? { al: warriorA.plan.AL } : undefined,
+      encumbrance: warriorA.derivedStats?.encumbrance,
+      endurance: warriorA.derivedStats?.endurance,
     },
     {
       id: warriorD.id,
@@ -74,6 +77,9 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
       style: warriorD.style,
       attributes: warriorD.attributes,
       skills: warriorD.baseSkills ?? zeroSkills,
+      plan: warriorD.plan ? { al: warriorD.plan.AL } : undefined,
+      encumbrance: warriorD.derivedStats?.encumbrance,
+      endurance: warriorD.derivedStats?.endurance,
     }
   );
 

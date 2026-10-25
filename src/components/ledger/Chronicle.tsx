@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -135,6 +135,9 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
 export function Chronicle() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
   const newsletter = useGameStore((s) => s.newsletter);
+  const playerAds = useGameStore((s) => s.playerAds);
+  const submitPlayerAd = useGameStore((s) => s.submitPlayerAd);
+  const [adText, setAdText] = useState('');
 
   const news = useMemo(() => [...(newsletter || [])].reverse().slice(0, 50), [newsletter]);
 
@@ -161,6 +164,32 @@ export function Chronicle() {
           </span>
         </div>
       </div>
+
+      <form
+        className="flex items-center gap-2 px-1"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!adText.trim()) return;
+          submitPlayerAd(adText);
+          setAdText('');
+        }}
+      >
+        <input
+          type="text"
+          value={adText}
+          onChange={(e) => setAdText(e.target.value)}
+          maxLength={140}
+          placeholder="Pen a personal ad for the gazette…"
+          aria-label="Personal ad"
+          className="flex-1 bg-black/40 border border-white/10 px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40"
+        />
+        <button
+          type="submit"
+          className="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 border border-primary/30 text-primary hover:bg-primary/10"
+        >
+          Post Ad{(playerAds?.length ?? 0) > 0 ? ` (${(playerAds ?? []).length}/3)` : ''}
+        </button>
+      </form>
 
       {news.length === 0 ? (
         <ChronicleEmptyState />

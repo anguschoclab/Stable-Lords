@@ -86,8 +86,9 @@ export function selectTrainingFocus(
     w.style === FightingStyle.TotalParry &&
     !(w.attributes.WT >= 15 && w.attributes.DF >= 11)
   ) {
+    const trainable = new Set(trainableKeys);
     for (const k of TP_SCUM_TRAIN_ORDER) {
-      if (trainableKeys.includes(k) && w.attributes[k] < ATTRIBUTE_MAX) return k;
+      if (trainable.has(k) && w.attributes[k] < ATTRIBUTE_MAX) return k;
     }
   }
 

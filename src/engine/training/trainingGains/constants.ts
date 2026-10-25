@@ -3,6 +3,10 @@ import { type TrainerFocus } from '@/types/shared.types';
 
 export const TOTAL_CAP = 120;
 export const BASE_GAIN_CHANCE = 0.55;
+/** Canon: stat-train base odds ≈ 5% × WL (WL 15 → 75%). */
+export const WL_GAIN_BASE_FACTOR = 0.05;
+/** Canon: repeat raise of the same stat in a season is halved. */
+export const REPEAT_ATTR_GAIN_FACTOR = 0.5;
 export const SEASONAL_CAP_PER_ATTR = 3;
 export const BASE_TRAINING_INJURY_CHANCE = 0.03;
 export const GAIN_CHANCE_MIN = 0.15;

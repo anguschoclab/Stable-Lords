@@ -92,6 +92,20 @@ export interface DesperatePlan {
 }
 
 /**
+ * Canon "special strategy" slots: an alternate plan used when the warrior is
+ * the bout's proposer and/or when they are the one being challenged. Resolved
+ * once at plan-selection time (before the fight), then in-fight mechanics
+ * (conditions, desperatePlan, phase shifts) apply on top as usual.
+ */
+export interface ChallengePlans {
+  /** Applied when this warrior's stable proposed the bout. Partial override —
+   *  only the fields listed are swapped over the base plan. */
+  whenProposer?: Partial<DesperatePlan>;
+  /** Applied when another stable's challenge brought this bout. */
+  whenChallenged?: Partial<DesperatePlan>;
+}
+
+/**
  * Defines the shape of fight plan.
  */
 export interface FightPlan {
@@ -126,4 +140,6 @@ export interface FightPlan {
   rangePreference?: DistanceRange;
   /** Stable owner's personality — drives in-bout adaptation conditions (see ownerAI.ts). Undefined for player-authored plans. */
   ownerPersonality?: 'Aggressive' | 'Methodical' | 'Showman' | 'Pragmatic' | 'Tactician';
+  /** Challenge-context alternate plans — see {@link ChallengePlans}. */
+  challengePlans?: ChallengePlans;
 }

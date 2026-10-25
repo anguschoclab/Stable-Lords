@@ -131,6 +131,9 @@ function ExpandedViewer({ res }: { res: BoutResult }) {
       style: res.a.style,
       attributes: res.a.attributes,
       skills: res.a.baseSkills ?? zeroSkills,
+      plan: res.a.plan ? { al: res.a.plan.AL } : undefined,
+      encumbrance: res.a.derivedStats?.encumbrance,
+      endurance: res.a.derivedStats?.endurance,
     },
     {
       id: res.d.id,
@@ -138,6 +141,9 @@ function ExpandedViewer({ res }: { res: BoutResult }) {
       style: res.d.style,
       attributes: res.d.attributes,
       skills: res.d.baseSkills ?? zeroSkills,
+      plan: res.d.plan ? { al: res.d.plan.AL } : undefined,
+      encumbrance: res.d.derivedStats?.encumbrance,
+      endurance: res.d.derivedStats?.endurance,
     }
   );
   return (

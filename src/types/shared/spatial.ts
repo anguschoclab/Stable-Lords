@@ -26,6 +26,7 @@ export type ArenaTag =
   | 'cramped'
   | 'open'
   | 'premium'
+  | 'honor-bound'
   | 'uneven'
   | 'ruins'
   | 'magical'

@@ -351,6 +351,15 @@ describe('resolveImpacts', () => {
     expect(newState.playerAvoids[0]).toBe('rival-1');
   });
 
+  it('handles playerStableAvoids - appends stable IDs', () => {
+    const state = makeInitialState();
+    const impact: StateImpact = { playerStableAvoids: ['stable-1' as any] };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.playerStableAvoids).toHaveLength(1);
+    expect(newState.playerStableAvoids[0]).toBe('stable-1');
+  });
+
   it('handles coachDismissed - appends dismissed tip IDs', () => {
     const state = makeInitialState();
     const impact: StateImpact = { coachDismissed: ['tip-1'] };

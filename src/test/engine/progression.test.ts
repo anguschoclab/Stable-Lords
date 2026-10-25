@@ -50,6 +50,38 @@ describe('Warrior Progression', () => {
       const outcome = { winner: 'A', by: 'Kill', minutes: 5 } as FightOutcome;
       expect(calculateXP(outcome, 'A', ['Flashy', 'Comeback'])).toBe(5); // 2 (win) + 1 (kill) + 1 (flashy) + 1 (comeback)
     });
+
+    describe('experience-scaled learning (canon: WT × opponent knowledge)', () => {
+      const learner = (wt = 15, wins = 0, losses = 0) =>
+        ({
+          attributes: { WT: wt },
+          career: { wins, losses, kills: 0 },
+        }) as unknown as Warrior;
+      const opponent = (wins: number, losses = 0) =>
+        ({ career: { wins, losses, kills: 0 } }) as unknown as Warrior;
+      const loss = { winner: 'D', by: 'KO', minutes: 5 } as FightOutcome;
+
+      it('grants bonus XP against a more experienced opponent', () => {
+        expect(calculateXP(loss, 'A', [], learner(), opponent(30, 10))).toBeGreaterThan(
+          calculateXP(loss, 'A', [], learner(), opponent(0, 0))
+        );
+      });
+
+      it('grants no bonus when the opponent is equally or less experienced', () => {
+        expect(calculateXP(loss, 'A', [], learner(15, 20, 10), opponent(5, 2))).toBe(1);
+      });
+
+      it('scales the bonus with learner WT', () => {
+        const highWt = calculateXP(loss, 'A', [], learner(17), opponent(30, 10));
+        const lowWt = calculateXP(loss, 'A', [], learner(5), opponent(30, 10));
+        expect(highWt).toBeGreaterThan(lowWt);
+      });
+
+      it('caps the experience bonus', () => {
+        // Even an absurd gap can't exceed the bonus cap
+        expect(calculateXP(loss, 'A', [], learner(25), opponent(200, 0))).toBeLessThanOrEqual(4);
+      });
+    });
   });
 
   describe('applyXP', () => {

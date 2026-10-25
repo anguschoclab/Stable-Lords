@@ -66,10 +66,10 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
   const newsletterItems: NewsletterItem[] = [];
 
   // XP for both fighters — routed to the right roster regardless of ownership
-  const updatedA = applyXP(wA, calculateXP(outcome, 'A', tags), rng).warrior;
+  const updatedA = applyXP(wA, calculateXP(outcome, 'A', tags, wA, wD), rng).warrior;
   routeUpdate(s, wA, updatedA, rosterUpdates, rivalWarriorPatches);
 
-  const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags), rng).warrior;
+  const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags, wD, wA), rng).warrior;
   routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
 
   // Favorites discovery — also for both fighters (was player-only).

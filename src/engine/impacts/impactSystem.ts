@@ -124,6 +124,7 @@ const MERGE_CONFIG: MergeConfig = {
   moodHistory: { strategy: 'append', defaultValue: [] },
   playerChallenges: { strategy: 'append', defaultValue: [] },
   playerAvoids: { strategy: 'append', defaultValue: [] },
+  playerStableAvoids: { strategy: 'append', defaultValue: [] },
   coachDismissed: { strategy: 'append', defaultValue: [] },
   unacknowledgedDeaths: { strategy: 'append', defaultValue: [] },
   seasonalGrowth: { strategy: 'replace', defaultValue: [] },

@@ -15,6 +15,47 @@ import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { computePlanModifiers, mergePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
+import type { ChallengePlans } from '@/types/shared/fightPlan';
+
+/**
+ * Canon "special strategy" preparation by personality: planners (Tactician/
+ * Methodical) keep alternates for both roles, Aggressive stables pack an
+ * all-out opener for their own challenges, and VENDETTA stables prep a
+ * surprise counter for the grudge match they expect to be challenged into.
+ */
+function applyChallengePlanEmission(
+  plan: FightPlan,
+  personality: OwnerPersonality,
+  intent?: AIIntent
+): void {
+  const slots: ChallengePlans = {};
+  if (personality === 'Tactician' || personality === 'Methodical') {
+    slots.whenProposer = {
+      OE: clamp(plan.OE + 1, 1, 10),
+      AL: clamp(plan.AL - 1, 1, 10),
+    };
+    slots.whenChallenged = {
+      OE: clamp(plan.OE - 2, 1, 10),
+      AL: clamp(plan.AL + 2, 1, 10),
+      killDesire: Math.max(1, (plan.killDesire ?? 5) - 2),
+    };
+  }
+  if (personality === 'Aggressive') {
+    slots.whenProposer = {
+      OE: clamp(plan.OE + 2, 1, 10),
+      AL: clamp(plan.AL - 1, 1, 10),
+      killDesire: Math.min(10, (plan.killDesire ?? 5) + 2),
+    };
+  }
+  if (intent === 'VENDETTA' && !slots.whenChallenged) {
+    // The blood feud they expect: meet the challenger hot.
+    slots.whenChallenged = {
+      OE: clamp(plan.OE + 1, 1, 10),
+      AL: clamp(plan.AL - 1, 1, 10),
+    };
+  }
+  if (slots.whenProposer || slots.whenChallenged) plan.challengePlans = slots;
+}
 
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
@@ -86,6 +127,8 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
     mods: mods,
     competence: args.competence,
   });
+
+  applyChallengePlanEmission(plan, personality, intent);
 
   // Reconcile two-handed weapon + shield conflict
   if (w.equipment) {

@@ -79,6 +79,7 @@ describe('narrowRivalShardState', () => {
       'legacyFounderQueue',
       'playerChallenges',
       'playerAvoids',
+      'playerStableAvoids',
       'player',
     ] as const) {
       expect(narrowed[key], `field "${key}" must survive narrowing`).toBe(full[key]);

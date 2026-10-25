@@ -219,11 +219,12 @@ describe('social impact handlers', () => {
   // ─── socialHandlers map ───────────────────────────────────────────────
 
   describe('socialHandlers', () => {
-    it('has all 5 handler keys', () => {
+    it('has all 6 handler keys', () => {
       expect(Object.keys(socialHandlers).sort()).toEqual([
         'ownerGrudges',
         'playerAvoids',
         'playerChallenges',
+        'playerStableAvoids',
         'rivalries',
         'unacknowledgedDeaths',
       ]);

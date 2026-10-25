@@ -170,6 +170,8 @@ export const GameStateSchema = z
     matchHistory: z.array(MatchRecordSchema),
     playerChallenges: z.array(z.string()),
     playerAvoids: z.array(z.string()),
+    playerStableAvoids: z.array(z.string()).default([]),
+    playerAds: z.array(z.string()).default([]),
     recruitPool: z.array(PoolWarriorSchema),
     rosterBonus: z.number(),
     ownerGrudges: z.array(OwnerGrudgeSchema),

@@ -68,6 +68,11 @@ describe('player-directed bids', () => {
   it('playerAvoids hard-skips the marked rival warrior for player-bound bids', () => {
     const stateWithAvoids = makeGameState({ roster: playerRoster() });
     const rival = vendettaRivalTargeting(stateWithAvoids.player.id);
+    // Avoid marks only bind on listed warriors — give the roster a fight each.
+    rival.roster = rival.roster.map((w) => ({
+      ...w,
+      career: { wins: 1, losses: 0, kills: 0 },
+    }));
     // Player avoids BOTH rival warriors → no player-bound bid possible
     stateWithAvoids.playerAvoids = rival.roster.map((w) => w.id);
     const { bids } = generateBoutBids({
@@ -82,7 +87,9 @@ describe('player-directed bids', () => {
   });
 
   it('playerChallenges marked rival warrior produces a player-targeted bid without VENDETTA', () => {
-    const marked = makeWarrior({ fame: 100 });
+    // Marked warrior must be "listed" (≥1 career fight) for the mark to bind —
+    // canon: challenges don't work until a warrior has fought and is listed.
+    const marked = makeWarrior({ fame: 100, career: { wins: 3, losses: 2, kills: 0 } });
     const rival = makeRival({
       roster: [marked],
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
@@ -129,6 +136,69 @@ describe('player-directed bids', () => {
       byProposer.set(key, (byProposer.get(key) ?? 0) + 1);
     }
     for (const count of byProposer.values()) expect(count).toBeLessThanOrEqual(1);
+  });
+
+  it('playerStableAvoids suppresses vendetta bids to the player (generation-level)', () => {
+    const state = makeGameState({ roster: playerRoster() });
+    const rival = vendettaRivalTargeting(state.player.id);
+    state.playerStableAvoids = [rival.id as string];
+    const { bids } = generateBoutBids({
+      rival: rival,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rival],
+      state: state,
+    });
+    expect(bids.filter((b) => b.targetStableId === state.player.id)).toHaveLength(0);
+  });
+
+  it('playerStableAvoids vetoes player-bound offers at conversion even when bids exist', () => {
+    const state = makeGameState({ roster: playerRoster() });
+    const rival = vendettaRivalTargeting(state.player.id);
+    const { bids } = generateBoutBids({
+      rival: rival,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rival],
+      state: state,
+    });
+    expect(bids.length).toBeGreaterThan(0);
+    // The stable-avoid is set AFTER bids generate — conversion is the backstop.
+    state.playerStableAvoids = [rival.id as string];
+    const offers = convertBidsToOffers(
+      bids.map((bid) => ({ bid, rivalId: rival.id as string })),
+      [rival],
+      state,
+      new SeededRNG(1),
+      new Set()
+    );
+    const playerIds = new Set(state.roster.map((w) => w.id as string));
+    expect(
+      offers.filter((o) => o.warriorIds.some((id) => playerIds.has(id as string)))
+    ).toHaveLength(0);
+  });
+
+  it('player challenge mark on an UNLISTED rival warrior produces no answering bid', () => {
+    const marked = makeWarrior({ fame: 100, career: { wins: 0, losses: 0, kills: 0 } });
+    const rival = makeRival({
+      roster: [marked],
+      strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
+    });
+    const state = makeGameState({ playerChallenges: [marked.id] });
+    const { bids } = generateBoutBids({
+      rival: rival,
+      _currentWeek: 5,
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      rivals: [rival],
+      state: state,
+    });
+    const playerBid = bids.find(
+      (b) => b.targetStableId === state.player.id && b.proposingWarriorId === marked.id
+    );
+    expect(playerBid).toBeUndefined();
   });
 
   it('isBookable honored: warriors in trainingAssignments are never offered', () => {

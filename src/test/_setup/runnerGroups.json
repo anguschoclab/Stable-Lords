@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-25T15:51:58.396Z",
+  "generatedAt": "2026-10-25T17:40:47.114Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -162,6 +162,7 @@
     "src/test/config/environmentSplitCanary.test.ts",
     "src/test/engine/advisor/boutOfferAdvisor.test.ts",
     "src/test/engine/advisor/campaignFocusEvaluator.test.ts",
+    "src/test/engine/ai/canonTargeting.test.ts",
     "src/test/engine/ai/intentEngine.tournament.test.ts",
     "src/test/engine/ai/intentStates.test.ts",
     "src/test/engine/ai/plan/coreGenerator.test.ts",

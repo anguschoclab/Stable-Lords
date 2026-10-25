@@ -28,6 +28,29 @@ const TOTAL_ATTR_CAP = 80;
 /** Chance to reveal an attribute's potential after each fight */
 const POTENTIAL_REVEAL_CHANCE = 0.15;
 
+// ─── Experience-scaled learning (canon: skills learned ~ WT and the
+// opponent's knowledge — "challenge a very experienced warrior" to learn) ──
+/** Career-bout advantage per learning notch. */
+const LEARN_GAP_DIVISOR = 10;
+/** WT at which the full per-notch bonus is paid. */
+const LEARN_WT_DIVISOR = 15;
+/** Hard cap on the experience bonus (base XP is untouched). */
+const LEARN_BONUS_CAP = 2;
+
+const careerBouts = (w: Warrior): number =>
+  (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+
+/**
+ * Bonus XP for fighting a more seasoned opponent: one notch per
+ * LEARN_GAP_DIVISOR career-bout advantage, scaled by the learner's WT.
+ */
+function learningBonusXP(learner: Warrior, opponent: Warrior): number {
+  const gap = careerBouts(opponent) - careerBouts(learner);
+  if (gap <= 0) return 0;
+  const wt = learner.attributes?.WT ?? 10;
+  return Math.min(LEARN_BONUS_CAP, Math.floor((gap / LEARN_GAP_DIVISOR) * (wt / LEARN_WT_DIVISOR)));
+}
+
 /**
  * Defines the shape of xp gain.
  */
@@ -49,7 +72,13 @@ interface XPGain {
  * @param tags - Special tags earned during the fight (e.g. Flashy, Comeback)
  * @returns The numerical XP gained
  */
-export function calculateXP(outcome: FightOutcome, side: 'A' | 'D', tags: string[]): number {
+export function calculateXP(
+  outcome: FightOutcome,
+  side: 'A' | 'D',
+  tags: string[],
+  learner?: Warrior,
+  opponent?: Warrior
+): number {
   const won = outcome.winner === side;
   const draw = outcome.winner === null;
   let xp = won ? 2 : draw ? 1 : 1;
@@ -57,6 +86,7 @@ export function calculateXP(outcome: FightOutcome, side: 'A' | 'D', tags: string
   if (won && outcome.by === 'Kill') xp += 1;
   if (tags.includes('Flashy')) xp += 1;
   if (tags.includes('Comeback') && won) xp += 1;
+  if (learner && opponent) xp += learningBonusXP(learner, opponent);
 
   return xp;
 }

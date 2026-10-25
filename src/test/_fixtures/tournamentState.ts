@@ -80,6 +80,7 @@ export const makeTournamentBaseState = (week = 1): GameState =>
     matchHistory: [],
     playerChallenges: [],
     playerAvoids: [],
+    playerStableAvoids: [],
     ownerGrudges: [],
     insightTokens: [],
     moodHistory: [],

@@ -14,16 +14,18 @@ const mockPlan: FightPlan = {
 const mockWarrior = {} as unknown as Warrior;
 
 describe('Duplicate Switch bug fix', () => {
-  it('ContingencyPlans renders exactly one Switch', () => {
+  it('ContingencyPlans renders the Contingency + Special Strategy switches', () => {
     render(<ContingencyPlans plan={mockPlan} onPlanChange={() => {}} />);
     const switches = screen.getAllByRole('switch');
-    expect(switches).toHaveLength(1);
+    expect(switches).toHaveLength(2);
   });
 
   it('ContingencyPlans Switch has aria-label', () => {
     render(<ContingencyPlans plan={mockPlan} onPlanChange={() => {}} />);
-    const sw = screen.getByRole('switch');
+    const sw = screen.getByRole('switch', { name: 'Contingency Plans' });
     expect(sw).toHaveAttribute('aria-label', 'Contingency Plans');
+    const special = screen.getByRole('switch', { name: 'Special Strategy' });
+    expect(special).toHaveAttribute('aria-label', 'Special Strategy');
   });
 
   it('StylePassives renders exactly one Switch', () => {

@@ -25,6 +25,17 @@ interface MatchupCardProps {
   onToggleAvoid: () => void;
 }
 
+/** Button row availability — marks only bind on listed warriors. */
+function markProps(listed: boolean | undefined) {
+  const disabled = listed === false;
+  return {
+    disabled,
+    tooltip: disabled
+      ? 'Unlisted — challenge/avoid marks bind after a warrior has fought once'
+      : undefined,
+  };
+}
+
 /** Card head — direction icon + warrior name + profile link. */
 function CardHeader({ w, isGood }: { w: MatchupScore['rivalWarrior']; isGood: boolean }) {
   return (
@@ -96,11 +107,13 @@ function CardFooter(props: {
   isGood: boolean;
   isChallenged: boolean;
   isAvoided: boolean;
+  listed?: boolean;
   onToggleChallenge: () => void;
   onToggleAvoid: () => void;
 }) {
-  const { score, isGood, isChallenged, isAvoided, onToggleChallenge } = props;
+  const { score, isGood, isChallenged, isAvoided, onToggleChallenge, listed } = props;
   const { onToggleAvoid } = props;
+  const marks = markProps(listed);
   return (
     <>
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
@@ -122,6 +135,8 @@ function CardFooter(props: {
           variant={isChallenged ? 'default' : 'outline'}
           size="sm"
           onClick={onToggleChallenge}
+          disabled={marks.disabled}
+          tooltip={marks.tooltip}
           className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
         >
           {isChallenged ? 'Challenged' : 'Challenge'}
@@ -130,6 +145,8 @@ function CardFooter(props: {
           variant={isAvoided ? 'destructive' : 'outline'}
           size="sm"
           onClick={onToggleAvoid}
+          disabled={marks.disabled}
+          tooltip={marks.tooltip}
           className="font-display font-black uppercase tracking-widest text-[8px] h-7 px-3"
         >
           {isAvoided ? 'Avoided' : 'Avoid'}
@@ -159,6 +176,7 @@ function MatchupCard(props: MatchupCardProps) {
         isGood={isGood}
         isChallenged={isChallenged}
         isAvoided={isAvoided}
+        listed={matchup.listed}
         onToggleChallenge={onToggleChallenge}
         onToggleAvoid={onToggleAvoid}
       />

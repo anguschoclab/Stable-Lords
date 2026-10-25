@@ -5,6 +5,15 @@
  */
 import type { FightOutcome, ExchangeLogEntry } from '@/types/combat.types';
 import { getMatchupBonus } from '@/constants/combat/combat';
+import {
+  DEBRIEF_ENCUMBRANCE_DRAG_RATIO,
+  DEBRIEF_OUT_JUMP_INI_EDGE,
+  DEBRIEF_OUT_JUMP_MIN_EXCHANGES,
+  DEBRIEF_OUT_JUMP_LOSS_RATE,
+  DEBRIEF_WEAPON_MIN_SWINGS,
+  DEBRIEF_WEAPON_HIT_RATE_FLOOR,
+  DEBRIEF_LEARN_XP_GAP,
+} from '@/constants/combat/combat/meta';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
 /** A single ranked, human-readable reason the fight went the way it did. */
@@ -51,6 +60,12 @@ interface AnalysisWarrior {
   style: string;
   attributes: Attributes;
   skills: BaseSkills;
+  /** Committed plan axes — the AL the manager asked for. */
+  plan?: { al?: number };
+  /** Loadout drag (derivedStats.encumbrance). */
+  encumbrance?: number;
+  /** Endurance pool (derivedStats.endurance). */
+  endurance?: number;
 }
 
 function summarizeTale(log: ExchangeLogEntry[]) {
@@ -120,6 +135,116 @@ function biggestSkillGap(
   return best;
 }
 
+/**
+ * Manager's Notebook factors — the guide's post-fight review checklist:
+ * encumbrance drag, weapon work, out-jumped, learning, corner plan-shifts.
+ * Each producer is silent unless its diagnostic threshold is met.
+ */
+function buildDebriefFactors(
+  log: ExchangeLogEntry[],
+  outcome: FightOutcome,
+  fatigue: ReturnType<typeof findFatigueCrossover>,
+  warriorA: AnalysisWarrior,
+  warriorD: AnalysisWarrior
+): AnalysisFactor[] {
+  const factors: AnalysisFactor[] = [];
+  const sides = [
+    { w: warriorA, side: 'A' as const, opp: 'D' as const },
+    { w: warriorD, side: 'D' as const, opp: 'A' as const },
+  ];
+
+  // Encumbrance drag — the fatigued fighter was carrying too much.
+  for (const s of sides) {
+    if (fatigue.fatiguedSide !== s.side) continue;
+    const enc = s.w.encumbrance ?? 0;
+    const end = s.w.endurance ?? 0;
+    if (end > 0 && enc >= end * DEBRIEF_ENCUMBRANCE_DRAG_RATIO) {
+      factors.push({
+        label: 'Encumbrance',
+        detail: `${s.w.name} was dragged down by their loadout — heavy gear bled endurance faster than the plan expected.`,
+        favored: s.opp,
+        weight: 0.4,
+      });
+    }
+  }
+
+  // Weapon work — "did they hit when they swung, and crit?" Swing attempts
+  // from attResult (attributed to iniWinner like summarizeTale), crits from
+  // the weapon charting ledger.
+  const critsFor = (side: 'A' | 'D') => {
+    const chart = side === 'A' ? outcome.post?.weaponChartA : outcome.post?.weaponChartD;
+    return Object.values(chart ?? {}).reduce((n, e) => n + (e.crits ?? 0), 0);
+  };
+  for (const s of sides) {
+    let attempts = 0;
+    let hits = 0;
+    for (const e of log) {
+      if ((e.iniWinner ?? 'A') !== s.side) continue;
+      if (e.attResult === 'hit' || e.attResult === 'crit') {
+        attempts++;
+        hits++;
+      } else if (e.attResult === 'miss' || e.attResult === 'fumble') {
+        attempts++;
+      }
+    }
+    if (attempts < DEBRIEF_WEAPON_MIN_SWINGS) continue;
+    if (hits / attempts < DEBRIEF_WEAPON_HIT_RATE_FLOOR && critsFor(s.side) === 0) {
+      factors.push({
+        label: 'Weapon work',
+        detail: `${s.w.name} landed ${hits} of ${attempts} swings with no critical hits — consider a weapon change.`,
+        favored: s.opp,
+        weight: 0.45,
+      });
+    }
+  }
+
+  // Out-jumped — the faster fighter kept losing the initiative roll.
+  const iniExchanges = log.filter((e) => e.iniWinner !== undefined);
+  if (iniExchanges.length >= DEBRIEF_OUT_JUMP_MIN_EXCHANGES) {
+    for (const s of sides) {
+      const oppSkills = (s.side === 'A' ? warriorD : warriorA).skills;
+      const edge = (s.w.skills.INI ?? 0) - (oppSkills.INI ?? 0);
+      if (edge < DEBRIEF_OUT_JUMP_INI_EDGE) continue;
+      const lost = iniExchanges.reduce((n, e) => n + (e.iniWinner !== s.side ? 1 : 0), 0);
+      if (lost / iniExchanges.length > DEBRIEF_OUT_JUMP_LOSS_RATE) {
+        factors.push({
+          label: 'Initiative',
+          detail: `${s.w.name} held a ${edge}-point INI edge but was out-jumped ${lost} of ${iniExchanges.length} exchanges — check weapon speed or opening OE.`,
+          favored: s.opp,
+          weight: 0.35,
+        });
+      }
+    }
+  }
+
+  // Learning — who took the bigger lesson.
+  const xpA = outcome.post?.xpA ?? 0;
+  const xpD = outcome.post?.xpD ?? 0;
+  if (Math.abs(xpA - xpD) >= DEBRIEF_LEARN_XP_GAP) {
+    const winner = xpA > xpD ? warriorA : warriorD;
+    factors.push({
+      label: 'Learning',
+      detail: `${winner.name} took the bigger lesson from the bout (+${Math.max(xpA, xpD)} XP).`,
+      favored: xpA > xpD ? 'A' : 'D',
+      weight: 0.15,
+    });
+  }
+
+  // Corner plan-shifts — which triggers actually fired mid-fight.
+  const fired: Record<'A' | 'D', string[]> = { A: [], D: [] };
+  for (const e of log) {
+    if (e.conditionFire) fired[e.conditionFire.actor].push(e.conditionFire.trigger);
+  }
+  const parts = sides
+    .filter((s) => fired[s.side].length > 0)
+    .map((s) => `${s.w.name}'s corner shifted plan ${fired[s.side].length}× (${fired[s.side][0]})`);
+  if (parts.length > 0) {
+    factors.push({ label: 'Corner', detail: `${parts.join('; ')}.`, favored: null, weight: 0.2 });
+  }
+
+  return factors;
+}
+
 /** Ranked analysis factors: style edge, skill gap, fatigue, damage, outcome. */
 function buildFactors(
   ctx: {
@@ -183,6 +308,10 @@ function buildFactors(
     favored: outcome.winner,
     weight: 0.1,
   });
+
+  factors.push(
+    ...buildDebriefFactors(outcome.exchangeLog ?? [], outcome, ctx.fatigue, warriorA, warriorD)
+  );
 
   factors.sort((x, y) => y.weight - x.weight);
   return factors.slice(0, 5);

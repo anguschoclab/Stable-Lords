@@ -54,8 +54,10 @@ describe('scorePairwiseMatchup', () => {
   });
 
   it('is unaffected by playerChallenges/playerAvoids (AI-AI leak fix)', () => {
-    const a = makeWarrior({ fame: 100 });
-    const b = makeWarrior({ fame: 100 });
+    // Career fights make both warriors "listed" so the player marks bind in
+    // the legacy scorer (canon: marks need ≥1 career fight).
+    const a = makeWarrior({ fame: 100, career: { wins: 2, losses: 1, kills: 0 } });
+    const b = makeWarrior({ fame: 100, career: { wins: 2, losses: 1, kills: 0 } });
     const rival = makeRival({ roster: [a, b] });
     const base = makeGameState({ rivals: [rival] });
     const challenged = makeGameState({

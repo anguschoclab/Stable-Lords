@@ -9,6 +9,11 @@ import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { clamp } from '@/utils/math';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
+import { isWarriorListed } from '@/engine/matchmaking/schedulingAssistant/matchups';
+import {
+  AI_STABLE_AVOID_MIN_LOSSES,
+  AI_STABLE_AVOID_PERSONALITIES,
+} from '@/constants/ai';
 
 export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 
@@ -306,6 +311,25 @@ const INTENT_EMITTERS: readonly IntentEmitter[] = [
   emitExpansionBid,
 ];
 
+/**
+ * Canon "avoid team numbers" for AI stables: a rival whose dossier shows it
+ * is dominated by a candidate stable (no wins, ≥ AI_STABLE_AVOID_MIN_LOSSES
+ * losses) stops proposing bouts into that stable. Personalities outside
+ * {@link AI_STABLE_AVOID_PERSONALITIES} fight anyone; VENDETTA bids carry an
+ * explicit targetStableId and bypass this at the call site.
+ */
+export function stableIsAvoided(
+  proposer: RivalStableData | undefined,
+  candidate: RivalStableData
+): boolean {
+  if (!proposer) return false;
+  if (!AI_STABLE_AVOID_PERSONALITIES.has(proposer.owner.personality ?? 'Pragmatic')) return false;
+  const dossiers = proposer.agentMemory?.opponentDossiers ?? {};
+  const dossier = dossiers[candidate.id as string] ?? dossiers[candidate.owner.id as string];
+  if (!dossier) return false;
+  return dossier.recordVs.w === 0 && dossier.recordVs.l >= AI_STABLE_AVOID_MIN_LOSSES;
+}
+
 /** Emit a single warrior's bid under the rival's current intent, or none. */
 function emitWarriorBid(
   warrior: Warrior,
@@ -329,8 +353,18 @@ function emitWarriorBid(
     weatherModifier: weatherBidModifier(warrior, weather),
     moodModifier,
     matchupModifier: bestMatchupModifier(warrior, env.matchupCtx),
-    warriorIsChallenged: state !== undefined && !!state.playerChallenges?.includes(warrior.id),
-    warriorIsAvoided: state !== undefined && !!state.playerAvoids?.includes(warrior.id),
+    // Player marks only bind once the warrior is listed (≥1 career fight),
+    // and a stable-level avoid marks the whole roster.
+    warriorIsChallenged:
+      state !== undefined &&
+      isWarriorListed(warrior) &&
+      !!state.playerChallenges?.includes(warrior.id),
+    // Warrior-level avoids need the warrior listed; a stable avoid binds the
+    // stable itself, which is listed even when a given warrior isn't.
+    warriorIsAvoided:
+      state !== undefined &&
+      ((isWarriorListed(warrior) && !!state.playerAvoids?.includes(warrior.id)) ||
+        !!state.playerStableAvoids?.includes(warrior.stableId as string)),
   };
 
   for (const emit of INTENT_EMITTERS) {

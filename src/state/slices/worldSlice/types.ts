@@ -71,6 +71,8 @@ export interface WorldSlice {
   matchHistory: MatchRecord[];
   playerChallenges: string[];
   playerAvoids: string[];
+  playerStableAvoids: string[];
+  playerAds: string[];
   ownerGrudges: OwnerGrudge[];
   phase: 'planning' | 'resolution';
   pendingResolutionData?: GameState['pendingResolutionData'];
@@ -93,5 +95,8 @@ export interface WorldSlice {
   renamePlayer: (newName: string) => void;
   toggleChallenge: (warriorId: string) => void;
   toggleAvoid: (warriorId: string) => void;
+  toggleStableAvoid: (stableId: string) => void;
+  /** Queue a personal ad for the next gazette issue (max 3 pending). */
+  submitPlayerAd: (text: string) => void;
   relinquishArenaTitle: (arenaId: string) => void;
 }

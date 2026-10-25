@@ -126,6 +126,8 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
   draft.playerChallenges = state.playerChallenges || [];
   draft.playerAvoids = state.playerAvoids || [];
+  draft.playerStableAvoids = state.playerStableAvoids || [];
+  draft.playerAds = state.playerAds || [];
   draft.bookmarks = state.bookmarks || [];
   draft.progression = state.progression || DEFAULT_PROGRESSION;
   draft.stewardReport = state.stewardReport;

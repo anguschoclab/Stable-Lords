@@ -52,6 +52,7 @@ const ARRAY_FIELDS = [
   'matchHistory',
   'playerChallenges',
   'playerAvoids',
+  'playerStableAvoids',
   'recruitPool',
   'ownerGrudges',
   'insightTokens',

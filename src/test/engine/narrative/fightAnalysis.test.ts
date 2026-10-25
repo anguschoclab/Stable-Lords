@@ -152,4 +152,135 @@ describe('buildFightAnalysis', () => {
     const outcomeFactor = a.factors.find((f) => f.label === 'Outcome');
     expect(outcomeFactor?.detail).toContain('No one won by Timeout');
   });
+
+  // ─── Manager's Notebook debrief factors ─────────────────────────────────
+  const debriefOutcome = (entries: any[], post?: any): FightOutcome =>
+    outcome({ exchangeLog: entries, post });
+
+  it('flags over-encumbrance when a heavily-loaded fighter gasses out early', () => {
+    const o = debriefOutcome([
+      { exchangeIndex: 0, minute: 1, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 1, minute: 2, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 2, minute: 3, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 3, minute: 4, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+    ]);
+    const a = buildFightAnalysis(
+      o,
+      baseWarrior({ id: 'A', encumbrance: 10, endurance: 100, plan: { al: 6 } }),
+      baseWarrior({ id: 'D', encumbrance: 60, endurance: 100, plan: { al: 6 } })
+    );
+    const f = a.factors.find((f) => f.label === 'Encumbrance');
+    expect(f).toBeDefined();
+    expect(f?.favored).toBe('A');
+    expect(f?.detail).toContain('Test');
+  });
+
+  it('does not flag encumbrance on a lightly-loaded fatigued fighter', () => {
+    const o = debriefOutcome([
+      { exchangeIndex: 0, minute: 1, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 1, minute: 2, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 2, minute: 3, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+      { exchangeIndex: 3, minute: 4, iniWinner: 'A', endDeltas: { a: -1, d: -5 } },
+    ]);
+    const a = buildFightAnalysis(
+      o,
+      baseWarrior({ id: 'A', encumbrance: 10, endurance: 100 }),
+      baseWarrior({ id: 'D', encumbrance: 10, endurance: 100 })
+    );
+    expect(a.factors.find((f) => f.label === 'Encumbrance')).toBeUndefined();
+  });
+
+  it('flags poor weapon work when swings rarely convert to hits or crits', () => {
+    const o = debriefOutcome(
+      [0, 1, 2, 3, 4, 5].map((i) => ({
+        exchangeIndex: i,
+        minute: i + 1,
+        iniWinner: 'D',
+        attResult: 'miss',
+      })),
+      { weaponChartD: { longsword: { swings: 6, crits: 0, knockdowns: 0 } } }
+    );
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const f = a.factors.find((f) => f.label === 'Weapon work');
+    expect(f).toBeDefined();
+    expect(f?.favored).toBe('A');
+    expect(f?.detail).toContain('no critical hits');
+  });
+
+  it('does not flag weapon work when swings convert normally', () => {
+    const o = debriefOutcome(
+      [0, 1, 2, 3].map((i) => ({
+        exchangeIndex: i,
+        minute: i + 1,
+        iniWinner: 'D',
+        attResult: 'hit',
+        damage: 4,
+      })),
+      { weaponChartD: { longsword: { swings: 4, crits: 1, knockdowns: 0 } } }
+    );
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    expect(a.factors.find((f) => f.label === 'Weapon work')).toBeUndefined();
+  });
+
+  it('flags being out-jumped when the faster fighter loses initiative repeatedly', () => {
+    const o = debriefOutcome(
+      [0, 1, 2, 3, 4].map((i) => ({ exchangeIndex: i, minute: i + 1, iniWinner: 'A' }))
+    );
+    const a = buildFightAnalysis(
+      o,
+      baseWarrior({ id: 'A', skills: { ATT: 8, PAR: 8, DEF: 8, INI: 8, RIP: 6, DEC: 8 } }),
+      baseWarrior({ id: 'D', skills: { ATT: 8, PAR: 8, DEF: 8, INI: 14, RIP: 6, DEC: 8 } })
+    );
+    const f = a.factors.find((f) => f.label === 'Initiative');
+    expect(f).toBeDefined();
+    expect(f?.favored).toBe('A');
+    expect(f?.detail).toContain('out-jumped');
+  });
+
+  it('does not flag out-jumped when initiative losses match the skill gap', () => {
+    const o = debriefOutcome(
+      [0, 1, 2, 3, 4].map((i) => ({ exchangeIndex: i, minute: i + 1, iniWinner: 'A' }))
+    );
+    const a = buildFightAnalysis(
+      o,
+      baseWarrior({ id: 'A', skills: { ATT: 8, PAR: 8, DEF: 8, INI: 14, RIP: 6, DEC: 8 } }),
+      baseWarrior({ id: 'D', skills: { ATT: 8, PAR: 8, DEF: 8, INI: 8, RIP: 6, DEC: 8 } })
+    );
+    expect(a.factors.find((f) => f.label === 'Initiative')).toBeUndefined();
+  });
+
+  it('reports the learning outcome when one fighter gains much more XP', () => {
+    const o = outcome({ post: { xpA: 5, xpD: 1 } });
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const f = a.factors.find((f) => f.label === 'Learning');
+    expect(f).toBeDefined();
+    expect(f?.favored).toBe('A');
+  });
+
+  it('reports corner plan-shifts from conditionFire entries', () => {
+    const o = debriefOutcome([
+      {
+        exchangeIndex: 0,
+        minute: 1,
+        iniWinner: 'A',
+        conditionFire: { actor: 'D', trigger: 'HP_BELOW', corner: true },
+      },
+      { exchangeIndex: 1, minute: 2, iniWinner: 'A' },
+    ]);
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const f = a.factors.find((f) => f.label === 'Corner');
+    expect(f).toBeDefined();
+    expect(f?.detail).toContain('HP_BELOW');
+  });
+
+  it('emits no debrief factors on a clean textbook exchange', () => {
+    const o = debriefOutcome([
+      { exchangeIndex: 0, minute: 1, iniWinner: 'A', attResult: 'hit', damage: 5 },
+      { exchangeIndex: 1, minute: 2, iniWinner: 'D', attResult: 'hit', damage: 5 },
+    ]);
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    for (const label of ['Encumbrance', 'Weapon work', 'Initiative', 'Corner']) {
+      expect(a.factors.find((f) => f.label === label)).toBeUndefined();
+    }
+  });
 });

@@ -25,6 +25,8 @@ export const defaultWorldState: Omit<
   | 'renamePlayer'
   | 'toggleChallenge'
   | 'toggleAvoid'
+  | 'toggleStableAvoid'
+  | 'submitPlayerAd'
   | 'relinquishArenaTitle'
 > = {
   year: 1,
@@ -63,6 +65,8 @@ export const defaultWorldState: Omit<
   matchHistory: [],
   playerChallenges: [],
   playerAvoids: [],
+  playerStableAvoids: [],
+  playerAds: [],
   ownerGrudges: [],
   phase: 'planning',
   pendingResolutionData: undefined,

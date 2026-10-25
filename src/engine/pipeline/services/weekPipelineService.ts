@@ -12,6 +12,7 @@ import { assertPipelineLegal } from './weekPipeline/passes';
 import { buildWeekCaches, impactsAffectWeekCaches } from './weekPipeline/caches';
 import { runStage, runBoutPhase, collectCoreImpacts } from './weekPipeline/stages';
 import { checkBankruptcy, finalizeState } from './weekPipeline/finalize';
+import { flushGazette } from '@/engine/narrative/gazette';
 
 /**
  * Options for week advancement
@@ -69,6 +70,9 @@ export async function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): 
   const preState = TournamentSelectionService.sweepUnfinishedTournaments(state, headless);
 
   const mutableState = createMutableWeekContext(preState, opts?.mutableInput);
+  // Gazette: flush queued personal ads + a seeded rival taunt (UI content —
+  // skipped headless like other newsletter generation).
+  if (!headless) flushGazette(mutableState);
   const ctx: WeekContext = { ...prepareWeekContext(mutableState, headless), pool };
 
   // Build caches once per week for O(1) lookups

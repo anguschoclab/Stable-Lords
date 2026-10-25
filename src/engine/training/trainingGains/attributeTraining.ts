@@ -8,11 +8,12 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { computeTrainerBonus } from '../coachLogic';
 import { getSeasonalGains, updateSeasonalGains } from '../facilityUpkeep';
 import {
-  BASE_GAIN_CHANCE,
   GAIN_CHANCE_MIN,
   GAIN_CHANCE_MAX,
+  REPEAT_ATTR_GAIN_FACTOR,
   SEASONAL_CAP_PER_ATTR,
   TOTAL_CAP,
+  WL_GAIN_BASE_FACTOR,
 } from './constants';
 import type { TrainingResult } from './types';
 import { clamp } from '@/utils/math';
@@ -28,7 +29,9 @@ export function computeGainChance(
   trainers: GameState['trainers']
 ): number {
   const trainerBonus = computeTrainerBonus(attribute, trainers, warrior.style);
-  const wtBonus = ((warrior.attributes.WT ?? 10) - 10) * 0.01;
+  // Canon: stat trains are WL-driven (odds ≈ 5% × WL before modifiers);
+  // WT governs skill learning instead.
+  const wlBase = (warrior.attributes.WL ?? 10) * WL_GAIN_BASE_FACTOR;
   const agePenalty =
     (warrior.age ?? 18) > AGING_PENALTY_START
       ? ((warrior.age ?? 18) - AGING_PENALTY_START) * 0.02
@@ -39,7 +42,7 @@ export function computeGainChance(
   const potentialVal = warrior.potential?.[attribute];
   const drFactor = diminishingReturnsFactor(warrior.attributes[attribute], potentialVal);
 
-  const raw = (BASE_GAIN_CHANCE + trainerBonus + wtBonus - agePenalty - injuryPenalty) * drFactor;
+  const raw = (wlBase + trainerBonus - agePenalty - injuryPenalty) * drFactor;
   return clamp(raw, GAIN_CHANCE_MIN, GAIN_CHANCE_MAX);
 }
 
@@ -162,8 +165,11 @@ export function processAttributeTraining(
     );
   }
 
-  // Compute gain chance with all modifiers
-  const gainChance = computeGainChance(warrior, attr, state.trainers ?? []);
+  // Compute gain chance with all modifiers — canon: a repeat raise of the
+  // same stat within the season is halved (5%×WL×0.5 for a 2nd raise).
+  const gainChance =
+    computeGainChance(warrior, attr, state.trainers ?? []) *
+    ((seasonGains[attr] ?? 0) >= 1 ? REPEAT_ATTR_GAIN_FACTOR : 1);
 
   // Roll for gain
   if (rng.next() < gainChance) {

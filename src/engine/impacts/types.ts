@@ -172,6 +172,7 @@ export interface StateImpact {
   rivalries?: Rivalry[];
   playerChallenges?: string[];
   playerAvoids?: string[];
+  playerStableAvoids?: string[];
   unacknowledgedDeaths?: string[];
 
   // Awards

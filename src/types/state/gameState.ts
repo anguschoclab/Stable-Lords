@@ -125,6 +125,11 @@ export interface GameState {
   matchHistory: MatchRecord[];
   playerChallenges: string[];
   playerAvoids: string[];
+  /** Stable-level avoids (canon "avoid team numbers") — vetoes every warrior
+   *  of a listed stable in matchmaking and inbound player-bound bids. */
+  playerStableAvoids: string[];
+  /** Player-written gazette ads — flushed into the newsletter on week advance. */
+  playerAds?: string[];
   recruitPool: PoolWarrior[];
   rosterBonus: number;
   ownerGrudges: OwnerGrudge[];

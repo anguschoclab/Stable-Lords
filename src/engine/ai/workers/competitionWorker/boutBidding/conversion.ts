@@ -26,7 +26,19 @@ import {
   BID_MATCHMAKING_ID,
   MAX_PLAYER_OFFERS_GLOBAL,
   MAX_PLAYER_OFFERS_PER_RIVAL,
+  stableIsAvoided,
 } from './generation';
+import {
+  AI_LEARN_SEEK_CAP,
+  AI_LEARN_SEEK_GAP_DIVISOR,
+  AI_LEARN_SEEK_MAX_BOUTS,
+  AI_LEARN_SEEK_PERSONALITIES,
+} from '@/constants/ai';
+import {
+  AI_DOWN_CHALLENGE_PENALTY,
+  arenaIsHonorBound,
+  isDownChallenge,
+} from '@/engine/politics/honorCulture';
 
 /**
  * Convert bids from all rivals into actual BoutOffer objects.
@@ -44,6 +56,7 @@ interface BidConversionCtx {
   paired: Set<string>;
   playerStableId: string;
   playerAvoidSet: Set<string>;
+  playerStableAvoidSet: Set<string>;
   h2hCache: Map<string, PairwiseHeadToHead>;
   playerOffersByStable: Map<string, number>;
   playerOfferTotal: number;
@@ -98,6 +111,7 @@ function buildConversionCtx(
     paired,
     playerStableId: state.player.id as string,
     playerAvoidSet: new Set<string>(state.playerAvoids ?? []),
+    playerStableAvoidSet: new Set<string>(state.playerStableAvoids ?? []),
     h2hCache: new Map<string, PairwiseHeadToHead>(),
     playerOffersByStable: new Map<string, number>(),
     playerOfferTotal: 0,
@@ -135,10 +149,13 @@ function collectCandidates(
       }
     }
   } else {
-    // All other intents: search all rival stables
+    // All other intents: search all rival stables — minus stables the
+    // proposer's dossier says it is dominated by (stable-level avoid).
+    const proposerRival = cx.rivalMap.get(proposerStable.stableId);
     for (const rival of rivals) {
       if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
         continue;
+      if (stableIsAvoided(proposerRival, rival)) continue;
       for (const w of rival.roster) {
         if (!isActive(w)) continue;
         if (isChampionBookingLocked(state, w.id)) continue;
@@ -164,28 +181,59 @@ function fameFilter(
   });
 }
 
+const careerBouts = (w: Warrior): number =>
+  (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+
+/**
+ * Canon "challenge a very experienced warrior" to learn: young warriors of
+ * studious personalities get a score bonus toward more seasoned opponents.
+ */
+function learningSeekBonus(
+  proposer: Warrior,
+  candidate: Warrior,
+  proposerStable: RivalStableData | undefined
+): number {
+  if (!proposerStable) return 0;
+  if (!AI_LEARN_SEEK_PERSONALITIES.has(proposerStable.owner.personality ?? '')) return 0;
+  if (careerBouts(proposer) >= AI_LEARN_SEEK_MAX_BOUTS) return 0;
+  const gap = careerBouts(candidate) - careerBouts(proposer);
+  if (gap <= 0) return 0;
+  return Math.min(AI_LEARN_SEEK_CAP, Math.floor(gap / AI_LEARN_SEEK_GAP_DIVISOR));
+}
+
 /** Picks the highest-scoring candidate opponent (pairwise; h2h memoized). */
 function pickBestCandidate(
   proposer: Warrior,
   candidates: { warrior: Warrior; stableId: string }[],
   proposerStableId: string,
-  cx: BidConversionCtx
+  cx: BidConversionCtx,
+  bid: BoutBid
 ): { warrior: Warrior; stableId: string } | undefined {
   const { state } = cx;
+  const proposerRival = cx.rivalMap.get(proposerStableId);
   let bestCandidate = candidates[0];
   if (!bestCandidate) return undefined;
   let bestScore = -Infinity;
   for (const candidate of candidates) {
-    const score = scorePairwiseMatchup(proposer, candidate.warrior, {
-      rankings: state.realmRankings,
-      arenaHistory: state.arenaHistory,
-      rivalries: state.rivalries,
-      rivalryMap: state.rivalryMap,
-      aStableId: proposerStableId,
-      bStableId: candidate.stableId,
-      week: state.week,
-      h2hCache: cx.h2hCache,
-    });
+    // Arena honor culture: down-challenges draw stigma in honor-bound venues.
+    const venue = resolveArenaId(bid, proposer, candidate.warrior, cx);
+    const dishonorPenalty =
+      arenaIsHonorBound(venue) && isDownChallenge(proposer, candidate.warrior)
+        ? AI_DOWN_CHALLENGE_PENALTY
+        : 0;
+    const score =
+      scorePairwiseMatchup(proposer, candidate.warrior, {
+        rankings: state.realmRankings,
+        arenaHistory: state.arenaHistory,
+        rivalries: state.rivalries,
+        rivalryMap: state.rivalryMap,
+        aStableId: proposerStableId,
+        bStableId: candidate.stableId,
+        week: state.week,
+        h2hCache: cx.h2hCache,
+      }) +
+      learningSeekBonus(proposer, candidate.warrior, proposerRival) -
+      dishonorPenalty;
     if (score > bestScore) {
       bestScore = score;
       bestCandidate = candidate;
@@ -302,8 +350,14 @@ export function convertBidsToOffers(
 
     const bidTargetsPlayer = bid.targetStableId === cx.playerStableId;
 
-    // The player's avoid list vetoes the proposer for player-bound offers.
-    if (bidTargetsPlayer && cx.playerAvoidSet.has(bid.proposingWarriorId)) continue;
+    // The player's avoid lists veto the proposer for player-bound offers —
+    // warrior-level marks and stable-level avoids alike.
+    if (
+      bidTargetsPlayer &&
+      (cx.playerAvoidSet.has(bid.proposingWarriorId) ||
+        cx.playerStableAvoidSet.has(proposerStable.stableId))
+    )
+      continue;
 
     // Player-bound caps: ≤1 per proposing stable, ≤3 globally.
     if (bidTargetsPlayer) {
@@ -320,7 +374,13 @@ export function convertBidsToOffers(
     if (candidates.length === 0) continue;
 
     // Pick the best matchup opponent (pairwise — player marks never leak)
-    const bestCandidate = pickBestCandidate(proposer, candidates, proposerStable.stableId, cx);
+    const bestCandidate = pickBestCandidate(
+      proposer,
+      candidates,
+      proposerStable.stableId,
+      cx,
+      bid
+    );
     if (!bestCandidate) continue;
     const opponent = bestCandidate.warrior;
 

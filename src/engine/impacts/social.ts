@@ -33,6 +33,13 @@ const playerAvoids = (state: GameState, value: string[]) => {
 };
 
 /**
+ * Apply player stable avoids to state.
+ */
+const playerStableAvoids = (state: GameState, value: string[]) => {
+  state.playerStableAvoids = [...(state.playerStableAvoids || []), ...value];
+};
+
+/**
  * Apply unacknowledged deaths to state.
  */
 const unacknowledgedDeaths = (state: GameState, value: string[]) => {
@@ -47,5 +54,6 @@ export const socialHandlers = {
   rivalries,
   playerChallenges,
   playerAvoids,
+  playerStableAvoids,
   unacknowledgedDeaths,
 };

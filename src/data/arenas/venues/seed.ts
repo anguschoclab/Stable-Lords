@@ -163,7 +163,7 @@ export const LANTERN_HALL_ARENA: ArenaConfig = {
 export const WALLED_COURT_ARENA: ArenaConfig = {
   id: 'walled_court_arena',
   name: 'The Walled Court',
-  tags: ['outdoor', 'cramped'],
+  tags: ['outdoor', 'cramped', 'honor-bound'],
   tier: 1,
   size: 'cramped',
   description:

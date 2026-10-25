@@ -219,6 +219,7 @@ const FRESH_COMBAT_COUNTERS = {
   parDegrade: 0,
   committed: false,
   survivalStrike: false,
+  doomed: false,
   counterstrikePrimed: false,
   recoveryDebt: 0,
 } as const;
@@ -274,6 +275,7 @@ function assembleFighterState(args: {
     weaponMods,
     // Fresh per-bout weapon charting tally — merged into favorites.chart post-bout.
     weaponChart: {},
+    bloodlust: warrior?.bloodlust,
   };
 }
 

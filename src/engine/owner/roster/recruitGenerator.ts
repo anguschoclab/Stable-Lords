@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG, hashStr } from '@/utils/random';
-import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
@@ -200,6 +200,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
     attributes: attrs,
     baseSkills: finalBaseSkills,
     luckfactor: rollLuckfactor(rng),
+    bloodlust: rollBloodlust(rng),
     derivedStats: finalDerivedStats,
     ...newWarriorDefaults(),
     age: 17 + Math.floor(rng.next() * 5),

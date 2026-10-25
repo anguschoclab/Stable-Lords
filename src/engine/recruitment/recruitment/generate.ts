@@ -1,7 +1,7 @@
 import { FightingStyle } from '@/types/shared.types';
 import { type StyleMeta } from '../../analytics/metaDrift';
 import { type WarriorLineage, type Warrior } from '@/types/warrior.types';
-import { computeWarriorStats, rollLuckfactor } from '../../warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '../../warrior/skillCalc';
 import { generatePotential } from '../../warrior/potential';
 import { generateFavorites } from '../../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -131,6 +131,7 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
     potential,
     baseSkills,
     luckfactor: rollLuckfactor(rng),
+    bloodlust: rollBloodlust(rng),
     derivedStats,
     tier,
     cost: TIER_COST[tier],
@@ -186,6 +187,7 @@ export function generateApprentice(args: GenerateRecruitArgs): PoolWarrior {
     potential,
     baseSkills,
     luckfactor: rollLuckfactor(rng),
+    bloodlust: rollBloodlust(rng),
     derivedStats,
     tier,
     cost: Math.floor(TIER_COST[tier] * 0.75),

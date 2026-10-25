@@ -42,7 +42,8 @@ export type DeathCauseBucket =
   | 'ARMOR_FAILURE'
   | 'RIVALRY_FINISH'
   | 'ARENA_HAZARD'
-  | 'BLEED';
+  | 'BLEED'
+  | 'DIED_OF_WOUNDS';
 
 /**
  * Fight outcome by type.
@@ -172,6 +173,10 @@ export interface FightOutcome {
     causeBucket?: DeathCauseBucket;
     fatalHitLocation?: string;
     fatalExchangeIndex?: number;
+    /** Set when a doomed fighter survives to the bout's end without being
+     *  the recorded Kill victim (e.g. a doomed winner) — they still die;
+     *  the death is processed by mortalityHandler off this marker. */
+    diedPostBout?: 'A' | 'D';
     tags?: string[];
   };
 }

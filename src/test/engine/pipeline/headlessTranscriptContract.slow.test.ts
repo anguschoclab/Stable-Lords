@@ -47,7 +47,7 @@ const GATED_PUSH_COUNTS: Record<string, number> = {
   'simulate/simulationLoop/narrate.ts': 3,
   'simulate/simulationLoop/outcomes.ts': 2,
   'simulate/simulationLoop/beats.ts': 3,
-  'simulate/postFight.ts': 1,
+  'simulate/postFight.ts': 2,
 };
 
 describe('headless transcript contract', () => {

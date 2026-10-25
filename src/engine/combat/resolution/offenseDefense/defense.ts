@@ -239,23 +239,32 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
 
   const extraDefPenalty = computeExtraDefPenalty(s);
 
-  const defCheck = performDefenseCheck({
-    rng: rng,
-    def: def,
-    curDefOE: curDefOE,
-    matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
-    fat: aGoesFirst ? s.fatD : s.fatA,
-    curDefMods: curDefMods,
-    curPassD: curPassD,
-    curBiasDef: curBiasDef,
-    overDef: overDef,
-    isDodge: isDodge,
-    curAntiSynDef: curAntiSynDef,
-    curOffMods: s.curOffMods,
-    ctx: ctx,
-    attacker: att,
-    extraDefPenalty: extraDefPenalty,
-  });
+  const killDesire = aGoesFirst
+    ? (s.fA.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fA.activePlan.killDesire ?? 5)
+    : (s.fD.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fD.activePlan.killDesire ?? 5);
+
+  // Canon death spiral: a doomed defender cannot defend — attacks land as
+  // normal hits to the vitals until their hit points run out.
+  const defCheck = def.doomed
+    ? { success: false, type: 'PARRY' as const }
+    : performDefenseCheck({
+        rng: rng,
+        def: def,
+        curDefOE: curDefOE,
+        matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
+        fat: aGoesFirst ? s.fatD : s.fatA,
+        curDefMods: curDefMods,
+        curPassD: curPassD,
+        curBiasDef: curBiasDef,
+        overDef: overDef,
+        isDodge: isDodge,
+        curAntiSynDef: curAntiSynDef,
+        curOffMods: s.curOffMods,
+        ctx: ctx,
+        attacker: att,
+        attKD: killDesire,
+        extraDefPenalty: extraDefPenalty,
+      });
 
   if (defCheck.success) {
     events.push({ type: 'DEFENSE', actor: defLabel, result: defCheck.type });
@@ -264,9 +273,6 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
     }
     att.consecutiveHits = 0;
   } else {
-    const killDesire = aGoesFirst
-      ? (s.fA.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fA.activePlan.killDesire ?? 5)
-      : (s.fD.activePlan.phases?.[s.phaseKey]?.killDesire ?? s.fD.activePlan.killDesire ?? 5);
     executeHit({
       events: events,
       rng: rng,

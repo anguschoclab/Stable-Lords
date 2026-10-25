@@ -167,6 +167,10 @@ export interface Warrior {
   /** Hidden canonical ±4-per-skill "luckfactor" rolled at creation. Applied in combat
    *  (fighterState), NOT shown in the overview — two identical builds differ in the arena. */
   luckfactor?: BaseSkills;
+  /** Hidden −1..+1 "bloodlust" rolled at creation — canon (Assur): some
+   *  warriors simply have a higher lust for the kill. Feeds the vitals
+   *  roll when this warrior attacks; never displayed. */
+  bloodlust?: number;
   derivedStats?: DerivedStats;
   fame: number;
   popularity: number;

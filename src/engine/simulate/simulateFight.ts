@@ -13,7 +13,7 @@ import type { CrowdMood } from '@/engine/bout/crowdMood';
 import { initializeRng, initializeFighters, initializeResolutionContext } from './initialization';
 import { runSimulationLoop } from './simulationLoop';
 import { generateIntroductions } from './narrative';
-import { processPostFight } from './postFight';
+import { applyPostBoutFate, processPostFight } from './postFight';
 
 export { defaultPlanForWarrior };
 
@@ -217,10 +217,27 @@ export function simulateFight(args: SimulateFightArgs): FightOutcome {
     headless: headless,
   });
 
-  // 6. Process post-fight: tags, stats, and final outcome assembly
-  return processPostFight({
+  // 5b. Post-bout fate: doomed survivors die; the low-hp loser takes the
+  // post-fight infirmary roll — "died of wounds" becomes a Kill outcome.
+  const fate = applyPostBoutFate({
     winner: winner,
     by: by,
+    fA: prep.fA,
+    fD: prep.fD,
+    rng: prep.rng,
+    deathRateMult: deathRateMult,
+    log: log,
+    headless: headless ?? false,
+    fightMinutes: fightMinutes,
+    causeBucket: causeBucket,
+    fatalHitLocation: fatalHitLocation,
+    fatalExchangeIndex: fatalExchangeIndex,
+  });
+
+  // 6. Process post-fight: tags, stats, and final outcome assembly
+  return processPostFight({
+    winner: fate.winner,
+    by: fate.by,
     fA: prep.fA,
     fD: prep.fD,
     nameA: prep.nameA,
@@ -230,8 +247,9 @@ export function simulateFight(args: SimulateFightArgs): FightOutcome {
     exchangeLog: exchangeLog,
     headless: headless ?? false,
     fightMinutes: fightMinutes,
-    causeBucket: causeBucket,
-    fatalHitLocation: fatalHitLocation,
-    fatalExchangeIndex: fatalExchangeIndex,
+    causeBucket: fate.causeBucket,
+    fatalHitLocation: fate.fatalHitLocation,
+    fatalExchangeIndex: fate.fatalExchangeIndex,
+    diedPostBout: fate.diedPostBout,
   });
 }

@@ -18,6 +18,7 @@ import {
 import { tickBleed } from './bleed';
 import { emitDownedBoutEnd } from '../mechanics/downedFighterEnd';
 import { tickArenaEvents } from '../mechanics/arenaEvents';
+import { rollInfirmaryOutcome } from '../mechanics/deathRolls';
 import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
 import { prepareExchange, type ExchangeSetup } from './exchangePrep';
 import type { FighterState, ResolutionContext } from './types';
@@ -107,8 +108,11 @@ export function resolveExchange(
   updateTacticStreaks(ctx, s.tactA.offTactic, s.tactD.offTactic);
   tickBleedOnFighters(fA, fD, events);
   // Bleed bypasses the weapon kill-window — a bleed-down ends the bout here,
-  // before the arena tick (which must not stack a second end on top).
-  emitDownedBoutEnd(fA, fD, events, 'BLEED');
+  // before the arena tick (which must not stack a second end on top). Canon
+  // infirmary roll applies to any hp-depletion death.
+  emitDownedBoutEnd(fA, fD, events, 'BLEED', (f) =>
+    rollInfirmaryOutcome(ctx.rng, f, ctx.deathRateMult ?? 1)
+  );
   tickArenaEvents(ctx, fA, fD, events);
 
   return events;
@@ -135,8 +139,11 @@ function runAttackExchange(args: RunAttackExchangeArgs): void {
   const att = aGoesFirst ? fA : fD;
   const def = aGoesFirst ? fD : fA;
 
-  // Sub-phase 2: Feint (attacker only)
-  const feintResult = runFeint(ctx.rng, att, def);
+  // Sub-phase 2: Feint (attacker only) — high-KD defenders feinted easily
+  const defKD = aGoesFirst
+    ? (fD.activePlan.phases?.[phaseKey]?.killDesire ?? fD.activePlan.killDesire ?? 5)
+    : (fA.activePlan.phases?.[phaseKey]?.killDesire ?? fA.activePlan.killDesire ?? 5);
+  const feintResult = runFeint(ctx.rng, att, def, defKD);
   events.push(...feintResult.events);
   const feintAttBonus = feintResult.feintBonus;
   const feintDefBonus = feintResult.feintFailed ? FEINT_FAILED_DEF_BONUS : 0;

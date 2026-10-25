@@ -505,6 +505,28 @@ const narrateStateChangeEvent: EventNarrator = (event, h, minute) => {
   if (result === 'DESPERATE') {
     return [{ minute, text: `${actorName} is in dire straits — switching to survival mode.` }];
   }
+  if (result === 'DEATH_INTENT') {
+    const pool = peekArchive(['kill_text', 'death_intent']);
+    const template =
+      (pool && h.rng.pick(pool)) || `${actorName} is trying to make this a death match!`;
+    return [
+      {
+        minute,
+        text: interpolateTemplate(template, {
+          attacker: actorName,
+          defender: h.getOpponentName(event.actor),
+          name: h.getOpponentName(event.actor),
+        }),
+        emphasis: true,
+      },
+    ];
+  }
+  if (result === 'DOOMED') {
+    const pool = peekArchive(['kill_text', 'doomed']);
+    const template =
+      (pool && h.rng.pick(pool)) || `${actorName} is mortally wounded — hanging on by a thread!`;
+    return [{ minute, text: interpolateTemplate(template, { name: actorName }), emphasis: true }];
+  }
   if (result?.startsWith('PSYCH_')) {
     const state = result.replace('PSYCH_', '');
     const psychLines: Record<string, string> = {

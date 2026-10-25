@@ -280,6 +280,7 @@ export const WarriorSchema = z.object({
   potential: z.record(z.string(), z.number()).optional(),
   baseSkills: BaseSkillsSchema.optional(),
   luckfactor: LuckfactorSchema.optional(),
+  bloodlust: z.number().optional(),
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),
@@ -356,6 +357,7 @@ export const PoolWarriorSchema = z.object({
   favorites: WarriorFavoritesSchema,
   lineage: WarriorLineageSchema.optional(),
   luckfactor: LuckfactorSchema,
+  bloodlust: z.number().optional(),
   veteran: z
     .object({
       fame: z.number(),

@@ -1,6 +1,6 @@
 import { type BaseSkills, type DerivedStats, type WarriorId } from '@/types/shared.types';
 import { type Warrior } from '@/types/warrior.types';
-import { rollLuckfactor } from '../../warrior/skillCalc';
+import { rollBloodlust, rollLuckfactor } from '../../warrior/skillCalc';
 import { generatePotential } from '../../warrior/potential';
 import { generateFavorites } from '../../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -41,6 +41,7 @@ export function warriorToPoolWarrior(
     favorites: w.favorites ?? generateFavorites(w.style, rng),
     lineage: w.lineage,
     luckfactor: w.luckfactor ?? rollLuckfactor(rng),
+    bloodlust: w.bloodlust ?? rollBloodlust(rng),
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source,
     avatarSeed: w.avatarSeed,

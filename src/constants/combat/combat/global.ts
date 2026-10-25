@@ -117,6 +117,71 @@ export const KILL_WINDOW = {
   MOMENTUM_HIGH_ADD: 0.004,
 };
 
+// ─── Death Model (canonical Duel2 two-roll) ──────────────────────────────
+/**
+ * Death-roll model (Noblish Island canon — "Mechanics of Death"):
+ *
+ *   vital hit → vitals roll (calculateKillWindow) → DEATH_INTENT statement
+ *   → death roll → fail = doomed → non-critical vital hits until hp is gone.
+ *
+ * A warrior at ≤0 hp without a death intent instead makes the *infirmary*
+ * roll; failing it also sends them to the death roll — "died of wounds".
+ * All magnitudes here are the world-facing dials alongside KILL_WINDOW.SCALE.
+ */
+export const DEATH_ROLL = {
+  /** Base probability the struck warrior fails the death roll and is doomed. */
+  BASE_FAIL: 0.25,
+  /** Doom addend when the struck warrior wears no armor (any armor >> none). */
+  NO_ARMOR_ADD: 0.08,
+  /** Doom addend when a head hit lands on a bare head. */
+  NO_HELM_HEAD_ADD: 0.06,
+  /** Survival per point of WL above/below 10 — the infirmary stat. */
+  WL_COEFF: -0.008,
+  /** Survival per 10 points of maxHp above/below 60 (size keeps you alive). */
+  HP_POOL_COEFF: -0.05,
+  /** Doom addend when the victim has fewer than YOUTH_FIGHTS_REF fights —
+   *  young fighters die much more often. Scaled per missing fight. */
+  YOUTH_FIGHTS_REF: 10,
+  YOUTH_COEFF: 0.006,
+  /** Doom addend when the victim is fully exhausted (endurance ≤ 0). */
+  EXHAUSTED_ADD: 0.06,
+  /** Attacker bloodlust (−1..+1 hidden attribute) → vitals-roll addend.
+   *  "Some warriors appear to have a higher blood lust than others." */
+  BLOODLUST_COEFF: 0.02,
+  /** Vitals-roll bonus for the Good/Great damage sweet spot (classes 3–4);
+   *  Little/Normal can't wound to kill, Tremendous ends fights early. */
+  DAMAGE_SWEET_SPOT_ADD: 0.01,
+  DAMAGE_LOW_PENALTY: -0.005,
+};
+
+/** Infirmary roll — a warrior whose hp ran out (in or after combat) must
+ *  survive this check to live; failing it sends them to the death roll. */
+export const INFIRMARY = {
+  /** Base probability the infirmary roll fails when hp <= 0. */
+  BASE_FAIL: 0.08,
+  /** Post-fight trigger: the loser below this hp fraction also rolls. */
+  POST_HP_RATIO: 0.1,
+  /** Extra failure when the victim is fully exhausted. */
+  EXHAUSTED_ADD: 0.04,
+  /** Survival per point of WL above/below 10. */
+  WL_COEFF: -0.004,
+};
+
+// ─── Kill Desire = Patience ──────────────────────────────────────────────
+/** Canon (Jest/Boyd): high KD means wild swinging — easier to dodge, parry,
+ *  and feint — not more damage or better aim. KD≥8 is the "drunken wildman"
+ *  band; the defender's checks get a bonus per point above the threshold. */
+export const KILL_DESIRE_WILD = {
+  THRESHOLD: 8,
+  /** Defender parry/dodge bonus per attacker KD point above threshold.
+   *  Tuned down: at 1.0 the wild penalty crushed high-KD trait builds
+   *  (merciless KD12 → +5) below the 32% win floor; 0.4 keeps the canon
+   *  "easier to counter" direction without inverting trait value. */
+  DEF_COEFF: 0.4,
+  /** Feint-roll bonus against a wild (high-KD) defender, per KD point. */
+  FEINT_COEFF: 0.6,
+};
+
 /**
  * Tactic overuse cap
  */

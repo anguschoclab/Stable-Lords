@@ -215,6 +215,9 @@ export const DEATH_CAUSE_BUCKETS = [
   // or arena hazards incapacitate outside the attack kill-window.
   'ARENA_HAZARD',
   'BLEED',
+  // Infirmary death — the victim's hit points ran out (in or after combat)
+  // without a death intent, and they failed the infirmary + death rolls.
+  'DIED_OF_WOUNDS',
 ] as const;
 
 export const AI_INTENTS = [

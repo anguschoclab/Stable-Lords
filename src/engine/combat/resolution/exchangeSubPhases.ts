@@ -2,6 +2,7 @@ import type { CommitLevel } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
 import { clamp } from '@/utils/math';
+import { KILL_DESIRE_WILD } from '@/constants/combat';
 import {
   contestDistance,
   transitionZone,
@@ -109,7 +110,12 @@ interface FeintResult {
  * threshold = clamp(roll / 20, 0.05, 0.95)
  * Success → +4 ATT bonus. Failure → defender gets +2 DEF this exchange.
  */
-export function runFeint(rng: () => number, att: FighterState, def: FighterState): FeintResult {
+export function runFeint(
+  rng: () => number,
+  att: FighterState,
+  def: FighterState,
+  defKD = 5
+): FeintResult {
   const plan = att.activePlan;
   const wt = att.attributes.WT;
   const feintTendency = plan.feintTendency ?? 0;
@@ -121,7 +127,11 @@ export function runFeint(rng: () => number, att: FighterState, def: FighterState
 
   const defAL = def.activePlan.AL;
   const defWT = def.attributes.WT;
-  const roll = wt + feintTendency - defAL - defWT * 0.5;
+  // Canon (Jest): wild, high-KD fighters are "feinted into bad dueling
+  // decisions" — easier to feint.
+  const wildFeint = Math.max(0, defKD - KILL_DESIRE_WILD.THRESHOLD + 1) *
+    KILL_DESIRE_WILD.FEINT_COEFF;
+  const roll = wt + feintTendency - defAL - defWT * 0.5 + wildFeint;
   const threshold = clamp(roll / 20, 0.05, 0.95);
   const succeeded = rng() < threshold;
 

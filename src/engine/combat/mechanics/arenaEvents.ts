@@ -27,6 +27,7 @@ import type { ArenaEventConfig } from '@/constants/arenaEvents';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from '../resolution/types';
 import { emitDownedBoutEnd } from './downedFighterEnd';
+import { rollInfirmaryOutcome } from './deathRolls';
 
 /**
  * Heaviest single untagged hit this exchange — the heavy_hit input.
@@ -139,5 +140,7 @@ export function tickArenaEvents(
   // Hazard damage incapacitates like any other damage: a fighter dropped to
   // ≤0 hp cannot continue — emit BOUT_END so the loop doesn't run another
   // exchange with a downed fighter. Both down = mutual incapacitation draw.
-  emitDownedBoutEnd(fA, fD, events, 'ARENA_HAZARD');
+  emitDownedBoutEnd(fA, fD, events, 'ARENA_HAZARD', (f) =>
+    rollInfirmaryOutcome(ctx.rng, f, ctx.deathRateMult ?? 1)
+  );
 }

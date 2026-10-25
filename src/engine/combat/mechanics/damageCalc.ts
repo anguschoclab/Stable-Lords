@@ -2,7 +2,7 @@
  * Damage calculation and kill window computation.
  */
 
-import { KILL_WINDOW, KILL_WINDOW_ENDURANCE } from '@/constants/combat';
+import { KILL_WINDOW, KILL_WINDOW_ENDURANCE, DEATH_ROLL } from '@/constants/combat';
 import { LOCATION_DAMAGE_MULT, LOCATION_KILL_MULT, type HitLocation } from './hitLocation';
 import { clamp } from '@/utils/math';
 
@@ -40,6 +40,12 @@ interface CalculateKillWindowArgs {
   momentum?: number;
   specialtyBonus?: number;
   crowdKillBonus?: number;
+  /** Attacker hidden bloodlust (−1..+1) — per-warrior lust for the kill. */
+  bloodlust?: number;
+  /** Attacker damage class (1–9). Canon: Good/Great (3–4) kill most reliably;
+   *  Little/Normal can't wound to kill; Tremendous ends fights early (no add —
+   *  its lower kill rate is emergent from KO'ing before intent procs). */
+  damageClass?: number;
 }
 
 /**
@@ -48,7 +54,7 @@ interface CalculateKillWindowArgs {
 export function calculateKillWindow(args: CalculateKillWindowArgs): number {
   const { hpRatio, enduranceRatio, location, killDesire, phaseLevel } = args;
   const { attOE = 5, attAL = 5, matchupBonus = 0, decSkill = 10, momentum = 0 } = args;
-  const { specialtyBonus = 0, crowdKillBonus = 0 } = args;
+  const { specialtyBonus = 0, crowdKillBonus = 0, bloodlust = 0, damageClass = 0 } = args;
   if (momentum < 0) return 0;
   const K = KILL_WINDOW;
 
@@ -75,6 +81,9 @@ export function calculateKillWindow(args: CalculateKillWindowArgs): number {
 
   threshold += specialtyBonus;
   threshold += crowdKillBonus;
+  threshold += bloodlust * DEATH_ROLL.BLOODLUST_COEFF;
+  if (damageClass === 3 || damageClass === 4) threshold += DEATH_ROLL.DAMAGE_SWEET_SPOT_ADD;
+  else if (damageClass > 0 && damageClass <= 2) threshold += DEATH_ROLL.DAMAGE_LOW_PENALTY;
 
   return clamp(threshold, 0, K.CAP);
 }

@@ -31,6 +31,7 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
   FATIGUE_COLLAPSE: 'fatigue_collapse',
   RIVALRY_FINISH: 'rivalry_finish',
   FATAL_DAMAGE: 'fatal_damage',
+  DIED_OF_WOUNDS: 'died_of_wounds',
 };
 
 /**

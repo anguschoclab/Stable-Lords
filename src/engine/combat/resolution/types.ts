@@ -79,6 +79,16 @@ export interface FighterState {
   committed: boolean;
   /** True when fighter survived a commit attack — grants a free riposte on next exchange. */
   survivalStrike: boolean;
+  /** Canon death model: set when this fighter failed the death roll after a
+   *  death-intent proc. Doomed fighters cannot defend — their opponent's
+   *  attacks auto-land normal (non-crit) hits to vital locations until their
+   *  hp runs out. A doomed fighter still standing at bout end dies. */
+  doomed?: boolean;
+  /** Which side inflicted the doom ('A' | 'D') — attribution for the kill. */
+  doomedBy?: 'A' | 'D';
+  /** Hidden −1..+1 bloodlust copied from the warrior at fighter build —
+   *  feeds this fighter's vitals-roll lethality when attacking. */
+  bloodlust?: number;
   /** Parry-Strike: true after a successful parry — grants an ATT bonus on this
    *  fighter's next attack, then clears (spent on the attempt, hit or miss). */
   counterstrikePrimed?: boolean;

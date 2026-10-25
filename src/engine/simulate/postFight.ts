@@ -3,7 +3,8 @@
  *
  * Extracted from simulate.ts and simulate/resolution.ts to improve modularity.
  */
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP } from '@/constants/combat';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP, INFIRMARY } from '@/constants/combat';
+import { rollInfirmaryOutcome } from '../combat/mechanics/deathRolls';
 import { resolveDecision } from '../bout/decisionLogic';
 import type { FighterState } from '../combat/resolution/types';
 import type {
@@ -54,6 +55,7 @@ interface BuildPostFightStatsArgs {
   causeBucket?: DeathCauseBucket;
   fatalHitLocation?: string;
   fatalExchangeIndex?: number;
+  diedPostBout?: 'A' | 'D';
 }
 
 /**
@@ -61,7 +63,7 @@ interface BuildPostFightStatsArgs {
  */
 function buildPostFightStats(args: BuildPostFightStatsArgs) {
   const { winner, by, fA, fD, tags } = args;
-  const { causeBucket, fatalHitLocation, fatalExchangeIndex } = args;
+  const { causeBucket, fatalHitLocation, fatalExchangeIndex, diedPostBout } = args;
   return {
     xpA: winner === 'A' ? WIN_XP : LOSS_XP,
     xpD: winner === 'D' ? WIN_XP : LOSS_XP,
@@ -80,6 +82,7 @@ function buildPostFightStats(args: BuildPostFightStatsArgs) {
     causeBucket,
     fatalHitLocation,
     fatalExchangeIndex,
+    diedPostBout,
   };
 }
 
@@ -133,6 +136,7 @@ interface ProcessPostFightArgs {
   causeBucket?: DeathCauseBucket;
   fatalHitLocation?: string;
   fatalExchangeIndex?: number;
+  diedPostBout?: 'A' | 'D';
 }
 
 /**
@@ -145,7 +149,7 @@ interface ProcessPostFightArgs {
 export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
   const { winner, by, fA, fD, nameA } = args;
   const { nameD, rng, log, exchangeLog, headless } = args;
-  const { fightMinutes, causeBucket, fatalHitLocation, fatalExchangeIndex } = args;
+  const { fightMinutes, causeBucket, fatalHitLocation, fatalExchangeIndex, diedPostBout } = args;
   // Run judges only when the loop timed out without a terminal outcome.
   // A real terminal outcome with winner === null (mutual-collapse Exhaustion,
   // Draw) must be surfaced as-is — re-judging it would silently convert every
@@ -174,6 +178,7 @@ export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
         fA: fA,
         fD: fD,
         tags: generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes),
+        diedPostBout: diedPostBout,
       }),
     };
   }
@@ -197,6 +202,82 @@ export function processPostFight(args: ProcessPostFightArgs): FightOutcome {
       causeBucket: causeBucket,
       fatalHitLocation: fatalHitLocation,
       fatalExchangeIndex: fatalExchangeIndex,
+      diedPostBout: diedPostBout,
     }),
   };
+}
+
+/**
+ * Post-bout fate resolution — canon (Mechanics of Death):
+ *  1) A doomed fighter still standing when the bout ends dies regardless.
+ *  2) The loser below a preset hp fraction takes the post-fight infirmary
+ *     roll; failing it (then the death roll) turns the result into a Kill —
+ *     "died of wounds" in the infirmary.
+ * Runs between the simulation loop and outcome assembly so `by`/`winner`
+ * stay consistent for records, mortality, and reporting downstream.
+ */
+export function applyPostBoutFate(args: {
+  winner: 'A' | 'D' | null;
+  by: FightOutcomeBy | null;
+  fA: FighterState;
+  fD: FighterState;
+  rng: () => number;
+  deathRateMult?: number;
+  log: MinuteEvent[];
+  headless: boolean;
+  fightMinutes: number;
+  causeBucket?: DeathCauseBucket;
+  fatalHitLocation?: string;
+  fatalExchangeIndex?: number;
+}): {
+  winner: 'A' | 'D' | null;
+  by: FightOutcomeBy | null;
+  causeBucket?: DeathCauseBucket;
+  fatalHitLocation?: string;
+  fatalExchangeIndex?: number;
+  diedPostBout?: 'A' | 'D';
+} {
+  const { fA, fD, rng, log, headless, fightMinutes } = args;
+  const deathMult = args.deathRateMult ?? 1;
+  const { winner, fatalHitLocation, fatalExchangeIndex } = args;
+  let { by, causeBucket } = args;
+  let diedPostBout: 'A' | 'D' | undefined;
+
+  // 1. Doomed survivors: a failed death roll means death, win or lose.
+  for (const side of ['A', 'D'] as const) {
+    const f = side === 'A' ? fA : fD;
+    if (!f.doomed) continue;
+    if (winner === side || winner === null) {
+      // Doomed winner (or no-winner bout): they die anyway — recorded
+      // downstream off the diedPostBout marker.
+      diedPostBout = side;
+      f.hp = 0;
+    } else {
+      // Doomed loser: the victor's work is already done — record the kill.
+      by = 'Kill';
+      causeBucket = 'EXECUTION';
+      f.hp = 0;
+    }
+  }
+
+  // 2. Post-fight infirmary roll — the loser below the hp threshold.
+  if (winner && by !== 'Kill') {
+    const loser = winner === 'A' ? fD : fA;
+    if (
+      loser.hp < loser.maxHp * INFIRMARY.POST_HP_RATIO &&
+      rollInfirmaryOutcome(rng, loser, deathMult)
+    ) {
+      by = 'Kill';
+      causeBucket = 'DIED_OF_WOUNDS';
+      if (!headless) {
+        log.push({
+          minute: fightMinutes,
+          text: 'The healers rush in, but it is too late — the wounds were mortal.',
+          emphasis: true,
+        });
+      }
+    }
+  }
+
+  return { winner, by, causeBucket, fatalHitLocation, fatalExchangeIndex, diedPostBout };
 }

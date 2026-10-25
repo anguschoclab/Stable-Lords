@@ -146,6 +146,7 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
     traits: [...recruit.traits],
     favorites: recruit.favorites,
     luckfactor: { ...recruit.luckfactor },
+    bloodlust: recruit.bloodlust,
     equipment: getFittedLoadout(recruit.style, attributes),
     isStarInvestment: recruit.tier === 'Prodigy',
     lore: recruit.lore,

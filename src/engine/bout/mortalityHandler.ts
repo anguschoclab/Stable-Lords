@@ -8,7 +8,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG } from '@/utils/random';
 import { formatDateOfDeath } from '@/utils/format';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
-import { StateImpact } from '@/engine/impacts';
+import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { weekToTimestamp } from '@/constants';
 
@@ -191,6 +191,15 @@ interface HandleDeathArgs {
   tournamentId?: string;
 }
 
+/** Result of the death handler — the state impact plus who died and whether
+ *  a player warrior was lost (for the dramatic-moment banner). */
+interface HandleDeathResult {
+  impact: StateImpact;
+  death: boolean;
+  playerDeath: boolean;
+  deathRefs: { id: WarriorId; name: string }[];
+}
+
 /**
  * Handle death.
  * @param args.s -
@@ -201,9 +210,45 @@ interface HandleDeathArgs {
  * @param args.tags -
  * @param args.rng -
  */
-export function handleDeath(args: HandleDeathArgs) {
+export function handleDeath(args: HandleDeathArgs): HandleDeathResult {
   const { s, wA, wD, outcome, week } = args;
   const { tags, rng = new SeededRNG(week * 9973 + 123), tournamentId } = args;
+
+  // Canon: a doomed fighter dies even when they aren't the recorded Kill
+  // victim — e.g. a doomed warrior who felled their doomer first. The
+  // diedPostBout marker names that side; process it as a second death by
+  // re-entering with the killer/victim sides swapped.
+  const postBout = outcome.post?.diedPostBout;
+  if (postBout) {
+    const killerSide = postBout === 'A' ? 'D' : 'A';
+    const sub = handleDeath({
+      ...args,
+      outcome: {
+        ...outcome,
+        winner: killerSide,
+        by: 'Kill',
+        post: outcome.post ? { ...outcome.post, diedPostBout: undefined } : undefined,
+      },
+    });
+    // The recorded kill victim (if any) is processed below too — merge.
+    if (outcome.by === 'Kill' && (outcome.winner === 'A' || outcome.winner === 'D')) {
+      const main = handleDeath({
+        ...args,
+        outcome: {
+          ...outcome,
+          post: outcome.post ? { ...outcome.post, diedPostBout: undefined } : undefined,
+        },
+      });
+      return {
+        impact: mergeImpacts([main.impact, sub.impact]),
+        death: main.death || sub.death,
+        playerDeath: main.playerDeath || sub.playerDeath,
+        deathRefs: [...main.deathRefs, ...sub.deathRefs],
+      };
+    }
+    return sub;
+  }
+
   if (outcome.by !== 'Kill') return { impact: {}, death: false, playerDeath: false, deathRefs: [] };
 
   if (s.houseRules?.severeInjuryInsteadOfDeath) {

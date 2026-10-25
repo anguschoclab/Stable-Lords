@@ -119,6 +119,21 @@ export function rollLuckfactor(rng: IRNGService): BaseSkills {
  * @param luck - Optional stored luckfactor deltas. Absent → skills unchanged.
  * @returns Luck-adjusted skills for combat.
  */
+/**
+ * Roll a per-warrior bloodlust: a hidden −1..+1 factor rolled at creation.
+ * Canon (Assur's Guide to Killing): "Some warriors appear to have a higher
+ * blood lust than others." Applied to the vitals roll when they attack;
+ * never shown on the overview.
+ */
+/**
+ * Roll the hidden bloodlust value — canon (Assur): "some warriors appear to
+ * have a higher blood lust than others". Generated once at warrior creation
+ * alongside luckfactor; −1..+1, applied to the vitals roll in combat.
+ */
+export function rollBloodlust(rng: IRNGService): number {
+  return rng.next() * 2 - 1;
+}
+
 export function applyLuckfactor(skills: BaseSkills, luck?: Partial<BaseSkills>): BaseSkills {
   if (!luck) return skills;
   return {

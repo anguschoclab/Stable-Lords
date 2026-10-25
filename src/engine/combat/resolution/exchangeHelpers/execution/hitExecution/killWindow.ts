@@ -8,7 +8,8 @@ import type { ResolutionContext } from '../../../types';
 import { resolveEffectiveTactics } from '../../../tactics';
 import { getKillMechanic, Phase as StylePhase } from '@/engine/stylePassives';
 import { getDynamicTraitMods } from '@/engine/traits';
-import { calculateKillWindow } from '../../../../mechanics/combatDamage';
+import { calculateKillWindow, VITAL_LOCATIONS } from '../../../../mechanics/combatDamage';
+import { deathRollFailChance, infirmaryFailChance } from '../../../../mechanics/deathRolls';
 import type { HitLocation } from '../../../../mechanics/combatDamage';
 import {
   KILL_WINDOW,
@@ -83,6 +84,7 @@ interface CheckKillWindowArgs {
   rawDamage: number;
   attTactics: ReturnType<typeof resolveEffectiveTactics>;
   attLabel: 'A' | 'D';
+  defLabel: 'A' | 'D';
   stylePhase: StylePhase;
   phase: string;
   attKD: number;
@@ -93,46 +95,80 @@ interface CheckKillWindowArgs {
 
 function checkKillWindow(args: CheckKillWindowArgs): void {
   const { events, rng, attacker, defender, ctx } = args;
-  const { hitLoc, rawDamage, attTactics, attLabel, stylePhase } = args;
+  const { hitLoc, rawDamage, attTactics, attLabel, defLabel, stylePhase } = args;
   const { phase, attKD, attOE, attAL, attMatchup } = args;
-  const killMech = getKillMechanic(attacker.style, {
-    phase: stylePhase,
-    hitsLanded: attacker.hitsLanded,
-    consecutiveHits: attacker.consecutiveHits,
-    targetedLocation: attTactics.target,
-    hitLocation: hitLoc,
-  });
+  const deathMult = ctx?.deathRateMult ?? 1;
 
-  let didKill = false;
-  let causeBucket: string = 'EXECUTION';
-
-  if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
-    const killThreshold = gatherKillThreshold({
-      attacker: attacker,
-      defender: defender,
-      ctx: ctx,
-      hitLoc: hitLoc,
-      killMech: killMech,
-      phase: phase,
-      attKD: attKD,
-      attOE: attOE,
-      attAL: attAL,
-      attMatchup: attMatchup,
+  // Canon (Death Intent Explained): the death intent statement can ONLY be
+  // gained after striking a vital location — a fighter hitting only arms
+  // and legs never kills (excepting infirmary deaths, handled below).
+  if ((VITAL_LOCATIONS as readonly string[]).includes(hitLoc) && !defender.doomed) {
+    const killMech = getKillMechanic(attacker.style, {
+      phase: stylePhase,
+      hitsLanded: attacker.hitsLanded,
+      consecutiveHits: attacker.consecutiveHits,
+      targetedLocation: attTactics.target,
+      hitLocation: hitLoc,
     });
-    if (rng() < killThreshold * KILL_WINDOW.SCALE * (ctx?.deathRateMult ?? 1)) {
-      defender.hp = 0;
-      didKill = true;
+
+    if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
+      const killThreshold = gatherKillThreshold({
+        attacker: attacker,
+        defender: defender,
+        ctx: ctx,
+        hitLoc: hitLoc,
+        killMech: killMech,
+        phase: phase,
+        attKD: attKD,
+        attOE: attOE,
+        attAL: attAL,
+        attMatchup: attMatchup,
+      });
+      // The vitals roll: does this vital strike open a death intent?
+      if (rng() < killThreshold * KILL_WINDOW.SCALE * deathMult) {
+        events.push({
+          type: 'STATE_CHANGE',
+          actor: attLabel,
+          target: defLabel,
+          result: 'DEATH_INTENT',
+          metadata: { location: hitLoc },
+        });
+        // The death roll: the struck warrior rolls to survive the fight.
+        if (
+          rng() <
+          deathRollFailChance({
+            hitLoc: hitLoc,
+            armorId: defender.armorId,
+            helmId: defender.helmId,
+            will: defender.attributes.WL,
+            maxHp: defender.maxHp,
+            totalFights: defender.totalFights,
+            enduranceRatio: defender.endurance / defender.maxEndurance,
+          }) * deathMult
+        ) {
+          defender.doomed = true;
+          defender.doomedBy = attLabel;
+          events.push({
+            type: 'STATE_CHANGE',
+            actor: defLabel,
+            result: 'DOOMED',
+            metadata: { location: hitLoc },
+          });
+        }
+      }
+    }
+  }
+
+  if (defender.hp <= 0) {
+    if (defender.doomed) {
+      // The death spiral lands — the doomed warrior's hp is gone.
+      let causeBucket: string = 'EXECUTION';
       if (attacker.consecutiveHits >= CRITICAL_CHAIN_HITS) {
         causeBucket = 'CRITICAL_CHAIN';
       } else {
         const wasCovered = !!defender.activePlan.protect && defender.activePlan.protect !== 'Any';
         if (wasCovered && rawDamage >= ARMOR_FAILURE_DMG_THRESHOLD) causeBucket = 'ARMOR_FAILURE';
       }
-    }
-  }
-
-  if (defender.hp <= 0) {
-    if (didKill) {
       events.push({
         type: 'BOUT_END',
         actor: attLabel,
@@ -140,12 +176,39 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
         metadata: { location: hitLoc, cause: causeBucket, weaponId: attacker.weaponId },
       });
     } else {
-      events.push({
-        type: 'BOUT_END',
-        actor: attLabel,
-        result: 'KO',
-        metadata: { location: hitLoc, cause: 'FATAL_DAMAGE', weaponId: attacker.weaponId },
-      });
+      // Hit points ran out without a death intent — the infirmary roll.
+      // Failing it sends the warrior to the death roll: "died of wounds".
+      const diedOfWounds =
+        rng() <
+          infirmaryFailChance({
+            will: defender.attributes.WL,
+            enduranceRatio: defender.endurance / defender.maxEndurance,
+          }) * deathMult &&
+        rng() <
+          deathRollFailChance({
+            hitLoc: hitLoc,
+            armorId: defender.armorId,
+            helmId: defender.helmId,
+            will: defender.attributes.WL,
+            maxHp: defender.maxHp,
+            totalFights: defender.totalFights,
+            enduranceRatio: defender.endurance / defender.maxEndurance,
+          }) * deathMult;
+      if (diedOfWounds) {
+        events.push({
+          type: 'BOUT_END',
+          actor: attLabel,
+          result: 'Kill',
+          metadata: { location: hitLoc, cause: 'DIED_OF_WOUNDS', weaponId: attacker.weaponId },
+        });
+      } else {
+        events.push({
+          type: 'BOUT_END',
+          actor: attLabel,
+          result: 'KO',
+          metadata: { location: hitLoc, cause: 'FATAL_DAMAGE', weaponId: attacker.weaponId },
+        });
+      }
     }
   }
 }
@@ -196,6 +259,8 @@ function gatherKillThreshold(args: GatherKillThresholdArgs): number {
     momentum: attacker.momentum,
     specialtyBonus: specKillBonus + attackerTraitKill,
     crowdKillBonus: crowdKillBonus,
+    bloodlust: attacker.bloodlust ?? 0,
+    damageClass: attacker.derived.damage,
   });
 }
 
@@ -266,6 +331,7 @@ export function afterHitEvents(args: AfterHitEventsArgs) {
     rawDamage: rawDamage,
     attTactics: attTactics,
     attLabel: attLabel,
+    defLabel: defLabel,
     stylePhase: stylePhase,
     phase: phase,
     attKD: attKD,

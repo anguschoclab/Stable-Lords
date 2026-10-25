@@ -4,7 +4,7 @@
  */
 import type { Warrior } from '@/types/state.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
-import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { generateFavorites } from '@/engine/favorites';
 import { generateTraits } from '@/engine/traits';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
@@ -61,6 +61,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     // Hidden ±4-per-skill luckfactor (canonical) — only rolled for seeded/real-game
     // warriors; rng-less test builds stay luck-neutral.
     luckfactor: rng ? rollLuckfactor(rng) : undefined,
+    bloodlust: rng ? rollBloodlust(rng) : undefined,
     derivedStats,
     ...newWarriorDefaults(),
     age: 18 + Math.floor((rng ? rng.next() : 0.5) * 8),

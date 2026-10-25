@@ -5,6 +5,7 @@
 export type { HitLocation } from './hitLocation';
 export {
   HIT_LOCATIONS,
+  VITAL_LOCATIONS,
   protectCovers,
   rollHitLocation,
   LOCATION_DAMAGE_MULT,

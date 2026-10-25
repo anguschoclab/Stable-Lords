@@ -11,7 +11,7 @@ import { FightingStyle } from '@/types/game';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { TIER_COST, type RecruitTier } from '@/engine/recruitment/recruitment/types';
 import { generatePotential } from '@/engine/warrior/potential';
-import { computeWarriorStats, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { generateFavorites } from '@/engine/favorites';
 import { applyTraitAttrBonuses, TRAITS } from '@/engine/traits';
 import { generateWarriorName } from '@/data/names/nameGenerator';
@@ -96,6 +96,7 @@ export function generateOrphanPool(
       addedWeek: 1,
       favorites: generateFavorites(style, rng),
       luckfactor: rollLuckfactor(rng),
+      bloodlust: rollBloodlust(rng),
       source: 'orphanage',
       avatarSeed: Math.floor(rng.next() * 1000000),
     });

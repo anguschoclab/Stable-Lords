@@ -193,7 +193,11 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
     dynTraitsD: args.dynTraitsD,
   });
 
-  const attSucc = performAttackCheck({
+  // Doomed defenders cannot avoid the blow — canon: the rest of the fight
+  // is "a matter of running down the dead fighter's hit points". The check
+  // still rolls so the RNG stream keeps its usual shape.
+  const attSucc =
+    performAttackCheck({
     rng: rng,
     att: att,
     curAttOE: curAttOE,
@@ -215,7 +219,7 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
       bonuses.dynTraitAtt +
       bonuses.counterstrikeAtt +
       aimedBlowShellGapBonus(att, def),
-  });
+  }) || def.doomed === true;
 
   // The attack was thrown — chart it (hits, whiffs, parried and dodged
   // swings all count toward the weapon's ledger).

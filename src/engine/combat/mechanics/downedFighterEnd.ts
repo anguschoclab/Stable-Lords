@@ -17,20 +17,37 @@ import type { FighterState } from '../resolution/types';
 /**
  * Append a BOUT_END when at least one fighter is at ≤0 hp. No-op when both
  * fighters are standing or the bout already ended this exchange.
+ *
+ * `diedOfWounds` (optional) runs the canon infirmary roll for the downed
+ * fighter: when it returns true the outcome is 'Kill' cause
+ * 'DIED_OF_WOUNDS' instead of a survivable 'KO'.
  */
 export function emitDownedBoutEnd(
   fA: FighterState,
   fD: FighterState,
   events: CombatEvent[],
-  cause: string
+  cause: string,
+  diedOfWounds?: (f: FighterState) => boolean
 ): void {
   if (fA.hp > 0 && fD.hp > 0) return;
   if (events.some((e) => e.type === 'BOUT_END')) return;
   if (fA.hp <= 0 && fD.hp <= 0) {
     events.push({ type: 'BOUT_END', actor: 'A', result: 'Exhaustion', metadata: { cause } });
   } else if (fA.hp <= 0) {
-    events.push({ type: 'BOUT_END', actor: 'D', result: 'KO', metadata: { cause } });
+    const dead = diedOfWounds?.(fA) ?? false;
+    events.push({
+      type: 'BOUT_END',
+      actor: 'D',
+      result: dead ? 'Kill' : 'KO',
+      metadata: { cause: dead ? 'DIED_OF_WOUNDS' : cause },
+    });
   } else {
-    events.push({ type: 'BOUT_END', actor: 'A', result: 'KO', metadata: { cause } });
+    const dead = diedOfWounds?.(fD) ?? false;
+    events.push({
+      type: 'BOUT_END',
+      actor: 'A',
+      result: dead ? 'Kill' : 'KO',
+      metadata: { cause: dead ? 'DIED_OF_WOUNDS' : cause },
+    });
   }
 }

@@ -50,6 +50,8 @@ export interface PoolWarrior {
   favorites: WarriorFavorites;
   lineage?: WarriorLineage;
   luckfactor: BaseSkills;
+  /** Hidden −1..+1 bloodlust — per-warrior lust for the kill (canon). */
+  bloodlust?: number;
   /**
    * Present when this pool entry is a displaced roster veteran — a warrior
    * whose stable dissolved (bankruptcy, seasonal churn). Signing paths must

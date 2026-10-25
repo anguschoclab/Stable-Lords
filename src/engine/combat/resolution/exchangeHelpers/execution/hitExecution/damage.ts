@@ -16,6 +16,7 @@ import {
   applyFlatMitigation,
   applyShieldZoneMod,
   HIT_LOCATIONS,
+  VITAL_LOCATIONS,
 } from '../../../../mechanics/combatDamage';
 import type { HitLocation } from '../../../../mechanics/combatDamage';
 import { FightingStyle } from '@/types/shared.types';
@@ -65,6 +66,13 @@ export function computePreArmorDamage(args: ComputePreArmorDamageArgs): {
   const { rng, attacker, defender, attTactics, attOffMods } = args;
   const { attPassive } = args;
   let hitLoc: HitLocation = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
+
+  // Death spiral (canon): the doomed fighter's hit points are run down by
+  // normal attacks to the vital areas — every landed blow strikes a vital.
+  if (defender.doomed) {
+    const vital = VITAL_LOCATIONS[Math.floor(rng() * VITAL_LOCATIONS.length)];
+    if (vital) hitLoc = vital;
+  }
 
   if (attacker.style === FightingStyle.AimedBlow) {
     const locIdx = HIT_LOCATIONS.indexOf(hitLoc);
@@ -173,12 +181,15 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
   const { events, rng, hitLoc, attacker } = args;
   let { rawDamage } = args;
   const { defender, attPassive, attLabel, defLabel } = args;
-  const effectiveCritChance =
-    attPassive.critChance +
-    getStCritChanceBonus(attacker.style) +
-    (isWieldingFavoriteWeapon(attacker.favorites, attacker.weaponId)
-      ? FAVORITE_WEAPON_CRIT_CHANCE
-      : 0);
+  // Canon: a doomed victim is run down by *normal, non-critical* attacks —
+  // crits are suppressed while running out the doomed fighter's hp.
+  const effectiveCritChance = defender.doomed
+    ? 0
+    : attPassive.critChance +
+      getStCritChanceBonus(attacker.style) +
+      (isWieldingFavoriteWeapon(attacker.favorites, attacker.weaponId)
+        ? FAVORITE_WEAPON_CRIT_CHANCE
+        : 0);
   const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
   if (isCrit) {
     recordWeaponCrit(attacker);

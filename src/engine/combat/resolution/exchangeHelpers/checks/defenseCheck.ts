@@ -3,7 +3,7 @@
  */
 import { skillCheck } from '../../../mechanics/combatMath';
 import { oeDefMod } from '../../../mechanics/tacticResolution';
-import { GLOBAL_PAR_PENALTY } from '@/constants/combat';
+import { GLOBAL_PAR_PENALTY, KILL_DESIRE_WILD } from '@/constants/combat';
 import type { FighterState } from '../../types';
 import { getDefensiveTacticMods } from '../../../mechanics/tacticResolution';
 import { getOffensiveTacticMods } from '../../../mechanics/tacticResolution';
@@ -28,6 +28,9 @@ interface PerformDefenseCheckArgs {
   curOffMods: ReturnType<typeof getOffensiveTacticMods>;
   ctx?: { weatherEffect?: { riposteMod: number } };
   attacker?: FighterState;
+  /** Attacker kill desire — canon (Jest/Boyd): KD is "patience", and the
+   *  high-KD band (≥8) swings wild, so they are easier to dodge and parry. */
+  attKD?: number;
   extraDefPenalty?: number;
 }
 
@@ -40,6 +43,9 @@ export function performDefenseCheck(args: PerformDefenseCheckArgs) {
   const { curAntiSynDef, curOffMods, ctx, attacker, extraDefPenalty = 0 } = args;
   // Committed attacker is fully open — defender gets +15 on defense
   const commitPenalty = attacker?.committed ? 15 : 0;
+  // Wild swings (KD ≥ threshold) are easier to read — defender bonus.
+  const wildBonus = Math.max(0, (args.attKD ?? 0) - KILL_DESIRE_WILD.THRESHOLD + 1) *
+    KILL_DESIRE_WILD.DEF_COEFF;
   if (isDodge) {
     const success = skillCheck(
       rng,
@@ -52,7 +58,8 @@ export function performDefenseCheck(args: PerformDefenseCheckArgs) {
         curBiasDef -
         overDef -
         def.legHits +
-        commitPenalty -
+        commitPenalty +
+        wildBonus -
         extraDefPenalty
     );
     return { success, type: 'DODGE' as const };
@@ -74,6 +81,7 @@ export function performDefenseCheck(args: PerformDefenseCheckArgs) {
         overDef -
         def.armHits +
         commitPenalty +
+        wildBonus +
         riposteMod -
         extraDefPenalty
     );

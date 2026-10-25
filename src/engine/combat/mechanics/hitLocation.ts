@@ -36,11 +36,18 @@ export const LOCATION_KILL_MULT: Record<HitLocation, number> = {
   head: 6.0,
   chest: 3.5,
   abdomen: 3.5,
-  'right arm': 0.1,
-  'left arm': 0.1,
-  'right leg': 0.1,
-  'left leg': 0.1,
+  'right arm': 0.0,
+  'left arm': 0.0,
+  'right leg': 0.0,
+  'left leg': 0.0,
 };
+
+/**
+ * Vital locations — canon: the death intent statement "can ONLY be gained"
+ * after striking a vital region (HE/CH/AB, pelvis folded into abdomen).
+ * Limb hits can never kill via the vitals roll, only via the infirmary roll.
+ */
+export const VITAL_LOCATIONS: readonly HitLocation[] = ['head', 'chest', 'abdomen'];
 
 /**
  *

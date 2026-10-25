@@ -237,6 +237,7 @@ const FightOutcomeSchema = z.object({
       causeBucket: DeathCauseBucketSchema.optional(),
       fatalHitLocation: z.string().optional(),
       fatalExchangeIndex: z.number().optional(),
+      diedPostBout: fighterSideSchema.optional(),
       tags: z.array(z.string()).optional(),
     })
     .optional(),

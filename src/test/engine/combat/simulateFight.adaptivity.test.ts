@@ -10,7 +10,9 @@ import { simulateFight } from '@/engine/simulate';
 import { FightingStyle, type FightPlan } from '@/types/game';
 import { makeWarrior, makePlan } from './_helpers';
 
-const SEEDS = Array.from({ length: 80 }, (_, i) => 1000 + i * 7);
+// 300 seeds: the press's finish-rate edge is real but small (~3%) — needs
+// enough samples to clear seed noise deterministically.
+const SEEDS = Array.from({ length: 300 }, (_, i) => 1000 + i * 7);
 
 /** Roughly even striker-vs-parrier matchup so finish rate is middling. */
 function fighters() {
@@ -50,7 +52,10 @@ describe('mid-bout adaptivity', () => {
       conditions: [
         {
           trigger: { type: 'OPPONENT_HP_BELOW', value: 45 },
-          override: { OE: 9, killDesire: 10 },
+          // Canon (Jest): KD is patience, not lethality — spiking KD into the
+          // wild band (≥8) makes swings easier to dodge/parry/feint, so a
+          // reliable press raises aggression, not KD.
+          override: { OE: 9, AL: 8, killDesire: 6 },
           label: 'Kill-window press',
         },
       ],

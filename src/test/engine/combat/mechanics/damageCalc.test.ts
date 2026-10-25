@@ -42,7 +42,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: 1.0,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 1,
           attOE: 5,
@@ -80,7 +80,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 0.2,
           enduranceRatio: 1.0,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -95,7 +95,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 0.4,
           enduranceRatio: 1.0,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -112,7 +112,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 0.4,
           enduranceRatio: 1.0,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -127,7 +127,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 0.6,
           enduranceRatio: 1.0,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -146,7 +146,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: 0.1,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -161,7 +161,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: KILL_WINDOW_ENDURANCE - 0.01,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -178,7 +178,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: KILL_WINDOW_ENDURANCE - 0.01,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -193,7 +193,7 @@ describe('damageCalc mechanics', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: 0.5,
-          location: 'left arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -223,7 +223,7 @@ describe('damageCalc mechanics', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.0052, 5);
+      ).toBeCloseTo(0.004, 5);
 
       expect(
         calculateKillWindow({
@@ -240,7 +240,7 @@ describe('damageCalc mechanics', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.0087, 5);
+      ).toBeCloseTo(0.0075, 5);
     });
 
     it('incorporates attOE, attAL, matchupBonus, decSkill, phaseLevel', () => {
@@ -259,7 +259,7 @@ describe('damageCalc mechanics', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.00245, 5);
+      ).toBeCloseTo(0.00125, 5);
 
       expect(
         calculateKillWindow({
@@ -276,7 +276,7 @@ describe('damageCalc mechanics', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.0062, 5);
+      ).toBeCloseTo(0.005, 5);
     });
 
     it('falls back to 1.0 locMult if location missing in LOCATION_KILL_MULT', () => {
@@ -411,7 +411,7 @@ describe('damageCalc mechanics', () => {
         decSkill: 10,
         momentum: 0,
       });
-      expect(win).toBeCloseTo(0.0027, 4);
+      expect(win).toBeCloseTo(0.0015, 4);
     });
 
     it('applies specialty and crowd kill bonuses', () => {
@@ -429,7 +429,7 @@ describe('damageCalc mechanics', () => {
         specialtyBonus: 0.01,
         crowdKillBonus: 0.01,
       });
-      expect(win).toBeCloseTo(0.0227, 4);
+      expect(win).toBeCloseTo(0.0215, 4);
     });
 
     it('handles negative thresholds by clamping to 0', () => {
@@ -488,7 +488,7 @@ describe('damageCalc mechanics', () => {
       const base = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -499,15 +499,15 @@ describe('damageCalc mechanics', () => {
         specialtyBonus: 0,
         crowdKillBonus: 0,
       });
-      // momentum = 0: no tier bonus, threshold = 0.012 * 0.1 = 0.0012
-      expect(base).toBeCloseTo(0.0012, 5);
+      // momentum = 0: no tier bonus, threshold = 0.012 * 3.5 = 0.0012
+      expect(base).toBeCloseTo(0.042, 5);
     });
 
     it('does not add momentum tier bonus when momentum = 1 (below tier 2)', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -519,14 +519,14 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // momentum = 1: no tier bonus (tier 2 starts at momentum >= 2)
-      expect(win).toBeCloseTo(0.0012, 5);
+      expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('adds tier 2 bonus when momentum = 2', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -538,14 +538,14 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // momentum = 2: +0.004 → 0.0012 + 0.004 = 0.0052
-      expect(win).toBeCloseTo(0.0052, 5);
+      expect(win).toBeCloseTo(0.046, 5);
     });
 
     it('adds tier 3 bonus when momentum = 3', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -556,15 +556,15 @@ describe('damageCalc mechanics', () => {
         specialtyBonus: 0,
         crowdKillBonus: 0,
       });
-      // momentum = 3: +0.0075 → 0.0012 + 0.0075 = 0.0087
-      expect(win).toBeCloseTo(0.0087, 5);
+      // momentum = 3: +0.0075 → (0.012*3.5) + 0.0075 = 0.0495
+      expect(win).toBeCloseTo(0.0495, 5);
     });
 
     it('tests hpRatio at exact 0.3 boundary (not < 0.3, falls to < 0.5 tier)', () => {
       const win = calculateKillWindow({
         hpRatio: 0.3,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -576,15 +576,15 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // hpRatio = 0.3: not < 0.3, but < 0.5 → +0.001
-      // threshold = (0.012 + 0.001) * 0.1 = 0.0013
-      expect(win).toBeCloseTo(0.0013, 5);
+      // threshold = (0.012 + 0.001) * 3.5 = 0.0013
+      expect(win).toBeCloseTo(0.0455, 5);
     });
 
     it('tests hpRatio at exact 0.5 boundary (not < 0.5, no hp bonus)', () => {
       const win = calculateKillWindow({
         hpRatio: 0.5,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -596,15 +596,15 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // hpRatio = 0.5: not < 0.3, not < 0.5 → no hp bonus
-      // threshold = 0.012 * 0.1 = 0.0012
-      expect(win).toBeCloseTo(0.0012, 5);
+      // threshold = 0.012 * 3.5 = 0.0012
+      expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('tests enduranceRatio at exact 0.2 boundary (not < 0.2, falls to < KILL_WINDOW_ENDURANCE tier)', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 0.2,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -616,15 +616,15 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // enduranceRatio = 0.2: not < 0.2, but < 0.4 (KILL_WINDOW_ENDURANCE) → +0.006
-      // threshold = (0.012 + 0.006) * 0.1 = 0.0018
-      expect(win).toBeCloseTo(0.0018, 5);
+      // threshold = (0.012 + 0.006) * 3.5 = 0.0018
+      expect(win).toBeCloseTo(0.063, 5);
     });
 
     it('tests enduranceRatio at exact KILL_WINDOW_ENDURANCE (0.4) boundary', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 0.4,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -636,15 +636,15 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // enduranceRatio = 0.4: not < 0.2, not < 0.4, but < 0.6 → +0.001
-      // threshold = (0.012 + 0.001) * 0.1 = 0.0013
-      expect(win).toBeCloseTo(0.0013, 5);
+      // threshold = (0.012 + 0.001) * 3.5 = 0.0013
+      expect(win).toBeCloseTo(0.0455, 5);
     });
 
     it('tests enduranceRatio at exact 0.6 boundary (not < 0.6, no endurance bonus)', () => {
       const win = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 0.6,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -656,8 +656,8 @@ describe('damageCalc mechanics', () => {
         crowdKillBonus: 0,
       });
       // enduranceRatio = 0.6: no endurance bonus
-      // threshold = 0.012 * 0.1 = 0.0012
-      expect(win).toBeCloseTo(0.0012, 5);
+      // threshold = 0.012 * 3.5 = 0.0012
+      expect(win).toBeCloseTo(0.042, 5);
     });
 
     it('applies chest kill multiplier (3.5)', () => {
@@ -702,7 +702,7 @@ describe('damageCalc mechanics', () => {
       const base = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -716,7 +716,7 @@ describe('damageCalc mechanics', () => {
       const withCrowd = calculateKillWindow({
         hpRatio: 1.0,
         enduranceRatio: 1.0,
-        location: 'left arm',
+        location: 'chest',
         killDesire: 5,
         phaseLevel: 0,
         attOE: 5,
@@ -727,7 +727,7 @@ describe('damageCalc mechanics', () => {
         specialtyBonus: 0,
         crowdKillBonus: 0.005,
       });
-      expect(withCrowd - base).toBeCloseTo(0.005, 5);
+      expect(withCrowd - base).toBeCloseTo(0.0049999999999999975, 5);
     });
   });
 });
@@ -843,7 +843,7 @@ describe('Damage Calculation', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.0875, 5);
+      ).toBeCloseTo(0.08750000000000001, 5);
     });
 
     it('handles KILL_WINDOW_ENDURANCE correctly', () => {
@@ -873,14 +873,14 @@ describe('Damage Calculation', () => {
     it('handles momentum >= 3 correctly', () => {
       // Base: 0.012
       // locMult (right arm): 0.1
-      // threshold: 0.012 * 0.1 = 0.0012
+      // threshold: 0.012 * 3.5 = 0.0012
       // momentum: 3 -> +0.0075
       // total = 0.0087
       expect(
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: 1.0,
-          location: 'right arm',
+          location: 'chest',
           killDesire: 5,
           phaseLevel: 0,
           attOE: 5,
@@ -891,7 +891,7 @@ describe('Damage Calculation', () => {
           specialtyBonus: 0,
           crowdKillBonus: 0,
         })
-      ).toBeCloseTo(0.0087, 4);
+      ).toBeCloseTo(0.0495, 4);
     });
 
     it('clamps minimum threshold to 0', () => {
@@ -900,7 +900,7 @@ describe('Damage Calculation', () => {
         calculateKillWindow({
           hpRatio: 1.0,
           enduranceRatio: 1.0,
-          location: 'right arm',
+          location: 'chest',
           killDesire: 0,
           phaseLevel: 0,
           attOE: 0,

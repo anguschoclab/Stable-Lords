@@ -811,6 +811,24 @@
       "No glory, no honor, just the wet sound of {{defender}} dying alone in the sand.",
       "A bleak and brutal end as {{defender}}'s life is snuffed out.",
       "{{attacker}} stands alone as {{defender}} breathes their bloody last."
+    ],
+    "death_intent": [
+      "{{attacker}} is trying to make this a death match!",
+      "{{attacker}} fights with a deadly bloodlust in their eyes!",
+      "{{attacker}} is eagerly seeking the death blow!",
+      "{{attacker}} is going for the kill!",
+      "{{attacker}} seeks the death of their opponent!",
+      "{{attacker}} aims to slay {{defender}}!"
+    ],
+    "doomed": [
+      "{{name}} is mortally wounded — hanging on by a thread!",
+      "{{name}} reels from a mortal blow — the end is near!",
+      "{{name}}'s wound is fatal; only the formality remains!"
+    ],
+    "died_of_wounds": [
+      "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
+      "{{defender}} succumbs to the accumulated wounds dealt by {{attacker}} — dead on the sand.",
+      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted."
     ]
   }
 }

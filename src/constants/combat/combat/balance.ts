@@ -33,6 +33,11 @@ export const AB_ARMOR_BYPASS_MAX = 0.4;
 /** Aimed Blow armor bypass: DF divisor (bypass = min(AB_ARMOR_BYPASS_MAX, DF / this)). */
 export const AB_ARMOR_BYPASS_DF_DIVISOR = 50;
 
+/** Aimed Blow shell-gap payoff: max ATT bonus when the defender's shell out-classes AB's craft. Balance knob. */
+export const AB_SHELL_GAP_ATT_MAX = 6;
+/** Aimed Blow shell-gap payoff: DF divisor (bonus = min(MAX, ceil((def.PAR - att.ATT) * DF / this))). */
+export const AB_SHELL_GAP_DF_DIVISOR = 12;
+
 /** Total Parry fatigue-exploit: endurance ratio below which the severe tier applies. */
 export const TP_FATIGUE_SEVERE_RATIO = 0.25;
 /** Total Parry fatigue-exploit: endurance ratio below which the moderate tier applies. */
@@ -156,6 +161,13 @@ export const WHIFF_RIPOSTE_DEF_PENALTY = 4;
 export const PASSIVE_NARRATIVE_CHANCE = 0.4;
 /** Defense bonus granted to a defender when the attacker's feint fails. */
 export const FEINT_FAILED_DEF_BONUS = 2;
+
+// ─── Favorites ──────────────────────────────────────────────────────────
+/** Added crit chance while a fighter wields their (hidden) favorite weapon.
+ *  The "charting" signal: baseline critChance is ~0 for most styles, so a
+ *  sustained ~20% crit rate over a weapon's swings is the player's cue that
+ *  they have found the favorite — before formal discovery reveals it. */
+export const FAVORITE_WEAPON_CRIT_CHANCE = 0.2;
 
 // ─── Trait Generation ───────────────────────────────────────────────────────
 /**

@@ -2,7 +2,7 @@
  * Resolution Types - FighterState and ResolutionContext definitions
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorFavorites } from '@/types/warrior.types';
+import type { WarriorFavorites, WeaponChartEntry } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import type {
   BaseSkills,
@@ -42,6 +42,10 @@ export interface FighterState {
   consecutiveHits: number;
   armHits: number;
   legHits: number;
+  /** Per-weapon charting tally for this bout — swings/crits/knockdowns keyed by
+   *  the weapon actually swung (tracks across disarm → backup → fists). Merged
+   *  into `warrior.favorites.chart` post-bout. */
+  weaponChart?: Record<string, WeaponChartEntry>;
   favorites?: WarriorFavorites;
   /** Inherent traits — Berserker, Patient, etc. Static mods are baked into
    *  `skills`; conditional ones are evaluated each exchange in `resolveExchange`. */

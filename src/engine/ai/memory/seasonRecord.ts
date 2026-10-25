@@ -6,6 +6,7 @@
 import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { logAgentAction } from '@/engine/ai/agentCore';
+import { recordPlanOutcome, cloneStrategyMemory } from '@/engine/ai/plan/strategyLab';
 
 type SeasonRecord = NonNullable<import('@/types/state.types').AIAgentMemory['seasonRecord']>;
 
@@ -94,9 +95,37 @@ export function recordBoutOutcome(
     }
   }
 
+  // Strategy Lab: score each fighter's plan cell against this week's outcome.
+  // The ledger is what `pickStrategyTarget` exploits/probes next week.
+  const rosterById = new Map(rival.roster.map((x) => [String(x.id), x]));
+  const outcomes = new Map<string, { oe: number; al: number; won: boolean }[]>();
+  for (const fight of fights) {
+    const side = sideFor(rival, fight);
+    if (!side) continue;
+    const wid = String(side === 'A' ? fight.warriorIdA : fight.warriorIdD);
+    const w = rosterById.get(wid);
+    if (!w?.plan) continue;
+    const list = outcomes.get(wid) ?? [];
+    outcomes.set(wid, list);
+    list.push({
+      oe: w.plan.OE ?? 5,
+      al: w.plan.AL ?? 5,
+      won: fight.winner === side,
+    });
+  }
+  const roster = outcomes.size
+    ? rival.roster.map((w) => {
+        const outs = outcomes.get(String(w.id));
+        if (!outs?.length) return w;
+        const memory = cloneStrategyMemory(w.strategyMemory);
+        for (const o of outs) recordPlanOutcome(memory, o.oe, o.al, o.won);
+        return { ...w, strategyMemory: memory };
+      })
+    : rival.roster;
+
   const summary = `Week ${week}: ${wins}W-${losses}L${kills > 0 ? `, ${kills} kill${kills > 1 ? 's' : ''}` : ''}`;
   let out = logAgentAction({
-    rival: rival,
+    rival: { ...rival, roster },
     type: 'BOUT',
     description: summary,
     riskTier: 'Low',

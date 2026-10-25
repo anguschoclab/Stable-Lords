@@ -165,6 +165,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'pagePrimitives.conformance.test.tsx': 'LIVE_RATCHET',
   'paramBudget.guard.test.ts': 'LIVE_RATCHET',
   'scanInLoop.guard.test.ts': 'LIVE_RATCHET',
+  'skillPathScan.guard.slow.test.ts': 'LIVE_RATCHET',
   'skipCount.guard.test.ts': 'LIVE_RATCHET',
   'styleArchives.wired.test.tsx': 'LIVE_RATCHET',
   'testSuiteAudit.guard.test.ts': 'LIVE_RATCHET',

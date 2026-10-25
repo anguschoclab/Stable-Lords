@@ -2,15 +2,13 @@
  * Favorite Weapon & Rhythm Discovery System
  *
  * Each warrior has hidden favorite weapon and OE/AL rhythm generated at creation.
- * These are discovered through bout experience:
- * - After 5 fights: first hint appears in combat log
- * - After 10 fights: second hint (narrows down)
- * - After 15 fights: fully revealed
- * - Insight Tokens (tournament rewards) skip the grind
- *
- * Using favorite weapon grants +1 ATT, favorite rhythm grants +1 INI.
+ * The bonuses are ALWAYS ON — discovery only *reveals* them (epiphany rolls,
+ * hints, or Insight Tokens). Wielding the favorite raises crit chance, which
+ * is what makes the classic "charting" method work: `favorites.chart` keeps a
+ * per-weapon swings/crits/knockdowns ledger, so an observant player can deduce
+ * the affinity from its statistical signature before it is ever named.
  */
-import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
+import type { Warrior, WarriorFavorites, WeaponChartEntry } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
@@ -97,7 +95,7 @@ export interface DiscoveryResult {
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,
-  context?: { weaponId: string; oe: number; al: number }
+  context?: { weaponId?: string; oe?: number; al?: number }
 ): DiscoveryResult {
   const r = () => rng.next();
   const fav = warrior.favorites;
@@ -134,7 +132,8 @@ export function checkDiscovery(
   // 2. Rhythm Discovery Roll
   if (!fav.discovered.rhythm) {
     const isMatchingRhythm =
-      context &&
+      context?.oe != null &&
+      context?.al != null &&
       Math.abs(context.oe - fav.rhythm.oe) <= 1 &&
       Math.abs(context.al - fav.rhythm.al) <= 1;
     const revealRoll = isMatchingRhythm ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE;
@@ -160,12 +159,15 @@ export function checkDiscovery(
 
 // ─── Combat Bonuses ─────────────────────────────────────────────────────
 
-/** Get ATT bonus from using favorite weapon (only if discovered) */
-export function getFavoriteWeaponBonus(warrior: Warrior): number {
-  const fav = warrior.favorites;
-  if (!fav?.discovered.weapon) return 0;
-  const equippedWeapon = warrior.equipment?.weapon ?? 'broadsword';
-  return equippedWeapon === fav.weaponId ? 1 : 0;
+/** True when the fighter is wielding their favorite weapon — known or not.
+ *  The favorite bonus is always on; discovery only *reveals* it. This is what
+ *  makes weapon charting work: the elevated performance is visible in the
+ *  swing/crit ledger before the affinity is ever named. */
+export function isWieldingFavoriteWeapon(
+  favorites: WarriorFavorites | undefined,
+  weaponId: string | undefined
+): boolean {
+  return !!favorites && !!weaponId && favorites.weaponId === weaponId;
 }
 
 /**
@@ -193,6 +195,69 @@ export function getFavoriteRhythmBonus(
   if (oeDelta === 0 && alDelta === 0) return 2; // perfect match
   if (oeDelta <= 1 && alDelta <= 1) return 1; // close match
   return 0;
+}
+
+// ─── Charting ────────────────────────────────────────────────────────────
+
+/** Minimum swings before a weapon's chart row means anything. */
+export const CHART_MIN_SWINGS = 10;
+/** Crits-per-swing rate that reads as a real affinity signal. */
+export const CHART_SIGNAL_CRIT_RATE = 0.15;
+
+/**
+ * The weapon the evidence points at — the "charting" deduction.
+ *
+ * - Discovered favorite → that weapon, always.
+ * - Otherwise the chart row whose crits-per-swing rate crosses the signal
+ *   threshold over a meaningful sample (highest rate wins).
+ * - No evidence yet → undefined.
+ *
+ * Players read this off the Weapon Chart UI; AI stables feed it into their
+ * weekly armory pass. Legality/wieldability checks are the caller's job —
+ * this only says what the evidence suggests.
+ */
+export function suspectedFavoriteWeapon(
+  favorites: WarriorFavorites | undefined
+): string | undefined {
+  if (!favorites) return undefined;
+  if (favorites.discovered.weapon) return favorites.weaponId;
+  let bestId: string | undefined;
+  let bestRate = 0;
+  for (const [weaponId, row] of Object.entries(favorites.chart ?? {})) {
+    if (row.swings < CHART_MIN_SWINGS) continue;
+    const rate = row.crits / row.swings;
+    if (rate >= CHART_SIGNAL_CRIT_RATE && rate > bestRate) {
+      bestRate = rate;
+      bestId = weaponId;
+    }
+  }
+  return bestId;
+}
+
+/**
+ * Merge a bout's per-weapon charting tally into the warrior's persistent
+ * `favorites.chart` ledger. Returns a fresh favorites object when the tally
+ * changed anything, or undefined when there is nothing to record (no
+ * favorites, no tally) so callers can skip the state write.
+ */
+export function mergeWeaponChart(
+  favorites: WarriorFavorites | undefined,
+  tally: Record<string, WeaponChartEntry> | undefined
+): WarriorFavorites | undefined {
+  if (!favorites || !tally) return undefined;
+  const chart = { ...(favorites.chart ?? {}) };
+  let changed = false;
+  for (const [weaponId, row] of Object.entries(tally)) {
+    const prev = chart[weaponId] ?? { swings: 0, crits: 0, knockdowns: 0 };
+    chart[weaponId] = {
+      swings: prev.swings + row.swings,
+      crits: prev.crits + row.crits,
+      knockdowns: prev.knockdowns + row.knockdowns,
+    };
+    changed = true;
+  }
+  if (!changed) return undefined;
+  return { ...favorites, chart };
 }
 
 /** Apply Insight Token — instantly reveals weapon or rhythm */

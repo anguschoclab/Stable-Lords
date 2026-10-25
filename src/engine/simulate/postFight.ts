@@ -74,6 +74,8 @@ function buildPostFightStats(args: BuildPostFightStatsArgs) {
     armHitsD: fD.armHits,
     legHitsA: fA.legHits,
     legHitsD: fD.legHits,
+    weaponChartA: fA.weaponChart,
+    weaponChartD: fD.weaponChart,
     tags,
     causeBucket,
     fatalHitLocation,

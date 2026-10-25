@@ -15,7 +15,7 @@ import {
   getEncumbrancePenalties,
 } from '@/data/equipment/encumbrance';
 import { getTrainingBonus, trainerBonusToMods } from '@/engine/trainers/trainers';
-import { getFavoriteWeaponBonus } from '@/engine/favorites';
+import { isWieldingFavoriteWeapon } from '@/engine/favorites';
 import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
@@ -52,7 +52,10 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   const { warrior, trainers, plan, attrs, equip } = ctx;
 
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
-  const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
+  // Resolve against the fitted loadout — warriors without equipment fall back
+  // to their style's default weapon, so `warrior.equipment` alone can miss.
+  const favWeapon =
+    warrior && isWieldingFavoriteWeapon(warrior.favorites, equip.weapon) ? 1 : 0;
   const mastery = getMasteryBonus(plan.style, favWeapon > 0);
   const veteranDef = warrior ? getVeteranDefBonus(warrior.age ?? 18, attrs.WL) : 0;
 
@@ -269,6 +272,8 @@ function assembleFighterState(args: {
     disarmResist: traitMods.disarmResist || undefined,
     unarmedDmgBonus: traitMods.unarmedDmgBonus || undefined,
     weaponMods,
+    // Fresh per-bout weapon charting tally — merged into favorites.chart post-bout.
+    weaponChart: {},
   };
 }
 

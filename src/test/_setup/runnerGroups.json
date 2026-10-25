@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T11:17:37.875Z",
+  "generatedAt": "2026-10-25T15:51:58.396Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -165,10 +165,12 @@
     "src/test/engine/ai/intentEngine.tournament.test.ts",
     "src/test/engine/ai/intentStates.test.ts",
     "src/test/engine/ai/plan/coreGenerator.test.ts",
+    "src/test/engine/ai/styleDoctrine.test.ts",
     "src/test/engine/autosim/autosim.unit.test.ts",
     "src/test/engine/autosim/councilAutoPilot.test.ts",
     "src/test/engine/bout/services/weekFinalizationRollover.test.ts",
     "src/test/engine/boutSimulationTimestamp.test.ts",
+    "src/test/engine/combat/aimedBlow.test.ts",
     "src/test/engine/combat/hitExecution.test.ts",
     "src/test/engine/combat/strikingAttack.test.ts",
     "src/test/engine/deathNotifier.test.ts",

@@ -5,8 +5,33 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateRecommendations } from '@/engine/equipment/equipmentOptimizer';
-import { validateLoadout, checkWeaponRequirements, getStyleDefaultLoadout } from '@/data/equipment';
+import {
+  validateLoadout,
+  checkWeaponRequirements,
+  getStyleDefaultLoadout,
+  getAvailableItems,
+} from '@/data/equipment';
 import { refitWeapon } from '@/engine/equipment/loadoutFitting';
+import { suspectedFavoriteWeapon } from '@/engine/favorites';
+
+/**
+ * The AI manager's read of the charting ledger: the discovered or suspected
+ * favorite weapon when it's both style-legal and wieldable. Fists are legal
+ * favorites where the style allows them — a warrior charting a bare-knuckle
+ * affinity drops the steel just like a human manager would.
+ */
+function favoriteWeaponPick(w: Warrior): string | undefined {
+  const suspect = suspectedFavoriteWeapon(w.favorites);
+  if (!suspect) return undefined;
+  if (!getAvailableItems('weapon', w.style).some((i) => i.id === suspect)) return undefined;
+  const attrs = {
+    ST: w.attributes.ST,
+    SZ: w.attributes.SZ,
+    WT: w.attributes.WT,
+    DF: w.attributes.DF,
+  };
+  return checkWeaponRequirements(suspect, attrs).met ? suspect : undefined;
+}
 
 /**
  * Apply an equipment upgrade — validated through the same loadout + weapon-
@@ -38,6 +63,9 @@ export function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
     // this warrior's attributes so an upgrade never hands over a favorite
     // they cannot wield.
     const loadout = refitWeapon(w.style, w.attributes, rec.loadout);
+    // A known or charted favorite keeps its slot through the upgrade.
+    const pick = favoriteWeaponPick(w);
+    if (pick) loadout.weapon = pick;
     if (validateLoadout(loadout).length > 0) continue;
     const wepReq = checkWeaponRequirements(loadout.weapon, attrs);
     if (!wepReq.met) continue;
@@ -59,6 +87,15 @@ export function refitRosterWeapons(roster: Warrior[]): Warrior[] {
   const next = roster.map((w) => {
     if (w.status !== 'Active') return w;
     const current = w.equipment ?? getStyleDefaultLoadout(w.style);
+    // A discovered or chart-suspected favorite always wins the weapon slot —
+    // the affinity edge outweighs a nominally better fit, and a pure refit
+    // would strip it. This is the AI's use of the charting system.
+    const pick = favoriteWeaponPick(w);
+    if (pick) {
+      if (current.weapon === pick && w.equipment) return w;
+      changed = true;
+      return { ...w, equipment: { ...current, weapon: pick } };
+    }
     const fitted = refitWeapon(w.style, w.attributes, current);
     if (fitted === current && w.equipment) return w;
     changed = true;

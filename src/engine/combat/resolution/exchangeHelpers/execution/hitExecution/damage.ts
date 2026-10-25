@@ -27,7 +27,10 @@ import {
   AB_ARMOR_BYPASS_DF_DIVISOR,
   COMMIT_DAMAGE_MULT,
   DISARM_UNARMED_WEAPON_ID,
+  FAVORITE_WEAPON_CRIT_CHANCE,
 } from '@/constants/combat';
+import { isWieldingFavoriteWeapon } from '@/engine/favorites/favorites';
+import { recordWeaponCrit } from '../../../weaponChart';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../../guardBreak';
 import { accumulateBleed } from '../../../bleed';
@@ -170,9 +173,15 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
   const { events, rng, hitLoc, attacker } = args;
   let { rawDamage } = args;
   const { defender, attPassive, attLabel, defLabel } = args;
-  const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
+  const effectiveCritChance =
+    attPassive.critChance +
+    getStCritChanceBonus(attacker.style) +
+    (isWieldingFavoriteWeapon(attacker.favorites, attacker.weaponId)
+      ? FAVORITE_WEAPON_CRIT_CHANCE
+      : 0);
   const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
   if (isCrit) {
+    recordWeaponCrit(attacker);
     rawDamage = Math.round(rawDamage * (CRIT_DAMAGE_MULT + getStCritDamageBonus(attacker.style)));
   }
 

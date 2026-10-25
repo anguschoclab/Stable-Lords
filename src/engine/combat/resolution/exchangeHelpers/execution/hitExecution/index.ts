@@ -18,6 +18,7 @@ import { COMMIT_HP_THRESHOLD, COMMIT_KILL_DESIRE } from '@/constants/combat';
 import { weaponDamageBonus } from '../../../../mechanics/weaponStats';
 import { afterHitEvents } from './killWindow';
 import { applyDamageMultipliers, applyHitAndCounters, computePreArmorDamage } from './damage';
+import { recordWeaponSwing } from '../../../weaponChart';
 
 interface HandleSurvivalStrikeArgs {
   events: CombatEvent[];
@@ -57,6 +58,7 @@ function handleSurvivalStrike(args: HandleSurvivalStrikeArgs): boolean {
   attacker.hp -= freeRipDmg;
   attacker.hitsTaken++;
   defender.hitsLanded++;
+  recordWeaponSwing(defender);
   if (attacker.hp <= 0) {
     events.push({
       type: 'BOUT_END',

@@ -4,7 +4,7 @@ import type { WarriorId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { calculateXP, applyXP } from '@/engine/warrior/progression';
-import { checkDiscovery } from '@/engine/favorites';
+import { checkDiscovery, mergeWeaponChart } from '@/engine/favorites';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 import { patchRivalWarrior } from './warriorRouting';
@@ -72,9 +72,16 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
   const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags), rng).warrior;
   routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
 
-  // Favorites discovery — also for both fighters (was player-only)
+  // Favorites discovery — also for both fighters (was player-only).
+  // The bout's per-weapon tally merges into the persistent charting ledger
+  // first, so players can deduce the favorite from crit rates before the
+  // epiphany/symmetry rolls formally reveal it.
   const discRng = rng;
   for (const w of [wA, wD]) {
+    const tally = w === wA ? outcome.post?.weaponChartA : outcome.post?.weaponChartD;
+    const mergedFav = mergeWeaponChart(w.favorites, tally);
+    if (mergedFav) w.favorites = mergedFav;
+
     const disc = checkDiscovery(
       w,
       discRng ?? {
@@ -86,13 +93,18 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
         rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
           Object.keys(weights)[0] as K,
         chance: () => false,
-      }
+      },
+      { weaponId: w.equipment?.weapon, oe: w.plan?.OE, al: w.plan?.AL }
     );
-    if (disc.updated && w.favorites) {
+    if ((disc.updated || mergedFav) && w.favorites) {
       // checkDiscovery mutates w.favorites in place; route a fresh copy so the
       // rival patch diff (by reference) sees the change. Shard workers hold
       // clones, so without a patch the discovery would be lost off-thread.
-      const favorites = { ...w.favorites, discovered: { ...w.favorites.discovered } };
+      const favorites = {
+        ...w.favorites,
+        discovered: { ...w.favorites.discovered },
+        chart: w.favorites.chart ? { ...w.favorites.chart } : undefined,
+      };
       routeUpdate(s, w, { favorites }, rosterUpdates, rivalWarriorPatches);
       if (disc.hints.length > 0) {
         newsletterItems.push({

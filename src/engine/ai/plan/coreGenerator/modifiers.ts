@@ -2,7 +2,23 @@
  * Plan axis modifiers — intent shaping, grudge escalation, scouted-plan
  * counter-deltas, and rematch adaptation.
  */
-import type { AIIntent, OpponentDossier } from '@/types/state.types';
+import type { AIIntent, OpponentDossier, OwnerPersonality } from '@/types/state.types';
+import type { FightPlan } from '@/types/combat.types';
+import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
+import { clamp } from '@/utils/math';
+
+/**
+ * Feint tendency dial by personality — flamboyant and cerebral managers
+ * teach feints; methodical and pragmatic managers discourage them. Styles
+ * whose base plan carries no feint stay at 0 since `runFeint` can never fire
+ * for them.
+ */
+const PERSONALITY_FEINT_MOD: Partial<Record<OwnerPersonality, number>> = {
+  Showman: 2,
+  Tactician: 2,
+  Pragmatic: -1,
+  Methodical: -2,
+};
 
 /** Scouted plan tendencies older than this many weeks are ignored. */
 const PLAN_INTEL_FRESH_WEEKS = 6;
@@ -131,4 +147,67 @@ function rematchModifiers(dossier: OpponentDossier | undefined) {
     }
   }
   return { rematchOE, rematchAL, rematchKD, changeTactics };
+}
+
+/**
+ * Merges every dial source — personality, philosophy, style-matchup heuristics,
+ * and the computed contextual modifiers — into the clamped FightPlan.
+ * Extracted from index.ts per the function-budget guard.
+ */
+export function mergePlanModifiers(args: {
+  base: FightPlan;
+  personality: OwnerPersonality;
+  philosophy: string;
+  matchup: { oe: number; al: number; kd: number };
+  mods: PlanModifiers;
+}): FightPlan {
+  const { base, personality, philosophy, matchup, mods } = args;
+  const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
+  const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
+  return {
+    ...base,
+    OE: clamp(
+      (base.OE ?? 5) +
+        (pMod.OE ?? 0) +
+        (phMod.OE ?? 0) +
+        matchup.oe +
+        mods.intentOE +
+        mods.rematchOE +
+        mods.intelOE,
+      1,
+      10
+    ),
+    AL: clamp(
+      (base.AL ?? 5) +
+        (pMod.AL ?? 0) +
+        (phMod.AL ?? 0) +
+        matchup.al +
+        mods.intentAL +
+        mods.grudgeAL +
+        mods.rematchAL +
+        mods.intelAL,
+      1,
+      10
+    ),
+    killDesire: clamp(
+      (base.killDesire ?? 5) +
+        (pMod.killDesire ?? 0) +
+        (phMod.killDesire ?? 0) +
+        matchup.kd +
+        mods.intentKD +
+        mods.grudgeKD +
+        mods.rematchKD +
+        mods.intelKD,
+      1,
+      10
+    ),
+    feintTendency:
+      (base.feintTendency ?? 0) > 0
+        ? clamp(
+            (base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0),
+            0,
+            10
+          )
+        : 0,
+  };
 }

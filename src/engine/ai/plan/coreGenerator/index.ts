@@ -8,26 +8,13 @@ import type { FightPlan } from '@/types/combat.types';
 import type { OwnerPersonality, AIIntent, OpponentDossier } from '@/types/state.types';
 import type { OwnerCompetence } from '@/types/state/owner';
 import { defaultPlanForWarrior } from '@/engine/simulate';
-import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
 import { getStyleMatchupMods, getStyleSuitabilityBias } from '@/engine/ai/matchup/styleMatcher';
+import { applyStyleDoctrine, applyStrategyLabSteering } from './doctrine';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
-import { computePlanModifiers } from './modifiers';
+import { computePlanModifiers, mergePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
-
-/**
- * Feint modulation by personality: the WT-derived baseline
- * in `defaultPlanForWarrior` is shaped — deceptive stables sharpen it,
- * measured ones blunt it. Only an existing aptitude is touched: WT < 15
- * fighters stay at 0 since `runFeint` can never fire for them.
- */
-const PERSONALITY_FEINT_MOD: Partial<Record<OwnerPersonality, number>> = {
-  Showman: 2,
-  Tactician: 2,
-  Pragmatic: -1,
-  Methodical: -2,
-};
 
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
@@ -54,8 +41,6 @@ function assembleBasePlan(args: AiPlanForWarriorArgs): {
   const { w, personality, philosophy, opponentStyle, intent } = args;
   const { grudgeIntensity = 0, dossier, now } = args;
   const base = defaultPlanForWarrior(w);
-  const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
-  const phMod = PHILOSOPHY_PLAN_MODS[philosophy] ?? {};
   const mods = computePlanModifiers(intent, grudgeIntensity, dossier, now);
 
   // Per-style matchup heuristics
@@ -63,50 +48,12 @@ function assembleBasePlan(args: AiPlanForWarriorArgs): {
     ? getStyleMatchupMods(w.style, opponentStyle)
     : { oe: 0, al: 0, kd: 0 };
 
-  const plan: FightPlan = {
-    ...base,
-    OE: clamp(
-      (base.OE ?? 5) +
-        (pMod.OE ?? 0) +
-        (phMod.OE ?? 0) +
-        matchup.oe +
-        mods.intentOE +
-        mods.rematchOE +
-        mods.intelOE,
-      1,
-      10
-    ),
-    AL: clamp(
-      (base.AL ?? 5) +
-        (pMod.AL ?? 0) +
-        (phMod.AL ?? 0) +
-        matchup.al +
-        mods.intentAL +
-        mods.grudgeAL +
-        mods.rematchAL +
-        mods.intelAL,
-      1,
-      10
-    ),
-    killDesire: clamp(
-      (base.killDesire ?? 5) +
-        (pMod.killDesire ?? 0) +
-        (phMod.killDesire ?? 0) +
-        matchup.kd +
-        mods.intentKD +
-        mods.grudgeKD +
-        mods.rematchKD +
-        mods.intelKD,
-      1,
-      10
-    ),
-    feintTendency:
-      (base.feintTendency ?? 0) > 0
-        ? clamp((base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0), 0, 10)
-        : 0,
-  };
+  const plan = mergePlanModifiers({ base, personality, philosophy, matchup, mods });
+  applyStrategyLabSteering(plan, w, now ?? 0);
   return { plan, mods };
 }
+
+export { applyStyleDoctrine } from './doctrine';
 
 /** Strategy-score validation and style-suitability bias on the assembled plan. */
 function applyPlanValidation(plan: FightPlan, w: Warrior): void {
@@ -118,6 +65,8 @@ function applyPlanValidation(plan: FightPlan, w: Warrior): void {
   const styleSuitabilityBias = getStyleSuitabilityBias(w.style);
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
+
+  applyStyleDoctrine(plan, w);
 }
 
 /** Generates a full weekly plan for one AI warrior given owner personality. */

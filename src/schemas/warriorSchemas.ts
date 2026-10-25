@@ -110,6 +110,16 @@ const WarriorFavoritesSchema = z.object({
     weaponHints: z.number(),
     rhythmHints: z.number(),
   }),
+  chart: z
+    .record(
+      z.string(),
+      z.object({
+        swings: z.number(),
+        crits: z.number(),
+        knockdowns: z.number(),
+      })
+    )
+    .optional(),
 });
 
 /**

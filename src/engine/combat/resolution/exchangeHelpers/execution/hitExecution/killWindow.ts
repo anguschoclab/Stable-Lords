@@ -23,14 +23,19 @@ import {
   MOMENTUM_FLOOR,
 } from '@/constants/combat';
 import { addCapped } from '@/utils/math';
+import { recordWeaponKnockdown } from '../../../weaponChart';
 
-function checkKnockdown(
-  events: CombatEvent[],
-  rng: () => number,
-  defender: FighterState,
-  damage: number,
-  defLabel: 'A' | 'D'
-): void {
+interface CheckKnockdownArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  defender: FighterState;
+  damage: number;
+  defLabel: 'A' | 'D';
+}
+
+function checkKnockdown(args: CheckKnockdownArgs): void {
+  const { events, rng, attacker, defender, damage, defLabel } = args;
   const hpRatioAfterHit = defender.hp / defender.maxHp;
   const damageRatio = damage / defender.maxHp;
   if (
@@ -41,6 +46,7 @@ function checkKnockdown(
     rng() < Math.min(KNOCKDOWN_CHANCE_CAP, damageRatio + defender.legHits * KNOCKDOWN_LEG_BONUS)
   ) {
     defender.knockedDown = true;
+    recordWeaponKnockdown(attacker);
     events.push({ type: 'KNOCKDOWN', actor: defLabel });
   }
 }
@@ -225,7 +231,14 @@ export function afterHitEvents(args: AfterHitEventsArgs) {
   const { damage, rawDamage, attTactics, attLabel, defLabel } = args;
   const { stylePhase, phase, attKD, attOE, attAL } = args;
   const { attMatchup, ctx } = args;
-  checkKnockdown(events, rng, defender, damage, defLabel);
+  checkKnockdown({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    damage: damage,
+    defLabel: defLabel,
+  });
   applyMomentumShift(events, attacker, defender, attLabel, defLabel);
 
   // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──

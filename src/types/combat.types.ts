@@ -165,6 +165,10 @@ export interface FightOutcome {
     armHitsD?: number;
     legHitsA?: number;
     legHitsD?: number;
+    /** Per-weapon charting tally for each fighter this bout — merged into
+     *  `warrior.favorites.chart` by the progression handler. */
+    weaponChartA?: Record<string, import('./warrior.types').WeaponChartEntry>;
+    weaponChartD?: Record<string, import('./warrior.types').WeaponChartEntry>;
     causeBucket?: DeathCauseBucket;
     fatalHitLocation?: string;
     fatalExchangeIndex?: number;

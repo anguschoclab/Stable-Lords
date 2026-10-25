@@ -106,6 +106,21 @@ export interface InjuryData {
 export type AttributePotential = Record<keyof Attributes, number>;
 
 /**
+ * Per-weapon bout ledger row — the classic "charting" counters:
+ * every swing attempted, crit landed, and knockdown caused while wielding
+ * the keyed weapon. Persisted on the warrior so players can read the
+ * hidden favorite's statistical signature before it is revealed.
+ */
+export interface WeaponChartEntry {
+  /** Attack attempts with this weapon (hits, misses, whiffs, ripostes). */
+  swings: number;
+  /** Swings that rolled crit damage. */
+  crits: number;
+  /** Knockdowns inflicted with this weapon. */
+  knockdowns: number;
+}
+
+/**
  * Defines the shape of warrior favorites.
  */
 export interface WarriorFavorites {
@@ -117,6 +132,8 @@ export interface WarriorFavorites {
     weaponHints: number;
     rhythmHints: number;
   };
+  /** Per-weapon performance ledger accumulated across bouts. Keyed by weapon id. */
+  chart?: Record<string, WeaponChartEntry>;
 }
 
 /**
@@ -133,6 +150,13 @@ export interface WarriorLineage {
 /**
  * Defines the shape of warrior.
  */
+/** Per-warrior plan-space ledger — the AI's trial-and-error memory.
+ *  Keys are canon rhythm cells ("VL/L" … "VH/VH"); see strategyLab.ts. */
+export interface StrategyMemory {
+  /** Outcome counts per rhythm cell, keyed "VL/L" … "VH/VH". */
+  cells: Record<string, { w: number; l: number }>;
+}
+
 export interface Warrior {
   id: WarriorId;
   name: string;
@@ -180,6 +204,7 @@ export interface Warrior {
   lastBoutWeek?: number;
   stableId?: StableId;
   favorites?: WarriorFavorites;
+  strategyMemory?: StrategyMemory;
   isDead?: boolean;
   dateOfDeath?: string;
   causeOfDeath?: string;

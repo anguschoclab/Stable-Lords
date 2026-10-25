@@ -2,9 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   generateFavorites,
   checkDiscovery,
-  getFavoriteWeaponBonus,
   getFavoriteRhythmBonus,
   applyInsightToken,
+  isWieldingFavoriteWeapon,
+  mergeWeaponChart,
+  suspectedFavoriteWeapon,
 } from '@/engine/favorites';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -260,61 +262,6 @@ describe('checkDiscovery', () => {
   });
 });
 
-// ─── getFavoriteWeaponBonus ─────────────────────────────────────────────────
-
-describe('getFavoriteWeaponBonus', () => {
-  it('returns 0 when warrior has no favorites', () => {
-    const warrior = makeWarrior();
-    expect(getFavoriteWeaponBonus(warrior)).toBe(0);
-  });
-
-  it('returns 0 when weapon is not discovered', () => {
-    const warrior = makeWarrior({
-      favorites: {
-        weaponId: 'longsword',
-        rhythm: { oe: 7, al: 5 },
-        discovered: { weapon: false, rhythm: true, weaponHints: 0, rhythmHints: 0 },
-      },
-    });
-    expect(getFavoriteWeaponBonus(warrior)).toBe(0);
-  });
-
-  it('returns 0 when equipped weapon does not match favorite', () => {
-    const warrior = makeWarrior({
-      favorites: {
-        weaponId: 'longsword',
-        rhythm: { oe: 7, al: 5 },
-        discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 },
-      },
-      equipment: { weapon: 'broadsword' },
-    });
-    expect(getFavoriteWeaponBonus(warrior)).toBe(0);
-  });
-
-  it('returns 1 when equipped weapon matches discovered favorite', () => {
-    const warrior = makeWarrior({
-      favorites: {
-        weaponId: 'longsword',
-        rhythm: { oe: 7, al: 5 },
-        discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 },
-      },
-      equipment: { weapon: 'longsword' },
-    });
-    expect(getFavoriteWeaponBonus(warrior)).toBe(1);
-  });
-
-  it('defaults to broadsword when no equipment field', () => {
-    const warrior = makeWarrior({
-      favorites: {
-        weaponId: 'broadsword',
-        rhythm: { oe: 7, al: 5 },
-        discovered: { weapon: true, rhythm: true, weaponHints: 0, rhythmHints: 0 },
-      },
-    });
-    expect(getFavoriteWeaponBonus(warrior)).toBe(1);
-  });
-});
-
 // ─── getFavoriteRhythmBonus ─────────────────────────────────────────────────
 
 describe('getFavoriteRhythmBonus', () => {
@@ -441,5 +388,125 @@ describe('applyInsightToken', () => {
     expect(msg).toContain('OE 7');
     expect(msg).toContain('AL 5');
     expect(fav.discovered.rhythm).toBe(true);
+  });
+});
+
+// ─── isWieldingFavoriteWeapon ───────────────────────────────────────────────
+
+describe('isWieldingFavoriteWeapon', () => {
+  const fav: WarriorFavorites = {
+    weaponId: 'longsword',
+    rhythm: { oe: 7, al: 5 },
+    discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+  };
+
+  it('is true on a weapon-id match regardless of discovery', () => {
+    expect(isWieldingFavoriteWeapon(fav, 'longsword')).toBe(true);
+  });
+
+  it('is false on mismatch, missing favorites, or missing weapon', () => {
+    expect(isWieldingFavoriteWeapon(fav, 'dagger')).toBe(false);
+    expect(isWieldingFavoriteWeapon(undefined, 'longsword')).toBe(false);
+    expect(isWieldingFavoriteWeapon(fav, undefined)).toBe(false);
+  });
+});
+
+// ─── mergeWeaponChart ───────────────────────────────────────────────────────
+
+describe('mergeWeaponChart', () => {
+  const baseFav = (): WarriorFavorites => ({
+    weaponId: 'longsword',
+    rhythm: { oe: 7, al: 5 },
+    discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+  });
+
+  it('returns undefined when there is no favorites record or no tally', () => {
+    expect(mergeWeaponChart(undefined, { x: { swings: 1, crits: 0, knockdowns: 0 } })).toBeUndefined();
+    expect(mergeWeaponChart(baseFav(), undefined)).toBeUndefined();
+    expect(mergeWeaponChart(baseFav(), {})).toBeUndefined();
+  });
+
+  it('seeds a chart row for a newly wielded weapon', () => {
+    const merged = mergeWeaponChart(baseFav(), {
+      short_spear: { swings: 12, crits: 4, knockdowns: 1 },
+    });
+    expect(merged?.chart?.short_spear).toEqual({ swings: 12, crits: 4, knockdowns: 1 });
+  });
+
+  it('accumulates across bouts and tracks multiple weapons independently', () => {
+    const fav = baseFav();
+    const first = mergeWeaponChart(fav, {
+      scimitar: { swings: 16, crits: 2, knockdowns: 1 },
+    });
+    const second = mergeWeaponChart(first, {
+      scimitar: { swings: 5, crits: 1, knockdowns: 0 },
+      short_spear: { swings: 15, crits: 7, knockdowns: 2 },
+    });
+    expect(second?.chart?.scimitar).toEqual({ swings: 21, crits: 3, knockdowns: 1 });
+    expect(second?.chart?.short_spear).toEqual({ swings: 15, crits: 7, knockdowns: 2 });
+  });
+
+  it('does not mutate the input favorites object', () => {
+    const fav = baseFav();
+    mergeWeaponChart(fav, { dagger: { swings: 3, crits: 1, knockdowns: 0 } });
+    expect(fav.chart).toBeUndefined();
+  });
+});
+
+// ─── suspectedFavoriteWeapon ────────────────────────────────────────────────
+
+describe('suspectedFavoriteWeapon', () => {
+  const fav = (over: Partial<WarriorFavorites> = {}): WarriorFavorites => ({
+    weaponId: 'longsword',
+    rhythm: { oe: 7, al: 5 },
+    discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+    ...over,
+  });
+
+  it('returns the discovered favorite outright', () => {
+    const f = fav({
+      discovered: { weapon: true, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+      chart: { dagger: { swings: 30, crits: 9, knockdowns: 0 } },
+    });
+    expect(suspectedFavoriteWeapon(f)).toBe('longsword');
+  });
+
+  it('reads a chart suspect — elevated crit rate over a real sample', () => {
+    const f = fav({
+      chart: {
+        scimitar: { swings: 16, crits: 2, knockdowns: 1 }, // 12.5% — doubtful
+        short_spear: { swings: 15, crits: 7, knockdowns: 2 }, // 47% — BINGO
+      },
+    });
+    expect(suspectedFavoriteWeapon(f)).toBe('short_spear');
+  });
+
+  it('ignores small samples and low-rate rows', () => {
+    const f = fav({
+      chart: {
+        dagger: { swings: 4, crits: 4, knockdowns: 0 }, // 100% but too few swings
+        mace: { swings: 40, crits: 2, knockdowns: 0 }, // 5% — doubtful
+      },
+    });
+    expect(suspectedFavoriteWeapon(f)).toBeUndefined();
+  });
+
+  it('returns undefined without favorites or a chart', () => {
+    expect(suspectedFavoriteWeapon(undefined)).toBeUndefined();
+    expect(suspectedFavoriteWeapon(fav())).toBeUndefined();
+  });
+
+  it('fists can be a favorite — generation pool and suspect read both allow it', () => {
+    // 'fist' is pool[0] for Striking Attack (not restricted) — rng=0 lands it.
+    const rng = makeMockRng([0, 0, 0, 0]);
+    const generated = generateFavorites(FightingStyle.StrikingAttack, rng);
+    expect(generated.weaponId).toBe('fist');
+
+    const f = fav({
+      weaponId: 'fist',
+      chart: { fist: { swings: 20, crits: 5, knockdowns: 1 } },
+    });
+    expect(suspectedFavoriteWeapon(f)).toBe('fist');
+    expect(isWieldingFavoriteWeapon(f, 'fist')).toBe(true);
   });
 });

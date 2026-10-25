@@ -13,6 +13,7 @@ import {
   applyFlatMitigation,
 } from '../../../mechanics/combatDamage';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
+import { recordWeaponSwing } from '../../weaponChart';
 import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
 import { addCapped } from '@/utils/math';
 
@@ -59,6 +60,7 @@ export function executeRiposte(args: ExecuteRiposteArgs) {
   attacker.hitsTaken++;
   defender.hitsLanded++;
   defender.ripostes++;
+  recordWeaponSwing(defender);
   defender.consecutiveHits++;
   attacker.consecutiveHits = 0;
 

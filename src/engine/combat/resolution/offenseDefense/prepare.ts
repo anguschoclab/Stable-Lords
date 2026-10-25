@@ -13,6 +13,8 @@ import type { ResolutionContext } from '../types';
 import type { FighterState } from '../types';
 import { getWeaponRangeMod } from '../../mechanics/distanceResolution';
 import { getCounterstrikeAttBonus } from '../counterstrike';
+import { aimedBlowShellGapBonus } from '../aimedBlow';
+import { recordWeaponSwing } from '../weaponChart';
 import type { OffenseDefenseArgs, OffenseDefenseCtx } from './types';
 
 interface ComputeAttackBonusesArgs {
@@ -211,8 +213,13 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
       args.feintAttBonus +
       bonuses.weaponRangeMod +
       bonuses.dynTraitAtt +
-      bonuses.counterstrikeAtt,
+      bonuses.counterstrikeAtt +
+      aimedBlowShellGapBonus(att, def),
   });
+
+  // The attack was thrown — chart it (hits, whiffs, parried and dodged
+  // swings all count toward the weapon's ledger).
+  recordWeaponSwing(att);
 
   return { s: buildOffenseCtx(args, v, bonuses), attSucc };
 }

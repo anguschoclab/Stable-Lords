@@ -1029,6 +1029,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'Legend states that an exiled king fought here anonymously. He supposedly bled out on the center sands, and it is said the dirt there still repels water to this day.',
   },
+  {
+    id: 'standard_arena_the_great_collapse',
+    arenaId: 'standard_arena',
+    type: 'architectural_quirk',
+    title: 'The Great Collapse',
+    narrative:
+      'The eastern wall of the arena collapsed during a riot three decades ago. It was hastily rebuilt using stones from a demolished slaughterhouse.',
+  },
+  {
+    id: 'mudpit_arena_blind_butcher',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Blind Butcher',
+    narrative:
+      'A famous gladiator who fought blindfolded was finally killed here when the mud drowned out the sound of his opponent\'s footsteps.',
+  },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
 ];

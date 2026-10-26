@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -132,12 +132,88 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
  * Chronicle component displaying historical newsletter entries
  * in a timeline format with animated transitions.
  */
+const composerInputClass =
+  'flex-1 bg-black/40 border border-white/10 px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40';
+const composerButtonClass =
+  'text-[9px] font-black uppercase tracking-widest px-3 py-1.5 border border-primary/30 text-primary hover:bg-primary/10';
+
+/** Gazette composer: personal-ad + warrior-spotlight forms feeding the queue. */
+function GazetteComposer() {
+  const playerAds = useGameStore((s) => s.playerAds);
+  const submitPlayerAd = useGameStore((s) => s.submitPlayerAd);
+  const roster = useGameStore((s) => s.roster);
+  const playerSpotlights = useGameStore((s) => s.playerSpotlights);
+  const submitPlayerSpotlight = useGameStore((s) => s.submitPlayerSpotlight);
+  const [adText, setAdText] = useState('');
+  const [spotlightId, setSpotlightId] = useState('');
+  const [spotlightText, setSpotlightText] = useState('');
+
+  const postAd = (e: FormEvent) => {
+    e.preventDefault();
+    if (!adText.trim()) return;
+    submitPlayerAd(adText);
+    setAdText('');
+  };
+  const postSpotlight = (e: FormEvent) => {
+    e.preventDefault();
+    if (!spotlightId || !spotlightText.trim()) return;
+    submitPlayerSpotlight(spotlightId, spotlightText);
+    setSpotlightText('');
+  };
+  return (
+    <>
+      <form className="flex items-center gap-2 px-1" onSubmit={postAd}>
+        <input
+          type="text"
+          value={adText}
+          onChange={(e) => setAdText(e.target.value)}
+          maxLength={140}
+          placeholder="Pen a personal ad for the gazette…"
+          aria-label="Personal ad"
+          className={composerInputClass}
+        />
+        <button type="submit" className={composerButtonClass}>
+          Post Ad{(playerAds?.length ?? 0) > 0 ? ` (${(playerAds ?? []).length}/3)` : ''}
+        </button>
+      </form>
+      <form className="flex items-center gap-2 px-1" onSubmit={postSpotlight}>
+        <select
+          value={spotlightId}
+          onChange={(e) => setSpotlightId(e.target.value)}
+          aria-label="Spotlight warrior"
+          className="bg-black/40 border border-white/10 px-2 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:border-primary/40"
+        >
+          <option value="">Spotlight a warrior…</option>
+          {(roster ?? []).map((w) => (
+            <option key={w.id} value={w.id}>
+              {w.name}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          value={spotlightText}
+          onChange={(e) => setSpotlightText(e.target.value)}
+          maxLength={240}
+          placeholder="Write their spotlight…"
+          aria-label="Spotlight text"
+          className={composerInputClass}
+        />
+        <button type="submit" className={composerButtonClass}>
+          Spotlight
+          {(playerSpotlights?.length ?? 0) > 0
+            ? ` (${(playerSpotlights ?? []).length}/3)`
+            : ''}
+        </button>
+      </form>
+    </>
+  );
+}
+
+/** Stable Chronicle page — gazette composer plus the archived newsletter feed. */
 export function Chronicle() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
   const newsletter = useGameStore((s) => s.newsletter);
-  const playerAds = useGameStore((s) => s.playerAds);
-  const submitPlayerAd = useGameStore((s) => s.submitPlayerAd);
-  const [adText, setAdText] = useState('');
 
   const news = useMemo(() => [...(newsletter || [])].reverse().slice(0, 50), [newsletter]);
 
@@ -165,31 +241,7 @@ export function Chronicle() {
         </div>
       </div>
 
-      <form
-        className="flex items-center gap-2 px-1"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!adText.trim()) return;
-          submitPlayerAd(adText);
-          setAdText('');
-        }}
-      >
-        <input
-          type="text"
-          value={adText}
-          onChange={(e) => setAdText(e.target.value)}
-          maxLength={140}
-          placeholder="Pen a personal ad for the gazette…"
-          aria-label="Personal ad"
-          className="flex-1 bg-black/40 border border-white/10 px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/40"
-        />
-        <button
-          type="submit"
-          className="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 border border-primary/30 text-primary hover:bg-primary/10"
-        >
-          Post Ad{(playerAds?.length ?? 0) > 0 ? ` (${(playerAds ?? []).length}/3)` : ''}
-        </button>
-      </form>
+      <GazetteComposer />
 
       {news.length === 0 ? (
         <ChronicleEmptyState />

@@ -106,4 +106,49 @@ describe('applyChallengeContext', () => {
     expect(out.offensiveTactic).toBe('Lunge'); // inherited from base
     expect(out.AL).toBe(w.plan!.AL); // inherited
   });
+
+  describe('tournament plan slot', () => {
+    const tour = (): BoutOffer =>
+      offer({ id: 'tour_t1_0_0' as any, proposerStableId: 'stable-a' as StableId });
+
+    it('applies tournamentPlan on synthetic tournament contracts', () => {
+      const w = makeWarrior({
+        stableId: 'stable-d' as StableId,
+        plan: makePlan({ tournamentPlan: { OE: 9, AL: 1, killDesire: 10 } }),
+      });
+      const out = applyChallengeContext(w, w.plan!, tour());
+      expect(out.OE).toBe(9);
+      expect(out.AL).toBe(1);
+      expect(out.killDesire).toBe(10);
+    });
+
+    it('tournament contracts ignore challengePlans even when present', () => {
+      const w = makeWarrior({
+        stableId: 'stable-d' as StableId,
+        plan: makePlan({
+          challengePlans: { whenChallenged: challengedPlan },
+          tournamentPlan: { AL: 9 },
+        }),
+      });
+      const out = applyChallengeContext(w, w.plan!, tour());
+      expect(out.AL).toBe(9); // tournamentPlan wins, not whenChallenged
+    });
+
+    it('leaves the plan untouched on a tournament contract with no tournamentPlan', () => {
+      const w = makeWarrior({
+        stableId: 'stable-d' as StableId,
+        plan: makePlan({ challengePlans: { whenChallenged: challengedPlan } }),
+      });
+      expect(applyChallengeContext(w, w.plan!, tour())).toBe(w.plan);
+    });
+
+    it('does not apply tournamentPlan on non-tournament contracts', () => {
+      const w = makeWarrior({
+        stableId: 'stable-d' as StableId,
+        plan: makePlan({ tournamentPlan: { OE: 9 } }),
+      });
+      const normal = offer({ proposerStableId: 'stable-a' as StableId });
+      expect(applyChallengeContext(w, w.plan!, normal)).toBe(w.plan);
+    });
+  });
 });

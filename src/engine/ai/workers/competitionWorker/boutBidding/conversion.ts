@@ -155,7 +155,7 @@ function collectCandidates(
     for (const rival of rivals) {
       if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
         continue;
-      if (stableIsAvoided(proposerRival, rival)) continue;
+      if (stableIsAvoided(proposerRival, rival, state.ownerGrudges)) continue;
       for (const w of rival.roster) {
         if (!isActive(w)) continue;
         if (isChampionBookingLocked(state, w.id)) continue;

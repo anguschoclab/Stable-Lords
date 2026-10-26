@@ -681,6 +681,37 @@ describe('WorldSlice', () => {
     });
   });
 
+  describe('submitPlayerSpotlight', () => {
+    it('queues a spotlight for a warrior', () => {
+      useTestStore.getState().submitPlayerSpotlight('w1', '  Watch this one.  ');
+      expect(useTestStore.getState().playerSpotlights).toEqual([
+        { warriorId: 'w1', text: 'Watch this one.' },
+      ]);
+    });
+
+    it('re-queues a warrior rather than duplicating the slot', () => {
+      useTestStore.getState().submitPlayerSpotlight('w1', 'first');
+      useTestStore.getState().submitPlayerSpotlight('w1', 'second');
+      expect(useTestStore.getState().playerSpotlights).toEqual([
+        { warriorId: 'w1', text: 'second' },
+      ]);
+    });
+
+    it('caps the pending queue at 3 entries', () => {
+      for (const id of ['a', 'b', 'c', 'd']) {
+        useTestStore.getState().submitPlayerSpotlight(id, `ad-${id}`);
+      }
+      expect(useTestStore.getState().playerSpotlights).toHaveLength(3);
+      expect(useTestStore.getState().playerSpotlights![0].warriorId).toBe('b');
+    });
+
+    it('no-ops on blank text or empty warrior id', () => {
+      useTestStore.getState().submitPlayerSpotlight('w1', '   ');
+      useTestStore.getState().submitPlayerSpotlight('', 'text');
+      expect(useTestStore.getState().playerSpotlights).toEqual([]);
+    });
+  });
+
   describe('newsletter-listing gate (canon: marks need ≥1 career fight)', () => {
     const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({
       id: stableId,

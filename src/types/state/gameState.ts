@@ -130,6 +130,8 @@ export interface GameState {
   playerStableAvoids: string[];
   /** Player-written gazette ads — flushed into the newsletter on week advance. */
   playerAds?: string[];
+  /** Player-authored warrior spotlights — flushed into the newsletter on week advance. */
+  playerSpotlights?: { warriorId: string; text: string }[];
   recruitPool: PoolWarrior[];
   rosterBonus: number;
   ownerGrudges: OwnerGrudge[];

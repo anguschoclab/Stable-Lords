@@ -21,14 +21,34 @@ import { tournamentIdFromContractId } from './core/pairings';
  * (bid conversion always lists the proposer first). The other combatant is
  * "challenged". Returns `plan` unchanged when no override applies.
  */
+/** Merge a partial plan override over the base plan, ignoring undefined keys. */
+function mergeOverride(plan: FightPlan, override: Partial<FightPlan> | undefined): FightPlan {
+  if (!override) return plan;
+  const defined = Object.fromEntries(
+    Object.entries(override).filter(([, v]) => v !== undefined)
+  );
+  return { ...plan, ...defined };
+}
+
+/**
+ * Resolve the FightPlan a warrior actually runs for this bout: the
+ * tournamentPlan slot on `tour_*` contracts, or the challenge-context slot
+ * matching their proposer/challenged role otherwise.
+ */
 export function applyChallengeContext(
   warrior: Warrior,
   plan: FightPlan,
   contract: BoutOffer | undefined
 ): FightPlan {
+  if (!contract) return plan;
+  // Tournament brackets: challenge roles don't exist — the dedicated
+  // tournamentPlan slot applies instead.
+  if (tournamentIdFromContractId(contract.id as string)) {
+    return mergeOverride(plan, plan.tournamentPlan);
+  }
+
   const slots = plan.challengePlans;
-  if (!slots || !contract) return plan;
-  if (tournamentIdFromContractId(contract.id as string)) return plan;
+  if (!slots) return plan;
 
   const stableId = warrior.stableId as string | undefined;
   let role: 'proposer' | 'challenged' | undefined;
@@ -39,10 +59,5 @@ export function applyChallengeContext(
   }
   if (!role) return plan;
 
-  const override = role === 'proposer' ? slots.whenProposer : slots.whenChallenged;
-  if (!override) return plan;
-  const defined = Object.fromEntries(
-    Object.entries(override).filter(([, v]) => v !== undefined)
-  );
-  return { ...plan, ...defined };
+  return mergeOverride(plan, role === 'proposer' ? slots.whenProposer : slots.whenChallenged);
 }

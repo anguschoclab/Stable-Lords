@@ -1,4 +1,10 @@
-import type { GameState, RivalStableData, WeatherType, Warrior } from '@/types/state.types';
+import type {
+  GameState,
+  OwnerGrudge,
+  RivalStableData,
+  WeatherType,
+  Warrior,
+} from '@/types/state.types';
 import type { PromoterId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
@@ -11,6 +17,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
 import { isWarriorListed } from '@/engine/matchmaking/schedulingAssistant/matchups';
 import {
+  AI_GRUDGE_AVOID_MIN_INTENSITY,
   AI_STABLE_AVOID_MIN_LOSSES,
   AI_STABLE_AVOID_PERSONALITIES,
 } from '@/constants/ai';
@@ -320,10 +327,20 @@ const INTENT_EMITTERS: readonly IntentEmitter[] = [
  */
 export function stableIsAvoided(
   proposer: RivalStableData | undefined,
-  candidate: RivalStableData
+  candidate: RivalStableData,
+  grudges?: OwnerGrudge[]
 ): boolean {
   if (!proposer) return false;
   if (!AI_STABLE_AVOID_PERSONALITIES.has(proposer.owner.personality ?? 'Pragmatic')) return false;
+  // Avenger avoidance (canon: avoid teams likely to challenge you) — a hot
+  // grudge from the candidate means a blood-feud challenge is coming.
+  const hot = (grudges ?? []).some(
+    (g) =>
+      g.intensity >= AI_GRUDGE_AVOID_MIN_INTENSITY &&
+      ((g.ownerIdA === proposer.id && g.ownerIdB === candidate.id) ||
+        (g.ownerIdB === proposer.id && g.ownerIdA === candidate.id))
+  );
+  if (hot) return true;
   const dossiers = proposer.agentMemory?.opponentDossiers ?? {};
   const dossier = dossiers[candidate.id as string] ?? dossiers[candidate.owner.id as string];
   if (!dossier) return false;

@@ -42,6 +42,26 @@ export function flushGazette(state: GameState): void {
     state.playerAds = [];
   }
 
+  // Player-authored warrior spotlights (canon "spotlight" blurb).
+  const spotlights = state.playerSpotlights ?? [];
+  if (spotlights.length > 0) {
+    const names = new Map<string, string>();
+    for (const w of state.roster ?? []) names.set(w.id as string, w.name);
+    for (const r of state.rivals ?? [])
+      for (const w of r.roster ?? []) names.set(w.id as string, w.name);
+    state.newsletter = [
+      ...(state.newsletter ?? []),
+      ...spotlights.map((s) => ({
+        id: rng.uuid('gazette-spotlight'),
+        week,
+        title: `Spotlight: ${names.get(s.warriorId) ?? 'Unknown Warrior'}`,
+        items: [s.text],
+        category: 'newsletter' as const,
+      })),
+    ];
+    state.playerSpotlights = [];
+  }
+
   // AI taunt: the top-fame rival warrior crows in the gazette.
   const top = (state.rivals ?? [])
     .flatMap((r) =>

@@ -61,6 +61,9 @@ export const AI_STABLE_AVOID_PERSONALITIES: ReadonlySet<string> = new Set([
   'Methodical',
   'Tactician',
 ]);
+/** Owner-grudge intensity at which a studious stable avoids the avenger —
+ *  canon: avoid teams likely to challenge you (a blood feud is coming). */
+export const AI_GRUDGE_AVOID_MIN_INTENSITY = 3;
 
 // ─── Learning-seek targeting (canon: challenge experienced warriors to learn) ─
 /** A proposer with fewer than this many career bouts is "young" enough to

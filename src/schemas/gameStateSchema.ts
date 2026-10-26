@@ -172,6 +172,7 @@ export const GameStateSchema = z
     playerAvoids: z.array(z.string()),
     playerStableAvoids: z.array(z.string()).default([]),
     playerAds: z.array(z.string()).default([]),
+    playerSpotlights: z.array(z.object({ warriorId: z.string(), text: z.string() })).default([]),
     recruitPool: z.array(PoolWarriorSchema),
     rosterBonus: z.number(),
     ownerGrudges: z.array(OwnerGrudgeSchema),

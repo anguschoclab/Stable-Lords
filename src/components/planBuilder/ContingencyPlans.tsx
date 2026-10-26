@@ -166,6 +166,13 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
             override={plan.challengePlans?.whenChallenged}
             onChange={(v) => setSlot('whenChallenged', v)}
           />
+          <SpecialStrategySlot
+            idPrefix="tournament"
+            title="Tournament"
+            base={plan}
+            override={plan.tournamentPlan}
+            onChange={(v) => onPlanChange({ ...plan, tournamentPlan: v })}
+          />
         </div>
       )}
     </div>

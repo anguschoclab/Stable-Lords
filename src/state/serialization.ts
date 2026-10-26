@@ -113,6 +113,7 @@ type GameStateValues = {
   playerAvoids: GameState['playerAvoids'];
   playerStableAvoids: GameState['playerStableAvoids'];
   playerAds: GameState['playerAds'];
+  playerSpotlights: GameState['playerSpotlights'];
   stewardReport: import('@/types/state.types').StewardReport | undefined;
   bookmarks: import('@/types/bookmark.types').Bookmark[];
   progression: GameState['progression'];
@@ -192,6 +193,7 @@ function collectStoreValues(store: GameStore): GameStateValues {
     playerAvoids: store.playerAvoids,
     playerStableAvoids: store.playerStableAvoids,
     playerAds: store.playerAds,
+    playerSpotlights: store.playerSpotlights,
     stewardReport: store.stewardReport,
     bookmarks: store.bookmarks,
     progression: store.progression,
@@ -233,6 +235,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerAvoids: store.playerAvoids || [],
     playerStableAvoids: store.playerStableAvoids || [],
     playerAds: store.playerAds || [],
+    playerSpotlights: store.playerSpotlights || [],
     bookmarks: store.bookmarks || [],
     stewardReport: store.stewardReport,
     deferredBoutLogs: store.deferredBoutLogs || [],

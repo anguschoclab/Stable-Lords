@@ -27,6 +27,7 @@ export const defaultWorldState: Omit<
   | 'toggleAvoid'
   | 'toggleStableAvoid'
   | 'submitPlayerAd'
+  | 'submitPlayerSpotlight'
   | 'relinquishArenaTitle'
 > = {
   year: 1,
@@ -67,6 +68,7 @@ export const defaultWorldState: Omit<
   playerAvoids: [],
   playerStableAvoids: [],
   playerAds: [],
+  playerSpotlights: [],
   ownerGrudges: [],
   phase: 'planning',
   pendingResolutionData: undefined,

@@ -142,4 +142,7 @@ export interface FightPlan {
   ownerPersonality?: 'Aggressive' | 'Methodical' | 'Showman' | 'Pragmatic' | 'Tactician';
   /** Challenge-context alternate plans — see {@link ChallengePlans}. */
   challengePlans?: ChallengePlans;
+  /** Tournament-only alternate plan — applied on `tour_*` bracket contracts.
+   *  Partial override merged over the base plan like challengePlans slots. */
+  tournamentPlan?: Partial<DesperatePlan>;
 }

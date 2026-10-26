@@ -66,4 +66,22 @@ describe('flushGazette', () => {
     flushGazette(state);
     expect(state.newsletter.length).toBe(0);
   });
+
+  it('flushes player spotlights into titled Spotlight items and clears the queue', () => {
+    const hero = makeWarrior({ name: 'Bloodfang' });
+    const state = makeGameState({ roster: [hero], rivals: [] });
+    state.playerSpotlights = [{ warriorId: hero.id as string, text: 'Watch this one.' }];
+    flushGazette(state);
+    const item = state.newsletter.find((n) => n.title === 'Spotlight: Bloodfang');
+    expect(item).toBeDefined();
+    expect(item!.items).toEqual(['Watch this one.']);
+    expect(state.playerSpotlights).toEqual([]);
+  });
+
+  it('falls back to a generic title when the spotlighted warrior cannot be found', () => {
+    const state = makeGameState({ roster: [], rivals: [] });
+    state.playerSpotlights = [{ warriorId: 'ghost-id', text: 'A mystery.' }];
+    flushGazette(state);
+    expect(state.newsletter.find((n) => n.title === 'Spotlight: Unknown Warrior')).toBeDefined();
+  });
 });

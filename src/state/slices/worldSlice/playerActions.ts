@@ -6,6 +6,31 @@ import { createChampionshipDelta, relinquishCrown } from '@/engine/championship/
 import { sanitizeEntityName } from '@/utils/entityName';
 import type { ArenaPreferences } from './types';
 
+/** Gazette-composer actions: queue a personal ad or warrior spotlight (cap 3). */
+function gazetteActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
+  return {
+    submitPlayerAd: (text: string) => {
+      set((state) => {
+        const trimmed = text.trim();
+        if (!trimmed) return {};
+        return { playerAds: [...(state.playerAds || []), trimmed].slice(-3) };
+      });
+    },
+    submitPlayerSpotlight: (warriorId: string, text: string) => {
+      set((state) => {
+        const trimmed = text.trim();
+        if (!trimmed || !warriorId) return {};
+        const pending = (state.playerSpotlights || []).filter(
+          (s) => s.warriorId !== warriorId
+        );
+        return {
+          playerSpotlights: [...pending, { warriorId, text: trimmed }].slice(-3),
+        };
+      });
+    },
+  };
+}
+
 /** Locate a rival warrior and its stable id by warrior id. */
 function findRivalWarrior(
   state: GameStore,
@@ -135,12 +160,6 @@ export function createPlayerActions(set: (fn: (state: GameStore) => Partial<Game
       });
     },
 
-    submitPlayerAd: (text: string) => {
-      set((state) => {
-        const trimmed = text.trim();
-        if (!trimmed) return {};
-        return { playerAds: [...(state.playerAds || []), trimmed].slice(-3) };
-      });
-    },
+    ...gazetteActions(set),
   };
 }

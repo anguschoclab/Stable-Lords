@@ -73,6 +73,7 @@ export interface WorldSlice {
   playerAvoids: string[];
   playerStableAvoids: string[];
   playerAds: string[];
+  playerSpotlights: { warriorId: string; text: string }[];
   ownerGrudges: OwnerGrudge[];
   phase: 'planning' | 'resolution';
   pendingResolutionData?: GameState['pendingResolutionData'];
@@ -98,5 +99,7 @@ export interface WorldSlice {
   toggleStableAvoid: (stableId: string) => void;
   /** Queue a personal ad for the next gazette issue (max 3 pending). */
   submitPlayerAd: (text: string) => void;
+  /** Queue a warrior spotlight for the next gazette issue (max 3 pending). */
+  submitPlayerSpotlight: (warriorId: string, text: string) => void;
   relinquishArenaTitle: (arenaId: string) => void;
 }

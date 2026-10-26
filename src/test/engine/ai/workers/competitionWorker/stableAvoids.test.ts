@@ -135,4 +135,62 @@ describe('AI stable avoids (dossier-driven)', () => {
     expect(offers).toHaveLength(1);
     expect(offers[0]!.warriorIds).toContain(bullyStableWarrior.id);
   });
+
+  describe('avenger avoidance (canon: avoid teams likely to challenge you)', () => {
+    const grudgeOn = (proposerId: string, avengerId: string, intensity: number) => ({
+      id: `g-${proposerId}-${avengerId}` as any,
+      ownerIdA: proposerId as any,
+      ownerIdB: avengerId as any,
+      intensity,
+      reason: 'Blood feud',
+      startWeek: 1,
+      lastEscalation: 4,
+    });
+
+    it('a Pragmatic stable avoids the avenger stable holding a hot grudge on it', () => {
+      const { state, rivals, bid, bullyStableWarrior } = setup('Aggressive', 0);
+      // No dominated dossier — but a hot grudge from stable-bully.
+      state.ownerGrudges = [grudgeOn('stable-proposer', 'stable-bully', 4)] as any;
+      // Personality flipped to Pragmatic for the avoid check.
+      rivals[0]!.owner.personality = 'Pragmatic' as any;
+      const offers = convertBidsToOffers(
+        [{ bid, rivalId: 'stable-proposer' }],
+        rivals,
+        state,
+        new SeededRNG(11),
+        new Set()
+      );
+      expect(offers).toHaveLength(0);
+      expect(offers.some((o) => o.warriorIds.includes(bullyStableWarrior.id))).toBe(false);
+    });
+
+    it('an Aggressive stable ignores the grudge and books anyway', () => {
+      const { state, rivals, bid, bullyStableWarrior } = setup('Aggressive', 0);
+      state.ownerGrudges = [grudgeOn('stable-proposer', 'stable-bully', 4)] as any;
+      const offers = convertBidsToOffers(
+        [{ bid, rivalId: 'stable-proposer' }],
+        rivals,
+        state,
+        new SeededRNG(11),
+        new Set()
+      );
+      expect(offers).toHaveLength(1);
+      expect(offers[0]!.warriorIds).toContain(bullyStableWarrior.id);
+    });
+
+    it('a cooling grudge below the threshold does not trigger avoidance', () => {
+      const { state, rivals, bid, bullyStableWarrior } = setup('Aggressive', 0);
+      rivals[0]!.owner.personality = 'Pragmatic' as any;
+      state.ownerGrudges = [grudgeOn('stable-proposer', 'stable-bully', 1)] as any;
+      const offers = convertBidsToOffers(
+        [{ bid, rivalId: 'stable-proposer' }],
+        rivals,
+        state,
+        new SeededRNG(11),
+        new Set()
+      );
+      expect(offers).toHaveLength(1);
+      expect(offers[0]!.warriorIds).toContain(bullyStableWarrior.id);
+    });
+  });
 });

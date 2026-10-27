@@ -45,7 +45,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     ]) {
       expect(ORIGINS).toContain(s);
     }
-    expect(ORIGINS.length).toBe(387); // 373 baseline + 8 (#1065) + 6 (#1068)
+    expect(ORIGINS.length).toBe(392); // 373 baseline + 8 (#1065) + 6 (#1068) + 5 newer
   });
 
   it('childhoodTraits contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
@@ -55,7 +55,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     ]) {
       expect(CHILDHOOD_TRAITS).toContain(s);
     }
-    expect(CHILDHOOD_TRAITS.length).toBe(228); // 219 + 5 (#1065) + 4 (#1068)
+    expect(CHILDHOOD_TRAITS.length).toBe(233); // 219 + 5 (#1065) + 4 (#1068) + 5 newer
   });
 
   it('definingMoments contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
@@ -65,7 +65,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     ]) {
       expect(DEFINING_MOMENTS).toContain(s);
     }
-    expect(DEFINING_MOMENTS.length).toBe(205); // 196 + 5 (#1065) + 4 (#1068)
+    expect(DEFINING_MOMENTS.length).toBe(210); // 196 + 5 (#1065) + 4 (#1068) + 5 newer
   });
 
   it('loreBackfill2 contains all six V20 arena lore ids (MEGAPLAN-V6)', () => {

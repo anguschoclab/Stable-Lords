@@ -209,4 +209,9 @@ export const DEFINING_MOMENTS: string[] = [
   'until a desperate fight over a crust of bread taught them that survival always comes at a cost',
   'realizing that the deafening roar of the arena was the only sound that could drown out the silence of their past',
   'until they locked eyes with a dying champion and understood that glory was just another word for survival',
+  'until they broke their first rusted iron collar, vowing that their next chains would be made of gold',
+  'realizing that the blood-soaked sands were the only place where their feral instincts were celebrated rather than punished',
+  'until they strangled an abusive matron with the very whip used to torment them, finding freedom in violence',
+  'knowing that the deafening roar of the colosseum is the only true requiem for a childhood stolen by the slums',
+  'until a brutal betrayal in the fighting pits taught them that mercy is a fatal vulnerability on the sands',
 ];

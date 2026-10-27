@@ -391,4 +391,9 @@ export const ORIGINS: string[] = [
   'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
   'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
   'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
+  'Discovered starving in the hollowed-out skull of a forgotten leviathan in the Deep Wastes',
+  'Raised by silent bone-pickers in the shadow of the colossal iron gallows',
+  'Abandoned wrapped in a tattered battle banner at the blood-stained doors of the Red Keep',
+  'Survived the agonizingly slow famine of the Lower Sump by scavenging from the plague carts',
+  'Sold to the merciless pit-masters of the Scab District for a handful of tarnished silver',
 ];

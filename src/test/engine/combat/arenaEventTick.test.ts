@@ -16,6 +16,7 @@ import { tickArenaEvents } from '@/engine/combat/mechanics/arenaEvents';
 import { resolveExchange } from '@/engine/combat/resolution/resolution';
 import { narrateEvents } from '@/engine/combat/narrative/narrator';
 import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
+import { SeededRNG } from '@/utils/random';
 import { loadCombatNarrative } from '@/data/narrative';
 import { makeNarrationContext } from '@/test/_fixtures/narrationContext';
 import { FightingStyle } from '@/types/shared.types';
@@ -567,7 +568,8 @@ describe('arena events — bout-level integration', () => {
 
   it('same seed reproduces identical arena-event outcomes (determinism)', () => {
     const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-    const mk = (style: FightingStyle) => makeWarrior({ id: undefined, name: 'W', style, attrs });
+    const mk = (style: FightingStyle) =>
+      makeWarrior({ id: undefined, name: 'W', style, attrs, rng: new SeededRNG(12345) });
     const run = (headless: boolean) => {
       const wA = mk(FightingStyle.StrikingAttack);
       const wD = mk(FightingStyle.TotalParry);

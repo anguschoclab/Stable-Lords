@@ -230,16 +230,26 @@ function SessionControlsSheet({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9 rounded-none hover:bg-white/5"
-          aria-label="Open session controls"
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-none hover:bg-white/5"
+              aria-label="Open session controls"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </SheetTrigger>
+        </TooltipTrigger>
+        <TooltipContent
+          side="bottom"
+          className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
         >
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </SheetTrigger>
+          Session Controls
+        </TooltipContent>
+      </Tooltip>
       <SheetContent side="right" className="w-80 border-l border-white/10 bg-background">
         <SheetHeader>
           <SheetTitle className="font-display uppercase tracking-widest">

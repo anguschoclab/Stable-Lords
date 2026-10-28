@@ -65,7 +65,8 @@ export type WeatherType =
   | 'Stardust Gale'
   | 'Mana Storm'
   | 'Dreamweavers Mist'
-  | 'Shattered Skies';
+  | 'Shattered Skies'
+  | 'Threads of Chaos';
 
 /**
  * Defines the shape of death event.

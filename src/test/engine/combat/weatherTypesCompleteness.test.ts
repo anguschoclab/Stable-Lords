@@ -49,8 +49,8 @@ describe('weather type registry completeness', () => {
     }
   });
 
-  it('Weather count is 64 (post-merge with chaos weaver branches + cursed eclipse)', () => {
-    expect(WEATHER_TYPES.length).toBe(64);
+  it('Weather count is 65 (post-merge with chaos weaver branches + cursed eclipse + threads of chaos)', () => {
+    expect(WEATHER_TYPES.length).toBe(65);
   });
 
   it('WeatherType union in shared.types.ts has no duplicate members', () => {

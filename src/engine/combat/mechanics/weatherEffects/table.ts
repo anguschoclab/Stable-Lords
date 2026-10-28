@@ -484,4 +484,12 @@ export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
+  'Threads of Chaos': {
+    staminaMult: 1.5,
+    initiativeMod: 5,
+    riposteMod: 5,
+    damageMult: 1.5,
+    description:
+      'The fabric of reality is torn, revealing the threads of chaos. Every strike is devastating, every movement exhausting.',
+  },
 };

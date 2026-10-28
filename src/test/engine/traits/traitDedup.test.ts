@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 178; // 165 + 10 V17 curated traits + 3 new narrative traits
+const EXPECTED_COUNT = 179; // 165 + 10 V17 curated traits + 3 new narrative traits
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

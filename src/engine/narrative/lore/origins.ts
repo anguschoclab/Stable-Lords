@@ -391,4 +391,9 @@ export const ORIGINS: string[] = [
   'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
   'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
   'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
+  'Raised in the bleak, dripping cells of the Iron Spire Orphanage',
+  'Found clutching a rusted coin in the rain-slicked alleys of the Gutters',
+  'Abandoned to the freezing winds at the rusted gates of the Blackwood Workhouse',
+  'Survived the terrifying silent cullings of the Whispering Vaults',
+  'Found swaddled in blood-soaked rags beneath the Weeping Bridge',
 ];

@@ -229,5 +229,21 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Extinguished Flame',
     narrative:
       'A beloved champion met their end when a massive, suspended lantern was severed from its chain by a stray throwing axe, crushing them in a burst of glass and burning oil.',
+  },
+  {
+    id: 'charnel_pits_the_blood_tide',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Blood Tide',
+    narrative:
+      'A vicious free-for-all that went on for hours until the sheer volume of blood caused the fighters to constantly slip, turning the end into a desperate grappling match in a crimson pool.',
+  },
+  {
+    id: 'lantern_hall_arena_falling_shadows',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: 'Falling Shadows',
+    narrative:
+      'The precarious lanterns are known to occasionally swing violently due to unnatural updrafts, throwing chaotic, flickering shadows that disorient even veteran fighters.',
   }
 ];

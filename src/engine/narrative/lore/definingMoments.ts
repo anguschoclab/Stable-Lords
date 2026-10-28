@@ -209,4 +209,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until a desperate fight over a crust of bread taught them that survival always comes at a cost',
   'realizing that the deafening roar of the arena was the only sound that could drown out the silence of their past',
   'until they locked eyes with a dying champion and understood that glory was just another word for survival',
+  'until they garroted a corrupt slaver with a stolen rosary and embraced the arena’s call',
+  'until they drowned a cruel overseer in a vat of boiling lye, vowing never to be helpless again',
+  'realizing that mercy in the Undercity only rewards the weak with an early grave',
 ];

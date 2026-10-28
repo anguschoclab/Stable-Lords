@@ -103,6 +103,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Dreamweavers Mist':
     'A surreal, hallucinogenic mist envelops the arena, distorting senses and lulling the crowd.',
   'Shattered Skies': 'The sky shatters like glass, raining ethereal shards onto the sand.',
+  'Threads of Chaos':
+    'Reality itself seems to unravel as the Threads of Chaos descend upon the arena.',
 };
 
 /**

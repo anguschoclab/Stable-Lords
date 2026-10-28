@@ -72,6 +72,7 @@ export const WEATHER_TYPES = [
   'Mana Storm',
   'Dreamweavers Mist',
   'Shattered Skies',
+  'Threads of Chaos',
 ] as const;
 
 /**
@@ -93,6 +94,7 @@ export const OFFSEASON_WEATHER_TYPES = [
   'Mana Storm',
   'Dreamweavers Mist',
   'Shattered Skies',
+  'Threads of Chaos',
 ] as const;
 
 export const TRAINER_TIERS = ['Novice', 'Seasoned', 'Master'] as const;

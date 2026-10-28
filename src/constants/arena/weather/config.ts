@@ -491,6 +491,14 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     description:
       'The sky cracks like glass, unleashing raw aether that empowers blows but tires fighters quickly.',
   },
+  'Threads of Chaos': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description:
+      'The fabric of reality is torn, revealing the threads of chaos. Every strike is devastating, every movement exhausting.',
+  },
 };
 
 /** Returns the weather config for a given weather type, falling back to Clear. */

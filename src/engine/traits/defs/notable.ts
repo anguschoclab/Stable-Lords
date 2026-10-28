@@ -38,6 +38,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     weight: 0.5,
   },
   // New Narrative Traits
+  orphan_shadow_fury: {
+    id: 'orphan_shadow_fury',
+    name: 'Shadow Fury',
+    description: 'Bred in the dark alleys, their anger boils over unpredictably when they strike from unseen angles.',
+    effect: { attModLate: 1, dmgBonus: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.5,
+  },
   orphan_street_rat: {
     id: 'orphan_street_rat',
     name: 'Street Rat',

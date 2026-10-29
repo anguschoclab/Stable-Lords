@@ -229,5 +229,29 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Extinguished Flame',
     narrative:
       'A beloved champion met their end when a massive, suspended lantern was severed from its chain by a stray throwing axe, crushing them in a burst of glass and burning oil.',
+  },
+  {
+    id: 'mudpit_arena_drowned_brawl',
+    arenaId: 'mudpit_arena',
+    type: 'historical_battle',
+    title: 'The Drowned Brawl',
+    narrative:
+      'During the great deluge of the third age, the mudpit flooded entirely. Two rival stables refused to cancel their grudge match, fighting neck-deep in the murky water until only one warrior emerged breathing.',
+  },
+  {
+    id: 'walled_court_arena_iron_maiden',
+    arenaId: 'walled_court_arena',
+    type: 'architectural_quirk',
+    title: 'The Iron Maiden’s Embrace',
+    narrative:
+      'One of the corner walls of the court features a jagged, inward-facing relief of a weeping goddess. Savvy fighters often try to trap their opponents against it, using the stone thorns to restrict their movement.',
+  },
+  {
+    id: 'standard_arena_blind_butcher',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The Blind Butcher’s Fall',
+    narrative:
+      'A famously cruel gladiator, known as the Blind Butcher, met a poetic end here when their opponent shattered their heavy visor, blinding them with sun-glare before delivering the final, fatal thrust.',
   }
 ];

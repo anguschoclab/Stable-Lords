@@ -232,4 +232,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'spent their youth silently climbing the sheer outer walls of the colosseum to watch the bloodletting',
   'developed an uncanny ability to gauge the exact weight of a makeshift weapon merely by looking at it',
   'learned to feign unconsciousness under a pile of corpses to survive the winter cullings',
+  'developed a twitch that perfectly masks the winding of their heavy attacks',
+  'learned to ignore the sting of rusted blades by practicing on jagged scrap metal',
+  'would intentionally seek out the largest enforcer in the workhouse just to test their own resilience',
 ];

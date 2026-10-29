@@ -19,6 +19,15 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.5,
   },
+  gutter_shadow_striker: {
+    id: 'gutter_shadow_striker',
+    name: 'Shadow Striker',
+    description: 'A master of ambushes, using the shadows of the arena to their advantage.',
+    effect: { iniModEarly: 1, attModEarly: 1 },
+    tier: 'Notable',
+    sign: 'positive',
+    weight: 0.4,
+  },
   shadow_born_killer: {
     id: 'shadow_born_killer',
     name: 'Shadow Born Killer',

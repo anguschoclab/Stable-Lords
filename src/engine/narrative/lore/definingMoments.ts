@@ -209,4 +209,8 @@ export const DEFINING_MOMENTS: string[] = [
   'until a desperate fight over a crust of bread taught them that survival always comes at a cost',
   'realizing that the deafening roar of the arena was the only sound that could drown out the silence of their past',
   'until they locked eyes with a dying champion and understood that glory was just another word for survival',
+  'until they shattered the iron bars of their workhouse cell with their bare, bloody knuckles',
+  'realizing that the blood they spilled in the alleys was the exact same color as the blood in the grand colosseum',
+  'until a vicious beating by the city watch forged their resolve into an unbreakable, jagged spike',
+  'knowing that the cheers of the bloodthirsty crowd were the closest thing to a family they would ever have',
 ];

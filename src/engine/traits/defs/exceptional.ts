@@ -226,4 +226,14 @@ export const EXCEPTIONAL_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     weight: 0.3,
   },
+  orphan_iron_will: {
+    id: 'orphan_iron_will',
+    name: 'Iron Will',
+    description:
+      'A mind forged in the bleakness of the workhouse. Increased defense in early rounds and late game attack.',
+    effect: { defModEarly: 1, attModLate: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.3,
+  },
 };

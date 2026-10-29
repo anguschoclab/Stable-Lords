@@ -391,4 +391,8 @@ export const ORIGINS: string[] = [
   'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
   'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
   'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
+  'Abandoned during the frenzied evacuation of the Lower Docks, left with nothing but a rusted spoon',
+  'Raised in the lightless oubliettes beneath the Whispering Vaults, learning to see in the dark',
+  'Found clinging to the frozen corpse of a legendary pit fighter in the Snow Wastes',
+  'Survived the great fire of the Ash Dunes by burying themselves in the cool, blood-soaked sand',
 ];

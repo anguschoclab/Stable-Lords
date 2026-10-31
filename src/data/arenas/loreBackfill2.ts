@@ -229,5 +229,21 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Extinguished Flame',
     narrative:
       'A beloved champion met their end when a massive, suspended lantern was severed from its chain by a stray throwing axe, crushing them in a burst of glass and burning oil.',
+  },
+  {
+    id: 'charnel_pits_flesh_rot_outbreak',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Flesh-Rot Outbreak',
+    narrative:
+      'A brutal free-for-all was cut short when a highly contagious necrotic rot rapidly spread among the combatants mid-swing, forcing the overseers to seal and incinerate the entire pit.',
+  },
+  {
+    id: 'walled_court_arena_shattered_balcony',
+    arenaId: 'walled_court_arena',
+    type: 'architectural_quirk',
+    title: 'The Shattered Balcony',
+    narrative:
+      'The rusted remnants of a nobles\' viewing box hang perilously over the east side of the arena, destroyed decades ago when a berserker hurled his opponent straight into the gilded seating.',
   }
 ];

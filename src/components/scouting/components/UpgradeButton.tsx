@@ -25,6 +25,7 @@ export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps)
 
   return (
     <button
+      type="button"
       onClick={onUpgrade}
       className={cn(
         'w-full flex items-center justify-between p-4 rounded-none border transition-all motion-reduce:transition-none motion-reduce:transform-none group',

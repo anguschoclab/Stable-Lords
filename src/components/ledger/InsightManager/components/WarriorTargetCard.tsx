@@ -35,6 +35,7 @@ export function WarriorTargetCard({
       )}
     >
       <button
+        type="button"
         aria-label={`Select warrior ${warrior.name} for insight`}
         disabled={isRevealed || isRevealing}
         onClick={onSelect}

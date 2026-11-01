@@ -13,6 +13,7 @@ interface BookmarkFilterToggleProps {
 export function BookmarkFilterToggle({ active, onToggle, count }: BookmarkFilterToggleProps) {
   return (
     <button
+      type="button"
       onClick={onToggle}
       aria-label="Toggle bookmarked only filter"
       aria-pressed={active}

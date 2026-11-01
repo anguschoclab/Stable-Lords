@@ -149,6 +149,7 @@ function RangeButton({
     (plan.rangePreference ?? getWeaponPreferredRange(warrior?.equipment?.weapon)) === r;
   return (
     <button
+      type="button"
       aria-label={`Set Range Preference to ${r}`}
       onClick={() => onPlanChange({ ...plan, rangePreference: r })}
       className={cn(

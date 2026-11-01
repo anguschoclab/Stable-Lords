@@ -40,6 +40,7 @@ export function BookmarkButton({
 
   return (
     <button
+      type="button"
       onClick={(e) => {
         e.stopPropagation();
         toggleBookmark(entityType, entityId);

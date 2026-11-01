@@ -170,6 +170,7 @@ function StepControls({
       }}
     >
       <button
+        type="button"
         onClick={() => onHighlightChange?.(prevPageIndex)}
         disabled={isAtStart}
         aria-label="Previous"
@@ -185,6 +186,7 @@ function StepControls({
       </div>
 
       <button
+        type="button"
         onClick={() => onHighlightChange?.(nextPageIndex)}
         disabled={isAtEnd}
         aria-label="Next"

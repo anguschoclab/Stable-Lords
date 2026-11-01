@@ -26,6 +26,7 @@ export function TokenCard({ token, isSelected, onSelect }: TokenCardProps) {
       )}
     >
       <button
+        type="button"
         aria-label={`Select ${token.type} Insight Token, discovered week ${token.discoveredWeek}`}
         onClick={onSelect}
         className="w-full text-left p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"

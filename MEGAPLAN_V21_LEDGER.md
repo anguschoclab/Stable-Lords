@@ -13,7 +13,7 @@ work present in tree; non-overlapping paths, staged explicitly).
 | type-check | PASS (exit 0, tsr generate + tsc7 --build) | /tmp/v21-typecheck.log |
 | lint | PASS (0 errors, 30 warnings) | /tmp/v21-lint.log |
 | test | PASS (900 files, 9,686 tests, 2 skipped, 0 failed, 61s) | /tmp/v21-test.log |
-| knip / jscpd / dup-scans | PENDING | — |
+| knip / jscpd / dup-scans | knip exit 1 (~160 dead exports, V20 baseline); jscpd 91 clones/0.54%; data-array-dup 0; fuzzy 0; dup-scan ~6 small blocks; SRP top-files stable | /tmp/v21-scanners*.log |
 
 ## Commits
 
@@ -32,6 +32,10 @@ work present in tree; non-overlapping paths, staged explicitly).
 | 11 | 7baf4bc5 | regen audit baselines | — | test-audit-scan |
 | 12 | 9aa5d121 | fix collapsed bf2 boundaries; ARENA_LORE→242 | all guards GREEN | §B-2 |
 | 13 | 1c419d0b | fix 8 WEATHER_STATS display lies | parity allowlist ∅ | §B-1 |
+| 14 | c655d46a | orphanScan ratchet 161→162 | slow rerun 3/4 flakes pass | §B |
+| 15 | 1ece9505 | findings §W/§B/§V + ledger | — | — |
+| 16 | d6feb7d8 | register pre-existing KD failure §B-6 | worktree-verified | — |
+| 17 | 15bb3125 | close-out battery (e2e+soak) | all green | — |
 
 
 ## Close-out battery (final)

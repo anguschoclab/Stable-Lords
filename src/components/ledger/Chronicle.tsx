@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -141,7 +142,18 @@ const composerButtonClass =
 function GazetteComposer() {
   const playerAds = useGameStore((s) => s.playerAds);
   const submitPlayerAd = useGameStore((s) => s.submitPlayerAd);
-  const roster = useGameStore((s) => s.roster);
+
+  // ⚡ Bolt: Extract only primitive IDs and names using useShallow with flatMap
+  // to prevent unnecessary re-renders on unrelated roster changes (e.g., HP/fatigue)
+  const rosterFields = useGameStore(useShallow((s) => s.roster.flatMap((w) => [w.id, w.name])));
+  const rosterData = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < rosterFields.length; i += 2) {
+      list.push({ id: rosterFields[i] as string, name: rosterFields[i + 1] as string });
+    }
+    return list;
+  }, [rosterFields]);
+
   const playerSpotlights = useGameStore((s) => s.playerSpotlights);
   const submitPlayerSpotlight = useGameStore((s) => s.submitPlayerSpotlight);
   const [adText, setAdText] = useState('');
@@ -184,7 +196,7 @@ function GazetteComposer() {
           className="bg-black/40 border border-white/10 px-2 py-1.5 text-xs font-mono text-foreground focus:outline-none focus:border-primary/40"
         >
           <option value="">Spotlight a warrior…</option>
-          {(roster ?? []).map((w) => (
+          {rosterData.map((w) => (
             <option key={w.id} value={w.id}>
               {w.name}
             </option>

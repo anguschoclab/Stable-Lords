@@ -100,12 +100,15 @@ describe('megaplan: orphan guard', () => {
   // Relaxed 160 → 161 (fighter concepts): scaleToAttributeBudget carries a
   // test-only consumer (its spec pins the scaler in isolation) — same class
   // as the clamp01/lerp/mapRange and generateRecruitAttrs precedents above.
+  // Relaxed 161 → 162 (V21): WEATHER_AI_DISPOSITION carries a test-only
+  // consumer (v21Weather.guard disposition↔pool coherence check) — same
+  // test-only-consumer class; exported intentionally for guard visibility.
   it('dead-export count does not grow past the V2 audit level', () => {
     const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
     expect(
       srcDead.length,
-      `dead exports grew past the V2 audit level (${srcDead.length} > 161) — ` +
+      `dead exports grew past the V2 audit level (${srcDead.length} > 162) — ` +
         `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
-    ).toBeLessThanOrEqual(161);
+    ).toBeLessThanOrEqual(162);
   });
 });

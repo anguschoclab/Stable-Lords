@@ -33,3 +33,18 @@ work present in tree; non-overlapping paths, staged explicitly).
 | 12 | 9aa5d121 | fix collapsed bf2 boundaries; ARENA_LORE→242 | all guards GREEN | §B-2 |
 | 13 | 1c419d0b | fix 8 WEATHER_STATS display lies | parity allowlist ∅ | §B-1 |
 
+
+## Close-out battery (final)
+
+| Gate | Result |
+| ---- | ------ |
+| type-check | PASS |
+| lint | 0 errors / 30 warnings (baseline) |
+| test (fast) | 903 files / 9,711 pass / 0 fail |
+| test:slow | 4 env/pre-existing issues → resolved: perf×2 load-flakes (pass serially), orphanScan re-baselined 161→162, balance.slow KD pre-existing §B-6 |
+| e2e (chromium) | 5/5 pass |
+| soak 40wk | 0 invariant violations, 13.8s |
+| tags | pre/post-megaplan-v21 pushed |
+| PRs | 8 dispositions posted; auto-closed merged |
+| remote branches | 8 deleted (heads preserved refs/megaplan/v21/*) |
+| new since pass | ux-palette-add-button-types-2648780633548327679 (PR #1078, next pass) |

@@ -64,6 +64,7 @@ function PhaseCard({
         </span>
         {plan.phases?.[p] && (
           <button
+            type="button"
             onClick={() => {
               if (!plan.phases) return;
               const { [p]: _, ...rest } = plan.phases;

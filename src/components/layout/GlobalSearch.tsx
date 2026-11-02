@@ -103,6 +103,7 @@ function ResultOption({
   const active = index === selection.activeIndex;
   return (
     <button
+      type="button"
       id={`gs-option-${index}`}
       role="option"
       aria-selected={active}

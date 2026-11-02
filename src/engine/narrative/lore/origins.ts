@@ -391,4 +391,9 @@ export const ORIGINS: string[] = [
   'Sold by indebted parents to the flesh-peddlers of the Red Lantern District for copper',
   'Abandoned in the plague-ridden alleyways of the Undercity as a mere infant',
   'Survived the culling of the Hollow Hill Workhouse by hiding inside an empty water barrel',
+  'Raised by the grim overseers of the Blackspire Orphanage, where weakness was punished with starvation',
+  'Abandoned in the flooded cellars of the Drowned Ward as the waters rose, surviving by climbing the slick stones',
+  'Sold to the pit-masters of the Sump to pay off a gambling debt before they could even walk',
+  'Found shivering among the ashes of a burned-down tenement in the Cinder Wards, clutching a charred bone',
+  'Raised in the silent, lightless dormitories of the Whispering Vaults, taught to move without a sound',
 ];

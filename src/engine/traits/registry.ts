@@ -46,6 +46,7 @@ const LEGACY_TRAIT_ORDER = [
   'feral_endurance',
   'orphan_vengeance',
   'orphan_fragility',
+  'orphan_shadow_fury',
   'orphan_blood',
   'shadow_walker',
   'orphan_instinct',

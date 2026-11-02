@@ -235,4 +235,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'would meticulously collect shattered teeth from the gutters to study the angle of the blows that dislodged them',
   'learned to perfectly mimic the death rattles of plague victims to clear out crowded alleyways',
   'developed a terrifying stillness, capable of holding their breath for minutes just to ambush unwary rats in the dark',
+  'developed a terrifying habit of laughing whenever they drew blood in a street brawl',
+  'would intentionally break their own fingers just to see if they could set them straight',
+  'slept on a bed of river stones to harden their spine against the cold',
 ];

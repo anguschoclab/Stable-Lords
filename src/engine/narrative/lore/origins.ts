@@ -396,4 +396,9 @@ export const ORIGINS: string[] = [
   'Sold to the pit-masters of the Sump to pay off a gambling debt before they could even walk',
   'Found shivering among the ashes of a burned-down tenement in the Cinder Wards, clutching a charred bone',
   'Raised in the silent, lightless dormitories of the Whispering Vaults, taught to move without a sound',
+  'Raised in the bleak, dripping cells of the Iron Spire Orphanage',
+  'Found clutching a rusted coin in the rain-slicked alleys of the Gutters',
+  'Abandoned to the freezing winds at the rusted gates of the Blackwood Workhouse',
+  'Survived the terrifying silent cullings of the Whispering Vaults',
+  'Found swaddled in blood-soaked rags beneath the Weeping Bridge',
 ];

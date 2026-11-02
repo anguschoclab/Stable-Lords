@@ -36,19 +36,9 @@ describe('weather surface coherence (live guard)', () => {
   });
 
   it('WEATHER_STATS strings match WEATHER_EFFECTS values (shrink-only allowlist)', () => {
-    // Known pre-existing drift — display lies vs engine truth (V21 §B).
-    // Shrink-only: new weather rows must be parity-clean; fixing a listed
-    // row removes it from the allowlist.
-    const ALLOWLIST = new Set([
-      'Gale', // missing DAMAGE token, mult 0.85
-      'Eclipse', // missing DAMAGE token, mult 1.3
-      'Sandstorm', // missing DAMAGE token, mult 0.9
-      'Ashfall', // missing DAMAGE token, mult 0.9
-      'Spooky Night', // missing DAMAGE token, mult 0.9
-      'Cursed Miasma', // missing DAMAGE token, mult 1.1
-      'Aurora Borealis', // missing DAMAGE token, mult 0.95
-      'Diamond Rain', // claims +30, mult 1.15
-    ]);
+    // V21 §B-1: the 8 pre-existing drift rows were corrected in Phase 5 —
+    // allowlist is now empty and must stay empty (shrink-only ratchet).
+    const ALLOWLIST = new Set<string>();
     const mismatches: string[] = [];
     for (const w of WEATHER_TYPES) {
       const stats = WEATHER_STATS[w];
@@ -57,11 +47,11 @@ describe('weather surface coherence (live guard)', () => {
       let bad = false;
       const dmg = stats.match(/DAMAGE ([+-]\d+)%/);
       if (!dmg && e.damageMult !== 1.0) bad = true;
-      if (dmg && parseInt(dmg[1]) !== Math.round((e.damageMult - 1) * 100)) bad = true;
+      if (dmg && parseInt(dmg[1] ?? '0') !== Math.round((e.damageMult - 1) * 100)) bad = true;
       const ini = stats.match(/INITIATIVE ([+-]\d+)/);
-      if (ini && parseInt(ini[1]) !== e.initiativeMod) bad = true;
+      if (ini && parseInt(ini[1] ?? '0') !== e.initiativeMod) bad = true;
       const rip = stats.match(/RIPOSTE ([+-]\d+)/);
-      if (rip && parseInt(rip[1]) !== e.riposteMod) bad = true;
+      if (rip && parseInt(rip[1] ?? '0') !== e.riposteMod) bad = true;
       if (bad && !ALLOWLIST.has(w)) mismatches.push(w);
     }
     expect(mismatches, 'new stats↔effects drift — fix the string, not the allowlist').toEqual([]);

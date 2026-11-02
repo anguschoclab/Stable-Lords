@@ -110,6 +110,6 @@ describe('MEGAPLAN-V7: V21 union-merged lore pools', () => {
     }
     // 230 total (125 local + 77 bf1 + 28 bf2 spreads) + 5 local adds
     // (#1070 ×2, #1071 ×3) + 7 bf2 adds (#1075 ×3, #1073 ×2, #1077 ×2)
-    expect(ARENA_LORE.length).toBe(240);
+    expect(ARENA_LORE.length).toBe(242);
   });
 });

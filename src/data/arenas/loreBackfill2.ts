@@ -245,6 +245,8 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Shattered Balcony',
     narrative:
       'The rusted remnants of a nobles\' viewing box hang perilously over the east side of the arena, destroyed decades ago when a berserker hurled his opponent straight into the gilded seating.',
+  },
+  {
     id: 'charnel_pits_the_blood_tide',
     arenaId: 'charnel_pits',
     type: 'historical_battle',
@@ -259,6 +261,8 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'Falling Shadows',
     narrative:
       'The precarious lanterns are known to occasionally swing violently due to unnatural updrafts, throwing chaotic, flickering shadows that disorient even veteran fighters.',
+  },
+  {
     id: 'mudpit_arena_drowned_brawl',
     arenaId: 'mudpit_arena',
     type: 'historical_battle',

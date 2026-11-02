@@ -3,8 +3,9 @@ import { Swords, Shield } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV } from '@/types/shared.types';
+import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
+import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
 import { getMatchupBonus, STYLE_ORDER } from '@/constants/combat/combat/matchup';
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import { WEAPONS } from '@/data/equipment';
@@ -77,6 +78,33 @@ function MatchupPanel({ style }: { style: FightingStyle }) {
   );
 }
 
+/** Canonical Arena-93 fighter concepts: doctrine + long-term builds. */
+function ConceptsPanel({ style }: { style: FightingStyle }) {
+  const guide = FIGHTER_CONCEPTS[style];
+  return (
+    <div className="space-y-3 pt-3 border-t border-white/5">
+      <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
+        Fighter Concepts
+      </span>
+      <p className="text-[10px] text-muted-foreground/60 leading-relaxed">{guide.doctrine}</p>
+      {guide.concepts.map((c) => (
+        <div key={c.name} className="space-y-1 border-l-2 border-arena-gold/20 pl-3">
+          <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80">
+            {c.name}
+          </span>
+          <p className="font-mono text-[9px] text-arena-gold/70 tracking-wide">
+            {ATTRIBUTE_KEYS.map((k) => `${k} ${c.stats[k]}`).join(' · ')}
+          </p>
+          <p className="text-[10px] text-muted-foreground/60 leading-relaxed">{c.notes}</p>
+          <p className="text-[9px] text-muted-foreground/50 italic leading-relaxed">
+            {c.tactics}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /** A single style's archive card: lore, hallmarks, weapons, matchup record. */
 export function StyleCard({ style }: { style: FightingStyle }) {
   const entry = STYLE_COMPENDIUM[style];
@@ -131,6 +159,8 @@ export function StyleCard({ style }: { style: FightingStyle }) {
         </div>
 
         <MatchupPanel style={style} />
+
+        <ConceptsPanel style={style} />
 
         <div className="pt-3 border-t border-white/5">
           <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">

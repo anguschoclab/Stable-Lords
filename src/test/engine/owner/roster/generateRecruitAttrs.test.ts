@@ -4,9 +4,10 @@
  *
  * World measurement (1000-wk oracle): WALL OF STEEL win rate collapsed to
  * ~31% because philosophy-biased attributes leave tank styles starved of
- * CN/WL/SZ. Recruit attrs now blend the style's archetype key-stats into the
- * weighted pool (~50/50 philosophy/style) — a 'tank' recruit should trend
- * toward CN/WL/SZ even under a neutral philosophy.
+ * CN/WL/SZ. Recruit attrs now blend the style's canonical Arena-93 fighter
+ * concept mean into the weighted pool (~50/50 philosophy/style) — recruits
+ * trend toward their style's canon build (e.g. WS stays WT/WL-led, small;
+ * LU stays WT-led) instead of a flat philosophy spread.
  */
 import { describe, it, expect } from 'vitest';
 import { generateRecruitAttrs } from '@/engine/owner/roster/recruitGenerator';
@@ -26,21 +27,27 @@ function meanAttrs(style?: FightingStyle) {
 }
 
 describe('generateRecruitAttrs — style-aware blend', () => {
-  it('tank-style recruits (WallOfSteel) get elevated CN/WL/SZ', () => {
+  it('WallOfSteel recruits trend toward canon WT/WL (not size)', () => {
     const tank = meanAttrs(FightingStyle.WallOfSteel);
     const neutral = meanAttrs(undefined);
-    // Tank highs (CN, WL, SZ) should each beat the style-blind baseline.
-    expect(tank.CN).toBeGreaterThan(neutral.CN + 1);
+    // Canon WS concepts are WT/WL-led with deliberately low SZ — the blend
+    // should lift the two leadership stats without inflating size.
+    expect(tank.WT).toBeGreaterThan(neutral.WT + 1);
     expect(tank.WL).toBeGreaterThan(neutral.WL + 1);
-    expect(tank.SZ).toBeGreaterThan(neutral.SZ + 1);
+    expect(tank.WT).toBeGreaterThan(tank.SZ);
   });
 
-  it('agile-style recruits (LungingAttack) get elevated SP/DF/WT', () => {
+  it('LungingAttack recruits trend toward canon WT', () => {
     const agile = meanAttrs(FightingStyle.LungingAttack);
     const neutral = meanAttrs(undefined);
-    expect(agile.SP).toBeGreaterThan(neutral.SP + 1);
-    expect(agile.DF).toBeGreaterThan(neutral.DF + 1);
     expect(agile.WT).toBeGreaterThan(neutral.WT + 1);
+  });
+
+  it('StrikingAttack recruits trend toward canon WT/DF', () => {
+    const striker = meanAttrs(FightingStyle.StrikingAttack);
+    const neutral = meanAttrs(undefined);
+    expect(striker.WT).toBeGreaterThan(neutral.WT + 1);
+    expect(striker.DF).toBeGreaterThan(neutral.DF + 1);
   });
 
   it('style-less calls keep the philosophy-only distribution', () => {

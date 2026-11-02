@@ -137,6 +137,43 @@ export function FightingStylesSection() {
   );
 }
 
+/** Codex section: fighter concepts. */
+export function FighterConceptsSection() {
+  return (
+    <AccordionItem value="concepts">
+      <AccordionTrigger className="font-display text-lg">Fighter Concepts</AccordionTrigger>
+      <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+        <p>
+          The Arena 93 archives record canonical long-term builds for every style — proven stat
+          spreads paired with the tactics that suit them. They are concepts, not requirements:
+          there is no perfect warrior, and challenges plus scouting matter more than the exact
+          numbers.
+        </p>
+        <ul className="list-disc list-inside space-y-1">
+          <li>
+            <strong>Concept builds</strong> — Each style has 1-2 named builds (e.g., the
+            Total-Parry "Ghost", the Basher "Workhorse") tuned for long-term growth.
+          </li>
+          <li>
+            <strong>Presets</strong> — Apply a concept directly in the Warrior Builder's Fighter
+            Concept picker; the spread fills your 70-point budget automatically.
+          </li>
+          <li>
+            <strong>Tactics</strong> — Every concept ships with its suited offensive and defensive
+            tactics and a suggested fight rhythm.
+          </li>
+        </ul>
+        <ContextLinks
+          links={[
+            { to: '/world/style-archives', label: 'Browse the concepts' },
+            { to: '/stable/recruit', label: 'Forge a warrior' },
+          ]}
+        />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 /** Codex section: attributes. */
 export function AttributesSection() {
   return (

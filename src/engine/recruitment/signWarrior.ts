@@ -14,7 +14,7 @@ import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import { veteranSigningPatch } from './recruitment/freeAgents';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
-import { ARCHETYPE_STAT_WEIGHTS, STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { conceptPrimaryAttr } from '@/data/fighterConcepts';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { PoolWarrior } from './recruitment/types';
 
@@ -113,7 +113,7 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
   let derivedStats = { ...recruit.derivedStats };
   const flair: string[] = [];
   if (recruit.source === 'apprentice') {
-    const primary = ARCHETYPE_STAT_WEIGHTS[STYLE_ARCHETYPE[recruit.style]].high[0];
+    const primary = conceptPrimaryAttr(recruit.style);
     if (primary) {
       attributes = {
         ...attributes,

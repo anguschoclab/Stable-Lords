@@ -1,7 +1,26 @@
 import { describe, it, expect } from 'vitest';
 import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
-import { FightingStyle, ATTRIBUTE_KEYS } from '@/types/shared.types';
+import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
+import {
+  FightingStyle,
+  ATTRIBUTE_KEYS,
+  ATTRIBUTE_MIN,
+  ATTRIBUTE_MAX,
+  type Attributes,
+} from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
+
+const JITTER = 3;
+
+/** Distance of a generated spread from the nearest canon concept for the style. */
+function nearestConceptDistance(style: FightingStyle, attrs: Attributes): number {
+  const concepts = FIGHTER_CONCEPTS[style].concepts;
+  return Math.min(
+    ...concepts.map((c) =>
+      Math.max(...ATTRIBUTE_KEYS.map((k) => Math.abs(attrs[k] - c.stats[k])))
+    )
+  );
+}
 
 describe('statGeneration', () => {
   it('generates valid attributes for all archetypes', () => {
@@ -20,8 +39,8 @@ describe('statGeneration', () => {
 
       let total = 0;
       for (const key of ATTRIBUTE_KEYS) {
-        expect(attrs[key]).toBeGreaterThanOrEqual(3);
-        expect(attrs[key]).toBeLessThanOrEqual(25);
+        expect(attrs[key]).toBeGreaterThanOrEqual(ATTRIBUTE_MIN);
+        expect(attrs[key]).toBeLessThanOrEqual(ATTRIBUTE_MAX);
         total += attrs[key];
       }
 
@@ -31,16 +50,20 @@ describe('statGeneration', () => {
     }
   });
 
-  it('verifies that high priority stats get higher values than low priority stats', () => {
+  it('stays near a canonical fighter concept for the style', () => {
     const rng = new SeededRNG(999);
 
-    // Test brutal archetype (high: ST, CN, SZ; low: WT, SP, DF)
-    const attrs = generateArchetypeAttrs(FightingStyle.StrikingAttack, rng);
-
-    const highSum = attrs.ST + attrs.CN + attrs.SZ;
-    const lowSum = attrs.WT + attrs.SP + attrs.DF;
-
-    expect(highSum).toBeGreaterThan(lowSum);
+    // Canon striker builds are WT/WL/DF-led (not ST/CN/SZ like the old
+    // 'brutal' archetype): the generated spread must sit within jitter range
+    // of one of the style's concepts.
+    for (const style of Object.values(FightingStyle)) {
+      const attrs = generateArchetypeAttrs(style, rng);
+      const dist = nearestConceptDistance(style, attrs);
+      expect(
+        dist,
+        `${style} spread ${JSON.stringify(attrs)} drifts ${dist} from every concept`
+      ).toBeLessThanOrEqual(JITTER);
+    }
   });
 
   it('exhausts point pool appropriately without exceeding caps', () => {
@@ -58,6 +81,20 @@ describe('statGeneration', () => {
 
       expect(total).toBeGreaterThanOrEqual(68);
       expect(total).toBeLessThanOrEqual(74);
+    }
+  });
+
+  it('is deterministic — same seed produces the same spread', () => {
+    const a = generateArchetypeAttrs(FightingStyle.ParryRiposte, new SeededRNG(7));
+    const b = generateArchetypeAttrs(FightingStyle.ParryRiposte, new SeededRNG(7));
+    expect(a).toEqual(b);
+  });
+
+  it('does not return the shared concept spread by reference', () => {
+    const rng = new SeededRNG(11);
+    const attrs = generateArchetypeAttrs(FightingStyle.WallOfSteel, rng);
+    for (const concept of FIGHTER_CONCEPTS[FightingStyle.WallOfSteel].concepts) {
+      expect(attrs).not.toBe(concept.stats);
     }
   });
 });

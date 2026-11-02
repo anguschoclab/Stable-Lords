@@ -14,7 +14,7 @@ interface BuilderColumnsProps {
 /** The two-column editor: identity + attribute sliders | stat previews + create. */
 export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
   const {
-    name, setName, personality, style, setStyle,
+    name, setName, personality, style, setStyle, applyConcept,
     attrs, total, remaining, isValid, rosterFull,
     stats, updateAttr, handleCreate,
   } = builder;
@@ -23,10 +23,9 @@ export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
       <div className="space-y-4">
         <IdentitySection
           name={name}
-          setName={setName}
           style={style}
-          setStyle={setStyle}
           personality={personality}
+          actions={{ setName, setStyle, applyConcept }}
         />
         <AttributeSliders
           attrs={attrs}

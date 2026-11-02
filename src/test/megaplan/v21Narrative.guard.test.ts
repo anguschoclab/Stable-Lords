@@ -8,12 +8,10 @@ import { ARENA_LORE_BACKFILL_2 } from '@/data/arenas/loreBackfill2';
 /**
  * V21 narrative-pool guards (PRs #1070/#1071/#1073/#1075/#1077 union-merge).
  *
- * The uniqueness describes are live ratchets — green at commit and must stay
- * green through the union merges (an intra-pool duplicate or a cross-pool
- * arena-lore id collision fails here). The MEGAPLAN-V7 describes pin the
- * post-merge union contents and counts — RED until all five branches land;
- * counts are the pre-fuzzy-dedupe union totals and are reconciled at the
- * final merge commit.
+ * The uniqueness describes are live ratchets — an intra-pool duplicate or a
+ * cross-pool arena-lore id collision fails here. The MEGAPLAN-V7 describes
+ * pin the post-merge union contents and counts (the pre-fuzzy-dedupe union
+ * totals, reconciled at the final merge commit).
  */
 describe('narrative pool uniqueness (live guard)', () => {
   const pools: [string, string[]][] = [

@@ -21,6 +21,7 @@ import {
   AttributesSection,
   CombatResolutionSection,
   EquipmentSection,
+  FighterConceptsSection,
   FightingStylesSection,
   InsightTokensSection,
   ProgressionSection,
@@ -155,6 +156,7 @@ export default function Help() {
         defaultValue={[
           'strategy',
           'styles',
+          'concepts',
           'attributes',
           'equipment',
           'trainers',
@@ -165,6 +167,7 @@ export default function Help() {
       >
         <StrategyBasicsSection />
         <FightingStylesSection />
+        <FighterConceptsSection />
         <AttributesSection />
         <EquipmentSection />
         <TrainersSection />

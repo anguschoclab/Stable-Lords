@@ -6,7 +6,8 @@ import { SeededRNG, hashStr } from '@/utils/random';
 import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
-import { STYLE_ARCHETYPE, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
+import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { conceptMean } from '@/data/fighterConcepts';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
@@ -100,17 +101,15 @@ export function generateRecruitAttrs(
   let pool = 70 - 21;
   const keys: (keyof typeof attrs)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'];
 
-  // Style-aware blend: the recruit's fighting style mixes its archetype
-  // key-stats into the ticket pool alongside the philosophy bias — roughly
-  // half the weight (high=3, mid=2, low=1 tickets ≈ 14 style tickets vs
-  // ~7–11 philosophy tickets). Style-blind recruits left tank styles (WALL
-  // OF STEEL ~31% world win rate) starved of CN/WL/SZ.
-  const styleWeights = style ? ARCHETYPE_STAT_WEIGHTS[STYLE_ARCHETYPE[style]] : undefined;
+  // Style-aware blend: the recruit's fighting style mixes its canonical
+  // Arena-93 concept mean into the ticket pool alongside the philosophy
+  // bias — roughly half the weight (≈14 style tickets vs ~7–11 philosophy
+  // tickets). Style-blind recruits left tank styles (WALL OF STEEL ~31%
+  // world win rate) starved of their key stats.
+  const styleMean = style ? conceptMean(style) : undefined;
   const styleTickets = (k: keyof typeof attrs): number => {
-    if (!styleWeights) return 0;
-    if (styleWeights.high.includes(k)) return 3;
-    if (styleWeights.mid.includes(k)) return 2;
-    return 1;
+    if (!styleMean) return 0;
+    return Math.max(1, Math.round(styleMean[k] / 5));
   };
 
   const weighted: (keyof typeof attrs)[] = [];

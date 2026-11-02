@@ -1,7 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, renderHook, act } from '@testing-library/react';
 import WarriorBuilder from '@/components/WarriorBuilder';
+import { useWarriorBuilderState } from '@/components/WarriorBuilder/hooks/useWarriorBuilderState';
+import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
+import { ATTRIBUTE_KEYS, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { CreateButton } from '@/components/WarriorBuilder/components/CreateButton';
 import { SkillsPreview } from '@/components/WarriorBuilder/components/SkillsPreview';
 import { AttributeSliders } from '@/components/WarriorBuilder/components/AttributeSliders';
@@ -135,17 +138,67 @@ describe('AttributeSliders', () => {
   });
 });
 
+describe('useWarriorBuilderState — fighter concept presets', () => {
+  const hook = () =>
+    renderHook(() =>
+      useWarriorBuilderState({ onCreateWarrior: vi.fn(), maxRoster: 10, currentRosterSize: 0 })
+    );
+
+  it('applies the concept style and scaled spread', () => {
+    const { result } = hook();
+    const style = FightingStyle.AimedBlow;
+    const concept = FIGHTER_CONCEPTS[style].concepts[0]!;
+    act(() => result.current.applyConcept(style, concept));
+    expect(result.current.style).toBe(style);
+    expect(result.current.attrs).toEqual(concept.stats);
+    expect(ATTRIBUTE_KEYS.reduce((s, k) => s + result.current.attrs[k], 0)).toBe(70);
+  });
+
+  it('copies the shared concept stats — slider edits never corrupt module data', () => {
+    const { result } = hook();
+    const style = FightingStyle.BashingAttack;
+    const concept = FIGHTER_CONCEPTS[style].concepts[0]!;
+    const before = concept.stats.ST;
+    act(() => result.current.applyConcept(style, concept));
+    act(() => result.current.updateAttr('ST', before === 25 ? 24 : before + 1));
+    expect(concept.stats.ST).toBe(before);
+  });
+
+  it('makes the form valid once the warrior is named', () => {
+    const { result } = hook();
+    const style = FightingStyle.ParryRiposte;
+    const concept = FIGHTER_CONCEPTS[style].concepts[0]!;
+    act(() => result.current.setName('Preset Warrior'));
+    act(() => result.current.applyConcept(style, concept));
+    expect(result.current.isValid).toBe(true);
+    expect(result.current.remaining).toBe(0);
+  });
+});
+
 describe('IdentitySection', () => {
   it('renders without crashing', () => {
     const { container } = render(
       <IdentitySection
         name="TestWarrior"
-        setName={vi.fn()}
         style={FightingStyle.BashingAttack}
-        setStyle={vi.fn()}
+        actions={{ setName: vi.fn(), setStyle: vi.fn() }}
       />
     );
     expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it('renders the fighter concept picker when applyConcept is provided', () => {
+    const style = FightingStyle.AimedBlow;
+    const concept = FIGHTER_CONCEPTS[style].concepts[0]!;
+    const { getByText } = render(
+      <IdentitySection
+        name="TestWarrior"
+        style={style}
+        actions={{ setName: vi.fn(), setStyle: vi.fn(), applyConcept: vi.fn() }}
+      />
+    );
+    expect(getByText('Fighter Concept')).toBeInTheDocument();
+    expect(getByText(`${STYLE_DISPLAY_NAMES[style]} — ${concept.name}`)).toBeInTheDocument();
   });
 });
 

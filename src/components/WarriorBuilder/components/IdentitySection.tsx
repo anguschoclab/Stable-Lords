@@ -13,25 +13,34 @@ import { Dices } from 'lucide-react';
 import { randomWarriorName } from '@/data/names';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { FIGHTER_CONCEPTS, type FighterConcept } from '@/data/fighterConcepts';
 
 interface IdentitySectionProps {
   name: string;
-  setName: (n: string) => void;
   style: FightingStyle;
-  setStyle: (s: FightingStyle) => void;
   personality?: string;
+  actions: {
+    setName: (n: string) => void;
+    setStyle: (s: FightingStyle) => void;
+    applyConcept?: (style: FightingStyle, concept: FighterConcept) => void;
+  };
 }
+
+/** Flat list of every fighter concept: "Style — Concept". */
+const CONCEPT_OPTIONS = Object.values(FightingStyle).flatMap((s) =>
+  FIGHTER_CONCEPTS[s].concepts.map((concept, index) => ({
+    value: `${s}::${index}`,
+    label: `${STYLE_DISPLAY_NAMES[s]} — ${concept.name}`,
+    style: s,
+    concept,
+  }))
+);
 
 /**
  *
  */
-export function IdentitySection({
-  name,
-  setName,
-  style,
-  setStyle,
-  personality,
-}: IdentitySectionProps) {
+export function IdentitySection({ name, style, personality, actions }: IdentitySectionProps) {
+  const { setName, setStyle, applyConcept } = actions;
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -79,6 +88,29 @@ export function IdentitySection({
             </SelectContent>
           </Select>
         </div>
+        {applyConcept && (
+          <div className="space-y-1.5">
+            <Label htmlFor="fighter-concept">Fighter Concept</Label>
+            <Select
+              value=""
+              onValueChange={(v) => {
+                const option = CONCEPT_OPTIONS.find((o) => o.value === v);
+                if (option) applyConcept(option.style, option.concept);
+              }}
+            >
+              <SelectTrigger id="fighter-concept" aria-label="Fighter Concept">
+                <SelectValue placeholder="Apply a canon build…" />
+              </SelectTrigger>
+              <SelectContent>
+                {CONCEPT_OPTIONS.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

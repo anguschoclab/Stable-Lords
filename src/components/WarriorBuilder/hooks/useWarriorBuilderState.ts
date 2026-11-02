@@ -12,6 +12,7 @@ import {
 } from '@/types/game';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import type { FighterConcept } from '@/data/fighterConcepts';
 import { clamp } from '@/utils/math';
 import { sanitizeEntityName } from '@/utils/entityName';
 
@@ -73,6 +74,11 @@ export function useWarriorBuilderState({
     });
   }, []);
 
+  const applyConcept = useCallback((s: FightingStyle, concept: FighterConcept) => {
+    setStyle(s);
+    setAttrs({ ...concept.stats });
+  }, []);
+
   const randomize = useCallback(() => {
     setAttrs(rollRandomAttributes());
     const styles = Object.values(FightingStyle);
@@ -114,6 +120,7 @@ export function useWarriorBuilderState({
     rosterFull,
     stats,
     updateAttr,
+    applyConcept,
     randomize,
     handleCreate,
   };

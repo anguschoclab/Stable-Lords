@@ -109,7 +109,9 @@ const DEBT_PAIRS = new Set<string>([]);
 // same exemption category as the V18 tournamentSelection preambles.
 // V20: +1 — v20Components.guard shares StyleMeterTable's mock preamble
 // (registered exempt below), → 13.
-const TEST_TO_TEST_BASELINE = 13;
+// V21: +1 — v20↔v21 narrative guards share the pool-uniqueness harness
+// preamble across version waves (registered exempt below), → 14.
+const TEST_TO_TEST_BASELINE = 14;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -144,6 +146,9 @@ const TEST_EXEMPT_PAIRS = new Set([
   // V20 component guard re-uses StyleMeterTable's useGameStore/useShallow
   // mock preamble only — its body pins a different post-merge behavior.
   'src/test/components/charts/StyleMeterTable.test.tsx|src/test/megaplan/v20Components.guard.test.tsx',
+  // v20↔v21 narrative guards share the pool-uniqueness harness preamble
+  // across version waves; each pins a different post-merge union state.
+  'src/test/megaplan/v20Narrative.guard.test.ts|src/test/megaplan/v21Narrative.guard.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the
@@ -154,9 +159,12 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // intentional literal pins: specs re-stating canonical production literals
 // (zero-state objects, enum unions, ctx key lists, barrel/mocks surfaces)
 // as assertion data — the duplication is the point.
-const MIXED_BASELINE = 18;
+const MIXED_BASELINE = 19;
 
 const MIXED_EXEMPT_PAIRS = new Set([
+  // fighterConcepts spec re-states a canonical newsletter spread as
+  // assertion data for the scaler — a canonical production-literal pin.
+  'src/data/fighterConcepts.ts|src/test/data/fighterConcepts.test.ts',
   'src/components/layout/MobileNav.tsx|src/test/_mocks/routerLink.tsx',
   'src/components/world/WarriorLeaderboardFilters.tsx|src/test/components/FilterToggleButton.test.tsx',
   'src/data/equipment/weaponStyles.ts|src/test/data/equipment/weaponStyles.test.ts',

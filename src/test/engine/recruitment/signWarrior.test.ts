@@ -20,10 +20,10 @@ import {
   type StableId,
 } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { STYLE_ARCHETYPE, ARCHETYPE_STAT_WEIGHTS } from '@/engine/factories/statGeneration';
+import { conceptPrimaryAttr } from '@/data/fighterConcepts';
 
 const primaryAttr = (style: FightingStyle): keyof Warrior['attributes'] =>
-  ARCHETYPE_STAT_WEIGHTS[STYLE_ARCHETYPE[style]].high[0]!;
+  conceptPrimaryAttr(style);
 
 describe('poolWarriorToWarrior', () => {
   const recruit = (over: Partial<PoolWarrior> = {}): PoolWarrior =>
@@ -123,7 +123,7 @@ describe('poolWarriorToWarrior', () => {
   });
 
   it('bumps the style-primary attribute for academy apprentices (clamped at max)', () => {
-    const key = primaryAttr(FightingStyle.StrikingAttack); // 'ST' — brutal archetype
+    const key = primaryAttr(FightingStyle.StrikingAttack); // 'WT' — canon striker concepts are wit-led
     const r = recruit({
       source: 'apprentice',
       style: FightingStyle.StrikingAttack,
@@ -147,7 +147,7 @@ describe('poolWarriorToWarrior', () => {
       style: FightingStyle.StrikingAttack,
       attributes: {
         ...ATTRS_10,
-        ST: ATTRIBUTE_MAX,
+        [key]: ATTRIBUTE_MAX,
       },
     });
     const w = poolWarriorToWarrior(r, {});

@@ -4,10 +4,10 @@ import { TRAITS } from '@/engine/traits';
 /**
  * V21 trait-registry guards (PRs #1070/#1071/#1073/#1075).
  *
- * Parked specs encode the post-merge end-state — RED until the four
- * trait-bearing branches land. Adjudication (FINDINGS §1): six traits
- * survive; three `_2`-suffixed defs are REJECTED as dedup-collision
- * workarounds (display-name collisions with existing traits).
+ * Live ratchets pinning the post-merge end-state. Adjudication (FINDINGS
+ * §1): six traits survive; three `_2`-suffixed defs were REJECTED as
+ * dedup-collision workarounds (display-name collisions with existing
+ * traits).
  *
  * Expected union: 178 + 6 = 184.
  */

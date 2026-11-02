@@ -7,13 +7,22 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
+import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
 import { StyleCard } from './styleArchives/StyleCard';
 
 /** Whether a style's archive entry matches the search query. */
 function styleMatches(style: FightingStyle, normalized: string): boolean {
   const name = STYLE_DISPLAY_NAMES[style];
   const entry = STYLE_COMPENDIUM[style];
-  const haystack = [name, entry.archetype, entry.description, ...entry.hallmarks]
+  const guide = FIGHTER_CONCEPTS[style];
+  const haystack = [
+    name,
+    entry.archetype,
+    entry.description,
+    ...entry.hallmarks,
+    guide.doctrine,
+    ...guide.concepts.flatMap((c) => [c.name, c.notes, c.tactics]),
+  ]
     .join(' ')
     .toLowerCase();
   return haystack.includes(normalized);

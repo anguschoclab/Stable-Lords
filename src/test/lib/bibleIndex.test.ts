@@ -19,4 +19,11 @@ describe('bibleIndex (design bible search)', () => {
     expect(searchBibleDocs('')).toEqual([]);
     expect(searchBibleDocs('zzzqxxv')).toEqual([]);
   });
+
+  it('indexes the Arena-93 fighter concepts doc', () => {
+    const doc = BIBLE_DOCS.find((d) => /fighter concepts/i.test(d.title));
+    expect(doc, 'fighter concepts doc not indexed').toBeDefined();
+    const hits = searchBibleDocs('long term fighter');
+    expect(hits.some((h) => h.docId === doc!.id)).toBe(true);
+  });
 });

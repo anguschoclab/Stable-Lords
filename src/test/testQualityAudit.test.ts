@@ -189,6 +189,9 @@ const GUARD_REGISTRY: Record<string, string> = {
   'v20Narrative.guard.test.ts': 'LIVE_RATCHET',
   'v20Traits.guard.test.ts': 'LIVE_RATCHET',
   'v20Wiring.guard.test.ts': 'LIVE_RATCHET',
+  'v21Narrative.guard.test.ts': 'LIVE_RATCHET',
+  'v21Traits.guard.test.ts': 'LIVE_RATCHET',
+  'v21Weather.guard.test.ts': 'LIVE_RATCHET',
   'wiring.wired.test.tsx': 'LIVE_RATCHET',
 };
 

@@ -127,6 +127,13 @@ const COMBAT_TRAITS = [
   'dark_survivor',
   'gutter_brawler',
   'street_specter',
+  // V21 additions (PRs #1070/#1071/#1073/#1075): direct-mod narrative traits.
+  'street_rat',
+  'gut_survivor',
+  'ash_breather',
+  'orphan_iron_will',
+  'gutter_shadow_striker',
+  'orphan_shadow_fury',
 ];
 const NEGATIVE_TRAITS = ['fragile', 'slow'];
 const PERSONALITY_TRAITS = [

@@ -215,4 +215,8 @@ export const DEFINING_MOMENTS: string[] = [
   'until they garroted a corrupt slaver with a stolen rosary and embraced the arena’s call',
   'until they drowned a cruel overseer in a vat of boiling lye, vowing never to be helpless again',
   'realizing that mercy in the Undercity only rewards the weak with an early grave',
+  'until they shattered the iron bars of their workhouse cell with their bare, bloody knuckles',
+  'realizing that the blood they spilled in the alleys was the exact same color as the blood in the grand colosseum',
+  'until a vicious beating by the city watch forged their resolve into an unbreakable, jagged spike',
+  'knowing that the cheers of the bloodthirsty crowd were the closest thing to a family they would ever have',
 ];

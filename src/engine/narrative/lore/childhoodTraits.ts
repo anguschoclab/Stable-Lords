@@ -238,4 +238,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed a terrifying habit of laughing whenever they drew blood in a street brawl',
   'would intentionally break their own fingers just to see if they could set them straight',
   'slept on a bed of river stones to harden their spine against the cold',
+  'developed a twitch that perfectly masks the winding of their heavy attacks',
+  'learned to ignore the sting of rusted blades by practicing on jagged scrap metal',
+  'would intentionally seek out the largest enforcer in the workhouse just to test their own resilience',
 ];

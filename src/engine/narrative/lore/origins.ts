@@ -401,4 +401,8 @@ export const ORIGINS: string[] = [
   'Abandoned to the freezing winds at the rusted gates of the Blackwood Workhouse',
   'Survived the terrifying silent cullings of the Whispering Vaults',
   'Found swaddled in blood-soaked rags beneath the Weeping Bridge',
+  'Abandoned during the frenzied evacuation of the Lower Docks, left with nothing but a rusted spoon',
+  'Raised in the lightless oubliettes beneath the Whispering Vaults, learning to see in the dark',
+  'Found clinging to the frozen corpse of a legendary pit fighter in the Snow Wastes',
+  'Survived the great fire of the Ash Dunes by burying themselves in the cool, blood-soaked sand',
 ];

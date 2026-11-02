@@ -103,4 +103,22 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     tier: 'Common',
     sign: 'positive',
   },
+  gut_survivor: {
+    id: 'gut_survivor',
+    name: 'Gut Survivor',
+    description: 'Forged in the darkest alleys, possessing an unyielding will to fight back. Modest endurance boost.',
+    effect: { enduranceMult: 0.98 },
+    weight: 0.6,
+    tier: 'Common',
+    sign: 'positive',
+  },
+  ash_breather: {
+    id: 'ash_breather',
+    name: 'Ash Breather',
+    description: 'Accustomed to toxic fumes and choked air, giving a slight edge against fatigue.',
+    effect: { enduranceMult: 0.97 },
+    weight: 0.6,
+    tier: 'Common',
+    sign: 'positive',
+  },
 };

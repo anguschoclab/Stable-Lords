@@ -44,7 +44,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 100;
-const EXPECTED_COUNT = 181; // 179 post-#1073 + 2 (#1075)
+const EXPECTED_COUNT = 183; // 181 post-#1075 + 2 kept (#1071 minus gutter_phantom_two)
 
 /** Canonical effect signature: key-order must not change the hash
  *  (JSON.stringify of an object literal preserves insertion order, so a

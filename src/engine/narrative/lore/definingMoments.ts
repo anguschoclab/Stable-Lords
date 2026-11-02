@@ -219,4 +219,9 @@ export const DEFINING_MOMENTS: string[] = [
   'realizing that the blood they spilled in the alleys was the exact same color as the blood in the grand colosseum',
   'until a vicious beating by the city watch forged their resolve into an unbreakable, jagged spike',
   'knowing that the cheers of the bloodthirsty crowd were the closest thing to a family they would ever have',
+  'until they broke their first rusted iron collar, vowing that their next chains would be made of gold',
+  'realizing that the blood-soaked sands were the only place where their feral instincts were celebrated rather than punished',
+  'until they strangled an abusive matron with the very whip used to torment them, finding freedom in violence',
+  'knowing that the deafening roar of the colosseum is the only true requiem for a childhood stolen by the slums',
+  'until a brutal betrayal in the fighting pits taught them that mercy is a fatal vulnerability on the sands',
 ];

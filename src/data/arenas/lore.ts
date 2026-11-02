@@ -1031,6 +1031,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,
+  {
+    id: 'sun_baked_plateau_the_glass_scorch',
+    arenaId: 'sun_baked_plateau',
+    type: 'architectural_quirk',
+    title: 'The Glass Scorch',
+    narrative:
+      'The midday heat is so intense that blood spilled on the plateau sometimes instantly crystallizes, turning the sands into jagged crimson glass.',
+  },
+  {
+    id: 'ancient_aqueduct_drowning_echoes',
+    arenaId: 'ancient_aqueduct',
+    type: 'hazard',
+    title: 'Drowning Echoes',
+    narrative:
+      'Sudden surges of dark, rushing water not only sweep away unwary fighters but echo their final, gurgling screams through the ancient stonework for minutes after.',
+  },
+  {
+    id: 'sun_baked_plateau_bleached_bones',
+    arenaId: 'sun_baked_plateau',
+    type: 'famous_death',
+    title: 'The Bleached Champion',
+    narrative:
+      'A legendary brute refused to fall until the sun bleached the color from his armor, finally collapsing as an immaculate, lifeless statue.',
+  },
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

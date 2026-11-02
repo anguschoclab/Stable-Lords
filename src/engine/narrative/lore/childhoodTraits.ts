@@ -241,4 +241,9 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed a twitch that perfectly masks the winding of their heavy attacks',
   'learned to ignore the sting of rusted blades by practicing on jagged scrap metal',
   'would intentionally seek out the largest enforcer in the workhouse just to test their own resilience',
+  'developed a grim obsession with tracing the jagged scars on the backs of veteran pit fighters',
+  'learned to sleep standing in the freezing rain to avoid the predatory hounds of the Lower Wards',
+  'would meticulously collect and string together the shattered teeth of fallen arena beasts',
+  'developed an unnervingly calm demeanor when trapped in the lightless oubliettes of the workhouse',
+  'learned to predict the exact moment a guard would look away just by the rhythm of their breathing',
 ];

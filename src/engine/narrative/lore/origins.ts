@@ -405,4 +405,9 @@ export const ORIGINS: string[] = [
   'Raised in the lightless oubliettes beneath the Whispering Vaults, learning to see in the dark',
   'Found clinging to the frozen corpse of a legendary pit fighter in the Snow Wastes',
   'Survived the great fire of the Ash Dunes by burying themselves in the cool, blood-soaked sand',
+  'Discovered starving in the hollowed-out skull of a forgotten leviathan in the Deep Wastes',
+  'Raised by silent bone-pickers in the shadow of the colossal iron gallows',
+  'Abandoned wrapped in a tattered battle banner at the blood-stained doors of the Red Keep',
+  'Survived the agonizingly slow famine of the Lower Sump by scavenging from the plague carts',
+  'Sold to the merciless pit-masters of the Scab District for a handful of tarnished silver',
 ];

@@ -67,4 +67,5 @@ export const WEATHER_STATS: Record<WeatherType, string> = {
   'Stardust Gale': 'STAMINA DRAIN 115% | INITIATIVE +2',
   'Mana Storm': 'STAMINA DRAIN 150% | INITIATIVE +4 | RIPOSTE +1 | DAMAGE +10%',
   'Shattered Skies': 'STAMINA DRAIN 110% | INITIATIVE +2 | RIPOSTE -2 | DAMAGE +15%',
+  'Threads of Chaos': 'STAMINA DRAIN 150% | INITIATIVE +5 | RIPOSTE +5 | DAMAGE +50%',
 };

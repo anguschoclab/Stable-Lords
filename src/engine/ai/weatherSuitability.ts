@@ -45,7 +45,7 @@ const CN0_LT = (n: number) => (w: WeatherSubject) => (w.attributes.CN || 0) < n;
 const ARENA: WeatherDisposition = { bucket: 'arena' };
 const OFFSEASON: WeatherDisposition = { bucket: 'offseason' };
 
-const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
+export const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
   Clear: ARENA,
   Rainy: {
     bucket: 'arena',
@@ -174,6 +174,7 @@ const WEATHER_AI_DISPOSITION: Record<WeatherType, WeatherDisposition> = {
   'Mana Storm': OFFSEASON,
   'Dreamweavers Mist': OFFSEASON,
   'Shattered Skies': OFFSEASON,
+  'Threads of Chaos': OFFSEASON,
 };
 
 /** Weather the intent engine treats as strategically hazardous. */

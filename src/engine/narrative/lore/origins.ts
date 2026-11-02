@@ -410,4 +410,9 @@ export const ORIGINS: string[] = [
   'Abandoned wrapped in a tattered battle banner at the blood-stained doors of the Red Keep',
   'Survived the agonizingly slow famine of the Lower Sump by scavenging from the plague carts',
   'Sold to the merciless pit-masters of the Scab District for a handful of tarnished silver',
+  'Tossed into the corpse carts during the Red Fever, only to crawl back out days later',
+  'Raised by silent crypt-keepers in the bone-choked catacombs of the Old City',
+  'Found nursing from a feral direhound in the frozen gutters of the North Ward',
+  'Left bound in iron chains at the doorstep of the Merciful Sisters Orphanage',
+  'Sold to the fighting pits for a handful of silver to pay a father\'s gambling debt',
 ];

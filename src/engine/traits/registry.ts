@@ -203,6 +203,7 @@ const LEGACY_TRAIT_ORDER = [
   'gutter_shadow_striker',
   'gut_survivor',
   'ash_breather',
+  'street_rat',
 ];
 
 const MERGED: Record<string, TraitDef> = {

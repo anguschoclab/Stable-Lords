@@ -121,4 +121,14 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     tier: 'Common',
     sign: 'positive',
   },
+  street_rat: {
+    id: 'street_rat',
+    name: 'Street Rat',
+    description: 'Forged in the gutters. Quick on their feet but lacks formal training.',
+    effect: { iniMod: 1, defMod: -1 },
+    weight: 0.8,
+    tier: 'Common',
+    sign: 'positive',
+  },
 };
+

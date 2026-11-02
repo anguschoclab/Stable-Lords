@@ -224,4 +224,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until they strangled an abusive matron with the very whip used to torment them, finding freedom in violence',
   'knowing that the deafening roar of the colosseum is the only true requiem for a childhood stolen by the slums',
   'until a brutal betrayal in the fighting pits taught them that mercy is a fatal vulnerability on the sands',
+  'until they realized the iron chains that once held them could be forged into a weapon',
+  'knowing that the only difference between an alley rat and a gladiator is a roaring crowd',
+  'until a beggar taught them the lethal art of hamstringing before bleeding to death in their arms',
 ];

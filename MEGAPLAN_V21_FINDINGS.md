@@ -51,6 +51,8 @@ TRAITS 178+6 = **184** (6 surviving traits).
 | B3 | Stamina-token semantics ambiguous across WEATHER_STATS (Chaos Storm 'DRAIN 125%' @ mult 0.8 contradicts sibling direct-mult convention) | DOCUMENTED — convention decision deferred; not in parity guard scope |
 | B4 | Dependabot: 4 vulns on default branch (1 high, 1 moderate, 2 low) | REGISTERED — out of V21 scope |
 | B5 | v20Narrative.guard exact-count pins = guaranteed-red churn for every lore PR | FIXED — converted to floors (V11 verdict) |
+| B6 | `balance.slow` KD spec fails 8.75% == 8.75% on pre-merge main (bf9e4346) — killDesire produces zero kill-rate differential post canon-death-model | REGISTERED — **pre-existing**, NOT merge-caused (verified via worktree rerun); needs balance-team seed/mechanic triage, out of V21 scope |
+| B7 | New remote branch `ux-palette-add-button-types-…` appeared mid-pass | NOTED — out of V21 scope (next pass) |
 
 ## §V Verdict matrix — explicit approve/disprove
 
@@ -77,6 +79,8 @@ TRAITS 178+6 = **184** (6 surviving traits).
 ## Close-out
 
 Baseline → final: type-check 0→0, lint 0err/30warn→0err/30warn, test
-9686→TBD(slow run pending), traits 178→184, weather 64→65, lore pools
+9686→9711 (+3 guard files, all green), slow: 4 pre-existing/env issues
+(2 perf load-flakes passing serially, 1 ratchet re-baselined 161→162,
+1 pre-existing KD failure B6), traits 178→184, weather 64→65, lore pools
 +ORIGINS 24 / +CHILDHOOD 17 / +DEFINING 18 / +ARENA_LORE 12 / +BF2 7.
 

@@ -227,4 +227,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until they realized the iron chains that once held them could be forged into a weapon',
   'knowing that the only difference between an alley rat and a gladiator is a roaring crowd',
   'until a beggar taught them the lethal art of hamstringing before bleeding to death in their arms',
+  'until they survived the cull of the Sump by suffocating an armed enforcer with their bare hands',
+  'realizing that the roar of the colosseum was just a louder version of the screaming alleys',
+  'until they watched a legendary pit fighter die and realized that even gods bleed red',
 ];

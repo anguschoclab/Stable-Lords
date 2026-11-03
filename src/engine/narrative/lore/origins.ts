@@ -415,4 +415,9 @@ export const ORIGINS: string[] = [
   'Found nursing from a feral direhound in the frozen gutters of the North Ward',
   'Left bound in iron chains at the doorstep of the Merciful Sisters Orphanage',
   'Sold to the fighting pits for a handful of silver to pay a father\'s gambling debt',
+  'Raised in the crumbling ruins of the Hollow Hand Orphanage, surviving on rain and rats',
+  'Left on the obsidian altar of a forgotten cult before being claimed by the pit masters',
+  'Abandoned in the flooded cellars of the Drowned Market and raised by beggars',
+  'Found shivering in the rusted ventilation grates above the Black Iron Forge',
+  'Raised in the lightless, suffocating basements of the Cinderstone Foundling Home',
 ];

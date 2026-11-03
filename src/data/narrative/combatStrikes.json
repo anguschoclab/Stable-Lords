@@ -80,7 +80,9 @@
         "{{attacker}}'s slash fails to bite deeply, glancing off {{defender}}.",
         "The slash slides harmlessly off the armor of {{defender}}.",
         "A weak cut from {{attacker}} fails to bite into {{defender}}.",
-        "The blade grazes {{defender}}, leaving only a superficial scratch."
+        "The blade grazes {{defender}}, leaving only a superficial scratch.",
+        "A wild slash from {{attacker}} is easily deflected by {{defender}}.",
+        "{{attacker}}'s slash barely grazes {{defender}}."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -388,7 +390,9 @@
         "{{defender}} shrugs off a poorly aimed bash from {{attacker}}.",
         "{{attacker}}'s heavy blow merely nudges {{defender}} off balance.",
         "A blunt strike from {{attacker}} clatters weakly against {{defender}}.",
-        "{{attacker}}'s bashing attack loses momentum, glancing off {{defender}}'s guard."
+        "{{attacker}}'s bashing attack loses momentum, glancing off {{defender}}'s guard.",
+        "{{attacker}}'s bludgeon glances off {{defender}}'s armor harmlessly.",
+        "A heavy swing from {{attacker}} misses the mark, only jarring {{defender}} slightly."
       ],
       "solid": [
         "{{attacker}} steps into the swing, bringing {{possessive}} {{weapon}} down hard on {{defender}}'s {{bodyPart}}.",
@@ -702,7 +706,9 @@
         "A weak thrust from {{attacker}} fails to find purchase.",
         "{{attacker}}'s point snags on armor, failing to pierce {{defender}}.",
         "{{defender}} pivots, turning a deadly thrust into a minor graze.",
-        "{{attacker}}'s point fails to penetrate, sliding past {{defender}}."
+        "{{attacker}}'s point fails to penetrate, sliding past {{defender}}.",
+        "{{attacker}}'s thrust is batted aside by {{defender}} at the last second.",
+        "A quick stab from {{attacker}} fails to penetrate {{defender}}'s defenses."
       ],
       "solid": [
         "With practiced precision, {{attacker}} slips {{possessive}} {{weapon}} past {{defender}}'s defenses, striking the {{bodyPart}}!",
@@ -1009,7 +1015,9 @@
         "{{attacker}}'s punch lacks weight, barely nudging {{defender}}.",
         "{{attacker}} fails to plant their feet, delivering a weak glancing blow.",
         "{{defender}} easily slips the punch, reducing it to a glancing strike.",
-        "A grazing knuckle from {{attacker}} leaves {{defender}} unfazed."
+        "A grazing knuckle from {{attacker}} leaves {{defender}} unfazed.",
+        "{{attacker}} throws a wild punch that {{defender}} easily avoids.",
+        "A glancing blow from {{attacker}}'s fist barely fazes {{defender}}."
       ],
       "solid": [
         "{{attacker}} unleashes a raw, bare-knuckle brawl, overwhelming {{defender}} with relentless strikes.",

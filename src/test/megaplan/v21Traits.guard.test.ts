@@ -51,8 +51,8 @@ describe('MEGAPLAN-V7: V21 narrative traits', () => {
     }
   });
 
-  it('post-merge trait count is 184 (MEGAPLAN-V7)', () => {
-    expect(Object.keys(TRAITS).length).toBe(184);
+  it('post-merge trait count is 186 (MEGAPLAN-V7)', () => {
+    expect(Object.keys(TRAITS).length).toBe(186);
   });
 });
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T03:37:20.953Z",
+  "generatedAt": "2026-11-04T02:47:25.638Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -196,6 +196,7 @@
     "src/test/engine/pipeline/passes/PromoterPass.test.ts",
     "src/test/engine/pipeline/passes/RecruitmentPass.test.ts",
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
+    "src/test/engine/pipeline/services/weekPipelineService.test.ts",
     "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
     "src/test/engine/pipeline/truncationCadence.slow.test.ts",

@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { impactsAffectWeekCaches, buildWeekCaches } from '@/engine/pipeline/services/weekPipeline/caches';
 import { GameState, Warrior } from '@/types/game';
 import * as warriorLookup from '@/engine/core/warriorLookup';
+import { WarriorId } from '@/types/shared.types';
 
 describe('weekPipeline/caches', () => {
   describe('impactsAffectWeekCaches', () => {
@@ -42,8 +43,8 @@ describe('weekPipeline/caches', () => {
 
       expect(mockState.warriorMap).toBeDefined();
       expect(mockState.warriorMap?.size).toBe(2);
-      expect(mockState.warriorMap?.get('w1')).toEqual({ id: 'w1' });
-      expect(mockState.warriorMap?.get('w2')).toEqual({ id: 'w2' });
+      expect(mockState.warriorMap?.get('w1' as WarriorId)).toEqual({ id: 'w1' });
+      expect(mockState.warriorMap?.get('w2' as WarriorId)).toEqual({ id: 'w2' });
 
       expect(mockState.warriorToStableMap).toBeDefined();
       expect(mockState.warriorToStableMap?.get('w1')).toEqual({ stableId: 'player-stable', isPlayer: true });

@@ -1071,6 +1071,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A legendary brute refused to fall until the sun bleached the color from his armor, finally collapsing as an immaculate, lifeless statue.',
   },
+  {
+    id: 'standard_arena_the_shattered_shields',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The Shattered Shields',
+    narrative:
+      'A legendary skirmish where both fighters’ weapons shattered in the opening clash, leading to a brutal, bare-knuckle brawl that lasted until dusk.',
+  },
+  {
+    id: 'mudpit_arena_choking_trench',
+    arenaId: 'mudpit_arena',
+    type: 'architectural_quirk',
+    title: 'The Choking Trench',
+    narrative:
+      'A deep, jagged depression near the center of the pit where fighters often get stuck; those who control the trench control the flow of blood.',
+  },
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

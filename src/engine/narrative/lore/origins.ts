@@ -415,4 +415,9 @@ export const ORIGINS: string[] = [
   'Found nursing from a feral direhound in the frozen gutters of the North Ward',
   'Left bound in iron chains at the doorstep of the Merciful Sisters Orphanage',
   'Sold to the fighting pits for a handful of silver to pay a father\'s gambling debt',
+  'Raised by the grim overseers of the Hollowstone Orphanage, learning to fight for scraps',
+  'Left shivering in a rusted crate behind the Slaughterhouse of the Ash Dunes',
+  'Survived the silent starvation of the Weeping Convent by scavenging rat carcasses',
+  'Found clinging to the iron gates of the Blackwood Orphanage during a brutal winter',
+  'Abandoned wrapped in a tattered shroud near the whispering crypts of the Old City',
 ];

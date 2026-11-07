@@ -89,3 +89,10 @@ describe('DESIGN_REVIEW_THRESHOLDS — sanity', () => {
     expect(DESIGN_REVIEW_THRESHOLDS.PS_FLAT_SPREAD).toBe(7);
   });
 });
+
+  it('pins the wall canon thresholds — will warn below 15, deftness floor at 11', () => {
+    expect(DESIGN_REVIEW_THRESHOLDS.WS_WL_WARN).toBe(15);
+    expect(DESIGN_REVIEW_THRESHOLDS.WS_DF_MIN).toBe(11);
+    expect(DESIGN_REVIEW_THRESHOLDS.WS_ST_MIN).toBe(9);
+    expect(DESIGN_REVIEW_THRESHOLDS.WS_COORD_MIN).toBe(18);
+  });

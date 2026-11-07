@@ -168,17 +168,21 @@ describe('validateStrategy', () => {
         expect(warnings).toHaveLength(0);
       });
 
-      it('warns for WallOfSteel with OE >= 8', () => {
+      // Arena 93 canon: walls run hot openings (Eli's 10-10-6, She-Puppy's
+      // 9-6-6, Dante's "run them fast and furious") — a high-OE Wall of Steel
+      // is doctrine, not a mismatch.
+      it('does not warn for WallOfSteel with OE = 8 — canon walls open hot', () => {
         const plan = createMockFightPlan(FightingStyle.WallOfSteel, 8, 5);
         const warnings = validateStrategy(plan);
-        expect(warnings).toHaveLength(1);
-        expect(warnings[0]?.code).toBe('STYLE_MISMATCH_OE');
+        const codes = warnings.map((w) => w.code);
+        expect(codes).not.toContain('STYLE_MISMATCH_OE');
       });
 
-      it('does not warn for WallOfSteel with OE = 7', () => {
-        const plan = createMockFightPlan(FightingStyle.WallOfSteel, 7, 5);
+      it('does not warn for WallOfSteel with OE = 10 — Eli opens 10-10-6', () => {
+        const plan = createMockFightPlan(FightingStyle.WallOfSteel, 10, 5);
         const warnings = validateStrategy(plan);
-        expect(warnings).toHaveLength(0);
+        const codes = warnings.map((w) => w.code);
+        expect(codes).not.toContain('STYLE_MISMATCH_OE');
       });
 
       it('does not warn for other styles with OE = 8', () => {
@@ -1138,5 +1142,75 @@ describe('PL_TACTICS_PAST_EXPERT — Tripwire "drop the tactics after Expert" (A
     };
     const warnings = validateStrategy(plan, makeWarrior({ style: FightingStyle.ParryLunge }));
     expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
+  });
+});
+
+describe('Wall-of-steel rhythm (Arena 93 wall articles)', () => {
+  const WS = FightingStyle.WallOfSteel;
+
+  // Every wall article tapers activity to low by mid-bout — the style burns
+  // endurance like a lunger and cannot afford a busy late fight.
+  it('advises against sustained high activity into mid/late', () => {
+    const plan = {
+      ...createMockFightPlan(WS, 8, 5, 6),
+      phases: {
+        opening: { OE: 9, AL: 6, killDesire: 6 },
+        mid: { OE: 7, AL: 8, killDesire: 6 },
+        late: { OE: 5, AL: 5, killDesire: 5 },
+      },
+    };
+    const warnings = validateStrategy(plan as FightPlan);
+    const note = warnings.find((x) => x.code === 'WS_SUSTAINED_HIGH_AL');
+    expect(note).toBeDefined();
+    expect(note?.severity).toBe('info');
+  });
+
+  it('fires on the base AL too when no phases override it', () => {
+    const plan = createMockFightPlan(WS, 6, 8, 5);
+    const warnings = validateStrategy(plan);
+    expect(warnings.find((x) => x.code === 'WS_SUSTAINED_HIGH_AL')).toBeDefined();
+  });
+
+  it('stays silent on a canon taper — She-Puppy pace drops AL to low', () => {
+    const plan = {
+      ...createMockFightPlan(WS, 9, 6, 6),
+      phases: {
+        opening: { OE: 9, AL: 6, killDesire: 6 },
+        mid: { OE: 6, AL: 4, killDesire: 6 },
+        late: { OE: 5, AL: 2, killDesire: 5 },
+      },
+    };
+    const warnings = validateStrategy(plan as FightPlan);
+    expect(warnings.find((x) => x.code === 'WS_SUSTAINED_HIGH_AL')).toBeUndefined();
+  });
+
+  // She-Puppy: "I don't like to use a kill desire above 6" — 7+ is reserved
+  // for desperation saves, not the base sheet.
+  it('advises against a high base kill desire — canon walls run KD 6 or under', () => {
+    const plan = createMockFightPlan(WS, 6, 5, 9);
+    const warnings = validateStrategy(plan);
+    const note = warnings.find((x) => x.code === 'WS_KILL_DESIRE');
+    expect(note).toBeDefined();
+    expect(note?.severity).toBe('info');
+  });
+
+  it('stays silent at the canon KD ceiling', () => {
+    const plan = createMockFightPlan(WS, 6, 5, 6);
+    const warnings = validateStrategy(plan);
+    expect(warnings.find((x) => x.code === 'WS_KILL_DESIRE')).toBeUndefined();
+  });
+
+  it('does not leak wall rhythm notes onto other styles', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.TotalParry, 4, 8, 9),
+      phases: {
+        opening: { OE: 4, AL: 8, killDesire: 9 },
+        mid: { OE: 4, AL: 8, killDesire: 9 },
+        late: { OE: 4, AL: 8, killDesire: 9 },
+      },
+    };
+    const warnings = validateStrategy(plan as FightPlan);
+    expect(warnings.find((x) => x.code === 'WS_SUSTAINED_HIGH_AL')).toBeUndefined();
+    expect(warnings.find((x) => x.code === 'WS_KILL_DESIRE')).toBeUndefined();
   });
 });

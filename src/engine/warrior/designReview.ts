@@ -158,127 +158,62 @@ function reviewStyle(attrs: Attributes, style: FightingStyle): DesignReviewItem[
     });
   }
 
-  // Slasher notes from the Arena 93 slasher articles — the scimitar criterion
-  // is the cornerstone check; the rest are advisory spending notes.
-  if (style === FightingStyle.SlashingAttack) {
-    const sc = checkWeaponRequirements('scimitar', attrs);
-    const deficit = trainableDeficit(sc);
-    items.push({
-      axis: 'style',
-      verdict: sc.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
-      title: 'Scimitar criterion',
-      detail: sc.met
-        ? 'Meets the scimitar minimums (ST 9 / WT 11 / DF 11) — the cornerstone slasher blade.'
-        : deficit <= T.WEAPON_DEFICIT_IN_REACH
-          ? `Scimitar within a couple stat trains — ${sc.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
-          : 'Misses the scimitar criterion (ST 9 / WT 11 / DF 11) by more than a couple trains — the articles say run shortsword or hatchet instead, or design a striker.',
-    });
-    if (attrs.DF < T.SL_DF_PARRY_INFO) {
-      items.push({
-        axis: 'style',
-        verdict: 'info',
-        title: 'Negative-parry baseline',
-        detail: `Deftness ${attrs.DF} keeps slasher parry near zero — canon: the style defends with speed and offense, not parry.`,
-      });
-    }
-    if (attrs.WL < T.SL_WL_INFO) {
-      items.push({
-        axis: 'style',
-        verdict: 'info',
-        title: 'Endurance engine',
-        detail: `Will ${attrs.WL} — slashers burn endurance fast; the articles want will doing the heavy lifting.`,
-      });
-    }
-    if (attrs.SZ > T.SL_SZ_INFO) {
-      items.push({
-        axis: 'style',
-        verdict: 'info',
-        title: 'Big-slasher trade-off',
-        detail: `Size ${attrs.SZ} buys hit points and damage at the cost of encumbrance — workable, but the canon builds stay small.`,
-      });
-    }
-    if (attrs.SP > T.SL_SP_INFO) {
-      items.push({
-        axis: 'style',
-        verdict: 'info',
-        title: 'Speed spending',
-        detail: `Speed ${attrs.SP} — the articles say never add points to speed on a slasher; initiative comes from the style itself.`,
-      });
-    }
-  }
-
-  if (style === FightingStyle.ParryStrike) {
-    items.push(...pikerCanonNotes(attrs));
-  }
-
-  if (style === FightingStyle.StrikingAttack) {
-    items.push(...strikerCanonNotes(attrs));
-  }
-
-  if (style === FightingStyle.ParryLunge) {
-    items.push(...parryLungeCanonNotes(attrs));
-  }
-
-  if (style === FightingStyle.LungingAttack) {
-    items.push(...lungerCanonNotes(attrs));
-  }
+  if (style === FightingStyle.SlashingAttack) items.push(...slasherCanonNotes(attrs));
+  if (style === FightingStyle.ParryStrike) items.push(...pikerCanonNotes(attrs));
+  if (style === FightingStyle.StrikingAttack) items.push(...strikerCanonNotes(attrs));
+  if (style === FightingStyle.ParryLunge) items.push(...parryLungeCanonNotes(attrs));
+  if (style === FightingStyle.WallOfSteel) items.push(...wallOfSteelCanonNotes(attrs));
+  if (style === FightingStyle.LungingAttack) items.push(...lungerCanonNotes(attrs));
 
   return items;
 }
 
-// Lunger notes from the Arena 93 lunger articles (Snorri's Lunger Strats,
-// the Wild Boar's Defensive Lunger, Assur's Lunger Model): the style wants
-// an even spread behind the longsword well-suited triplet — ST 11 / WT 13 /
-// DF 11 — with will carrying the highest endurance burn in the game.
-// Constitution 9+ is canon (the usual never-spend-con advice doesn't hold),
-// size under 12 with sub-13 strength hits light, and Snorri saw no gain
-// past wit 17.
-function lungerCanonNotes(attrs: Attributes): DesignReviewItem[] {
+// Slasher notes from the Arena 93 slasher articles — the scimitar criterion
+// is the cornerstone check; the rest are advisory spending notes.
+function slasherCanonNotes(attrs: Attributes): DesignReviewItem[] {
   const items: DesignReviewItem[] = [];
-  const lo = checkWeaponRequirements('longsword', attrs);
-  const deficit = trainableDeficit(lo);
+  const sc = checkWeaponRequirements('scimitar', attrs);
+  const deficit = trainableDeficit(sc);
   items.push({
     axis: 'style',
-    verdict: lo.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
-    title: 'Longsword frame',
-    detail: lo.met
-      ? "Meets the longsword well-suited triplet (ST 11 / WT 13 / DF 11) — Assur's frame: the one weapon a lunger needs."
+    verdict: sc.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
+    title: 'Scimitar criterion',
+    detail: sc.met
+      ? 'Meets the scimitar minimums (ST 9 / WT 11 / DF 11) — the cornerstone slasher blade.'
       : deficit <= T.WEAPON_DEFICIT_IN_REACH
-        ? `Longsword within a couple stat trains — ${lo.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
-        : "Cannot reach the longsword frame (ST 11 / WT 13 / DF 11) — Assur's principal weapon; the triplet is the spine of his model.",
+        ? `Scimitar within a couple stat trains — ${sc.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
+        : 'Misses the scimitar criterion (ST 9 / WT 11 / DF 11) by more than a couple trains — the articles say run shortsword or hatchet instead, or design a striker.',
   });
-  if (attrs.CN < T.LU_CN_SOFT_FLOOR) {
+  if (attrs.DF < T.SL_DF_PARRY_INFO) {
     items.push({
       axis: 'style',
       verdict: 'info',
-      title: 'Thin constitution',
-      detail: `Constitution ${attrs.CN} — Snorri's floor is ${T.LU_CN_SOFT_FLOOR}; the usual never-spend-con advice doesn't hold on a style that takes hits.`,
+      title: 'Negative-parry baseline',
+      detail: `Deftness ${attrs.DF} keeps slasher parry near zero — canon: the style defends with speed and offense, not parry.`,
     });
   }
-  if (attrs.SZ < T.LU_DAMAGE_SZ && attrs.ST < T.LU_DAMAGE_ST) {
+  if (attrs.WL < T.SL_WL_INFO) {
     items.push({
       axis: 'style',
       verdict: 'info',
-      title: 'Damage-rating caution',
-      detail: `Size ${attrs.SZ} with strength ${attrs.ST} — Snorri: hard to roll a good damage rating under size ${T.LU_DAMAGE_SZ} without ${T.LU_DAMAGE_ST} strength (which also unlocks the long spear).`,
+      title: 'Endurance engine',
+      detail: `Will ${attrs.WL} — slashers burn endurance fast; the articles want will doing the heavy lifting.`,
     });
   }
-  const vals = Object.values(attrs);
-  if (Math.max(...vals) - Math.min(...vals) <= T.LU_EVEN_SPREAD) {
+  if (attrs.SZ > T.SL_SZ_INFO) {
     items.push({
       axis: 'style',
       verdict: 'info',
-      title: 'Even spread',
-      detail:
-        "Snorri's core doctrine — a fairly even spread works well on a lunger; the skills arrive well distributed.",
+      title: 'Big-slasher trade-off',
+      detail: `Size ${attrs.SZ} buys hit points and damage at the cost of encumbrance — workable, but the canon builds stay small.`,
     });
   }
-  if (attrs.WT > T.LU_WT_CEIL) {
+  if (attrs.SP > T.SL_SP_INFO) {
     items.push({
       axis: 'style',
       verdict: 'info',
-      title: 'Wit ceiling',
-      detail: `Wit ${attrs.WT} — Snorri got good bases at 12 and saw no improvement past ${T.LU_WT_CEIL}; the extra points serve better elsewhere.`,
+      title: 'Speed spending',
+      detail: `Speed ${attrs.SP} — the articles say never add points to speed on a slasher; initiative comes from the style itself.`,
     });
   }
   return items;
@@ -371,6 +306,164 @@ function pikerCanonNotes(attrs: Attributes): DesignReviewItem[] {
       verdict: 'warn',
       title: 'Average-numbers piker',
       detail: `A spread of only ${spread} points between best and worst attribute — canon advice: never make average numbers into the worst style in the game; pick an extreme.`,
+    });
+  }
+  return items;
+}
+
+// Wall-of-Steel notes from the Arena 93 wall corpus (Eli's Parry-Slash take,
+// Assur's Bash Bros, Dante Killatroll's Nerdy Style, She-Puppy's Berserker,
+// and Wasted Wastes). Will is the keystone — the style burns endurance like
+// a lunger — and the scimitar floor is the cornerstone criterion. Everything
+// else is advisory: speed is a luxury, size stays in band, and Eli keeps
+// SP+DF at 18 minimum for coordination.
+function wallOfSteelCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+
+  if (attrs.WL < T.WS_WL_WARN) {
+    items.push({
+      axis: 'style',
+      verdict: attrs.WL < T.WS_WL_FLOOR ? 'warn' : 'info',
+      title: 'Endurance-burn will',
+      detail:
+        attrs.WL < T.WS_WL_FLOOR
+          ? `Will ${attrs.WL} — a will-less wall is a wasted waste; the style burns endurance like a lunger and even Dante's floor is ${T.WS_WL_FLOOR}.`
+          : `Will ${attrs.WL} works outside ADM ambition, but the wall corpus wants ${T.WS_WL_WARN}+ (17 or 21 preferred) — the style burns endurance like a lunger.`,
+    });
+  } else if (attrs.WL >= 17) {
+    items.push({
+      axis: 'style',
+      verdict: 'good',
+      title: 'Endurance-burn will',
+      detail: `Will ${attrs.WL} is burn-rated for the wall — the corpus asks 15+ and prefers 17 or 21.`,
+    });
+  }
+
+  const sc = checkWeaponRequirements('scimitar', attrs);
+  const deficit = trainableDeficit(sc);
+  items.push({
+    axis: 'style',
+    verdict: sc.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
+    title: 'Scimitar floor',
+    detail: sc.met
+      ? `Meets the scimitar minimums — Dante's cornerstone: a waste must at least swing the scimitar (ST ${T.WS_ST_MIN}+ opens it; ${T.WS_ST_GOOD} adds broadsword and quarterstaff).`
+      : deficit <= T.WEAPON_DEFICIT_IN_REACH
+        ? `Scimitar within a couple stat trains — ${sc.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
+        : 'Cannot reach the scimitar — Dante: "you need to at least be able to use the Scimitar."',
+  });
+
+  if (attrs.WT < T.WS_WT_INFO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Wit learning',
+      detail: `Wit ${attrs.WT} — Eli calls ${T.WS_WT_INFO}+ near-mandatory: below it, learning "slows to a crawl."`,
+    });
+  }
+  if (attrs.DF < T.WS_DF_MIN) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      title: 'Deftness floor',
+      detail: `Deftness ${attrs.DF} — ${T.WS_DF_MIN} is the floor for weapon requirements and coordination; Eli won't run a waste below 13.`,
+    });
+  }
+  if (attrs.SP > T.WS_SP_INFO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Speed luxury',
+      detail: `Speed ${attrs.SP} — the corpus treats speed as a luxury: Assur adds zero points to it and Eli runs a 3.`,
+    });
+  }
+  if (attrs.SZ > T.WS_SZ_HI || attrs.SZ < T.WS_SZ_LO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Size band',
+      detail:
+        attrs.SZ > T.WS_SZ_HI
+          ? `Size ${attrs.SZ} buys negative defense/parry skill points and an endurance tax — Dante caps walls at ${T.WS_SZ_HI}.`
+          : `Size ${attrs.SZ} — wee wastes hit soft and take less; She-Puppy floors size at ${T.WS_SZ_LO}.`,
+    });
+  }
+  if (attrs.SP + attrs.DF < T.WS_COORD_MIN) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Coordination check',
+      detail: `SP+DF ${attrs.SP + attrs.DF} — Eli keeps the pair at ${T.WS_COORD_MIN} minimum (21 is normal coordination): coordination is vital to the wall's attack and defense.`,
+    });
+  }
+  if (attrs.CN <= 8) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Low-con wall',
+      detail: `Constitution ${attrs.CN} — low con is workable on a wall run fast and furious; Eli's Bender held a 7 and never lost.`,
+    });
+  }
+  if (attrs.ST + attrs.CN >= T.WS_STCN_GOOD) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Physical spread',
+      detail: `ST+CN ${attrs.ST + attrs.CN} reaches Dante's ${T.WS_STCN_GOOD} bar — endurance and carry are set.`,
+    });
+  }
+  return items;
+}
+
+// Lunger notes from the Arena 93 lunger corpus — Elder Snorri's "Lunger
+// Strats", The Wild Boar's "Defensive Lunger", and Assur's Lunger Model.
+// Assur's frame is the longsword well-suited triplet (ST 11 / WT 13 / DF 11);
+// Snorri spends like a scum — con is real on this style — and wants the
+// spread even.
+function lungerCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  const lo = checkWeaponRequirements('longsword', attrs);
+  const deficit = trainableDeficit(lo);
+  items.push({
+    axis: 'style',
+    verdict: lo.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
+    title: 'Longsword criterion',
+    detail: lo.met
+      ? `Meets Assur's longsword frame (ST 11 / WT 13 / DF 11) — the lazy-mode lunger blade, scimitar against plate.`
+      : deficit <= T.WEAPON_DEFICIT_IN_REACH
+        ? `Longsword within a couple stat trains — ${lo.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
+        : `Misses Assur's longsword frame (ST 11 / WT 13 / DF 11) by more than a couple trains — run short spear or epee instead, or spend like the model.`,
+  });
+  if (attrs.CN < T.LU_CN_SOFT_FLOOR) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Thin constitution',
+      detail: `Constitution ${attrs.CN} — the usual never-spend-con advice doesn't hold here; Snorri keeps ${T.LU_CN_SOFT_FLOOR}+ on a style that takes hits.`,
+    });
+  }
+  if (attrs.SZ < T.LU_DAMAGE_SZ && attrs.ST < T.LU_DAMAGE_ST) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Damage-rating caution',
+      detail: `Size ${attrs.SZ} with strength ${attrs.ST} — Snorri finds it hard to roll a good damage rating under size ${T.LU_DAMAGE_SZ} without strength ${T.LU_DAMAGE_ST}.`,
+    });
+  }
+  const spread = Math.max(...Object.values(attrs)) - Math.min(...Object.values(attrs));
+  if (spread <= T.LU_EVEN_SPREAD) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Even spread',
+      detail: `Only ${spread} points between best and worst attribute — Snorri's core lunger doctrine: a fairly even spread works well.`,
+    });
+  }
+  if (attrs.WT >= T.LU_WT_CEIL) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Wit ceiling',
+      detail: `Wit ${attrs.WT} — Snorri got good bases at 12 and saw no gain past ${T.LU_WT_CEIL} on a lunger; the points may serve better on will or strength.`,
     });
   }
   return items;

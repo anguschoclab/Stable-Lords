@@ -163,3 +163,43 @@ describe('applyStyleDoctrine — Parry-Lunge doctrine (Arena 93)', () => {
     expect(high).toMatchObject({ OE: 8, AL: 10 });
   });
 });
+
+describe('applyStyleDoctrine — Wall-of-Steel doctrine (Arena 93)', () => {
+  // Canon walls run hot while young (Eli/She-Puppy: "run them offensively
+  // while young") then taper to the high-low pace; activity stays
+  // moderate-to-low and kill desire stays at or under 6 outside desperation.
+  const YOUNG = makeComputedWarrior({}, FightingStyle.WallOfSteel);
+  const VETERAN = makeComputedWarrior({}, FightingStyle.WallOfSteel, {
+    career: { wins: 6, losses: 4, kills: 0 },
+  });
+
+  it('floors OE for young walls — canon runs them offensively while young', () => {
+    const p = plan(3, 4, 5);
+    applyStyleDoctrine(p, YOUNG);
+    expect(p.OE).toBe(6);
+  });
+
+  it('leaves a veteran wall free to run a defensive sheet', () => {
+    const p = plan(3, 6, 3);
+    applyStyleDoctrine(p, VETERAN);
+    expect(p.OE).toBe(3);
+  });
+
+  it('caps AL at 7 — walls run moderate-to-low activity', () => {
+    const p = plan(6, 10, 5);
+    applyStyleDoctrine(p, YOUNG);
+    expect(p.AL).toBe(7);
+  });
+
+  it('caps killDesire at 7 — canon sheets run KD 6; 7+ is a desperation save', () => {
+    const p = plan(6, 5, 10);
+    applyStyleDoctrine(p, YOUNG);
+    expect(p.killDesire).toBe(7);
+  });
+
+  it('is a ceiling plus a young-OE floor — canon sheets pass through', () => {
+    const p = plan(9, 6, 6);
+    applyStyleDoctrine(p, YOUNG);
+    expect(p).toMatchObject({ OE: 9, AL: 6, killDesire: 6 });
+  });
+});

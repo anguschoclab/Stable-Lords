@@ -531,3 +531,14 @@ describe('suspectedFavoriteWeapon', () => {
     expect(isWieldingFavoriteWeapon(f, 'fist')).toBe(true);
   });
 });
+
+  it('WS rhythm range follows the canon wall corpus (OE 5-9, AL 2-7)', () => {
+    // Canon composite: berserker sheets open OE 9; the 18-11 graduate favored
+    // a moderate OE with low AL — lows reach AL 2.
+    const max = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0.999, 0.999]));
+    expect(max.rhythm.oe).toBe(9);
+    expect(max.rhythm.al).toBe(7);
+    const min = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0, 0]));
+    expect(min.rhythm.oe).toBe(5);
+    expect(min.rhythm.al).toBe(2);
+  });

@@ -282,7 +282,9 @@ export const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.WallOfSteel]: {
-    tempo: { opening: 0, mid: 0, late: 1, enduranceMult: 0.92 },
+    // Canon burn: "similar to lungers, they have a high endurance burn"
+    // (Assur's Bash Bros) — the wall keeps the blade moving all fight.
+    tempo: { opening: 0, mid: 0, late: 1, enduranceMult: 1.02 },
     getPassive: (ctx, m) => {
       const wallBonus = Math.min(1 + m.bonus, Math.floor(ctx.exchange / 10));
       return {

@@ -225,8 +225,15 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   const rangePref = getAIRangePreference(w.style);
   if (rangePref) plan.rangePreference = rangePref;
 
-  // Phase-stratified effort curves — opening is conservative, late is personality-modified
-  plan.phases = buildPhasePlan(plan, personality, w.style);
+  // Phase-stratified effort curves — opening is conservative, late is
+  // personality-modified; young Walls of Steel open like offensives (canon:
+  // "run them offensively while they are young").
+  plan.phases = buildPhasePlan(
+    plan,
+    personality,
+    w.style,
+    (w.career?.wins ?? 0) + (w.career?.losses ?? 0)
+  );
 
   // Desperate plan — wired into resolution.ts at HP<30% or END<20%
   plan.desperatePlan = buildDesperatePlan(plan, personality);

@@ -124,8 +124,9 @@ export function FightingStylesSection() {
             exhausting opponents. Low damage output.
           </li>
           <li>
-            <strong>Wall of Steel (WS)</strong> — Defensive all-rounder. Good DEF and RIP, constant
-            blade motion. Beats most styles by attrition.
+            <strong>Wall of Steel (WS)</strong> — "the Waste." Hybrid all-rounder that learns
+            initiative, parry, and attack readily but burns endurance like a lunger — will is the
+            keystone. Canon walls open hot, then taper activity to the high-low pace.
           </li>
         </ul>
         <p className="mt-3">

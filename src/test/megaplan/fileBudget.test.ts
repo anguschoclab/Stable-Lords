@@ -63,8 +63,8 @@ describe('megaplan: file & function budgets', () => {
     expect(functions.filter((f: { len: number }) => f.len > 80).length).toBeLessThanOrEqual(19);
     // >800: commonCorpus.ts + arenas/lore.ts + fighterConcepts.ts (pure data) —
     // routeTree.gen.ts dropped to 788 under prettier formatting; tightened 4 → 2,
-    // then the Arena-93 lunger concept port pushed fighterConcepts past 800
-    // (still far under the 1300 data ceiling). Rebaselined to 3.
+    // then the Arena-93 concept ports pushed fighterConcepts past 800 (still far
+    // under the 1300 data ceiling). Rebaselined to 3.
     expect(files.source.filter((f: { lines: number }) => f.lines > 800).length).toBeLessThanOrEqual(
       3
     );

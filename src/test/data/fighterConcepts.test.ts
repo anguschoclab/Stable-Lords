@@ -552,3 +552,39 @@ describe('conceptMean', () => {
     }
   });
 });
+
+describe('FIGHTER_CONCEPTS — Wall-of-Steel canon roster (Arena 93 wall articles)', () => {
+  const concepts = FIGHTER_CONCEPTS[FightingStyle.WallOfSteel].concepts;
+  const find = (name: string) => concepts.find((c) => c.name === name);
+
+  it('keeps Aegis first — the concept-picker contract (concepts[0])', () => {
+    expect(concepts[0]!.name).toBe('Aegis');
+  });
+
+  it("includes Eli's undefeated Bender — the 9-7-14-17-17-3-17 duelmaster", () => {
+    const c = find('Bender');
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 9, CN: 7, SZ: 14, WT: 17, WL: 17, SP: 3, DF: 17 });
+  });
+
+  it('includes the 18-11 Wasted Wastes graduate — 11-9-6-13-21-9-17', () => {
+    const c = find('The Graduate');
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 11, CN: 9, SZ: 6, WT: 13, WL: 21, SP: 9, DF: 17 });
+  });
+
+  it("includes Dante's worked example — 10-12-9-15-15-10-13", () => {
+    const c = find("Dante's Trainee");
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 10, CN: 12, SZ: 9, WT: 15, WL: 15, SP: 10, DF: 13 });
+  });
+
+  it('carries the four Assur Bash Bros hybrids — high will, minimal speed', () => {
+    for (const name of ['Bash Bro Prime', 'Bash Bro Hybrid', 'Bash Bro Slow', 'Bash Bro Brick']) {
+      const c = find(name);
+      expect(c, `missing ${name}`).toBeDefined();
+      expect(c!.canonStats.WL, `${name} will`).toBeGreaterThanOrEqual(16);
+      expect(c!.canonStats.SP, `${name} speed`).toBeLessThanOrEqual(10);
+    }
+  });
+});

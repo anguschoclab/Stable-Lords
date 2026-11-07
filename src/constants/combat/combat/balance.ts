@@ -19,6 +19,11 @@ export const LU_MOMENTUM_DMG_COEFF = 0.5;
 export const WS_ATTRITION_FLOOR = 0.5;
 /** Wall of Steel standing guard: parry bonus from the first exchange (the wall is up before it thickens). Balance knob. */
 export const WS_WALL_PAR = 2;
+/** Wall of Steel harmony: parry bonus while the phase-resolved OE equals kill
+ *  desire — the She-Puppy rumor (Arena 93): "a wall of steel gets a bonus if
+ *  his OE equals his KD." The wall hums behind a steadier guard when effort
+ *  matches intent. Balance knob. */
+export const WS_HARMONY_PAR = 2;
 
 /** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
 export const PS_COUNTERSTRIKE_ATT = 2;

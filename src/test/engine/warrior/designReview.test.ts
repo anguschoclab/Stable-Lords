@@ -463,3 +463,94 @@ describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
     expect(leaked).toBeUndefined();
   });
 });
+
+describe('wall-of-steel canon notes (Arena 93 wall articles)', () => {
+  const WS = FightingStyle.WallOfSteel;
+  const onStyle = (over: Partial<Attributes> = {}) =>
+    reviewWarriorDesign(A(over), WS).filter((x) => x.axis === 'style');
+  const find = (over: Partial<Attributes>, re: RegExp) =>
+    onStyle(over).find((x) => re.test(x.title));
+
+  // "Wastes need Will, at the very least 15 and preferably 17 or 21, because
+  // of the endurance burn of this fighting style." (Wasted Wastes)
+  it('warns below Dante\'s 11-will floor — a will-less wall is a wasted waste', () => {
+    expect(find({ WL: 8 }, /endurance-burn will/i)?.verdict).toBe('warn');
+  });
+
+  it('advises (not warns) in the 11-14 band — workable outside ADM ambition', () => {
+    expect(find({ WL: 13 }, /endurance-burn will/i)?.verdict).toBe('info');
+  });
+
+  it('praises a burn-rated will at 17+', () => {
+    expect(find({ WL: 18 }, /endurance-burn will/i)?.verdict).toBe('good');
+  });
+
+  it('stays silent on will in the 15-16 band', () => {
+    expect(find({ WL: 15 }, /endurance-burn will/i)).toBeUndefined();
+  });
+
+  // Dante: "You need to at least be able to use the Scimitar."
+  it('warns when the scimitar is untrainably out of reach', () => {
+    expect(find({ ST: 3, WT: 3, DF: 3 }, /scimitar floor/i)?.verdict).toBe('warn');
+  });
+
+  it('passes the scimitar criterion when the triplet is met', () => {
+    expect(find({ ST: 9, WT: 11, DF: 11 }, /scimitar floor/i)?.verdict).toBe('ok');
+  });
+
+  it('passes when the scimitar sits within a couple stat trains', () => {
+    expect(find({ ST: 9, WT: 10, DF: 11 }, /scimitar floor/i)?.verdict).toBe('ok');
+  });
+
+  it('advises on wit below 15 — learning slows to a crawl (Eli)', () => {
+    expect(find({ WT: 13 }, /wit learning/i)?.verdict).toBe('info');
+  });
+
+  it('warns on sub-11 deftness — weapon requirements plus coordination', () => {
+    expect(find({ DF: 9 }, /deftness floor/i)?.verdict).toBe('warn');
+  });
+
+  it('notes speed spending — Assur adds zero; Eli runs a 3', () => {
+    expect(find({ SP: 11 }, /speed luxury/i)?.verdict).toBe('info');
+  });
+
+  it('notes out-of-band size — big walls pay defense and endurance', () => {
+    expect(find({ SZ: 15 }, /size band/i)?.verdict).toBe('info');
+  });
+
+  it('notes tiny size — wee walls hit soft and take less', () => {
+    expect(find({ SZ: 6 }, /size band/i)?.verdict).toBe('info');
+  });
+
+  it('notes sub-canon coordination — Eli keeps SP+DF at 18 minimum', () => {
+    expect(find({ SP: 10, DF: 7 }, /coordination/i)?.verdict).toBe('info');
+  });
+
+  it('endorses a low-con wall — Bender ran a 7 and never lost', () => {
+    expect(find({ CN: 7 }, /low-con/i)?.verdict).toBe('info');
+  });
+
+  it('praises ST+CN at 21 — Dante\'s endurance and carry bar', () => {
+    expect(find({ ST: 11, CN: 10 }, /physical spread/i)?.verdict).toBe('info');
+  });
+
+  it('emits no canon-note warns on Dante\'s worked example', () => {
+    // The generic mixed-family "style fit" check may still warn on thin
+    // cut-offs — that verdict is orthogonal to the wall corpus notes.
+    const items = onStyle({ ST: 10, CN: 12, SZ: 9, WT: 15, WL: 15, SP: 10, DF: 13 });
+    const warns = items.filter((x) => x.verdict === 'warn' && !/style fit/i.test(x.title));
+    expect(warns).toHaveLength(0);
+  });
+
+  it('emits no warns on Bender\'s undefeated frame', () => {
+    const items = onStyle({ ST: 9, CN: 7, SZ: 14, WT: 17, WL: 17, SP: 3, DF: 17 });
+    expect(items.filter((x) => x.verdict === 'warn')).toHaveLength(0);
+  });
+
+  it('does not leak wall notes onto other styles', () => {
+    const leaked = reviewWarriorDesign(A({ WL: 8, DF: 9, SP: 11 }), FightingStyle.TotalParry).find(
+      (x) => /scimitar floor|waste|coordination/i.test(x.title)
+    );
+    expect(leaked).toBeUndefined();
+  });
+});

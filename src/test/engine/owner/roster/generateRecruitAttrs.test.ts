@@ -27,14 +27,17 @@ function meanAttrs(style?: FightingStyle) {
 }
 
 describe('generateRecruitAttrs — style-aware blend', () => {
-  it('WallOfSteel recruits trend toward canon WT/WL (not size)', () => {
+  it('WallOfSteel recruits trend toward canon WL/DF (speed is the luxury)', () => {
     const tank = meanAttrs(FightingStyle.WallOfSteel);
     const neutral = meanAttrs(undefined);
-    // Canon WS concepts are WT/WL-led with deliberately low SZ — the blend
-    // should lift the two leadership stats without inflating size.
-    expect(tank.WT).toBeGreaterThan(neutral.WT + 1);
+    // The canon wall corpus is will-first ("Wastes need Will", 15-21), with
+    // wit and deftness next — and speed explicitly gets zero added points.
+    // The blend lifts the leadership pair, keeps deftness ahead of size,
+    // and starves speed.
     expect(tank.WL).toBeGreaterThan(neutral.WL + 1);
-    expect(tank.WT).toBeGreaterThan(tank.SZ);
+    expect(tank.WT + tank.WL).toBeGreaterThan(neutral.WT + neutral.WL + 1);
+    expect(tank.DF).toBeGreaterThan(tank.SZ);
+    expect(tank.SP).toBeLessThan(neutral.SP);
   });
 
   it('LungingAttack recruits trend toward canon WT/WL', () => {

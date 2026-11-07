@@ -137,6 +137,39 @@ export const DESIGN_REVIEW_THRESHOLDS = {
    */
   PS_FLAT_SPREAD: 7,
   /**
+   * Wall of Steel — the Arena 93 wall corpus (Eli's Parry-Slash take, Assur's
+   * Bash Bros, Dante Killatroll's Nerdy Style, She-Puppy's Berserker, and
+   * Wasted Wastes). "Wastes need Will": the style burns endurance like a
+   * lunger, so 15 is the consensus floor and 17/21 the aim; Dante allows 11
+   * only for builds never meant for ADM.
+   */
+  WS_WL_WARN: 15,
+  WS_WL_FLOOR: 11,
+  /**
+   * Scimitar strength floor — Dante: "you need to at least be able to use
+   * the Scimitar" (ST 9); 11 opens the Broadsword/Quarterstaff, 13 the
+   * Great Axe.
+   */
+  WS_ST_MIN: 9,
+  WS_ST_GOOD: 11,
+  /** Wit below which learning "slows to a crawl" (Eli; Dante wants 15/17/21). */
+  WS_WT_INFO: 15,
+  /** Deftness floor — weapon requirements plus the coordination column. */
+  WS_DF_MIN: 11,
+  /** Speed above which the "speed is a luxury" note fires — Assur adds 0; Eli runs a 3. */
+  WS_SP_INFO: 10,
+  /**
+   * Size band — above 14 buys negative DEF/PAR skill points and endurance
+   * cost (Dante caps 14; She-Puppy warns 15+); below 7 the wee wall hits
+   * soft and can't take damage (She-Puppy's floor; Eli allows 5).
+   */
+  WS_SZ_HI: 14,
+  WS_SZ_LO: 7,
+  /** Eli's coordination floor — "at the very least" SP+DF 18 (21 = Normal). */
+  WS_COORD_MIN: 18,
+  /** Dante's endurance/carry bar — get ST+CN to at least 21. */
+  WS_STCN_GOOD: 21,
+  /**
    * Lunger constitution floor — Snorri: "try not to go any lower than 9";
    * the usual never-spend-con advice doesn't hold on a style that takes
    * hits. Only Boar's defensive variant forgives less.

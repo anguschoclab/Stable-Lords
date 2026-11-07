@@ -25,10 +25,14 @@
  *   and bashers" in the first few fights, "always remain cautious" after —
  *   veterans still bid the heavy hitters, rookies refuse them outright;
  *   Tripwire steers clear of scum that burn out the fragile frame.
- *
  *  LU: "pure scum in Plate Armor!!! Avoid like the plague!" (Assur) —
  *   lungers hunt strikers, bashers, and the hybrids, and respect the
  *   high-attack defenses and slashers without fearing the plague band.
+ *  WS: "challenge pretty much any style (lungers aren't recommended)" —
+ *   She-Puppy; Dante loves watching bashers, slashers, and lungers get
+ *   nowhere against the guard. Eli warns end-game lungers and aimed blows
+ *   are way OP, and She-Puppy slows down against very defensive walls —
+ *   "slow down or you will be scummed."
  *
  * Bias units match the post-transform score scale in boutBidding (−5..+5).
  */
@@ -92,6 +96,18 @@ const PL: StyleBias = {
   [FightingStyle.BashingAttack]: -2.5, // hardest hitters — deepest caution
 };
 
+const WS: StyleBias = {
+  [FightingStyle.BashingAttack]: 1.5, // Dante: nothing beats watching bashers get nowhere
+  [FightingStyle.SlashingAttack]: 1, // fast offensives the guard parries all day
+  [FightingStyle.StrikingAttack]: 1,
+  [FightingStyle.LungingAttack]: -2, // "lungers aren't recommended"; way OP at end-game
+  [FightingStyle.AimedBlow]: -1.5, // Eli's other end-game nightmare
+  [FightingStyle.TotalParry]: -1, // "slow down or you will be scummed"
+  [FightingStyle.ParryRiposte]: -0.5, // scummy varieties — same caution, milder
+  [FightingStyle.ParryStrike]: -0.5,
+  [FightingStyle.ParryLunge]: -0.5,
+};
+
 const LU: StyleBias = {
   [FightingStyle.StrikingAttack]: 2.5, // Assur's best matchups — soft offensives
   [FightingStyle.BashingAttack]: 2.5,
@@ -121,6 +137,7 @@ const CANON_TARGETING: Partial<Record<FightingStyle, StyleBias>> = {
   [FightingStyle.ParryLunge]: PL,
   [FightingStyle.SlashingAttack]: SL,
   [FightingStyle.StrikingAttack]: ST,
+  [FightingStyle.WallOfSteel]: WS,
   [FightingStyle.LungingAttack]: LU,
 };
 

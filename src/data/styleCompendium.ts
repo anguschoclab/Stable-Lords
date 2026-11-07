@@ -140,7 +140,7 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
   [FightingStyle.WallOfSteel]: {
     archetype: 'The Bulwark',
     description:
-      'Wall of Steel keeps the guard but never abandons the reply — defend in layers, strike in the seams. It is the veteran’s style: rarely spectacular, never easy to beat, and quietly lethal against the reckless.',
+      'Wall of Steel — "the Waste" to the managers who swear by it — keeps the guard but never abandons the reply: defend in layers, strike in the seams. It burns endurance like a lunging style, so will does the heavy lifting; run it hot while young, then settle into the high-low pace. Rarely spectacular, never easy to beat, and quietly lethal against the reckless.',
     hallmarks: [
       'Layered active defense',
       'Counters from inside the guard',

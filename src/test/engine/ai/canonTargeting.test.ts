@@ -161,6 +161,41 @@ describe('canonTargetingBias — ST doctrine (Arena 93)', () => {
   });
 });
 
+describe('canonTargetingBias — WS doctrine (Arena 93 wall articles)', () => {
+  const WS = FightingStyle.WallOfSteel;
+  const BA = FightingStyle.BashingAttack;
+  const SL = FightingStyle.SlashingAttack;
+  const ST = FightingStyle.StrikingAttack;
+  const TP = FightingStyle.TotalParry;
+  const PR = FightingStyle.ParryRiposte;
+  const PS = FightingStyle.ParryStrike;
+  const PL = FightingStyle.ParryLunge;
+
+  it('hunts the fast offensives — Dante loves watching bashers and slashers get nowhere', () => {
+    expect(canonTargetingBias(WS, BA)).toBeGreaterThanOrEqual(1);
+    expect(canonTargetingBias(WS, SL)).toBeGreaterThan(0);
+    expect(canonTargetingBias(WS, ST)).toBeGreaterThan(0);
+  });
+
+  it('avoids lungers and aimed blows — "not recommended"; way OP at end-game', () => {
+    expect(canonTargetingBias(WS, LU)).toBeLessThanOrEqual(-1);
+    expect(canonTargetingBias(WS, AB)).toBeLessThanOrEqual(-1);
+  });
+
+  it('shows mild scum caution — She-Puppy: slow down or be scummed', () => {
+    expect(canonTargetingBias(WS, TP)).toBeLessThan(0);
+    expect(canonTargetingBias(WS, PR)).toBeLessThan(0);
+    expect(canonTargetingBias(WS, PS)).toBeLessThan(0);
+    expect(canonTargetingBias(WS, PL)).toBeLessThan(0);
+  });
+
+  it('never hard-avoids — canon walls "challenge pretty much any style"', () => {
+    for (const style of Object.values(FightingStyle)) {
+      expect(canonTargetingBias(WS, style)).toBeGreaterThan(-3);
+    }
+  });
+});
+
 describe('canonTargetingBias — LU doctrine (Arena 93)', () => {
   it('hard-avoids plate scum — "pure scum in Plate Armor!!! Avoid like the plague!"', () => {
     expect(canonTargetingBias(LU, TP)).toBeLessThanOrEqual(-3);

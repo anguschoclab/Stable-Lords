@@ -56,6 +56,31 @@ function warnSlasherRhythm(plan: FightPlan, OE: number, AL: number, out: Strateg
   }
 }
 
+/** Canon wall rhythm (Arena 93): every Wall-of-Steel article tapers activity
+ * to low by mid-bout — the style burns endurance like a lunger and cannot
+ * afford a busy late fight. Kill desire stays at 6 or under; She-Puppy
+ * reserves 7+ for desperation saves, not the base sheet. */
+function warnWallRhythm(plan: FightPlan, AL: number, out: StrategyWarning[]): void {
+  if (plan.style !== FightingStyle.WallOfSteel) return;
+  const sustainedAL = (['mid', 'late'] as const).some((p) => (plan.phases?.[p]?.AL ?? AL) >= 7);
+  if (sustainedAL) {
+    out.push({
+      code: 'WS_SUSTAINED_HIGH_AL',
+      severity: 'info',
+      message:
+        'Walls burn endurance like lungers — canon sheets open hot, then taper AL to low by mid-bout.',
+    });
+  }
+  if ((plan.killDesire ?? 5) >= 7) {
+    out.push({
+      code: 'WS_KILL_DESIRE',
+      severity: 'info',
+      message:
+        'Canon wall sheets run kill desire 6 or under — 7+ is reserved for desperation saves.',
+    });
+  }
+}
+
 /** Canon lunger rhythm (Arena 93, Assur's Way + Snorri): the style tapers
  * activity fast — Assur's 7-10 opener drops to AL 4-5 by mid — and even the
  * defensive lunger keeps fighting at OE 4. Forced tactics stay light: the
@@ -180,11 +205,9 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
     });
   }
 
-  // Style vs. posture sanity
-  if (
-    (plan.style === FightingStyle.TotalParry || plan.style === FightingStyle.WallOfSteel) &&
-    OE >= HIGH
-  ) {
+  // Style vs. posture sanity — canon walls open hot (10-10-6, 9-6-6), so
+  // only the true defensive styles draw the high-OE warning.
+  if (plan.style === FightingStyle.TotalParry && OE >= HIGH) {
     out.push({
       code: 'STYLE_MISMATCH_OE',
       severity: 'warn',
@@ -221,6 +244,7 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
   }
 
   warnSlasherRhythm(plan, OE, AL, out);
+  warnWallRhythm(plan, AL, out);
   warnLungerRhythm(plan, OE, AL, out);
   if (warrior) warnParryLungerTactics(plan, warrior, out);
 

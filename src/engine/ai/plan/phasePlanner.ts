@@ -14,17 +14,24 @@ import { clamp } from '@/utils/math';
  * @param plan - The base fight plan
  * @param personality - Owner personality for late phase modifiers
  * @param style - Fighting style to determine opening bias
+ * @param fights - Career fight count; young Walls of Steel open like
+ *   offensives ("run them offensively while they are young"), veterans keep
+ *   the defensive taper.
  * @returns Phased strategies for the bout
  */
 export function buildPhasePlan(
   plan: FightPlan,
   personality: OwnerPersonality,
-  style: FightingStyle
+  style: FightingStyle,
+  fights?: number
 ): FightPlan['phases'] {
+  const youngWall =
+    style === FightingStyle.WallOfSteel && fights !== undefined && fights < 10;
   const isDefensive =
-    style === FightingStyle.TotalParry ||
-    style === FightingStyle.WallOfSteel ||
-    style === FightingStyle.ParryRiposte;
+    !youngWall &&
+    (style === FightingStyle.TotalParry ||
+      style === FightingStyle.WallOfSteel ||
+      style === FightingStyle.ParryRiposte);
   const openingOE = clamp(plan.OE - (isDefensive ? 2 : 1), 1, 10);
   // Aggression bias ramps across the bout: feel the opponent out, then open up late.
   const baseBias = plan.aggressionBias ?? 5;

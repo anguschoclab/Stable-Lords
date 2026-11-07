@@ -52,6 +52,19 @@ export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
     plan.killDesire = Math.min(plan.killDesire ?? 5, 7);
     return;
   }
+  if (w.style === FightingStyle.WallOfSteel) {
+    // Arena 93 wall canon (Eli/She-Puppy/Dante/Assur): "run them offensively
+    // while they are young" — young walls take the slasher-style opening, so
+    // OE floors at 6 for the first ten fights (the suitability bias's OE
+    // knockdown is already applied upstream). Veterans may free-run Dante's
+    // defensive 6-4-6 sheets. Every article runs activity moderate-to-low
+    // and keeps KD at 6 or under — 7+ belongs to desperation saves.
+    const fights = (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+    if (fights < 10) plan.OE = Math.max(plan.OE, 6);
+    plan.AL = Math.min(plan.AL, 7);
+    plan.killDesire = Math.min(plan.killDesire ?? 5, 7);
+    return;
+  }
   if (w.style !== FightingStyle.TotalParry) return;
   // Duel II canon recognizes TP varieties by build (Consortium/Blackstorm/
   // Buri/Stimpy): the Un-Scum needs WT 15+/DF 11+ — an active dodge-parry

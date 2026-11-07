@@ -16,6 +16,10 @@
  *     Blind Man's "Brainy Low-Will Strikers", Sir Boyd's "The Striking
  *     Style", Talon's "Strikers R Us", Tex's "Yet Another Striker
  *     Article", and the Crimson Strategist's "Crimson Strikers".
+ *   Duel2 Arena 93 Wall-of-Steel articles — Eli's "My Take on the Parry
+ *     Slash (Wall of Steel)", Assur's "Bash Bros Waste", Dante
+ *     Killatroll's "Wall of Steel: Nerdy Style", The She-Puppy's "The
+ *     Wall of Steel as a Berserker", and "Wasted Wastes".
  */
 
 import {
@@ -773,7 +777,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
   },
   [FightingStyle.WallOfSteel]: {
     doctrine:
-      'The all-around style — good defense with equal offense, rarely fast. Parries until it gains the initiative, then strikes powerfully. Defensive tactics include parry and some riposte; offensively bash and slash work well, depending on the weapon.',
+      'The "waste" — the hybrid wall that never drops its guard but never stops answering. It learns initiative, parry, and attack readily while defense lags, and it burns endurance like a lunger, so will is the keystone (15 minimum, 17+ preferred) and activity tapers to low after hot minute-one openings. Run young walls offensively, then settle into the high-low pace.',
     concepts: [
       concept(
         'Aegis',
@@ -786,6 +790,60 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         { ST: 13, CN: 16, SZ: 9, WT: 15, WL: 17, SP: 3, DF: 11 },
         'Offensive version — strength develops over time and speed eventually must rise to avoid clumsiness. High constitution absorbs nearly anything and sustains full offense indefinitely; he can wear pretty much any armor without a problem.',
         'Parry early, then bash or slash.'
+      ),
+      concept(
+        'Bender',
+        { ST: 9, CN: 7, SZ: 14, WT: 17, WL: 17, SP: 3, DF: 17 },
+        "Eli's undefeated DM-41 Duelmaster — a tourney-grade frame: low con tolerated because it runs fast and furious and most fights end in minute one, big enough for real damage, wit and will at 17, speed left at 3.",
+        'Run hot: 10-10-6 in minute one, then taper to high offensive effort and low activity.'
+      ),
+      concept(
+        'Beowulf',
+        { ST: 11, CN: 12, SZ: 9, WT: 15, WL: 17, SP: 3, DF: 17 },
+        "Eli's Seam veteran — 54 learned skills and near the top of the arena. The balanced waste: 11 strength opens the broadsword and quarterstaff, everything else serves wit, will, and deftness.",
+        'Same high-low rhythm — offensive opening, low-activity finish.'
+      ),
+      concept(
+        'Midnight',
+        { ST: 9, CN: 11, SZ: 10, WT: 17, WL: 15, SP: 3, DF: 21 },
+        "Eli's ADM build — ad-masters in attack and initiative on a 21-deftness chassis. The wit statement loadout carries the style's signature skills; will at 15 is the floor, not the aim.",
+        'Offensive minute one, then high-low.'
+      ),
+      concept(
+        "Dante's Trainee",
+        { ST: 10, CN: 12, SZ: 9, WT: 15, WL: 15, SP: 10, DF: 13 },
+        "Dante Killatroll's worked example — four wit statements (INI 12, ATT 10, PAR 7, DEF 7) plus an endurance blessing. Trains strength to 11 early to un-hose damage and carry; learned 46 skills in a 14-8 start.",
+        'Open 6-4-6, then move effort and activity up or down by one until the parry locks in.'
+      ),
+      concept(
+        'Bash Bro Prime',
+        { ST: 12, CN: 9, SZ: 15, WT: 13, WL: 21, SP: 3, DF: 11 },
+        "Assur's first Bash Bro — a big 21-will hybrid a manager would be pleased with, just short of tourney quality. Spare points went to con over strength: at this size, strength buys little.",
+        'Hybrid wall — defensive structure, offensive answers.'
+      ),
+      concept(
+        'Bash Bro Hybrid',
+        { ST: 12, CN: 8, SZ: 9, WT: 17, WL: 17, SP: 10, DF: 11 },
+        "Assur's second — the 17-17 wit-will pairing most managers build for tournaments. Moderate con keeps it a hybrid rather than a true defensive wall.",
+        'Hybrid wall — parry the storm, answer in the seams.'
+      ),
+      concept(
+        'Bash Bro Slow',
+        { ST: 17, CN: 9, SZ: 15, WT: 11, WL: 17, SP: 4, DF: 11 },
+        "Assur's big-guy burner — wit parked at 11 (the fallback breakpoint when 17 is out of reach) and the rest dumped into physicals. Slow on paper; the will still carries the burn.",
+        'Hybrid wall — accept the tempo loss, lean on will and frame.'
+      ),
+      concept(
+        'Bash Bro Brick',
+        { ST: 20, CN: 11, SZ: 10, WT: 6, WL: 16, SP: 10, DF: 11 },
+        "Assur's problem-child pick — a hit-point-maximizing burner at the expense of wit. Explicitly not a long-term design: the 6-wit Battle Axe is well-suited early, and the bulk wins more fights than cleverness would.",
+        'Offensive wall — a burner that closes fights before the learning deficit matters.'
+      ),
+      concept(
+        'The Graduate',
+        { ST: 11, CN: 9, SZ: 6, WT: 13, WL: 21, SP: 9, DF: 17 },
+        "The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack, and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a wall survives wit under 15 when everything else is elite.",
+        'Canon favorites: Quarterstaff, moderate offensive effort, low activity; the Riposte tactic runs well; learns initiative first.'
       ),
     ],
   },

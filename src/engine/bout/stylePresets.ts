@@ -2,7 +2,7 @@
  * Per-style strategy presets — named fight plans transcribed from
  * docs/Stable_Lords_Strategy_Editor_Spec_v1.0.md §5 (two per style), plus
  * canon strategies from the Arena 93 newsletter corpus (ripper, slasher,
- * striker, piker, and lunger sheets from the Noblish Island articles).
+ * striker, piker, and wall sheets from the Noblish Island articles).
  *
  * Each preset provides a complete FightPlan with per-phase OE/AL/KD
  * overrides; canon presets may also set per-phase tactics and a
@@ -560,6 +560,45 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
         opening: { OE: 6, AL: 7, KD: 5 },
         mid: { OE: 6, AL: 6, KD: 5 },
         late: { OE: 5, AL: 5, KD: 6 },
+      }
+    ),
+    makePreset(
+      FightingStyle.WallOfSteel,
+      "She-Puppy's Dervish",
+      'The berserker wall — attack and defend the arms like a slasher, then bleed the activity off as the arms tire. Shells up behind Parry when desperate.',
+      {
+        OE: 9,
+        AL: 6,
+        KD: 6,
+        protect: 'Arms',
+        desperatePlan: { OE: 2, AL: 6, killDesire: 2, defensiveTactic: 'Parry' },
+      },
+      {
+        opening: { OE: 9, AL: 6, KD: 6 },
+        mid: { OE: 6, AL: 4, KD: 6 },
+        late: { OE: 5, AL: 2, KD: 5 },
+      }
+    ),
+    makePreset(
+      FightingStyle.WallOfSteel,
+      "Eli's High-Low",
+      'Minute one is all-out — 10-10-6 — then the pace tapers to the ADM-proven high offensive effort over low activity.',
+      { OE: 10, AL: 10, KD: 6 },
+      {
+        opening: { OE: 10, AL: 10, KD: 6 },
+        mid: { OE: 9, AL: 4, KD: 6 },
+        late: { OE: 6, AL: 3, KD: 5 },
+      }
+    ),
+    makePreset(
+      FightingStyle.WallOfSteel,
+      "Dante's Guard",
+      'The Nerdy Style opener — 6-4-6, then move effort and activity up or down by one until the parry locks in.',
+      { OE: 6, AL: 4, KD: 6 },
+      {
+        opening: { OE: 6, AL: 4, KD: 6 },
+        mid: { OE: 5, AL: 4, KD: 6 },
+        late: { OE: 5, AL: 4, KD: 6 },
       }
     ),
   ],

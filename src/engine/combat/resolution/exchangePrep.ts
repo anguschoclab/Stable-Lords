@@ -20,6 +20,7 @@ import { resolveTacticCounters, type TacticCounterMods } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
 import { tryRearm } from './disarm';
+import { getWallHarmonyBonus } from './wallHarmony';
 import type { FighterState, ResolutionContext } from './types';
 
 /**
@@ -165,6 +166,7 @@ interface ResolveStylePassivesArgs {
   fA: FighterState;
   fD: FighterState;
   stylePhase: StylePhase;
+  phaseKey: 'opening' | 'mid' | 'late';
   exchange: number;
   tactA: ReturnType<typeof resolveEffectiveTactics>;
   tactD: ReturnType<typeof resolveEffectiveTactics>;
@@ -175,7 +177,7 @@ function resolveStylePassives(args: ResolveStylePassivesArgs): {
   passA: ReturnType<typeof getStylePassive>;
   passD: ReturnType<typeof getStylePassive>;
 } {
-  const { rng, fA, fD, stylePhase, exchange } = args;
+  const { rng, fA, fD, stylePhase, phaseKey, exchange } = args;
   const { tactA, tactD, events } = args;
   const passA = getStylePassive(fA.style, {
     phase: stylePhase,
@@ -203,6 +205,20 @@ function resolveStylePassives(args: ResolveStylePassivesArgs): {
     targetedLocation: tactD.target,
     totalFights: fD.totalFights,
   });
+
+  // Wall-of-Steel harmony (She-Puppy rumor): OE == KD hums the guard. Reads
+  // the phase-resolved ACTIVE plan — after condition/decoy/desperate swaps —
+  // so a desperate 2-6-2 sheet can harmonize itself.
+  passA.parBonus += getWallHarmonyBonus(
+    fA.style,
+    fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE,
+    fA.activePlan.phases?.[phaseKey]?.killDesire ?? fA.activePlan.killDesire ?? 5
+  );
+  passD.parBonus += getWallHarmonyBonus(
+    fD.style,
+    fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE,
+    fD.activePlan.phases?.[phaseKey]?.killDesire ?? fD.activePlan.killDesire ?? 5
+  );
 
   if (passA.narrative && rng() < PASSIVE_NARRATIVE_CHANCE) {
     events.push({ type: 'PASSIVE', actor: 'A', result: passA.narrative });
@@ -406,6 +422,7 @@ export function prepareExchange(
     fA: fA,
     fD: fD,
     stylePhase: stylePhase,
+    phaseKey: phaseKey,
     exchange: exchange,
     tactA: tac.tactA,
     tactD: tac.tactD,

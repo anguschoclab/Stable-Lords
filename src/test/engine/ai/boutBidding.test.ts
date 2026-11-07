@@ -98,10 +98,10 @@ describe('matchup scoring evaluates all opponents, not just first', () => {
 describe('matchup scoring excludes own stablemates', () => {
   it('matchupModifier does not score against own stablemates', () => {
     // WallOfSteel vs BashingAttack is favorable (matrix +1 → score 125 → mod +1.25)
-    // WallOfSteel vs LungingAttack is neutral (matrix 0 → score 100 → mod 0)
+    // WallOfSteel vs WallOfSteel is neutral (matrix 0 → score 100 → mod 0, no canon bias)
     const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const ownStablemate = makeWarrior('OwnBasher', FightingStyle.BashingAttack);
-    const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
+    const neutralOpp = makeWarrior('Mirror', FightingStyle.WallOfSteel);
 
     const rival = makeRival({
       id: 'rival-1' as any,
@@ -556,7 +556,8 @@ describe('boutBidding optimization — non-VENDETTA', () => {
   it('non-VENDETTA excludes self-rival from opponent list', () => {
     const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const ownStablemate = makeWarrior('OwnBasher', FightingStyle.BashingAttack);
-    const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
+    // WS mirror — matrix- and canon-neutral, so the mod stays 0.
+    const neutralOpp = makeWarrior('Mirror', FightingStyle.WallOfSteel);
 
     const rival = makeRival({
       id: 'rival-1' as any,

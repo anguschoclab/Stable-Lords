@@ -102,17 +102,19 @@ describe('Style Passives', () => {
   describe('getEnduranceMult', () => {
     it('should return multipliers less than or equal to 1.0 for efficient styles', () => {
       const tp = getEnduranceMult(FightingStyle.TotalParry);
-      const ws = getEnduranceMult(FightingStyle.WallOfSteel);
       const ab = getEnduranceMult(FightingStyle.AimedBlow);
 
       expect(tp).toBeLessThanOrEqual(1.0);
-      expect(ws).toBeLessThanOrEqual(1.0);
       expect(ab).toBeLessThanOrEqual(1.0);
     });
 
     it('should return multipliers greater than 1.0 for wasteful styles', () => {
       const lu = getEnduranceMult(FightingStyle.LungingAttack);
+      // Canon (Arena 93 wall corpus): walls burn endurance like lungers —
+      // "they have a high endurance burn". WS sits in the burn tier.
+      const ws = getEnduranceMult(FightingStyle.WallOfSteel);
       expect(lu).toBeGreaterThan(1.0);
+      expect(ws).toBeGreaterThan(1.0);
     });
 
     it('should give Parry-Riposte a low endurance burn — a canon PR advantage', () => {

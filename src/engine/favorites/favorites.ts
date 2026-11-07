@@ -40,7 +40,7 @@ const STYLE_RHYTHM_RANGES: Record<FightingStyle, { oe: [number, number]; al: [nu
   [FightingStyle.SlashingAttack]: { oe: [5, 10], al: [1, 6] },
   [FightingStyle.StrikingAttack]: { oe: [6, 9], al: [4, 7] },
   [FightingStyle.TotalParry]: { oe: [1, 4], al: [1, 4] },
-  [FightingStyle.WallOfSteel]: { oe: [5, 8], al: [4, 7] }, // widened OE to include default 7
+  [FightingStyle.WallOfSteel]: { oe: [5, 9], al: [2, 7] }, // canon: berserker sheets open OE 9; the 18-11 graduate favored moderate OE over low AL
 };
 
 /** Generate hidden favorites for a warrior at creation */

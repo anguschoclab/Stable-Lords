@@ -3041,7 +3041,12 @@
           "{{name}} slowly levers themselves off the blood-stained sand.",
           "Leaning heavily on their weapon, {{name}} pushes back up.",
           "{{name}} rises with a painful grimace, clearly worse for wear.",
-          "Shaking their head to clear the daze, {{name}} gets up."
+          "Shaking their head to clear the daze, {{name}} gets up.",
+          "{{name}} groans, sluggishly picking themselves up from the dirt.",
+          "It takes an agonizing moment for {{name}} to push themselves back to a standing position.",
+          "With trembling limbs, {{name}} slowly rises, clearly battered by the fall.",
+          "{{name}} struggles to find their footing, taking a slow, heavy breath as they stand.",
+          "Clinging to their weapon for support, {{name}} heaves themselves upward at a snail's pace."
         ],
         "fast": [
           "{{name}} springs back up, refusing to stay grounded.",
@@ -3053,7 +3058,12 @@
           "No hesitation—{{name}} is back on their feet in a blur.",
           "{{name}} uses the momentum of the fall to spring right back up.",
           "Brushing off the dirt mid-motion, {{name}} returns to stance.",
-          "{{name}} flips gracefully back to a standing position."
+          "{{name}} flips gracefully back to a standing position.",
+          "{{name}} bounces right back up, unfazed by the knockdown!",
+          "In a flash, {{name}} springs to their feet, ready for more.",
+          "{{name}} kip-ups smoothly, shaking off the dirt in an instant.",
+          "Hardly hitting the ground, {{name}} scrambles back to a fighting stance.",
+          "With practiced agility, {{name}} is back on their feet before you can blink!"
         ]
       }
     },

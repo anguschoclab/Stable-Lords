@@ -52,8 +52,8 @@ function dedupeArray(arr, path) {
     for (let j = i + 1; j < arr.length; j++) {
       if (toRemove.has(j)) continue;
       const sim = getSimilarity(arr[i], arr[j]);
-      if (sim >= 0.8) {
-        // Set threshold to 80% to catch more near-duplicates
+      if (sim >= 0.85) {
+        // Set threshold to 85% to catch more near-duplicates
         toRemove.add(j);
         if (!removedEntries[path]) removedEntries[path] = [];
         removedEntries[path].push(arr[j]);
@@ -93,7 +93,7 @@ for (const file of files) {
   fs.writeFileSync(filePath, JSON.stringify(newContent, null, 2) + '\n');
 }
 
-console.log(`Removed ${totalRemoved} near-duplicates (>= 80% similarity).`);
+console.log(`Removed ${totalRemoved} near-duplicates (>= 85% similarity).`);
 if (totalRemoved > 0) {
   fs.mkdirSync('.claude/backups/narrative', { recursive: true });
   // Merge with existing backup if it exists

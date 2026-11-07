@@ -39,11 +39,13 @@ describe('styleMatchupSymmetry', () => {
 
   it('carries the Arena-93 striker canon — ST beats AB/PL, loses to WS', () => {
     // Assur/Crimson consensus: strikers hunt aimed blows and parry-lungers;
-    // walls (and rippers) weather the first blow.
-    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.AimedBlow)).toBeGreaterThan(0);
+    // walls (and rippers) weather the first blow. The AB edge is carried by
+    // the live decise mechanic, not a baked cell — a +1 double-counted it and
+    // pushed ST→AB past the 80/20 guard (round-3 cell compression).
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.AimedBlow)).toBe(0);
+    expect(getMatchupBonus(FightingStyle.AimedBlow, FightingStyle.StrikingAttack)).toBe(0);
     expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.ParryLunge)).toBeGreaterThan(0);
     expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.WallOfSteel)).toBeLessThan(0);
-    expect(getMatchupBonus(FightingStyle.AimedBlow, FightingStyle.StrikingAttack)).toBeLessThan(0);
     expect(getMatchupBonus(FightingStyle.ParryLunge, FightingStyle.StrikingAttack)).toBeLessThan(0);
     expect(getMatchupBonus(FightingStyle.WallOfSteel, FightingStyle.StrikingAttack)).toBeGreaterThan(0);
   });

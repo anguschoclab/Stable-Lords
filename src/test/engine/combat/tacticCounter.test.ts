@@ -193,13 +193,13 @@ describe('simulateFight — decise is live and Response counters it', () => {
   it('Decisiveness is a real edge: a decise striker beats the same striker without it', () => {
     const deciseWins = winsFor(
       'A',
-      makePlan(ST, { OE: 8, AL: 7, offensiveTactic: 'Decisiveness' }),
-      makePlan(ST, { OE: 8, AL: 7 })
+      makePlan(ST, { OE: 10, AL: 9, offensiveTactic: 'Decisiveness' }),
+      makePlan(ST, { OE: 10, AL: 9 })
     );
     const noneWins = winsFor(
       'A',
-      makePlan(ST, { OE: 8, AL: 7 }),
-      makePlan(ST, { OE: 8, AL: 7 })
+      makePlan(ST, { OE: 10, AL: 9 }),
+      makePlan(ST, { OE: 10, AL: 9 })
     );
     expect(deciseWins).toBeGreaterThan(noneWins);
   });
@@ -208,10 +208,10 @@ describe('simulateFight — decise is live and Response counters it', () => {
     const responsePlan = makePlan(ST, { OE: 6, AL: 6, defensiveTactic: 'Responsiveness' });
     const vsDecise = winsFor(
       'D',
-      makePlan(ST, { OE: 8, AL: 7, offensiveTactic: 'Decisiveness' }),
+      makePlan(ST, { OE: 10, AL: 9, offensiveTactic: 'Decisiveness' }),
       responsePlan
     );
-    const vsNone = winsFor('D', makePlan(ST, { OE: 8, AL: 7 }), responsePlan);
+    const vsNone = winsFor('D', makePlan(ST, { OE: 10, AL: 9 }), responsePlan);
     expect(vsDecise).toBeGreaterThan(vsNone);
   });
 });

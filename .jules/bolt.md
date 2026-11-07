@@ -1,0 +1,3 @@
+## 2024-05-15 - [React.memo() with useShallow lists]
+**Learning:** `RosterSnapshot` renders a large array of elements where each item (`SnapshotRow`) does not change often. But because of `useGameStore(useShallow(...))` extracting the entire `roster` object array, when a field unrelated to `SnapshotRow` (e.g. fatigue) changes for *one* warrior, it might trigger a shallow equality failure on the array causing all `SnapshotRow` children to re-render.
+**Action:** When rendering lists of complex objects from a Zustand store, always memoize the child item component (e.g., `SnapshotRow`) using `React.memo()`. This acts as a firewall, ensuring only the specifically mutated list items re-render.

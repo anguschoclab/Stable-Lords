@@ -16,7 +16,10 @@ Talon's "Strikers R Us" (the Biffs, the Solid, the Perfect), Tex's "Yet
 Another Striker Article" (eight veterans), and the Crimson Strategist's
 "Crimson Strikers" (the synthesized build). The Parry-Lunger section draws on
 "The Armor Piercing Parry-Lunge", Tripwire's "Parry-Lunge" guide, and Assur's
-addendum.
+addendum. The Lunger section draws on Elder Snorri's "And now, for Something
+Completely Different. . . (Lunger Strats)", The Wild Boar's "The Defensive
+Lunger", and "Assur's Lunger Model" (with its six listed graduates and the
+synthesized model build).
 
 These are long term fighter concepts, not floor requirements — warriors can be
 viable long-term with many different builds. Each spread below is shown as the
@@ -108,9 +111,15 @@ him swinging. Few weaknesses — balanced builds outlast godlings on average.
 
 ## Lunger
 
-**Doctrine:** Keeps moving (high AL). Surprisingly good at dodging when built
-right — quick and powerful. Lunge is the signature; decisiveness only
-moderately effective. Dodge works well, riposte possibly.
+**Doctrine:** The overlooked offensive — even-spread physicals behind the
+highest endurance burn in the game. Spend like a total parry: strength 9-13
+(13 unlocks the long spear), constitution 9 or better despite the common
+never-spend-con advice, wit 12-17 (15 does fair), will ~15+, speed 7-11+,
+deftness 11+ to hit the legs. Assur's frame is the longsword well-suited
+triplet — ST 11+ / WT 13+ / DF 11+ — with 21 will. Run hot in minute 1 (7-10
+or hi-hi-mod), then taper activity fast; a lunger paced like a scum is just
+a target. Feast on offensives and hybrids; avoid pure scum in plate armor
+like the plague.
 
 ### Scrapper
 
@@ -141,6 +150,207 @@ plus speed lets him dodge around for a shot and stay offensive.
 
 High strength for crippling blows; every weapon but the epee. Purely
 offensive — trades the Scrapper's defensive edge for damage.
+
+### Broke Stroker
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 10    | 8      |
+| CN   | 10    | 8      |
+| SZ   | 10    | 8      |
+| WT   | 15    | 13     |
+| WL   | 15    | 13     |
+| SP   | 11    | 9      |
+| DF   | 13    | 11     |
+
+The legendary redesign: wit and will high enough for a viable long-term
+warrior. Well-suited to the short spear and one strength train from
+longsword suitability; enough con to take a hit.
+
+### Even Spread
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 13    | 11     |
+| CN   | 12    | 10     |
+| SZ   | 12    | 10     |
+| WT   | 12    | 10     |
+| WL   | 12    | 10     |
+| SP   | 12    | 10     |
+| DF   | 11    | 9      |
+
+Elder Snorri's first lunger — the article's namesake even spread. No
+godling, but the long spear did wicked things and he very nearly won his
+DA match.
+
+### The Aesir
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 13    | 11     |
+| CN   | 10    | 8      |
+| SZ   | 9     | 8      |
+| WT   | 15    | 13     |
+| WL   | 15    | 12     |
+| SP   | 11    | 9      |
+| DF   | 11    | 9      |
+
+Snorri's best skill base — 50% initiative and attack, 30% parry, 35%
+defense, 20% riposte off balanced 15-15 wit and will.
+
+### Riposte Gamble
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 8      |
+| CN   | 15    | 12     |
+| SZ   | 8     | 7      |
+| WT   | 15    | 12     |
+| WL   | 13    | 11     |
+| SP   | 11    | 9      |
+| DF   | 13    | 11     |
+
+Snorri's 60%-riposte outlier — the highest riposte base he recorded on a
+lunger, but with no parry behind it the riposte was sort of useless.
+
+### Boar's Perfect
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 13    | 11     |
+| CN   | 7     | 6      |
+| SZ   | 4     | 3      |
+| WT   | 21    | 18     |
+| WL   | 17    | 14     |
+| SP   | 5     | 4      |
+| DF   | 17    | 14     |
+
+The Wild Boar's theoretical defensive lunger — 21 wit, 17 deftness, tiny
+frame; fighting defensively compensates for the speed at which lungers
+burn endurance. 14-5 over his trial run.
+
+### Boar's Graduate
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 13    | 11     |
+| CN   | 11    | 9      |
+| SZ   | 6     | 5      |
+| WT   | 17    | 14     |
+| WL   | 19    | 16     |
+| SP   | 5     | 4      |
+| DF   | 13    | 11     |
+
+The Wild Boar's listed actual — graduated with an expert in attack off
+19 will on the dodge-first defensive plan (Off 4, Act 6→4; never run
+defensively vs other lungers).
+
+### Assur's Model
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 11    | 9      |
+| CN   | 14    | 12     |
+| SZ   | 9     | 8      |
+| WT   | 13    | 11     |
+| WL   | 21    | 17     |
+| SP   | 5     | 4      |
+| DF   | 11    | 9      |
+
+Synthesized from Assur's published standards — the only spread that meets
+them all: STR 11+ for the longsword, CON 8ish++, WIT 13+, WIL 21, SPD 5+,
+DFT 11+. No graduate ever met every bar; this is the target. Lazy 7-10
+minute 1, AL off fast, OE ~7, no tactics.
+
+### The Fantastic
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 12    | 10     |
+| CN   | 13    | 11     |
+| SZ   | 8     | 7      |
+| WT   | 13    | 11     |
+| WL   | 21    | 17     |
+| SP   | 6     | 5      |
+| DF   | 11    | 9      |
+
+Assur's 17-6 graduate in a difficult arena — only normal damage even
+after two strength trains, but fantastic anyway.
+
+### Freshman Crown
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 8      |
+| CN   | 15    | 12     |
+| SZ   | 11    | 9      |
+| WT   | 14    | 12     |
+| WL   | 20    | 17     |
+| SP   | 5     | 4      |
+| DF   | 10    | 8      |
+
+Busted his stats to a freshman TC (April 2017) and graduated 19-12 —
+proof the model tolerates misses when the physicals are right.
+
+### The Natural
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 8      |
+| CN   | 11    | 9      |
+| SZ   | 8     | 7      |
+| WT   | 15    | 12     |
+| WL   | 21    | 17     |
+| SP   | 7     | 6      |
+| DF   | 13    | 11     |
+
+Assur's 14-7 graduate — no trains at all, did normal damage, walked out
+of basic on raw bases.
+
+### Lucky Roll
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 10    | 9      |
+| CN   | 10    | 8      |
+| SZ   | 4     | 3      |
+| WT   | 16    | 13     |
+| WL   | 20    | 17     |
+| SP   | 14    | 12     |
+| DF   | 10    | 8      |
+
+Rolled good damage on a tiny frame, did no trains, and graduated 16-5 —
+the cautionary miss: DF 10 means no longsword suitability.
+
+### The Standard
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 8      |
+| CN   | 11    | 9      |
+| SZ   | 13    | 11     |
+| WT   | 13    | 11     |
+| WL   | 19    | 16     |
+| SP   | 9     | 7      |
+| DF   | 10    | 8      |
+
+Quickly trained to 11-13-13-14-21-9-11 — the only Assur graduate ever to
+meet every published standard — then rocked the arena 18-6.
+
+### Arena Ace
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 8      |
+| CN   | 9     | 8      |
+| SZ   | 13    | 11     |
+| WT   | 17    | 14     |
+| WL   | 21    | 17     |
+| SP   | 4     | 3      |
+| DF   | 11    | 9      |
+
+Assur's easy-arena graduate — 17-4 with good damage and normal endurance
+off 21 will and 17 wit.
 
 ## Parry-Lunger
 
@@ -1475,10 +1685,11 @@ still long-term capable.
 
 ## Wall of Steel
 
-**Doctrine:** The all-around style — good defense with equal offense, rarely
-fast. Parries until it gains the initiative, then strikes powerfully.
-Defensively parry and some riposte; offensively bash and slash, depending on
-the weapon.
+**Doctrine:** The "waste" — the hybrid wall that never drops its guard but
+never stops answering. It learns initiative, parry, and attack readily while
+defense lags, and it burns endurance like a lunger, so will is the keystone
+(15 minimum, 17+ preferred) and activity tapers to low after hot minute-one
+openings. Run young walls offensively, then settle into the high-low pace.
 
 ### Aegis
 
@@ -1512,7 +1723,175 @@ Offensive version — strength develops over time, speed eventually must rise
 to avoid clumsiness. High constitution absorbs nearly anything and sustains
 full offense indefinitely; wears any armor without trouble.
 
+### Bender
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 7      |
+| CN   | 7     | 6      |
+| SZ   | 14    | 12     |
+| WT   | 17    | 14     |
+| WL   | 17    | 14     |
+| SP   | 3     | 3      |
+| DF   | 17    | 14     |
+
+Eli's undefeated DM-41 Duelmaster — a tourney-grade frame: low con tolerated
+because it runs fast and furious and most fights end in minute one, big
+enough for real damage, wit and will at 17, speed left at 3.
+
+*Tactics:* Run hot: 10-10-6 in minute one, then taper to high offensive
+effort and low activity.
+
+### Beowulf
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 11    | 9      |
+| CN   | 12    | 10     |
+| SZ   | 9     | 8      |
+| WT   | 15    | 12     |
+| WL   | 17    | 14     |
+| SP   | 3     | 3      |
+| DF   | 17    | 14     |
+
+Eli's Seam veteran — 54 learned skills and near the top of the arena. The
+balanced waste: 11 strength opens the broadsword and quarterstaff,
+everything else serves wit, will, and deftness.
+
+*Tactics:* Same high-low rhythm — offensive opening, low-activity finish.
+
+### Midnight
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 9     | 7      |
+| CN   | 11    | 9      |
+| SZ   | 10    | 8      |
+| WT   | 17    | 14     |
+| WL   | 15    | 12     |
+| SP   | 3     | 3      |
+| DF   | 21    | 17     |
+
+Eli's ADM build — ad-masters in attack and initiative on a 21-deftness
+chassis. The wit statement loadout carries the style's signature skills;
+will at 15 is the floor, not the aim.
+
+*Tactics:* Offensive minute one, then high-low.
+
+### Dante's Trainee
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 10    | 8      |
+| CN   | 12    | 10     |
+| SZ   | 9     | 8      |
+| WT   | 15    | 13     |
+| WL   | 15    | 12     |
+| SP   | 10    | 8      |
+| DF   | 13    | 11     |
+
+Dante Killatroll's worked example — four wit statements (INI 12, ATT 10,
+PAR 7, DEF 7) plus an endurance blessing. Trains strength to 11 early to
+un-hose damage and carry; learned 46 skills in a 14-8 start.
+
+*Tactics:* Open 6-4-6, then move effort and activity up or down by one until
+the parry locks in.
+
+### Bash Bro Prime
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 12    | 10     |
+| CN   | 9     | 8      |
+| SZ   | 15    | 12     |
+| WT   | 13    | 11     |
+| WL   | 21    | 17     |
+| SP   | 3     | 3      |
+| DF   | 11    | 9      |
+
+Assur's first Bash Bro — a big 21-will hybrid a manager would be pleased
+with, just short of tourney quality. Spare points went to con over
+strength: at this size, strength buys little.
+
+*Tactics:* Hybrid wall — defensive structure, offensive answers.
+
+### Bash Bro Hybrid
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 12    | 10     |
+| CN   | 8     | 7      |
+| SZ   | 9     | 8      |
+| WT   | 17    | 14     |
+| WL   | 17    | 14     |
+| SP   | 10    | 8      |
+| DF   | 11    | 9      |
+
+Assur's second — the 17-17 wit-will pairing most managers build for
+tournaments. Moderate con keeps it a hybrid rather than a true defensive
+wall.
+
+*Tactics:* Hybrid wall — parry the storm, answer in the seams.
+
+### Bash Bro Slow
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 17    | 14     |
+| CN   | 9     | 8      |
+| SZ   | 15    | 13     |
+| WT   | 11    | 9      |
+| WL   | 17    | 14     |
+| SP   | 4     | 3      |
+| DF   | 11    | 9      |
+
+Assur's big-guy burner — wit parked at 11 (the fallback breakpoint when 17
+is out of reach) and the rest dumped into physicals. Slow on paper; the
+will still carries the burn.
+
+*Tactics:* Hybrid wall — accept the tempo loss, lean on will and frame.
+
+### Bash Bro Brick
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 20    | 17     |
+| CN   | 11    | 9      |
+| SZ   | 10    | 9      |
+| WT   | 6     | 5      |
+| WL   | 16    | 13     |
+| SP   | 10    | 8      |
+| DF   | 11    | 9      |
+
+Assur's problem-child pick — a hit-point-maximizing burner at the expense
+of wit. Explicitly not a long-term design: the 6-wit Battle Axe is
+well-suited early, and the bulk wins more fights than cleverness would.
+
+*Tactics:* Offensive wall — a burner that closes fights before the learning
+deficit matters.
+
+### The Graduate
+
+| Stat | Canon | Scaled |
+| ---- | ----- | ------ |
+| ST   | 11    | 9      |
+| CN   | 9     | 7      |
+| SZ   | 6     | 5      |
+| WT   | 13    | 11     |
+| WL   | 21    | 17     |
+| SP   | 9     | 7      |
+| DF   | 17    | 14     |
+
+The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack,
+and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a
+wall survives wit under 15 when everything else is elite.
+
+*Tactics:* Canon favorites: Quarterstaff, moderate offensive effort, low
+activity; the Riposte tactic runs well; learns initiative first.
+
 ---
 
 *Source: Duel2 Arena 93 Newsletters — Noblish Island compilation, "Long Term
-Fighter Concepts," Gavin Rule, mgr Faux Tides (1482), DM 93.*
+Fighter Concepts," Gavin Rule, mgr Faux Tides (1482), DM 93; Eli's "My Take
+on the Parry Slash (Wall of Steel)"; Assur's "Bash Bros Waste"; Dante
+Killatroll's "Wall of Steel: Nerdy Style"; and "Wasted Wastes".*

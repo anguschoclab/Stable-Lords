@@ -45,14 +45,15 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
   [FightingStyle.LungingAttack]: {
     archetype: 'The Spear',
     description:
-      'Lungers seize the exchange before it forms — a single explosive entry that ends most bouts where they begin. They live and die by initiative: the lunge that lands first rarely gets an answer.',
+      'Lungers seize the exchange before it forms — a single explosive entry that ends most bouts where they begin. They live and die by initiative: the lunge that lands first rarely gets an answer. Evenly-built frames behind the longsword and spear outlast the fragile stereotypes.',
     hallmarks: [
       'Explosive opening exchanges',
       'Initiative-dominant entries',
+      'Highest endurance burn in the game',
       'Ends bouts early or fades',
     ],
     counterplay:
-      'Survive the burst. Defensive styles that weather the first exchanges watch the lunger spend stamina it cannot recover.',
+      'Survive the burst. Defensive styles that weather the first exchanges watch the lunger spend stamina it cannot recover — pure scum in plate armor is the worst out a lunger can draw.',
   },
   [FightingStyle.ParryLunge]: {
     archetype: 'The Fencer',

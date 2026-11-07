@@ -155,7 +155,8 @@ export function FighterConceptsSection() {
           <li>
             <strong>Concept builds</strong> — Each style has named builds (e.g., the
             Total-Parry "Ghost", the Basher "Workhorse", a dozen canonical rippers,
-            nine canonical slashers, nine canonical parry-lungers) tuned for
+            nine canonical slashers, eleven canonical parry-lungers, fifteen
+            canonical lungers) tuned for
             long-term growth.
           </li>
           <li>

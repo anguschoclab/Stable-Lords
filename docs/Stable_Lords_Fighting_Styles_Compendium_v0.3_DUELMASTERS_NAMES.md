@@ -192,29 +192,41 @@ Frantic, jabbing, constantly moving—hard to hit, attacks from unexpected angle
 - **Endurance:** explicitly “requires a tremendous amount of endurance and stamina”【turn11search3】.
 - **Signature:** “Keep moving!” and angles of thrust; good retreat/leap-back capability【turn7search2】.
 
-### Best-fit attributes
+### Best-fit attributes (Arena 93)
 
-- **Constitution (CN):** endurance budget.
-- **Speed (SP):** movement + initiative.
-- **Deftness (DF):** point control and thrust accuracy.
+- **Strength (ST):** 9–13; 13 unlocks the long spear, 11+ meets longsword suitability.
+- **Constitution (CN):** 9+ preferred, ~13 ideal — a rare style that profits from con.
+- **Size (SZ):** 9 suffices for every weapon; 12+ improves damage.
+- **Wit (WT):** 12–17, ~15 does fair; Assur's model needs 13 for the longsword.
+- **Will (WL):** ~15; the endurance engine — Assur's model pushes 21.
+- **Speed (SP):** 7 works, 11+ preferred; lungers use speed better than most.
+- **Deftness (DF):** 11+ — needed to hit small, mobile targets (and the longsword).
 
 ### Weapon identity
 
 - Classic: **Short Spear**【turn11search3】
+- Canon picks: **Longsword** (Assur's principal; ST 11 / WT 13 / DF 11 well-suited),
+  **Long Spear** (ST 13 — “an obviously superior lunging weapon”),
+  **Scimitar** vs plate, **Epee** for low-ST/low-CN speed builds.
 - General: any “jabbing” weapon.
 
 ### Tactic synergy rules
 
 - LU is “very well suited to the Lunge tactic; lunging is what the style is all about”【turn7search2】.
+- Canon line: **no tactics by default** — Assur's “laziness is king”; tactics are situational at best.
 
-### Strategy guidance
+### Strategy guidance (Arena 93)
 
-- Default: **higher AL**, moderate OE early to avoid self-exhaustion.
+- Default: **hot opening, fast taper** — 7–10 in minute 1 (or hi-hi-mod), drop AL to ~4–5 by mid, keep OE near 7.
+- Armor: **ALE/APL** beats the default nudity — a little armor outvalues the extra dodge; strip vs scum total parries.
+- Defensive variant (Wild Boar): Off 4 / Act 6→4, protect body — dodge-first covers the endurance burn; never run it vs other lungers.
 - Spike OE when opponent is hurt/out of position.
 
 ### AI heuristics
 
 - If opponent is BA (slow, heavy): kite and pick angles; this is a classic advantage example【turn7search6】.
+- Best matchups: hybrids, strikers, bashers — especially when they aren't ready for the hot opening.
+- Worst matchup: **pure scum in plate armor (TP) — avoid like the plague** (−3+ hard avoid). Very high attack/initiative offensives also threaten.
 - If opponent is TP/PR: avoid wasteful OE; use AL to deny their preferred tempo.
 
 ### UI requirements

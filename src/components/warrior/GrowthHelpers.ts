@@ -1,5 +1,10 @@
 import { Warrior, ATTRIBUTE_KEYS } from '@/types/game';
 
+/** Positive headroom (potential − current) bands for the growth narratives. */
+const HEADROOM = { DEVELOPING_MAX: 5, SOLID: 15, VAST: 30 } as const;
+/** Attribute count at/under ceiling that reads as "mostly maxed". */
+const MOSTLY_MAXED_COUNT = 5;
+
 /**
  * Narrative descriptors for growth headroom.
  * These hint at potential without showing numbers.
@@ -34,7 +39,7 @@ export function growthNarrative(
       color: 'text-arena-gold',
       tooltip: 'Some growth remains, but progress is slowing.',
     };
-  if (gap <= 5)
+  if (gap <= HEADROOM.DEVELOPING_MAX)
     return {
       label: 'Developing',
       color: 'text-primary',
@@ -56,11 +61,12 @@ export function overallGrowthNarrative(warrior: Warrior): string {
   const totalGap = gaps.reduce((s, g) => s + Math.max(0, g), 0);
   const maxedCount = gaps.filter((g) => g <= 0).length;
 
-  if (maxedCount === 7)
+  if (maxedCount === ATTRIBUTE_KEYS.length)
     return 'A fully realized warrior — there is nothing more the arena can teach.';
-  if (maxedCount >= 5) return 'Nearing the end of their growth. Focus training on what remains.';
-  if (totalGap >= 30)
+  if (maxedCount >= MOSTLY_MAXED_COUNT)
+    return 'Nearing the end of their growth. Focus training on what remains.';
+  if (totalGap >= HEADROOM.VAST)
     return 'Brimming with untapped potential. The right training could forge a legend.';
-  if (totalGap >= 15) return 'Still growing. There are gains to be made across the board.';
+  if (totalGap >= HEADROOM.SOLID) return 'Still growing. There are gains to be made across the board.';
   return 'Approaching their natural limits, but a few areas can still sharpen.';
 }

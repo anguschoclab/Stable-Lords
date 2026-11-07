@@ -5,6 +5,9 @@ import { cn } from '@/lib/utils';
  */
 type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';
 
+/** Part-health color bands — HP breakpoints between red, gold, and green. */
+const PART_HP = { CRITICAL: 20, INJURED: 50 } as const;
+
 /**
  * Defines the shape of paper doll props.
  */
@@ -21,8 +24,8 @@ export function PaperDoll({ healthMap, className }: PaperDollProps) {
   const getPartColor = (part: BodyPart) => {
     const hp = healthMap[part] ?? 100;
     if (hp <= 0) return 'fill-neutral-900';
-    if (hp < 20) return 'fill-destructive';
-    if (hp <= 50) return 'fill-arena-gold';
+    if (hp < PART_HP.CRITICAL) return 'fill-destructive';
+    if (hp <= PART_HP.INJURED) return 'fill-arena-gold';
     return 'fill-green-500';
   };
 

@@ -8,14 +8,19 @@ interface LethalityBadgeProps {
   crowdMood: string;
 }
 
+/** HP breakpoints — a fighter below them raises the lethality read. */
+const HP_RISK = { CRITICAL: 15, LOW: 25 } as const;
+/** Score bands — which badge tier the total renders. */
+const RISK_BAND = { HIGH: 4, MODERATE: 2 } as const;
+
 function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
   let score = 0;
   // Lower HP = higher risk
   const hpA = wA.derivedStats?.hp ?? 0;
   const hpB = wB.derivedStats?.hp ?? 0;
 
-  if (hpA < 15 || hpB < 15) score += 2;
-  else if (hpA < 25 || hpB < 25) score += 1;
+  if (hpA < HP_RISK.CRITICAL || hpB < HP_RISK.CRITICAL) score += 2;
+  else if (hpA < HP_RISK.LOW || hpB < HP_RISK.LOW) score += 1;
 
   const powerStyles = ['Bashing Attack', 'Striking Attack', 'Slashing Attack', 'Lunging Attack'];
   if (powerStyles.includes(wA.style)) score += 1;
@@ -34,7 +39,7 @@ function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
 export function LethalityBadge({ wA, wB, crowdMood }: LethalityBadgeProps) {
   const score = getLethalityScore(wA, wB, crowdMood);
 
-  if (score >= 4) {
+  if (score >= RISK_BAND.HIGH) {
     return (
       <Badge
         variant="outline"
@@ -44,7 +49,7 @@ export function LethalityBadge({ wA, wB, crowdMood }: LethalityBadgeProps) {
       </Badge>
     );
   }
-  if (score >= 2) {
+  if (score >= RISK_BAND.MODERATE) {
     return (
       <Badge
         variant="outline"

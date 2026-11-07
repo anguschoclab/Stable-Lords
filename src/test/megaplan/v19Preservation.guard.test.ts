@@ -130,7 +130,8 @@ describe('megaplan V19: unique-logic preservation (§U)', () => {
         expect(text, `${file} lost badge styling '${n}'`).toContain(n);
       }
     }
-    // Code-chip styling survived the prose-code radius fix.
+    // Code chips kept accent styling; rounded-none is the intended
+    // radius — square corners on purpose, not drift.
     const md = fileText('src/components/MarkdownReader.tsx');
     expect(md).toContain('prose-code:text-accent');
     expect(md).toContain('prose-code:rounded-none');

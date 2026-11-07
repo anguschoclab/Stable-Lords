@@ -94,7 +94,7 @@ function arenaModEcho(
 
 const narrateInitiativeEvent: EventNarrator = (event, h, minute) => {
   const out: MinuteEvent[] = [];
-  // Attribution beats must not be swallowed by the 30% flavor gate below —
+  // Attribution beats are emitted before the 30% flavor gate —
   // an unexplained mod swing reads as a bug, not flavor.
   const sources = event.metadata?.arenaModSources;
   if (Array.isArray(sources) && sources.length) {

@@ -14,21 +14,43 @@ import {
 import { TRAITS } from './registry';
 import type { TraitDef, TraitTier, TraitId } from './types';
 
-/** Class traits available to a given fighting style. */
-export function traitsForStyle(style: FightingStyle): TraitDef[] {
-  return Object.values(TRAITS).filter((t) => t.styles?.includes(style));
-}
-
-/** All traits of a given tier. */
-export function traitsByTier(tier: TraitTier): TraitDef[] {
-  return Object.values(TRAITS).filter((t) => t.tier === tier);
-}
-
 /**
  *
  */
 // TraitId is defined as string in types.ts
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
+
+/**
+ * Style/tier → trait indexes, built once from the static TRAITS registry so
+ * the accessors never rebuild a values array per call. Returned arrays are
+ * shared — treat them as read-only.
+ */
+const TRAIT_INDEXES = (() => {
+  const byStyle = new Map<FightingStyle, TraitDef[]>();
+  const byTier = new Map<TraitTier, TraitDef[]>();
+  const add = <K>(index: Map<K, TraitDef[]>, key: K, t: TraitDef) => {
+    const arr = index.get(key);
+    if (arr) arr.push(t);
+    else index.set(key, [t]);
+  };
+  for (const id of TRAIT_IDS) {
+    const t = TRAITS[id];
+    if (!t) continue;
+    add(byTier, t.tier, t);
+    for (const s of t.styles ?? []) add(byStyle, s, t);
+  }
+  return { byStyle, byTier };
+})();
+
+/** Class traits available to a given fighting style. Shared array — read-only. */
+export function traitsForStyle(style: FightingStyle): TraitDef[] {
+  return TRAIT_INDEXES.byStyle.get(style) ?? [];
+}
+
+/** All traits of a given tier. Shared array — read-only. */
+export function traitsByTier(tier: TraitTier): TraitDef[] {
+  return TRAIT_INDEXES.byTier.get(tier) ?? [];
+}
 
 /**
  * Archetype → trait-id indexes, built once from the static registry so the

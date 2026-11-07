@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
-import { getAllArenas } from '@/data/arenas';
+import { tryGetArenaById } from '@/data/arenas';
 import type { RivalStableData, AIIntent } from '@/types/state.types';
 import { ActionTimeline } from './ActionTimeline';
 
@@ -136,7 +136,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
             if (!arenaId) return <span>Targeting: {targetName}</span>;
             return (
               <span>
-                Title campaign: {getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId}
+                Title campaign: {tryGetArenaById(arenaId)?.name ?? arenaId}
               </span>
             );
           })()}

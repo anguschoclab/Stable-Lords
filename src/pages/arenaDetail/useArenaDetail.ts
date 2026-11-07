@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getAllArenas, getArenaLore } from '@/data/arenas';
+import { tryGetArenaById, getArenaLore } from '@/data/arenas';
 import { getPackArenaLore } from '@/lib/contentPacks';
 import { describeArenaEffects } from '@/engine/narrative/arenaNarrative';
 import {
@@ -14,7 +14,7 @@ import { statusBadge, useArenaDetailStore, useArenaBoards } from './useArenaSele
 
 /** All arena-detail derived state: champion, boards, ladder, history, bouts. */
 export function useArenaDetail(arenaId: string) {
-  const arena = useMemo(() => getAllArenas().find((a) => a.id === arenaId), [arenaId]);
+  const arena = useMemo(() => tryGetArenaById(arenaId), [arenaId]);
 
   const store = useArenaDetailStore();
   const state = store as unknown as GameState;

@@ -154,6 +154,7 @@ const NON_MIRROR_DIRS = new Set([
 // must register here.
 const GUARD_REGISTRY: Record<string, string> = {
   'appShell.cta.test.tsx': 'LIVE_RATCHET',
+  'arenaLookup.guard.test.ts': 'LIVE_RATCHET',
   'documentationParity.test.ts': 'LIVE_RATCHET',
   'duplication.guard.test.ts': 'LIVE_RATCHET',
   'entriesInLoop.guard.test.ts': 'LIVE_RATCHET',

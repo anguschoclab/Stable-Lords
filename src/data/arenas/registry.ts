@@ -51,6 +51,16 @@ export function getArenaById(id: string): ArenaConfig {
 }
 
 /**
+ * Get arena by id, or undefined — O(1) lookup for display fallbacks that
+ * must NOT silently substitute the default arena.
+ * @param id - Arena identifier.
+ * @returns The ArenaConfig, or undefined if not registered.
+ */
+export function tryGetArenaById(id: string): ArenaConfig | undefined {
+  return registry.get(id);
+}
+
+/**
  * Get all registered arenas.
  * @returns Array of all ArenaConfig entries.
  */

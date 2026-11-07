@@ -4,7 +4,7 @@
  * not from where the user happened to come from — the referrer chip in
  * Breadcrumbs handles the actual-history case.
  */
-import { getAllArenas } from '@/data/arenas';
+import { tryGetArenaById } from '@/data/arenas';
 import { ensureEntityIndex, type EntityIndexState } from '@/engine/core/entityIndex';
 import { HUBS, UTILITY_LINKS } from '@/components/layout/navigationHubs';
 
@@ -55,7 +55,7 @@ function stableCrumbs(id: string, s: EntityIndexState): Crumb[] {
 }
 
 function arenaCrumbs(id: string): Crumb[] {
-  const arena = getAllArenas().find((a) => a.id === id);
+  const arena = tryGetArenaById(id);
   return [WORLD, { label: 'Arenas', to: '/world/arenas' }, { label: arena?.name ?? id }];
 }
 

@@ -9,7 +9,7 @@ import type {
   GrandChampionEntry,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
+import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { earnEpithet, type EpithetCause } from '@/data/names/epithets';
@@ -113,9 +113,14 @@ export function effectiveOffers(
   state: GameState,
   delta: ChampionshipDelta | undefined
 ): BoutOffer[] {
-  const canceled = new Set(Object.keys(delta?.canceledOffers ?? {}));
-  const base = Object.values(state.boutOffers ?? {}).filter((o) => o && !canceled.has(o.id));
-  return [...base, ...(delta?.newOffers ?? [])];
+  const canceled = delta?.canceledOffers;
+  const out: BoutOffer[] = [];
+  for (const k in state.boutOffers) {
+    const o = state.boutOffers[k as BoutOfferId];
+    if (o && !canceled?.[o.id]) out.push(o);
+  }
+  for (const o of delta?.newOffers ?? []) out.push(o);
+  return out;
 }
 
 /** True while a bout offer is still pending a response. */

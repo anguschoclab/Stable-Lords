@@ -7,12 +7,12 @@ import {
   type FightingStyle,
   type RivalStableData,
 } from '@/types/game';
-import { getAllArenas } from '@/data/arenas';
+import { tryGetArenaById } from '@/data/arenas';
 import type { ArenaTitle } from '@/types/state.types';
 import { cn } from '@/lib/utils';
 
 const arenaDisplayName = (arenaId: string): string =>
-  getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId;
+  tryGetArenaById(arenaId)?.name ?? arenaId;
 
 /**
  * Title posture for one stable: which crowns its roster holds, and whether a

@@ -17,14 +17,23 @@ export function getArenaChampion(state: GameState, arenaId: string): ArenaTitle[
 
 /** Warrior currently holds a crown at ANY arena, in any lifecycle state. */
 export function isReigningChampion(state: GameState, warriorId: string): boolean {
-  return Object.values(state.arenaChampions ?? {}).some((t) => t.champion?.warriorId === warriorId);
+  const titles = state.arenaChampions;
+  if (!titles) return false;
+  for (const arenaId in titles) {
+    if (titles[arenaId]?.champion?.warriorId === warriorId) return true;
+  }
+  return false;
 }
 
 /** Warrior holds a crown whose title is fully active (choke-point scope). */
 export function isActiveChampion(state: GameState, warriorId: string): boolean {
-  return Object.values(state.arenaChampions ?? {}).some(
-    (t) => t.champion?.warriorId === warriorId && t.status === 'active'
-  );
+  const titles = state.arenaChampions;
+  if (!titles) return false;
+  for (const arenaId in titles) {
+    const t = titles[arenaId];
+    if (t?.champion?.warriorId === warriorId && t.status === 'active') return true;
+  }
+  return false;
 }
 
 /**
@@ -32,9 +41,13 @@ export function isActiveChampion(state: GameState, warriorId: string): boolean {
  * the producer-side exclusion predicate. Dormant champions stay bookable.
  */
 export function isChampionBookingLocked(state: GameState, warriorId: string): boolean {
-  return Object.values(state.arenaChampions ?? {}).some(
-    (t) => t.champion?.warriorId === warriorId && t.status !== 'dormant'
-  );
+  const titles = state.arenaChampions;
+  if (!titles) return false;
+  for (const arenaId in titles) {
+    const t = titles[arenaId];
+    if (t?.champion?.warriorId === warriorId && t.status !== 'dormant') return true;
+  }
+  return false;
 }
 
 /** Arena ids where the warrior is the reigning champion (derived titles). */

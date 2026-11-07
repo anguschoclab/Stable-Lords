@@ -8,7 +8,7 @@ import { type FightPlan } from '@/types/game';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { EquipmentLoadout } from '@/data/equipment';
 import { getCurrentArenaTitles, getPastArenaTitles } from '@/engine/championship/arenaChampionship';
-import { getAllArenas } from '@/data/arenas';
+import { tryGetArenaById } from '@/data/arenas';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { toast } from 'sonner';
 
@@ -50,8 +50,7 @@ export function useArenaCrowns(id: string, arenaChampions: GameState['arenaChamp
   return useMemo(() => {
     if (!id) return { current: [] as string[], past: [] as string[] };
     const state = { arenaChampions } as GameState;
-    const nameOf = (arenaId: string) =>
-      getAllArenas().find((a) => a.id === arenaId)?.name ?? arenaId;
+    const nameOf = (arenaId: string) => tryGetArenaById(arenaId)?.name ?? arenaId;
     return {
       current: getCurrentArenaTitles(state, id).map(nameOf),
       past: getPastArenaTitles(state, id).map((p) => nameOf(p.arenaId)),

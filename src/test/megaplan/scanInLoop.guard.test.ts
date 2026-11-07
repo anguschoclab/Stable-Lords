@@ -385,11 +385,6 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     why: 'per-iteration collection — the current item\'s own tag/style list (small)',
   },
   {
-    file: 'src/engine/traits/generation.ts',
-    match: "t.styles?.includes(style)",
-    why: 'per-iteration collection — the current item\'s own tag/style list (small)',
-  },
-  {
     file: 'src/engine/traits/mods.ts',
     match: "Object.entries(def.effect.fightPlanMod).filter( (e): e is [keyof FightPlan, numb",
     why: 'module-init pass over the static TRAITS registry — runs once at load',

@@ -111,7 +111,10 @@ const DEBT_PAIRS = new Set<string>([]);
 // (registered exempt below), → 13.
 // V21: +1 — v20↔v21 narrative guards share the pool-uniqueness harness
 // preamble across version waves (registered exempt below), → 14.
-const TEST_TO_TEST_BASELINE = 14;
+// Megaplan-alloc: +1 — arenaLookup↔scanInLoop guards share the
+// scanner+allowlist ratchet harness (KNOWN_EXCEPTIONS, stale-entry and
+// why-length assertions); each pins a different invariant → 15.
+const TEST_TO_TEST_BASELINE = 15;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -149,6 +152,11 @@ const TEST_EXEMPT_PAIRS = new Set([
   // v20↔v21 narrative guards share the pool-uniqueness harness preamble
   // across version waves; each pins a different post-merge union state.
   'src/test/megaplan/v20Narrative.guard.test.ts|src/test/megaplan/v21Narrative.guard.test.ts',
+  // Sibling ratchet guards share the scanner+allowlist harness preamble
+  // (KNOWN_EXCEPTIONS shape, stale-entry/why-length assertions); each
+  // guards a different scan invariant — same exemption category as the
+  // v20↔v21 narrative-guard pair above.
+  'src/test/megaplan/arenaLookup.guard.test.ts|src/test/megaplan/scanInLoop.guard.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

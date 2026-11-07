@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getArenaById, getAllArenas, ARENA_LORE } from '@/data/arenas';
+import { getArenaById, getAllArenas, tryGetArenaById, ARENA_LORE } from '@/data/arenas';
 
 describe('arena registration — new arenas from PR #791', () => {
   it('SUN_BAKED_PLATEAU is registered', () => {
@@ -61,6 +61,20 @@ describe('arena registration (PR #988 arenas + PR #984/#991/#995 lore)', () => {
     'blood_sands_crimson_tide',
   ])('ARENA_LORE rejects %s — references a non-existent arena', (id) => {
     expect(ARENA_LORE.some((e) => e.id === id)).toBe(false);
+  });
+});
+
+describe('tryGetArenaById — O(1) lookup without default-arena fallback', () => {
+  it('returns the registered arena for a known id', () => {
+    expect(tryGetArenaById('bloodsands_arena')).toBe(getArenaById('bloodsands_arena'));
+  });
+
+  it('returns undefined for an unregistered id — no default substitution', () => {
+    expect(tryGetArenaById('__not_an_arena__')).toBeUndefined();
+  });
+
+  it('contrasts with getArenaById, which falls back to the default arena', () => {
+    expect(getArenaById('__not_an_arena__').id).toBe('standard_arena');
   });
 });
 

@@ -5,6 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { getCanonicalCrumbs } from '@/components/layout/breadcrumbs/routeCrumbs';
+import { getArenaById } from '@/data/arenas';
 import {
   makeWarrior,
   makeRival,
@@ -88,13 +89,24 @@ describe('getCanonicalCrumbs — other detail routes', () => {
     expect(crumbs[1]?.to).toBe('/world/scouting');
   });
 
-  it('/world/arenas/$arenaId → World › Arenas › arena name', () => {
+  it('/world/arenas/$arenaId → World › Arenas › arena name for a registered arena', () => {
+    const s = makeState();
+    const crumbs = getCanonicalCrumbs('/world/arenas/bloodsands_arena', s as never);
+    expect(crumbs).not.toBeNull();
+    expect(crumbs?.[0]?.label).toBe('World');
+    expect(crumbs?.[1]?.label).toBe('Arenas');
+    expect(crumbs?.[1]?.to).toBe('/world/arenas');
+    expect(crumbs?.[2]?.label).toBe(getArenaById('bloodsands_arena').name);
+  });
+
+  it('/world/arenas/$arenaId → falls back to the raw id for an unregistered arena', () => {
     const s = makeState();
     const crumbs = getCanonicalCrumbs('/world/arenas/pit-of-kings', s as never);
     expect(crumbs).not.toBeNull();
     expect(crumbs?.[0]?.label).toBe('World');
     expect(crumbs?.[1]?.label).toBe('Arenas');
     expect(crumbs?.[1]?.to).toBe('/world/arenas');
+    expect(crumbs?.[2]?.label).toBe('pit-of-kings');
   });
 
   it('/stable/promoter/$id → Stable › Promoters › promoter name', () => {

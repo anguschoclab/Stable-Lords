@@ -33,6 +33,18 @@ export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
     plan.OE = Math.max(plan.OE, 5);
     return;
   }
+  if (w.style === FightingStyle.LungingAttack) {
+    // Arena 93 lunger canon (Snorri/Boar/Assur): the style's signature is
+    // constant movement — a lunger too slow to move is just a target, so AL
+    // is floored at 4 (even Boar's defensive lunger runs Act 4-6). KD caps
+    // at 8: Snorri runs the whole style inside the 5-8 band ("with exception
+    // of some of my defensives, I always run a 5-8 KD") and Boar's plan
+    // proper sits at 4 — only desperation goes 9. OE stays free: canon
+    // sheets span Boar's 4 to Snorri's hi.
+    plan.AL = Math.max(plan.AL, 4);
+    plan.killDesire = Math.min(plan.killDesire ?? 5, 8);
+    return;
+  }
   if (w.style === FightingStyle.ParryLunge) {
     // Arena 93 PL canon (the Armor-Piercer article + Tripwire + Assur's
     // addendum): "keep the kill desire relatively low as to avoid sloppy

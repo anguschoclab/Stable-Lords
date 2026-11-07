@@ -173,7 +173,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
   },
   [FightingStyle.LungingAttack]: {
     doctrine:
-      'Keeps moving — high activity. For an offensive style, surprisingly good at dodging when built right. Quick and powerful. Lunge is the signature; decisiveness only moderate. Dodge works well, riposte possibly.',
+      'The overlooked offensive — even-spread physicals behind the highest endurance burn in the game. Spend like a total parry: strength 9-13 (13 unlocks the long spear), constitution 9 or better despite the common never-spend-con advice, wit 12-17 (15 does fair), will ~15+, speed 7-11+, deftness 11+ to hit the legs. Assur\'s frame is the longsword well-suited triplet — ST 11+ / WT 13+ / DF 11+ — with 21 will. Run hot in minute 1 (7-10 or hi-hi-mod), then taper activity fast; a lunger paced like a scum is just a target. Feast on offensives and hybrids; avoid pure scum in plate armor like the plague.',
     concepts: [
       concept(
         'Scrapper',
@@ -192,6 +192,78 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 15, SP: 11, DF: 13 },
         'The legendary redesign: wit and will high enough for a viable long-term warrior. Starts well-suited to the short spear and sits one strength train from longsword suitability. Enough con to take a hit — good damage likely arrives with the first strength train, if not on the original overview.',
         'Lunge — commit to the attack.'
+      ),
+      concept(
+        'Even Spread',
+        { ST: 13, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 11 },
+        'Elder Snorri\'s first lunger — the article\'s namesake even spread. No godling, but the long spear did wicked things and he very nearly won his DA match.',
+        'Hi-hi-mod behind the long spear; kill desire inside the 5-8 band.'
+      ),
+      concept(
+        'The Aesir',
+        { ST: 13, CN: 10, SZ: 9, WT: 15, WL: 15, SP: 11, DF: 11 },
+        'Snorri\'s best skill base — 50% initiative and attack, 30% parry, 35% defense, 20% riposte off balanced 15-15 wit and will.',
+        'Long spear or longsword; hi-hi-mod, KD 5-8.'
+      ),
+      concept(
+        'Riposte Gamble',
+        { ST: 9, CN: 15, SZ: 8, WT: 15, WL: 13, SP: 11, DF: 13 },
+        'Snorri\'s 60%-riposte outlier — the highest riposte base he ever recorded on a lunger, but with no parry behind it the riposte was sort of useless.',
+        'Lunge; the con lets him gamble on the counter.'
+      ),
+      concept(
+        "Boar's Perfect",
+        { ST: 13, CN: 7, SZ: 4, WT: 21, WL: 17, SP: 5, DF: 17 },
+        'The Wild Boar\'s theoretical defensive lunger — 21 wit, 17 deftness, tiny frame; fighting defensively compensates for the speed at which lungers burn endurance. 14-5 over his trial run.',
+        'Off 4, Act 6 tapering to 4, KD 4 — all-out 9s when desperate; never run defensively vs other lungers.'
+      ),
+      concept(
+        "Boar's Graduate",
+        { ST: 13, CN: 11, SZ: 6, WT: 17, WL: 19, SP: 5, DF: 13 },
+        'The Wild Boar\'s listed actual — graduated with an expert in attack off 19 will on the dodge-first defensive plan.',
+        'Off 4, Act 6→4; dodge; protect the body, attack the legs.'
+      ),
+      concept(
+        "Assur's Model",
+        { ST: 11, CN: 14, SZ: 9, WT: 13, WL: 21, SP: 5, DF: 11 },
+        'Synthesized from Assur\'s published standards — the only spread that meets them all: STR 11+ for the longsword, CON 8ish++, WIT 13+, WIL 21, SPD 5+, DFT 11+. No graduate ever met every bar; this is the target.',
+        'Lazy 7-10 minute 1; AL off fast, OE ~7; longsword, scimitar vs plate; no tactics.'
+      ),
+      concept(
+        'The Fantastic',
+        { ST: 12, CN: 13, SZ: 8, WT: 13, WL: 21, SP: 6, DF: 11 },
+        'Assur\'s 17-6 graduate in a difficult arena — only normal damage even after two strength trains, but fantastic anyway.',
+        'Longsword; 7-10 minute 1, taper activity.'
+      ),
+      concept(
+        'Freshman Crown',
+        { ST: 9, CN: 15, SZ: 11, WT: 14, WL: 20, SP: 5, DF: 10 },
+        'Busted his stats to a freshman TC (April 2017) and graduated 19-12 — proof the model tolerates misses when the physicals are right.',
+        'Longsword; 7-10 rhythm.'
+      ),
+      concept(
+        'The Natural',
+        { ST: 9, CN: 11, SZ: 8, WT: 15, WL: 21, SP: 7, DF: 13 },
+        'Assur\'s 14-7 graduate — no trains at all, did normal damage, walked out of basic on raw bases.',
+        'Longsword; 7-10 rhythm.'
+      ),
+      concept(
+        'Lucky Roll',
+        { ST: 10, CN: 10, SZ: 4, WT: 16, WL: 20, SP: 14, DF: 10 },
+        'Rolled good damage on a tiny frame, did no trains, and graduated 16-5 — the cautionary miss: DF 10 means no longsword suitability.',
+        'Short spear or shortsword; 7-10 rhythm.'
+      ),
+      concept(
+        'The Standard',
+        { ST: 9, CN: 11, SZ: 13, WT: 13, WL: 19, SP: 9, DF: 10 },
+        'Quickly trained to 11-13-13-14-21-9-11 — the only Assur graduate ever to meet every published standard — then rocked the arena 18-6.',
+        'Longsword once trained; 7-10 rhythm.'
+      ),
+      concept(
+        'Arena Ace',
+        { ST: 9, CN: 9, SZ: 13, WT: 17, WL: 21, SP: 4, DF: 11 },
+        'Assur\'s easy-arena graduate — 17-4 with good damage and normal endurance off 21 will and 17 wit.',
+        'Longsword; 7-10 rhythm.'
       ),
     ],
   },

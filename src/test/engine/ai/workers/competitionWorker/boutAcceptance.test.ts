@@ -132,3 +132,20 @@ describe('canon doctrine refusal — PL rookies (Arena 93)', () => {
     expect(r.accepted).toBe(true);
   });
 });
+
+describe('canon doctrine refusal — LU vs plate scum (Arena 93)', () => {
+  it('a lunger refuses a total parry — "pure scum in Plate Armor!!! Avoid like the plague!"', () => {
+    const lu = makeWarrior({ style: FightingStyle.LungingAttack, fame: 100 });
+    const tp = makeWarrior({ style: FightingStyle.TotalParry, fame: 100 });
+    const r = verifyBoutAcceptance(rivalWith('CONSOLIDATION'), lu, tp);
+    expect(r.accepted).toBe(false);
+    expect(r.reason).toMatch(/style beats ours/i);
+  });
+
+  it('a lunger still takes the striker — canon best matchup', () => {
+    const lu = makeWarrior({ style: FightingStyle.LungingAttack, fame: 100 });
+    const st = makeWarrior({ style: FightingStyle.StrikingAttack, fame: 100 });
+    const r = verifyBoutAcceptance(rivalWith('CONSOLIDATION'), lu, st);
+    expect(r.accepted).toBe(true);
+  });
+});

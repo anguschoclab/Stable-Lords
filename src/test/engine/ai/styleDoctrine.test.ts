@@ -13,6 +13,7 @@ const OTP = makeComputedWarrior({ WT: 17, DF: 15, SP: 7, CN: 12 }, FightingStyle
 const ST = makeComputedWarrior({}, FightingStyle.StrikingAttack);
 const AB = makeComputedWarrior({ DF: 21, WT: 17 }, FightingStyle.AimedBlow);
 const LU = makeComputedWarrior({}, FightingStyle.LungingAttack);
+const BA = makeComputedWarrior({}, FightingStyle.BashingAttack);
 
 describe('applyStyleDoctrine — TP scum doctrine', () => {
   it('caps OE at 5 — a TP run hot abandons its defense', () => {
@@ -41,7 +42,7 @@ describe('applyStyleDoctrine — TP scum doctrine', () => {
 
   it('does not touch other styles', () => {
     const p = plan(9, 9, 9);
-    applyStyleDoctrine(p, LU);
+    applyStyleDoctrine(p, BA); // LU carries its own doctrine now — BA stays doctrine-free
     expect(p).toMatchObject({ OE: 9, AL: 9, killDesire: 9 });
   });
 });
@@ -112,6 +113,29 @@ describe('applyStyleDoctrine — Aimed Blow doctrine', () => {
     const p = plan(10, 10, 6);
     applyStyleDoctrine(p, AB);
     expect(p).toMatchObject({ OE: 10, AL: 10, killDesire: 6 });
+  });
+});
+
+describe('applyStyleDoctrine — Lunger doctrine (Arena 93)', () => {
+  it('floors AL at 4 — a lunger too slow to move is just a target', () => {
+    const p = plan(7, 1, 6);
+    applyStyleDoctrine(p, LU);
+    expect(p.AL).toBe(4);
+  });
+
+  it('caps killDesire at 8 — Snorri runs the whole style inside the 5-8 band', () => {
+    const p = plan(7, 7, 10);
+    applyStyleDoctrine(p, LU);
+    expect(p.killDesire).toBe(8);
+  });
+
+  it('leaves canon plans untouched — Assur 7-10 and Boar 4-6 both pass through', () => {
+    const assur = plan(7, 10, 6);
+    const boar = plan(4, 6, 4);
+    applyStyleDoctrine(assur, LU);
+    applyStyleDoctrine(boar, LU);
+    expect(assur).toMatchObject({ OE: 7, AL: 10, killDesire: 6 });
+    expect(boar).toMatchObject({ OE: 4, AL: 6, killDesire: 4 });
   });
 });
 

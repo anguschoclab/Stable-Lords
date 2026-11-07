@@ -2,7 +2,7 @@
  * Per-style strategy presets — named fight plans transcribed from
  * docs/Stable_Lords_Strategy_Editor_Spec_v1.0.md §5 (two per style), plus
  * canon strategies from the Arena 93 newsletter corpus (ripper, slasher,
- * striker, and piker sheets from the Noblish Island articles).
+ * striker, piker, and lunger sheets from the Noblish Island articles).
  *
  * Each preset provides a complete FightPlan with per-phase OE/AL/KD
  * overrides; canon presets may also set per-phase tactics and a
@@ -163,6 +163,54 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
         opening: { OE: 6, AL: 7, KD: 4 },
         mid: { OE: 6, AL: 6, KD: 5 },
         late: { OE: 5, AL: 5, KD: 6 },
+      }
+    ),
+    makePreset(
+      FightingStyle.LungingAttack,
+      "Assur's Lazy 7-10",
+      'Arena 93 — Assur\'s Lunger Model: 7-10 minute 1 for a whole basic career, AL off fast to save the endurance burn, OE ~7, no tactics.',
+      {
+        OE: 7,
+        AL: 10,
+        KD: 6,
+        offensiveTactic: 'none',
+        desperatePlan: { OE: 7, AL: 10, killDesire: 6 },
+      },
+      {
+        opening: { OE: 7, AL: 10, KD: 6 },
+        mid: { OE: 7, AL: 5, KD: 5 },
+        late: { OE: 6, AL: 4, KD: 4 },
+      }
+    ),
+    makePreset(
+      FightingStyle.LungingAttack,
+      'Defensive Lunger',
+      'Arena 93 — The Wild Boar: fight defensively to cover the endurance burn; dodge steals the initiative back. Never run it vs other lungers.',
+      {
+        OE: 4,
+        AL: 5,
+        KD: 4,
+        offensiveTactic: 'none',
+        defensiveTactic: 'Dodge',
+        target: 'Right Leg',
+        protect: 'Body',
+        desperatePlan: { OE: 9, AL: 9, killDesire: 9 },
+      },
+      {
+        opening: { OE: 4, AL: 6, KD: 4 },
+        mid: { OE: 4, AL: 4, KD: 4 },
+        late: { OE: 4, AL: 4, KD: 5 },
+      }
+    ),
+    makePreset(
+      FightingStyle.LungingAttack,
+      "Snorri's Tempo",
+      'Arena 93 — Elder Snorri\'s hi-hi-mod: run hot minute 1, throttle both dials to moderate, KD inside the 5-8 band.',
+      { OE: 9, AL: 9, KD: 7 },
+      {
+        opening: { OE: 9, AL: 9, KD: 7 },
+        mid: { OE: 7, AL: 7, KD: 6 },
+        late: { OE: 5, AL: 6, KD: 5 },
       }
     ),
   ],

@@ -7,7 +7,7 @@
  * CN/WL/SZ. Recruit attrs now blend the style's canonical Arena-93 fighter
  * concept mean into the weighted pool (~50/50 philosophy/style) — recruits
  * trend toward their style's canon build (e.g. WS stays WT/WL-led, small;
- * LU stays WT-led) instead of a flat philosophy spread.
+ * LU stays WL-led) instead of a flat philosophy spread.
  */
 import { describe, it, expect } from 'vitest';
 import { generateRecruitAttrs } from '@/engine/owner/roster/recruitGenerator';
@@ -37,10 +37,13 @@ describe('generateRecruitAttrs — style-aware blend', () => {
     expect(tank.WT).toBeGreaterThan(tank.SZ);
   });
 
-  it('LungingAttack recruits trend toward canon WT', () => {
+  it('LungingAttack recruits trend toward canon WT/WL', () => {
     const agile = meanAttrs(FightingStyle.LungingAttack);
     const neutral = meanAttrs(undefined);
+    // Fifteen Arena-93 lunger spreads (Snorri/Boar/Assur) are will-led — the
+    // endurance engine is the canon priority, with wit close behind.
     expect(agile.WT).toBeGreaterThan(neutral.WT + 1);
+    expect(agile.WL).toBeGreaterThan(neutral.WL + 1);
   });
 
   it('StrikingAttack recruits trend toward canon WT', () => {

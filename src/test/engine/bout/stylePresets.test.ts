@@ -105,6 +105,45 @@ describe('Specific preset values (from spec)', () => {
     expect(presets[1]!.name).toBe('Sustained Pressure');
   });
 
+  it('LU carries the Arena 93 canon sheets after the spec two', () => {
+    const presets = getStylePresets(FightingStyle.LungingAttack);
+    expect(presets.map((p) => p.name)).toEqual([
+      'Blitz',
+      'Sustained Pressure',
+      "Assur's Lazy 7-10",
+      'Defensive Lunger',
+      "Snorri's Tempo",
+    ]);
+  });
+
+  it("Assur's Lazy 7-10 opens 7-10, tapers AL fast, and stays tactic-free — even desperate", () => {
+    const plan = getStylePresets(FightingStyle.LungingAttack)[2]!.plan;
+    expect(plan.phases?.opening).toMatchObject({ OE: 7, AL: 10, killDesire: 6 });
+    expect(plan.phases?.mid).toMatchObject({ OE: 7, AL: 5, killDesire: 5 });
+    expect(plan.phases?.late).toMatchObject({ OE: 6, AL: 4, killDesire: 4 });
+    expect(plan.offensiveTactic).toBe('none');
+    expect(plan.desperatePlan).toMatchObject({ OE: 7, AL: 10, killDesire: 6 });
+  });
+
+  it('Defensive Lunger dodges at OE 4, guards the body, taps the legs, and explodes when desperate', () => {
+    const plan = getStylePresets(FightingStyle.LungingAttack)[3]!.plan;
+    expect(plan.phases?.opening).toMatchObject({ OE: 4, AL: 6, killDesire: 4 });
+    expect(plan.phases?.late?.AL).toBe(4);
+    expect(plan.offensiveTactic).toBe('none');
+    expect(plan.defensiveTactic).toBe('Dodge');
+    expect(plan.target).toBe('Right Leg');
+    expect(plan.protect).toBe('Body');
+    expect(plan.desperatePlan).toMatchObject({ OE: 9, AL: 9, killDesire: 9 });
+  });
+
+  it("Snorri's Tempo runs hi-hi-mod and throttles both dials after the opening", () => {
+    const plan = getStylePresets(FightingStyle.LungingAttack)[4]!.plan;
+    expect(plan.phases?.opening).toMatchObject({ OE: 9, AL: 9, killDesire: 7 });
+    const late = plan.phases?.late;
+    expect(late?.OE).toBeLessThan(plan.phases?.opening?.OE ?? 0);
+    expect(late?.AL).toBeLessThan(plan.phases?.opening?.AL ?? 0);
+  });
+
   it('ParryLunge presets match spec', () => {
     const presets = getStylePresets(FightingStyle.ParryLunge);
     expect(presets[0]!.name).toBe('Counter-Strike');

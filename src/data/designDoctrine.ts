@@ -136,6 +136,29 @@ export const DESIGN_REVIEW_THRESHOLDS = {
    * warning fires — canon: never make average numbers into the worst style.
    */
   PS_FLAT_SPREAD: 7,
+  /**
+   * Lunger constitution floor — Snorri: "try not to go any lower than 9";
+   * the usual never-spend-con advice doesn't hold on a style that takes
+   * hits. Only Boar's defensive variant forgives less.
+   */
+  LU_CN_SOFT_FLOOR: 9,
+  /**
+   * Lunger damage caution — Snorri: hard to roll a good damage rating under
+   * size 12 without strength 13 (13 also unlocks the long spear).
+   */
+  LU_DAMAGE_SZ: 12,
+  LU_DAMAGE_ST: 13,
+  /**
+   * Lunger spread (max − min attribute) at/below which the even-spread
+   * praise fires — Snorri's core doctrine: a fairly even spread works
+   * well; his own builds scale to ≤5 on the 70-pt budget.
+   */
+  LU_EVEN_SPREAD: 5,
+  /**
+   * Wit at/above which the diminishing-returns note fires — Snorri got
+   * good bases at 12 and saw no gain past 17 on a lunger.
+   */
+  LU_WT_CEIL: 17,
   /** Wit at/above which the fast-learner note fires. */
   FAST_LEARNER_WT: 17,
 } as const;

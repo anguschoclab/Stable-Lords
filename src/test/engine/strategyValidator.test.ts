@@ -978,6 +978,84 @@ describe('SL canon warnings (Arena 93 slasher articles)', () => {
   });
 });
 
+describe('LU canon warnings (Arena 93 lunger articles)', () => {
+  it('warns when a lunger plan sustains high AL past the opening — canon tapers fast', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack, 7, 8, 6),
+      phases: { mid: { OE: 7, AL: 7, killDesire: 6 } },
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    expect(warnings.find((x) => x.code === 'LU_SUSTAINED_HIGH_AL')).toBeDefined();
+  });
+
+  it('stays silent on the canon taper — Assur 7-10 drops to AL 4-5 mid', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack, 7, 10, 6),
+      phases: {
+        mid: { OE: 7, AL: 5, killDesire: 5 },
+        late: { OE: 6, AL: 4, killDesire: 4 },
+      },
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    expect(warnings.find((x) => x.code === 'LU_SUSTAINED_HIGH_AL')).toBeUndefined();
+  });
+
+  it('warns when a lunger runs sub-moderate offense — even the defensive lunger fights at OE 4', () => {
+    const plan = createMockFightPlan(FightingStyle.LungingAttack, 3, 5, 5);
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    expect(warnings.find((x) => x.code === 'LU_LOW_OFFENSE')).toBeDefined();
+  });
+
+  it('notes heavy forced-tactic use — Assur: "laziness is king"', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack, 7, 5, 6),
+      offensiveTactic: 'Lunge' as const,
+      defensiveTactic: 'Dodge' as const,
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    const w = warnings.find((x) => x.code === 'LU_TACTICS_HEAVY');
+    expect(w).toBeDefined();
+    expect(w?.severity).toBe('info');
+  });
+
+  it('counts phase-level tactics too — two forced tactics trip the info', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack, 7, 5, 6),
+      phases: {
+        opening: {
+          OE: 7,
+          AL: 9,
+          killDesire: 5,
+          offensiveTactic: 'Lunge' as const,
+          defensiveTactic: 'Dodge' as const,
+        },
+      },
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    expect(warnings.find((x) => x.code === 'LU_TACTICS_HEAVY')).toBeDefined();
+  });
+
+  it('stays silent for a tactic-free lunger — the canon default', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack, 7, 5, 6),
+      offensiveTactic: 'none' as const,
+      defensiveTactic: 'none' as const,
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.LungingAttack));
+    expect(warnings.find((x) => x.code === 'LU_TACTICS_HEAVY')).toBeUndefined();
+  });
+
+  it('does not leak lunger codes onto other styles', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.BashingAttack, 3, 5, 6),
+      offensiveTactic: 'Lunge' as const,
+      defensiveTactic: 'Dodge' as const,
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.BashingAttack));
+    expect(warnings.find((x) => x.code.startsWith('LU_'))).toBeUndefined();
+  });
+});
+
 describe('PL_TACTICS_PAST_EXPERT — Tripwire "drop the tactics after Expert" (Arena 93)', () => {
   const plWith = (skills: Partial<BaseSkills>) =>
     makeWarrior({

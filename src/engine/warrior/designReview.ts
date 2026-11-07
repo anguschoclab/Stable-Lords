@@ -219,6 +219,68 @@ function reviewStyle(attrs: Attributes, style: FightingStyle): DesignReviewItem[
     items.push(...parryLungeCanonNotes(attrs));
   }
 
+  if (style === FightingStyle.LungingAttack) {
+    items.push(...lungerCanonNotes(attrs));
+  }
+
+  return items;
+}
+
+// Lunger notes from the Arena 93 lunger articles (Snorri's Lunger Strats,
+// the Wild Boar's Defensive Lunger, Assur's Lunger Model): the style wants
+// an even spread behind the longsword well-suited triplet — ST 11 / WT 13 /
+// DF 11 — with will carrying the highest endurance burn in the game.
+// Constitution 9+ is canon (the usual never-spend-con advice doesn't hold),
+// size under 12 with sub-13 strength hits light, and Snorri saw no gain
+// past wit 17.
+function lungerCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  const lo = checkWeaponRequirements('longsword', attrs);
+  const deficit = trainableDeficit(lo);
+  items.push({
+    axis: 'style',
+    verdict: lo.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
+    title: 'Longsword frame',
+    detail: lo.met
+      ? "Meets the longsword well-suited triplet (ST 11 / WT 13 / DF 11) — Assur's frame: the one weapon a lunger needs."
+      : deficit <= T.WEAPON_DEFICIT_IN_REACH
+        ? `Longsword within a couple stat trains — ${lo.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
+        : "Cannot reach the longsword frame (ST 11 / WT 13 / DF 11) — Assur's principal weapon; the triplet is the spine of his model.",
+  });
+  if (attrs.CN < T.LU_CN_SOFT_FLOOR) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Thin constitution',
+      detail: `Constitution ${attrs.CN} — Snorri's floor is ${T.LU_CN_SOFT_FLOOR}; the usual never-spend-con advice doesn't hold on a style that takes hits.`,
+    });
+  }
+  if (attrs.SZ < T.LU_DAMAGE_SZ && attrs.ST < T.LU_DAMAGE_ST) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Damage-rating caution',
+      detail: `Size ${attrs.SZ} with strength ${attrs.ST} — Snorri: hard to roll a good damage rating under size ${T.LU_DAMAGE_SZ} without ${T.LU_DAMAGE_ST} strength (which also unlocks the long spear).`,
+    });
+  }
+  const vals = Object.values(attrs);
+  if (Math.max(...vals) - Math.min(...vals) <= T.LU_EVEN_SPREAD) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Even spread',
+      detail:
+        "Snorri's core doctrine — a fairly even spread works well on a lunger; the skills arrive well distributed.",
+    });
+  }
+  if (attrs.WT > T.LU_WT_CEIL) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Wit ceiling',
+      detail: `Wit ${attrs.WT} — Snorri got good bases at 12 and saw no improvement past ${T.LU_WT_CEIL}; the extra points serve better elsewhere.`,
+    });
+  }
   return items;
 }
 

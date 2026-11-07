@@ -56,6 +56,47 @@ function warnSlasherRhythm(plan: FightPlan, OE: number, AL: number, out: Strateg
   }
 }
 
+/** Canon lunger rhythm (Arena 93, Assur's Way + Snorri): the style tapers
+ * activity fast — Assur's 7-10 opener drops to AL 4-5 by mid — and even the
+ * defensive lunger keeps fighting at OE 4. Forced tactics stay light: the
+ * articles' line is "laziness is king". */
+function warnLungerRhythm(plan: FightPlan, OE: number, AL: number, out: StrategyWarning[]): void {
+  if (plan.style !== FightingStyle.LungingAttack) return;
+  const sustainedAL = (['mid', 'late'] as const).some((p) => (plan.phases?.[p]?.AL ?? AL) >= 7);
+  if (sustainedAL) {
+    out.push({
+      code: 'LU_SUSTAINED_HIGH_AL',
+      severity: 'info',
+      message:
+        'Canon lungers taper activity fast — a 7-10 opener should drop to AL 4-5 by mid, not stay busy.',
+    });
+  }
+  if (OE < 4) {
+    out.push({
+      code: 'LU_LOW_OFFENSE',
+      severity: 'info',
+      message:
+        'Even the defensive lunger fights at OE 4 — sub-moderate offense turns the style into a target.',
+    });
+  }
+  const forced = [
+    plan.offensiveTactic,
+    plan.defensiveTactic,
+    ...(['opening', 'mid', 'late'] as const).flatMap((p) => [
+      plan.phases?.[p]?.offensiveTactic,
+      plan.phases?.[p]?.defensiveTactic,
+    ]),
+  ].filter((t) => t && t !== 'none');
+  if (forced.length >= 2) {
+    out.push({
+      code: 'LU_TACTICS_HEAVY',
+      severity: 'info',
+      message:
+        'Heavy forced tactics on a lunger — Assur\'s canon line is "laziness is king"; let the style\'s own lunge do the work.',
+    });
+  }
+}
+
 /** Canon expert rating (Duel2): a skill reaches Expert at 16 — Tripwire's
  * parry-lunge advice is to stop forcing tactics once the backing skill is
  * Expert and let the style's natural tools run. */
@@ -180,6 +221,7 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
   }
 
   warnSlasherRhythm(plan, OE, AL, out);
+  warnLungerRhythm(plan, OE, AL, out);
   if (warrior) warnParryLungerTactics(plan, warrior, out);
 
   // Attribute fit — endurance-heavy plan vs. low WT warrior

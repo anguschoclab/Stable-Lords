@@ -93,6 +93,89 @@ describe('FIGHTER_CONCEPTS — "How to Build a Better Warrior" redesigns', () =>
   });
 });
 
+describe('LU — Arena 93 lunger canon builds', () => {
+  // Elder Snorri's "Lunger Strats", The Wild Boar's "Defensive Lunger", and
+  // Assur's Lunger Model — every published qualifying spread plus the
+  // synthesized model build. Boar's minimums (66) and his 11-3-10-… actual
+  // (74) fail the ~84-point canon budget and are excluded.
+  const luConcepts = FIGHTER_CONCEPTS[FightingStyle.LungingAttack].concepts;
+
+  it('carries the full canon roster: 3 baseline + 12 article builds', () => {
+    expect(luConcepts).toHaveLength(15);
+  });
+
+  it('names every article build', () => {
+    const names = luConcepts.map((c) => c.name);
+    for (const n of [
+      // Snorri's three
+      'Even Spread',
+      'The Aesir',
+      'Riposte Gamble',
+      // The Wild Boar's two
+      "Boar's Perfect",
+      "Boar's Graduate",
+      // Assur's synthesized model + six graduates
+      "Assur's Model",
+      'The Fantastic',
+      'Freshman Crown',
+      'The Natural',
+      'Lucky Roll',
+      'The Standard',
+      'Arena Ace',
+    ]) {
+      expect(names).toContain(n);
+    }
+  });
+
+  const pin = (name: string, spread: Attributes) =>
+    expect(
+      luConcepts.find((c) => c.name === name)?.canonStats,
+      `${name} canonStats`
+    ).toEqual(spread);
+
+  it("pins Snorri's first lunger — the even spread (13-12-12-12-12-12-11)", () =>
+    pin('Even Spread', { ST: 13, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 11 }));
+
+  it("pins Snorri's best skill base (13-10-9-15-15-11-11)", () =>
+    pin('The Aesir', { ST: 13, CN: 10, SZ: 9, WT: 15, WL: 15, SP: 11, DF: 11 }));
+
+  it("pins Snorri's 60%-riposte gamble (9-15-8-15-13-11-13)", () =>
+    pin('Riposte Gamble', { ST: 9, CN: 15, SZ: 8, WT: 15, WL: 13, SP: 11, DF: 13 }));
+
+  it("pins the Wild Boar perfect defensive lunger (13-7-4-21-17-5-17)", () =>
+    pin("Boar's Perfect", { ST: 13, CN: 7, SZ: 4, WT: 21, WL: 17, SP: 5, DF: 17 }));
+
+  it("pins the Wild Boar graduate (13-11-6-17-19-5-13)", () =>
+    pin("Boar's Graduate", { ST: 13, CN: 11, SZ: 6, WT: 17, WL: 19, SP: 5, DF: 13 }));
+
+  it("pins the synthesized Assur model — meets every standard (11-14-9-13-21-5-11)", () =>
+    pin("Assur's Model", { ST: 11, CN: 14, SZ: 9, WT: 13, WL: 21, SP: 5, DF: 11 }));
+
+  it("pins Assur's 17-6 graduate — 'The Fantastic' (12-13-8-13-21-6-11)", () =>
+    pin('The Fantastic', { ST: 12, CN: 13, SZ: 8, WT: 13, WL: 21, SP: 6, DF: 11 }));
+
+  it('pins the freshman TC (9-15-11-14-20-5-10)', () =>
+    pin('Freshman Crown', { ST: 9, CN: 15, SZ: 11, WT: 14, WL: 20, SP: 5, DF: 10 }));
+
+  it('pins the untrained 14-7 graduate (9-11-8-15-21-7-13)', () =>
+    pin('The Natural', { ST: 9, CN: 11, SZ: 8, WT: 15, WL: 21, SP: 7, DF: 13 }));
+
+  it('pins the lucky-roll 16-5 graduate (10-10-4-16-20-14-10)', () =>
+    pin('Lucky Roll', { ST: 10, CN: 10, SZ: 4, WT: 16, WL: 20, SP: 14, DF: 10 }));
+
+  it('pins the trained-to-standard graduate (9-11-13-13-19-9-10)', () =>
+    pin('The Standard', { ST: 9, CN: 11, SZ: 13, WT: 13, WL: 19, SP: 9, DF: 10 }));
+
+  it('pins the easy-arena 17-4 graduate (9-9-13-17-21-4-11)', () =>
+    pin('Arena Ace', { ST: 9, CN: 9, SZ: 13, WT: 17, WL: 21, SP: 4, DF: 11 }));
+
+  it('LU doctrine encodes the even-spread advice and the scum avoid', () => {
+    const d = FIGHTER_CONCEPTS[FightingStyle.LungingAttack].doctrine;
+    expect(d).toMatch(/even|balanced/i);
+    expect(d).toMatch(/scum|plate/i);
+  });
+});
+
 describe('PL — Arena 93 parry-lunge canon builds', () => {
   // "The Armor Piercing Parry-Lunge" (the article's perfect spread), Tripwire's
   // Parry-Lunge (all seven listed graduates), and Assur's addendum — the lone

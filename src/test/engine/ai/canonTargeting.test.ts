@@ -161,8 +161,36 @@ describe('canonTargetingBias — ST doctrine (Arena 93)', () => {
   });
 });
 
+describe('canonTargetingBias — LU doctrine (Arena 93)', () => {
+  it('hard-avoids plate scum — "pure scum in Plate Armor!!! Avoid like the plague!"', () => {
+    expect(canonTargetingBias(LU, TP)).toBeLessThanOrEqual(-3);
+  });
+
+  it('feeds on strikers and bashers — Assur\'s best matchups', () => {
+    expect(canonTargetingBias(LU, ST)).toBeGreaterThanOrEqual(2);
+    expect(canonTargetingBias(LU, FightingStyle.BashingAttack)).toBeGreaterThanOrEqual(2);
+  });
+
+  it('hunts the hybrids — "other hybrids ... are probably your best matchups"', () => {
+    expect(canonTargetingBias(LU, FightingStyle.ParryStrike)).toBeGreaterThanOrEqual(1);
+    expect(canonTargetingBias(LU, FightingStyle.ParryLunge)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('respects the high-attack defenses and slashers — cautious, never the plague band', () => {
+    for (const opp of [
+      FightingStyle.SlashingAttack,
+      FightingStyle.WallOfSteel,
+      FightingStyle.ParryRiposte,
+    ]) {
+      const bias = canonTargetingBias(LU, opp);
+      expect(bias).toBeLessThan(0);
+      expect(bias).toBeGreaterThan(-3);
+    }
+  });
+});
+
 describe('canonTargetingBias — non-doctrine styles', () => {
   it('returns 0 for styles with no canon challenge/avoid lore', () => {
-    expect(canonTargetingBias(FightingStyle.WallOfSteel, LU)).toBe(0);
+    expect(canonTargetingBias(FightingStyle.BashingAttack, LU)).toBe(0);
   });
 });

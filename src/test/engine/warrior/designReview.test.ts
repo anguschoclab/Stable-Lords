@@ -330,6 +330,93 @@ describe('piker canon notes (Arena 93 parry-strike articles)', () => {
   });
 });
 
+describe('reviewWarriorDesign — lunger canon notes (Arena 93)', () => {
+  const LU = FightingStyle.LungingAttack;
+
+  it('warns when the longsword frame is out of reach — Assur wants ST 11 / WT 13 / DF 11', () => {
+    const items = reviewWarriorDesign(A({ ST: 7, WT: 9, DF: 9 }), LU);
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'warn' && /longsword/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('notes the longsword frame within a couple trains', () => {
+    // ST 9 sits one train below the LO requirement of 11.
+    const items = reviewWarriorDesign(A({ ST: 9, WT: 13, WL: 15, DF: 11 }), LU);
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'ok' && /within|train/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('green-lights the Assur frame — ST 11+ / WT 13+ / DF 11+ met', () => {
+    const items = reviewWarriorDesign(A({ ST: 11, WT: 13, WL: 15, DF: 11 }), LU);
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'ok' && /longsword/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('notes thin constitution — Snorri wants CN 9+ on a style that takes hits', () => {
+    const items = reviewWarriorDesign(
+      A({ ST: 11, CN: 6, WT: 13, WL: 15, DF: 11 }),
+      LU
+    );
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'info' && /constitution/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('notes the damage-rating caution — small size plus sub-13 strength hits light', () => {
+    const items = reviewWarriorDesign(
+      A({ ST: 11, SZ: 9, WT: 13, WL: 15, DF: 11 }),
+      LU
+    );
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'info' && /damage/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('praises the even spread — Snorri\'s core lunger doctrine', () => {
+    const items = reviewWarriorDesign(
+      A({ ST: 11, CN: 9, SZ: 9, WT: 12, WL: 12, SP: 9, DF: 10 }),
+      LU
+    );
+    expect(
+      items.find(
+        (x) => x.axis === 'style' && x.verdict === 'info' && /even|spread|balanced/i.test(x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('notes the wit ceiling — Snorri saw good bases at 12 and no gain past 17', () => {
+    const items = reviewWarriorDesign(A({ ST: 11, WT: 19, WL: 15, DF: 11 }), LU);
+    expect(
+      items.find(
+        (x) =>
+          x.axis === 'style' && x.verdict === 'info' && /wit/i.test(x.title + x.detail)
+      )
+    ).toBeDefined();
+  });
+
+  it('does not leak lunger notes onto other styles', () => {
+    const items = reviewWarriorDesign(
+      A({ ST: 7, CN: 6, SZ: 9, WT: 9, WL: 15, SP: 9, DF: 9 }),
+      FightingStyle.SlashingAttack
+    );
+    const leaked = items.find((x) => /longsword|even spread|lunger/i.test(x.title + x.detail));
+    expect(leaked).toBeUndefined();
+  });
+});
+
 describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
   const PL = FightingStyle.ParryLunge;
 

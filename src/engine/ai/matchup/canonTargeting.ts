@@ -26,6 +26,10 @@
  *   veterans still bid the heavy hitters, rookies refuse them outright;
  *   Tripwire steers clear of scum that burn out the fragile frame.
  *
+ *  LU: "pure scum in Plate Armor!!! Avoid like the plague!" (Assur) —
+ *   lungers hunt strikers, bashers, and the hybrids, and respect the
+ *   high-attack defenses and slashers without fearing the plague band.
+ *
  * Bias units match the post-transform score scale in boutBidding (−5..+5).
  */
 import { FightingStyle } from '@/types/shared.types';
@@ -88,6 +92,17 @@ const PL: StyleBias = {
   [FightingStyle.BashingAttack]: -2.5, // hardest hitters — deepest caution
 };
 
+const LU: StyleBias = {
+  [FightingStyle.StrikingAttack]: 2.5, // Assur's best matchups — soft offensives
+  [FightingStyle.BashingAttack]: 2.5,
+  [FightingStyle.ParryStrike]: 1.5, // "other hybrids ... are probably your best matchups"
+  [FightingStyle.ParryLunge]: 1.5,
+  [FightingStyle.SlashingAttack]: -1.5, // very-high-attack offensives "cause problems"
+  [FightingStyle.WallOfSteel]: -1, // "hard to beat good defensives"
+  [FightingStyle.ParryRiposte]: -1, // good defensive — the burn-out risk is real
+  [FightingStyle.TotalParry]: -3, // "pure scum in Plate Armor!!! Avoid like the plague!"
+};
+
 const ST: StyleBias = {
   [FightingStyle.BashingAttack]: 2, // Assur's best matchup — soft offensives
   [FightingStyle.SlashingAttack]: 2, // Assur's best matchup — burn-out slashers
@@ -106,6 +121,7 @@ const CANON_TARGETING: Partial<Record<FightingStyle, StyleBias>> = {
   [FightingStyle.ParryLunge]: PL,
   [FightingStyle.SlashingAttack]: SL,
   [FightingStyle.StrikingAttack]: ST,
+  [FightingStyle.LungingAttack]: LU,
 };
 
 /**

@@ -3,6 +3,7 @@ import {
   verifyBoutAcceptance,
   venueCounterTarget,
 } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
+import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior, makeRival, makeStrategy, makeBoutOffer } from '@/test/_fixtures/factories';
 import type { AIIntent } from '@/types/state/game';
 import { evalBoutOffer } from '@/test/_fixtures/competitionWorker';
@@ -108,5 +109,26 @@ describe('evaluateBoutOffer (characterization)', () => {
     });
     expect(v).toBe('Accepted');
     expect(explain.reason).toBe('desperate-for-purse');
+  });
+});
+
+describe('canon doctrine refusal — PL rookies (Arena 93)', () => {
+  it('a rookie parry-lunger refuses a lunger — canon "stay away" in the first few fights', () => {
+    const pl = makeWarrior({ style: FightingStyle.ParryLunge, fame: 100 });
+    const lu = makeWarrior({ style: FightingStyle.LungingAttack, fame: 100 });
+    const r = verifyBoutAcceptance(rivalWith('CONSOLIDATION'), pl, lu);
+    expect(r.accepted).toBe(false);
+    expect(r.reason).toMatch(/style beats ours/i);
+  });
+
+  it('a veteran parry-lunger still evaluates the lunger — cautious, not hard-avoid', () => {
+    const pl = makeWarrior({
+      style: FightingStyle.ParryLunge,
+      fame: 100,
+      career: { wins: 10, losses: 5 } as never,
+    });
+    const lu = makeWarrior({ style: FightingStyle.LungingAttack, fame: 100 });
+    const r = verifyBoutAcceptance(rivalWith('CONSOLIDATION'), pl, lu);
+    expect(r.accepted).toBe(true);
   });
 });

@@ -51,9 +51,9 @@ function makePerfRival(overrides: Partial<RivalStableData> = {}): RivalStableDat
 
 describe('matchup scoring evaluates all opponents, not just first', () => {
   it('matchupModifier reflects best matchup, not just first opponent found', () => {
-    // ParryLunge vs BashingAttack is a favorable matchup (matrix +1)
-    // ParryLunge vs LungingAttack is a neutral matchup (matrix 0)
-    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    // WallOfSteel vs BashingAttack is a favorable matchup (matrix +1)
+    // WallOfSteel vs LungingAttack is a neutral matchup (matrix 0)
+    const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const favorOpp = makeWarrior('Basher', FightingStyle.BashingAttack);
     const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
 
@@ -97,9 +97,9 @@ describe('matchup scoring evaluates all opponents, not just first', () => {
 
 describe('matchup scoring excludes own stablemates', () => {
   it('matchupModifier does not score against own stablemates', () => {
-    // ParryLunge vs BashingAttack is favorable (matrix +1 → score 125 → mod +1.25)
-    // ParryLunge vs LungingAttack is neutral (matrix 0 → score 100 → mod 0)
-    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    // WallOfSteel vs BashingAttack is favorable (matrix +1 → score 125 → mod +1.25)
+    // WallOfSteel vs LungingAttack is neutral (matrix 0 → score 100 → mod 0)
+    const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const ownStablemate = makeWarrior('OwnBasher', FightingStyle.BashingAttack);
     const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
 
@@ -216,8 +216,8 @@ describe('VENDETTA without targetStableId', () => {
 
 describe('VENDETTA bid description reflects matchup against target stable', () => {
   it('VENDETTA bid description contains Favorable matchup when target has disadvantaged style', () => {
-    // ParryLunge vs BashingAttack: matrix +1 → favorable
-    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    // WallOfSteel vs BashingAttack: matrix +1 → favorable
+    const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const target = makeWarrior('Basher', FightingStyle.BashingAttack);
 
     const rival = makeRival({
@@ -529,7 +529,7 @@ describe('boutBidding optimization — VENDETTA', () => {
 
 describe('boutBidding optimization — non-VENDETTA', () => {
   it('non-VENDETTA evaluates all rival opponents for matchup scoring', () => {
-    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const favorOpp = makeWarrior('Basher', FightingStyle.BashingAttack);
     const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
 
@@ -548,13 +548,13 @@ describe('boutBidding optimization — non-VENDETTA', () => {
     });
 
     expect(bids.length).toBeGreaterThan(0);
-    // Favorable matchup (ParryLunge vs BashingAttack: matrix +1 → score 125 → mod +1.25)
+    // Favorable matchup (WallOfSteel vs BashingAttack: matrix +1 → score 125 → mod +1.25)
     // priority = 4 + 0 + 0 + 1.25 = 5.25 > 4
     expect(bids[0]!.priority).toBeGreaterThan(4);
   });
 
   it('non-VENDETTA excludes self-rival from opponent list', () => {
-    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    const warrior = makeWarrior('Waller', FightingStyle.WallOfSteel);
     const ownStablemate = makeWarrior('OwnBasher', FightingStyle.BashingAttack);
     const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
 
@@ -682,11 +682,9 @@ describe('boutBidding optimization — edge cases', () => {
   });
 
   it('multiple warriors each get own bid with independent matchup scoring', () => {
-    const w1 = makeWarrior('W1', FightingStyle.ParryLunge);
+    const w1 = makeWarrior('W1', FightingStyle.WallOfSteel);
     const w2 = makeWarrior('W2', FightingStyle.WallOfSteel);
-    // ParryLunge vs BashingAttack: favorable (matrix +1 → +1.25)
-    // WallOfSteel vs BashingAttack: need to check — let's use a different setup
-    // ParryLunge vs AimedBlow: neutral/unknown
+    // WallOfSteel vs BashingAttack: favorable (matrix +1 → +1.25)
     // WallOfSteel vs AimedBlow: unfavorable (matrix -3 → -3.75)
     // Use two separate rival stables so each warrior's best matchup differs
     const basher = makeWarrior('Basher', FightingStyle.BashingAttack);

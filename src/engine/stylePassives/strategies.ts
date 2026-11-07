@@ -145,7 +145,10 @@ export const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.ParryRiposte]: {
-    tempo: { opening: 0, mid: 1, late: 0, enduranceMult: 1.04 },
+    // Canon: low endurance burn is a headline PR advantage (Arena 93 ripper
+    // articles; STYLE_IDENTITY.fatigueBurn = 'Low'). Was 1.04 — the highest
+    // burn in the game — now below 1.0 to match.
+    tempo: { opening: 0, mid: 1, late: 0, enduranceMult: 0.94 },
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
@@ -195,7 +198,8 @@ export const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.SlashingAttack]: {
-    tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 0.96 },
+    // Canon: slashers "burn endurance very quickly" — the fastest burner.
+    tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 1.05 },
     getPassive: (ctx, m) => {
       const flurryDmg = ctx.hitsLanded >= 4 ? 1 : 0;
       return {

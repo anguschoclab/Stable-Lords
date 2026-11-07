@@ -92,6 +92,50 @@ export const DESIGN_REVIEW_THRESHOLDS = {
   AB_DF_CANON: 21,
   /** Total-parry wit at/above which the scum-spending note fires. */
   TP_SCUM_WT_INFO: 17,
+  /** Slasher deftness below which the negative-parry note fires. */
+  SL_DF_PARRY_INFO: 15,
+  /** Slasher will below which the endurance-engine note fires. */
+  SL_WL_INFO: 15,
+  /** Slasher size above which the big-slasher longevity note fires. */
+  SL_SZ_INFO: 11,
+  /** Slasher speed above which the wasted-points note fires. */
+  SL_SP_INFO: 11,
+  /**
+   * Piker wit below which the keystone note fires — Assur's tournament
+   * pikers ran 17-21 on the 84-pt budget; even his scum piker ran ~11.
+   */
+  PS_WT_NOTE: 15,
+  /** Striker stat minimums from Assur's guide: ST 9 / WT 11 / WL 9 / DF 11. */
+  ST_MIN_ST: 9,
+  ST_MIN_WT: 11,
+  ST_MIN_WL: 9,
+  ST_MIN_DF: 11,
+  /** Sir Boyd's damage bar — ST+SZ under this and the striker hits softly. */
+  ST_BOYD_DAMAGE_SUM: 21,
+  /** Talon's Primal frame: WT/DF/WL bars for a Primus-quality striker. */
+  ST_PRIMAL_WT: 17,
+  ST_PRIMAL_DF: 15,
+  ST_PRIMAL_WL: 13,
+  /**
+   * Parry-lunger constitution at/below which the glass-jaw note fires —
+   * the armor-piercer's own graduate "clings to life by luck".
+   */
+  PL_CN_INFO: 6,
+  /**
+   * Parry-lunger speed at/above which the wasted-speed note fires —
+   * canon: a PL is "not a lunger mimic"; the points belong on WT/WL/DF.
+   */
+  PL_SP_INFO: 10,
+  /** Parry-lunger deftness below which the epee note fires — DF 15 unlocks it. */
+  PL_DF_INFO: 15,
+  /** Attack-god chassis praise bars: the armor-piercer spread is WT/DF-led. */
+  PL_WT_GOOD: 17,
+  PL_DF_GOOD: 15,
+  /**
+   * Piker spread (max − min attribute) at/below which the "average numbers"
+   * warning fires — canon: never make average numbers into the worst style.
+   */
+  PS_FLAT_SPREAD: 7,
   /** Wit at/above which the fast-learner note fires. */
   FAST_LEARNER_WT: 17,
 } as const;

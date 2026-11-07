@@ -103,9 +103,30 @@ describe('generateFavorites', () => {
       // Test max OE/AL via rng just under 1
       const rngMax = makeMockRng([0, 0, 0.999, 0.999]);
       const maxResult = generateFavorites(style, rngMax);
-      expect(maxResult.rhythm.oe).toBeLessThanOrEqual(9);
-      expect(maxResult.rhythm.al).toBeLessThanOrEqual(9);
+      expect(maxResult.rhythm.oe).toBeLessThanOrEqual(10);
+      expect(maxResult.rhythm.al).toBeLessThanOrEqual(10);
     }
+  });
+
+  it('SL rhythm range follows the canon 65-graduate distribution (OE 5-10, AL 1-6)', () => {
+    // rng sequence: weapon idx=0, useStyleRange=true (<0.8), OE draw, AL draw
+    const max = generateFavorites(FightingStyle.SlashingAttack, makeMockRng([0, 0.5, 0.999, 0.999]));
+    expect(max.rhythm.oe).toBe(10);
+    expect(max.rhythm.al).toBe(6);
+    const min = generateFavorites(FightingStyle.SlashingAttack, makeMockRng([0, 0.5, 0, 0]));
+    expect(min.rhythm.oe).toBe(5);
+    expect(min.rhythm.al).toBe(1);
+  });
+
+  it('PL rhythm range follows the canon favorite envelope (OE VL-HI 1-8, AL LO-VH 3-10)', () => {
+    // Tripwire: "favorite Offensive Efforts of VL to HI and favorite Activity
+    // Levels of LO to VH — no VH OE and no VL AL as favorites."
+    const max = generateFavorites(FightingStyle.ParryLunge, makeMockRng([0, 0.5, 0.999, 0.999]));
+    expect(max.rhythm.oe).toBe(8);
+    expect(max.rhythm.al).toBe(10);
+    const min = generateFavorites(FightingStyle.ParryLunge, makeMockRng([0, 0.5, 0, 0]));
+    expect(min.rhythm.oe).toBe(1);
+    expect(min.rhythm.al).toBe(3);
   });
 
   it('initializes discovered state to all false/zero', () => {

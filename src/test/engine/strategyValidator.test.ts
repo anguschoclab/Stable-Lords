@@ -9,7 +9,12 @@ import {
   estimateStaminaCurve,
   predictedCollapseMinute,
 } from '@/engine/strategy/strategyValidator';
-import { FightingStyle, type FightPlan, type WarriorId } from '@/types/shared.types';
+import {
+  FightingStyle,
+  type BaseSkills,
+  type FightPlan,
+  type WarriorId,
+} from '@/types/shared.types';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
@@ -930,7 +935,7 @@ describe('PR_RIPOSTE_PAST_MASTER — canon "drop the riposte tactic after master
   it('also flags a phase-level Riposte tactic', () => {
     const plan = {
       ...createMockFightPlan(FightingStyle.ParryRiposte),
-      phases: { mid: { OE: 5, AL: 5, defensiveTactic: 'Riposte' as const } },
+      phases: { mid: { OE: 5, AL: 5, killDesire: 5, defensiveTactic: 'Riposte' as const } },
     };
     const warnings = validateStrategy(plan, masterWarrior(FightingStyle.ParryRiposte));
     expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeDefined();
@@ -940,5 +945,120 @@ describe('PR_RIPOSTE_PAST_MASTER — canon "drop the riposte tactic after master
     const plan = createMockFightPlan(FightingStyle.ParryRiposte);
     const warnings = validateStrategy(plan, masterWarrior(FightingStyle.ParryRiposte));
     expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeUndefined();
+  });
+});
+
+describe('SL canon warnings (Arena 93 slasher articles)', () => {
+  it('warns when an SL plan sustains high AL past the opening — canon SL goes low', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.SlashingAttack, 9, 8, 6),
+      phases: { mid: { OE: 9, AL: 8, killDesire: 6 } },
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.SlashingAttack));
+    expect(warnings.find((x) => x.code === 'SL_SUSTAINED_HIGH_AL')).toBeDefined();
+  });
+
+  it('warns when an SL plan runs sub-moderate OE — no graduate favorite ran OE below 5', () => {
+    const plan = createMockFightPlan(FightingStyle.SlashingAttack, 4, 4, 5);
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.SlashingAttack));
+    expect(warnings.find((x) => x.code === 'SL_LOW_OE')).toBeDefined();
+  });
+
+  it('stays silent for a canon-shaped SL plan (high OE, collapsing AL)', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.SlashingAttack, 9, 2, 6),
+      phases: {
+        mid: { OE: 9, AL: 3, killDesire: 6 },
+        late: { OE: 7, AL: 2, killDesire: 7 },
+      },
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.SlashingAttack));
+    expect(warnings.find((x) => x.code === 'SL_SUSTAINED_HIGH_AL')).toBeUndefined();
+    expect(warnings.find((x) => x.code === 'SL_LOW_OE')).toBeUndefined();
+  });
+});
+
+describe('PL_TACTICS_PAST_EXPERT — Tripwire "drop the tactics after Expert" (Arena 93)', () => {
+  const plWith = (skills: Partial<BaseSkills>) =>
+    makeWarrior({
+      style: FightingStyle.ParryLunge,
+      baseSkills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10, ...skills },
+    });
+
+  it('warns when an Expert-parry PL still forces the Parry tactic', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      defensiveTactic: 'Parry' as const,
+    };
+    const warnings = validateStrategy(plan, plWith({ PAR: 16 }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeDefined();
+  });
+
+  it('warns on a phase-level forced tactic past Expert too', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      phases: { opening: { OE: 5, AL: 8, killDesire: 5, defensiveTactic: 'Dodge' as const } },
+    };
+    const warnings = validateStrategy(plan, plWith({ DEF: 16 }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeDefined();
+  });
+
+  it('stays silent below Expert — forcing tactics is correct early', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      defensiveTactic: 'Parry' as const,
+    };
+    const warnings = validateStrategy(plan, plWith({ PAR: 15 }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
+  });
+
+  it('warns on an Expert-attack PL still forcing the Lunge offensive tactic', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      offensiveTactic: 'Lunge' as const,
+    };
+    const warnings = validateStrategy(plan, plWith({ ATT: 16 }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeDefined();
+  });
+
+  it('stays silent when the forced tactic backs a different, sub-Expert skill', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      defensiveTactic: 'Parry' as const,
+    };
+    const warnings = validateStrategy(plan, plWith({ DEF: 20 }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
+  });
+
+  it('stays silent with no tactics forced — the graduated PL runs clean', () => {
+    const warnings = validateStrategy(
+      createMockFightPlan(FightingStyle.ParryLunge),
+      plWith({ PAR: 20, DEF: 20 })
+    );
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
+  });
+
+  it('stays silent for non-PL styles — the lifecycle advice is parry-lunge canon', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.LungingAttack),
+      defensiveTactic: 'Parry' as const,
+    };
+    const warnings = validateStrategy(
+      plan,
+      makeWarrior({
+        style: FightingStyle.LungingAttack,
+        baseSkills: { ATT: 10, PAR: 18, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+      })
+    );
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
+  });
+
+  it('stays silent when the warrior has no skill record to judge against', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryLunge),
+      defensiveTactic: 'Parry' as const,
+    };
+    const warnings = validateStrategy(plan, makeWarrior({ style: FightingStyle.ParryLunge }));
+    expect(warnings.find((x) => x.code === 'PL_TACTICS_PAST_EXPERT')).toBeUndefined();
   });
 });

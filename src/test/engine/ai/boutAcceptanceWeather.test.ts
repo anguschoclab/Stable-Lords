@@ -186,7 +186,11 @@ describe('Gap 9: verifyBoutAcceptance covers all significant weather types', () 
   it('accepts Clear weather for all styles (sanity check)', () => {
     const styles = Object.values(FightingStyle);
     for (const style of styles) {
-      const warrior = makeWarrior(style);
+      // Veteran career (10 fights) — the canon rookie carve-outs (PL refusing
+      // bashers in his first few fights) are a lore refusal, not weather.
+      const warrior = makeWarrior(style, 15, {
+        career: { wins: 5, losses: 5 } as never,
+      });
       const opponent = makeWarrior(FightingStyle.BashingAttack);
       const rival = makeRival();
       const decision = verifyBoutAcceptance(rival, warrior, opponent, 'Clear');

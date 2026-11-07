@@ -124,6 +124,7 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
     personality: personality,
     intent: intent,
     dossier: dossier,
+    opponentStyle: args.opponentStyle,
     mods: mods,
     competence: args.competence,
   });

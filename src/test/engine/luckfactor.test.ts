@@ -27,6 +27,44 @@ describe('luckfactor', () => {
     expect(a).not.toEqual(b);
   });
 
+  it('widens pikers to [-6, +6] — canon: greater chance to be bonused or cursed', () => {
+    const rng = new SeededRNG(4242);
+    let sawBeyond4 = false;
+    for (let i = 0; i < 200; i++) {
+      const luck = rollLuckfactor(rng, FightingStyle.ParryStrike);
+      for (const s of SKILLS) {
+        expect(luck[s]).toBeGreaterThanOrEqual(-6);
+        expect(luck[s]).toBeLessThanOrEqual(6);
+        if (Math.abs(luck[s]) >= 5) sawBeyond4 = true;
+      }
+    }
+    // The widened range must actually be reachable — ±4 can never produce 5+.
+    expect(sawBeyond4).toBe(true);
+  });
+
+  it('keeps every other style on the canon ±4 range', () => {
+    for (const style of Object.values(FightingStyle)) {
+      if (style === FightingStyle.ParryStrike) continue;
+      const rng = new SeededRNG(777);
+      for (let i = 0; i < 50; i++) {
+        const luck = rollLuckfactor(rng, style);
+        for (const s of SKILLS) {
+          expect(luck[s], `${style}.${s} = ${luck[s]}`).toBeGreaterThanOrEqual(-4);
+          expect(luck[s]).toBeLessThanOrEqual(4);
+        }
+      }
+    }
+  });
+
+  it('consumes the same six RNG draws regardless of style — stream stays aligned', () => {
+    const rngPS = new SeededRNG(99);
+    const rngLU = new SeededRNG(99);
+    rollLuckfactor(rngPS, FightingStyle.ParryStrike);
+    rollLuckfactor(rngLU, FightingStyle.LungingAttack);
+    // If draw counts matched, the next value out of each stream is identical.
+    expect(rngPS.next()).toBe(rngLU.next());
+  });
+
   it('applyLuckfactor adds deltas and floors each skill at 1', () => {
     const base: BaseSkills = { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 };
     expect(applyLuckfactor(base, { ATT: 3, DEF: -2 })).toMatchObject({ ATT: 13, DEF: 8 });

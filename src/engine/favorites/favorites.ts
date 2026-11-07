@@ -31,10 +31,13 @@ const STYLE_RHYTHM_RANGES: Record<FightingStyle, { oe: [number, number]; al: [nu
   [FightingStyle.AimedBlow]: { oe: [4, 7], al: [4, 6] }, // widened OE to include default 6
   [FightingStyle.BashingAttack]: { oe: [7, 9], al: [2, 5] }, // widened AL to include default 3
   [FightingStyle.LungingAttack]: { oe: [6, 9], al: [6, 9] },
-  [FightingStyle.ParryLunge]: { oe: [4, 7], al: [4, 7] },
+  // Tripwire (Arena 93): PL favorites run VL-HI OE and LO-VH AL — no VH OE, no VL AL.
+  [FightingStyle.ParryLunge]: { oe: [1, 8], al: [3, 10] },
   [FightingStyle.ParryRiposte]: { oe: [3, 6], al: [4, 7] }, // widened to give PR more variance
   [FightingStyle.ParryStrike]: { oe: [4, 7], al: [4, 7] },
-  [FightingStyle.SlashingAttack]: { oe: [6, 9], al: [4, 7] },
+  // Canon 65-graduate distribution (Jorja): no OE favorite below 5, AL runs
+  // 1–6 with low activity dominant — the slasher runs hot, not busy.
+  [FightingStyle.SlashingAttack]: { oe: [5, 10], al: [1, 6] },
   [FightingStyle.StrikingAttack]: { oe: [6, 9], al: [4, 7] },
   [FightingStyle.TotalParry]: { oe: [1, 4], al: [1, 4] },
   [FightingStyle.WallOfSteel]: { oe: [5, 8], al: [4, 7] }, // widened OE to include default 7

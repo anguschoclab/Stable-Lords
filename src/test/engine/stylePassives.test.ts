@@ -26,6 +26,11 @@ describe('Style Passives', () => {
       expect(identity.fatigueBurn).toBe('Low');
       expect(identity.tagline).toBe('patient surgeon of the arena');
     });
+
+    it('should mark Slashing Attack as a high fatigue-burn style — canon: burns endurance very quickly', () => {
+      const identity = getStyleIdentity(FightingStyle.SlashingAttack);
+      expect(identity.fatigueBurn).toBe('High');
+    });
   });
 
   describe('fallback behaviors', () => {
@@ -113,6 +118,11 @@ describe('Style Passives', () => {
     it('should give Parry-Riposte a low endurance burn — a canon PR advantage', () => {
       const pr = getEnduranceMult(FightingStyle.ParryRiposte);
       expect(pr).toBeLessThan(1.0);
+    });
+
+    it('should make Slashing Attack a wasteful burner — the articles’ "burns endurance very quickly"', () => {
+      const sl = getEnduranceMult(FightingStyle.SlashingAttack);
+      expect(sl).toBeGreaterThan(1.0);
     });
   });
 

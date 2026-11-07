@@ -26,7 +26,9 @@ import {
   getAITactics,
 } from '@/engine/ai/plan/levers';
 import { aiFeature } from '@/engine/ai/featureFlags';
+import { getDefensiveSuitability, getOffensiveSuitability } from '@/engine/strategy/tacticSuitability';
 import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
+import type { FightingStyle } from '@/types/shared.types';
 import type { PlanModifiers } from './modifiers';
 
 /** WT floor for holding a committed deception script through the masked window. */
@@ -67,8 +69,32 @@ interface ApplyStrategicLayerArgs {
   personality: OwnerPersonality;
   intent: AIIntent | undefined;
   dossier: OpponentDossier | undefined;
+  /** Known opponent style this bout — powers the counter-tactic lever. */
+  opponentStyle?: FightingStyle;
   mods: PlanModifiers;
   competence?: OwnerCompetence;
+}
+
+/**
+ * Arena-93 counter-tactic lever (Tex/Sir Boyd RPS): "counter strikers using
+ * decise with responsiveness." A tactical stable stands a Response-suited
+ * fighter responsive when the opponent runs a decise-suited style — the
+ * only defensive pick whose payoff depends on reading the incoming attack.
+ * Fills an empty defensive slot only; a style's signature defense is never
+ * stripped, and hot-blooded personalities don't play the counter game.
+ */
+function applyCounterTacticLever(
+  plan: FightPlan,
+  w: Warrior,
+  personality: OwnerPersonality,
+  opponentStyle: ApplyStrategicLayerArgs['opponentStyle']
+): void {
+  if (plan.defensiveTactic !== undefined && plan.defensiveTactic !== 'none') return;
+  if (personality !== 'Tactician' && personality !== 'Methodical') return;
+  if (opponentStyle === undefined) return;
+  if (getOffensiveSuitability(opponentStyle, 'Decisiveness') !== 'WS') return;
+  if (getDefensiveSuitability(w.style, 'Responsiveness') === 'U') return;
+  plan.defensiveTactic = 'Responsiveness';
 }
 
 /**
@@ -181,6 +207,9 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
     plan.offensiveTactic = getBestOffensiveTactic(w.style);
     plan.defensiveTactic = getBestDefensiveTactic(w.style);
   }
+
+  // Canon counter-tactic read — responsiveness answers a decisive attack.
+  applyCounterTacticLever(plan, w, personality, args.opponentStyle);
 
   // Strategic levers the AI previously left at defaults — hit-location target,
   // protected zone, aggression bias, opening move, and range preference — so NPCs

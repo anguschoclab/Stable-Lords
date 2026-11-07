@@ -56,20 +56,25 @@ export const STYLE_ORDER = [
  * M'[i][j] = round((M[i][j] - M[j][i]) / 2). Absolute-power bias moved to
  * STYLE_PENALTIES. Matrix now pure rock-paper-scissors.
  *
+ * Pass 4 (Arena-93 striker canon): Assur/Crimson consensus — strikers hunt
+ * aimed blows and parry-lungers (AB −2→+1, PL 0→+1) while walls weather the
+ * first blow (WS +2→−1); mirrors flipped to keep pair-sums antisymmetric.
+ * Absolute ST power is re-ratcheted through STYLE_PENALTIES, not here.
+ *
  * Target: aggregate W% spread ≤ 20pp; per-matchup spread ≤ 30pp on samples ≥50.
  */
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [0, 1, 2, 1, 1, 1, 2, 2, 1, 3], // AB
+  [0, 1, 2, 1, 1, 1, 2, -1, 1, 3], // AB
   [-1, 0, 0, -1, -1, 0, -1, -1, -1, 0], // BA
   [-2, 0, 0, 0, 0, -1, -1, -1, 0, 0], // LU
-  [-1, 1, 0, 0, 1, 1, 0, 0, 1, 1], // PL
-  [-1, 1, 0, 0, 0, 0, 0, 1, 1, 1], // PR
+  [-1, 1, 0, 0, 1, 1, 0, -1, 1, 1], // PL
+  [-1, 1, 0, 0, 0, 0, -1, 1, 1, 1], // PR
   [-1, 0, 1, -1, 0, 0, 0, 2, 0, 2], // PS
-  [-2, 1, 1, 0, 0, 0, 0, -1, 0, 1], // SL
-  [-2, 1, 1, 0, -1, -2, 1, 0, 1, 2], // ST
-  [-1, 1, 0, -1, 0, 0, 0, -1, 0, 0], // TP
-  [-3, 1, 0, -1, 0, -1, -1, -1, 0, 0], // WS
+  [-2, 1, 1, 0, 1, 0, 0, -1, -1, 1], // SL
+  [1, 1, 1, 1, -1, -2, 1, 0, 1, -1], // ST
+  [-1, 1, 0, -1, 0, 0, 1, -1, 0, 0], // TP
+  [-3, 1, 0, -1, 0, -1, -1, 1, 0, 0], // WS
 ];
 
 // Style → matrix row/col index, built once at module init. The pairwise

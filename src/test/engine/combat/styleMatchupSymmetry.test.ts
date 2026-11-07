@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getStyleMatchupMods } from '@/engine/ai/matchup/styleMatcher';
+import { getMatchupBonus } from '@/constants/combat/combat';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('styleMatchupSymmetry', () => {
@@ -29,6 +30,22 @@ describe('styleMatchupSymmetry', () => {
     }
     // Document the known asymmetric pairs. If this count changes, it should be intentional.
     expect(asymmetricPairs.length).toBeGreaterThan(0);
+  });
+
+  it('carries the canon SL↔TP combat edge — slashers fear the long-haul scum', () => {
+    expect(getMatchupBonus(FightingStyle.SlashingAttack, FightingStyle.TotalParry)).toBe(-1);
+    expect(getMatchupBonus(FightingStyle.TotalParry, FightingStyle.SlashingAttack)).toBe(1);
+  });
+
+  it('carries the Arena-93 striker canon — ST beats AB/PL, loses to WS', () => {
+    // Assur/Crimson consensus: strikers hunt aimed blows and parry-lungers;
+    // walls (and rippers) weather the first blow.
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.AimedBlow)).toBeGreaterThan(0);
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.ParryLunge)).toBeGreaterThan(0);
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.WallOfSteel)).toBeLessThan(0);
+    expect(getMatchupBonus(FightingStyle.AimedBlow, FightingStyle.StrikingAttack)).toBeLessThan(0);
+    expect(getMatchupBonus(FightingStyle.ParryLunge, FightingStyle.StrikingAttack)).toBeLessThan(0);
+    expect(getMatchupBonus(FightingStyle.WallOfSteel, FightingStyle.StrikingAttack)).toBeGreaterThan(0);
   });
 
   it('matchup modifiers should be bounded (no unbounded multipliers)', () => {

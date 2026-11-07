@@ -15,6 +15,8 @@ import {
   WHIFF_RIPOSTE_DEF_PENALTY,
   MOMENTUM_CAP,
   MOMENTUM_FLOOR,
+  PR_LOW_KD_THRESHOLD,
+  PR_LOW_KD_RIPOSTE_PENALTY,
 } from '@/constants/combat';
 import { getZonePenalty } from '../../mechanics/distanceResolution';
 import { getStyleWeatherModifier } from '@/constants/arena';
@@ -37,6 +39,20 @@ function stampRiposteSources(s: OffenseDefenseCtx): void {
       return;
     }
   }
+}
+
+/**
+ * Canon (Blackhawk, Arena 93): a ripper run at low kill desire passes up
+ * riposte opportunities — "more often than not made him pass up attack, via
+ * riposte, opportunities" at KD 2 vs KD 5. Applies to both riposte checks
+ * (whiff + post-parry); reads the phase-effective kill desire first.
+ */
+function prKillDesireRipostePenalty(s: OffenseDefenseCtx): number {
+  const { def } = s;
+  if (def.style !== FightingStyle.ParryRiposte) return 0;
+  const kd =
+    def.activePlan.phases?.[s.phaseKey]?.killDesire ?? def.activePlan.killDesire ?? 5;
+  return kd <= PR_LOW_KD_THRESHOLD ? -PR_LOW_KD_RIPOSTE_PENALTY : 0;
 }
 
 /** Per-style conditional riposte bonuses (TP fatigue-exploit, PL momentum pressure, PR riposte master). */
@@ -78,7 +94,8 @@ export function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
       styleRip.ripBonus +
       ctx.weatherEffect.riposteMod +
       (ctx.arenaEventMods?.riposteMod ?? 0) +
-      styleWeatherRipMod,
+      styleWeatherRipMod +
+      prKillDesireRipostePenalty(s),
     curPass: aGoesFirst ? s.passD : s.passA,
     curAntiSynDef: curAntiSynDef,
   });
@@ -182,7 +199,8 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
       ctx.weatherEffect.riposteMod +
       (ctx.arenaEventMods?.riposteMod ?? 0) +
       styleRip.ripBonus +
-      styleWeatherRipMod,
+      styleWeatherRipMod +
+      prKillDesireRipostePenalty(s),
     curPass: aGoesFirst ? s.passD : s.passA,
     curAntiSynDef: undefined,
   });

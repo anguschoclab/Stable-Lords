@@ -23,6 +23,15 @@ export const WS_WALL_PAR = 2;
 /** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
 export const PS_COUNTERSTRIKE_ATT = 2;
 
+/** Hidden per-skill luck roll at warrior creation — canon ±4 (every style but pikers). */
+export const LUCKFACTOR_RANGE = 4;
+/**
+ * Widened luck range for Parry-Strike — canon (Assur's Parry Strike Style,
+ * Arena 93): "a greater chance for them to be bonused or cursed in skills
+ * than other styles". Zero-mean; same single draw per skill.
+ */
+export const PS_LUCKFACTOR_RANGE = 6;
+
 /** Parry/dodge penalty added to a defender per landed Bashing Attack hit. Balance knob. */
 export const BA_PARDEGRADE_PER_HIT = 0.5;
 /** Maximum accumulated guard-break penalty a defender can suffer in one fight. */
@@ -65,6 +74,14 @@ export const PR_COMMIT_PUNISH: Record<CommitLevel, number> = {
 /** Parry-Riposte light chain: riposte damage per consecutive prior riposte, and its cap. */
 export const PR_CHAIN_STEP = 0.5;
 export const PR_CHAIN_CAP = 1.5;
+
+/** Parry-Riposte low-KD shell: a defender at or below this kill desire passes
+ *  up riposte opportunities — canon (Blackhawk, Arena 93): "more often than
+ *  not made him pass up attack, via riposte, opportunities" at KD 2 vs KD 5. */
+export const PR_LOW_KD_THRESHOLD = 3;
+/** Skill-check penalty applied to a low-KD Parry-Riposte defender's riposte
+ *  check (both whiff-riposte and post-parry riposte call sites). Balance knob. */
+export const PR_LOW_KD_RIPOSTE_PENALTY = 2;
 
 /** Slashing Attack flurry: bleed stacks applied per landed SL hit. Balance knob. */
 export const SL_BLEED_STACKS_PER_HIT = 2;

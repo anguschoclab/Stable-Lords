@@ -74,6 +74,8 @@ export function resolveExchange(
     fatD: s.fatD,
     defModsA: s.defModsA,
     defModsD: s.defModsD,
+    tacticIniA: s.tacticIniA,
+    tacticIniD: s.tacticIniD,
     passA: s.passA,
     passD: s.passD,
     psychA: s.psychA,

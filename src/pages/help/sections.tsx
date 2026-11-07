@@ -94,8 +94,9 @@ export function FightingStylesSection() {
             Great in the opening but tires quickly.
           </li>
           <li>
-            <strong>Striker (ST)</strong> — Balanced attacker with solid ATT. Versatile weapon
-            choices, good all-around.
+            <strong>Striker (ST)</strong> — The pure offensive: wins on the first blow or not at
+            all. Lives on decisiveness and initiative, hunts other offensives and out-endures
+            scum. Walls and rippers that weather the opener are its nightmare.
           </li>
           <li>
             <strong>Slasher (SL)</strong> — Speed-dependent blade work. High ATT and INI, weak
@@ -114,8 +115,9 @@ export function FightingStylesSection() {
             Lets opponents attack then punishes mistakes.
           </li>
           <li>
-            <strong>Parry-Striker (PS)</strong> — Balanced parry + offense. Highest PAR seed among
-            offensive styles.
+            <strong>Parry-Striker (PS)</strong> — The hardest style to win with and the most
+            flexible. Fights above its skill sheet, conserves endurance, pivots between offense
+            and defense. Needs WT and DF.
           </li>
           <li>
             <strong>Total-Parry (TP)</strong> — Ultimate defense. Highest PAR and DEF seeds. Wins by
@@ -151,8 +153,10 @@ export function FighterConceptsSection() {
         </p>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            <strong>Concept builds</strong> — Each style has 1-2 named builds (e.g., the
-            Total-Parry "Ghost", the Basher "Workhorse") tuned for long-term growth.
+            <strong>Concept builds</strong> — Each style has named builds (e.g., the
+            Total-Parry "Ghost", the Basher "Workhorse", a dozen canonical rippers,
+            nine canonical slashers, nine canonical parry-lungers) tuned for
+            long-term growth.
           </li>
           <li>
             <strong>Presets</strong> — Apply a concept directly in the Warrior Builder's Fighter

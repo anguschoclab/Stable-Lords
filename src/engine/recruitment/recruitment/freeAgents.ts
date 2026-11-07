@@ -40,7 +40,7 @@ export function warriorToPoolWarrior(
     addedWeek: week,
     favorites: w.favorites ?? generateFavorites(w.style, rng),
     lineage: w.lineage,
-    luckfactor: w.luckfactor ?? rollLuckfactor(rng),
+    luckfactor: w.luckfactor ?? rollLuckfactor(rng, w.style),
     bloodlust: w.bloodlust ?? rollBloodlust(rng),
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source,

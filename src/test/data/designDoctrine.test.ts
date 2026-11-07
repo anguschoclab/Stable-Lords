@@ -83,4 +83,9 @@ describe('DESIGN_REVIEW_THRESHOLDS — sanity', () => {
       expect(value, `${key} not positive`).toBeGreaterThan(0);
     }
   });
+
+  it('pins the piker canon thresholds — wit note below 15, flat warn at spread ≤ 7', () => {
+    expect(DESIGN_REVIEW_THRESHOLDS.PS_WT_NOTE).toBe(15);
+    expect(DESIGN_REVIEW_THRESHOLDS.PS_FLAT_SPREAD).toBe(7);
+  });
 });

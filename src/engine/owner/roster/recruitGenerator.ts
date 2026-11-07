@@ -198,7 +198,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
     style,
     attributes: attrs,
     baseSkills: finalBaseSkills,
-    luckfactor: rollLuckfactor(rng),
+    luckfactor: rollLuckfactor(rng, style),
     bloodlust: rollBloodlust(rng),
     derivedStats: finalDerivedStats,
     ...newWarriorDefaults(),

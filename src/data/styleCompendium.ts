@@ -57,14 +57,16 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
   [FightingStyle.ParryLunge]: {
     archetype: 'The Fencer',
     description:
-      'The parry-lunge is patience weaponized: absorb the advance on a guard, then answer with a single committed thrust that exploits the opening it created. Balanced between defense and counteroffense.',
+      'The parry-lunge is the arena\'s quietest attack god — a versatile duelist who guards behind dodge or parry, then answers with a pinpoint thrust. The best-built ones open defensively to waste an opponent\'s first charge, then hunt the head until the job is done. Fragile frames are common: the deadliest versions are built on wit and deftness, not constitution, and they live their early careers one bad exchange from the infirmary.',
     hallmarks: [
       'Guard-then-thrust exchanges',
-      'Balanced offense and defense',
-      'Punishes overcommitment',
+      'Precision attacks aimed at the head',
+      'Flexible defense — dodge leads, parry supports',
+      'Wins by accuracy, not attrition',
+      'Demanding to manage — rewards close attention',
     ],
     counterplay:
-      'Feint, never commit. Multi-angle flurries split the guard; a bash that never stops moving gives the thrust nothing to catch.',
+      'Overwhelm the opening. Bashers and lungers who land early never let the fencer\'s counterattack form — a fragile frame cannot trade blows. Defensive styles starve it differently: outlast the thrust, and the fencer\'s thin endurance burns itself out.',
   },
   [FightingStyle.ParryRiposte]: {
     archetype: 'The Duelist',
@@ -74,18 +76,22 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
       'Counter-striking after successful parries',
       'Punishes repeated attack patterns',
       'Surgical riposte accuracy',
+      'Low endurance burn outlasts pressure styles',
+      'Natural striker-killer and scum-hunter',
     ],
     counterplay:
-      'Vary the attack. The riposte reads repetition — a fighter who never strikes the same line twice starves the counter.',
+      'Vary the attack. The riposte reads repetition — a fighter who never strikes the same line twice starves the counter. Aimed blows are the classic answer: precision beats parry, and a ripper who never gets to counter offers nothing.',
   },
   [FightingStyle.ParryStrike]: {
     archetype: 'The Counterpunch',
     description:
-      'Where the duelist deflects, the parry-striker intercepts — turning defense directly into a striking answer. The style trades elegance for reliability: the counter lands on strength as much as timing.',
+      'Where the duelist deflects, the parry-striker intercepts — turning defense directly into a striking answer. The style trades elegance for reliability: the counter lands on strength as much as timing. Veteran managers call it the hardest style to win with and the most flexible — a piker fights above its skill sheet, conserves endurance well, and pivots between offense and defense mid-bout.',
     hallmarks: [
       'Strike-integrated parries',
-      'Strong mid-range answers',
-      'Reliable against linear attacks',
+      'Most flexible style — wins by adaptation',
+      'Fights above its skill sheet',
+      'Conserves endurance unusually well',
+      'Luck swings wider — bonused and cursed more often',
     ],
     counterplay:
       'Crowd the guard or go around it. Hooks and angles that come from off-line bypass the intercepting strike.',
@@ -94,17 +100,29 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
     archetype: 'The Reaper',
     description:
       'Slashers fight in arcs wide enough to carve through anything standing in them. Where aimers hit a spot, slashers take a limb — the bloodiest finishers in the arena and the crowd’s favorite horror.',
-    hallmarks: ['Wide sweeping arcs', 'Highest limb and bleed threat', 'Crowd-favoring brutality'],
+    hallmarks: [
+      'Wide sweeping arcs',
+      'Highest limb and bleed threat',
+      'Crowd-favoring brutality',
+      'Endurance burns fast — win early or fade',
+      'Scimitar is the cornerstone blade',
+    ],
     counterplay:
-      'Step inside the arc. The wide swing needs room — a fighter pressed against the slasher turns reach into a liability.',
+      'Step inside the arc. The wide swing needs room — a fighter pressed against the slasher turns reach into a liability. And make it last: the flurry fades fast, so outlast it.',
   },
   [FightingStyle.StrikingAttack]: {
     archetype: 'The Hammer',
     description:
-      'The striking attack is the arena’s honest style: close, punch, repeat. No tricks, no waiting — volume pressure that wins fights by making the opponent defend more often than they can.',
-    hallmarks: ['High-volume pressure', 'Consistent mid-fight output', 'Few defensive weaknesses'],
+      'The striker is the arena’s pure offensive: wind him up and let him go. The whole style is the first blow — a decisive opener thrown before the other fighter has finished turning, backed by whatever endurance the design could buy. A striker who cannot end it early is just a slow sword arm.',
+    hallmarks: [
+      'Decisive first-strike — the bout is won in the opening exchange',
+      'Pure offensive: never a tank, rarely a dodger',
+      'The 10-10 opener, then the tempo falls fast',
+      'Hunts offensives and out-endures scum',
+      'Armor stays light — ALE or nothing',
+    ],
     counterplay:
-      'Volume cuts both ways. An accurate counter-style harvests the openings that constant striking inevitably leaves.',
+      'Weather the first blow. A shell or a riposte makes the opener the only card the striker holds — the wall and the ripper are the canonical answers, and the responsive fighter can steal his jump.',
   },
   [FightingStyle.TotalParry]: {
     archetype: 'The Tortoise',

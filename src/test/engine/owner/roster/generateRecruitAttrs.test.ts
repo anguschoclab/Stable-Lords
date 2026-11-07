@@ -46,11 +46,11 @@ describe('generateRecruitAttrs — style-aware blend', () => {
   it('StrikingAttack recruits trend toward canon WT', () => {
     const striker = meanAttrs(FightingStyle.StrikingAttack);
     const neutral = meanAttrs(undefined);
-    // The striker concept pool now mixes a deliberately low-WL/low-DF build
-    // (Low-Will Wonder) alongside the WT/DF builds — wit remains the clean
-    // leadership trend while DF stays a wash.
+    // The striker concept pool is 31 canon Arena-93 builds — wit dominates
+    // (17-21 everywhere) while DF sits at the canon minimum-11 band, a wash
+    // against the neutral spread rather than a leadership trend.
     expect(striker.WT).toBeGreaterThan(neutral.WT + 1);
-    expect(striker.DF).toBeGreaterThan(neutral.DF);
+    expect(Math.abs(striker.DF - neutral.DF)).toBeLessThan(1);
   });
 
   it('style-less calls keep the philosophy-only distribution', () => {

@@ -156,10 +156,163 @@ function reviewStyle(attrs: Attributes, style: FightingStyle): DesignReviewItem[
     });
   }
 
+  // Slasher notes from the Arena 93 slasher articles — the scimitar criterion
+  // is the cornerstone check; the rest are advisory spending notes.
+  if (style === FightingStyle.SlashingAttack) {
+    const sc = checkWeaponRequirements('scimitar', attrs);
+    const deficit = trainableDeficit(sc);
+    items.push({
+      axis: 'style',
+      verdict: sc.met || deficit <= T.WEAPON_DEFICIT_IN_REACH ? 'ok' : 'warn',
+      title: 'Scimitar criterion',
+      detail: sc.met
+        ? 'Meets the scimitar minimums (ST 9 / WT 11 / DF 11) — the cornerstone slasher blade.'
+        : deficit <= T.WEAPON_DEFICIT_IN_REACH
+          ? `Scimitar within a couple stat trains — ${sc.failures.map((f) => `${f.stat} needs ${f.required}`).join(', ')}.`
+          : 'Misses the scimitar criterion (ST 9 / WT 11 / DF 11) by more than a couple trains — the articles say run shortsword or hatchet instead, or design a striker.',
+    });
+    if (attrs.DF < T.SL_DF_PARRY_INFO) {
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Negative-parry baseline',
+        detail: `Deftness ${attrs.DF} keeps slasher parry near zero — canon: the style defends with speed and offense, not parry.`,
+      });
+    }
+    if (attrs.WL < T.SL_WL_INFO) {
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Endurance engine',
+        detail: `Will ${attrs.WL} — slashers burn endurance fast; the articles want will doing the heavy lifting.`,
+      });
+    }
+    if (attrs.SZ > T.SL_SZ_INFO) {
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Big-slasher trade-off',
+        detail: `Size ${attrs.SZ} buys hit points and damage at the cost of encumbrance — workable, but the canon builds stay small.`,
+      });
+    }
+    if (attrs.SP > T.SL_SP_INFO) {
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Speed spending',
+        detail: `Speed ${attrs.SP} — the articles say never add points to speed on a slasher; initiative comes from the style itself.`,
+      });
+    }
+  }
+
+  if (style === FightingStyle.ParryStrike) {
+    items.push(...pikerCanonNotes(attrs));
+  }
+
+  if (style === FightingStyle.StrikingAttack) {
+    items.push(...strikerCanonNotes(attrs));
+  }
+
+  if (style === FightingStyle.ParryLunge) {
+    items.push(...parryLungeCanonNotes(attrs));
+  }
+
   return items;
 }
 
-function reviewPhysicals(attrs: Attributes): DesignReviewItem {
+// Parry-lunge notes from the Arena 93 armor-piercer article + Tripwire's
+// guide: the style is a fragile attack god — deftness 15 unlocks the epee,
+// speed is wasted ("not a lunger mimic"), and low-constitution graduates
+// cling to life by luck.
+function parryLungeCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  if (attrs.CN <= T.PL_CN_INFO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Glass-jaw constitution',
+      detail: `Constitution ${attrs.CN} — the armor-piercer's own graduate clings to life by luck; fragile is workable, but know what you're signing up for.`,
+    });
+  }
+  if (attrs.SP >= T.PL_SP_INFO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Wasted speed',
+      detail: `Speed ${attrs.SP} — a parry-lunger is not a lunger mimic; the articles spend those points on wit, will, and deftness.`,
+    });
+  }
+  if (attrs.DF < T.PL_DF_INFO) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Sub-epee deftness',
+      detail: `Deftness ${attrs.DF} — 15 deftness unlocks the epee, the style's signature blade.`,
+    });
+  }
+  if (attrs.WT >= T.PL_WT_GOOD && attrs.DF >= T.PL_DF_GOOD) {
+    items.push({
+      axis: 'style',
+      verdict: 'good',
+      title: 'Attack-god chassis',
+      detail: `Wit ${attrs.WT} with deftness ${attrs.DF} — the armor-piercer spread; a parry-lunger on this frame out-attacks everything.`,
+    });
+  }
+  return items;
+}
+
+// Striker notes from the Arena 93 striker articles — Assur's stat
+// minimums (ST 9 / WT 11 / WL 9 / DF 11) are the consensus floor every
+// author repeats in some form.
+function strikerCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const minimums: [keyof Attributes, number][] = [
+    ['ST', T.ST_MIN_ST],
+    ['WT', T.ST_MIN_WT],
+    ['WL', T.ST_MIN_WL],
+    ['DF', T.ST_MIN_DF],
+  ];
+  const short = minimums.filter(([k, min]) => attrs[k] < min);
+  if (short.length === 0) return [];
+  return [
+    {
+      axis: 'style',
+      verdict: 'warn',
+      title: 'Striker minimums',
+      detail: `Below Assur's striker minimums — ${short
+        .map(([k, min]) => `${k} ${attrs[k]} < ${min}`)
+        .join(', ')} (canon floor: ST ${T.ST_MIN_ST} / WT ${T.ST_MIN_WT} / WL ${T.ST_MIN_WL} / DF ${T.ST_MIN_DF}).`,
+    },
+  ];
+}
+
+// Piker notes from the Arena 93 parry-strike articles. Wit is the keystone
+// (Assur's tournament pikers ran 17-21; even his successful scum piker ran
+// ~11) and "do not make average numbers into pikers" — the flat-spread
+// warn fires on builds with no extreme, not on low absolute values.
+function pikerCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  if (attrs.WT < T.PS_WT_NOTE) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Piker wit',
+      detail: `Wit ${attrs.WT} — the canon articles call wit the keystone of the style: tournament pikers ran 17-21, and even scum variants want ~11.`,
+    });
+  }
+  const spread =
+    Math.max(...Object.values(attrs)) - Math.min(...Object.values(attrs));
+  if (spread <= T.PS_FLAT_SPREAD) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      title: 'Average-numbers piker',
+      detail: `A spread of only ${spread} points between best and worst attribute — canon advice: never make average numbers into the worst style in the game; pick an extreme.`,
+    });
+  }
+  return items;
+}
+
+function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const endurance = computeEnduranceTier(attrs.ST, attrs.CN, attrs.WL);
   const damage = computeDamageClass(attrs.ST, attrs.SZ);
   const hp = computeHP(attrs.CN, attrs.SZ, attrs.WL);
@@ -167,12 +320,42 @@ function reviewPhysicals(attrs: Attributes): DesignReviewItem {
   const good =
     enduranceAtLeast(endurance, 'G') || damage >= 3 || hp >= T.HP_GOOD;
 
-  return {
-    axis: 'physicals',
-    verdict: good ? 'good' : 'warn',
-    title: 'Physical capability',
-    detail: `Endurance ${ENDURANCE_LABELS[endurance as TierLetter] ?? endurance} · Damage ${DAMAGE_LABELS[damage] ?? '?'} · HP ${hp} — at least one should reach "good".`,
-  };
+  const items: DesignReviewItem[] = [
+    {
+      axis: 'physicals',
+      verdict: good ? 'good' : 'warn',
+      title: 'Physical capability',
+      detail: `Endurance ${ENDURANCE_LABELS[endurance as TierLetter] ?? endurance} · Damage ${DAMAGE_LABELS[damage] ?? '?'} · HP ${hp} — at least one should reach "good".`,
+    },
+  ];
+
+  if (style === FightingStyle.StrikingAttack) {
+    // Assur's acceptable pairings: Normal endurance/Normal damage,
+    // Poor/Good, or Very Little/Great — a striker must reach at least one.
+    const pairingMet =
+      (enduranceAtLeast(endurance, 'N') && damage >= 2) ||
+      (enduranceAtLeast(endurance, 'P') && damage >= 3) ||
+      damage >= 4;
+    if (!pairingMet) {
+      items.push({
+        axis: 'physicals',
+        verdict: 'warn',
+        title: 'Striker physicals',
+        detail: `No canon physical pairing reaches Assur's floor (Normal/Normal, Poor/Good, Very Little/Great) — endurance ${ENDURANCE_LABELS[endurance as TierLetter] ?? endurance}, damage ${DAMAGE_LABELS[damage] ?? '?'}.`,
+      });
+    }
+    // Sir Boyd's damage rule — a striker with ST+SZ under 21 hits softly.
+    if (attrs.ST + attrs.SZ < T.ST_BOYD_DAMAGE_SUM) {
+      items.push({
+        axis: 'physicals',
+        verdict: 'info',
+        title: "Boyd's damage bar",
+        detail: `Strength ${attrs.ST} + size ${attrs.SZ} = ${attrs.ST + attrs.SZ} — Sir Boyd wants ${T.ST_BOYD_DAMAGE_SUM}+ on a striker or the damage rating stays light.`,
+      });
+    }
+  }
+
+  return items;
 }
 
 function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewItem {
@@ -257,8 +440,23 @@ function reviewTrainability(
   return items;
 }
 
-function reviewLongevity(attrs: Attributes): DesignReviewItem[] {
+function reviewLongevity(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const items: DesignReviewItem[] = [];
+  // Talon's Primal bar — wit 17+, deftness 15+, will 13+ marks a
+  // Primus-quality striker frame.
+  if (
+    style === FightingStyle.StrikingAttack &&
+    attrs.WT >= T.ST_PRIMAL_WT &&
+    attrs.DF >= T.ST_PRIMAL_DF &&
+    attrs.WL >= T.ST_PRIMAL_WL
+  ) {
+    items.push({
+      axis: 'longevity',
+      verdict: 'info',
+      title: 'Primal frame',
+      detail: `Wit ${attrs.WT} / deftness ${attrs.DF} / will ${attrs.WL} — clears Talon's Primal bar; a Primus-quality striker frame.`,
+    });
+  }
   if (attrs.WT >= T.FAST_LEARNER_WT) {
     items.push({
       axis: 'longevity',
@@ -289,9 +487,9 @@ export function reviewWarriorDesign(
 ): DesignReviewItem[] {
   return [
     ...reviewStyle(attrs, style),
-    reviewPhysicals(attrs),
+    ...reviewPhysicals(attrs, style),
     reviewWeapons(attrs, style),
     ...reviewTrainability(attrs, style),
-    ...reviewLongevity(attrs),
+    ...reviewLongevity(attrs, style),
   ];
 }

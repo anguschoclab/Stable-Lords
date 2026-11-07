@@ -187,6 +187,17 @@ export const KILL_DESIRE_WILD = {
  */
 export const TACTIC_OVERUSE_CAP = 3;
 
+// ─── Tactic Counter-Play: Response ↔ Decise RPS ───────────────────────────
+/** Arena-93 canon (Sir Boyd, "The Striking Style"): "Response tactic has
+ *  advantage over Decise tactic" — a responsive read seizes the tempo a
+ *  decisive attack was built on. Added to the defender's iniBonus. */
+export const RESPONSE_COUNTER_INI = 2;
+
+/** Same canon: "any tactic other than Decise has advantage over Response" —
+ *  against a non-decisive attack the read never comes, so the responder's
+ *  iniBonus scales to this fraction (0 = the stance is wasted). */
+export const RESPONSE_WASTED_INI_MULT = 0;
+
 // ─── AI Tactic Valuation ───────────────────────────────────────────────────
 /**
  * Weight applied to parry-bypass in the offensive tactic tiebreaker

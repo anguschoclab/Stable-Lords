@@ -12,6 +12,7 @@ const TP = makeComputedWarrior({ WT: 9, WL: 19 }, FightingStyle.TotalParry);
 const OTP = makeComputedWarrior({ WT: 17, DF: 15, SP: 7, CN: 12 }, FightingStyle.TotalParry);
 const ST = makeComputedWarrior({}, FightingStyle.StrikingAttack);
 const AB = makeComputedWarrior({ DF: 21, WT: 17 }, FightingStyle.AimedBlow);
+const LU = makeComputedWarrior({}, FightingStyle.LungingAttack);
 
 describe('applyStyleDoctrine — TP scum doctrine', () => {
   it('caps OE at 5 — a TP run hot abandons its defense', () => {
@@ -40,8 +41,28 @@ describe('applyStyleDoctrine — TP scum doctrine', () => {
 
   it('does not touch other styles', () => {
     const p = plan(9, 9, 9);
-    applyStyleDoctrine(p, ST);
+    applyStyleDoctrine(p, LU);
     expect(p).toMatchObject({ OE: 9, AL: 9, killDesire: 9 });
+  });
+});
+
+describe('applyStyleDoctrine — Striker doctrine (Arena 93)', () => {
+  it('floors OE at 5 — every canon sheet opens 6-10; a passive striker is not a striker', () => {
+    const p = plan(2, 4, 6);
+    applyStyleDoctrine(p, ST);
+    expect(p.OE).toBe(5);
+  });
+
+  it('is a floor, not a ceiling — hot canon plans pass through', () => {
+    const p = plan(10, 10, 6);
+    applyStyleDoctrine(p, ST);
+    expect(p).toMatchObject({ OE: 10, AL: 10, killDesire: 6 });
+  });
+
+  it('leaves AL and killDesire to personality — canon spreads both freely', () => {
+    const p = plan(7, 1, 9);
+    applyStyleDoctrine(p, ST);
+    expect(p).toMatchObject({ OE: 7, AL: 1, killDesire: 9 });
   });
 });
 
@@ -91,5 +112,30 @@ describe('applyStyleDoctrine — Aimed Blow doctrine', () => {
     const p = plan(10, 10, 6);
     applyStyleDoctrine(p, AB);
     expect(p).toMatchObject({ OE: 10, AL: 10, killDesire: 6 });
+  });
+});
+
+describe('applyStyleDoctrine — Parry-Lunge doctrine (Arena 93)', () => {
+  const PL = makeComputedWarrior({}, FightingStyle.ParryLunge);
+
+  it('caps killDesire at 7 — "keep the kill desire relatively low as to avoid sloppy attacking"', () => {
+    const p = plan(8, 8, 10);
+    applyStyleDoctrine(p, PL);
+    expect(p.killDesire).toBe(7);
+  });
+
+  it('leaves a canon kill desire untouched — ceiling, not a rewrite', () => {
+    const p = plan(8, 8, 5);
+    applyStyleDoctrine(p, PL);
+    expect(p.killDesire).toBe(5);
+  });
+
+  it('leaves OE and AL free — canon PL favorites span VL-HI / LO-VH', () => {
+    const low = plan(1, 3, 5);
+    const high = plan(8, 10, 5);
+    applyStyleDoctrine(low, PL);
+    applyStyleDoctrine(high, PL);
+    expect(low).toMatchObject({ OE: 1, AL: 3 });
+    expect(high).toMatchObject({ OE: 8, AL: 10 });
   });
 });

@@ -3,10 +3,17 @@
  * Kept pure + deterministic so both the UI (PlanBuilder) and the AI planner
  * can consume the same ruleset.
  */
-import type { FightPlan, PhaseStrategy } from '@/types/shared.types';
+import type {
+  BaseSkills,
+  DefensiveTactic,
+  FightPlan,
+  OffensiveTactic,
+  PhaseStrategy,
+} from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import { getPhaseByMinute } from '@/engine/combat/phase';
+import { getMastery } from '@/engine/stylePassives';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
 
 /**
@@ -25,6 +32,78 @@ export interface StrategyWarning {
 
 const HIGH = 8;
 const LOW = 3;
+
+/** Canon slasher rhythm (Arena 93): the style burns endurance fast, so the
+ * articles taper activity to low by mid-bout — and no graduate favorite ever
+ * ran offensive effort below moderate. */
+function warnSlasherRhythm(plan: FightPlan, OE: number, AL: number, out: StrategyWarning[]): void {
+  if (plan.style !== FightingStyle.SlashingAttack) return;
+  const sustainedAL = (['mid', 'late'] as const).some((p) => (plan.phases?.[p]?.AL ?? AL) >= 7);
+  if (sustainedAL) {
+    out.push({
+      code: 'SL_SUSTAINED_HIGH_AL',
+      severity: 'info',
+      message:
+        'Slashers burn out fast — canon strategy drops AL to low after the opening, not sustained high.',
+    });
+  }
+  if (OE < 5) {
+    out.push({
+      code: 'SL_LOW_OE',
+      severity: 'info',
+      message: 'No graduate slasher favorite ran OE below moderate — the style wins on offense.',
+    });
+  }
+}
+
+/** Canon expert rating (Duel2): a skill reaches Expert at 16 — Tripwire's
+ * parry-lunge advice is to stop forcing tactics once the backing skill is
+ * Expert and let the style's natural tools run. */
+const EXPERT_SKILL = 16;
+
+/** Which base skill a forced tactic leans on. */
+const TACTIC_BACKING: Partial<Record<OffensiveTactic | DefensiveTactic, keyof BaseSkills>> = {
+  Lunge: 'ATT',
+  Slash: 'ATT',
+  Bash: 'ATT',
+  Decisiveness: 'DEC',
+  Parry: 'PAR',
+  Dodge: 'DEF',
+  Responsiveness: 'DEF',
+  Riposte: 'RIP',
+};
+
+function skillRating(warrior: Warrior, skill: keyof BaseSkills): number {
+  return (warrior.baseSkills?.[skill] ?? 0) + (warrior.skillDrills?.[skill] ?? 0);
+}
+
+/** Tripwire's Parry-Lunge (Arena 93): "drop the tactics after Expert — let
+ * it go at MO/MO or MO/HI no tactic." Forcing a tactic the warrior has
+ * already mastered constrains the style's natural parry/dodge/riposte mix. */
+function warnParryLungerTactics(plan: FightPlan, warrior: Warrior, out: StrategyWarning[]): void {
+  if (plan.style !== FightingStyle.ParryLunge || !warrior.baseSkills) return;
+  const tactics: (OffensiveTactic | DefensiveTactic | undefined)[] = [
+    plan.offensiveTactic,
+    plan.defensiveTactic,
+    ...(['opening', 'mid', 'late'] as const).flatMap((p) => [
+      plan.phases?.[p]?.offensiveTactic,
+      plan.phases?.[p]?.defensiveTactic,
+    ]),
+  ];
+  const pastExpert = tactics.some((t) => {
+    if (!t || t === 'none') return false;
+    const backing = TACTIC_BACKING[t];
+    return backing !== undefined && skillRating(warrior, backing) >= EXPERT_SKILL;
+  });
+  if (pastExpert) {
+    out.push({
+      code: 'PL_TACTICS_PAST_EXPERT',
+      severity: 'info',
+      message:
+        'An Expert-rated parry-lunger gains nothing from forced tactics — canon advice is to drop them and let the natural skills run.',
+    });
+  }
+}
 
 /**
  * Validate strategy.
@@ -78,6 +157,30 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
       message: 'Bashing attack rarely leans this heavily on defence.',
     });
   }
+
+  // Canon ripper guidance (Arena 93): once a Parry-Riposte reaches master the
+  // Riposte defensive tactic is redundant — the style's natural parry already
+  // generates counters, so veteran rippers run Parry instead.
+  if (warrior && plan.style === FightingStyle.ParryRiposte) {
+    const fights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+    const tier = getMastery(fights).tier;
+    const riposteTactic =
+      plan.defensiveTactic === 'Riposte' ||
+      (['opening', 'mid', 'late'] as const).some(
+        (p) => plan.phases?.[p]?.defensiveTactic === 'Riposte'
+      );
+    if ((tier === 'Master' || tier === 'Grandmaster') && riposteTactic) {
+      out.push({
+        code: 'PR_RIPOSTE_PAST_MASTER',
+        severity: 'info',
+        message:
+          'A master-level ripper counters without the Riposte tactic — canon advice is to drop it for Parry.',
+      });
+    }
+  }
+
+  warnSlasherRhythm(plan, OE, AL, out);
+  if (warrior) warnParryLungerTactics(plan, warrior, out);
 
   // Attribute fit — endurance-heavy plan vs. low WT warrior
   if (warrior?.attributes) {

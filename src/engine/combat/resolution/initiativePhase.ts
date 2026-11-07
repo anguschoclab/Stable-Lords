@@ -21,6 +21,8 @@ interface SumInitiativeArgs {
   matchup: number;
   fat: number;
   defMods: DefensiveMods;
+  /** Offensive-tactic first-strike edge (decise) from tacticCounter. */
+  tacticIni: number;
   pass: StylePassiveResult;
   psych: PsychStateMod;
   dynTraits: DynamicTraitMods;
@@ -32,7 +34,7 @@ interface SumInitiativeArgs {
 
 /** Sum one fighter's initiative: skills + tactics + passives + mods. Pure — no RNG. */
 function sumInitiative(args: SumInitiativeArgs): number {
-  const { f, AL, matchup, fat, defMods } = args;
+  const { f, AL, matchup, fat, defMods, tacticIni } = args;
   const { pass, psych, dynTraits, trainerIniMod, masteryIni } = args;
   const { ctx, stylePhase } = args;
   const styleWeatherMod = getStyleWeatherModifier(f.style, ctx.weather, ctx.arenaConfig.tags);
@@ -42,6 +44,7 @@ function sumInitiative(args: SumInitiativeArgs): number {
     matchup +
     fat +
     defMods.iniBonus +
+    tacticIni +
     getTempoBonus(f.style, stylePhase) +
     pass.iniBonus +
     masteryIni -
@@ -73,6 +76,9 @@ interface ResolveInitiativePhaseArgs {
   fatD: number;
   defModsA: DefensiveMods;
   defModsD: DefensiveMods;
+  /** Offensive-tactic first-strike edges (decise) — 0 when absent/countered. */
+  tacticIniA?: number;
+  tacticIniD?: number;
   passA: StylePassiveResult;
   passD: StylePassiveResult;
   psychA: PsychStateMod;
@@ -94,6 +100,8 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   const { OE_D, AL_D, fatA, fatD, defModsA } = args;
   const { defModsD, passA, passD, psychA, psychD } = args;
   const { dynTraitsA, dynTraitsD } = args;
+  const tacticIniA = args.tacticIniA ?? 0;
+  const tacticIniD = args.tacticIniD ?? 0;
   const { rng, phase } = ctx;
   const stylePhase = phase as StylePhase;
 
@@ -106,6 +114,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
     matchup: ctx.matchupA,
     fat: fatA,
     defMods: defModsA,
+    tacticIni: tacticIniA,
     pass: passA,
     psych: psychA,
     dynTraits: dynTraitsA,
@@ -120,6 +129,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
     matchup: ctx.matchupD,
     fat: fatD,
     defMods: defModsD,
+    tacticIni: tacticIniD,
     pass: passD,
     psych: psychD,
     dynTraits: dynTraitsD,

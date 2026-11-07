@@ -21,6 +21,25 @@ export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
     plan.killDesire = Math.min(plan.killDesire ?? 5, 7);
     return;
   }
+  if (w.style === FightingStyle.SlashingAttack) {
+    // Arena 93 slasher canon: no graduate favorite ran OE below moderate —
+    // a slasher who stops attacking is just a slow target.
+    plan.OE = Math.max(plan.OE, 5);
+    return;
+  }
+  if (w.style === FightingStyle.StrikingAttack) {
+    // Arena 93 striker canon (Assur/Blind Man/Crimson/Talon/Tex): every
+    // published sheet opens 6-10 OE — a passive striker isn't a striker.
+    plan.OE = Math.max(plan.OE, 5);
+    return;
+  }
+  if (w.style === FightingStyle.ParryLunge) {
+    // Arena 93 PL canon (the Armor-Piercer article + Tripwire + Assur's
+    // addendum): "keep the kill desire relatively low as to avoid sloppy
+    // attacking." OE/AL stay free — canon favorites span VL–HI / LO–VH.
+    plan.killDesire = Math.min(plan.killDesire ?? 5, 7);
+    return;
+  }
   if (w.style !== FightingStyle.TotalParry) return;
   // Duel II canon recognizes TP varieties by build (Consortium/Blackstorm/
   // Buri/Stimpy): the Un-Scum needs WT 15+/DF 11+ — an active dodge-parry

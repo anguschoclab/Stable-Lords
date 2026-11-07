@@ -350,7 +350,11 @@ Economy-of-motion defender who attacks swiftly in the shortest paths—defensive
 ### UI requirements
 
 - “Efficiency” icon (stopwatch / minimal motion).
-- Recommended preset: “Measured Defense → Quick Finish”.
+- Recommended preset: “Measured Defense → Quick Finish”. Arena 93 canon
+  sheets add “Assur's Cadence” (the flat 9-10 rhythm), “One Strike, One
+  Kill” (offensive pikers — 10‑10‑10 Decisiveness even in desperation), and
+  “Priest's Shell” (defensive pikers — Responsiveness open, Decisiveness
+  mid, Responsiveness desperate).
 
 ---
 

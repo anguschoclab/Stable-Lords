@@ -24,6 +24,10 @@ import {
   computeEnduranceValue,
 } from '@/data/terrabloodCharts';
 import {
+  LUCKFACTOR_RANGE,
+  PS_LUCKFACTOR_RANGE,
+} from '@/constants/combat/combat/balance';
+import {
   bp,
   szMod,
   ST_ATT,
@@ -95,20 +99,27 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
   };
 }
 
-// ─── Luckfactor (Canonical ±4 per skill) ────────────────────────────────
-// Canon: each of the 6 skill categories gets a hidden random ±4 "luckfactor" at
-// creation, so two warriors with identical stats+style differ. The OVERVIEW shows
+// ─── Luckfactor (Canonical ±4 per skill; ±6 for pikers) ──────────────────
+// Canon: each of the 6 skill categories gets a hidden random "luckfactor" at
+// creation, so two warriors with identical stats+style differ. Parry-Strike
+// rolls a wider range — Assur's Arena 93 article: "a greater chance for them
+// to be bonused or cursed in skills than other styles". The OVERVIEW shows
 // luck-free skills (computeBaseSkills); combat applies the stored luckfactor.
 
 /**
- * Roll a per-warrior luckfactor: a hidden ±4 modifier for each of the 6 skills.
- * Generated once at creation and stored on the warrior.
+ * Roll a per-warrior luckfactor: a hidden ±LUCKFACTOR_RANGE modifier for
+ * each of the 6 skills (±PS_LUCKFACTOR_RANGE for Parry-Strike). Generated
+ * once at creation and stored on the warrior. Every style consumes the same
+ * six RNG draws — the widened piker range keeps the stream aligned.
  *
  * @param rng - Seeded RNG service for deterministic generation.
- * @returns A BaseSkills object of deltas, each in [-4, +4].
+ * @param style - The warrior's fighting style (pikers roll the wider range).
+ * @returns A BaseSkills object of deltas.
  */
-export function rollLuckfactor(rng: IRNGService): BaseSkills {
-  const d = () => rng.roll(-4, 4); // roll is inclusive on both ends → -4..4
+export function rollLuckfactor(rng: IRNGService, style?: FightingStyle): BaseSkills {
+  const range =
+    style === FightingStyle.ParryStrike ? PS_LUCKFACTOR_RANGE : LUCKFACTOR_RANGE;
+  const d = () => rng.roll(-range, range); // roll is inclusive on both ends
   return { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
 }
 

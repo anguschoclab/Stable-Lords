@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
-import { FightingStyle } from '@/types/shared.types';
+import { aiPlanForWarrior, applyStyleDoctrine } from '@/engine/ai/plan/coreGenerator';
+import { FightingStyle, type FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { OwnerPersonality } from '@/types/state.types';
 
@@ -106,10 +106,11 @@ describe('coreGenerator', () => {
     it('incorporates per-style matchup heuristics', () => {
       const w = createMockWarrior();
       // StrikingAttack defaults: OE=7, AL=5, KD=7
-      // opponent is WallOfSteel -> StrikingAttack vs WallOfSteel gives { oe: 2, al: 0, kd: 1 }
+      // opponent is WallOfSteel -> canon (Crimson) moderate effort:
+      //   StrikingAttack vs WallOfSteel gives { oe: -1, al: 0, kd: 0 }
       // styleBias StrikingAttack -> OE +1, AL 0
-      // total OE = 7+2+1 = 10
-      // total KD = 7+1 = 8
+      // total OE = 7-1+1 = 7
+      // total KD = 7+0 = 7
       const plan = aiPlanForWarrior({
         w: w,
         personality: 'Pragmatic' as OwnerPersonality,
@@ -117,8 +118,8 @@ describe('coreGenerator', () => {
         opponentStyle: FightingStyle.WallOfSteel,
       });
 
-      expect(plan.OE).toBe(10);
-      expect(plan.killDesire).toBe(8);
+      expect(plan.OE).toBe(7);
+      expect(plan.killDesire).toBe(7);
     });
 
     it('clamps values correctly and integrates phase/desperate sub-plans', () => {
@@ -338,6 +339,69 @@ describe('coreGenerator', () => {
       };
 
       expect(activePlan.fallbackCondition).toBe('BERZERK');
+    });
+  });
+
+  describe('Response counter-tactic lever (Arena 93 — the RPS read)', () => {
+    // Canon (Sir Boyd/Tex): "counter strikers using decise with responsiveness."
+    // Tactical stables stand a Response-suited fighter responsive when the
+    // opponent runs a decise-suited style (ST/BA/PS).
+    const strikerVs = (personality: OwnerPersonality, opp: FightingStyle) =>
+      aiPlanForWarrior({
+        w: createMockWarrior({ style: FightingStyle.StrikingAttack }),
+        personality,
+        philosophy: 'Balanced',
+        opponentStyle: opp,
+      });
+
+    it('a Tactician\'s Response-suited fighter answers a decise style with Responsiveness', () => {
+      const plan = strikerVs('Tactician', FightingStyle.StrikingAttack);
+      expect(plan.defensiveTactic).toBe('Responsiveness');
+    });
+
+    it('does not waste the read on a non-decise opponent', () => {
+      const plan = strikerVs('Tactician', FightingStyle.TotalParry);
+      expect(plan.defensiveTactic ?? 'none').toBe('none');
+    });
+
+    it('hot-blooded personalities do not play the counter game', () => {
+      const plan = strikerVs('Aggressive', FightingStyle.StrikingAttack);
+      expect(plan.defensiveTactic ?? 'none').toBe('none');
+    });
+
+    it('a Methodical stable also stands responsive vs decise', () => {
+      const plan = strikerVs('Methodical', FightingStyle.BashingAttack);
+      expect(plan.defensiveTactic).toBe('Responsiveness');
+    });
+  });
+
+  describe('SL canon OE floor (Arena 93 — no graduate favorite ran OE below moderate)', () => {
+    it('floors a SlashingAttack plan at OE 5', () => {
+      const w = createMockWarrior({ style: FightingStyle.SlashingAttack });
+      const plan = {
+        style: FightingStyle.SlashingAttack,
+        OE: 3,
+        AL: 7,
+        killDesire: 5,
+        target: 'Any',
+        protect: 'Any',
+      } as FightPlan;
+      applyStyleDoctrine(plan, w);
+      expect(plan.OE).toBe(5);
+    });
+
+    it('leaves an already-canon SL plan untouched', () => {
+      const w = createMockWarrior({ style: FightingStyle.SlashingAttack });
+      const plan = {
+        style: FightingStyle.SlashingAttack,
+        OE: 9,
+        AL: 5,
+        killDesire: 6,
+        target: 'Any',
+        protect: 'Any',
+      } as FightPlan;
+      applyStyleDoctrine(plan, w);
+      expect(plan.OE).toBe(9);
     });
   });
 });

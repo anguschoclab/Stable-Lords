@@ -272,7 +272,7 @@ export const STYLE_PENALTIES: Record<
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
   [FightingStyle.AimedBlow]: /*AB*/ [-12, -7, -11, -7, -6, +1], // lightened ATT -15→-12 to reduce mirror-match A/D bias (34% → 37% → targeting 40%+)
-  [FightingStyle.ParryRiposte]: /*PR*/ [-12, -6, -13, -6, -1, -1], // lightened: -49 → -39 to lift 29.0% toward 40%
+  [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat)
   [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -5, -3, 0], // re-ratchet: lightened INI -7→-5 to offset encumbrance INI penalty from equipment changes
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
@@ -282,7 +282,7 @@ export const STYLE_PENALTIES: Record<
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
   [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -15, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15, RIP -4→-5; BA was 64.8% pre-existing, now 61.6%
-  [FightingStyle.StrikingAttack]: /*ST*/ [-9, -7, -10, -3, -3, +1], // unchanged: 52.4% is within target
+  [FightingStyle.StrikingAttack]: /*ST*/ [-10, -9, -15, -5, -4, +1], // re-ratchet: Arena-93 decise went live (+3 INI vs non-Response) plus +1 net matrix edge — deepened −31→−42, all on the defense side (canon: pure offensive, glass when the opener fails). 62.1% → 54.5% flat, 53.4% → 51.9% snap
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-15, -1, -12, -6, -4, -2], // deepened further: -32 → -40 to bring 56.5% toward 60%

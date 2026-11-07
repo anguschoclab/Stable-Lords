@@ -61,7 +61,7 @@ export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
     voice: 'Flowing',
     attackFreq: 'Relentless',
     killBias: 'Savage',
-    fatigueBurn: 'Moderate',
+    fatigueBurn: 'High',
     tagline: 'whirl of razored arcs',
   },
   [FightingStyle.WallOfSteel]: {

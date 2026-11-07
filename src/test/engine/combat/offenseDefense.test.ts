@@ -3,205 +3,38 @@
  * pins current behavior before refactoring. Tests run against unrefactored code.
  */
 import { describe, it, expect } from 'vitest';
-import { resolveCombatOffenseDefense } from '@/engine/combat/resolution/offenseDefense';
-import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
+import type { FighterState } from '@/engine/combat/resolution/types';
 import { FightingStyle } from '@/types/shared.types';
-import type { CombatEvent } from '@/types/combat.types';
-import { resolveEffectiveTactics } from '@/engine/combat/resolution/tactics';
 import {
-  getOffensiveTacticMods,
-  getDefensiveTacticMods,
-} from '@/engine/combat/mechanics/tacticResolution';
-import { getStylePassive } from '@/engine/stylePassives';
-import { getDynamicTraitMods } from '@/engine/traits';
-import {
-  makeExchangeState,
-  runCommit,
-  type ExchangeState,
-} from '@/engine/combat/resolution/exchangeSubPhases';
-import { makeResolutionContext } from '@/test/_fixtures/factories';
-import { makeCombatFighter } from '@/test/_fixtures/combatFighter';
+  setupExchange,
+  callResolveCombatOffenseDefense,
+} from '@/test/_fixtures/exchangeSetup';
 
-const makeFighter = makeCombatFighter;
-const makeCtx = makeResolutionContext;
-
-interface SetupResult {
-  ctx: ResolutionContext;
-  fA: FighterState;
-  fD: FighterState;
-  es: ExchangeState;
-  events: CombatEvent[];
-  tactA: ReturnType<typeof resolveEffectiveTactics>;
-  tactD: ReturnType<typeof resolveEffectiveTactics>;
-  offModsA: ReturnType<typeof getOffensiveTacticMods>;
-  offModsD: ReturnType<typeof getOffensiveTacticMods>;
-  defModsA: ReturnType<typeof getDefensiveTacticMods>;
-  defModsD: ReturnType<typeof getDefensiveTacticMods>;
-  passA: ReturnType<typeof getStylePassive>;
-  passD: ReturnType<typeof getStylePassive>;
-  dynTraitsA: ReturnType<typeof getDynamicTraitMods>;
-  dynTraitsD: ReturnType<typeof getDynamicTraitMods>;
-  psychA: any;
-  psychD: any;
-  OE_A: number;
-  AL_A: number;
-  OE_D: number;
-  AL_D: number;
-  fatA: number;
-  fatD: number;
-  biasAttA: number;
-  biasDefA: number;
-  biasAttD: number;
-  biasDefD: number;
-}
-
-function setupExchange(
-  overrides: {
-    fA?: Partial<FighterState>;
-    fD?: Partial<FighterState>;
-    ctx?: Partial<ResolutionContext>;
-    aGoesFirst?: boolean;
-  } = {}
-): SetupResult {
-  const fA = makeFighter({ ...overrides.fA });
-  const fD = makeFighter({ label: 'D', style: FightingStyle.ParryRiposte, ...overrides.fD });
-  const ctx = makeCtx(overrides.ctx);
-  const events: CombatEvent[] = [];
-  const es = makeExchangeState();
-
-  const phaseKey = 'opening';
-  const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);
-  const tactD = resolveEffectiveTactics(fD.activePlan, phaseKey);
-  const offModsA = getOffensiveTacticMods(tactA.offTactic, fA.style);
-  const offModsD = getOffensiveTacticMods(tactD.offTactic, fD.style);
-  const defModsA = getDefensiveTacticMods(tactA.defTactic, fA.style);
-  const defModsD = getDefensiveTacticMods(tactD.defTactic, fD.style);
-
-  const passA = getStylePassive(fA.style, {
-    phase: 'OPENING',
-    exchange: 0,
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    hpRatio: fA.hp / fA.maxHp,
-    endRatio: fA.endurance / fA.maxEndurance,
-    opponentStyle: fD.style,
-  });
-  const passD = getStylePassive(fD.style, {
-    phase: 'OPENING',
-    exchange: 0,
-    hitsLanded: 0,
-    hitsTaken: 0,
-    ripostes: 0,
-    consecutiveHits: 0,
-    hpRatio: fD.hp / fD.maxHp,
-    endRatio: fD.endurance / fD.maxEndurance,
-    opponentStyle: fA.style,
-  });
-
-  const dynTraitsA = getDynamicTraitMods(fA, {
-    phase: 'OPENING',
-    hpRatio: fA.hp / fA.maxHp,
-    endRatio: fA.endurance / fA.maxEndurance,
-    consecutiveHits: 0,
-  });
-  const dynTraitsD = getDynamicTraitMods(fD, {
-    phase: 'OPENING',
-    hpRatio: fD.hp / fD.maxHp,
-    endRatio: fD.endurance / fD.maxEndurance,
-    consecutiveHits: 0,
-  });
-
-  const OE_A = fA.activePlan.OE;
-  const AL_A = fA.activePlan.AL;
-  const OE_D = fD.activePlan.OE;
-  const AL_D = fD.activePlan.AL;
-  const fatA = 0;
-  const fatD = 0;
-  const biasAttA = 0;
-  const biasDefA = 0;
-  const biasAttD = 0;
-  const biasDefD = 0;
-  const psychA = { attMod: 0, defMod: 0, parMod: 0, iniMod: 0 };
-  const psychD = { attMod: 0, defMod: 0, parMod: 0, iniMod: 0 };
-
-  const attCommit = runCommit(fA, OE_A);
-  const defCommit = runCommit(fD, OE_D);
-  es.recoveryDebtToWriteA = attCommit.debtToWrite;
-  es.recoveryDebtToWriteD = defCommit.debtToWrite;
-
-  return {
-    ctx,
-    fA,
-    fD,
-    es,
-    events,
-    tactA,
-    tactD,
-    offModsA,
-    offModsD,
-    defModsA,
-    defModsD,
-    passA,
-    passD,
-    dynTraitsA,
-    dynTraitsD,
-    psychA,
-    psychD,
-    OE_A,
-    AL_A,
-    OE_D,
-    AL_D,
-    fatA,
-    fatD,
-    biasAttA,
-    biasDefA,
-    biasAttD,
-    biasDefD,
-  };
-}
-
-function callResolveCombatOffenseDefense(s: SetupResult, aGoesFirst: boolean) {
-  const attCommit = runCommit(aGoesFirst ? s.fA : s.fD, aGoesFirst ? s.OE_A : s.OE_D);
-  const defCommit = runCommit(aGoesFirst ? s.fD : s.fA, aGoesFirst ? s.OE_D : s.OE_A);
-  resolveCombatOffenseDefense({
-    ctx: s.ctx,
-    fA: s.fA,
-    fD: s.fD,
-    aGoesFirst: aGoesFirst,
-    OE_A: s.OE_A,
-    AL_A: s.AL_A,
-    OE_D: s.OE_D,
-    AL_D: s.AL_D,
-    fatA: s.fatA,
-    fatD: s.fatD,
-    offModsA: s.offModsA,
-    offModsD: s.offModsD,
-    defModsA: s.defModsA,
-    defModsD: s.defModsD,
-    passA: s.passA,
-    passD: s.passD,
-    biasAttA: s.biasAttA,
-    biasDefA: s.biasDefA,
-    biasAttD: s.biasAttD,
-    biasDefD: s.biasDefD,
-    tactA: s.tactA,
-    tactD: s.tactD,
-    psychA: s.psychA,
-    psychD: s.psychD,
-    dynTraitsA: s.dynTraitsA,
-    dynTraitsD: s.dynTraitsD,
-    feintAttBonus: 0,
-    feintDefBonus: 0,
-    attCommit: attCommit,
-    defCommit: defCommit,
-    es: s.es,
-    phaseKey: 'opening',
-    stylePhase: 'OPENING',
-    events: s.events,
-  });
-}
+const STRONG_ATT: FighterState['skills'] = {
+  ATT: 20,
+  PAR: 10,
+  DEF: 10,
+  INI: 10,
+  RIP: 10,
+  DEC: 10,
+};
+const WEAK_DEF: FighterState['skills'] = { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 };
+const MODEST_ATT: FighterState['skills'] = {
+  ATT: 5,
+  PAR: 10,
+  DEF: 10,
+  INI: 10,
+  RIP: 10,
+  DEC: 10,
+};
+const ELITE_GUARD: FighterState['skills'] = {
+  ATT: 5,
+  PAR: 25,
+  DEF: 25,
+  INI: 10,
+  RIP: 25,
+  DEC: 10,
+};
 
 describe('resolveCombatOffenseDefense — attack whiff path', () => {
   it('pushes ATTACK WHIFF event when attack check fails', () => {
@@ -228,11 +61,11 @@ describe('resolveCombatOffenseDefense — attack success path', () => {
     const s = setupExchange({
       fA: {
         style: FightingStyle.StrikingAttack,
-        skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        skills: STRONG_ATT,
       },
       fD: {
         style: FightingStyle.WallOfSteel,
-        skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+        skills: WEAK_DEF,
       },
       ctx: { rng: () => 0.01 },
     });
@@ -259,12 +92,12 @@ describe('resolveCombatOffenseDefense — momentum shift on hit', () => {
     const s = setupExchange({
       fA: {
         style: FightingStyle.StrikingAttack,
-        skills: { ATT: 20, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        skills: STRONG_ATT,
         momentum: 0,
       },
       fD: {
         style: FightingStyle.WallOfSteel,
-        skills: { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+        skills: WEAK_DEF,
         momentum: 0,
       },
       ctx: { rng: () => 0.01 },
@@ -285,7 +118,7 @@ describe('resolveCombatOffenseDefense — successful defense (parry)', () => {
     const s = setupExchange({
       fA: {
         style: FightingStyle.StrikingAttack,
-        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        skills: MODEST_ATT,
       },
       fD: {
         style: FightingStyle.ParryRiposte,
@@ -304,11 +137,11 @@ describe('resolveCombatOffenseDefense — PS counterstrike priming', () => {
     const s = setupExchange({
       fA: {
         style: FightingStyle.StrikingAttack,
-        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        skills: MODEST_ATT,
       },
       fD: {
         style: FightingStyle.ParryStrike,
-        skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 },
+        skills: ELITE_GUARD,
       },
       ctx: { rng: () => 0.01 },
     });
@@ -326,11 +159,11 @@ describe('resolveCombatOffenseDefense — PR riposte streak', () => {
     const s = setupExchange({
       fA: {
         style: FightingStyle.StrikingAttack,
-        skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+        skills: MODEST_ATT,
       },
       fD: {
         style: FightingStyle.ParryRiposte,
-        skills: { ATT: 5, PAR: 25, DEF: 25, INI: 10, RIP: 25, DEC: 10 },
+        skills: ELITE_GUARD,
       },
       ctx: { rng: () => 0.01 },
     });

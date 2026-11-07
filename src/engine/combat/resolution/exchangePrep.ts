@@ -16,6 +16,7 @@ import {
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+import { resolveTacticCounters } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
 import { tryRearm } from './disarm';
@@ -37,6 +38,9 @@ export interface ExchangeSetup {
   biasDefA: number;
   biasAttD: number;
   biasDefD: number;
+  /** Live first-strike edge from each fighter's offensive tactic (tacticCounter). */
+  tacticIniA: number;
+  tacticIniD: number;
   OE_A: number;
   AL_A: number;
   OE_D: number;
@@ -51,22 +55,37 @@ export interface ExchangeSetup {
   psychD: ReturnType<typeof getPsychStateMods>['psychD'];
 }
 
-function resolveTacticsAndBias(
-  fA: FighterState,
-  fD: FighterState,
-  phaseKey: 'opening' | 'mid' | 'late'
-): {
+interface TacticModBundle {
   tactA: ReturnType<typeof resolveEffectiveTactics>;
   tactD: ReturnType<typeof resolveEffectiveTactics>;
   offModsA: ReturnType<typeof getOffensiveTacticMods>;
   defModsA: ReturnType<typeof getDefensiveTacticMods>;
   offModsD: ReturnType<typeof getOffensiveTacticMods>;
   defModsD: ReturnType<typeof getDefensiveTacticMods>;
+  tacticIniA: number;
+  tacticIniD: number;
+}
+
+interface TacticsAndBias extends TacticModBundle {
   biasAttA: number;
   biasDefA: number;
   biasAttD: number;
   biasDefD: number;
-} {
+}
+
+/**
+ * Resolve both fighters' tactic pairs into modifier bundles plus the
+ * pairwise counter-play channel (Response↔Decise RPS): the decise edge
+ * becomes a live first-strike bonus carried on tacticIni; the defensive
+ * iniBonus is judged against the incoming attack — boosted on a successful
+ * counter-read, wasted on a missed one. defMods objects are per-exchange
+ * fresh (or the shared all-zero singleton where a no-op write is inert).
+ */
+function resolveTacticMods(
+  fA: FighterState,
+  fD: FighterState,
+  phaseKey: 'opening' | 'mid' | 'late'
+): TacticModBundle {
   const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);
   const tactD = resolveEffectiveTactics(fD.activePlan, phaseKey);
   const offModsA = getOffensiveTacticMods(tactA.offTactic, fA.style);
@@ -74,12 +93,16 @@ function resolveTacticsAndBias(
   const offModsD = getOffensiveTacticMods(tactD.offTactic, fD.style);
   const defModsD = getDefensiveTacticMods(tactD.defTactic, fD.style);
 
-  const [biasAttA, biasDefA] = applyAggressionBias(
-    fA.activePlan.phases?.[phaseKey]?.aggressionBias ?? fA.activePlan.aggressionBias ?? 5
-  );
-  const [biasAttD, biasDefD] = applyAggressionBias(
-    fD.activePlan.phases?.[phaseKey]?.aggressionBias ?? fD.activePlan.aggressionBias ?? 5
-  );
+  const counters = resolveTacticCounters({
+    tactA,
+    tactD,
+    offModsA,
+    offModsD,
+    defModsA,
+    defModsD,
+  });
+  defModsA.iniBonus = counters.defIniBonusA;
+  defModsD.iniBonus = counters.defIniBonusD;
 
   return {
     tactA,
@@ -88,11 +111,24 @@ function resolveTacticsAndBias(
     defModsA,
     offModsD,
     defModsD,
-    biasAttA,
-    biasDefA,
-    biasAttD,
-    biasDefD,
+    tacticIniA: counters.tacticIniA,
+    tacticIniD: counters.tacticIniD,
   };
+}
+
+function resolveTacticsAndBias(
+  fA: FighterState,
+  fD: FighterState,
+  phaseKey: 'opening' | 'mid' | 'late'
+): TacticsAndBias {
+  const mods = resolveTacticMods(fA, fD, phaseKey);
+  const [biasAttA, biasDefA] = applyAggressionBias(
+    fA.activePlan.phases?.[phaseKey]?.aggressionBias ?? fA.activePlan.aggressionBias ?? 5
+  );
+  const [biasAttD, biasDefD] = applyAggressionBias(
+    fD.activePlan.phases?.[phaseKey]?.aggressionBias ?? fD.activePlan.aggressionBias ?? 5
+  );
+  return { ...mods, biasAttA, biasDefA, biasAttD, biasDefD };
 }
 
 function resolveOEAL(

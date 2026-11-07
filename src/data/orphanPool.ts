@@ -95,7 +95,7 @@ export function generateOrphanPool(
       traits,
       addedWeek: 1,
       favorites: generateFavorites(style, rng),
-      luckfactor: rollLuckfactor(rng),
+      luckfactor: rollLuckfactor(rng, style),
       bloodlust: rollBloodlust(rng),
       source: 'orphanage',
       avatarSeed: Math.floor(rng.next() * 1000000),

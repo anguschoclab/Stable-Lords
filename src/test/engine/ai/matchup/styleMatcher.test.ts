@@ -86,11 +86,22 @@ describe('styleMatcher', () => {
       expect(mods.kd).toBe(1);
     });
 
-    it('returns correct mods for StrikingAttack vs WallOfSteel', () => {
+    it('returns canon mods for StrikingAttack vs WallOfSteel — moderate effort vs the wall', () => {
+      // Arena 93 (Crimson): moderate OE/AL, no tactic vs walls — the old
+      // run-hot heuristic (+2 OE) fed strikers to their worst matchup.
       const mods = getStyleMatchupMods(FightingStyle.StrikingAttack, FightingStyle.WallOfSteel);
-      expect(mods.oe).toBe(2);
+      expect(mods.oe).toBe(-1);
       expect(mods.al).toBe(0);
-      expect(mods.kd).toBe(1);
+      expect(mods.kd).toBe(0);
+    });
+
+    it('returns canon mods for StrikingAttack vs TotalParry — the anti-scum grind', () => {
+      // Arena 93 (Blind Man): sustained 6-OE, collapsing-AL marathon, not the
+      // 10-10 burst — out-endure the shell over 8+ minutes.
+      const mods = getStyleMatchupMods(FightingStyle.StrikingAttack, FightingStyle.TotalParry);
+      expect(mods.oe).toBe(-1);
+      expect(mods.al).toBe(-1);
+      expect(mods.kd).toBe(0);
     });
 
     it('returns correct mods for SlashingAttack vs TotalParry', () => {

@@ -32,7 +32,9 @@ preset picker, the Style Archives, and AI recruit generation.
   Trains past 21 yield quick, significant skills.
 
 **Canon tips:** never design an aimed-blow with less than a 21 deftness;
-keep wit as low as possible on scum warriors.
+keep wit as low as possible on scum warriors; never make average numbers
+into a piker — wit is the keystone of the style (17-21 on standard builds,
+~11 even on scum variants), so design to an extreme.
 
 ## Example Rebuilds
 

@@ -167,7 +167,7 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // intentional literal pins: specs re-stating canonical production literals
 // (zero-state objects, enum unions, ctx key lists, barrel/mocks surfaces)
 // as assertion data — the duplication is the point.
-const MIXED_BASELINE = 19;
+const MIXED_BASELINE = 20;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -179,7 +179,18 @@ const MIXED_EXEMPT_PAIRS = new Set([
   'src/data/equipment/weapons.ts|src/test/data/equipment/weaponStyles.test.ts',
   'src/data/equipment/weapons/items.ts|src/test/data/equipment/weaponStyles.test.ts',
   'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/enduranceCosts.test.ts',
-  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/offenseDefense.test.ts',
+  // tacticCounter spec re-states the resolveInitiativePhase arg-bag call
+  // shape as fixture data — same literal-pin category as the
+  // enduranceCosts + exchangeSetup pairs registered above.
+  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/tacticCounter.test.ts',
+  // The offense/defense arg-bag call shape moved into the shared
+  // exchangeSetup fixture (offenseDefense + prKillDesireRiposte specs both
+  // consume it) — same pin category as the enduranceCosts pair above.
+  'src/engine/combat/resolution/resolution.ts|src/test/_fixtures/exchangeSetup.ts',
+  // tacticCounter spec re-states the resolveInitiativePhase arg-bag shape
+  // verbatim as assertion data (same pin category as the enduranceCosts
+  // and exchangeSetup pairs above).
+  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/tacticCounter.test.ts',
   'src/engine/factories/warriorDefaults.ts|src/test/_fixtures/statWarrior.ts',
   'src/engine/narrative/index.ts|src/test/engine/narrative/combatNarrators.test.ts',
   'src/engine/traits/mods.ts|src/test/engine/traitMods.test.ts',

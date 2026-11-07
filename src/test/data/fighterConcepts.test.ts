@@ -69,6 +69,66 @@ describe('FIGHTER_CONCEPTS — scaled spreads', () => {
   });
 });
 
+describe('FIGHTER_CONCEPTS — "How to Build a Better Warrior" redesigns', () => {
+  // Neon Necromancer's three example rebuilds (Arena 93, ~84-pt canon budget).
+  const find = (style: FightingStyle, name: string) =>
+    FIGHTER_CONCEPTS[style].concepts.find((c) => c.name === name);
+
+  it('includes the Broke Stroker lunging redesign', () => {
+    const c = find(FightingStyle.LungingAttack, 'Broke Stroker');
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 10, CN: 10, SZ: 10, WT: 15, WL: 15, SP: 11, DF: 13 });
+  });
+
+  it('includes the Scimitar Adept slashing redesign', () => {
+    const c = find(FightingStyle.SlashingAttack, 'Scimitar Adept');
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 9, CN: 8, SZ: 14, WT: 13, WL: 17, SP: 10, DF: 13 });
+  });
+
+  it('includes the Low-Will Wonder striking redesign', () => {
+    const c = find(FightingStyle.StrikingAttack, 'Low-Will Wonder');
+    expect(c).toBeDefined();
+    expect(c!.canonStats).toEqual({ ST: 17, CN: 9, SZ: 7, WT: 17, WL: 9, SP: 14, DF: 11 });
+  });
+});
+
+describe('FIGHTER_CONCEPTS — Parry-Riposte Arena 93 canon builds', () => {
+  const prConcepts = FIGHTER_CONCEPTS[FightingStyle.ParryRiposte].concepts;
+
+  it('carries the full dozen canon ripper concepts', () => {
+    expect(prConcepts).toHaveLength(12);
+  });
+
+  it('includes the newsletter canon builds', () => {
+    const names = prConcepts.map((c) => c.name);
+    for (const n of [
+      'Daydream',
+      'Consortium Hybrid',
+      'Freshman Scum',
+      'The Art',
+      "Necrom's Paragon",
+      "Thror's Lesson",
+      'Fantasy Duelist',
+      'Dawnrain',
+      'Scovellie',
+      'Santee',
+    ]) {
+      expect(names).toContain(n);
+    }
+  });
+
+  it('pins Daydream — Assur\'s "best Parry Riposte ever" (17-14-4-17-7-8-17)', () => {
+    const c = prConcepts.find((x) => x.name === 'Daydream');
+    expect(c?.canonStats).toEqual({ ST: 17, CN: 14, SZ: 4, WT: 17, WL: 7, SP: 8, DF: 17 });
+  });
+
+  it('pins Necrom\'s Paragon — the "perfect" ripper (9-4-5-17-21-11-17)', () => {
+    const c = prConcepts.find((x) => x.name === "Necrom's Paragon");
+    expect(c?.canonStats).toEqual({ ST: 9, CN: 4, SZ: 5, WT: 17, WL: 21, SP: 11, DF: 17 });
+  });
+});
+
 describe('scaleToAttributeBudget', () => {
   const SPREAD: Attributes = { ST: 11, CN: 12, SZ: 9, WT: 17, WL: 15, SP: 5, DF: 15 }; // sums 84
 

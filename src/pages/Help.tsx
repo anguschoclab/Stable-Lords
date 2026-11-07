@@ -27,6 +27,7 @@ import {
   ProgressionSection,
   StrategyBasicsSection,
   TrainersSection,
+  WarriorDesignSection,
 } from './help/sections';
 
 /**
@@ -157,6 +158,7 @@ export default function Help() {
           'strategy',
           'styles',
           'concepts',
+          'design',
           'attributes',
           'equipment',
           'trainers',
@@ -168,6 +170,7 @@ export default function Help() {
         <StrategyBasicsSection />
         <FightingStylesSection />
         <FighterConceptsSection />
+        <WarriorDesignSection />
         <AttributesSection />
         <EquipmentSection />
         <TrainersSection />

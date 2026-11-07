@@ -43,11 +43,14 @@ describe('generateRecruitAttrs — style-aware blend', () => {
     expect(agile.WT).toBeGreaterThan(neutral.WT + 1);
   });
 
-  it('StrikingAttack recruits trend toward canon WT/DF', () => {
+  it('StrikingAttack recruits trend toward canon WT', () => {
     const striker = meanAttrs(FightingStyle.StrikingAttack);
     const neutral = meanAttrs(undefined);
+    // The striker concept pool now mixes a deliberately low-WL/low-DF build
+    // (Low-Will Wonder) alongside the WT/DF builds — wit remains the clean
+    // leadership trend while DF stays a wash.
     expect(striker.WT).toBeGreaterThan(neutral.WT + 1);
-    expect(striker.DF).toBeGreaterThan(neutral.DF + 1);
+    expect(striker.DF).toBeGreaterThan(neutral.DF);
   });
 
   it('style-less calls keep the philosophy-only distribution', () => {

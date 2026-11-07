@@ -174,6 +174,58 @@ export function FighterConceptsSection() {
   );
 }
 
+/** Codex section: warrior design. */
+export function WarriorDesignSection() {
+  return (
+    <AccordionItem value="design">
+      <AccordionTrigger className="font-display text-lg">Designing a Warrior</AccordionTrigger>
+      <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+        <p>
+          The Arena 93 archives record five design axes every manager weighs at
+          once — there is no perfect warrior, but these rules keep the other
+          99% alive:
+        </p>
+        <ul className="list-disc list-inside space-y-1.5">
+          <li>
+            <strong>Fighting style</strong> — Offensive styles (LU, SL, ST, AB, BA) key on
+            will and strength; defensive styles (TP, PR, PS) key on will and
+            constitution; mixed styles (WS, PL) key on will plus balanced
+            skill cut-offs.
+          </li>
+          <li>
+            <strong>Physical capabilities</strong> — Endurance, damage, and the ability
+            to take a hit. At least one should reach the "good" level or above;
+            the more the better. Trading strength for deftness usually buys
+            more damage than the lost skills are worth.
+          </li>
+          <li>
+            <strong>Weapon suitability</strong> — Be well-suited to several weapons of
+            your style, and no more than a couple stat trains away from more.
+            It lets you change up and surprise your foes.
+          </li>
+          <li>
+            <strong>Trainability</strong> — Leave a stat a couple points below a skill
+            breakpoint (deftness at 9 is the classic) and train it once your
+            skills are learned. Trains past 21 yield quick, significant skills.
+          </li>
+          <li>
+            <strong>Longevity</strong> — Decide the career length at birth. High wit
+            learns fastest; high will finds easy trains. Canon tips: never
+            design an aimed-blow without top-tier deftness, and keep wit low
+            on scum warriors.
+          </li>
+        </ul>
+        <ContextLinks
+          links={[
+            { to: '/stable/recruit', label: 'Try the Design Review' },
+            { to: '/world/style-archives', label: 'Style families in the archives' },
+          ]}
+        />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 /** Codex section: attributes. */
 export function AttributesSection() {
   return (

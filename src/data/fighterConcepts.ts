@@ -6,8 +6,12 @@
  * preserves the original stat spread (`canonStats`, the Duel2 ~84-point
  * budget) alongside a scaled 70-point spread (`stats`) for in-game use.
  *
- * Source: Duel2 Arena 93 — "Long Term Fighter Concepts", Gavin Rule,
- * mgr Faux Tides (1482).
+ * Sources:
+ *   Duel2 Arena 93 — "Long Term Fighter Concepts", Gavin Rule,
+ *     mgr Faux Tides (1482).
+ *   Duel2 Arena 93 — "How to Build a Better Warrior (version Y2K)",
+ *     Neon Necromancer (the "Broke Stroker", "Scimitar Adept", and
+ *     "Low-Will Wonder" redesigns).
  */
 
 import {
@@ -179,6 +183,12 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         'More average except the high strength for crippling blows — every weapon in reach except the epee, which would waste the strength. Purely offensive, trading the Scrapper\'s defensive edge for damage.',
         'Lunge — commit to the attack.'
       ),
+      concept(
+        'Broke Stroker',
+        { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 15, SP: 11, DF: 13 },
+        'The legendary redesign: wit and will high enough for a viable long-term warrior. Starts well-suited to the short spear and sits one strength train from longsword suitability. Enough con to take a hit — good damage likely arrives with the first strength train, if not on the original overview.',
+        'Lunge — commit to the attack.'
+      ),
     ],
   },
   [FightingStyle.ParryLunge]: {
@@ -251,6 +261,12 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         'The tougher build wins more long-term: he does not need the first shot, wears stout armor without trouble, and goes all out on great endurance. Hard to take down while he slices — an excellent long-term slasher with a good skill base and easy stat trains.',
         'Slash only.'
       ),
+      concept(
+        'Scimitar Adept',
+        { ST: 9, CN: 8, SZ: 14, WT: 13, WL: 17, SP: 10, DF: 13 },
+        'Starts well-suited to the scimitar, with enough strength, constitution, and will for normal endurance. A good shot at good damage out of the gate — and if not, only a train or two away.',
+        'Slash only.'
+      ),
     ],
   },
   [FightingStyle.StrikingAttack]: {
@@ -267,6 +283,12 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         'Classic Striker',
         { ST: 15, CN: 5, SZ: 9, WT: 17, WL: 15, SP: 7, DF: 15 },
         'The traditional striker — uses the style\'s decise advantage and a good wit to stay ahead of other styles. Deftness adds attack because the first shot has to count with low constitution. Strength is high for great damage and nearly any weapon. Endurance is the weak point: he has to end it quick.',
+        'Decisiveness only.'
+      ),
+      concept(
+        'Low-Will Wonder',
+        { ST: 17, CN: 9, SZ: 7, WT: 17, WL: 9, SP: 14, DF: 11 },
+        'This low will wonder needs help to reach normal endurance — hence the high strength, which has the bonus of guaranteeing good damage on a relatively small warrior. The 11 deftness opens suitability to almost every weapon.',
         'Decisiveness only.'
       ),
     ],

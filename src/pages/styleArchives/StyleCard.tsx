@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
 import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
+import { STYLE_FAMILY, FAMILY_GUIDE } from '@/data/designDoctrine';
 import { getMatchupBonus, STYLE_ORDER } from '@/constants/combat/combat/matchup';
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import { WEAPONS } from '@/data/equipment';
@@ -81,12 +82,21 @@ function MatchupPanel({ style }: { style: FightingStyle }) {
 /** Canonical Arena-93 fighter concepts: doctrine + long-term builds. */
 function ConceptsPanel({ style }: { style: FightingStyle }) {
   const guide = FIGHTER_CONCEPTS[style];
+  const family = FAMILY_GUIDE[STYLE_FAMILY[style]];
   return (
     <div className="space-y-3 pt-3 border-t border-white/5">
-      <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
-        Fighter Concepts
-      </span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
+          Fighter Concepts
+        </span>
+        <span className="text-[8px] font-black uppercase tracking-[0.15em] text-arena-gold/50">
+          {family.label} · keys {family.keyAttributes.join(' + ')}
+        </span>
+      </div>
       <p className="text-[10px] text-muted-foreground/60 leading-relaxed">{guide.doctrine}</p>
+      <p className="text-[10px] text-muted-foreground/50 italic leading-relaxed">
+        {family.doctrine}
+      </p>
       {guide.concepts.map((c) => (
         <div key={c.name} className="space-y-1 border-l-2 border-arena-gold/20 pl-3">
           <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80">

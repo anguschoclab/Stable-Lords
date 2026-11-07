@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T16:23:31.147Z",
+  "generatedAt": "2026-11-07T18:00:42.985Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -153,6 +153,7 @@
     "src/test/components/warrior/condition/OverrideSliders.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierHeader.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierStats.test.tsx",
+    "src/test/components/warriorBuilder/DesignReviewCard.test.tsx",
     "src/test/components/warriorBuilder/WarriorBuilder.test.tsx",
     "src/test/components/widgets/PreAdvanceChecklist.test.tsx",
     "src/test/components/widgets/Widgets.test.tsx",

@@ -3,6 +3,7 @@ import { IdentitySection } from './IdentitySection';
 import { AttributeSliders } from './AttributeSliders';
 import { SkillsPreview } from './SkillsPreview';
 import { PhysicalsPreview } from './PhysicalsPreview';
+import { DesignReviewCard } from './DesignReviewCard';
 import { CreateButton } from './CreateButton';
 import type { useWarriorBuilderState } from '../hooks/useWarriorBuilderState';
 
@@ -43,6 +44,7 @@ export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
           damage={DAMAGE_LABELS[stats.derivedStats.damage]}
           encumbrance={stats.derivedStats.encumbrance}
         />
+        <DesignReviewCard attrs={attrs} style={style} />
         <CreateButton
           disabled={!isValid || rosterFull}
           onClick={handleCreate}

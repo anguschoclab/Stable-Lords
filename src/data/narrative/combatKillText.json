@@ -818,17 +818,36 @@
       "{{attacker}} is eagerly seeking the death blow!",
       "{{attacker}} is going for the kill!",
       "{{attacker}} seeks the death of their opponent!",
-      "{{attacker}} aims to slay {{defender}}!"
+      "{{attacker}} aims to slay {{defender}}!",
+      "{{attacker}} has murder in their eyes!",
+      "{{attacker}} fights with ruthless intent, seeking the final blow!",
+      "{{attacker}} abandons all restraint—they want blood!",
+      "A sinister focus falls over {{attacker}}—they want a corpse, not just a victory!",
+      "{{attacker}} presses forward with a chilling, lethal determination."
     ],
     "doomed": [
       "{{name}} is mortally wounded — hanging on by a thread!",
       "{{name}} reels from a mortal blow — the end is near!",
-      "{{name}}'s wound is fatal; only the formality remains!"
+      "{{name}}'s wound is fatal; only the formality remains!",
+      "Blood pooling beneath them, {{name}} has only moments left.",
+      "{{name}} staggers, life ebbing away with every passing second.",
+      "The light fades from {{name}}'s eyes—the end is inevitable.",
+      "{{name}} collapses to one knee, the grim reaper already standing over them.",
+      "{{name}} tries to stay standing, but the final curtain is drawing close.",
+      "A shadow passes over {{name}}'s face; their doom is sealed.",
+      "{{name}} is dead on their feet—it's only a matter of time."
     ],
     "died_of_wounds": [
       "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
       "{{defender}} succumbs to the accumulated wounds dealt by {{attacker}} — dead on the sand.",
-      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted."
+      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted.",
+      "{{defender}} crumples into the dirt, their body finally yielding to the immense trauma dealt by {{attacker}}.",
+      "The brutal accumulation of injuries is too much; {{defender}} slumps over, dead.",
+      "{{defender}} drops their guard one final time, succumbing to the terrible wounds inflicted by {{attacker}}.",
+      "A final, ragged breath escapes {{defender}} as they fall lifeless to the arena floor.",
+      "{{attacker}} watches coldly as {{defender}} bleeds out, unable to sustain the grievous damage.",
+      "The battle takes its final toll—{{defender}} collapses and breathes their last.",
+      "{{defender}}'s body gives out entirely under the relentless punishment from {{attacker}}."
     ]
   }
 }

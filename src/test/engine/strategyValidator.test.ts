@@ -890,3 +890,55 @@ describe('predictedCollapseMinute', () => {
     }
   });
 });
+
+describe('PR_RIPOSTE_PAST_MASTER — canon "drop the riposte tactic after master" guidance', () => {
+  const masterWarrior = (style: FightingStyle) => {
+    const w = createMockWarrior(style);
+    w.career = { wins: 25, losses: 10, kills: 2 }; // 35 fights → Master tier
+    return w;
+  };
+
+  it('warns (info) when a Master-tier PR plans the Riposte defensive tactic', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryRiposte),
+      defensiveTactic: 'Riposte' as const,
+    };
+    const warnings = validateStrategy(plan, masterWarrior(FightingStyle.ParryRiposte));
+    const w = warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER');
+    expect(w).toBeDefined();
+    expect(w?.severity).toBe('info');
+  });
+
+  it('stays silent for a Novice PR — the riposte tactic is correct early', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryRiposte),
+      defensiveTactic: 'Riposte' as const,
+    };
+    const warnings = validateStrategy(plan, createMockWarrior(FightingStyle.ParryRiposte));
+    expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeUndefined();
+  });
+
+  it('stays silent for non-PR styles at Master tier', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.WallOfSteel),
+      defensiveTactic: 'Riposte' as const,
+    };
+    const warnings = validateStrategy(plan, masterWarrior(FightingStyle.WallOfSteel));
+    expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeUndefined();
+  });
+
+  it('also flags a phase-level Riposte tactic', () => {
+    const plan = {
+      ...createMockFightPlan(FightingStyle.ParryRiposte),
+      phases: { mid: { OE: 5, AL: 5, defensiveTactic: 'Riposte' as const } },
+    };
+    const warnings = validateStrategy(plan, masterWarrior(FightingStyle.ParryRiposte));
+    expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeDefined();
+  });
+
+  it('stays silent without the Riposte tactic at Master tier', () => {
+    const plan = createMockFightPlan(FightingStyle.ParryRiposte);
+    const warnings = validateStrategy(plan, masterWarrior(FightingStyle.ParryRiposte));
+    expect(warnings.find((x) => x.code === 'PR_RIPOSTE_PAST_MASTER')).toBeUndefined();
+  });
+});

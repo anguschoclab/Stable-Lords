@@ -46,6 +46,30 @@ describe('canonTargetingBias — AB doctrine', () => {
   });
 });
 
+describe('canonTargetingBias — PR doctrine', () => {
+  const PR = FightingStyle.ParryRiposte;
+
+  it('hunts strikers — the natural striker-killer', () => {
+    expect(canonTargetingBias(PR, ST)).toBeGreaterThanOrEqual(2);
+  });
+
+  it('hunts scum (TP) — ripostes starve the shell', () => {
+    expect(canonTargetingBias(PR, TP)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('hard-avoids aimed blows — "the bane" of rippers', () => {
+    expect(canonTargetingBias(PR, AB)).toBeLessThanOrEqual(-3);
+  });
+
+  it('avoids slashers — a "pretty tough" matchup for rippers', () => {
+    expect(canonTargetingBias(PR, FightingStyle.SlashingAttack)).toBeLessThan(0);
+  });
+
+  it('is neutral on lungers', () => {
+    expect(canonTargetingBias(PR, LU)).toBe(0);
+  });
+});
+
 describe('canonTargetingBias — non-doctrine styles', () => {
   it('returns 0 for styles with no canon challenge/avoid lore', () => {
     expect(canonTargetingBias(ST, LU)).toBe(0);

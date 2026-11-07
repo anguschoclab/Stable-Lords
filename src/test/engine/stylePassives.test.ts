@@ -109,6 +109,11 @@ describe('Style Passives', () => {
       const lu = getEnduranceMult(FightingStyle.LungingAttack);
       expect(lu).toBeGreaterThan(1.0);
     });
+
+    it('should give Parry-Riposte a low endurance burn — a canon PR advantage', () => {
+      const pr = getEnduranceMult(FightingStyle.ParryRiposte);
+      expect(pr).toBeLessThan(1.0);
+    });
   });
 
   describe('getMastery', () => {

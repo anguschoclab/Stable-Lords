@@ -25,6 +25,15 @@ describe('getMatchupBonus', () => {
       getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.StrikingAttack)
     ).toBeDefined();
   });
+
+  it('gives Slashing Attack the edge over Parry-Riposte — canon "pretty tough" for rippers', () => {
+    expect(
+      getMatchupBonus(FightingStyle.SlashingAttack, FightingStyle.ParryRiposte)
+    ).toBeGreaterThan(0);
+    expect(
+      getMatchupBonus(FightingStyle.ParryRiposte, FightingStyle.SlashingAttack)
+    ).toBeLessThan(0);
+  });
 });
 
 describe('resolveEffectiveTactics', () => {

@@ -5,9 +5,9 @@ import { FightingStyle } from '@/types/shared.types';
 const ALL_STYLES = Object.values(FightingStyle);
 
 describe('STYLE_PRESETS', () => {
-  it('has exactly 2 presets per style (20 total)', () => {
+  it('has at least 2 presets per style', () => {
     for (const style of ALL_STYLES) {
-      expect(STYLE_PRESETS[style]).toHaveLength(2);
+      expect(STYLE_PRESETS[style].length).toBeGreaterThanOrEqual(2);
     }
   });
 
@@ -113,8 +113,12 @@ describe('Specific preset values (from spec)', () => {
 
   it('ParryRiposte presets match spec', () => {
     const presets = getStylePresets(FightingStyle.ParryRiposte);
-    expect(presets[0]!.name).toBe('Classic Counter');
-    expect(presets[1]!.name).toBe('Aggressive Riposte');
+    expect(presets.map((p) => p.name)).toEqual([
+      'Classic Counter',
+      'Aggressive Riposte',
+      'Fast Ripper',
+      'Third-Minute Surge',
+    ]);
   });
 
   it('ParryStrike presets match spec', () => {

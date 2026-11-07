@@ -16,7 +16,7 @@ import {
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
-import { resolveTacticCounters } from './tacticCounter';
+import { resolveTacticCounters, type TacticCounterMods } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
 import { tryRearm } from './disarm';
@@ -93,7 +93,7 @@ function resolveTacticMods(
   const offModsD = getOffensiveTacticMods(tactD.offTactic, fD.style);
   const defModsD = getDefensiveTacticMods(tactD.defTactic, fD.style);
 
-  const counters = resolveTacticCounters({
+  const counters: TacticCounterMods = resolveTacticCounters({
     tactA,
     tactD,
     offModsA,

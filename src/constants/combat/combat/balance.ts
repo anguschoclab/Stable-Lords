@@ -101,6 +101,14 @@ export const ST_CRIT_DAMAGE_BONUS = 0.2;
 /** Striking Attack execute: bonus damage when the target's HP ratio is below the threshold. */
 export const ST_EXECUTE_HP_THRESHOLD = 0.3;
 export const ST_EXECUTE_BONUS = 2;
+/**
+ * Striking Attack shell pressure — Arena-93 canon ("keep swinging": sustained
+ * decisive pressure hammers a Parry shell down; the marathon is the strikers'
+ * own anti-scum sheet). Flat attack-check edge when the defender's resolved
+ * defensive tactic is Parry. Zero vs Dodge/none: there is no shell to crack,
+ * so fragile non-parrying styles (AB) see no benefit.
+ */
+export const ST_PARRY_PIERCE = 3;
 
 // ─── Commit Mechanic ──────────────────────────────────────────────────────
 /** HP ratio below which a fighter is considered "at low HP" for commit triggering. */

@@ -7,6 +7,7 @@ import {
   getStCritChanceBonus,
   getStCritDamageBonus,
   getExecuteBonus,
+  strikerParryPierce,
 } from '@/engine/combat/resolution/strikingAttack';
 import {
   ST_FRONTLOAD_START,
@@ -14,7 +15,12 @@ import {
   ST_CRIT_CHANCE_BONUS,
   ST_CRIT_DAMAGE_BONUS,
   ST_EXECUTE_BONUS,
+  ST_PARRY_PIERCE,
 } from '@/constants/combat/combat';
+import {
+  setupExchange,
+  callResolveCombatOffenseDefense,
+} from '@/test/_fixtures/exchangeSetup';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import type { Warrior } from '@/types/game';
 
@@ -56,6 +62,83 @@ describe('getExecuteBonus', () => {
   });
   it('is zero for non-ST styles even against a low-HP target', () => {
     expect(getExecuteBonus(OTHER, 20, 100)).toBe(0);
+  });
+});
+
+describe('strikerParryPierce', () => {
+  it('grants the pierce bonus to ST against a Parry shell', () => {
+    expect(strikerParryPierce(ST, 'Parry')).toBe(ST_PARRY_PIERCE);
+  });
+  it('grants nothing against Dodge or no defensive tactic', () => {
+    expect(strikerParryPierce(ST, 'Dodge')).toBe(0);
+    expect(strikerParryPierce(ST, 'none')).toBe(0);
+  });
+  it('grants nothing to non-ST attackers even against Parry', () => {
+    expect(strikerParryPierce(OTHER, 'Parry')).toBe(0);
+    expect(strikerParryPierce(FightingStyle.WallOfSteel, 'Parry')).toBe(0);
+  });
+});
+
+describe('strikerParryPierce (wiring)', () => {
+  // The defender's defTactic reaches the attack check only through the pierce:
+  // sweeping the rng threshold must show strictly more ST successes vs Parry.
+  const attackSuccessCount = (defTactic: 'Parry' | 'none') => {
+    let ok = 0;
+    for (let r = 1; r < 100; r++) {
+      const s = setupExchange({
+        fA: { style: FightingStyle.StrikingAttack },
+        fD: {
+          activePlan: {
+            style: FightingStyle.WallOfSteel,
+            OE: 5,
+            AL: 5,
+            killDesire: 5,
+            target: 'Any',
+            defensiveTactic: defTactic,
+          } as any,
+        },
+        ctx: { rng: () => r / 100 },
+      });
+      callResolveCombatOffenseDefense(s, true);
+      const whiffed = s.events.some(
+        (e) => e.type === 'ATTACK' && e.result === 'WHIFF'
+      );
+      if (!whiffed) ok++;
+    }
+    return ok;
+  };
+
+  it('ST converts more attack checks against a Parry defender', () => {
+    expect(attackSuccessCount('Parry')).toBeGreaterThan(attackSuccessCount('none'));
+  });
+
+  it('a non-ST attacker sees no swing between Parry and none', () => {
+    const count = (defTactic: 'Parry' | 'none') => {
+      let ok = 0;
+      for (let r = 1; r < 100; r++) {
+        const s = setupExchange({
+          fA: { style: FightingStyle.TotalParry },
+          fD: {
+            activePlan: {
+              style: FightingStyle.WallOfSteel,
+              OE: 5,
+              AL: 5,
+              killDesire: 5,
+              target: 'Any',
+              defensiveTactic: defTactic,
+            } as any,
+          },
+          ctx: { rng: () => r / 100 },
+        });
+        callResolveCombatOffenseDefense(s, true);
+        const whiffed = s.events.some(
+          (e) => e.type === 'ATTACK' && e.result === 'WHIFF'
+        );
+        if (!whiffed) ok++;
+      }
+      return ok;
+    };
+    expect(count('Parry')).toBe(count('none'));
   });
 });
 

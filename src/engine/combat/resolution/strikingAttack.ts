@@ -1,4 +1,4 @@
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type DefensiveTactic } from '@/types/shared.types';
 import {
   ST_FRONTLOAD_START,
   ST_FRONTLOAD_WINDOW,
@@ -6,6 +6,7 @@ import {
   ST_CRIT_DAMAGE_BONUS,
   ST_EXECUTE_HP_THRESHOLD,
   ST_EXECUTE_BONUS,
+  ST_PARRY_PIERCE,
 } from '@/constants/combat/combat';
 
 const isST = (style: FightingStyle) => style === FightingStyle.StrikingAttack;
@@ -31,4 +32,15 @@ export function getStCritDamageBonus(style: FightingStyle): number {
 export function getExecuteBonus(style: FightingStyle, hp: number, maxHp: number): number {
   if (!isST(style)) return 0;
   return hp / Math.max(1, maxHp) < ST_EXECUTE_HP_THRESHOLD ? ST_EXECUTE_BONUS : 0;
+}
+
+/**
+ * Shell pressure: canon "keep swinging" — a striker's sustained decisive
+ * pressure grinds a Parry shell down. Flat attack-check edge when the
+ * defender's resolved defensive tactic is Parry; nothing vs Dodge/none since
+ * there is no shell to crack.
+ */
+export function strikerParryPierce(style: FightingStyle, defTactic: DefensiveTactic): number {
+  if (!isST(style)) return 0;
+  return defTactic === 'Parry' ? ST_PARRY_PIERCE : 0;
 }

@@ -14,6 +14,7 @@ import type { FighterState } from '../types';
 import { getWeaponRangeMod } from '../../mechanics/distanceResolution';
 import { getCounterstrikeAttBonus } from '../counterstrike';
 import { aimedBlowShellGapBonus } from '../aimedBlow';
+import { strikerParryPierce } from '../strikingAttack';
 import { recordWeaponSwing } from '../weaponChart';
 import type { OffenseDefenseArgs, OffenseDefenseCtx } from './types';
 
@@ -218,7 +219,11 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
       bonuses.weaponRangeMod +
       bonuses.dynTraitAtt +
       bonuses.counterstrikeAtt +
-      aimedBlowShellGapBonus(att, def),
+      aimedBlowShellGapBonus(att, def) +
+      strikerParryPierce(
+        att.style,
+        (args.aGoesFirst ? args.tactD : args.tactA).defTactic
+      ),
   }) || def.doomed === true;
 
   // The attack was thrown — chart it (hits, whiffs, parried and dodged

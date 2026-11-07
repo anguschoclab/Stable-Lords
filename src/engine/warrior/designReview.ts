@@ -11,6 +11,8 @@ import { FightingStyle, type Attributes } from '@/types/shared.types';
 import {
   STYLE_FAMILY,
   FAMILY_GUIDE,
+  type StyleFamily,
+  type StyleFamilyGuide,
   DESIGN_REVIEW_THRESHOLDS as T,
 } from '@/data/designDoctrine';
 import {
@@ -104,8 +106,8 @@ function trainableDeficit(req: WeaponReqResult): number {
 // ─── Axis reviewers ─────────────────────────────────────────────────────────
 
 function reviewStyle(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
-  const family = STYLE_FAMILY[style];
-  const guide = FAMILY_GUIDE[family];
+  const family: StyleFamily = STYLE_FAMILY[style];
+  const guide: StyleFamilyGuide = FAMILY_GUIDE[family];
   const items: DesignReviewItem[] = [];
 
   if (family === 'mixed') {

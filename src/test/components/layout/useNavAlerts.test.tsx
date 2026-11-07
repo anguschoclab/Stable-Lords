@@ -18,7 +18,7 @@ vi.mock('@/hooks/useTacticalAlerts', () => ({
   useTacticalAlerts: vi.fn(() => mockAlerts),
 }));
 
-import { useNavAlerts } from '@/components/layout/navigationShared';
+import { useNavAlerts } from '@/components/layout/navAlerts';
 import { useTacticalAlerts } from '@/hooks/useTacticalAlerts';
 
 function makeAlert(id: string, message: string): TacticalAlert {

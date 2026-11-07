@@ -29,6 +29,18 @@ describe('event filtering', () => {
     expect(filterEventsByCategory(events, 'all')).toHaveLength(5);
   });
 
+  it('returns a new array for the all category', () => {
+    const result = filterEventsByCategory(events, 'all');
+    expect(result).toHaveLength(5);
+    expect(result).not.toBe(events);
+  });
+
+  it('does not mutate the input array', () => {
+    const before = events.map((e) => e.id);
+    filterEventsByCategory(events, 'consequences');
+    expect(events.map((e) => e.id)).toEqual(before);
+  });
+
   it('groups combat results and memorial events into consequences', () => {
     expect(filterEventsByCategory(events, 'consequences').map((e) => e.id)).toEqual([
       'fight-1',

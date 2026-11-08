@@ -1,0 +1,1496 @@
+[
+ {
+  "file": "src/components/arena/weather/index.tsx",
+  "symbol": "WEATHER_VISUALS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/arena/weatherVisuals.test.ts",
+   "src/test/constants/weatherRegistries.test.ts"
+  ]
+ },
+ {
+  "file": "src/components/charts/WarriorRadarChart.tsx",
+  "symbol": "WarriorRadarChart",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/components/WarriorDossier.tsx",
+   "src/components/warrior/BiometricsTab.tsx"
+  ],
+  "testRefs": [
+   "src/test/components/WarriorDossier.test.tsx",
+   "src/test/components/charts/WarriorRadarChart.test.tsx",
+   "src/test/components/warrior/BiometricsTab.test.tsx"
+  ]
+ },
+ {
+  "file": "src/components/layout/LeftNav.tsx",
+  "symbol": "HUBS",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/components/layout/HubSwitcher.tsx",
+   "src/components/layout/MobileNav.tsx",
+   "src/components/layout/SubPageList.tsx",
+   "src/components/layout/breadcrumbs/routeCrumbs.ts"
+  ],
+  "testRefs": [
+   "src/test/components/navigationHubs.test.ts",
+   "src/test/megaplan/informationArchitecture.test.ts"
+  ]
+ },
+ {
+  "file": "src/components/layout/LeftNav.tsx",
+  "symbol": "HubId",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/components/layout/AlertStrip.tsx",
+   "src/components/layout/HubSwitcher.tsx",
+   "src/components/layout/MobileNav.tsx",
+   "src/components/layout/SubPageList.tsx"
+  ],
+  "testRefs": [
+   "src/test/components/layout/AlertStrip.test.tsx",
+   "src/test/components/layout/HubSwitcher.test.tsx",
+   "src/test/components/navigationHubs.test.ts"
+  ]
+ },
+ {
+  "file": "src/components/layout/primaryCta.ts",
+  "symbol": "PRIMARY_CTA_BY_ROUTE",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/layout/primaryCta.test.ts",
+   "src/test/megaplan/appShell.cta.test.tsx"
+  ]
+ },
+ {
+  "file": "src/components/ResolutionReveal.tsx",
+  "symbol": "default",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/App.tsx",
+   "src/components/AppShell.tsx",
+   "src/components/BoutViewer.tsx",
+   "src/components/EquipmentLoadout.tsx"
+  ],
+  "testRefs": [
+   "src/test/_fixtures/aiTestState.ts",
+   "src/test/_fixtures/bidRoster.ts",
+   "src/test/_fixtures/factories.ts"
+  ]
+ },
+ {
+  "file": "src/components/ui/alert-dialog.tsx",
+  "symbol": "AlertDialogPortal",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/alert-dialog.tsx",
+  "symbol": "AlertDialogOverlay",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/alert-dialog.tsx",
+  "symbol": "AlertDialogTrigger",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/chart.tsx",
+  "symbol": "ChartLegend",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/chart.tsx",
+  "symbol": "ChartLegendContent",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogPortal",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogOverlay",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogClose",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogTrigger",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogHeader",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/dialog.tsx",
+  "symbol": "DialogFooter",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/scroll-area.tsx",
+  "symbol": "ScrollBar",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/select.tsx",
+  "symbol": "SelectGroup",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/select.tsx",
+  "symbol": "SelectLabel",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/select.tsx",
+  "symbol": "SelectSeparator",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/select.tsx",
+  "symbol": "SelectScrollUpButton",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/select.tsx",
+  "symbol": "SelectScrollDownButton",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/sheet.tsx",
+  "symbol": "SheetPortal",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/sheet.tsx",
+  "symbol": "SheetOverlay",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/sheet.tsx",
+  "symbol": "SheetFooter",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/table.tsx",
+  "symbol": "TableFooter",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/ui/table.tsx",
+  "symbol": "TableCaption",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/components/warrior/favorites/FavoritesCharting.tsx",
+  "symbol": "buildFavoritesChart",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/warrior/FavoritesCharting.test.ts",
+   "src/test/megaplan/orphanScan.guard.test.ts"
+  ]
+ },
+ {
+  "file": "src/data/arenas/index.ts",
+  "symbol": "resetArenaRegistry",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/_setup/setup.node.ts"
+  ]
+ },
+ {
+  "file": "src/data/backstories.ts",
+  "symbol": "BACKSTORIES",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/pages/startGameAsync.test.tsx"
+  ]
+ },
+ {
+  "file": "src/data/equipment/equipment.utils.ts",
+  "symbol": "STYLE_CLASSIC_WEAPONS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/distanceResolution.test.ts",
+   "src/test/engine/combat/weaponIdCoverage.test.ts"
+  ]
+ },
+ {
+  "file": "src/data/equipment/weaponStyles.ts",
+  "symbol": "ALL_STYLES",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/data/equipment/weaponStyles.test.ts",
+   "src/test/data/getAvailableItems.test.ts",
+   "src/test/engine/ai/weatherSuitability.test.ts"
+  ]
+ },
+ {
+  "file": "src/data/orphanPool.ts",
+  "symbol": "OrphanWarrior",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/orphanage/WarriorCard.test.tsx"
+  ]
+ },
+ {
+  "file": "src/data/terrabloodCharts.ts",
+  "symbol": "computeEnduranceTier",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/skillCalc.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/competence.ts",
+  "symbol": "COMPETENCE_QUALITY",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/competence.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/competence.ts",
+  "symbol": "competenceOf",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/competence.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/intentEngine/index.ts",
+  "symbol": "pickWeeklyIntent",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/intentEngine.crown.test.ts",
+   "src/test/engine/ai/intentEngine.seasonRecord.test.ts",
+   "src/test/engine/ai/intentEngine.survival.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/intentStates.ts",
+  "symbol": "BoutIntentInput",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/intentStates.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/intentStates.ts",
+  "symbol": "deriveBoutIntent",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/intentStates.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/market/poachBid.ts",
+  "symbol": "isPoachingEnabled",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/market/poachBid.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/market/poachBid.ts",
+  "symbol": "seasonIndexFor",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/market/poachBid.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/market/poachBid.ts",
+  "symbol": "computePoachBid",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/market/poachBid.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/memory/intelDossier.ts",
+  "symbol": "DOSSIER_CAP",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/memory/intelDossier.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/memory/intelDossier.ts",
+  "symbol": "decayDossiers",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/memory/intelDossier.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/plan/agentPlan.ts",
+  "symbol": "agentPlanForWarrior",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/ai/plan/rivalPlan.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/ai/plan/planMasking.test.ts",
+   "src/test/engine/ai/plan/rivalPlan.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/plan/rivalPlan.ts",
+  "symbol": "RivalFightPlanOpts",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/ai/plan/seasonPlan.ts",
+  "symbol": "SEASON_OBJECTIVE_WEEKS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/plan/seasonPlan.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/plan/seasonPlan.ts",
+  "symbol": "pickSeasonObjective",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/types/state/game.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/ai/plan/seasonPlan.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/seasonalRetirementService.ts",
+  "symbol": "retireChanceFor",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/retirementTiming.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/traitPolicy.ts",
+  "symbol": "TRAIT_POLICY",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/traitPolicy.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/budgetWorker.ts",
+  "symbol": "BASE_RESERVE",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/market/poachBid.test.ts",
+   "src/test/engine/ai/workers/cashFlow.test.ts",
+   "src/test/engine/economy/worldBalance.slow.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/budgetWorker.ts",
+  "symbol": "projectCashFlow",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/workers/cashFlow.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/competitionWorker/negotiation.ts",
+  "symbol": "NegotiationOutcome",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/workers/competitionWorker/negotiation.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/competitionWorker/negotiation.ts",
+  "symbol": "walkAwayTolerance",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/workers/competitionWorker/negotiation.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/crownWorker.ts",
+  "symbol": "assessCrownOpportunity",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/workers/crownWorker.dominance.test.ts",
+   "src/test/engine/ai/workers/crownWorker.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/ai/workers/staffWorker.ts",
+  "symbol": "preferredTrainerFocus",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/workers/staffWorker.denial.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/analytics/metaDrift.ts",
+  "symbol": "createDefaultMeta",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/draftService.test.ts",
+   "src/test/engine/metaDrift.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/autosim/autosim.ts",
+  "symbol": "processPlayerOffers",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/autosim/autosim.unit.test.ts",
+   "src/test/engine/autosim/autosimOfferProcessing.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/autosim/autosim.ts",
+  "symbol": "extractWeekSummary",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/pipeline/tick/timeAdvance/index.ts",
+   "src/engine/pipeline/tick/timeAdvance/service.ts",
+   "src/engine/pipeline/tick/timeAdvance/summaries.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/autosim/autosim.unit.test.ts",
+   "src/test/engine/autosim/autosimMemoryGrowth.slow.test.ts",
+   "src/test/engine/autosim/autosimOfferProcessing.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/avatar/avatarGenerator.ts",
+  "symbol": "seedForEntity",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/avatar/avatarGenerator.test.ts",
+   "src/test/megaplan/orphanScan.guard.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/avatar/avatarGenerator.ts",
+  "symbol": "wearScore",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/avatar/avatarGenerator.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/avatar/avatarGenerator.ts",
+  "symbol": "avatarDescription",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/avatar/avatarGenerator.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/avatar/avatarGenerator.ts",
+  "symbol": "clothingCategoryForStyle",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/avatar/avatarGenerator.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/bout/services/boutResolution.ts",
+  "symbol": "getNPCPlan",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/ai/plan/rivalPlan.ts"
+  ],
+  "testRefs": [
+   "src/test/_fixtures/factories.ts",
+   "src/test/engine/ai/plan/planMasking.test.ts",
+   "src/test/engine/ai/plan/rivalPlan.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/bout/stylePresets.ts",
+  "symbol": "STYLE_PRESETS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/bout/stylePresets.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/championship/championsTournament.ts",
+  "symbol": "selectGrandChampionshipField",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/championship/championsTournament.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/conditionEngine.ts",
+  "symbol": "derivePsychState",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/ai/intentStates.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/combat/conditionEngine.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/distanceResolution.ts",
+  "symbol": "ArenaSizeProfile",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/matchmaking/arenaFit.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/distanceResolution.ts",
+  "symbol": "WEAPON_PREFERRED_RANGE",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/distanceResolution.test.ts",
+   "src/test/engine/combat/weaponStats.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/distanceResolution.ts",
+  "symbol": "WEAPON_RANGE_MODIFIERS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/distanceResolution.test.ts",
+   "src/test/engine/combat/weaponStats.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/distanceResolution.ts",
+  "symbol": "computeReachScore",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/distanceResolution.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/mechanics/distanceResolution.ts",
+  "symbol": "clampRangeToMax",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/distanceResolution.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/resolution/decoyShift.ts",
+  "symbol": "applyDecoyMask",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/featureFlags.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/resolution/decoyShift.ts",
+  "symbol": "emitDecoyReveal",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/featureFlags.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/resolution/disarm.ts",
+  "symbol": "rollDisarmChance",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/resolution/disarm.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/combat/resolution/disarm.ts",
+  "symbol": "isArmLocation",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/resolution/disarm.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/absoluteWeek.ts",
+  "symbol": "resolveAbsoluteWeek",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/core/absoluteWeek.test.ts",
+   "src/test/engine/core/boutWeekUtils.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/deathNotifier.ts",
+  "symbol": "clearDeathHandlers",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/deathNotifier.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/fatigueUtils.ts",
+  "symbol": "FATIGUE_FRESH",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/tournaments/TournamentsReadiness.test.tsx",
+   "src/test/engine/core/fatigueUtils.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/fatigueUtils.ts",
+  "symbol": "FATIGUE_ELEVATED",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/components/tournaments/TournamentsReadiness.test.tsx",
+   "src/test/engine/core/fatigueUtils.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/historyResolver.ts",
+  "symbol": "clearHistoryResolverCaches",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/core/entityIndex.ts"
+  ],
+  "testRefs": [
+   "src/test/_setup/setup.node.ts",
+   "src/test/engine/core/historyResolver.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/leaderboards.ts",
+  "symbol": "ArenaLeaderboardEntry",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/core/leaderboards.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/core/leaderboards.ts",
+  "symbol": "ArenaWarriorEntry",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/core/leaderboards.ts",
+  "symbol": "ArenaLeaderboardData",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/core/leaderboards.ts",
+  "symbol": "ArenaStableEntry",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "BEAST_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "WEAPON_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "SYMBOL_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "NATURE_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "CELESTIAL_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/chargePaths.ts",
+  "symbol": "MYTHICAL_PATHS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/chargePaths.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/crest/crestGenerator.ts",
+  "symbol": "getCrestColor",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/crest/crestGenerator.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/equipment/equipmentOptimizer.ts",
+  "symbol": "GearRecommendation",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/equipment/loadoutFitting.ts",
+  "symbol": "weaponFitScore",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/equipment/loadoutFitting.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/equipment/loadoutFitting.ts",
+  "symbol": "fitWeapon",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/equipment/loadoutFitting.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/equipment/weaponSuitability.ts",
+  "symbol": "WEAPON_STYLE_SUITABILITY",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/weaponSuitability.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/gazette/gazetteDetections.ts",
+  "symbol": "FightAnalysisContext",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/gazette/gazetteDetections.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/gazette/gazetteTemplateHelpers.ts",
+  "symbol": "DEFAULT_CROWD_MOOD",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/gazette/gazetteTemplateHelpers.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/matchmaking/arenaFit.ts",
+  "symbol": "scoreArenaFitForWarrior",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/matchmaking/arenaFit.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/matchmaking/arenaFit.ts",
+  "symbol": "eligibleArenasFor",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/constants/magicNumbers.test.ts",
+   "src/test/engine/matchmaking/arenaFit.booking.test.ts",
+   "src/test/engine/matchmaking/arenaFit.eligibility.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/matchmaking/tournament/tournamentArenaSelection.ts",
+  "symbol": "getEligibleArenasForTournament",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/newArenaArchitect.test.ts",
+   "src/test/engine/matchmaking/tournamentArenaSelection.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/matchmaking/tournamentSelection.ts",
+  "symbol": "TOURNAMENT_TIERS",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/advisor/tournamentAdvisor.ts",
+   "src/engine/matchmaking/tournamentSelection/core.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/narrative/narrativePostBout.ts",
+  "symbol": "BoutEndContext",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/narrative/narrativePostBout.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/owner/roster/recruitGenerator.ts",
+  "symbol": "generateRecruitAttrs",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/economy/balance.slow.test.ts",
+   "src/test/engine/owner/roster/generateRecruitAttrs.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/pipeline/offseasonEvents/helpers.ts",
+  "symbol": "ChosenWarriorOutcome",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/pipeline/offseasonEvents/helpers.ts",
+  "symbol": "addStat",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/pipeline/offseasonStatGrant.test.ts",
+   "src/test/engine/pipeline/offseasonStatGrantCharacterization.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/pipeline/offseasonEvents/helpers.ts",
+  "symbol": "GrantableStat",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/pipeline/offseasonEvents/helpers.ts",
+  "symbol": "StatGrantOutcomeOpts",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/pipeline/offseasonStatGrant.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/pipeline/seasonal.ts",
+  "symbol": "EVENT_HANDLERS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/data/seasonalEventHandlerCoverage.test.ts",
+   "src/test/engine/pipeline/seasonalChaosWeaver.test.ts",
+   "src/test/engine/pipeline/seasonalMonolithEvent.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/pool/enginePool.ts",
+  "symbol": "ShardWorkerApi",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/_fixtures/fakeShardWorker.ts",
+   "src/test/engine/pool/enginePool.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/pool/enginePool.ts",
+  "symbol": "createEnginePool",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/pipeline/parallelDeterminism.slow.test.ts",
+   "src/test/engine/pipeline/stateInvariants.slow.test.ts",
+   "src/test/engine/pool/enginePool.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/promoters/offerMatchmaking.ts",
+  "symbol": "lowerBound",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/pipeline/passes/PromoterPass.test.ts",
+   "src/test/engine/promoters/offerMatchmaking.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/promoters/offerMatchmaking.ts",
+  "symbol": "upperBound",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/pipeline/passes/PromoterPass.test.ts",
+   "src/test/engine/promoters/offerMatchmaking.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/promoters/offerMatchmaking.ts",
+  "symbol": "OpponentSearchContext",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/promoters/offerMatchmaking.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/promoters/offerMatchmaking.ts",
+  "symbol": "OfferBuildContext",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/promoters/offerMatchmaking.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/scouting/scoutInsights.ts",
+  "symbol": "createStyleInsight",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/scouting.insights.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/scouting/scoutInsights.ts",
+  "symbol": "createAttributeInsights",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/scouting.insights.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/scouting/scoutInsights.ts",
+  "symbol": "createTacticInsight",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/scouting.insights.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/scouting/scoutInsights.ts",
+  "symbol": "createTraitInsights",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/scouting.insights.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/simulate/initialization.ts",
+  "symbol": "CROWD_KILL_BONUS",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/stable/stableReputation.ts",
+  "symbol": "StableReputation",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/engine/stable/stableReputation.ts",
+  "symbol": "getTopFameWarriors",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/stableReputation.helpers.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/stable/stableReputation.ts",
+  "symbol": "computeFameScore",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/stableReputation.helpers.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/storage/electronArchive.ts",
+  "symbol": "ArchiveConflictError",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/storage/ArchiveConflictError.ts",
+   "src/engine/storage/opfsArchive/index.ts",
+   "src/engine/storage/opfsArchive/service.ts",
+   "src/engine/storage/opfsArchive/types.ts"
+  ],
+  "testRefs": [
+   "src/test/_mocks/opfsArchive.ts",
+   "src/test/engine/storage/opfsArchive.test.ts",
+   "src/test/scripts/nodeArchiveService.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/storage/truncation.ts",
+  "symbol": "TRUNCATION_CAPS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/simulation_hardening.slow.test.ts",
+   "src/test/engine/pipeline/truncationCadence.test.ts",
+   "src/test/engine/sim/harnessTruncation.slow.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/trainers/trainerSpecialties.ts",
+  "symbol": "defaultSpecialtyMods",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/trainerSpecialties.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/training/trainingGains/traitTraining.ts",
+  "symbol": "traitTrainingCeiling",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/training/traitTraining.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/training/trainingGains/traitTraining.ts",
+  "symbol": "conflictsWith",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/traits/traitDedup.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/validate/stateInvariants.ts",
+  "symbol": "validateArenaChampions",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/validate/stateInvariants.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/careerUpdate.ts",
+  "symbol": "CareerUpdateInput",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/warrior/careerUpdate.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/careerUpdate.ts",
+  "symbol": "calculateCareerUpdate",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/warrior/careerUpdate.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/careerUpdate.ts",
+  "symbol": "applyCareerUpdate",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/warrior/careerUpdate.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/careerUpdate.ts",
+  "symbol": "updateWarriorAfterBout",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/engine/bout/recordHandler.ts",
+   "src/engine/bout/warriorStateUpdater.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/bout/warriorStateUpdater.test.ts",
+   "src/test/engine/warrior/careerUpdate.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/skillCalc.ts",
+  "symbol": "computeBaseSkills",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/skillCalcEdgeCases.test.ts",
+   "src/test/engine/luckfactor.test.ts",
+   "src/test/engine/skillCalc.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/skillCalc.ts",
+  "symbol": "computeHP",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/data/terrabloodCharts.ts"
+  ],
+  "testRefs": [
+   "src/test/engine/combat/skillCalcEdgeCases.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/skillCalc.ts",
+  "symbol": "computeEndurance",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/skillCalcEdgeCases.test.ts",
+   "src/test/engine/skillCalc.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/skillCalc.ts",
+  "symbol": "computeDamage",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/skillCalcEdgeCases.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/warrior/skillCalc.ts",
+  "symbol": "computeDerivedStats",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/skillCalcEdgeCases.test.ts"
+  ]
+ },
+ {
+  "file": "src/engine/weather/seasonalWeather.ts",
+  "symbol": "SEASONAL_WEATHER",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/types/enumSources.ts"
+  ],
+  "testRefs": [
+   "src/test/_fixtures/weather.ts",
+   "src/test/engine/combat/rainOfFrogs.test.ts",
+   "src/test/engine/combat/wildMagicWeather.test.ts"
+  ]
+ },
+ {
+  "file": "src/hooks/useScoutingStableComparison.ts",
+  "symbol": "stableStats",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/components/ledger/SeasonSynthesis/hooks/useSeasonData.ts",
+   "src/components/scouting/components/AverageAttributesSection.tsx",
+   "src/components/scouting/components/KeyMetricsSection.tsx",
+   "src/pages/ArenaHub.tsx"
+  ],
+  "testRefs": [
+   "src/test/engine/stats/stableStats.test.ts",
+   "src/test/hooks/useStableComparison.test.ts"
+  ]
+ },
+ {
+  "file": "src/lib/a11yPrefs.ts",
+  "symbol": "A11Y_KEY",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/lib/a11yPrefs.test.ts",
+   "src/test/pages/HelpA11y.test.tsx"
+  ]
+ },
+ {
+  "file": "src/lib/AudioManager.ts",
+  "symbol": "SfxType",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/lib/AudioManager.test.ts"
+  ]
+ },
+ {
+  "file": "src/lib/AudioManager.ts",
+  "symbol": "AudioManager",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/components/ResolutionReveal.tsx",
+   "src/components/layout/AppHeader/actions.tsx",
+   "src/engine/narrative/combatNarrators.ts",
+   "src/engine/narrative/narrativePostBout.ts"
+  ],
+  "testRefs": [
+   "src/test/_setup/setup.dom.ts",
+   "src/test/components/ResolutionReveal.selector.test.tsx",
+   "src/test/components/layout/HeaderActions.test.tsx"
+  ]
+ },
+ {
+  "file": "src/lib/bibleIndex.ts",
+  "symbol": "BIBLE_DOCS",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/lib/bibleIndex.test.ts"
+  ]
+ },
+ {
+  "file": "src/pages/bookmarks/groupBookmarks.ts",
+  "symbol": "BookmarkRow",
+  "cls": "zero-ref",
+  "prodRefs": [],
+  "testRefs": []
+ },
+ {
+  "file": "src/pages/StartGame.tsx",
+  "symbol": "default",
+  "cls": "prod-referenced",
+  "prodRefs": [
+   "src/App.tsx",
+   "src/components/AppShell.tsx",
+   "src/components/BoutViewer.tsx",
+   "src/components/EquipmentLoadout.tsx"
+  ],
+  "testRefs": [
+   "src/test/_fixtures/aiTestState.ts",
+   "src/test/_fixtures/bidRoster.ts",
+   "src/test/_fixtures/factories.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/economySchemas.ts",
+  "symbol": "AIStrategySchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/_fixtures/factories.test.ts",
+   "src/test/schemas/crownMemorySchema.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/economySchemas.ts",
+  "symbol": "AIEventSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/_fixtures/factories.test.ts",
+   "src/test/engine/ai/agentEvents.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/economySchemas.ts",
+  "symbol": "AIAgentMemorySchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/_fixtures/factories.test.ts",
+   "src/test/schemas/aiMemorySchema.test.ts",
+   "src/test/schemas/crownMemorySchema.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/warriorSchemas.ts",
+  "symbol": "AttributesSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/schemas/schemaCharacterization.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/warriorSchemas.ts",
+  "symbol": "BaseSkillsSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/schemas/schemaCharacterization.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/warriorSchemas.ts",
+  "symbol": "InjuryDataSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/schemas/schemaCharacterization.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/warriorSchemas.ts",
+  "symbol": "PlanConditionSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/combat/conditionEngine.streak.test.ts"
+  ]
+ },
+ {
+  "file": "src/schemas/warriorSchemas.ts",
+  "symbol": "FightPlanSchema",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/engine/ai/plan/phaseShift.test.ts",
+   "src/test/engine/combat/decoyAxes.test.ts"
+  ]
+ },
+ {
+  "file": "src/state/slices/bookmarksSlice.ts",
+  "symbol": "bookmarkKeySet",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/state/slices/bookmarksSlice.test.ts"
+  ]
+ },
+ {
+  "file": "src/utils/math.ts",
+  "symbol": "clamp01",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/utils/math.test.ts"
+  ]
+ },
+ {
+  "file": "src/utils/math.ts",
+  "symbol": "lerp",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/utils/math.test.ts"
+  ]
+ },
+ {
+  "file": "src/utils/math.ts",
+  "symbol": "mapRange",
+  "cls": "test-only",
+  "prodRefs": [],
+  "testRefs": [
+   "src/test/utils/math.test.ts"
+  ]
+ }
+]

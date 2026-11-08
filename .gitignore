@@ -69,9 +69,9 @@ electron/main.js
 # Electron build output
 /out/
 
-# Scan artifacts — regenerated; orphan-report.md is committed for PO triage
-scripts/out/*
-!scripts/out/orphan-report.md
+# Scan artifacts are tracked — except multi-MB simulation save dumps
+# (save-1000w/150w snapshots, ~110MB) which stay local.
+scripts/out/save-*.json
 
 # Script-generated archives (daily_oracle bout transcripts)
 archives/

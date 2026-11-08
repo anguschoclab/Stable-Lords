@@ -1,0 +1,55 @@
+=== src/engine/combat/resolution/resolution.ts | src/test/engine/combat/offenseDefense.test.ts  (23L, 2 blk)
+    154:     fD: fD,
+    155:     aGoesFirst: aGoesFirst,
+    156:     OE_A: s.OE_A,
+    157:     AL_A: s.AL_A,
+    158:     OE_D: s.OE_D,
+    159:     AL_D: s.AL_D,
+    160:     fatA: s.fatA,
+    161:     fatD: s.fatD,
+    162:     offModsA: s.offModsA,
+    163:     offModsD: s.offModsD,
+    164:     defModsA: s.defModsA,
+    165:     defModsD: s.defModsD,
+
+=== src/test/schemas/schemaCharacterization.test.ts | src/types/enumSources.ts  (16L, 2 blk)
+    109:       const types = [
+    110:         'INITIATIVE',
+    111:         'ATTACK',
+    112:         'DEFENSE',
+    113:         'HIT',
+    114:         'CONTEST',
+    115:         'ENDURANCE',
+    116:         'FATIGUE',
+    117:         'STATE_CHANGE',
+    118:         'BOUT_END',
+    119:         'PASSIVE',
+    120:         'INSIGHT',
+
+=== src/engine/narrative/index.ts | src/test/engine/narrative/combatNarrators.test.ts  (14L, 2 blk)
+    14: export {
+    15:   narrateAttack,
+    16:   narratePassive,
+    17:   narrateParry,
+    18:   narrateDodge,
+    19:   narrateCounterstrike,
+    20:   narrateHit,
+    21:   narrateParryBreak,
+    22:   narrateInitiative,
+    23:   narrateKnockdown,
+    24:   narrateRecovery,
+    25:   getEpithet,
+
+=== src/engine/combat/resolution/resolution.ts | src/test/engine/combat/enduranceCosts.test.ts  (12L, 2 blk)
+    212:   const curAttAL = aGoesFirst ? s.AL_A : s.AL_D;
+    213:   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
+    214:   const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
+    215: 
+    216:   applyEnduranceCosts({
+    217:     events: events,
+    218:     ctx: ctx,
+    219:     fA: fA,
+    220:     fD: fD,
+    221:     aGoesFirst: aGoesFirst,
+    222:     curAttOE: curAttOE,
+    223:     curAttAL: curAttAL,

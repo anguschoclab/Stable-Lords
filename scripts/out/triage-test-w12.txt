@@ -1,0 +1,251 @@
+=== src/test/_fixtures/weather.ts | src/test/schemas/enumSourcesSync.test.ts  (24L, 2 blk)
+    27:   'Ashfall',
+    28:   'Acid Rain',
+    29:   'Mana Surge',
+    30:   'Rainbow',
+    31:   'Scorching Wind',
+    32:   'Wild Magic',
+    33:   'Spooky Night',
+    34:   'Meteor Shower',
+    35:   'Solar Flare',
+    36:   'Abyssal Gloom',
+    37:   'Cursed Miasma',
+    38:   'Hailstorm',
+
+=== src/test/engine/combat/resolutionDeterminism.test.ts | src/test/engine/narrative/narrationDeterminism.test.ts  (23.5L, 3 blk)
+    39:           rng: undefined,
+    40:         });
+    41: 
+    42:         const run1 = simulateFight({
+    43:           planA: defaultPlanForWarrior(A),
+    44:           planD: defaultPlanForWarrior(D),
+    45:           warriorA: A,
+    46:           warriorD: D,
+    47:           providedRng: seed,
+    48:         });
+    49:         const run2 = simulateFight({
+    50:           planA: defaultPlanForWarrior(A),
+
+=== src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts | src/test/engine/ai/workers/competitionWorker/venueCounter.test.ts  (19L, 3 blk)
+    195:     });
+    196:     expect(
+    197:       evaluateBoutOffer({
+    198:         offer: offer,
+    199:         rival: rival,
+    200:         warrior: warrior,
+    201:         currentWeek: 5,
+    202:         weather: 'Clear',
+    203:         opponent: opponent,
+    204:         state: state,
+    205:       })
+    206:     ).toBe('Accepted');
+
+=== src/test/components/dashboard/CouncilBriefingWidget.test.tsx | src/test/pages/Advisor.test.tsx  (14L, 2 blk)
+    4: import { CouncilBriefingWidget } from '@/pages/ControlCenter/components/CouncilBriefingWidget';
+    5: import { useGameStore } from '@/state/useGameStore';
+    6: import { createFreshState } from '@/engine/factories/gameStateFactory';
+    7: import { makeWarrior } from '@/engine/factories/warriorFactory';
+    8: import { FightingStyle } from '@/types/shared.types';
+    9: import type { GameState } from '@/types/state.types';
+    10: import '@/test/_setup/setup';
+    11: 
+    12: vi.mock('@tanstack/react-router', () => ({
+    13:   Link: ({ to, children, className }: any) => (
+    14:     <a href={to} className={className}>
+    15:       {children}
+
+=== src/test/_fixtures/bidRoster.ts | src/test/engine/pipeline/passes/RivalStrategyPass.slow.test.ts  (13L, 2 blk)
+    27:       stableName: 'Stable',
+    28:       fame: 100,
+    29:       renown: 50,
+    30:       titles: 0,
+    31:       personality: 'Pragmatic',
+    32:     },
+    33:     roster: [],
+    34:     treasury: 1000,
+    35:     fame: 100,
+    36:     ledger: [],
+    37:     trainingAssignments: [],
+    38:     strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },
+
+=== src/test/components/awards/Awards.test.tsx | src/test/components/eventLog/EventLog.test.tsx  (13L, 2 blk)
+    21:   },
+    22:   {
+    23:     id: 'f2' as never,
+    24:     title: 'Carol vs Dave',
+    25:     winner: 'D',
+    26:     by: 'Kill',
+    27:     week: 2,
+    28:     warriorIdA: 'w3' as never,
+    29:     warriorIdD: 'w4' as never,
+    30:     styleA: 'Striking Attack',
+    31:     styleD: 'Evasion',
+    32:     createdAt: '2024-01-02',
+
+=== src/test/engine/ai/memory/intelDossier.observedTells.test.ts | src/test/engine/ai/memory/intelDossier.test.ts  (13L, 2 blk)
+    95:     const self = makeRival({ id: 'self-1' as StableId, roster: [mine] });
+    96:     const opp = makeRival({
+    97:       id: 'opp-1' as StableId,
+    98:       roster: [makeWarrior({ id: 'ow1' as WarriorId })],
+    99:     });
+    100:     const state = makeGameState({
+    101:       rivals: [self, opp],
+    102:       absoluteWeek: 5,
+    103:       arenaHistory: [
+    104:         makeFightSummary({
+    105:           warriorIdA: 'rw1' as WarriorId,
+    106:           warriorIdD: 'ow1' as WarriorId,
+
+=== src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts | src/test/engine/ai/workers/crownWorker.dominance.test.ts  (13L, 2 blk)
+    25: /** Rankings where the player's warrior sits #1 of ten — 'Dominant' threat. */
+    26: function dominantRankings(playerWarriorId: string): Record<WarriorId, RankingEntry> {
+    27:   const entries: Record<WarriorId, RankingEntry> = {
+    28:     [playerWarriorId as WarriorId]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+    29:   };
+    30:   for (let i = 2; i <= 10; i++) {
+    31:     entries[`dummy-${i}` as WarriorId] = {
+    32:       overallRank: i,
+    33:       classRank: i,
+    34:       compositeScore: 100 - i,
+    35:     };
+    36:   }
+
+=== src/test/components/dashboard/BriefingTab.test.tsx | src/test/components/dashboard/GazetteTab.test.tsx  (12L, 2 blk)
+    28: describe('BriefingTab', () => {
+    29:   beforeEach(() => {
+    30:     mockStateRef.current = {
+    31:       roster: [
+    32:         { id: 'w1', name: 'Brutus' },
+    33:         { id: 'w2', name: 'Cassius' },
+    34:       ],
+    35:       graveyard: [],
+    36:       retired: [],
+    37:       rivals: [{ owner: { stableName: 'Wolf Pack' }, roster: [] }],
+    38:       player: { stableName: "Dragon's Hearth" },
+    39:     };
+
+=== src/test/components/dashboard/BriefingTab.test.tsx | src/test/components/gazette/GazetteArticle.test.tsx  (12L, 2 blk)
+    28: describe('BriefingTab', () => {
+    29:   beforeEach(() => {
+    30:     mockStateRef.current = {
+    31:       roster: [
+    32:         { id: 'w1', name: 'Brutus' },
+    33:         { id: 'w2', name: 'Cassius' },
+    34:       ],
+    35:       graveyard: [],
+    36:       retired: [],
+    37:       rivals: [{ owner: { stableName: 'Wolf Pack' }, roster: [] }],
+    38:       player: { stableName: "Dragon's Hearth" },
+    39:     };
+
+=== src/test/components/dashboard/GazetteTab.test.tsx | src/test/components/gazette/GazetteArticle.test.tsx  (12L, 2 blk)
+    30: describe('GazetteTab', () => {
+    31:   beforeEach(() => {
+    32:     mockStateRef.current = {
+    33:       roster: [
+    34:         { id: 'w1', name: 'Brutus' },
+    35:         { id: 'w2', name: 'Cassius' },
+    36:       ],
+    37:       graveyard: [],
+    38:       retired: [],
+    39:       rivals: [{ owner: { stableName: 'Wolf Pack' }, roster: [] }],
+    40:       player: { stableName: "Dragon's Hearth" },
+    41:     };
+
+=== src/test/engine/bloodMoon.test.ts | src/test/engine/pipeline/seasonalWeather.test.ts  (12L, 2 blk)
+    5: 
+    6: describe('Blood Moon Feature', () => {
+    7:   it('should return a 0.9 multiplier for Blood Moon stamina drain', () => {
+    8:     expect(getWeatherEffect('Blood Moon').staminaMult).toBe(0.9);
+    9:   });
+    10: 
+    11:   it('should roll Blood Moon weather when rng yields high enough value', () => {
+    12:     const rng = new SeededRNG(123);
+    13:     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.41);
+    14:     const weather = rollWeather(rng, 'Summer');
+    15:     expect(weather).toBe('Blood Moon');
+    16:     mock.mockRestore();
+
+=== src/test/engine/bloodRain.test.ts | src/test/engine/pipeline/seasonalWeather.test.ts  (12L, 2 blk)
+    5: 
+    6: describe('Blood Rain Feature', () => {
+    7:   it('should return a 1.1 multiplier for Blood Rain stamina drain', () => {
+    8:     expect(getWeatherEffect('Blood Rain').staminaMult).toBe(1.1);
+    9:   });
+    10: 
+    11:   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
+    12:     const rng = new SeededRNG(123);
+    13:     const mock = vi.spyOn(rng, 'next').mockReturnValue(0.866);
+    14:     const weather = rollWeather(rng, 'Spring');
+    15:     expect(weather).toBe('Blood Rain');
+    16:     mock.mockRestore();
+
+=== src/test/engine/championship/arenaChampionship.test.ts | src/test/engine/championship/arenaChampionshipPass.test.ts  (12L, 2 blk)
+    45: 
+    46: function warriorAtArena(
+    47:   id: string,
+    48:   arenaId: string,
+    49:   rec: { wins: number; losses: number; kills?: number }
+    50: ) {
+    51:   return makeVenueWarrior(id, {
+    52:     wins: rec.wins,
+    53:     losses: rec.losses,
+    54:     kills: rec.kills ?? 0,
+    55:     arenaId,
+    56:   });
+
+=== src/test/engine/championship/championsTournament.test.ts | src/test/engine/validate/stateInvariants.test.ts  (12L, 2 blk)
+    28: 
+    29: function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
+    30:   return {
+    31:     champion: null,
+    32:     status: 'active',
+    33:     history: [],
+    34:     refusals: 0,
+    35:     deferrals: 0,
+    36:     noContenderStreak: 0,
+    37:     declinedContenders: {},
+    38:     ...partial,
+    39:   };
+
+=== src/test/engine/championship/championsTournament.test.ts | src/test/pages/ArenaCircuit.test.tsx  (12L, 2 blk)
+    28: 
+    29: function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
+    30:   return {
+    31:     champion: null,
+    32:     status: 'active',
+    33:     history: [],
+    34:     refusals: 0,
+    35:     deferrals: 0,
+    36:     noContenderStreak: 0,
+    37:     declinedContenders: {},
+    38:     ...partial,
+    39:   };
+
+=== src/test/engine/validate/stateInvariants.test.ts | src/test/pages/ArenaCircuit.test.tsx  (12L, 2 blk)
+    13: 
+    14: function title(partial: Partial<ArenaTitle> = {}): ArenaTitle {
+    15:   return {
+    16:     champion: null,
+    17:     status: 'active',
+    18:     history: [],
+    19:     refusals: 0,
+    20:     deferrals: 0,
+    21:     noContenderStreak: 0,
+    22:     declinedContenders: {},
+    23:     ...partial,
+    24:   };
+
+=== src/test/engine/combat/aiIntentTelemetry.test.ts | src/test/engine/narrative/narrationDeterminism.test.ts  (12L, 2 blk)
+    18:     style: FightingStyle.LungingAttack,
+    19:     attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+    20:     overrides: undefined,
+    21:     rng: new SeededRNG(seed),
+    22:   });
+    23:   const D = makeWarrior({
+    24:     id: undefined,
+    25:     name: 'D',
+    26:     style: FightingStyle.TotalParry,
+    27:     attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+    28:     overrides: undefined,
+    29:     rng: new SeededRNG(seed + 100),

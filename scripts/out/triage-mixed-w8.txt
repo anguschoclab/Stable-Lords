@@ -1,0 +1,377 @@
+=== src/test/schemas/schemaCharacterization.test.ts | src/types/enumSources.ts  (24L, 4 blk)
+    109:       const types = [
+    110:         'INITIATIVE',
+    111:         'ATTACK',
+    112:         'DEFENSE',
+    113:         'HIT',
+    114:         'CONTEST',
+    115:         'ENDURANCE',
+    116:         'FATIGUE',
+    117:         'STATE_CHANGE',
+    118:         'BOUT_END',
+    119:         'PASSIVE',
+    120:         'INSIGHT',
+
+=== src/engine/combat/resolution/resolution.ts | src/test/engine/combat/offenseDefense.test.ts  (23L, 2 blk)
+    154:     fD: fD,
+    155:     aGoesFirst: aGoesFirst,
+    156:     OE_A: s.OE_A,
+    157:     AL_A: s.AL_A,
+    158:     OE_D: s.OE_D,
+    159:     AL_D: s.AL_D,
+    160:     fatA: s.fatA,
+    161:     fatD: s.fatD,
+    162:     offModsA: s.offModsA,
+    163:     offModsD: s.offModsD,
+    164:     defModsA: s.defModsA,
+    165:     defModsD: s.defModsD,
+
+=== src/engine/factories/gameStateFactory.ts | src/test/engine/core/warriorCollection.test.ts  (21L, 4 blk)
+    61:     killEvents: [],
+    62:     arenaHistory: [],
+    63:     newsletter: [],
+    64:     gazettes: [],
+    65:     hallOfFame: [],
+    66:     crowdMood: 'Calm',
+    67:     tournaments: [],
+    68:     trainers: [],
+    69:     hiringPool: [],
+    70:     trainingAssignments: [],
+    71:     seasonalGrowth: [],
+    72:     rivals: [],
+
+=== src/engine/traits/registry.ts | src/test/engine/combat/traitBalance.slow.test.ts  (21L, 4 blk)
+    70:   'gutter_rat',
+    71:   'quick',
+    72:   'patient',
+    73:   'berserker',
+    74:   'stalwart',
+    75:   'heavy_handed',
+    76:   'disciplined',
+    77:   'ironlung',
+    78:   'bloodthirsty',
+    79:   'agile',
+    80:   'precise',
+    81:   'comboartist',
+
+=== src/engine/factories/gameStateFactory.ts | src/test/engine/training/training.test.ts  (19L, 3 blk)
+    64:     gazettes: [],
+    65:     hallOfFame: [],
+    66:     crowdMood: 'Calm',
+    67:     tournaments: [],
+    68:     trainers: [],
+    69:     hiringPool: [],
+    70:     trainingAssignments: [],
+    71:     seasonalGrowth: [],
+    72:     rivals: [],
+    73:     legacyFounderQueue: [],
+    74:     freeAgents: [],
+    75:     scoutReports: [],
+
+=== src/test/_fixtures/weather.ts | src/types/enumSources.ts  (18L, 4 blk)
+    9: export const SEASONABLE_WEATHER_TYPES: WeatherType[] = [
+    10:   'Clear',
+    11:   'Rainy',
+    12:   'Sweltering',
+    13:   'Breezy',
+    14:   'Overcast',
+    15:   'Blazing Sun',
+    16:   'Gale',
+    17:   'Blood Moon',
+    18:   'Eclipse',
+    19:   'Sandstorm',
+    20:   'Zephyr',
+
+=== src/test/schemas/enumSourcesSync.test.ts | src/types/enumSources.ts  (18L, 4 blk)
+    8:   const weatherTypeSet = new Set<WeatherType>([
+    9:     'Clear',
+    10:     'Rainy',
+    11:     'Sweltering',
+    12:     'Breezy',
+    13:     'Overcast',
+    14:     'Blazing Sun',
+    15:     'Gale',
+    16:     'Blood Moon',
+    17:     'Eclipse of Chaos',
+    18:     'Eclipse',
+    19:     'Sandstorm',
+
+=== src/engine/narrative/index.ts | src/test/engine/narrative/combatNarrators.test.ts  (14L, 2 blk)
+    14: export {
+    15:   narrateAttack,
+    16:   narratePassive,
+    17:   narrateParry,
+    18:   narrateDodge,
+    19:   narrateCounterstrike,
+    20:   narrateHit,
+    21:   narrateParryBreak,
+    22:   narrateInitiative,
+    23:   narrateKnockdown,
+    24:   narrateRecovery,
+    25:   getEpithet,
+
+=== src/engine/combat/resolution/resolution.ts | src/test/engine/combat/enduranceCosts.test.ts  (13L, 2 blk)
+    212:   const curAttAL = aGoesFirst ? s.AL_A : s.AL_D;
+    213:   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
+    214:   const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
+    215: 
+    216:   applyEnduranceCosts({
+    217:     events: events,
+    218:     ctx: ctx,
+    219:     fA: fA,
+    220:     fD: fD,
+    221:     aGoesFirst: aGoesFirst,
+    222:     curAttOE: curAttOE,
+    223:     curAttAL: curAttAL,
+
+=== src/engine/factories/warriorDefaults.ts | src/test/engine/strategyValidator.test.ts  (12L, 3 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/data/equipment/weaponStyles.ts | src/test/data/equipment/weaponStyles.test.ts  (11L, 2 blk)
+    21: export const ALL_STYLES: FightingStyle[] = [
+    22:   S.AimedBlow,
+    23:   S.BashingAttack,
+    24:   S.LungingAttack,
+    25:   S.ParryLunge,
+    26:   S.ParryRiposte,
+    27:   S.ParryStrike,
+    28:   S.SlashingAttack,
+    29:   S.StrikingAttack,
+    30:   S.TotalParry,
+    31:   S.WallOfSteel,
+    32: ];
+
+=== src/data/equipment/weapons/items.ts | src/test/data/equipment/weaponStyles.test.ts  (9L, 2 blk)
+    3: import {
+    4:   without,
+    5:   FENCING_PREFERRED_STYLES,
+    6:   BASHING_STRIKE_STYLES,
+    7:   CRUSHING_PREFERRED_STYLES,
+    8:   FENCING_RESTRICTED_STYLES,
+    9:   SPEAR_RESTRICTED_STYLES,
+    10:   HEAVY_RESTRICTED_STYLES,
+    11:   CRUSHING_RESTRICTED_STYLES,
+    12:   BASHING_RESTRICTED_STYLES,
+    13: } from '../weaponStyles';
+    14: 
+
+=== src/test/components/warrior/condition/ConditionTriggerSection.test.tsx | src/types/enumSources.ts  (9L, 2 blk)
+    29:     for (const type of [
+    30:       'HP_BELOW',
+    31:       'HP_ABOVE',
+    32:       'MOMENTUM_LEAD',
+    33:       'MOMENTUM_DEFICIT',
+    34:       'PHASE_IS',
+    35:       'ENDURANCE_BELOW',
+    36:       'OPPONENT_HP_BELOW',
+    37:       'OPPONENT_ENDURANCE_BELOW',
+    38:       'OPPONENT_MOMENTUM_LEAD',
+    39:       'PSYCH_IS',
+    40:     ]) {
+
+=== src/components/layout/MobileNav.tsx | src/test/_mocks/routerLink.tsx  (8L, 2 blk)
+    36: const SheetCloseLink = ({
+    37:   to,
+    38:   children,
+    39:   className,
+    40: }: {
+    41:   to: string;
+    42:   children: React.ReactNode;
+    43:   className?: string;
+    44: }) => (
+    45:   <SheetClose asChild>
+    46:     <Link to={to} className={className}>
+    47:       {children}
+
+=== src/components/layout/MobileNav.tsx | src/test/components/layout/LeftNav.test.tsx  (8L, 2 blk)
+    36: const SheetCloseLink = ({
+    37:   to,
+    38:   children,
+    39:   className,
+    40: }: {
+    41:   to: string;
+    42:   children: React.ReactNode;
+    43:   className?: string;
+    44: }) => (
+    45:   <SheetClose asChild>
+    46:     <Link to={to} className={className}>
+    47:       {children}
+
+=== src/components/world/WarriorLeaderboardFilters.tsx | src/test/components/FilterToggleButton.test.tsx  (8L, 2 blk)
+    12:   label: ReactNode;
+    13:   ariaLabel: string;
+    14: }
+    15: 
+    16: function FilterToggleButton({ active, onClick, label, ariaLabel }: FilterToggleButtonProps) {
+    17:   return (
+    18:     <button
+    19:       onClick={onClick}
+    20:       aria-label={ariaLabel}
+    21:       aria-pressed={active}
+    22:       className={cn(
+    23:         'text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none',
+
+=== src/data/equipment/weapons.ts | src/test/data/equipment/weaponStyles.test.ts  (8L, 2 blk)
+    2: export {
+    3:   FENCING_PREFERRED_STYLES,
+    4:   BASHING_STRIKE_STYLES,
+    5:   CRUSHING_PREFERRED_STYLES,
+    6:   FENCING_RESTRICTED_STYLES,
+    7:   SPEAR_RESTRICTED_STYLES,
+    8:   HEAVY_RESTRICTED_STYLES,
+    9:   CRUSHING_RESTRICTED_STYLES,
+    10:   BASHING_RESTRICTED_STYLES,
+    11: } from './weaponStyles';
+    12: 
+    13: /**
+
+=== src/engine/factories/warriorDefaults.ts | src/test/_fixtures/statWarrior.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/components/PlanBuilder.test.tsx  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/engine/aging/veteranCompensation.test.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/engine/bout/boutProcessorService.test.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/engine/economy/idleStipend.test.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/megaplan/v12Dedup.guard.test.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/factories/warriorDefaults.ts | src/test/state/slices/rosterSlice.test.ts  (8L, 2 blk)
+    13:   return {
+    14:     fame: 0,
+    15:     popularity: 0,
+    16:     titles: [],
+    17:     injuries: [],
+    18:     flair: [],
+    19:     career: { wins: 0, losses: 0, kills: 0 },
+    20:     champion: false,
+    21:     status: 'Active',
+    22:   };
+    23: }
+    24: 
+
+=== src/engine/traits/mods.ts | src/test/engine/traitMods.test.ts  (8L, 2 blk)
+    61:   const acc = {
+    62:     attMod: 0,
+    63:     parMod: 0,
+    64:     defMod: 0,
+    65:     iniMod: 0,
+    66:     ripMod: 0,
+    67:     decMod: 0,
+    68:     dmgBonus: 0,
+    69:     enduranceMult: 1.0,
+    70:   };
+    71:   if (!warrior?.traits) return acc;
+    72:   for (const id of warrior.traits) {
+
+=== src/engine/weather/seasonalWeather.ts | src/test/engine/pipeline/weatherSeasonExclusivity.test.ts  (8L, 2 blk)
+    11: const SHARED_WEATHER: WeatherType[] = [
+    12:   'Clear',
+    13:   'Overcast',
+    14:   'Blood Moon',
+    15:   'Eclipse',
+    16:   'Mana Surge',
+    17:   'Chaos Storm',
+    18:   'Chaos Squall',
+    19: ];
+    20: 
+    21: /**
+    22:  * Season-exclusive weather pools.  Every WeatherType must appear in exactly one
+
+=== src/test/megaplan/typeSurface.test.ts | src/types/state.types.ts  (8L, 2 blk)
+    19:   DeathEvent,
+    20:   WeatherType,
+    21:   Season,
+    22:   CrowdMoodType,
+    23:   NewsletterItem,
+    24:   TrainerTier,
+    25:   TrainerFocus,
+    26:   Trainer,
+    27:   ScoutQuality,
+    28:   CrestData,
+    29:   FightSummary,
+    30:   FightOutcomeBy,

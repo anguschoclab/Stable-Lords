@@ -1,0 +1,90 @@
+{
+  "skills": [
+    {
+      "skill": "ai-agent",
+      "refs": 8,
+      "unresolved": []
+    },
+    {
+      "skill": "combat-balance",
+      "refs": 18,
+      "unresolved": []
+    },
+    {
+      "skill": "combat-sim",
+      "refs": 24,
+      "unresolved": []
+    },
+    {
+      "skill": "determinism-debug",
+      "refs": 8,
+      "unresolved": []
+    },
+    {
+      "skill": "economy-balance",
+      "refs": 5,
+      "unresolved": []
+    },
+    {
+      "skill": "guard-ratchet",
+      "refs": 5,
+      "unresolved": []
+    },
+    {
+      "skill": "honest-assessment",
+      "refs": 0,
+      "unresolved": []
+    },
+    {
+      "skill": "integration-autosim",
+      "refs": 9,
+      "unresolved": []
+    },
+    {
+      "skill": "narrative-validate",
+      "refs": 8,
+      "unresolved": []
+    },
+    {
+      "skill": "offseason-event",
+      "refs": 9,
+      "unresolved": []
+    },
+    {
+      "skill": "pipeline-seasonal",
+      "refs": 10,
+      "unresolved": []
+    },
+    {
+      "skill": "recruitment-scout",
+      "refs": 4,
+      "unresolved": []
+    },
+    {
+      "skill": "safe-codemod",
+      "refs": 0,
+      "unresolved": []
+    },
+    {
+      "skill": "tournament-bracket",
+      "refs": 17,
+      "unresolved": []
+    },
+    {
+      "skill": "training-coach",
+      "refs": 8,
+      "unresolved": []
+    },
+    {
+      "skill": "ui-honesty-audit",
+      "refs": 1,
+      "unresolved": []
+    },
+    {
+      "skill": "week-pipeline",
+      "refs": 9,
+      "unresolved": []
+    }
+  ],
+  "missing": []
+}

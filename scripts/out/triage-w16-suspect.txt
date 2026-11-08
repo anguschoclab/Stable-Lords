@@ -1,0 +1,3261 @@
+=== MISC [SRC ~688L] src/data/names/archetypeNames.ts | src/data/names/commonCorpus.ts
+ */
+export const NAMES_BRUTAL = [
+  'KRAGOS',
+  'GORLAK',
+  'BRUTAG',
+  'THUNDRAK',
+  'GARVOK',
+  'IRONJAW',
+  'BOLVERK',
+  'SKARN',
+  'GROTHAK',
+  'WULFGAR',
+
+=== MISC [SRC ~320L] src/engine/traits/defs/exceptional.ts | src/engine/traits/defs/notable.ts
+    effect: { attModLowHp: 1, defModLowHp: 1 },
+    tier: 'Exceptional',
+    sign: 'positive',
+    weight: 0.4,
+  },
+  gutters_edge: {
+    id: 'gutters_edge',
+    name: "Gutter's Edge",
+    description:
+      'A desperate, wild fighting style born from alleyway brawls. Bonus damage but lowered early defense.',
+    effect: { dmgBonus: 1, defModEarly: -1 },
+    tier: 'Exceptional',
+
+=== MISC [SRC ~188L] src/data/names/archetypeNames.ts | src/data/names/stableNames.ts
+ */
+export const NAMES_BRUTAL = [
+  'KRAGOS',
+  'GORLAK',
+  'BRUTAG',
+  'THUNDRAK',
+  'GARVOK',
+  'IRONJAW',
+  'BOLVERK',
+  'SKARN',
+  'GROTHAK',
+  'WULFGAR',
+
+=== MISC [SRC ~161L] src/data/names/archetypeNames.ts | src/data/names/ownerNames.ts
+ */
+export const NAMES_BRUTAL = [
+  'KRAGOS',
+  'GORLAK',
+  'BRUTAG',
+  'THUNDRAK',
+  'GARVOK',
+  'IRONJAW',
+  'BOLVERK',
+  'SKARN',
+  'GROTHAK',
+  'WULFGAR',
+
+=== MISC [SRC ~121L] src/data/names/archetypeNames.ts | src/types/enumSources.ts
+ */
+export const NAMES_BRUTAL = [
+  'KRAGOS',
+  'GORLAK',
+  'BRUTAG',
+  'THUNDRAK',
+  'GARVOK',
+  'IRONJAW',
+  'BOLVERK',
+  'SKARN',
+  'GROTHAK',
+  'WULFGAR',
+
+=== MISC [MIX ~112L] src/engine/traits/registry.ts | src/test/config/terminology.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [MIX ~110L] src/engine/traits/registry.ts | src/test/engine/pipeline/seasonalChaosWeaver.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [SRC ~106L] src/data/templates/establishedTemplates.ts | src/data/templates/legendaryTemplates.ts
+    attrBias: { SP: 2, DF: 2, WL: 2, WT: 1 },
+    warriorNames: [
+      'BLAZE',
+      'TEMPEST',
+      'PHOENIX',
+      'FLASH',
+      'GLORY',
+      'DAZZLE',
+      'REGAL',
+      'CROWN',
+      'LION',
+      'PRIDE',
+
+=== MISC [MIX ~99L] src/engine/traits/registry.ts | src/test/data/narrativeContent.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [MIX ~98L] src/engine/traits/registry.ts | src/test/megaplan/v11Restructure.guard.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [MIX ~98L] src/engine/traits/registry.ts | src/test/data/narrativeContent.split.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [MIX ~98L] src/engine/traits/registry.ts | src/test/schemas/schemaCharacterization.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== MISC [MIX ~97L] src/engine/traits/registry.ts | src/test/engine/traits/traitDedup.test.ts
+ */
+const LEGACY_TRAIT_ORDER = [
+  'orphan_street_rat',
+  'orphan_pit_fighter',
+  'orphan_survivor',
+  'iron_orphan',
+  'orphan_resilience',
+  'hollow_gaze',
+  'scab_survivor',
+  'orphanage_survivor',
+  'gutter_shadow',
+  'guttersnipe_cunning',
+
+=== HARNESS [TEST ~85L] src/test/data/arenas.test.ts | src/test/megaplan/duplication.guard.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== MISC [SRC ~85L] src/routeTree.gen.ts | src/types/shared/weather.ts
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/bookmarks'
+    | '/help'
+    | '/import-export'
+    | '/mods'
+    | '/welcome'
+    | '/lore/hall-of-fights'
+    | '/stable/advisor'
+    | '/stable/arena'
+    | '/stable/bouts'
+
+=== MISC [SRC ~84L] src/engine/pipeline/offseasonEvents/types.ts | src/routeTree.gen.ts
+  title: string;
+  effectType:
+    | 'chaos_rift'
+    | 'unexplained_monolith'
+    | 'chaotic_weather_experiment'
+    | 'fame_boost'
+    | 'winter_chill'
+    | 'merchant_blessing'
+    | 'epiphany'
+    | 'tavern_brawl'
+    | 'bards_song'
+    | 'plague_outbreak'
+
+=== MISC [SRC ~75L] src/data/templates/legendaryTemplates.ts | src/data/templates/minorTemplates.ts
+    attrBias: { ST: 2, CN: 2, WT: 2, WL: 2, SP: 1, DF: 1 },
+    warriorNames: [
+      'IMPERATOR',
+      'DOMINUS',
+      'PRAETOR',
+      'CENTURION',
+      'MAXIMUS',
+      'AURELIUS',
+      'LEGATUS',
+      'TRIBUNE',
+      'CONSUL',
+      'DECANUS',
+
+=== MISC [SRC ~74L] src/components/ui/dialog.tsx | src/components/ui/sheet.tsx
+      )}
+      {...props}
+    >
+      {children}
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-none opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 motion-reduce:transition-none">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+    </DialogPrimitive.Content>
+  </DialogPortal>
+));
+DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+=== MISC [SRC ~73L] src/engine/traits/defs/flaws.ts | src/engine/traits/defs/notable.ts
+    effect: { decMod: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  short_winded: {
+    id: 'short_winded',
+    name: 'Short-Winded',
+    description: '×1.08 endurance cost — tires quickly.',
+    effect: { enduranceMult: 1.08 },
+    weight: 0.4,
+    tier: 'Flaw',
+
+=== MISC [SRC ~71L] src/components/ui/alert-dialog.tsx | src/components/ui/sheet.tsx
+ */
+const AlertDialog = AlertDialogPrimitive.Root;
+
+/**
+ * Alert dialog trigger.
+ */
+const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
+
+/**
+ * Alert dialog portal.
+ */
+const AlertDialogPortal = AlertDialogPrimitive.Portal;
+
+=== MISC [SRC ~69L] src/data/templates/legendaryTemplates.ts | src/data/templates/majorTemplates.ts
+      FightingStyle.ParryRiposte,
+      FightingStyle.WallOfSteel,
+      FightingStyle.StrikingAttack,
+      FightingStyle.AimedBlow,
+    ],
+    attrBias: { ST: 2, CN: 2, WT: 2, WL: 2, SP: 1, DF: 1 },
+    warriorNames: [
+      'IMPERATOR',
+      'DOMINUS',
+      'PRAETOR',
+      'CENTURION',
+      'MAXIMUS',
+
+=== HARNESS [MIX ~68L] src/test/data/arenas.test.ts | src/types/enumSources.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== MISC [TEST ~68L] src/test/engine/pipeline/shardInputSize.test.ts | src/test/megaplan/duplication.guard.test.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [MIX ~68L] src/engine/impacts/types.ts | src/test/megaplan/typeSurface.test.ts
+ */
+import type {
+  GameState,
+  LedgerEntry,
+  NewsletterItem,
+  RivalStableData,
+  RankingEntry,
+  Season,
+  WeatherType,
+  BoutOffer,
+  Promoter,
+  Trainer,
+
+=== MISC [SRC ~67L] src/components/arena/weather/effects/stormEffects.tsx | src/components/arena/weather/effects/windEffects.tsx
+            animationDuration: `${0.4 + cryptoRandom() * 0.3}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** Arcane storm with reality-warping sky and crackling sparks. */
+export function ArcaneStormEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+
+=== MISC [SRC ~66L] src/data/arenas/index.ts | src/engine/warrior/skillCalc.ts
+  LANTERN_HALL_ARENA,
+  WALLED_COURT_ARENA,
+  CLIFFTOP_ARENA,
+  FLOODED_VAULT_ARENA,
+} from './venues/seed';
+import {
+  SUNDERED_COLISEUM,
+  SUNKEN_TEMPLE,
+  CRYSTAL_CAVERN,
+  WHISPERING_GROVE,
+  CHARNEL_PITS,
+  FLESH_GARDENS,
+
+=== RETOBJ [TEST ~64L] src/test/engine/combat/offenseDefense.test.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    ctx,
+    fA,
+    fD,
+    es,
+    events,
+    tactA,
+    tactD,
+    offModsA,
+    offModsD,
+    defModsA,
+    defModsD,
+
+=== MISC [SRC ~62L] src/data/arenas/venues/seed.ts | src/data/arenas/venues/variants.ts
+  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.1 },
+};
+
+/**
+ * Tiny, brutal ring with uneven stones. Penalizes lunging and favors close-quarters brawling.
+ */
+export const BRASS_RING: ArenaConfig = {
+  id: 'brass_ring',
+  name: 'The Brass Ring',
+  tags: ['outdoor', 'cramped', 'uneven'],
+  tier: 1,
+  size: 'cramped',
+
+=== MISC [SRC ~62L] src/engine/pipeline/offseasonEvents/types.ts | src/types/shared/weather.ts
+  effectType:
+    | 'chaos_rift'
+    | 'unexplained_monolith'
+    | 'chaotic_weather_experiment'
+    | 'fame_boost'
+    | 'winter_chill'
+    | 'merchant_blessing'
+    | 'epiphany'
+    | 'tavern_brawl'
+    | 'bards_song'
+    | 'plague_outbreak'
+    | 'black_market_raid'
+
+=== MISC [SRC ~61L] src/components/BoutViewer.tsx | src/routeTree.gen.ts
+  BoutViewerProps,
+  | 'nameA'
+  | 'nameD'
+  | 'styleA'
+  | 'styleD'
+  | 'log'
+  | 'winner'
+  | 'by'
+  | 'announcement'
+  | 'arenaTier'
+  | 'arenaId'
+  | 'analysis'
+
+=== MISC [SRC ~61L] src/engine/traits/defs/common.ts | src/engine/traits/defs/exceptional.ts
+    effect: { attMod: 1 },
+    tier: 'Common',
+    sign: 'positive',
+    weight: 1,
+  },
+  iron_knuckles: {
+    id: 'iron_knuckles',
+    name: 'Iron Knuckles',
+    description:
+      'Calloused fists from countless street brawls. Bonus to unarmed strikes and disarms.',
+    effect: { attModEarly: 1, ripMod: 1 },
+    tier: 'Common',
+
+=== RETOBJ [MIX ~60L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== RETOBJ [MIX ~60L] src/pages/AdminTools/hooks/useAdminTools.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [MIX ~59L] src/hooks/useScoutingStableComparison.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [MIX ~59L] src/pages/arenaDetail/useArenaDetail.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [MIX ~59L] src/pages/tournaments/useTournamentState.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== HARNESS [TEST ~59L] src/test/data/arenas.test.ts | src/test/schemas/enumSourcesSync.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== RETOBJ [MIX ~59L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/test/megaplan/typeSurface.test.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== MISC [MIX ~53L] src/test/engine/pipeline/shardInputSize.test.ts | src/types/enumSources.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [SRC ~53L] src/engine/combat/resolution/offenseDefense/prepare.ts | src/state/serialization.ts
+): OffenseDefenseCtx {
+  return {
+    ctx: args.ctx,
+    fA: args.fA,
+    fD: args.fD,
+    aGoesFirst: args.aGoesFirst,
+    OE_A: args.OE_A,
+    AL_A: args.AL_A,
+    OE_D: args.OE_D,
+    AL_D: args.AL_D,
+    fatA: args.fatA,
+    fatD: args.fatD,
+
+=== RETOBJ [SRC ~51L] src/engine/combat/resolution/offenseDefense/prepare.ts | src/engine/pipeline/seasonal.ts
+  return {
+    ctx: args.ctx,
+    fA: args.fA,
+    fD: args.fD,
+    aGoesFirst: args.aGoesFirst,
+    OE_A: args.OE_A,
+    AL_A: args.AL_A,
+    OE_D: args.OE_D,
+    AL_D: args.AL_D,
+    fatA: args.fatA,
+    fatD: args.fatD,
+    offModsA: args.offModsA,
+
+=== HARNESS [TEST ~48L] src/test/engine/ai/plan/levers.test.ts | src/test/engine/tacticSuitability.test.ts
+    expect(getAIProtect(FightingStyle.StrikingAttack, 'Aggressive', 'RECOVERY')).toBe('Head');
+  });
+
+  it('returns Head when style is defensive (TotalParry)', () => {
+    expect(getAIProtect(FightingStyle.TotalParry, 'Aggressive')).toBe('Head');
+  });
+
+  it('returns Head when style is defensive (WallOfSteel)', () => {
+    expect(getAIProtect(FightingStyle.WallOfSteel, 'Aggressive')).toBe('Head');
+  });
+
+  it('returns Head when style is defensive (ParryRiposte)', () => {
+
+=== HARNESS [TEST ~47L] src/test/data/arenas.test.ts | src/test/engine/pipeline/seasonalChaosWeaver.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== HARNESS [TEST ~45L] src/test/engine/ai/workers/competitionWorker/desperationGate.test.ts | src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts
+      strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 },
+    });
+    const offer = makeBoutOffer({
+      warriorIds: [warrior.id, killer.id],
+      purse: 400,
+      hype: 120,
+    });
+    expect(
+      evaluateBoutOffer({
+        offer: offer,
+        rival: rival,
+        warrior: warrior,
+
+=== MISC [TEST ~43L] src/test/engine/pipeline/shardInputSize.test.ts | src/test/schemas/enumSourcesSync.test.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [SRC ~42L] src/engine/combat/resolution/resolution.ts | src/state/serialization.ts
+    aGoesFirst: aGoesFirst,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    offModsA: s.offModsA,
+    offModsD: s.offModsD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+    passA: s.passA,
+
+=== RETOBJ [MIX ~42L] src/state/serialization.ts | src/test/engine/combat/offenseDefense.test.ts
+  return {
+    treasury: store.treasury,
+    ledger: store.ledger,
+    roster: store.roster,
+    graveyard: store.graveyard,
+    retired: store.retired,
+    deadWarriorIds: store.deadWarriorIds,
+    killEvents: store.killEvents,
+    recruitPool: store.recruitPool,
+    insightTokens: store.insightTokens,
+    arenaHistory: store.arenaHistory,
+    player: store.player,
+
+=== MISC [SRC ~41L] src/engine/combat/resolution/resolution.ts | src/engine/pipeline/seasonal.ts
+    aGoesFirst: aGoesFirst,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    offModsA: s.offModsA,
+    offModsD: s.offModsD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+    passA: s.passA,
+
+=== MISC [SRC ~40L] src/components/BoutViewer.tsx | src/types/shared/weather.ts
+  BoutViewerProps,
+  | 'nameA'
+  | 'nameD'
+  | 'styleA'
+  | 'styleD'
+  | 'log'
+  | 'winner'
+  | 'by'
+  | 'announcement'
+  | 'arenaTier'
+  | 'arenaId'
+  | 'analysis'
+
+=== MISC [SRC ~37L] src/components/BoutViewer.tsx | src/engine/pipeline/offseasonEvents/types.ts
+  BoutViewerProps,
+  | 'nameA'
+  | 'nameD'
+  | 'styleA'
+  | 'styleD'
+  | 'log'
+  | 'winner'
+  | 'by'
+  | 'announcement'
+  | 'arenaTier'
+  | 'arenaId'
+  | 'analysis'
+
+=== HARNESS [TEST ~37L] src/test/data/arenas.test.ts | src/test/engine/pipeline/shardInputSize.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== MISC [SRC ~36L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/Trainers/hooks/useTrainers.ts
+    doReset,
+    doAdvanceWeek,
+    loadGame,
+    treasury,
+    fame,
+    week,
+    season,
+    roster,
+    player,
+    ftueComplete,
+  } = useGameStore(
+    useShallow((s) => ({
+
+=== MISC [SRC ~36L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/Trainers/hooks/useTrainers.ts
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    treasury,
+    fame,
+    rivals,
+    realmRankings,
+    progression,
+  } = useGameStore(
+    useShallow((s) => ({
+
+=== MISC [SRC ~36L] src/data/arenas/venues/late.ts | src/data/arenas/venues/variants.ts
+  surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.3 },
+};
+
+export const ANCIENT_AQUEDUCT: ArenaConfig = {
+  id: 'ancient_aqueduct',
+  name: 'Ancient Aqueduct',
+  tags: ['water', 'ruins', 'cramped'],
+  tier: 1,
+  size: 'cramped',
+  description: 'Cramped, flooded stone corridors that punish long weapons and footwork.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.15 },
+
+=== HARNESS [TEST ~35L] src/test/data/arenas.test.ts | src/test/data/narrativeContent.split.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== HARNESS [TEST ~35L] src/test/data/arenas.test.ts | src/test/data/narrativeContent.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== MISC [SRC ~35L] src/engine/traits/defs/common.ts | src/engine/traits/defs/flaws.ts
+    effect: { iniModFresh: 1 },
+    weight: 0.8,
+    tier: 'Common',
+    sign: 'positive',
+  },
+  quick: {
+    id: 'quick',
+    name: 'Quick',
+    description: '+1 initiative — naturally fast on the draw.',
+    effect: { iniMod: 1 },
+    weight: 1.0,
+    tier: 'Common',
+
+=== MISC [SRC ~35L] src/engine/traits/defs/notable.ts | src/engine/traits/defs/signature.ts
+    effect: { defModLowHp: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  street_rat_cunning: {
+    id: 'street_rat_cunning',
+    name: 'Street Rat Cunning',
+    description:
+      '+1 initiative while fresh, +1 decisiveness — always ready to run or strike first.',
+    effect: { iniModFresh: 1, decMod: 1 },
+    weight: 0.7,
+
+=== HARNESS [TEST ~35L] src/test/data/arenas.test.ts | src/test/megaplan/v11Restructure.guard.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== HARNESS [TEST ~35L] src/test/data/narrativeContent.test.ts | src/test/engine/pipeline/seasonalChaosWeaver.test.ts
+    walk(narrativeContent, 'root');
+  });
+
+  it('all required top-level keys are present', () => {
+    const requiredKeys = [
+      'ux_metadata',
+      'persona',
+      'strikes',
+      'pbp',
+      'conclusions',
+      'blurbs',
+      'commentary',
+
+=== HARNESS [TEST ~34L] src/test/data/arenas.test.ts | src/test/engine/traits/traitDedup.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== HARNESS [TEST ~34L] src/test/data/arenas.test.ts | src/test/schemas/schemaCharacterization.test.ts
+    expect(getAllArenas().map((a) => a.id)).toEqual([
+      'standard_arena',
+      'mudpit_arena',
+      'bloodsands_arena',
+      'underpit_arena',
+      'highplain_arena',
+      'lantern_hall_arena',
+      'walled_court_arena',
+      'clifftop_arena',
+      'flooded_vault_arena',
+      'sundered_coliseum',
+      'sunken_temple',
+
+=== HARNESS [TEST ~34L] src/test/engine/pipeline/seasonalChaosWeaver.test.ts | src/test/schemas/schemaCharacterization.test.ts
+    expect(typeof runSeasonalPass).toBe('function');
+  });
+
+  it('OffseasonEventNarrative effectType union includes all current handler keys', () => {
+    // Type-level test: if this compiles, the union is correct
+    const validEffectTypes = [
+      'chaos_rift',
+      'fame_boost',
+      'winter_chill',
+      'merchant_blessing',
+      'epiphany',
+      'tavern_brawl',
+
+=== MISC [SRC ~32L] src/components/world/StableRankingsRow.tsx | src/components/world/WarriorLeaderboardRow.tsx
+    </TableCell>
+  );
+}
+
+function KillsCell({ row }: { row: StableRow }) {
+  return (
+    <TableCell className="text-right">
+      <div className="flex items-center justify-end gap-1.5">
+        <span
+          className={cn(
+            'font-mono font-black text-xs',
+            row.kills > 0 ? 'text-destructive' : 'text-muted-foreground/30'
+
+=== MISC [SRC ~32L] src/engine/crest/crestGenerator.ts | src/types/crest.types.ts
+    ],
+    Legendary: [
+      'solid',
+      'fess',
+      'pale',
+      'bend',
+      'chevron',
+      'cross',
+      'saltire',
+      'per-pale',
+      'per-fess',
+      'gyronny',
+
+=== MISC [SRC ~32L] src/components/arena/weather/effects/heatEffects.tsx | src/components/arena/weather/effects/specialEffects.tsx
+            top: `${cryptoRandom() * 100}%`,
+            left: '-20%',
+            animationDelay: `${cryptoRandom() * 2}s`,
+            animationDuration: `${0.7 + cryptoRandom() * 0.8}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** Mirage with heat ripples and shimmering particles. */
+
+=== MISC [SRC ~32L] src/engine/core/telemetry.ts | src/types/crest.types.ts
+ */
+export const TelemetryEvents = {
+  // Timing events
+  ADVANCE_WEEK: 'advance_week',
+  ADVANCE_DAY: 'advance_day',
+  ADVANCE_QUARTER: 'advance_quarter',
+  ADVANCE_MONTH: 'advance_month',
+  ADVANCE_YEAR: 'advance_year',
+  SKIP_TO_MONTH_END: 'skip_to_month_end',
+  SKIP_TO_QUARTER_END: 'skip_to_quarter_end',
+  SKIP_TO_YEAR_END: 'skip_to_year_end',
+  FLUSH_DEFERRED_ARCHIVES: 'flush_deferred_archives',
+
+=== MISC [SRC ~31L] src/components/ui/dialog.tsx | src/components/ui/tabs.tsx
+ */
+const DialogClose = DialogPrimitive.Close;
+
+/**
+ * Dialog overlay.
+ */
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+
+=== RETOBJ [SRC ~31L] src/engine/combat/resolution/offenseDefense/prepare.ts | src/engine/combat/resolution/resolution.ts
+  return {
+    ctx: args.ctx,
+    fA: args.fA,
+    fD: args.fD,
+    aGoesFirst: args.aGoesFirst,
+    OE_A: args.OE_A,
+    AL_A: args.AL_A,
+    OE_D: args.OE_D,
+    AL_D: args.AL_D,
+    fatA: args.fatA,
+    fatD: args.fatD,
+    offModsA: args.offModsA,
+
+=== MISC [SRC ~30L] src/components/arena/weather/effects/specialEffects.tsx | src/components/arena/weather/effects/stormEffects.tsx
+          key={`star-${i}`}
+          className="absolute w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse-slow motion-reduce:animate-none"
+          style={{
+            left: `${cryptoRandom() * 100}%`,
+            top: `${cryptoRandom() * 40}%`,
+            animationDelay: `${cryptoRandom() * 4}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+=== HARNESS [TEST ~30L] src/test/engine/ai/plan/levers.test.ts | src/test/lib/boutUtils.test.ts
+    expect(getAIAggressionBias('Aggressive', 'VENDETTA')).toBe(8);
+  });
+});
+
+describe('levers — getAIOpeningMove', () => {
+  it('returns Aggressive for Aggressive personality', () => {
+    expect(getAIOpeningMove('Aggressive')).toBe('Aggressive');
+  });
+
+  it('returns Aggressive for Showman personality', () => {
+    expect(getAIOpeningMove('Showman')).toBe('Aggressive');
+  });
+
+=== MISC [SRC ~29L] src/components/ui/select.tsx | src/components/ui/sheet.tsx
+  </SelectPrimitive.Item>
+));
+SelectItem.displayName = SelectPrimitive.Item.displayName;
+
+/**
+ * Select separator.
+ */
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator
+
+=== MISC [SRC ~29L] src/schemas/economySchemas.ts | src/schemas/schemaEnums.ts
+ */
+import { z } from 'zod';
+import {
+  FightingStyleSchema,
+  SeasonSchema,
+  TrainerTierSchema,
+  TrainerFocusSchema,
+  TrainerSpecialtySchema,
+  ScoutQualitySchema,
+  PromoterPersonalitySchema,
+  PromoterTierSchema,
+  OwnerPersonalitySchema,
+
+=== HARNESS [TEST ~29L] src/test/engine/combat/mechanics/protectShield.test.ts | src/test/engine/combat/mechanics/weaponArmor.test.ts
+    it('reduces damage by 12% (0.88) for MEDIUM coverage', () => {
+      expect(applyShieldZoneMod(100, 'chest', 'MEDIUM')).toBe(88);
+    });
+
+    it('reduces damage by 15% (0.85) for HIGH coverage', () => {
+      expect(applyShieldZoneMod(100, 'head', 'HIGH')).toBe(85);
+    });
+  });
+
+  // ─── Phase 4: Edge cases & boundary tests ────────────────────────────────────
+
+  describe('applyProtectMod edge cases', () => {
+
+=== MISC [SRC ~28L] src/components/BoutViewer.tsx | src/components/EventLog.tsx
+  logEndRef: React.RefObject<HTMLDivElement | null>;
+}
+
+/** Content area: animated arena or tactical log depending on view mode. */
+function ArenaOrLog(
+  props: Pick<
+    BoutBodyProps,
+    | 'viewMode'
+    | 'nameA'
+    | 'nameD'
+    | 'styleA'
+    | 'styleD'
+
+=== MISC [MIX ~28L] src/data/arenas/index.ts | src/test/data/names/nameValidation.test.ts
+  STANDARD_ARENA,
+  MIST_SHROUDED_RUINS,
+  THE_GALLOWS_TREE,
+  BRASS_RING,
+  NARROW_BRIDGE,
+  MUDPIT_ARENA,
+  BLOODSANDS_ARENA,
+  UNDERPIT_ARENA,
+  HIGHPLAIN_ARENA,
+  LANTERN_HALL_ARENA,
+  WALLED_COURT_ARENA,
+  CLIFFTOP_ARENA,
+
+=== HARNESS [TEST ~28L] src/test/lib/boutUtils.test.ts | src/test/utils/escapeHtml.test.ts
+
+  describe('branch precedence', () => {
+    it('phase takes precedence over all text-based branches', () => {
+      expect(classifyEvent('— Phase: kills')).toBe('phase');
+    });
+
+    it('death takes precedence over ko', () => {
+      expect(classifyEvent('knocked out and killed')).toBe('death');
+    });
+
+    it('death takes precedence over crit text', () => {
+      expect(classifyEvent('a fatal critical strike')).toBe('death');
+
+=== MISC [MIX ~27L] src/data/arenas/index.ts | src/test/schemas/schemaCharacterization.test.ts
+  STANDARD_ARENA,
+  MIST_SHROUDED_RUINS,
+  THE_GALLOWS_TREE,
+  BRASS_RING,
+  NARROW_BRIDGE,
+  MUDPIT_ARENA,
+  BLOODSANDS_ARENA,
+  UNDERPIT_ARENA,
+  HIGHPLAIN_ARENA,
+  LANTERN_HALL_ARENA,
+  WALLED_COURT_ARENA,
+  CLIFFTOP_ARENA,
+
+=== HARNESS [TEST ~27L] src/test/engine/combat/prRiposteMaster.test.ts | src/test/engine/combat/strikingAttack.test.ts
+    expect(r).toEqual({ ripBonus: 0, dmgBonus: 0 });
+  });
+});
+
+function mk(style: FightingStyle, id: string): Warrior {
+  return makeStatWarrior(style, id);
+}
+
+describe('PR riposte master (integration)', () => {
+  it('Parry-Riposte punishes an aggressive Striking Attack brawler', () => {
+    const pr = mk(FightingStyle.ParryRiposte, 'PR');
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+
+=== HARNESS [TEST ~27L] src/test/engine/combat/prRiposteMaster.test.ts | src/test/engine/combat/wsImmovable.test.ts
+    expect(r).toEqual({ ripBonus: 0, dmgBonus: 0 });
+  });
+});
+
+function mk(style: FightingStyle, id: string): Warrior {
+  return makeStatWarrior(style, id);
+}
+
+describe('PR riposte master (integration)', () => {
+  it('Parry-Riposte punishes an aggressive Striking Attack brawler', () => {
+    const pr = mk(FightingStyle.ParryRiposte, 'PR');
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+
+=== HARNESS [TEST ~27L] src/test/engine/combat/strikingAttack.test.ts | src/test/engine/combat/wsImmovable.test.ts
+    expect(getExecuteBonus(OTHER, 20, 100)).toBe(0);
+  });
+});
+
+function mk(style: FightingStyle, id: string): Warrior {
+  return makeStatWarrior(style, id);
+}
+
+describe('ST all-in (integration)', () => {
+  it('Striking Attack is a real threat against a mid-tier Parry-Lunge', () => {
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+    const pl = mk(FightingStyle.ParryLunge, 'PL');
+
+=== RETOBJ [SRC ~27L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/schemas/schemaEnums.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== MISC [MIX ~27L] src/schemas/gameStateSchema.ts | src/test/engine/pipeline/offseasonStatGrantCharacterization.test.ts
+  InsightTokenSchema,
+  PoolWarriorSchema,
+  AnnualAwardSchema,
+} from './warriorSchemas';
+import {
+  NewsletterItemSchema,
+  FightSummarySchema,
+  GazetteStorySchema,
+  HallEntrySchema,
+  TournamentEntrySchema,
+  BoutOfferSchema,
+  RankingEntrySchema,
+
+=== RETOBJ [MIX ~26L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+
+=== RETOBJ [SRC ~26L] src/pages/AdminTools/hooks/useAdminTools.ts | src/schemas/schemaEnums.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== MISC [SRC ~26L] src/engine/traits/defs/exceptional.ts | src/engine/traits/defs/signature.ts
+    effect: { iniModEarly: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  orphan_shadow: {
+    id: 'orphan_shadow',
+    name: 'Orphan Shadow',
+    description:
+      '+1 initiative and +1 decisiveness — forged in the darkest corners of the undercity.',
+    effect: { iniMod: 1, decMod: 1 },
+    weight: 0.8,
+
+=== HARNESS [TEST ~26L] src/test/engine/combat/combat.test.ts | src/test/engine/combat/simulate.test.ts
+
+describe('simulateFight — determinism', () => {
+  it('produces identical results with the same seed', () => {
+    const wA = makeWarrior('Alpha', FightingStyle.StrikingAttack);
+    const wD = makeWarrior('Beta', FightingStyle.ParryRiposte);
+    const planA = makePlan(FightingStyle.StrikingAttack);
+    const planD = makePlan(FightingStyle.ParryRiposte);
+
+    const r1 = simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: wA,
+
+=== RETOBJ [MIX ~26L] src/pages/AdminTools/hooks/useAdminTools.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+
+=== MISC [MIX ~26L] src/engine/impacts/types.ts | src/test/engine/impacts/resolveImpacts.test.ts
+ */
+import type {
+  GameState,
+  LedgerEntry,
+  NewsletterItem,
+  RivalStableData,
+  RankingEntry,
+  Season,
+  WeatherType,
+  BoutOffer,
+  Promoter,
+  Trainer,
+
+=== RETOBJ [SRC ~26L] src/hooks/useScoutingStableComparison.ts | src/schemas/schemaEnums.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~26L] src/pages/arenaDetail/useArenaDetail.ts | src/schemas/schemaEnums.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [SRC ~26L] src/pages/tournaments/useTournamentState.ts | src/schemas/schemaEnums.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== MISC [SRC ~26L] src/data/arenas/index.ts | src/engine/ai/intentEngine/index.ts
+  MIST_SHROUDED_RUINS,
+  THE_GALLOWS_TREE,
+  BRASS_RING,
+  NARROW_BRIDGE,
+  MUDPIT_ARENA,
+  BLOODSANDS_ARENA,
+  UNDERPIT_ARENA,
+  HIGHPLAIN_ARENA,
+  LANTERN_HALL_ARENA,
+  WALLED_COURT_ARENA,
+  CLIFFTOP_ARENA,
+  FLOODED_VAULT_ARENA,
+
+=== MISC [SRC ~26L] src/data/arenas/index.ts | src/engine/crest/crestGenerator.ts
+  BRASS_RING,
+  NARROW_BRIDGE,
+  MUDPIT_ARENA,
+  BLOODSANDS_ARENA,
+  UNDERPIT_ARENA,
+  HIGHPLAIN_ARENA,
+  LANTERN_HALL_ARENA,
+  WALLED_COURT_ARENA,
+  CLIFFTOP_ARENA,
+  FLOODED_VAULT_ARENA,
+} from './venues/seed';
+import {
+
+=== MISC [SRC ~26L] src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/index.ts | src/routeTree.gen.ts
+  afterHitEvents({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    hitLoc: hitLoc,
+    damage: damage,
+    rawDamage: rawDamage,
+    attTactics: attTactics,
+    attLabel: attLabel,
+    defLabel: defLabel,
+    stylePhase: stylePhase,
+
+=== RETOBJ [MIX ~25L] src/hooks/useScoutingStableComparison.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [MIX ~25L] src/pages/tournaments/useTournamentState.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+
+=== FUNC [SRC ~25L] src/components/arena/MiniCombatLog.tsx | src/components/arena/TacticalLogView.tsx
+function getEventIcon(type: ReturnType<typeof classifyEvent>): string {
+  switch (type) {
+    case 'hit':
+      return 'HIT';
+    case 'crit':
+      return 'CRT';
+    case 'death':
+      return 'KIL';
+    case 'ko':
+      return 'KO';
+    case 'miss':
+      return 'MISS';
+
+=== RETOBJ [SRC ~25L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/schemas/schemaEnums.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== MISC [SRC ~25L] src/engine/warrior/skillCalc.ts | src/schemas/gameStateSchema.ts
+  computeHP as canonicalHP,
+  computeDamageClass,
+  computeEncumbranceCapacity,
+  computeEnduranceValue,
+} from '@/data/terrabloodCharts';
+import {
+  bp,
+  szMod,
+  ST_ATT,
+  ST_PAR,
+  WT_ATT,
+  WT_DEF,
+
+=== MISC [SRC ~25L] src/engine/traits/defs/exceptional.ts | src/engine/traits/defs/flaws.ts
+    effect: { defModEarly: 1, iniMod: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  born_in_shadows: {
+    id: 'born_in_shadows',
+    name: 'Born in Shadows',
+    description: '+1 initiative in OPENING phase — used to striking before being seen.',
+    effect: { iniModEarly: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+
+=== RETOBJ [MIX ~25L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+
+=== RETOBJ [MIX ~24L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [MIX ~24L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/test/_setup/sharedMocks.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== MISC [SRC ~24L] src/engine/impacts/types.ts | src/state/slices/worldSlice/types.ts
+ */
+import type {
+  GameState,
+  LedgerEntry,
+  NewsletterItem,
+  RivalStableData,
+  RankingEntry,
+  Season,
+  WeatherType,
+  BoutOffer,
+  Promoter,
+  Trainer,
+
+=== MISC [SRC ~24L] src/data/arenas/index.ts | src/types/state/game.ts
+  SUNDERED_COLISEUM,
+  SUNKEN_TEMPLE,
+  CRYSTAL_CAVERN,
+  WHISPERING_GROVE,
+  CHARNEL_PITS,
+  FLESH_GARDENS,
+  GUTTER_PIT,
+  STORMTOP_TERRACE,
+  GLACIAL_RIFT,
+  SKY_PLATFORM,
+  MISTY_VALLEY,
+  THE_MEAT_GRINDER,
+
+=== FUNC [TEST ~24L] src/test/engine/combat/aiIntentTelemetry.test.ts | src/test/engine/narrative/narrationDeterminism.test.ts
+function makeFighters(seed: number) {
+  const A = makeWarrior({
+    id: undefined,
+    name: 'A',
+    style: FightingStyle.LungingAttack,
+    attrs: { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+    overrides: undefined,
+    rng: new SeededRNG(seed),
+  });
+  const D = makeWarrior({
+    id: undefined,
+    name: 'D',
+
+=== RETOBJ [MIX ~24L] src/pages/AdminTools/hooks/useAdminTools.ts | src/test/_setup/sharedMocks.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== MISC [SRC ~24L] src/engine/impacts/types.ts | src/types/state/game.ts
+ */
+import type {
+  GameState,
+  LedgerEntry,
+  NewsletterItem,
+  RivalStableData,
+  RankingEntry,
+  Season,
+  WeatherType,
+  BoutOffer,
+  Promoter,
+  Trainer,
+
+=== RETOBJ [MIX ~23L] src/pages/arenaDetail/useArenaDetail.ts | src/test/engine/combat/offenseDefense.test.ts
+
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+
+=== RETOBJ [MIX ~23L] src/hooks/useScoutingStableComparison.ts | src/test/_setup/sharedMocks.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [MIX ~23L] src/pages/tournaments/useTournamentState.ts | src/test/_setup/sharedMocks.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== RETOBJ [TEST ~23L] src/test/engine/combat/offenseDefense.test.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    ctx,
+    fA,
+    fD,
+    es,
+    events,
+    tactA,
+    tactD,
+    offModsA,
+    offModsD,
+    defModsA,
+    defModsD,
+
+=== HARNESS [TEST ~23L] src/test/data/narrativeContent.test.ts | src/test/schemas/schemaCharacterization.test.ts
+    walk(narrativeContent, 'root');
+  });
+
+  it('all required top-level keys are present', () => {
+    const requiredKeys = [
+      'ux_metadata',
+      'persona',
+      'strikes',
+      'pbp',
+      'conclusions',
+      'blurbs',
+      'commentary',
+
+=== MISC [MIX ~23L] src/engine/combat/resolution/resolution.ts | src/test/engine/combat/offenseDefense.test.ts
+    fD: fD,
+    aGoesFirst: aGoesFirst,
+    OE_A: s.OE_A,
+    AL_A: s.AL_A,
+    OE_D: s.OE_D,
+    AL_D: s.AL_D,
+    fatA: s.fatA,
+    fatD: s.fatD,
+    offModsA: s.offModsA,
+    offModsD: s.offModsD,
+    defModsA: s.defModsA,
+    defModsD: s.defModsD,
+
+=== RETOBJ [MIX ~23L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/test/_setup/sharedMocks.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== MISC [SRC ~23L] src/constants/combat/combat/global.ts | src/engine/storage/truncation.ts
+ */
+export const KILL_WINDOW = {
+  BASE: 0.012,
+  CAP: 0.12,
+  SCALE: 1.1,
+  HP_CRITICAL_RATIO: 0.3,
+  HP_CRITICAL_ADD: 0.008,
+  HP_HURT_RATIO: 0.5,
+  HP_HURT_ADD: 0.001,
+  END_SPENT_RATIO: 0.2,
+  END_SPENT_ADD: 0.012,
+  END_TIRED_ADD: 0.006,
+
+=== HARNESS [TEST ~23L] src/test/engine/combat/exchangePrep.test.ts | src/test/pages/Recruit/hooks/useRecruit.test.ts
+    const keys = Object.keys(result);
+    expect(keys).toContain('condResultA');
+    expect(keys).toContain('condResultD');
+    expect(keys).toContain('tactA');
+    expect(keys).toContain('tactD');
+    expect(keys).toContain('offModsA');
+    expect(keys).toContain('defModsA');
+    expect(keys).toContain('offModsD');
+    expect(keys).toContain('defModsD');
+    expect(keys).toContain('biasAttA');
+    expect(keys).toContain('biasDefA');
+    expect(keys).toContain('biasAttD');
+
+=== RETOBJ [MIX ~22L] src/pages/arenaDetail/useArenaDetail.ts | src/test/_setup/sharedMocks.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [SRC ~21L] src/hooks/useScoutingStableComparison.ts | src/pages/ControlCenter/hooks/useControlCenter.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~21L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+
+=== FUNC [SRC ~21L] src/pages/AdminTools/index.tsx | src/pages/Recruit/components/ScoutMarket.tsx
+function CategoryPanels({ tools }: { tools: ReturnType<typeof useAdminTools> }) {
+  const {
+    activeCategory,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+    doReset,
+
+=== RETOBJ [SRC ~21L] src/hooks/useScoutingStableComparison.ts | src/pages/AdminTools/hooks/useAdminTools.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~21L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+
+=== RETOBJ [SRC ~21L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/pages/ControlCenter/hooks/useControlCenter.ts
+
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+
+=== RETOBJ [SRC ~20L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/ControlCenter/hooks/useControlCenter.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [SRC ~20L] src/hooks/useScoutingStableComparison.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~20L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/BookingOffice/hooks/useBookingOffice.ts
+
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+
+=== MISC [SRC ~20L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/pages/Trainers/hooks/useTrainers.ts
+    thisWeekOffers
+  );
+
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+
+=== MISC [SRC ~20L] src/pages/Trainers/hooks/useTrainers.ts | src/pages/bookmarks/useBookmarkGroups.ts
+    graveyard,
+    retired,
+    rivals,
+    promoters,
+    trainers,
+    tournaments,
+    boutOffers,
+    scoutReports,
+    clearBookmarks,
+    clearBookmarksByType,
+  } = useGameStore(
+    useShallow((s) => ({
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/baGuardBreak.integration.test.ts | src/test/engine/combat/prRiposteMaster.test.ts
+
+describe('BA guard-break (integration)', () => {
+  it('Bashing Attack is favored against a Total Parry wall (guard erodes over the fight)', () => {
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    const tp = mk(FightingStyle.TotalParry, 'TP');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ba),
+        planD: defaultPlanForWarrior(tp),
+        warriorA: ba,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/baGuardBreak.integration.test.ts | src/test/engine/combat/resolution/bleed.test.ts
+
+describe('BA guard-break (integration)', () => {
+  it('Bashing Attack is favored against a Total Parry wall (guard erodes over the fight)', () => {
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    const tp = mk(FightingStyle.TotalParry, 'TP');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ba),
+        planD: defaultPlanForWarrior(tp),
+        warriorA: ba,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/baGuardBreak.integration.test.ts | src/test/engine/combat/strikingAttack.test.ts
+
+describe('BA guard-break (integration)', () => {
+  it('Bashing Attack is favored against a Total Parry wall (guard erodes over the fight)', () => {
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    const tp = mk(FightingStyle.TotalParry, 'TP');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ba),
+        planD: defaultPlanForWarrior(tp),
+        warriorA: ba,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/baGuardBreak.integration.test.ts | src/test/engine/combat/wsImmovable.test.ts
+
+describe('BA guard-break (integration)', () => {
+  it('Bashing Attack is favored against a Total Parry wall (guard erodes over the fight)', () => {
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    const tp = mk(FightingStyle.TotalParry, 'TP');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ba),
+        planD: defaultPlanForWarrior(tp),
+        warriorA: ba,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/prRiposteMaster.test.ts | src/test/engine/combat/psCounterstrike.integration.test.ts
+
+describe('PR riposte master (integration)', () => {
+  it('Parry-Riposte punishes an aggressive Striking Attack brawler', () => {
+    const pr = mk(FightingStyle.ParryRiposte, 'PR');
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(pr),
+        planD: defaultPlanForWarrior(st),
+        warriorA: pr,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/prRiposteMaster.test.ts | src/test/engine/combat/resolution/bleed.test.ts
+
+describe('PR riposte master (integration)', () => {
+  it('Parry-Riposte punishes an aggressive Striking Attack brawler', () => {
+    const pr = mk(FightingStyle.ParryRiposte, 'PR');
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(pr),
+        planD: defaultPlanForWarrior(st),
+        warriorA: pr,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/psCounterstrike.integration.test.ts | src/test/engine/combat/resolution/bleed.test.ts
+
+describe('PS counterstrike (integration)', () => {
+  it('a Parry-Strike fighter is not a free win for an aggressive Bashing Attack', () => {
+    const ps = mk(FightingStyle.ParryStrike, 'PS');
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ps),
+        planD: defaultPlanForWarrior(ba),
+        warriorA: ps,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/psCounterstrike.integration.test.ts | src/test/engine/combat/strikingAttack.test.ts
+
+describe('PS counterstrike (integration)', () => {
+  it('a Parry-Strike fighter is not a free win for an aggressive Bashing Attack', () => {
+    const ps = mk(FightingStyle.ParryStrike, 'PS');
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ps),
+        planD: defaultPlanForWarrior(ba),
+        warriorA: ps,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/psCounterstrike.integration.test.ts | src/test/engine/combat/wsImmovable.test.ts
+
+describe('PS counterstrike (integration)', () => {
+  it('a Parry-Strike fighter is not a free win for an aggressive Bashing Attack', () => {
+    const ps = mk(FightingStyle.ParryStrike, 'PS');
+    const ba = mk(FightingStyle.BashingAttack, 'BA');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(ps),
+        planD: defaultPlanForWarrior(ba),
+        warriorA: ps,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/resolution/bleed.test.ts | src/test/engine/combat/strikingAttack.test.ts
+
+describe('SL bleed (integration)', () => {
+  it('Slashing Attack stays competitive vs a defensive Parry-Strike via attrition', () => {
+    const sl = mk(FightingStyle.SlashingAttack, 'SL');
+    const ps = mk(FightingStyle.ParryStrike, 'PS');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(sl),
+        planD: defaultPlanForWarrior(ps),
+        warriorA: sl,
+
+=== HARNESS [TEST ~20L] src/test/engine/combat/resolution/bleed.test.ts | src/test/engine/combat/wsImmovable.test.ts
+
+describe('SL bleed (integration)', () => {
+  it('Slashing Attack stays competitive vs a defensive Parry-Strike via attrition', () => {
+    const sl = mk(FightingStyle.SlashingAttack, 'SL');
+    const ps = mk(FightingStyle.ParryStrike, 'PS');
+    let wins = 0;
+    const N = 200;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight({
+        planA: defaultPlanForWarrior(sl),
+        planD: defaultPlanForWarrior(ps),
+        warriorA: sl,
+
+=== RETOBJ [SRC ~20L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/AdminTools/hooks/useAdminTools.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [SRC ~20L] src/hooks/useScoutingStableComparison.ts | src/pages/BookingOffice/hooks/useBookingOffice.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~20L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+
+=== HARNESS [TEST ~20L] src/test/data/narrativeContent.test.ts | src/test/megaplan/v11Restructure.guard.test.ts
+  it('all required top-level keys are present', () => {
+    const requiredKeys = [
+      'ux_metadata',
+      'persona',
+      'strikes',
+      'pbp',
+      'conclusions',
+      'blurbs',
+      'commentary',
+      'recap',
+      'events',
+      'gazette',
+
+=== MISC [TEST ~20L] src/test/engine/pipeline/shardInputSize.test.ts | src/test/megaplan/v11Restructure.guard.test.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [MIX ~20L] src/engine/pipeline/passes/rivalStableShard/shardContract.ts | src/test/_fixtures/tournamentState.ts
+    ...state,
+    newsletter: [],
+    gazettes: [],
+    hallOfFame: [],
+    grandChampions: [],
+    matchHistory: [],
+    killEvents: [],
+    scoutReports: [],
+    moodHistory: [],
+    ledger: [],
+    awards: [],
+    insightTokens: [],
+
+=== RETOBJ [SRC ~19L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/hooks/useScoutingStableComparison.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [SRC ~19L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [SRC ~19L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/arenaDetail/useArenaDetail.ts
+
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+
+=== FUNC [SRC ~19L] src/engine/combat/resolution/offenseDefense/prepare.ts | src/pages/Recruit/components/ScoutMarket.tsx
+function deriveAttackView(args: OffenseDefenseArgs): AttackView {
+  const {
+    ctx,
+    fA,
+    fD,
+    aGoesFirst,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    offModsA,
+    offModsD,
+
+=== RETOBJ [MIX ~19L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== FUNC [SRC ~19L] src/components/world/RivalIntelligence.tsx | src/components/world/WarriorLeaderboardTitle.tsx
+function NetworkHeader({ count }: { count: number }) {
+  return (
+    <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
+          <Brain className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <h3 className="font-display text-sm font-black uppercase tracking-tight">
+            Rival Network
+          </h3>
+          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
+
+=== MISC [MIX ~19L] src/schemas/gameStateSchema.ts | src/test/data/names/nameValidation.test.ts
+  NewsletterItemSchema,
+  FightSummarySchema,
+  GazetteStorySchema,
+  HallEntrySchema,
+  TournamentEntrySchema,
+  BoutOfferSchema,
+  RankingEntrySchema,
+  ArenaTitleSchema,
+  GrandChampionEntrySchema,
+  SimulationReportSchema,
+  BoutResultSchema,
+  PendingResolutionDataSchema,
+
+=== MISC [TEST ~19L] src/test/engine/pipeline/shardInputSize.test.ts | src/test/engine/traits/traitDedup.test.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [TEST ~19L] src/test/engine/pipeline/shardInputSize.test.ts | src/test/schemas/schemaCharacterization.test.ts
+    for (const key of [
+      'roster',
+      'rivals',
+      'retired',
+      'graveyard',
+      'deadWarriorIds',
+      'arenaHistory',
+      'recruitPool',
+      'freeAgents',
+      'tournaments',
+      'boutOffers',
+      'rivalries',
+
+=== MISC [SRC ~19L] src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/index.ts | src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/killWindow.ts
+
+  afterHitEvents({
+    events: events,
+    rng: rng,
+    attacker: attacker,
+    defender: defender,
+    hitLoc: hitLoc,
+    damage: damage,
+    rawDamage: rawDamage,
+    attTactics: attTactics,
+    attLabel: attLabel,
+    defLabel: defLabel,
+
+=== FUNC [SRC ~19L] src/pages/AdminTools/components/SystemPanel.tsx | src/pages/AdminTools/components/WorldPanel.tsx
+export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
+  return (
+    <div className="space-y-12">
+      <SectionDivider label="Save Operations" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Surface variant="glass" className="border-white/5 overflow-hidden">
+          <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+            <ImperialRing size="sm" variant="bronze">
+              <Download className="h-3 w-3 text-muted-foreground" />
+            </ImperialRing>
+            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+              Save Data
+
+=== HARNESS [TEST ~19L] src/test/engine/narrative/narrativePBPUtils.test.ts | src/test/engine/narrative/templateHelpers.test.ts
+      expect(interpolateTemplate('%A attacks.', {})).toBe('The warrior attacks.');
+    });
+
+    it('falls back to "the opponent" for missing defender', () => {
+      expect(interpolateTemplate('%A attacks %D.', { attacker: 'Thor' })).toBe(
+        'Thor attacks the opponent.'
+      );
+    });
+
+    it('uses name as fallback for attacker', () => {
+      expect(interpolateTemplate('%A attacks.', { name: 'Warrior' })).toBe('Warrior attacks.');
+    });
+
+=== RETOBJ [SRC ~19L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/BookingOffice/hooks/useBookingOffice.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [SRC ~19L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/arenaDetail/useArenaDetail.ts
+
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+
+=== FUNC [SRC ~19L] src/components/scouting/StableComparison.tsx | src/pages/Recruit/components/ScoutMarket.tsx
+export function StableComparison({ rivals }: StableComparisonProps) {
+  const {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [MIX ~19L] src/pages/AdminTools/hooks/useAdminTools.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [SRC ~19L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/Recruit/components/ScoutMarket.tsx
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== RETOBJ [SRC ~18L] src/hooks/useScoutingStableComparison.ts | src/pages/arenaDetail/useArenaDetail.ts
+
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~18L] src/pages/arenaDetail/useArenaDetail.ts | src/pages/tournaments/useTournamentState.ts
+
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+
+=== MISC [SRC ~18L] src/components/arena/weather/effects/heatEffects.tsx | src/components/arena/weather/effects/stormEffects.tsx
+            top: `${cryptoRandom() * 100}%`,
+            left: '-20%',
+            animationDelay: `${cryptoRandom() * 2}s`,
+            animationDuration: `${0.7 + cryptoRandom() * 0.8}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/** Mirage with heat ripples and shimmering particles. */
+
+=== FUNC [SRC ~18L] src/engine/combat/resolution/offenseDefense/prepare.ts | src/pages/AdminTools/index.tsx
+function deriveAttackView(args: OffenseDefenseArgs): AttackView {
+  const {
+    ctx,
+    fA,
+    fD,
+    aGoesFirst,
+    OE_A,
+    AL_A,
+    OE_D,
+    AL_D,
+    offModsA,
+    offModsD,
+
+=== RETOBJ [MIX ~18L] src/hooks/useScoutingStableComparison.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~18L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/Recruit/components/ScoutMarket.tsx
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [SRC ~18L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/schemas/economySchemas.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== RETOBJ [SRC ~18L] src/pages/ControlCenter/hooks/useControlCenter.ts | src/state/slices/worldSlice/types.ts
+  return {
+    activeTab,
+    setActiveTab,
+    player,
+    week,
+    absoluteWeek,
+    season,
+    arenaHistory,
+    boutOffers,
+    roster,
+    stats,
+    totalBouts,
+
+=== RETOBJ [MIX ~18L] src/pages/arenaDetail/useArenaDetail.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [MIX ~18L] src/pages/tournaments/useTournamentState.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== MISC [MIX ~18L] src/schemas/gameStateSchema.ts | src/test/schemas/schemaCharacterization.test.ts
+  NewsletterItemSchema,
+  FightSummarySchema,
+  GazetteStorySchema,
+  HallEntrySchema,
+  TournamentEntrySchema,
+  BoutOfferSchema,
+  RankingEntrySchema,
+  ArenaTitleSchema,
+  GrandChampionEntrySchema,
+  SimulationReportSchema,
+  BoutResultSchema,
+  PendingResolutionDataSchema,
+
+=== MISC [MIX ~18L] src/engine/warrior/skillCalc.ts | src/test/engine/pipeline/offseasonStatGrantCharacterization.test.ts
+  computeDamageClass,
+  computeEncumbranceCapacity,
+  computeEnduranceValue,
+} from '@/data/terrabloodCharts';
+import {
+  bp,
+  szMod,
+  ST_ATT,
+  ST_PAR,
+  WT_ATT,
+  WT_DEF,
+  WT_INI,
+
+=== HARNESS [TEST ~18L] src/test/data/narrativeContent.test.ts | src/test/engine/traits/traitDedup.test.ts
+  it('all required top-level keys are present', () => {
+    const requiredKeys = [
+      'ux_metadata',
+      'persona',
+      'strikes',
+      'pbp',
+      'conclusions',
+      'blurbs',
+      'commentary',
+      'recap',
+      'events',
+      'gazette',
+
+=== MISC [SRC ~18L] src/pages/Scouting.tsx | src/pages/Trainers.tsx
+        Warrior Face-Off
+      </TabsTrigger>
+    </TabsList>
+  );
+}
+
+/**
+ * Scouting.
+ */
+export default function Scouting() {
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+  const {
+
+=== RETOBJ [SRC ~18L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/pages/arenaDetail/useArenaDetail.ts
+
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+
+=== FUNC [SRC ~18L] src/components/scouting/StableComparison.tsx | src/engine/combat/resolution/offenseDefense/prepare.ts
+export function StableComparison({ rivals }: StableComparisonProps) {
+  const {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== FUNC [SRC ~18L] src/components/scouting/StableComparison.tsx | src/pages/AdminTools/index.tsx
+export function StableComparison({ rivals }: StableComparisonProps) {
+  const {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+
+=== RETOBJ [SRC ~18L] src/hooks/useScoutingStableComparison.ts | src/pages/Recruit/components/ScoutMarket.tsx
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~18L] src/pages/AdminTools/hooks/useAdminTools.ts | src/schemas/economySchemas.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [SRC ~18L] src/pages/AdminTools/hooks/useAdminTools.ts | src/state/slices/worldSlice/types.ts
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [MIX ~18L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/test/engine/impacts/resolveImpacts.test.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== RETOBJ [SRC ~18L] src/pages/Recruit/components/ScoutMarket.tsx | src/pages/arenaDetail/useArenaDetail.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== MISC [SRC ~18L] src/components/bout-viewer/FightAnalysisPanel.tsx | src/components/bout-viewer/FightForecastPanel.tsx
+        Why it went this way
+      </h3>
+
+      <ul className="space-y-2">
+        {analysis.factors.map((f, i) => {
+          const who = favoredName(f.favored, nameA, nameD);
+          return (
+            <li key={i} className="flex gap-3 items-start">
+              <span className="mt-0.5 inline-block min-w-[7rem] text-xs font-medium text-primary">
+                {f.label}
+              </span>
+              <span className="text-sm text-foreground/90">
+
+=== MISC [SRC ~17L] src/components/BoutViewer.tsx | src/data/terrabloodCharts.ts
+  BoutViewerProps,
+  | 'nameA'
+  | 'nameD'
+  | 'styleA'
+  | 'styleD'
+  | 'log'
+  | 'winner'
+  | 'by'
+  | 'announcement'
+  | 'arenaTier'
+  | 'arenaId'
+  | 'analysis'
+
+=== RETOBJ [SRC ~17L] src/hooks/useScoutingStableComparison.ts | src/schemas/economySchemas.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~17L] src/hooks/useScoutingStableComparison.ts | src/state/slices/worldSlice/types.ts
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~17L] src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/AdminTools/index.tsx
+  return {
+    activeCategory,
+    setActiveCategory,
+    ftueComplete,
+    handleExport,
+    handleImport,
+    skipWeek,
+    skipMonth,
+    skipSeason,
+    skipFTUE,
+    resetRivals,
+    forceMastery,
+
+=== RETOBJ [SRC ~17L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/pages/Recruit/components/ScoutMarket.tsx
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== RETOBJ [SRC ~17L] src/pages/arenaDetail/useArenaDetail.ts | src/schemas/economySchemas.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [SRC ~17L] src/pages/arenaDetail/useArenaDetail.ts | src/state/slices/worldSlice/types.ts
+  return {
+    arena,
+    state,
+    store,
+    title,
+    reign,
+    champWarrior,
+    champStable,
+    isExcluded,
+    badge,
+    effects,
+    lore,
+
+=== RETOBJ [SRC ~17L] src/pages/tournaments/useTournamentState.ts | src/schemas/economySchemas.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== RETOBJ [SRC ~17L] src/pages/tournaments/useTournamentState.ts | src/state/slices/worldSlice/types.ts
+  return {
+    tournaments,
+    season,
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+
+=== MISC [SRC ~17L] src/components/ui/dialog.tsx | src/components/ui/toast.tsx
+ */
+const DialogOverlay = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Overlay
+    ref={ref}
+    className={cn(
+      'fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in motion-reduce:animate-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      className
+    )}
+    {...props}
+
+=== HARNESS [TEST ~17L] src/test/routes/top-routes.test.tsx | src/test/routes/world-routes.test.tsx
+// @vitest-environment jsdom
+import { describe, it, expect, vi } from 'vitest';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { describeRoutes } from './_helpers/routeTestHelper';
+
+vi.mock('@/pages/AdminTools', () => ({
+  default: () => <div data-testid="admin-tools">AdminTools</div>,
+}));
+vi.mock('@/pages/Bookmarks', () => ({
+  default: () => <div data-testid="bookmarks">Bookmarks</div>,
+}));
+
+=== RETOBJ [SRC ~17L] src/hooks/useScoutingStableComparison.ts | src/pages/AdminTools/index.tsx
+  return {
+    idA,
+    setIdA,
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+
+=== RETOBJ [SRC ~17L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/schemas/economySchemas.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== RETOBJ [SRC ~17L] src/pages/BookingOffice/hooks/useBookingOffice.ts | src/state/slices/worldSlice/types.ts
+  return {
+    week,
+    promoters,
+    roster,
+    boutOffers,
+    activeTab,
+    setActiveTab,
+    signedOfferIds,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    rivalWarriorMap,
+    thisWeekOffers,
+
+=== MISC [SRC ~16L] src/components/EventLog.tsx | src/pages/tournaments/useTournamentState.ts
+  const state = useGameStore(
+    useShallow((s) => ({
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+      roster: s.roster,
+      week: s.week,
+      trainingAssignments: s.trainingAssignments,
+      newsletter: s.newsletter,
+      tournaments: s.tournaments,
+      gazettes: s.gazettes,
+
+=== RETOBJ [SRC ~16L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/arenaDetail/useArenaDetail.ts
+
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+
+=== RETOBJ [MIX ~16L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/test/_setup/sharedMocks.ts
+  return {
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+    rosterFull,
+
+=== MISC [SRC ~16L] src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts | src/pages/Trainers/hooks/useTrainers.ts
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    avatarSeed,
+    attrs,
+    total,
+    remaining,
+    isValid,
+    rosterFull,
+    stats,
+
+=== MISC [SRC ~16L] src/hooks/useScoutingStableComparison.ts | src/pages/Trainers/hooks/useTrainers.ts
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+    modsB,
+    maxWins,
+    maxKills,
+
+=== MISC [SRC ~16L] src/pages/Trainers/hooks/useTrainers.ts | src/pages/tournaments/useTournamentState.ts
+    roster,
+    week,
+    year,
+    arenaHistory,
+    player,
+    activeSlotId,
+    loadGame,
+    setSimulating,
+    isSimulating,
+    currentTournament,
+    activeWarriors,
+    playerWarriorsInTournament,
+
+=== RETOBJ [MIX ~16L] src/pages/Trainers/hooks/useTrainers.ts | src/test/engine/combat/offenseDefense.test.ts
+  return {
+    graveyard,
+    retired,
+    treasury,
+    currentTrainers,
+    bookmarkedCount,
+    currentHiringPool,
+    canHire,
+    convertDialogOpen,
+    setConvertDialogOpen,
+    convertableRetired,
+    refreshPool,
+
+=== MISC [SRC ~16L] src/components/appShell/chrome.tsx | src/pages/tournaments/useTournamentState.ts
+      day: s.day,
+      isTournamentWeek: s.isTournamentWeek,
+      treasury: s.treasury,
+      fame: s.fame,
+      crowdMood: s.crowdMood,
+      weather: s.weather,
+      doReset: s.doReset,
+      returnToTitle: s.returnToTitle,
+      lastSavedAt: s.lastSavedAt,
+      isSimulating: s.isSimulating,
+      isInitialized: s.isInitialized,
+      eventLogOpen: s.eventLogOpen,
+
+=== MISC [SRC ~16L] src/components/arena/MiniCombatLog.tsx | src/components/crest/StableCrest/components/ChargeComponent.tsx
+      return 'KO';
+    case 'miss':
+      return 'MISS';
+    case 'riposte':
+      return 'RIP';
+    case 'initiative':
+      return 'INI';
+    case 'exhaust':
+      return 'EXH';
+    case 'phase':
+      return 'PHS';
+    case 'spatial':
+
+=== MISC [SRC ~16L] src/components/arena/TacticalLogView.tsx | src/components/crest/StableCrest/components/ChargeComponent.tsx
+      return 'border-arena-gold/30 bg-arena-gold/5';
+    case 'riposte':
+      return 'border-arena-fame/20 bg-arena-fame/5';
+    case 'initiative':
+      return 'border-primary/20 bg-primary/5';
+    case 'exhaust':
+      return 'border-white/5 bg-white/5';
+    case 'miss':
+      return 'border-white/5 bg-transparent opacity-60';
+    case 'phase':
+      return 'border-primary/40 bg-primary/10 py-3 my-2';
+    case 'spatial':
+
+=== MISC [SRC ~16L] src/components/arena/weather/index.tsx | src/types/state/game.ts
+  AcidRainEffect,
+  ManaSurgeEffect,
+  LocustSwarmEffect,
+  TornadoEffect,
+  ScorchingWindEffect,
+  HailstormEffect,
+  ArcaneStormEffect,
+  AetherStormEffect,
+  ChaoticWindsEffect,
+  EmberRainEffect,
+  AuroraBorealisEffect,
+  MirageEffect,
+
+=== MISC [SRC ~16L] src/components/layout/navigationHubs.ts | src/types/state/game.ts
+  Building2,
+  Sunset,
+  Trophy,
+  Radar,
+  Newspaper,
+  BookOpen,
+  CalendarClock,
+  BrainCircuit,
+  UserPlus,
+  Bookmark,
+  Activity,
+  LifeBuoy,
+
+=== MISC [SRC ~16L] src/engine/warrior/skillCalc.ts | src/types/state/game.ts
+  WL_DEF,
+  WL_DEC,
+  SP_DEC,
+  SP_DEF,
+  SP_INI,
+  SP_RIP,
+  DF_ATT,
+  DF_DEF,
+  DF_INI,
+  DF_PAR,
+  DF_RIP,
+  SZ_INI_MOD,
+
+=== MISC [SRC ~16L] src/schemas/economySchemas.ts | src/types/state/game.ts
+  SeasonSchema,
+  TrainerTierSchema,
+  TrainerFocusSchema,
+  TrainerSpecialtySchema,
+  ScoutQualitySchema,
+  PromoterPersonalitySchema,
+  PromoterTierSchema,
+  OwnerPersonalitySchema,
+  MetaAdaptationSchema,
+  OwnerCompetenceSchema,
+  ShieldShapeSchema,
+  FieldTypeSchema,
+
+=== MISC [SRC ~16L] src/schemas/schemaEnums.ts | src/types/state/game.ts
+  DEFENSIVE_TACTICS,
+  CONDITION_TRIGGERS,
+  DISTANCE_RANGES,
+  SHIELD_SHAPES,
+  FIELD_TYPES,
+  METAL_COLORS,
+  CHARGE_TYPES,
+  BEAST_POSTURES,
+  BOUT_OFFER_STATUSES,
+  BOUT_OFFER_RESPONSES,
+  FIGHT_OUTCOME_BY,
+  DEATH_CAUSE_BUCKETS,
+
+=== MISC [SRC ~16L] src/components/scouting/StableComparison.tsx | src/pages/Trainers.tsx
+    idB,
+    setIdB,
+    rivalA,
+    rivalB,
+    statsA,
+    statsB,
+    grudge,
+    clashes,
+    modsA,
+    modsB,
+    maxWins,
+    maxKills,
+
+=== MISC [MIX ~16L] src/constants/arena/weather/config.ts | src/test/engine/championship/arenaChampionship.test.ts
+  CloudRain,
+  Cloud,
+  Wind,
+  Moon,
+  CloudSun,
+  Flame,
+  CloudLightning,
+  Circle,
+  Waves,
+  CloudSnow,
+  CloudFog,
+  Factory,
+
+=== MISC [TEST ~16L] src/test/engine/pipeline/offseasonStatGrantCharacterization.test.ts | src/test/schemas/schemaCharacterization.test.ts
+  handleEpiphany,
+  handleBardsSong,
+  handleMysticVision,
+  handleStrangeDream,
+  handleMeteorShower,
+  handleGladiatorOlympics,
+  handleLoyalStrayDog,
+  handleChaosSpores,
+  handleChaosWeaversGift,
+  handleShadowTraining,
+  handleOffseasonTrainingCamp,
+  handleWanderingMerchantStrangeBrew,
+
+=== MISC [SRC ~16L] src/engine/narrative/index.ts | src/engine/training/trainingGains/index.ts
+export { generateWarriorIntro, battleOpener, type WarriorIntroData } from './narrativeIntro';
+export {
+  narrateAttack,
+  narratePassive,
+  narrateParry,
+  narrateDodge,
+  narrateCounterstrike,
+  narrateHit,
+  narrateParryBreak,
+  narrateInitiative,
+  narrateKnockdown,
+  narrateRecovery,
+
+=== MISC [SRC ~16L] src/pages/StableEquipment/index.tsx | src/pages/TrainingPlanner/index.tsx
+        ))}
+      </div>
+    </Surface>
+  );
+}
+
+/**
+ *
+ */
+export default function StableEquipment() {
+  const {
+    activeWarriors,
+
+=== MISC [SRC ~16L] src/pages/WarriorDetail/hooks/useWarriorDetail.ts | src/pages/scouting/useScouting.ts
+    [treasury, week, scoutReports, setState, activeWarrior, activeRival]
+  );
+
+  return {
+    treasury,
+    week,
+    rivals,
+    scoutReports,
+    roster,
+    selectedRivalId,
+    selectedWarriorId,
+    filteredReports,
+
+=== MISC [MIX ~16L] src/schemas/economySchemas.ts | src/test/engine/narrative/combatNarrators.test.ts
+  TrainerTierSchema,
+  TrainerFocusSchema,
+  TrainerSpecialtySchema,
+  ScoutQualitySchema,
+  PromoterPersonalitySchema,
+  PromoterTierSchema,
+  OwnerPersonalitySchema,
+  MetaAdaptationSchema,
+  OwnerCompetenceSchema,
+  ShieldShapeSchema,
+  FieldTypeSchema,
+  MetalColorSchema,
+
+=== MISC [MIX ~16L] src/state/slices/worldSlice/types.ts | src/test/engine/narrative/combatNarrators.test.ts
+  WeatherType,
+  Promoter,
+  BoutOffer,
+  RivalStableData,
+  GazetteStory,
+  Owner,
+  ScoutReportData,
+  CrowdMoodType,
+  NewsletterItem,
+  HallEntry,
+  Rivalry,
+  MatchRecord,
+
+=== HARNESS [TEST ~16L] src/test/components/BookmarkButton.test.tsx | src/test/components/BookmarkButtonA11y.test.tsx
+// @vitest-environment jsdom
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { useGameStore } from '@/state/useGameStore';
+
+const bookmarkedIds = new Set<string>();
+const mockToggle = vi.fn();
+
+describe('BookmarkButton', () => {
+  beforeEach(() => {
+    bookmarkedIds.clear();
+
+=== HARNESS [TEST ~16L] src/test/engine/ai/plan/levers.test.ts | src/test/utils/escapeHtml.test.ts
+
+describe('levers — getAIOpeningMove', () => {
+  it('returns Aggressive for Aggressive personality', () => {
+    expect(getAIOpeningMove('Aggressive')).toBe('Aggressive');
+  });
+
+  it('returns Aggressive for Showman personality', () => {
+    expect(getAIOpeningMove('Showman')).toBe('Aggressive');
+  });
+
+  it('returns Safe for Methodical personality', () => {
+    expect(getAIOpeningMove('Methodical')).toBe('Safe');
+
+=== HARNESS [TEST ~16L] src/test/engine/ai/plan/levers.test.ts | src/test/engine/ai/plan/tacticAdvisor.test.ts
+describe('levers — getAIRangePreference', () => {
+  it('returns Extended for LungingAttack', () => {
+    expect(getAIRangePreference(FightingStyle.LungingAttack)).toBe('Extended');
+  });
+
+  it('returns Extended for ParryLunge', () => {
+    expect(getAIRangePreference(FightingStyle.ParryLunge)).toBe('Extended');
+  });
+
+  it('returns Tight for BashingAttack', () => {
+    expect(getAIRangePreference(FightingStyle.BashingAttack)).toBe('Tight');
+  });
+
+=== HARNESS [TEST ~16L] src/test/engine/combat/distanceResolution.test.ts | src/test/lib/boutUtils.test.ts
+describe('transitionZone', () => {
+  it('Center → Edge when pushed', () => {
+    expect(transitionZone('Center')).toBe('Edge');
+  });
+  it('Edge → Corner when pushed again', () => {
+    expect(transitionZone('Edge')).toBe('Corner');
+  });
+  it('Corner stays Corner', () => {
+    expect(transitionZone('Corner')).toBe('Corner');
+  });
+  it('Obstacle stays Obstacle', () => {
+    expect(transitionZone('Obstacle')).toBe('Obstacle');
+
+=== HARNESS [TEST ~16L] src/test/engine/combat/mechanics/combatDamage.test.ts | src/test/engine/combat/mechanics/protectShield.test.ts
+      expect(result).toBe(1);
+    });
+  });
+
+  describe('applyArmorTypeMod — armor ID corrections (Bug 2)', () => {
+    it('padded armor resists bash damage', () => {
+      // mace → bash; padded: { bash: 0.9 } → floor(100 * 0.9) = 90
+      expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
+    });
+
+    it('padded armor is weak to pierce damage', () => {
+      // dagger → pierce; padded: { pierce: 1.05 } → floor(100 * 1.05) = 105
+
+=== HARNESS [TEST ~16L] src/test/engine/combat/mechanics/combatDamage.test.ts | src/test/engine/combat/mechanics/weaponArmor.test.ts
+      expect(result).toBe(1);
+    });
+  });
+
+  describe('applyArmorTypeMod — armor ID corrections (Bug 2)', () => {
+    it('padded armor resists bash damage', () => {
+      // mace → bash; padded: { bash: 0.9 } → floor(100 * 0.9) = 90
+      expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
+    });
+
+    it('padded armor is weak to pierce damage', () => {
+      // dagger → pierce; padded: { pierce: 1.05 } → floor(100 * 1.05) = 105
+
+=== MISC [TEST ~16L] src/test/engine/jobQueue.test.ts | src/test/engine/session.test.ts
+    const queue = createJobQueue();
+    const order: string[] = [];
+    const gate = deferred<null>();
+
+    const p1 = queue.enqueue(async () => {
+      order.push('job1-start');
+      await gate.promise;
+      order.push('job1-end');
+      return 'a';
+    });
+    const p2 = queue.enqueue(async () => {
+      order.push('job2');
+
+=== HARNESS [TEST ~16L] src/test/engine/rivals/rivalUtils.test.ts | src/test/utils/math.test.ts
+      // Math.floor(7/3) + 1*5 + 2*3 = 2 + 5 + 6 = 13. Max is 5.
+      expect(calculateRivalryScore(7, 1, 2)).toBe(5);
+    });
+
+    it('should not go below 1', () => {
+      expect(calculateRivalryScore(0, 0, 0)).toBe(1);
+      expect(calculateRivalryScore(2, 0, 0)).toBe(1); // 2/3 = 0, floor is 0 -> clamped to 1
+    });
+
+    it('should not exceed 5', () => {
+      expect(calculateRivalryScore(30, 0, 0)).toBe(5);
+      expect(calculateRivalryScore(0, 2, 0)).toBe(5);
+
+=== FUNC [TEST ~16L] src/test/engine/stableReputation.test.ts | src/test/hooks/useQuadrantDots.test.ts
+
+function createMockGameState(overrides: Partial<GameState> = {}): GameState {
+  return {
+    player: { stableName: 'Player Stable' },
+    roster: [],
+    graveyard: [],
+    newsletter: [],
+    arenaHistory: [],
+    fame: 0,
+    trainingAssignments: [],
+    trainers: [],
+    ...overrides,

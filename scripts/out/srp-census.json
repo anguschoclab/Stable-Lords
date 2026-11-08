@@ -1,0 +1,4271 @@
+{
+  "summary": {
+    "filesScanned": 1292,
+    "candidates": 138,
+    "bySignal": {
+      "multi-domain": 480,
+      "fan-out": 63,
+      "export-mix": 19,
+      "name-families": 37,
+      "banner-blocks": 33,
+      "god-unit": 61
+    },
+    "limits": {
+      "domains": 4,
+      "fanOut": 12,
+      "exportCount": 6,
+      "exportKinds": 3,
+      "families": 4,
+      "familyMinExports": 8,
+      "banners": 3
+    }
+  },
+  "candidates": [
+    {
+      "file": "src/engine/favorites/favorites.ts",
+      "lines": 281,
+      "domains": [
+        "data/equipment",
+        "engine/core",
+        "types/shared.types",
+        "types/warrior.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 5,
+      "exports": 10,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "CHART",
+        "DISCOVERY",
+        "DISCOVERYRESULT",
+        "FAVORITERHYTHMBONUS",
+        "GENERATE",
+        "INSIGHTTOKEN",
+        "SUSPECTED",
+        "WEAPONCHART",
+        "WIELDINGFAVORITEWEAPON"
+      ],
+      "banners": 4,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "export-mix": 10,
+        "name-families": 9,
+        "banner-blocks": 4
+      },
+      "signalCount": 4
+    },
+    {
+      "file": "src/engine/combat/resolution/exchangePrep.ts",
+      "lines": 395,
+      "domains": [
+        "constants/combat",
+        "engine/ai",
+        "engine/combat",
+        "engine/stylePassives",
+        "engine/traits",
+        "types/combat.types"
+      ],
+      "localImports": 14,
+      "exports": 2,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "EXCHANGESETUP",
+        "PREPARE"
+      ],
+      "banners": 9,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "fan-out": 14,
+        "banner-blocks": 9
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/state/createStore.ts",
+      "lines": 372,
+      "domains": [
+        "constants/progression",
+        "engine/core",
+        "engine/factories",
+        "engine/pipeline",
+        "engine/runtime",
+        "engine/storage",
+        "state/resolutionPayload",
+        "state/serialization",
+        "state/slices",
+        "state/store.types",
+        "types/shared.types",
+        "types/state.types",
+        "utils/logger"
+      ],
+      "localImports": 21,
+      "exports": 1,
+      "exportKinds": [
+        "const"
+      ],
+      "exportFamilies": [
+        "GAMESTORE"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 13,
+        "fan-out": 21,
+        "banner-blocks": 3
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/combat/resolution/resolution.ts",
+      "lines": 281,
+      "domains": [
+        "constants/combat",
+        "engine/combat",
+        "engine/stylePassives",
+        "types/combat.types"
+      ],
+      "localImports": 12,
+      "exports": 17,
+      "exportKinds": [
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "AGGRESSIONBIAS",
+        "COMBATOFFENSEDEFENSE",
+        "CONTESTEDDEFENSE",
+        "DECISION",
+        "DESPERATESTATE",
+        "EFFECTIVETACTICS",
+        "EVALUATE",
+        "EXCHANGE",
+        "FIGHTERSTATE",
+        "INITIATIVEPHASE",
+        "MATCHUPBONUS",
+        "OFFENSEDEFENSECTX",
+        "PSYCHSTATEMODS",
+        "RESOLUTIONCONTEXT",
+        "SPECIALTYMODS",
+        "STYLE",
+        "WHIFFRIPOSTE"
+      ],
+      "banners": 2,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "fan-out": 12,
+        "name-families": 17
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/combat/mechanics/distanceResolution.ts",
+      "lines": 277,
+      "domains": [
+        "engine/combat",
+        "types/combat.types",
+        "types/shared.types"
+      ],
+      "localImports": 4,
+      "exports": 13,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "ARENA",
+        "ARENASIZEPROFILE",
+        "CLAMP",
+        "CONTEST",
+        "RANGE",
+        "REACHSCORE",
+        "RESET",
+        "TRANSITION",
+        "WEAPON",
+        "WEAPONPREFERREDRANGE",
+        "WEAPONRANGEMOD",
+        "ZONEPENALTY"
+      ],
+      "banners": 14,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 13,
+        "name-families": 12,
+        "banner-blocks": 14
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/championship/arenaChampionship/core.ts",
+      "lines": 268,
+      "domains": [
+        "constants/arena",
+        "data/names",
+        "engine/core",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 6,
+      "exports": 16,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "AWARD",
+        "CEL",
+        "CHAMPIONSHIP",
+        "CHAMPIONSHIPDELTA",
+        "CROWN",
+        "EFFECTIVE",
+        "END",
+        "ENSURE",
+        "NEWS",
+        "OPENOFFER",
+        "OWNING",
+        "SORTED",
+        "TITLE"
+      ],
+      "banners": 2,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "export-mix": 16,
+        "name-families": 13
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/core/leaderboards.ts",
+      "lines": 250,
+      "domains": [
+        "data/arenas",
+        "engine/championship",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 6,
+      "exports": 8,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "ARENALEADERBOARDDATA",
+        "ARENALEADERBOARDENTRY",
+        "ARENASTABLEENTRY",
+        "ARENAWARRIORENTRY",
+        "ULATE"
+      ],
+      "banners": 5,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "name-families": 5,
+        "banner-blocks": 5
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/warrior/skillCalc.ts",
+      "lines": 235,
+      "domains": [
+        "data/terrabloodCharts",
+        "engine/core",
+        "engine/warrior",
+        "types/shared.types",
+        "utils/math"
+      ],
+      "localImports": 5,
+      "exports": 10,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "BASESKILLS",
+        "BLOODLUST",
+        "DAMAGE",
+        "DERIVEDSTATS",
+        "ENDURANCE",
+        "HP",
+        "LUCKFACTOR",
+        "WARRIORSTATS"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "name-families": 8,
+        "banner-blocks": 3
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/components/appShell/chrome.tsx",
+      "lines": 228,
+      "domains": [
+        "components/EventLog",
+        "components/layout",
+        "components/modals",
+        "components/progression",
+        "components/ui",
+        "hooks/useWeekExecution",
+        "state/useGameStore"
+      ],
+      "localImports": 13,
+      "exports": 4,
+      "exportKinds": [
+        "component",
+        "hook"
+      ],
+      "exportFamilies": [
+        "ROUTEAWAREEVENTLOG",
+        "SHELLCONTENT",
+        "SHELLSTATE",
+        "SHELLTOP"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "fan-out": 13,
+        "banner-blocks": 3
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/trainers/trainers.ts",
+      "lines": 212,
+      "domains": [
+        "engine/rivals",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 4,
+      "exports": 13,
+      "exportKinds": [
+        "const",
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "CONVERT",
+        "FOCUS",
+        "GENERATE",
+        "TIER",
+        "TRAINER",
+        "TRAINERFOCUS",
+        "TRAINERTIER",
+        "TRAININGBONUS"
+      ],
+      "banners": 1,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "export-mix": 13,
+        "name-families": 8
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/constants/economy/economy.ts",
+      "lines": 188,
+      "domains": [
+        "utils/math"
+      ],
+      "localImports": 1,
+      "exports": 25,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "AI",
+        "ARENA",
+        "BANKRUPTCY",
+        "DEBT",
+        "EMERGENCY",
+        "FAME",
+        "FIGHT",
+        "FIGHTECONOMICS",
+        "FIGHTECONOMICSINPUT",
+        "IDLE",
+        "LEAGUE",
+        "MATCHMAKING",
+        "MIN",
+        "SCOUT",
+        "STARTING",
+        "TRAINER",
+        "TRAINING",
+        "WARRIOR",
+        "WEATHER",
+        "WIN"
+      ],
+      "banners": 7,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 25,
+        "name-families": 20,
+        "banner-blocks": 7
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/state/saveSlots.ts",
+      "lines": 180,
+      "domains": [
+        "constants/core",
+        "engine/storage",
+        "schemas/gameStateSchema",
+        "types/state.types",
+        "utils/logger"
+      ],
+      "localImports": 6,
+      "exports": 9,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "DELETE",
+        "EXPORT",
+        "FROMSLOT",
+        "IMPORT",
+        "LIST",
+        "MAX",
+        "NEW",
+        "SAVESLOTMETA",
+        "TOSLOT"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "export-mix": 9,
+        "name-families": 9
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/recruitment/recruitment/types.ts",
+      "lines": 142,
+      "domains": [
+        "constants/world",
+        "data/narrative",
+        "engine/warrior",
+        "types/narrative.types",
+        "types/shared.types",
+        "types/warrior.types",
+        "utils/math"
+      ],
+      "localImports": 7,
+      "exports": 10,
+      "exportKinds": [
+        "const",
+        "function",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "ACADEMY",
+        "DEFAULT",
+        "FREEAGENTCOST",
+        "POOLWARRIOR",
+        "RECRUITPOOLHARDCAP",
+        "RECRUITPOOLSIZE",
+        "RECRUITTIER",
+        "REFRESH",
+        "TIER"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "export-mix": 10,
+        "name-families": 9
+      },
+      "signalCount": 3
+    },
+    {
+      "file": "src/engine/ai/workers/recruitmentWorker.ts",
+      "lines": 568,
+      "domains": [
+        "constants/ai",
+        "constants/world",
+        "data/ownerData",
+        "engine/ai",
+        "engine/analytics",
+        "engine/core",
+        "engine/owner",
+        "engine/recruitment",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/collections"
+      ],
+      "localImports": 14,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "RECRUITMENT"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 12,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/crest/chargePaths.ts",
+      "lines": 491,
+      "domains": [
+        "types/crest.types"
+      ],
+      "localImports": 1,
+      "exports": 9,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "BEAST",
+        "CELESTIAL",
+        "CHARGEPATH",
+        "CHARGEPATHSBYTYPE",
+        "MYTHICAL",
+        "NATURE",
+        "RANDOMCHARGE",
+        "SYMBOL",
+        "WEAPON"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 9,
+        "name-families": 9
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/matchmaking/arenaFit.ts",
+      "lines": 467,
+      "domains": [
+        "constants/arena",
+        "data/arenas",
+        "engine/ai",
+        "engine/combat",
+        "engine/core",
+        "types/combat.types",
+        "types/shared.types",
+        "types/warrior.types"
+      ],
+      "localImports": 8,
+      "exports": 4,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "ARENAFORMATCHUP",
+        "DESCRIBE",
+        "ELIGIBLE",
+        "SCORE"
+      ],
+      "banners": 5,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "banner-blocks": 5
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/bout/services/boutResolution.ts",
+      "lines": 440,
+      "domains": [
+        "constants/arena",
+        "engine/ai",
+        "engine/bout",
+        "engine/core",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/narrative",
+        "engine/politics",
+        "engine/simulate",
+        "engine/warrior",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state.types",
+        "utils/random"
+      ],
+      "localImports": 23,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "BOUT",
+        "NPC"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 14,
+        "fan-out": 23
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/workers/crownWorker.ts",
+      "lines": 438,
+      "domains": [
+        "constants/arena",
+        "engine/advisor",
+        "engine/ai",
+        "engine/championship",
+        "engine/core",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state",
+        "types/state.types",
+        "utils/collections",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 13,
+      "exports": 3,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "ASSESS",
+        "ASSIGN",
+        "CROWNPOSTURE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts",
+      "lines": 411,
+      "domains": [
+        "constants/ai",
+        "constants/arena",
+        "engine/ai",
+        "engine/championship",
+        "engine/core",
+        "engine/matchmaking",
+        "engine/politics",
+        "engine/stable",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "CONVERT"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/workers/competitionWorker/boutBidding/generation.ts",
+      "lines": 393,
+      "domains": [
+        "constants/ai",
+        "engine/ai",
+        "engine/bout",
+        "engine/championship",
+        "engine/core",
+        "engine/matchmaking",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/math"
+      ],
+      "localImports": 13,
+      "exports": 5,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "BID",
+        "GENERATE",
+        "MAX",
+        "STABLE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/training/trainingImpact.ts",
+      "lines": 387,
+      "domains": [
+        "engine/core",
+        "engine/impacts",
+        "engine/training",
+        "engine/traits",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 10,
+      "exports": 4,
+      "exportKinds": [
+        "function",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "GAINCHANCE",
+        "TRAINING",
+        "TRAININGIMPACT"
+      ],
+      "banners": 6,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "banner-blocks": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/bout/mortalityHandler.ts",
+      "lines": 380,
+      "domains": [
+        "constants",
+        "engine/bout",
+        "engine/core",
+        "engine/gazette",
+        "engine/impacts",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/format",
+        "utils/random",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "DEATH"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 12,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/data/names/cultures.ts",
+      "lines": 363,
+      "domains": [
+        "data/names",
+        "data/narrative",
+        "types/narrative.types"
+      ],
+      "localImports": 4,
+      "exports": 8,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "CULTURE",
+        "CULTURESPEC",
+        "NAMINGCULTURE",
+        "SYLLABLE",
+        "SYLLABLETABLE",
+        "WEIGHTEDCULTURE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 8,
+        "name-families": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/constants/arena/arena.ts",
+      "lines": 356,
+      "domains": [
+        "constants/arena",
+        "types/shared.types"
+      ],
+      "localImports": 2,
+      "exports": 8,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "ARENA",
+        "SPECIAL",
+        "STYLE",
+        "STYLEWEATHERMODIFIER",
+        "TOURNAMENT"
+      ],
+      "banners": 10,
+      "godUnit": false,
+      "signals": {
+        "name-families": 5,
+        "banner-blocks": 10
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/BoutViewer.tsx",
+      "lines": 354,
+      "domains": [
+        "components/arena",
+        "components/bout-viewer",
+        "components/ui",
+        "data/arenas",
+        "hooks/useBoutPlayback",
+        "hooks/useMediaQuery",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 16,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "BOUTVIEWER"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 16
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/owner/roster/management.ts",
+      "lines": 349,
+      "domains": [
+        "constants/ai",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/warrior",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/collections",
+        "utils/random",
+        "utils/roster",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "AI"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/aging/agingSystem.ts",
+      "lines": 341,
+      "domains": [
+        "constants/aging",
+        "constants/combat",
+        "constants/core",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/impacts",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/collections",
+        "utils/stateUtils",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 16,
+      "exports": 4,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "AGEPENALTY",
+        "AGINGIMPACT",
+        "FORCEDRETIREMENT",
+        "RETIREDWARRIOR"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 14,
+        "fan-out": 16
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/workers/rosterWorkerTraining.ts",
+      "lines": 341,
+      "domains": [
+        "constants/ai",
+        "engine/ai",
+        "engine/core",
+        "engine/training",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 12,
+      "exports": 7,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "AI",
+        "FLAW",
+        "PERFORM",
+        "QUALIFIED",
+        "TRAININGFOCUS",
+        "TRAITDEVELOPMENT"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/stats/simulationMetrics.ts",
+      "lines": 338,
+      "domains": [
+        "constants/arena",
+        "constants/core",
+        "engine/championship",
+        "engine/core",
+        "engine/traits",
+        "types/state.types"
+      ],
+      "localImports": 6,
+      "exports": 3,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "PULSE",
+        "PULSETABLE",
+        "SIMPULSE"
+      ],
+      "banners": 6,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "banner-blocks": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/data/terrabloodCharts.ts",
+      "lines": 337,
+      "domains": [
+        "utils/math"
+      ],
+      "localImports": 1,
+      "exports": 9,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "ACTIVITYRATING",
+        "COORDINATION",
+        "DAMAGECLASS",
+        "ENCUMBRANCE",
+        "ENCUMBRANCECAPACITY",
+        "ENCUMBRANCECLASS",
+        "ENDURANCETIER",
+        "ENDURANCEVALUE",
+        "HP"
+      ],
+      "banners": 6,
+      "godUnit": false,
+      "signals": {
+        "name-families": 9,
+        "banner-blocks": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/warrior/skillBreakpoints.ts",
+      "lines": 331,
+      "domains": [
+        "types/shared.types",
+        "utils/math"
+      ],
+      "localImports": 2,
+      "exports": 27,
+      "exportKinds": [
+        "const",
+        "function"
+      ],
+      "exportFamilies": [
+        "BP",
+        "DF",
+        "SP",
+        "ST",
+        "STYLE",
+        "SZ",
+        "WL",
+        "WT"
+      ],
+      "banners": 9,
+      "godUnit": false,
+      "signals": {
+        "name-families": 8,
+        "banner-blocks": 9
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/bout/fighterState.ts",
+      "lines": 319,
+      "domains": [
+        "data/equipment",
+        "engine/aging",
+        "engine/combat",
+        "engine/favorites",
+        "engine/injuries",
+        "engine/trainers",
+        "engine/traits",
+        "engine/warrior",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/math"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "FIGHTERSTATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 13,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/rivals/rivalStableFactory.ts",
+      "lines": 317,
+      "domains": [
+        "constants/ai",
+        "data/names",
+        "data/templates",
+        "engine/ai",
+        "engine/core",
+        "engine/crest",
+        "engine/rivals",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 13,
+      "exports": 5,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "GENERATE",
+        "ROMANNUMERAL",
+        "STABLETEMPLATES",
+        "UNIQUE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/RecruitmentPass.ts",
+      "lines": 309,
+      "domains": [
+        "constants/ai",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/impacts",
+        "engine/recruitment",
+        "engine/warrior",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "RECRUITMENTPASS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/planBuilder/sections.tsx",
+      "lines": 299,
+      "domains": [
+        "components/planBuilder",
+        "components/ui",
+        "engine/bout",
+        "engine/strategy",
+        "lib/scoreDisplay",
+        "lib/utils",
+        "types/game"
+      ],
+      "localImports": 13,
+      "exports": 5,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "PLANHEADER",
+        "PLANVALUESLIDER",
+        "PRESETBAR",
+        "TACTICBADGESTRIP",
+        "WARNINGSROW"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/SystemPass.ts",
+      "lines": 298,
+      "domains": [
+        "engine/ai",
+        "engine/core",
+        "engine/impacts",
+        "engine/owner",
+        "engine/pipeline",
+        "engine/recruitment",
+        "engine/warrior",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 17,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "SYSTEMPASS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 17
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/widgets/SchedulingWidget.tsx",
+      "lines": 294,
+      "domains": [
+        "components/ui",
+        "engine/matchmaking",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 10,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "SCHEDULINGWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/market/poachBid.ts",
+      "lines": 294,
+      "domains": [
+        "constants/ai",
+        "constants/core",
+        "engine/ai",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/collections",
+        "utils/logger",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 14,
+      "exports": 4,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "POACHBID",
+        "POACHINGENABLED",
+        "POACHMARKET",
+        "SEASON"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/stableDetail/sections.tsx",
+      "lines": 289,
+      "domains": [
+        "components/EntityLink",
+        "components/avatar",
+        "components/crest",
+        "components/ui",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game",
+        "types/warrior.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 14,
+      "exports": 4,
+      "exportKinds": [
+        "component",
+        "type"
+      ],
+      "exportFamilies": [
+        "STABLENOTFOUND",
+        "STABLEOVERVIEWTAB",
+        "STABLESIDEBAR",
+        "TIERCONFIG"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 9,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/workers/rosterWorker.ts",
+      "lines": 285,
+      "domains": [
+        "constants/economy",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/training",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/random",
+        "utils/stateUtils",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 15,
+      "exports": 4,
+      "exportKinds": [
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "FLAW",
+        "QUALIFIED",
+        "ROSTER",
+        "TRAININGFOCUS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/state/slices/rosterSlice/actions.ts",
+      "lines": 283,
+      "domains": [
+        "constants/economy",
+        "constants/world",
+        "engine/ai",
+        "engine/recruitment",
+        "engine/warrior",
+        "state/useGameStore",
+        "types/shared.types",
+        "types/state.types",
+        "utils/entityName",
+        "utils/format",
+        "utils/random",
+        "utils/stateUtils"
+      ],
+      "localImports": 14,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "ROSTERACTIONS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 12,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/Offseason.tsx",
+      "lines": 282,
+      "domains": [
+        "components/ledger",
+        "components/ui",
+        "engine/warrior",
+        "state/useGameStore"
+      ],
+      "localImports": 8,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "OFFSEASON"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/promoters/offerMatchmaking.ts",
+      "lines": 280,
+      "domains": [
+        "constants/economy",
+        "engine/core",
+        "engine/matchmaking",
+        "engine/promoters",
+        "types/shared.types",
+        "types/state.types",
+        "utils/keyUtils"
+      ],
+      "localImports": 10,
+      "exports": 9,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "BESTOPPONENT",
+        "BOUTOFFER",
+        "LOWER",
+        "OFFERBUILDCONTEXT",
+        "OPPONENTSEARCHCONTEXT",
+        "PRUNE",
+        "UNAVAILABLEWARRIORIDS",
+        "UPPER",
+        "WEATHERDISADVANTAGED"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "name-families": 9
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/combat/resolution/exchangeSubPhases.ts",
+      "lines": 267,
+      "domains": [
+        "constants/combat",
+        "engine/combat",
+        "types/combat.types",
+        "types/shared.types",
+        "utils/math"
+      ],
+      "localImports": 6,
+      "exports": 7,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "APPROACH",
+        "COMMIT",
+        "COMMITRESULT",
+        "EXCHANGESTATE",
+        "FEINT",
+        "RECOVERY"
+      ],
+      "banners": 5,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "banner-blocks": 5
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/EventPass.ts",
+      "lines": 258,
+      "domains": [
+        "data/narrative",
+        "engine/core",
+        "engine/impacts",
+        "engine/narrative",
+        "engine/warrior",
+        "types/narrative.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random",
+        "utils/roster"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "EVENTPASS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/simulate/simulateFight.ts",
+      "lines": 256,
+      "domains": [
+        "constants/combat",
+        "data/equipment",
+        "engine/bout",
+        "engine/core",
+        "engine/simulate",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 14,
+      "exports": 3,
+      "exportKinds": [
+        "function",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "DEFAULT",
+        "SIMULATE",
+        "SIMULATEFIGHTARGS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/tournaments/TournamentBracket.tsx",
+      "lines": 253,
+      "domains": [
+        "components/avatar",
+        "components/tournaments",
+        "components/ui",
+        "engine/core",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 6,
+      "exports": 4,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "BRONZEHIGHLIGHT",
+        "CHAMPIONDISPLAY",
+        "TOURNAMENTBRACKET",
+        "TOURNAMENTPROGRESS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/Tournaments.tsx",
+      "lines": 250,
+      "domains": [
+        "components/bookmarks",
+        "components/layout",
+        "components/tournaments",
+        "components/ui",
+        "hooks/useExecuteTournamentRound",
+        "lib/AudioManager",
+        "lib/utils",
+        "pages/tournaments"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "TOURNAMENTS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/autosim/autosim.ts",
+      "lines": 248,
+      "domains": [
+        "constants/economy",
+        "engine/advisor",
+        "engine/bout",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/pipeline",
+        "engine/runtime",
+        "engine/storage",
+        "types/shared.types",
+        "types/state.types",
+        "utils/fightTitle"
+      ],
+      "localImports": 12,
+      "exports": 6,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "AUTOSIM",
+        "AUTOSIMOPTIONS",
+        "AUTOSIMRESULT",
+        "AUTOSIMWEEKSUMMARY",
+        "EXTRACT",
+        "PLAYEROFFERS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/combat/resolution/exchangeHelpers/execution/hitExecution/damage.ts",
+      "lines": 244,
+      "domains": [
+        "constants/arena",
+        "constants/combat",
+        "data/equipment",
+        "engine/combat",
+        "engine/favorites",
+        "engine/stylePassives",
+        "types/combat.types",
+        "types/shared.types"
+      ],
+      "localImports": 18,
+      "exports": 3,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "DAMAGEMULTIPLIERS",
+        "HITANDCOUNTERS",
+        "PREARMORDAMAGE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 18
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/services/weekPipeline/finalize.ts",
+      "lines": 243,
+      "domains": [
+        "constants/economy",
+        "engine/bout",
+        "engine/championship",
+        "engine/core",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/pipeline",
+        "engine/storage",
+        "engine/validate",
+        "types/shared.types",
+        "types/state.types",
+        "utils/logger"
+      ],
+      "localImports": 13,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "BANKRUPTCY",
+        "FINALIZE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 12,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/ledger/YearEndRecap.tsx",
+      "lines": 241,
+      "domains": [
+        "components/ui",
+        "lib/utils",
+        "state/useGameStore",
+        "types/state.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "YEARENDRECAP"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/hooks/useWeekExecution.ts",
+      "lines": 241,
+      "domains": [
+        "engine/autosim",
+        "engine/bout",
+        "engine/runtime",
+        "state/useGameStore",
+        "utils/logger"
+      ],
+      "localImports": 6,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "WEEKEXECUTION"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/plan/coreGenerator/strategicLayer.ts",
+      "lines": 239,
+      "domains": [
+        "engine/ai",
+        "types/combat.types",
+        "types/shared",
+        "types/state",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/math"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "STRATEGICLAYER"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pool/enginePool.ts",
+      "lines": 237,
+      "domains": [
+        "engine/bout",
+        "engine/core",
+        "engine/pipeline",
+        "engine/pool",
+        "types/shared.types",
+        "types/state.types"
+      ],
+      "localImports": 9,
+      "exports": 9,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "BOUTSHARDCHUNK",
+        "BOUTSHARDCONTEXT",
+        "BOUTSHARDINPUT",
+        "CONFIGURE",
+        "ENGINEPOOL",
+        "SHARDWORKERAPI",
+        "SHUTDOWN"
+      ],
+      "banners": 1,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "name-families": 7
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/EventLog.tsx",
+      "lines": 232,
+      "domains": [
+        "components/eventLog",
+        "components/ui",
+        "hooks/useEntityNames",
+        "lib/utils",
+        "state/useGameStore",
+        "types/eventLog"
+      ],
+      "localImports": 10,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "EVENTLOG"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/combat/mechanics/tacticResolution.ts",
+      "lines": 230,
+      "domains": [
+        "constants/combat",
+        "engine/strategy",
+        "types/combat.types",
+        "types/shared.types",
+        "utils/math"
+      ],
+      "localImports": 5,
+      "exports": 8,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "AL",
+        "DEFENSIVEMODS",
+        "DEFENSIVETACTICMODS",
+        "OE",
+        "OFFENSIVEMODS",
+        "OFFENSIVETACTICMODS",
+        "ULATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "name-families": 7
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/combat/resolution/offenseDefense/prepare.ts",
+      "lines": 230,
+      "domains": [
+        "constants/combat",
+        "engine/combat",
+        "engine/stylePassives",
+        "engine/traits"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "PREPARE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/arena/ArenaView.tsx",
+      "lines": 226,
+      "domains": [
+        "components/arena",
+        "constants/combat",
+        "hooks/useArenaAnimation",
+        "hooks/useArenaEventEffects",
+        "lib/utils",
+        "state/useGameStore",
+        "types/combat.types",
+        "types/game"
+      ],
+      "localImports": 17,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ARENAVIEW"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 17
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/ResolutionReveal.tsx",
+      "lines": 225,
+      "domains": [
+        "components/resolution-reveal",
+        "components/ui",
+        "data/narrative",
+        "lib/AudioManager",
+        "state/useGameStore",
+        "types/combat.types",
+        "types/shared.types"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "RESOLUTIONREVEAL"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/bout/services/boutProcessorService.ts",
+      "lines": 225,
+      "domains": [
+        "engine/bout",
+        "engine/core",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/pool",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/roster"
+      ],
+      "localImports": 14,
+      "exports": 7,
+      "exportKinds": [
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "BOUT",
+        "BOUTCONTEXT",
+        "BOUTIMPACT",
+        "BOUTRESULT",
+        "WEEKBOUTS",
+        "WEEKBOUTSSHARDED",
+        "WEEKBOUTSUMMARY"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 9,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/WarriorDetail.tsx",
+      "lines": 224,
+      "domains": [
+        "components/layout",
+        "components/ui",
+        "components/warrior",
+        "data/equipment",
+        "engine/bout",
+        "engine/gazette",
+        "pages/WarriorDetail",
+        "types/shared.types"
+      ],
+      "localImports": 14,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "WARRIORDETAIL"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/hooks/useRivalryAlerts.ts",
+      "lines": 223,
+      "domains": [
+        "state/useGameStore",
+        "types/shared.types",
+        "utils/cryptoRandom",
+        "utils/math"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "RIVALRYALERTS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/scouting/StableComparison.tsx",
+      "lines": 220,
+      "domains": [
+        "components/scouting",
+        "components/ui",
+        "hooks/useScoutingStableComparison",
+        "types/game"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STABLECOMPARISON"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/factories/gameStateFactory.ts",
+      "lines": 219,
+      "domains": [
+        "constants/core",
+        "constants/economy",
+        "constants/progression",
+        "data/backstories",
+        "data/narrative",
+        "engine/ai",
+        "engine/core",
+        "engine/factories",
+        "engine/recruitment",
+        "engine/warrior",
+        "types/narrative.types",
+        "types/shared.types",
+        "types/state.types",
+        "utils/random"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "FRESHSTATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 14,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/eventLog/eventProcessors.ts",
+      "lines": 215,
+      "domains": [
+        "components/eventLog",
+        "engine/core",
+        "engine/injuries",
+        "state/useGameStore",
+        "types/eventLog",
+        "types/state.types"
+      ],
+      "localImports": 6,
+      "exports": 9,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "DEATHEVENTS",
+        "FIGHTEVENTS",
+        "GAZETTEEVENTS",
+        "GROUP",
+        "INJURYEVENTS",
+        "NEWSLETTEREVENTS",
+        "RETIREMENTEVENTS",
+        "TOURNAMENTEVENTS",
+        "TRAININGEVENTS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "name-families": 9
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/owner/roster/recruitGenerator.ts",
+      "lines": 213,
+      "domains": [
+        "data/fighterConcepts",
+        "data/names",
+        "data/ownerData",
+        "engine/analytics",
+        "engine/core",
+        "engine/factories",
+        "engine/narrative",
+        "engine/traits",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 15,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "GENERATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 13,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/offseasonEvents/helpers.ts",
+      "lines": 213,
+      "domains": [
+        "engine/core",
+        "engine/injuries",
+        "engine/narrative",
+        "engine/pipeline",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 10,
+      "exports": 12,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "ACTIVEWARRIOR",
+        "ACTIVEWARRIORS",
+        "ANNOUNCE",
+        "GRANT",
+        "OFFSEASONEVENTRUN",
+        "STAT",
+        "STATGRANTOUTCOMEOPTS",
+        "WARRIOR",
+        "WITH"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "name-families": 9
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/stableManager.ts",
+      "lines": 211,
+      "domains": [
+        "constants/economy",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/economy",
+        "engine/impacts",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/random"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "AI"
+      ],
+      "banners": 1,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/RivalStrategyPass/churn.ts",
+      "lines": 209,
+      "domains": [
+        "constants/ai",
+        "constants/world",
+        "engine/ai",
+        "engine/core",
+        "engine/impacts",
+        "engine/pipeline",
+        "engine/recruitment",
+        "engine/rivals",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "utils/collections",
+        "utils/random"
+      ],
+      "localImports": 14,
+      "exports": 3,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "MINT",
+        "STARVATIONANDFREEAGENTS",
+        "SUCCESSOR"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 13,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/RivalStrategyPass/finish.ts",
+      "lines": 208,
+      "domains": [
+        "engine/ai",
+        "engine/championship",
+        "engine/core",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/pipeline",
+        "engine/recruitment",
+        "types/shared.types",
+        "types/state.types"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "FINISH"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 9,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/WarriorDetail/sections.tsx",
+      "lines": 208,
+      "domains": [
+        "components/bookmarks",
+        "components/layout",
+        "components/ui",
+        "engine/warrior",
+        "lib/obfuscation",
+        "lib/utils",
+        "types/state.types"
+      ],
+      "localImports": 12,
+      "exports": 3,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "DETAILHEADERACTIONS",
+        "DETAILSIDEBAR",
+        "DETAILTABSTRIP"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/StableDossier.tsx",
+      "lines": 206,
+      "domains": [
+        "components/avatar",
+        "components/crest",
+        "components/ui",
+        "engine/crest",
+        "engine/warrior",
+        "state/useGameStore",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 11,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STABLEDOSSIER"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/ControlCenter/index.tsx",
+      "lines": 206,
+      "domains": [
+        "components/charts",
+        "components/dashboard",
+        "components/ui",
+        "components/widgets",
+        "lib/utils",
+        "pages/ControlCenter"
+      ],
+      "localImports": 19,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "CONTROLCENTER"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "fan-out": 19
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/scouting/HeadToHead.tsx",
+      "lines": 205,
+      "domains": [
+        "components/avatar",
+        "components/ui",
+        "engine/core",
+        "hooks/useScoutingHeadToHead",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 8,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "HEADTOHEAD"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/recruitment/recruitment/generate.ts",
+      "lines": 205,
+      "domains": [
+        "data/names",
+        "engine/analytics",
+        "engine/core",
+        "engine/factories",
+        "engine/favorites",
+        "engine/narrative",
+        "engine/recruitment",
+        "engine/traits",
+        "engine/warrior",
+        "types/shared.types",
+        "types/warrior.types"
+      ],
+      "localImports": 13,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "GENERATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/ArenaDetail.tsx",
+      "lines": 198,
+      "domains": [
+        "components/arena",
+        "components/layout",
+        "components/ui",
+        "data/arenas",
+        "lib/utils",
+        "pages/arenaDetail"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ARENADETAIL"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/stable/RosterWarriorRow.tsx",
+      "lines": 195,
+      "domains": [
+        "components/avatar",
+        "components/bookmarks",
+        "components/stable",
+        "components/ui",
+        "components/warrior",
+        "constants/training",
+        "lib/utils",
+        "types/game",
+        "types/shared.types",
+        "types/warrior.types"
+      ],
+      "localImports": 15,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ROSTERWARRIORROW"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/warrior/WarriorFightHistory.tsx",
+      "lines": 193,
+      "domains": [
+        "components/BoutViewer",
+        "components/ui",
+        "engine/core",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game",
+        "utils/fightTitle"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "WARRIORFIGHTHISTORY"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/simulate/simulationLoop/index.ts",
+      "lines": 192,
+      "domains": [
+        "constants/combat",
+        "engine/ai",
+        "engine/combat",
+        "engine/core",
+        "engine/simulate",
+        "types/combat.types",
+        "types/warrior.types"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "SIMULATIONLOOP"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/charts/TreasurySparkline.tsx",
+      "lines": 191,
+      "domains": [
+        "components/charts",
+        "components/ui",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "TREASURYSPARKLINE"
+      ],
+      "banners": 2,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/championship/arenaChampionship/queries.ts",
+      "lines": 191,
+      "domains": [
+        "constants/arena",
+        "data/arenas",
+        "engine/championship",
+        "engine/core",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 8,
+      "exports": 13,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "ACTIVECHAMPION",
+        "ARENACHAMPION",
+        "CHAMPIONBOOKINGLOCKED",
+        "CHAMPIONS",
+        "CONTENDER",
+        "CONTENDERINDEX",
+        "CURRENTARENATITLES",
+        "P",
+        "PASTARENATITLES",
+        "RANK",
+        "RANKEDCONTENDER",
+        "REIGNINGCHAMPION",
+        "TITLECONTENDER"
+      ],
+      "banners": 1,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "name-families": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/widgets/NextBoutWidget.tsx",
+      "lines": 183,
+      "domains": [
+        "components/ui",
+        "constants/core",
+        "engine/core",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game",
+        "types/state.types"
+      ],
+      "localImports": 8,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "NEXTBOUTWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/training/trainingGains/attributeTraining.ts",
+      "lines": 182,
+      "domains": [
+        "constants/combat",
+        "engine/core",
+        "engine/training",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/math",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 13,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "ATTRIBUTETRAINING",
+        "GAINCHANCE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 9,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/narrative/narrativePostBout.ts",
+      "lines": 180,
+      "domains": [
+        "engine/core",
+        "engine/narrative",
+        "lib/AudioManager",
+        "types/shared.types"
+      ],
+      "localImports": 5,
+      "exports": 8,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "BOUTENDCONTEXT",
+        "CONSERVING",
+        "NARRATE",
+        "POPULARITY",
+        "SKILL",
+        "STALEMATE",
+        "TAUNT",
+        "TRADING"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "name-families": 8
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/types/state/gameState.ts",
+      "lines": 177,
+      "domains": [
+        "engine/recruitment",
+        "lib/contentPacks",
+        "types/avatar.types",
+        "types/bookmark.types",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state",
+        "types/warrior.types"
+      ],
+      "localImports": 12,
+      "exports": 2,
+      "exportKinds": [
+        "type"
+      ],
+      "exportFamilies": [
+        "GAMESTATE",
+        "UI"
+      ],
+      "banners": 1,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/orphanage/ftueStateBuilder.ts",
+      "lines": 176,
+      "domains": [
+        "data/orphanPool",
+        "engine",
+        "engine/factories",
+        "engine/impacts",
+        "engine/pipeline",
+        "engine/promoters",
+        "engine/recruitment",
+        "engine/rivals",
+        "types/shared.types",
+        "types/state.types",
+        "utils/random"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "FTUE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/simulate/initialization.ts",
+      "lines": 172,
+      "domains": [
+        "constants/combat",
+        "data/arenas",
+        "data/equipment",
+        "engine/bout",
+        "engine/combat",
+        "engine/core",
+        "types/combat.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 15,
+      "exports": 3,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "IALIZE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 15
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/intentEngine/predicates.ts",
+      "lines": 171,
+      "domains": [
+        "engine/ai",
+        "engine/core",
+        "engine/warrior",
+        "types/shared.types",
+        "types/state.types"
+      ],
+      "localImports": 10,
+      "exports": 11,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "AGGRESSIVE",
+        "CROWN",
+        "EXPANSION",
+        "OBJECTIVE",
+        "RECOVERY",
+        "ROSTER",
+        "SURVIVAL",
+        "URNAMENT",
+        "VENDETTA",
+        "WEALTH",
+        "WEATHER"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "name-families": 11
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/data/warriorStatements.ts",
+      "lines": 170,
+      "domains": [
+        "data/narrative",
+        "data/terrabloodCharts",
+        "types/narrative.types",
+        "types/shared.types"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "GENERATE"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "banner-blocks": 3
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/scouting/useScouting.ts",
+      "lines": 165,
+      "domains": [
+        "engine/scouting",
+        "state/slices",
+        "state/useGameStore",
+        "types/game",
+        "utils/random"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "SCOUTING"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/BookingOffice/hooks/useOfferActions.ts",
+      "lines": 161,
+      "domains": [
+        "engine/bout",
+        "engine/core",
+        "engine/matchmaking",
+        "state/useGameStore",
+        "types/shared.types",
+        "types/warrior.types"
+      ],
+      "localImports": 6,
+      "exports": 4,
+      "exportKinds": [
+        "function",
+        "hook"
+      ],
+      "exportFamilies": [
+        "FATIGUESTATUS",
+        "INJURYBADGE",
+        "OFFERACTIONS",
+        "WEEKRESET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/constants/ai.ts",
+      "lines": 158,
+      "domains": [
+        "constants/world",
+        "types/state.types"
+      ],
+      "localImports": 2,
+      "exports": 20,
+      "exportKinds": [
+        "const",
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "AI",
+        "DEFAULT",
+        "PERSONALITY"
+      ],
+      "banners": 4,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 20,
+        "banner-blocks": 4
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/dashboard/WeeklyDigestWidget.tsx",
+      "lines": 155,
+      "domains": [
+        "components/dashboard",
+        "components/ui",
+        "hooks/useDigestSummary",
+        "state/useGameStore",
+        "types/game",
+        "types/state.types"
+      ],
+      "localImports": 8,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "WEEKLYDIGESTWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/StableDetail.tsx",
+      "lines": 152,
+      "domains": [
+        "components/bookmarks",
+        "components/layout",
+        "components/stable",
+        "components/ui",
+        "pages/stableDetail",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 11,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STABLEDETAIL"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/stable/StableRosterTab.tsx",
+      "lines": 151,
+      "domains": [
+        "components/EntityLink",
+        "components/avatar",
+        "components/charts",
+        "components/ui",
+        "components/warrior",
+        "hooks/useListShell",
+        "lib/utils",
+        "types/game",
+        "types/warrior.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STABLEROSTERTAB"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/StableHall.tsx",
+      "lines": 150,
+      "domains": [
+        "components/charts",
+        "components/ledger",
+        "components/stable",
+        "components/ui",
+        "components/warrior",
+        "state/useGameStore"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STABLEHALL"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 6,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/dashboard/RecentBoutsWidget.tsx",
+      "lines": 143,
+      "domains": [
+        "components/dashboard",
+        "components/ui",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 7,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "RECENTBOUTSWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/ui/WarriorBadges.tsx",
+      "lines": 143,
+      "domains": [
+        "components/ui",
+        "data/tagDescriptions",
+        "lib/utils",
+        "types/game"
+      ],
+      "localImports": 5,
+      "exports": 3,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STATBADGE",
+        "TAGBADGE",
+        "WARRIORNAMETAG"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "banner-blocks": 3
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/PromoterDetail.tsx",
+      "lines": 143,
+      "domains": [
+        "components/avatar",
+        "components/bookmarks",
+        "components/layout",
+        "components/ui",
+        "engine/core",
+        "pages/promoterDetail",
+        "state/useGameStore"
+      ],
+      "localImports": 11,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "PROMOTERDETAIL"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/ai/plan/coreGenerator/index.ts",
+      "lines": 140,
+      "domains": [
+        "engine/ai",
+        "engine/simulate",
+        "engine/strategy",
+        "types/combat.types",
+        "types/shared",
+        "types/shared.types",
+        "types/state",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/math"
+      ],
+      "localImports": 14,
+      "exports": 2,
+      "exportKinds": [
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "AI",
+        "STYLEDOCTRINE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 14
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/rivalStableShard/processStable.ts",
+      "lines": 140,
+      "domains": [
+        "constants/ai",
+        "engine/ai",
+        "engine/pipeline",
+        "types/state.types",
+        "utils/random"
+      ],
+      "localImports": 13,
+      "exports": 2,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "RIVALSHARDCHUNK",
+        "RIVALSTABLE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 5,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/arenaHub/leaderboard.tsx",
+      "lines": 134,
+      "domains": [
+        "components/ui",
+        "engine/core",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 6,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ARENALEADERBOARD"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/widgets/MetaDriftWidget.tsx",
+      "lines": 133,
+      "domains": [
+        "components/ui",
+        "engine/analytics",
+        "lib/metaDriftDisplay",
+        "lib/utils",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "METADRIFTWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 6,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/dashboard/RivalryWidget.tsx",
+      "lines": 130,
+      "domains": [
+        "components/dashboard",
+        "components/ui",
+        "hooks/useRivalries",
+        "state/useGameStore"
+      ],
+      "localImports": 7,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "RIVALRYWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/AdminTools/index.tsx",
+      "lines": 129,
+      "domains": [
+        "components/layout",
+        "components/ui",
+        "lib/utils",
+        "pages/AdminTools"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ADMINTOOLS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/StartGame.tsx",
+      "lines": 129,
+      "domains": [
+        "components/startGame",
+        "pages/startGame",
+        "state/saveSlots",
+        "utils/dateUtils"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STARTGAME"
+      ],
+      "banners": 3,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 4,
+        "banner-blocks": 3
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/WarriorBuilder/hooks/useWarriorBuilderState.ts",
+      "lines": 128,
+      "domains": [
+        "data/fighterConcepts",
+        "data/names",
+        "engine/factories",
+        "engine/warrior",
+        "state/useGameStore",
+        "types/game",
+        "utils/cryptoRandom",
+        "utils/entityName",
+        "utils/math"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "WARRIORBUILDERSTATE"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 9,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/avatar/AvatarForEntity.tsx",
+      "lines": 127,
+      "domains": [
+        "components/avatar",
+        "engine/recruitment",
+        "state/useGameStore",
+        "types/avatar.types",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types"
+      ],
+      "localImports": 9,
+      "exports": 2,
+      "exportKinds": [
+        "component",
+        "type"
+      ],
+      "exportFamilies": [
+        "AVATARFORENTITY",
+        "AVATARFORENTITYPROPS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 7,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/StableEquipment/hooks/useStableEquipment.ts",
+      "lines": 126,
+      "domains": [
+        "data/equipment",
+        "engine/equipment",
+        "engine/warrior",
+        "state/useGameStore",
+        "types/shared.types"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "STABLEEQUIPMENT"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/training/useTrainingAssignments.ts",
+      "lines": 126,
+      "domains": [
+        "engine/training",
+        "state/useGameStore",
+        "types/game",
+        "types/shared.types"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "TRAININGASSIGNMENTS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/charts/StyleMeterTable.tsx",
+      "lines": 120,
+      "domains": [
+        "components/ui",
+        "constants/core",
+        "lib/utils",
+        "state/useGameStore",
+        "types/shared.types"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "STYLEMETERTABLE"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/data/names/epithets.ts",
+      "lines": 118,
+      "domains": [
+        "utils/random"
+      ],
+      "localImports": 1,
+      "exports": 8,
+      "exportKinds": [
+        "const",
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "EARN",
+        "EPITHET",
+        "EPITHETCAUSE",
+        "MILESTONE",
+        "QUALIFIES"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "export-mix": 8,
+        "name-families": 5
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/passes/NarrativePass.ts",
+      "lines": 116,
+      "domains": [
+        "constants/core",
+        "engine/core",
+        "engine/gazette",
+        "engine/impacts",
+        "engine/newsletter",
+        "engine/pipeline",
+        "lore/AnnouncerAI",
+        "types/state.types",
+        "utils/fightTitle",
+        "utils/random"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "NARRATIVEPASS"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 10,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/HallOfFame/hooks/useHallOfFame.ts",
+      "lines": 115,
+      "domains": [
+        "components/awards",
+        "engine/core",
+        "engine/history",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 6,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "HALLOFFAME"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/physicals/usePhysicalsSim.ts",
+      "lines": 114,
+      "domains": [
+        "components/stable",
+        "engine/warrior",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "PHYSICALSSIM"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/data/orphanPool.ts",
+      "lines": 110,
+      "domains": [
+        "data/names",
+        "engine/factories",
+        "engine/favorites",
+        "engine/narrative",
+        "engine/recruitment",
+        "engine/traits",
+        "engine/warrior",
+        "types/game",
+        "utils/random"
+      ],
+      "localImports": 12,
+      "exports": 3,
+      "exportKinds": [
+        "function",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "GENERATE",
+        "ORPHANWARRIOR",
+        "TRAIT"
+      ],
+      "banners": 2,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 9,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/WarriorDetail/hooks/useWarriorSelectors.ts",
+      "lines": 108,
+      "domains": [
+        "data/arenas",
+        "data/equipment",
+        "engine/championship",
+        "engine/core",
+        "lib/obfuscation",
+        "state/useGameStore",
+        "types/game",
+        "types/state.types",
+        "utils/warriorDisplay"
+      ],
+      "localImports": 9,
+      "exports": 4,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "ARENACROWNS",
+        "WARRIORDETAILSTORE",
+        "WARRIORIDENTITY",
+        "WARRIORMUTATIONS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 9,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/pipeline/services/weekPipelineService.ts",
+      "lines": 105,
+      "domains": [
+        "engine/core",
+        "engine/impacts",
+        "engine/matchmaking",
+        "engine/narrative",
+        "engine/pipeline",
+        "engine/pool",
+        "types/state.types"
+      ],
+      "localImports": 11,
+      "exports": 6,
+      "exportKinds": [
+        "function",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "BANKRUPTCY",
+        "PIPELINEPROFILING",
+        "WEEK",
+        "WEEKADVANCEOPTIONS",
+        "WEEKCACHES"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "export-mix": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/BookingOffice/components/OfferCard.tsx",
+      "lines": 105,
+      "domains": [
+        "components/bout-viewer",
+        "components/ui",
+        "data/promoterPersonalityConfig",
+        "engine/core",
+        "engine/narrative",
+        "lib/utils",
+        "pages/BookingOffice",
+        "types/state.types"
+      ],
+      "localImports": 12,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "OFFERCARD"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 8,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/hooks/useScoutingStableComparison.ts",
+      "lines": 104,
+      "domains": [
+        "data/ownerData",
+        "engine/stats",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 4,
+      "exports": 2,
+      "exportKinds": [
+        "function",
+        "hook"
+      ],
+      "exportFamilies": [
+        "STABLE",
+        "STABLECOMPARISON"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/Graveyard.tsx",
+      "lines": 104,
+      "domains": [
+        "components/fallen",
+        "components/ui",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 6,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "GRAVEYARD"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/Recruit/hooks/useRecruitActions.ts",
+      "lines": 103,
+      "domains": [
+        "engine/recruitment",
+        "pages/Recruit",
+        "state/useGameStore",
+        "types/game",
+        "types/state.types"
+      ],
+      "localImports": 7,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "RECRUITACTIONS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/worldOverview/useWorldOverview.ts",
+      "lines": 98,
+      "domains": [
+        "engine/rivals",
+        "pages/worldOverview",
+        "state/slices",
+        "state/useGameStore",
+        "types/leaderboard"
+      ],
+      "localImports": 5,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "WORLDOVERVIEW"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/core/worldSeeder.ts",
+      "lines": 96,
+      "domains": [
+        "constants/world",
+        "data/names",
+        "engine/core",
+        "engine/factories",
+        "engine/promoters",
+        "engine/recruitment",
+        "engine/rivals",
+        "engine/trainers",
+        "types/shared.types",
+        "types/state.types",
+        "types/warrior.types",
+        "utils/random"
+      ],
+      "localImports": 13,
+      "exports": 1,
+      "exportKinds": [
+        "function"
+      ],
+      "exportFamilies": [
+        "POPULATE"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 12,
+        "fan-out": 13
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/dashboard/IntelligenceHubWidget.tsx",
+      "lines": 94,
+      "domains": [
+        "components/dashboard",
+        "components/ui",
+        "state/useGameStore",
+        "types/state.types"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "INTELLIGENCEHUBWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/stable/RosterWall.tsx",
+      "lines": 94,
+      "domains": [
+        "components/stable",
+        "components/ui",
+        "components/warrior",
+        "hooks/useActiveRoster",
+        "hooks/useListShell",
+        "state/slices",
+        "state/useGameStore",
+        "types/shared.types",
+        "types/state.types"
+      ],
+      "localImports": 10,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "ROSTERWALL"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 9,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/ControlCenter/hooks/useControlCenter.ts",
+      "lines": 94,
+      "domains": [
+        "engine/stable",
+        "engine/stats",
+        "state/selectors",
+        "state/useGameStore"
+      ],
+      "localImports": 4,
+      "exports": 2,
+      "exportKinds": [
+        "hook",
+        "type"
+      ],
+      "exportFamilies": [
+        "CONTROLCENTER",
+        "TABID"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/ControlCenter/components/KpiBar.tsx",
+      "lines": 85,
+      "domains": [
+        "components/ui",
+        "engine/stats",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "KPIBAR"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/startGame/useStartGame.ts",
+      "lines": 83,
+      "domains": [
+        "data/backstories",
+        "engine/crest",
+        "pages/startGame",
+        "state/useGameStore",
+        "types/crest.types",
+        "types/state.types",
+        "utils/cryptoRandom",
+        "utils/entityName"
+      ],
+      "localImports": 9,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "STARTGAME"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 8,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/charts/FormSparkline.tsx",
+      "lines": 82,
+      "domains": [
+        "components/ui",
+        "engine/core",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "const"
+      ],
+      "exportFamilies": [
+        "FORMSPARKLINE"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/dashboard/QuestsWidget.tsx",
+      "lines": 82,
+      "domains": [
+        "components/ui",
+        "engine/onboarding",
+        "lib/utils",
+        "state/useGameStore"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "const"
+      ],
+      "exportFamilies": [
+        "QUESTSWIDGET"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/startGame/startGameOps.ts",
+      "lines": 80,
+      "domains": [
+        "data/backstories",
+        "engine/factories",
+        "engine/impacts",
+        "engine/pipeline",
+        "state/saveSlots",
+        "state/useGameStore",
+        "types/crest.types",
+        "types/state.types",
+        "utils/cryptoRandom",
+        "utils/entityName",
+        "utils/random"
+      ],
+      "localImports": 12,
+      "exports": 3,
+      "exportKinds": [
+        "function",
+        "type"
+      ],
+      "exportFamilies": [
+        "IMPORT",
+        "LOADGAME",
+        "NEWGAME"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 11,
+        "fan-out": 12
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/BookingOffice/hooks/useBookingOffice.ts",
+      "lines": 78,
+      "domains": [
+        "engine/matchmaking",
+        "pages/BookingOffice",
+        "state/useGameStore",
+        "types/state.types"
+      ],
+      "localImports": 4,
+      "exports": 4,
+      "exportKinds": [
+        "hook",
+        "reexport",
+        "type"
+      ],
+      "exportFamilies": [
+        "BOOKINGOFFICE",
+        "FATIGUESTATUS",
+        "INJURYBADGE",
+        "RIVALWARRIORMAP"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/engine/gazette/gazetteTemplateHelpers.ts",
+      "lines": 77,
+      "domains": [
+        "data/narrative",
+        "engine/core",
+        "types/narrative.types",
+        "types/shared.types",
+        "utils/cryptoRandom",
+        "utils/escapeHtml",
+        "utils/random"
+      ],
+      "localImports": 7,
+      "exports": 6,
+      "exportKinds": [
+        "const",
+        "function",
+        "reexport"
+      ],
+      "exportFamilies": [
+        "CROWDMOOD",
+        "DEFAULT",
+        "MOOD",
+        "MOODTONE",
+        "STYLE",
+        "T"
+      ],
+      "banners": 0,
+      "godUnit": false,
+      "signals": {
+        "multi-domain": 7,
+        "export-mix": 6
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/components/ledger/TreasuryOverview/index.tsx",
+      "lines": 71,
+      "domains": [
+        "components/charts",
+        "components/ledger",
+        "engine/economy",
+        "engine/warrior",
+        "state/useGameStore"
+      ],
+      "localImports": 7,
+      "exports": 1,
+      "exportKinds": [
+        "component"
+      ],
+      "exportFamilies": [
+        "TREASURYOVERVIEW"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 5,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/TrainingPlanner/hooks/useTrainingPlanner.ts",
+      "lines": 70,
+      "domains": [
+        "engine/bout",
+        "engine/warrior",
+        "state/useGameStore",
+        "types/game"
+      ],
+      "localImports": 4,
+      "exports": 1,
+      "exportKinds": [
+        "hook"
+      ],
+      "exportFamilies": [
+        "TRAININGPLANNER"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    },
+    {
+      "file": "src/pages/arenaDetail/useArenaSelectors.ts",
+      "lines": 65,
+      "domains": [
+        "data/arenas",
+        "engine/core",
+        "state/useGameStore",
+        "types/state.types"
+      ],
+      "localImports": 4,
+      "exports": 3,
+      "exportKinds": [
+        "function",
+        "hook"
+      ],
+      "exportFamilies": [
+        "ARENABOARDS",
+        "ARENADETAILSTORE",
+        "STATUS"
+      ],
+      "banners": 0,
+      "godUnit": true,
+      "signals": {
+        "multi-domain": 4,
+        "god-unit": 1
+      },
+      "signalCount": 2
+    }
+  ]
+}

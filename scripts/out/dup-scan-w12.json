@@ -1,0 +1,196 @@
+{
+  "window": 12,
+  "ident": false,
+  "clusters": [
+    {
+      "pair": [
+        "src/test/_fixtures/weather.ts",
+        "src/test/schemas/enumSourcesSync.test.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/test/_fixtures/weather.ts",
+          "start": 30,
+          "end": 53
+        },
+        {
+          "file": "src/test/schemas/enumSourcesSync.test.ts",
+          "start": 29,
+          "end": 52
+        }
+      ],
+      "totalDupeLines": 24
+    },
+    {
+      "pair": [
+        "src/engine/combat/resolution/resolution.ts",
+        "src/test/engine/combat/offenseDefense.test.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/engine/combat/resolution/resolution.ts",
+          "start": 154,
+          "end": 176
+        },
+        {
+          "file": "src/test/engine/combat/offenseDefense.test.ts",
+          "start": 171,
+          "end": 193
+        }
+      ],
+      "totalDupeLines": 23
+    },
+    {
+      "pair": [
+        "src/components/scouting/StableComparison.tsx",
+        "src/hooks/useScoutingStableComparison.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/components/scouting/StableComparison.tsx",
+          "start": 23,
+          "end": 39
+        },
+        {
+          "file": "src/hooks/useScoutingStableComparison.ts",
+          "start": 84,
+          "end": 100
+        }
+      ],
+      "totalDupeLines": 17
+    },
+    {
+      "pair": [
+        "src/test/schemas/schemaCharacterization.test.ts",
+        "src/types/enumSources.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/test/schemas/schemaCharacterization.test.ts",
+          "start": 109,
+          "end": 124
+        },
+        {
+          "file": "src/types/enumSources.ts",
+          "start": 295,
+          "end": 310
+        }
+      ],
+      "totalDupeLines": 16
+    },
+    {
+      "pair": [
+        "src/pages/AdminTools/hooks/useAdminTools.ts",
+        "src/pages/AdminTools/index.tsx"
+      ],
+      "blocks": [
+        {
+          "file": "src/pages/AdminTools/hooks/useAdminTools.ts",
+          "start": 120,
+          "end": 134
+        },
+        {
+          "file": "src/pages/AdminTools/index.tsx",
+          "start": 39,
+          "end": 53
+        }
+      ],
+      "totalDupeLines": 15
+    },
+    {
+      "pair": [
+        "src/pages/ControlCenter/components/RankingsBar.tsx",
+        "src/pages/ControlCenter/hooks/useControlCenter.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/pages/ControlCenter/components/RankingsBar.tsx",
+          "start": 53,
+          "end": 67
+        },
+        {
+          "file": "src/pages/ControlCenter/hooks/useControlCenter.ts",
+          "start": 52,
+          "end": 66
+        }
+      ],
+      "totalDupeLines": 15
+    },
+    {
+      "pair": [
+        "src/pages/Trainers.tsx",
+        "src/pages/Trainers/hooks/useTrainers.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/pages/Trainers.tsx",
+          "start": 66,
+          "end": 79
+        },
+        {
+          "file": "src/pages/Trainers/hooks/useTrainers.ts",
+          "start": 64,
+          "end": 77
+        }
+      ],
+      "totalDupeLines": 14
+    },
+    {
+      "pair": [
+        "src/components/stable/RosterWarriorRow.tsx",
+        "src/hooks/useActiveRoster.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/components/stable/RosterWarriorRow.tsx",
+          "start": 19,
+          "end": 31
+        },
+        {
+          "file": "src/hooks/useActiveRoster.ts",
+          "start": 10,
+          "end": 22
+        }
+      ],
+      "totalDupeLines": 13
+    },
+    {
+      "pair": [
+        "src/engine/combat/resolution/resolution.ts",
+        "src/test/engine/combat/enduranceCosts.test.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/engine/combat/resolution/resolution.ts",
+          "start": 212,
+          "end": 223
+        },
+        {
+          "file": "src/test/engine/combat/enduranceCosts.test.ts",
+          "start": 141,
+          "end": 152
+        }
+      ],
+      "totalDupeLines": 12
+    },
+    {
+      "pair": [
+        "src/pages/WarriorDetail.tsx",
+        "src/pages/WarriorDetail/hooks/useWarriorDetail.ts"
+      ],
+      "blocks": [
+        {
+          "file": "src/pages/WarriorDetail.tsx",
+          "start": 95,
+          "end": 106
+        },
+        {
+          "file": "src/pages/WarriorDetail/hooks/useWarriorDetail.ts",
+          "start": 34,
+          "end": 45
+        }
+      ],
+      "totalDupeLines": 12
+    }
+  ]
+}

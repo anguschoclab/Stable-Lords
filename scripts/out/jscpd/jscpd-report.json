@@ -1,0 +1,3515 @@
+{
+  "duplicates": [
+    {
+      "firstFile": {
+        "end": 167,
+        "endLoc": {
+          "column": 6,
+          "line": 167,
+          "position": 6301
+        },
+        "name": "balance-lab.ts",
+        "start": 147,
+        "startLoc": {
+          "column": 18,
+          "line": 147,
+          "position": 5697
+        }
+      },
+      "format": "typescript",
+      "fragment": "  const t = tally();\n  for (let i = 0; i < N; i++) {\n    const A = pool[Math.floor(rng.next() * pool.length)]!;\n    const D = pool[Math.floor(rng.next() * pool.length)]!;\n    if (A === D || A.w.stableId === D.w.stableId) continue;\n    const pA = tweakPlan(\n      aiPlanForWarrior({\n        w: A.w,\n        personality: A.personality as never,\n        philosophy: A.philosophy,\n        opponentStyle: D.w.style,\n      })\n    );\n    const pD = tweakPlan(\n      aiPlanForWarrior({\n        w: D.w,\n        personality: D.personality as never,\n        philosophy: D.philosophy,\n        opponentStyle: A.w.style,\n      })\n    );",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 21,
+      "secondFile": {
+        "end": 87,
+        "endLoc": {
+          "column": 4,
+          "line": 87,
+          "position": 2736
+        },
+        "name": "style-probe.ts",
+        "start": 67,
+        "startLoc": {
+          "column": 28,
+          "line": 67,
+          "position": 2172
+        }
+      },
+      "tokens": 161
+    },
+    {
+      "firstFile": {
+        "end": 50,
+        "endLoc": {
+          "column": 25,
+          "line": 50,
+          "position": 2041
+        },
+        "name": "dup-scan.mjs",
+        "start": 32,
+        "startLoc": {
+          "column": 1,
+          "line": 32,
+          "position": 1477
+        }
+      },
+      "format": "javascript",
+      "fragment": ");\n\nfunction walk(dir, out = []) {\n  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {\n    const p = path.join(dir, entry.name);\n    if (entry.isDirectory()) {\n      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) out.push(p);\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 52,
+        "endLoc": {
+          "column": 25,
+          "line": 52,
+          "position": 2197
+        },
+        "name": "srp-census.mjs",
+        "start": 34,
+        "startLoc": {
+          "column": 119,
+          "line": 34,
+          "position": 1633
+        }
+      },
+      "tokens": 168
+    },
+    {
+      "firstFile": {
+        "end": 46,
+        "endLoc": {
+          "column": 5,
+          "line": 46,
+          "position": 1906
+        },
+        "name": "dup-scan.mjs",
+        "start": 32,
+        "startLoc": {
+          "column": 1,
+          "line": 32,
+          "position": 1477
+        }
+      },
+      "format": "javascript",
+      "fragment": ");\n\nfunction walk(dir, out = []) {\n  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {\n    const p = path.join(dir, entry.name);\n    if (entry.isDirectory()) {\n      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) out.push(p);\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 65,
+        "endLoc": {
+          "column": 5,
+          "line": 65,
+          "position": 3226
+        },
+        "name": "ui-audit-scan.mjs",
+        "start": 51,
+        "startLoc": {
+          "column": 82,
+          "line": 51,
+          "position": 2797
+        }
+      },
+      "tokens": 134
+    },
+    {
+      "firstFile": {
+        "end": 48,
+        "endLoc": {
+          "column": 25,
+          "line": 48,
+          "position": 1832
+        },
+        "name": "entries-in-loop.mjs",
+        "start": 28,
+        "startLoc": {
+          "column": 59,
+          "line": 28,
+          "position": 1254
+        }
+      },
+      "format": "javascript",
+      "fragment": "const OUT_FILE = path.join(OUT_DIR, 'entries-in-loop.json');\n\nfunction walk(dir, out = []) {\n  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {\n    const p = path.join(dir, entry.name);\n    if (entry.isDirectory()) {\n      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) {\n      out.push(p);\n    }\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 21,
+      "secondFile": {
+        "end": 44,
+        "endLoc": {
+          "column": 25,
+          "line": 44,
+          "position": 1543
+        },
+        "name": "function-length.mjs",
+        "start": 24,
+        "startLoc": {
+          "column": 72,
+          "line": 24,
+          "position": 965
+        }
+      },
+      "tokens": 170
+    },
+    {
+      "firstFile": {
+        "end": 48,
+        "endLoc": {
+          "column": 25,
+          "line": 48,
+          "position": 1832
+        },
+        "name": "entries-in-loop.mjs",
+        "start": 28,
+        "startLoc": {
+          "column": 59,
+          "line": 28,
+          "position": 1254
+        }
+      },
+      "format": "javascript",
+      "fragment": "const OUT_FILE = path.join(OUT_DIR, 'entries-in-loop.json');\n\nfunction walk(dir, out = []) {\n  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {\n    const p = path.join(dir, entry.name);\n    if (entry.isDirectory()) {\n      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) {\n      out.push(p);\n    }\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 21,
+      "secondFile": {
+        "end": 45,
+        "endLoc": {
+          "column": 25,
+          "line": 45,
+          "position": 1555
+        },
+        "name": "param-count.mjs",
+        "start": 25,
+        "startLoc": {
+          "column": 28,
+          "line": 25,
+          "position": 977
+        }
+      },
+      "tokens": 170
+    },
+    {
+      "firstFile": {
+        "end": 101,
+        "endLoc": {
+          "column": 1,
+          "line": 101,
+          "position": 3118
+        },
+        "name": "entries-in-loop.mjs",
+        "start": 28,
+        "startLoc": {
+          "column": 58,
+          "line": 28,
+          "position": 1253
+        }
+      },
+      "format": "javascript",
+      "fragment": "const OUT_FILE = path.join(OUT_DIR, 'entries-in-loop.json');\n\nfunction walk(dir, out = []) {\n  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {\n    const p = path.join(dir, entry.name);\n    if (entry.isDirectory()) {\n      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) {\n      out.push(p);\n    }\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');\n\nconst ITER_METHODS = new Set([\n  'forEach',\n  'map',\n  'filter',\n  'reduce',\n  'flatMap',\n  'some',\n  'every',\n  'find',\n  'sort',\n]);\n\nconst isLoop = (n) =>\n  ts.isForStatement(n) ||\n  ts.isForInStatement(n) ||\n  ts.isForOfStatement(n) ||\n  ts.isWhileStatement(n) ||\n  ts.isDoStatement(n);\n\nfunction isDescendant(ancestor, node) {\n  let p = node.parent;\n  while (p) {\n    if (p === ancestor) return true;\n    p = p.parent;\n  }\n  return false;\n}\n\n/** True when `call` executes once per iteration of an enclosing loop/callback. */\nfunction executesPerIteration(call) {\n  let child = call;\n  let p = call.parent;\n  while (p) {\n    // The call is a descendant of a loop body.\n    if (isLoop(p) && p.statement && (p.statement === child || isDescendant(p.statement, child)))\n      return true;\n    // The call is a descendant of an iterative method's callback argument\n    // (receiver-position calls like Object.entries(x).map(cb) are excluded —\n    // they run once before iteration).\n    if (\n      ts.isCallExpression(p) &&\n      ts.isPropertyAccessExpression(p.expression) &&\n      ITER_METHODS.has(p.expression.name.text) &&\n      p.arguments.some((a) => a === child || isDescendant(a, child))\n    ) {\n      return true;\n    }\n    child = p;\n    p = p.parent;\n  }\n  return false;\n}",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 74,
+      "secondFile": {
+        "end": 105,
+        "endLoc": {
+          "column": 1,
+          "line": 105,
+          "position": 3344
+        },
+        "name": "scan-in-loop.mjs",
+        "start": 32,
+        "startLoc": {
+          "column": 55,
+          "line": 32,
+          "position": 1484
+        }
+      },
+      "tokens": 408
+    },
+    {
+      "firstFile": {
+        "end": 103,
+        "endLoc": {
+          "column": 8,
+          "line": 103,
+          "position": 3128
+        },
+        "name": "entries-in-loop.mjs",
+        "start": 34,
+        "startLoc": {
+          "column": 71,
+          "line": 34,
+          "position": 1502
+        }
+      },
+      "format": "javascript",
+      "fragment": "      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) {\n      out.push(p);\n    }\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');\n\nconst ITER_METHODS = new Set([\n  'forEach',\n  'map',\n  'filter',\n  'reduce',\n  'flatMap',\n  'some',\n  'every',\n  'find',\n  'sort',\n]);\n\nconst isLoop = (n) =>\n  ts.isForStatement(n) ||\n  ts.isForInStatement(n) ||\n  ts.isForOfStatement(n) ||\n  ts.isWhileStatement(n) ||\n  ts.isDoStatement(n);\n\nfunction isDescendant(ancestor, node) {\n  let p = node.parent;\n  while (p) {\n    if (p === ancestor) return true;\n    p = p.parent;\n  }\n  return false;\n}\n\n/** True when `call` executes once per iteration of an enclosing loop/callback. */\nfunction executesPerIteration(call) {\n  let child = call;\n  let p = call.parent;\n  while (p) {\n    // The call is a descendant of a loop body.\n    if (isLoop(p) && p.statement && (p.statement === child || isDescendant(p.statement, child)))\n      return true;\n    // The call is a descendant of an iterative method's callback argument\n    // (receiver-position calls like Object.entries(x).map(cb) are excluded —\n    // they run once before iteration).\n    if (\n      ts.isCallExpression(p) &&\n      ts.isPropertyAccessExpression(p.expression) &&\n      ITER_METHODS.has(p.expression.name.text) &&\n      p.arguments.some((a) => a === child || isDescendant(a, child))\n    ) {\n      return true;\n    }\n    child = p;\n    p = p.parent;\n  }\n  return false;\n}\n\nfunction isObjectEntriesCall(node, sf) {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 70,
+      "secondFile": {
+        "end": 107,
+        "endLoc": {
+          "column": 5,
+          "line": 107,
+          "position": 3351
+        },
+        "name": "scan-in-loop.mjs",
+        "start": 38,
+        "startLoc": {
+          "column": 71,
+          "line": 38,
+          "position": 1733
+        }
+      },
+      "tokens": 336
+    },
+    {
+      "firstFile": {
+        "end": 143,
+        "endLoc": {
+          "column": 33,
+          "line": 143,
+          "position": 4308
+        },
+        "name": "entries-in-loop.mjs",
+        "start": 129,
+        "startLoc": {
+          "column": 38,
+          "line": 129,
+          "position": 3850
+        }
+      },
+      "format": "javascript",
+      "fragment": "      if (isObjectEntriesCall(node, sf) && executesPerIteration(node)) {\n        const { line } = sf.getLineAndCharacterOfPosition(node.getStart(sf));\n        violations.push({ file: r, line: line + 1, text: node.getText(sf) });\n      }\n      ts.forEachChild(node, visit);\n    };\n    visit(sf);\n  }\n\n  violations.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);\n  return { violations, summary: { total: violations.length } };\n}\n\nfunction main() {\n  const { violations, summary } = collectEntriesInLoop();",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 148,
+        "endLoc": {
+          "column": 33,
+          "line": 148,
+          "position": 4557
+        },
+        "name": "scan-in-loop.mjs",
+        "start": 134,
+        "startLoc": {
+          "column": 31,
+          "line": 134,
+          "position": 4099
+        }
+      },
+      "tokens": 127
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 6,
+          "line": 47,
+          "position": 1575
+        },
+        "name": "function-length.mjs",
+        "start": 30,
+        "startLoc": {
+          "column": 71,
+          "line": 30,
+          "position": 1213
+        }
+      },
+      "format": "javascript",
+      "fragment": "      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;\n      walk(p, out);\n    } else if (/\\.tsx?$/.test(entry.name)) {\n      out.push(p);\n    }\n  }\n  return out;\n}\n\nconst rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');\nconst isTest = (r) =>\n  r.includes('/test/') ||\n  /\\.(test|spec)\\.tsx?$/.test(r) ||\n  r.includes('/_fixtures/') ||\n  r.includes('/_setup/');\n\nfunction fnName(node) {\n  if (",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 18,
+      "secondFile": {
+        "end": 49,
+        "endLoc": {
+          "column": 6,
+          "line": 49,
+          "position": 1703
+        },
+        "name": "param-count.mjs",
+        "start": 31,
+        "startLoc": {
+          "column": 71,
+          "line": 31,
+          "position": 1225
+        }
+      },
+      "tokens": 107
+    },
+    {
+      "firstFile": {
+        "end": 106,
+        "endLoc": {
+          "column": 17,
+          "line": 106,
+          "position": 4084
+        },
+        "name": "engine/ai/workers/intelWorker.ts",
+        "start": 94,
+        "startLoc": {
+          "column": 2,
+          "line": 94,
+          "position": 3454
+        }
+      },
+      "format": "typescript",
+      "fragment": "  const selfIds = new Set(rival.roster.map((w) => w.id));\n  const playerIds = keySet(state.roster, (w) => w.id);\n  for (const offer of Object.values(state.boutOffers ?? {})) {\n    if (!offer.titleArenaId) continue;\n    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;\n    const mine = offer.warriorIds.find((id) => selfIds.has(id));\n    if (!mine) continue;\n    const otherId = offer.warriorIds.find((id) => id !== mine);\n    if (!otherId) continue;\n    const oppStable =\n      state.warriorToStableMap?.get(otherId)?.stableId ??\n      (playerIds.has(otherId) ? state.player.id : undefined);\n    if (oppStable) return oppStable;",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 181,
+        "endLoc": {
+          "column": 17,
+          "line": 181,
+          "position": 6877
+        },
+        "name": "engine/ai/workers/intelWorker.ts",
+        "start": 169,
+        "startLoc": {
+          "column": 2,
+          "line": 169,
+          "position": 6247
+        }
+      },
+      "tokens": 170
+    },
+    {
+      "firstFile": {
+        "end": 102,
+        "endLoc": {
+          "column": 1,
+          "line": 102,
+          "position": 3031
+        },
+        "name": "engine/combat/resolution/offenseDefense/types.ts",
+        "start": 67,
+        "startLoc": {
+          "column": 36,
+          "line": 67,
+          "position": 2215
+        }
+      },
+      "format": "typescript",
+      "fragment": "export interface OffenseDefenseArgs {\n  ctx: ResolutionContext;\n  fA: FighterState;\n  fD: FighterState;\n  aGoesFirst: boolean;\n  OE_A: number;\n  AL_A: number;\n  OE_D: number;\n  AL_D: number;\n  fatA: number;\n  fatD: number;\n  offModsA: OffensiveMods;\n  offModsD: OffensiveMods;\n  defModsA: DefensiveMods;\n  defModsD: DefensiveMods;\n  passA: StylePassiveResult;\n  passD: StylePassiveResult;\n  biasAttA: number;\n  biasDefA: number;\n  biasAttD: number;\n  biasDefD: number;\n  tactA: ResolvedTactics;\n  tactD: ResolvedTactics;\n  psychA: PsychStateMod;\n  psychD: PsychStateMod;\n  dynTraitsA: DynamicTraitMods;\n  dynTraitsD: DynamicTraitMods;\n  feintAttBonus: number;\n  feintDefBonus: number;\n  attCommit: CommitResult;\n  defCommit: CommitResult;\n  es: ExchangeState;\n  phaseKey: 'opening' | 'mid' | 'late';\n  stylePhase: StylePhase;\n  events: CombatEvent[];\n}",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 36,
+      "secondFile": {
+        "end": 142,
+        "endLoc": {
+          "column": 1,
+          "line": 142,
+          "position": 3909
+        },
+        "name": "engine/combat/resolution/offenseDefense/types.ts",
+        "start": 107,
+        "startLoc": {
+          "column": 49,
+          "line": 107,
+          "position": 3093
+        }
+      },
+      "tokens": 144
+    },
+    {
+      "firstFile": {
+        "end": 185,
+        "endLoc": {
+          "column": 18,
+          "line": 185,
+          "position": 6051
+        },
+        "name": "engine/combat/resolution/resolution.ts",
+        "start": 161,
+        "startLoc": {
+          "column": 8,
+          "line": 161,
+          "position": 5501
+        }
+      },
+      "format": "typescript",
+      "fragment": "    fD: fD,\n    aGoesFirst: aGoesFirst,\n    OE_A: s.OE_A,\n    AL_A: s.AL_A,\n    OE_D: s.OE_D,\n    AL_D: s.AL_D,\n    fatA: s.fatA,\n    fatD: s.fatD,\n    offModsA: s.offModsA,\n    offModsD: s.offModsD,\n    defModsA: s.defModsA,\n    defModsD: s.defModsD,\n    passA: s.passA,\n    passD: s.passD,\n    biasAttA: s.biasAttA,\n    biasDefA: s.biasDefA,\n    biasAttD: s.biasAttD,\n    biasDefD: s.biasDefD,\n    tactA: s.tactA,\n    tactD: s.tactD,\n    psychA: s.psychA,\n    psychD: s.psychD,\n    dynTraitsA: s.dynTraitsA,\n    dynTraitsD: s.dynTraitsD,\n    feintAttBonus: feintAttBonus,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 25,
+      "secondFile": {
+        "end": 195,
+        "endLoc": {
+          "column": 18,
+          "line": 195,
+          "position": 5596
+        },
+        "name": "test/engine/combat/offenseDefense.test.ts",
+        "start": 171,
+        "startLoc": {
+          "column": 10,
+          "line": 171,
+          "position": 5046
+        }
+      },
+      "tokens": 140
+    },
+    {
+      "firstFile": {
+        "end": 74,
+        "endLoc": {
+          "column": 74,
+          "line": 74,
+          "position": 2390
+        },
+        "name": "pages/arenaDetail/RecordBoards.tsx",
+        "start": 62,
+        "startLoc": {
+          "column": 46,
+          "line": 62,
+          "position": 2035
+        }
+      },
+      "format": "tsx",
+      "fragment": "  (lb?.topWarriors ?? []).map((e: WarriorEntry, i) => ({\n    key: e.warriorId,\n    rank: i + 1,\n    cells: [\n      <WarriorNameTag\n        key=\"n\"\n        id={e.warriorId}\n        name={e.name}\n        epithet={e.epithet}\n        isChampion={e.warriorId === champId}\n      />,\n      <StableCell key=\"s\" name={e.stableName} />,\n      <RecordCells key=\"r\" wins={e.wins} losses={e.losses} kills={e.kills} />,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 95,
+        "endLoc": {
+          "column": 74,
+          "line": 95,
+          "position": 3071
+        },
+        "name": "pages/arenaDetail/RecordBoards.tsx",
+        "start": 83,
+        "startLoc": {
+          "column": 44,
+          "line": 83,
+          "position": 2716
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 64,
+        "endLoc": {
+          "column": 12,
+          "line": 64,
+          "position": 2263
+        },
+        "name": "state/slices/worldSlice/combatActions.ts",
+        "start": 53,
+        "startLoc": {
+          "column": 44,
+          "line": 53,
+          "position": 1791
+        }
+      },
+      "format": "typescript",
+      "fragment": "            roster: updateEntityInList(rival.roster, warriorId, (w) => ({\n              ...w,\n              fame: Math.max(0, (w.fame || 0) + fameDelta),\n              popularity: Math.max(0, (w.popularity || 0) + popDelta),\n              career: {\n                ...w.career,\n                wins: (w.career?.wins || 0) + (won ? 1 : 0),\n                losses: (w.career?.losses || 0) + (won ? 0 : 1),\n                kills: (w.career?.kills || 0) + (killed ? 1 : 0),\n              },\n            })),\n          };",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 80,
+        "endLoc": {
+          "column": 10,
+          "line": 80,
+          "position": 2825
+        },
+        "name": "state/slices/worldSlice/combatActions.ts",
+        "start": 69,
+        "startLoc": {
+          "column": 42,
+          "line": 69,
+          "position": 2375
+        }
+      },
+      "tokens": 128
+    },
+    {
+      "firstFile": {
+        "end": 173,
+        "endLoc": {
+          "column": 14,
+          "line": 173,
+          "position": 4598
+        },
+        "name": "test/components/ResolutionReveal.selector.test.tsx",
+        "start": 147,
+        "startLoc": {
+          "column": 65,
+          "line": 147,
+          "position": 4022
+        }
+      },
+      "format": "tsx",
+      "fragment": "  it('does NOT re-render when unrelated state (treasury) changes', async () => {\n    useTestStore.setState({\n      arenaHistory: [\n        {\n          pendingResolutionData: {\n            gazette: 'Test',\n            injuries: [],\n            deaths: [],\n            bouts: [],\n          },\n        },\n      ],\n      week: 2,\n    });\n\n    const renderCount = { current: 0 };\n    const Wrapper = () => {\n      renderCount.current++;\n      return <ResolutionReveal />;\n    };\n\n    render(<Wrapper />);\n    expect(renderCount.current).toBe(1);\n\n    await act(async () => {\n      useTestStore.getState().setState((draft: any) => {\n        draft.treasury += 100;",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 27,
+      "secondFile": {
+        "end": 207,
+        "endLoc": {
+          "column": 14,
+          "line": 207,
+          "position": 5370
+        },
+        "name": "test/components/ResolutionReveal.selector.test.tsx",
+        "start": 181,
+        "startLoc": {
+          "column": 47,
+          "line": 181,
+          "position": 4794
+        }
+      },
+      "tokens": 124
+    },
+    {
+      "firstFile": {
+        "end": 18,
+        "endLoc": {
+          "column": 62,
+          "line": 18,
+          "position": 730
+        },
+        "name": "test/components/charts/StyleMeterTable.test.tsx",
+        "start": 2,
+        "startLoc": {
+          "column": 0,
+          "line": 2,
+          "position": 29
+        }
+      },
+      "format": "tsx",
+      "fragment": "import { describe, it, expect, vi, beforeEach } from 'vitest';\nimport { render } from '@testing-library/react';\nimport '@testing-library/jest-dom';\nimport type { Warrior } from '@/types/warrior.types';\nimport { FightingStyle } from '@/types/shared.types';\nimport type { WarriorId } from '@/types/shared.types';\n\nvi.mock('zustand/react/shallow', () => ({ ...__SHARED_MOCKS.useShallow }));\n\nlet mockState: { roster: Warrior[] } = { roster: [] };\n\nvi.mock('@/state/useGameStore', () => ({\n  useGameStore: (selector: (s: unknown) => unknown) => selector(mockState),\n}));\n\nimport { StyleMeterTable } from '@/components/charts/StyleMeterTable';\nimport { makeMidWarrior } from '@/test/_fixtures/statWarrior';",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 18,
+        "endLoc": {
+          "column": 62,
+          "line": 18,
+          "position": 730
+        },
+        "name": "test/megaplan/v20Components.guard.test.tsx",
+        "start": 2,
+        "startLoc": {
+          "column": 0,
+          "line": 2,
+          "position": 29
+        }
+      },
+      "tokens": 133
+    },
+    {
+      "firstFile": {
+        "end": 31,
+        "endLoc": {
+          "column": 8,
+          "line": 31,
+          "position": 1924
+        },
+        "name": "test/components/tournaments/TournamentComponents.test.tsx",
+        "start": 18,
+        "startLoc": {
+          "column": 67,
+          "line": 18,
+          "position": 1409
+        }
+      },
+      "format": "tsx",
+      "fragment": "import type { TournamentEntry, TournamentBout } from '@/types/game';\nimport { makeTournament } from '@/test/_fixtures/tournamentState';\n\nvi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));\n\nvi.mock('@/state/useGameStore', () => ({ ...__SHARED_MOCKS.gameStoreEmpty }));\n\nvi.mock('@/hooks/useTournamentSchedule', () => ({ ...__SHARED_MOCKS.tournamentHooks }));\n\nvi.mock('@/components/bookmarks/BookmarkButton', () => ({ ...__SHARED_MOCKS.bookmarkButton }));\n\nvi.mock('@/components/tournaments/schedule', () => ({ ...__SHARED_MOCKS.tournamentScheduleUi }));\n\nvi.mock('@/components/ui/dialog', () => ({",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 25,
+        "endLoc": {
+          "column": 8,
+          "line": 25,
+          "position": 1037
+        },
+        "name": "test/components/tournaments/TournamentsReadiness.test.tsx",
+        "start": 11,
+        "startLoc": {
+          "column": 74,
+          "line": 11,
+          "position": 427
+        }
+      },
+      "tokens": 107
+    },
+    {
+      "firstFile": {
+        "end": 438,
+        "endLoc": {
+          "column": 7,
+          "line": 438,
+          "position": 17311
+        },
+        "name": "test/config/electronMain.test.ts",
+        "start": 427,
+        "startLoc": {
+          "column": 6,
+          "line": 427,
+          "position": 16828
+        }
+      },
+      "format": "typescript",
+      "fragment": "      };\n      const writeSpy = vi.fn().mockResolvedValue(undefined);\n      vi.mocked(mockFs.writeFile).mockImplementation(writeSpy);\n      vi.mocked(mockFs.mkdir).mockResolvedValue(undefined);\n\n      const result = await ipcHandlers['save-game']!({}, 'slot1', state);\n      expect(result.success).toBe(true);\n\n      const writtenJson = writeSpy.mock.calls[0]![1] as string;\n      const writtenState = JSON.parse(writtenJson);\n      expect(writtenState.meta.version).toBe('3.0.0');\n    });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 452,
+        "endLoc": {
+          "column": 7,
+          "line": 452,
+          "position": 17905
+        },
+        "name": "test/config/electronMain.test.ts",
+        "start": 441,
+        "startLoc": {
+          "column": 39,
+          "line": 441,
+          "position": 17422
+        }
+      },
+      "tokens": 119
+    },
+    {
+      "firstFile": {
+        "end": 263,
+        "endLoc": {
+          "column": 5,
+          "line": 263,
+          "position": 8175
+        },
+        "name": "test/config/terminology.test.ts",
+        "start": 248,
+        "startLoc": {
+          "column": 34,
+          "line": 248,
+          "position": 7796
+        }
+      },
+      "format": "typescript",
+      "fragment": "    for (const file of getTsxFiles()) {\n      const lines = readLines(file);\n      for (let i = 0; i < lines.length; i++) {\n        const line = lines[i];\n        if (!line) continue;\n        for (const term of bannedTerms) {\n          if (line.includes(term)) {\n            matches.push(`${file}:${i + 1}:${line.trim()}`);\n          }\n        }\n      }\n    }\n    expect(matches.join('\\n')).toBe('');\n  });\n\n  it('no banned sci-fi terms in e2e specs', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 280,
+        "endLoc": {
+          "column": 5,
+          "line": 280,
+          "position": 8671
+        },
+        "name": "test/config/terminology.test.ts",
+        "start": 265,
+        "startLoc": {
+          "column": 36,
+          "line": 265,
+          "position": 8292
+        }
+      },
+      "tokens": 105
+    },
+    {
+      "firstFile": {
+        "end": 263,
+        "endLoc": {
+          "column": 5,
+          "line": 263,
+          "position": 8175
+        },
+        "name": "test/config/terminology.test.ts",
+        "start": 248,
+        "startLoc": {
+          "column": 34,
+          "line": 248,
+          "position": 7796
+        }
+      },
+      "format": "typescript",
+      "fragment": "    for (const file of getTsxFiles()) {\n      const lines = readLines(file);\n      for (let i = 0; i < lines.length; i++) {\n        const line = lines[i];\n        if (!line) continue;\n        for (const term of bannedTerms) {\n          if (line.includes(term)) {\n            matches.push(`${file}:${i + 1}:${line.trim()}`);\n          }\n        }\n      }\n    }\n    expect(matches.join('\\n')).toBe('');\n  });\n\n  it('no banned sci-fi terms in e2e specs', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 297,
+        "endLoc": {
+          "column": 5,
+          "line": 297,
+          "position": 9176
+        },
+        "name": "test/config/terminology.test.ts",
+        "start": 282,
+        "startLoc": {
+          "column": 35,
+          "line": 282,
+          "position": 8797
+        }
+      },
+      "tokens": 105
+    },
+    {
+      "firstFile": {
+        "end": 129,
+        "endLoc": {
+          "column": 5,
+          "line": 129,
+          "position": 5516
+        },
+        "name": "test/data/narrativeContent.integration.test.ts",
+        "start": 110,
+        "startLoc": {
+          "column": 81,
+          "line": 110,
+          "position": 4721
+        }
+      },
+      "format": "typescript",
+      "fragment": "      const result = (crowdReaction as any)(rng, 'Brutus', 'Maximus', 0.5, 'Calm');\n      if (result !== null) {\n        // Should NOT be from crowd_reactions (those are Bloodthirsty/Theatrical specific)\n        const bloodthirstyLines = nc.crowd_reactions.Bloodthirsty || [];\n        const theatricalLines = nc.crowd_reactions.Theatrical || [];\n        const allCrowdReactionLines = [...bloodthirstyLines, ...theatricalLines];\n        const isMoodSpecific = allCrowdReactionLines.some((line) => {\n          const interpolated = interpolateTemplate(line, { name: 'Brutus', attacker: 'Maximus' });\n          return interpolated === result;\n        });\n        expect(isMoodSpecific).toBe(false);\n        fired = true;\n        break;\n      }\n    }\n    // A broken gate (e.g. rng.next() <= 0.25 never hit) must fail, not pass vacuously.\n    expect(fired).toBe(true);\n  });\n\n  it('undefined crowdMood falls through to generic pbp.reactions', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 20,
+      "secondFile": {
+        "end": 151,
+        "endLoc": {
+          "column": 5,
+          "line": 151,
+          "position": 6462
+        },
+        "name": "test/data/narrativeContent.integration.test.ts",
+        "start": 133,
+        "startLoc": {
+          "column": 64,
+          "line": 133,
+          "position": 5758
+        }
+      },
+      "tokens": 115
+    },
+    {
+      "firstFile": {
+        "end": 210,
+        "endLoc": {
+          "column": 9,
+          "line": 210,
+          "position": 7780
+        },
+        "name": "test/engine/advisor/boutOfferAdvisor.test.ts",
+        "start": 196,
+        "startLoc": {
+          "column": 95,
+          "line": 196,
+          "position": 6937
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('treasury pressure elevates purse weight — lucrative mismatch beats safe low-purse bout', () => {\n    const warrior = mkWarrior('p1', FightingStyle.LungingAttack);\n    // LU vs ParryStrike = -1 (unfavorable) but big purse; LU vs BashingAttack = 0 with small purse.\n    const toughOpponent = mkWarrior('opp_tough', FightingStyle.ParryStrike);\n    const easyOpponent = mkWarrior('opp_easy', FightingStyle.BashingAttack);\n    const lucrative = mkOffer('offer_lucrative', 'p1', 'opp_tough', { purse: 250 });\n    const modest = mkOffer('offer_modest', 'p1', 'opp_easy', { purse: 100 });\n    const rivals = [\n      { id: 'rs1', roster: [toughOpponent], owner: { stableName: 'T' } },\n      { id: 'rs2', roster: [easyOpponent], owner: { stableName: 'E' } },\n    ];\n\n    // Solvent + non-purse focus: modest-purse safe matchup wins (score 60 vs 55).\n    // (PURSE_HUNTER itself elevates purse weight — see the focus test below.)\n    const solvent = evaluateBoutOffers(",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 248,
+        "endLoc": {
+          "column": 9,
+          "line": 248,
+          "position": 9333
+        },
+        "name": "test/engine/advisor/boutOfferAdvisor.test.ts",
+        "start": 238,
+        "startLoc": {
+          "column": 74,
+          "line": 238,
+          "position": 8756
+        }
+      },
+      "tokens": 124
+    },
+    {
+      "firstFile": {
+        "end": 54,
+        "endLoc": {
+          "column": 68,
+          "line": 54,
+          "position": 1816
+        },
+        "name": "test/engine/advisor/stableEvalContext.test.ts",
+        "start": 42,
+        "startLoc": {
+          "column": 77,
+          "line": 42,
+          "position": 1309
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('uses ctx.treasury instead of the player treasury for purse desperation', () => {\n    const warrior = makeWarrior({ id: 'w1' as WarriorId });\n    const offer = pendingOfferFor('w1', 'opp1');\n    const opponent = makeWarrior({ id: 'opp1' as WarriorId });\n    const state = makeGameState({\n      week: 5,\n      absoluteWeek: 5,\n      treasury: 99999, // player is rich\n      roster: [warrior],\n      rivals: [makeRival({ id: 'r1' as never, roster: [opponent] })],\n      boutOffers: { [offer.id]: offer },\n    });\n    const advice = evaluateBoutOffers(warrior, state, 'PURSE_HUNTER', undefined, {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 73,
+        "endLoc": {
+          "column": 68,
+          "line": 73,
+          "position": 2548
+        },
+        "name": "test/engine/advisor/stableEvalContext.test.ts",
+        "start": 61,
+        "startLoc": {
+          "column": 68,
+          "line": 61,
+          "position": 2059
+        }
+      },
+      "tokens": 113
+    },
+    {
+      "firstFile": {
+        "end": 79,
+        "endLoc": {
+          "column": 9,
+          "line": 79,
+          "position": 3274
+        },
+        "name": "test/engine/advisor/tacticsAdvisorBridge.test.ts",
+        "start": 68,
+        "startLoc": {
+          "column": 89,
+          "line": 68,
+          "position": 2733
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('applies rematch patience deltas when warrior holds a losing record vs the opponent', () => {\n    const warrior = mkWarrior(FightingStyle.LungingAttack, { id: 'w1' as any });\n    const opponent = mkWarrior(FightingStyle.ParryStrike, { id: 'opp1' as any });\n    const state = makeGameState({\n      arenaHistory: [\n        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),\n        makeFightSummary({ warriorIdA: 'opp1' as any, warriorIdD: 'w1' as any, winner: 'A' }),\n        makeFightSummary({ warriorIdA: 'w1' as any, warriorIdD: 'opp1' as any, winner: 'D' }),\n      ],\n    });\n\n    const base = evaluateTacticsAdvice(warrior, 'PURSE_HUNTER');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 211,
+        "endLoc": {
+          "column": 9,
+          "line": 211,
+          "position": 8777
+        },
+        "name": "test/engine/advisor/tacticsAdvisorBridge.test.ts",
+        "start": 200,
+        "startLoc": {
+          "column": 59,
+          "line": 200,
+          "position": 8236
+        }
+      },
+      "tokens": 119
+    },
+    {
+      "firstFile": {
+        "end": 78,
+        "endLoc": {
+          "column": 49,
+          "line": 78,
+          "position": 2240
+        },
+        "name": "test/engine/ai/aiEconomyParity.test.ts",
+        "start": 60,
+        "startLoc": {
+          "column": 72,
+          "line": 60,
+          "position": 1704
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('AI base income matches player base income for fame-0 tier-1 fight', () => {\n    const state = createFreshState('test');\n    state.week = 5;\n    state.absoluteWeek = 5;\n    const rival = makeRival({\n      roster: [\n        {\n          id: 'warA' as any,\n          name: 'Warrior',\n          style: 'StrikingAttack',\n          fame: 0,\n          status: 'Active',\n          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },\n        } as any,\n      ],\n    });\n    state.arenaHistory = [makeFight(5, 'rival-1', { winner: 'A' })];\n\n    const result = processAIStable(rival, state);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 289,
+        "endLoc": {
+          "column": 49,
+          "line": 289,
+          "position": 8573
+        },
+        "name": "test/engine/ai/aiEconomyParity.test.ts",
+        "start": 271,
+        "startLoc": {
+          "column": 53,
+          "line": 271,
+          "position": 8037
+        }
+      },
+      "tokens": 127
+    },
+    {
+      "firstFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 57,
+          "line": 66,
+          "position": 2674
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 55,
+        "startLoc": {
+          "column": 60,
+          "line": 55,
+          "position": 2138
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('creates bout offers from bids with matching opponents', () => {\n    const warriorA = makeWarrior('Alpha', FightingStyle.StrikingAttack);\n    const warriorB = makeWarrior('Bravo', FightingStyle.BashingAttack);\n    const rivalA = makeRival({ id: 'rival-a' as any, roster: [warriorA] });\n    const rivalB = makeRival({\n      id: 'rival-b' as any,\n      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },\n      roster: [warriorB],\n    });\n    const state = makeMinimalState([rivalA, rivalB]);\n\n    const { bids } = generateTestBids(rivalA, rivalB, 5);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 153,
+        "endLoc": {
+          "column": 57,
+          "line": 153,
+          "position": 6295
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 142,
+        "startLoc": {
+          "column": 50,
+          "line": 142,
+          "position": 5759
+        }
+      },
+      "tokens": 121
+    },
+    {
+      "firstFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 57,
+          "line": 66,
+          "position": 2674
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 55,
+        "startLoc": {
+          "column": 60,
+          "line": 55,
+          "position": 2138
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('creates bout offers from bids with matching opponents', () => {\n    const warriorA = makeWarrior('Alpha', FightingStyle.StrikingAttack);\n    const warriorB = makeWarrior('Bravo', FightingStyle.BashingAttack);\n    const rivalA = makeRival({ id: 'rival-a' as any, roster: [warriorA] });\n    const rivalB = makeRival({\n      id: 'rival-b' as any,\n      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },\n      roster: [warriorB],\n    });\n    const state = makeMinimalState([rivalA, rivalB]);\n\n    const { bids } = generateTestBids(rivalA, rivalB, 5);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 172,
+        "endLoc": {
+          "column": 57,
+          "line": 172,
+          "position": 7163
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 161,
+        "startLoc": {
+          "column": 74,
+          "line": 161,
+          "position": 6627
+        }
+      },
+      "tokens": 121
+    },
+    {
+      "firstFile": {
+        "end": 155,
+        "endLoc": {
+          "column": 9,
+          "line": 155,
+          "position": 6377
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 144,
+        "startLoc": {
+          "column": 33,
+          "line": 144,
+          "position": 5875
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const warriorB = makeWarrior('Bravo', FightingStyle.BashingAttack);\n    const rivalA = makeRival({ id: 'rival-a' as any, roster: [warriorA] });\n    const rivalB = makeRival({\n      id: 'rival-b' as any,\n      owner: { ...makeRival().owner, id: 'owner-b' as any, name: 'OwnerB', stableName: 'StableB' },\n      roster: [warriorB],\n    });\n    const state = makeMinimalState([rivalA, rivalB]);\n\n    const { bids } = generateTestBids(rivalA, rivalB, 5);\n        // warriorA already has an offer — should not be paired again\n    const existing = new Set<string>([warriorA.id]);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 173,
+        "endLoc": {
+          "column": 9,
+          "line": 173,
+          "position": 7173
+        },
+        "name": "test/engine/ai/boutBiddingIntegration.test.ts",
+        "start": 163,
+        "startLoc": {
+          "column": 33,
+          "line": 163,
+          "position": 6743
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 203,
+        "endLoc": {
+          "column": 19,
+          "line": 203,
+          "position": 6697
+        },
+        "name": "test/engine/ai/intentEnginePerf.test.ts",
+        "start": 181,
+        "startLoc": {
+          "column": 58,
+          "line": 181,
+          "position": 6098
+        }
+      },
+      "format": "typescript",
+      "fragment": "    it('correctly identifies dominant style concentration', () => {\n      const rival = makeMockRival({\n        roster: [\n          {\n            id: 'w1',\n            name: 'W1',\n            style: FightingStyle.BashingAttack,\n            status: 'Active',\n            injuries: [],\n            attributes: {},\n            baseSkills: {},\n            derivedStats: {},\n          } as any,\n          {\n            id: 'w2',\n            name: 'W2',\n            style: FightingStyle.BashingAttack,\n            status: 'Active',\n            injuries: [],\n            attributes: {},\n            baseSkills: {},\n            derivedStats: {},\n          } as any,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 23,
+      "secondFile": {
+        "end": 262,
+        "endLoc": {
+          "column": 19,
+          "line": 262,
+          "position": 8452
+        },
+        "name": "test/engine/ai/intentEnginePerf.test.ts",
+        "start": 240,
+        "startLoc": {
+          "column": 58,
+          "line": 240,
+          "position": 7853
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 106,
+        "endLoc": {
+          "column": 75,
+          "line": 106,
+          "position": 4043
+        },
+        "name": "test/engine/ai/workers/competitionWorker/playerBids.test.ts",
+        "start": 92,
+        "startLoc": {
+          "column": 72,
+          "line": 92,
+          "position": 3570
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const marked = makeWarrior({ fame: 100, career: { wins: 3, losses: 2, kills: 0 } });\n    const rival = makeRival({\n      roster: [marked],\n      strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },\n    });\n    const state = makeGameState({ playerChallenges: [marked.id] });\n    const { bids } = generateBoutBids({\n      rival: rival,\n      _currentWeek: 5,\n      weather: 'Clear',\n      crowdMood: 'Calm',\n      rivals: [rival],\n      state: state,\n    });\n    const playerBid = bids.find((b) => b.targetStableId === state.player.id);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 199,
+        "endLoc": {
+          "column": 49,
+          "line": 199,
+          "position": 7570
+        },
+        "name": "test/engine/ai/workers/competitionWorker/playerBids.test.ts",
+        "start": 184,
+        "startLoc": {
+          "column": 72,
+          "line": 184,
+          "position": 7090
+        }
+      },
+      "tokens": 108
+    },
+    {
+      "firstFile": {
+        "end": 50,
+        "endLoc": {
+          "column": 50,
+          "line": 50,
+          "position": 1773
+        },
+        "name": "test/engine/ai/workers/staffWorker.denial.test.ts",
+        "start": 39,
+        "startLoc": {
+          "column": 66,
+          "line": 39,
+          "position": 1337
+        }
+      },
+      "format": "typescript",
+      "fragment": "        opponentDossiers: { 'enemy-stable': offensiveFieldDossier },\n      }),\n      strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 4 },\n    });\n    const state = makeGameState({ rivals: [rival] });\n    const pool = [\n      trainer('def-master', 'Master', 'Defense'),\n      trainer('agg-master', 'Master', 'Aggression'),\n    ];\n    const { updatedRival } = processStaff(rival, state, pool);\n    expect(updatedRival.trainers).toHaveLength(1);\n    expect(updatedRival.trainers![0]!.focus).toBe('Defense');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 75,
+        "endLoc": {
+          "column": 50,
+          "line": 75,
+          "position": 2641
+        },
+        "name": "test/engine/ai/workers/staffWorker.denial.test.ts",
+        "start": 64,
+        "startLoc": {
+          "column": 8,
+          "line": 64,
+          "position": 2205
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 193,
+        "endLoc": {
+          "column": 63,
+          "line": 193,
+          "position": 6655
+        },
+        "name": "test/engine/bout/aiPlanIntegration.test.ts",
+        "start": 175,
+        "startLoc": {
+          "column": 77,
+          "line": 175,
+          "position": 6073
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const npcWarrior = makeWarrior('NPCFighter', FightingStyle.StrikingAttack, 'rival-1');\n\n    const rival = makeRival({ roster: [npcWarrior] });\n    const state = setupStateWithOffer(playerWarrior, npcWarrior, rival);\n\n    mod.resolveBout(state, {\n      warrior: playerWarrior,\n      opponent: npcWarrior,\n      isRivalry: false,\n      moodMods: { fameMod: 1, popMod: 1 } as any,\n      week: 5,\n      displayWeek: 5,\n      playerId: 'player-1',\n      warriorMap: state.warriorMap!,\n      contract: state.boutOffers['test-offer' as any],\n    });\n\n    expect(simulateSpy).toHaveBeenCalledOnce();\n    const planA = (simulateSpy.mock.calls[0]![0] as any).planA;",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 225,
+        "endLoc": {
+          "column": 63,
+          "line": 225,
+          "position": 7865
+        },
+        "name": "test/engine/bout/aiPlanIntegration.test.ts",
+        "start": 207,
+        "startLoc": {
+          "column": 75,
+          "line": 207,
+          "position": 7283
+        }
+      },
+      "tokens": 127
+    },
+    {
+      "firstFile": {
+        "end": 27,
+        "endLoc": {
+          "column": 19,
+          "line": 27,
+          "position": 933
+        },
+        "name": "test/engine/bout/boutProcessor.test.ts",
+        "start": 11,
+        "startLoc": {
+          "column": 52,
+          "line": 11,
+          "position": 471
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('should generate pairings for player and rival', () => {\n    const state: any = makeGameState({\n      player: { id: 'p1', stableName: 'Player' },\n      roster: [\n        {\n          id: 'w1',\n          status: 'Active',\n          stableId: 'p1',\n          style: FightingStyle.BashingAttack,\n          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },\n          fame: 0,\n        },\n      ],\n      rivals: [\n        {\n          owner: { id: 'r1', stableName: 'Stab' },\n          roster: [",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 298,
+        "endLoc": {
+          "column": 67,
+          "line": 298,
+          "position": 9612
+        },
+        "name": "test/engine/bout/boutProcessor.test.ts",
+        "start": 282,
+        "startLoc": {
+          "column": 76,
+          "line": 282,
+          "position": 8976
+        }
+      },
+      "tokens": 106
+    },
+    {
+      "firstFile": {
+        "end": 27,
+        "endLoc": {
+          "column": 19,
+          "line": 27,
+          "position": 933
+        },
+        "name": "test/engine/bout/boutProcessor.test.ts",
+        "start": 12,
+        "startLoc": {
+          "column": 4,
+          "line": 12,
+          "position": 485
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const state: any = makeGameState({\n      player: { id: 'p1', stableName: 'Player' },\n      roster: [\n        {\n          id: 'w1',\n          status: 'Active',\n          stableId: 'p1',\n          style: FightingStyle.BashingAttack,\n          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },\n          fame: 0,\n        },\n      ],\n      rivals: [\n        {\n          owner: { id: 'r1', stableName: 'Stab' },\n          roster: [",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 265,
+        "endLoc": {
+          "column": 67,
+          "line": 265,
+          "position": 8497
+        },
+        "name": "test/engine/bout/boutProcessor.test.ts",
+        "start": 253,
+        "startLoc": {
+          "column": 4,
+          "line": 253,
+          "position": 8078
+        }
+      },
+      "tokens": 101
+    },
+    {
+      "firstFile": {
+        "end": 93,
+        "endLoc": {
+          "column": 6,
+          "line": 93,
+          "position": 3152
+        },
+        "name": "test/engine/bout/boutProcessorService.test.ts",
+        "start": 73,
+        "startLoc": {
+          "column": 65,
+          "line": 73,
+          "position": 2513
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('should count rival stables when checking eligible warriors', () => {\n    const state = makeBaseState();\n    // Player has 1 eligible warrior\n    state.roster = [makeMinimalWarrior({ id: 'w1' as any, name: 'Ready', fatigue: 0 })];\n    // Rival has 1 eligible warrior — total = 2, should proceed to pairings\n    state.rivals = [\n      {\n        id: 'rival-1',\n        owner: {\n          id: 'owner-1',\n          name: 'Rival',\n          stableName: 'Rival Stable',\n          fame: 0,\n          renown: 0,\n          titles: 0,\n        } as any,\n        roster: [makeMinimalWarrior({ id: 'w2' as any, name: 'Rival Ready', fatigue: 0 })],\n        treasury: 100,\n        fame: 0,\n      } as any,\n    ];",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 21,
+      "secondFile": {
+        "end": 150,
+        "endLoc": {
+          "column": 6,
+          "line": 150,
+          "position": 4963
+        },
+        "name": "test/engine/bout/boutProcessorService.test.ts",
+        "start": 132,
+        "startLoc": {
+          "column": 59,
+          "line": 132,
+          "position": 4439
+        }
+      },
+      "tokens": 115
+    },
+    {
+      "firstFile": {
+        "end": 69,
+        "endLoc": {
+          "column": 38,
+          "line": 69,
+          "position": 2197
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 57,
+        "startLoc": {
+          "column": 41,
+          "line": 57,
+          "position": 1767
+        }
+      },
+      "format": "typescript",
+      "fragment": "    it('processes death for Kill outcome', () => {\n      const s = createMockState();\n      const wA = createMockWarrior();\n      const wD = createMockWarrior({\n        id: 'warrior-d' as WarriorId,\n        name: 'Warrior D',\n        stableId: 'rival-1' as StableId,\n      });\n      const outcome = createMockOutcome({ by: 'Kill' });\n\n      const result = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });\n\n      expect(result.death).toBe(true);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 325,
+        "endLoc": {
+          "column": 38,
+          "line": 325,
+          "position": 11063
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 311,
+        "startLoc": {
+          "column": 40,
+          "line": 311,
+          "position": 10525
+        }
+      },
+      "tokens": 101
+    },
+    {
+      "firstFile": {
+        "end": 189,
+        "endLoc": {
+          "column": 28,
+          "line": 189,
+          "position": 6202
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 172,
+        "startLoc": {
+          "column": 62,
+          "line": 172,
+          "position": 5727
+        }
+      },
+      "format": "typescript",
+      "fragment": "      const s = createMockState({ roster: [warrior], graveyard: [] });\n      const wA = warrior;\n      const wD = createMockWarrior({\n        id: 'warrior-d' as WarriorId,\n        name: 'Warrior D',\n        stableId: 'rival-1' as StableId,\n      });\n      const outcome: FightOutcome = {\n        winner: 'D',\n        by: 'Kill',\n        minutes: 5,\n        log: [],\n      };\n\n      const result = handleDeath({ s: s, wA: wA, wD: wD, outcome: outcome, week: 1, tags: [] });\n\n      // Should have roster update\n      expect(result.impact?.rosterUpdates?.size).toBeGreaterThan(0);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 18,
+      "secondFile": {
+        "end": 308,
+        "endLoc": {
+          "column": 28,
+          "line": 308,
+          "position": 10426
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 292,
+        "startLoc": {
+          "column": 73,
+          "line": 292,
+          "position": 9986
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 211,
+        "endLoc": {
+          "column": 13,
+          "line": 211,
+          "position": 7121
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 192,
+        "startLoc": {
+          "column": 89,
+          "line": 192,
+          "position": 6341
+        }
+      },
+      "format": "typescript",
+      "fragment": "    it('emits a roster removal for a player victim — dead warriors never stay bookable', () => {\n      // The store-side retireToGraveyard already filters the roster; the engine\n      // must match. A 'Dead'-marked warrior left on state.roster stays in\n      // warriorMap, remains pairable on side D, and violates\n      // graveyard-roster-disjoint.\n      const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });\n      const s = createMockState({ roster: [warrior], graveyard: [] });\n      const wD = createMockWarrior({\n        id: 'warrior-d' as WarriorId,\n        name: 'Warrior D',\n        stableId: 'rival-1' as StableId,\n      });\n      const outcome: FightOutcome = { winner: 'D', by: 'Kill', minutes: 5, log: [] };\n\n      const result = handleDeath({\n        s: s,\n        wA: warrior,\n        wD: wD,\n        outcome: outcome,\n        week: 1,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 20,
+      "secondFile": {
+        "end": 233,
+        "endLoc": {
+          "column": 13,
+          "line": 233,
+          "position": 7849
+        },
+        "name": "test/engine/bout/mortalityHandler.test.ts",
+        "start": 218,
+        "startLoc": {
+          "column": 87,
+          "line": 218,
+          "position": 7323
+        }
+      },
+      "tokens": 111
+    },
+    {
+      "firstFile": {
+        "end": 128,
+        "endLoc": {
+          "column": 27,
+          "line": 128,
+          "position": 4076
+        },
+        "name": "test/engine/bout/progressionHandler.test.ts",
+        "start": 113,
+        "startLoc": {
+          "column": 55,
+          "line": 113,
+          "position": 3618
+        }
+      },
+      "format": "typescript",
+      "fragment": "      const wA = createMockWarrior({ fame: 10, flair: [] });\n      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Famous', fame: 30 });\n      const s = createMockState();\n      const outcome = createMockOutcome({ winner: 'A' });\n\n      const result = handleProgressions({\n        s: s,\n        wA: wA,\n        wD: wD,\n        outcome: outcome,\n        tags: [],\n        week: 1,\n      });\n\n      const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);\n      if (aUpdate?.flair) {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 149,
+        "endLoc": {
+          "column": 27,
+          "line": 149,
+          "position": 4734
+        },
+        "name": "test/engine/bout/progressionHandler.test.ts",
+        "start": 134,
+        "startLoc": {
+          "column": 69,
+          "line": 134,
+          "position": 4276
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 61,
+        "endLoc": {
+          "column": 19,
+          "line": 61,
+          "position": 1783
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 43,
+        "startLoc": {
+          "column": 36,
+          "line": 43,
+          "position": 1296
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const wD = createMockWarrior('D');\n    const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };\n\n    const impact = applyRecords({\n      s: s,\n      wA: wA,\n      wD: wD,\n      outcome: outcome,\n      tags: [],\n      fameA: 5,\n      popA: 2,\n      fameD: 1,\n      popD: 1,\n    });\n\n    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;\n    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;\n\n    expect(updatedA).toBeDefined();",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 194,
+        "endLoc": {
+          "column": 19,
+          "line": 194,
+          "position": 6346
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 176,
+        "startLoc": {
+          "column": 53,
+          "line": 176,
+          "position": 5859
+        }
+      },
+      "tokens": 117
+    },
+    {
+      "firstFile": {
+        "end": 171,
+        "endLoc": {
+          "column": 20,
+          "line": 171,
+          "position": 5714
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 150,
+        "startLoc": {
+          "column": 79,
+          "line": 150,
+          "position": 4993
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('skips fatigue accrual for tournament participants during tournament week', () => {\n    const s = createMockState({\n      isTournamentWeek: true,\n      tournaments: [\n        {\n          id: 'tourney-1' as import('@/types/shared.types').TournamentId,\n          name: 'Tournament',\n          season: 'Spring',\n          week: 1,\n          tierId: 'Gold',\n          bracket: [],\n          participants: [\n            {\n              id: 'A' as import('@/types/shared.types').WarriorId,\n              stableId: 'player' as import('@/types/shared.types').StableId,\n            } as any,\n            {\n              id: 'D' as import('@/types/shared.types').WarriorId,\n              stableId: 'rival' as import('@/types/shared.types').StableId,\n            } as any,\n          ],\n          completed: false,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 223,
+        "endLoc": {
+          "column": 20,
+          "line": 223,
+          "position": 7541
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 198,
+        "startLoc": {
+          "column": 117,
+          "line": 198,
+          "position": 6555
+        }
+      },
+      "tokens": 112
+    },
+    {
+      "firstFile": {
+        "end": 194,
+        "endLoc": {
+          "column": 34,
+          "line": 194,
+          "position": 6361
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 171,
+        "startLoc": {
+          "column": 26,
+          "line": 171,
+          "position": 5720
+        }
+      },
+      "format": "typescript",
+      "fragment": "          completed: false,\n        },\n      ],\n    });\n    const wA = createMockWarrior('A', { fatigue: 20 });\n    const wD = createMockWarrior('D', { fatigue: 30 });\n    const outcome: FightOutcome = { winner: 'A', by: 'KO', minutes: 5, log: [] };\n\n    const impact = applyRecords({\n      s: s,\n      wA: wA,\n      wD: wD,\n      outcome: outcome,\n      tags: [],\n      fameA: 5,\n      popA: 2,\n      fameD: 1,\n      popD: 1,\n    });\n\n    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;\n    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;\n\n    expect(updatedA.fatigue).toBe(20); // No change",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 24,
+      "secondFile": {
+        "end": 246,
+        "endLoc": {
+          "column": 34,
+          "line": 246,
+          "position": 8187
+        },
+        "name": "test/engine/bout/recordHandler.test.ts",
+        "start": 223,
+        "startLoc": {
+          "column": 25,
+          "line": 223,
+          "position": 7546
+        }
+      },
+      "tokens": 157
+    },
+    {
+      "firstFile": {
+        "end": 808,
+        "endLoc": {
+          "column": 5,
+          "line": 808,
+          "position": 31610
+        },
+        "name": "test/engine/championship/arenaChampionship.test.ts",
+        "start": 793,
+        "startLoc": {
+          "column": 89,
+          "line": 793,
+          "position": 31155
+        }
+      },
+      "format": "typescript",
+      "fragment": "      responses: { 'w-champ': 'Declined', 'w-cont': 'Accepted' } as BoutOffer['responses'],\n    });\n    const state = makeGameState({\n      absoluteWeek: 10,\n      roster: [champ, cont],\n      boutOffers: { [offer.id]: offer },\n      arenaChampions: { [arenaId]: makeTitleAt(arenaId, 'w-champ') },\n    });\n    const delta = createChampionshipDelta();\n    sweepTitleRefusals(state, delta);\n    const title = effTitle(state, delta, arenaId)!;\n    expect(title.refusals).toBe(0);\n    expect(title.champion?.warriorId).toBe('w-champ');\n  });\n\n  it('challenger decline applies a contender cooldown', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 898,
+        "endLoc": {
+          "column": 5,
+          "line": 898,
+          "position": 35834
+        },
+        "name": "test/engine/championship/arenaChampionship.test.ts",
+        "start": 883,
+        "startLoc": {
+          "column": 88,
+          "line": 883,
+          "position": 35379
+        }
+      },
+      "tokens": 111
+    },
+    {
+      "firstFile": {
+        "end": 986,
+        "endLoc": {
+          "column": 29,
+          "line": 986,
+          "position": 40063
+        },
+        "name": "test/engine/championship/arenaChampionship.test.ts",
+        "start": 973,
+        "startLoc": {
+          "column": 66,
+          "line": 973,
+          "position": 39551
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('books a defense when cadence elapsed and a contender exists', () => {\n    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });\n    const cont = makeVenueWarriorAt('w-cont', arenaId, { wins: 5, losses: 0 });\n    const state = makeGameState({\n      absoluteWeek: 29,\n      week: 29,\n      roster: [champ, cont],\n      arenaChampions: {\n        [arenaId]: makeTitleAt(arenaId, 'w-champ', {\n          champion: {\n            warriorId: 'w-champ' as WarriorId,\n            startedAbsoluteWeek: 10,\n            defenses: 1,\n            lastActivityWeek: 29 - ARENA_TITLE.DEFENSE_INTERVAL_WEEKS,",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 1015,
+        "endLoc": {
+          "column": 29,
+          "line": 1015,
+          "position": 41138
+        },
+        "name": "test/engine/championship/arenaChampionship.test.ts",
+        "start": 1002,
+        "startLoc": {
+          "column": 54,
+          "line": 1002,
+          "position": 40626
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 188,
+        "endLoc": {
+          "column": 51,
+          "line": 188,
+          "position": 7657
+        },
+        "name": "test/engine/championship/arenaChampionshipPass.test.ts",
+        "start": 178,
+        "startLoc": {
+          "column": 67,
+          "line": 178,
+          "position": 7207
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('lets a dormant champion’s signed ordinary offer resolve', () => {\n    const champ = makeVenueWarriorAt('w-champ', arenaId, { wins: 8, losses: 0 });\n    const other = makeVenueWarriorAt('w-other', arenaId, { wins: 5, losses: 0 });\n    const offer = signedOffer('o1', 'w-champ', 'w-other');\n    const state = makeGameState({\n      week: 29,\n      absoluteWeek: 29,\n      roster: [champ, other],\n      boutOffers: { [offer.id]: offer },\n      arenaChampions: {\n        [arenaId]: activeTitle('w-champ', { status: 'dormant' }),",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 11,
+      "secondFile": {
+        "end": 206,
+        "endLoc": {
+          "column": 51,
+          "line": 206,
+          "position": 8362
+        },
+        "name": "test/engine/championship/arenaChampionshipPass.test.ts",
+        "start": 196,
+        "startLoc": {
+          "column": 72,
+          "line": 196,
+          "position": 7912
+        }
+      },
+      "tokens": 103
+    },
+    {
+      "firstFile": {
+        "end": 180,
+        "endLoc": {
+          "column": 65,
+          "line": 180,
+          "position": 6432
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 165,
+        "startLoc": {
+          "column": 51,
+          "line": 165,
+          "position": 5743
+        }
+      },
+      "format": "typescript",
+      "fragment": "        attributes: { ST: 10, CN: 10, SZ: 10, WT: 5, WL: 10, SP: 10, DF: 10 },\n        plan: {\n          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,\n          OE: 5,\n          AL: 5,\n          killDesire: 5,\n          conditions: [{ trigger: { type: 'HP_BELOW', value: 0.5 }, override: { OE: 10 } }],\n        },\n      });\n      const opponent = createMockFighter({ label: 'D' });\n\n      // Exchange 1: should evaluate (WT=5 means every 3 exchanges, and 1 % 3 !== 0... wait)\n      // Actually evaluationInterval(5) returns 3 (WT >= 4 but < 7)\n      // So it evaluates when exchange % 3 === 0\n      const ctx1 = createMockContext({ exchange: 1 });\n      const result1 = evaluateConditions(fighter, opponent, ctx1, 5);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 539,
+        "endLoc": {
+          "column": 65,
+          "line": 539,
+          "position": 19756
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 527,
+        "startLoc": {
+          "column": 51,
+          "line": 527,
+          "position": 19201
+        }
+      },
+      "tokens": 106
+    },
+    {
+      "firstFile": {
+        "end": 365,
+        "endLoc": {
+          "column": 37,
+          "line": 365,
+          "position": 13155
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 353,
+        "startLoc": {
+          "column": 19,
+          "line": 353,
+          "position": 12661
+        }
+      },
+      "format": "typescript",
+      "fragment": "        momentum: 3,\n        plan: {\n          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,\n          OE: 5,\n          AL: 5,\n          killDesire: 5,\n          conditions: [{ trigger: { type: 'MOMENTUM_LEAD', value: 2 }, override: { OE: 8 } }],\n        },\n      });\n      const opponent = createMockFighter({ label: 'D' });\n      const ctx = createMockContext({ exchange: 1 });\n      const result = evaluateConditions(fighter, opponent, ctx, 10);\n      expect(result.newPlan.OE).toBe(8);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 382,
+        "endLoc": {
+          "column": 37,
+          "line": 382,
+          "position": 13808
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 370,
+        "startLoc": {
+          "column": 19,
+          "line": 370,
+          "position": 13314
+        }
+      },
+      "tokens": 107
+    },
+    {
+      "firstFile": {
+        "end": 399,
+        "endLoc": {
+          "column": 37,
+          "line": 399,
+          "position": 14444
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 387,
+        "startLoc": {
+          "column": 20,
+          "line": 387,
+          "position": 13947
+        }
+      },
+      "format": "typescript",
+      "fragment": "        momentum: -3,\n        plan: {\n          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,\n          OE: 5,\n          AL: 5,\n          killDesire: 5,\n          conditions: [{ trigger: { type: 'MOMENTUM_DEFICIT', value: 2 }, override: { OE: 2 } }],\n        },\n      });\n      const opponent = createMockFighter({ label: 'D' });\n      const ctx = createMockContext({ exchange: 1 });\n      const result = evaluateConditions(fighter, opponent, ctx, 10);\n      expect(result.newPlan.OE).toBe(2);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 416,
+        "endLoc": {
+          "column": 37,
+          "line": 416,
+          "position": 15112
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 404,
+        "startLoc": {
+          "column": 20,
+          "line": 404,
+          "position": 14615
+        }
+      },
+      "tokens": 107
+    },
+    {
+      "firstFile": {
+        "end": 434,
+        "endLoc": {
+          "column": 37,
+          "line": 434,
+          "position": 15748
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 421,
+        "startLoc": {
+          "column": 14,
+          "line": 421,
+          "position": 15237
+        }
+      },
+      "format": "typescript",
+      "fragment": "        hp: 80,\n        maxHp: 100,\n        plan: {\n          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,\n          OE: 5,\n          AL: 5,\n          killDesire: 5,\n          conditions: [{ trigger: { type: 'HP_ABOVE', value: 0.7 }, override: { OE: 9 } }],\n        },\n      });\n      const opponent = createMockFighter({ label: 'D' });\n      const ctx = createMockContext({ exchange: 1 });\n      const result = evaluateConditions(fighter, opponent, ctx, 10);\n      expect(result.newPlan.OE).toBe(9);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 452,
+        "endLoc": {
+          "column": 37,
+          "line": 452,
+          "position": 16410
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 439,
+        "startLoc": {
+          "column": 14,
+          "line": 439,
+          "position": 15899
+        }
+      },
+      "tokens": 111
+    },
+    {
+      "firstFile": {
+        "end": 470,
+        "endLoc": {
+          "column": 37,
+          "line": 470,
+          "position": 17074
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 457,
+        "startLoc": {
+          "column": 21,
+          "line": 457,
+          "position": 16549
+        }
+      },
+      "format": "typescript",
+      "fragment": "        endurance: 20,\n        maxEndurance: 100,\n        plan: {\n          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,\n          OE: 5,\n          AL: 5,\n          killDesire: 5,\n          conditions: [{ trigger: { type: 'ENDURANCE_BELOW', value: 0.3 }, override: { AL: 8 } }],\n        },\n      });\n      const opponent = createMockFighter({ label: 'D' });\n      const ctx = createMockContext({ exchange: 1 });\n      const result = evaluateConditions(fighter, opponent, ctx, 10);\n      expect(result.newPlan.AL).toBe(8);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 488,
+        "endLoc": {
+          "column": 37,
+          "line": 488,
+          "position": 17767
+        },
+        "name": "test/engine/combat/conditionEngine.test.ts",
+        "start": 475,
+        "startLoc": {
+          "column": 21,
+          "line": 475,
+          "position": 17242
+        }
+      },
+      "tokens": 111
+    },
+    {
+      "firstFile": {
+        "end": 103,
+        "endLoc": {
+          "column": 18,
+          "line": 103,
+          "position": 3062
+        },
+        "name": "test/engine/combat/distanceResolution.test.ts",
+        "start": 80,
+        "startLoc": {
+          "column": 67,
+          "line": 80,
+          "position": 2472
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it(\"produces newRange = one step toward winner's preferred range\", () => {\n    const rng = vi.fn().mockReturnValue(0.1);\n    const fA = {\n      skills: { INI: 15 },\n      activePlan: { OE: 5, rangePreference: 'Extended' },\n      recoveryDebt: 0,\n      weaponId: 'short_spear',\n    } as any;\n    const fD = {\n      skills: { INI: 5 },\n      activePlan: { OE: 5 },\n      recoveryDebt: 0,\n      weaponId: 'broadsword',\n    } as any;\n    const result = contestDistance({\n      rng: rng,\n      fA: fA,\n      fD: fD,\n      OE_A: 5,\n      OE_D: 5,\n      currentRange: 'Striking',\n    });\n    // Striking → Extended (one step toward Extended)\n    expect(result.newRange).toBe('Extended');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 24,
+      "secondFile": {
+        "end": 403,
+        "endLoc": {
+          "column": 18,
+          "line": 403,
+          "position": 12264
+        },
+        "name": "test/engine/combat/distanceResolution.test.ts",
+        "start": 381,
+        "startLoc": {
+          "column": 49,
+          "line": 381,
+          "position": 11730
+        }
+      },
+      "tokens": 124
+    },
+    {
+      "firstFile": {
+        "end": 131,
+        "endLoc": {
+          "column": 18,
+          "line": 131,
+          "position": 3980
+        },
+        "name": "test/engine/combat/distanceResolution.test.ts",
+        "start": 106,
+        "startLoc": {
+          "column": 59,
+          "line": 106,
+          "position": 3156
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('keeps current range when scores are equal (pure tie)', () => {\n    // Equal INI, equal OE, equal recoveryDebt — reach scores are identical\n    // contestCheck will break the tie with rng, but we test no RANGE_SHIFT event when range stays same\n    const rng = vi.fn().mockReturnValue(0.5);\n    const fA = {\n      skills: { INI: 10 },\n      activePlan: { OE: 5, rangePreference: 'Striking' },\n      recoveryDebt: 0,\n      weaponId: 'broadsword',\n    } as any;\n    const fD = {\n      skills: { INI: 10 },\n      activePlan: { OE: 5, rangePreference: 'Striking' },\n      recoveryDebt: 0,\n      weaponId: 'broadsword',\n    } as any;\n    const result = contestDistance({\n      rng: rng,\n      fA: fA,\n      fD: fD,\n      OE_A: 5,\n      OE_D: 5,\n      currentRange: 'Striking',\n    });\n    // Both prefer Striking, so newRange stays Striking regardless of who wins\n    expect(result.newRange).toBe('Striking');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 26,
+      "secondFile": {
+        "end": 430,
+        "endLoc": {
+          "column": 18,
+          "line": 430,
+          "position": 13030
+        },
+        "name": "test/engine/combat/distanceResolution.test.ts",
+        "start": 408,
+        "startLoc": {
+          "column": 60,
+          "line": 408,
+          "position": 12467
+        }
+      },
+      "tokens": 128
+    },
+    {
+      "firstFile": {
+        "end": 137,
+        "endLoc": {
+          "column": 34,
+          "line": 137,
+          "position": 4843
+        },
+        "name": "test/engine/combat/exchangeSubPhases.test.ts",
+        "start": 126,
+        "startLoc": {
+          "column": 43,
+          "line": 126,
+          "position": 4333
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const rng = vi.fn().mockReturnValue(0.3);\n    const att = makeFighter({\n      attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 },\n      activePlan: { style: 'SLASHING ATTACK' as any, OE: 6, AL: 5, feintTendency: 5 },\n    });\n    const def = makeFighter({\n      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },\n      activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },\n    });\n    const result = runFeint(rng, att, def);\n    expect(result.triggered).toBe(true);\n    expect(result.succeeded).toBe(true);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 153,
+        "endLoc": {
+          "column": 34,
+          "line": 153,
+          "position": 5504
+        },
+        "name": "test/engine/combat/exchangeSubPhases.test.ts",
+        "start": 142,
+        "startLoc": {
+          "column": 43,
+          "line": 142,
+          "position": 4994
+        }
+      },
+      "tokens": 157
+    },
+    {
+      "firstFile": {
+        "end": 41,
+        "endLoc": {
+          "column": 7,
+          "line": 41,
+          "position": 1725
+        },
+        "name": "test/engine/combat/mechanics/hitLocation.test.ts",
+        "start": 24,
+        "startLoc": {
+          "column": 49,
+          "line": 24,
+          "position": 1026
+        }
+      },
+      "format": "typescript",
+      "fragment": "    it('returns chest and abdomen for body armor', () => {\n      expect(protectCovers('leather')).toEqual(['chest', 'abdomen']);\n      expect(protectCovers('padded')).toEqual(['chest', 'abdomen']);\n      expect(protectCovers('studded_leather')).toEqual(['chest', 'abdomen']);\n      expect(protectCovers('chain_mail')).toEqual(['chest', 'abdomen']);\n      expect(protectCovers('plate_armor')).toEqual(['chest', 'abdomen']);\n      expect(protectCovers('body')).toEqual(['chest', 'abdomen']);\n    });\n\n    it('returns arms for arms', () => {\n      expect(protectCovers('arms')).toEqual(['right arm', 'left arm']);\n    });\n\n    it('returns legs for legs', () => {\n      expect(protectCovers('legs')).toEqual(['right leg', 'left leg']);\n    });\n\n    it('returns empty array for unknown protection types', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 18,
+      "secondFile": {
+        "end": 250,
+        "endLoc": {
+          "column": 7,
+          "line": 250,
+          "position": 10490
+        },
+        "name": "test/engine/combat/mechanics/hitLocation.test.ts",
+        "start": 233,
+        "startLoc": {
+          "column": 45,
+          "line": 233,
+          "position": 9791
+        }
+      },
+      "tokens": 168
+    },
+    {
+      "firstFile": {
+        "end": 486,
+        "endLoc": {
+          "column": 5,
+          "line": 486,
+          "position": 14197
+        },
+        "name": "test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts",
+        "start": 463,
+        "startLoc": {
+          "column": 41,
+          "line": 463,
+          "position": 13516
+        }
+      },
+      "format": "typescript",
+      "fragment": "      style: FightingStyle.StrikingAttack,\n      skills: { ATT: 5, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },\n    });\n    const rng = () => 0.5; // roll = 11\n    // oeAttMod(10, StrikingAttack) = floor((10-5)*0.85) + 1 = 5\n    // modifier = 5 + 0 + 0 + 0 + 0 + 0 + 1 + 2.5 + 0 - 0 - 0 + 0 + 0 + 0 = 8.5\n    // target = clamp(floor(5+8.5), 1, 19) = 13 → 11 ≤ 13 → success\n    const result = performAttackCheck({\n      rng: rng,\n      att: att,\n      curAttOE: 10,\n      matchup: 0,\n      fat: 0,\n      curOffMods: zeroOffMods,\n      curPass: zeroPass,\n      curAntiSyn: zeroAntiSyn,\n      curBiasAtt: 0,\n      overAtt: 0,\n      _curAttWepReq: { attPenalty: 0 },\n    });\n    expect(result).toBe(true);\n  });\n\n  it('non-aggressive style does not get +1 from oeAttMod', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 24,
+      "secondFile": {
+        "end": 512,
+        "endLoc": {
+          "column": 5,
+          "line": 512,
+          "position": 15065
+        },
+        "name": "test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts",
+        "start": 489,
+        "startLoc": {
+          "column": 37,
+          "line": 489,
+          "position": 14384
+        }
+      },
+      "tokens": 112
+    },
+    {
+      "firstFile": {
+        "end": 91,
+        "endLoc": {
+          "column": 7,
+          "line": 91,
+          "position": 3433
+        },
+        "name": "test/engine/combat/styleWeatherRiposte.test.ts",
+        "start": 70,
+        "startLoc": {
+          "column": 73,
+          "line": 70,
+          "position": 2896
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('ParryRiposte in Dense Fog gets more ripostes than in Clear weather', () => {\n    const defender = makeWarrior('Riposter', FightingStyle.ParryRiposte, {\n      DF: 17,\n      CN: 20,\n      WL: 15,\n    });\n    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, {\n      ST: 8,\n      CN: 20,\n      SP: 6,\n      DF: 5,\n    });\n    const planD = makePlan(FightingStyle.ParryRiposte, {\n      OE: 3,\n      AL: 5,\n      killDesire: 1,\n      defensiveTactic: 'Parry',\n    });\n    const planA = makePlan(FightingStyle.BashingAttack, { OE: 5, AL: 3, killDesire: 1 });\n\n    let fogRipostes = 0;\n    let clearRipostes = 0;",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 197,
+        "endLoc": {
+          "column": 7,
+          "line": 197,
+          "position": 6475
+        },
+        "name": "test/engine/combat/styleWeatherRiposte.test.ts",
+        "start": 175,
+        "startLoc": {
+          "column": 68,
+          "line": 175,
+          "position": 5858
+        }
+      },
+      "tokens": 122
+    },
+    {
+      "firstFile": {
+        "end": 123,
+        "endLoc": {
+          "column": 5,
+          "line": 123,
+          "position": 4348
+        },
+        "name": "test/engine/combat/styleWeatherRiposte.test.ts",
+        "start": 82,
+        "startLoc": {
+          "column": 53,
+          "line": 82,
+          "position": 3219
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const planD = makePlan(FightingStyle.ParryRiposte, {\n      OE: 3,\n      AL: 5,\n      killDesire: 1,\n      defensiveTactic: 'Parry',\n    });\n    const planA = makePlan(FightingStyle.BashingAttack, { OE: 5, AL: 3, killDesire: 1 });\n\n    let fogRipostes = 0;\n    let clearRipostes = 0;\n    const seeds = [42, 100, 200, 300, 500, 700, 1000, 1500, 2000, 3000];\n\n    for (const seed of seeds) {\n      const fogOutcome = simulateFight({\n        planA: planA,\n        planD: planD,\n        warriorA: attacker,\n        warriorD: defender,\n        providedRng: seed,\n        trainers: undefined,\n        weather: 'Dense Fog',\n      });\n      const clearOutcome = simulateFight({\n        planA: planA,\n        planD: planD,\n        warriorA: attacker,\n        warriorD: defender,\n        providedRng: seed,\n        trainers: undefined,\n        weather: 'Clear',\n      });\n\n      fogRipostes += countRipostes(fogOutcome);\n      clearRipostes += countRipostes(clearOutcome);\n    }\n\n    // Dense Fog should produce more ripostes due to the +3 riposteMod\n    // from STYLE_WEATHER_MODIFIERS plus the +12 from WEATHER_EFFECTS\n    expect(fogRipostes).toBeGreaterThan(clearRipostes);\n  });\n\n  it('ParryLunge in Dense Fog gets more ripostes than in Clear weather', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 42,
+      "secondFile": {
+        "end": 175,
+        "endLoc": {
+          "column": 5,
+          "line": 175,
+          "position": 5795
+        },
+        "name": "test/engine/combat/styleWeatherRiposte.test.ts",
+        "start": 135,
+        "startLoc": {
+          "column": 51,
+          "line": 135,
+          "position": 4736
+        }
+      },
+      "tokens": 192
+    },
+    {
+      "firstFile": {
+        "end": 148,
+        "endLoc": {
+          "column": 5,
+          "line": 148,
+          "position": 5829
+        },
+        "name": "test/engine/combat/styleWinConditions.slow.test.ts",
+        "start": 114,
+        "startLoc": {
+          "column": 41,
+          "line": 114,
+          "position": 4906
+        }
+      },
+      "format": "typescript",
+      "fragment": "describe('TP — fatigue-exploit counter', () => {\n  // ── Direct unit tests for styleRiposteBonus ──────────────────────────────\n  function makeMockFighter(\n    style: FS,\n    endurance: number,\n    maxEndurance: number,\n    momentum: number = 0\n  ): FighterState {\n    return {\n      label: 'D',\n      style,\n      attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },\n      skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, DMG: 10 } as any,\n      derived: { damage: 10 } as any,\n      plan: {} as any,\n      activePlan: {} as any,\n      psychState: 'Neutral' as any,\n      hp: 20,\n      maxHp: 20,\n      endurance,\n      maxEndurance,\n      hitsLanded: 0,\n      hitsTaken: 0,\n      ripostes: 0,\n      consecutiveHits: 0,\n      armHits: 0,\n      legHits: 0,\n      momentum,\n      committed: false,\n      survivalStrike: false,\n      recoveryDebt: 0,\n    } as FighterState;\n  }\n\n  it('TP gets no riposte bonus when opponent endurance is full', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 35,
+      "secondFile": {
+        "end": 261,
+        "endLoc": {
+          "column": 5,
+          "line": 261,
+          "position": 9640
+        },
+        "name": "test/engine/combat/styleWinConditions.slow.test.ts",
+        "start": 227,
+        "startLoc": {
+          "column": 61,
+          "line": 227,
+          "position": 8733
+        }
+      },
+      "tokens": 182
+    },
+    {
+      "firstFile": {
+        "end": 56,
+        "endLoc": {
+          "column": 48,
+          "line": 56,
+          "position": 1805
+        },
+        "name": "test/engine/core/entityIndex.test.ts",
+        "start": 43,
+        "startLoc": {
+          "column": 74,
+          "line": 43,
+          "position": 1296
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('indexes warriors from roster, graveyard, retired, and rival rosters', () => {\n    const s = makeState({\n      roster: [namedWarrior('w-1', 'Alice')],\n      graveyard: [namedWarrior('w-2', 'Dead Bob', { status: 'Dead' })],\n      retired: [namedWarrior('w-3', 'Old Carol', { status: 'Retired' })],\n      rivals: [\n        makeRival({\n          id: 'r1' as StableId,\n          owner: makeOwner({ id: 'r1' as StableId, stableName: 'Iron Wolves' }),\n          roster: [namedWarrior('w-4', 'Rival Dave')],\n        }),\n      ],\n    });\n    const index = ensureEntityIndex(s as never);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 247,
+        "endLoc": {
+          "column": 48,
+          "line": 247,
+          "position": 8796
+        },
+        "name": "test/engine/core/entityIndex.test.ts",
+        "start": 234,
+        "startLoc": {
+          "column": 51,
+          "line": 234,
+          "position": 8287
+        }
+      },
+      "tokens": 114
+    },
+    {
+      "firstFile": {
+        "end": 38,
+        "endLoc": {
+          "column": 4,
+          "line": 38,
+          "position": 1206
+        },
+        "name": "test/engine/core/historyUtils.test.ts",
+        "start": 23,
+        "startLoc": {
+          "column": 33,
+          "line": 23,
+          "position": 607
+        }
+      },
+      "format": "typescript",
+      "fragment": "    }) as unknown as FightSummary;\n\n  const history = [\n    createFight({ absoluteWeek: 1, week: 1, warriorIdA: 'w1' as any, warriorIdD: 'w2' as any }),\n    createFight({ absoluteWeek: 2, week: 2, warriorIdA: 'w3' as any, warriorIdD: 'w4' as any }),\n    createFight({\n      absoluteWeek: 2,\n      week: 2,\n      warriorIdA: 'w1' as any,\n      warriorIdD: 'w5' as any,\n      arenaId: 'arena2',\n      tournamentId: 't1' as any,\n    }),\n    createFight({ absoluteWeek: 3, week: 3, warriorIdA: 'w6' as any, warriorIdD: 'w7' as any }),\n    createFight({ absoluteWeek: 4, week: 4, warriorIdA: 'w1' as any, warriorIdD: 'w8' as any }),\n  ];",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 133,
+        "endLoc": {
+          "column": 6,
+          "line": 133,
+          "position": 4610
+        },
+        "name": "test/engine/core/historyUtils.test.ts",
+        "start": 119,
+        "startLoc": {
+          "column": 6,
+          "line": 119,
+          "position": 3984
+        }
+      },
+      "tokens": 143
+    },
+    {
+      "firstFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 41,
+          "line": 66,
+          "position": 2242
+        },
+        "name": "test/engine/history/arenaHistory.test.ts",
+        "start": 51,
+        "startLoc": {
+          "column": 46,
+          "line": 51,
+          "position": 1691
+        }
+      },
+      "format": "typescript",
+      "fragment": "      const fights = Array.from({ length: 150 }, (_, i) => createMockFight({ id: `f${i}` as any }));\n      localStorage.setItem('sl.arenaHistory', JSON.stringify(fights));\n\n      let calls = 0;\n      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {\n        calls++;\n        if (calls === 1) {\n          const err = new Error('QuotaExceededError');\n          (err as any).name = 'QuotaExceededError';\n          throw err;\n        }\n      });\n\n      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});\n\n      const fight = createMockFight({ id: 'f151' as any });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 101,
+        "endLoc": {
+          "column": 41,
+          "line": 101,
+          "position": 3617
+        },
+        "name": "test/engine/history/arenaHistory.test.ts",
+        "start": 86,
+        "startLoc": {
+          "column": 45,
+          "line": 86,
+          "position": 3066
+        }
+      },
+      "tokens": 124
+    },
+    {
+      "firstFile": {
+        "end": 11,
+        "endLoc": {
+          "column": 9,
+          "line": 11,
+          "position": 606
+        },
+        "name": "test/engine/impacts/rivalMembership.test.ts",
+        "start": 1,
+        "startLoc": {
+          "column": 45,
+          "line": 1,
+          "position": 45
+        }
+      },
+      "format": "typescript",
+      "fragment": "import { describe, it, expect, vi, afterEach } from 'vitest';\nimport { mergeImpacts, resolveImpacts, type StateImpact } from '@/engine/impacts';\nimport type { GameState, RivalStableData } from '@/types/state.types';\nimport type { Warrior } from '@/types/warrior.types';\nimport type { WarriorId, StableId } from '@/types/shared.types';\n\nconst W = (id: string) => ({ id: id as WarriorId, name: id }) as unknown as Warrior;\nconst rival = (id: string, roster: Warrior[], extra: Record<string, unknown> = {}) =>\n  ({ id: id as StableId, roster, treasury: 0, ...extra }) as unknown as RivalStableData;\n\ndescribe('rivalsAdditions — new stables join the world', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 11,
+      "secondFile": {
+        "end": 11,
+        "endLoc": {
+          "column": 9,
+          "line": 11,
+          "position": 591
+        },
+        "name": "test/engine/impacts/rivalReplacements.test.ts",
+        "start": 1,
+        "startLoc": {
+          "column": 30,
+          "line": 1,
+          "position": 30
+        }
+      },
+      "tokens": 123
+    },
+    {
+      "firstFile": {
+        "end": 106,
+        "endLoc": {
+          "column": 7,
+          "line": 106,
+          "position": 3816
+        },
+        "name": "test/engine/matchmaking/tournamentResolution.test.ts",
+        "start": 90,
+        "startLoc": {
+          "column": 66,
+          "line": 90,
+          "position": 3280
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('records the simulated arenaId on the persisted FightSummary', () => {\n    const wA = makeWarrior('wA', 'Challenger', 'player');\n    const wD = makeWarrior('wD', 'Defender', 'rival1');\n    const state = makeState([wA], [{ id: 'rival1', roster: [wD] }]);\n\n    const outcome = { winner: 'A', by: 'Decision', log: [] } as unknown as FightOutcome;\n    const result = applyBoutResults({\n      state: state,\n      wA: wA,\n      wD: wD,\n      outcome: outcome,\n      tId: 't1',\n      tName: 'Gold Cup',\n      rng: new SeededRNG(12345),\n      skipFatigue: true,\n      arenaId: 'sundered_coliseum',\n    });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 130,
+        "endLoc": {
+          "column": 7,
+          "line": 130,
+          "position": 4638
+        },
+        "name": "test/engine/matchmaking/tournamentResolution.test.ts",
+        "start": 114,
+        "startLoc": {
+          "column": 77,
+          "line": 114,
+          "position": 4102
+        }
+      },
+      "tokens": 124
+    },
+    {
+      "firstFile": {
+        "end": 40,
+        "endLoc": {
+          "column": 5,
+          "line": 40,
+          "position": 1579
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/completion.test.ts",
+        "start": 29,
+        "startLoc": {
+          "column": 40,
+          "line": 29,
+          "position": 1064
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('resolves all rounds to completion', () => {\n    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);\n    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);\n\n    // Use a round-7 bout so isComplete (currentRound >= 7) triggers\n    const { state, tournament } = makeFinalsState(w1, w2);\n\n    const updated = resolveCompleteTournament(state, tournament.id, 1);\n\n    expect(updated.tournaments[0]!.completed).toBe(true);\n    expect(updated.tournaments[0]!.champion).toBeDefined();\n  });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 219,
+        "endLoc": {
+          "column": 5,
+          "line": 219,
+          "position": 8288
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/resolveRound.test.ts",
+        "start": 210,
+        "startLoc": {
+          "column": 57,
+          "line": 210,
+          "position": 7843
+        }
+      },
+      "tokens": 103
+    },
+    {
+      "firstFile": {
+        "end": 146,
+        "endLoc": {
+          "column": 10,
+          "line": 146,
+          "position": 5653
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 131,
+        "startLoc": {
+          "column": 57,
+          "line": 131,
+          "position": 5132
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('creates fight summary and appends to arena history', () => {\n    const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);\n    const w2 = makeTournamentWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);\n\n    const state = makeTournamentBaseState(1);\n    state.roster = [w1];\n    state.rivals = [makeTournamentRival([w2])];\n\n    const rng = new SeededRNG(42);\n    const outcome = makeFightOutcome('A', 'Stoppage');\n    const updated = applyBoutResults({\n      state: state,\n      wA: w1,\n      wD: w2,\n      outcome: outcome,\n      tId: 't-gold-spring-1',",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 16,
+      "secondFile": {
+        "end": 260,
+        "endLoc": {
+          "column": 10,
+          "line": 260,
+          "position": 9274
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 245,
+        "startLoc": {
+          "column": 48,
+          "line": 245,
+          "position": 8753
+        }
+      },
+      "tokens": 109
+    },
+    {
+      "firstFile": {
+        "end": 182,
+        "endLoc": {
+          "column": 22,
+          "line": 182,
+          "position": 6706
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 161,
+        "startLoc": {
+          "column": 5,
+          "line": 161,
+          "position": 6145
+        }
+      },
+      "format": "typescript",
+      "fragment": "    });\n\n    const state = makeTournamentBaseState(1);\n    state.roster = [w1];\n    state.rivals = [makeTournamentRival([w2])];\n\n    const rng = new SeededRNG(42);\n    const outcome = makeFightOutcome('A', 'Stoppage');\n    const updated = applyBoutResults({\n      state: state,\n      wA: w1,\n      wD: w2,\n      outcome: outcome,\n      tId: 't1',\n      tName: 'Test',\n      rng: rng,\n    });\n\n    const updatedW1 = updated.roster.find((w) => w.id === 'w1');\n    const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');\n\n    expect(updatedW1!.fatigue).toBeGreaterThan(0);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 268,
+        "endLoc": {
+          "column": 22,
+          "line": 268,
+          "position": 9500
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 247,
+        "startLoc": {
+          "column": 86,
+          "line": 247,
+          "position": 8939
+        }
+      },
+      "tokens": 140
+    },
+    {
+      "firstFile": {
+        "end": 182,
+        "endLoc": {
+          "column": 31,
+          "line": 182,
+          "position": 6715
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 163,
+        "startLoc": {
+          "column": 44,
+          "line": 163,
+          "position": 6193
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const state = makeTournamentBaseState(1);\n    state.roster = [w1];\n    state.rivals = [makeTournamentRival([w2])];\n\n    const rng = new SeededRNG(42);\n    const outcome = makeFightOutcome('A', 'Stoppage');\n    const updated = applyBoutResults({\n      state: state,\n      wA: w1,\n      wD: w2,\n      outcome: outcome,\n      tId: 't1',\n      tName: 'Test',\n      rng: rng,\n    });\n\n    const updatedW1 = updated.roster.find((w) => w.id === 'w1');\n    const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');\n\n    expect(updatedW1!.fatigue).toBeGreaterThan(0);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 20,
+      "secondFile": {
+        "end": 214,
+        "endLoc": {
+          "column": 31,
+          "line": 214,
+          "position": 7690
+        },
+        "name": "test/engine/matchmaking/tournamentSelection/results.test.ts",
+        "start": 195,
+        "startLoc": {
+          "column": 33,
+          "line": 195,
+          "position": 7168
+        }
+      },
+      "tokens": 134
+    },
+    {
+      "firstFile": {
+        "end": 227,
+        "endLoc": {
+          "column": 93,
+          "line": 227,
+          "position": 7894
+        },
+        "name": "test/engine/owner/ownerGrudges.test.ts",
+        "start": 213,
+        "startLoc": {
+          "column": 101,
+          "line": 213,
+          "position": 7295
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('should attribute a kill to the victim stable via the graveyard once the victim left the roster', () => {\n    // 28f26ba5 removed dead warriors from rosters; the victim of a Kill is\n    // only in state.graveyard (stableId preserved) when grudges process.\n    const state: any = {\n      week: 10,\n      arenaHistory: [\n        { id: 'f1', week: 9, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'Kill' },\n      ],\n      rivals: [\n        {\n          id: 'r1',\n          owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' },\n          roster: [{ id: 'w1', stableId: 'r1' }],\n        },\n        { id: 'r2', owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [] },",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 252,
+        "endLoc": {
+          "column": 19,
+          "line": 252,
+          "position": 8754
+        },
+        "name": "test/engine/owner/ownerGrudges.test.ts",
+        "start": 237,
+        "startLoc": {
+          "column": 84,
+          "line": 237,
+          "position": 8275
+        }
+      },
+      "tokens": 110
+    },
+    {
+      "firstFile": {
+        "end": 129,
+        "endLoc": {
+          "column": 90,
+          "line": 129,
+          "position": 4683
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 118,
+        "startLoc": {
+          "column": 49,
+          "line": 118,
+          "position": 4206
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('generates narrative for Showman with kills', () => {\n    const state = createMockState({\n      season: 'Spring',\n      rivals: [\n        {\n          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Showman' },\n          roster: [{ id: 'w-warriora', name: 'WarriorA' }],\n        },\n      ],\n      arenaHistory: [\n        createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'A', by: 'Kill' }),\n        createMockFight({ week: 11, a: 'WarriorA', d: 'Other', winner: 'A', by: 'Kill' }),",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 242,
+        "endLoc": {
+          "column": 90,
+          "line": 242,
+          "position": 9354
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 231,
+        "startLoc": {
+          "column": 50,
+          "line": 231,
+          "position": 8877
+        }
+      },
+      "tokens": 110
+    },
+    {
+      "firstFile": {
+        "end": 150,
+        "endLoc": {
+          "column": 90,
+          "line": 150,
+          "position": 5492
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 139,
+        "startLoc": {
+          "column": 63,
+          "line": 139,
+          "position": 5013
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('generates narrative for Pragmatic owner suffering deaths', () => {\n    const state = createMockState({\n      season: 'Spring',\n      rivals: [\n        {\n          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Pragmatic' },\n          roster: [{ id: 'w-warriora', name: 'WarriorA' }],\n        },\n      ],\n      arenaHistory: [\n        createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D', by: 'Kill' }),\n        createMockFight({ week: 11, a: 'WarriorA', d: 'Other', winner: 'D', by: 'Kill' }),",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 217,
+        "endLoc": {
+          "column": 90,
+          "line": 217,
+          "position": 8248
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 206,
+        "startLoc": {
+          "column": 59,
+          "line": 206,
+          "position": 7769
+        }
+      },
+      "tokens": 110
+    },
+    {
+      "firstFile": {
+        "end": 271,
+        "endLoc": {
+          "column": 20,
+          "line": 271,
+          "position": 10609
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 257,
+        "startLoc": {
+          "column": 79,
+          "line": 257,
+          "position": 10098
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('generates blood feud taunt when rivalry intensity is high and RNG passes', () => {\n    const state = createMockState({\n      season: 'Spring',\n      player: { id: 'player-stable', stableName: \"Dragon's Hearth\" },\n      rivals: [\n        {\n          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },\n          roster: [{ id: 'w-warriora', name: 'WarriorA' }],\n        },\n      ],\n      arenaHistory: [createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' })],\n      rivalries: [\n        {\n          id: 'riv1',\n          stableIdA: 'player-stable',",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 359,
+        "endLoc": {
+          "column": 20,
+          "line": 359,
+          "position": 13441
+        },
+        "name": "test/engine/owner/ownerNarrative.test.ts",
+        "start": 345,
+        "startLoc": {
+          "column": 74,
+          "line": 345,
+          "position": 12930
+        }
+      },
+      "tokens": 104
+    },
+    {
+      "firstFile": {
+        "end": 221,
+        "endLoc": {
+          "column": 62,
+          "line": 221,
+          "position": 8389
+        },
+        "name": "test/engine/owner/ownerRoster.test.ts",
+        "start": 192,
+        "startLoc": {
+          "column": 48,
+          "line": 192,
+          "position": 7307
+        }
+      },
+      "format": "typescript",
+      "fragment": "        { stableIdA: 'player-1', stableIdB: 'r1', intensity: 3, id: 'rv-1' } as any,\n      ];\n      // Player-stable fights are all Bashing Attack wins → counter-meta\n      // favors drafting a Basher over a Parry-Lunger.\n      mockState.warriorToStableMap = new Map([\n        ['pw-1', { stableId: 'player-1', isPlayer: true }],\n        ['rw-x', { stableId: 'r9', isPlayer: false }],\n      ]) as any;\n      mockState.arenaHistory = Array.from({ length: 6 }, (_, i) => ({\n        week: 9 - i,\n        winner: 'A',\n        warriorIdA: 'pw-1',\n        warriorIdD: 'rw-x',\n        styleA: FightingStyle.BashingAttack,\n        styleD: FightingStyle.StrikingAttack,\n      })) as any;\n\n      const pool = [\n        poolCandidate('pool-bash', FightingStyle.BashingAttack),\n        poolCandidate('pool-pl', FightingStyle.ParryLunge),\n      ];\n      const { updatedRivals } = aiDraftFromPool({\n        pool: pool,\n        rivals: [r1],\n        week: 10,\n        state: mockState,\n      });\n      const signed = updatedRivals[0]!.roster[1];\n      expect(signed).toBeDefined();\n      expect(signed!.style).toBe(FightingStyle.BashingAttack);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 30,
+      "secondFile": {
+        "end": 307,
+        "endLoc": {
+          "column": 62,
+          "line": 307,
+          "position": 11534
+        },
+        "name": "test/engine/owner/ownerRoster.test.ts",
+        "start": 280,
+        "startLoc": {
+          "column": 48,
+          "line": 280,
+          "position": 10582
+        }
+      },
+      "tokens": 204
+    },
+    {
+      "firstFile": {
+        "end": 117,
+        "endLoc": {
+          "column": 5,
+          "line": 117,
+          "position": 4546
+        },
+        "name": "test/engine/pipeline/opfsArchiverFlush.test.ts",
+        "start": 107,
+        "startLoc": {
+          "column": 47,
+          "line": 107,
+          "position": 4123
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const unsubscribe = onArchiveRetry(listener);\n    try {\n      flushLogs.mockRejectedValue(new Error('worker died'));\n      archiveBoutLog.mockRejectedValue(new Error('disk full'));\n      flushDeferredArchivesOffThread(stateWithLogs(2));\n      await vi.waitFor(() => {\n        expect(listener).toHaveBeenCalledTimes(2);\n      });\n      expect(listener.mock.calls[0]?.[0]?.boutId).toBe('bout_0');\n      expect(listener.mock.calls[1]?.[0]?.boutId).toBe('bout_1');\n    } finally {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 11,
+      "secondFile": {
+        "end": 145,
+        "endLoc": {
+          "column": 12,
+          "line": 145,
+          "position": 5696
+        },
+        "name": "test/engine/pipeline/opfsArchiverFlush.test.ts",
+        "start": 135,
+        "startLoc": {
+          "column": 77,
+          "line": 135,
+          "position": 5266
+        }
+      },
+      "tokens": 102
+    },
+    {
+      "firstFile": {
+        "end": 819,
+        "endLoc": {
+          "column": 5,
+          "line": 819,
+          "position": 28576
+        },
+        "name": "test/engine/pipeline/passes/PromoterPass.test.ts",
+        "start": 803,
+        "startLoc": {
+          "column": 26,
+          "line": 803,
+          "position": 28106
+        }
+      },
+      "format": "typescript",
+      "fragment": "        style: s.style ?? FightingStyle.StrikingAttack,\n        attrs: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },\n        overrides: { fame: s.score },\n      });\n      w.id = s.id as WarriorId;\n      return w;\n    });\n\n    const realmRankings: Record<string, any> = {};\n    for (const s of scores) {\n      realmRankings[s.id] = { overallRank: 1, classRank: 1, compositeScore: s.score };\n    }\n\n    return fixtureGameState({ week: 5, roster: warriors, realmRankings });\n  }\n\n  it('warrior with score 30 and gap 0.25 should not match score 20 or 40', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 17,
+      "secondFile": {
+        "end": 1228,
+        "endLoc": {
+          "column": 5,
+          "line": 1228,
+          "position": 42594
+        },
+        "name": "test/engine/pipeline/passes/PromoterPass.test.ts",
+        "start": 1212,
+        "startLoc": {
+          "column": 15,
+          "line": 1212,
+          "position": 42124
+        }
+      },
+      "tokens": 129
+    },
+    {
+      "firstFile": {
+        "end": 324,
+        "endLoc": {
+          "column": 68,
+          "line": 324,
+          "position": 11415
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 310,
+        "startLoc": {
+          "column": 10,
+          "line": 310,
+          "position": 10979
+        }
+      },
+      "format": "typescript",
+      "fragment": "          ],\n        } as any,\n      ],\n      newsletter: [],\n      treasury: 1000,\n    };\n\n    const impact = runSeasonalPass(state as GameState, 1, rng);\n\n    expect(impact.treasuryDelta).toBeDefined();\n    expect(impact.treasuryDelta).toBeLessThanOrEqual(-50);\n    expect(impact.treasuryDelta).toBeGreaterThanOrEqual(-100);\n\n    expect(impact.ledgerEntries).toHaveLength(1);\n    expect(impact.ledgerEntries?.[0]?.label).toBe('Medical Tonics');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 373,
+        "endLoc": {
+          "column": 68,
+          "line": 373,
+          "position": 12979
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 359,
+        "startLoc": {
+          "column": 21,
+          "line": 359,
+          "position": 12543
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 411,
+        "endLoc": {
+          "column": 11,
+          "line": 411,
+          "position": 14321
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 398,
+        "startLoc": {
+          "column": 33,
+          "line": 398,
+          "position": 13868
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const warriorId = 'w-mystic' as WarriorId;\n    const state: Partial<GameState> = {\n      year: 1,\n      roster: [{ id: warriorId, name: 'Grok', status: 'Active', xp: 5, fame: 5 } as any],\n      newsletter: [],\n    };\n\n    const impact = runSeasonalPass(state as GameState, 1, rng);\n\n    // The warrior should have received XP (+15) and Fame (+10)\n    const update = impact.rosterUpdates?.get(warriorId);\n    expect(update).toBeDefined();\n    expect(update?.xp).toBe(20);\n    expect(update?.fame).toBe(15);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 557,
+        "endLoc": {
+          "column": 11,
+          "line": 557,
+          "position": 19386
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 544,
+        "startLoc": {
+          "column": 32,
+          "line": 544,
+          "position": 18958
+        }
+      },
+      "tokens": 100
+    },
+    {
+      "firstFile": {
+        "end": 665,
+        "endLoc": {
+          "column": 45,
+          "line": 665,
+          "position": 23349
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 654,
+        "startLoc": {
+          "column": 48,
+          "line": 654,
+          "position": 22884
+        }
+      },
+      "format": "typescript",
+      "fragment": "      roster: [{ id: warriorId, name: 'Hercules', status: 'Active', xp: 10, fame: 20 } as any],\n      newsletter: [],\n    };\n\n    const impact = runSeasonalPass(state as GameState, 1, rng);\n\n    const update = impact.rosterUpdates?.get(warriorId);\n    expect(update).toBeDefined();\n    expect(update?.xp).toBeGreaterThanOrEqual(25); // 10 + 15 to 25\n    expect(update?.xp).toBeLessThanOrEqual(35);\n    expect(update?.fame).toBeGreaterThanOrEqual(30); // 20 + 10 to 20\n    expect(update?.fame).toBeLessThanOrEqual(40);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 12,
+      "secondFile": {
+        "end": 701,
+        "endLoc": {
+          "column": 45,
+          "line": 701,
+          "position": 24674
+        },
+        "name": "test/engine/pipeline/passes/SeasonalPass.test.ts",
+        "start": 690,
+        "startLoc": {
+          "column": 45,
+          "line": 690,
+          "position": 24209
+        }
+      },
+      "tokens": 104
+    },
+    {
+      "firstFile": {
+        "end": 40,
+        "endLoc": {
+          "column": 61,
+          "line": 40,
+          "position": 1666
+        },
+        "name": "test/engine/pipeline/rivalMapStaleness.test.ts",
+        "start": 28,
+        "startLoc": {
+          "column": 64,
+          "line": 28,
+          "position": 1058
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('rivalMap reflects the updated roster after resolveImpacts', () => {\n    const rivalWarrior = makeWarrior('rw1', 'Rival Fighter');\n    const rival = makeRival('rival-1', [rivalWarrior]);\n    const state = makeState([rival]);\n\n    // Simulate what buildWeekCaches does: build rivalMap from state.rivals\n    const rivalMap = new Map<string, RivalStableData>();\n    state.rivals!.forEach((r) => rivalMap.set(r.id, r));\n    state.rivalMap = rivalMap;\n\n    // Simulate what bout phase does: a rival warrior dies, update rivals via impact\n    const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();\n    rivalsUpdates.set('rival-1' as StableId, { roster: [] });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 72,
+        "endLoc": {
+          "column": 61,
+          "line": 72,
+          "position": 2863
+        },
+        "name": "test/engine/pipeline/rivalMapStaleness.test.ts",
+        "start": 60,
+        "startLoc": {
+          "column": 65,
+          "line": 60,
+          "position": 2355
+        }
+      },
+      "tokens": 111
+    },
+    {
+      "firstFile": {
+        "end": 147,
+        "endLoc": {
+          "column": 30,
+          "line": 147,
+          "position": 5854
+        },
+        "name": "test/engine/progression.test.ts",
+        "start": 133,
+        "startLoc": {
+          "column": 58,
+          "line": 133,
+          "position": 5409
+        }
+      },
+      "format": "typescript",
+      "fragment": "      warrior.potential = { ...warrior.attributes } as any;\n\n      const rng = {\n        next: () => 0.5,\n        pick: (_arr: any[]) => _arr[0],\n      } as any;\n\n      const { warrior: updated, gain } = applyXP(warrior, 2, rng);\n\n      expect(updated.xp).toBe(6);\n      expect(gain.levelUp).toBe(true);\n      expect(gain.improvement).toBeUndefined(); // No attribute improved\n\n      const totalAttrs = Object.values(updated.attributes).reduce((sum, val) => sum + val, 0);\n      expect(totalAttrs).toBe(70); // No growth",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 169,
+        "endLoc": {
+          "column": 30,
+          "line": 169,
+          "position": 6661
+        },
+        "name": "test/engine/progression.test.ts",
+        "start": 155,
+        "startLoc": {
+          "column": 84,
+          "line": 155,
+          "position": 6224
+        }
+      },
+      "tokens": 118
+    },
+    {
+      "firstFile": {
+        "end": 71,
+        "endLoc": {
+          "column": 5,
+          "line": 71,
+          "position": 2849
+        },
+        "name": "test/engine/traits/newLoreExpansionTraits.test.ts",
+        "start": 57,
+        "startLoc": {
+          "column": 55,
+          "line": 57,
+          "position": 2329
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const warrior = makeWarriorWithTrait('gutters_edge');\n    const mods = getStaticTraitMods(warrior);\n    const baseMods = getStaticTraitMods({ ...warrior, traits: [] });\n\n    const anyDiff =\n      mods.attMod !== baseMods.attMod ||\n      mods.parMod !== baseMods.parMod ||\n      mods.defMod !== baseMods.defMod ||\n      mods.iniMod !== baseMods.iniMod ||\n      mods.ripMod !== baseMods.ripMod ||\n      mods.decMod !== baseMods.decMod ||\n      mods.dmgBonus !== baseMods.dmgBonus ||\n      mods.enduranceMult !== baseMods.enduranceMult;\n    expect(anyDiff).toBe(true);\n  });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 89,
+        "endLoc": {
+          "column": 5,
+          "line": 89,
+          "position": 3558
+        },
+        "name": "test/engine/traits/newLoreExpansionTraits.test.ts",
+        "start": 75,
+        "startLoc": {
+          "column": 58,
+          "line": 75,
+          "position": 3038
+        }
+      },
+      "tokens": 106
+    },
+    {
+      "firstFile": {
+        "end": 106,
+        "endLoc": {
+          "column": 23,
+          "line": 106,
+          "position": 4331
+        },
+        "name": "test/engine/weekDeterminism.slow.test.ts",
+        "start": 93,
+        "startLoc": {
+          "column": 41,
+          "line": 93,
+          "position": 3622
+        }
+      },
+      "format": "typescript",
+      "fragment": "      sequentialState = await advanceWeek(sequentialState);\n    }\n\n    // Compare functional state (week, year, treasury, roster size, etc.)\n    // Note: Exact IDs may differ due to RNG usage patterns, but functional values should match\n    const expectedSequential = truncateState(sequentialState);\n    expect(batchResult.state.week).toBe(expectedSequential.week);\n    expect(batchResult.state.year).toBe(expectedSequential.year);\n    expect(batchResult.state.treasury).toBe(expectedSequential.treasury);\n    expect(batchResult.state.roster.length).toBe(expectedSequential.roster.length);\n    expect(batchResult.state.arenaHistory.length).toBe(expectedSequential.arenaHistory.length);\n\n    // Compare week summaries structure\n    expect(batchResult.summaries.length).toBe(13);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 149,
+        "endLoc": {
+          "column": 23,
+          "line": 149,
+          "position": 6446
+        },
+        "name": "test/engine/weekDeterminism.slow.test.ts",
+        "start": 137,
+        "startLoc": {
+          "column": 61,
+          "line": 137,
+          "position": 5835
+        }
+      },
+      "tokens": 105
+    },
+    {
+      "firstFile": {
+        "end": 31,
+        "endLoc": {
+          "column": 6,
+          "line": 31,
+          "position": 923
+        },
+        "name": "test/hooks/useArenaAnimation.test.ts",
+        "start": 7,
+        "startLoc": {
+          "column": 64,
+          "line": 7,
+          "position": 338
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('two independent instances maintain separate fighter names', () => {\n    const { result: instanceA } = renderHook(() =>\n      useArenaAnimation({\n        log: [],\n        visibleCount: 0,\n        maxHpA: 100,\n        maxHpD: 100,\n        winner: null,\n        isComplete: false,\n        fighterNameA: 'Alice',\n        fighterNameD: 'Bob',\n      })\n    );\n    const { result: instanceB } = renderHook(() =>\n      useArenaAnimation({\n        log: [],\n        visibleCount: 0,\n        maxHpA: 100,\n        maxHpD: 100,\n        winner: null,\n        isComplete: false,\n        fighterNameA: 'Charlie',\n        fighterNameD: 'Diana',\n      })\n    );",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 25,
+      "secondFile": {
+        "end": 75,
+        "endLoc": {
+          "column": 6,
+          "line": 75,
+          "position": 2325
+        },
+        "name": "test/hooks/useArenaAnimation.test.ts",
+        "start": 51,
+        "startLoc": {
+          "column": 52,
+          "line": 51,
+          "position": 1740
+        }
+      },
+      "tokens": 109
+    },
+    {
+      "firstFile": {
+        "end": 118,
+        "endLoc": {
+          "column": 30,
+          "line": 118,
+          "position": 3796
+        },
+        "name": "test/hooks/useRivalries.test.ts",
+        "start": 106,
+        "startLoc": {
+          "column": 48,
+          "line": 106,
+          "position": 3375
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('intensity = 1 when no kills and bouts < 5', () => {\n    const state = makeState({\n      roster: [makeWarrior('p1')],\n      rivals: [\n        {\n          owner: { id: 'owner1', stableName: 'Iron Wolves' },\n          roster: [makeWarrior('r1')],\n        } as any,\n      ],\n      arenaHistory: [makeFight({ warriorIdA: 'p1' as any, warriorIdD: 'r1' as any, winner: 'A' })],\n    });\n    const rosterIds = new Set([state.roster[0]!.id]);\n    const rivalWarriorStable = useRivalWarriorStableResult(state);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 13,
+      "secondFile": {
+        "end": 275,
+        "endLoc": {
+          "column": 30,
+          "line": 275,
+          "position": 9418
+        },
+        "name": "test/hooks/useRivalries.test.ts",
+        "start": 263,
+        "startLoc": {
+          "column": 71,
+          "line": 263,
+          "position": 8997
+        }
+      },
+      "tokens": 101
+    },
+    {
+      "firstFile": {
+        "end": 124,
+        "endLoc": {
+          "column": 25,
+          "line": 124,
+          "position": 4036
+        },
+        "name": "test/hooks/useRivalries.test.ts",
+        "start": 106,
+        "startLoc": {
+          "column": 48,
+          "line": 106,
+          "position": 3375
+        }
+      },
+      "format": "typescript",
+      "fragment": "  it('intensity = 1 when no kills and bouts < 5', () => {\n    const state = makeState({\n      roster: [makeWarrior('p1')],\n      rivals: [\n        {\n          owner: { id: 'owner1', stableName: 'Iron Wolves' },\n          roster: [makeWarrior('r1')],\n        } as any,\n      ],\n      arenaHistory: [makeFight({ warriorIdA: 'p1' as any, warriorIdD: 'r1' as any, winner: 'A' })],\n    });\n    const rosterIds = new Set([state.roster[0]!.id]);\n    const rivalWarriorStable = useRivalWarriorStableResult(state);\n\n    const nameResolver = useNameResolverResult(state);\n    const { result } = renderHook(() =>\n      useRivalriesList(state, rosterIds, rivalWarriorStable, nameResolver)\n    );\n    expect(result.current[0]!.intensity).toBe(1);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 302,
+        "endLoc": {
+          "column": 25,
+          "line": 302,
+          "position": 10364
+        },
+        "name": "test/hooks/useRivalries.test.ts",
+        "start": 284,
+        "startLoc": {
+          "column": 39,
+          "line": 284,
+          "position": 9703
+        }
+      },
+      "tokens": 141
+    },
+    {
+      "firstFile": {
+        "end": 417,
+        "endLoc": {
+          "column": 5,
+          "line": 417,
+          "position": 12755
+        },
+        "name": "test/hooks/useStableComparison.test.ts",
+        "start": 393,
+        "startLoc": {
+          "column": 32,
+          "line": 393,
+          "position": 12259
+        }
+      },
+      "format": "typescript",
+      "fragment": "        personality: 'Pragmatic',\n      },\n    });\n    const rival2 = createMockRival('r2', {\n      owner: {\n        id: 'r2' as StableId,\n        name: 'O2',\n        stableName: 'S2',\n        fame: 0,\n        renown: 0,\n        titles: 0,\n        personality: 'Aggressive',\n      },\n    });\n    const { result } = renderHook(() => useStableComparison([rival1, rival2]));\n\n    act(() => {\n      result.current.setIdA('r1');\n      result.current.setIdB('r2');\n    });\n\n    expect(result.current.clashes).toBe(false);\n  });\n\n  it('returns false when one rival has no personality', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 25,
+      "secondFile": {
+        "end": 450,
+        "endLoc": {
+          "column": 5,
+          "line": 450,
+          "position": 13529
+        },
+        "name": "test/hooks/useStableComparison.test.ts",
+        "start": 426,
+        "startLoc": {
+          "column": 30,
+          "line": 426,
+          "position": 13033
+        }
+      },
+      "tokens": 118
+    },
+    {
+      "firstFile": {
+        "end": 50,
+        "endLoc": {
+          "column": 5,
+          "line": 50,
+          "position": 1821
+        },
+        "name": "test/integration/autosimCouncil.crown.test.ts",
+        "start": 36,
+        "startLoc": {
+          "column": 5,
+          "line": 36,
+          "position": 1229
+        }
+      },
+      "format": "typescript",
+      "fragment": "    };\n    // Purse 10 — far below any purse-driven heuristic; the title stakes carry it.\n    const offer = makeOffer('offer1', ['w1', 'rival1'], {\n      titleArenaId: 'iron_forge',\n      arenaId: 'iron_forge',\n      purse: 10,\n    });\n    (state as any).boutOffers = { offer1: offer };\n    state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);\n\n    const result = await runAutosim(state, { weeksToSim: 1, councilAutoPilot: true });\n    expect(\n      result.finalState.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]\n    ).toBe('Accepted');\n  });",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 66,
+        "endLoc": {
+          "column": 5,
+          "line": 66,
+          "position": 2440
+        },
+        "name": "test/integration/autosimCouncil.crown.test.ts",
+        "start": 53,
+        "startLoc": {
+          "column": 37,
+          "line": 53,
+          "position": 1933
+        }
+      },
+      "tokens": 115
+    },
+    {
+      "firstFile": {
+        "end": 147,
+        "endLoc": {
+          "column": 47,
+          "line": 147,
+          "position": 4834
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 121,
+        "startLoc": {
+          "column": 91,
+          "line": 121,
+          "position": 4088
+        }
+      },
+      "format": "tsx",
+      "fragment": "    vi.mocked(saveSlots.importSaveToNewSlot).mockRejectedValue(new Error('corrupt payload'));\n\n    const mockFileReader = {\n      readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {\n        if (this.onload) {\n          this.onload({ target: { result: '{\"x\": 1}' } } as any);\n        }\n      }),\n      onload: null,\n    };\n    window.FileReader = vi.fn().mockImplementation(function () {\n      return mockFileReader;\n    }) as any;\n\n    render(\n      <TooltipProvider>\n        <StartGame />\n      </TooltipProvider>\n    );\n\n    const fileInput = document.querySelector('input[type=\"file\"]') as HTMLInputElement;\n    fireEvent.change(fileInput, {\n      target: { files: [new File(['x'], 'save.json', { type: 'application/json' })] },\n    });\n\n    await waitFor(() => {\n      expect(toast.error).toHaveBeenCalledWith('corrupt payload');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 27,
+      "secondFile": {
+        "end": 179,
+        "endLoc": {
+          "column": 47,
+          "line": 179,
+          "position": 5872
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 152,
+        "startLoc": {
+          "column": 78,
+          "line": 152,
+          "position": 5046
+        }
+      },
+      "tokens": 164
+    },
+    {
+      "firstFile": {
+        "end": 147,
+        "endLoc": {
+          "column": 13,
+          "line": 147,
+          "position": 4800
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 126,
+        "startLoc": {
+          "column": 53,
+          "line": 126,
+          "position": 4282
+        }
+      },
+      "format": "tsx",
+      "fragment": "          this.onload({ target: { result: '{\"x\": 1}' } } as any);\n        }\n      }),\n      onload: null,\n    };\n    window.FileReader = vi.fn().mockImplementation(function () {\n      return mockFileReader;\n    }) as any;\n\n    render(\n      <TooltipProvider>\n        <StartGame />\n      </TooltipProvider>\n    );\n\n    const fileInput = document.querySelector('input[type=\"file\"]') as HTMLInputElement;\n    fireEvent.change(fileInput, {\n      target: { files: [new File(['x'], 'save.json', { type: 'application/json' })] },\n    });\n\n    await waitFor(() => {\n      expect(toast.error).toHaveBeenCalledWith('corrupt payload');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 22,
+      "secondFile": {
+        "end": 210,
+        "endLoc": {
+          "column": 13,
+          "line": 210,
+          "position": 6766
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 189,
+        "startLoc": {
+          "column": 47,
+          "line": 189,
+          "position": 6248
+        }
+      },
+      "tokens": 112
+    },
+    {
+      "firstFile": {
+        "end": 147,
+        "endLoc": {
+          "column": 47,
+          "line": 147,
+          "position": 4834
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 129,
+        "startLoc": {
+          "column": 12,
+          "line": 129,
+          "position": 4327
+        }
+      },
+      "format": "tsx",
+      "fragment": "      onload: null,\n    };\n    window.FileReader = vi.fn().mockImplementation(function () {\n      return mockFileReader;\n    }) as any;\n\n    render(\n      <TooltipProvider>\n        <StartGame />\n      </TooltipProvider>\n    );\n\n    const fileInput = document.querySelector('input[type=\"file\"]') as HTMLInputElement;\n    fireEvent.change(fileInput, {\n      target: { files: [new File(['x'], 'save.json', { type: 'application/json' })] },\n    });\n\n    await waitFor(() => {\n      expect(toast.error).toHaveBeenCalledWith('corrupt payload');",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 19,
+      "secondFile": {
+        "end": 241,
+        "endLoc": {
+          "column": 47,
+          "line": 241,
+          "position": 7728
+        },
+        "name": "test/pages/StartGame.test.tsx",
+        "start": 223,
+        "startLoc": {
+          "column": 13,
+          "line": 223,
+          "position": 7221
+        }
+      },
+      "tokens": 108
+    },
+    {
+      "firstFile": {
+        "end": 620,
+        "endLoc": {
+          "column": 7,
+          "line": 620,
+          "position": 19949
+        },
+        "name": "test/state/slices/worldSlice.test.ts",
+        "start": 606,
+        "startLoc": {
+          "column": 30,
+          "line": 606,
+          "position": 19504
+        }
+      },
+      "format": "typescript",
+      "fragment": "  describe('toggleStableAvoid', () => {\n    const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({\n      id: stableId,\n      owner: { id: stableId, name: 'Rival', stableName: stableId, fame: 0, renown: 0, titles: 0 },\n      roster: warriors.map(\n        (w) =>\n          ({\n            id: w.id,\n            stableId,\n            career: { wins: w.wins, losses: w.losses, kills: 0 },\n          }) as any\n      ),\n    });\n\n    it('should add stableId to playerStableAvoids when not present', () => {",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 15,
+      "secondFile": {
+        "end": 729,
+        "endLoc": {
+          "column": 7,
+          "line": 729,
+          "position": 24237
+        },
+        "name": "test/state/slices/worldSlice.test.ts",
+        "start": 715,
+        "startLoc": {
+          "column": 74,
+          "line": 715,
+          "position": 23792
+        }
+      },
+      "tokens": 117
+    },
+    {
+      "firstFile": {
+        "end": 47,
+        "endLoc": {
+          "column": 50,
+          "line": 47,
+          "position": 1656
+        },
+        "name": "test/state/typeSafetyAudit.test.ts",
+        "start": 34,
+        "startLoc": {
+          "column": 32,
+          "line": 34,
+          "position": 1098
+        }
+      },
+      "format": "typescript",
+      "fragment": "    const files = readDir(srcDir, '.ts');\n    const violations: string[] = [];\n    for (const file of files) {\n      const content = fs.readFileSync(file, 'utf-8');\n      const lines = content.split('\\n');\n      for (let i = 0; i < lines.length; i++) {\n        if (lines[i]!.includes(' as any') && !lines[i]!.includes('eslint-disable')) {\n          violations.push(`${path.basename(file)}:${i + 1}`);\n        }\n      }\n    }\n    // We know there are ~5 instances. This test documents them.\n    // The goal is to reduce this to 0 over time.\n    expect(violations.length).toBeLessThanOrEqual(10);",
+      "isNew": false,
+      "kind": "exact",
+      "lines": 14,
+      "secondFile": {
+        "end": 64,
+        "endLoc": {
+          "column": 50,
+          "line": 64,
+          "position": 2303
+        },
+        "name": "test/state/typeSafetyAudit.test.ts",
+        "start": 52,
+        "startLoc": {
+          "column": 34,
+          "line": 52,
+          "position": 1813
+        }
+      },
+      "tokens": 117
+    }
+  ],
+  "statistics": {
+    "detectionDate": "2026-11-02T03:29:14.217Z",
+    "formats": {
+      "javascript": {
+        "clones": 8,
+        "duplicatedLines": 245,
+        "duplicatedTokens": 1620,
+        "lines": 3234,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 7.575757575757576,
+        "percentageTokens": 6.990592905842755,
+        "sources": 20,
+        "tokens": 23174
+      },
+      "tsx": {
+        "clones": 7,
+        "duplicatedLines": 132,
+        "duplicatedTokens": 848,
+        "lines": 71937,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.18349389048750991,
+        "percentageTokens": 0.20844855769821666,
+        "sources": 667,
+        "tokens": 406815
+      },
+      "typescript": {
+        "clones": 76,
+        "duplicatedLines": 1239,
+        "duplicatedTokens": 9153,
+        "lines": 225438,
+        "newClones": 0,
+        "newDuplicatedLines": 0,
+        "percentage": 0.5495967849253454,
+        "percentageTokens": 0.6688833674364221,
+        "sources": 1437,
+        "tokens": 1368400
+      }
+    },
+    "total": {
+      "clones": 91,
+      "duplicatedLines": 1616,
+      "duplicatedTokens": 11621,
+      "lines": 300609,
+      "newClones": 0,
+      "newDuplicatedLines": 0,
+      "percentage": 0.5375753886277523,
+      "percentageTokens": 0.6461894506694603,
+      "sources": 2124,
+      "tokens": 1798389
+    }
+  }
+}

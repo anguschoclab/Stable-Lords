@@ -1,0 +1,2533 @@
+=== src/data/arenas/lore.ts | src/data/arenas/loreBackfill1.ts  (810.5L, 4 blk)
+    23: 
+    24: export const ARENA_LORE: ArenaLoreEntry[] = [
+    25:   {
+    26:     id: 'mudpit_arena_drowning_grasp',
+    27:     arenaId: 'mudpit_arena',
+    28:     type: 'famous_death',
+    29:     title: 'The Drowning Grasp',
+    30:     narrative:
+    31:       'A legendary heavily-armored champion slipped in the muck, and their lighter opponent simply held their face beneath the surface until the bubbles stopped.',
+    32:   },
+    33:   {
+    34:     id: 'clifftop_arena_the_long_fall',
+
+=== src/data/names/commonCorpus.ts | src/engine/narrative/lore/origins.ts  (794.5L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/engine/narrative/lore/childhoodTraits.ts  (717.5L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/data/names/stableNames.ts  (706L, 4 blk)
+    6: 
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+
+=== src/data/names/commonCorpus.ts | src/engine/narrative/lore/definingMoments.ts  (706L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/engine/traits/registry.ts  (695.5L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/data/names/cultures.ts  (692L, 7 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/archetypeNames.ts | src/data/names/commonCorpus.ts  (687.5L, 5 blk)
+    3:  */
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+
+=== src/data/names/commonCorpus.ts | src/data/names/ownerNames.ts  (681.5L, 3 blk)
+    6: 
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+
+=== src/data/names/commonCorpus.ts | src/types/enumSources.ts  (650.5L, 3 blk)
+    6: 
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+
+=== src/data/names/commonCorpus.ts | src/engine/promoters/promoterGenerator.ts  (640.5L, 3 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/engine/storage/opfsArchive/plausibility.ts  (622L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/engine/rivals/rivalNamePool.ts  (620L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/names/commonCorpus.ts | src/engine/pipeline/pipelineStages.ts  (618.5L, 2 blk)
+    7: export const COMMON_CORPUS = [
+    8:   'AARON',
+    9:   'ABBEY',
+    10:   'ABBIE',
+    11:   'ABBY',
+    12:   'ABDUL',
+    13:   'ABE',
+    14:   'ABEL',
+    15:   'ABIGAIL',
+    16:   'ABRAHAM',
+    17:   'ABRAM',
+    18:   'ABYSSCRAWLER',
+
+=== src/data/arenas/lore.ts | src/data/arenas/loreBackfill2.ts  (595L, 2 blk)
+    23: 
+    24: export const ARENA_LORE: ArenaLoreEntry[] = [
+    25:   {
+    26:     id: 'mudpit_arena_drowning_grasp',
+    27:     arenaId: 'mudpit_arena',
+    28:     type: 'famous_death',
+    29:     title: 'The Drowning Grasp',
+    30:     narrative:
+    31:       'A legendary heavily-armored champion slipped in the muck, and their lighter opponent simply held their face beneath the surface until the bubbles stopped.',
+    32:   },
+    33:   {
+    34:     id: 'clifftop_arena_the_long_fall',
+
+=== src/data/arenas/loreBackfill1.ts | src/data/arenas/loreBackfill2.ts  (399.5L, 4 blk)
+    1: import type { ArenaLoreEntry } from './lore';
+    2: 
+    3: export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
+    4:   {
+    5:     id: 'mudpit_arena_historical_battle_0',
+    6:     arenaId: 'mudpit_arena',
+    7:     type: 'historical_battle',
+    8:     title: 'The Mudpit War',
+    9:     narrative:
+    10:       'A Mudpit promoter staged a chariot duel there — the wheels cut three fighters before the axle snapped.',
+    11:   },
+    12:   {
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/narrative/lore/origins.ts  (298L, 2 blk)
+    5: 
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/narrative/lore/origins.ts  (286.5L, 2 blk)
+    5: 
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+
+=== src/data/names/stableNames.ts | src/engine/narrative/lore/origins.ts  (283.5L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/engine/narrative/lore/origins.ts | src/engine/traits/registry.ts  (275L, 2 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/data/names/cultures.ts | src/engine/narrative/lore/origins.ts  (271.5L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/templates/establishedTemplates.ts | src/data/templates/minorTemplates.ts  (270L, 3 blk)
+    5: 
+    6: import { FightingStyle } from '@/types/game';
+    7: import type { StableTemplate } from './stableTemplate.types';
+    8: 
+    9: /**
+    10:  * Established_templates.
+    11:  */
+    12: export const ESTABLISHED_TEMPLATES: StableTemplate[] = [
+    13:   {
+    14:     stableName: 'Golden Lions',
+    15:     motto: 'Glory above all.',
+    16:     origin:
+
+=== src/data/names/archetypeNames.ts | src/engine/narrative/lore/origins.ts  (264.5L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/ownerNames.ts | src/engine/narrative/lore/origins.ts  (259.5L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/data/templates/establishedTemplates.ts | src/data/templates/majorTemplates.ts  (252.5L, 3 blk)
+    5: 
+    6: import { FightingStyle } from '@/types/game';
+    7: import type { StableTemplate } from './stableTemplate.types';
+    8: 
+    9: /**
+    10:  * Established_templates.
+    11:  */
+    12: export const ESTABLISHED_TEMPLATES: StableTemplate[] = [
+    13:   {
+    14:     stableName: 'Golden Lions',
+    15:     motto: 'Glory above all.',
+    16:     origin:
+
+=== src/engine/narrative/lore/origins.ts | src/types/enumSources.ts  (228.5L, 3 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/engine/narrative/lore/origins.ts | src/engine/promoters/promoterGenerator.ts  (220L, 3 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/narrative/lore/definingMoments.ts  (209.5L, 2 blk)
+    5: 
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+
+=== src/data/names/stableNames.ts | src/engine/narrative/lore/childhoodTraits.ts  (206.5L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/engine/traits/defs/exceptional.ts | src/engine/traits/defs/notable.ts  (204.5L, 12 blk)
+    8:     effect: { attModLowHp: 1, defModLowHp: 1 },
+    9:     tier: 'Exceptional',
+    10:     sign: 'positive',
+    11:     weight: 0.4,
+    12:   },
+    13:   gutters_edge: {
+    14:     id: 'gutters_edge',
+    15:     name: "Gutter's Edge",
+    16:     description:
+    17:       'A desperate, wild fighting style born from alleyway brawls. Bonus damage but lowered early defense.',
+    18:     effect: { dmgBonus: 1, defModEarly: -1 },
+    19:     tier: 'Exceptional',
+
+=== src/engine/narrative/lore/origins.ts | src/engine/storage/opfsArchive/plausibility.ts  (201.5L, 2 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/engine/narrative/lore/origins.ts | src/engine/rivals/rivalNamePool.ts  (199.5L, 2 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/data/templates/majorTemplates.ts | src/data/templates/minorTemplates.ts  (199.5L, 4 blk)
+    5: 
+    6: import { FightingStyle } from '@/types/game';
+    7: import type { StableTemplate } from './stableTemplate.types';
+    8: 
+    9: /**
+    10:  * Major_templates.
+    11:  */
+    12: export const MAJOR_TEMPLATES: StableTemplate[] = [
+    13:   {
+    14:     stableName: 'The Iron Wolves',
+    15:     motto: 'Through iron, victory.',
+    16:     origin:
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/traits/registry.ts  (198L, 2 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/engine/narrative/lore/origins.ts | src/engine/pipeline/pipelineStages.ts  (198L, 2 blk)
+    6: export const ORIGINS: string[] = [
+    7:   'Left wrapped in rags on the steps of the Ashen Convent',
+    8:   'Raised by wild dogs in the ruins of the Old Aqueduct',
+    9:   'Found clutching a bloodied coin in the Gutters',
+    10:   'Abandoned inside a forgotten crypt near the Undercity',
+    11:   'Survived the great fire that consumed the Iron Spire Orphanage',
+    12:   'Abandoned at the rusted gates of the Blackwood Workhouse',
+    13:   'Survived the chilling cullings of the Whispering Vaults',
+    14:   'Found swaddled in blood-soaked banners beneath the Weeping Bridge',
+    15:   'Abandoned on the jagged rocks beneath the Weeping Gargoyles',
+    16:   'Survived the silent culling of the Hollow Hill Orphanage',
+    17:   'Sold by desperate parents to the debt-collectors of the Brass Syndicate',
+
+=== src/data/names/stableNames.ts | src/engine/narrative/lore/definingMoments.ts  (195L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/data/names/cultures.ts | src/engine/narrative/lore/childhoodTraits.ts  (194.5L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/archetypeNames.ts | src/data/names/stableNames.ts  (187.5L, 2 blk)
+    3:  */
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+
+=== src/data/names/archetypeNames.ts | src/engine/narrative/lore/childhoodTraits.ts  (187.5L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/traits/registry.ts  (186.5L, 2 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/data/names/stableNames.ts | src/engine/traits/registry.ts  (184.5L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/data/names/cultures.ts | src/engine/narrative/lore/definingMoments.ts  (183L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/ownerNames.ts | src/engine/narrative/lore/childhoodTraits.ts  (182.5L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/data/names/cultures.ts | src/data/names/stableNames.ts  (180L, 9 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/ownerNames.ts | src/data/names/stableNames.ts  (177.5L, 2 blk)
+    5: 
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+
+=== src/data/names/archetypeNames.ts | src/engine/narrative/lore/definingMoments.ts  (176L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/cultures.ts | src/engine/traits/registry.ts  (172.5L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/ownerNames.ts | src/engine/narrative/lore/definingMoments.ts  (171L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/data/names/archetypeNames.ts | src/engine/traits/registry.ts  (165.5L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/archetypeNames.ts | src/data/names/ownerNames.ts  (161L, 2 blk)
+    3:  */
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+
+=== src/data/names/archetypeNames.ts | src/data/names/cultures.ts  (160.5L, 10 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/ownerNames.ts | src/engine/traits/registry.ts  (160.5L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/data/names/cultures.ts | src/data/names/ownerNames.ts  (156.5L, 8 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/types/enumSources.ts  (151.5L, 3 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/promoters/promoterGenerator.ts  (143L, 3 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/types/enumSources.ts  (140L, 3 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/data/names/stableNames.ts | src/types/enumSources.ts  (139.5L, 5 blk)
+    5: 
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/promoters/promoterGenerator.ts  (131.5L, 3 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/data/names/stableNames.ts | src/engine/promoters/promoterGenerator.ts  (129.5L, 5 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/engine/traits/registry.ts | src/types/enumSources.ts  (129.5L, 3 blk)
+    22: const LEGACY_TRAIT_ORDER = [
+    23:   'orphan_street_rat',
+    24:   'orphan_pit_fighter',
+    25:   'orphan_survivor',
+    26:   'iron_orphan',
+    27:   'orphan_resilience',
+    28:   'hollow_gaze',
+    29:   'scab_survivor',
+    30:   'orphanage_survivor',
+    31:   'gutter_shadow',
+    32:   'guttersnipe_cunning',
+    33:   'iron_stomach',
+
+=== src/engine/promoters/promoterGenerator.ts | src/engine/traits/registry.ts  (127.5L, 3 blk)
+    5: import type { IRNGService } from '@/engine/core/rng/IRNGService';
+    6: import { resolveRng } from '@/utils/random';
+    7: 
+    8: const PROMOTER_FIRST_NAMES = [
+    9:   'Silas',
+    10:   'Cassian',
+    11:   'Vesper',
+    12:   'Theron',
+    13:   'Marius',
+    14:   'Lucia',
+    15:   'Octavia',
+    16:   'Titus',
+
+=== src/data/names/cultures.ts | src/types/enumSources.ts  (127L, 8 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/storage/opfsArchive/plausibility.ts  (124.5L, 2 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/rivals/rivalNamePool.ts  (122.5L, 2 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/engine/narrative/lore/childhoodTraits.ts | src/engine/pipeline/pipelineStages.ts  (121L, 2 blk)
+    6: export const CHILDHOOD_TRAITS: string[] = [
+    7:   'learned to navigate the city sewers entirely in the pitch black',
+    8:   'always kept a sharpened bone hidden in their boot',
+    9:   "spoke to the shadows when the orphanage matrons weren't looking",
+    10:   'developed an iron grip from clinging to the underside of merchant carts',
+    11:   'used to meticulously trace the structural flaws in stone walls',
+    12:   'slept soundly only when the city',
+    13:   'was known for carving the names of their enemies into their own flesh',
+    14:   'developed a terrifying habit of laughing whenever they drew blood',
+    15:   'would break their own fingers just to see if they could set them straight',
+    16:   'slept on a bed of river stones to harden their spine',
+    17:   'would steal discarded training weapons from the arena trash heaps',
+
+=== src/data/names/archetypeNames.ts | src/types/enumSources.ts  (120.5L, 6 blk)
+    3:  */
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+
+=== src/data/names/cultures.ts | src/engine/promoters/promoterGenerator.ts  (117L, 8 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/ownerNames.ts | src/types/enumSources.ts  (115.5L, 4 blk)
+    5: 
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/storage/opfsArchive/plausibility.ts  (113L, 2 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/rivals/rivalNamePool.ts  (111L, 2 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/data/names/archetypeNames.ts | src/engine/promoters/promoterGenerator.ts  (110.5L, 6 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/stableNames.ts | src/engine/storage/opfsArchive/plausibility.ts  (110L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/engine/narrative/lore/definingMoments.ts | src/engine/pipeline/pipelineStages.ts  (109.5L, 2 blk)
+    6: export const DEFINING_MOMENTS: string[] = [
+    7:   'until a brutal alley ambush taught them that the first strike is the only one that matters',
+    8:   'until they watched their only friend sold to the fighting pits, vowing never to be helpless again',
+    9:   'realizing that mercy in the Undercity was just another word for weakness',
+    10:   'until they garroted a corrupt slaver with a stolen rosary',
+    11:   'until they drowned a corrupt overseer in a vat of boiling lye',
+    12:   'realizing that mercy only rewards the weak with an early grave',
+    13:   'until they shattered a merciless overseer',
+    14:   'knowing that the roar of the arena is the only justice they will ever see',
+    15:   'knowing that only the roar of the colosseum could silence the screams of their past',
+    16:   'until they strangled a cruel taskmaster and embraced the arena’s call',
+    17:   'until they strangled a cruel matron with a stolen garrote',
+
+=== src/data/names/stableNames.ts | src/engine/rivals/rivalNamePool.ts  (109L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/data/names/stableNames.ts | src/engine/pipeline/pipelineStages.ts  (106.5L, 4 blk)
+    6: export const STABLE_PREFIXES = [
+    7:   'The Bleeding',
+    8:   'The Severed',
+    9:   'The Flayed',
+    10:   'The Shattered',
+    11:   'The Ruined',
+    12:   'The Iron',
+    13:   'The Blood',
+    14:   'The Shadow',
+    15:   'The Storm',
+    16:   'The Crimson',
+    17:   'The Ashen',
+
+=== src/data/templates/establishedTemplates.ts | src/data/templates/legendaryTemplates.ts  (106L, 10 blk)
+    26:     attrBias: { SP: 2, DF: 2, WL: 2, WT: 1 },
+    27:     warriorNames: [
+    28:       'BLAZE',
+    29:       'TEMPEST',
+    30:       'PHOENIX',
+    31:       'FLASH',
+    32:       'GLORY',
+    33:       'DAZZLE',
+    34:       'REGAL',
+    35:       'CROWN',
+    36:       'LION',
+    37:       'PRIDE',
+
+=== src/data/names/ownerNames.ts | src/engine/promoters/promoterGenerator.ts  (105.5L, 4 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/engine/storage/opfsArchive/plausibility.ts | src/engine/traits/registry.ts  (103.5L, 2 blk)
+    32: 
+    33: const ARRAY_FIELDS = [
+    34:   'roster',
+    35:   'graveyard',
+    36:   'retired',
+    37:   'deadWarriorIds',
+    38:   'killEvents',
+    39:   'arenaHistory',
+    40:   'newsletter',
+    41:   'gazettes',
+    42:   'hallOfFame',
+    43:   'tournaments',
+
+=== src/engine/rivals/rivalNamePool.ts | src/engine/traits/registry.ts  (101.5L, 2 blk)
+    5: 
+    6: const TRAINER_FIRST_NAMES = [
+    7:   'Aldric',
+    8:   'Brenna',
+    9:   'Caius',
+    10:   'Dara',
+    11:   'Eryx',
+    12:   'Fenna',
+    13:   'Galthor',
+    14:   'Hessa',
+    15:   'Ivor',
+    16:   'Jelena',
+
+=== src/data/names/cultures.ts | src/engine/storage/opfsArchive/plausibility.ts  (100L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/engine/pipeline/pipelineStages.ts | src/engine/traits/registry.ts  (99L, 2 blk)
+    64: const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
+    65:   'matchHistory',
+    66:   'seasonalGrowth',
+    67:   'tournaments',
+    68:   'recruitPool',
+    69:   'legacyFounderQueue',
+    70:   'freeAgents',
+    71:   'realmRankings',
+    72:   'promoters',
+    73:   'trainers',
+    74:   'hiringPool',
+    75:   'gazettes',
+
+=== src/data/names/cultures.ts | src/engine/rivals/rivalNamePool.ts  (97L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/cultures.ts | src/engine/pipeline/pipelineStages.ts  (96.5L, 7 blk)
+    33:     // Nordic sagas
+    34:     'BJORN',
+    35:     'ULF',
+    36:     'RAGNAR',
+    37:     'SIGURD',
+    38:     'EIRIK',
+    39:     'TORBJORN',
+    40:     'HAKON',
+    41:     'IVAR',
+    42:     'GORM',
+    43:     'HARALD',
+    44:     'KNUT',
+
+=== src/data/names/archetypeNames.ts | src/engine/storage/opfsArchive/plausibility.ts  (90.5L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/archetypeNames.ts | src/engine/rivals/rivalNamePool.ts  (90L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/archetypeNames.ts | src/engine/pipeline/pipelineStages.ts  (87L, 5 blk)
+    4: export const NAMES_BRUTAL = [
+    5:   'KRAGOS',
+    6:   'GORLAK',
+    7:   'BRUTAG',
+    8:   'THUNDRAK',
+    9:   'GARVOK',
+    10:   'IRONJAW',
+    11:   'BOLVERK',
+    12:   'SKARN',
+    13:   'GROTHAK',
+    14:   'WULFGAR',
+    15:   'DRAXUS',
+
+=== src/data/names/ownerNames.ts | src/engine/storage/opfsArchive/plausibility.ts  (86.5L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/data/names/ownerNames.ts | src/engine/rivals/rivalNamePool.ts  (85L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/routeTree.gen.ts | src/types/shared/weather.ts  (84.5L, 4 blk)
+    338:   fullPaths:
+    339:     | '/'
+    340:     | '/admin'
+    341:     | '/bookmarks'
+    342:     | '/help'
+    343:     | '/import-export'
+    344:     | '/mods'
+    345:     | '/welcome'
+    346:     | '/lore/hall-of-fights'
+    347:     | '/stable/advisor'
+    348:     | '/stable/arena'
+    349:     | '/stable/bouts'
+
+=== src/engine/pipeline/offseasonEvents/types.ts | src/routeTree.gen.ts  (84L, 3 blk)
+    12:   title: string;
+    13:   effectType:
+    14:     | 'chaos_rift'
+    15:     | 'unexplained_monolith'
+    16:     | 'chaotic_weather_experiment'
+    17:     | 'fame_boost'
+    18:     | 'winter_chill'
+    19:     | 'merchant_blessing'
+    20:     | 'epiphany'
+    21:     | 'tavern_brawl'
+    22:     | 'bards_song'
+    23:     | 'plague_outbreak'
+
+=== src/data/names/ownerNames.ts | src/engine/pipeline/pipelineStages.ts  (83L, 3 blk)
+    6: export const OWNER_FIRST = [
+    7:   'Aldric',
+    8:   'Balthazar',
+    9:   'Cassian',
+    10:   'Draven',
+    11:   'Edric',
+    12:   'Fenwick',
+    13:   'Gareth',
+    14:   'Hadrian',
+    15:   'Isolde',
+    16:   'Jareth',
+    17:   'Kestrel',
+
+=== src/engine/traits/defs/common.ts | src/engine/traits/defs/notable.ts  (82.5L, 4 blk)
+    41:     weight: 0.8,
+    42:   },
+    43:   adrenaline_surge: {
+    44:     id: 'adrenaline_surge',
+    45:     name: 'Adrenaline Surge',
+    46:     description: '+1 initiative while fresh — their adrenaline spikes right out of the gate.',
+    47:     effect: { iniModFresh: 1 },
+    48:     weight: 0.8,
+    49:     tier: 'Common',
+    50:     sign: 'positive',
+    51:   },
+    52:   quick: {
+
+=== src/data/equipment/armor.ts | src/data/equipment/helms.ts  (74.5L, 2 blk)
+    5: 
+    6: import { FightingStyle } from '@/types/game';
+    7: import type { EquipmentItem } from './equipment.types';
+    8: 
+    9: /**
+    10:  * Armors.
+    11:  */
+    12: export const ARMORS: EquipmentItem[] = [
+    13:   {
+    14:     id: 'none_armor',
+    15:     code: '',
+    16:     name: 'None',
+
+=== src/data/templates/legendaryTemplates.ts | src/data/templates/minorTemplates.ts  (74.5L, 7 blk)
+    27:     attrBias: { ST: 2, CN: 2, WT: 2, WL: 2, SP: 1, DF: 1 },
+    28:     warriorNames: [
+    29:       'IMPERATOR',
+    30:       'DOMINUS',
+    31:       'PRAETOR',
+    32:       'CENTURION',
+    33:       'MAXIMUS',
+    34:       'AURELIUS',
+    35:       'LEGATUS',
+    36:       'TRIBUNE',
+    37:       'CONSUL',
+    38:       'DECANUS',
+
+=== src/components/ui/dialog.tsx | src/components/ui/sheet.tsx  (74L, 2 blk)
+    60:       )}
+    61:       {...props}
+    62:     >
+    63:       {children}
+    64:       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-none opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 motion-reduce:transition-none">
+    65:         <X className="h-4 w-4" />
+    66:         <span className="sr-only">Close</span>
+    67:       </DialogPrimitive.Close>
+    68:     </DialogPrimitive.Content>
+    69:   </DialogPortal>
+    70: ));
+    71: DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+=== src/engine/promoters/promoterGenerator.ts | src/types/enumSources.ts  (74L, 4 blk)
+    8: const PROMOTER_FIRST_NAMES = [
+    9:   'Silas',
+    10:   'Cassian',
+    11:   'Vesper',
+    12:   'Theron',
+    13:   'Marius',
+    14:   'Lucia',
+    15:   'Octavia',
+    16:   'Titus',
+    17:   'Flavia',
+    18:   'Gaius',
+    19:   'Livia',
+
+=== src/data/templates/legendaryTemplates.ts | src/data/templates/majorTemplates.ts  (69L, 6 blk)
+    22:       FightingStyle.ParryRiposte,
+    23:       FightingStyle.WallOfSteel,
+    24:       FightingStyle.StrikingAttack,
+    25:       FightingStyle.AimedBlow,
+    26:     ],
+    27:     attrBias: { ST: 2, CN: 2, WT: 2, WL: 2, SP: 1, DF: 1 },
+    28:     warriorNames: [
+    29:       'IMPERATOR',
+    30:       'DOMINUS',
+    31:       'PRAETOR',
+    32:       'CENTURION',
+    33:       'MAXIMUS',
+
+=== src/data/arenas/index.ts | src/engine/warrior/skillCalc.ts  (66L, 3 blk)
+    20:   LANTERN_HALL_ARENA,
+    21:   WALLED_COURT_ARENA,
+    22:   CLIFFTOP_ARENA,
+    23:   FLOODED_VAULT_ARENA,
+    24: } from './venues/seed';
+    25: import {
+    26:   SUNDERED_COLISEUM,
+    27:   SUNKEN_TEMPLE,
+    28:   CRYSTAL_CAVERN,
+    29:   WHISPERING_GROVE,
+    30:   CHARNEL_PITS,
+    31:   FLESH_GARDENS,
+
+=== src/engine/pipeline/seasonal.ts | src/state/serialization.ts  (61.5L, 2 blk)
+    19: const EVENT_HANDLERS: Record<string, (run: OffseasonEventRun) => void> = {
+    20:   chaos_rift: offseason.handleChaosRift,
+    21:   unexplained_monolith: offseason.handleUnexplainedMonolith,
+    22:   chaotic_weather_experiment: offseason.handleChaoticWeatherExperiment,
+    23:   fame_boost: offseason.handleFameBoost,
+    24:   winter_chill: offseason.handleWinterChill,
+    25:   merchant_blessing: offseason.handleMerchantBlessing,
+    26:   epiphany: offseason.handleEpiphany,
+    27:   shadow_market_run: offseason.handleShadowMarketRun,
+    28:   tavern_brawl: offseason.handleTavernBrawl,
+    29:   bards_song: offseason.handleBardsSong,
+    30:   plague_outbreak: offseason.handlePlagueOutbreak,
+
+=== src/engine/pipeline/offseasonEvents/types.ts | src/types/shared/weather.ts  (61.5L, 2 blk)
+    13:   effectType:
+    14:     | 'chaos_rift'
+    15:     | 'unexplained_monolith'
+    16:     | 'chaotic_weather_experiment'
+    17:     | 'fame_boost'
+    18:     | 'winter_chill'
+    19:     | 'merchant_blessing'
+    20:     | 'epiphany'
+    21:     | 'tavern_brawl'
+    22:     | 'bards_song'
+    23:     | 'plague_outbreak'
+    24:     | 'black_market_raid'
+
+=== src/components/arena/weather/effects/stormEffects.tsx | src/components/arena/weather/effects/windEffects.tsx  (61L, 6 blk)
+    18:             animationDuration: `${0.4 + cryptoRandom() * 0.3}s`,
+    19:           }}
+    20:         />
+    21:       ))}
+    22:     </div>
+    23:   );
+    24: }
+    25: 
+    26: /** Arcane storm with reality-warping sky and crackling sparks. */
+    27: export function ArcaneStormEffect() {
+    28:   return (
+    29:     <div className="absolute inset-0 pointer-events-none overflow-hidden">
+
+=== src/engine/storage/opfsArchive/plausibility.ts | src/types/enumSources.ts  (58.5L, 3 blk)
+    33: const ARRAY_FIELDS = [
+    34:   'roster',
+    35:   'graveyard',
+    36:   'retired',
+    37:   'deadWarriorIds',
+    38:   'killEvents',
+    39:   'arenaHistory',
+    40:   'newsletter',
+    41:   'gazettes',
+    42:   'hallOfFame',
+    43:   'tournaments',
+    44:   'trainers',
+
+=== src/data/arenas/index.ts | src/schemas/schemaEnums.ts  (56.5L, 3 blk)
+    42: } from './venues/variants';
+    43: import {
+    44:   THE_BRAMBLE_RING,
+    45:   THUNDER_PEAK,
+    46:   SUN_BAKED_PLATEAU,
+    47:   ANCIENT_AQUEDUCT,
+    48:   FORGOTTEN_CRYPT,
+    49:   RUSTED_GORGE,
+    50:   THE_ASYLUM,
+    51:   VOLCANIC_CRATER,
+    52:   SHATTERED_MONOLITH,
+    53:   VERDANT_LABYRINTH,
+
+=== src/components/arena/weather/index.tsx | src/data/arenas/index.ts  (56L, 3 blk)
+    2: import type { WeatherType } from '@/types/shared.types';
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+
+=== src/data/arenas/index.ts | src/engine/combat/resolution/offenseDefense/index.ts  (54.5L, 3 blk)
+    43: import {
+    44:   THE_BRAMBLE_RING,
+    45:   THUNDER_PEAK,
+    46:   SUN_BAKED_PLATEAU,
+    47:   ANCIENT_AQUEDUCT,
+    48:   FORGOTTEN_CRYPT,
+    49:   RUSTED_GORGE,
+    50:   THE_ASYLUM,
+    51:   VOLCANIC_CRATER,
+    52:   SHATTERED_MONOLITH,
+    53:   VERDANT_LABYRINTH,
+    54:   THE_SHIFTING_SANDS,
+
+=== src/engine/rivals/rivalNamePool.ts | src/types/enumSources.ts  (54L, 3 blk)
+    6: const TRAINER_FIRST_NAMES = [
+    7:   'Aldric',
+    8:   'Brenna',
+    9:   'Caius',
+    10:   'Dara',
+    11:   'Eryx',
+    12:   'Fenna',
+    13:   'Galthor',
+    14:   'Hessa',
+    15:   'Ivor',
+    16:   'Jelena',
+    17:   'Korvin',
+
+=== src/engine/pipeline/pipelineStages.ts | src/types/enumSources.ts  (53.5L, 3 blk)
+    64: const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
+    65:   'matchHistory',
+    66:   'seasonalGrowth',
+    67:   'tournaments',
+    68:   'recruitPool',
+    69:   'legacyFounderQueue',
+    70:   'freeAgents',
+    71:   'realmRankings',
+    72:   'promoters',
+    73:   'trainers',
+    74:   'hiringPool',
+    75:   'gazettes',
+
+=== src/engine/combat/resolution/offenseDefense/prepare.ts | src/state/serialization.ts  (53L, 2 blk)
+    128: ): OffenseDefenseCtx {
+    129:   return {
+    130:     ctx: args.ctx,
+    131:     fA: args.fA,
+    132:     fD: args.fD,
+    133:     aGoesFirst: args.aGoesFirst,
+    134:     OE_A: args.OE_A,
+    135:     AL_A: args.AL_A,
+    136:     OE_D: args.OE_D,
+    137:     AL_D: args.AL_D,
+    138:     fatA: args.fatA,
+    139:     fatD: args.fatD,
+
+=== src/data/arenas/index.ts | src/engine/impacts/types.ts  (52.5L, 3 blk)
+    43: import {
+    44:   THE_BRAMBLE_RING,
+    45:   THUNDER_PEAK,
+    46:   SUN_BAKED_PLATEAU,
+    47:   ANCIENT_AQUEDUCT,
+    48:   FORGOTTEN_CRYPT,
+    49:   RUSTED_GORGE,
+    50:   THE_ASYLUM,
+    51:   VOLCANIC_CRATER,
+    52:   SHATTERED_MONOLITH,
+    53:   VERDANT_LABYRINTH,
+    54:   THE_SHIFTING_SANDS,
+
+=== src/components/layout/navigationHubs.ts | src/data/arenas/index.ts  (52L, 3 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/engine/combat/resolution/offenseDefense/prepare.ts | src/engine/pipeline/seasonal.ts  (50.5L, 2 blk)
+    129:   return {
+    130:     ctx: args.ctx,
+    131:     fA: args.fA,
+    132:     fD: args.fD,
+    133:     aGoesFirst: args.aGoesFirst,
+    134:     OE_A: args.OE_A,
+    135:     AL_A: args.AL_A,
+    136:     OE_D: args.OE_D,
+    137:     AL_D: args.AL_D,
+    138:     fatA: args.fatA,
+    139:     fatD: args.fatD,
+    140:     offModsA: args.offModsA,
+
+=== src/components/ui/alert-dialog.tsx | src/components/ui/dialog.tsx  (50L, 2 blk)
+    57:     />
+    58:   </AlertDialogPortal>
+    59: ));
+    60: AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+    61: 
+    62: /**
+    63:  * Alert dialog header.
+    64:  * @param - { class name, ...props }.
+    65:  */
+    66: const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    67:   <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
+    68: );
+
+=== src/components/ui/alert-dialog.tsx | src/components/ui/sheet.tsx  (50L, 2 blk)
+    57:     />
+    58:   </AlertDialogPortal>
+    59: ));
+    60: AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
+    61: 
+    62: /**
+    63:  * Alert dialog header.
+    64:  * @param - { class name, ...props }.
+    65:  */
+    66: const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+    67:   <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
+    68: );
+
+=== src/data/arenas/index.ts | src/pages/startGame/useStartGame.ts  (48.5L, 3 blk)
+    43: import {
+    44:   THE_BRAMBLE_RING,
+    45:   THUNDER_PEAK,
+    46:   SUN_BAKED_PLATEAU,
+    47:   ANCIENT_AQUEDUCT,
+    48:   FORGOTTEN_CRYPT,
+    49:   RUSTED_GORGE,
+    50:   THE_ASYLUM,
+    51:   VOLCANIC_CRATER,
+    52:   SHATTERED_MONOLITH,
+    53:   VERDANT_LABYRINTH,
+    54:   THE_SHIFTING_SANDS,
+
+=== src/engine/promoters/promoterGenerator.ts | src/engine/storage/opfsArchive/plausibility.ts  (48.5L, 3 blk)
+    7: 
+    8: const PROMOTER_FIRST_NAMES = [
+    9:   'Silas',
+    10:   'Cassian',
+    11:   'Vesper',
+    12:   'Theron',
+    13:   'Marius',
+    14:   'Lucia',
+    15:   'Octavia',
+    16:   'Titus',
+    17:   'Flavia',
+    18:   'Gaius',
+
+=== src/engine/promoters/promoterGenerator.ts | src/engine/rivals/rivalNamePool.ts  (47L, 3 blk)
+    7: 
+    8: const PROMOTER_FIRST_NAMES = [
+    9:   'Silas',
+    10:   'Cassian',
+    11:   'Vesper',
+    12:   'Theron',
+    13:   'Marius',
+    14:   'Lucia',
+    15:   'Octavia',
+    16:   'Titus',
+    17:   'Flavia',
+    18:   'Gaius',
+
+=== src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/ControlCenter/hooks/useControlCenter.ts  (44L, 4 blk)
+    65:   const {
+    66:     setState,
+    67:     doReset,
+    68:     doAdvanceWeek,
+    69:     loadGame,
+    70:     treasury,
+    71:     fame,
+    72:     week,
+    73:     season,
+    74:     roster,
+    75:     player,
+    76:     ftueComplete,
+
+=== src/engine/pipeline/pipelineStages.ts | src/engine/promoters/promoterGenerator.ts  (43.5L, 3 blk)
+    64: const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
+    65:   'matchHistory',
+    66:   'seasonalGrowth',
+    67:   'tournaments',
+    68:   'recruitPool',
+    69:   'legacyFounderQueue',
+    70:   'freeAgents',
+    71:   'realmRankings',
+    72:   'promoters',
+    73:   'trainers',
+    74:   'hiringPool',
+    75:   'gazettes',
+
+=== src/data/arenas/index.ts | src/schemas/gameStateSchema.ts  (41.5L, 2 blk)
+    9: import { registerArena, snapshotRegistry, restoreRegistry, setDefaultArena } from './registry';
+    10: import {
+    11:   STANDARD_ARENA,
+    12:   MIST_SHROUDED_RUINS,
+    13:   THE_GALLOWS_TREE,
+    14:   BRASS_RING,
+    15:   NARROW_BRIDGE,
+    16:   MUDPIT_ARENA,
+    17:   BLOODSANDS_ARENA,
+    18:   UNDERPIT_ARENA,
+    19:   HIGHPLAIN_ARENA,
+    20:   LANTERN_HALL_ARENA,
+
+=== src/engine/combat/resolution/resolution.ts | src/state/serialization.ts  (41.5L, 2 blk)
+    155:     aGoesFirst: aGoesFirst,
+    156:     OE_A: s.OE_A,
+    157:     AL_A: s.AL_A,
+    158:     OE_D: s.OE_D,
+    159:     AL_D: s.AL_D,
+    160:     fatA: s.fatA,
+    161:     fatD: s.fatD,
+    162:     offModsA: s.offModsA,
+    163:     offModsD: s.offModsD,
+    164:     defModsA: s.defModsA,
+    165:     defModsD: s.defModsD,
+    166:     passA: s.passA,
+
+=== src/engine/combat/resolution/resolution.ts | src/engine/pipeline/seasonal.ts  (41L, 2 blk)
+    155:     aGoesFirst: aGoesFirst,
+    156:     OE_A: s.OE_A,
+    157:     AL_A: s.AL_A,
+    158:     OE_D: s.OE_D,
+    159:     AL_D: s.AL_D,
+    160:     fatA: s.fatA,
+    161:     fatD: s.fatD,
+    162:     offModsA: s.offModsA,
+    163:     offModsD: s.offModsD,
+    164:     defModsA: s.defModsA,
+    165:     defModsD: s.defModsD,
+    166:     passA: s.passA,
+
+=== src/engine/crest/crestGenerator.ts | src/engine/weather/seasonalWeather.ts  (40.5L, 2 blk)
+    94:     Established: ['solid', 'fess', 'pale', 'bend', 'chevron', 'per-pale', 'per-fess'],
+    95:     Major: [
+    96:       'solid',
+    97:       'fess',
+    98:       'pale',
+    99:       'bend',
+    100:       'chevron',
+    101:       'cross',
+    102:       'per-pale',
+    103:       'per-fess',
+    104:       'gyronny',
+    105:       'saltire',
+
+=== src/data/names/cultures.ts | src/engine/weather/seasonalWeather.ts  (40L, 2 blk)
+    60:     'TOKE',
+    61:     'FRODE',
+    62:     'GRIMKELL',
+    63:     'ERLEND',
+    64:     'KOLBEIN',
+    65:     'RUNOLF',
+    66:     'SIGVALD',
+    67:     'THORFINN',
+    68:     'VARG',
+    69:     'YRSA',
+    70:     'BRUNHILD',
+    71:     'SIGRUN',
+
+=== src/components/arena/weather/index.tsx | src/schemas/schemaEnums.ts  (35.5L, 2 blk)
+    2: import type { WeatherType } from '@/types/shared.types';
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+
+=== src/components/ui/tabs.tsx | src/components/ui/toast.tsx  (35.5L, 2 blk)
+    13:  */
+    14: const TabsList = React.forwardRef<
+    15:   React.ElementRef<typeof TabsPrimitive.List>,
+    16:   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+    17: >(({ className, ...props }, ref) => (
+    18:   <TabsPrimitive.List
+    19:     ref={ref}
+    20:     className={cn(
+    21:       'inline-flex h-10 items-center justify-center rounded-none bg-muted p-1 text-muted-foreground',
+    22:       className
+    23:     )}
+    24:     {...props}
+
+=== src/engine/combat/resolution/offenseDefense/index.ts | src/schemas/schemaEnums.ts  (34L, 2 blk)
+    23:   const { s, attSucc } = prepareOffenseDefense({
+    24:     ctx,
+    25:     fA,
+    26:     fD,
+    27:     aGoesFirst,
+    28:     OE_A,
+    29:     AL_A,
+    30:     OE_D,
+    31:     AL_D,
+    32:     fatA,
+    33:     fatD,
+    34:     offModsA,
+
+=== src/components/arena/weather/index.tsx | src/engine/combat/resolution/offenseDefense/index.ts  (33.5L, 2 blk)
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+    14:   SpookyNightEffect,
+
+=== src/engine/warrior/skillCalc.ts | src/schemas/schemaEnums.ts  (32.5L, 2 blk)
+    25: } from '@/data/terrabloodCharts';
+    26: import {
+    27:   bp,
+    28:   szMod,
+    29:   ST_ATT,
+    30:   ST_PAR,
+    31:   WT_ATT,
+    32:   WT_DEF,
+    33:   WT_INI,
+    34:   WT_RIP,
+    35:   WT_DEC,
+    36:   WL_ATT,
+
+=== src/components/arena/weather/index.tsx | src/engine/warrior/skillCalc.ts  (32L, 2 blk)
+    2: import type { WeatherType } from '@/types/shared.types';
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+
+=== src/engine/impacts/types.ts | src/schemas/schemaEnums.ts  (32L, 2 blk)
+    5: import type {
+    6:   GameState,
+    7:   LedgerEntry,
+    8:   NewsletterItem,
+    9:   RivalStableData,
+    10:   RankingEntry,
+    11:   Season,
+    12:   WeatherType,
+    13:   BoutOffer,
+    14:   Promoter,
+    15:   Trainer,
+    16:   OwnerGrudge,
+
+=== src/components/world/StableRankingsRow.tsx | src/components/world/WarriorLeaderboardRow.tsx  (32L, 2 blk)
+    150:     </TableCell>
+    151:   );
+    152: }
+    153: 
+    154: function KillsCell({ row }: { row: StableRow }) {
+    155:   return (
+    156:     <TableCell className="text-right">
+    157:       <div className="flex items-center justify-end gap-1.5">
+    158:         <span
+    159:           className={cn(
+    160:             'font-mono font-black text-xs',
+    161:             row.kills > 0 ? 'text-destructive' : 'text-muted-foreground/30'
+
+=== src/components/arena/weather/effects/heatEffects.tsx | src/components/arena/weather/effects/specialEffects.tsx  (31.5L, 3 blk)
+    49:             top: `${cryptoRandom() * 100}%`,
+    50:             left: '-20%',
+    51:             animationDelay: `${cryptoRandom() * 2}s`,
+    52:             animationDuration: `${0.7 + cryptoRandom() * 0.8}s`,
+    53:           }}
+    54:         />
+    55:       ))}
+    56:     </div>
+    57:   );
+    58: }
+    59: 
+    60: /** Mirage with heat ripples and shimmering particles. */
+
+=== src/components/layout/navigationHubs.ts | src/schemas/schemaEnums.ts  (31.5L, 2 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/components/arena/weather/index.tsx | src/engine/impacts/types.ts  (31.5L, 2 blk)
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+    14:   SpookyNightEffect,
+
+=== src/components/arena/weather/index.tsx | src/components/layout/navigationHubs.ts  (31L, 2 blk)
+    2: import type { WeatherType } from '@/types/shared.types';
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+
+=== src/engine/combat/resolution/offenseDefense/index.ts | src/engine/impacts/types.ts  (31L, 2 blk)
+    23:   const { s, attSucc } = prepareOffenseDefense({
+    24:     ctx,
+    25:     fA,
+    26:     fD,
+    27:     aGoesFirst,
+    28:     OE_A,
+    29:     AL_A,
+    30:     OE_D,
+    31:     AL_D,
+    32:     fatA,
+    33:     fatD,
+    34:     offModsA,
+
+=== src/engine/combat/resolution/offenseDefense/index.ts | src/engine/warrior/skillCalc.ts  (30.5L, 2 blk)
+    23:   const { s, attSucc } = prepareOffenseDefense({
+    24:     ctx,
+    25:     fA,
+    26:     fD,
+    27:     aGoesFirst,
+    28:     OE_A,
+    29:     AL_A,
+    30:     OE_D,
+    31:     AL_D,
+    32:     fatA,
+    33:     fatD,
+    34:     offModsA,
+
+=== src/engine/combat/resolution/offenseDefense/prepare.ts | src/engine/combat/resolution/resolution.ts  (30.5L, 2 blk)
+    129:   return {
+    130:     ctx: args.ctx,
+    131:     fA: args.fA,
+    132:     fD: args.fD,
+    133:     aGoesFirst: args.aGoesFirst,
+    134:     OE_A: args.OE_A,
+    135:     AL_A: args.AL_A,
+    136:     OE_D: args.OE_D,
+    137:     AL_D: args.AL_D,
+    138:     fatA: args.fatA,
+    139:     fatD: args.fatD,
+    140:     offModsA: args.offModsA,
+
+=== src/components/arena/weather/effects/specialEffects.tsx | src/components/arena/weather/effects/stormEffects.tsx  (30L, 3 blk)
+    28:           key={`star-${i}`}
+    29:           className="absolute w-0.5 h-0.5 bg-white/60 rounded-full animate-pulse-slow motion-reduce:animate-none"
+    30:           style={{
+    31:             left: `${cryptoRandom() * 100}%`,
+    32:             top: `${cryptoRandom() * 40}%`,
+    33:             animationDelay: `${cryptoRandom() * 4}s`,
+    34:           }}
+    35:         />
+    36:       ))}
+    37:     </div>
+    38:   );
+    39: }
+
+=== src/components/layout/navigationHubs.ts | src/engine/combat/resolution/offenseDefense/index.ts  (30L, 2 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/engine/core/telemetry.ts | src/types/crest.types.ts  (29.5L, 2 blk)
+    68:  */
+    69: export const TelemetryEvents = {
+    70:   // Timing events
+    71:   ADVANCE_WEEK: 'advance_week',
+    72:   ADVANCE_DAY: 'advance_day',
+    73:   ADVANCE_QUARTER: 'advance_quarter',
+    74:   ADVANCE_MONTH: 'advance_month',
+    75:   ADVANCE_YEAR: 'advance_year',
+    76:   SKIP_TO_MONTH_END: 'skip_to_month_end',
+    77:   SKIP_TO_QUARTER_END: 'skip_to_quarter_end',
+    78:   SKIP_TO_YEAR_END: 'skip_to_year_end',
+    79:   FLUSH_DEFERRED_ARCHIVES: 'flush_deferred_archives',
+
+=== src/components/ui/dialog.tsx | src/components/ui/select.tsx  (29L, 2 blk)
+    105:   />
+    106: ));
+    107: DialogTitle.displayName = DialogPrimitive.Title.displayName;
+    108: 
+    109: /**
+    110:  * Dialog description.
+    111:  */
+    112: const DialogDescription = React.forwardRef<
+    113:   React.ElementRef<typeof DialogPrimitive.Description>,
+    114:   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+    115: >(({ className, ...props }, ref) => (
+    116:   <DialogPrimitive.Description
+
+=== src/components/ui/select.tsx | src/components/ui/sheet.tsx  (29L, 2 blk)
+    151:   </SelectPrimitive.Item>
+    152: ));
+    153: SelectItem.displayName = SelectPrimitive.Item.displayName;
+    154: 
+    155: /**
+    156:  * Select separator.
+    157:  */
+    158: const SelectSeparator = React.forwardRef<
+    159:   React.ElementRef<typeof SelectPrimitive.Separator>,
+    160:   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+    161: >(({ className, ...props }, ref) => (
+    162:   <SelectPrimitive.Separator
+
+=== src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/bookmarks/useBookmarkGroups.ts  (29L, 2 blk)
+    18: 
+    19:   const {
+    20:     player,
+    21:     week,
+    22:     absoluteWeek,
+    23:     season,
+    24:     arenaHistory,
+    25:     boutOffers,
+    26:     roster,
+    27:     treasury,
+    28:     fame,
+    29:     rivals,
+
+=== src/engine/impacts/types.ts | src/engine/warrior/skillCalc.ts  (28.5L, 2 blk)
+    5: import type {
+    6:   GameState,
+    7:   LedgerEntry,
+    8:   NewsletterItem,
+    9:   RivalStableData,
+    10:   RankingEntry,
+    11:   Season,
+    12:   WeatherType,
+    13:   BoutOffer,
+    14:   Promoter,
+    15:   Trainer,
+    16:   OwnerGrudge,
+
+=== src/components/layout/navigationHubs.ts | src/engine/warrior/skillCalc.ts  (28L, 2 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/components/layout/navigationHubs.ts | src/engine/impacts/types.ts  (28L, 2 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/engine/combat/resolution/offenseDefense/index.ts | src/pages/startGame/useStartGame.ts  (28L, 2 blk)
+    23:   const { s, attSucc } = prepareOffenseDefense({
+    24:     ctx,
+    25:     fA,
+    26:     fD,
+    27:     aGoesFirst,
+    28:     OE_A,
+    29:     AL_A,
+    30:     OE_D,
+    31:     AL_D,
+    32:     fatA,
+    33:     fatD,
+    34:     offModsA,
+
+=== src/pages/startGame/useStartGame.ts | src/schemas/schemaEnums.ts  (28L, 2 blk)
+    207:   return {
+    208:     screen,
+    209:     setScreen,
+    210:     slots,
+    211:     deleteTarget,
+    212:     setDeleteTarget,
+    213:     ownerName,
+    214:     setOwnerName,
+    215:     stableName,
+    216:     setStableName,
+    217:     playerCrest,
+    218:     setPlayerCrest,
+
+=== src/data/arenas/venues/seed.ts | src/data/arenas/venues/variants.ts  (28L, 2 blk)
+    40:   surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.1 },
+    41: };
+    42: 
+    43: /**
+    44:  * Tiny, brutal ring with uneven stones. Penalizes lunging and favors close-quarters brawling.
+    45:  */
+    46: export const BRASS_RING: ArenaConfig = {
+    47:   id: 'brass_ring',
+    48:   name: 'The Brass Ring',
+    49:   tags: ['outdoor', 'cramped', 'uneven'],
+    50:   tier: 1,
+    51:   size: 'cramped',
+
+=== src/engine/rivals/rivalNamePool.ts | src/engine/storage/opfsArchive/plausibility.ts  (28L, 2 blk)
+    5: 
+    6: const TRAINER_FIRST_NAMES = [
+    7:   'Aldric',
+    8:   'Brenna',
+    9:   'Caius',
+    10:   'Dara',
+    11:   'Eryx',
+    12:   'Fenna',
+    13:   'Galthor',
+    14:   'Hessa',
+    15:   'Ivor',
+    16:   'Jelena',
+
+=== src/data/names/cultures.ts | src/engine/crest/crestGenerator.ts  (28L, 2 blk)
+    61:     'FRODE',
+    62:     'GRIMKELL',
+    63:     'ERLEND',
+    64:     'KOLBEIN',
+    65:     'RUNOLF',
+    66:     'SIGVALD',
+    67:     'THORFINN',
+    68:     'VARG',
+    69:     'YRSA',
+    70:     'BRUNHILD',
+    71:     'SIGRUN',
+    72:     'THORA',
+
+=== src/components/arena/weather/index.tsx | src/pages/startGame/useStartGame.ts  (27.5L, 2 blk)
+    3: import {
+    4:   RainEffect,
+    5:   BloodRainEffect,
+    6:   MistEffect,
+    7:   HeatEffect,
+    8:   SolarFlareEffect,
+    9:   AbyssalGloomEffect,
+    10:   CursedMiasmaEffect,
+    11:   WindEffect,
+    12:   EclipseEffect,
+    13:   BloodMoonEffect,
+    14:   SpookyNightEffect,
+
+=== src/components/arena/weather/effects/fogEffects.tsx | src/components/arena/weather/effects/heatEffects.tsx  (27L, 2 blk)
+    34:       />
+    35:     </div>
+    36:   );
+    37: }
+    38: 
+    39: /** Crimson blood fog with drifting red mist particles. */
+    40: export function BloodFogEffect() {
+    41:   return (
+    42:     <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    43:       {/* Crimson fog base */}
+    44:       <div
+    45:         className="absolute inset-0 animate-fog-drift motion-reduce:animate-none"
+
+=== src/engine/pipeline/pipelineStages.ts | src/engine/storage/opfsArchive/plausibility.ts  (26.5L, 2 blk)
+    64: const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
+    65:   'matchHistory',
+    66:   'seasonalGrowth',
+    67:   'tournaments',
+    68:   'recruitPool',
+    69:   'legacyFounderQueue',
+    70:   'freeAgents',
+    71:   'realmRankings',
+    72:   'promoters',
+    73:   'trainers',
+    74:   'hiringPool',
+    75:   'gazettes',
+
+=== src/constants/arenaEvents.ts | src/engine/storage/truncation.ts  (26L, 2 blk)
+    1: export const ARENA_EVENT_CONSTANTS = {
+    2:   HAUNTING_WHISPERS_TRIGGER: 18,
+    3: 
+    4:   COLLAPSING_PILLAR_TRIGGER: 15,
+    5:   CROWD_RIOT_TRIGGER: 15,
+    6:   CROWD_RIOT_DAMAGE: 2,
+    7:   BLOOD_MOON_LIGHTING_TRIGGER: 1,
+    8:   BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
+    9:   GEYSER_ERUPTION_TRIGGER: 6,
+    10:   SHADOW_TENDRIL_TRIGGER: 20,
+    11:   SHADOW_TENDRIL_DRAIN: 5,
+    12:   THORN_BARBS_TRIGGER: 10,
+
+=== src/components/arena/MiniCombatLog.tsx | src/components/arena/TacticalLogView.tsx  (25L, 2 blk)
+    67: function getEventIcon(type: ReturnType<typeof classifyEvent>): string {
+    68:   switch (type) {
+    69:     case 'hit':
+    70:       return 'HIT';
+    71:     case 'crit':
+    72:       return 'CRT';
+    73:     case 'death':
+    74:       return 'KIL';
+    75:     case 'ko':
+    76:       return 'KO';
+    77:     case 'miss':
+    78:       return 'MISS';
+
+=== src/engine/impacts/types.ts | src/pages/startGame/useStartGame.ts  (25L, 2 blk)
+    5: import type {
+    6:   GameState,
+    7:   LedgerEntry,
+    8:   NewsletterItem,
+    9:   RivalStableData,
+    10:   RankingEntry,
+    11:   Season,
+    12:   WeatherType,
+    13:   BoutOffer,
+    14:   Promoter,
+    15:   Trainer,
+    16:   OwnerGrudge,
+
+=== src/engine/combat/mechanics/weaponArmor.ts | src/engine/core/telemetry.ts  (25L, 2 blk)
+    9: export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
+    10:   dagger: 'pierce',
+    11:   epee: 'pierce',
+    12:   short_spear: 'pierce',
+    13:   long_spear: 'pierce',
+    14:   hatchet: 'slash',
+    15:   short_sword: 'slash',
+    16:   scimitar: 'slash',
+    17:   longsword: 'slash',
+    18:   battle_axe: 'slash',
+    19:   broadsword: 'slash',
+    20:   greatsword: 'slash',
+
+=== src/engine/warrior/skillCalc.ts | src/pages/startGame/useStartGame.ts  (24.5L, 2 blk)
+    26: import {
+    27:   bp,
+    28:   szMod,
+    29:   ST_ATT,
+    30:   ST_PAR,
+    31:   WT_ATT,
+    32:   WT_DEF,
+    33:   WT_INI,
+    34:   WT_RIP,
+    35:   WT_DEC,
+    36:   WL_ATT,
+    37:   WL_PAR,
+
+=== src/engine/combat/mechanics/weaponArmor.ts | src/types/crest.types.ts  (24.5L, 2 blk)
+    9: export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
+    10:   dagger: 'pierce',
+    11:   epee: 'pierce',
+    12:   short_spear: 'pierce',
+    13:   long_spear: 'pierce',
+    14:   hatchet: 'slash',
+    15:   short_sword: 'slash',
+    16:   scimitar: 'slash',
+    17:   longsword: 'slash',
+    18:   battle_axe: 'slash',
+    19:   broadsword: 'slash',
+    20:   greatsword: 'slash',
+
+=== src/components/layout/navigationHubs.ts | src/pages/startGame/useStartGame.ts  (24L, 2 blk)
+    1: import {
+    2:   Swords,
+    3:   Globe,
+    4:   LayoutDashboard,
+    5:   BookUser,
+    6:   Dumbbell,
+    7:   Flame,
+    8:   Skull,
+    9:   Wrench,
+    10:   Coins,
+    11:   ScrollText,
+    12:   Building2,
+
+=== src/engine/combat/mechanics/distanceResolution.ts | src/engine/combat/mechanics/weaponArmor.ts  (24L, 2 blk)
+    32: 
+    33: export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
+    34:   // ── Tight (close, fast weapons) ────────────────────────────────────────────
+    35:   fist: 'Tight',
+    36:   dagger: 'Tight',
+    37:   short_sword: 'Tight',
+    38:   mace: 'Tight',
+    39:   hatchet: 'Tight',
+    40:   war_hammer: 'Tight',
+    41:   // ── Striking (medium, balanced — most weapons) ────────────────────────────
+    42:   broadsword: 'Striking',
+    43:   longsword: 'Striking',
+
+=== src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/bookmarks/useBookmarkGroups.ts  (24L, 2 blk)
+    65:   const {
+    66:     setState,
+    67:     doReset,
+    68:     doAdvanceWeek,
+    69:     loadGame,
+    70:     treasury,
+    71:     fame,
+    72:     week,
+    73:     season,
+    74:     roster,
+    75:     player,
+    76:     ftueComplete,
+
+=== src/engine/pipeline/pipelineStages.ts | src/engine/rivals/rivalNamePool.ts  (23.5L, 2 blk)
+    64: const EXCLUSIVE_STRATEGY_KEYS: ReadonlySet<keyof StateImpact> = new Set([
+    65:   'matchHistory',
+    66:   'seasonalGrowth',
+    67:   'tournaments',
+    68:   'recruitPool',
+    69:   'legacyFounderQueue',
+    70:   'freeAgents',
+    71:   'realmRankings',
+    72:   'promoters',
+    73:   'trainers',
+    74:   'hiringPool',
+    75:   'gazettes',
+
+=== src/engine/combat/mechanics/distanceResolution.ts | src/engine/core/telemetry.ts  (23.5L, 2 blk)
+    34:   // ── Tight (close, fast weapons) ────────────────────────────────────────────
+    35:   fist: 'Tight',
+    36:   dagger: 'Tight',
+    37:   short_sword: 'Tight',
+    38:   mace: 'Tight',
+    39:   hatchet: 'Tight',
+    40:   war_hammer: 'Tight',
+    41:   // ── Striking (medium, balanced — most weapons) ────────────────────────────
+    42:   broadsword: 'Striking',
+    43:   longsword: 'Striking',
+    44:   scimitar: 'Striking',
+    45:   battle_axe: 'Striking',
+
+=== src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/startGame/useStartGame.ts  (23.5L, 2 blk)
+    71: 
+    72:   return {
+    73:     activeTab,
+    74:     setActiveTab,
+    75:     player,
+    76:     week,
+    77:     absoluteWeek,
+    78:     season,
+    79:     arenaHistory,
+    80:     boutOffers,
+    81:     roster,
+    82:     stats,
+
+=== src/engine/combat/mechanics/distanceResolution.ts | src/types/crest.types.ts  (23L, 2 blk)
+    34:   // ── Tight (close, fast weapons) ────────────────────────────────────────────
+    35:   fist: 'Tight',
+    36:   dagger: 'Tight',
+    37:   short_sword: 'Tight',
+    38:   mace: 'Tight',
+    39:   hatchet: 'Tight',
+    40:   war_hammer: 'Tight',
+    41:   // ── Striking (medium, balanced — most weapons) ────────────────────────────
+    42:   broadsword: 'Striking',
+    43:   longsword: 'Striking',
+    44:   scimitar: 'Striking',
+    45:   battle_axe: 'Striking',
+
+=== src/components/gazette/GazetteLeaderboards.tsx | src/components/gazette/MetaAnalytics.tsx  (22L, 2 blk)
+    165: 
+    166:   return (
+    167:     <Surface
+    168:       variant="glass"
+    169:       className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full"
+    170:     >
+    171:       <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
+    172:         <Swords className="h-24 w-24 text-arena-gold" />
+    173:       </div>
+    174: 
+    175:       <div className="flex items-center gap-4 mb-8 relative z-10">
+    176:         <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+
+=== src/components/warrior/favorites/BioRhythmSection.tsx | src/components/warrior/favorites/WeaponAffinitySection.tsx  (21L, 2 blk)
+    6: 
+    7: interface BioRhythmSectionProps {
+    8:   warrior: Warrior;
+    9:   actions: Pick<
+    10:     UseFavoritesActionsResult,
+    11:     | 'handleInsight'
+    12:     | 'handleApplyRhythm'
+    13:     | 'favDisplay'
+    14:     | 'isRhythmDiscovered'
+    15:     | 'rhythmHints'
+    16:     | 'rhythmProgress'
+    17:   >;
+
+=== src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/orphanage/useFtueFlow.ts  (21L, 2 blk)
+    116: 
+    117:   return {
+    118:     activeCategory,
+    119:     setActiveCategory,
+    120:     ftueComplete,
+    121:     handleExport,
+    122:     handleImport,
+    123:     skipWeek,
+    124:     skipMonth,
+    125:     skipSeason,
+    126:     skipFTUE,
+    127:     resetRivals,
+
+=== src/constants/arenaEvents.ts | src/constants/combat/combat/global.ts  (20L, 2 blk)
+    1: export const ARENA_EVENT_CONSTANTS = {
+    2:   HAUNTING_WHISPERS_TRIGGER: 18,
+    3: 
+    4:   COLLAPSING_PILLAR_TRIGGER: 15,
+    5:   CROWD_RIOT_TRIGGER: 15,
+    6:   CROWD_RIOT_DAMAGE: 2,
+    7:   BLOOD_MOON_LIGHTING_TRIGGER: 1,
+    8:   BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
+    9:   GEYSER_ERUPTION_TRIGGER: 6,
+    10:   SHADOW_TENDRIL_TRIGGER: 20,
+    11:   SHADOW_TENDRIL_DRAIN: 5,
+    12:   THORN_BARBS_TRIGGER: 10,
+
+=== src/constants/combat/combat/global.ts | src/engine/storage/truncation.ts  (20L, 2 blk)
+    97:  */
+    98: export const KILL_WINDOW = {
+    99:   BASE: 0.012,
+    100:   CAP: 0.12,
+    101:   SCALE: 1.1,
+    102:   HP_CRITICAL_RATIO: 0.3,
+    103:   HP_CRITICAL_ADD: 0.008,
+    104:   HP_HURT_RATIO: 0.5,
+    105:   HP_HURT_ADD: 0.001,
+    106:   END_SPENT_RATIO: 0.2,
+    107:   END_SPENT_ADD: 0.012,
+    108:   END_TIRED_ADD: 0.006,
+
+=== src/data/arenas/venues/late.ts | src/data/arenas/venues/variants.ts  (20L, 2 blk)
+    37:   surfaceMod: { initiativeMod: 0, riposteMod: 0, enduranceMult: 1.3 },
+    38: };
+    39: 
+    40: export const ANCIENT_AQUEDUCT: ArenaConfig = {
+    41:   id: 'ancient_aqueduct',
+    42:   name: 'Ancient Aqueduct',
+    43:   tags: ['water', 'ruins', 'cramped'],
+    44:   tier: 1,
+    45:   size: 'cramped',
+    46:   description: 'Cramped, flooded stone corridors that punish long weapons and footwork.',
+    47:   zoneDef: { Edge: -3, Corner: -5 },
+    48:   surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.15 },
+
+=== src/hooks/useScoutingStableComparison.ts | src/pages/tournaments/useTournamentState.ts  (20L, 2 blk)
+    83: 
+    84:   return {
+    85:     idA,
+    86:     setIdA,
+    87:     idB,
+    88:     setIdB,
+    89:     rivalA,
+    90:     rivalB,
+    91:     statsA,
+    92:     statsB,
+    93:     grudge,
+    94:     clashes,
+
+=== src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/Trainers/hooks/useTrainers.ts  (20L, 2 blk)
+    67:     doReset,
+    68:     doAdvanceWeek,
+    69:     loadGame,
+    70:     treasury,
+    71:     fame,
+    72:     week,
+    73:     season,
+    74:     roster,
+    75:     player,
+    76:     ftueComplete,
+    77:   } = useGameStore(
+    78:     useShallow((s) => ({
+
+=== src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/Trainers/hooks/useTrainers.ts  (20L, 2 blk)
+    22:     absoluteWeek,
+    23:     season,
+    24:     arenaHistory,
+    25:     boutOffers,
+    26:     roster,
+    27:     treasury,
+    28:     fame,
+    29:     rivals,
+    30:     realmRankings,
+    31:     progression,
+    32:   } = useGameStore(
+    33:     useShallow((s) => ({
+
+=== src/pages/Trainers/hooks/useTrainers.ts | src/pages/bookmarks/useBookmarkGroups.ts  (20L, 2 blk)
+    14:   const {
+    15:     trainers,
+    16:     hiringPool,
+    17:     week,
+    18:     retired,
+    19:     graveyard,
+    20:     treasury,
+    21:     setState,
+    22:     deductFunds,
+    23:     bookmarks,
+    24:   } = useGameStore(
+    25:     useShallow((s) => ({
+
+=== src/pages/AdminTools/hooks/useAdminTools.ts | src/pages/startGame/useStartGame.ts  (20L, 2 blk)
+    117:   return {
+    118:     activeCategory,
+    119:     setActiveCategory,
+    120:     ftueComplete,
+    121:     handleExport,
+    122:     handleImport,
+    123:     skipWeek,
+    124:     skipMonth,
+    125:     skipSeason,
+    126:     skipFTUE,
+    127:     resetRivals,
+    128:     forceMastery,
+
+=== src/pages/ControlCenter/hooks/useControlCenter.ts | src/pages/orphanage/useFtueFlow.ts  (20L, 2 blk)
+    73:     activeTab,
+    74:     setActiveTab,
+    75:     player,
+    76:     week,
+    77:     absoluteWeek,
+    78:     season,
+    79:     arenaHistory,
+    80:     boutOffers,
+    81:     roster,
+    82:     stats,
+    83:     totalBouts,
+    84:     killRate,
+
+=== src/pages/orphanage/useFtueFlow.ts | src/pages/startGame/useStartGame.ts  (20L, 2 blk)
+    253:   return {
+    254:     step,
+    255:     setStep,
+    256:     stableInput,
+    257:     setStableInput,
+    258:     ownerInput,
+    259:     setOwnerInput,
+    260:     selected,
+    261:     orphanPool,
+    262:     boutResult,
+    263:     playerPlan,
+    264:     setPlayerPlan,

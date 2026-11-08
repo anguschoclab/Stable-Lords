@@ -67,11 +67,7 @@ package-lock.json
 electron/main.js
 
 # Electron build output
-/out/
-
-# Scan artifacts — ignored except orphan-report.md (PO triage report)
-scripts/out/*
-!scripts/out/orphan-report.md
+out/
 
 # Script-generated archives (daily_oracle bout transcripts)
 archives/

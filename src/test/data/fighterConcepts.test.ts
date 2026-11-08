@@ -246,8 +246,10 @@ describe('PL — Arena 93 parry-lunge canon builds', () => {
 describe('FIGHTER_CONCEPTS — Parry-Riposte Arena 93 canon builds', () => {
   const prConcepts = FIGHTER_CONCEPTS[FightingStyle.ParryRiposte].concepts;
 
-  it('carries the full dozen canon ripper concepts', () => {
-    expect(prConcepts).toHaveLength(12);
+  it('carries the full canon ripper concepts', () => {
+    // V25: Assur's marginal worked example joined the dozen (documented as
+    // not-recommended — a caution, not a build to copy).
+    expect(prConcepts).toHaveLength(13);
   });
 
   it('includes the newsletter canon builds', () => {

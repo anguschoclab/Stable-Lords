@@ -155,6 +155,24 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         'Smaller and tougher — size and damage traded for more wit and deftness. High constitution means he shrugs off what lands and drills holes in return.',
         'Same as the all-around build: parry when pressed, targeted offense otherwise.'
       ),
+      concept(
+        'Snotling',
+        { ST: 17, CN: 15, SZ: 6, WT: 17, WL: 8, SP: 4, DF: 17 },
+        "The Manager's model aimed-blow (Arena 93) — a tank-lite aimer: real strength and constitution behind the scalpel, will and speed sold to buy them. Wit 17 keeps the learning steep on the way to the DF 21 rung.",
+        'Aim vitals; low-moderate rhythm; heavier armor than a pure aimer wears.'
+      ),
+      concept(
+        'Snotling Runner',
+        { ST: 15, CN: 16, SZ: 8, WT: 11, WL: 7, SP: 10, DF: 17 },
+        'The speedier Snotling line — wit trimmed to the 11 floor buys the speed and extra constitution the model gives up. Same doctrine: surgeon accuracy on a frame that can take a hit.',
+        'Aim vitals; moderate rhythm; train wit early if the learning lags.'
+      ),
+      concept(
+        'Snotling Deft',
+        { ST: 15, CN: 15, SZ: 7, WT: 11, WL: 7, SP: 8, DF: 21 },
+        'The DF-21 variant — deftness maxed for the surgeon ceiling while the physicals stay tank-adjacent. The expensive version; it pays once the skills arrive.',
+        'Aim vitals; epee-class precision weapons shine; moderate rhythm.'
+      ),
     ],
   },
   [FightingStyle.BashingAttack]: {
@@ -418,6 +436,12 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         { ST: 13, CN: 7, SZ: 14, WT: 17, WL: 15, SP: 8, DF: 10 },
         'The size-14 outlier who proved big rippers graduate: the frame carries hit points and damage the classic builds lack, at the cost of deftness. Jorja ran him moderate/moderate and charted a slash favorite.',
         'Longsword; moderate/moderate rhythm; slash on the riposte.'
+      ),
+      concept(
+        "Assur's Marginal Ripper",
+        { ST: 21, CN: 11, SZ: 7, WT: 11, WL: 7, SP: 12, DF: 15 },
+        "The worked example from Assur's hybrid guides — included honestly: he calls this one marginal and does not recommend it. The 21 strength guarantees damage, but wit 11 and will 7 leave the riposte skills thin and the endurance engine fragile. A caution: damage alone does not make a ripper.",
+        'If run anyway: moderate effort, low activity; riposte; pray the damage carries.'
       ),
     ],
   },
@@ -844,6 +868,42 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         { ST: 11, CN: 9, SZ: 6, WT: 13, WL: 21, SP: 9, DF: 17 },
         "The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack, and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a wall survives wit under 15 when everything else is elite.",
         'Canon favorites: Quarterstaff, moderate offensive effort, low activity; the Riposte tactic runs well; learns initiative first.'
+      ),
+      concept(
+        'Tank-Riposte Flagship',
+        { ST: 21, CN: 15, SZ: 6, WT: 11, WL: 7, SP: 13, DF: 11 },
+        "Assur's perfect low-will tank hybrid — the flagship worked example. Will sold to 7 buys the 21-strength, 15-constitution frame plus a 24 raw riposte base (SP+DF) that replaces the skills will would have paid for. Plate is the uniform; the riposte does the answering.",
+        'APA/F norm; offensive effort 5+; the physical riposte carries what will cannot.'
+      ),
+      concept(
+        'Swift Tank',
+        { ST: 17, CN: 16, SZ: 5, WT: 11, WL: 8, SP: 16, DF: 11 },
+        'The fast low-will tank — speed 16 makes the riposte genuinely quick while the frame stays plate-legal. Constitution at 16 is the highest in the tank line.',
+        'APA/F; offensive effort 5+; riposte comes free with the speed.'
+      ),
+      concept(
+        'Pure Tank',
+        { ST: 21, CN: 13, SZ: 5, WT: 11, WL: 10, SP: 13, DF: 11 },
+        'The will-10 line — right at the low-will boundary. Same frame-plus-riposte doctrine as the flagship; the extra will buys a little more endurance and trainability.',
+        'APA/F; offensive effort 5+; parry or nothing defensively.'
+      ),
+      concept(
+        'Deft Hybrid',
+        { ST: 17, CN: 10, SZ: 8, WT: 15, WL: 10, SP: 7, DF: 17 },
+        'The skills-leaning tank — wit 15 and deftness 17 buy a real riposte ceiling on a frame still heavy enough for plate. Constitution is the deliberate sacrifice.',
+        'APA/F if the carry holds; scale down to chain when it does not.'
+      ),
+      concept(
+        'Wit Tank',
+        { ST: 17, CN: 14, SZ: 4, WT: 17, WL: 9, SP: 8, DF: 15 },
+        'The learner tank — wit 17 keeps the skills growing on a low-will frame. The smallest of the tank line; the frame math still works.',
+        'APA/F; offensive effort 5+; wit does the long-term work.'
+      ),
+      concept(
+        'Balanced Tank',
+        { ST: 17, CN: 13, SZ: 4, WT: 17, WL: 9, SP: 13, DF: 11 },
+        'The middle of the addendum line — strength, constitution, wit, and speed all live on a will-9 chassis. No extreme anywhere; every stat does its job.',
+        'APA/F; offensive effort 5+; riposte when the lane is there.'
       ),
     ],
   },

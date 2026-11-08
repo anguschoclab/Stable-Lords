@@ -554,15 +554,17 @@ function lungerCanonNotes(attrs: Attributes): DesignReviewItem[] {
 
 // V25 — Assur's winning-archetype layer (orthogonal to StyleFamily: family
 // is how the style fights, archetype is how the build wins). Filed under
-// the 'style' axis with the other build-identity notes.
-function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
-  const items: DesignReviewItem[] = [];
-  const fits = classifyArchetype(attrs, style);
-  const [top, second] = fits;
-  if (!top) return items;
+// the 'style' axis with the other build-identity notes. One helper per
+// note so each canon bar stays a named, testable unit.
 
+/** Top-fit classification item + close-second mention. */
+function archetypeFitItem(
+  fits: ReturnType<typeof classifyArchetype>
+): DesignReviewItem | undefined {
+  const [top, second] = fits;
+  if (!top) return undefined;
   const guide = WINNING_ARCHETYPES[top.archetype];
-  items.push({
+  return {
     axis: 'style',
     verdict: 'info',
     id: 'v25-archetype-fit',
@@ -573,103 +575,146 @@ function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewI
         ? ` — close to ${WINNING_ARCHETYPES[second.archetype].label}. `
         : '. ') +
       guide.armor.notes,
-  });
+  };
+}
 
-  // Tank-frame gap — the build classifies AS a tank but the ST/CN frame
-  // bars are unmet (it wants the identity without the chassis).
-  const isTankFit =
+/** Tank-frame gap — classifies AS a tank but the ST/CN bars are unmet. */
+function tankFrameNote(
+  attrs: Attributes,
+  top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
+): DesignReviewItem | undefined {
+  const isTank =
     top.archetype === 'tankHybrid' || top.archetype === 'lowWillTankHybrid';
   if (
-    isTankFit &&
-    (attrs.ST < ARCHETYPE_DESIGN_BARS.TANK_ST_MIN ||
-      attrs.CN < ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
-  ) {
-    items.push({
-      axis: 'style',
-      verdict: 'warn',
-      id: 'v25-tank-frame',
-      title: 'Tank frame gap',
-      detail: `Tank fit ${top.score}/100 but ST ${attrs.ST} < ${ARCHETYPE_DESIGN_BARS.TANK_ST_MIN} or CN ${attrs.CN} < ${ARCHETYPE_DESIGN_BARS.TANK_CN_MIN} — tank hybrids need the frame to carry plate and hit points.`,
-    });
-  }
+    !isTank ||
+    (attrs.ST >= ARCHETYPE_DESIGN_BARS.TANK_ST_MIN &&
+      attrs.CN >= ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
+  )
+    return undefined;
+  return {
+    axis: 'style',
+    verdict: 'warn',
+    id: 'v25-tank-frame',
+    title: 'Tank frame gap',
+    detail: `Tank fit ${top.score}/100 but ST ${attrs.ST} < ${ARCHETYPE_DESIGN_BARS.TANK_ST_MIN} or CN ${attrs.CN} < ${ARCHETYPE_DESIGN_BARS.TANK_CN_MIN} — tank hybrids need the frame to carry plate and hit points.`,
+  };
+}
 
-  // Offensive wit floor — "wit 11 is the bare minimum".
-  if (top.archetype === 'pureOffensive' && attrs.WT < ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN) {
-    items.push({
-      axis: 'style',
-      verdict: 'warn',
-      id: 'v25-offensive-wit',
-      title: 'Offensive wit',
-      detail: `Wit ${attrs.WT} under the canon bare minimum of ${ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN} — an offensive that cannot learn cannot adapt.`,
-    });
-  }
+/** Offensive wit floor — "wit 11 is the bare minimum". */
+function offensiveWitNote(
+  attrs: Attributes,
+  top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
+): DesignReviewItem | undefined {
+  if (
+    top.archetype !== 'pureOffensive' ||
+    attrs.WT >= ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN
+  )
+    return undefined;
+  return {
+    axis: 'style',
+    verdict: 'warn',
+    id: 'v25-offensive-wit',
+    title: 'Offensive wit',
+    detail: `Wit ${attrs.WT} under the canon bare minimum of ${ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN} — an offensive that cannot learn cannot adapt.`,
+  };
+}
 
-  // Riposte dead band — SP 10-12 on a riposting fit.
+/** Riposte dead band — SP 10-12 on a riposting fit. */
+function riposteDeadBandNote(
+  attrs: Attributes,
+  fits: ReturnType<typeof classifyArchetype>
+): DesignReviewItem | undefined {
   const [deadLo, deadHi] = ARCHETYPE_DESIGN_BARS.RIPOSTE_SP_DEAD_BAND;
   const riposteFit = fits.slice(0, 2).some((f) => f.archetype === 'ripostingHybrid');
-  if (riposteFit && attrs.SP >= deadLo && attrs.SP <= deadHi) {
-    items.push({
-      axis: 'style',
-      verdict: 'info',
-      id: 'v25-riposte-dead-band',
-      title: 'Riposte dead band',
-      detail: `Speed ${attrs.SP} sits in the SP ${deadLo}-${deadHi} dead band — slow ripostes never land; the build gave up the speed it needed to matter.`,
-    });
-  }
+  if (!riposteFit || attrs.SP < deadLo || attrs.SP > deadHi) return undefined;
+  return {
+    axis: 'style',
+    verdict: 'info',
+    id: 'v25-riposte-dead-band',
+    title: 'Riposte dead band',
+    detail: `Speed ${attrs.SP} sits in the SP ${deadLo}-${deadHi} dead band — slow ripostes never land; the build gave up the speed it needed to matter.`,
+  };
+}
 
-  // Big hybrid — size on a hybrid fit costs the points the build needs.
-  if (guide.family === 'hybrid' && attrs.SZ >= ARCHETYPE_DESIGN_BARS.BIG_HYBRID_SZ) {
-    items.push({
-      axis: 'style',
-      verdict: 'info',
-      id: 'v25-big-hybrid',
-      title: 'Big hybrid',
-      detail: `Size ${attrs.SZ} — hybrids stay small; size points are wit, deftness, and will the build cannot train back.`,
-    });
-  }
+/** Big hybrid — size on a hybrid fit costs the points the build needs. */
+function bigHybridNote(
+  attrs: Attributes,
+  top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
+): DesignReviewItem | undefined {
+  const guide = WINNING_ARCHETYPES[top.archetype];
+  if (guide.family !== 'hybrid' || attrs.SZ < ARCHETYPE_DESIGN_BARS.BIG_HYBRID_SZ)
+    return undefined;
+  return {
+    axis: 'style',
+    verdict: 'info',
+    id: 'v25-big-hybrid',
+    title: 'Big hybrid',
+    detail: `Size ${attrs.SZ} — hybrids stay small; size points are wit, deftness, and will the build cannot train back.`,
+  };
+}
 
-  // Surgeon chassis — AB with ST under the viability floor can't damage.
-  if (style === FightingStyle.AimedBlow && attrs.ST < ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY) {
-    items.push({
-      axis: 'style',
-      verdict: 'warn',
-      id: 'v25-surgeon-chassis',
-      title: 'Surgeon chassis',
-      detail: `Strength ${attrs.ST} under ${ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY} — a low-strength aimed-blow surgeon still needs enough damage to finish.`,
-    });
-  }
+/** Surgeon chassis — AB with ST under the viability floor can't damage. */
+function surgeonChassisNote(
+  attrs: Attributes,
+  style: FightingStyle
+): DesignReviewItem | undefined {
+  if (style !== FightingStyle.AimedBlow || attrs.ST >= ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY)
+    return undefined;
+  return {
+    axis: 'style',
+    verdict: 'warn',
+    id: 'v25-surgeon-chassis',
+    title: 'Surgeon chassis',
+    detail: `Strength ${attrs.ST} under ${ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY} — a low-strength aimed-blow surgeon still needs enough damage to finish.`,
+  };
+}
 
-  // Encumbrance ceiling — armor-dependent archetypes (tank, low-will tank,
-  // defensive) win *because of* plate; a frame that cannot carry it cannot
-  // be the thing it classified as.
-  const armorDependent: WinningArchetype[] = [
-    'tankHybrid',
-    'lowWillTankHybrid',
-    'pureDefensive',
-  ];
+/** Archetypes whose win condition requires plate — the frame must carry it. */
+const ARMOR_DEPENDENT: WinningArchetype[] = [
+  'tankHybrid',
+  'lowWillTankHybrid',
+  'pureDefensive',
+];
+
+/** Encumbrance ceiling — an armor-dependent build that can't carry plate. */
+function encumbranceCeilingNote(
+  attrs: Attributes,
+  top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
+): DesignReviewItem | undefined {
+  const guide = WINNING_ARCHETYPES[top.archetype];
   const leadArmor = guide.armor.ids[0];
-  if (leadArmor && armorDependent.includes(top.archetype)) {
-    const loadout = {
-      weapon: 'short_spear',
-      armor: leadArmor,
-      shield: 'none_shield',
-      helm: 'leather_cap',
-    };
-    const capacity = computeEncumbranceCapacity(attrs.ST, attrs.CN);
-    const weight = getLoadoutWeight(loadout);
-    const ratio = weight / capacity;
-    if (ratio >= 1.2) {
-      items.push({
-        axis: 'style',
-        verdict: 'warn',
-        id: 'v25-encumbrance-ceiling',
-        title: 'Encumbrance ceiling',
-        detail: `This frame carries ${capacity} — ${getItemById(leadArmor)?.name ?? leadArmor} plus a light loadout weighs ${weight} (over-encumbered). It cannot wear the armor its winning archetype wants.`,
-      });
-    }
-  }
+  if (!leadArmor || !ARMOR_DEPENDENT.includes(top.archetype)) return undefined;
+  const loadout = {
+    weapon: 'short_spear',
+    armor: leadArmor,
+    shield: 'none_shield',
+    helm: 'leather_cap',
+  };
+  const capacity = computeEncumbranceCapacity(attrs.ST, attrs.CN);
+  const weight = getLoadoutWeight(loadout);
+  if (weight / capacity < 1.2) return undefined;
+  return {
+    axis: 'style',
+    verdict: 'warn',
+    id: 'v25-encumbrance-ceiling',
+    title: 'Encumbrance ceiling',
+    detail: `This frame carries ${capacity} — ${getItemById(leadArmor)?.name ?? leadArmor} plus a light loadout weighs ${weight} (over-encumbered). It cannot wear the armor its winning archetype wants.`,
+  };
+}
 
-  return items;
+function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
+  const fits = classifyArchetype(attrs, style);
+  const top = fits[0];
+  if (!top) return [];
+  return [
+    archetypeFitItem(fits),
+    tankFrameNote(attrs, top),
+    offensiveWitNote(attrs, top),
+    riposteDeadBandNote(attrs, fits),
+    bigHybridNote(attrs, top),
+    surgeonChassisNote(attrs, style),
+    encumbranceCeilingNote(attrs, top),
+  ].filter((i): i is DesignReviewItem => i !== undefined);
 }
 
 function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {

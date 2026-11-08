@@ -10,6 +10,7 @@ import {
   OE_DEF_SCALING,
   AL_INI_SCALING,
   DOUBLE_TACTIC_SKILL_PENALTY,
+  KD_HIGH_PENALTY,
 } from '@/constants/combat';
 import { clamp } from '@/utils/math';
 
@@ -167,10 +168,11 @@ export function doubleTacticSkillPenalty(
 }
 
 /** V24 canon (Assur): KD 9-10 makes warriors "fight somewhat strangely" —
- *  flat efficacy tax at/above threshold. Scaffolding returns none. */
+ *  flat efficacy tax at/above the threshold (kill window scales as before). */
 export function killDesirePenalty(kd: number | undefined): { attBonus: number; iniBonus: number } {
-  void kd;
-  return { attBonus: 0, iniBonus: 0 };
+  if (kd === undefined || kd < KD_HIGH_PENALTY.threshold)
+    return { attBonus: 0, iniBonus: 0 };
+  return { attBonus: KD_HIGH_PENALTY.attPenalty, iniBonus: KD_HIGH_PENALTY.iniPenalty };
 }
 
 /**

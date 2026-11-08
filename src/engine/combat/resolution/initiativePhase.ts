@@ -9,7 +9,14 @@ import { getTempoBonus, type Phase as StylePhase } from '../../stylePassives';
 import type { StylePassiveResult } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
 import type { DynamicTraitMods } from '../../traits';
-import { MOMENTUM_INI_MULT, DEC_INI_COEFF, JUMP_OE_COEFF, JUMP_DISPARITY, JUMP_CLASH_MAX } from '@/constants/combat';
+import {
+  MOMENTUM_INI_MULT,
+  DEC_INI_COEFF,
+  JUMP_OE_COEFF,
+  JUMP_DISPARITY,
+  JUMP_CLASH_MAX,
+  JUMP_CLASH_JITTER,
+} from '@/constants/combat';
 import { alIniMod, type DefensiveMods } from '../mechanics/tacticResolution';
 import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
@@ -118,7 +125,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
-  const iniA = sumInitiative({
+  let iniA = sumInitiative({
     f: fA,
     OE: OE_A,
     AL: AL_A,
@@ -134,7 +141,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
     ctx: ctx,
     stylePhase: stylePhase,
   });
-  const iniD = sumInitiative({
+  let iniD = sumInitiative({
     f: fD,
     OE: OE_D,
     AL: AL_D,
@@ -155,15 +162,22 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
 
   // Canon (Pagan, "Getting the Jump"): at bout open a contested jump —
   // the skill gap too narrow for a clean win — becomes a clash of rushes:
-  // bounded re-rolls on the main stream, last roll decides. Only the
-  // opening exchange clashes; later exchanges roll once as always.
+  // each clash re-draws both fighters' jump strings until a real disparity
+  // emerges (bounded by JUMP_CLASH_MAX). Only the opening exchange clashes;
+  // later exchanges roll once as always.
   if (ctx.exchange === 0 && Math.abs(iniA - iniD) < JUMP_DISPARITY && args.events) {
-    for (let i = 0; i < JUMP_CLASH_MAX; i++) {
+    for (
+      let i = 0;
+      i < JUMP_CLASH_MAX && Math.abs(iniA - iniD) < JUMP_DISPARITY;
+      i++
+    ) {
       args.events.push({
         type: 'CLASH',
         actor: aGoesFirst ? 'A' : 'D',
         value: Math.abs(iniA - iniD),
       });
+      iniA += (rng() * 2 - 1) * JUMP_CLASH_JITTER;
+      iniD += (rng() * 2 - 1) * JUMP_CLASH_JITTER;
       aGoesFirst = contestCheck(rng, iniA, iniD);
     }
   }

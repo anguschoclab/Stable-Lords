@@ -194,7 +194,9 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
         defensiveTactic: 'Dodge',
         target: 'Right Leg',
         protect: 'Body',
-        desperatePlan: { OE: 9, AL: 9, killDesire: 9 },
+        // Drake (Arena 93): the lunger's desperation line is 10-10-4 Dodge —
+        // flat-out activity, moderate kill intent, dodging for dear life.
+        desperatePlan: { OE: 10, AL: 10, killDesire: 4, defensiveTactic: 'Dodge' },
       },
       {
         opening: { OE: 4, AL: 6, KD: 4 },
@@ -515,6 +517,19 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
   ],
 
   [FightingStyle.TotalParry]: [
+    // Arena 93 pure defensive ("scum"): 1 OE / 1 AL behind a shield and heavy
+    // armor, Parry tactic — win by never getting hit until the foe drops.
+    makePreset(
+      FightingStyle.TotalParry,
+      'Scum Wall',
+      'True 1-1 parry wall: minimum effort, shield up, outlast everything.',
+      { OE: 1, AL: 1, KD: 1, defensiveTactic: 'Parry' },
+      {
+        opening: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
+        mid: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
+        late: { OE: 2, AL: 1, KD: 3, defTac: 'Parry' },
+      }
+    ),
     makePreset(
       FightingStyle.TotalParry,
       'Endurance Wall',

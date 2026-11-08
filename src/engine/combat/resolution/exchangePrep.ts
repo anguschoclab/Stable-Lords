@@ -13,6 +13,7 @@ import {
   getDefensiveTacticMods,
   calculateFinalOEAL,
   doubleTacticSkillPenalty,
+  killDesirePenalty,
 } from '../mechanics/tacticResolution';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
@@ -136,6 +137,14 @@ function resolveTacticMods(
   defModsA.parBonus += getFavoriteTacticBonus(fA, tactA.defTactic);
   offModsD.attBonus += getFavoriteTacticBonus(fD, tactD.offTactic);
   defModsD.parBonus += getFavoriteTacticBonus(fD, tactD.defTactic);
+
+  // V24 canon (Assur): KD 9-10 "fights somewhat strangely" — flat tax.
+  const kdA = killDesirePenalty(fA.activePlan.killDesire);
+  offModsA.attBonus += kdA.attBonus;
+  defModsA.iniBonus += kdA.iniBonus;
+  const kdD = killDesirePenalty(fD.activePlan.killDesire);
+  offModsD.attBonus += kdD.attBonus;
+  defModsD.iniBonus += kdD.iniBonus;
 
   const counters: TacticCounterMods = resolveTacticCounters({
     tactA,

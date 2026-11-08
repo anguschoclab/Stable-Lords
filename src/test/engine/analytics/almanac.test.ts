@@ -903,7 +903,7 @@ describe('computeAlmanac', () => {
         award('CLASS_MVP', {
           warriorId: 'champ' as WarriorId,
           warriorName: 'champ',
-          style: 'TOTAL PARRY',
+          style: FightingStyle.TotalParry,
         }),
         award('STABLE_OF_YEAR', { stableId: 'p1' as StableId, stableName: 'Player Stable', value: 44 }),
         award('TOURNAMENT_RANK', { warriorId: 'champ' as WarriorId, warriorName: 'champ', value: 9 }),

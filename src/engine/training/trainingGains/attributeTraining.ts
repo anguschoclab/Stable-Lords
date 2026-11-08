@@ -19,6 +19,7 @@ import type { TrainingResult } from './types';
 import { clamp } from '@/utils/math';
 import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { breakpointBurns, applySkillBurns } from '@/engine/learning/skillBurn';
 
 /**
  *
@@ -89,21 +90,34 @@ function applyAttributeGain(
 
   const ceilingNote = nearCeiling ? ' (reached potential ceiling)' : '';
 
+  // V23/D2 — trains-burn: every +1 gain crossing a skill breakpoint burns
+  // that many learn slots (canon: stats bought with growth aren't lessons).
+  const burnSkills = breakpointBurns(attr, currentVal, currentVal + 1);
+  const burnNote =
+    Object.values(burnSkills).reduce((s, v) => s + (v ?? 0), 0) > 0
+      ? ` Crossing a breakpoint burned ${Object.entries(burnSkills)
+          .map(([k, v]) => `${v} ${k}`)
+          .join(', ')} learn ${Object.values(burnSkills).reduce((s, v) => s + (v ?? 0), 0) > 1 ? 'slots' : 'slot'}.`
+      : '';
+
   return {
-    updatedWarrior: {
-      ...warrior,
-      attributes: newAttrs,
-      baseSkills,
-      derivedStats,
-      potentialRevealed: newRevealed,
-    },
+    updatedWarrior: applySkillBurns(
+      {
+        ...warrior,
+        attributes: newAttrs,
+        baseSkills,
+        derivedStats,
+        potentialRevealed: newRevealed,
+      },
+      burnSkills
+    ),
     updatedSeasonalGrowth: updateSeasonalGains(seasonalGrowth, warrior.id, state.season, attr),
     result: {
       type: 'gain',
       warriorId: warrior.id,
       attr,
       gain: 1,
-      message: `${warriorDisplayName(warrior)} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}`,
+      message: `${warriorDisplayName(warrior)} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ''}${burnNote}`,
     },
   };
 }

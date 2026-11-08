@@ -21,11 +21,11 @@ import type { BaseSkills } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { hashStr, resolveRng } from '@/utils/random';
 import { STYLE_LEARN_WEIGHTS } from '@/data/learnPriorities';
+import { effectiveLearnCap } from './skillBurn';
 import {
   LEARN_ATTEMPTS,
   LEARN_WT_FACTOR,
   LEARN_FAVORITE_WEIGHT,
-  LEARN_PER_SKILL_CAP,
   LEARN_CAREER_CAP,
   LEARN_SUSPECT_MIN,
 } from '@/constants/combat/combat/learn';
@@ -104,7 +104,7 @@ export interface BoutLearnResult {
  * @param rng - Bout RNG; falls back to a per-warrior-per-bout seeded stream
  */
 export function rollBoutLearns(
-  warrior: Pick<Warrior, 'id' | 'style' | 'attributes' | 'learnedSkills' | 'career'>,
+  warrior: Pick<Warrior, 'id' | 'style' | 'attributes' | 'learnedSkills' | 'burnedSkills' | 'career'>,
   opponentStyle: FightingStyle | undefined,
   rng?: IRNGService
 ): BoutLearnResult {
@@ -124,11 +124,13 @@ export function rollBoutLearns(
   for (let i = 0; i < LEARN_ATTEMPTS && total < LEARN_CAREER_CAP; i++) {
     if (rngService.next() >= learnChance) continue;
     // The pool rebuilds in LEARN_SKILL_KEYS order minus capped skills —
-    // a mastered skill simply isn't offered by the arena anymore.
+    // a mastered skill simply isn't offered by the arena anymore. Burned
+    // slots shrink the cap (V23/D2): a fully-burned skill drops out of
+    // the pool entirely — the arena can't teach capacity already spent.
     const full = learnPoolWeights(warrior.style, opponentStyle, favorite);
     const weights: Partial<Record<keyof BaseSkills, number>> = {};
     for (const skill of LEARN_SKILL_KEYS) {
-      if ((learnedSkills[skill] ?? 0) < LEARN_PER_SKILL_CAP && (full[skill] ?? 0) > 0) {
+      if ((learnedSkills[skill] ?? 0) < effectiveLearnCap(warrior, skill) && (full[skill] ?? 0) > 0) {
         weights[skill] = full[skill];
       }
     }

@@ -14,6 +14,44 @@
 import type { Attributes, BaseSkills } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { LEARN_PER_SKILL_CAP } from '@/constants/combat/combat/learn';
+import {
+  bp,
+  ST_ATT,
+  ST_PAR,
+  WT_ATT,
+  WT_DEF,
+  WT_INI,
+  WT_RIP,
+  WT_DEC,
+  WL_ATT,
+  WL_PAR,
+  WL_DEF,
+  WL_DEC,
+  WL_INI,
+  SP_DEC,
+  SP_DEF,
+  SP_INI,
+  SP_RIP,
+  DF_ATT,
+  DF_DEF,
+  DF_INI,
+  DF_PAR,
+  DF_RIP,
+  type BP,
+} from '../warrior/skillBreakpoints';
+
+/** The skill tables each attribute feeds. CN and SZ feed none — CN gains
+ *  are always free, and SZ_INI_MOD is a size modifier, not a skill
+ *  breakpoint table (canon-free gains fall out of this map by absence). */
+const ATTR_SKILL_TABLES: Record<keyof Attributes, Partial<Record<keyof BaseSkills, BP>>> = {
+  ST: { ATT: ST_ATT, PAR: ST_PAR },
+  CN: {},
+  SZ: {},
+  WT: { ATT: WT_ATT, DEF: WT_DEF, INI: WT_INI, RIP: WT_RIP, DEC: WT_DEC },
+  WL: { ATT: WL_ATT, PAR: WL_PAR, DEF: WL_DEF, DEC: WL_DEC, INI: WL_INI },
+  SP: { DEC: SP_DEC, DEF: SP_DEF, INI: SP_INI, RIP: SP_RIP },
+  DF: { ATT: DF_ATT, DEF: DF_DEF, INI: DF_INI, PAR: DF_PAR, RIP: DF_RIP },
+};
 
 /**
  * Compute the per-skill burn caused by one +1 attribute gain.
@@ -29,10 +67,13 @@ export function breakpointBurns(
   oldVal: number,
   newVal: number
 ): Partial<Record<keyof BaseSkills, number>> {
-  void attr;
-  void oldVal;
-  void newVal;
-  return {};
+  const tables = ATTR_SKILL_TABLES[attr] ?? {};
+  const burns: Partial<Record<keyof BaseSkills, number>> = {};
+  for (const [skill, table] of Object.entries(tables)) {
+    const delta = bp(table as BP, newVal) - bp(table as BP, oldVal);
+    if (delta > 0) burns[skill as keyof BaseSkills] = delta;
+  }
+  return burns;
 }
 
 /**

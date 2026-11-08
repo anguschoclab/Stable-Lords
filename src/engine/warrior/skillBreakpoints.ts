@@ -13,7 +13,7 @@ import { clamp } from '@/utils/math';
 /**
  *
  */
-type BP = [number, number][];
+export type BP = [number, number][];
 
 /**
  *

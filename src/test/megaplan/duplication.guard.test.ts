@@ -23,8 +23,11 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * ×7 offseason, DriftParticles, rivalFightPlan) → baseline 36→27.
  * NEW duplicate pairs fail loudly; a pair leaving either set must be dead
  * on the scan (the stale-entries test enforces the live-ledger invariant).
+ * V23 D2: +1 — skillBurn imports the canonical bp tables from
+ * skillBreakpoints; the table-list preamble echoes skillCalc's own import
+ * of the same data (registered exempt) → 28.
  */
-const SRC_TO_SRC_BASELINE = 27;
+const SRC_TO_SRC_BASELINE = 28;
 
 const EXEMPT_PAIRS = new Set([
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop
@@ -78,6 +81,10 @@ const EXEMPT_PAIRS = new Set([
   // Warrior-card avatar block idiom — the sm-size AvatarForEntity + adjacent
   // flex wrapper is a shared display pattern, not behavioral duplication.
   'src/components/stable/StableRosterTab.tsx|src/components/stable/VeteranReassignmentDialog.tsx',
+  // V23 D2: skillBurn's breakpoint-table import map echoes skillCalc's own
+  // table usage — both consume the same canonical skillBreakpoints data;
+  // a shared-data preamble, not cloned logic.
+  'src/engine/learning/skillBurn.ts|src/engine/warrior/skillCalc.ts',
 ]);
 
 // ─── DEBT — genuine cloned logic, drain to zero. V17's whole-repo prettier
@@ -194,7 +201,10 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // weight derivation (rank→6..1) the engine applies — a literal pin → 21.
 // V22 Phase-4: +1 — decise.test.ts re-states the resolveInitiativePhase
 // arg-bag call shape (same pin category as the tacticCounter pair) → 24.
-const MIXED_BASELINE = 24;
+// V23 D2: +1 — skillBurn's table map echoes the canon spec's breakpoint
+// literals (same literal-pin category); net +1 after the learnRoll pair
+// went stale and was pruned → 25.
+const MIXED_BASELINE = 25;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -234,9 +244,9 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // makeBoutSummary in _fixtures re-states WeekStatsService's zeroed
   // summary shape — a canonical production-literal pin for mock returns.
   'src/engine/bout/services/WeekStatsService.ts|src/test/_fixtures/factories.ts',
-  // The learnPriorities data spec pins the rank→weight derivation that
-  // learnPoolWeights applies — canonical production-literal pin.
-  'src/engine/learning/learnRoll.ts|src/test/data/learnPriorities.test.ts',
+  // V23 D2: skillBurn re-states the breakpoint-table grant literals the
+  // canon spec pins verbatim — canonical table-data echo, same pin family.
+  'src/engine/learning/skillBurn.ts|src/test/engine/warrior/skillBreakpoints.canon.test.ts',
   // V22 canon spec re-states the worked-example raw-sum derivation as
   // assertion data — canonical chart-literal pin.
   'src/engine/warrior/skillCalc.ts|src/test/engine/warrior/skillBreakpoints.canon.test.ts',

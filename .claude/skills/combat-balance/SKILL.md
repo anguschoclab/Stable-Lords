@@ -59,7 +59,7 @@ skills mostly sit _below_ the penalty, on the clamp floor. Consequences:
   minimum a style's signature skills take whatever the attributes. A floor only
   touches warriors below it, so it leaves the fixture exactly unchanged — keep
   every floor below the fixture's value for that skill (a test enforces this).
-- A **passive** (`src/engine/stylePassives/strategies.ts`) moves both surfaces.
+- A **passive** (`src/engine/stylePassives/strategies/<style>.ts` — one file per style, `STYLES` registry in `index.ts`) moves both surfaces.
 
 So: lift a style that is weak only in the world with a floor; move a style
 that is off on both surfaces with its penalty row or passive; re-ratchet the
@@ -125,7 +125,7 @@ it keeps changes small, testable, and reversible:
 
 1. **Ground first.** Read the real hook before writing. `references/hook-map.md`
    has the file/symbol map; confirm line numbers with `grep` (they drift).
-2. **Constant** for every magnitude → `src/constants/combat/combat/` (`global.ts`, `matchup.ts`, `balance.ts`, `meta.ts` — `combat.ts` is just the barrel). No bare
+2. **Constant** for every magnitude → `src/constants/combat/combat/` (`global.ts`, `matchup.ts`, `balance.ts`, `meta.ts` — `combat.ts` is just the barrel). **Style-scoped** knobs go in `styles/<code>.ts` (`AB_*` in `ab.ts`, `SL_BLEED_*` in `sl.ts`, …); shared mechanics stay in `balance.ts`. No bare
    numbers in logic; magnitudes are knobs the harness tunes.
 3. **Pure helper** in `src/engine/combat/resolution/` (e.g. `guardBreak.ts`,
    `bleed.ts`, `strikingAttack.ts`). Style-gated, returns the no-op value for

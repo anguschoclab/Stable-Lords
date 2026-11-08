@@ -1,0 +1,24 @@
+// ─── Parry-Strike (PS) — per-style balance knobs ────────────────────────────
+/** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
+export const PS_COUNTERSTRIKE_ATT = 2;
+
+/**
+ * Widened luck range for Parry-Strike — canon (Assur's Parry Strike Style,
+ * Arena 93): "a greater chance for them to be bonused or cursed in skills
+ * than other styles". Zero-mean; same single draw per skill.
+ */
+export const PS_LUCKFACTOR_RANGE = 6;
+
+// ─── Passive ────────────────────────────────────────────────────────────────
+/** Parry-Strike passive: flat parry, base ATT, and the counter-ready ATT add. */
+export const PS_PASSIVE_PAR = 3;
+export const PS_PASSIVE_ATT = 1;
+export const PS_PASSIVE_COUNTER_ATT = 2;
+
+// ─── Kill mechanic ──────────────────────────────────────────────────────────
+/** Parry-Strike kill mechanic: kill-window HP multiplier. */
+export const PS_KILL_WINDOW_HP_MULT = 0.45;
+
+// ─── Anti-synergy ───────────────────────────────────────────────────────────
+/** Parry-Strike anti-synergy: the style doesn't carry bashing weight. */
+export const PS_ANTISYNERGY_BASH_MULT = 0.6;

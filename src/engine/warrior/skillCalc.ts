@@ -23,10 +23,7 @@ import {
   computeEncumbranceCapacity,
   computeEnduranceValue,
 } from '@/data/terrabloodCharts';
-import {
-  LUCKFACTOR_RANGE,
-  PS_LUCKFACTOR_RANGE,
-} from '@/constants/combat/combat/balance';
+import { LUCKFACTOR_RANGE, PS_LUCKFACTOR_RANGE } from '@/constants/combat';
 import {
   bp,
   szMod,
@@ -124,27 +121,25 @@ export function rollLuckfactor(rng: IRNGService, style?: FightingStyle): BaseSki
 }
 
 /**
+ * Roll a per-warrior bloodlust: a hidden −1..+1 factor rolled once at
+ * creation alongside luckfactor. Canon (Assur's Guide to Killing): "Some
+ * warriors appear to have a higher blood lust than others." Applied to the
+ * vitals roll in combat; never shown on the overview.
+ *
+ * @param rng - Seeded RNG service for deterministic generation.
+ * @returns The stored bloodlust value in [-1, +1).
+ */
+export function rollBloodlust(rng: IRNGService): number {
+  return rng.next() * 2 - 1;
+}
+
+/**
  * Apply a stored luckfactor to base skills (combat-time). Each skill floored at 1.
  *
  * @param skills - Luck-free base skills (from computeBaseSkills).
  * @param luck - Optional stored luckfactor deltas. Absent → skills unchanged.
  * @returns Luck-adjusted skills for combat.
  */
-/**
- * Roll a per-warrior bloodlust: a hidden −1..+1 factor rolled at creation.
- * Canon (Assur's Guide to Killing): "Some warriors appear to have a higher
- * blood lust than others." Applied to the vitals roll when they attack;
- * never shown on the overview.
- */
-/**
- * Roll the hidden bloodlust value — canon (Assur): "some warriors appear to
- * have a higher blood lust than others". Generated once at warrior creation
- * alongside luckfactor; −1..+1, applied to the vitals roll in combat.
- */
-export function rollBloodlust(rng: IRNGService): number {
-  return rng.next() * 2 - 1;
-}
-
 export function applyLuckfactor(skills: BaseSkills, luck?: Partial<BaseSkills>): BaseSkills {
   if (!luck) return skills;
   return {

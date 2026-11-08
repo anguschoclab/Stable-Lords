@@ -42,6 +42,7 @@
     "scripts/balance-lab.ts",
     "scripts/lab-overrides.ts",
     "scripts/style-probe.ts",
+    "scripts/style-card.ts",
     "scripts/daily_bard.ts",
     "scripts/daily_oracle.ts",
     "scripts/nodeArchiveService.ts",

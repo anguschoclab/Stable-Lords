@@ -1,4 +1,3 @@
-import type { CommitLevel } from '@/types/shared.types';
 // ─── Balance Guardrails ───────────────────────────────────────────────────────
 /**
  * Allowed deviation from 50% for mirror-match A-side win rates
@@ -13,107 +12,11 @@ export const MIRROR_MATCH_BAND = 0.1;
 export const ABSOLUTE_POWER_LOW = 0.4;
 export const ABSOLUTE_POWER_HIGH = 0.6;
 
-/** Damage per momentum point for Lunging Attack's first-strike pressure. Balance knob. */
-export const LU_MOMENTUM_DMG_COEFF = 0.5;
-/** Flat attrition damage on a Wall of Steel landed hit so the immovable brick still closes fights. */
-export const WS_ATTRITION_FLOOR = 0.5;
-/** Wall of Steel standing guard: parry bonus from the first exchange (the wall is up before it thickens). Balance knob. */
-export const WS_WALL_PAR = 2;
-/** Wall of Steel harmony: parry bonus while the phase-resolved OE equals kill
- *  desire — the She-Puppy rumor (Arena 93): "a wall of steel gets a bonus if
- *  his OE equals his KD." The wall hums behind a steadier guard when effort
- *  matches intent. Balance knob. */
-export const WS_HARMONY_PAR = 2;
-
-/** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
-export const PS_COUNTERSTRIKE_ATT = 2;
+// Per-style knobs (AB_*, BA_*, LU_*, PL_*, PR_*, PS_*, SL_*, ST_*, TP_*,
+// WS_*) live in ./styles/<code>.ts — re-exported through the barrel.
 
 /** Hidden per-skill luck roll at warrior creation — canon ±4 (every style but pikers). */
 export const LUCKFACTOR_RANGE = 4;
-/**
- * Widened luck range for Parry-Strike — canon (Assur's Parry Strike Style,
- * Arena 93): "a greater chance for them to be bonused or cursed in skills
- * than other styles". Zero-mean; same single draw per skill.
- */
-export const PS_LUCKFACTOR_RANGE = 6;
-
-/** Parry/dodge penalty added to a defender per landed Bashing Attack hit. Balance knob. */
-export const BA_PARDEGRADE_PER_HIT = 0.5;
-/** Maximum accumulated guard-break penalty a defender can suffer in one fight. */
-export const BA_PARDEGRADE_CAP = 3;
-
-/** Aimed Blow armor bypass: max fraction of armor mitigation ignored. Balance knob. */
-export const AB_ARMOR_BYPASS_MAX = 0.4;
-/** Aimed Blow armor bypass: DF divisor (bypass = min(AB_ARMOR_BYPASS_MAX, DF / this)). */
-export const AB_ARMOR_BYPASS_DF_DIVISOR = 50;
-
-/** Aimed Blow shell-gap payoff: max ATT bonus when the defender's shell out-classes AB's craft. Balance knob. */
-export const AB_SHELL_GAP_ATT_MAX = 6;
-/** Aimed Blow shell-gap payoff: DF divisor (bonus = min(MAX, ceil((def.PAR - att.ATT) * DF / this))). */
-export const AB_SHELL_GAP_DF_DIVISOR = 12;
-
-/** Total Parry fatigue-exploit: endurance ratio below which the severe tier applies. */
-export const TP_FATIGUE_SEVERE_RATIO = 0.25;
-/** Total Parry fatigue-exploit: endurance ratio below which the moderate tier applies. */
-export const TP_FATIGUE_MODERATE_RATIO = 0.5;
-/** Total Parry fatigue-exploit: severe-tier riposte bonus. */
-export const TP_FATIGUE_SEVERE_RIP = 2;
-/** Total Parry fatigue-exploit: severe-tier damage bonus. */
-export const TP_FATIGUE_SEVERE_DMG = 1;
-/** Total Parry fatigue-exploit: moderate-tier riposte bonus. */
-export const TP_FATIGUE_MODERATE_RIP = 1;
-/** Total Parry fatigue-exploit: moderate-tier damage bonus. */
-export const TP_FATIGUE_MODERATE_DMG = 1;
-
-/** Parry-Lunge momentum-riposte damage coefficient (damage = momentum × this). Balance knob. */
-export const PL_MOMENTUM_RIPOSTE_DMG_COEFF = 0.5;
-
-/** Parry-Riposte counter-on-parry: riposte-chance bonus after a successful parry. Balance knob. */
-export const PR_COUNTER_ON_PARRY = 4;
-/** Parry-Riposte punish-commitment: riposte damage bonus by the attacker's commitment level. */
-export const PR_COMMIT_PUNISH: Record<CommitLevel, number> = {
-  Cautious: 0,
-  Standard: 1,
-  Full: 2,
-};
-/** Parry-Riposte light chain: riposte damage per consecutive prior riposte, and its cap. */
-export const PR_CHAIN_STEP = 0.5;
-export const PR_CHAIN_CAP = 1.5;
-
-/** Parry-Riposte low-KD shell: a defender at or below this kill desire passes
- *  up riposte opportunities — canon (Blackhawk, Arena 93): "more often than
- *  not made him pass up attack, via riposte, opportunities" at KD 2 vs KD 5. */
-export const PR_LOW_KD_THRESHOLD = 3;
-/** Skill-check penalty applied to a low-KD Parry-Riposte defender's riposte
- *  check (both whiff-riposte and post-parry riposte call sites). Balance knob. */
-export const PR_LOW_KD_RIPOSTE_PENALTY = 2;
-
-/** Slashing Attack flurry: bleed stacks applied per landed SL hit. Balance knob. */
-export const SL_BLEED_STACKS_PER_HIT = 2;
-/** Maximum bleed stacks a fighter can carry. */
-export const SL_BLEED_CAP = 5;
-/** Damage per bleed stack per exchange tick. */
-export const SL_BLEED_TICK_DMG = 1;
-/** Bleed stacks shed per exchange (natural clotting). */
-export const SL_BLEED_DECAY = 1;
-
-/** Striking Attack front-load: damage multiplier at exchange 0, decaying to 1.0 over the window. */
-export const ST_FRONTLOAD_START = 1.3;
-export const ST_FRONTLOAD_WINDOW = 6;
-/** Striking Attack crit specialist: added crit chance and added crit-damage multiplier. */
-export const ST_CRIT_CHANCE_BONUS = 0.1;
-export const ST_CRIT_DAMAGE_BONUS = 0.2;
-/** Striking Attack execute: bonus damage when the target's HP ratio is below the threshold. */
-export const ST_EXECUTE_HP_THRESHOLD = 0.3;
-export const ST_EXECUTE_BONUS = 2;
-/**
- * Striking Attack shell pressure — Arena-93 canon ("keep swinging": sustained
- * decisive pressure hammers a Parry shell down; the marathon is the strikers'
- * own anti-scum sheet). Flat attack-check edge when the defender's resolved
- * defensive tactic is Parry. Zero vs Dodge/none: there is no shell to crack,
- * so fragile non-parrying styles (AB) see no benefit.
- */
-export const ST_PARRY_PIERCE = 3;
 
 // ─── Commit Mechanic ──────────────────────────────────────────────────────
 /** HP ratio below which a fighter is considered "at low HP" for commit triggering. */

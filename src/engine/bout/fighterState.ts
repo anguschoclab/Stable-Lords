@@ -4,7 +4,7 @@ import { type FightPlan } from '@/types/combat.types';
 import { type Trainer } from '@/types/state.types';
 import {
   getClassicWeaponBonus,
-  checkWeaponRequirements,
+  checkLoadoutWieldability,
   getShieldModifiers,
   getStyleDefaultLoadout,
   getItemById,
@@ -64,11 +64,9 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   const oShield = getShieldModifiers(equip.shield);
   const ohShield = getShieldModifiers(equip.offhand); // V23/D1 — item-declared mods only
 
-  const weaponReq = checkWeaponRequirements(equip.weapon, {
-    ST: attrs.ST,
-    SZ: attrs.SZ,
-    WT: attrs.WT,
-    DF: attrs.DF,
+  const weaponReq = checkLoadoutWieldability(equip, attrs, {
+    ambidextrous:
+      warrior?.handedness === 'ambidextrous' || warrior?.handedness === 'ambi-reversed',
   });
 
   // 5-tier encumbrance system

@@ -5,9 +5,9 @@ import { checkWeaponRequirements, getItemById } from '@/data/equipment';
 const BIG = { ST: 18, SZ: 18, WT: 18, DF: 18 };
 
 describe('weapon wield-mode requirements (canonical special cases)', () => {
-  it('Battle Axe needs only SZ 3 when used two-handed (default for two-handed weapons)', () => {
-    // base canon BA is 15/7/7/9; a SZ-5 warrior would fail SZ 7 normally,
-    // but BA is two-handed so the SZ requirement eases to 3.
+  it('Battle Axe meets its canon SZ 3 base requirement for a SZ-5 warrior', () => {
+    // canon BA is 15/3/7/9 — SZ only tightens to 9 when an off-hand item is
+    // carried (offhandCarryReq), never for the bare weapon.
     const attrs = { ST: 15, SZ: 5, WT: 7, DF: 9 };
     const res = checkWeaponRequirements('battle_axe', attrs);
     expect(res.met).toBe(true);

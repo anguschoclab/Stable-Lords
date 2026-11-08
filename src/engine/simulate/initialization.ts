@@ -2,7 +2,7 @@
  * Simulation Initialization - RNG setup, fighter state, weather effects
  */
 import { createFighterState } from '../bout/fighterState';
-import { DEFAULT_LOADOUT, checkWeaponRequirements } from '@/data/equipment';
+import { DEFAULT_LOADOUT, checkLoadoutWieldability } from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
 import {
   applyArenaWeatherMods,
@@ -115,8 +115,7 @@ export function initializeResolutionContext(
 ): ResolutionContext {
   const { planA, planD, effectiveWeather, warriorA, warriorD } = args;
   const { trainers, arenaId = 'standard_arena', crowdMood, deathRateMult } = args;
-  const weaponA = (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon;
-  const weaponD = (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
+
 
   const modsA = trainers
     ? getTrainerMods(trainers, planA.style)
@@ -125,13 +124,21 @@ export function initializeResolutionContext(
     ? getTrainerMods(trainers, planD.style)
     : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
 
-  const weaponReqA = checkWeaponRequirements(
-    weaponA,
-    warriorA?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 }
+  const weaponReqA = checkLoadoutWieldability(
+    warriorA?.equipment ?? DEFAULT_LOADOUT,
+    warriorA?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 },
+    {
+      ambidextrous:
+        warriorA?.handedness === 'ambidextrous' || warriorA?.handedness === 'ambi-reversed',
+    }
   );
-  const weaponReqD = checkWeaponRequirements(
-    weaponD,
-    warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 }
+  const weaponReqD = checkLoadoutWieldability(
+    warriorD?.equipment ?? DEFAULT_LOADOUT,
+    warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 },
+    {
+      ambidextrous:
+        warriorD?.handedness === 'ambidextrous' || warriorD?.handedness === 'ambi-reversed',
+    }
   );
 
   const arenaConfig = applyArenaWeatherMods(getArenaById(arenaId), effectiveWeather);

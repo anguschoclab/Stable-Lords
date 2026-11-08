@@ -46,7 +46,8 @@ export function EncumbranceBar({ totalWeight, carryCap, loadout }: EncumbranceBa
   const tier = getEncumbranceTier(ratio);
   const penalties = getEncumbrancePenalties(tier);
   const encPct = Math.min(100, ratio * 100);
-  const hasPenalties = tier === 'HEAVY' || tier === 'OVER';
+  const hasPenalties =
+    penalties.iniPenalty !== 0 || penalties.defPenalty !== 0 || penalties.parPenalty !== 0;
 
   return (
     <div className="space-y-1.5">

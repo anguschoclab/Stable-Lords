@@ -28,7 +28,7 @@ describe('EncumbranceBar', () => {
     // carryCap chosen so ratio lands in LIGHT (0.60–0.80)
     const carryCap = Math.ceil(weight / 0.7);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
-    expect(screen.getByText(/Light/)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${weight} / ${carryCap}.*Light`))).toBeInTheDocument();
   });
 
   it('shows Medium tier label for MEDIUM tier', () => {
@@ -36,7 +36,7 @@ describe('EncumbranceBar', () => {
     // carryCap chosen so ratio lands in MEDIUM (0.80–1.00)
     const carryCap = Math.ceil(weight / 0.9);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
-    expect(screen.getByText(/Medium/)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${weight} / ${carryCap}.*Medium`))).toBeInTheDocument();
   });
 
   it('shows Heavy tier label for HEAVY tier', () => {
@@ -64,11 +64,15 @@ describe('EncumbranceBar', () => {
     expect(screen.queryByText(/combat penalties apply/)).not.toBeInTheDocument();
   });
 
-  it('does not render penalty details for LIGHT tier', () => {
+  it('renders penalty details for LIGHT tier (INI tax is real)', () => {
     const weight = getLoadoutWeight(mediumLoadout);
     const carryCap = Math.ceil(weight / 0.7);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
-    expect(screen.queryByText(/combat penalties apply/)).not.toBeInTheDocument();
+    // V24: LIGHT carries iniPenalty=-1, enduranceMult=1.05 — the UI must
+    // show the penalty rather than pretend the tier is free.
+    expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
+    expect(screen.getByText(/-1 INI/)).toBeInTheDocument();
+    expect(screen.getByText(/5% END/)).toBeInTheDocument();
   });
 
   it('renders penalty details for HEAVY tier with INI, DEF, and END values', () => {
@@ -96,11 +100,14 @@ describe('EncumbranceBar', () => {
     expect(screen.getByText(/100% END/)).toBeInTheDocument();
   });
 
-  it('does not render penalty details for MEDIUM tier (only HEAVY/OVER show penalties)', () => {
+  it('renders penalty details for MEDIUM tier', () => {
     const weight = getLoadoutWeight(mediumLoadout);
     const carryCap = Math.ceil(weight / 0.9);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={mediumLoadout} />);
-    // Component only shows penalty details for HEAVY and OVER tiers
-    expect(screen.queryByText(/combat penalties apply/)).not.toBeInTheDocument();
+    // V24: MEDIUM carries iniPenalty=-2, defPenalty=-1, enduranceMult=1.15.
+    expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
+    expect(screen.getByText(/-2 INI/)).toBeInTheDocument();
+    expect(screen.getByText(/-1 DEF/)).toBeInTheDocument();
+    expect(screen.getByText(/15% END/)).toBeInTheDocument();
   });
 });

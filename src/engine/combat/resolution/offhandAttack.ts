@@ -15,6 +15,7 @@ import {
   DUAL_VHC_SUM_MIN,
   DUAL_VHC_STAT_MIN,
   DUAL_OFFHAND_DAMAGE_MULT,
+  OFFHAND_AMBI_GATE,
 } from '@/constants/combat';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
@@ -46,7 +47,12 @@ export function tryOffhandAttack(args: {
   const { ctx, attacker, defender, events } = args;
   const offId = attacker.offhandWeaponId;
   if (!offId) return false;
-  if (!isVeryHighlyCoordinated(attacker)) return false;
+  // Smithy (V24 canon): the off-hand shot comes from the highly coordinated
+  // OR the ambidextrous — handedness bypasses the VHC stat profile.
+  const ambidextrous =
+    OFFHAND_AMBI_GATE &&
+    (attacker.handedness === 'ambidextrous' || attacker.handedness === 'ambi-reversed');
+  if (!ambidextrous && !isVeryHighlyCoordinated(attacker)) return false;
   if (attacker.hp <= 0 || defender.hp <= 0 || attacker.knockedDown) return false;
 
   // The off-hand weapon's parry-side mods (usually {def:0,att:0} — a weapon

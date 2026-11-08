@@ -49,7 +49,7 @@ export const WEAPONS: EquipmentItem[] = [
     weight: 1,
     reqST: 3,
     reqSZ: 3,
-    reqWT: 5,
+    reqWT: 7,
     reqDF: 7,
     description: 'Fast, light. Precise styles excel.',
     preferredStyles: [
@@ -90,7 +90,7 @@ export const WEAPONS: EquipmentItem[] = [
     weight: 2,
     reqST: 7,
     reqSZ: 3,
-    reqWT: 7,
+    reqWT: 5,
     reqDF: 7,
     description: 'Light chopping weapon. Quick and versatile.',
     preferredStyles: [
@@ -109,7 +109,7 @@ export const WEAPONS: EquipmentItem[] = [
   },
   {
     id: 'short_sword',
-    code: 'SH',
+    code: 'SS',
     name: 'Shortsword',
     slot: 'weapon',
     weight: 2,
@@ -142,7 +142,7 @@ export const WEAPONS: EquipmentItem[] = [
   },
   {
     id: 'short_spear',
-    code: 'SS',
+    code: 'SH',
     name: 'Short Spear',
     slot: 'weapon',
     weight: 4,
@@ -292,7 +292,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqST: 5,
     reqSZ: 3,
     reqWT: 3,
-    reqDF: 7,
+    reqDF: 5,
     description: 'Buckler. +1 DEF, no ATT penalty.',
     preferredStyles: [
       FightingStyle.ParryRiposte,
@@ -312,7 +312,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqST: 9,
     reqSZ: 3,
     reqWT: 3,
-    reqDF: 7,
+    reqDF: 5,
     description: 'Round shield. CW for Total-Parry. +2 DEF, no ATT penalty.',
     favoredStyles: [FightingStyle.TotalParry],
     preferredStyles: [
@@ -332,7 +332,7 @@ export const WEAPONS: EquipmentItem[] = [
     slot: 'weapon',
     weight: 6,
     reqST: 13,
-    reqSZ: 3,
+    reqSZ: 7,
     reqWT: 3,
     reqDF: 7,
     offHandReq: { WT: 3 }, // canon: LG can be WT 3 when used in the off-hand
@@ -433,12 +433,13 @@ export const WEAPONS: EquipmentItem[] = [
     slot: 'weapon',
     weight: 4,
     reqST: 15,
-    reqSZ: 7,
+    reqSZ: 3,
     reqWT: 7,
     reqDF: 9,
     twoHanded: true,
-    twoHandedReq: { SZ: 3 }, // canon: BA can be SZ 3 when used two-handed
-    description: 'Heavy two-handed axe. No shield. SZ requirement eases when gripped two-handed.',
+    // canon (Assur's chart): BA requires SZ 9 when carrying an off-hand item
+    offhandCarryReq: { SZ: 9 },
+    description: 'Heavy two-handed axe. No shield. Needs real size to pair with an off-hand item.',
     preferredStyles: [
       FightingStyle.ParryStrike,
       FightingStyle.SlashingAttack,

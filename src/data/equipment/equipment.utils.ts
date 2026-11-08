@@ -4,6 +4,8 @@
  */
 
 import { FightingStyle } from '@/types/game';
+import { SZ_REQ_NO_ATT_PENALTY } from '@/constants/combat';
+import { offhandDualDfReq } from './offhandGrid';
 import { indexBy } from '@/utils/collections';
 import { WEAPONS, SHIELD_ITEM_IDS } from './weapons';
 import { ARMORS } from './armor';
@@ -178,14 +180,18 @@ export function checkWeaponRequirements(
   consider('DF', 'Deftness', req.DF, attrs.DF);
 
   let totalDeficit = 0;
+  let attDeficit = 0;
   for (const check of checks) {
     totalDeficit += check.deficit;
+    // Smithy (hedged canon): a SZ shortfall carries no skill penalty —
+    // only the endurance tax. Other stats still tax attack.
+    if (!(SZ_REQ_NO_ATT_PENALTY && check.stat === 'SZ')) attDeficit += check.deficit;
   }
 
   return {
     met: checks.length === 0,
     failures: checks,
-    attPenalty: totalDeficit * -2,
+    attPenalty: attDeficit === 0 ? 0 : attDeficit * -2,
     endurancePenalty: 1 + totalDeficit * 0.1,
   };
 }
@@ -204,9 +210,6 @@ export interface LoadoutWieldResult {
  * weapon-in-each-hand pair needs deftness from {@link offhandDualDfReq}
  * (MH-req × OH-req grid); a main-hand `offhandCarryReq` (e.g. Battle Axe
  * SZ 9) applies whenever an off-hand item is carried.
- *
- * Phase-1 scaffolding: resolves through the single-weapon check for now —
- * the off-hand relax rules and grid land in Phase 3.
  */
 export function checkLoadoutWieldability(
   loadout: EquipmentLoadout,
@@ -214,7 +217,54 @@ export function checkLoadoutWieldability(
   opts?: { ambidextrous?: boolean }
 ): LoadoutWieldResult {
   const mh = checkWeaponRequirements(loadout.weapon, attrs, opts);
-  return { ...mh };
+  const shieldId =
+    loadout.shield && loadout.shield !== 'none_shield' && loadout.shield !== 'None'
+      ? loadout.shield
+      : undefined;
+  const offId = loadout.offhand ?? shieldId;
+  const offItem = offId ? getItemById(offId) : undefined;
+  const mhItem = getItemById(loadout.weapon);
+  if (!offItem) return { ...mh };
+
+  const failures: WeaponReqCheck[] = [...mh.failures];
+  const push = (
+    stat: 'ST' | 'SZ' | 'WT' | 'DF',
+    label: string,
+    required: number | undefined,
+    current: number
+  ) => {
+    if (required && current < required)
+      failures.push({ stat, label, required, current, deficit: required - current });
+  };
+
+  // Raised MH minimums while carrying an off-hand item (canon: BA needs SZ 9).
+  if (mhItem?.offhandCarryReq) {
+    const r = mhItem.offhandCarryReq;
+    push('ST', 'Strength (off-hand carry)', r.ST, attrs.ST);
+    push('SZ', 'Size (off-hand carry)', r.SZ, attrs.SZ);
+    push('WT', 'Wit (off-hand carry)', r.WT, attrs.WT);
+    push('DF', 'Deftness (off-hand carry)', r.DF, attrs.DF);
+  }
+
+  // Off-hand relax: same ST requirement; NO wit and NO size requirement.
+  push('ST', 'Strength (off hand)', offItem.reqST, attrs.ST);
+
+  // Two items in hand: deftness from the MH-req × OH-req chart.
+  const pairDf = offhandDualDfReq(mhItem?.reqDF ?? 3, offItem.reqDF ?? 3);
+  push('DF', 'Deftness (two items)', pairDf, attrs.DF);
+
+  let totalDeficit = 0;
+  let attDeficit = 0;
+  for (const f of failures) {
+    totalDeficit += f.deficit;
+    if (!(SZ_REQ_NO_ATT_PENALTY && f.stat === 'SZ')) attDeficit += f.deficit;
+  }
+  return {
+    met: failures.length === 0,
+    failures,
+    attPenalty: attDeficit === 0 ? 0 : attDeficit * -2,
+    endurancePenalty: 1 + totalDeficit * 0.1,
+  };
 }
 
 /**

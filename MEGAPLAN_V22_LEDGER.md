@@ -3,7 +3,8 @@
 # MEGAPLAN V22 LEDGER — Noblish Island Canon Integration
 
 One row per commit. Findings: `MEGAPLAN_V22_FINDINGS.md` ·
-Plan: `MEGAPLAN_V22_PLAN.md` · Restore tag: `pre-megaplan-v22`.
+Plan: `MEGAPLAN_V22_PLAN.md` · Deferred work: `MEGAPLAN_V22_DEFERRED.md` ·
+Restore tag: `pre-megaplan-v22`.
 
 ## §0 Baseline
 

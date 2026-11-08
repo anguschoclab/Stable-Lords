@@ -312,7 +312,7 @@ export const STYLE_PENALTIES: Record<
 > = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
-  [FightingStyle.AimedBlow]: /*AB*/ [-25, -8, -11, -9, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-23 to pull AB→WS under 80
+  [FightingStyle.AimedBlow]: /*AB*/ [-21, -8, -11, -9, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-23 to pull AB→WS under 80
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat)
   [FightingStyle.ParryStrike]: /*PS*/ [-9, -7, -12, -5, -7, 0], // V22: PAR -5→-7, DEF -10→-12, RIP -3→-7 — canon DF tables pushed fixture defense past SL's attrition window; PS keeps parry identity over riposte; ATT -10→-9 for TP→PS cell
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
@@ -322,12 +322,12 @@ export const STYLE_PENALTIES: Record<
   [FightingStyle.SlashingAttack]: /*SL*/ [-7, -10, -11, -2, -7, -2], // V22: ATT -10→-7, PAR -14→-10, DEF -15→-11, INI -4→-2 — canon-chart DEF/PAR inflation left SL at 17.5% vs PS (bleed needs swings → tempo); prior lighten -12→-10 for bottom-of-surface
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
-  [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -14, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15→-14 for ST→BA cell; BA was 64.8% pre-existing
+  [FightingStyle.BashingAttack]: /*BA*/ [-8, -11, -14, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15→-14 for ST→BA cell; BA was 64.8% pre-existing
   [FightingStyle.StrikingAttack]: /*ST*/ [-10, -9, -12, -7, -4, +1], // V22: canon DEF/PAR yields + DEC_INI lean (strikers carry high DEC) — ATT -12→-10 back after dodge-riposte gave high-AL defenders a counter channel (ST sank to 46.8)
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -15, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-15 for the TP→PS cell
-  [FightingStyle.WallOfSteel]: /*WS*/ [-7, -5, -10, 1, -3, -2], // re-ratchet: DEF -13→-10, INI -2→+1; ATT -8→-7 + PAR -6→-5 + RIP -4→-3 for the AB→WS cell after ATT_CRIT_COEFF buffed aimed blows
+  [FightingStyle.WallOfSteel]: /*WS*/ [-6, -5, -10, 0, -3, -2], // re-ratchet: DEF -13→-10, INI -2→+1; ATT -8→-7 + PAR -6→-5 + RIP -4→-3 for the AB→WS cell after ATT_CRIT_COEFF buffed aimed blows
 };
 
 // ─── Style Skill Floors ───────────────────────────────────────────────────

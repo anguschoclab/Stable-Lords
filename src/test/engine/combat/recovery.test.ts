@@ -1,7 +1,7 @@
 /**
  * Canon in-bout endurance recovery (Arena 93): a fighter running a low
  * OE/AL beat catches their breath — endurance ticks back up instead of
- * only ever draining. RED until Phase-4 lands applyEnduranceRecovery.
+ * only ever draining. Live guard on applyEnduranceRecovery (Phase-4).
  */
 import { describe, it, expect } from 'vitest';
 import { applyEnduranceRecovery, RECOVERY_ACTIVITY_CAP } from '@/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery';

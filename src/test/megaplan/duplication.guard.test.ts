@@ -116,7 +116,10 @@ const DEBT_PAIRS = new Set<string>([]);
 // why-length assertions); each pins a different invariant → 15.
 // Learn-rollout: +1 — extraValueHits↔attackCheck share the getStylePassive
 // ctx arg shape + makeCombatFighter preamble (registered exempt) → 16.
-const TEST_TO_TEST_BASELINE = 16;
+// V22 Phase-4: +3 — decise↔tacticCounter re-state the initiative arg bag;
+// attackCrit↔extraValueHits/attackCheck share the applyHitAndCounters call
+// shape (registered exempt) → 19.
+const TEST_TO_TEST_BASELINE = 19;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -163,6 +166,12 @@ const TEST_EXEMPT_PAIRS = new Set([
   // makeCombatFighter preamble as fixture data — the canonical call shape
   // is the pin, same category as the tournamentSelection pairs above.
   'src/test/engine/combat/extraValueHits.test.ts|src/test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts',
+  // V22 Phase-4 pins: decise + attackCrit re-state their respective engine
+  // call shapes (initiative arg bag / applyHitAndCounters arg bag) as fixture
+  // data — same literal-pin category as the pairs above.
+  'src/test/engine/combat/decise.test.ts|src/test/engine/combat/tacticCounter.test.ts',
+  'src/test/engine/combat/attackCrit.test.ts|src/test/engine/combat/extraValueHits.test.ts',
+  'src/test/engine/combat/attackCrit.test.ts|src/test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the
@@ -175,7 +184,9 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // as assertion data — the duplication is the point.
 // Learn-rollout: +1 — the learnPriorities data spec re-states the canonical
 // weight derivation (rank→6..1) the engine applies — a literal pin → 21.
-const MIXED_BASELINE = 23;
+// V22 Phase-4: +1 — decise.test.ts re-states the resolveInitiativePhase
+// arg-bag call shape (same pin category as the tacticCounter pair) → 24.
+const MIXED_BASELINE = 24;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -199,6 +210,9 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // verbatim as assertion data (same pin category as the enduranceCosts
   // and exchangeSetup pairs above).
   'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/tacticCounter.test.ts',
+  // decise spec re-states the resolveInitiativePhase arg-bag call shape
+  // verbatim as fixture data — same pin category as the tacticCounter pair.
+  'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/decise.test.ts',
   'src/engine/factories/warriorDefaults.ts|src/test/_fixtures/statWarrior.ts',
   'src/engine/narrative/index.ts|src/test/engine/narrative/combatNarrators.test.ts',
   'src/engine/traits/mods.ts|src/test/engine/traitMods.test.ts',

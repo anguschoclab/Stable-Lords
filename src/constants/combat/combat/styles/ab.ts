@@ -5,7 +5,7 @@ export const AB_ARMOR_BYPASS_MAX = 0.4;
 export const AB_ARMOR_BYPASS_DF_DIVISOR = 50;
 
 /** Aimed Blow shell-gap payoff: max ATT bonus when the defender's shell out-classes AB's craft. Balance knob. */
-export const AB_SHELL_GAP_ATT_MAX = 6;
+export const AB_SHELL_GAP_ATT_MAX = 2;
 /** Aimed Blow shell-gap payoff: DF divisor (bonus = min(MAX, ceil((def.PAR - att.ATT) * DF / this))). */
 export const AB_SHELL_GAP_DF_DIVISOR = 12;
 

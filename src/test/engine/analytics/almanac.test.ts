@@ -18,6 +18,7 @@ import type { AnnualAward, ArenaTitle, TournamentEntry } from '@/types/state.typ
 import type { FightSummary } from '@/types/combat.types';
 import type { HallEntry } from '@/types/state/game';
 import { FightingStyle } from '@/types/shared.types';
+import { getAllArenas } from '@/data/arenas';
 import type { WarriorId, StableId, FightId } from '@/types/shared.types';
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
@@ -132,6 +133,25 @@ describe('computeCareerBoards', () => {
     const b = board(computeCareerBoards(input({ warriors: ws })), 'honors');
     expect(b.rows.map((r) => r.warriorId)).toEqual(['a1', 'a2', 'a3']);
     expect(b.rows[0]?.value).toBe(2);
+  });
+
+  it('ranks Longest Career by warrior age with bouts tiebreak', () => {
+    const oldGuard = w('old', { age: 45, career: { wins: 50, losses: 40, kills: 0 } });
+    const vet = w('vet', { age: 45, career: { wins: 60, losses: 20, kills: 0 } });
+    const rookie = w('rookie', { age: 18, career: { wins: 5, losses: 0, kills: 0 } });
+    const b = board(computeCareerBoards(input({ warriors: [oldGuard, vet, rookie] })), 'longestCareer');
+    // same age → bouts decides: old(90) before vet(80), rookie(18) last.
+    expect(b.rows.map((r) => r.key)).toEqual(['old', 'vet', 'rookie']);
+    expect(b.rows[0]?.value).toBe(45);
+    expect(b.rows[0]?.valueLabel).toMatch(/age|years/i);
+  });
+
+  it('breaks secondary ties on fame before the id fallback', () => {
+    // Identical primary + wins — fame must order them, not id ('alpha' < 'zeta').
+    const low = w('alpha', { career: { wins: 10, losses: 5, kills: 3 }, fame: 5 });
+    const high = w('zeta', { career: { wins: 10, losses: 5, kills: 3 }, fame: 500 });
+    const b = board(computeCareerBoards(input({ warriors: [low, high] })), 'kills');
+    expect(b.rows.map((r) => r.key)).toEqual(['zeta', 'alpha']);
   });
 
   it('keeps Undefeated to zero-loss warriors with >=3 wins', () => {
@@ -648,6 +668,22 @@ describe('computeStableBoards', () => {
     expect(b.rows[0]?.value).toBe(7);
     expect(b.rows[0]?.detail).toContain('Blood feud');
   });
+
+  it('rolls Stable of the Year recipients newest year first', () => {
+    const awards = [
+      { type: 'STABLE_OF_YEAR', year: 1, stableId: 'r1', stableName: 'Iron Gale', value: 30 },
+      { type: 'STABLE_OF_YEAR', year: 2, stableId: 'p1', stableName: 'Player Stable', value: 44 },
+      { type: 'WARRIOR_OF_YEAR', year: 2, warriorId: 'w9', warriorName: 'Champ', value: 20 },
+    ] as AnnualAward[];
+    const b = board(
+      computeStableBoards(input({ warriors, stables, awards })),
+      'stableOfYear'
+    );
+    expect(b.rows.map((r) => r.name)).toEqual(['Player Stable', 'Iron Gale']);
+    expect(b.rows[0]?.sub).toBe('Year 2');
+    expect(b.rows[0]?.isPlayer).toBe(true);
+    expect(b.rows[0]?.value).toBe(44);
+  });
 });
 
 /* ── §8 world stats ──────────────────────────────────────────────────── */
@@ -663,6 +699,11 @@ describe('computeWorldStats', () => {
           { id: 'p1', name: 'P', fame: 0, isPlayer: true },
           { id: 'r1', name: 'R', fame: 0, isPlayer: false },
         ],
+        tournaments: [
+          { id: 't1', completed: true },
+          { id: 't2', completed: false },
+          { id: 't3', completed: true },
+        ] as TournamentEntry[],
         year: 4,
         week: 20,
       })
@@ -672,6 +713,10 @@ describe('computeWorldStats', () => {
     expect(get('Total Deaths')).toBe(3);
     expect(get('Total Retirements')).toBe(14);
     expect(get('Year')).toBe(4);
+    expect(get('Stables')).toBe(2);
+    expect(get('Arenas')).toBe(getAllArenas().length);
+    expect(get('Tournaments Completed')).toBe(2);
+    expect(get('Death Rate')).toBe('0.25%'); // 3 / 1200
   });
 });
 

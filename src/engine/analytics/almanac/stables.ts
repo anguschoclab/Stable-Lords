@@ -137,6 +137,32 @@ const crownsBoard = (
   );
 };
 
+/** §7 #43 — Stable of the Year roll from the awards archive, newest year first. */
+const sotyBoard = (input: AlmanacInput, stables: AlmanacStableInput[], n: number): AlmanacBoard => {
+  const byId = new Map(stables.map((s) => [s.id, s]));
+  const rows = (input.awards ?? [])
+    .filter((a) => a.type === 'STABLE_OF_YEAR')
+    .sort(
+      by(
+        numDesc((a) => a.year),
+        strAsc((a) => (a.stableId as string) ?? a.stableName ?? '')
+      )
+    )
+    .map((a, i) => {
+      const s = byId.get(a.stableId as string);
+      return {
+        key: `soty-${a.year}-${a.stableId ?? a.stableName ?? i}`,
+        name: s?.name ?? a.stableName ?? 'Unknown',
+        sub: `Year ${a.year}`,
+        detail: a.reason,
+        value: a.value ?? 0,
+        valueLabel: 'wins',
+        isPlayer: s?.isPlayer ?? false,
+      };
+    });
+  return mkBoard('stableOfYear', 'Stable of the Year', 'stable', cap(rows, n));
+};
+
 const rivalriesBoard = (
   input: AlmanacInput,
   stables: AlmanacStableInput[],
@@ -201,6 +227,7 @@ export function computeStableBoards(input: AlmanacInput): AlmanacBoard[] {
       label: 'fame',
     }),
     crownsBoard(input, stables, n),
+    sotyBoard(input, stables, n),
     rivalriesBoard(input, stables, n),
   ].filter((b) => b.rows.length > 0);
 }

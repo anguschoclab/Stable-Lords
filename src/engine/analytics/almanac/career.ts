@@ -37,6 +37,7 @@ const boutsBoard = (ws: Warrior[], row: Row, n: number): AlmanacBoard =>
           by(
             numDesc(boutsOf),
             numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -57,6 +58,7 @@ const winRateBoard = (ws: Warrior[], row: Row, n: number): AlmanacBoard =>
           by(
             numDesc((w) => career(w).wins / boutsOf(w)),
             numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -82,6 +84,7 @@ const killsBoard = (ws: Warrior[], row: Row, n: number): AlmanacBoard =>
           by(
             numDesc((w) => career(w).kills),
             numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -198,7 +201,7 @@ const honorsBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
           by(
             numDesc((w) => w.awards?.length ?? 0),
             numDesc((w) => w.titles?.length ?? 0),
-            numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -223,7 +226,7 @@ const titlesBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
         .sort(
           by(
             numDesc((w) => w.titles?.length ?? 0),
-            numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -243,10 +246,31 @@ const undefeatedBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
         .sort(
           by(
             numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
         .map((w) => row(w, career(w).wins, 'wins')),
+      n
+    )
+  );
+
+const longestCareerBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
+  mkBoard(
+    'longestCareer',
+    'Longest Career',
+    'warrior',
+    cap(
+      all
+        .filter((w) => (w.age ?? 0) > 0)
+        .sort(
+          by(
+            numDesc((w) => w.age ?? 0),
+            numDesc(boutsOf),
+            strAsc((w) => w.id as string)
+          )
+        )
+        .map((w) => row(w, w.age ?? 0, 'years')),
       n
     )
   );
@@ -263,6 +287,7 @@ const careerLengthBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
           by(
             numDesc((w) => Object.keys(w.yearlySnapshots ?? {}).length),
             numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -282,7 +307,7 @@ const seasonPointsBoard = (all: Warrior[], row: Row, n: number): AlmanacBoard =>
         .sort(
           by(
             numDesc((w) => w.seasonPoints ?? 0),
-            numDesc((w) => career(w).wins),
+            numDesc((w) => w.fame ?? 0),
             strAsc((w) => w.id as string)
           )
         )
@@ -312,6 +337,7 @@ export function computeCareerBoards(input: AlmanacInput): AlmanacBoard[] {
     honorsBoard(all, row, n),
     titlesBoard(all, row, n),
     undefeatedBoard(all, row, n),
+    longestCareerBoard(all, row, n),
     careerLengthBoard(all, row, n),
     seasonPointsBoard(all, row, n),
   ];

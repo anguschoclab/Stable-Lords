@@ -100,6 +100,9 @@ export interface FighterState {
   recoveryDebt: number;
   /** True when fighter was knocked down by a heavy hit — cleared on RECOVERY next exchange. */
   knockedDown?: boolean;
+  /** Set after this fighter has rolled their one-bout will check against an
+   *  exhaustion stoppage — a pass grants the reprieve and is not re-rolled. */
+  willChecked?: boolean;
   /** Set while this fighter is disarmed: the id of the weapon currently on
    *  the sand. `weaponId` holds what they're fighting with meanwhile — their
    *  `backupWeaponId` if one was carried, else 'fist'. Cleared by a

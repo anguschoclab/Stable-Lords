@@ -23,6 +23,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../../mechanics/weaponStats';
 import {
+  ATT_CRIT_COEFF,
   CRIT_DAMAGE_MULT,
   CRIT_EXTRA_VALUE_MIN_DAMAGE,
   AB_ARMOR_BYPASS_MAX,
@@ -188,6 +189,7 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
     ? 0
     : attPassive.critChance +
       getStCritChanceBonus(attacker.style) +
+      attacker.skills.ATT * ATT_CRIT_COEFF +
       (isWieldingFavoriteWeapon(attacker.favorites, attacker.weaponId)
         ? FAVORITE_WEAPON_CRIT_CHANCE
         : 0);

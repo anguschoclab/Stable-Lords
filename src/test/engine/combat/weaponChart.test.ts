@@ -88,13 +88,15 @@ describe('weaponChart through simulateFight', () => {
 
     let crits = 0;
     let swings = 0;
-    for (const seed of [42, 777, 2024, 9001, 5, 31337, 123, 8]) {
+    for (let seed = 1; seed <= 40; seed++) {
       const out = runNarratedVsHeadless(A, D, seed).headless;
       const row = out.post?.weaponChartA?.[equipped];
       crits += row?.crits ?? 0;
       swings += row?.swings ?? 0;
     }
     expect(swings).toBeGreaterThan(10);
+    // 20% favorite crit edge — at this sample size zero crits is a broken
+    // mechanism, not bad luck.
     expect(crits).toBeGreaterThan(0);
   });
 });

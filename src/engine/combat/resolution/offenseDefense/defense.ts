@@ -15,6 +15,7 @@ import {
   WHIFF_RIPOSTE_DEF_PENALTY,
   MOMENTUM_CAP,
   MOMENTUM_FLOOR,
+  DODGE_RIPOSTE_MOD,
   PR_LOW_KD_THRESHOLD,
   PR_LOW_KD_RIPOSTE_PENALTY,
 } from '@/constants/combat';
@@ -229,6 +230,66 @@ function handleSuccessfulDefense(s: OffenseDefenseCtx): void {
   }
 }
 
+/**
+ * Canon: a successful dodge opens a counter window — the defender checks
+ * riposte at a small penalty vs a parry-triggered counter (a parry positions
+ * better). Shares the post-parry mod bag minus parry-specific bonuses.
+ */
+function handleSuccessfulDodge(s: OffenseDefenseCtx): void {
+  const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
+  const { rng } = ctx;
+
+  const styleRip = styleRiposteBonus(def, att, {
+    afterParry: false,
+    attCommitLevel: s.attCommit.level,
+    riposteStreak: def.riposteStreak ?? 0,
+  });
+  const styleWeatherRipMod = getStyleWeatherModifier(
+    def.style,
+    ctx.weather,
+    ctx.arenaConfig.tags
+  ).riposteMod;
+  const ripPostDodge = performRiposteCheck({
+    rng: rng,
+    def: def,
+    matchup: aGoesFirst ? ctx.matchupD : ctx.matchupA,
+    fat: aGoesFirst ? s.fatD : s.fatA,
+    penaltyOrBonus:
+      (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
+      DODGE_RIPOSTE_MOD +
+      ctx.weatherEffect.riposteMod +
+      (ctx.arenaEventMods?.riposteMod ?? 0) +
+      styleRip.ripBonus +
+      styleWeatherRipMod +
+      prKillDesireRipostePenalty(s),
+    curPass: aGoesFirst ? s.passD : s.passA,
+    curAntiSynDef: undefined,
+  });
+  if (def.style === FightingStyle.ParryRiposte) {
+    def.riposteStreak = ripPostDodge ? (def.riposteStreak ?? 0) + 1 : 0;
+  }
+  if (ripPostDodge) {
+    const specRiposteMult = aGoesFirst
+      ? (ctx.trainerModsD.riposteDamageMult ?? 1.0)
+      : (ctx.trainerModsA.riposteDamageMult ?? 1.0);
+    executeRiposte({
+      events: events,
+      rng: rng,
+      attacker: att,
+      defender: def,
+      defTactics: aGoesFirst ? s.tactD : s.tactA,
+      defPassive: aGoesFirst ? s.passD : s.passA,
+      attLabel: attLabel,
+      defLabel: defLabel,
+      specialtyRiposteMult: specRiposteMult,
+      extraDmg: styleRip.dmgBonus,
+    });
+    stampRiposteSources(s);
+  } else {
+    stampFailedRiposte(s, defLabel);
+  }
+}
+
 /** Handles a landed attack: defender's defense check, then parry/riposte or hit. */
 export function resolveContestedDefense(s: OffenseDefenseCtx): void {
   const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
@@ -286,7 +347,9 @@ export function resolveContestedDefense(s: OffenseDefenseCtx): void {
 
   if (defCheck.success) {
     events.push({ type: 'DEFENSE', actor: defLabel, result: defCheck.type });
-    if (!isDodge) {
+    if (isDodge) {
+      handleSuccessfulDodge(s);
+    } else {
       handleSuccessfulDefense(s);
     }
     att.consecutiveHits = 0;

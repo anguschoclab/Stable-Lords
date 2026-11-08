@@ -317,11 +317,14 @@ describe('applyEnduranceCosts — full multiplicative chain', () => {
 
 describe('applyEnduranceCosts — defender floor', () => {
   it('defender drain clamped to ≥1 even when base cost is 0', () => {
-    const { fD } = run({ oeA: 0, alA: 0, oeD: 0, alD: 0 });
+    // Active defender (OE+AL over the recovery cap) so the V22 rest-beat
+    // recovery can't mask the floor drain.
+    const { fD } = run({ oeA: 0, alA: 0, oeD: 6, alD: 6 });
     expect(1000 - fD.endurance).toBe(1); // Math.max(1, Math.round(0)) = 1
   });
 
   it('attacker drain can be 0 (no floor on attacker)', () => {
+    // At max endurance the rest-beat recovery caps out — net drain stays 0.
     const { fA } = run({ oeA: 0, alA: 0, oeD: 0, alD: 0 });
     expect(1000 - fA.endurance).toBe(0); // Math.round(0) = 0, no floor
   });

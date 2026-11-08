@@ -91,6 +91,14 @@ export const MOMENTUM_INI_MULT = 2;
 /** Coefficient on skills.DEC inside the initiative contest sum. */
 export const DEC_INI_COEFF = 0.2;
 
+/** Coefficient on skills.ATT inside the critical-hit chance — canon: skilled
+ *  strikers find vitals more often. ATT 25 → +10%, ATT 5 → +2%. */
+export const ATT_CRIT_COEFF = 0.004;
+
+/** Penalty on a dodge-triggered riposte check vs a parry-triggered one —
+ *  canon: dodging opens a counter window, but a parry positions better. */
+export const DODGE_RIPOSTE_MOD = -2;
+
 // ─── Whiff & Riposte ──────────────────────────────────────────────────────
 /** Endurance cost multiplier on a whiffed attack (fraction of normal cost). */
 export const WHIFF_ENDURANCE_COST_MULT = 0.5;

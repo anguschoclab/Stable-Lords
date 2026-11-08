@@ -9,6 +9,8 @@ import { PSYCH_STATE_MODS } from '../../../mechanics/conditionEngine';
 import { getEnduranceMult } from '@/engine/stylePassives';
 import { DEFENDER_ENDURANCE_DISCOUNT, EXHAUSTION_STOP_HP_RATIO } from '@/constants/combat';
 import { getItemById } from '@/data/equipment/equipment.utils';
+import { rollWillCheck } from '../../../mechanics/willChecks';
+import { applyEnduranceRecovery } from './enduranceRecovery';
 
 /**
  *
@@ -75,7 +77,12 @@ export function applyEnduranceCosts(args: ApplyEnduranceCostsArgs) {
     )
   );
 
-  checkExhaustionStoppage(events, fA, fD);
+  // Canon in-bout recovery: each fighter recovers on a quiet beat of their
+  // own — low OE+AL catches the breath (applied after this beat's costs).
+  applyEnduranceRecovery(fA, OE_A, AL_A);
+  applyEnduranceRecovery(fD, OE_D, AL_D);
+
+  checkExhaustionStoppage(events, fA, fD, ctx.rng);
 }
 
 /**
@@ -119,14 +126,26 @@ function enduranceMultipliers(
  * the defenselessness threshold. A fighter who merely gassed out keeps fighting
  * under fatigue penalties until hurt, KO'd, or decided by the judges.
  */
-function checkExhaustionStoppage(events: CombatEvent[], fA: FighterState, fD: FighterState) {
+function checkExhaustionStoppage(
+  events: CombatEvent[],
+  fA: FighterState,
+  fD: FighterState,
+  rng: () => number
+) {
   const collapsedA = fA.endurance <= 0;
   const collapsedD = fD.endurance <= 0;
   if (!(collapsedA || collapsedD) || events.some((e) => e.result === 'Kill' || e.result === 'KO')) {
     return;
   }
-  const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO;
-  const hurtD = collapsedD && fD.hp < fD.maxHp * EXHAUSTION_STOP_HP_RATIO;
+  // Canon will check: a collapsed, hurt fighter rolls once per bout against
+  // will + killDesire — passing grants the reprieve and they fight on.
+  const willHolds = (f: FighterState) => {
+    if (f.willChecked) return false;
+    f.willChecked = true;
+    return rollWillCheck(f.attributes.WL, f.activePlan?.killDesire ?? 5, rng);
+  };
+  const hurtA = collapsedA && fA.hp < fA.maxHp * EXHAUSTION_STOP_HP_RATIO && !willHolds(fA);
+  const hurtD = collapsedD && fD.hp < fD.maxHp * EXHAUSTION_STOP_HP_RATIO && !willHolds(fD);
   if (hurtA && hurtD) {
     // Double collapse of two already-beaten fighters — the rare mutual draw.
     events.push({

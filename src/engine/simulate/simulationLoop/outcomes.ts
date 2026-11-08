@@ -4,6 +4,11 @@ import { narrateBoutEnd } from '../../narrative';
 import type { LoopCtx } from './types';
 
 const YIELD_THRESHOLD = 0.15;
+/** Canon: killDesire leans surrender — a bloodlusted fighter needs deeper
+ *  desperation before quitting; a reluctant one gives earlier. */
+const YIELD_KD_SCALE = 0.08;
+const yieldThresholdFor = (kd: number | undefined) =>
+  YIELD_THRESHOLD * (1 + (5 - (kd ?? 5)) * YIELD_KD_SCALE);
 
 /**
  * Yield check — before resolving the exchange, a fighter whose
@@ -16,14 +21,16 @@ export function checkYieldOutcome(
   fD: FighterState,
   min: number
 ): { winner: 'A' | 'D'; by: FightOutcomeBy } | null {
+  const kdA = fA.activePlan?.killDesire ?? c.planA?.killDesire ?? 5;
+  const kdD = fD.activePlan?.killDesire ?? c.planD?.killDesire ?? 5;
   const yields =
     c.planA?.fallbackCondition === 'YIELD' &&
-    fA.hp < fA.maxHp * YIELD_THRESHOLD &&
-    fA.endurance < fA.maxEndurance * YIELD_THRESHOLD
+    fA.hp < fA.maxHp * yieldThresholdFor(kdA) &&
+    fA.endurance < fA.maxEndurance * yieldThresholdFor(kdA)
       ? 'A'
       : c.planD?.fallbackCondition === 'YIELD' &&
-          fD.hp < fD.maxHp * YIELD_THRESHOLD &&
-          fD.endurance < fD.maxEndurance * YIELD_THRESHOLD
+          fD.hp < fD.maxHp * yieldThresholdFor(kdD) &&
+          fD.endurance < fD.maxEndurance * yieldThresholdFor(kdD)
         ? 'D'
         : null;
   if (!yields) return null;

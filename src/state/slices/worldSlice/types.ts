@@ -1,4 +1,5 @@
 import type {
+  BloodfeudMark,
   GameState,
   Season,
   WeatherType,
@@ -72,6 +73,9 @@ export interface WorldSlice {
   playerChallenges: string[];
   playerAvoids: string[];
   playerStableAvoids: string[];
+  /** V24 canon: four-week bloodfeud entitlements created when a rival kills
+   *  a player warrior — any stablemate may challenge the killer's warrior. */
+  playerBloodfeuds?: BloodfeudMark[];
   playerAds: string[];
   playerSpotlights: { warriorId: string; text: string }[];
   ownerGrudges: OwnerGrudge[];

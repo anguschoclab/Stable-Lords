@@ -46,6 +46,8 @@ export interface DesignReviewItem {
   verdict: DesignVerdict;
   title: string;
   detail: string;
+  /** V24: stable identifier for canonical doctrine rules (tests, UI keys). */
+  id?: string;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

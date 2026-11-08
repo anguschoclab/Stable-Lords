@@ -132,6 +132,27 @@ export type DefensiveMods = {
 const ZERO_DEF: DefensiveMods = { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
 
 /**
+ * V24 canon (Consortium "Tactics"): running an offensive AND a defensive
+ * tactic at once has "very limiting value" — flat per-skill tax while both
+ * are active. Phase-1 scaffolding returns zero; Phase 4 wires the penalty.
+ */
+export function doubleTacticSkillPenalty(
+  offTactic: OffensiveTactic | undefined,
+  defTactic: DefensiveTactic | undefined
+): { attBonus: number; parBonus: number; defBonus: number; iniBonus: number; ripBonus: number; decBonus: number } {
+  void offTactic;
+  void defTactic;
+  return { attBonus: 0, parBonus: 0, defBonus: 0, iniBonus: 0, ripBonus: 0, decBonus: 0 };
+}
+
+/** V24 canon (Assur): KD 9-10 makes warriors "fight somewhat strangely" —
+ *  flat efficacy tax at/above threshold. Scaffolding returns none. */
+export function killDesirePenalty(kd: number | undefined): { attBonus: number; iniBonus: number } {
+  void kd;
+  return { attBonus: 0, iniBonus: 0 };
+}
+
+/**
  * Strategy map: each defensive tactic (excluding 'none') maps to a function
  * that accepts the suitability multiplier and returns the resolved mods.
  */

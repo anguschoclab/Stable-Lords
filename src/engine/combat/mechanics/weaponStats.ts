@@ -58,6 +58,21 @@ export function getWeaponInitiativeMod(weaponId?: string): number {
  * Bare fists can never be "dropped"; anything else defaults to droppable
  * unless the item data opts out via `disarmable: false`.
  */
+/** V24 canon (Assur): lunging weapons have the best knock-down ability.
+ *  Scaffolding: 0 until Phase 7 wires it into the knockdown check. */
+export function lungingKnockdownBonus(weaponId?: string): number {
+  void weaponId;
+  return 0;
+}
+
+/** V24 canon (Assur): 2-handed weapons pay an endurance surcharge on the
+ *  parry side ("break often when used to parry"). Scaffolding: 1 until
+ *  Phase 7 wires it into endurance costs. */
+export function twoHandedParryEnduranceMult(weaponId?: string): number {
+  void weaponId;
+  return 1;
+}
+
 export function isDisarmable(weaponId?: string): boolean {
   if (!weaponId || weaponId === DISARM_UNARMED_WEAPON_ID) return false;
   const w = WEAPON_BY_ID.get(weaponId);

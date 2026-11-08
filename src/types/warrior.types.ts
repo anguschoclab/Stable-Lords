@@ -130,6 +130,9 @@ export interface WeaponChartEntry {
 export interface WarriorFavorites {
   weaponId: string;
   rhythm: { oe: number; al: number };
+  /** V24 canon (Pagan): every warrior has a favorite tactic drawn from the
+   *  style's possible-favorite set — fires hidden like the favorite weapon. */
+  tactic?: string;
   discovered: {
     weapon: boolean;
     rhythm: boolean;

@@ -39,6 +39,10 @@ export interface EquipmentItem {
   // dual Epées need DF 22 — or 17 if ambidextrous).
   twoHandedReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // used two-handed
   offHandReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // used in the off-hand
+  /** Canon (Assur's Weapon Requirement Chart): raised minimums that apply to
+   *  the MAIN-hand weapon when any item is held in the off hand — e.g. Battle
+   *  Axe needs SZ 9 if you are carrying an off-hand weapon. */
+  offhandCarryReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>;
   dualWieldReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // wielding two of this weapon
   dualWieldReqAmbi?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // dual-wielded, ambidextrous
   // Shield-only: which hit-location band the shield reliably covers.

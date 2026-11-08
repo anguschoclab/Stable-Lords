@@ -229,3 +229,10 @@ export const STYLE_DESIGN_MINIMUMS: Partial<
  */
 export const DA_WL_FLOOR = 7;
 export const DA_ST_FLOOR = 7;
+
+/**
+ * V24 canon (Consortium Q&A): low ST+WL builds can't feed an endurance burn —
+ * steer them to the low-burn styles. Phase-1 scaffolding: empty until the
+ * steering lands in Phase 9.
+ */
+export const LOW_BURN_STYLES: FightingStyle[] = [];

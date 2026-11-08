@@ -171,6 +171,15 @@ export const GameStateSchema = z
     playerChallenges: z.array(z.string()),
     playerAvoids: z.array(z.string()),
     playerStableAvoids: z.array(z.string()).default([]),
+    playerBloodfeuds: z
+      .array(
+        z.object({
+          killerWarriorId: z.string(),
+          killerStableId: z.string().optional(),
+          expiresWeek: z.number(),
+        })
+      )
+      .optional(),
     playerAds: z.array(z.string()).default([]),
     playerSpotlights: z.array(z.object({ warriorId: z.string(), text: z.string() })).default([]),
     recruitPool: z.array(PoolWarriorSchema),

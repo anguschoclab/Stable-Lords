@@ -190,6 +190,33 @@ export function checkWeaponRequirements(
   };
 }
 
+/** Result of a loadout-level wieldability check. */
+export interface LoadoutWieldResult {
+  met: boolean;
+  failures: WeaponReqCheck[];
+  attPenalty: number;
+  endurancePenalty: number;
+}
+
+/**
+ * V24 canon (Assur's Weapon Requirement Chart): loadout-aware wieldability.
+ * Off-hand items require no WT and no SZ (same ST as the main hand); a
+ * weapon-in-each-hand pair needs deftness from {@link offhandDualDfReq}
+ * (MH-req × OH-req grid); a main-hand `offhandCarryReq` (e.g. Battle Axe
+ * SZ 9) applies whenever an off-hand item is carried.
+ *
+ * Phase-1 scaffolding: resolves through the single-weapon check for now —
+ * the off-hand relax rules and grid land in Phase 3.
+ */
+export function checkLoadoutWieldability(
+  loadout: EquipmentLoadout,
+  attrs: { ST: number; SZ: number; WT: number; DF: number },
+  opts?: { ambidextrous?: boolean }
+): LoadoutWieldResult {
+  const mh = checkWeaponRequirements(loadout.weapon, attrs, opts);
+  return { ...mh };
+}
+
 /**
  * Is over encumbered.
  */

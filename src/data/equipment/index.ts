@@ -28,6 +28,7 @@ export {
   isPreferredWeapon,
   getStyleDefaultLoadout,
   checkWeaponRequirements,
+  checkLoadoutWieldability,
   validateLoadout,
   getLoadoutWeight,
   isOverEncumbered,

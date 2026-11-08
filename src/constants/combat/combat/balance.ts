@@ -178,6 +178,50 @@ export const FEINT_FAILED_DEF_BONUS = 2;
  *  they have found the favorite — before formal discovery reveals it. */
 export const FAVORITE_WEAPON_CRIT_CHANCE = 0.2;
 
+// ─── V24 canon knobs (Phase-1 scaffolding — wired in later phases) ─────────
+/** Pagan's model: tactics a style cannot roll as a favorite are net-negative
+ *  — the tactic "enhances" its area while draining the rest twice as fast. */
+export const TACTIC_U_MULT = -0.5;
+/** Consortium canon: running an offensive AND a defensive tactic together is
+ *  "very limiting" — flat per-skill tax while both are active. */
+export const DOUBLE_TACTIC_SKILL_PENALTY = 1;
+/** Pagan's jump: each clash re-draws a string term into both totals until a
+ *  clear disparity emerges. Jitter added per clash per side. */
+export const JUMP_CLASH_JITTER = 2;
+/** Assur: KD 9-10 makes warriors "fight somewhat strangely" — flat efficacy
+ *  tax at or above the threshold (kill window still scales as before). */
+export const KD_HIGH_PENALTY = { threshold: 9, attPenalty: -1, iniPenalty: -1 } as const;
+/** Assur's fast weapons (Design vs. Strategy / Getting the Jump): initiative
+ *  edge independent of the weight-derived formula. */
+export const FAST_WEAPON_INI: readonly string[] = [
+  'war_hammer',
+  'hatchet',
+  'quarterstaff',
+  'short_sword',
+];
+/** Assur: lunging weapons have the best knock-down ability. */
+export const LUNGE_KNOCKDOWN_BONUS = 1;
+/** Assur: 2-handed weapons "break often when used to parry" and burn
+ *  endurance faster — parry-side endurance surcharge for two-handed weapons. */
+export const TWOHANDED_PARRY_ENDURANCE_SURCHARGE = 1.2;
+/** Per-weapon armor overrides layered before the damage-type table
+ *  (weaponArmor.canon): e.g. dagger penalised vs mid armor per Jalopy. */
+export const WEAPON_ARMOR_OVERRIDES: Record<string, Record<string, number>> = {};
+/** Favorite tactic fires hidden (weapon-crit parity — Godling Heresy:
+ *  favorites matter before you know them). */
+export const FAVORITE_TACTIC_BONUS = 2;
+/** Smithy (hedged canon): a warrior too small for a weapon takes NO skill
+ *  penalty from the SZ shortfall — only the endurance tax remains. */
+export const SZ_REQ_NO_ATT_PENALTY = true;
+/** Consortium Q&A: double-challenging "appx doubles" the chance. */
+export const DOUBLE_CHALLENGE_MULT = 2;
+/** Canon: a bloodfeud challenge is near-guaranteed — dominant offer bonus. */
+export const BLOODFEUD_PRIORITY = 500;
+/** Smithy: off-hand weapon attacks come from the highly coordinated OR the
+ *  ambidextrous — handedness bypasses the VHC stat profile. */
+export const OFFHAND_AMBI_GATE = true;
+
+
 // ─── Trait Generation ───────────────────────────────────────────────────────
 /**
  * Synergy multiplier for archetype-matching traits

@@ -142,6 +142,15 @@ export interface OpponentSearchContext {
   playerWarriorIds: Set<string>;
   avoidSet: Set<string>;
   challengeSet: Set<string>;
+  /** V24: stable-level avoids — candidates from these stables take a score
+   *  penalty rather than the hard skip individual avoids get. */
+  stableAvoidSet?: Set<string>;
+  /** V24: challenge multiplicity — a warrior listed N times earns
+   *  CHALLENGE_BONUS × N (canon double-challenge ≈ doubles the chance). */
+  challengeCounts?: Map<string, number>;
+  /** V24: bloodfeud entitlement targets — top-priority offers that also
+   *  bypass the score window (canon: bloodfeuds transcend classes). */
+  bloodfeudSet?: Set<string>;
   gapThreshold: number;
 }
 

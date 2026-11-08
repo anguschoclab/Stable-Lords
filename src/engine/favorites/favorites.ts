@@ -44,6 +44,47 @@ const STYLE_RHYTHM_RANGES: Record<FightingStyle, { oe: [number, number]; al: [nu
   [FightingStyle.WallOfSteel]: { oe: [5, 9], al: [2, 7] }, // canon: berserker sheets open OE 9; the 18-11 graduate favored moderate OE over low AL
 };
 
+/**
+ * V24 canon (Pagan's favorites chart): tactics a style can roll as a
+ * favorite — the WS-rated set, weighted by the article's observed counts
+ * where published (PR/PS/PL); uniform elsewhere.
+ */
+export const FAVORITE_TACTIC_POOLS: Partial<
+  Record<FightingStyle, { tactic: string; weight: number }[]>
+> = {
+  [FightingStyle.ParryRiposte]: [
+    { tactic: 'Lunge', weight: 3 },
+    { tactic: 'Riposte', weight: 11 },
+    { tactic: 'Parry', weight: 6 },
+  ],
+  [FightingStyle.ParryStrike]: [
+    { tactic: 'Decisiveness', weight: 12 },
+    { tactic: 'Responsiveness', weight: 9 },
+    { tactic: 'Dodge', weight: 9 },
+    { tactic: 'Riposte', weight: 1 },
+    { tactic: 'Parry', weight: 8 },
+  ],
+  [FightingStyle.ParryLunge]: [
+    { tactic: 'Lunge', weight: 23 },
+    { tactic: 'Dodge', weight: 12 },
+    { tactic: 'Parry', weight: 12 },
+  ],
+};
+
+/**
+ * Bonus applied when the fighter's plan uses their (hidden) favorite tactic —
+ * weapon-crit parity: fires whether or not the favorite is discovered.
+ * Phase-1 scaffolding: returns 0 until Phase 5 wires generation + bonus.
+ */
+export function getFavoriteTacticBonus(
+  warrior: { favorites?: WarriorFavorites },
+  tactic: string | undefined
+): number {
+  void warrior;
+  void tactic;
+  return 0;
+}
+
 /** Generate hidden favorites for a warrior at creation */
 export function generateFavorites(style: FightingStyle, rng: IRNGService): WarriorFavorites {
   const r = () => rng.next();

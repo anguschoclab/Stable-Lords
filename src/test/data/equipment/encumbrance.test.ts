@@ -133,7 +133,7 @@ describe('getEncumbrancePenalties', () => {
     expect(p.defPenalty).toBeLessThan(0);
     expect(p.parPenalty).toBe(0);
     expect(p.enduranceMult).toBeGreaterThan(1.1);
-    expect(p.enduranceMult).toBeLessThanOrEqual(1.4);
+    expect(p.enduranceMult).toBeLessThanOrEqual(1.7); // V23 ratchet: HEAVY 1.3→1.6 — Assur's endurance channel is the real encumbrance lever
   });
 
   it('OVER tier: largest INI/DEF/endurance penalties, still NO PAR penalty', () => {

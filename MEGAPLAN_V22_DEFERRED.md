@@ -7,9 +7,14 @@ needs its own pass — most are structural changes or design decisions, not
 fixes. Findings: `MEGAPLAN_V22_FINDINGS.md` · Plan: `MEGAPLAN_V22_PLAN.md` ·
 Ledger: `MEGAPLAN_V22_LEDGER.md` · Restore tag: `pre-megaplan-v22`.
 
+> **V23 update:** D1 (dual-wield) and D2 (trains-burn) were pulled into the
+> V23 Arena-93 pass and landed (commits `46e26119`, `c967fbb9`). Entries
+> below are kept for history; §3 watch items re-baselined under V23
+> mechanics (world-diag 1000wk seed 12345).
+
 ## §1 Structural items (own implementation pass each)
 
-### D1 — Off-hand / dual-wield combat (finding C14)
+### D1 — Off-hand / dual-wield combat (finding C14) — ✅ LANDED V23
 
 - **Canon:** SP+DF>31 → "Very High Coordination"; +either>14 → "weapon in
   each hand" profile line and a free off-hand shot in combat.
@@ -27,8 +32,16 @@ Ledger: `MEGAPLAN_V22_LEDGER.md` · Restore tag: `pre-megaplan-v22`.
 - **Entry points:** `src/engine/equipment/weaponRequirements.ts`,
   `src/engine/combat/resolution/`, `src/engine/factories/warriorFactory.ts`
   (handedness already rolled), `src/types/warrior.types.ts`.
+- **V23 landed:** `EquipmentLoadout.offhand` + `validateLoadout` legal
+  states (weapon / weapon+shield / two weapons — `DUAL_WITH_SHIELD` +
+  `TWO_HANDED_WITH_OFFHAND` blocks), `tryOffhandAttack` VHC gate +
+  `OFFHAND_ATTACK` event wired into `runAttackExchange`, off-hand counted
+  in `getLoadoutWeight` (backup stays uncounted), off-hand arm-drop via
+  the side-gated disarm, item-declared parry-side mods baked in fighter
+  state. Commit `46e26119`; specs `dualWield.test.ts` +
+  `loadout.validation.test.ts` (14/14 green).
 
-### D2 — Trains-burn-skills economy (finding E2)
+### D2 — Trains-burn-skills economy (finding E2) — ✅ LANDED V23
 
 - **Canon:** stat trains burn future skill learns; ST 7–14 and CN trains
   are free.
@@ -38,6 +51,12 @@ Ledger: `MEGAPLAN_V22_LEDGER.md` · Restore tag: `pre-megaplan-v22`.
 - **Needs:** a design decision first (does the inversion serve this game?),
   then a training-budget model + world calibration.
 - **Entry points:** `src/engine/training/`, training-gain pipeline passes.
+- **V23 landed:** generic breakpoint-delta burn — `breakpointBurns` counts
+  `bp(table,new) − bp(table,old)` per skill table; ST≤14 and CN freedom
+  emerge from the tables (no special-casing). `burnedSkills` ledger on
+  Warrior; `effectiveLearnCap` gates the bout learn pool — a fully-burned
+  skill is never taught. Wired into `applyAttributeGain` + advisor copy.
+  Commit `c967fbb9`; spec `trainsBurn.test.ts` (11/11 green).
 
 ### D3 — Pagan literal damage model (finding C15)
 
@@ -78,20 +97,23 @@ Ledger: `MEGAPLAN_V22_LEDGER.md` · Restore tag: `pre-megaplan-v22`.
 - **Numeric skills shown** — canon hides them; the dossier shows numbers.
   Deliberate product choice.
 
-## §3 Watch items (world-diag 1000wk seed 12345, post-batch)
+## §3 Watch items — V23 re-baseline (world-diag 1000wk seed 12345, V23 mechanics)
 
-- **TP world dominance — 61.9%** above the band ceiling. Development
-  outlier: walls survive → accumulate skills/drills (63.8 drills vs ~10–30
-  elsewhere) → dominate veterans (66.3% at 26+, 71.5% vs greener),
-  population share grows 8.1→11.4% by era. Canon-consistent identity but
-  pressing the ceiling. Candidate lever if it crosses 65%: damp drill
-  accrual or TP development, not combat numbers (fixture FLAT reads
-  50.1% — the dominance is emergent, not mechanical).
-- **World kill 6.65% weekly / 5.36% tournament** — below the ~8% design
-  floor referenced in `KILL_WINDOW`'s comment. Recovery + will checks
-  reduced world lethality slightly. Fixture bands (9–19%) green at
-  9.3%/8.3% — watch whether the world floor keeps dropping on future
-  mechanic changes.
+- **TP world dominance — 62.9%** (was 61.9% V22 — slow climb, not a spike).
+  Same emergent flywheel: walls survive → drill accrual (4.1 drills/fight,
+  66.1 avg career fights vs ~12–30 elsewhere) → veteran dominance
+  (68.6% at 26+, 74.4% vs greener), pop share 6.7→10.5% by era. V23 pulled
+  the combat levers to their FLAT-safe limits (PAR -2→-3, DEF -15→-16,
+  BA/SL floors up) — snap proxy read ~69%. The registered lever stands:
+  damp drill accrual or TP development, NOT combat numbers.
+- **World kill 6.68% weekly / 5.81% tournament** (was 6.65% — flat). Still
+  under the ~8% design floor; `KILL_WINDOW.SCALE` bumped 1.1→1.18 for the
+  certified fixture (FLAT back to 9.3%). Watch whether the world floor
+  responds on the next world run.
+- **LU 42.7%** — new bottom-of-band watch (lowest overall rate; weak vs
+  TP 16.1% in matrix). Floor candidates if it dips under 40.
+- **PR 55.8%** — second-highest, approaching the band edge (snap proxy
+  read 58–60%); small penalty nudge (-1 PAR) already applied for V23.
 
 ## §4 Environment notes
 

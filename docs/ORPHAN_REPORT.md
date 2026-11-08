@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 167 src-scoped dead exports — under the 169 ratchet — guard green.
+> **Ratchet status:** 168 src-scoped dead exports — under the 169 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -220,7 +220,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `validateArenaChampions` | `src/engine/validate/stateInvariants.ts` | validateStateInvariants | — |
 | `SEASONAL_WEATHER` | `src/engine/weather/seasonalWeather.ts` | rollWeather | — |
 
-### Combat & bout (15)
+### Combat & bout (16)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
@@ -239,6 +239,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `isArmLocation` | `src/engine/combat/resolution/disarm.ts` | tryDisarm | — |
 | `RECOVERY_ACTIVITY_CAP` | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery | — |
 | `RECOVERY_PER_BEAT` | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery | — |
+| `isVeryHighlyCoordinated` | `src/engine/combat/resolution/offhandAttack.ts` | tryOffhandAttack | — |
 
 ### Matchmaking, scouting & reputation (15)
 
@@ -346,8 +347,8 @@ Generated-library exports — the components ship their full part API even when 
 | --- | --- | --- |
 | **Delete / integrate** | 5 curated item(s) + **1 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 4 test-reset hook(s); 116 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 167 / 169 | — |
+| **Keep** | 4 test-reset hook(s); 117 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 168 / 169 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

@@ -117,11 +117,11 @@ export function computeBaseSkills(
   };
 }
 
-// ─── Luckfactor (Canonical ±4 per skill; ±6 for pikers) ──────────────────
+// ─── Luckfactor (Canonical ±4 per skill, all styles) ──────────────────────
 // Canon: each of the 6 skill categories gets a hidden random "luckfactor" at
-// creation, so two warriors with identical stats+style differ. Parry-Strike
-// rolls a wider range — Assur's Arena 93 article: "a greater chance for them
-// to be bonused or cursed in skills than other styles". The OVERVIEW shows
+// creation, so two warriors with identical stats+style differ. V23: the PS
+// ±6 range was removed (luckfactor parity) — piker variance now rolls the
+// shared LUCKFACTOR_RANGE like every other style. The OVERVIEW shows
 // luck-free skills (computeBaseSkills); combat applies the stored luckfactor.
 
 /**

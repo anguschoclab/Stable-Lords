@@ -76,12 +76,12 @@ describe('EncumbranceBar', () => {
     const carryCap = Math.ceil(weight / 1.1);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
-    // HEAVY penalties: iniPenalty=-3, defPenalty=-1, parPenalty=0, enduranceMult=1.3
+    // HEAVY penalties: iniPenalty=-3, defPenalty=-1, parPenalty=0, enduranceMult=1.6
     // (V23 canon — encumbrance doesn't hurt parry, so no PAR chip renders)
     expect(screen.getByText(/-3 INI/)).toBeInTheDocument();
     expect(screen.getByText(/-1 DEF/)).toBeInTheDocument();
     expect(screen.queryByText(/PAR/)).not.toBeInTheDocument();
-    expect(screen.getByText(/30% END/)).toBeInTheDocument();
+    expect(screen.getByText(/60% END/)).toBeInTheDocument();
   });
 
   it('renders penalty details for OVER tier with larger penalties', () => {
@@ -89,11 +89,11 @@ describe('EncumbranceBar', () => {
     const carryCap = Math.floor(weight / 1.3);
     render(<EncumbranceBar totalWeight={weight} carryCap={carryCap} loadout={heavyLoadout} />);
     expect(screen.getByText(/combat penalties apply/)).toBeInTheDocument();
-    // OVER penalties: iniPenalty=-4, defPenalty=-2, parPenalty=0, enduranceMult=1.5
+    // OVER penalties: iniPenalty=-4, defPenalty=-2, parPenalty=0, enduranceMult=2.0
     expect(screen.getByText(/-4 INI/)).toBeInTheDocument();
     expect(screen.getByText(/-2 DEF/)).toBeInTheDocument();
     expect(screen.queryByText(/PAR/)).not.toBeInTheDocument();
-    expect(screen.getByText(/50% END/)).toBeInTheDocument();
+    expect(screen.getByText(/100% END/)).toBeInTheDocument();
   });
 
   it('does not render penalty details for MEDIUM tier (only HEAVY/OVER show penalties)', () => {

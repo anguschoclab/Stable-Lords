@@ -313,8 +313,14 @@ describe('Trained-loadout ceiling', () => {
   it('a max class-trait loadout does not exceed a ~75% win rate vs an untraited peer', () => {
     // Strongest realistic build: BA Signature + two BA class traits, on Bashing Attack.
     const loadout = ['demolisher', 'juggernaut', 'bonebreaker'];
-    const { traited, drawCount } = runMirrorBouts(loadout, 250, FightingStyle.BashingAttack);
-    const decidedBouts = 250 - drawCount;
+    // V23 re-baseline: the V23 mechanics (side-gated disarms, conditioned
+    // handedness, coordination drops) shifted the fight stream — the 250-bout
+    // slice landed at 54.8%, under the sanity floor. The true rate converges
+    // ~0.585 by n=500 (0.588 at n=1000), safely inside the band — widened the
+    // sample rather than re-seeding.
+    const n = 500;
+    const { traited, drawCount } = runMirrorBouts(loadout, n, FightingStyle.BashingAttack);
+    const decidedBouts = n - drawCount;
     const rate = decidedBouts > 0 ? traited.wins / decidedBouts : 0.5;
     expect(rate, `max-loadout win rate ${(rate * 100).toFixed(1)}%`).toBeLessThanOrEqual(0.75);
     // sanity: the loadout should actually help (not a no-op)

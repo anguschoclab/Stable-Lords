@@ -313,7 +313,7 @@ export const STYLE_PENALTIES: Record<
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
   [FightingStyle.AimedBlow]: /*AB*/ [-21, -8, -11, -9, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-23 to pull AB→WS under 80
-  [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat)
+  [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat); V23: a -6 test nudge blew the SL→PR/WS→PR cells past 80% — reverted
   [FightingStyle.ParryStrike]: /*PS*/ [-9, -7, -12, -5, -7, 0], // V22: PAR -5→-7, DEF -10→-12, RIP -3→-7 — canon DF tables pushed fixture defense past SL's attrition window; PS keeps parry identity over riposte; ATT -10→-9 for TP→PS cell
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
@@ -326,7 +326,7 @@ export const STYLE_PENALTIES: Record<
   [FightingStyle.StrikingAttack]: /*ST*/ [-10, -9, -12, -7, -4, +1], // V22: canon DEF/PAR yields + DEC_INI lean (strikers carry high DEC) — ATT -12→-10 back after dodge-riposte gave high-AL defenders a counter channel (ST sank to 46.8)
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
-  [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -15, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-15 for the TP→PS cell
+  [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -15, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-15 for the TP→PS cell; V23: a -3/-16 test deepen blew the WS→TP cell to 88% — reverted; snap dominance is emergent (drill flywheel), not fixture-mechanical
   [FightingStyle.WallOfSteel]: /*WS*/ [-6, -5, -10, 0, -3, -2], // re-ratchet: DEF -13→-10, INI -2→+1; ATT -8→-7 + PAR -6→-5 + RIP -4→-3 for the AB→WS cell after ATT_CRIT_COEFF buffed aimed blows
 };
 
@@ -360,9 +360,13 @@ export const STYLE_SKILL_FLOORS: Record<
   [FightingStyle.LungingAttack]: /*LU*/ [10, 1, 1, 10, 1, 1],
   // Slashing: the flurry's initiative is drilled. Leaves the fixture (INI 13)
   // untouched; lifts world-only weakness (43.6%).
-  [FightingStyle.SlashingAttack]: /*SL*/ [1, 1, 1, 11, 1, 1],
+  // V23 snap lift: side-gated disarms + freed parries clipped bleed tempo —
+  // floor ATT 1→9, PAR 1→3, DEF 1→7 on top of the drilled INI.
+  [FightingStyle.SlashingAttack]: /*SL*/ [9, 3, 7, 11, 1, 1],
   // Brutal: the style is built on getting the blow in first and landing it.
-  [FightingStyle.BashingAttack]: /*BA*/ [6, 1, 1, 9, 1, 1],
+  // V23 snap lift: parry-freedom post-V23 left world bashers exposed —
+  // floor ATT 6→14, PAR 1→4, DEF 1→8 (fixture stays above, untouched).
+  [FightingStyle.BashingAttack]: /*BA*/ [14, 4, 8, 9, 1, 1],
   [FightingStyle.StrikingAttack]: /*ST*/ [6, 1, 1, 9, 1, 1],
   [FightingStyle.TotalParry]: /*TP*/ [1, 1, 1, 1, 1, 1],
   // Wall of Steel: the whirling arc is attack, guard and tempo at once — it

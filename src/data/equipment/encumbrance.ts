@@ -44,8 +44,8 @@ const TIER_PENALTIES: Record<EncumbranceTier, EncumbrancePenalties> = {
   NONE: { iniPenalty: 0, defPenalty: 0, parPenalty: 0, enduranceMult: 1.0 },
   LIGHT: { iniPenalty: -1, defPenalty: 0, parPenalty: 0, enduranceMult: 1.05 },
   MEDIUM: { iniPenalty: -2, defPenalty: -1, parPenalty: 0, enduranceMult: 1.15 },
-  HEAVY: { iniPenalty: -3, defPenalty: -1, parPenalty: 0, enduranceMult: 1.3 },
-  OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: 0, enduranceMult: 1.5 },
+  HEAVY: { iniPenalty: -3, defPenalty: -1, parPenalty: 0, enduranceMult: 1.6 },
+  OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: 0, enduranceMult: 2.0 },
 };
 
 /**

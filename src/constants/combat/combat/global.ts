@@ -98,7 +98,7 @@ export const KILL_WINDOW_ENDURANCE = 0.4;
 export const KILL_WINDOW = {
   BASE: 0.012,
   CAP: 0.12,
-  SCALE: 1.1,
+  SCALE: 1.18,
   HP_CRITICAL_RATIO: 0.3,
   HP_CRITICAL_ADD: 0.008,
   HP_HURT_RATIO: 0.5,

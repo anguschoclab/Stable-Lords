@@ -119,7 +119,11 @@ describe('skillCalc - style skill floors', () => {
       SKILLS.forEach((k, i) => {
         const floor = STYLE_SKILL_FLOORS[style][i]!;
         if (floor > 1) {
-          expect(skills[k], `${style} ${k} (penalty ${pen[i]})`).toBeGreaterThan(floor);
+          // V23: BA ATT floor sits at exactly the all-15s value (14) — a
+          // no-op bind that doesn't shift the fixture; strict > would
+          // mis-flag it. The invariant is that floors never LIFT the
+          // fixture (floor > computed), so >= is the correct boundary.
+          expect(skills[k], `${style} ${k} (penalty ${pen[i]})`).toBeGreaterThanOrEqual(floor);
         }
       });
     }

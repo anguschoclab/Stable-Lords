@@ -10,6 +10,7 @@ import {
 } from '@/engine/equipment/loadoutFitting';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { refitRosterWeapons } from '@/engine/ai/workers/rosterWorkerEquipment';
+import { fitArchetypeArmor } from '@/engine/equipment/archetypeArmor';
 
 const ALL_STYLES = Object.values(FightingStyle);
 const FLAT_15: Attributes = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
@@ -142,14 +143,46 @@ describe('fitted loadouts at the creation and roster seams', () => {
   });
 
   it('refitRosterWeapons returns the same array when nothing changes', () => {
+    // V25: the roster must already wear its archetype-fitted armor or the
+    // armor-refit channel legitimately churns it.
+    const base = getStyleDefaultLoadout(FightingStyle.WallOfSteel);
+    const fitted = {
+      ...base,
+      weapon: fitWeapon(FightingStyle.WallOfSteel, TANK_RECRUIT, base),
+      armor: fitArchetypeArmor(FightingStyle.WallOfSteel, TANK_RECRUIT, base),
+    };
     const roster = [
       makeWarrior({
         id: undefined,
         name: 'A',
         style: FightingStyle.WallOfSteel,
         attrs: TANK_RECRUIT,
+        overrides: { equipment: fitted },
       }),
     ];
     expect(refitRosterWeapons(roster)).toBe(roster);
+  });
+
+  it('refitRosterWeapons upgrades a tank-framed recruit toward plate', () => {
+    // V25 canon: APA/F is the tank norm — the weekly refit moves a
+    // leather-default tank frame into the heaviest legal armor it can
+    // carry without going over-encumbered.
+    const roster = [
+      makeWarrior({
+        id: undefined,
+        name: 'A',
+        style: FightingStyle.WallOfSteel,
+        attrs: TANK_RECRUIT,
+        overrides: { equipment: getStyleDefaultLoadout(FightingStyle.WallOfSteel) },
+      }),
+    ];
+    const next = refitRosterWeapons(roster);
+    const armor = next[0]!.equipment?.armor ?? '';
+    const expected = fitArchetypeArmor(FightingStyle.WallOfSteel, TANK_RECRUIT, {
+      ...getStyleDefaultLoadout(FightingStyle.WallOfSteel),
+      weapon: next[0]!.equipment!.weapon,
+    });
+    expect(armor).toBe(expected);
+    expect(armor).not.toBe('leather');
   });
 });

@@ -12,6 +12,7 @@ import {
   getAvailableItems,
 } from '@/data/equipment';
 import { refitWeapon } from '@/engine/equipment/loadoutFitting';
+import { refitArmor, fitArchetypeArmor } from '@/engine/equipment/archetypeArmor';
 import { suspectedFavoriteWeapon } from '@/engine/favorites';
 
 /**
@@ -63,6 +64,9 @@ export function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
     // this warrior's attributes so an upgrade never hands over a favorite
     // they cannot wield.
     const loadout = refitWeapon(w.style, w.attributes, rec.loadout);
+    // V25: the armor slot follows the build's winning-archetype doctrine —
+    // tanks buy plate, hybrids never pay their way over the carry limit.
+    loadout.armor = fitArchetypeArmor(w.style, w.attributes, loadout);
     // A known or charted favorite keeps its slot through the upgrade.
     const pick = favoriteWeaponPick(w);
     if (pick) loadout.weapon = pick;
@@ -79,8 +83,11 @@ export function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
  * Weekly armory pass: keep each active warrior on the best weapon they can
  * wield as their attributes change (a recruit who trains into the favorite's
  * requirements picks it up; one who never will stops swinging it at a
- * penalty). Free and RNG-free — swapping between stock weapons is not the
- * paid gear upgrade above. Returns the same roster array when nothing changed.
+ * penalty), and keep the armor slot on the warrior's archetype doctrine —
+ * tank-framed AI wear the heaviest plate they can carry, hybrids never
+ * go over-encumbered. Free and RNG-free — swapping between stock gear is
+ * not the paid gear upgrade above. Returns the same roster array when
+ * nothing changed.
  */
 export function refitRosterWeapons(roster: Warrior[]): Warrior[] {
   let changed = false;
@@ -91,12 +98,12 @@ export function refitRosterWeapons(roster: Warrior[]): Warrior[] {
     // the affinity edge outweighs a nominally better fit, and a pure refit
     // would strip it. This is the AI's use of the charting system.
     const pick = favoriteWeaponPick(w);
-    if (pick) {
-      if (current.weapon === pick && w.equipment) return w;
-      changed = true;
-      return { ...w, equipment: { ...current, weapon: pick } };
-    }
-    const fitted = refitWeapon(w.style, w.attributes, current);
+    const afterWeapon = pick
+      ? { ...current, weapon: pick }
+      : refitWeapon(w.style, w.attributes, current);
+    // V25: the armor slot follows the build's winning-archetype doctrine —
+    // the fitter honors restrictedStyles and never lands the loadout OVER.
+    const fitted = refitArmor(w.style, w.attributes, afterWeapon);
     if (fitted === current && w.equipment) return w;
     changed = true;
     return { ...w, equipment: fitted };

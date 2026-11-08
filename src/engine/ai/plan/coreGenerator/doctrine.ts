@@ -7,9 +7,14 @@ import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/game';
 import { clamp } from '@/utils/math';
 import { pickStrategyTarget } from '@/engine/ai/plan/strategyLab';
+import { getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
+import {
+  ARCHETYPE_DESIGN_BARS,
+  classifyArchetype,
+} from '@/data/warriorArchetypes';
 
 /** Canon per-style plan doctrine — hard ceilings applied after all modifiers. */
-export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
+function applyStyleCaps(plan: FightPlan, w: Warrior): void {
   if (w.style === FightingStyle.AimedBlow) {
     // Duel II canon (Raf/Assur/Trump/Manimal/Paradox): AB is an offensive —
     // OE below 4 makes it "stand around looking for an opening", so OE is
@@ -83,6 +88,56 @@ export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
   plan.OE = Math.min(plan.OE, 5);
   plan.AL = Math.min(plan.AL, 5);
   plan.killDesire = Math.min(plan.killDesire ?? 5, 5);
+}
+
+/**
+ * V25 — Assur's winning-archetype shaping, applied after the per-style
+ * caps: the build's top archetype fit steers the plan inside whatever
+ * bounds the style doctrine already set.
+ *
+ * - Tank/low-will-tank fits: OE floors at the articles' 5+ ("tanks
+ *   generally run high offensive effort") — a floor, never a raise above
+ *   an existing style cap's ceiling.
+ * - Pure-defensive fits: conservative ceilings (OE/AL/KD ≤ 5) — the
+ *   scum doctrine generalized to defensive builds on other styles.
+ * - Riposting-hybrid fits: the Riposte tactic is suggested where the
+ *   style is well-suited to it ("riposte is easy to fake") — only fills
+ *   an empty tactic slot, never overrides a chosen tactic.
+ */
+function applyArchetypeShaping(plan: FightPlan, w: Warrior): void {
+  const top = classifyArchetype(w.attributes, w.style)[0];
+  if (!top) return;
+  switch (top.archetype) {
+    case 'tankHybrid':
+    case 'lowWillTankHybrid':
+      // TP is exempt: its own scum/un-scum doctrine is the canon OE source —
+      // the un-scum variety legitimately runs 2-7, below the tank floor.
+      if (w.style !== FightingStyle.TotalParry) {
+        plan.OE = Math.max(plan.OE, ARCHETYPE_DESIGN_BARS.TANK_OE_FLOOR);
+      }
+      return;
+    case 'pureDefensive':
+      plan.OE = Math.min(plan.OE, 5);
+      plan.AL = Math.min(plan.AL, 5);
+      plan.killDesire = Math.min(plan.killDesire ?? 5, 5);
+      return;
+    case 'ripostingHybrid':
+      if (
+        !plan.defensiveTactic &&
+        getDefensiveSuitability(w.style, 'Riposte') === 'WS'
+      ) {
+        plan.defensiveTactic = 'Riposte';
+      }
+      return;
+    default:
+      return;
+  }
+}
+
+/** Canon plan doctrine — per-style caps, then archetype-fit shaping. */
+export function applyStyleDoctrine(plan: FightPlan, w: Warrior): void {
+  applyStyleCaps(plan, w);
+  applyArchetypeShaping(plan, w);
 }
 
 /** Strategy Lab: blend the assembled plan toward the week's ε-greedy

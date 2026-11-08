@@ -195,6 +195,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'v21Weather.guard.test.ts': 'LIVE_RATCHET',
   'v22Canon.guard.test.ts': 'LIVE_RATCHET',
   'v23Canon.guard.test.ts': 'LIVE_RATCHET',
+  'v25Archetypes.guard.test.ts': 'LIVE_RATCHET',
   'wiring.wired.test.tsx': 'LIVE_RATCHET',
 };
 

@@ -27,14 +27,14 @@ function meanAttrs(style?: FightingStyle) {
 }
 
 describe('generateRecruitAttrs — style-aware blend', () => {
-  it('WallOfSteel recruits trend toward canon WL/DF (speed is the luxury)', () => {
+  it('WallOfSteel recruits trend toward the canon wall corpus', () => {
     const tank = meanAttrs(FightingStyle.WallOfSteel);
     const neutral = meanAttrs(undefined);
-    // The canon wall corpus is will-first ("Wastes need Will", 15-21), with
-    // wit and deftness next — and speed explicitly gets zero added points.
-    // The blend lifts the leadership pair, keeps deftness ahead of size,
+    // V25 corpus update: Assur's low-will tank line joined the WS concepts,
+    // so the corpus is no longer uniformly will-first — the blend lifts
+    // wit+will together, keeps deftness ahead of size on a small frame,
     // and starves speed.
-    expect(tank.WL).toBeGreaterThan(neutral.WL + 1);
+    expect(tank.WL).toBeGreaterThan(neutral.WL);
     expect(tank.WT + tank.WL).toBeGreaterThan(neutral.WT + neutral.WL + 1);
     expect(tank.DF).toBeGreaterThan(tank.SZ);
     expect(tank.SP).toBeLessThan(neutral.SP);

@@ -290,6 +290,11 @@ export function isWieldingFavoriteWeapon(
  * favorite range, and structurally impossible for AB/WS whose defaults were
  * outside. The ±1 "close match" tier gives a more reliable bonus while still
  * rewarding plans that exactly hit the warrior's natural rhythm.
+ *
+ * V25 canon (Assur): the rhythm bonus is always on — like the favorite
+ * weapon, discovery only *reveals* the affinity to the manager; the
+ * warrior fights better at their natural rhythm whether or not anyone
+ * has charted it.
  */
 export function getFavoriteRhythmBonus(
   warrior: { favorites?: WarriorFavorites },
@@ -297,7 +302,7 @@ export function getFavoriteRhythmBonus(
   currentAL: number
 ): number {
   const fav = warrior.favorites;
-  if (!fav?.discovered.rhythm) return 0;
+  if (!fav) return 0;
   const oeDelta = Math.abs(currentOE - fav.rhythm.oe);
   const alDelta = Math.abs(currentAL - fav.rhythm.al);
   if (oeDelta === 0 && alDelta === 0) return 2; // perfect match

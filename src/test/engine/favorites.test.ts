@@ -295,7 +295,9 @@ describe('getFavoriteRhythmBonus', () => {
     expect(getFavoriteRhythmBonus(warrior, 7, 5)).toBe(0);
   });
 
-  it('returns 0 when rhythm is not discovered', () => {
+  it('pays the bonus even while the rhythm is undiscovered — V25 always-on canon', () => {
+    // Assur: the warrior fights better at their natural rhythm whether or
+    // not the manager has charted it — same rule as the favorite weapon.
     const warrior = makeWarrior({
       favorites: {
         weaponId: 'longsword',
@@ -303,7 +305,8 @@ describe('getFavoriteRhythmBonus', () => {
         discovered: { weapon: true, rhythm: false, weaponHints: 0, rhythmHints: 0 },
       },
     });
-    expect(getFavoriteRhythmBonus(warrior, 7, 5)).toBe(0);
+    expect(getFavoriteRhythmBonus(warrior, 7, 5)).toBe(2);
+    expect(getFavoriteRhythmBonus(warrior, 8, 5)).toBe(1);
   });
 
   it('returns 0 when current plan is far from favorite', () => {

@@ -129,7 +129,11 @@ const DEBT_PAIRS = new Set<string>([]);
 // V23 Phase-2/4: +2 — the DA-rule and doctrine review specs re-state their
 // respective engine call shapes (generateRecruitAttrs attrs bag /
 // reviewWarriorDesign item assertions) as fixture data (registered exempt) → 21.
-const TEST_TO_TEST_BASELINE = 21;
+// V24 close-out + V25 in-flight: the V24 canon spec batch and the V25
+// archetype spec batch echo the same fixture shapes (attrs-bag helper,
+// reviewWarriorDesign item assertions, simulateFight preamble) — the pin
+// is the point; all 11 pairs registered exempt → 32.
+const TEST_TO_TEST_BASELINE = 32;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -187,6 +191,23 @@ const TEST_EXEMPT_PAIRS = new Set([
   // assertion shape — same literal-pin/call-shape category as above.
   'src/test/engine/economy/balance.slow.test.ts|src/test/engine/owner/recruitGenerator.da.test.ts',
   'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/v23DesignReview.test.ts',
+  // ─── V24 close-out / V25 in-flight — the V24 canon spec batch and the
+  // V25 archetype spec batch re-state the shared fixture shapes (attrs-bag
+  // helper, reviewWarriorDesign item-assertion shape, simulateFight call
+  // preamble) as assertion data — same literal-pin/call-shape category as
+  // the pairs above. The V25 pairs stay registered while that megaplan is
+  // in flight; its close-out owns any real consolidation.
+  'src/test/engine/combat/clashLoop.canon.test.ts|src/test/engine/combat/jump.test.ts',
+  'src/test/engine/equipment/archetypeArmor.test.ts|src/test/engine/learning/learnCapAndBurn.canon.test.ts',
+  'src/test/engine/equipment/archetypeArmor.test.ts|src/test/engine/warrior/designReview.test.ts',
+  'src/test/engine/equipment/archetypeArmor.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
+  'src/test/engine/equipment/archetypeArmor.test.ts|src/test/engine/warrior/v23DesignReview.test.ts',
+  'src/test/engine/learning/learnCapAndBurn.canon.test.ts|src/test/engine/warrior/designReview.test.ts',
+  'src/test/engine/learning/learnCapAndBurn.canon.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
+  'src/test/engine/learning/learnCapAndBurn.canon.test.ts|src/test/engine/warrior/v23DesignReview.test.ts',
+  'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
+  'src/test/engine/warrior/v23DesignReview.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
+  'src/test/constants/burnOrder.test.ts|src/test/engine/combat/v25MechanicsAudit.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

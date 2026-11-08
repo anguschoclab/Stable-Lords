@@ -48,6 +48,8 @@ const GATED_PUSH_COUNTS: Record<string, number> = {
   'simulate/simulationLoop/outcomes.ts': 2,
   'simulate/simulationLoop/beats.ts': 3,
   'simulate/postFight.ts': 2,
+  // Learn-transcript line — gated in-file by `if (!args.headless)`.
+  'bout/progressionHandler.ts': 1,
 };
 
 describe('headless transcript contract', () => {

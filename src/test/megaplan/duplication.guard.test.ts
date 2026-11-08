@@ -114,7 +114,9 @@ const DEBT_PAIRS = new Set<string>([]);
 // Megaplan-alloc: +1 — arenaLookup↔scanInLoop guards share the
 // scanner+allowlist ratchet harness (KNOWN_EXCEPTIONS, stale-entry and
 // why-length assertions); each pins a different invariant → 15.
-const TEST_TO_TEST_BASELINE = 15;
+// Learn-rollout: +1 — extraValueHits↔attackCheck share the getStylePassive
+// ctx arg shape + makeCombatFighter preamble (registered exempt) → 16.
+const TEST_TO_TEST_BASELINE = 16;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -157,6 +159,10 @@ const TEST_EXEMPT_PAIRS = new Set([
   // guards a different scan invariant — same exemption category as the
   // v20↔v21 narrative-guard pair above.
   'src/test/megaplan/arenaLookup.guard.test.ts|src/test/megaplan/scanInLoop.guard.test.ts',
+  // extraValueHits re-states attackCheck's getStylePassive ctx arg shape and
+  // makeCombatFighter preamble as fixture data — the canonical call shape
+  // is the pin, same category as the tournamentSelection pairs above.
+  'src/test/engine/combat/extraValueHits.test.ts|src/test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the
@@ -167,7 +173,9 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // intentional literal pins: specs re-stating canonical production literals
 // (zero-state objects, enum unions, ctx key lists, barrel/mocks surfaces)
 // as assertion data — the duplication is the point.
-const MIXED_BASELINE = 20;
+// Learn-rollout: +1 — the learnPriorities data spec re-states the canonical
+// weight derivation (rank→6..1) the engine applies — a literal pin → 21.
+const MIXED_BASELINE = 21;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -204,6 +212,9 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // makeBoutSummary in _fixtures re-states WeekStatsService's zeroed
   // summary shape — a canonical production-literal pin for mock returns.
   'src/engine/bout/services/WeekStatsService.ts|src/test/_fixtures/factories.ts',
+  // The learnPriorities data spec pins the rank→weight derivation that
+  // learnPoolWeights applies — canonical production-literal pin.
+  'src/engine/learning/learnRoll.ts|src/test/data/learnPriorities.test.ts',
 ]);
 
 const MIXED_DEBT_PAIRS = new Set<string>([]);

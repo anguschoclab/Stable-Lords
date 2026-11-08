@@ -34,7 +34,10 @@ import {
   AI_TRAIT_DEV_RESERVE,
   AI_TRAIT_DEV_WEALTH_TREASURY,
   AI_TRAIT_DEV_WEALTH_APPETITE_MULT,
+  AI_WT_LEARN_FLOOR,
+  AI_WT_TRAIN_MAX_BOUTS,
 } from '@/constants/ai';
+import { suspectedFavoriteLearn } from '@/engine/learning';
 import type { Trainer } from '@/types/shared.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
@@ -90,6 +93,19 @@ export function selectTrainingFocus(
     for (const k of TP_SCUM_TRAIN_ORDER) {
       if (trainable.has(k) && w.attributes[k] < ATTRIBUTE_MAX) return k;
     }
+  }
+
+  // Canon godling doctrine: wit gates arena learning — a young warrior with
+  // low WT is paying for fights and skipping the lesson. Burn WT to the
+  // learn-rate floor while the career window is open; veterans past it keep
+  // their normal focus.
+  const bouts = (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+  if (
+    w.attributes.WT < AI_WT_LEARN_FLOOR &&
+    bouts < AI_WT_TRAIN_MAX_BOUTS &&
+    trainableKeys.includes('WT')
+  ) {
+    return 'WT';
   }
 
   let chosen: keyof Attributes | undefined;
@@ -241,7 +257,13 @@ export function performAISkillDrill(
   const primary = STYLE_PRIMARY_DRILL[w.style as FightingStyle];
   const drills = w.skillDrills ?? {};
   let skill: keyof BaseSkills | undefined;
-  if (primary && (drills[primary] ?? 0) < SKILL_DRILL_CAP) {
+  // Evidence first (tinkering doctrine): when the learn ledger shows a
+  // suspected favorite learn, drill that skill — the warrior is proving the
+  // aptitude in the arena, so the stable doubles down on the route.
+  const suspected = suspectedFavoriteLearn(w);
+  if (suspected && (drills[suspected] ?? 0) < SKILL_DRILL_CAP) {
+    skill = suspected;
+  } else if (primary && (drills[primary] ?? 0) < SKILL_DRILL_CAP) {
     skill = primary;
   } else {
     // Fall back to the least-drilled still-below-cap skill; ties broken by

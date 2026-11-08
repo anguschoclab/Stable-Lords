@@ -24,6 +24,7 @@ import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../../mechanics/weaponStats';
 import {
   CRIT_DAMAGE_MULT,
+  CRIT_EXTRA_VALUE_MIN_DAMAGE,
   AB_ARMOR_BYPASS_MAX,
   AB_ARMOR_BYPASS_DF_DIVISOR,
   COMMIT_DAMAGE_MULT,
@@ -31,7 +32,7 @@ import {
   FAVORITE_WEAPON_CRIT_CHANCE,
 } from '@/constants/combat';
 import { isWieldingFavoriteWeapon } from '@/engine/favorites/favorites';
-import { recordWeaponCrit } from '../../../weaponChart';
+import { recordWeaponCrit, recordWeaponExtraValueHit } from '../../../weaponChart';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../../guardBreak';
 import { accumulateBleed } from '../../../bleed';
@@ -200,6 +201,12 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
     SHIELD_COVERAGE[defender.shieldId ?? ''] ?? SHIELD_COVERAGE[defender.weaponId ?? ''];
   const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
   const damage = applyProtectMod(postShieldDamage, hitLoc, defender.activePlan.protect);
+
+  // Fourth chart column (canon "extra value" hits): a crit whose applied
+  // damage cleared the EV line — recorded alongside the crit tally.
+  if (isCrit && damage >= CRIT_EXTRA_VALUE_MIN_DAMAGE) {
+    recordWeaponExtraValueHit(attacker);
+  }
 
   if (isCrit) {
     events.push({

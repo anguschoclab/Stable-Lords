@@ -6,6 +6,7 @@ const WarriorRadarChart = lazy(() =>
 );
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { FavoritesCard } from '@/components/warrior/FavoritesCard';
+import { TurnaroundCard } from '@/components/warrior/TurnaroundCard';
 import { AttrBar, SkillBar, WarriorStatementsPanel } from '@/components/warrior/WarriorStats';
 import { overallGrowthNarrative } from '@/components/warrior/GrowthHelpers';
 import { Warrior } from '@/types/game';
@@ -53,6 +54,8 @@ function PhysiqueColumn({ warrior }: { warrior: Warrior }) {
 
       <SectionDivider label="Combat Affinities" />
       <FavoritesCard warrior={warrior} onUpdate={() => {}} />
+
+      <TurnaroundCard warrior={warrior} />
     </div>
   );
 }

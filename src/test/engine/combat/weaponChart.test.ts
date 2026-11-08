@@ -8,6 +8,7 @@ import {
   recordWeaponSwing,
   recordWeaponCrit,
   recordWeaponKnockdown,
+  recordWeaponExtraValueHit,
 } from '@/engine/combat/resolution/weaponChart';
 import { makeFighterState } from '@/test/_fixtures/factories';
 import { makeFlatWarrior } from '@/test/_fixtures/determinism';
@@ -28,7 +29,7 @@ describe('weaponChart tally helpers', () => {
     recordWeaponSwing(f);
     recordWeaponCrit(f);
     recordWeaponKnockdown(f);
-    expect(f.weaponChart?.warhammer).toEqual({ swings: 2, crits: 1, knockdowns: 1 });
+    expect(f.weaponChart?.warhammer).toEqual({ swings: 2, crits: 1, knockdowns: 1, critDamages: 0 });
   });
 
   it('attributes tallies per weapon across a disarm weapon swap', () => {
@@ -38,8 +39,30 @@ describe('weaponChart tally helpers', () => {
     f.weaponId = 'fist';
     recordWeaponSwing(f);
     recordWeaponKnockdown(f);
-    expect(f.weaponChart?.warhammer).toEqual({ swings: 1, crits: 1, knockdowns: 0 });
-    expect(f.weaponChart?.fist).toEqual({ swings: 1, crits: 0, knockdowns: 1 });
+    expect(f.weaponChart?.warhammer).toEqual({ swings: 1, crits: 1, knockdowns: 0, critDamages: 0 });
+    expect(f.weaponChart?.fist).toEqual({ swings: 1, crits: 0, knockdowns: 1, critDamages: 0 });
+  });
+
+  it('counts extra-value hits in the fourth chart column', () => {
+    const f = makeFighterState({ weaponId: 'warhammer' });
+    recordWeaponSwing(f);
+    recordWeaponCrit(f);
+    recordWeaponExtraValueHit(f);
+    expect(f.weaponChart?.warhammer).toEqual({
+      swings: 1,
+      crits: 1,
+      knockdowns: 0,
+      critDamages: 1,
+    });
+  });
+
+  it('keeps extra-value hits attributed to the weapon that dealt them', () => {
+    const f = makeFighterState({ weaponId: 'warhammer' });
+    recordWeaponExtraValueHit(f);
+    f.weaponId = 'fist';
+    recordWeaponCrit(f);
+    expect(f.weaponChart?.warhammer?.critDamages).toBe(1);
+    expect(f.weaponChart?.fist?.critDamages ?? 0).toBe(0);
   });
 });
 

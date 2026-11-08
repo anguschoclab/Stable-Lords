@@ -17,6 +17,15 @@ const freshRecord = (rival: RivalStableData): SeasonRecord => ({
   rosterSizeAtSeasonStart: rival.roster.reduce((count, w) => (isActive(w) ? count + 1 : count), 0),
 });
 
+/** The analysis factor the debrief credited against this stable's side. */
+function opponentFavoredFactor(
+  fight: FightSummary,
+  side: 'A' | 'D'
+): string | undefined {
+  const opp = side === 'A' ? 'D' : 'A';
+  return fight.analysis?.factors.find((f) => f.favored === opp)?.label;
+}
+
 /** Which side of a fight belongs to this stable, if any. */
 function sideFor(rival: RivalStableData, fight: FightSummary): 'A' | 'D' | null {
   for (const w of rival.roster) {
@@ -97,13 +106,20 @@ export function recordBoutOutcome(
 
   // Strategy Lab: score each fighter's plan cell against this week's outcome.
   // The ledger is what `pickStrategyTarget` exploits/probes next week.
+  // Loss factors are also filed per-warrior (`recentLossFactors`) — the
+  // turnaround engine's "why am I losing" ledger.
   const rosterById = new Map(rival.roster.map((x) => [String(x.id), x]));
   const outcomes = new Map<string, { oe: number; al: number; won: boolean }[]>();
+  const lossFactorByWarrior = new Map<string, string>();
   for (const fight of fights) {
     const side = sideFor(rival, fight);
     if (!side) continue;
     const wid = String(side === 'A' ? fight.warriorIdA : fight.warriorIdD);
     const w = rosterById.get(wid);
+    if (fight.winner && fight.winner !== side) {
+      const factor = opponentFavoredFactor(fight, side);
+      lossFactorByWarrior.set(wid, factor ?? fight.by ?? 'Unknown');
+    }
     if (!w?.plan) continue;
     const list = outcomes.get(wid) ?? [];
     outcomes.set(wid, list);
@@ -113,12 +129,19 @@ export function recordBoutOutcome(
       won: fight.winner === side,
     });
   }
-  const roster = outcomes.size
+  const touched = new Set([...outcomes.keys(), ...lossFactorByWarrior.keys()]);
+  const roster = touched.size
     ? rival.roster.map((w) => {
-        const outs = outcomes.get(String(w.id));
-        if (!outs?.length) return w;
+        const wid = String(w.id);
+        if (!touched.has(wid)) return w;
         const memory = cloneStrategyMemory(w.strategyMemory);
-        for (const o of outs) recordPlanOutcome(memory, o.oe, o.al, o.won);
+        for (const o of outcomes.get(wid) ?? []) {
+          recordPlanOutcome(memory, o.oe, o.al, o.won);
+        }
+        const thisLoss = lossFactorByWarrior.get(wid);
+        if (thisLoss) {
+          memory.recentLossFactors = [thisLoss, ...(memory.recentLossFactors ?? [])].slice(0, 5);
+        }
         return { ...w, strategyMemory: memory };
       })
     : rival.roster;

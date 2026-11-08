@@ -13,6 +13,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
+import { favoriteLearnOf } from '@/engine/learning';
 
 // ─── Generation ─────────────────────────────────────────────────────────
 
@@ -72,6 +73,8 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
       rhythm: false,
       weaponHints: 0,
       rhythmHints: 0,
+      learn: false,
+      learnHints: 0,
     },
   };
 }
@@ -90,6 +93,7 @@ export interface DiscoveryResult {
   hints: string[];
   weaponRevealed: boolean;
   rhythmRevealed: boolean;
+  learnRevealed: boolean;
 }
 
 /**
@@ -98,16 +102,18 @@ export interface DiscoveryResult {
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,
-  context?: { weaponId?: string; oe?: number; al?: number }
+  context?: { weaponId?: string; oe?: number; al?: number; learnedFavorite?: boolean }
 ): DiscoveryResult {
   const r = () => rng.next();
   const fav = warrior.favorites;
-  if (!fav) return { updated: false, hints: [], weaponRevealed: false, rhythmRevealed: false };
+  if (!fav)
+    return { updated: false, hints: [], weaponRevealed: false, rhythmRevealed: false, learnRevealed: false };
 
   const hints: string[] = [];
   let updated = false;
   let weaponRevealed = false;
   let rhythmRevealed = false;
+  let learnRevealed = false;
 
   // 1. Weapon Discovery Roll
   if (!fav.discovered.weapon) {
@@ -157,7 +163,31 @@ export function checkDiscovery(
     }
   }
 
-  return { updated, hints, weaponRevealed, rhythmRevealed };
+  // 3. Favorite-Learn Discovery Roll — a warrior who just learned in their
+  //    hidden affinity skill may realize the pattern (symmetry epiphany).
+  //    `learn` is absent on legacy saves; `?? false` keeps them eligible.
+  if (!(fav.discovered.learn ?? false)) {
+    const learnedFavorite = context?.learnedFavorite === true;
+    const revealRoll = learnedFavorite ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE;
+
+    if (learnedFavorite && r() < revealRoll) {
+      fav.discovered.learn = true;
+      learnRevealed = true;
+      const skill = favoriteLearnOf(warrior);
+      hints.push(
+        `EUREKA! ${warriorDisplayName(warrior)} senses an unusual aptitude for ${skill} — lessons in it come easily!`
+      );
+      updated = true;
+    } else if (r() < CHANCE_HINT && (fav.discovered.learnHints ?? 0) < 2) {
+      fav.discovered.learnHints = (fav.discovered.learnHints ?? 0) + 1;
+      hints.push(
+        `Observing: ${warriorDisplayName(warrior)} is absorbing some lessons faster than others...`
+      );
+      updated = true;
+    }
+  }
+
+  return { updated, hints, weaponRevealed, rhythmRevealed, learnRevealed };
 }
 
 // ─── Combat Bonuses ─────────────────────────────────────────────────────
@@ -251,11 +281,12 @@ export function mergeWeaponChart(
   const chart = { ...(favorites.chart ?? {}) };
   let changed = false;
   for (const [weaponId, row] of Object.entries(tally)) {
-    const prev = chart[weaponId] ?? { swings: 0, crits: 0, knockdowns: 0 };
+    const prev = chart[weaponId] ?? { swings: 0, crits: 0, knockdowns: 0, critDamages: 0 };
     chart[weaponId] = {
       swings: prev.swings + row.swings,
       crits: prev.crits + row.crits,
       knockdowns: prev.knockdowns + row.knockdowns,
+      critDamages: (prev.critDamages ?? 0) + (row.critDamages ?? 0),
     };
     changed = true;
   }
@@ -263,8 +294,11 @@ export function mergeWeaponChart(
   return { ...favorites, chart };
 }
 
-/** Apply Insight Token — instantly reveals weapon or rhythm */
-export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm'): string {
+/** Apply Insight Token — instantly reveals weapon, rhythm, or favorite learn */
+export function applyInsightToken(
+  warrior: Warrior,
+  type: 'weapon' | 'rhythm' | 'learn'
+): string {
   const fav = warrior.favorites;
   if (!fav) return `${warriorDisplayName(warrior)} has no hidden favorites.`;
 
@@ -274,10 +308,15 @@ export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm'): 
     fav.discovered.weapon = true;
     const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
     return `Weapon Insight Token used! ${warriorDisplayName(warrior)}'s favorite weapon is the ${weaponItem?.name ?? fav.weaponId}.`;
-  } else {
-    if (fav.discovered.rhythm)
-      return `${warriorDisplayName(warrior)} already knows their natural rhythm.`;
-    fav.discovered.rhythm = true;
-    return `Rhythm Insight Token used! ${warriorDisplayName(warrior)}'s natural rhythm is OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}.`;
   }
+  if (type === 'learn') {
+    if (fav.discovered.learn)
+      return `${warriorDisplayName(warrior)} already knows their favorite learn.`;
+    fav.discovered.learn = true;
+    return `Learn Insight Token used! ${warriorDisplayName(warrior)} learns ${favoriteLearnOf(warrior)} fastest — lessons in it stick.`;
+  }
+  if (fav.discovered.rhythm)
+    return `${warriorDisplayName(warrior)} already knows their natural rhythm.`;
+  fav.discovered.rhythm = true;
+  return `Rhythm Insight Token used! ${warriorDisplayName(warrior)}'s natural rhythm is OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}.`;
 }

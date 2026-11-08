@@ -219,6 +219,13 @@ export const OFFENSIVE_END_COST_WEIGHT = 0.5;
  */
 export const CRIT_DAMAGE_MULT = 1.7;
 
+/**
+ * Extra-value hit threshold (canon Duel2 charting, fourth column): a crit
+ * counts as "extra value" when its applied damage clears this line — the
+ * tell that separates crits that bit deep from cosmetic crits.
+ */
+export const CRIT_EXTRA_VALUE_MIN_DAMAGE = 12;
+
 // ─── Decision Logic ───────────────────────────────────────────────────────
 /**
  * Decision hit margin

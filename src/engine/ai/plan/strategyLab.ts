@@ -32,7 +32,9 @@ export function cloneStrategyMemory(memory: StrategyMemory | undefined): Strateg
     const c = src[k];
     if (c) cells[k] = { w: c.w, l: c.l };
   }
-  return { cells };
+  const out: StrategyMemory = { cells };
+  if (memory?.recentLossFactors) out.recentLossFactors = [...memory.recentLossFactors];
+  return out;
 }
 
 /** Record a bout outcome against the plan cell that produced it. */
@@ -86,13 +88,22 @@ export function pickStrategyTarget(
   const total = Object.values(cells).reduce((s, c) => s + visits(c), 0);
   if (total === 0) return null; // no data yet — run the base plan, learn first
   const exploreRate = Math.max(0.1, 0.35 - total * 0.01);
-  const exploring = hash(warriorId, week, 1) < exploreRate;
+
+  // Stuck detection (canon tinkering doctrine): when the ledger's best cell
+  // has enough visits and still can't win, exploiting it is just losing on
+  // purpose — force a probe until something else proves out.
+  let topKey: string | null = null;
+  for (const [k, c] of Object.entries(cells)) {
+    if (!topKey || score(c) > score(cells[topKey])) topKey = k;
+  }
+  const topCell = topKey ? cells[topKey] : undefined;
+  const stuck = !!topCell && visits(topCell) >= 4 && score(topCell) < 0.5;
+
+  const exploring = stuck || hash(warriorId, week, 1) < exploreRate;
 
   let bestKey: string | null = null;
   if (!exploring) {
-    for (const [k, c] of Object.entries(cells)) {
-      if (!bestKey || score(c) > score(cells[bestKey])) bestKey = k;
-    }
+    bestKey = topKey;
   }
   if (!bestKey) {
     // Probe the least-visited cell, seeded so the same week picks the same cell.

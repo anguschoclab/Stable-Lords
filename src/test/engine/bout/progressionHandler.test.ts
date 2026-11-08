@@ -3,46 +3,15 @@
  */
 import { describe, it, expect } from 'vitest';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
-import type { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
-import type { FightOutcome } from '@/types/combat.types';
+import type { RivalStableData } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import {
+  mkBoutWarrior as createMockWarrior,
+  mkBoutState as createMockState,
+  mkBoutOutcome as createMockOutcome,
+} from './_helpers';
 
 describe('progressionHandler', () => {
-  const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
-    ({
-      id: 'warrior-a' as WarriorId,
-      name: 'Warrior A',
-      fame: 10,
-      popularity: 5,
-      favorites: {
-        weaponId: 'broadsword',
-        rhythm: { oe: 5, al: 5 },
-        discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
-      },
-      flair: [],
-      career: { wins: 5, losses: 3, kills: 1 },
-      ...overrides,
-    }) as Warrior;
-
-  const createMockState = (overrides: Partial<GameState> = {}): GameState =>
-    ({
-      week: 1,
-      roster: [],
-      rivalMap: new Map(),
-      warriorToStableMap: new Map(),
-      player: { id: 'player-1' as StableId },
-      ...overrides,
-    }) as any as GameState;
-
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
-    winner: 'A',
-    by: 'KO',
-    minutes: 5,
-    log: [],
-    post: { xpA: 100, xpD: 50 },
-    ...overrides,
-  });
 
   describe('handleProgressions', () => {
     it('applies XP to both fighters', () => {

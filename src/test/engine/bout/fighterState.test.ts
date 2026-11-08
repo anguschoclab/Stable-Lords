@@ -525,4 +525,48 @@ describe('fighterState', () => {
       expect(rDual.skills.DEF).toBeGreaterThan(rSingle.skills.DEF);
     });
   });
+
+  describe('learned skills (Arena-93 learns)', () => {
+    it('adds learnedSkills on top of derived skills', () => {
+      const baseline = createMockWarrior();
+      const learned = createMockWarrior({ learnedSkills: { ATT: 2, INI: 1 } });
+      const plan = createMockPlan();
+
+      const rBase = createFighterState('A', plan, baseline);
+      const rLearned = createFighterState('A', plan, learned);
+
+      expect(rLearned.skills.ATT).toBe(rBase.skills.ATT + 2);
+      expect(rLearned.skills.INI).toBe(rBase.skills.INI + 1);
+      expect(rLearned.skills.PAR).toBe(rBase.skills.PAR);
+    });
+
+    it('stacks learnedSkills with skillDrills', () => {
+      const drilled = createMockWarrior({ skillDrills: { ATT: 3 } });
+      const drilledAndLearned = createMockWarrior({
+        skillDrills: { ATT: 3 },
+        learnedSkills: { ATT: 2 },
+      });
+      const plan = createMockPlan();
+
+      const rDrill = createFighterState('A', plan, drilled);
+      const rBoth = createFighterState('A', plan, drilledAndLearned);
+
+      expect(rBoth.skills.ATT).toBe(rDrill.skills.ATT + 2);
+    });
+
+    it('adds learns to every skill row, not just ATT', () => {
+      const baseline = createMockWarrior();
+      const learned = createMockWarrior({
+        learnedSkills: { ATT: 1, PAR: 1, DEF: 1, INI: 1, RIP: 1, DEC: 1 },
+      });
+      const plan = createMockPlan();
+
+      const rBase = createFighterState('A', plan, baseline);
+      const rLearned = createFighterState('A', plan, learned);
+
+      for (const k of ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'] as const) {
+        expect(rLearned.skills[k]).toBe(rBase.skills[k] + 1);
+      }
+    });
+  });
 });

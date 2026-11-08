@@ -3,7 +3,7 @@ import { type Warrior } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { useFavoritesActions } from '@/hooks/useFavoritesActions';
-import { WeaponAffinitySection, BioRhythmSection } from './favorites';
+import { WeaponAffinitySection, BioRhythmSection, LearnAffinitySection } from './favorites';
 
 /**
  *
@@ -27,6 +27,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
       <div className="p-8 space-y-10">
         <WeaponAffinitySection warrior={warrior} actions={actions} />
         <BioRhythmSection warrior={warrior} actions={actions} />
+        <LearnAffinitySection warrior={warrior} actions={actions} />
       </div>
     </Surface>
   );

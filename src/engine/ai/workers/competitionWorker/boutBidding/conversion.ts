@@ -33,7 +33,11 @@ import {
   AI_LEARN_SEEK_GAP_DIVISOR,
   AI_LEARN_SEEK_MAX_BOUTS,
   AI_LEARN_SEEK_PERSONALITIES,
+  AI_LEARN_TEACH_BONUS,
+  AI_LEARN_TEACH_WEIGHT_MIN,
 } from '@/constants/ai';
+import { suspectedFavoriteLearn } from '@/engine/learning';
+import { STYLE_LEARN_WEIGHTS } from '@/data/learnPriorities';
 import {
   AI_DOWN_CHALLENGE_PENALTY,
   arenaIsHonorBound,
@@ -187,8 +191,11 @@ const careerBouts = (w: Warrior): number =>
 /**
  * Canon "challenge a very experienced warrior" to learn: young warriors of
  * studious personalities get a score bonus toward more seasoned opponents.
+ * A candidate whose style strongly teaches the proposer's suspected
+ * favorite learn adds a teach-matchup bonus — the opponent is the textbook
+ * ("How To Make a Loser Win": fight who teaches what you need).
  */
-function learningSeekBonus(
+export function learningSeekBonus(
   proposer: Warrior,
   candidate: Warrior,
   proposerStable: RivalStableData | undefined
@@ -198,7 +205,14 @@ function learningSeekBonus(
   if (careerBouts(proposer) >= AI_LEARN_SEEK_MAX_BOUTS) return 0;
   const gap = careerBouts(candidate) - careerBouts(proposer);
   if (gap <= 0) return 0;
-  return Math.min(AI_LEARN_SEEK_CAP, Math.floor(gap / AI_LEARN_SEEK_GAP_DIVISOR));
+  const base = Math.min(AI_LEARN_SEEK_CAP, Math.floor(gap / AI_LEARN_SEEK_GAP_DIVISOR));
+  const suspected = suspectedFavoriteLearn(proposer);
+  const teach =
+    suspected &&
+    (STYLE_LEARN_WEIGHTS[candidate.style]?.[suspected] ?? 0) >= AI_LEARN_TEACH_WEIGHT_MIN
+      ? AI_LEARN_TEACH_BONUS
+      : 0;
+  return base + teach;
 }
 
 /** Picks the highest-scoring candidate opponent (pairwise; h2h memoized). */

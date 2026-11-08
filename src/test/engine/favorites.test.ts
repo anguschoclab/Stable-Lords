@@ -135,6 +135,8 @@ describe('generateFavorites', () => {
     expect(result.discovered).toEqual({
       weapon: false,
       rhythm: false,
+      learn: false,
+      learnHints: 0,
       weaponHints: 0,
       rhythmHints: 0,
     });
@@ -169,6 +171,7 @@ describe('checkDiscovery', () => {
       hints: [],
       weaponRevealed: false,
       rhythmRevealed: false,
+      learnRevealed: false,
     });
   });
 
@@ -276,7 +279,8 @@ describe('checkDiscovery', () => {
     const warrior = makeWarrior({ favorites: fav });
     // Weapon: no reveal, no hint (0.3, 0.2)
     // Rhythm: symmetry match, reveal (0.1 < 0.25)
-    const rng = makeMockRng([0.3, 0.2, 0.1, 0]);
+    // Learn: no favorite lesson → hint roll fails (0.5)
+    const rng = makeMockRng([0.3, 0.2, 0.1, 0.5]);
     const result = checkDiscovery(warrior, rng, { weaponId: 'dagger', oe: 6, al: 6 });
     expect(result.hints.length).toBe(1);
     expect(result.rhythmRevealed).toBe(true);
@@ -451,7 +455,12 @@ describe('mergeWeaponChart', () => {
     const merged = mergeWeaponChart(baseFav(), {
       short_spear: { swings: 12, crits: 4, knockdowns: 1 },
     });
-    expect(merged?.chart?.short_spear).toEqual({ swings: 12, crits: 4, knockdowns: 1 });
+    expect(merged?.chart?.short_spear).toEqual({
+      swings: 12,
+      crits: 4,
+      knockdowns: 1,
+      critDamages: 0,
+    });
   });
 
   it('accumulates across bouts and tracks multiple weapons independently', () => {
@@ -463,8 +472,29 @@ describe('mergeWeaponChart', () => {
       scimitar: { swings: 5, crits: 1, knockdowns: 0 },
       short_spear: { swings: 15, crits: 7, knockdowns: 2 },
     });
-    expect(second?.chart?.scimitar).toEqual({ swings: 21, crits: 3, knockdowns: 1 });
-    expect(second?.chart?.short_spear).toEqual({ swings: 15, crits: 7, knockdowns: 2 });
+    expect(second?.chart?.scimitar).toEqual({ swings: 21, crits: 3, knockdowns: 1, critDamages: 0 });
+    expect(second?.chart?.short_spear).toEqual({
+      swings: 15,
+      crits: 7,
+      knockdowns: 2,
+      critDamages: 0,
+    });
+  });
+
+  it('accumulates extra-value hits in the fourth column', () => {
+    const fav = baseFav();
+    const first = mergeWeaponChart(fav, {
+      warhammer: { swings: 10, crits: 3, knockdowns: 0, critDamages: 2 },
+    });
+    const second = mergeWeaponChart(first, {
+      warhammer: { swings: 8, crits: 2, knockdowns: 1, critDamages: 1 },
+    });
+    expect(second?.chart?.warhammer).toEqual({
+      swings: 18,
+      crits: 5,
+      knockdowns: 1,
+      critDamages: 3,
+    });
   });
 
   it('does not mutate the input favorites object', () => {

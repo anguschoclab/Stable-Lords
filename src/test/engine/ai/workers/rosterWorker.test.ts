@@ -72,12 +72,14 @@ afterEach(() => {
 
 describe('selectTrainingFocus', () => {
   it('selects CN for Spring', () => {
-    const w = makeWarrior('w1');
+    // WT at/above the learn floor so the godling WT-burn doesn't hijack the
+    // seasonal pick (that doctrine is covered in rosterWorkerTurnaround).
+    const w = makeWarrior('w1', { WT: 14 });
     expect(selectTrainingFocus(w, 'Spring')).toBe('CN');
   });
 
   it('selects ST for Summer', () => {
-    const w = makeWarrior('w1');
+    const w = makeWarrior('w1', { WT: 14 });
     expect(selectTrainingFocus(w, 'Summer')).toBe('ST');
   });
 

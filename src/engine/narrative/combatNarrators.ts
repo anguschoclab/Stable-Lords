@@ -303,6 +303,9 @@ interface NarrateHitArgs {
   location: string;
   _isMastery?: boolean;
   isSuperFlashy?: boolean;
+  /** True when the crit's applied damage cleared CRIT_EXTRA_VALUE_MIN_DAMAGE —
+   *  prefers the canon "extra value" pool for the strike text. */
+  isExtraValue?: boolean;
   attackerName?: string;
   weaponId?: string;
   damage?: number;
@@ -317,7 +320,7 @@ interface NarrateHitArgs {
  * Narrates a hit with severity-based flavor.
  */
 export function narrateHit(args: NarrateHitArgs): string {
-  const { rng, defenderName, location, isSuperFlashy } = args;
+  const { rng, defenderName, location, isSuperFlashy, isExtraValue } = args;
   const { attackerName, weaponId, damage, maxHp, isFatal } = args;
   const { attackerFame, isFavorite, style } = args;
   const richLoc = richHitLocation(rng, location);
@@ -328,7 +331,9 @@ export function narrateHit(args: NarrateHitArgs): string {
     damage: damage || 0,
     maxHp: maxHp || 100,
     isFatal: isFatal || false,
-    isCrit: isSuperFlashy || false,
+    // An extra-value crit narrates as critical even when the flashy gate is
+    // closed — a blow that bit deep IS the dramatic hit.
+    isCrit: isSuperFlashy || isExtraValue || false,
     isFavorite: isFavorite || false,
     fame: attackerFame || 0,
   });
@@ -340,6 +345,18 @@ export function narrateHit(args: NarrateHitArgs): string {
   let template = '';
   if (isFatal) {
     template = getFromArchive(rng, ['pbp', 'executions']);
+  }
+
+  // Canon "extra value" crits get their own deep-damage flavor pool before
+  // the generic severity pools — the blow that actually bit deserves text
+  // that says it bit.
+  if (
+    isExtraValue &&
+    (severity === 'critical_human' || severity === 'critical_supernatural') &&
+    (!template || template === 'A fierce exchange occurs.')
+  ) {
+    const evPool = peekArchive(['strikes', wType, 'extra_value']);
+    if (evPool) template = rng.pick(evPool);
   }
 
   if (!template || template === 'A fierce exchange occurs.') {

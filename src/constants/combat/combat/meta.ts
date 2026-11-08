@@ -36,3 +36,7 @@ export const DEBRIEF_WEAPON_MIN_SWINGS = 4;
 export const DEBRIEF_WEAPON_HIT_RATE_FLOOR = 0.35;
 /** XP delta that makes one fighter "the bigger student" of the bout. */
 export const DEBRIEF_LEARN_XP_GAP = 2;
+
+/** Classroom debrief: minimum gap in arena lessons learned before the
+ *  analysis calls out the brighter fighter's faster growth. */
+export const DEBRIEF_CLASSROOM_GAP = 2;

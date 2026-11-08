@@ -5,6 +5,9 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { calculateXP, applyXP } from '@/engine/warrior/progression';
 import { checkDiscovery, mergeWeaponChart } from '@/engine/favorites';
+import { rollBoutLearns, favoriteLearnOf, LEARN_SKILL_KEYS } from '@/engine/learning';
+import { LEARN_SKILL_NAMES } from '@/constants/combat/combat/learn';
+import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 import { patchRivalWarrior } from './warriorRouting';
@@ -23,6 +26,10 @@ import { patchRivalWarrior } from './warriorRouting';
  * follow-up routed them through whole-roster rivalsUpdates writes, which
  * later bout impacts clobbered, so rival progression was still lost.
  */
+function isPlayerWarrior(s: GameState, warrior: Warrior): boolean {
+  return s.player?.id === warrior.stableId || (s.roster || []).some((w) => w.id === warrior.id);
+}
+
 function routeUpdate(
   s: GameState,
   warrior: Warrior,
@@ -30,8 +37,7 @@ function routeUpdate(
   rosterUpdates: Map<WarriorId, Partial<Warrior>>,
   rivalWarriorPatches: Map<WarriorId, Partial<Warrior>>
 ): void {
-  const isPlayer =
-    s.player?.id === warrior.stableId || (s.roster || []).some((w) => w.id === warrior.id);
+  const isPlayer = isPlayerWarrior(s, warrior);
   if (isPlayer) {
     const existing = rosterUpdates.get(warrior.id) ?? {};
     rosterUpdates.set(warrior.id, { ...existing, ...partial });
@@ -53,6 +59,86 @@ interface HandleProgressionsArgs {
   tags: string[];
   week: number;
   rng?: IRNGService;
+  /** Headless bouts keep outcome.log empty — no transcript lines are pushed. */
+  headless?: boolean;
+}
+
+/** Display names for the skills gained this bout, in fixed learn order. */
+function learnedSkillNames(gained: Partial<Record<string, number>>): string {
+  return LEARN_SKILL_KEYS.filter((k) => (gained[k] ?? 0) > 0)
+    .map((k) => LEARN_SKILL_NAMES[k])
+    .join(', ');
+}
+
+/**
+ * Skill learning (Arena-93): each living fighter rolls WT-gated learn
+ * attempts weighted by both combatants' style priorities plus their own
+ * hidden favorite learn. The dead learn nothing — mortality ran first.
+ * Consumes the bout's shared stream in fixed A-then-D order, after XP
+ * draws and before discovery draws.
+ */
+function rollLearnProgressions(
+  args: HandleProgressionsArgs,
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>,
+  rivalWarriorPatches: Map<WarriorId, Partial<Warrior>>,
+  newsletterItems: NewsletterItem[],
+  learnedFavorite: Record<'A' | 'D', boolean>
+): void {
+  const { s, wA, wD, outcome, week, rng } = args;
+  const post = outcome.post ?? { xpA: 0, xpD: 0 };
+  outcome.post = post;
+  for (const { w, opp, side } of [
+    { w: wA, opp: wD, side: 'A' as const },
+    { w: wD, opp: wA, side: 'D' as const },
+  ]) {
+    const dead =
+      w.isDead === true ||
+      post.diedPostBout === side ||
+      (outcome.by === 'Kill' && outcome.winner !== side);
+    if (dead) continue;
+
+    const { gained, learnedSkills } = rollBoutLearns(w, opp.style, rng);
+    if (side === 'A') post.learnsA = gained;
+    else post.learnsD = gained;
+
+    const totalGained = Object.values(gained).reduce((sum, v) => sum + (v ?? 0), 0);
+    if (totalGained === 0) continue;
+    w.learnedSkills = learnedSkills;
+    learnedFavorite[side] = (gained[favoriteLearnOf(w)] ?? 0) > 0;
+    // Fresh copy in the patch: `w` is the rival diff's `before` snapshot, so
+    // routing the same reference we just assigned would compare equal and
+    // drop the change (same reason the favorites block below re-wraps).
+    routeUpdate(
+      s,
+      w,
+      { learnedSkills: { ...learnedSkills } },
+      rosterUpdates,
+      rivalWarriorPatches
+    );
+
+    // Transcript line — deterministic text built from the stored gains, so
+    // it draws nothing from any RNG stream. Headless-gated like every other
+    // transcript push: autosim's deferredBoutLogs must stay empty.
+    if (!args.headless) {
+      const skillsLearned = learnedSkillNames(gained);
+      outcome.log.push({
+        minute: outcome.minutes,
+        text: `${warriorDisplayName(w)} learned well this bout — picks up lessons in ${skillsLearned}.`,
+        phase: 'LATE',
+      });
+    }
+
+    // Gazette: learn write-ups stay player-stable only — rivals' classrooms
+    // are their own business.
+    if (isPlayerWarrior(s, w)) {
+      newsletterItems.push({
+        id: rng ? rng.uuid() : generateId(undefined, 'newsletter'),
+        week,
+        title: 'Training Insight',
+        items: [`${warriorDisplayName(w)} learned ${totalGained} skill${totalGained > 1 ? 's' : ''} this bout (${skillsLearned}).`],
+      });
+    }
+  }
 }
 
 /**
@@ -71,6 +157,10 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
 
   const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags, wD, wA), rng).warrior;
   routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
+
+  outcome.post = outcome.post ?? { xpA: 0, xpD: 0 };
+  const learnedFavorite: Record<'A' | 'D', boolean> = { A: false, D: false };
+  rollLearnProgressions(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
 
   // Favorites discovery — also for both fighters (was player-only).
   // The bout's per-weapon tally merges into the persistent charting ledger
@@ -94,7 +184,12 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
           Object.keys(weights)[0] as K,
         chance: () => false,
       },
-      { weaponId: w.equipment?.weapon, oe: w.plan?.OE, al: w.plan?.AL }
+      {
+        weaponId: w.equipment?.weapon,
+        oe: w.plan?.OE,
+        al: w.plan?.AL,
+        learnedFavorite: learnedFavorite[w === wA ? 'A' : 'D'],
+      }
     );
     if ((disc.updated || mergedFav) && w.favorites) {
       // checkDiscovery mutates w.favorites in place; route a fresh copy so the

@@ -174,6 +174,38 @@ describe('combatNarrators', () => {
     });
   });
 
+  describe('narrateHit — extra-value crits', () => {
+    it('every weapon family has an extra_value pool', () => {
+      for (const wType of ['slashing', 'bashing', 'piercing', 'fist'] as const) {
+        const pool = peekArchive(['strikes', wType, 'extra_value']);
+        expect(pool, `extra_value pool for ${wType}`).not.toBeNull();
+        expect(pool!.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('produces no-raw-token text for an extra-value crit', () => {
+      const rng = new SeededRNG(1);
+      const result = narrateHit({
+        rng: rng,
+        defenderName: 'Vellis',
+        location: 'chest',
+        _isMastery: false,
+        isSuperFlashy: true,
+        isExtraValue: true,
+        attackerName: 'Rex',
+        weaponId: 'warhammer',
+        damage: 30,
+        maxHp: 100,
+        isFatal: false,
+        attackerFame: 50,
+        isFavorite: false,
+        style: FightingStyle.BashingAttack,
+      });
+      expect(noRawTokens(result)).toBe(true);
+      expect(result).not.toBe('A fierce exchange occurs.');
+    });
+  });
+
   describe('narrateParryBreak', () => {
     it('produces no-raw-token text', () => {
       const rng = new SeededRNG(1);

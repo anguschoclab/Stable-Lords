@@ -425,6 +425,52 @@ export function CombatResolutionSection() {
   );
 }
 
+/** Codex section: learning. */
+export function LearningSection() {
+  return (
+    <AccordionItem value="learning">
+      <AccordionTrigger className="font-display text-lg">
+        Lessons & Favorite Learns
+      </AccordionTrigger>
+      <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+        <p>
+          Warriors learn in the arena itself — after every bout a warrior banks
+          <strong> lessons</strong>, permanent +1 skill bonuses on top of their
+          trained sheet. Wit gates the roll: WT 15 ≈ 3–4 lessons per fight.
+        </p>
+        <ul className="list-disc list-inside space-y-1.5">
+          <li>
+            <strong>Six skills</strong> — ATT, PAR, DEF, INI, RIP, DEC. What a
+            warrior tends to learn follows their style's teach order and the
+            opponent's: fight a riposte specialist and their RIP lessons rub
+            off. Caps: 6 per skill, 24 career.
+          </li>
+          <li>
+            <strong>Favorite learn</strong> — Every warrior has one hidden
+            skill they absorb fastest. Watch the <em>Lessons Banked</em>{' '}
+            ledger: a skill at 3+ is flagged Suspected until a{' '}
+            <strong>Learn insight</strong> confirms it.
+          </li>
+          <li>
+            <strong>Weapon charting</strong> — The dossier tallies swings,
+            crits, and extra-value hits per weapon. A weapon producing nothing
+            after a couple dozen swings is evidence to change hands.
+          </li>
+          <li>
+            <strong>Manager's Notebook</strong> — A losing warrior's dossier
+            shows the turnaround advisor's read: one win condition to build
+            around plus the plan, weapon, and matchup moves that evidence
+            supports.
+          </li>
+        </ul>
+        <ContextLinks
+          links={[{ to: '/stable/warriors', label: 'Open the dossier' }]}
+        />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 /** Codex section: tokens. */
 export function InsightTokensSection() {
   return (
@@ -447,6 +493,10 @@ export function InsightTokensSection() {
           <li>
             <strong>Style Token</strong> 🥋 — Instantly identifies a warrior's core fighting style
             without scouting.
+          </li>
+          <li>
+            <strong>Learn Token</strong> 🧠 — Reveals your warrior's favorite learn — the skill
+            their lessons bank fastest.
           </li>
         </ul>
         <p className="mt-2">

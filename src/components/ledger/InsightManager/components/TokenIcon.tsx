@@ -1,4 +1,4 @@
-import { Swords, RotateCw, Zap, TrendingUp, Brain, Fingerprint } from 'lucide-react';
+import { Swords, RotateCw, Zap, TrendingUp, Brain, Fingerprint, BookOpen } from 'lucide-react';
 import type { InsightTokenType } from '@/types/state.types';
 
 const TOKEN_CFG: Record<
@@ -11,6 +11,7 @@ const TOKEN_CFG: Record<
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-arena-fame/20 text-arena-fame', label: 'Tactic' },
   Trait: { Icon: Fingerprint, color: 'bg-accent/20 text-accent', label: 'Trait' },
+  Learn: { Icon: BookOpen, color: 'bg-arena-gold/20 text-arena-gold', label: 'Learn' },
 };
 
 interface TokenIconProps {

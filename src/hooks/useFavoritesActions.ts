@@ -8,16 +8,19 @@ import type { Warrior } from '@/types/game';
  *
  */
 export interface UseFavoritesActionsResult {
-  handleInsight: (type: 'weapon' | 'rhythm') => void;
+  handleInsight: (type: 'weapon' | 'rhythm' | 'learn') => void;
   handleApplyRhythm: () => void;
   handleEquipFavoriteWeapon: () => void;
   favDisplay: ReturnType<typeof getFavoritesDisplay>;
   isWeaponDiscovered: boolean;
   isRhythmDiscovered: boolean;
+  isLearnDiscovered: boolean;
   weaponHints: number;
   rhythmHints: number;
+  learnHints: number;
   weaponProgress: number;
   rhythmProgress: number;
+  learnProgress: number;
 }
 
 /** Rhythm-apply and weapon-equip mutations for a warrior's discovered favorites. */
@@ -78,12 +81,15 @@ export function useFavoritesActions(
 
   const isWeaponDiscovered = !!warrior.favorites?.discovered.weapon;
   const isRhythmDiscovered = !!warrior.favorites?.discovered.rhythm;
+  const isLearnDiscovered = !!warrior.favorites?.discovered.learn;
 
   const weaponHints = warrior.favorites?.discovered.weaponHints ?? 0;
   const rhythmHints = warrior.favorites?.discovered.rhythmHints ?? 0;
+  const learnHints = warrior.favorites?.discovered.learnHints ?? 0;
 
   const weaponProgress = isWeaponDiscovered ? 100 : (weaponHints / 2) * 100;
   const rhythmProgress = isRhythmDiscovered ? 100 : (rhythmHints / 2) * 100;
+  const learnProgress = isLearnDiscovered ? 100 : (learnHints / 2) * 100;
 
   const mutateRosterWarrior = (fn: (w: typeof warrior) => void) => {
     setState((s) => {
@@ -92,7 +98,7 @@ export function useFavoritesActions(
     });
   };
 
-  const handleInsight = (type: 'weapon' | 'rhythm') => {
+  const handleInsight = (type: 'weapon' | 'rhythm' | 'learn') => {
     const msg = applyInsightToken(warrior, type);
     mutateRosterWarrior((w) => {
       if (w.favorites) w.favorites = warrior.favorites;
@@ -115,9 +121,12 @@ export function useFavoritesActions(
     favDisplay,
     isWeaponDiscovered,
     isRhythmDiscovered,
+    isLearnDiscovered,
     weaponHints,
     rhythmHints,
+    learnHints,
     weaponProgress,
     rhythmProgress,
+    learnProgress,
   };
 }

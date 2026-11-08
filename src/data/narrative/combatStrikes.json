@@ -336,6 +336,20 @@
         "A devastating, momentum-fueled swing from {{attacker}} nearly severs {{defender}}'s {{bodyPart}}.",
         "{{attacker}} unleashes a monstrous slash, opening a terrifying wound on {{defender}}'s {{bodyPart}}.",
         "{{defender}} reels backward as {{attacker}}'s blade carves deeply into their {{bodyPart}}."
+      ],
+      "extra_value": [
+        "{{attacker}}'s {{weapon}} shears through {{defender}}'s {{bodyPart}} in a welter of blood — an awesome blow!",
+        "The arena gasps as {{attacker}}'s edge bites to the bone of {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} delivers an avalanche of steel — {{defender}}'s {{bodyPart}} is laid open!",
+        "A stroke of incredible force! {{attacker}}'s blade carves a ruinous furrow across {{defender}}'s {{bodyPart}}!",
+        "{{attacker}}'s {{weapon}} sings once, and {{defender}}'s {{bodyPart}} spurts a sheet of red!",
+        "With the fury of a headsman's axe, {{attacker}} hews into {{defender}}'s {{bodyPart}} — the crowd roars!",
+        "{{defender}}'s {{bodyPart}} erupts in gore as {{attacker}}'s cut lands with devastating effect!",
+        "{{attacker}} strikes with the force of a falling oak — {{defender}}'s {{bodyPart}} is nearly severed!",
+        "A magnificent, murderous slash from {{attacker}} — {{defender}} staggers, {{bodyPart}} split wide!",
+        "{{attacker}} rips the {{weapon}} through {{defender}}'s {{bodyPart}} like a scythe through ripe wheat!",
+        "Steel whines and flesh parts — {{attacker}}'s blow to {{defender}}'s {{bodyPart}} draws a collective gasp!",
+        "{{attacker}}'s blade finds the deep seam of {{defender}}'s {{bodyPart}} — a wound for the chronicles!"
       ]
     },
     "bashing": {
@@ -653,6 +667,20 @@
         "A monstrous swing from {{attacker}} caves in {{defender}}'s defenses, crushing the {{bodyPart}}.",
         "{{defender}} is nearly knocked off their feet by a colossal smash to the {{bodyPart}} from {{attacker}}.",
         "With terrifying force, {{attacker}} crushes {{defender}}'s {{bodyPart}} in a ruinous impact."
+      ],
+      "extra_value": [
+        "{{attacker}} strikes {{defender}}'s {{bodyPart}} with the force of a battering ram — a colossal hit!",
+        "Bones splinter audibly as {{attacker}}'s {{weapon}} lands on {{defender}}'s {{bodyPart}} like a dropped anvil!",
+        "{{attacker}} delivers an avalanche of power — {{defender}}'s {{bodyPart}} caves under the blow!",
+        "A hammerblow for the ages! {{attacker}}'s strike folds {{defender}}'s {{bodyPart}} like parchment!",
+        "{{attacker}}'s {{weapon}} hits with devastating effect — {{defender}}'s {{bodyPart}} will carry the dent forever!",
+        "The impact shakes the sands — {{attacker}} pulverizes {{defender}}'s {{bodyPart}}!",
+        "{{defender}}'s {{bodyPart}} buckles visibly as {{attacker}}'s blow lands with the weight of a siege engine!",
+        "{{attacker}} swings like a man demolishing a wall — {{defender}}'s {{bodyPart}} pays the price!",
+        "A ruinous, ringing impact! {{attacker}}'s {{weapon}} bludgeons {{defender}}'s {{bodyPart}} into submission!",
+        "{{attacker}} hits {{defender}}'s {{bodyPart}} so hard the echo reaches the cheap seats!",
+        "{{defender}} reels, {{bodyPart}} shattered by the sheer tonnage of {{attacker}}'s strike!",
+        "{{attacker}}'s blow lands like thunder — {{defender}}'s {{bodyPart}} absorbs a career's worth of pain!"
       ]
     },
     "piercing": {
@@ -962,6 +990,20 @@
         "A flawless, devastating lunge from {{attacker}} pierces straight through {{defender}}'s {{bodyPart}}.",
         "{{attacker}} finds the perfect gap, thrusting deep into {{defender}}'s vitals!",
         "A devastating puncture wound erupts as {{attacker}}'s blade sinks deep!"
+      ],
+      "extra_value": [
+        "{{attacker}}'s {{weapon}} skewers {{defender}}'s {{bodyPart}} with the precision of a headsman's pick!",
+        "A thrust of incredible force — {{attacker}}'s point punches clean through {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} drives the {{weapon}} into {{defender}}'s {{bodyPart}} like a spear through board!",
+        "{{defender}}'s {{bodyPart}} erupts as {{attacker}}'s strike lands with devastating effect!",
+        "{{attacker}} hits {{defender}}'s {{bodyPart}} with the force of a battering ram — point first!",
+        "The lunge lands like a striking viper — {{attacker}}'s {{weapon}} buries itself in {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} delivers an avalanche of power behind the point — {{defender}}'s {{bodyPart}} gapes!",
+        "A puncture for the surgeons' tents — {{attacker}}'s strike transfixes {{defender}}'s {{bodyPart}}!",
+        "{{attacker}}'s thrust strikes with the force of a loosed ballista bolt into {{defender}}'s {{bodyPart}}!",
+        "Deep, deep into {{defender}}'s {{bodyPart}} goes {{attacker}}'s {{weapon}} — the crowd winces!",
+        "{{attacker}}'s point finds the vitals of {{defender}}'s {{bodyPart}} — a wound of terrible depth!",
+        "With surgical savagery, {{attacker}} skewers {{defender}}'s {{bodyPart}} to the gasp of the stands!"
       ]
     },
     "fist": {
@@ -1264,6 +1306,20 @@
         "A devastating, perfectly placed uppercut from {{attacker}} completely scrambles {{defender}}.",
         "{{defender}} is sent staggering by a jaw-shattering blow to the {{bodyPart}} from {{attacker}}.",
         "{{attacker}} steps into a crushing hook, visibly buckling {{defender}}'s knees with a strike to the {{bodyPart}}."
+      ],
+      "extra_value": [
+        "{{attacker}}'s fist lands on {{defender}}'s {{bodyPart}} with the force of a thrown paving stone!",
+        "A barehanded blow of terrifying power — {{attacker}} caves in {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} delivers an avalanche of knuckles — {{defender}}'s {{bodyPart}} rings like a struck bell!",
+        "Flesh, bone, and fury meet — {{attacker}}'s fist rearranges {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} hits {{defender}}'s {{bodyPart}} with devastating effect — unarmed but hardly harmless!",
+        "The punch lands like a kicked door — {{defender}}'s {{bodyPart}} folds under {{attacker}}'s fist!",
+        "{{attacker}}'s knuckles bury themselves in {{defender}}'s {{bodyPart}} — a blow for the legends!",
+        "With a haymaker for the ages, {{attacker}} pounds {{defender}}'s {{bodyPart}} into paste!",
+        "{{defender}}'s {{bodyPart}} absorbs a bare fist swung like a warhammer — {{attacker}} grins!",
+        "{{attacker}}'s strike lands with the force of a battering ram — fist or not, {{defender}} felt that!",
+        "A sickening crunch as {{attacker}}'s fist detonates on {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} plants every ounce behind the blow — {{defender}}'s {{bodyPart}} takes the whole harvest!"
       ]
     }
   }

@@ -257,6 +257,21 @@ describe('buildFightAnalysis', () => {
     expect(f?.favored).toBe('A');
   });
 
+  it('reports the classroom edge when one fighter learns far more skills', () => {
+    const o = outcome({ post: { xpA: 2, xpD: 1, learnsA: { ATT: 2, INI: 1 }, learnsD: {} } });
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const f = a.factors.find((f) => f.label === 'Classroom');
+    expect(f).toBeDefined();
+    expect(f?.favored).toBe('A');
+    expect(f?.detail).toContain('3');
+  });
+
+  it('stays silent on the classroom edge when learns are close', () => {
+    const o = outcome({ post: { xpA: 2, xpD: 2, learnsA: { ATT: 1 }, learnsD: { DEF: 1 } } });
+    const a = buildFightAnalysis(o, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    expect(a.factors.find((f) => f.label === 'Classroom')).toBeUndefined();
+  });
+
   it('reports corner plan-shifts from conditionFire entries', () => {
     const o = debriefOutcome([
       {

@@ -118,6 +118,10 @@ export interface WeaponChartEntry {
   crits: number;
   /** Knockdowns inflicted with this weapon. */
   knockdowns: number;
+  /** Crits that rolled above-baseline damage — the "extra value" column of the
+   *  classic weapon chart. A high critDamages/crits ratio is the signature of
+   *  a weapon whose criticals bite deep (favorite candidates). */
+  critDamages?: number;
 }
 
 /**
@@ -131,6 +135,10 @@ export interface WarriorFavorites {
     rhythm: boolean;
     weaponHints: number;
     rhythmHints: number;
+    /** Revealed when the warrior knows which skill they learn fastest
+     *  (the derived favorite learn). Optional for legacy saves. */
+    learn?: boolean;
+    learnHints?: number;
   };
   /** Per-weapon performance ledger accumulated across bouts. Keyed by weapon id. */
   chart?: Record<string, WeaponChartEntry>;
@@ -155,6 +163,9 @@ export interface WarriorLineage {
 export interface StrategyMemory {
   /** Outcome counts per rhythm cell, keyed "VL/L" … "VH/VH". */
   cells: Record<string, { w: number; l: number }>;
+  /** Top loss factors recorded from recent bout analyses — the AI's
+   *  "why am I losing" ledger, used by the turnaround diagnostics. */
+  recentLossFactors?: string[];
 }
 
 export interface Warrior {
@@ -200,6 +211,10 @@ export interface Warrior {
   potentialRevealed?: Partial<Record<keyof Attributes, boolean>>;
   /** Skill drilling bonuses — additive flat modifiers on top of attribute-derived baseSkills. Capped at SKILL_DRILL_CAP per skill. */
   skillDrills?: Partial<Record<keyof BaseSkills, number>>;
+  /** Arena lessons learned in actual bouts (Arena-93 "learns") — WT-gated
+   *  additive skill gains rolled post-bout, distinct from drills. Capped at
+   *  LEARN_PER_SKILL_CAP per skill and LEARN_CAREER_CAP per career. */
+  learnedSkills?: Partial<Record<keyof BaseSkills, number>>;
   deathWeek?: number;
   deathCause?: string;
   deathEvent?: DeathEvent;

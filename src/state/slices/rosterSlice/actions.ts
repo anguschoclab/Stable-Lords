@@ -58,6 +58,8 @@ function applyInsightToken(w: Warrior, token: InsightToken, state: GameStore): W
     draft.flair = [...(draft.flair || []), 'Tactical Insight'];
   } else if (token.type === 'Trait') {
     draft.flair = [...(draft.flair || []), 'Pattern Reader'];
+  } else if (token.type === 'Learn') {
+    draft.favorites.discovered.learn = true;
   }
 
   return draft;

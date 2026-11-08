@@ -303,6 +303,7 @@ function postResolutionImpacts(args: PostResolutionImpactsArgs): {
       tags: tags,
       week: ctx.week,
       rng: rng,
+      headless: ctx.headless,
     }),
     ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
   );

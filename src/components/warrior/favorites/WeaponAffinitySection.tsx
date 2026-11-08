@@ -110,6 +110,7 @@ interface ChartRow {
   name: string;
   swings: number;
   crits: number;
+  critDamages: number;
   knockdowns: number;
   rate: number;
 }
@@ -135,6 +136,7 @@ function WeaponChart({
       name: getItemById(weaponId)?.name ?? weaponId,
       swings: r.swings,
       crits: r.crits,
+      critDamages: r.critDamages ?? 0,
       knockdowns: r.knockdowns,
       rate: r.crits / r.swings,
     }))
@@ -155,11 +157,12 @@ function WeaponChart({
       <div className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40 flex items-center gap-2">
         <Activity className="h-3 w-3" /> Weapon Chart
       </div>
-      <div className="grid grid-cols-[1fr_2rem_2rem_3rem_2rem] gap-x-2 text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">
+      <div className="grid grid-cols-[1fr_2rem_2rem_3rem_2rem_2rem] gap-x-2 text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">
         <span>Weapon</span>
         <span className="text-right">Swg</span>
         <span className="text-right">Crt</span>
         <span className="text-right">Crt%</span>
+        <span className="text-right">EV</span>
         <span className="text-right">KD</span>
       </div>
       {rows.map((row) => {
@@ -168,7 +171,7 @@ function WeaponChart({
         return (
           <div
             key={row.weaponId}
-            className="grid grid-cols-[1fr_2rem_2rem_3rem_2rem] gap-x-2 items-center"
+            className="grid grid-cols-[1fr_2rem_2rem_3rem_2rem_2rem] gap-x-2 items-center"
           >
             <span
               className={cn(
@@ -196,6 +199,16 @@ function WeaponChart({
               )}
             >
               {(row.rate * 100).toFixed(0)}%
+            </span>
+            <span
+              className={cn(
+                'text-right font-mono text-[10px]',
+                row.crits > 0 && row.critDamages / row.crits >= 0.5
+                  ? 'text-arena-gold'
+                  : 'text-foreground/70'
+              )}
+            >
+              {row.critDamages}
             </span>
             <span className="text-right font-mono text-[10px] text-foreground/70">
               {row.knockdowns}

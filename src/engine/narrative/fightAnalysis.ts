@@ -13,6 +13,7 @@ import {
   DEBRIEF_WEAPON_MIN_SWINGS,
   DEBRIEF_WEAPON_HIT_RATE_FLOOR,
   DEBRIEF_LEARN_XP_GAP,
+  DEBRIEF_CLASSROOM_GAP,
 } from '@/constants/combat/combat/meta';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
@@ -136,6 +137,45 @@ function biggestSkillGap(
 }
 
 /**
+/** Learning & Classroom — who took the bigger lesson. Pagan's doctrine:
+ * skills learned in the arena are the real growth, not XP. */
+function learnFactors(
+  outcome: FightOutcome,
+  warriorA: AnalysisWarrior,
+  warriorD: AnalysisWarrior
+): AnalysisFactor[] {
+  const factors: AnalysisFactor[] = [];
+
+  const xpA = outcome.post?.xpA ?? 0;
+  const xpD = outcome.post?.xpD ?? 0;
+  if (Math.abs(xpA - xpD) >= DEBRIEF_LEARN_XP_GAP) {
+    const winner = xpA > xpD ? warriorA : warriorD;
+    factors.push({
+      label: 'Learning',
+      detail: `${winner.name} took the bigger lesson from the bout (+${Math.max(xpA, xpD)} XP).`,
+      favored: xpA > xpD ? 'A' : 'D',
+      weight: 0.15,
+    });
+  }
+
+  const learnsTotal = (m?: Partial<Record<keyof BaseSkills, number>>) =>
+    Object.values(m ?? {}).reduce((n, v) => n + (v ?? 0), 0);
+  const lessonsA = learnsTotal(outcome.post?.learnsA);
+  const lessonsD = learnsTotal(outcome.post?.learnsD);
+  if (Math.abs(lessonsA - lessonsD) >= DEBRIEF_CLASSROOM_GAP) {
+    const brighter = lessonsA > lessonsD ? warriorA : warriorD;
+    const duller = lessonsA > lessonsD ? warriorD : warriorA;
+    factors.push({
+      label: 'Classroom',
+      detail: `${brighter.name} absorbed ${Math.max(lessonsA, lessonsD)} arena lessons to ${duller.name}'s ${Math.min(lessonsA, lessonsD)} — wit is telling.`,
+      favored: lessonsA > lessonsD ? 'A' : 'D',
+      weight: 0.25,
+    });
+  }
+  return factors;
+}
+
+/**
  * Manager's Notebook factors — the guide's post-fight review checklist:
  * encumbrance drag, weapon work, out-jumped, learning, corner plan-shifts.
  * Each producer is silent unless its diagnostic threshold is met.
@@ -217,18 +257,7 @@ function buildDebriefFactors(
     }
   }
 
-  // Learning — who took the bigger lesson.
-  const xpA = outcome.post?.xpA ?? 0;
-  const xpD = outcome.post?.xpD ?? 0;
-  if (Math.abs(xpA - xpD) >= DEBRIEF_LEARN_XP_GAP) {
-    const winner = xpA > xpD ? warriorA : warriorD;
-    factors.push({
-      label: 'Learning',
-      detail: `${winner.name} took the bigger lesson from the bout (+${Math.max(xpA, xpD)} XP).`,
-      favored: xpA > xpD ? 'A' : 'D',
-      weight: 0.15,
-    });
-  }
+  factors.push(...learnFactors(outcome, warriorA, warriorD));
 
   // Corner plan-shifts — which triggers actually fired mid-fight.
   const fired: Record<'A' | 'D', string[]> = { A: [], D: [] };

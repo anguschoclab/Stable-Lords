@@ -24,6 +24,7 @@ import {
   FighterConceptsSection,
   FightingStylesSection,
   InsightTokensSection,
+  LearningSection,
   ProgressionSection,
   StrategyBasicsSection,
   TrainersSection,
@@ -175,6 +176,7 @@ export default function Help() {
         <EquipmentSection />
         <TrainersSection />
         <CombatResolutionSection />
+        <LearningSection />
         <InsightTokensSection />
         <ProgressionSection />
         <AccordionItem value="accessibility">

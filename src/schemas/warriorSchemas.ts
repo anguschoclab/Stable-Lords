@@ -109,6 +109,8 @@ const WarriorFavoritesSchema = z.object({
     rhythm: z.boolean(),
     weaponHints: z.number(),
     rhythmHints: z.number(),
+    learn: z.boolean().optional(),
+    learnHints: z.number().optional(),
   }),
   chart: z
     .record(
@@ -117,9 +119,18 @@ const WarriorFavoritesSchema = z.object({
         swings: z.number(),
         crits: z.number(),
         knockdowns: z.number(),
+        critDamages: z.number().optional(),
       })
     )
     .optional(),
+});
+
+/**
+ * StrategyMemory schema — the AI's plan-space ledger.
+ */
+const StrategyMemorySchema = z.object({
+  cells: z.record(z.string(), z.object({ w: z.number(), l: z.number() })),
+  recentLossFactors: z.array(z.string()).optional(),
 });
 
 /**
@@ -312,6 +323,8 @@ export const WarriorSchema = z.object({
   xp: z.number().optional(),
   potentialRevealed: z.record(z.string(), z.boolean()).optional(),
   skillDrills: z.record(z.string(), z.number()).optional(),
+  learnedSkills: z.record(z.string(), z.number()).optional(),
+  strategyMemory: StrategyMemorySchema.optional(),
   deathWeek: z.number().optional(),
   deathCause: z.string().optional(),
   deathEvent: DeathEventSchema.optional(),
@@ -408,7 +421,7 @@ export const MatchRecordSchema = z.object({
  */
 export const InsightTokenSchema = z.object({
   id: z.string(),
-  type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic', 'Trait']),
+  type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic', 'Trait', 'Learn']),
   warriorId: z.string(),
   warriorName: EntityNameSchema,
   detail: z.string(),

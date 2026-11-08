@@ -29,6 +29,7 @@ import {
   narrateRearm,
 } from '../../../narrative/combatNarrators';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
+import { CRIT_EXTRA_VALUE_MIN_DAMAGE } from '@/constants/combat';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { NarrationContext } from '../types';
 
@@ -391,6 +392,12 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
 
   const isFatal = !!event.metadata?.lethal;
   const isCrit = !!event.metadata?.crit;
+  // Canon "extra value" crit — applied damage (what the victim felt) cleared
+  // the EV line. Same predicate the weapon chart's fourth column uses.
+  const isExtraValue =
+    isCrit &&
+    ((event.metadata?.appliedDamage as number | undefined) ?? event.value ?? 0) >=
+      CRIT_EXTRA_VALUE_MIN_DAMAGE;
   const isHeavyHit =
     isCrit ||
     isFatal ||
@@ -404,6 +411,7 @@ const narrateHitEvent: EventNarrator = (event, h, minute, events) => {
       location: event.location,
       _isMastery: isMastery,
       isSuperFlashy: isSuperFlashy,
+      isExtraValue: isExtraValue,
       attackerName: actorName,
       weaponId: weapon,
       damage: event.value,

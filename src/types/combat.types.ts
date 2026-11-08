@@ -170,6 +170,10 @@ export interface FightOutcome {
      *  `warrior.favorites.chart` by the progression handler. */
     weaponChartA?: Record<string, import('./warrior.types').WeaponChartEntry>;
     weaponChartD?: Record<string, import('./warrior.types').WeaponChartEntry>;
+    /** Skill lessons each fighter learned this bout (Arena-93 learns) —
+     *  accumulated into `warrior.learnedSkills` by the progression handler. */
+    learnsA?: Partial<Record<keyof import('./shared/skills').BaseSkills, number>>;
+    learnsD?: Partial<Record<keyof import('./shared/skills').BaseSkills, number>>;
     causeBucket?: DeathCauseBucket;
     fatalHitLocation?: string;
     fatalExchangeIndex?: number;

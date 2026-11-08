@@ -126,4 +126,48 @@ describe('recordBoutOutcome', () => {
     }
     expect(cur.agentMemory!.lastLossFactors!.length).toBeLessThanOrEqual(3);
   });
+
+  it('records per-warrior recentLossFactors on the losing warrior', () => {
+    const w1 = rosterWarrior('rw1');
+    const rival = makeRival({ roster: [w1], actionHistory: [] });
+    const fights = [
+      makeFightSummary({
+        warriorIdA: 'rw1' as WarriorId,
+        winner: 'D',
+        by: 'KO',
+        analysis: {
+          styleMatchup: { styleA: 'Lunging Attack', styleD: 'Total Parry', edge: 0 },
+          decisiveExchange: { index: null, minute: null, reasonCodes: [], summary: '' },
+          fatigue: { fatiguedSide: null, crossoverExchange: null },
+          tale: { hitsA: 0, hitsD: 0, damageA: 0, damageD: 0, ripostesA: 0, ripostesD: 0 },
+          factors: [
+            {
+              label: 'INI edge',
+              detail: 'out-jumped',
+              favored: 'D',
+              weight: 0.5,
+            },
+          ],
+        },
+      }),
+    ];
+    const out = recordBoutOutcome(rival, fights, 5);
+    const w = out.roster.find((x) => x.id === 'rw1');
+    expect(w?.strategyMemory?.recentLossFactors?.[0]).toBe('INI edge');
+  });
+
+  it('bounds per-warrior recentLossFactors to the 5 most recent', () => {
+    const w1 = rosterWarrior('rw1');
+    const rival = makeRival({ roster: [w1], actionHistory: [] });
+    let cur = rival;
+    for (let i = 0; i < 8; i++) {
+      cur = recordBoutOutcome(
+        cur,
+        [makeFightSummary({ warriorIdA: 'rw1' as WarriorId, winner: 'D', by: 'KO' })],
+        5
+      );
+    }
+    const w = cur.roster.find((x) => x.id === 'rw1');
+    expect(w?.strategyMemory?.recentLossFactors?.length ?? 0).toBeLessThanOrEqual(5);
+  });
 });

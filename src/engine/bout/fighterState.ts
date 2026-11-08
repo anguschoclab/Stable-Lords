@@ -96,6 +96,9 @@ function gatherSkillModifiers(ctx: ModifierContext) {
     },
     // Skill drilling bonuses — flat additive modifiers from dedicated drill training.
     drills: warrior?.skillDrills ?? {},
+    // Arena lessons learned in bouts (Arena-93 learns) — flat additive like
+    // drills but a separate ledger and cap economy.
+    learns: warrior?.learnedSkills ?? {},
     // Static trait mods (Quick, Heavy-Handed, Agile, etc.). Conditional traits
     // (Berserker, Patient, etc.) are applied per-exchange in resolution.ts.
     traitMods: getStaticTraitMods(warrior),
@@ -115,6 +118,7 @@ function skillAddends(m: SkillMods): BaseSkills {
       m.weaponReq.attPenalty +
       m.totalShieldAtt +
       (m.drills.ATT ?? 0) +
+      (m.learns.ATT ?? 0) +
       m.traitMods.attMod +
       (m.injuryPenalties['ATT'] ?? 0),
     PAR:
@@ -122,6 +126,7 @@ function skillAddends(m: SkillMods): BaseSkills {
       m.totalShieldDef +
       m.encPenalties.parPenalty +
       (m.drills.PAR ?? 0) +
+      (m.learns.PAR ?? 0) +
       m.traitMods.parMod +
       (m.injuryPenalties['PAR'] ?? 0),
     DEF:
@@ -133,6 +138,7 @@ function skillAddends(m: SkillMods): BaseSkills {
       m.veteranDef +
       m.mastery.def +
       (m.drills.DEF ?? 0) +
+      (m.learns.DEF ?? 0) +
       m.traitMods.defMod +
       (m.injuryPenalties['DEF'] ?? 0),
     INI:
@@ -140,16 +146,19 @@ function skillAddends(m: SkillMods): BaseSkills {
       m.encPenalties.iniPenalty +
       m.mastery.ini +
       (m.drills.INI ?? 0) +
+      (m.learns.INI ?? 0) +
       m.traitMods.iniMod +
       (m.injuryPenalties['INI'] ?? 0),
     RIP:
       m.mastery.rip +
       (m.drills.RIP ?? 0) +
+      (m.learns.RIP ?? 0) +
       m.traitMods.ripMod +
       (m.injuryPenalties['RIP'] ?? 0),
     DEC:
       (m.trainerMods?.decMod ?? 0) +
       (m.drills.DEC ?? 0) +
+      (m.learns.DEC ?? 0) +
       m.traitMods.decMod +
       (m.injuryPenalties['DEC'] ?? 0),
   };

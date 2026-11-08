@@ -79,6 +79,19 @@ export const AI_LEARN_SEEK_PERSONALITIES: ReadonlySet<string> = new Set([
   'Methodical',
   'Tactician',
 ]);
+/** Teach-matchup bonus: added to the learning-seek score when the
+ *  candidate's style is a strong teacher of the proposer's suspected
+ *  favorite learn (canon: fight the textbook you need). */
+export const AI_LEARN_TEACH_BONUS = 6;
+/** Minimum STYLE_LEARN_WEIGHTS weight that counts as "teaches" a skill. */
+export const AI_LEARN_TEACH_WEIGHT_MIN = 5;
+
+// ─── WT training (canon godling doctrine: wit gates arena learning) ──────
+/** Below this WT a young warrior is a slow learner — the AI trains wit. */
+export const AI_WT_LEARN_FLOOR = 13;
+/** Career-bout window where raising WT still pays its learning dividend —
+ *  veterans past the window keep their existing focus. */
+export const AI_WT_TRAIN_MAX_BOUTS = 15;
 
 // ─── Personality draft weights ────────────────────────────────────────────
 // Extended scorer inputs for the unified draft (megaplan): each personality

@@ -122,7 +122,7 @@ export interface AlmanacData {
 /* ── shared helpers ──────────────────────────────────────────────────── */
 
 /** Comparator chaining — each returns 0/nonzero, first nonzero wins. */
-export type Cmp<T> = (a: T, b: T) => number;
+type Cmp<T> = (a: T, b: T) => number;
 /** Compose comparators into one total-order comparator. */
 export const by = <T>(cmp: Cmp<T>, ...chain: Cmp<T>[]): Cmp<T> => {
   const all = [cmp, ...chain];
@@ -165,7 +165,7 @@ export function stableNameOf(w: Warrior, input: AlmanacInput): string | undefine
 }
 
 /** Inputs for {@link warriorRow} — bundled to stay under the param budget. */
-export interface WarriorRowOpts {
+interface WarriorRowOpts {
   w: Warrior;
   input: AlmanacInput;
   value: number;

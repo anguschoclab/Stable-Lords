@@ -12,6 +12,7 @@ import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
   calculateFinalOEAL,
+  doubleTacticSkillPenalty,
 } from '../mechanics/tacticResolution';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
@@ -90,10 +91,43 @@ function resolveTacticMods(
 ): TacticModBundle {
   const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);
   const tactD = resolveEffectiveTactics(fD.activePlan, phaseKey);
-  const offModsA = getOffensiveTacticMods(tactA.offTactic, fA.style);
-  const defModsA = getDefensiveTacticMods(tactA.defTactic, fA.style);
-  const offModsD = getOffensiveTacticMods(tactD.offTactic, fD.style);
-  const defModsD = getDefensiveTacticMods(tactD.defTactic, fD.style);
+  const rawOffA = getOffensiveTacticMods(tactA.offTactic, fA.style);
+  const rawDefA = getDefensiveTacticMods(tactA.defTactic, fA.style);
+  const rawOffD = getOffensiveTacticMods(tactD.offTactic, fD.style);
+  const rawDefD = getDefensiveTacticMods(tactD.defTactic, fD.style);
+
+  // Consortium (V24): running an offensive AND defensive tactic together is
+  // "very limiting" — flat per-skill tax folded into the tactic mods.
+  const applyDoubleTax = (
+    off: typeof rawOffA,
+    def: typeof rawDefA,
+    offT: typeof tactA.offTactic,
+    defT: typeof tactA.defTactic
+  ) => {
+    const p = doubleTacticSkillPenalty(offT, defT);
+    return {
+      off: { ...off, attBonus: off.attBonus + p.attBonus, decBonus: off.decBonus + p.decBonus },
+      def: {
+        ...def,
+        parBonus: def.parBonus + p.parBonus,
+        defBonus: def.defBonus + p.defBonus,
+        iniBonus: def.iniBonus + p.iniBonus,
+        ripBonus: def.ripBonus + p.ripBonus,
+      },
+    };
+  };
+  const { off: offModsA, def: defModsA } = applyDoubleTax(
+    rawOffA,
+    rawDefA,
+    tactA.offTactic,
+    tactA.defTactic
+  );
+  const { off: offModsD, def: defModsD } = applyDoubleTax(
+    rawOffD,
+    rawDefD,
+    tactD.offTactic,
+    tactD.defTactic
+  );
 
   const counters: TacticCounterMods = resolveTacticCounters({
     tactA,

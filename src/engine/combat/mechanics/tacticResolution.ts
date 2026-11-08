@@ -5,7 +5,12 @@ import {
   getOffensiveSuitability,
   getDefensiveSuitability,
 } from '../../strategy/tacticSuitability';
-import { OE_ATT_SCALING, OE_DEF_SCALING, AL_INI_SCALING } from '@/constants/combat';
+import {
+  OE_ATT_SCALING,
+  OE_DEF_SCALING,
+  AL_INI_SCALING,
+  DOUBLE_TACTIC_SKILL_PENALTY,
+} from '@/constants/combat';
 import { clamp } from '@/utils/math';
 
 /**
@@ -117,8 +122,23 @@ export function getOffensiveTacticMods(
   style: FightingStyle
 ): OffensiveMods {
   if (!tactic || tactic === 'none') return ZERO_OFF;
-  const mult = suitabilityMultiplier(getOffensiveSuitability(style, tactic));
-  return (OFFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_OFF))(mult);
+  const rating = getOffensiveSuitability(style, tactic);
+  const mult = suitabilityMultiplier(rating);
+  const mods = (OFFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_OFF))(mult);
+  // Pagan (V24 canon): an unsuited tactic can only drain — never grant. The
+  // negative mult already flips most fields; counter-terms (e.g. Parry's rip
+  // cost) would otherwise flip into bonuses, so clamp every field ≤ 0.
+  if (rating === 'U') {
+    return {
+      ...mods,
+      attBonus: Math.min(0, mods.attBonus),
+      dmgBonus: Math.min(0, mods.dmgBonus),
+      decBonus: Math.min(0, mods.decBonus),
+      parryBypass: Math.min(0, mods.parryBypass),
+      defPenalty: Math.max(0, mods.defPenalty),
+    };
+  }
+  return mods;
 }
 
 /** Shape returned by defensive tactic resolution. */
@@ -134,15 +154,16 @@ const ZERO_DEF: DefensiveMods = { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonu
 /**
  * V24 canon (Consortium "Tactics"): running an offensive AND a defensive
  * tactic at once has "very limiting value" — flat per-skill tax while both
- * are active. Phase-1 scaffolding returns zero; Phase 4 wires the penalty.
+ * are active.
  */
 export function doubleTacticSkillPenalty(
   offTactic: OffensiveTactic | undefined,
   defTactic: DefensiveTactic | undefined
 ): { attBonus: number; parBonus: number; defBonus: number; iniBonus: number; ripBonus: number; decBonus: number } {
-  void offTactic;
-  void defTactic;
-  return { attBonus: 0, parBonus: 0, defBonus: 0, iniBonus: 0, ripBonus: 0, decBonus: 0 };
+  const both =
+    !!offTactic && offTactic !== 'none' && !!defTactic && defTactic !== 'none';
+  const p = both ? -DOUBLE_TACTIC_SKILL_PENALTY : 0;
+  return { attBonus: p, parBonus: p, defBonus: p, iniBonus: p, ripBonus: p, decBonus: p };
 }
 
 /** V24 canon (Assur): KD 9-10 makes warriors "fight somewhat strangely" —
@@ -194,8 +215,19 @@ export function getDefensiveTacticMods(
   style: FightingStyle
 ): DefensiveMods {
   if (!tactic || tactic === 'none') return ZERO_DEF;
-  const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
-  return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
+  const rating = getDefensiveSuitability(style, tactic);
+  const mult = suitabilityMultiplier(rating);
+  const mods = (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
+  if (rating === 'U') {
+    return {
+      ...mods,
+      parBonus: Math.min(0, mods.parBonus),
+      defBonus: Math.min(0, mods.defBonus),
+      ripBonus: Math.min(0, mods.ripBonus),
+      iniBonus: Math.min(0, mods.iniBonus),
+    };
+  }
+  return mods;
 }
 
 /**

@@ -8,6 +8,7 @@ import {
   suitabilityMultiplier,
 } from '@/engine/strategy/tacticSuitability';
 import { FightingStyle, type OffensiveTactic, type DefensiveTactic } from '@/types/game';
+import { TACTIC_U_MULT } from '@/constants/combat';
 
 describe('Tactic Suitability', () => {
   describe('getOffensiveSuitability', () => {
@@ -135,8 +136,9 @@ describe('Tactic Suitability', () => {
       expect(suitabilityMultiplier('S')).toBe(0.6);
     });
 
-    it('should return 0.3 for U', () => {
-      expect(suitabilityMultiplier('U')).toBe(0.3);
+    it('should return TACTIC_U_MULT (negative) for U — V24 canon', () => {
+      expect(suitabilityMultiplier('U')).toBe(TACTIC_U_MULT);
+      expect(suitabilityMultiplier('U')).toBeLessThan(0);
     });
   });
 

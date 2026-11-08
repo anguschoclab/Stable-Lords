@@ -137,9 +137,10 @@ describe('tacticResolution', () => {
       expect(mods.endCost).toBe(2);
     });
 
-    it('returns Decisiveness mods with decBonus', () => {
+    it('returns Decisiveness mods with decBonus drain for U-rated AB', () => {
+      // V24 canon: AB × Decisiveness is U-rated — the tactic drains, never grants.
       const mods = getOffensiveTacticMods('Decisiveness', FightingStyle.AimedBlow);
-      expect(mods.decBonus).toBeGreaterThan(0);
+      expect(mods.decBonus).toBeLessThan(0);
       expect(mods.attBonus).toBe(0);
       expect(mods.dmgBonus).toBe(0);
       expect(mods.endCost).toBe(1);
@@ -187,9 +188,10 @@ describe('tacticResolution', () => {
       expect(mods.parBonus).toBeGreaterThan(0);
     });
 
-    it('returns Responsiveness mods with initiative bonus', () => {
+    it('returns Responsiveness mods with initiative drain for U-rated AB', () => {
+      // V24 canon: AB × Responsiveness is U-rated — the tactic drains.
       const mods = getDefensiveTacticMods('Responsiveness', FightingStyle.AimedBlow);
-      expect(mods.iniBonus).toBeGreaterThan(0);
+      expect(mods.iniBonus).toBeLessThan(0);
       expect(mods.parBonus).toBe(0);
       expect(mods.defBonus).toBe(0);
       expect(mods.ripBonus).toBe(0);
@@ -422,13 +424,12 @@ describe('tacticResolution', () => {
   });
 
   describe('getOffensiveTacticMods suitability scaling', () => {
-    it('Lunge with U-rated style (BashingAttack) scales by 0.3', () => {
-      // BashingAttack + Lunge = U → mult = 0.3
-      // attBonus = round(2 * 0.3) = round(0.6) = 1
-      // defPenalty = round(1 * 0.3) = round(0.3) = 0
+    it('Lunge with U-rated style (BashingAttack) drains instead of granting', () => {
+      // V24 canon: U → TACTIC_U_MULT (-0.5) with every field clamped ≤ 0.
+      // attBonus = round(2 * -0.5) = -1; defPenalty can never become a bonus.
       const mods = getOffensiveTacticMods('Lunge', FightingStyle.BashingAttack);
-      expect(mods.attBonus).toBe(1);
-      expect(mods.defPenalty).toBe(0);
+      expect(mods.attBonus).toBe(-1);
+      expect(mods.defPenalty).toBeGreaterThanOrEqual(0);
       expect(mods.endCost).toBe(2);
     });
 
@@ -456,13 +457,12 @@ describe('tacticResolution', () => {
   });
 
   describe('getDefensiveTacticMods suitability scaling', () => {
-    it('Parry with U-rated style (BashingAttack) scales by 0.3', () => {
-      // BashingAttack + Parry = U → mult = 0.3
-      // parBonus = round(3 * 0.3) = round(0.9) = 1
-      // ripBonus = -round(1 * 0.3) = -round(0.3) = -0
+    it('Parry with U-rated style (BashingAttack) drains instead of granting', () => {
+      // V24 canon: U → TACTIC_U_MULT (-0.5); the rip counter-term is clamped
+      // at 0 so a drain can't flip into a bonus.
       const mods = getDefensiveTacticMods('Parry', FightingStyle.BashingAttack);
-      expect(mods.parBonus).toBe(1);
-      expect(mods.ripBonus).toBe(-0);
+      expect(mods.parBonus).toBe(-1);
+      expect(mods.ripBonus).toBe(0);
     });
 
     it('Dodge with WS-rated style (AimedBlow) scales by 1.0', () => {

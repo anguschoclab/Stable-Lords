@@ -13,6 +13,10 @@ import {
   getOffensiveSuitability,
   getDefensiveSuitability,
 } from '@/engine/strategy/tacticSuitability';
+import {
+  getBestOffensiveTactic,
+  getBestDefensiveTactic,
+} from '@/engine/ai/plan/tacticAdvisor';
 import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 
@@ -64,6 +68,19 @@ describe('double tactics are very limiting (Consortium canon)', () => {
       doubleTacticSkillPenalty(undefined, undefined),
     ]) {
       for (const k of Object.keys(p) as (keyof typeof p)[]) expect(p[k]).toBe(0);
+    }
+  });
+});
+
+describe('AI never plans an unsuited tactic (regression lock)', () => {
+  it('best-tactic picks are never U-rated', () => {
+    for (const style of STYLES) {
+      const off = getBestOffensiveTactic(style);
+      const def = getBestDefensiveTactic(style);
+      if (off !== 'none')
+        expect(getOffensiveSuitability(style, off)).not.toBe('U');
+      if (def !== 'none')
+        expect(getDefensiveSuitability(style, def)).not.toBe('U');
     }
   });
 });

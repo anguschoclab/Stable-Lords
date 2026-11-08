@@ -1,10 +1,11 @@
 /**
  * Tactic Suitability Matrix — defines how well each style uses each tactic.
- * WS = Well Suited (1.0), S = Suited (0.6), U = Unsuited (0.3)
+ * WS = Well Suited (1.0), S = Suited (0.6), U = Unsuited (net-negative, TACTIC_U_MULT)
  * Canonical source: Duel II "Styles & Tactics" chart by Pagan (terrablood.com).
  * See memory terrablood-canon-sources / terrablood-weapon-tables.
  */
 import { FightingStyle } from '@/types/shared.types';
+import { TACTIC_U_MULT } from '@/constants/combat';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 
 /**
@@ -78,7 +79,7 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
   const multipliers: Record<SuitabilityRating, number> = {
     WS: 1.0,
     S: 0.6,
-    U: 0.3,
+    U: TACTIC_U_MULT,
   };
   return multipliers[rating];
 }

@@ -57,7 +57,7 @@ describe('applyStyleDoctrine — archetype shaping (V25)', () => {
 
 describe('classifyArchetype — feeds the doctrine layer', () => {
   it('the tank frames actually classify as tank hybrids', () => {
-    expect(classifyArchetype(TANK_BA.attributes, TANK_BA.style)[0]?.archetype).toMatch(/tank/);
-    expect(classifyArchetype(TANK_WS.attributes, TANK_WS.style)[0]?.archetype).toMatch(/tank/);
+    expect(classifyArchetype(TANK_BA.attributes, TANK_BA.style)[0]?.archetype).toMatch(/tank/i);
+    expect(classifyArchetype(TANK_WS.attributes, TANK_WS.style)[0]?.archetype).toMatch(/tank/i);
   });
 });

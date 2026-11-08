@@ -31,6 +31,7 @@ import type {
   ArenaTitle,
   GrandChampionEntry,
   KillEvent,
+  BloodfeudMark,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -77,6 +78,9 @@ export interface StateImpact {
   deadWarriorIds?: WarriorId[];
   /** Delta additions to `state.killEvents` (append, id-deduped). */
   killEvents?: KillEvent[];
+  /** Delta additions to `state.playerBloodfeuds` — killer-keyed, latest
+   *  expiry wins; expired marks are pruned on write (V24 canon). */
+  playerBloodfeuds?: BloodfeudMark[];
 
   // Rivals
   rivalsUpdates?: Map<StableId, Partial<RivalStableData>>;

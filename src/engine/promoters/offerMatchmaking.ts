@@ -176,6 +176,22 @@ export function findBestOpponent(
   const lo = lowerBound(sortedScores, minScoreB);
   const hi = upperBound(sortedScores, maxScoreB);
 
+  // V24 canon (Rose of Shanon): a player warrior chasing their stable's
+  // bloodfeud transcends the score window and outranks every ordinary
+  // candidate. Real constraints still apply — already booked this pass,
+  // fought within the recent window, or individually avoided.
+  if (ctx.playerWarriorIds.has(warriorA.id) && ctx.bloodfeudSet?.size) {
+    for (let i = 0; i < sortedByScore.length; i++) {
+      const candidate = sortedByScore[i];
+      if (!candidate || !ctx.bloodfeudSet.has(candidate.id)) continue;
+      if (candidate.id === warriorA.id) continue;
+      if (ctx.matchedIds.has(candidate.id)) continue;
+      if (ctx.recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;
+      if (ctx.avoidSet.has(candidate.id)) continue;
+      return candidate;
+    }
+  }
+
   let bestCandidate: Warrior | null = null;
   let bestScore = -Infinity;
 
@@ -203,12 +219,22 @@ export function findBestOpponent(
       candidateScore = personalityScore * 100 - gap;
     }
 
-    // Player challenge — boost challenged warriors when a player warrior is in the matchup
+    // Player challenge — boost challenged warriors when a player warrior is
+    // in the matchup. V24 canon (Consortium Q&A): a double challenge
+    // "appx doubles" the odds — the bonus scales with listing count.
     if (ctx.playerWarriorIds.has(warriorA.id) && ctx.challengeSet.has(candidate.id)) {
-      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+      const n = ctx.challengeCounts?.get(candidate.id) ?? 1;
+      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
     }
     if (ctx.playerWarriorIds.has(candidate.id) && ctx.challengeSet.has(warriorA.id)) {
-      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS;
+      const n = ctx.challengeCounts?.get(warriorA.id) ?? 1;
+      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
+    }
+
+    // V24 canon: stable-level avoids penalise (~50% rejection) — they
+    // deprioritise, they never make a candidate invisible.
+    if (candidate.stableId && ctx.stableAvoidSet?.has(candidate.stableId)) {
+      candidateScore += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
     }
 
     if (candidateScore > bestScore) {

@@ -32,6 +32,9 @@ interface PromoterPassContext {
   playerWarriorIds: Set<string>;
   challengeSet: Set<string>;
   avoidSet: Set<string>;
+  stableAvoidSet: Set<string>;
+  challengeCounts: Map<string, number>;
+  bloodfeudSet: Set<string>;
   recentFightPairs: ReturnType<typeof buildRecentFightPairs>;
 }
 
@@ -81,6 +84,9 @@ function generatePromoterOffers(
     playerWarriorIds: ctx.playerWarriorIds,
     avoidSet: ctx.avoidSet,
     challengeSet: ctx.challengeSet,
+    stableAvoidSet: ctx.stableAvoidSet,
+    challengeCounts: ctx.challengeCounts,
+    bloodfeudSet: ctx.bloodfeudSet,
     gapThreshold,
   };
   const offerCtx = { playerWarriorIds: ctx.playerWarriorIds, weather };
@@ -154,6 +160,19 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     // Player challenge/avoid sets for bout offer biasing
     challengeSet: new Set(state.playerChallenges || []),
     avoidSet: new Set(state.playerAvoids || []),
+    // V24 canon: stable-level avoids deprioritise (~50%), they don't hide.
+    stableAvoidSet: new Set(state.playerStableAvoids || []),
+    // V24 canon: a double challenge ~doubles the odds.
+    challengeCounts: (state.playerChallenges || []).reduce((m, id) => {
+      m.set(id, (m.get(id) ?? 0) + 1);
+      return m;
+    }, new Map<string, number>()),
+    // V24 canon: live bloodfeud marks (killers the stable may hunt).
+    bloodfeudSet: new Set(
+      (state.playerBloodfeuds || [])
+        .filter((m) => m.expiresWeek > state.absoluteWeek)
+        .map((m) => m.killerWarriorId)
+    ),
     // Repeat-opponent avoidance: pairs that fought within last 4 weeks
     recentFightPairs: buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4),
   };

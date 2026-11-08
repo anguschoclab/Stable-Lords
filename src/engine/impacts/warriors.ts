@@ -2,7 +2,7 @@
  * Warriors Domain Impacts
  * Handles roster updates, removals, graveyard, and retirement-related state impacts.
  */
-import type { GameState, KillEvent } from '@/types/state.types';
+import type { GameState, KillEvent, BloodfeudMark } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { WarriorEpithetAward } from './types';
@@ -137,6 +137,22 @@ const killEvents = (state: GameState, value: KillEvent[]) => {
 };
 
 /**
+ * Apply bloodfeud-mark additions (V24 canon): keyed by killer — a renewed
+ * feud keeps the latest expiry. Expired marks are pruned whenever the list
+ * is written so stale entitlements can't linger.
+ */
+const playerBloodfeuds = (state: GameState, value: BloodfeudMark[]) => {
+  if (value.length === 0) return;
+  const now = state.absoluteWeek ?? state.week;
+  const byKiller = new Map<string, BloodfeudMark>();
+  for (const m of state.playerBloodfeuds || []) {
+    if (m.expiresWeek > now) byKiller.set(m.killerWarriorId, m);
+  }
+  for (const m of value) byKiller.set(m.killerWarriorId, m);
+  state.playerBloodfeuds = [...byKiller.values()];
+};
+
+/**
  * Apply retired warriors to state.
  */
 const retired = (state: GameState, value: Warrior[]) => {
@@ -179,5 +195,6 @@ export const warriorsHandlers = {
   retired,
   deadWarriorIds,
   killEvents,
+  playerBloodfeuds,
   warriorEpithets,
 };

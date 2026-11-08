@@ -1,4 +1,4 @@
-import type { GameState, NewsletterItem } from '@/types/state.types';
+import type { GameState, NewsletterItem, BloodfeudMark } from '@/types/state.types';
 import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
@@ -10,6 +10,7 @@ import { formatDateOfDeath } from '@/utils/format';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
+import { bloodfeudMarksFromOutcome } from '@/engine/matchmaking/bloodfeud';
 import { weekToTimestamp } from '@/constants';
 
 interface ApplySevereInjuryRuleArgs {
@@ -279,6 +280,18 @@ export function handleDeath(args: HandleDeathArgs): HandleDeathResult {
     rng: rng,
   });
 
+  // V24 canon: a player victim earns the stable a four-week bloodfeud on
+  // the killer. Tournament kills don't feed the feud (exhibition deaths).
+  const playerBloodfeuds = tournamentId
+    ? []
+    : bloodfeudMarksFromOutcome({
+        outcome,
+        warriorA: wA,
+        warriorD: wD,
+        week,
+        playerWarriorIds: new Set(s.roster.map((w) => w.id)),
+      });
+
   return assembleDeathImpact({
     s: s,
     victim: victim,
@@ -289,6 +302,7 @@ export function handleDeath(args: HandleDeathArgs): HandleDeathResult {
     week: week,
     rng: rng,
     tournamentId: tournamentId,
+    playerBloodfeuds,
   });
 }
 
@@ -302,12 +316,13 @@ interface AssembleDeathImpactArgs {
   week: number;
   rng: IRNGService;
   tournamentId?: string;
+  playerBloodfeuds?: BloodfeudMark[];
 }
 
 /** Assemble the death impact: roster updates, obituary, event, fame delta. */
 function assembleDeathImpact(args: AssembleDeathImpactArgs) {
   const { s, victim, killer, isPlayerVictim, graveyardEntry } = args;
-  const { narrative, week, rng, tournamentId } = args;
+  const { narrative, week, rng, tournamentId, playerBloodfeuds } = args;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
   const isOnPlayerRoster = s.roster.some((w) => w.id === victim.id);
@@ -357,6 +372,7 @@ function assembleDeathImpact(args: AssembleDeathImpactArgs) {
     // Resolution-time kill accounting: the persistent death registry plus an
     // audit event, so counting never depends on the capped arenaHistory.
     deadWarriorIds: [victim.id],
+    playerBloodfeuds,
     killEvents: [
       {
         id: `kill_${week}_${victim.id}`,

@@ -29,6 +29,7 @@ export {
   getStyleDefaultLoadout,
   checkWeaponRequirements,
   checkLoadoutWieldability,
+  type LoadoutWieldResult,
   validateLoadout,
   getLoadoutWeight,
   isOverEncumbered,

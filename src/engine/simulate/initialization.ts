@@ -2,7 +2,7 @@
  * Simulation Initialization - RNG setup, fighter state, weather effects
  */
 import { createFighterState } from '../bout/fighterState';
-import { DEFAULT_LOADOUT, checkLoadoutWieldability } from '@/data/equipment';
+import { DEFAULT_LOADOUT, checkLoadoutWieldability, type LoadoutWieldResult } from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
 import {
   applyArenaWeatherMods,
@@ -124,7 +124,7 @@ export function initializeResolutionContext(
     ? getTrainerMods(trainers, planD.style)
     : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
 
-  const weaponReqA = checkLoadoutWieldability(
+  const weaponReqA: LoadoutWieldResult = checkLoadoutWieldability(
     warriorA?.equipment ?? DEFAULT_LOADOUT,
     warriorA?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 },
     {
@@ -132,7 +132,7 @@ export function initializeResolutionContext(
         warriorA?.handedness === 'ambidextrous' || warriorA?.handedness === 'ambi-reversed',
     }
   );
-  const weaponReqD = checkLoadoutWieldability(
+  const weaponReqD: LoadoutWieldResult = checkLoadoutWieldability(
     warriorD?.equipment ?? DEFAULT_LOADOUT,
     warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 },
     {

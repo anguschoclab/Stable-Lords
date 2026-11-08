@@ -274,6 +274,10 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // V22 guard pins the CANON_STYLE_PENALTIES literals that skillBreakpoints
   // preserves — canonical chart-literal pin.
   'src/engine/warrior/skillBreakpoints.ts|src/test/megaplan/v22Canon.guard.test.ts',
+  // V24: PromoterPass now annotates its search/offer bags with
+  // OpponentSearchContext/OfferBuildContext (orphan-scan wiring), so the
+  // pass's literal ctx fields echo the spec's makeCtx bag — ctx-shape pin.
+  'src/engine/pipeline/passes/PromoterPass.ts|src/test/engine/promoters/offerMatchmaking.test.ts',
 ]);
 
 const MIXED_DEBT_PAIRS = new Set<string>([]);

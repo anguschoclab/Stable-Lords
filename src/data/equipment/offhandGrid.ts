@@ -11,7 +11,7 @@
  * Off-hand items otherwise relax requirements: no WT requirement, no SZ
  * requirement, same ST requirement as the main hand.
  */
-export const OFFHAND_DF_REQS = [3, 5, 7, 9, 11, 15] as const;
+const OFFHAND_DF_REQS = [3, 5, 7, 9, 11, 15] as const;
 
 const GRID_ROWS: number[][] = [
   // OH: 3   5   7   9  11  15

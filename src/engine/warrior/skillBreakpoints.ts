@@ -314,8 +314,8 @@ export const STYLE_PENALTIES: Record<
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
   [FightingStyle.AimedBlow]: /*AB*/ [-21, -8, -11, -9, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-23 to pull AB→WS under 80
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat); V23: a -6 test nudge blew the SL→PR/WS→PR cells past 80% — reverted
-  [FightingStyle.ParryStrike]: /*PS*/ [-9, -7, -12, -5, -7, 0], // V22: PAR -5→-7, DEF -10→-12, RIP -3→-7 — canon DF tables pushed fixture defense past SL's attrition window; PS keeps parry identity over riposte; ATT -10→-9 for TP→PS cell
-  [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
+  [FightingStyle.ParryStrike]: /*PS*/ [-9, -7, -12, -5, -5, 0], // V22: PAR -5→-7, DEF -10→-12, RIP -3→-7 — canon DF tables pushed fixture defense past SL's attrition window; PS keeps parry identity over riposte; ATT -10→-9 for TP→PS cell; V24: RIP -7→-5 for the TP→PS cell (81→80) — riposte counters back through the wall's attacks is the signature-consistent lever; TP's own row is untouchable (any deepen blows the razor-edge WS→TP cell)
+  [FightingStyle.ParryLunge]: /*PL*/ [-8, -3, -10, -5, -4, 0], // lightened: -45 → -35 to lift 40.4% toward 50%; V24: +1ATT/+2PAR/+1DEF/+1RIP (35.8→42.1 flat) after the V24 mechanics (U-drain, clash jitter, 2H surcharge) taxed the style's parry-lunge economy
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
   [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -11, -3, -3, 0], // V22: global +DEF buff inflated LU's wall-vs-ram cell (aged LU beat prime BA 60%); deepened DEF -9→-11

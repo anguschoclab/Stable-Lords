@@ -12,13 +12,11 @@ import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
   calculateFinalOEAL,
-  doubleTacticEffectiveness,
-  killDesirePenalty,
 } from '../mechanics/tacticResolution';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
-import { getFavoriteTacticBonus } from '@/engine/favorites/favorites';
+import { applyPairAdjustments } from './exchangeHelpers/tacticAdjust';
 import { resolveTacticCounters, type TacticCounterMods } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
@@ -84,7 +82,7 @@ interface TacticsAndBias extends TacticModBundle {
  * becomes a live first-strike bonus carried on tacticIni; the defensive
  * iniBonus is judged against the incoming attack — boosted on a successful
  * counter-read, wasted on a missed one. defMods objects are per-exchange
- * fresh (or the shared all-zero singleton where a no-op write is inert).
+ * fresh (applyPairAdjustments spreads before any write).
  */
 function resolveTacticMods(
   fA: FighterState,
@@ -93,61 +91,23 @@ function resolveTacticMods(
 ): TacticModBundle {
   const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);
   const tactD = resolveEffectiveTactics(fD.activePlan, phaseKey);
-  const rawOffA = getOffensiveTacticMods(tactA.offTactic, fA.style);
-  const rawDefA = getDefensiveTacticMods(tactA.defTactic, fA.style);
-  const rawOffD = getOffensiveTacticMods(tactD.offTactic, fD.style);
-  const rawDefD = getDefensiveTacticMods(tactD.defTactic, fD.style);
 
-  // Consortium (V24): running an offensive AND defensive tactic together is
-  // "very limiting" — flat per-skill tax folded into the tactic mods.
-  const applyDoubleTax = (
-    off: typeof rawOffA,
-    def: typeof rawDefA,
-    offT: typeof tactA.offTactic,
-    defT: typeof tactA.defTactic
-  ) => {
-    // Canon: the pairing's "very limiting value" lands on the secondary
-    // defensive shell — the offensive plan keeps its punch.
-    const mult = doubleTacticEffectiveness(offT, defT);
-    const scale = (v: number) => (mult !== 1 && v > 0 ? Math.floor(v * mult) : v);
-    return {
-      off: { ...off },
-      def: {
-        ...def,
-        parBonus: scale(def.parBonus),
-        defBonus: scale(def.defBonus),
-        iniBonus: scale(def.iniBonus),
-        ripBonus: scale(def.ripBonus),
-      },
-    };
-  };
-  const { off: offModsA, def: defModsA } = applyDoubleTax(
-    rawOffA,
-    rawDefA,
+  // V24 adjustments (double-tactic shell tax, favorite tactic, KD band) —
+  // sibling always returns fresh mod objects.
+  const { off: offModsA, def: defModsA } = applyPairAdjustments(
+    getOffensiveTacticMods(tactA.offTactic, fA.style),
+    getDefensiveTacticMods(tactA.defTactic, fA.style),
+    fA,
     tactA.offTactic,
     tactA.defTactic
   );
-  const { off: offModsD, def: defModsD } = applyDoubleTax(
-    rawOffD,
-    rawDefD,
+  const { off: offModsD, def: defModsD } = applyPairAdjustments(
+    getOffensiveTacticMods(tactD.offTactic, fD.style),
+    getDefensiveTacticMods(tactD.defTactic, fD.style),
+    fD,
     tactD.offTactic,
     tactD.defTactic
   );
-
-  // V24 canon: the hidden favorite tactic fires like the favorite weapon —
-  // a flat bonus onto the favored tactic's primary area, discovered or not.
-  offModsA.attBonus += getFavoriteTacticBonus(fA, tactA.offTactic);
-  defModsA.parBonus += getFavoriteTacticBonus(fA, tactA.defTactic);
-  offModsD.attBonus += getFavoriteTacticBonus(fD, tactD.offTactic);
-  defModsD.parBonus += getFavoriteTacticBonus(fD, tactD.defTactic);
-
-  // V24 canon (Assur): KD 9-10 "fights somewhat strangely" — flat tax.
-  const kdA = killDesirePenalty(fA.activePlan.killDesire);
-  offModsA.attBonus += kdA.attBonus;
-  defModsA.iniBonus += kdA.iniBonus;
-  const kdD = killDesirePenalty(fD.activePlan.killDesire);
-  offModsD.attBonus += kdD.attBonus;
-  defModsD.iniBonus += kdD.iniBonus;
 
   const counters: TacticCounterMods = resolveTacticCounters({
     tactA,

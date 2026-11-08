@@ -5,6 +5,7 @@ import { type Trainer } from '@/types/state.types';
 import {
   getClassicWeaponBonus,
   checkLoadoutWieldability,
+  type LoadoutWieldResult,
   getShieldModifiers,
   getStyleDefaultLoadout,
   getItemById,
@@ -64,7 +65,7 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   const oShield = getShieldModifiers(equip.shield);
   const ohShield = getShieldModifiers(equip.offhand); // V23/D1 — item-declared mods only
 
-  const weaponReq = checkLoadoutWieldability(equip, attrs, {
+  const weaponReq: LoadoutWieldResult = checkLoadoutWieldability(equip, attrs, {
     ambidextrous:
       warrior?.handedness === 'ambidextrous' || warrior?.handedness === 'ambi-reversed',
   });

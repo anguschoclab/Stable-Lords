@@ -14,6 +14,8 @@ import {
   collectUnavailableWarriorIds,
   findBestOpponent,
   createBoutOffer,
+  type OpponentSearchContext,
+  type OfferBuildContext,
 } from '@/engine/promoters/offerMatchmaking';
 
 /**
@@ -77,7 +79,7 @@ function generatePromoterOffers(
 
   // Track matched warriors to prevent reuse within this promoter's pass
   const matchedIds = new Set<string>();
-  const searchCtx = {
+  const searchCtx: OpponentSearchContext = {
     promoter,
     matchedIds,
     recentFightPairs: ctx.recentFightPairs,
@@ -89,7 +91,7 @@ function generatePromoterOffers(
     bloodfeudSet: ctx.bloodfeudSet,
     gapThreshold,
   };
-  const offerCtx = { playerWarriorIds: ctx.playerWarriorIds, weather };
+  const offerCtx: OfferBuildContext = { playerWarriorIds: ctx.playerWarriorIds, weather };
 
   for (const warriorA of shuffledEligible) {
     if (generated >= capacity) break;

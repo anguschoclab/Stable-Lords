@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 168 src-scoped dead exports — under the 169 ratchet — guard green.
+> **Ratchet status:** 172 src-scoped dead exports — under the 172 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -139,13 +139,18 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `BookmarkRow *(type)*` | `src/pages/bookmarks/groupBookmarks.ts` | BookmarkGroups, resolveBookmarkRow | — |
 | `bookmarkKeySet` | `src/state/slices/bookmarksSlice.ts` | createBookmarksSlice | — |
 
-### Data & schemas (11)
+### Data & schemas (16)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
 | `STYLE_CLASSIC_WEAPONS` | `src/data/equipment/equipment.utils.ts` | getStyleDefaultLoadout, getClassicWeaponBonus | — |
 | `ALL_STYLES` | `src/data/equipment/weaponStyles.ts` | without | — |
 | `scaleToAttributeBudget` | `src/data/fighterConcepts.ts` | concept | — |
+| `WinningFamily *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide | — |
+| `ArchetypeDesignBars *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide, barRatio | — |
+| `ArchetypeStrategy *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide | — |
+| `ArchetypeGuide *(type)*` | `src/data/warriorArchetypes.ts` | styleFit, classifyArchetype | — |
+| `ArchetypeFit *(type)*` | `src/data/warriorArchetypes.ts` | classifyArchetype | — |
 | `AIStrategySchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
 | `AIEventSchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
 | `AIAgentMemorySchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
@@ -241,18 +246,17 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `RECOVERY_PER_BEAT` | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery | — |
 | `isVeryHighlyCoordinated` | `src/engine/combat/resolution/offhandAttack.ts` | tryOffhandAttack | — |
 
-### Matchmaking, scouting & reputation (15)
+### Matchmaking, scouting & reputation (14)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
 | `selectGrandChampionshipField` | `src/engine/championship/championsTournament.ts` | buildChampionsTournament | — |
 | `scoreArenaFitForWarrior` | `src/engine/matchmaking/arenaFit.ts` | selectArenaForMatchup | — |
 | `eligibleArenasFor` | `src/engine/matchmaking/arenaFit.ts` | matchupArenas | — |
+| `BLOODFEUD_TURNS` | `src/engine/matchmaking/bloodfeud.ts` | bloodfeudMarksFromOutcome | — |
 | `getEligibleArenasForTournament` | `src/engine/matchmaking/tournament/tournamentArenaSelection.ts` | selectArenaForTournamentBout | — |
 | `lowerBound` | `src/engine/promoters/offerMatchmaking.ts` | findBestOpponent | — |
 | `upperBound` | `src/engine/promoters/offerMatchmaking.ts` | findBestOpponent | — |
-| `OpponentSearchContext *(type)*` | `src/engine/promoters/offerMatchmaking.ts` | findBestOpponent | — |
-| `OfferBuildContext *(type)*` | `src/engine/promoters/offerMatchmaking.ts` | CreateBoutOfferArgs | — |
 | `createStyleInsight` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
 | `createAttributeInsights` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
 | `createTacticInsight` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
@@ -347,8 +351,8 @@ Generated-library exports — the components ship their full part API even when 
 | --- | --- | --- |
 | **Delete / integrate** | 5 curated item(s) + **1 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 4 test-reset hook(s); 117 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 168 / 169 | — |
+| **Keep** | 4 test-reset hook(s); 121 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 172 / 172 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

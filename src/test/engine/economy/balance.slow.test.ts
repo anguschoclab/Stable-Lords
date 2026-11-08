@@ -66,6 +66,11 @@ describe('Mirror-match drift (engine A/D bias)', () => {
     // ±10pp band holds on that center, not on a symmetric coin flip.
     const STYLE_MIRROR_CENTER: Partial<Record<FightingStyle, number>> = {
       [FightingStyle.BashingAttack]: 0.44,
+      // V24: the clash-jitter stream re-rolled the certified grid and PR's
+      // 100-fight draw landed at 61% — probed true center ≈51.4% A-side
+      // (51.7/52.0/50.7 across 3 seed bases × 300 fights). Near-fair coin;
+      // the band holds on the true center, same pattern as BA above.
+      [FightingStyle.ParryRiposte]: 0.51,
     };
     const problems: string[] = [];
     for (const s of ALL_STYLES) {

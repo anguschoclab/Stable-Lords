@@ -67,7 +67,11 @@ package-lock.json
 electron/main.js
 
 # Electron build output
-out/
+/out/
+
+# Scan artifacts — regenerated; orphan-report.md is committed for PO triage
+scripts/out/*
+!scripts/out/orphan-report.md
 
 # Script-generated archives (daily_oracle bout transcripts)
 archives/

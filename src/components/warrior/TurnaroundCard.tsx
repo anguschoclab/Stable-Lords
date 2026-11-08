@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { diagnoseTurnaround } from '@/engine/advisor/turnaroundAdvisor';
-import type { TurnaroundReport } from '@/engine/advisor/turnaroundAdvisor';
+import type { TurnaroundAction, TurnaroundReport } from '@/engine/advisor/turnaroundAdvisor';
 
 /**
  * Manager's notebook — the turnaround advisor's read on a losing warrior.
@@ -41,7 +41,7 @@ export function TurnaroundCard({ warrior }: { warrior: Warrior }) {
           <div className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
             Next Moves
           </div>
-          {report.actions.map((a: TurnaroundReport['actions'][number]) => (
+          {report.actions.map((a: TurnaroundAction) => (
             <div key={a.headline} className="space-y-0.5">
               <div className="text-[10px] font-black uppercase tracking-widest text-foreground">
                 {a.headline}

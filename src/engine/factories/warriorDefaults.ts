@@ -8,7 +8,15 @@ import type { Warrior } from '@/types/warrior.types';
  */
 export function newWarriorDefaults(): Pick<
   Warrior,
-  'fame' | 'popularity' | 'titles' | 'injuries' | 'flair' | 'career' | 'champion' | 'status'
+  | 'fame'
+  | 'popularity'
+  | 'titles'
+  | 'injuries'
+  | 'flair'
+  | 'career'
+  | 'champion'
+  | 'status'
+  | 'learnedSkills'
 > {
   return {
     fame: 0,
@@ -19,5 +27,9 @@ export function newWarriorDefaults(): Pick<
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',
+    // Minted empty so the field sits in canonical key position — a
+    // mid-pipeline first-write vs a shard-patch first-write would otherwise
+    // land learnedSkills at different offsets and diverge the state hash.
+    learnedSkills: {},
   };
 }

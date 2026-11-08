@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 165 src-scoped dead exports — ⚠️ **over the 162 ratchet by 3** — the guard is red.
+> **Ratchet status:** 163 src-scoped dead exports — under the 163 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -19,7 +19,6 @@ Flagged by the latest scan with no curated entry in `orphan-report.mjs` `ANNOTAT
 | Symbol | File | Evidence |
 | --- | --- | --- |
 | `HUBS` | src/components/layout/LeftNav.tsx | re-export with no local declaration — add ANNOTATIONS verdict |
-| `TurnaroundReport` | src/engine/advisor/turnaroundAdvisor.ts | zero external refs — likely over-export |
 
 ## Duplication — alternate flows sharing an orphan's name
 
@@ -156,11 +155,36 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `PlanConditionSchema` | `src/schemas/warriorSchemas.ts` | FightPlanSchema | — |
 | `FightPlanSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema | — |
 
-### Engine core & services (35)
+### AI decisioning (21)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
-| `TurnaroundAction *(type)*` | `src/engine/advisor/turnaroundAdvisor.ts` | TurnaroundReport, planAdvice, weaponAdvice, learnAdvice, trainAdvice, drillAdvice, matchupAdvice, diagnoseTurnaround | — |
+| `COMPETENCE_QUALITY` | `src/engine/ai/competence.ts` | competenceQuality | — |
+| `competenceOf` | `src/engine/ai/competence.ts` | competenceQuality | — |
+| `pickWeeklyIntent` | `src/engine/ai/intentEngine/index.ts` | updateAIStrategy | — |
+| `BoutIntentInput *(type)*` | `src/engine/ai/intentStates.ts` | module scope | — |
+| `deriveBoutIntent` | `src/engine/ai/intentStates.ts` | BoutIntent, evaluateBoutIntent | — |
+| `isPoachingEnabled` | `src/engine/ai/market/poachBid.ts` | computePoachBid, processPoachMarket | — |
+| `seasonIndexFor` | `src/engine/ai/market/poachBid.ts` | processPoachMarket | — |
+| `computePoachBid` | `src/engine/ai/market/poachBid.ts` | processPoachMarket, SettleAIPoachArgs | — |
+| `DOSSIER_CAP` | `src/engine/ai/memory/intelDossier.ts` | pruneDossiers | — |
+| `decayDossiers` | `src/engine/ai/memory/intelDossier.ts` | updateDossiers | — |
+| `agentPlanForWarrior` | `src/engine/ai/plan/agentPlan.ts` | persistNPCPlans | — |
+| `retireChanceFor` | `src/engine/ai/seasonalRetirementService.ts` | SeasonalRetirementService | — |
+| `TRAIT_POLICY` | `src/engine/ai/traitPolicy.ts` | policyFor | — |
+| `WEATHER_AI_DISPOSITION` | `src/engine/ai/weatherSuitability.ts` | HAZARDOUS_WEATHER, acceptanceWeatherBlock, offerWeatherDecline, committeeWeatherSkip, weatherBidModifier | — |
+| `BASE_RESERVE` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
+| `projectCashFlow` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
+| `learningSeekBonus` | `src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts` | pickBestCandidate | — |
+| `NegotiationOutcome *(type)*` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
+| `walkAwayTolerance` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
+| `assessCrownOpportunity` | `src/engine/ai/workers/crownWorker.ts` | processCrownPosture | — |
+| `preferredTrainerFocus` | `src/engine/ai/workers/staffWorker.ts` | tryHireTrainer | — |
+
+### Engine core & services (34)
+
+| Symbol(s) | File | Live via (internal caller) | Alt-flow |
+| --- | --- | --- | --- |
 | `processPlayerOffers` | `src/engine/autosim/autosim.ts` | runAutosim | — |
 | `extractWeekSummary` | `src/engine/autosim/autosim.ts` | runAutosim | distinct |
 | `seedForEntity` | `src/engine/avatar/avatarGenerator.ts` | generateAvatar | — |
@@ -195,32 +219,6 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `defaultSpecialtyMods` | `src/engine/trainers/trainerSpecialties.ts` | getSpecialtyMods | — |
 | `validateArenaChampions` | `src/engine/validate/stateInvariants.ts` | validateStateInvariants | — |
 | `SEASONAL_WEATHER` | `src/engine/weather/seasonalWeather.ts` | rollWeather | — |
-
-### AI decisioning (21)
-
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `COMPETENCE_QUALITY` | `src/engine/ai/competence.ts` | competenceQuality | — |
-| `competenceOf` | `src/engine/ai/competence.ts` | competenceQuality | — |
-| `pickWeeklyIntent` | `src/engine/ai/intentEngine/index.ts` | updateAIStrategy | — |
-| `BoutIntentInput *(type)*` | `src/engine/ai/intentStates.ts` | module scope | — |
-| `deriveBoutIntent` | `src/engine/ai/intentStates.ts` | BoutIntent, evaluateBoutIntent | — |
-| `isPoachingEnabled` | `src/engine/ai/market/poachBid.ts` | computePoachBid, processPoachMarket | — |
-| `seasonIndexFor` | `src/engine/ai/market/poachBid.ts` | processPoachMarket | — |
-| `computePoachBid` | `src/engine/ai/market/poachBid.ts` | processPoachMarket, SettleAIPoachArgs | — |
-| `DOSSIER_CAP` | `src/engine/ai/memory/intelDossier.ts` | pruneDossiers | — |
-| `decayDossiers` | `src/engine/ai/memory/intelDossier.ts` | updateDossiers | — |
-| `agentPlanForWarrior` | `src/engine/ai/plan/agentPlan.ts` | persistNPCPlans | — |
-| `retireChanceFor` | `src/engine/ai/seasonalRetirementService.ts` | SeasonalRetirementService | — |
-| `TRAIT_POLICY` | `src/engine/ai/traitPolicy.ts` | policyFor | — |
-| `WEATHER_AI_DISPOSITION` | `src/engine/ai/weatherSuitability.ts` | HAZARDOUS_WEATHER, acceptanceWeatherBlock, offerWeatherDecline, committeeWeatherSkip, weatherBidModifier | — |
-| `BASE_RESERVE` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
-| `projectCashFlow` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
-| `learningSeekBonus` | `src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts` | pickBestCandidate | — |
-| `NegotiationOutcome *(type)*` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
-| `walkAwayTolerance` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
-| `assessCrownOpportunity` | `src/engine/ai/workers/crownWorker.ts` | processCrownPosture | — |
-| `preferredTrainerFocus` | `src/engine/ai/workers/staffWorker.ts` | tryHireTrainer | — |
 
 ### Combat & bout (12)
 
@@ -342,10 +340,10 @@ Generated-library exports — the components ship their full part API even when 
 
 | Decision | Items | Unique code at stake |
 | --- | --- | --- |
-| **Delete / integrate** | 5 curated item(s) + **2 UNTRIAGED** | see per-item tags above |
+| **Delete / integrate** | 5 curated item(s) + **1 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 4 test-reset hook(s); 113 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 165 / 162 | — |
+| **Keep** | 4 test-reset hook(s); 112 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 163 / 163 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

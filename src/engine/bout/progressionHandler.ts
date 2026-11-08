@@ -119,8 +119,8 @@ function rollLearnProgressions(
     // Transcript line — deterministic text built from the stored gains, so
     // it draws nothing from any RNG stream. Headless-gated like every other
     // transcript push: autosim's deferredBoutLogs must stay empty.
+    const skillsLearned = learnedSkillNames(gained);
     if (!args.headless) {
-      const skillsLearned = learnedSkillNames(gained);
       outcome.log.push({
         minute: outcome.minutes,
         text: `${warriorDisplayName(w)} learned well this bout — picks up lessons in ${skillsLearned}.`,

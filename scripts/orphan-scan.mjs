@@ -534,8 +534,19 @@ const report = {
   unlinkedPages: unlinkedPages.sort(),
 };
 
+// Triage analysis (unique-code + duplication measures) — enriches
+// report.deadExports entries before the JSON is written so every output
+// carries the same per-symbol verdicts.
+const { analyzeOrphans, generateOrphanReport } = await import('./orphan-report.mjs');
+const { summary: triageSummary, buckets: triageBuckets } = analyzeOrphans(report);
+report.triageSummary = triageSummary;
+
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(OUT_FILE, JSON.stringify(report, null, 2));
+
+// PO-facing markdown companion — regenerated with every scan so the report
+// and the JSON never drift (scripts/out/orphan-report.md).
+const reportMd = generateOrphanReport(report, triageBuckets);
 
 // ─── stdout summary ─────────────────────────────────────────────────────────
 
@@ -576,4 +587,7 @@ console.log('');
 console.log(`-- Page files unreachable: ${unlinkedPages.length}`);
 for (const p of unlinkedPages) console.log(`   ${p}`);
 console.log('');
+console.log('');
+console.log(`-- Triage: ${triageSummary.uniqueCodeCount} unique-code, ${triageSummary.alternateFlowCount} with alternate flows, ${triageSummary.untriaged.length} untriaged`);
 console.log(`Full report: ${rel(OUT_FILE)}`);
+console.log(`PO report:   ${rel(reportMd)}`);

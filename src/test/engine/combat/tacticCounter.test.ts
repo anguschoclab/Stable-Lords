@@ -167,7 +167,7 @@ describe('tactic counters — exchange wiring', () => {
 });
 
 describe('simulateFight — decise is live and Response counters it', () => {
-  const trials = 30;
+  const trials = 120;
   const striker = () => makeWarrior('Striker', ST, { SP: 15, WT: 14, DF: 14 });
   const responder = () => makeWarrior('Responder', ST, { SP: 14, WT: 14, DF: 14 });
 

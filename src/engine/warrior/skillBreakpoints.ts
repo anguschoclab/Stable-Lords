@@ -312,21 +312,21 @@ export const STYLE_PENALTIES: Record<
 > = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
-  [FightingStyle.AimedBlow]: /*AB*/ [-12, -7, -9, -7, -6, +1], // lightened ATT -15→-12 for mirror bias; DEF -11→-9 lifts 47.5→~51 mid-band and compresses ST→AB (strikers' decise-vs-glass blowout)
+  [FightingStyle.AimedBlow]: /*AB*/ [-22, -8, -11, -8, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-22 to pull AB→WS under 80 (85 → ~78)
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat)
   [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -5, -3, 0], // re-ratchet: lightened INI -7→-5 to offset encumbrance INI penalty from equipment changes
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
-  [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -9, -3, -3, 0], // lightened further: -40 → -29 to lift 38.3% toward 40%
+  [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -11, -3, -3, 0], // V22: global +DEF buff inflated LU's wall-vs-ram cell (aged LU beat prime BA 60%); deepened DEF -9→-11
   [FightingStyle.SlashingAttack]: /*SL*/ [-10, -14, -15, -4, -7, -2], // 2026-09: lightened ATT -12→-10 — SL sat at the bottom of both surfaces (fixture 45.5%, world 44%)
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
   [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -15, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15, RIP -4→-5; BA was 64.8% pre-existing, now 61.6%
-  [FightingStyle.StrikingAttack]: /*ST*/ [-13, -9, -12, -6, -4, +1], // re-ratchet: Arena-93 decise went live (+3 INI vs non-Response) plus +1 net matrix edge. Lab: all-defense mixes leave ST→AB ~86 — the blowout is decise-vs-glass, not ST defense — so weight ATT and INI: 62.1% → ~49.6% flat, 54.3% snap; PS→ST 75, WS→ST 79 cells under 80
+  [FightingStyle.StrikingAttack]: /*ST*/ [-9, -9, -12, -6, -4, +1], // V22: canon DEF/PAR yields rose for everyone — lightened ATT -13→-9 to pull ST off the floor and WS→ST under 80
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
-  [FightingStyle.TotalParry]: /*TP*/ [-15, -1, -12, -6, -4, -2], // deepened further: -32 → -40 to bring 56.5% toward 60%
+  [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -14, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-14
   [FightingStyle.WallOfSteel]: /*WS*/ [-8, -6, -10, 0, -4, -2], // re-ratchet: lightened DEF -13→-10, INI -2→0 to offset encumbrance penalties from equipment changes
 };
 

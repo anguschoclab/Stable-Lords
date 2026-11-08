@@ -471,7 +471,7 @@ describe('simulateFight — equipment modifiers', () => {
     // defensive value shows up as fewer brutal finishes: blows that would KO
     // or kill an unshielded defender get turned into survivable stoppages or
     // judges' decisions. Compare KO/Kill losses over the same seeds.
-    const trials = 40;
+    const trials = 120;
     const destroyed = (shielded: boolean) => {
       let count = 0;
       for (let seed = 1; seed <= trials; seed++) {

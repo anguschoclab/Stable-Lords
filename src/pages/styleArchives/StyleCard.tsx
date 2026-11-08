@@ -7,6 +7,7 @@ import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, ATTRIBUTE_KEYS } from
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
 import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
 import { STYLE_FAMILY, FAMILY_GUIDE } from '@/data/designDoctrine';
+import { STYLE_ARCHETYPE_FIT, WINNING_ARCHETYPES } from '@/data/warriorArchetypes';
 import { getMatchupBonus, STYLE_ORDER } from '@/constants/combat/combat/matchup';
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import { WEAPONS } from '@/data/equipment';
@@ -43,6 +44,29 @@ function StyleChip({ style, tone }: { style: FightingStyle; tone: 'up' | 'down' 
     >
       {STYLE_DISPLAY_NAMES[style]}
     </Badge>
+  );
+}
+
+/** Winning-archetype fits for the style — Assur's winning-build taxonomy. */
+function ArchetypeFitsPanel({ style }: { style: FightingStyle }) {
+  const fits = STYLE_ARCHETYPE_FIT[style];
+  return (
+    <div className="space-y-2 pt-3 border-t border-white/5">
+      <span className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
+        Winning Fits
+      </span>
+      <div className="flex flex-wrap gap-1">
+        {fits.map((fit) => (
+          <Badge
+            key={fit}
+            variant="outline"
+            className="rounded-none text-[8px] font-black uppercase tracking-widest border-arena-gold/20 text-arena-gold/70 bg-arena-gold/5"
+          >
+            {WINNING_ARCHETYPES[fit].label}
+          </Badge>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -167,6 +191,8 @@ export function StyleCard({ style }: { style: FightingStyle }) {
             {weapons.length > 0 ? weapons.join(' · ') : 'No signature weapons on record'}
           </p>
         </div>
+
+        <ArchetypeFitsPanel style={style} />
 
         <MatchupPanel style={style} />
 

@@ -180,6 +180,58 @@ export function FighterConceptsSection() {
   );
 }
 
+/** Codex section: winning warrior types (Assur's Arena-93 archetypes). */
+export function WinningTypesSection() {
+  return (
+    <AccordionItem value="archetypes">
+      <AccordionTrigger className="font-display text-lg">
+        Winning Warrior Types
+      </AccordionTrigger>
+      <AccordionContent className="space-y-2 text-sm text-muted-foreground">
+        <p>
+          Style decides how a warrior fights; the winning archetype decides how the
+          build wins. Assur's Arena-93 guides sort every graduate into three
+          families:
+        </p>
+        <ul className="list-disc list-inside space-y-1.5">
+          <li>
+            <strong>Pure Offensive</strong> — win by attacking. ST/WT/DF carry the
+            build; armor stays light because the fight should end in minute one.
+            OE 7-10, AL 7-10. Wit 11 is the bare minimum — below it the build
+            cannot learn its way out of a bad matchup.
+          </li>
+          <li>
+            <strong>Pure Defensive</strong> — win by refusing to lose. CN and WL do
+            the work; the heaviest plate the frame can carry (APA/F is the norm)
+            outlasts the opponent's endurance. OE/AL conservative, KD low.
+          </li>
+          <li>
+            <strong>Hybrids</strong> — win by fighting both sides of the exchange:
+            the <strong>Tank Hybrid</strong> (heavy frame + plate + OE 5+), the
+            <strong> Low-Will Tank</strong> (the addendum — WL spent on frame and
+            a real SP+DF riposte base), the <strong>High-Skill Hybrid</strong>
+            (WT/DF builds that out-fight rather than out-last), and the
+            <strong> Riposting Hybrid</strong> (parry and counter — beware the
+            SP 10-12 dead band).
+          </li>
+        </ul>
+        <p>
+          The Design Review classifies any build against all six archetypes, and
+          the Style Archives show which archetypes each style can express — the
+          lunger's four-way fit is why the archives call it the ultimate hybrid
+          chassis.
+        </p>
+        <ContextLinks
+          links={[
+            { to: '/stable/recruit', label: 'Check a build in the Design Review' },
+            { to: '/world/style-archives', label: 'Archetype fits by style' },
+          ]}
+        />
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 /** Codex section: warrior design. */
 export function WarriorDesignSection() {
   return (

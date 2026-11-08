@@ -29,6 +29,7 @@ import {
   StrategyBasicsSection,
   TrainersSection,
   WarriorDesignSection,
+  WinningTypesSection,
 } from './help/sections';
 
 /**
@@ -159,6 +160,7 @@ export default function Help() {
           'strategy',
           'styles',
           'concepts',
+          'archetypes',
           'design',
           'attributes',
           'equipment',
@@ -171,6 +173,7 @@ export default function Help() {
         <StrategyBasicsSection />
         <FightingStylesSection />
         <FighterConceptsSection />
+        <WinningTypesSection />
         <WarriorDesignSection />
         <AttributesSection />
         <EquipmentSection />

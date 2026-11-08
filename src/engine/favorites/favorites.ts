@@ -10,10 +10,16 @@
  */
 import type { Warrior, WarriorFavorites, WeaponChartEntry } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
+import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { favoriteLearnOf } from '@/engine/learning';
+import { FAVORITE_TACTIC_BONUS } from '@/constants/combat';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+} from '@/engine/strategy/tacticSuitability';
 
 // ─── Generation ─────────────────────────────────────────────────────────
 
@@ -73,16 +79,30 @@ export const FAVORITE_TACTIC_POOLS: Partial<
 
 /**
  * Bonus applied when the fighter's plan uses their (hidden) favorite tactic —
- * weapon-crit parity: fires whether or not the favorite is discovered.
- * Phase-1 scaffolding: returns 0 until Phase 5 wires generation + bonus.
+ * weapon-crit parity (Godling Heresy): fires whether or not the favorite is
+ * discovered, just like the favorite-weapon crit chance.
  */
 export function getFavoriteTacticBonus(
   warrior: { favorites?: WarriorFavorites },
   tactic: string | undefined
 ): number {
-  void warrior;
-  void tactic;
-  return 0;
+  const fav = warrior.favorites?.tactic;
+  if (!fav || !tactic || tactic === 'none') return 0;
+  return fav === tactic ? FAVORITE_TACTIC_BONUS : 0;
+}
+
+/**
+ * Styles without published favorite-tactic counts roll uniformly over their
+ * WS-rated set (Pagan: a favorite can only come from the WS pool).
+ */
+function defaultFavoriteTacticPool(style: FightingStyle): { tactic: string; weight: number }[] {
+  const off: OffensiveTactic[] = ['Lunge', 'Slash', 'Bash', 'Decisiveness'];
+  const def: DefensiveTactic[] = ['Dodge', 'Parry', 'Riposte', 'Responsiveness'];
+  const suited = [
+    ...off.filter((t) => getOffensiveSuitability(style, t) === 'WS'),
+    ...def.filter((t) => getDefensiveSuitability(style, t) === 'WS'),
+  ];
+  return suited.map((tactic) => ({ tactic, weight: 1 }));
 }
 
 /** Generate hidden favorites for a warrior at creation */
@@ -106,9 +126,23 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
     al = 1 + Math.floor(r() * 9);
   }
 
+  // Favorite tactic (V24 canon): weighted draw from the style's WS pool.
+  const tacticPool = FAVORITE_TACTIC_POOLS[style] ?? defaultFavoriteTacticPool(style);
+  const tacticTotal = tacticPool.reduce((s, p) => s + p.weight, 0);
+  let tacticRoll = r() * tacticTotal;
+  let tactic = tacticPool[0]?.tactic;
+  for (const p of tacticPool) {
+    tacticRoll -= p.weight;
+    if (tacticRoll < 0) {
+      tactic = p.tactic;
+      break;
+    }
+  }
+
   return {
     weaponId,
     rhythm: { oe, al },
+    tactic,
     discovered: {
       weapon: false,
       rhythm: false,

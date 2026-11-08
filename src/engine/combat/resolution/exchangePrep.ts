@@ -17,6 +17,7 @@ import {
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+import { getFavoriteTacticBonus } from '@/engine/favorites/favorites';
 import { resolveTacticCounters, type TacticCounterMods } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
@@ -128,6 +129,13 @@ function resolveTacticMods(
     tactD.offTactic,
     tactD.defTactic
   );
+
+  // V24 canon: the hidden favorite tactic fires like the favorite weapon —
+  // a flat bonus onto the favored tactic's primary area, discovered or not.
+  offModsA.attBonus += getFavoriteTacticBonus(fA, tactA.offTactic);
+  defModsA.parBonus += getFavoriteTacticBonus(fA, tactA.defTactic);
+  offModsD.attBonus += getFavoriteTacticBonus(fD, tactD.offTactic);
+  defModsD.parBonus += getFavoriteTacticBonus(fD, tactD.defTactic);
 
   const counters: TacticCounterMods = resolveTacticCounters({
     tactA,

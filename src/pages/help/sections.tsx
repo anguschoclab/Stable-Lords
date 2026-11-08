@@ -535,6 +535,18 @@ export function ProgressionSection() {
             one of your warriors.
           </li>
           <li>
+            <strong className="text-foreground">Arena Champion</strong> — Hold an arena
+            championship with one of your warriors.
+          </li>
+          <li>
+            <strong className="text-foreground">Lord of the Circuit</strong> — Hold three arena
+            championships across three different warriors.
+          </li>
+          <li>
+            <strong className="text-foreground">Grand Champion</strong> — Win the annual
+            champions-only Grand Championship.
+          </li>
+          <li>
             <strong className="text-foreground">Hall of Famer</strong> — Have a warrior win Warrior
             of the Year or Killer of the Year.
           </li>

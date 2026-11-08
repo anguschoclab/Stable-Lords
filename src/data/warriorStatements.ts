@@ -2,6 +2,7 @@ import { BaseSkills } from '@/types/shared.types';
 import type { Persona } from '@/types/narrative.types';
 import { computeCoordination, computeActivityRating, hpRating } from './terrabloodCharts';
 import { STATEMENT_MIN_SKILLS } from '@/engine/warrior/skillBreakpoints';
+import { skillTierLabel, SKILL_TIER_LABELS } from './skillTiers';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
 const persona: Persona = uiMeta.persona;
@@ -240,12 +241,12 @@ export function physicalProfileLines(profile: PhysicalProfile): string[] {
 }
 
 /**
- * Canon skill rating — Expert at 16+, Advanced Expert at 20+.
+ * Canon skill rating — the stated rungs of the Arena-93 ladder (Expert 16+).
+ * Below Expert the newsletters make no statement; the full ladder
+ * (incl. Master 26+ / Advanced Master 34+) lives in `skillTiers`.
  */
-export function skillRating(skill: number): 'Expert' | 'Advanced Expert' | null {
-  if (skill >= 20) return 'Advanced Expert';
-  if (skill >= 16) return 'Expert';
-  return null;
+export function skillRating(skill: number): string | null {
+  return skill >= SKILL_TIER_LABELS.expert.min ? skillTierLabel(skill) : null;
 }
 
 

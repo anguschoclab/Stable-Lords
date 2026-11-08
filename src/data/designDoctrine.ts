@@ -231,8 +231,21 @@ export const DA_WL_FLOOR = 7;
 export const DA_ST_FLOOR = 7;
 
 /**
- * V24 canon (Consortium Q&A): low ST+WL builds can't feed an endurance burn —
- * steer them to the low-burn styles. Phase-1 scaffolding: empty until the
- * steering lands in Phase 9.
+ * V24 canon (Consortium Q&A): low-burn builds (very low SP — a warrior who
+ * can't sustain an activity burn) belong on the patient/defensive styles
+ * that tolerate the slow pace: PR, PS, AB, TP, ST.
  */
-export const LOW_BURN_STYLES: FightingStyle[] = [];
+export const LOW_BURN_STYLES: FightingStyle[] = [
+  FightingStyle.ParryRiposte,
+  FightingStyle.ParryStrike,
+  FightingStyle.AimedBlow,
+  FightingStyle.TotalParry,
+  FightingStyle.StrikingAttack,
+];
+
+/**
+ * Speed ceiling that marks a "low-burn" build (Consortium): a SP this low
+ * can't sustain an offensive activity burn — the fighter must win on
+ * patience, parry, or aimed precision instead.
+ */
+export const LOW_BURN_SP_MAX = 5;

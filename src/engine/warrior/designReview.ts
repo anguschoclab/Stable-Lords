@@ -17,19 +17,29 @@ import {
   STYLE_DESIGN_MINIMUMS,
   DA_WL_FLOOR,
   DA_ST_FLOOR,
+  LOW_BURN_STYLES,
+  LOW_BURN_SP_MAX,
 } from '@/data/designDoctrine';
 import {
   computeHP,
   computeDamageClass,
   computeEnduranceTier,
+  computeEncumbranceCapacity,
 } from '@/data/terrabloodCharts';
 import { DAMAGE_LABELS, computeBaseSkills } from './skillCalc';
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import {
   WEAPONS,
   checkWeaponRequirements,
+  getItemById,
+  getLoadoutWeight,
   type WeaponReqResult,
 } from '@/data/equipment';
+import {
+  WINNING_ARCHETYPES,
+  ARCHETYPE_DESIGN_BARS,
+  classifyArchetype,
+} from '@/data/warriorArchetypes';
 import * as BPS from './skillBreakpoints';
 
 /** The five design axes from the article. */
@@ -541,6 +551,125 @@ function lungerCanonNotes(attrs: Attributes): DesignReviewItem[] {
   return items;
 }
 
+// V25 — Assur's winning-archetype layer (orthogonal to StyleFamily: family
+// is how the style fights, archetype is how the build wins). Filed under
+// the 'style' axis with the other build-identity notes.
+function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  const fits = classifyArchetype(attrs, style);
+  const [top, second] = fits;
+  if (!top) return items;
+
+  const guide = WINNING_ARCHETYPES[top.archetype];
+  items.push({
+    axis: 'style',
+    verdict: 'info',
+    id: 'v25-archetype-fit',
+    title: guide.label,
+    detail:
+      `${guide.family} fit ${top.score}/100` +
+      (second && top.score - second.score < 10
+        ? ` — close to ${WINNING_ARCHETYPES[second.archetype].label}. `
+        : '. ') +
+      guide.armor.notes,
+  });
+
+  // Tank-frame gap — a tank archetype is one of the build's best fits but
+  // the ST/CN frame bars are unmet.
+  const tankFit = fits.find(
+    (f) => f.archetype === 'tankHybrid' || f.archetype === 'lowWillTankHybrid'
+  );
+  const tankInTopThree = fits.slice(0, 3).some(
+    (f) => f.archetype === 'tankHybrid' || f.archetype === 'lowWillTankHybrid'
+  );
+  if (
+    tankInTopThree &&
+    tankFit &&
+    tankFit.score >= 60 &&
+    (attrs.ST < ARCHETYPE_DESIGN_BARS.TANK_ST_MIN ||
+      attrs.CN < ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
+  ) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      id: 'v25-tank-frame',
+      title: 'Tank frame gap',
+      detail: `Tank fit ${tankFit.score}/100 but ST ${attrs.ST} < ${ARCHETYPE_DESIGN_BARS.TANK_ST_MIN} or CN ${attrs.CN} < ${ARCHETYPE_DESIGN_BARS.TANK_CN_MIN} — tank hybrids need the frame to carry plate and hit points.`,
+    });
+  }
+
+  // Offensive wit floor — "wit 11 is the bare minimum".
+  if (top.archetype === 'pureOffensive' && attrs.WT < ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      id: 'v25-offensive-wit',
+      title: 'Offensive wit',
+      detail: `Wit ${attrs.WT} under the canon bare minimum of ${ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN} — an offensive that cannot learn cannot adapt.`,
+    });
+  }
+
+  // Riposte dead band — SP 10-12 on a riposting fit.
+  const [deadLo, deadHi] = ARCHETYPE_DESIGN_BARS.RIPOSTE_SP_DEAD_BAND;
+  const riposteFit = fits.slice(0, 2).some((f) => f.archetype === 'ripostingHybrid');
+  if (riposteFit && attrs.SP >= deadLo && attrs.SP <= deadHi) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      id: 'v25-riposte-dead-band',
+      title: 'Riposte dead band',
+      detail: `Speed ${attrs.SP} sits in the SP ${deadLo}-${deadHi} dead band — slow ripostes never land; the build gave up the speed it needed to matter.`,
+    });
+  }
+
+  // Big hybrid — size on a hybrid fit costs the points the build needs.
+  if (guide.family === 'hybrid' && attrs.SZ >= ARCHETYPE_DESIGN_BARS.BIG_HYBRID_SZ) {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      id: 'v25-big-hybrid',
+      title: 'Big hybrid',
+      detail: `Size ${attrs.SZ} — hybrids stay small; size points are wit, deftness, and will the build cannot train back.`,
+    });
+  }
+
+  // Surgeon chassis — AB with ST under the viability floor can't damage.
+  if (style === FightingStyle.AimedBlow && attrs.ST < ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      id: 'v25-surgeon-chassis',
+      title: 'Surgeon chassis',
+      detail: `Strength ${attrs.ST} under ${ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY} — a low-strength aimed-blow surgeon still needs enough damage to finish.`,
+    });
+  }
+
+  // Encumbrance ceiling — the archetype's own armor guidance over-encumbers.
+  const leadArmor = guide.armor.ids[0];
+  if (leadArmor && guide.family !== 'offensive') {
+    const loadout = {
+      weapon: 'short_spear',
+      armor: leadArmor,
+      shield: 'none_shield',
+      helm: 'leather_cap',
+    };
+    const capacity = computeEncumbranceCapacity(attrs.ST, attrs.CN);
+    const weight = getLoadoutWeight(loadout);
+    const ratio = weight / capacity;
+    if (ratio >= 1.2) {
+      items.push({
+        axis: 'style',
+        verdict: 'warn',
+        id: 'v25-encumbrance-ceiling',
+        title: 'Encumbrance ceiling',
+        detail: `This frame carries ${capacity} — ${getItemById(leadArmor)?.name ?? leadArmor} plus a light loadout weighs ${weight} (over-encumbered). It cannot wear the armor its winning archetype wants.`,
+      });
+    }
+  }
+
+  return items;
+}
+
 function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const endurance = computeEnduranceTier(attrs.ST, attrs.CN, attrs.WL);
   const damage = computeDamageClass(attrs.ST, attrs.SZ);
@@ -732,13 +861,25 @@ function reviewMinimums(attrs: Attributes, style: FightingStyle): DesignReviewIt
       detail: 'Clears the Arena-93 minimum-stat floor for this style.',
     });
   }
-  // Drake's Dark-Arena rejection rule — unconditional check, any style.
-  if (attrs.WL < DA_WL_FLOOR || attrs.ST < DA_ST_FLOOR) {
+  // Drake's Dark-Arena rejection rule — unconditional per-stat check, any
+  // style. Each breached stat gets its own flag (V24 canon: ST and WL must
+  // never drop below 7).
+  if (attrs.ST < DA_ST_FLOOR) {
     items.push({
       axis: 'longevity',
       verdict: 'warn',
       title: 'Dark Arena rejection',
-      detail: `${attrs.WL < DA_WL_FLOOR ? `WL ${attrs.WL} < ${DA_WL_FLOOR}` : `ST ${attrs.ST} < ${DA_ST_FLOOR}`} — Drake's rule sends this build to the Dark Arena rather than waste a roster slot; a DOA roll.`,
+      id: 'st-floor',
+      detail: `ST ${attrs.ST} < ${DA_ST_FLOOR} — Drake's rule sends this build to the Dark Arena rather than waste a roster slot; a DOA roll.`,
+    });
+  }
+  if (attrs.WL < DA_WL_FLOOR) {
+    items.push({
+      axis: 'longevity',
+      verdict: 'warn',
+      title: 'Dark Arena rejection',
+      id: 'wl-floor',
+      detail: `WL ${attrs.WL} < ${DA_WL_FLOOR} — Drake's rule sends this build to the Dark Arena rather than waste a roster slot; a DOA roll.`,
     });
   }
   // Drake's rollup-first method — a fixed allocation order beats dribbling
@@ -788,6 +929,91 @@ function reviewLongevity(attrs: Attributes, style: FightingStyle): DesignReviewI
   return items;
 }
 
+/**
+ * V24 canon (Consortium Q&A / Arena 93 doctrine): weapon-access tiers,
+ * low-burn style steering, and the stat-breakpoint dossier. Advisory
+ * flags — they inform the designer, never block the build.
+ */
+function reviewDoctrine(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+
+  // DF 11 is the weapon-access boundary: below it the arsenal collapses to
+  // daggers and light clubs; at/above it the real weapons unlock.
+  if (attrs.DF < 11) {
+    items.push({
+      axis: 'weapons',
+      verdict: 'warn',
+      title: 'Crippled weapon tier',
+      id: 'df-weapon-tier',
+      detail: `DF ${attrs.DF} < 11 — the crippled weapon tier: most worthwhile weapons demand DF 11+, so this build is fenced into the light arsenal.`,
+    });
+  }
+
+  // Low-burn steering (Consortium): a build with a very low speed ceiling
+  // can't sustain an offensive activity burn — it belongs on the patient
+  // styles (PR/PS/AB/TP/ST) that win on defense or precision.
+  if (attrs.SP <= LOW_BURN_SP_MAX) {
+    const family = STYLE_FAMILY[style];
+    if (LOW_BURN_STYLES.includes(style)) {
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Low-burn style fit',
+        id: 'low-burn-fit',
+        detail: `SP ${attrs.SP} marks a low-burn build — ${style} tolerates the slow pace; the Consortium steers these rolls to PR/PS/AB/TP/ST.`,
+      });
+    } else if (family === 'offensive') {
+      items.push({
+        axis: 'style',
+        verdict: 'warn',
+        title: 'Low-burn style mismatch',
+        id: 'low-burn-mismatch',
+        detail: `SP ${attrs.SP} marks a low-burn build — ${style} burns endurance it can't feed; the Consortium steers these rolls to PR/PS/AB/TP/ST.`,
+      });
+    } else {
+      // Mixed styles run a defensive engine — the wall corpus canonizes
+      // speed-poor frames ("speed is a luxury", wasted-points notes on PL),
+      // so a low-burn roll is no reason to reject them.
+      items.push({
+        axis: 'style',
+        verdict: 'info',
+        title: 'Low-burn build',
+        id: 'low-burn-fit',
+        detail: `SP ${attrs.SP} marks a low-burn build — ${style}'s defensive engine tolerates the slow pace; the wall corpus canonizes speed-poor frames.`,
+      });
+    }
+  }
+
+  // Breakpoint dossier — the canon stat rungs managers design around.
+  const rungs: [keyof Attributes, number, string][] = [
+    ['WT', 11, 'breakpoint-wt-11'],
+    ['WT', 13, 'breakpoint-wt-13'],
+    ['WT', 17, 'breakpoint-wt-17'],
+    ['WL', 15, 'breakpoint-wl-15'],
+    ['WL', 17, 'breakpoint-wl-17'],
+    ['WL', 21, 'breakpoint-wl-21'],
+  ];
+  if (style === FightingStyle.AimedBlow) {
+    rungs.push(
+      ['DF', 17, 'breakpoint-df-ab-17'],
+      ['DF', 21, 'breakpoint-df-ab-21']
+    );
+  }
+  for (const [stat, rung, id] of rungs) {
+    if (attrs[stat] >= rung) {
+      items.push({
+        axis: 'trainability',
+        verdict: 'info',
+        title: `${stat} ${rung} breakpoint`,
+        id,
+        detail: `${stat} ${attrs[stat]} reaches the canon ${rung} breakpoint rung — the newsletter breakpoint tables pay out here.`,
+      });
+    }
+  }
+
+  return items;
+}
+
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 /**
@@ -800,10 +1026,12 @@ export function reviewWarriorDesign(
 ): DesignReviewItem[] {
   return [
     ...reviewStyle(attrs, style),
+    ...reviewArchetype(attrs, style),
     ...reviewPhysicals(attrs, style),
     ...reviewWeapons(attrs, style),
     ...reviewTrainability(attrs, style),
     ...reviewMinimums(attrs, style),
+    ...reviewDoctrine(attrs, style),
     ...reviewLongevity(attrs, style),
   ];
 }

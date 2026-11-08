@@ -106,6 +106,6 @@ export interface WeaponReqResult {
  * so the UI/plan layer can block save instead of silently stripping gear.
  */
 export interface LoadoutIssue {
-  code: 'TWO_HANDED_WITH_SHIELD' | 'MISSING_WEAPON' | 'DUAL_WITH_SHIELD';
+  code: 'TWO_HANDED_WITH_SHIELD' | 'MISSING_WEAPON' | 'DUAL_WITH_SHIELD' | 'TWO_HANDED_WITH_OFFHAND';
   message: string;
 }

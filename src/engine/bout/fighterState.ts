@@ -62,6 +62,10 @@ function gatherSkillModifiers(ctx: ModifierContext) {
 
   const wShield = getShieldModifiers(equip.weapon);
   const oShield = getShieldModifiers(equip.shield);
+  // V23/D1: a wielded off-hand weapon contributes whatever parry-side mods
+  // its item data declares (usually {def:0} — no fabricated bonus, but a
+  // shield-type item held off-hand defends for real).
+  const ohShield = getShieldModifiers(equip.offhand);
 
   const weaponReq = checkWeaponRequirements(equip.weapon, {
     ST: attrs.ST,
@@ -80,8 +84,8 @@ function gatherSkillModifiers(ctx: ModifierContext) {
     trainerMods,
     mastery,
     veteranDef,
-    totalShieldDef: wShield.def + oShield.def,
-    totalShieldAtt: wShield.att + oShield.att,
+    totalShieldDef: wShield.def + oShield.def + ohShield.def,
+    totalShieldAtt: wShield.att + oShield.att + ohShield.att,
     weaponReq,
     encPenalties,
     // Equipment defense modifiers (armor + helm)

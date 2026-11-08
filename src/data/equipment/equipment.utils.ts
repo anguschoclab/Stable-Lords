@@ -103,8 +103,10 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
  * Get loadout weight.
  */
 export function getLoadoutWeight(loadout: EquipmentLoadout): number {
-  return [loadout.weapon, loadout.armor, loadout.shield, loadout.helm].reduce(
-    (sum, id) => sum + (getItemById(id)?.weight ?? 0),
+  // A wielded off-hand weapon counts toward encumbrance; the sheathed
+  // `backup` stays uncounted (house rule — it's not carried on the body).
+  return [loadout.weapon, loadout.offhand, loadout.armor, loadout.shield, loadout.helm].reduce(
+    (sum, id) => sum + (id ? (getItemById(id)?.weight ?? 0) : 0),
     0
   );
 }
@@ -232,6 +234,23 @@ export function validateLoadout(loadout: EquipmentLoadout): LoadoutIssue[] {
       code: 'TWO_HANDED_WITH_SHIELD',
       message: `${weapon.name} is two-handed and cannot be paired with a shield.`,
     });
+  }
+  // V23 / D1 — dual-wield legality. Three legal states only: one weapon OR
+  // weapon+shield OR two weapons. An off-hand weapon never shares hands
+  // with a shield or a two-handed primary.
+  if (loadout.offhand) {
+    if (usingShield) {
+      issues.push({
+        code: 'DUAL_WITH_SHIELD',
+        message: 'An off-hand weapon cannot be paired with a shield — pick one or the other.',
+      });
+    }
+    if (weapon.twoHanded) {
+      issues.push({
+        code: 'TWO_HANDED_WITH_OFFHAND',
+        message: `${weapon.name} is two-handed — no hand is free for an off-hand weapon.`,
+      });
+    }
   }
   return issues;
 }

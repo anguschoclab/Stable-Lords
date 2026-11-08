@@ -9,6 +9,13 @@
  *
  * Mutually exclusive with shields — dual-wield loadouts never carry one.
  */
+import { contestCheck } from '../mechanics/combatMath';
+import { getShieldModifiers } from '@/data/equipment';
+import {
+  DUAL_VHC_SUM_MIN,
+  DUAL_VHC_STAT_MIN,
+  DUAL_OFFHAND_DAMAGE_MULT,
+} from '@/constants/combat';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
 
@@ -17,16 +24,18 @@ import type { FighterState, ResolutionContext } from './types';
  * off-hand shot: SP+DF ≥ DUAL_VHC_SUM_MIN with both ≥ DUAL_VHC_STAT_MIN.
  */
 export function isVeryHighlyCoordinated(f: FighterState): boolean {
-  void f;
-  return false;
+  const { SP, DF } = f.attributes;
+  return SP + DF >= DUAL_VHC_SUM_MIN && SP >= DUAL_VHC_STAT_MIN && DF >= DUAL_VHC_STAT_MIN;
 }
 
 /**
  * Attempt the free off-hand attack after the attacker's primary swing
- * resolves. Pushes an OFFHAND_ATTACK event (and its hit resolution) when
- * the fighter is dual-wielding and VHC-gated. No-op otherwise.
+ * resolves. Gates: off-hand weapon held, VHC profile, both fighters alive,
+ * attacker not knocked down. On a won contest the off-hand weapon deals a
+ * reduced-weight hit (DUAL_OFFHAND_DAMAGE_MULT) — no kill-window, a free
+ * swing isn't a death intent.
  *
- * @returns true when the off-hand swing happened.
+ * @returns true when the off-hand swing happened (hit OR miss — the swing itself).
  */
 export function tryOffhandAttack(args: {
   ctx: ResolutionContext;
@@ -34,6 +43,31 @@ export function tryOffhandAttack(args: {
   defender: FighterState;
   events: CombatEvent[];
 }): boolean {
-  void args;
-  return false;
+  const { ctx, attacker, defender, events } = args;
+  const offId = attacker.offhandWeaponId;
+  if (!offId) return false;
+  if (!isVeryHighlyCoordinated(attacker)) return false;
+  if (attacker.hp <= 0 || defender.hp <= 0 || attacker.knockedDown) return false;
+
+  // The off-hand weapon's parry-side mods (usually {def:0,att:0} — a weapon
+  // only contributes what its item data declares, no fabricated bonus).
+  const offMods = getShieldModifiers(offId);
+
+  // Light contest: attacker ATT + off-hand attMod vs defender DEF+PAR.
+  const hit = contestCheck(
+    ctx.rng,
+    attacker.skills.ATT + offMods.att,
+    defender.skills.DEF + defender.skills.PAR
+  );
+  const damage = hit
+    ? Math.max(1, Math.round(attacker.derived.damage * DUAL_OFFHAND_DAMAGE_MULT))
+    : 0;
+  if (hit) defender.hp = Math.max(0, defender.hp - damage);
+
+  events.push({
+    type: 'OFFHAND_ATTACK',
+    actor: attacker.label,
+    metadata: { weaponId: offId, hit, damage },
+  });
+  return true;
 }

@@ -20,6 +20,7 @@ import { emitDownedBoutEnd } from '../mechanics/downedFighterEnd';
 import { tickArenaEvents } from '../mechanics/arenaEvents';
 import { rollInfirmaryOutcome } from '../mechanics/deathRolls';
 import { resolveInitiativePhase, resolveCombatOffenseDefense } from './phaseResolvers';
+import { tryOffhandAttack } from './offhandAttack';
 import { prepareExchange, type ExchangeSetup } from './exchangePrep';
 import type { FighterState, ResolutionContext } from './types';
 import { type Phase as StylePhase } from '../../stylePassives';
@@ -194,6 +195,11 @@ function runAttackExchange(args: RunAttackExchangeArgs): void {
     stylePhase: ctx.phase as StylePhase,
     events: events,
   });
+
+  // Sub-phase 4c: free off-hand shot — a VHC dual-wielder gets one extra
+  // swing per offensive exchange (Arena-93 D1). Offensive only — the
+  // defender's riposte stays a separate contest.
+  tryOffhandAttack({ ctx: ctx, attacker: att, defender: def, events: events });
 
   applyExchangeEndurance({
     events: events,

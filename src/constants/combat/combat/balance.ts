@@ -66,6 +66,9 @@ export const AMBI_REVERSED_CHANCE = 0.1;
  *  both SP and DF ≥ 15 (canon VHC profile line). */
 export const DUAL_VHC_SUM_MIN = 32;
 export const DUAL_VHC_STAT_MIN = 15;
+// Off-hand free shot deals a reduced-weight hit — the off-hand weapon is
+// the lighter weapon in canon dual setups; tunable house value.
+export const DUAL_OFFHAND_DAMAGE_MULT = 0.6;
 
 // ─── Commit Mechanic ──────────────────────────────────────────────────────
 /** HP ratio below which a fighter is considered "at low HP" for commit triggering. */

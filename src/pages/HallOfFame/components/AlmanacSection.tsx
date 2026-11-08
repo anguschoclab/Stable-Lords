@@ -56,7 +56,12 @@ function WorldStrip({ stats }: { stats: AlmanacStat[] }) {
 
 function RowLine({ row, index }: { row: AlmanacRow; index: number }) {
   return (
-    <div className="flex items-baseline gap-3 py-1.5 border-b border-white/5 last:border-0">
+    <div
+      data-player={row.isPlayer === true}
+      className={`flex items-baseline gap-3 py-1.5 border-b border-white/5 last:border-0${
+        row.isPlayer ? ' bg-primary/[0.04] border-l-2 border-l-primary pl-2 -ml-2' : ''
+      }`}
+    >
       <span className="text-[10px] font-mono font-black text-foreground/20 w-6 shrink-0">
         #{index + 1}
       </span>

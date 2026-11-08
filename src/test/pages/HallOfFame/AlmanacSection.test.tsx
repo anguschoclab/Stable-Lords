@@ -108,6 +108,15 @@ describe('AlmanacSection', () => {
     expect(screen.getByTestId('almanac-board-fightOfWeek')).toBeInTheDocument();
   });
 
+  it('highlights player-owned rows', () => {
+    render(<AlmanacSection data={data} />);
+    const wins = screen.getByTestId('almanac-board-wins');
+    const gladiatorRow = within(wins).getByText('Gladiator').closest('[data-player]');
+    expect(gladiatorRow).toHaveAttribute('data-player', 'true');
+    const reaperRow = within(wins).getByText('Reaper').closest('[data-player]');
+    expect(reaperRow).toHaveAttribute('data-player', 'false');
+  });
+
   it('surfaces caveats on windowed boards', () => {
     render(<AlmanacSection data={data} />);
     const streaks = screen.getByTestId('almanac-board-winStreaks');

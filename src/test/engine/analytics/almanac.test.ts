@@ -745,4 +745,238 @@ describe('computeAlmanac', () => {
       'world',
     ]);
   });
+
+  /* ── populated-state smoke — every board must have rows ────────────── */
+
+  const award = (type: string, over: Partial<AnnualAward> = {}): AnnualAward =>
+    ({ type, year: 2, value: 10, reason: 'r', ...over }) as AnnualAward;
+
+  const richWarriors = [
+    w('p1w', {
+      career: {
+        wins: 30,
+        losses: 12,
+        kills: 5,
+        medals: { gold: 1, silver: 0, bronze: 1 },
+        byArena: { arena_a: { wins: 10, losses: 2, kills: 2 } },
+      } as never,
+      fame: 300,
+      popularity: 80,
+      awards: [award('WARRIOR_OF_YEAR')],
+      titles: ['T1'],
+      age: 30,
+      yearlySnapshots: { 1: { wins: 10, losses: 4, kills: 1 } } as never,
+      seasonPoints: 40,
+      style: 'STRIKING ATTACK' as FightingStyle,
+      stableId: 'p1' as StableId,
+    }),
+    w('champ', {
+      career: {
+        wins: 60,
+        losses: 20,
+        kills: 10,
+        byArena: { arena_b: { wins: 20, losses: 5, kills: 4 } },
+      } as never,
+      fame: 150,
+      popularity: 40,
+      age: 40,
+      style: 'TOTAL PARRY' as FightingStyle,
+      stableId: 'p1' as StableId,
+    }),
+    w('dead1', {
+      career: {
+        wins: 50,
+        losses: 20,
+        kills: 8,
+        byArena: { arena_a: { wins: 15, losses: 3, kills: 3 } },
+      } as never,
+      fame: 120,
+      age: 35,
+      stableId: 'r1' as StableId,
+      status: 'Dead',
+      isDead: true,
+      style: 'SLASHING ATTACK' as FightingStyle,
+    }),
+    w('unbeat', {
+      career: { wins: 3, losses: 0, kills: 0 },
+      fame: 10,
+      age: 19,
+      stableId: 'r1' as StableId,
+      style: 'BASHING ATTACK' as FightingStyle,
+    }),
+    w('vet', {
+      career: { wins: 44, losses: 21, kills: 2 },
+      fame: 90,
+      popularity: 30,
+      age: 45,
+      stableId: 'r1' as StableId,
+      style: 'PARRY-STRIKE' as FightingStyle,
+    }),
+    w('loser', {
+      career: { wins: 2, losses: 30, kills: 0 },
+      fame: 5,
+      stableId: 'r1' as StableId,
+      style: 'LUNGING ATTACK' as FightingStyle,
+    }),
+  ];
+
+  const richHistory = [
+    fight('f1', {
+      warriorIdA: 'champ' as WarriorId,
+      warriorIdD: 'dead1' as WarriorId,
+      winner: 'A',
+      by: 'Kill',
+      week: 10,
+      title: 'champ vs dead1',
+      analysis: { decisiveExchange: { minute: 4 } } as never,
+    }),
+    fight('f2', {
+      warriorIdA: 'p1w' as WarriorId,
+      warriorIdD: 'loser' as WarriorId,
+      winner: 'A',
+      by: 'Kill',
+      week: 12,
+      title: 'p1w vs loser',
+      fameA: 50,
+      fameD: 300,
+      fameDeltaA: 8,
+      fameDeltaD: 2,
+      flashyTags: ['Comeback', 'Bloodbath'],
+      analysis: { decisiveExchange: { minute: 2 } } as never,
+    }),
+    fight('f3', {
+      warriorIdA: 'p1w' as WarriorId,
+      warriorIdD: 'loser' as WarriorId,
+      winner: 'A',
+      by: 'Kill',
+      week: 14,
+      title: 'p1w vs loser II',
+    }),
+    fight('f4', {
+      warriorIdA: 'p1w' as WarriorId,
+      warriorIdD: 'loser' as WarriorId,
+      winner: 'A',
+      by: 'KO',
+      week: 16,
+      title: 'p1w vs loser III',
+    }),
+  ];
+
+  const richChampions = {
+    arena_a: {
+      champion: {
+        warriorId: 'champ' as WarriorId,
+        startedAbsoluteWeek: 90,
+        defenses: 3,
+        lastActivityWeek: 110,
+      },
+      status: 'active',
+      refusals: 0,
+      deferrals: 0,
+      noContenderStreak: 0,
+      declinedContenders: {},
+      history: [
+        {
+          warriorId: 'dead1' as WarriorId,
+          warriorName: 'dead1',
+          stableName: 'Rival Stable',
+          startedAbsoluteWeek: 10,
+          endedAbsoluteWeek: 60,
+          endReason: 'defeated',
+          defenses: 7,
+        },
+      ],
+    },
+  } as unknown as Record<string, ArenaTitle>;
+
+  const richInput = (): AlmanacInput =>
+    input({
+      warriors: richWarriors,
+      arenaHistory: richHistory,
+      hallOfFame: [
+        { id: 'h1', label: 'Fight of the Week', fightId: 'f2', week: 12 },
+        { id: 'h2', label: 'Fight of the Tournament', fightId: 'f3', week: 14 },
+      ] as unknown as HallEntry[],
+      awards: [
+        award('WARRIOR_OF_YEAR', { warriorId: 'p1w' as WarriorId, warriorName: 'p1w', value: 30 }),
+        award('KILLER_OF_YEAR', { warriorId: 'dead1' as WarriorId, warriorName: 'dead1', value: 8 }),
+        award('CLASS_MVP', {
+          warriorId: 'champ' as WarriorId,
+          warriorName: 'champ',
+          style: 'TOTAL PARRY',
+        }),
+        award('STABLE_OF_YEAR', { stableId: 'p1' as StableId, stableName: 'Player Stable', value: 44 }),
+        award('TOURNAMENT_RANK', { warriorId: 'champ' as WarriorId, warriorName: 'champ', value: 9 }),
+      ],
+      arenaChampions: richChampions,
+      grandChampions: [
+        {
+          tournamentId: 't1',
+          year: 1,
+          warriorId: 'dead1' as WarriorId,
+          warriorName: 'dead1',
+          stableName: 'Rival Stable',
+        },
+      ] as never[],
+      tournaments: [
+        {
+          id: 't1',
+          name: 'Spring Invitational',
+          champion: 'dead1',
+          completed: true,
+          tierId: 'regional',
+          season: 'Spring',
+          week: 13,
+        },
+      ] as unknown as TournamentEntry[],
+      stables: [
+        { id: 'p1', name: 'Player Stable', fame: 400, isPlayer: true },
+        { id: 'r1', name: 'Rival Stable', fame: 250, isPlayer: false },
+      ],
+      rivalries: [
+        { id: 'rv1', stableIdA: 'p1' as StableId, stableIdB: 'r1' as StableId, intensity: 7, reason: 'Blood feud' },
+      ] as never[],
+      lifetimeStats: { bouts: 900, kills: 40, retirements: 5 },
+      deadWarriorIds: ['dead1'] as WarriorId[],
+      killEvents: [{ id: 'k1' }] as never[],
+      year: 2,
+      week: 30,
+      absoluteWeek: 110,
+    });
+
+  it('populates EVERY board in every section from a rich state', () => {
+    const a = computeAlmanac(richInput());
+    const sections = [
+      a.career,
+      a.accolades,
+      a.championships,
+      a.streaks,
+      a.styleArena,
+      a.fights,
+      a.stables,
+    ];
+    for (const boards of sections) {
+      expect(boards.length).toBeGreaterThan(0);
+      for (const b of boards) {
+        expect(b.rows.length, `board ${b.id} should have rows`).toBeGreaterThan(0);
+      }
+    }
+    expect(a.world.length).toBeGreaterThan(0);
+    // Spot-assert the boards a thin fixture would starve:
+    expect(board(a.streaks, 'currentStreaks').rows[0]?.warriorId).toBe('p1w');
+    expect(board(a.fights, 'rivalriesBouts').rows[0]?.name).toContain('p1w');
+    expect(board(a.stables, 'stableOfYear').rows[0]?.name).toBe('Player Stable');
+  });
+
+  it('flags isPlayer on accolade and pairing rows resolvable to the player stable', () => {
+    const a = computeAlmanac(richInput());
+    const woty = board(a.accolades, 'accolade-WARRIOR_OF_YEAR');
+    expect(woty.rows[0]?.isPlayer).toBe(true); // p1w's award, p1w is player's
+    const koty = board(a.accolades, 'accolade-KILLER_OF_YEAR');
+    expect(koty.rows[0]?.isPlayer).toBe(false); // dead1 is a rival
+    const soty = board(a.accolades, 'accolade-STABLE_OF_YEAR');
+    expect(soty.rows[0]?.isPlayer).toBe(true);
+    const pairs = board(a.fights, 'rivalriesBouts');
+    expect(pairs.rows[0]?.isPlayer).toBe(true); // p1w in the pairing
+  });
 });

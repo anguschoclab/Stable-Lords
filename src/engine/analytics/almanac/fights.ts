@@ -138,7 +138,13 @@ interface PairCount {
  */
 function rivalriesBoard(input: AlmanacInput, fights: FightSummary[], n: number): AlmanacBoard {
   const nameOf = new Map<string, string>();
-  for (const w of input.warriors) nameOf.set(w.id as string, w.name);
+  const stableOf = new Map<string, string | undefined>();
+  for (const w of input.warriors) {
+    nameOf.set(w.id as string, w.name);
+    stableOf.set(w.id as string, w.stableId as string | undefined);
+  }
+  const pairIsPlayer = (p: PairCount) =>
+    stableOf.get(p.a) === input.playerStableId || stableOf.get(p.d) === input.playerStableId;
 
   const firstFightOf = new Map<string, FightSummary>();
   const pairCounts = new Map<string, PairCount>();
@@ -166,6 +172,7 @@ function rivalriesBoard(input: AlmanacInput, fights: FightSummary[], n: number):
       value: p.count,
       valueLabel: 'bouts',
       detail: `last met W${p.lastWeek}`,
+      isPlayer: pairIsPlayer(p),
     }));
   return mkBoard('rivalriesBouts', 'Most-Fought Rivalries', 'fight', cap(rows, n));
 }

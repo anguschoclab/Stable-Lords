@@ -23,6 +23,8 @@ export function computeAccoladeBoards(input: AlmanacInput): AlmanacBoard[] {
     byType.set(a.type, list);
   });
 
+  const warriorById = new Map(input.warriors.map((w) => [w.id as string, w]));
+
   const boards: AlmanacBoard[] = [];
   for (const [type, entries] of byType) {
     entries.sort(by(numDesc((e) => e.award.year), numAsc((e) => e.idx)));
@@ -31,15 +33,23 @@ export function computeAccoladeBoards(input: AlmanacInput): AlmanacBoard[] {
         `accolade-${type}`,
         AWARD_TITLE[type] ?? type,
         'scroll',
-        entries.map(({ award: a }) => ({
-          key: `${type}-${a.year}-${a.warriorId ?? a.stableId ?? 'x'}`,
-          name: a.warriorName ?? a.stableName ?? 'Unknown',
-          sub: `Year ${a.year}`,
-          detail: a.reason,
-          value: a.value ?? 0,
-          warriorId: a.warriorId as string | undefined,
-          style: a.style,
-        }))
+        entries.map(({ award: a }) => {
+          // Player-ownership: stable-level awards key on stableId; warrior
+          // awards resolve through the warrior's current stable.
+          const stableId = a.stableId
+            ? (a.stableId as string)
+            : (warriorById.get(a.warriorId as string)?.stableId as string | undefined);
+          return {
+            key: `${type}-${a.year}-${a.warriorId ?? a.stableId ?? 'x'}`,
+            name: a.warriorName ?? a.stableName ?? 'Unknown',
+            sub: `Year ${a.year}`,
+            detail: a.reason,
+            value: a.value ?? 0,
+            warriorId: a.warriorId as string | undefined,
+            style: a.style,
+            isPlayer: stableId !== undefined && stableId === input.playerStableId,
+          };
+        })
       )
     );
   }

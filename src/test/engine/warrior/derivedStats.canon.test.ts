@@ -13,6 +13,9 @@ import {
   computeEnduranceValue,
   hpRating,
 } from '@/data/terrabloodCharts';
+import { computeWarriorStats, computeEndurance } from '@/engine/warrior/skillCalc';
+import { FightingStyle } from '@/types/shared.types';
+import type { Attributes } from '@/types/warrior.types';
 
 describe('computeHP — canon CN*2 + SZmod + WLmod (100% accuracy table)', () => {
   it('CN6/SZ18/WL9 → 22 → "Cannot take a lot" (Chronic Pain profile)', () => {
@@ -81,5 +84,21 @@ describe('computeEnduranceTier — canon (ST+CN) × WL lookup table', () => {
 
   it('computeEnduranceValue follows the tier', () => {
     expect(computeEnduranceValue(9, 6, 9)).toBe(12);
+  });
+});
+
+describe('striker endurance pool bonus (canon)', () => {
+  const attrs: Attributes = { SZ: 10, ST: 14, CN: 14, WT: 10, WL: 10, SP: 10, DF: 10 };
+
+  it('StrikingAttack gets a deeper endurance pool than the raw chart', () => {
+    const raw = computeEndurance(attrs);
+    const striker = computeWarriorStats(attrs, FightingStyle.StrikingAttack).derivedStats.endurance;
+    expect(striker).toBeGreaterThan(raw);
+  });
+
+  it('non-strikers keep the raw chart value', () => {
+    const raw = computeEndurance(attrs);
+    const wall = computeWarriorStats(attrs, FightingStyle.WallOfSteel).derivedStats.endurance;
+    expect(wall).toBe(raw);
   });
 });

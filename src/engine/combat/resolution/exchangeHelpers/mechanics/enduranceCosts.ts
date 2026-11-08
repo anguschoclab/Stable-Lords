@@ -82,6 +82,12 @@ export function applyEnduranceCosts(args: ApplyEnduranceCostsArgs) {
   applyEnduranceRecovery(fA, OE_A, AL_A);
   applyEnduranceRecovery(fD, OE_D, AL_D);
 
+  // Canon fatigue barks: crossing a tier surfaces one FATIGUE event per tier
+  // per bout — the narrator turns it into "breathing heavily" / "barely able
+  // to defend himself". Checked after recovery so the ratio is the true one.
+  emitFatigueBark(events, fA);
+  emitFatigueBark(events, fD);
+
   checkExhaustionStoppage(events, fA, fD, ctx.rng);
 }
 
@@ -119,6 +125,20 @@ function enduranceMultipliers(
     attEquipEndMult,
     defEquipEndMult,
   };
+}
+
+/** Endurance ratios at which the fatigue bark fires — mirrored by the
+ *  narrator's fatigueLine thresholds (≤0.3 winded, ≤0.15 spent). */
+const FATIGUE_TIER_MODERATE = 0.3;
+const FATIGUE_TIER_SEVERE = 0.15;
+
+function emitFatigueBark(events: CombatEvent[], f: FighterState) {
+  const ratio = f.endurance / f.maxEndurance;
+  const tier = ratio <= FATIGUE_TIER_SEVERE ? 2 : ratio <= FATIGUE_TIER_MODERATE ? 1 : 0;
+  if (tier > (f.fatigueTierWarned ?? 0)) {
+    f.fatigueTierWarned = tier as 0 | 1 | 2;
+    events.push({ type: 'FATIGUE', actor: f.label, value: Math.max(0, ratio) });
+  }
 }
 
 /**

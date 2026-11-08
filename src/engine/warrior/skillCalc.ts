@@ -23,7 +23,7 @@ import {
   computeEncumbranceCapacity,
   computeEnduranceValue,
 } from '@/data/terrabloodCharts';
-import { LUCKFACTOR_RANGE, PS_LUCKFACTOR_RANGE } from '@/constants/combat';
+import { LUCKFACTOR_RANGE, PS_LUCKFACTOR_RANGE, STRIKER_ENDURANCE_POOL_BONUS } from '@/constants/combat';
 import {
   bp,
   szMod,
@@ -281,8 +281,12 @@ export function computeDerivedStats(attrs: Attributes): DerivedStats {
  * @returns An object containing baseSkills and derivedStats
  */
 export function computeWarriorStats(attrs: Attributes, style: FightingStyle) {
+  const derivedStats = computeDerivedStats(attrs);
+  if (style === FightingStyle.StrikingAttack) {
+    derivedStats.endurance = Math.round(derivedStats.endurance * STRIKER_ENDURANCE_POOL_BONUS);
+  }
   return {
     baseSkills: computeBaseSkills(attrs, style),
-    derivedStats: computeDerivedStats(attrs),
+    derivedStats,
   };
 }

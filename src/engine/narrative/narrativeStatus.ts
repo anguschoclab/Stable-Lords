@@ -4,6 +4,7 @@
  */
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { DAMAGE_HARD_HIT } from '@/constants/combat';
 
 /**
  * Generates damage severity line.
@@ -23,7 +24,7 @@ export function damageSeverityLine(
     return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'terrific']), {
       defender: defenderName,
     });
-  if (ratio >= 0.15)
+  if (ratio >= 0.15 || damage >= DAMAGE_HARD_HIT)
     return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'powerful']), {
       defender: defenderName,
     });

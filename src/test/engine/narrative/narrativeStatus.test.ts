@@ -45,6 +45,14 @@ describe('narrativeStatus', () => {
       expect(damageSeverityLine(rng, 10, 100, 'Rex')).toBeNull();
     });
 
+    it('canon fixed channel: a hard hit speaks even on a huge HP pool', () => {
+      const rng = new SeededRNG(1);
+      // 20 damage on a 200 HP pool is ratio 0.10 (silent) — canon reads the
+      // absolute blow: at least the 'powerful' line fires.
+      expect(damageSeverityLine(rng, 20, 200, 'Rex')).not.toBeNull();
+      expect(damageSeverityLine(rng, 14, 200, 'Rex')).toBeNull();
+    });
+
     it('is deterministic with same seed', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);

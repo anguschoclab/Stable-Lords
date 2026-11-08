@@ -91,6 +91,14 @@ export const MOMENTUM_INI_MULT = 2;
 /** Coefficient on skills.DEC inside the initiative contest sum. */
 export const DEC_INI_COEFF = 0.2;
 
+/** Canon: Strikers draw on a deeper endurance pool than their (ST+CN)×WL
+ *  chart cell suggests — applied once at build to derivedStats.endurance. */
+export const STRIKER_ENDURANCE_POOL_BONUS = 1.1;
+
+/** Canon secondary-damage statements use a fixed wound threshold alongside
+ *  ratio tiers: a blow this big is a hard hit no matter how deep the pool. */
+export const DAMAGE_HARD_HIT = 15;
+
 /** Coefficient on skills.ATT inside the critical-hit chance — canon: skilled
  *  strikers find vitals more often. ATT 25 → +10%, ATT 5 → +2%. */
 export const ATT_CRIT_COEFF = 0.004;

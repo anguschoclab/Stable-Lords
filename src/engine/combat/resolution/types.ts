@@ -103,6 +103,9 @@ export interface FighterState {
   /** Set after this fighter has rolled their one-bout will check against an
    *  exhaustion stoppage — a pass grants the reprieve and is not re-rolled. */
   willChecked?: boolean;
+  /** Deepest fatigue tier already barked this bout: 0 none, 1 winded (≤30%
+   *  endurance), 2 spent (≤15%). Each tier fires at most once. */
+  fatigueTierWarned?: 0 | 1 | 2;
   /** Set while this fighter is disarmed: the id of the weapon currently on
    *  the sand. `weaponId` holds what they're fighting with meanwhile — their
    *  `backupWeaponId` if one was carried, else 'fist'. Cleared by a

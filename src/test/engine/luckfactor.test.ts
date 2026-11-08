@@ -27,24 +27,21 @@ describe('luckfactor', () => {
     expect(a).not.toEqual(b);
   });
 
-  it('widens pikers to [-6, +6] — canon: greater chance to be bonused or cursed', () => {
+  it('V23: pikers get NO widened range — knack parity across styles', () => {
+    // User-locked adjudication: all styles share LUCKFACTOR_RANGE (±4).
+    // Over 200 rolls, ±6 would produce |5|+|6| values ~constantly; ±4 never does.
     const rng = new SeededRNG(4242);
-    let sawBeyond4 = false;
     for (let i = 0; i < 200; i++) {
       const luck = rollLuckfactor(rng, FightingStyle.ParryStrike);
       for (const s of SKILLS) {
-        expect(luck[s]).toBeGreaterThanOrEqual(-6);
-        expect(luck[s]).toBeLessThanOrEqual(6);
-        if (Math.abs(luck[s]) >= 5) sawBeyond4 = true;
+        expect(luck[s]).toBeGreaterThanOrEqual(-4);
+        expect(luck[s]).toBeLessThanOrEqual(4);
       }
     }
-    // The widened range must actually be reachable — ±4 can never produce 5+.
-    expect(sawBeyond4).toBe(true);
   });
 
-  it('keeps every other style on the canon ±4 range', () => {
+  it('keeps every style on the shared canon ±4 range — PS included', () => {
     for (const style of Object.values(FightingStyle)) {
-      if (style === FightingStyle.ParryStrike) continue;
       const rng = new SeededRNG(777);
       for (let i = 0; i < 50; i++) {
         const luck = rollLuckfactor(rng, style);

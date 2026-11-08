@@ -127,21 +127,28 @@ describe('getEncumbrancePenalties', () => {
     expect(p.enduranceMult).toBeLessThanOrEqual(1.2);
   });
 
-  it('HEAVY tier: INI + DEF + PAR penalty, higher endurance mult', () => {
+  it('HEAVY tier: INI + DEF penalty, NO PAR penalty (V23 canon: encumbrance ~0 parry impact)', () => {
     const p = getEncumbrancePenalties('HEAVY' as EncumbranceTier);
     expect(p.iniPenalty).toBeLessThan(0);
     expect(p.defPenalty).toBeLessThan(0);
-    expect(p.parPenalty).toBeLessThan(0);
+    expect(p.parPenalty).toBe(0);
     expect(p.enduranceMult).toBeGreaterThan(1.1);
     expect(p.enduranceMult).toBeLessThanOrEqual(1.4);
   });
 
-  it('OVER tier: largest penalties', () => {
+  it('OVER tier: largest INI/DEF/endurance penalties, still NO PAR penalty', () => {
     const p = getEncumbrancePenalties('OVER' as EncumbranceTier);
     expect(p.iniPenalty).toBeLessThanOrEqual(-3);
     expect(p.defPenalty).toBeLessThan(0);
-    expect(p.parPenalty).toBeLessThan(0);
+    expect(p.parPenalty).toBe(0);
     expect(p.enduranceMult).toBeGreaterThan(1.3);
+  });
+
+  it('V23 canon (Assur, "Parry and Carry"): NO tier ever penalizes parry', () => {
+    const tiers: EncumbranceTier[] = ['NONE', 'LIGHT', 'MEDIUM', 'HEAVY', 'OVER'];
+    for (const t of tiers) {
+      expect(getEncumbrancePenalties(t).parPenalty).toBe(0);
+    }
   });
 
   it('penalties are monotonically increasing in severity', () => {

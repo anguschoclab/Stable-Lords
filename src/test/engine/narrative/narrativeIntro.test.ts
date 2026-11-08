@@ -90,6 +90,23 @@ describe('narrativeIntro', () => {
       expect(lines.some((l) => l.includes('backup'))).toBe(true);
     });
 
+    it('V23: names the off-hand weapon for a dual-wield fighter', () => {
+      const rng = new SeededRNG(1);
+      const data: WarriorIntroData = { ...baseData, offhandWeaponId: 'dagger' };
+      const lines = generateWarriorIntro(rng, data, 12);
+      // "in each hand" canon phrasing or the off-hand item name must appear.
+      expect(
+        lines.some((l) => /each hand|both hands|DAGGER/i.test(l))
+      ).toBe(true);
+    });
+
+    it('V23: a reversed ambi is still introduced as ambidextrous', () => {
+      const rng = new SeededRNG(1);
+      const data: WarriorIntroData = { ...baseData, handedness: 'ambi-reversed' };
+      const lines = generateWarriorIntro(rng, data, 12);
+      expect(lines.some((l) => l.includes('ambidextrous'))).toBe(true);
+    });
+
     it('is deterministic with same seed', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);

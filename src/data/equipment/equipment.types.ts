@@ -74,6 +74,11 @@ export interface EquipmentLoadout {
   // Optional backup weapon: drawn when the primary is disarmed mid-bout,
   // before falling back to bare fists. Not exposed in loadout UI — data-driven.
   backup?: string;
+  // Optional second actively-wielded weapon (dual wield). Mutually
+  // exclusive with `shield` — loadout legal states are: one weapon OR
+  // weapon+shield OR two weapons. Two-handed weapons can't take an
+  // off-hand. Distinct from `backup` (sheathed, drawn only on disarm).
+  offhand?: string;
 }
 
 /** Check weapon stat requirements against warrior attributes. Returns penalty details. */
@@ -101,6 +106,6 @@ export interface WeaponReqResult {
  * so the UI/plan layer can block save instead of silently stripping gear.
  */
 export interface LoadoutIssue {
-  code: 'TWO_HANDED_WITH_SHIELD' | 'MISSING_WEAPON';
+  code: 'TWO_HANDED_WITH_SHIELD' | 'MISSING_WEAPON' | 'DUAL_WITH_SHIELD';
   message: string;
 }

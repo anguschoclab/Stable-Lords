@@ -13,7 +13,7 @@ import type { Attributes } from '@/types/shared.types';
 
 describe('rollHandedness — canon distribution', () => {
   it('produces right/left/ambidextrous with canonical rates', () => {
-    const counts = { right: 0, left: 0, ambidextrous: 0 };
+    const counts = { right: 0, left: 0, ambidextrous: 0, 'ambi-reversed': 0 };
     const N = 4000;
     const rng = new SeededRNG(1234);
     for (let i = 0; i < N; i++) counts[rollHandedness(rng)]++;
@@ -28,6 +28,41 @@ describe('rollHandedness — canon distribution', () => {
 
   it('is deterministic for a given seed', () => {
     expect(rollHandedness(new SeededRNG(99))).toBe(rollHandedness(new SeededRNG(99)));
+  });
+});
+
+// ── V23: style-conditioned handedness + reversed ambidextrous ─────────────
+// Canon (Sir Jessie Jest): defensive styles produce more lefties and
+// ambidextrous fighters (PR ~43% ambi); a rare "reversed" ambidextrous
+// variant carries the primary in the LEFT hand.
+
+const count = (style: FightingStyle | undefined, N = 6000, seed = 42) => {
+  const counts = { right: 0, left: 0, ambidextrous: 0, 'ambi-reversed': 0 };
+  const rng = new SeededRNG(seed);
+  for (let i = 0; i < N; i++) counts[rollHandedness(rng, style)]++;
+  return counts;
+};
+
+describe('rollHandedness — style conditioning (V23)', () => {
+  it('defensive styles yield more non-right fighters than offensive styles', () => {
+    const pr = count(FightingStyle.ParryRiposte);
+    const st = count(FightingStyle.StrikingAttack);
+    const nonRightPR = (pr.left + pr.ambidextrous + pr['ambi-reversed']) / 6000;
+    const nonRightST = (st.left + st.ambidextrous + st['ambi-reversed']) / 6000;
+    expect(nonRightPR).toBeGreaterThan(nonRightST);
+  });
+
+  it('every style sums to a valid distribution (probabilities stay sane)', () => {
+    for (const style of Object.values(FightingStyle)) {
+      const c = count(style, 1000, 7);
+      expect(c.right).toBeGreaterThan(0); // no style is 100% non-right
+    }
+  });
+
+  it('the reversed-ambi variant is rare relative to regular ambi', () => {
+    const c = count(FightingStyle.ParryRiposte);
+    expect(c['ambi-reversed']).toBeGreaterThan(0);
+    expect(c['ambi-reversed']).toBeLessThan(c.ambidextrous);
   });
 });
 

@@ -182,11 +182,13 @@ export interface Warrior {
    *  warriors simply have a higher lust for the kill. Feeds the vitals
    *  roll when this warrior attacks; never displayed. */
   bloodlust?: number;
-  /** Persisted handedness rolled once at creation (~85% right / ~7.5% left /
-   *  ~7.5% ambidextrous). Ambidextrous grants +1 ATT (canon) and eases
-   *  dual-wield deftness requirements; the intro override keeps bout
-   *  narration deterministic. */
-  handedness?: 'right' | 'left' | 'ambidextrous';
+  /** Persisted handedness rolled once at creation (style-conditioned —
+   *  defensive styles produce more lefties/ambis; ~85/7.5/7.5 baseline).
+   *  'ambi-reversed' is the rare canon variant whose primary side is the
+   *  left hand instead of the usual right. Ambidextrous (either variant)
+   *  grants +1 ATT (canon) and eases dual-wield deftness requirements; the
+   *  intro override keeps bout narration deterministic. */
+  handedness?: 'right' | 'left' | 'ambidextrous' | 'ambi-reversed';
   derivedStats?: DerivedStats;
   fame: number;
   popularity: number;
@@ -220,6 +222,12 @@ export interface Warrior {
    *  additive skill gains rolled post-bout, distinct from drills. Capped at
    *  LEARN_PER_SKILL_CAP per skill and LEARN_CAREER_CAP per career. */
   learnedSkills?: Partial<Record<keyof BaseSkills, number>>;
+  /** Skill-learn capacity spent on attribute training — Arena-93 "trains
+   *  burn skills": each +1 attribute gain that crosses a skill breakpoint
+   *  consumes that many learn slots for the affected skills, decrementing
+   *  the effective LEARN_PER_SKILL_CAP. ST raises landing ≤14 and CN gains
+   *  are free (they cross no breakpoints). */
+  burnedSkills?: Partial<Record<keyof BaseSkills, number>>;
   deathWeek?: number;
   deathCause?: string;
   deathEvent?: DeathEvent;

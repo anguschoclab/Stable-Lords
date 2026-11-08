@@ -43,6 +43,8 @@ interface RollDisarmChanceArgs {
   armHits: number;
   damageRatio: number;
   isCrit: boolean;
+  /** Coordination rating of the defender — clumsy fighters drop more (V23). */
+  coordination?: string;
 }
 
 /**

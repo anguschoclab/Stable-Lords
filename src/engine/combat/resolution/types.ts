@@ -2,7 +2,8 @@
  * Resolution Types - FighterState and ResolutionContext definitions
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { WarriorFavorites, WeaponChartEntry } from '@/types/warrior.types';
+import type { Warrior, WarriorFavorites, WeaponChartEntry } from '@/types/warrior.types';
+import type { CoordinationRating } from '@/data/terrabloodCharts';
 import type { FightPlan } from '@/types/combat.types';
 import type {
   BaseSkills,
@@ -114,6 +115,22 @@ export interface FighterState {
   /** Backup weapon drawn the first time this fighter is disarmed (from
    *  `equipment.backup`). Consumed on draw — a second disarm goes to fists. */
   backupWeaponId?: string;
+  /** Second actively-wielded weapon (dual wield, `equipment.offhand`).
+   *  Grants a free off-hand shot per offensive exchange when the fighter is
+   *  Very Highly Coordinated. Distinct from `backupWeaponId` — this weapon
+   *  is in hand from the first exchange, not drawn on disarm. */
+  offhandWeaponId?: string;
+  /** The warrior's handedness copied at fighter build — drives weapon-side
+   *  disarm gating (an arm hit only threatens the weapon held in that hand).
+   *  Ambidextrous fighters pick a primary side lazily, at the first arm hit. */
+  handedness?: Warrior['handedness'];
+  /** Which hand currently holds the primary weapon for an ambidextrous
+   *  fighter — undefined until the first arm hit forces the lazy pick
+   *  (canon, Pagan). 'reversed' picks have primary in the left. */
+  ambiPrimarySide?: 'right' | 'left';
+  /** Coordination rating baked at fighter build from SP+DF — gates the
+   *  clumsy drop/fumble/slow-rise effects and the VHC off-hand shot. */
+  coordination?: CoordinationRating;
   /** 0-1 multiplicative reduction of disarm chance against this fighter
    *  (e.g. iron_knuckles). Baked from traits at fighter build. */
   disarmResist?: number;

@@ -569,4 +569,52 @@ describe('fighterState', () => {
       }
     });
   });
+
+  describe('V23 bakes — handedness, coordination, off-hand weapon', () => {
+    it('copies the warrior handedness onto FighterState', () => {
+      const w = createMockWarrior({ handedness: 'ambi-reversed' });
+      const r = createFighterState('A', createMockPlan(), w);
+      expect(r.handedness).toBe('ambi-reversed');
+    });
+
+    it('computes coordination from SP+DF at build', () => {
+      const clumsy = createMockWarrior({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 8 },
+      });
+      const vhc = createMockWarrior({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 17, DF: 17 },
+      });
+      const plan = createMockPlan();
+      expect(createFighterState('A', plan, clumsy).coordination).toBe('Clumsy');
+      expect(createFighterState('A', plan, vhc).coordination).toBe(
+        'Very Highly Coordinated'
+      );
+    });
+
+    it('carries the off-hand weapon id when the loadout dual-wields', () => {
+      const w = createMockWarrior({
+        equipment: {
+          weapon: 'broadsword',
+          offhand: 'dagger',
+          armor: 'leather',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        },
+      });
+      const r = createFighterState('A', createMockPlan(), w);
+      expect(r.offhandWeaponId).toBe('dagger');
+    });
+
+    it('no offhandWeaponId for single-weapon or shield loadouts', () => {
+      const w = createMockWarrior({
+        equipment: {
+          weapon: 'broadsword',
+          armor: 'leather',
+          shield: 'medium_shield',
+          helm: 'none_helm',
+        },
+      });
+      expect(createFighterState('A', createMockPlan(), w).offhandWeaponId).toBeUndefined();
+    });
+  });
 });

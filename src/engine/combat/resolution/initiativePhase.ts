@@ -88,6 +88,9 @@ interface ResolveInitiativePhaseArgs {
   psychD: PsychStateMod;
   dynTraitsA: DynamicTraitMods;
   dynTraitsD: DynamicTraitMods;
+  /** Optional sink for CLASH events emitted by the opening clash loop —
+   *  contested first-exchange jumps re-roll until a clear disparity. */
+  events?: CombatEvent[];
 }
 
 /**

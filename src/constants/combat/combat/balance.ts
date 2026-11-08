@@ -15,8 +15,57 @@ export const ABSOLUTE_POWER_HIGH = 0.6;
 // Per-style knobs (AB_*, BA_*, LU_*, PL_*, PR_*, PS_*, SL_*, ST_*, TP_*,
 // WS_*) live in ./styles/<code>.ts — re-exported through the barrel.
 
-/** Hidden per-skill luck roll at warrior creation — canon ±4 (every style but pikers). */
+/** Hidden per-skill luck roll at warrior creation — canon ±4, ALL styles
+ *  (V23 parity: pikers no longer get a widened ±6 range). */
 export const LUCKFACTOR_RANGE = 4;
+
+// ─── Coordination (V23 — SJJ "Effects of Coordination") ────────────────────
+/** Additive disarm-chance modifier by coordination rating — clumsy fighters
+ *  fumble grips more. Applied in rollDisarmChance alongside armHits/damage/crit. */
+export const COORD_DISARM_MOD: Partial<Record<string, number>> = {
+  Clumsy: 0.1,
+  'Slightly Uncoordinated': 0.05,
+};
+/** Chance to fumble the backup draw on disarm (draw delays one exchange).
+ *  Only low-coordination fighters risk it. */
+export const QUICKDRAW_FUMBLE_CHANCE: Partial<Record<string, number>> = {
+  Clumsy: 0.4,
+  'Slightly Uncoordinated': 0.15,
+};
+/** Chance per exchange that a knocked-down low-coordination fighter fails to
+ *  rise (stays knockedDown one more exchange). Non-listed tiers always rise. */
+export const COORD_RISE_FAIL_CHANCE: Partial<Record<string, number>> = {
+  Clumsy: 0.5,
+  'Slightly Uncoordinated': 0.2,
+};
+/** Small additive knockdown-susceptibility term by rating (house-approved
+ *  speculative extension — canon mentions slower rise, not extra falls). */
+export const COORD_KD_SUSCEPT: Partial<Record<string, number>> = {
+  Clumsy: 0.05,
+  'Slightly Uncoordinated': 0.02,
+};
+
+// ─── The Jump (V23 — Pagan "Getting the Jump") ─────────────────────────────
+/** OE coefficient inside the initiative sum — canon calls OE the biggest
+ *  controllable jump factor. */
+export const JUMP_OE_COEFF = 0.4;
+/** Minimum |iniA−iniD| for a clean first exchange — below this the jump is
+ *  contested and re-rolled (CLASH events). */
+export const JUMP_DISPARITY = 3;
+/** Max clash re-rolls at bout open before the last roll stands. */
+export const JUMP_CLASH_MAX = 3;
+
+// ─── Handedness & Dual Wield (V23) ─────────────────────────────────────────
+/** Chance an ambidextrous fighter's lazily-picked primary side is the right
+ *  hand (canon: ambis carry primary in the right but use the left more). */
+export const AMBI_PRIMARY_RIGHT_BIAS = 0.75;
+/** Chance an ambidextrous roll flips to the 'ambi-reversed' variant —
+ *  rare canon variant, primary in the left. */
+export const AMBI_REVERSED_CHANCE = 0.1;
+/** Very High Coordination gate for the free off-hand shot: SP+DF ≥ 32 AND
+ *  both SP and DF ≥ 15 (canon VHC profile line). */
+export const DUAL_VHC_SUM_MIN = 32;
+export const DUAL_VHC_STAT_MIN = 15;
 
 // ─── Commit Mechanic ──────────────────────────────────────────────────────
 /** HP ratio below which a fighter is considered "at low HP" for commit triggering. */

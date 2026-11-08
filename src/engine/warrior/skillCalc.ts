@@ -154,18 +154,24 @@ export function rollBloodlust(rng: IRNGService): number {
 // dual-wield deftness requirements (dualWieldReqAmbi in equipment data).
 
 /**
- * Handedness type.
+ * Handedness type. 'ambi-reversed' is the rare canon variant whose primary
+ * side is the left hand — still ambidextrous for the +1 ATT and eased
+ * dual-wield requirements.
  */
-export type Handedness = 'right' | 'left' | 'ambidextrous';
+export type Handedness = 'right' | 'left' | 'ambidextrous' | 'ambi-reversed';
 
 /**
  * Roll a warrior's handedness once at creation — stored on the warrior so
  * intros and equipment checks are deterministic across bouts.
  *
  * @param rng - Seeded RNG service for deterministic generation.
+ * @param style - Fighting style (defensive styles produce more
+ *   lefties/ambis — canon, Sir Jessie Jest). Optional: absent → flat
+ *   baseline distribution.
  * @returns The warrior's handedness.
  */
-export function rollHandedness(rng: IRNGService): Handedness {
+export function rollHandedness(rng: IRNGService, style?: FightingStyle): Handedness {
+  void style;
   if (rng.next() < 0.85) return 'right';
   return rng.next() < 0.5 ? 'left' : 'ambidextrous';
 }

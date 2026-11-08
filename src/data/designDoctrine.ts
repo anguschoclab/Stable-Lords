@@ -195,3 +195,25 @@ export const DESIGN_REVIEW_THRESHOLDS = {
   /** Wit at/above which the fast-learner note fires. */
   FAST_LEARNER_WT: 17,
 } as const;
+
+/**
+ * Canonical per-style minimum-stat floors — Arena 93 design articles
+ * ("minimum recommended attributes" tables + Drake's DA rejection rule).
+ * A recruit below a style's floor is a DOA build: the Arena-93 managers
+ * would send it to the Dark Arena rather than waste a roster slot.
+ *
+ * Filled in Phase 2 of MEGAPLAN V23 — the placeholder row exists so spec
+ * imports compile while the table is authored.
+ */
+export const STYLE_DESIGN_MINIMUMS: Partial<
+  Record<FightingStyle, Partial<Record<keyof Attributes, number>>>
+> = {
+  [FightingStyle.StrikingAttack]: { ST: 9, WT: 11, WL: 9, DF: 11 },
+};
+
+/**
+ * Drake's Dark-Arena rejection rule: a build with WL < 7 or ST < 7 is not
+ * worth fielding on Noblish Island regardless of style.
+ */
+export const DA_WL_FLOOR = 7;
+export const DA_ST_FLOOR = 7;

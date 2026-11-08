@@ -22,9 +22,11 @@ export interface WarriorIntroData {
   /** Physical attributes — used by the weapon-fit statement to call out deficiencies. */
   attributes?: Attributes;
   /** Optional handedness override (deterministic) — when absent, RNG chooses per-warrior. */
-  handedness?: 'right' | 'left' | 'ambidextrous';
+  handedness?: 'right' | 'left' | 'ambidextrous' | 'ambi-reversed';
   /** Backup weapon shown in intro — minor flavour, purely cosmetic. */
   backupWeaponId?: string;
+  /** Second actively-wielded weapon (dual wield) — named in the intro. */
+  offhandWeaponId?: string;
 }
 
 /**

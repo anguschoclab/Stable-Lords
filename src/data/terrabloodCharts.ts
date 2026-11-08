@@ -395,7 +395,7 @@ export function computeActivityRating(iniBase: number, ripBase: number): Activit
 /**
  * Coordination rating type.
  */
-type CoordinationRating =
+export type CoordinationRating =
   | 'Clumsy'
   | 'Slightly Uncoordinated'
   | 'Normal'

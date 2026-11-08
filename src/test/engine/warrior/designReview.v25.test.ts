@@ -44,9 +44,9 @@ describe('reviewWarriorDesign — archetype classification', () => {
 
 describe('reviewWarriorDesign — archetype-fit notes', () => {
   it('tank-fit build short of ST/CN bars draws the tank-frame note', () => {
-    // BA chassis built thin — tank identity wants heavy ST+CN.
+    // Classifies tank first but the chassis misses the frame bars.
     const items = reviewWarriorDesign(
-      attrs({ ST: 9, CN: 6, WT: 15, WL: 15, DF: 11, SZ: 8 }),
+      attrs({ ST: 14, CN: 10, SZ: 9, WT: 9, WL: 15, SP: 4, DF: 9 }),
       FightingStyle.BashingAttack
     );
     expect(find(items, /tank frame|tank hybrid/i)).toBeDefined();
@@ -86,11 +86,12 @@ describe('reviewWarriorDesign — archetype-fit notes', () => {
     expect(find(items, /surgeon|aimed|low strength/i)).toBeDefined();
   });
 
-  it('hybrid-fit build that cannot carry a plate-class loadout warns', () => {
-    // Small/weak frame on a hybrid style — APA/F would over-encumber.
+  it('armor-dependent build that cannot carry a plate-class loadout warns', () => {
+    // Defensive fit on a weak frame — APA/F would over-encumber, so the
+    // build cannot be the scum it classified as.
     const items = reviewWarriorDesign(
-      attrs({ ST: 7, CN: 7, WT: 17, WL: 13, DF: 15, SZ: 4, SP: 7 }),
-      FightingStyle.ParryRiposte
+      attrs({ ST: 9, CN: 9, WT: 7, WL: 15, SZ: 5, SP: 3, DF: 11 }),
+      FightingStyle.TotalParry
     );
     expect(find(items, /encumbr|carry|over.?encumber/i)).toBeDefined();
   });

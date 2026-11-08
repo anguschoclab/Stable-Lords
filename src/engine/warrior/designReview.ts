@@ -39,6 +39,7 @@ import {
   WINNING_ARCHETYPES,
   ARCHETYPE_DESIGN_BARS,
   classifyArchetype,
+  type WinningArchetype,
 } from '@/data/warriorArchetypes';
 import * as BPS from './skillBreakpoints';
 
@@ -574,18 +575,12 @@ function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewI
       guide.armor.notes,
   });
 
-  // Tank-frame gap — a tank archetype is one of the build's best fits but
-  // the ST/CN frame bars are unmet.
-  const tankFit = fits.find(
-    (f) => f.archetype === 'tankHybrid' || f.archetype === 'lowWillTankHybrid'
-  );
-  const tankInTopThree = fits.slice(0, 3).some(
-    (f) => f.archetype === 'tankHybrid' || f.archetype === 'lowWillTankHybrid'
-  );
+  // Tank-frame gap — the build classifies AS a tank but the ST/CN frame
+  // bars are unmet (it wants the identity without the chassis).
+  const isTankFit =
+    top.archetype === 'tankHybrid' || top.archetype === 'lowWillTankHybrid';
   if (
-    tankInTopThree &&
-    tankFit &&
-    tankFit.score >= 60 &&
+    isTankFit &&
     (attrs.ST < ARCHETYPE_DESIGN_BARS.TANK_ST_MIN ||
       attrs.CN < ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
   ) {
@@ -594,7 +589,7 @@ function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewI
       verdict: 'warn',
       id: 'v25-tank-frame',
       title: 'Tank frame gap',
-      detail: `Tank fit ${tankFit.score}/100 but ST ${attrs.ST} < ${ARCHETYPE_DESIGN_BARS.TANK_ST_MIN} or CN ${attrs.CN} < ${ARCHETYPE_DESIGN_BARS.TANK_CN_MIN} — tank hybrids need the frame to carry plate and hit points.`,
+      detail: `Tank fit ${top.score}/100 but ST ${attrs.ST} < ${ARCHETYPE_DESIGN_BARS.TANK_ST_MIN} or CN ${attrs.CN} < ${ARCHETYPE_DESIGN_BARS.TANK_CN_MIN} — tank hybrids need the frame to carry plate and hit points.`,
     });
   }
 
@@ -644,9 +639,16 @@ function reviewArchetype(attrs: Attributes, style: FightingStyle): DesignReviewI
     });
   }
 
-  // Encumbrance ceiling — the archetype's own armor guidance over-encumbers.
+  // Encumbrance ceiling — armor-dependent archetypes (tank, low-will tank,
+  // defensive) win *because of* plate; a frame that cannot carry it cannot
+  // be the thing it classified as.
+  const armorDependent: WinningArchetype[] = [
+    'tankHybrid',
+    'lowWillTankHybrid',
+    'pureDefensive',
+  ];
   const leadArmor = guide.armor.ids[0];
-  if (leadArmor && guide.family !== 'offensive') {
+  if (leadArmor && armorDependent.includes(top.archetype)) {
     const loadout = {
       weapon: 'short_spear',
       armor: leadArmor,

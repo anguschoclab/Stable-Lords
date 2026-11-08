@@ -1,6 +1,7 @@
 import { BaseSkills } from '@/types/shared.types';
 import type { Persona } from '@/types/narrative.types';
-import { computeCoordination, computeActivityRating } from './terrabloodCharts';
+import { computeCoordination, computeActivityRating, hpRating } from './terrabloodCharts';
+import { STATEMENT_MIN_SKILLS } from '@/engine/warrior/skillBreakpoints';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
 const persona: Persona = uiMeta.persona;
@@ -145,6 +146,11 @@ export function generateWarriorStatements(
   const coordRating = computeCoordination(sp, df);
   const coordination = p.descriptors.coordination[coordRating] ?? '';
 
+  // Canon floors (Noblish Island HIGH WIT STATEMENTS, WT15 row): on the
+  // high-wit side a skill earns no statement at all until it reaches its
+  // low-order floor — INI 10, RIP 10, ATT 7, PAR 6, DEF 3, DEC 9.
+  const floor = (baseValue: number, min: number) => (isGoodWit && baseValue < min ? '' : undefined);
+
   const quickness = getQuicknessStatement(skills.DEF, skills.PAR, wt);
 
   const actRating = computeActivityRating(skills.INI, skills.RIP);
@@ -156,14 +162,90 @@ export function generateWarriorStatements(
   }
 
   return {
-    initiative: skill('initiative', skills.INI, 13),
-    riposte: skill('riposte', skills.RIP, 13),
-    attack: skill('attack', skills.ATT, 10),
-    parry: skill('parry', skills.PAR, 10),
-    defense: skill('defense', skills.DEF, 7),
-    endurance: skill('endurance', skills.DEC, 10),
+    initiative: floor(skills.INI, STATEMENT_MIN_SKILLS.INI) ?? skill('initiative', skills.INI, 13),
+    riposte: floor(skills.RIP, STATEMENT_MIN_SKILLS.RIP) ?? skill('riposte', skills.RIP, 13),
+    attack: floor(skills.ATT, STATEMENT_MIN_SKILLS.ATT) ?? skill('attack', skills.ATT, 10),
+    parry: floor(skills.PAR, STATEMENT_MIN_SKILLS.PAR) ?? skill('parry', skills.PAR, 10),
+    defense: floor(skills.DEF, STATEMENT_MIN_SKILLS.DEF) ?? skill('defense', skills.DEF, 7),
+    endurance: floor(skills.DEC, STATEMENT_MIN_SKILLS.DEC) ?? skill('endurance', skills.DEC, 10),
     coordination,
     quickness,
     activity,
   };
 }
+
+// ─── Physical profile statements ────────────────────────────────────────────
+// Canon overview lines for non-normal physicals (Noblish Island profile).
+// 'Cannot take a lot' and 'Average' HP bands stay silent — the overview only
+// names the extremes; 'C' encumbrance and Normal damage likewise stay silent.
+
+export interface PhysicalProfile {
+  enduranceTier: string;
+  hp: number;
+  encumbranceClass: string;
+  damageClass: number;
+}
+
+const ENDURANCE_LINES: Record<string, string> = {
+  L: 'Has very little endurance',
+  P: 'Has poor endurance',
+  G: 'Has good endurance',
+  R: 'Has great endurance',
+  T: 'Has tremendous endurance',
+  A: 'Has awesome endurance',
+  U: 'Has limitless endurance',
+};
+
+const PUNISHMENT_LINES: Record<string, string> = {
+  'Very frail': 'Is very frail and cannot take much punishment',
+  'A lot': 'Can take a lot of punishment',
+  Tremendous: 'Can take tremendous amounts of punishment',
+  'Seemingly unaffected': 'Is seemingly unaffected by punishment',
+};
+
+const CARRY_LINES: Record<string, string> = {
+  A: 'Carries very little weight',
+  B: 'Carries little weight',
+  D: 'Carries a lot of weight',
+  E: 'Carries great weight',
+  F: 'Is crushed by the weight he bears',
+};
+
+const DAMAGE_LINES: Record<number, string> = {
+  1: 'Does little damage',
+  3: 'Does good damage',
+  4: 'Does great damage',
+  5: 'Does tremendous damage',
+  6: 'Does awesome damage',
+  7: 'Does devastating damage',
+  8: 'Does superhuman damage',
+  9: 'Does unearthly damage',
+};
+
+/**
+ * Canon physical-profile lines for a warrior overview — only non-normal
+ * physicals produce a statement.
+ */
+export function physicalProfileLines(profile: PhysicalProfile): string[] {
+  const lines: string[] = [];
+  const endurance = ENDURANCE_LINES[profile.enduranceTier];
+  if (endurance) lines.push(endurance);
+  const punishment = PUNISHMENT_LINES[hpRating(profile.hp)];
+  if (punishment) lines.push(punishment);
+  const carry = CARRY_LINES[profile.encumbranceClass];
+  if (carry) lines.push(carry);
+  const damage = DAMAGE_LINES[profile.damageClass];
+  if (damage) lines.push(damage);
+  return lines;
+}
+
+/**
+ * Canon skill rating — Expert at 16+, Advanced Expert at 20+.
+ */
+export function skillRating(skill: number): 'Expert' | 'Advanced Expert' | null {
+  if (skill >= 20) return 'Advanced Expert';
+  if (skill >= 16) return 'Expert';
+  return null;
+}
+
+

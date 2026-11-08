@@ -47,7 +47,7 @@
   },
   "meta": {
     "flair": {
-      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight.",
+      "Flashy": "Crowd favorite \u2014 earns +2 Popularity per flashy fight.",
       "Local Hero": "Loved by the locals. Their presence brings a touch more fame."
     },
     "title": {
@@ -67,62 +67,62 @@
       "initiative": {
         "high": [
           {
-            "min": 33,
-            "text": "Summons a storm of steel that leaves no room to breathe"
-          },
-          {
-            "min": 31,
-            "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
-          },
-          {
-            "min": 29,
-            "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
-          },
-          {
-            "min": 27,
-            "text": "Drowns his opponent in a relentless tide of crushing aggression"
-          },
-          {
-            "min": 25,
-            "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
-          },
-          {
-            "min": 13,
-            "text": "Steals the center of the pit and refuses to yield a single step"
-          },
-          {
-            "min": 4,
-            "text": "Dictates the flow of combat with absolute authority"
-          },
-          {
-            "min": 3,
-            "text": "Moves with terrifying purpose and sudden swiftness"
+            "min": 0,
+            "text": "Has learned how to keep his foe in trouble"
           },
           {
             "min": 2,
             "text": "Always seems to be half a step ahead of their opponent"
           },
           {
-            "min": 0,
-            "text": "Has learned how to keep his foe in trouble"
+            "min": 3,
+            "text": "Moves with terrifying purpose and sudden swiftness"
+          },
+          {
+            "min": 4,
+            "text": "Dictates the flow of combat with absolute authority"
+          },
+          {
+            "min": 13,
+            "text": "Steals the center of the pit and refuses to yield a single step"
+          },
+          {
+            "min": 15,
+            "text": "Is nothing short of a genius at keeping his foes off balance"
+          },
+          {
+            "min": 25,
+            "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
+          },
+          {
+            "min": 27,
+            "text": "Drowns his opponent in a relentless tide of crushing aggression"
+          },
+          {
+            "min": 29,
+            "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
+          },
+          {
+            "min": 31,
+            "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
+          },
+          {
+            "min": 33,
+            "text": "Summons a storm of steel that leaves no room to breathe"
           }
         ],
         "low": [
           {
-            "min": 25,
-            "text": "Lunges from the shadows before the opponent is ready"
+            "min": 0,
+            "text": "Has learned how to be decisive and quick"
           },
           {
-            "min": 24,
-            "text": "Fights with a hungry, restless aggression"
+            "min": 1,
+            "text": "Turns their opponent's momentum against them"
           },
           {
-            "min": 14,
-            "text": "With a very aggressive and clever fighting style"
-          },
-          {
-            "min": 4,
-            "text": "Maintains a commanding presence, forcing errors"
+            "min": 1,
+            "text": "Never rushes, completely confident in their timing"
           },
           {
             "min": 3,
@@ -137,122 +137,78 @@
             "text": "Reacts to threats with calm, practiced efficiency"
           },
           {
-            "min": 1,
-            "text": "Turns their opponent's momentum against them"
+            "min": 4,
+            "text": "Maintains a commanding presence, forcing errors"
           },
           {
-            "min": 1,
-            "text": "Never rushes, completely confident in their timing"
+            "min": 14,
+            "text": "With a very aggressive and clever fighting style"
           },
           {
-            "min": 0,
-            "text": "Has learned how to be decisive and quick"
+            "min": 24,
+            "text": "Fights with a hungry, restless aggression"
+          },
+          {
+            "min": 25,
+            "text": "Lunges from the shadows before the opponent is ready"
           }
         ]
       },
       "riposte": {
         "high": [
           {
-            "min": 24,
-            "text": "Baits their opponent into a fatal trap of their own making"
+            "min": 0,
+            "text": "Makes good dueling decisions"
           },
           {
-            "min": 23,
-            "text": "Turns the opponent's strength into their execution"
+            "min": 0,
+            "text": "Delivers devastating ripostes"
           },
           {
             "min": 14,
             "text": "Makes the most of his enemy's mistakes"
           },
           {
-            "min": 4,
-            "text": "Delivers devastating ripostes (9)"
+            "min": 23,
+            "text": "Turns the opponent's strength into their execution"
           },
           {
-            "min": 2,
-            "text": "Delivers devastating ripostes (4)"
-          },
-          {
-            "min": 2,
-            "text": "Delivers devastating ripostes (5)"
-          },
-          {
-            "min": 0,
-            "text": "Makes good dueling decisions"
-          },
-          {
-            "min": 0,
-            "text": "Delivers devastating ripostes (6)"
-          },
-          {
-            "min": 0,
-            "text": "Delivers devastating ripostes (7)"
-          },
-          {
-            "min": 0,
-            "text": "Delivers devastating ripostes (8)"
+            "min": 24,
+            "text": "Baits their opponent into a fatal trap of their own making"
           }
         ],
         "low": [
-          {
-            "min": 21,
-            "text": "Twists an enemy's assault into a sudden, bloody end"
-          },
-          {
-            "min": 14,
-            "text": "Does a lot of little things well"
-          },
-          {
-            "min": 4,
-            "text": "Shows competent riposte ability (9)"
-          },
-          {
-            "min": 3,
-            "text": "Shows competent riposte ability (4)"
-          },
-          {
-            "min": 2,
-            "text": "Shows competent riposte ability (7)"
-          },
-          {
-            "min": 1,
-            "text": "Shows competent riposte ability (8)"
-          },
           {
             "min": 0,
             "text": "Cleverly controls his foe's actions"
           },
           {
             "min": 0,
-            "text": "Shows competent riposte ability (3)"
+            "text": "Shows competent riposte ability"
           },
           {
-            "min": 0,
-            "text": "Shows competent riposte ability (5)"
+            "min": 14,
+            "text": "Does a lot of little things well"
           },
           {
-            "min": 0,
-            "text": "Shows competent riposte ability (6)"
+            "min": 21,
+            "text": "Twists an enemy's assault into a sudden, bloody end"
           }
         ]
       },
       "attack": {
         "high": [
           {
-            "min": 35,
-            "text": "An executioner in the pit, delivering critical ruin with every swing"
+            "min": 0,
+            "text": "He lands blows on less protected areas"
           },
           {
-            "min": 28,
-            "text": "Obliterates opponents with god-like, merciless precision"
+            "min": 2,
+            "text": "Finds openings that shouldn't even exist"
           },
           {
-            "min": 20,
-            "text": "Hunts for the vital organs with terrifying precision"
-          },
-          {
-            "min": 10,
-            "text": "Makes very clever attacks"
+            "min": 3,
+            "text": "Breaks through guards with overwhelming force"
           },
           {
             "min": 4,
@@ -267,16 +223,20 @@
             "text": "Their offensive technique is a masterclass in brutality"
           },
           {
-            "min": 3,
-            "text": "Breaks through guards with overwhelming force"
+            "min": 10,
+            "text": "Makes very clever attacks"
           },
           {
-            "min": 2,
-            "text": "Finds openings that shouldn't even exist"
+            "min": 20,
+            "text": "Hunts for the vital organs with terrifying precision"
           },
           {
-            "min": 0,
-            "text": "He lands blows on less protected areas"
+            "min": 28,
+            "text": "Obliterates opponents with god-like, merciless precision"
+          },
+          {
+            "min": 35,
+            "text": "An executioner in the pit, delivering critical ruin with every swing"
           },
           {
             "min": 40,
@@ -285,20 +245,20 @@
         ],
         "low": [
           {
-            "min": 24,
-            "text": "Transforms every meager opening into a harrowing bloodbath"
+            "min": 0,
+            "text": "Makes clever attacks"
           },
           {
-            "min": 14,
-            "text": "Has an unusual fighting style that confuses many opponents"
+            "min": 0,
+            "text": "Dismantles their opponent with cold, clinical strikes"
           },
           {
-            "min": 4,
-            "text": "Strikes with surgical precision, wasting no effort"
+            "min": 1,
+            "text": "Rarely misses a targeted blow"
           },
           {
-            "min": 4,
-            "text": "Every attack is meticulously calculated for maximum effect"
+            "min": 2,
+            "text": "Their strikes are incredibly efficient and deadly"
           },
           {
             "min": 3,
@@ -309,130 +269,138 @@
             "text": "Exploits even the tiniest weaknesses in their opponent's guard"
           },
           {
-            "min": 2,
-            "text": "Their strikes are incredibly efficient and deadly"
+            "min": 4,
+            "text": "Strikes with surgical precision, wasting no effort"
           },
           {
-            "min": 1,
-            "text": "Rarely misses a targeted blow"
+            "min": 4,
+            "text": "Every attack is meticulously calculated for maximum effect"
           },
           {
-            "min": 0,
-            "text": "Makes clever attacks"
+            "min": 14,
+            "text": "Has an unusual fighting style that confuses many opponents"
           },
           {
-            "min": 0,
-            "text": "Dismantles their opponent with cold, clinical strikes"
+            "min": 24,
+            "text": "Transforms every meager opening into a harrowing bloodbath"
           }
         ]
       },
       "parry": {
         "high": [
           {
-            "min": 30,
-            "text": "Their guard is an absolute fortress, effortlessly batting away strikes"
-          },
-          {
-            "min": 28,
-            "text": "A master of deflection, neutralizing assaults with contemptuous ease"
-          },
-          {
-            "min": 26,
-            "text": "Predicts the angle of attack flawlessly, turning force against itself"
-          },
-          {
-            "min": 25,
-            "text": "unshakable guard"
-          },
-          {
-            "min": 23,
-            "text": "An impenetrable wall of iron, turning aside the deadliest steel"
-          },
-          {
-            "min": 21,
-            "text": "Meets steel with steel, maintaining perfect defensive posture"
-          },
-          {
-            "min": 18,
-            "text": "Deflects incoming blows with sharp, deliberate precision"
-          },
-          {
-            "min": 15,
-            "text": "Possesses a very calculated and tight guard"
-          },
-          {
-            "min": 12,
-            "text": "Parrys very intelligently and rarely gives ground"
-          },
-          {
-            "min": 9,
-            "text": "A solid defensive tactician when blades clash"
+            "min": 0,
+            "text": "Is gifted at parrying"
           },
           {
             "min": 5,
             "text": "Shows a strong natural instinct for blocking"
           },
           {
-            "min": 0,
-            "text": "Is gifted at parrying"
+            "min": 9,
+            "text": "A solid defensive tactician when blades clash"
+          },
+          {
+            "min": 12,
+            "text": "Parrys very intelligently and rarely gives ground"
+          },
+          {
+            "min": 15,
+            "text": "Possesses a very calculated and tight guard"
+          },
+          {
+            "min": 18,
+            "text": "Deflects incoming blows with sharp, deliberate precision"
+          },
+          {
+            "min": 21,
+            "text": "Meets steel with steel, maintaining perfect defensive posture"
+          },
+          {
+            "min": 23,
+            "text": "An impenetrable wall of iron, turning aside the deadliest steel"
+          },
+          {
+            "min": 25,
+            "text": "unshakable guard"
+          },
+          {
+            "min": 26,
+            "text": "Predicts the angle of attack flawlessly, turning force against itself"
+          },
+          {
+            "min": 28,
+            "text": "A master of deflection, neutralizing assaults with contemptuous ease"
+          },
+          {
+            "min": 30,
+            "text": "Their guard is an absolute fortress, effortlessly batting away strikes"
           }
         ],
         "low": [
           {
-            "min": 30,
-            "text": "An immovable bulwark, shrugging off the heaviest assaults"
-          },
-          {
-            "min": 28,
-            "text": "Weathered and hardened, barely flinching when turning blades"
-          },
-          {
-            "min": 25,
-            "text": "Deflects with a brutal, unyielding strength"
-          },
-          {
-            "min": 21,
-            "text": "Denies the killing stroke with grim, practiced resolve"
-          },
-          {
-            "min": 18,
-            "text": "Stubbornly rejects incoming attacks with solid technique"
-          },
-          {
-            "min": 15,
-            "text": "Shows a seasoned, stoic resilience in their parries"
-          },
-          {
-            "min": 12,
-            "text": "Rarely makes mistakes when crossing blades"
-          },
-          {
-            "min": 9,
-            "text": "Maintains a sturdy and reliable guard"
-          },
-          {
-            "min": 6,
-            "text": "Capable of turning aside most typical strikes"
+            "min": 0,
+            "text": "Has a fundamentally sound defense"
           },
           {
             "min": 3,
             "text": "Parrys intelligently"
           },
           {
-            "min": 0,
-            "text": "Has a fundamentally sound defense"
+            "min": 6,
+            "text": "Capable of turning aside most typical strikes"
+          },
+          {
+            "min": 9,
+            "text": "Maintains a sturdy and reliable guard"
+          },
+          {
+            "min": 12,
+            "text": "Rarely makes mistakes when crossing blades"
+          },
+          {
+            "min": 15,
+            "text": "Shows a seasoned, stoic resilience in their parries"
+          },
+          {
+            "min": 18,
+            "text": "Stubbornly rejects incoming attacks with solid technique"
+          },
+          {
+            "min": 21,
+            "text": "Denies the killing stroke with grim, practiced resolve"
+          },
+          {
+            "min": 25,
+            "text": "Deflects with a brutal, unyielding strength"
+          },
+          {
+            "min": 28,
+            "text": "Weathered and hardened, barely flinching when turning blades"
+          },
+          {
+            "min": 30,
+            "text": "An immovable bulwark, shrugging off the heaviest assaults"
           }
         ]
       },
       "defense": {
         "high": [
           {
-            "min": 30,
-            "text": "Displays a chilling level of situational dominance"
+            "min": 0,
+            "text": "Is gifted at avoiding a blow"
           },
           {
-            "min": 14,
-            "text": "Is always thinking ahead"
+            "min": 0,
+            "text": "Completely shuts down their opponent's offensive rhythm"
+          },
+          {
+            "min": 1,
+            "text": "Makes dodging lethal strikes look like a casual stroll"
+          },
+          {
+            "min": 1,
+            "text": "Their parries are sharp, strong, and perfectly timed"
           },
           {
             "min": 2,
@@ -451,30 +419,34 @@
             "text": "Absorbs pressure without breaking a sweat"
           },
           {
-            "min": 1,
-            "text": "Makes dodging lethal strikes look like a casual stroll"
+            "min": 14,
+            "text": "Is always thinking ahead"
           },
           {
-            "min": 1,
-            "text": "Their parries are sharp, strong, and perfectly timed"
-          },
-          {
-            "min": 0,
-            "text": "Is gifted at avoiding a blow"
-          },
-          {
-            "min": 0,
-            "text": "Completely shuts down their opponent's offensive rhythm"
+            "min": 30,
+            "text": "Displays a chilling level of situational dominance"
           }
         ],
         "low": [
           {
-            "min": 21,
-            "text": "Weaves through the carnage with grim efficiency"
+            "min": 0,
+            "text": "Makes few mistakes"
           },
           {
-            "min": 14,
-            "text": "Avoids blows well"
+            "min": 1,
+            "text": "Their spatial awareness keeps them safely out of harm's way"
+          },
+          {
+            "min": 2,
+            "text": "Always maintains perfect balance, even under heavy assault"
+          },
+          {
+            "min": 3,
+            "text": "Slips past strikes by the narrowest, most calculated of margins"
+          },
+          {
+            "min": 3,
+            "text": "Their defensive patience frustrates even the most aggressive foes"
           },
           {
             "min": 4,
@@ -489,57 +461,17 @@
             "text": "Rarely exerts unnecessary energy when defending"
           },
           {
-            "min": 3,
-            "text": "Slips past strikes by the narrowest, most calculated of margins"
+            "min": 14,
+            "text": "Avoids blows well"
           },
           {
-            "min": 3,
-            "text": "Their defensive patience frustrates even the most aggressive foes"
-          },
-          {
-            "min": 2,
-            "text": "Always maintains perfect balance, even under heavy assault"
-          },
-          {
-            "min": 1,
-            "text": "Their spatial awareness keeps them safely out of harm's way"
-          },
-          {
-            "min": 0,
-            "text": "Makes few mistakes"
+            "min": 21,
+            "text": "Weaves through the carnage with grim efficiency"
           }
         ]
       },
       "endurance": {
         "high": [
-          {
-            "min": 24,
-            "text": "A tireless engine of destruction, grinding foes to bloody paste"
-          },
-          {
-            "min": 14,
-            "text": "Rarely wastes his endurance needlessly"
-          },
-          {
-            "min": 3,
-            "text": "Possesses a seemingly bottomless well of stamina"
-          },
-          {
-            "min": 3,
-            "text": "Fights with the same intensity in the final minute as the first"
-          },
-          {
-            "min": 2,
-            "text": "Shrugs off fatigue as if it were a minor inconvenience"
-          },
-          {
-            "min": 1,
-            "text": "Their relentless pace eventually breaks every opponent"
-          },
-          {
-            "min": 1,
-            "text": "Seems completely unfazed by extended, grueling bouts"
-          },
           {
             "min": 0,
             "text": "Can conserve his endurance past what might normally be expected"
@@ -551,33 +483,37 @@
           {
             "min": 0,
             "text": "Their physical conditioning is second to none"
-          }
-        ],
-        "low": [
-          {
-            "min": 22,
-            "text": "Refuses to empty his lungs until the slaughter is completely finished"
           },
           {
-            "min": 14,
-            "text": "He plans out every move he makes, seldom wasting any effort"
+            "min": 1,
+            "text": "Their relentless pace eventually breaks every opponent"
           },
           {
-            "min": 4,
-            "text": "Conserves energy with masterful efficiency"
-          },
-          {
-            "min": 3,
-            "text": "Never wastes a breath or a movement"
-          },
-          {
-            "min": 3,
-            "text": "Paces themselves perfectly throughout the entire bout"
+            "min": 1,
+            "text": "Seems completely unfazed by extended, grueling bouts"
           },
           {
             "min": 2,
-            "text": "Their stamina management is a tactical masterclass"
+            "text": "Shrugs off fatigue as if it were a minor inconvenience"
           },
+          {
+            "min": 3,
+            "text": "Possesses a seemingly bottomless well of stamina"
+          },
+          {
+            "min": 3,
+            "text": "Fights with the same intensity in the final minute as the first"
+          },
+          {
+            "min": 14,
+            "text": "Rarely wastes his endurance needlessly"
+          },
+          {
+            "min": 24,
+            "text": "A tireless engine of destruction, grinding foes to bloody paste"
+          }
+        ],
+        "low": [
           {
             "min": 0,
             "text": "Seldom wastes his endurance needlessly"
@@ -593,6 +529,30 @@
           {
             "min": 0,
             "text": "Makes their opponent do all the exhausting work"
+          },
+          {
+            "min": 2,
+            "text": "Their stamina management is a tactical masterclass"
+          },
+          {
+            "min": 3,
+            "text": "Never wastes a breath or a movement"
+          },
+          {
+            "min": 3,
+            "text": "Paces themselves perfectly throughout the entire bout"
+          },
+          {
+            "min": 4,
+            "text": "Conserves energy with masterful efficiency"
+          },
+          {
+            "min": 14,
+            "text": "He plans out every move he makes, seldom wasting any effort"
+          },
+          {
+            "min": 22,
+            "text": "Refuses to empty his lungs until the slaughter is completely finished"
           }
         ]
       }
@@ -601,16 +561,16 @@
       "initiative": {
         "high": [
           {
-            "min": 17,
-            "text": "Surrenders the momentum to the butcher immediately, standing completely helpless"
+            "min": 0,
+            "text": "He needs time to think things through before he can act"
           },
           {
-            "min": 4,
-            "text": "Hesitates precisely when decisive action is required"
+            "min": 1,
+            "text": "Takes too long to recover from even minor missteps"
           },
           {
-            "min": 4,
-            "text": "Moves with agonizing slowness, giving away every advantage"
+            "min": 2,
+            "text": "Allows the opponent to dictate the flow of the entire match"
           },
           {
             "min": 3,
@@ -629,42 +589,22 @@
             "text": "Consistently second-guesses their own attacks"
           },
           {
-            "min": 2,
-            "text": "Allows the opponent to dictate the flow of the entire match"
+            "min": 4,
+            "text": "Hesitates precisely when decisive action is required"
           },
           {
-            "min": 1,
-            "text": "Takes too long to recover from even minor missteps"
+            "min": 4,
+            "text": "Moves with agonizing slowness, giving away every advantage"
           },
           {
-            "min": 0,
-            "text": "He needs time to think things through before he can act"
+            "min": 17,
+            "text": "Surrenders the momentum to the butcher immediately, standing completely helpless"
           }
         ],
         "low": [
           {
-            "min": 24,
-            "text": "Moves with the urgency of a stone sinking in mud"
-          },
-          {
-            "min": 4,
-            "text": "Shows a concerning lack of situational awareness"
-          },
-          {
-            "min": 4,
-            "text": "Fails to capitalize on obvious openings"
-          },
-          {
-            "min": 2,
-            "text": "Gets easily distracted by feints and footwork"
-          },
-          {
-            "min": 2,
-            "text": "Lacks the killer instinct needed to press an advantage"
-          },
-          {
-            "min": 2,
-            "text": "Seems content to simply survive rather than win"
+            "min": 0,
+            "text": "He stands around slack-jawed"
           },
           {
             "min": 1,
@@ -679,20 +619,52 @@
             "text": "Rarely seizes the initiative, preferring a passive stance"
           },
           {
-            "min": 0,
-            "text": "He stands around slack-jawed"
+            "min": 2,
+            "text": "Gets easily distracted by feints and footwork"
+          },
+          {
+            "min": 2,
+            "text": "Lacks the killer instinct needed to press an advantage"
+          },
+          {
+            "min": 2,
+            "text": "Seems content to simply survive rather than win"
+          },
+          {
+            "min": 4,
+            "text": "Shows a concerning lack of situational awareness"
+          },
+          {
+            "min": 4,
+            "text": "Fails to capitalize on obvious openings"
+          },
+          {
+            "min": 24,
+            "text": "Moves with the urgency of a stone sinking in mud"
           }
         ]
       },
       "attack": {
         "high": [
           {
-            "min": 25,
-            "text": "Strikes with the sloppy desperation of a drowning man"
+            "min": 0,
+            "text": "He makes a lot of mistakes"
           },
           {
-            "min": 17,
-            "text": "Telegraphs every swing so heavily it practically invites his own death"
+            "min": 0,
+            "text": "Struggles to find the range, constantly hitting empty air"
+          },
+          {
+            "min": 1,
+            "text": "Their attacks are as predictable as the sunrise"
+          },
+          {
+            "min": 3,
+            "text": "Leaves themselves wide open after every clumsy strike"
+          },
+          {
+            "min": 3,
+            "text": "Lacks any real power behind their desperate swings"
           },
           {
             "min": 4,
@@ -707,51 +679,15 @@
             "text": "Fails to connect even the most basic of combinations"
           },
           {
-            "min": 3,
-            "text": "Leaves themselves wide open after every clumsy strike"
+            "min": 17,
+            "text": "Telegraphs every swing so heavily it practically invites his own death"
           },
           {
-            "min": 3,
-            "text": "Lacks any real power behind their desperate swings"
-          },
-          {
-            "min": 1,
-            "text": "Their attacks are as predictable as the sunrise"
-          },
-          {
-            "min": 0,
-            "text": "He makes a lot of mistakes"
-          },
-          {
-            "min": 0,
-            "text": "Struggles to find the range, constantly hitting empty air"
+            "min": 25,
+            "text": "Strikes with the sloppy desperation of a drowning man"
           }
         ],
         "low": [
-          {
-            "min": 26,
-            "text": "Telegraphs every swing like a lumbering ox"
-          },
-          {
-            "min": 3,
-            "text": "Shows a complete lack of precision in their strikes"
-          },
-          {
-            "min": 2,
-            "text": "Their offensive maneuvers are slow and easily countered"
-          },
-          {
-            "min": 2,
-            "text": "Fails to put their weight behind their attacks"
-          },
-          {
-            "min": 1,
-            "text": "Seems afraid to commit fully to any offensive action"
-          },
-          {
-            "min": 1,
-            "text": "Their strikes lack both speed and conviction"
-          },
           {
             "min": 0,
             "text": "He makes stupid feints that fool no one"
@@ -767,26 +703,46 @@
           {
             "min": 0,
             "text": "Seems to close their eyes right before they swing"
+          },
+          {
+            "min": 1,
+            "text": "Seems afraid to commit fully to any offensive action"
+          },
+          {
+            "min": 1,
+            "text": "Their strikes lack both speed and conviction"
+          },
+          {
+            "min": 2,
+            "text": "Their offensive maneuvers are slow and easily countered"
+          },
+          {
+            "min": 2,
+            "text": "Fails to put their weight behind their attacks"
+          },
+          {
+            "min": 3,
+            "text": "Shows a complete lack of precision in their strikes"
+          },
+          {
+            "min": 26,
+            "text": "Telegraphs every swing like a lumbering ox"
           }
         ]
       },
       "defense": {
         "high": [
           {
-            "min": 25,
-            "text": "Stumbles backward, relying on blind luck rather than skill"
+            "min": 0,
+            "text": "Leaves dangerous openings in their guard"
           },
           {
-            "min": 14,
-            "text": "Fails to anticipate even the most obvious strikes"
+            "min": 0,
+            "text": "Seems to absorb blows rather than actually avoiding them"
           },
           {
-            "min": 4,
-            "text": "Their guard is riddled with exploitable holes"
-          },
-          {
-            "min": 2,
-            "text": "Flinches away from strikes instead of properly deflecting them"
+            "min": 0,
+            "text": "Consistently falls for simple misdirections"
           },
           {
             "min": 1,
@@ -801,42 +757,30 @@
             "text": "Their parries are weak and easily broken through"
           },
           {
-            "min": 0,
-            "text": "Leaves dangerous openings in their guard"
+            "min": 2,
+            "text": "Flinches away from strikes instead of properly deflecting them"
           },
           {
-            "min": 0,
-            "text": "Seems to absorb blows rather than actually avoiding them"
+            "min": 4,
+            "text": "Their guard is riddled with exploitable holes"
           },
           {
-            "min": 0,
-            "text": "Consistently falls for simple misdirections"
+            "min": 14,
+            "text": "Fails to anticipate even the most obvious strikes"
+          },
+          {
+            "min": 25,
+            "text": "Stumbles backward, relying on blind luck rather than skill"
           }
         ],
         "low": [
           {
-            "min": 25,
-            "text": "Seems utterly confused by basic defensive footwork"
+            "min": 0,
+            "text": "Is easily outmaneuvered"
           },
           {
-            "min": 4,
-            "text": "Shows a terrifying lack of defensive coordination"
-          },
-          {
-            "min": 3,
-            "text": "Leaves their vital areas completely exposed"
-          },
-          {
-            "min": 3,
-            "text": "Fails to anticipate incoming strikes until it's too late"
-          },
-          {
-            "min": 2,
-            "text": "Their defensive reactions are sluggish and uncoordinated"
-          },
-          {
-            "min": 2,
-            "text": "Seems to have no concept of distance management"
+            "min": 0,
+            "text": "Displays a shocking lack of self-preservation instincts"
           },
           {
             "min": 1,
@@ -847,12 +791,94 @@
             "text": "Their evasive maneuvers are clumsy and ineffective"
           },
           {
-            "min": 0,
-            "text": "Is easily outmaneuvered"
+            "min": 2,
+            "text": "Their defensive reactions are sluggish and uncoordinated"
           },
           {
+            "min": 2,
+            "text": "Seems to have no concept of distance management"
+          },
+          {
+            "min": 3,
+            "text": "Leaves their vital areas completely exposed"
+          },
+          {
+            "min": 3,
+            "text": "Fails to anticipate incoming strikes until it's too late"
+          },
+          {
+            "min": 4,
+            "text": "Shows a terrifying lack of defensive coordination"
+          },
+          {
+            "min": 25,
+            "text": "Seems utterly confused by basic defensive footwork"
+          }
+        ]
+      },
+      "riposte": {
+        "high": [
+          {
             "min": 0,
-            "text": "Displays a shocking lack of self-preservation instincts"
+            "text": "Makes a very poor riposte when given the chance"
+          },
+          {
+            "min": 4,
+            "text": "Strikes back so clumsily that foes bait the counter on purpose"
+          }
+        ],
+        "low": [
+          {
+            "min": 0,
+            "text": "Would rather not strike back at all"
+          },
+          {
+            "min": 4,
+            "text": "Lunges back too late to matter"
+          }
+        ]
+      },
+      "parry": {
+        "high": [
+          {
+            "min": 0,
+            "text": "Is completely inept at defending himself"
+          },
+          {
+            "min": 4,
+            "text": "Meets steel with his face when a parry was called for"
+          }
+        ],
+        "low": [
+          {
+            "min": 0,
+            "text": "Rarely manages to get his weapon in the way of a blow"
+          },
+          {
+            "min": 4,
+            "text": "Would probably stab himself in the foot trying to parry"
+          }
+        ]
+      },
+      "endurance": {
+        "high": [
+          {
+            "min": 0,
+            "text": "Tires with astonishing quickness"
+          },
+          {
+            "min": 4,
+            "text": "Drags himself through the bout on fumes alone"
+          }
+        ],
+        "low": [
+          {
+            "min": 0,
+            "text": "Has little endurance to speak of"
+          },
+          {
+            "min": 4,
+            "text": "Spends more time gasping than fighting"
           }
         ]
       }

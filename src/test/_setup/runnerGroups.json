@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T07:23:20.170Z",
+  "generatedAt": "2026-11-08T08:12:53.821Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -169,6 +169,7 @@
     "src/test/engine/ai/intentStates.test.ts",
     "src/test/engine/ai/plan/coreGenerator.test.ts",
     "src/test/engine/ai/styleDoctrine.test.ts",
+    "src/test/engine/analytics/almanac.test.ts",
     "src/test/engine/autosim/autosim.unit.test.ts",
     "src/test/engine/autosim/councilAutoPilot.test.ts",
     "src/test/engine/bout/services/weekFinalizationRollover.test.ts",
@@ -264,6 +265,7 @@
     "src/test/pages/Gazette.test.tsx",
     "src/test/pages/Graveyard.test.tsx",
     "src/test/pages/HallOfFame.test.tsx",
+    "src/test/pages/HallOfFame/AlmanacSection.test.tsx",
     "src/test/pages/HallOfFame/InducteeCard.test.tsx",
     "src/test/pages/HelpA11y.test.tsx",
     "src/test/pages/ImportExport.test.tsx",

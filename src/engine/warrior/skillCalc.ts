@@ -38,6 +38,7 @@ import {
   WL_PAR,
   WL_DEF,
   WL_DEC,
+  WL_INI,
   SP_DEC,
   SP_DEF,
   SP_INI,
@@ -68,12 +69,21 @@ import {
  * @param style - The warrior's fighting style
  * @returns A BaseSkills object containing ATT, PAR, DEF, INI, RIP, and DEC
  */
-export function computeBaseSkills(attrs: Attributes, style: FightingStyle): BaseSkills {
+export function computeBaseSkills(
+  attrs: Attributes,
+  style: FightingStyle,
+  handedness?: Handedness
+): BaseSkills {
   const { ST, SZ, WT, WL, SP, DF } = attrs;
   const pen = STYLE_PENALTIES[style];
   const floor = STYLE_SKILL_FLOORS[style];
 
-  const ATT_raw = bp(ST_ATT, ST) + bp(WT_ATT, WT) + bp(WL_ATT, WL) + bp(DF_ATT, DF) + pen[0];
+  // Canon: "ABs get double the Att skills in DF" and ambidextrous warriors
+  // get +1 ATT (Terrablood skill chart notes).
+  const dfAtt = bp(DF_ATT, DF) * (style === FightingStyle.AimedBlow ? 2 : 1);
+  const ambiAtt = handedness === 'ambidextrous' ? 1 : 0;
+  const ATT_raw =
+    bp(ST_ATT, ST) + bp(WT_ATT, WT) + bp(WL_ATT, WL) + dfAtt + ambiAtt + pen[0];
   const PAR_raw = bp(ST_PAR, ST) + szMod(SZ_PAR_MOD, SZ) + bp(WL_PAR, WL) + bp(DF_PAR, DF) + pen[1];
   const DEF_raw =
     szMod(SZ_DEF_MOD, SZ) +
@@ -82,7 +92,13 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
     bp(SP_DEF, SP) +
     bp(DF_DEF, DF) +
     pen[2];
-  const INI_raw = szMod(SZ_INI_MOD, SZ) + bp(WT_INI, WT) + bp(SP_INI, SP) + bp(DF_INI, DF) + pen[3];
+  const INI_raw =
+    szMod(SZ_INI_MOD, SZ) +
+    bp(WT_INI, WT) +
+    bp(WL_INI, WL) +
+    bp(SP_INI, SP) +
+    bp(DF_INI, DF) +
+    pen[3];
   const RIP_raw = bp(WT_RIP, WT) + bp(SP_RIP, SP) + bp(DF_RIP, DF) + pen[4];
   const DEC_raw = bp(WT_DEC, WT) + bp(WL_DEC, WL) + bp(SP_DEC, SP) + pen[5];
 
@@ -131,6 +147,27 @@ export function rollLuckfactor(rng: IRNGService, style?: FightingStyle): BaseSki
  */
 export function rollBloodlust(rng: IRNGService): number {
   return rng.next() * 2 - 1;
+}
+
+// ─── Handedness (Canon ~85% right / ~7.5% left / ~7.5% ambidextrous) ───────
+// Ambidextrous warriors get +1 ATT (Terrablood chart note) and eased
+// dual-wield deftness requirements (dualWieldReqAmbi in equipment data).
+
+/**
+ * Handedness type.
+ */
+export type Handedness = 'right' | 'left' | 'ambidextrous';
+
+/**
+ * Roll a warrior's handedness once at creation — stored on the warrior so
+ * intros and equipment checks are deterministic across bouts.
+ *
+ * @param rng - Seeded RNG service for deterministic generation.
+ * @returns The warrior's handedness.
+ */
+export function rollHandedness(rng: IRNGService): Handedness {
+  if (rng.next() < 0.85) return 'right';
+  return rng.next() < 0.5 ? 'left' : 'ambidextrous';
 }
 
 /**

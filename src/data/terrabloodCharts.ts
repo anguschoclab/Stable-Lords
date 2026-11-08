@@ -35,6 +35,28 @@ const SZ_MOD: Record<number, number> = {
   21: 10,
 };
 
+// Canon HP statement bands (same chart page):
+//   Very frail 6-21 · Cannot take a lot 22-26 · Average 27-35
+//   A lot 36-40 · Tremendous 41-53 · Seemingly unaffected 54+
+const HP_RATING_BANDS: [number, string][] = [
+  [21, 'Very frail'],
+  [26, 'Cannot take a lot'],
+  [35, 'Average'],
+  [40, 'A lot'],
+  [53, 'Tremendous'],
+  [Infinity, 'Seemingly unaffected'],
+];
+
+/**
+ * Canon punishment-capacity statement for a computed HP total.
+ */
+export function hpRating(hp: number): string {
+  for (const [max, label] of HP_RATING_BANDS) {
+    if (hp <= max) return label;
+  }
+  return 'Seemingly unaffected';
+}
+
 const WL_MOD_HP: Record<number, number> = {
   3: 0,
   4: 0,
@@ -216,23 +238,82 @@ const ENDURANCE_VALUES: Record<EnduranceTier, number> = {
   U: 80,
 };
 
+// Canonical (ST+CN) × WL lookup — Terrablood warrior endurance chart
+// (postulated version, updated 2024-05-19). Rows: ST+CN 6-50; each row is a
+// 23-char string indexed by WL-3 (WL 3-25). '0' = no data: falls back to the
+// nearest defined tier left in the row, then up the column.
+const ENDURANCE_TABLE: Record<number, string> = {
+  6: 'LLLLLLLLLLLLLLLLLLL0000',
+  7: 'LLLLLLLLLLLLLLLLLLL0000',
+  8: 'LLLLLLLLLLLLLLLL0000000',
+  9: 'LLLLLLLLLLLLLLLL0P00000',
+  10: 'LLLLLLLLLLLLLLPPPPP0000',
+  11: 'LLLLLLLLLLLLLLPPPPP0000',
+  12: 'LLLLLLLLLLLLPPPPPPP0000',
+  13: 'LLLLLLLLLLPPPPPPPPP0000',
+  14: 'LLLLLLLPPPPPPPPPPPN0000',
+  15: 'LLLLLLLPPPPPPPPPPNN0000',
+  16: 'LLLLLLPPPPPPPPPPPNN0000',
+  17: 'LLLLLLPPPPPPPPPNNNN0000',
+  18: 'LLLLLLPPPPPPPPNNNNN0000',
+  19: 'LLLLLLPPPPPPPPNNNNNGGGG',
+  20: 'LLLLLLPPPPPPNNNNNNGG000',
+  21: 'LLLLLPPPPPPPNNNNNNGNN00',
+  22: 'LLLLLPPPPPPNNNNNGGGGRR0',
+  23: 'LLLLLPPPPPNNNNNGGGGGRRT',
+  24: 'LLLLLPPPPPNNNNNGGGGRRRT',
+  25: 'LLLLLPPPPNNNNGGGGGGRRRT',
+  26: 'LLLLPPPPPNNNNGGGGGRRRRT',
+  27: 'LLLLPPPPPNNNNGGGGGRRRRT',
+  28: 'LLLLPPPPPNNNGGGGRRRRRRT',
+  29: 'LLPPPPPPNNNNGGGRRRRRRRT',
+  30: 'LLPPPPPPNNNNGGGRRRRRRRT',
+  31: 'LLLPPPPPNNGGGGGRRRRRRRT',
+  32: 'LLLPPNNNNGGGGGRRRRRTTTA',
+  33: 'LLLPPNNNNGGGGGRRRRTTAAA',
+  34: 'LLLPPNNNNGGGGGRRRRTTAAA',
+  35: 'LLLPPNNNNGGGRRRRRRTTAAA',
+  36: 'LLLPPNNGGGGRRRRTTTTAAAA',
+  37: 'LLPNNNNGGGGRRRRTTTTAAAA',
+  38: 'LL0NNNN0000RRRTTTTAAAAA',
+  39: 'LL0NNN00000RRRTTTTAAAAA',
+  40: 'LL00N000000RRTTT0AAAAAA',
+  41: 'LL00000000000TT00AAAAAA',
+  42: 'LL00000000000TT000AAAAA',
+  43: '000000000000000000AAAAA',
+  44: '000000000000000000AAAAA',
+  45: '000000000000000000AAAAA',
+  46: '000000000000000000AAAAA',
+  47: '000000000000000000AAAAA',
+  48: '000000000000000000AAAAA',
+  49: '000000000000000000AAAAA',
+  50: '000000000000000000AAAAA',
+};
+
+const END_TIER_CHARS = new Set(['L', 'P', 'N', 'G', 'R', 'T', 'A', 'U']);
+
 /**
  * Compute endurance tier from canonical chart.
- * Uses piecewise approximation of the massive (ST+CN) × WL table.
+ * Canon is a measured (ST+CN) × WL lookup — not a formula. No-data ('0')
+ * cells fall back to the nearest defined tier left in the row, then up the
+ * column. The chart tops out at 'A' (Awesome); 'U' remains for future data.
  */
 export function computeEnduranceTier(st: number, cn: number, wl: number): EnduranceTier {
-  const stcn = st + cn;
-  // Simplified breakpoint approximation from the chart
-  // The chart shows that higher WL dramatically increases endurance,
-  // while higher ST+CN has a more moderate effect.
-  const score = wl * 3 + stcn;
-
-  if (score >= 95) return 'A';
-  if (score >= 85) return 'T';
-  if (score >= 75) return 'R';
-  if (score >= 62) return 'G';
-  if (score >= 48) return 'N';
-  if (score >= 35) return 'P';
+  const row = clamp(st + cn, 6, 50);
+  const col = clamp(wl - 3, 0, 22);
+  const line = ENDURANCE_TABLE[row] ?? ENDURANCE_TABLE[50] ?? '';
+  const direct = line[col];
+  if (direct && END_TIER_CHARS.has(direct)) return direct as EnduranceTier;
+  // Fallback: nearest defined tier left in the row …
+  for (let c = col - 1; c >= 0; c--) {
+    const t = line[c];
+    if (t && END_TIER_CHARS.has(t)) return t as EnduranceTier;
+  }
+  // … else nearest defined tier up the column.
+  for (let r = row - 1; r >= 6; r--) {
+    const t = ENDURANCE_TABLE[r]?.[col];
+    if (t && END_TIER_CHARS.has(t)) return t as EnduranceTier;
+  }
   return 'L';
 }
 

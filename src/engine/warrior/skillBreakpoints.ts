@@ -40,7 +40,14 @@ export const ST_ATT: BP = [
   [24, 1],
   [25, 1],
 ];
-export const ST_PAR = ST_ATT;
+// Canon: PAR diverges from ATT at 22+ — chart shows +0 for ST→PAR at 22-25.
+export const ST_PAR: BP = [
+  [5, 1],
+  [7, 1],
+  [15, 1],
+  [17, 1],
+  [21, 2],
+];
 
 // Wit → ATT, DEF (identical pattern), INI (+4 spike at 11!), RIP, DEC
 export const WT_ATT: BP = [
@@ -124,8 +131,16 @@ export const WL_DEC: BP = [
   [24, 1],
   [25, 1],
 ];
+// Canon: WL contributes to INI only at the extreme tail (22-25).
+export const WL_INI: BP = [
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
+];
 
 // Speed → DEC, DEF, INI, RIP
+// Canon: DEC gains at every even value 4-20, plus the 22-25 odd tail.
 export const SP_DEC: BP = [
   [4, 1],
   [6, 1],
@@ -133,29 +148,53 @@ export const SP_DEC: BP = [
   [10, 1],
   [12, 1],
   [14, 1],
+  [16, 1],
   [18, 1],
   [20, 1],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
+// Canon: DEF gains at odd values only (5,7,15,17,21×2, 22-25).
 export const SP_DEF: BP = [
   [5, 1],
   [7, 1],
   [15, 1],
+  [17, 1],
+  [21, 2],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
+// Canon: INI gains at odd 9/15/21×2(+22-25) and even 6/12/18 — nothing below 6.
 export const SP_INI: BP = [
-  [4, 1],
   [6, 1],
   [9, 1],
   [12, 1],
+  [15, 1],
   [18, 1],
+  [21, 2],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
+// Canon: RIP gains at odd values 5-17 (+2 at 11 and 21, +1 each 22-25).
 export const SP_RIP: BP = [
-  [4, 1],
-  [6, 1],
+  [5, 1],
   [7, 1],
+  [9, 1],
   [11, 2],
   [13, 1],
   [15, 1],
-  [21, 1],
+  [17, 1],
+  [21, 2],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
 
 // Deftness → ATT, DEF, INI, PAR, RIP
@@ -169,34 +208,36 @@ export const DF_ATT: BP = [
   [17, 1],
   [21, 2],
 ];
-export const DF_DEF: BP = [
-  [5, 1],
-  [13, 1],
-  [15, 1],
-  [21, 1],
-];
+// Canon: DF→DEF follows the same odd-value pattern as DF→ATT/DF→PAR.
+export const DF_DEF = DF_ATT;
 export const DF_INI: BP = [
   [5, 1],
   [7, 1],
   [15, 1],
   [17, 1],
   [21, 2],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
-export const DF_PAR: BP = [
-  [5, 1],
-  [9, 1],
-  [11, 2],
-  [13, 1],
-  [17, 1],
-];
+// Canon: DF→PAR follows the ATT/DEF pattern (yields 8 at DF17).
+export const DF_PAR = DF_ATT;
+// Canon: DF→RIP gains at every even value 4-20, plus the 22-25 tail.
 export const DF_RIP: BP = [
+  [4, 1],
   [6, 1],
+  [8, 1],
   [10, 1],
   [12, 1],
   [14, 1],
   [16, 1],
   [18, 1],
   [20, 1],
+  [22, 1],
+  [23, 1],
+  [24, 1],
+  [25, 1],
 ];
 
 // ─── Size Modifier (lookup table, not breakpoints) ────────────────────────
@@ -328,3 +369,34 @@ export const STYLE_SKILL_FLOORS: Record<
   // comes from the drill, not from wit or deftness.
   [FightingStyle.WallOfSteel]: /*WS*/ [11, 3, 1, 16, 1, 1],
 };
+
+// ─── Canon Reference Tables (V22) ─────────────────────────────────────────
+// The original Terrablood STYLE MODIFICATIONS chart, preserved as canon data
+// for reference/spec comparison — the live tuned values stay in
+// STYLE_PENALTIES above. Format: [ATT, PAR, DEF, INI, RIP, DEC].
+export const CANON_STYLE_PENALTIES: Record<
+  FightingStyle,
+  [number, number, number, number, number, number]
+> = {
+  [FightingStyle.AimedBlow]: [-17, -8, -12, -9, -7, 1],
+  [FightingStyle.BashingAttack]: [-8, -8, -13, -3, -4, 1],
+  [FightingStyle.LungingAttack]: [-6, -8, -10, -2, -4, 0],
+  [FightingStyle.ParryLunge]: [-8, -6, -12, -4, -4, -1],
+  [FightingStyle.ParryRiposte]: [-12, -6, -14, -5, 0, -1],
+  [FightingStyle.ParryStrike]: [-12, -6, -12, -7, -4, -1],
+  [FightingStyle.SlashingAttack]: [-8, -10, -12, 0, -4, 0],
+  [FightingStyle.StrikingAttack]: [-12, -9, -12, -5, -4, 1],
+  [FightingStyle.TotalParry]: [-14, -2, -12, -7, -4, -2],
+  [FightingStyle.WallOfSteel]: [-8, -4, -12, -1, -4, -1],
+};
+
+// Canon wit-statement floors (Noblish Island HIGH WIT STATEMENTS chart):
+// at WT 15+ a statement only appears when the skill reaches this base value.
+export const STATEMENT_MIN_SKILLS = {
+  INI: 10,
+  RIP: 10,
+  ATT: 7,
+  PAR: 6,
+  DEF: 3,
+  DEC: 9,
+} as const;

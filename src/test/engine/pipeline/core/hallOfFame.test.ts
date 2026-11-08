@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { processHallOfFame, recordWeeklyHallOfFame } from '@/engine/pipeline/core/hallOfFame';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/game';
+import type { RivalStableData } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { TournamentId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
@@ -90,6 +91,138 @@ describe('processHallOfFame', () => {
     const impact = processHallOfFame(state, 2);
 
     expect(impact).toEqual({});
+  });
+
+  describe('stable + tournament annual awards', () => {
+    const yearEndState = (roster: Warrior[], rivals: Partial<RivalStableData>[]): GameState =>
+      ({
+        ...baseState,
+        week: 52,
+        year: 1,
+        roster,
+        rivals,
+      }) as unknown as GameState;
+
+    it('awards STABLE_OF_YEAR to the stable with the most year-delta wins', () => {
+      // p1 stable: 3+2=5 year wins; r1 stable: 6 year wins → r1 takes it
+      const state = yearEndState(
+        [
+          mkW('w1', 'PA', 3, 0, 10, 'p1'),
+          mkW('w2', 'PB', 2, 0, 10, 'p1'),
+        ],
+        [
+          {
+            id: 'r1',
+            owner: { id: 'r1', stableName: 'RivalStable' },
+            roster: [mkW('w3', 'RA', 6, 0, 10, 'r1')],
+            fame: 100,
+          } as any,
+        ]
+      );
+
+      const res = resolveImpacts(state, [processHallOfFame(state, 1)]);
+      const soty = res.awards?.find((a) => a.type === 'STABLE_OF_YEAR');
+      expect(soty).toBeDefined();
+      expect(soty?.stableId).toBe('r1');
+      expect(soty?.stableName).toBe('RivalStable');
+      expect(soty?.warriorId).toBeUndefined();
+      expect(soty?.value).toBe(6);
+    });
+
+    it('bumps the winning rival stable fame; player win bumps player fame', () => {
+      const rivalWin = yearEndState(
+        [mkW('w1', 'PA', 3, 0, 10, 'p1')],
+        [
+          {
+            id: 'r1',
+            owner: { id: 'r1', stableName: 'RivalStable' },
+            roster: [mkW('w3', 'RA', 6, 0, 10, 'r1')],
+            fame: 100,
+          } as any,
+        ]
+      );
+      const res1 = resolveImpacts(rivalWin, [processHallOfFame(rivalWin, 1)]);
+      expect(res1.rivals.find((r) => r.id === 'r1')?.fame).toBe(130);
+
+      const playerWin = yearEndState(
+        [mkW('w1', 'PA', 9, 0, 10, 'p1')],
+        [
+          {
+            id: 'r1',
+            owner: { id: 'r1', stableName: 'RivalStable' },
+            roster: [mkW('w3', 'RA', 2, 0, 10, 'r1')],
+            fame: 100,
+          } as any,
+        ]
+      );
+      const res2 = resolveImpacts(playerWin, [processHallOfFame(playerWin, 1)]);
+      expect(res2.awards?.find((a) => a.type === 'STABLE_OF_YEAR')?.stableId).toBe('p1');
+      expect(res2.fame).toBe(30);
+    });
+
+    it('awards TOURNAMENT_RANK to the top medal-delta warrior (3/2/1 weighting)', () => {
+      const withMedals = (
+        id: string,
+        name: string,
+        medals: { gold: number; silver: number; bronze: number },
+        snapMedals: { gold: number; silver: number; bronze: number } | undefined,
+        stableId: string
+      ): Warrior =>
+        ({
+          ...mkW(id, name, 1, 0, 10, stableId),
+          career: { wins: 1, losses: 0, kills: 0, medals },
+          yearlySnapshots: {
+            1: { wins: 0, losses: 0, kills: 0, fame: 0, medals: snapMedals },
+          },
+        }) as Warrior;
+
+      const state = yearEndState(
+        [
+          // 2 new golds = score 6
+          withMedals('m1', 'Silver', { gold: 2, silver: 0, bronze: 0 }, undefined, 'p1'),
+          // 1 gold + 2 silver delta = score 7 — beats m1 despite fewer medals
+          withMedals(
+            'm2',
+            'Broad',
+            { gold: 1, silver: 2, bronze: 0 },
+            { gold: 0, silver: 0, bronze: 0 },
+            'p1'
+          ),
+          // 3 golds earned BEFORE the snapshot — delta 0, must not win
+          withMedals(
+            'm3',
+            'Stale',
+            { gold: 3, silver: 0, bronze: 0 },
+            { gold: 3, silver: 0, bronze: 0 },
+            'p1'
+          ),
+        ],
+        []
+      );
+
+      const res = resolveImpacts(state, [processHallOfFame(state, 1)]);
+      const tourney = res.awards?.find((a) => a.type === 'TOURNAMENT_RANK');
+      expect(tourney).toBeDefined();
+      expect(tourney?.warriorId).toBe('m2');
+      expect(tourney?.warriorName).toBe('Broad');
+      expect(tourney?.value).toBe(7);
+    });
+
+    it('skips TOURNAMENT_RANK when no warrior earned medals that year', () => {
+      const state = yearEndState([mkW('w1', 'Plain', 5, 0, 10, 'p1')], []);
+      const res = resolveImpacts(state, [processHallOfFame(state, 1)]);
+      expect(res.awards?.some((a) => a.type === 'TOURNAMENT_RANK')).toBe(false);
+    });
+
+    it('keeps every fame bump + record when one warrior wins multiple awards', () => {
+      // Sole eligible warrior wins WOTY (+50) and CLASS_MVP (+20)
+      const state = yearEndState([mkW('w1', 'Sweeper', 10, 3, 10, 'p1')], []);
+      const res = resolveImpacts(state, [processHallOfFame(state, 1)]);
+      const w1 = res.roster.find((w) => w.id === 'w1');
+      expect(w1?.fame).toBe(130); // 10 + 50(WOTY) + 50(KOTY) + 20(MVP)
+      expect(w1?.awards).toHaveLength(3); // WOTY + KOTY + CLASS_MVP
+      expect(res.awards?.filter((a) => a.warriorId === 'w1')).toHaveLength(3);
+    });
   });
 });
 

@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { runSystemPass } from '@/engine/pipeline/passes/SystemPass';
+import { resolveImpacts } from '@/engine/impacts';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { WarriorId, StableId } from '@/types/shared.types';
+import { FightingStyle, WarriorId, StableId } from '@/types/shared.types';
 import { makeRival, makeWarrior, makePoolWarrior } from '@/test/_fixtures/factories';
 import type { RivalStableData } from '@/types/state.types';
 
@@ -65,6 +66,93 @@ describe('SystemPass Snapshotting Logic', () => {
     // It should also have preserved the Year 1 snapshot
     expect(warriorUpdate?.yearlySnapshots?.[1]).toBeDefined();
     expect(warriorUpdate?.yearlySnapshots?.[1]?.wins).toBe(5);
+  });
+
+  it('keeps hall-of-fame award updates AND snapshots on the same warrior at year transition', () => {
+    // Week 52 → 1: award processing, snapshot creation, AND seasonal churn
+    // all fire on the same tick — their per-warrior updates must compose,
+    // not clobber each other.
+    const baseState = createFreshState('seed-clobber');
+    baseState.week = 52;
+    baseState.year = 1;
+    baseState.season = 'Winter';
+    baseState.absoluteWeek = 52;
+
+    const warriorId = 'award-winner' as WarriorId;
+    baseState.roster = [
+      {
+        id: warriorId,
+        name: 'Award Winner',
+        style: FightingStyle.StrikingAttack,
+        career: { wins: 12, losses: 2, kills: 1 },
+        fame: 100,
+        yearlySnapshots: {
+          1: { wins: 0, losses: 0, kills: 0, fame: 0 },
+        },
+        status: 'Active',
+        stableId: baseState.player.id,
+      } as any,
+    ];
+    baseState.rivals = [];
+
+    const impact = runSystemPass(baseState);
+    const res = resolveImpacts(baseState, [impact]);
+
+    const w = res.roster.find((x) => x.id === warriorId);
+    // Award effects must land: WOTY fame bump + warrior.awards record.
+    expect(w?.awards?.some((a) => a.type === 'WARRIOR_OF_YEAR')).toBe(true);
+    expect(w?.fame).toBeGreaterThan(100);
+    // …and the Year 2 baseline snapshot must land on the SAME warrior.
+    expect(w?.yearlySnapshots?.[2]?.wins).toBe(12);
+  });
+
+  it('keeps award updates AND snapshots on rival warriors through seasonal churn', () => {
+    // Same tick, rival side: churn writes whole-stable rivalsUpdates while
+    // award processing + snapshots write per-warrior updates — both must
+    // survive (regression: whole-roster replaces erased award+snapshot).
+    const baseState = createFreshState('seed-clobber-rival');
+    baseState.week = 52;
+    baseState.year = 1;
+    baseState.season = 'Winter';
+    baseState.absoluteWeek = 52;
+    baseState.roster = [];
+
+    const warriorId = 'rival-star' as WarriorId;
+    const rival = makeRival({
+      id: 'r1' as StableId,
+      treasury: 50_000,
+      owner: {
+        id: 'r1' as StableId,
+        name: 'Owner',
+        stableName: 'Rival Stable',
+        fame: 50,
+        renown: 10,
+        titles: 0,
+      } as never,
+      roster: [
+        makeWarrior({
+          id: warriorId,
+          name: 'Rival Star',
+          stableId: 'r1' as StableId,
+          career: { wins: 15, losses: 0, kills: 0 },
+          fame: 60,
+          yearlySnapshots: {
+            1: { wins: 0, losses: 0, kills: 0, fame: 0 },
+          },
+        }),
+      ],
+    });
+    baseState.rivals = [rival];
+
+    const impact = runSystemPass(baseState);
+    const res = resolveImpacts(baseState, [impact]);
+
+    const w = res.rivals.flatMap((r) => r.roster).find((x) => x.id === warriorId);
+    // Rival warrior won WOTY + CLASS_MVP — fame bump(s) + award records land…
+    expect(w?.awards?.some((a) => a.type === 'WARRIOR_OF_YEAR')).toBe(true);
+    expect(w?.fame).toBeGreaterThan(60);
+    // …while the Year 2 snapshot still lands on the same warrior.
+    expect(w?.yearlySnapshots?.[2]?.wins).toBe(15);
   });
 
   it('does NOT create snapshots on a post-rollover tick (they were already created on the transition tick)', () => {

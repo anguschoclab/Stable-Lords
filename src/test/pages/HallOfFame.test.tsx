@@ -1,7 +1,7 @@
 import { makePageStoreState } from '@/test/_fixtures/storeState';
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, within } from '@testing-library/react';
+import { render, within, fireEvent, screen } from '@testing-library/react';
 import HallOfFame from '@/pages/HallOfFame';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
@@ -185,5 +185,42 @@ describe('HallOfFame Component', () => {
 
     // fight2 (Victim2) shouldn't be the top
     expect(within(reaperCard as HTMLElement).queryByText(/Victim2/)).not.toBeInTheDocument();
+  });
+
+  it('keeps All-Time Greats on the Hall of Fame tab even when year awards exist', () => {
+    render(<HallOfFame />);
+
+    // Year 1 awards render…
+    expect(screen.getByText(/Year 1 Accolades/i)).toBeInTheDocument();
+    // …and the all-time roll is no longer hidden behind their absence.
+    expect(screen.getByText(/All-Time Greats/i)).toBeInTheDocument();
+  });
+
+  it('renders an Almanac tab with career record boards ranked from state data', () => {
+    render(<HallOfFame />);
+
+    const tab = screen.getByRole('tab', { name: /almanac/i });
+    fireEvent.click(tab);
+
+    // The career-records section shows all-time ranked boards…
+    const winsBoard = screen.getByTestId('almanac-board-wins');
+    expect(winsBoard).toBeInTheDocument();
+    // …ordered by the record, not the fixture order: Gladiator(30) > Reaper(20) > Mountain(15).
+    const names = within(winsBoard)
+      .getAllByText(/Gladiator|Reaper|The Mountain/)
+      .map((el) => el.textContent);
+    expect(names.indexOf('Gladiator')).toBeLessThan(names.indexOf('Reaper'));
+    expect(names.indexOf('Reaper')).toBeLessThan(names.indexOf('The Mountain'));
+
+    // Other career boards exist too.
+    expect(screen.getByTestId('almanac-board-fame')).toBeInTheDocument();
+    expect(screen.getByTestId('almanac-board-kills')).toBeInTheDocument();
+  });
+
+  it('Almanac surfaces honest caveats on windowed boards', () => {
+    render(<HallOfFame />);
+    fireEvent.click(screen.getByRole('tab', { name: /almanac/i }));
+    // Streak boards must label that they only cover the retained fight window.
+    expect(screen.getAllByText(/recorded/i).length).toBeGreaterThan(0);
   });
 });

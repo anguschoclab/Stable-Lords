@@ -1,9 +1,10 @@
 import type { GameState, Season, RivalStableData } from '@/types/state.types';
+import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG, resolveRng } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
-import { StateImpact } from '@/engine/impacts';
+import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import {
   processHallOfFame,
   createYearlySnapshots,
@@ -51,13 +52,14 @@ function processSystemicProgression(
 
   const tierImpact = processTierProgression(state, state.season, nextWeek);
 
-  return {
-    ...hofImpact,
-    ...snapshotImpact,
-    ...tierImpact,
-    ...weeklyHofImpact,
-    seasonalGrowth: state.seasonalGrowth ? [...state.seasonalGrowth] : [],
-  };
+  // mergeImpacts — never object spread: sub-impacts share update maps
+  // (rosterUpdates / rivalsUpdates / rivalWarriorPatches), and a naive
+  // spread would let later writers replace earlier maps wholesale. On the
+  // year-transition tick awards + snapshots + tier + weekly-HOF all fire
+  // together, so this is where award updates used to die.
+  const merged = mergeImpacts([hofImpact, snapshotImpact, tierImpact, weeklyHofImpact]);
+  merged.seasonalGrowth = state.seasonalGrowth ? [...state.seasonalGrowth] : [];
+  return merged;
 }
 
 /**
@@ -143,10 +145,21 @@ function processSeasonalChurnAndPhilosophy(
           ]
         : [];
 
-    impact.rivalsUpdates = new Map();
+    // Merge into the existing rivalsUpdates map instead of replacing it —
+    // same-tick partials (e.g. Stable-of-the-Year fame) must survive. And
+    // bake pending per-warrior patches (snapshots, award updates) into the
+    // evolved rosters so the whole-stable replace can't erase them.
+    const mergedRivalUpdates =
+      impact.rivalsUpdates ?? new Map<StableId, Partial<RivalStableData>>();
+    const patches = impact.rivalWarriorPatches;
     philRivals.forEach((r) => {
-      if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.id, r);
+      const prev = mergedRivalUpdates.get(r.id) ?? {};
+      const roster = patches?.size
+        ? r.roster.map((w) => (patches.has(w.id) ? ({ ...w, ...patches.get(w.id) } as Warrior) : w))
+        : r.roster;
+      mergedRivalUpdates.set(r.id, { ...r, ...prev, roster });
     });
+    impact.rivalsUpdates = mergedRivalUpdates;
 
     const combinedNews = [...news, ...gazetteItems, ...narrGazette, ...pointsNews];
     if (combinedNews.length > 0) {

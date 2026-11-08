@@ -1,8 +1,10 @@
 {
-  "generatedAt": "2026-11-08T07:23:20.169Z",
+  "generatedAt": "2026-11-08T08:12:53.820Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
     "src/test/engine/grudgeMap.test.ts",
+    "src/test/engine/warrior/derivedStats.canon.test.ts",
+    "src/test/engine/warrior/profileStatements.canon.test.ts",
     "src/test/state/lastWeekBoutDisplay.test.ts"
   ],
   "unregisteredTestDirs": [],
@@ -12,5 +14,7 @@
     "src/test/engine/combat/conditionEngine.triggers.test.ts",
     "src/test/engine/combat/equipmentIntegration.test.ts"
   ],
-  "missingJsdomPragma": []
+  "missingJsdomPragma": [
+    "src/test/engine/analytics/almanac.test.ts"
+  ]
 }

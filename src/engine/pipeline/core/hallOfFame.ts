@@ -24,14 +24,17 @@ interface WarriorStats {
   wins: number;
   kills: number;
   fame: number;
+  medals: { gold: number; silver: number; bronze: number };
 }
 
-/** Award bookkeeping bundle: roster + rival-roster update maps. */
+/** Award bookkeeping bundle: per-warrior update maps + stable-level fame. */
 interface AwardLedger {
   rosterUpdates: Map<WarriorId, Partial<Warrior>>;
   rivalsUpdates: Map<StableId, Partial<RivalStableData>>;
+  rivalWarriorPatches: Map<WarriorId, Partial<Warrior>>;
   awards: AnnualAward[];
   hofNews: string[];
+  fameDelta: number;
 }
 
 /** Collects the per-year stat deltas (career minus yearly snapshot). */
@@ -47,11 +50,17 @@ function collectEligible(state: GameState, completedYear: number): WarriorStats[
     const wins = (w.career?.wins || 0) - (snapshot.wins || 0);
     const kills = (w.career?.kills || 0) - (snapshot.kills || 0);
     const fameGain = (w.fame || 0) - (snapshot.fame || 0);
+    const snapMedals = snapshot.medals;
     eligible.push({
       w,
       wins: Math.max(0, wins),
       kills: Math.max(0, kills),
       fame: Math.max(0, fameGain),
+      medals: {
+        gold: Math.max(0, (w.career?.medals?.gold ?? 0) - (snapMedals?.gold ?? 0)),
+        silver: Math.max(0, (w.career?.medals?.silver ?? 0) - (snapMedals?.silver ?? 0)),
+        bronze: Math.max(0, (w.career?.medals?.bronze ?? 0) - (snapMedals?.bronze ?? 0)),
+      },
     });
   };
 
@@ -85,7 +94,11 @@ function pickBest(
 
 /**
  * Applies an award's fame bump and records the updated warrior in the
- * player-roster or rival-roster update map for its owning stable.
+ * player-roster update map or the rival per-warrior patch map. Multiple
+ * awards to the same warrior fold onto the prior pending update so every
+ * bump + award record survives; rival warriors go through
+ * `rivalWarriorPatches` so same-tick whole-roster replaces (yearly
+ * snapshots, seasonal churn) can't erase the award.
  */
 function recordAward(
   state: GameState,
@@ -94,21 +107,13 @@ function recordAward(
   fameBonus: number,
   ledger: AwardLedger
 ): void {
-  const { updatedWarrior } = applyAward(recipient.w, award, fameBonus);
   if (recipient.w.stableId === state.player.id) {
-    ledger.rosterUpdates.set(recipient.w.id, updatedWarrior);
+    const base = (ledger.rosterUpdates.get(recipient.w.id) as Warrior | undefined) ?? recipient.w;
+    ledger.rosterUpdates.set(recipient.w.id, applyAward(base, award, fameBonus).updatedWarrior);
   } else if (recipient.w.stableId) {
-    const stableId = recipient.w.stableId;
-    const currentRoster =
-      ledger.rivalsUpdates.get(stableId)?.roster || state.rivalMap?.get(stableId)?.roster || [];
-    const updatedRoster = [...currentRoster];
-    const index = updatedRoster.findIndex((w: Warrior) => w.id === recipient.w.id);
-    if (index !== -1) {
-      updatedRoster[index] = updatedWarrior;
-    } else {
-      updatedRoster.push(updatedWarrior);
-    }
-    ledger.rivalsUpdates.set(stableId, { roster: updatedRoster });
+    const base =
+      (ledger.rivalWarriorPatches.get(recipient.w.id) as Warrior | undefined) ?? recipient.w;
+    ledger.rivalWarriorPatches.set(recipient.w.id, applyAward(base, award, fameBonus).updatedWarrior);
   }
   ledger.awards.push(award);
 }
@@ -137,8 +142,10 @@ export function processHallOfFame(
   const ledger: AwardLedger = {
     rosterUpdates: new Map<WarriorId, Partial<Warrior>>(),
     rivalsUpdates: new Map<StableId, Partial<RivalStableData>>(),
+    rivalWarriorPatches: new Map<WarriorId, Partial<Warrior>>(),
     awards: [],
     hofNews: [],
+    fameDelta: 0,
   };
 
   const eligible = collectEligible(state, completedYear);
@@ -146,12 +153,18 @@ export function processHallOfFame(
 
   awardTopHonors(state, eligible, completedYear, ledger);
   awardClassMvps(state, eligible, completedYear, ledger);
+  awardStableOfYear(state, eligible, completedYear, ledger);
+  awardTournamentRank(state, eligible, completedYear, ledger);
 
   const impact: StateImpact = {
     awards: [...(state.awards || []), ...ledger.awards],
     rosterUpdates: ledger.rosterUpdates,
     rivalsUpdates: ledger.rivalsUpdates,
+    rivalWarriorPatches: ledger.rivalWarriorPatches,
   };
+  if (ledger.fameDelta !== 0) {
+    impact.fameDelta = (impact.fameDelta ?? 0) + ledger.fameDelta;
+  }
 
   if (ledger.hofNews.length > 0) {
     impact.newsletterItems = [
@@ -268,6 +281,112 @@ function awardClassMvps(
   }
 }
 
+/**
+ * Stable of the Year — the stable whose roster posted the most wins in the
+ * completed year. Stable-level award: no warriorId; the +30 fame bump lands
+ * on the stable itself (player fameDelta or a rival-stable fame patch).
+ */
+function awardStableOfYear(
+  state: GameState,
+  eligible: ReturnType<typeof collectEligible>,
+  completedYear: number,
+  ledger: AwardLedger
+): void {
+  const winsByStable = new Map<StableId, number>();
+  for (const e of eligible) {
+    const sid = e.w.stableId;
+    if (!sid) continue;
+    winsByStable.set(sid, (winsByStable.get(sid) ?? 0) + e.wins);
+  }
+
+  let bestId: StableId | undefined;
+  let bestWins = 0;
+  for (const [id, wins] of winsByStable) {
+    if (wins > bestWins || (wins === bestWins && wins > 0 && bestId !== undefined && id < bestId)) {
+      bestId = id;
+      bestWins = wins;
+    } else if (wins === bestWins && wins > 0 && bestId === undefined) {
+      bestId = id;
+    }
+  }
+  if (!bestId || bestWins <= 0) return;
+
+  const isPlayer = bestId === state.player.id;
+  const stableName = isPlayer
+    ? state.player.stableName
+    : (state.rivalMap?.get(bestId)?.owner?.stableName ??
+      state.rivals.find((r) => r.id === bestId)?.owner?.stableName ??
+      bestId);
+
+  ledger.awards.push({
+    year: completedYear,
+    type: 'STABLE_OF_YEAR',
+    stableId: bestId,
+    stableName,
+    value: bestWins,
+    reason: `Posted ${bestWins} stable victories in Year ${completedYear}`,
+  });
+
+  const SOTY_FAME = 30;
+  if (isPlayer) {
+    ledger.fameDelta += SOTY_FAME;
+  } else {
+    const current = ledger.rivalsUpdates.get(bestId) ?? {};
+    const baseFame =
+      current.fame ??
+      state.rivalMap?.get(bestId)?.fame ??
+      state.rivals.find((r) => r.id === bestId)?.fame ??
+      0;
+    ledger.rivalsUpdates.set(bestId, { ...current, fame: baseFame + SOTY_FAME });
+  }
+
+  ledger.hofNews.push(
+    `🛡️ STABLE OF THE YEAR: ${stableName} leads all stables with ${bestWins} victories in Year ${completedYear}!`
+  );
+}
+
+/**
+ * Tournament Rank — the year's most decorated tournament fighter, scored
+ * 3/2/1 on gold/silver/bronze medal deltas. Only lands when somebody
+ * actually medaled that year.
+ */
+function awardTournamentRank(
+  state: GameState,
+  eligible: ReturnType<typeof collectEligible>,
+  completedYear: number,
+  ledger: AwardLedger
+): void {
+  const medalScore = (e: WarriorStats) =>
+    e.medals.gold * 3 + e.medals.silver * 2 + e.medals.bronze;
+
+  const best = pickBest(
+    eligible,
+    (e) => medalScore(e),
+    (e) => e.fame
+  );
+  const score = best ? medalScore(best) : 0;
+  if (!best || score <= 0) return;
+
+  recordAward(
+    state,
+    best,
+    {
+      year: completedYear,
+      type: 'TOURNAMENT_RANK',
+      warriorId: best.w.id,
+      warriorName: best.w.name,
+      stableId: best.w.stableId,
+      value: score,
+      reason: `Top tournament medalist of Year ${completedYear} (${score} medal points)`,
+    },
+    25,
+    ledger
+  );
+  ledger.hofNews.push(
+    `🏅 TOURNAMENT RANK: ${warriorDisplayName(best.w)} is the year's most decorated tournament fighter.`
+  );
+}
+
 function applyAward(
   warrior: Warrior,
   award: AnnualAward,
@@ -295,7 +414,6 @@ function applyAward(
 export function createYearlySnapshots(state: GameState, snapshotYear?: number): StateImpact {
   const currentYear = snapshotYear ?? state.year;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
 
   state.roster.forEach((w: Warrior) => {
     const career = w.career || { wins: 0, losses: 0, kills: 0 };
@@ -307,21 +425,23 @@ export function createYearlySnapshots(state: GameState, snapshotYear?: number): 
     });
   });
 
+  // Rival warriors go through per-warrior patches — whole-roster
+  // `rivalsUpdates` writes from same-tick writers (award rosters, seasonal
+  // churn's evolved rivals) would otherwise erase the snapshot write.
+  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
   state.rivals.forEach((r) => {
-    const updatedRoster = r.roster.map((w: Warrior) => {
+    r.roster.forEach((w: Warrior) => {
       const career = w.career || { wins: 0, losses: 0, kills: 0 };
-      return {
-        ...w,
+      rivalWarriorPatches.set(w.id, {
         yearlySnapshots: {
           ...(w.yearlySnapshots || {}),
           [currentYear]: { ...career, fame: w.fame || 0 },
         },
-      };
+      });
     });
-    rivalsUpdates.set(r.id, { roster: updatedRoster });
   });
 
-  return { rosterUpdates, rivalsUpdates };
+  return { rosterUpdates, rivalWarriorPatches };
 }
 
 /**

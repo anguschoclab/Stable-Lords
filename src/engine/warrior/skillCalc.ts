@@ -23,7 +23,12 @@ import {
   computeEncumbranceCapacity,
   computeEnduranceValue,
 } from '@/data/terrabloodCharts';
-import { LUCKFACTOR_RANGE, PS_LUCKFACTOR_RANGE, STRIKER_ENDURANCE_POOL_BONUS } from '@/constants/combat';
+import {
+  AMBI_REVERSED_CHANCE,
+  LUCKFACTOR_RANGE,
+  STRIKER_ENDURANCE_POOL_BONUS,
+} from '@/constants/combat';
+import { STYLE_FAMILY } from '@/data/designDoctrine';
 import {
   bp,
   szMod,
@@ -123,15 +128,16 @@ export function computeBaseSkills(
  * Roll a per-warrior luckfactor: a hidden ±LUCKFACTOR_RANGE modifier for
  * each of the 6 skills (±PS_LUCKFACTOR_RANGE for Parry-Strike). Generated
  * once at creation and stored on the warrior. Every style consumes the same
- * six RNG draws — the widened piker range keeps the stream aligned.
+ * six RNG draws at the same range — V23 knack parity (user-locked): pikers
+ * no longer get a widened ±6 range; LUCKFACTOR_RANGE is the single knob.
  *
  * @param rng - Seeded RNG service for deterministic generation.
- * @param style - The warrior's fighting style (pikers roll the wider range).
+ * @param style - Kept for call-site compatibility; no longer affects the roll.
  * @returns A BaseSkills object of deltas.
  */
 export function rollLuckfactor(rng: IRNGService, style?: FightingStyle): BaseSkills {
-  const range =
-    style === FightingStyle.ParryStrike ? PS_LUCKFACTOR_RANGE : LUCKFACTOR_RANGE;
+  void style;
+  const range = LUCKFACTOR_RANGE;
   const d = () => rng.roll(-range, range); // roll is inclusive on both ends
   return { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
 }
@@ -170,10 +176,31 @@ export type Handedness = 'right' | 'left' | 'ambidextrous' | 'ambi-reversed';
  *   baseline distribution.
  * @returns The warrior's handedness.
  */
+// Canon (Sir Jessie Jest, Arena 93): handedness is style-conditioned —
+// defensive styles produce more lefties and ambidextrous fighters (PR ~43%
+// ambi). Offensive styles hold the flat ~85/7.5/7.5 baseline. The table is
+// per style family; absent style keeps the baseline for tests/legacy calls.
+const HANDEDNESS_BY_FAMILY: Record<
+  'offensive' | 'defensive' | 'mixed',
+  { right: number; leftOfRest: number }
+> = {
+  offensive: { right: 0.85, leftOfRest: 0.5 },
+  mixed: { right: 0.75, leftOfRest: 0.5 },
+  // Right 50%; of the rest ~80% ambi → ~40% ambidextrous overall (PR ~43%
+  // with the reversed variant counted in).
+  defensive: { right: 0.5, leftOfRest: 0.2 },
+};
+
 export function rollHandedness(rng: IRNGService, style?: FightingStyle): Handedness {
-  void style;
-  if (rng.next() < 0.85) return 'right';
-  return rng.next() < 0.5 ? 'left' : 'ambidextrous';
+  const row = style
+    ? HANDEDNESS_BY_FAMILY[STYLE_FAMILY[style]]
+    : { right: 0.85, leftOfRest: 0.5 };
+  if (rng.next() < row.right) return 'right';
+  if (rng.next() < row.leftOfRest) return 'left';
+  // Rare canon variant: the ambidextrous fighter carries primary in the
+  // LEFT hand (Pagan: "reversed" ambis exist; AMBI_REVERSED_CHANCE gate).
+  if (rng.next() < AMBI_REVERSED_CHANCE) return 'ambi-reversed';
+  return 'ambidextrous';
 }
 
 /**
@@ -182,7 +209,10 @@ export function rollHandedness(rng: IRNGService, style?: FightingStyle): Handedn
  * the bonus; no-op for right/left or absent skills.
  */
 export function applyHandednessAttack(skills: BaseSkills, handedness?: Handedness): void {
-  if (handedness === 'ambidextrous' && skills.ATT !== undefined) {
+  if (
+    (handedness === 'ambidextrous' || handedness === 'ambi-reversed') &&
+    skills.ATT !== undefined
+  ) {
     skills.ATT = Math.min(20, skills.ATT + 1);
   }
 }

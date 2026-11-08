@@ -115,6 +115,9 @@ export interface FighterState {
   /** Backup weapon drawn the first time this fighter is disarmed (from
    *  `equipment.backup`). Consumed on draw — a second disarm goes to fists. */
   backupWeaponId?: string;
+  /** A fumbled quickdraw left the backup sheathed — the draw completes at
+   *  the next exchange start (V23 clumsy-fighter rule). */
+  pendingBackupDraw?: boolean;
   /** Second actively-wielded weapon (dual wield, `equipment.offhand`).
    *  Grants a free off-hand shot per offensive exchange when the fighter is
    *  Very Highly Coordinated. Distinct from `backupWeaponId` — this weapon

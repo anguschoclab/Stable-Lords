@@ -43,8 +43,10 @@ export function generateWarriorIntro(
   if (sz) lines.push(`${n} is ${szToHeight(sz)}.`);
 
   // Handedness: deterministic override wins; otherwise RNG biased right-handed.
+  // 'ambi-reversed' reads as ambidextrous — the reversed carry is a combat
+  // detail, not an intro tell (canon: intros can't spot the difference).
   const hand = data.handedness
-    ? data.handedness === 'ambidextrous'
+    ? data.handedness === 'ambidextrous' || data.handedness === 'ambi-reversed'
       ? 'ambidextrous'
       : `${data.handedness} handed`
     : rng.next() < 0.85
@@ -70,8 +72,16 @@ export function generateWarriorIntro(
 
   // Weapon & Style
   const weaponName = getWeaponDisplayName(data.weaponId);
+  const offhandName = data.offhandWeaponId
+    ? getWeaponDisplayName(data.offhandWeaponId)
+    : undefined;
   if (weaponName === 'OPEN HAND') {
     lines.push(`${n} will fight using his OPEN HAND.`);
+  } else if (offhandName) {
+    // Dual wield — canon "weapon in each hand" profile.
+    lines.push(
+      `${n} is armed with a ${weaponName} and a ${offhandName} — a weapon in each hand.`
+    );
   } else {
     const verb =
       getFromArchive(rng, ['fanfare', 'weapon_intro_verbs']) || 'is armed with {{weapon}}';

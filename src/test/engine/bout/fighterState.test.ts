@@ -350,7 +350,7 @@ describe('fighterState', () => {
   });
 
   describe('encumbrance tier penalties', () => {
-    it('HEAVY encumbrance reduces INI, DEF, and PAR', () => {
+    it('HEAVY encumbrance reduces INI and DEF but not PAR (V23 canon)', () => {
       // Build a loadout that hits HEAVY tier (ratio 1.0-1.2)
       // halberd weight=8, plate_mail weight=12, large_shield weight=6, full_helm weight=4 = 30 total
       // carryCap (encumbrance) = 30 → ratio = 1.0 → HEAVY
@@ -377,10 +377,11 @@ describe('fighterState', () => {
       const rHeavy = createFighterState('A', plan, heavy);
       const rUnenc = createFighterState('A', plan, unencumbered);
 
-      // HEAVY tier: iniPenalty=-3, defPenalty=-1, parPenalty=-1
+      // HEAVY tier: iniPenalty=-3, defPenalty=-1, parPenalty=0 (V23: Assur —
+      // encumbrance doesn't hurt parry; the endurance drain is the real cost)
       expect(rHeavy.skills.INI).toBeLessThan(rUnenc.skills.INI);
       expect(rHeavy.skills.DEF).toBeLessThan(rUnenc.skills.DEF);
-      expect(rHeavy.skills.PAR).toBeLessThan(rUnenc.skills.PAR);
+      expect(rHeavy.skills.PAR).toBe(rUnenc.skills.PAR);
     });
 
     it('OVER encumbrance has larger penalties than HEAVY', () => {

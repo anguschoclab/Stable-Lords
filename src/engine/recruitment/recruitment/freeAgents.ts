@@ -23,7 +23,7 @@ export function warriorToPoolWarrior(
   const fame = w.fame ?? 0;
   const tier: RecruitTier =
     fame >= 200 ? 'Prodigy' : fame >= 80 ? 'Exceptional' : fame >= 30 ? 'Promising' : 'Common';
-  const handedness = w.handedness ?? rollHandedness(rng);
+  const handedness = w.handedness ?? rollHandedness(rng, w.style);
   const baseSkills = { ...(w.baseSkills ?? ({} as BaseSkills)) };
   if (!w.handedness) applyHandednessAttack(baseSkills, handedness);
   return {

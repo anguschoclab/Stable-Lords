@@ -82,6 +82,7 @@ export function resolveExchange(
     psychD: s.psychD,
     dynTraitsA: s.dynTraitsA,
     dynTraitsD: s.dynTraitsD,
+    events: events,
   });
   events.push(iniEvent);
 

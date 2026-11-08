@@ -412,6 +412,8 @@ export function computeCoordination(sp: number, df: number): CoordinationRating 
   if (total >= 32) return 'Very Highly Coordinated';
   if (total >= 28) return 'Highly Coordinated';
   if (total >= 21) return 'Normal';
-  if (total >= 16) return 'Slightly Uncoordinated';
+  // Canon (SJJ): 6–16 is Clumsy, 17–20 is Slightly Uncoordinated —
+  // V22's `>= 16` boundary let a canon-Clumsy 16 pass as Slightly.
+  if (total >= 17) return 'Slightly Uncoordinated';
   return 'Clumsy';
 }

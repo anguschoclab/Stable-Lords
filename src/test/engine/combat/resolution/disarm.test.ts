@@ -109,7 +109,7 @@ describe('tryDisarm', () => {
       rng: () => 0,
       defender: defender,
       defLabel: 'D',
-      hitLoc: 'left arm',
+      hitLoc: 'right arm',
       damage: 10,
       isCrit: false,
     });
@@ -412,8 +412,9 @@ describe('simulateFight — disarm integration', () => {
   });
 
   it('disarms surface in real bouts — projected into exchangeLog + reasonCodes', () => {
-    // Seed 113355 (ST mirror): A is disarmed on exchange 0 and never re-arms.
-    const out = runBout(113355);
+    // Seed 1002 (ST mirror): A is disarmed and never re-arms. (Re-seeded for
+    // V23: weapon-side gating means only weapon-arm hits can disarm.)
+    const out = runBout(1002);
     const log = out.exchangeLog ?? [];
     const disarmEntry = log.find((e) => e.disarm);
     expect(disarmEntry?.disarm).toBe('A');
@@ -424,7 +425,7 @@ describe('simulateFight — disarm integration', () => {
   it('the swap is mechanical, not cosmetic — post-disarm attacks use the fist pool', () => {
     // Same bout: after the drop, A_ST's strikes come out of pbp.attacks.fist
     // (knuckles/haymakers/uppercuts) — only reachable via weaponId === 'fist'.
-    const out = runBout(113355);
+    const out = runBout(1002);
     const texts = (out.log ?? []).map((l) => l.text ?? '');
     expect(texts.some((t) => /fist|knuckle|haymaker|uppercut|punch/i.test(t))).toBe(true);
   });
@@ -490,7 +491,7 @@ describe('weapon-linked mods unbake on swap', () => {
       rng: () => 0,
       defender: defender,
       defLabel: 'D',
-      hitLoc: 'left arm',
+      hitLoc: 'right arm',
       damage: 10,
       isCrit: false,
       ctx: ctx,

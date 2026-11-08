@@ -36,12 +36,16 @@ const TIER_THRESHOLDS: { tier: EncumbranceTier; min: number }[] = [
   { tier: 'NONE', min: 0.0 },
 ];
 
+// V23 canon (Assur, "Parry and Carry"): encumbrance has ~zero impact on
+// parry/dodge — the endurance drain is the real cost. parPenalty stays 0
+// on every tier; INI/DEF/endurance keep scaling. (User-locked middle
+// ground: canon parry neutrality, house DEF/INI penalties retained.)
 const TIER_PENALTIES: Record<EncumbranceTier, EncumbrancePenalties> = {
   NONE: { iniPenalty: 0, defPenalty: 0, parPenalty: 0, enduranceMult: 1.0 },
   LIGHT: { iniPenalty: -1, defPenalty: 0, parPenalty: 0, enduranceMult: 1.05 },
   MEDIUM: { iniPenalty: -2, defPenalty: -1, parPenalty: 0, enduranceMult: 1.15 },
-  HEAVY: { iniPenalty: -3, defPenalty: -1, parPenalty: -1, enduranceMult: 1.3 },
-  OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: -2, enduranceMult: 1.5 },
+  HEAVY: { iniPenalty: -3, defPenalty: -1, parPenalty: 0, enduranceMult: 1.3 },
+  OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: 0, enduranceMult: 1.5 },
 };
 
 /**

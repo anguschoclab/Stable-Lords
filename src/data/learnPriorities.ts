@@ -12,17 +12,21 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { BaseSkills } from '@/types/shared.types';
 
-/** Ordered most-learned → least-learned per style (Pagan, Arena 93). */
+/** Ordered most-learned → least-learned per style. Harmonized canon (V23):
+ *  Pagan's "Priority Skill Learning" chart merged with the "Learns
+ *  Naturally" table — agreed positions keep rank, the article's
+ *  parenthetical fills the contested slot, remainder keeps Pagan order.
+ *  Resolved rows: BA (article DEC>INI), SL (DEC>RIP), WS (PAR>INI). */
 export const STYLE_LEARN_PRIORITY: Record<FightingStyle, (keyof BaseSkills)[]> = {
   [FightingStyle.AimedBlow]: ['ATT', 'RIP', 'DEF', 'PAR', 'DEC', 'INI'],
-  [FightingStyle.BashingAttack]: ['ATT', 'INI', 'DEC', 'PAR', 'RIP', 'DEF'],
+  [FightingStyle.BashingAttack]: ['ATT', 'DEC', 'INI', 'PAR', 'RIP', 'DEF'],
   [FightingStyle.LungingAttack]: ['INI', 'DEF', 'RIP', 'ATT', 'DEC', 'PAR'],
   [FightingStyle.ParryLunge]: ['INI', 'PAR', 'ATT', 'DEF', 'DEC', 'RIP'],
   [FightingStyle.ParryStrike]: ['PAR', 'DEC', 'INI', 'ATT', 'DEF', 'RIP'],
   [FightingStyle.ParryRiposte]: ['RIP', 'PAR', 'ATT', 'DEF', 'INI', 'DEC'],
   [FightingStyle.StrikingAttack]: ['DEC', 'ATT', 'INI', 'RIP', 'PAR', 'DEF'],
-  [FightingStyle.SlashingAttack]: ['INI', 'ATT', 'RIP', 'DEC', 'PAR', 'DEF'],
-  [FightingStyle.WallOfSteel]: ['ATT', 'INI', 'PAR', 'DEF', 'DEC', 'RIP'],
+  [FightingStyle.SlashingAttack]: ['INI', 'ATT', 'DEC', 'RIP', 'PAR', 'DEF'],
+  [FightingStyle.WallOfSteel]: ['ATT', 'PAR', 'INI', 'DEF', 'DEC', 'RIP'],
   [FightingStyle.TotalParry]: ['PAR', 'DEF', 'RIP', 'ATT', 'DEC', 'INI'],
 };
 

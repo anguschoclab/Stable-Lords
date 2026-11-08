@@ -76,7 +76,7 @@ export function generateOrphanPool(
     const traits = [trait];
     applyTraitAttrBonuses(attributes, traits);
 
-    const handedness = rollHandedness(rng);
+    const handedness = rollHandedness(rng, style);
     const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
     applyHandednessAttack(baseSkills, handedness);
     const potential = generatePotential(attributes, tier, rng);

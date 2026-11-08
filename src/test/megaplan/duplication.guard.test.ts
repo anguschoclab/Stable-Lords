@@ -119,7 +119,10 @@ const DEBT_PAIRS = new Set<string>([]);
 // V22 Phase-4: +3 — decise↔tacticCounter re-state the initiative arg bag;
 // attackCrit↔extraValueHits/attackCheck share the applyHitAndCounters call
 // shape (registered exempt) → 19.
-const TEST_TO_TEST_BASELINE = 19;
+// V23 Phase-2/4: +2 — the DA-rule and doctrine review specs re-state their
+// respective engine call shapes (generateRecruitAttrs attrs bag /
+// reviewWarriorDesign item assertions) as fixture data (registered exempt) → 21.
+const TEST_TO_TEST_BASELINE = 21;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -172,6 +175,11 @@ const TEST_EXEMPT_PAIRS = new Set([
   'src/test/engine/combat/decise.test.ts|src/test/engine/combat/tacticCounter.test.ts',
   'src/test/engine/combat/attackCrit.test.ts|src/test/engine/combat/extraValueHits.test.ts',
   'src/test/engine/combat/attackCrit.test.ts|src/test/engine/combat/resolution/exchangeHelpers/checks/attackCheck.test.ts',
+  // V23: the recruit DA-rule spec re-states the balance suite's attr-bag
+  // fixture literal; the doctrine review spec re-states designReview's item
+  // assertion shape — same literal-pin/call-shape category as above.
+  'src/test/engine/economy/balance.slow.test.ts|src/test/engine/owner/recruitGenerator.da.test.ts',
+  'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/v23DesignReview.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

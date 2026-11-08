@@ -14,6 +14,9 @@ import {
   type StyleFamily,
   type StyleFamilyGuide,
   DESIGN_REVIEW_THRESHOLDS as T,
+  STYLE_DESIGN_MINIMUMS,
+  DA_WL_FLOOR,
+  DA_ST_FLOOR,
 } from '@/data/designDoctrine';
 import {
   computeHP,
@@ -702,6 +705,52 @@ function reviewTrainability(
   return items;
 }
 
+/**
+ * V23 — Arena-93 minimum-stat floors + Drake's rules. Advisory only: the
+ * review informs the designer, it never blocks the build.
+ */
+function reviewMinimums(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+  const floors = STYLE_DESIGN_MINIMUMS[style] ?? {};
+  const misses = (Object.entries(floors) as [keyof Attributes, number][]).filter(
+    ([k, min]) => attrs[k] < min
+  );
+  if (misses.length > 0) {
+    items.push({
+      axis: 'style',
+      verdict: 'warn',
+      title: 'Below style minimums',
+      detail: `${misses.map(([k, min]) => `${k} ${attrs[k]} < ${min}`).join(', ')} — under the Arena-93 minimum-stat floor for ${style} designs; the newsletters send these builds to the Dark Arena.`,
+    });
+  } else {
+    items.push({
+      axis: 'style',
+      verdict: 'info',
+      title: 'Style minimums met',
+      detail: 'Clears the Arena-93 minimum-stat floor for this style.',
+    });
+  }
+  // Drake's Dark-Arena rejection rule — unconditional check, any style.
+  if (attrs.WL < DA_WL_FLOOR || attrs.ST < DA_ST_FLOOR) {
+    items.push({
+      axis: 'longevity',
+      verdict: 'warn',
+      title: 'Dark Arena rejection',
+      detail: `${attrs.WL < DA_WL_FLOOR ? `WL ${attrs.WL} < ${DA_WL_FLOOR}` : `ST ${attrs.ST} < ${DA_ST_FLOOR}`} — Drake's rule sends this build to the Dark Arena rather than waste a roster slot; a DOA roll.`,
+    });
+  }
+  // Drake's rollup-first method — a fixed allocation order beats dribbling
+  // points across the sheet. Advisory once, always.
+  items.push({
+    axis: 'trainability',
+    verdict: 'info',
+    title: 'Rollup-first allocation',
+    detail:
+      'Drake\'s rollup method: decide the stat order, pour points into each stat until it hits its target, then move on — dribbling points across the sheet produces mediocre builds.',
+  });
+  return items;
+}
+
 function reviewLongevity(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const items: DesignReviewItem[] = [];
   // Talon's Primal bar — wit 17+, deftness 15+, will 13+ marks a
@@ -752,6 +801,7 @@ export function reviewWarriorDesign(
     ...reviewPhysicals(attrs, style),
     ...reviewWeapons(attrs, style),
     ...reviewTrainability(attrs, style),
+    ...reviewMinimums(attrs, style),
     ...reviewLongevity(attrs, style),
   ];
 }

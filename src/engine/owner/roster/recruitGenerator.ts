@@ -8,6 +8,7 @@ import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { conceptMean } from '@/data/fighterConcepts';
+import { DA_WL_FLOOR, DA_ST_FLOOR } from '@/data/designDoctrine';
 import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
@@ -97,8 +98,11 @@ export function generateRecruitAttrs(
     Specialist: { ST: 2, WT: 2, DF: 2 },
   };
   const bias = biasMap[philosophy] ?? {};
-  const attrs = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };
-  let pool = 70 - 21;
+  // Drake's Dark-Arena rule (V23): WL < 7 or ST < 7 is a DOA roll — the
+  // generator never mints one. Both stats floor at 7 before the weighted
+  // ticket pool spends the rest, keeping the 70-point budget exact.
+  const attrs = { ST: DA_ST_FLOOR, CN: 3, SZ: 3, WT: 3, WL: DA_WL_FLOOR, SP: 3, DF: 3 };
+  let pool = 70 - (DA_ST_FLOOR + DA_WL_FLOOR + 15);
   const keys: (keyof typeof attrs)[] = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'];
 
   // Style-aware blend: the recruit's fighting style mixes its canonical
@@ -168,7 +172,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
   applyTraitAttrBonuses(attrs, traits);
 
   // Recompute stats after trait attribute bonuses
-  const handedness = rollHandedness(rng);
+  const handedness = rollHandedness(rng, style);
   const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(
     attrs,
     style

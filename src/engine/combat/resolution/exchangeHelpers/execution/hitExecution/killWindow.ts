@@ -17,6 +17,7 @@ import {
   KNOCKDOWN_DAMAGE_RATIO,
   KNOCKDOWN_CHANCE_CAP,
   KNOCKDOWN_LEG_BONUS,
+  COORD_KD_SUSCEPT,
   INSIGHT_CHANCE,
   CRITICAL_CHAIN_HITS,
   ARMOR_FAILURE_DMG_THRESHOLD,
@@ -44,7 +45,14 @@ function checkKnockdown(args: CheckKnockdownArgs): void {
     defender.hp > 0 &&
     hpRatioAfterHit < KNOCKDOWN_HP_RATIO &&
     damageRatio >= KNOCKDOWN_DAMAGE_RATIO &&
-    rng() < Math.min(KNOCKDOWN_CHANCE_CAP, damageRatio + defender.legHits * KNOCKDOWN_LEG_BONUS)
+    rng() <
+      Math.min(
+        KNOCKDOWN_CHANCE_CAP,
+        damageRatio +
+          defender.legHits * KNOCKDOWN_LEG_BONUS +
+          // V23: small coordination susceptibility — clumsy fighters fall easier.
+          (COORD_KD_SUSCEPT[defender.coordination ?? ''] ?? 0)
+      )
   ) {
     defender.knockedDown = true;
     recordWeaponKnockdown(attacker);

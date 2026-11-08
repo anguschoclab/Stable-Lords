@@ -86,6 +86,7 @@ describe('fumbled backup draw — clumsy fighters (canon)', () => {
       weaponId: 'fist',
       droppedWeaponId: 'broadsword',
       backupWeaponId: 'dagger',
+      pendingBackupDraw: true,
     });
     const events: CombatEvent[] = [];
     // disarm stream: retrieve roll fails (0.99) but the pending backup

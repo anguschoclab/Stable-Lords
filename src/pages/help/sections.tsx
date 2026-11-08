@@ -307,6 +307,13 @@ export function EquipmentSection() {
             grant +1 damage. Two-handed weapons block shield use.
           </li>
           <li>
+            <strong>Dual wield</strong>: A second weapon replaces the shield slot — loadouts are
+            one weapon, weapon + shield, or two weapons. Very Highly Coordinated fighters
+            (SP+DF ≥ 32, both ≥ 15) gain a free off-hand strike each offensive exchange;
+            ambidextrous warriors ease the deftness requirement. Arm strikes disarm only the
+            weapon held in that arm.
+          </li>
+          <li>
             <strong>Shields</strong>: Buckler (+1 PAR), Small (+1 PAR/DEF), Medium (+2 DEF), Large
             (+3 DEF, -1 ATT). Restricted for some styles.
           </li>
@@ -321,7 +328,8 @@ export function EquipmentSection() {
         </ul>
         <p className="mt-2">
           <strong>Over-Encumbered</strong>: Exceeding carry capacity penalizes INI, DEF, and
-          endurance. Keep total weight at or below your Carry Cap.
+          endurance — but never parry (canon: Assur's "Parry and Carry"). Keep total weight
+          at or below your Carry Cap.
         </p>
         <p className="mt-2">
           <strong>Style Restrictions</strong>: Some items are restricted by style (e.g., Aimed-Blow

@@ -20,6 +20,7 @@ import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
 import { applyLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeCoordination } from '@/data/terrabloodCharts';
 import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { type FighterState } from '../combat/resolution/types';
 import { clamp } from '@/utils/math';
@@ -279,6 +280,12 @@ function assembleFighterState(args: {
     shieldId: equip.shield,
     helmId: equip.helm,
     backupWeaponId: equip.backup,
+    offhandWeaponId: equip.offhand,
+    handedness: warrior?.handedness,
+    // Canon ambi-reversed fighters carry primary in the left; plain
+    // ambidextrous fighters pick lazily at the first arm hit (Pagan).
+    ambiPrimarySide: warrior?.handedness === 'ambi-reversed' ? 'left' : undefined,
+    coordination: computeCoordination(attrs.SP, attrs.DF),
     disarmResist: traitMods.disarmResist || undefined,
     unarmedDmgBonus: traitMods.unarmedDmgBonus || undefined,
     weaponMods,

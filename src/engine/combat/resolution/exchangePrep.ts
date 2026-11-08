@@ -20,6 +20,7 @@ import { resolveTacticCounters, type TacticCounterMods } from './tacticCounter';
 import { evaluateBoutIntent } from '@/engine/ai/intentStates';
 import { applyBoundaryPhaseShifts, resolveDecoyMasks } from './decoyShift';
 import { tryRearm } from './disarm';
+import { COORD_RISE_FAIL_CHANCE } from '@/constants/combat';
 import { getWallHarmonyBonus } from './wallHarmony';
 import type { FighterState, ResolutionContext } from './types';
 
@@ -328,21 +329,39 @@ function recoverAndAdaptPlans(
   phaseKey: 'opening' | 'mid' | 'late',
   events: CombatEvent[]
 ): { condResultA: ReturnType<typeof evaluateConditions>; condResultD: ReturnType<typeof evaluateConditions> } {
+  const disarmRng = ctx.disarmRng ?? ctx.rng;
+
   // ── Recovery from knockdown ──
-  if (fA.knockedDown) {
-    fA.knockedDown = false;
-    events.push({ type: 'RECOVERY', actor: 'A' });
-  }
-  if (fD.knockedDown) {
-    fD.knockedDown = false;
-    events.push({ type: 'RECOVERY', actor: 'D' });
+  // Canon (SJJ): clumsy fighters are slower to rise — the auto-clear is a
+  // gated roll on the disarm stream; Normal+ always rises (no draw).
+  for (const [f, label] of [[fA, 'A'], [fD, 'D']] as const) {
+    if (!f.knockedDown) continue;
+    const failChance = COORD_RISE_FAIL_CHANCE[f.coordination ?? ''] ?? 0;
+    if (failChance > 0 && disarmRng() >= 1 - failChance) continue; // stays down
+    f.knockedDown = false;
+    events.push({ type: 'RECOVERY', actor: label });
   }
 
-  // ── Rearm: a disarmed fighter scrambles for the dropped weapon. The
-  // retrieve rolls draw from the isolated disarm stream when available.
-  const disarmRng = ctx.disarmRng ?? ctx.rng;
-  tryRearm({ events: events, rng: disarmRng, fighter: fA, label: 'A', ctx: ctx });
-  tryRearm({ events: events, rng: disarmRng, fighter: fD, label: 'D', ctx: ctx });
+  // ── Pending quickdraw: a fumbled backup draw completes now (no roll —
+  // the stumble was one beat of delay). A fighter finishing the draw does
+  // not also scramble for the dropped weapon this exchange.
+  const drawCompleted = new Set<FighterState>();
+  for (const f of [fA, fD]) {
+    if (!f.pendingBackupDraw) continue;
+    f.pendingBackupDraw = undefined;
+    drawCompleted.add(f);
+    if (f.backupWeaponId) {
+      f.weaponId = f.backupWeaponId;
+      f.backupWeaponId = undefined;
+    }
+  }
+
+  // ── Rearm: a disarmed fighter scrambles for the dropped weapon. Skipped
+  // when a pending draw just completed (the new weapon is already in hand).
+  if (!drawCompleted.has(fA))
+    tryRearm({ events: events, rng: disarmRng, fighter: fA, label: 'A', ctx: ctx });
+  if (!drawCompleted.has(fD))
+    tryRearm({ events: events, rng: disarmRng, fighter: fD, label: 'D', ctx: ctx });
 
   // ── Boundary-reactive phase shifts — evaluated on fighter.plan
   // BEFORE conditions so the shifted curve lands in this exchange's plan too.

@@ -208,7 +208,19 @@ export const DESIGN_REVIEW_THRESHOLDS = {
 export const STYLE_DESIGN_MINIMUMS: Partial<
   Record<FightingStyle, Partial<Record<keyof Attributes, number>>>
 > = {
+  // Sources: Assur's striker guide (ST row pinned to canon 9/11/9/11);
+  // other rows derive each style's article minimums onto the 70-pt budget —
+  // a recruit below its floor is the article's "send it to the DA" build.
+  [FightingStyle.AimedBlow]: { WT: 15, WL: 11, DF: 15 },
+  [FightingStyle.BashingAttack]: { ST: 11, WT: 11, WL: 11, DF: 9 },
+  [FightingStyle.LungingAttack]: { ST: 9, CN: 9, WT: 12, WL: 12, DF: 11 },
+  [FightingStyle.ParryLunge]: { ST: 9, WT: 11, WL: 11, DF: 11 },
+  [FightingStyle.ParryStrike]: { WT: 11, WL: 11, DF: 9 },
+  [FightingStyle.ParryRiposte]: { WT: 11, WL: 11, DF: 11 },
+  [FightingStyle.SlashingAttack]: { ST: 9, WT: 11, WL: 13, DF: 11 },
   [FightingStyle.StrikingAttack]: { ST: 9, WT: 11, WL: 9, DF: 11 },
+  [FightingStyle.TotalParry]: { WT: 11, WL: 15 },
+  [FightingStyle.WallOfSteel]: { WT: 11, WL: 13, DF: 11 },
 };
 
 /**

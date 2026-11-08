@@ -123,7 +123,7 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
   // Pick unique name based on Archetype — legacy recruits take dynastic names
   const name = pickRecruitName(rng, archetype, usedNames, lineage);
 
-  const handedness = rollHandedness(rng);
+  const handedness = rollHandedness(rng, style);
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
   applyHandednessAttack(baseSkills, handedness);
   const potential = generatePotential(attributes, tier, rng);
@@ -181,7 +181,7 @@ export function generateApprentice(args: GenerateRecruitArgs): PoolWarrior {
 
   const name = pickRecruitName(rng, archetype, usedNames, lineage);
 
-  const handedness = rollHandedness(rng);
+  const handedness = rollHandedness(rng, style);
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
   applyHandednessAttack(baseSkills, handedness);
   // Common cadets get Promising headroom — academies grow raw material.

@@ -45,7 +45,7 @@ interface MakeWarriorArgs {
 export function makeWarrior(args: MakeWarriorArgs): Warrior {
   const { id, name, style, attrs, overrides } = args;
   const { rng } = args;
-  const handedness = rng ? rollHandedness(rng) : undefined;
+  const handedness = rng ? rollHandedness(rng, style) : undefined;
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   applyHandednessAttack(baseSkills, handedness);
   const favorites = generateFavorites(style, rng ?? entropyRng());

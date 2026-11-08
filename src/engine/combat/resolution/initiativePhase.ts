@@ -9,7 +9,7 @@ import { getTempoBonus, type Phase as StylePhase } from '../../stylePassives';
 import type { StylePassiveResult } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
 import type { DynamicTraitMods } from '../../traits';
-import { MOMENTUM_INI_MULT, DEC_INI_COEFF } from '@/constants/combat';
+import { MOMENTUM_INI_MULT, DEC_INI_COEFF, JUMP_OE_COEFF, JUMP_DISPARITY, JUMP_CLASH_MAX } from '@/constants/combat';
 import { alIniMod, type DefensiveMods } from '../mechanics/tacticResolution';
 import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
@@ -17,6 +17,7 @@ import type { FighterState, ResolutionContext } from './types';
 
 interface SumInitiativeArgs {
   f: FighterState;
+  OE: number;
   AL: number;
   matchup: number;
   fat: number;
@@ -34,7 +35,7 @@ interface SumInitiativeArgs {
 
 /** Sum one fighter's initiative: skills + tactics + passives + mods. Pure — no RNG. */
 function sumInitiative(args: SumInitiativeArgs): number {
-  const { f, AL, matchup, fat, defMods, tacticIni } = args;
+  const { f, OE, AL, matchup, fat, defMods, tacticIni } = args;
   const { pass, psych, dynTraits, trainerIniMod, masteryIni } = args;
   const { ctx, stylePhase } = args;
   const styleWeatherMod = getStyleWeatherModifier(f.style, ctx.weather, ctx.arenaConfig.tags);
@@ -43,6 +44,9 @@ function sumInitiative(args: SumInitiativeArgs): number {
     // Canon: decisiveness skill leans the strike order (separate from the
     // named tactic's tacticIni edge below).
     f.skills.DEC * DEC_INI_COEFF +
+    // Canon (Pagan, "Getting the Jump"): OE is the biggest controllable
+    // factor in winning the jump.
+    OE * JUMP_OE_COEFF +
     alIniMod(AL) +
     matchup +
     fat +
@@ -116,6 +120,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
 
   const iniA = sumInitiative({
     f: fA,
+    OE: OE_A,
     AL: AL_A,
     matchup: ctx.matchupA,
     fat: fatA,
@@ -131,6 +136,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   });
   const iniD = sumInitiative({
     f: fD,
+    OE: OE_D,
     AL: AL_D,
     matchup: ctx.matchupD,
     fat: fatD,
@@ -145,7 +151,23 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
     stylePhase: stylePhase,
   });
 
-  const aGoesFirst = contestCheck(rng, iniA, iniD);
+  let aGoesFirst = contestCheck(rng, iniA, iniD);
+
+  // Canon (Pagan, "Getting the Jump"): at bout open a contested jump —
+  // the skill gap too narrow for a clean win — becomes a clash of rushes:
+  // bounded re-rolls on the main stream, last roll decides. Only the
+  // opening exchange clashes; later exchanges roll once as always.
+  if (ctx.exchange === 0 && Math.abs(iniA - iniD) < JUMP_DISPARITY && args.events) {
+    for (let i = 0; i < JUMP_CLASH_MAX; i++) {
+      args.events.push({
+        type: 'CLASH',
+        actor: aGoesFirst ? 'A' : 'D',
+        value: Math.abs(iniA - iniD),
+      });
+      aGoesFirst = contestCheck(rng, iniA, iniD);
+    }
+  }
+
   const attLabel = aGoesFirst ? 'A' : 'D';
   const attMasteryIni = aGoesFirst ? masteryIniA : masteryIniD;
 

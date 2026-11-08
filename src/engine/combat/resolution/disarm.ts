@@ -29,6 +29,9 @@ import {
   getShieldModifiers,
 } from '@/data/equipment';
 import {
+  AMBI_PRIMARY_RIGHT_BIAS,
+  COORD_DISARM_MOD,
+  QUICKDRAW_FUMBLE_CHANCE,
   DISARM_BASE_CHANCE,
   DISARM_PER_ARMHIT,
   DISARM_DAMAGE_COEFF,
@@ -57,7 +60,9 @@ export function rollDisarmChance(args: RollDisarmChanceArgs): number {
     DISARM_BASE_CHANCE +
       args.armHits * DISARM_PER_ARMHIT +
       args.damageRatio * DISARM_DAMAGE_COEFF +
-      (args.isCrit ? DISARM_CRIT_BONUS : 0)
+      (args.isCrit ? DISARM_CRIT_BONUS : 0) +
+      // Canon (SJJ "Effects of Coordination"): clumsy fighters drop more.
+      (COORD_DISARM_MOD[args.coordination ?? ''] ?? 0)
   );
 }
 
@@ -118,34 +123,102 @@ interface TryDisarmArgs {
 }
 
 /**
+ * Which hand holds this fighter's primary weapon. Non-ambi handedness is
+ * fixed; plain 'ambidextrous' resolves lazily — canon (Pagan): the warrior
+ * only picks a side when an arm hit forces the question. The pick is
+ * sticky once made and biased right (AMBI_PRIMARY_RIGHT_BIAS).
+ */
+function resolvePrimaryHand(f: FighterState, rng: () => number): 'right' | 'left' {
+  switch (f.handedness) {
+    case 'left':
+    case 'ambi-reversed':
+      f.ambiPrimarySide ??= 'left';
+      return 'left';
+    case 'ambidextrous':
+      if (!f.ambiPrimarySide) {
+        f.ambiPrimarySide = rng() < AMBI_PRIMARY_RIGHT_BIAS ? 'right' : 'left';
+      }
+      return f.ambiPrimarySide;
+    case 'right':
+    default:
+      return 'right';
+  }
+}
+
+/**
  * Roll a disarm on a landed hit. Gates: arm location, defender still
- * standing (hp > 0), current weapon droppable. On success the held weapon
- * drops (`droppedWeaponId`) and the fighter wields their backup — or fists.
+ * standing (hp > 0), the weapon IN THE STRUCK HAND droppable (canon
+ * handedness: an arm hit only threatens that hand's weapon — a shield arm
+ * holds nothing droppable). On success the struck weapon drops
+ * (`droppedWeaponId`); a primary drop swings to the backup — or fists.
+ * Clumsy fighters may fumble the backup draw: it stays sheathed and is
+ * completed at the next exchange start instead.
  */
 export function tryDisarm(args: TryDisarmArgs): boolean {
   const { events, rng, defender, defLabel, hitLoc, damage, isCrit, ctx } = args;
   const held = defender.weaponId;
-  if (!isArmLocation(hitLoc) || defender.hp <= 0 || !isDisarmable(held)) return false;
+  const heldOff = defender.offhandWeaponId;
+  if (!isArmLocation(hitLoc) || defender.hp <= 0) return false;
+  if (!isDisarmable(held) && !isDisarmable(heldOff)) return false;
+
+  // Weapon-side resolution — may consume a draw for a plain ambi's lazy pick.
+  const primaryHand = resolvePrimaryHand(defender, rng);
+  const struck = hitLoc === 'left arm' ? 'left' : 'right';
+  const targetSlot: 'primary' | 'offhand' = struck === primaryHand ? 'primary' : 'offhand';
+  const targetId = targetSlot === 'primary' ? held : heldOff;
+  if (!isDisarmable(targetId)) return false; // nothing droppable in the struck hand
 
   const chance =
     rollDisarmChance({
       armHits: defender.armHits,
       damageRatio: damage / defender.maxHp,
       isCrit: isCrit,
+      coordination: defender.coordination,
     }) *
     (1 - (defender.disarmResist ?? 0));
-  if (rng() >= chance || !held) return false;
+  if (rng() >= chance || !targetId) return false;
 
-  const dropped = held;
+  if (targetSlot === 'offhand') {
+    defender.droppedWeaponId = targetId;
+    defender.offhandWeaponId = undefined;
+    events.push({
+      type: 'DISARM',
+      actor: defLabel,
+      metadata: { weaponId: targetId, side: 'off' },
+    });
+    return true;
+  }
+
+  const dropped = held as string;
   const backup = defender.backupWeaponId;
   defender.droppedWeaponId = dropped;
-  defender.weaponId = backup ?? DISARM_UNARMED_WEAPON_ID;
-  defender.backupWeaponId = undefined;
+  defender.weaponId = DISARM_UNARMED_WEAPON_ID;
+
+  // Quickdraw: low-coordination fighters can fumble the backup draw — it
+  // stays sheathed and completes at the next exchange start (pending flag),
+  // leaving the fighter on fists meanwhile.
+  let fumbled = false;
+  if (backup) {
+    const fumbleChance = QUICKDRAW_FUMBLE_CHANCE[defender.coordination ?? ''] ?? 0;
+    if (fumbleChance > 0 && rng() < fumbleChance) {
+      fumbled = true;
+      defender.pendingBackupDraw = true;
+      events.push({ type: 'FUMBLE', actor: defLabel, metadata: { weaponId: backup } });
+    } else {
+      defender.weaponId = backup;
+      defender.backupWeaponId = undefined;
+    }
+  }
   applyWeaponSwap(defender, defLabel, ctx);
   events.push({
     type: 'DISARM',
     actor: defLabel,
-    metadata: { weaponId: dropped, toWeapon: defender.weaponId, backup: !!backup },
+    metadata: {
+      weaponId: dropped,
+      toWeapon: defender.weaponId,
+      backup: !!backup,
+      fumbled,
+    },
   });
   return true;
 }

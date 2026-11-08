@@ -249,4 +249,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'would meticulously carve notches into their own arms to count the days without a real meal',
   'learned to perfectly mimic the death rattles of plague victims to scare off street thugs',
   'developed a twitch that perfectly precedes a lethal strike, throwing off veteran fighters',
+  'developed a habit of silently tracking the pulse points on anyone who stood too close',
+  'learned to identify a weapon\'s balance by the sound it made when dropped on stone',
+  'would instinctively drop their center of gravity at the first sound of a drawn blade',
 ];

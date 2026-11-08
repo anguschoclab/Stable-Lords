@@ -63,15 +63,15 @@ describe('MEGAPLAN-V7: V21 union-merged lore pools', () => {
     ]) {
       expect(ORIGINS).toContain(s);
     }
-    expect(ORIGINS.length).toBe(411); // 387 V20 union + 4 + 5 + 5 + 5 + 5
+    expect(ORIGINS.length).toBe(416); // 387 V20 union + 4 + 5 + 5 + 5 + 5
   });
 
   it('childhoodTraits contains the union of all five branch entries (MEGAPLAN-V7)', () => {
-    expect(CHILDHOOD_TRAITS.length).toBe(245); // 228 + 3 + 3 + 5 + 3 + 3
+    expect(CHILDHOOD_TRAITS.length).toBe(248); // 228 + 3 + 3 + 5 + 3 + 3
   });
 
   it('definingMoments contains the union of all five branch entries (MEGAPLAN-V7)', () => {
-    expect(DEFINING_MOMENTS.length).toBe(223); // 205 + 4 + 3 + 5 + 3 + 3
+    expect(DEFINING_MOMENTS.length).toBe(226); // 205 + 4 + 3 + 5 + 3 + 3
   });
 
   it('loreBackfill2 contains the V21 backfill ids (MEGAPLAN-V7)', () => {
@@ -108,6 +108,6 @@ describe('MEGAPLAN-V7: V21 union-merged lore pools', () => {
     }
     // 230 total (125 local + 77 bf1 + 28 bf2 spreads) + 5 local adds
     // (#1070 ×2, #1071 ×3) + 7 bf2 adds (#1075 ×3, #1073 ×2, #1077 ×2)
-    expect(ARENA_LORE.length).toBe(242);
+    expect(ARENA_LORE.length).toBe(244);
   });
 });

@@ -415,4 +415,9 @@ export const ORIGINS: string[] = [
   'Found nursing from a feral direhound in the frozen gutters of the North Ward',
   'Left bound in iron chains at the doorstep of the Merciful Sisters Orphanage',
   'Sold to the fighting pits for a handful of silver to pay a father\'s gambling debt',
+  'Endured the silent, lightless punishments in the oubliettes of the Weeping Mother Orphanage',
+  'Abandoned in the rusted cog-works of the Lower District, surviving on grease and scraped bone',
+  'Raised among the feral child-packs of the Ash Dunes, fighting for scraps of burnt bread',
+  'Traded to the brutal taskmasters of the Blackspire Workhouse for a pint of sour ale',
+  'Survived the freezing rains of the Undercity by sheltering beneath the bodies of fallen pit hounds',
 ];

@@ -253,11 +253,11 @@ export function AttributesSection() {
           </li>
           <li>
             <strong>WT (Wit)</strong> — Primary skill driver. Affects ATT, PAR, INI, RIP, and DEC.
-            The most important attribute.
+            Co-primary with WL.
           </li>
           <li>
             <strong>WL (Will)</strong> — Endurance capacity and determination. Helps PAR and DEC.
-            Second most important.
+            Co-primary with WT.
           </li>
           <li>
             <strong>SP (Speed)</strong> — Initiative and defense. Critical for Lungers and Slashers.
@@ -268,8 +268,9 @@ export function AttributesSection() {
           </li>
         </ul>
         <p className="mt-3">
-          <strong>Breakpoint Bonuses</strong>: Stats at 9, 13, 17, and 21 provide increasing skill
-          bonuses (+1, +2, +3, +4). Plan your warrior's stats around these breakpoints.
+          <strong>Breakpoint Bonuses</strong>: Skills gain at odd attribute values (9, 11, 13, 15,
+          17, 19, 21) — the size of each gain varies by skill and attribute. Plan your warrior's
+          stats around these breakpoints.
         </p>
         <p className="mt-2">
           <strong>Derived Stats</strong>:
@@ -285,7 +286,7 @@ export function AttributesSection() {
             <strong>Damage</strong> = f(ST, SZ) — Little → Normal → Good → Great → Tremendous
           </li>
           <li>
-            <strong>Carry Cap</strong> = f(ST, CN, SZ) — Max equipment weight before penalties
+            <strong>Carry Cap</strong> = f(ST, CN) — Max equipment weight before penalties
           </li>
         </ul>
       </AccordionContent>
@@ -408,8 +409,8 @@ export function CombatResolutionSection() {
             extra.
           </li>
           <li>
-            <strong>Decisiveness (DEC)</strong> — When target is low HP+endurance, opens kill
-            window.
+            <strong>Decisiveness (DEC)</strong> — Strike-order skill: wins initiative contests;
+            when the target is low HP+endurance it also opens the kill window.
           </li>
           <li>
             <strong>Endurance</strong> — Both fighters drain stamina each exchange. Higher OE/AL =

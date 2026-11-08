@@ -179,7 +179,7 @@ export function generateWarriorStatements(
 // 'Cannot take a lot' and 'Average' HP bands stay silent — the overview only
 // names the extremes; 'C' encumbrance and Normal damage likewise stay silent.
 
-export interface PhysicalProfile {
+interface PhysicalProfile {
   enduranceTier: string;
   hp: number;
   encumbranceClass: string;

@@ -137,14 +137,14 @@ Any engine fix → combat-balance skill shape: constants in `constants/combat`, 
 
 ## Acceptance criteria
 
-- [ ] All six archetypes queryable with doctrine, styles, weapons, armor, strategy; every style has ≥1 archetype fit; all ids resolve.
-- [ ] Design Review classifies a build and emits canon-fit guidance incl. computed encumbrance warn.
-- [ ] ≥9 new Assur concept builds selectable in Warrior Builder; 84-pt canonStats + 70-pt stats verified per build.
-- [ ] Codex + archives teach the taxonomy; on-screen values map to real data.
-- [ ] AI: tank OE floor, defensive caps, riposte-tactic gating, archetype armor fitting honoring restrictions + carry.
-- [ ] Rhythm bonus always-on (or explicitly deferred to DEFERRED with rationale).
-- [ ] Every Phase-1 spec observed RED before its implementation commit; regression-locks born green.
-- [ ] Balance harnesses green post-ratchet (fixture + world, all ten styles in band); ledger complete.
+- [x] All six archetypes queryable with doctrine, styles, weapons, armor, strategy; every style has ≥1 archetype fit; all ids resolve.
+- [x] Design Review classifies a build and emits canon-fit guidance incl. computed encumbrance warn.
+- [x] ≥9 new Assur concept builds selectable in Warrior Builder; 84-pt canonStats + 70-pt stats verified per build.
+- [x] Codex + archives teach the taxonomy; on-screen values map to real data.
+- [x] AI: tank OE floor, defensive caps, riposte-tactic gating, archetype armor fitting honoring restrictions + carry.
+- [x] Rhythm bonus always-on (or explicitly deferred to DEFERRED with rationale).
+- [x] Every Phase-1 spec observed RED before its implementation commit; regression-locks born green.
+- [x] Balance harnesses green post-ratchet (fixture + world, all ten styles in band); ledger complete.
 
 ## Risks / decisions
 

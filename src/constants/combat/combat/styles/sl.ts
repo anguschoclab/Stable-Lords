@@ -28,3 +28,11 @@ export const SL_KILL_WINDOW_HP_MULT = 0.4;
 /** Slashing Attack anti-synergy: edge over mass — weak bash and parry. */
 export const SL_ANTISYNERGY_BASH_MULT = 0.5;
 export const SL_ANTISYNERGY_PARRY_MULT = 0.6;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Slashing Attack tempo: phase bonuses — front-loaded flurry style. */
+export const SL_TEMPO_OPENING = 1;
+export const SL_TEMPO_MID = 0;
+export const SL_TEMPO_LATE = 0;
+/** Canon burn: slashers "burn endurance very quickly" — the fastest burner. */
+export const SL_ENDURANCE_MULT = 1.05;

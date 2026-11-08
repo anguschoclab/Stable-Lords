@@ -13,10 +13,19 @@ import {
   TP_KILL_WINDOW_HP_MULT,
   TP_ANTISYNERGY_SLASH_MULT,
   TP_ANTISYNERGY_OFF_MULT,
+  TP_TEMPO_OPENING,
+  TP_TEMPO_MID,
+  TP_TEMPO_LATE,
+  TP_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const totalParry: StyleStrategy = {
-  tempo: { opening: -1, mid: 1, late: 1, enduranceMult: 0.9 },
+  tempo: {
+    opening: TP_TEMPO_OPENING,
+    mid: TP_TEMPO_MID,
+    late: TP_TEMPO_LATE,
+    enduranceMult: TP_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => ({
     ...EMPTY_PASSIVE,
     mastery: m.tier,

@@ -44,3 +44,13 @@ export const PR_KILL_WINDOW_HP_MULT = 0.4;
 /** Parry-Riposte anti-synergy: finesse frame — weak bash, dulled decise. */
 export const PR_ANTISYNERGY_BASH_MULT = 0.5;
 export const PR_ANTISYNERGY_DECISE_MULT = 0.7;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Parry-Riposte tempo: phase bonuses — builds through the mid-fight. */
+export const PR_TEMPO_OPENING = 0;
+export const PR_TEMPO_MID = 1;
+export const PR_TEMPO_LATE = 0;
+/** Canon burn: low endurance burn is a headline PR advantage (Arena 93 ripper
+ *  articles; STYLE_IDENTITY.fatigueBurn = 'Low'). Was 1.04 — the highest burn
+ *  in the game — now below 1.0 to match. */
+export const PR_ENDURANCE_MULT = 0.94;

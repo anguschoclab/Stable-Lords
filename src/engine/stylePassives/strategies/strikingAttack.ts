@@ -9,10 +9,19 @@ import {
   ST_KILL_EXTENDED_HITS,
   ST_KILL_WINDOW_HP_MULT,
   ST_ANTISYNERGY_RIPOSTE_MULT,
+  ST_TEMPO_OPENING,
+  ST_TEMPO_MID,
+  ST_TEMPO_LATE,
+  ST_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const strikingAttack: StyleStrategy = {
-  tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 0.96 },
+  tempo: {
+    opening: ST_TEMPO_OPENING,
+    mid: ST_TEMPO_MID,
+    late: ST_TEMPO_LATE,
+    enduranceMult: ST_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => ({
     ...EMPTY_PASSIVE,
     mastery: m.tier,

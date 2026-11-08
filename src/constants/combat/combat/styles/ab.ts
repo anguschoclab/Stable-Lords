@@ -32,3 +32,11 @@ export const AB_KILL_TARGETED_BONUS = 0.05;
 export const AB_KILL_TARGETED_DEC = 3;
 /** Aimed Blow kill mechanic: kill-window HP multiplier. Balance knob. */
 export const AB_KILL_WINDOW_HP_MULT = 0.8;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Aimed Blow tempo: phase bonuses — the style is a late-fight closer. */
+export const AB_TEMPO_OPENING = 0;
+export const AB_TEMPO_MID = 0;
+export const AB_TEMPO_LATE = 1;
+/** Aimed Blow endurance burn rate (1.0 = baseline). */
+export const AB_ENDURANCE_MULT = 0.94;

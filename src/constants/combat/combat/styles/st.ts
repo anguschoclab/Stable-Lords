@@ -34,3 +34,11 @@ export const ST_KILL_WINDOW_HP_MULT = 0.4;
 // ─── Anti-synergy ───────────────────────────────────────────────────────────
 /** Striking Attack anti-synergy: pure offense — riposte sits poorly. */
 export const ST_ANTISYNERGY_RIPOSTE_MULT = 0.6;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Striking Attack tempo: phase bonuses — front-loaded striker. */
+export const ST_TEMPO_OPENING = 1;
+export const ST_TEMPO_MID = 0;
+export const ST_TEMPO_LATE = 0;
+/** Striking Attack endurance burn rate (1.0 = baseline). */
+export const ST_ENDURANCE_MULT = 0.96;

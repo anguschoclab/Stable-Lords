@@ -36,3 +36,11 @@ export const TP_KILL_WINDOW_HP_MULT = 0.35;
 /** Total Parry anti-synergy: the shell can't carry offense — slash worse than lunge/bash. */
 export const TP_ANTISYNERGY_SLASH_MULT = 0.5;
 export const TP_ANTISYNERGY_OFF_MULT = 0.4;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Total Parry tempo: phase bonuses — gives up the opener, owns mid and late. */
+export const TP_TEMPO_OPENING = -1;
+export const TP_TEMPO_MID = 1;
+export const TP_TEMPO_LATE = 1;
+/** Total Parry endurance burn rate (1.0 = baseline) — the shell is cheap to hold. */
+export const TP_ENDURANCE_MULT = 0.9;

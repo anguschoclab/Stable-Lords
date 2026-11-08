@@ -17,10 +17,19 @@ import {
   BA_ANTISYNERGY_LUNGE_MULT,
   BA_ANTISYNERGY_DODGE_MULT,
   BA_ANTISYNERGY_RIPOSTE_MULT,
+  BA_TEMPO_OPENING,
+  BA_TEMPO_MID,
+  BA_TEMPO_LATE,
+  BA_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const bashingAttack: StyleStrategy = {
-  tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 0.98 },
+  tempo: {
+    opening: BA_TEMPO_OPENING,
+    mid: BA_TEMPO_MID,
+    late: BA_TEMPO_LATE,
+    enduranceMult: BA_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const momentumDmg = Math.min(
       BA_PASSIVE_MOMENTUM_DMG_CAP + m.bonus,

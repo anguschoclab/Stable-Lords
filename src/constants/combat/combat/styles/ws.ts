@@ -21,3 +21,12 @@ export const WS_PASSIVE_WALL_PAR_ADD = 1;
 export const WS_KILL_BONUS = -0.03;
 /** Wall of Steel kill mechanic: kill-window HP multiplier. */
 export const WS_KILL_WINDOW_HP_MULT = 0.4;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Wall of Steel tempo: phase bonuses — the wall is a late-fight closer. */
+export const WS_TEMPO_OPENING = 0;
+export const WS_TEMPO_MID = 0;
+export const WS_TEMPO_LATE = 1;
+/** Canon burn: "similar to lungers, they have a high endurance burn"
+ *  (Assur's Bash Bros) — the wall keeps the blade moving all fight. */
+export const WS_ENDURANCE_MULT = 1.02;

@@ -7,12 +7,19 @@ import {
   WS_PASSIVE_WALL_PAR_ADD,
   WS_KILL_BONUS,
   WS_KILL_WINDOW_HP_MULT,
+  WS_TEMPO_OPENING,
+  WS_TEMPO_MID,
+  WS_TEMPO_LATE,
+  WS_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const wallOfSteel: StyleStrategy = {
-  // Canon burn: "similar to lungers, they have a high endurance burn"
-  // (Assur's Bash Bros) — the wall keeps the blade moving all fight.
-  tempo: { opening: 0, mid: 0, late: 1, enduranceMult: 1.02 },
+  tempo: {
+    opening: WS_TEMPO_OPENING,
+    mid: WS_TEMPO_MID,
+    late: WS_TEMPO_LATE,
+    enduranceMult: WS_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const wallBonus = Math.min(
       WS_PASSIVE_WALL_CAP_BASE + m.bonus,

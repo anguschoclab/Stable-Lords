@@ -11,11 +11,19 @@ import {
   SL_KILL_WINDOW_HP_MULT,
   SL_ANTISYNERGY_BASH_MULT,
   SL_ANTISYNERGY_PARRY_MULT,
+  SL_TEMPO_OPENING,
+  SL_TEMPO_MID,
+  SL_TEMPO_LATE,
+  SL_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const slashingAttack: StyleStrategy = {
-  // Canon: slashers "burn endurance very quickly" — the fastest burner.
-  tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 1.05 },
+  tempo: {
+    opening: SL_TEMPO_OPENING,
+    mid: SL_TEMPO_MID,
+    late: SL_TEMPO_LATE,
+    enduranceMult: SL_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const flurryDmg = ctx.hitsLanded >= SL_PASSIVE_FLURRY_HITS ? SL_PASSIVE_FLURRY_DMG : 0;
     return {

@@ -18,3 +18,11 @@ export const LU_KILL_WINDOW_HP_MULT = 0.45;
 /** Lunging Attack anti-synergy: overextended frame — weak bash and parry. */
 export const LU_ANTISYNERGY_BASH_MULT = 0.5;
 export const LU_ANTISYNERGY_PARRY_MULT = 0.6;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Lunging Attack tempo: phase bonuses — spikes the opener, fades late. */
+export const LU_TEMPO_OPENING = 1;
+export const LU_TEMPO_MID = 0;
+export const LU_TEMPO_LATE = -1;
+/** Lunging Attack endurance burn rate (1.0 = baseline). */
+export const LU_ENDURANCE_MULT = 1.02;

@@ -13,10 +13,19 @@ import {
   AB_KILL_TARGETED_BONUS,
   AB_KILL_TARGETED_DEC,
   AB_KILL_WINDOW_HP_MULT,
+  AB_TEMPO_OPENING,
+  AB_TEMPO_MID,
+  AB_TEMPO_LATE,
+  AB_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const aimedBlow: StyleStrategy = {
-  tempo: { opening: 0, mid: 0, late: 1, enduranceMult: 0.94 },
+  tempo: {
+    opening: AB_TEMPO_OPENING,
+    mid: AB_TEMPO_MID,
+    late: AB_TEMPO_LATE,
+    enduranceMult: AB_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const targeted = ctx.targetedLocation && ctx.targetedLocation !== 'Any';
     return {

@@ -8,10 +8,19 @@ import {
   LU_KILL_WINDOW_HP_MULT,
   LU_ANTISYNERGY_BASH_MULT,
   LU_ANTISYNERGY_PARRY_MULT,
+  LU_TEMPO_OPENING,
+  LU_TEMPO_MID,
+  LU_TEMPO_LATE,
+  LU_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const lungingAttack: StyleStrategy = {
-  tempo: { opening: 1, mid: 0, late: -1, enduranceMult: 1.02 },
+  tempo: {
+    opening: LU_TEMPO_OPENING,
+    mid: LU_TEMPO_MID,
+    late: LU_TEMPO_LATE,
+    enduranceMult: LU_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const isFirst = ctx.exchange === 0;
     return {

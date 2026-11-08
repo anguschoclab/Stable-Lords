@@ -30,3 +30,11 @@ export const BA_KILL_WINDOW_HP_MULT = 0.4;
 export const BA_ANTISYNERGY_LUNGE_MULT = 0.7;
 export const BA_ANTISYNERGY_DODGE_MULT = 0.7;
 export const BA_ANTISYNERGY_RIPOSTE_MULT = 0.7;
+
+// ─── Tempo ──────────────────────────────────────────────────────────────────
+/** Bashing Attack tempo: phase bonuses — front-loaded brawler. */
+export const BA_TEMPO_OPENING = 1;
+export const BA_TEMPO_MID = 0;
+export const BA_TEMPO_LATE = 0;
+/** Bashing Attack endurance burn rate (1.0 = baseline). */
+export const BA_ENDURANCE_MULT = 0.98;

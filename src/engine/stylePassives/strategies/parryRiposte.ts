@@ -12,13 +12,19 @@ import {
   PR_KILL_WINDOW_HP_MULT,
   PR_ANTISYNERGY_BASH_MULT,
   PR_ANTISYNERGY_DECISE_MULT,
+  PR_TEMPO_OPENING,
+  PR_TEMPO_MID,
+  PR_TEMPO_LATE,
+  PR_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const parryRiposte: StyleStrategy = {
-  // Canon: low endurance burn is a headline PR advantage (Arena 93 ripper
-  // articles; STYLE_IDENTITY.fatigueBurn = 'Low'). Was 1.04 — the highest
-  // burn in the game — now below 1.0 to match.
-  tempo: { opening: 0, mid: 1, late: 0, enduranceMult: 0.94 },
+  tempo: {
+    opening: PR_TEMPO_OPENING,
+    mid: PR_TEMPO_MID,
+    late: PR_TEMPO_LATE,
+    enduranceMult: PR_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => ({
     ...EMPTY_PASSIVE,
     mastery: m.tier,

@@ -6,10 +6,19 @@ import {
   PL_PASSIVE_COUNTER_INI,
   PL_PASSIVE_PAR,
   PL_KILL_WINDOW_HP_MULT,
+  PL_TEMPO_OPENING,
+  PL_TEMPO_MID,
+  PL_TEMPO_LATE,
+  PL_ENDURANCE_MULT,
 } from '@/constants/combat';
 
 export const parryLunge: StyleStrategy = {
-  tempo: { opening: 0, mid: 2, late: 0, enduranceMult: 1.0 },
+  tempo: {
+    opening: PL_TEMPO_OPENING,
+    mid: PL_TEMPO_MID,
+    late: PL_TEMPO_LATE,
+    enduranceMult: PL_ENDURANCE_MULT,
+  },
   getPassive: (ctx, m) => {
     const counterReady = ctx.hitsTaken > ctx.hitsLanded;
     return {

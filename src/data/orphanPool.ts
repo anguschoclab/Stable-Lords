@@ -11,7 +11,7 @@ import { FightingStyle } from '@/types/game';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { TIER_COST, type RecruitTier } from '@/engine/recruitment/recruitment/types';
 import { generatePotential } from '@/engine/warrior/potential';
-import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollHandedness, rollLuckfactor, applyHandednessAttack } from '@/engine/warrior/skillCalc';
 import { generateFavorites } from '@/engine/favorites';
 import { applyTraitAttrBonuses, TRAITS } from '@/engine/traits';
 import { generateWarriorName } from '@/data/names/nameGenerator';
@@ -76,7 +76,9 @@ export function generateOrphanPool(
     const traits = [trait];
     applyTraitAttrBonuses(attributes, traits);
 
+    const handedness = rollHandedness(rng);
     const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
+    applyHandednessAttack(baseSkills, handedness);
     const potential = generatePotential(attributes, tier, rng);
 
     pool.push({
@@ -97,6 +99,7 @@ export function generateOrphanPool(
       favorites: generateFavorites(style, rng),
       luckfactor: rollLuckfactor(rng, style),
       bloodlust: rollBloodlust(rng),
+      handedness,
       source: 'orphanage',
       avatarSeed: Math.floor(rng.next() * 1000000),
     });

@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG, hashStr } from '@/utils/random';
-import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import { computeWarriorStats, rollBloodlust, rollHandedness, rollLuckfactor, applyHandednessAttack } from '@/engine/warrior/skillCalc';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
@@ -168,10 +168,12 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
   applyTraitAttrBonuses(attrs, traits);
 
   // Recompute stats after trait attribute bonuses
+  const handedness = rollHandedness(rng);
   const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(
     attrs,
     style
   );
+  applyHandednessAttack(finalBaseSkills, handedness);
 
   // Culture-aware naming: the stable's personality shapes recruit names,
   // with the archetype as a secondary influence.
@@ -200,6 +202,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
     baseSkills: finalBaseSkills,
     luckfactor: rollLuckfactor(rng, style),
     bloodlust: rollBloodlust(rng),
+    handedness,
     derivedStats: finalDerivedStats,
     ...newWarriorDefaults(),
     age: 17 + Math.floor(rng.next() * 5),

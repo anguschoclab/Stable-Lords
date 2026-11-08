@@ -441,9 +441,9 @@ describe('tacticResolution', () => {
 
     it('Decisiveness with S-rated style (LungingAttack) scales by 0.6', () => {
       // LungingAttack + Decisiveness = S → mult = 0.6
-      // decBonus = round(3 * 0.6) = round(1.8) = 2
+      // decBonus = round(6 * 0.6) = round(3.6) = 4
       const mods = getOffensiveTacticMods('Decisiveness', FightingStyle.LungingAttack);
-      expect(mods.decBonus).toBe(2);
+      expect(mods.decBonus).toBe(4);
     });
 
     it('Bash with WS-rated style (BashingAttack) scales by 1.0', () => {

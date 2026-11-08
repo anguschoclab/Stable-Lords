@@ -554,3 +554,76 @@ describe('wall-of-steel canon notes (Arena 93 wall articles)', () => {
     expect(leaked).toBeUndefined();
   });
 });
+
+describe('V22 canon notes — cross-cutting flags', () => {
+  it('flags "Little damage" on a damage-class-1 non-scum build', () => {
+    // ST 3 / SZ 3 → damage class 1 ('Little')
+    const items = reviewWarriorDesign(A({ ST: 3, SZ: 3 }), FightingStyle.LungingAttack);
+    const flag = items.find((i) => i.title === 'Little damage');
+    expect(flag?.verdict).toBe('warn');
+  });
+
+  it('does not flag Little damage on a total-parry scum', () => {
+    const items = reviewWarriorDesign(A({ ST: 3, SZ: 3, CN: 17, WL: 17 }), FightingStyle.TotalParry);
+    expect(items.find((i) => i.title === 'Little damage')).toBeUndefined();
+  });
+
+  it('marks will 10–14 as a dead zone between named breakpoints', () => {
+    const items = reviewWarriorDesign(A({ WL: 12 }), FightingStyle.LungingAttack);
+    expect(items.find((i) => i.title === 'Will dead zone')?.axis).toBe('trainability');
+    expect(
+      reviewWarriorDesign(A({ WL: 15 }), FightingStyle.LungingAttack).find(
+        (i) => i.title === 'Will dead zone'
+      )
+    ).toBeUndefined();
+  });
+
+  it('notes the deftness-11 weapon gate below 11', () => {
+    const items = reviewWarriorDesign(A({ DF: 9 }), FightingStyle.LungingAttack);
+    expect(items.find((i) => i.title === 'Deftness 11 gate')?.axis).toBe('weapons');
+    expect(
+      reviewWarriorDesign(A({ DF: 11 }), FightingStyle.LungingAttack).find(
+        (i) => i.title === 'Deftness 11 gate'
+      )
+    ).toBeUndefined();
+  });
+});
+
+describe('V22 canon notes — remaining styles', () => {
+  it('advises basher identity when neither tank nor smasher', () => {
+    const items = reviewWarriorDesign(A({ ST: 9, CN: 9, WL: 9 }), FightingStyle.BashingAttack);
+    expect(items.find((i) => i.title === 'Basher identity')).toBeDefined();
+    // A tank frame (CN+WL high) stays silent
+    expect(
+      reviewWarriorDesign(A({ CN: 15, WL: 15 }), FightingStyle.BashingAttack).find(
+        (i) => i.title === 'Basher identity'
+      )
+    ).toBeUndefined();
+  });
+
+  it('advises the riposteur frame when DF and SP are both thin', () => {
+    const items = reviewWarriorDesign(A({ DF: 7, SP: 7 }), FightingStyle.ParryRiposte);
+    expect(items.find((i) => i.title === 'Riposteur frame')).toBeDefined();
+    expect(
+      reviewWarriorDesign(A({ DF: 13, SP: 13 }), FightingStyle.ParryRiposte).find(
+        (i) => i.title === 'Riposteur frame'
+      )
+    ).toBeUndefined();
+  });
+
+  it('advises the scum frame when CN+WL cannot carry a total-parry', () => {
+    const items = reviewWarriorDesign(A({ CN: 9, WL: 9 }), FightingStyle.TotalParry);
+    expect(items.find((i) => i.title === 'Scum frame')).toBeDefined();
+    expect(
+      reviewWarriorDesign(A({ CN: 15, WL: 15 }), FightingStyle.TotalParry).find(
+        (i) => i.title === 'Scum frame'
+      )
+    ).toBeUndefined();
+  });
+
+  it('warns an aimed-blow with too little endurance to reach openings', () => {
+    // Very low ST+CN+WL → 'L'/'P' endurance tier
+    const items = reviewWarriorDesign(A({ ST: 5, CN: 5, WL: 9, DF: 21 }), FightingStyle.AimedBlow);
+    expect(items.find((i) => i.title === 'Aimer fragility')?.verdict).toBe('warn');
+  });
+});

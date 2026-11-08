@@ -171,6 +171,17 @@ export function rollHandedness(rng: IRNGService): Handedness {
 }
 
 /**
+ * Apply the canon ambidextrous +1 ATT to stored base skills (clamped ≤20).
+ * Called at creation after `rollHandedness` so the warrior's overview shows
+ * the bonus; no-op for right/left or absent skills.
+ */
+export function applyHandednessAttack(skills: BaseSkills, handedness?: Handedness): void {
+  if (handedness === 'ambidextrous' && skills.ATT !== undefined) {
+    skills.ATT = Math.min(20, skills.ATT + 1);
+  }
+}
+
+/**
  * Apply a stored luckfactor to base skills (combat-time). Each skill floored at 1.
  *
  * @param skills - Luck-free base skills (from computeBaseSkills).

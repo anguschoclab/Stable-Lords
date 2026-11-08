@@ -164,8 +164,75 @@ function reviewStyle(attrs: Attributes, style: FightingStyle): DesignReviewItem[
   if (style === FightingStyle.ParryLunge) items.push(...parryLungeCanonNotes(attrs));
   if (style === FightingStyle.WallOfSteel) items.push(...wallOfSteelCanonNotes(attrs));
   if (style === FightingStyle.LungingAttack) items.push(...lungerCanonNotes(attrs));
+  if (style === FightingStyle.BashingAttack) items.push(...basherCanonNotes(attrs));
+  if (style === FightingStyle.ParryRiposte) items.push(...parryRiposteCanonNotes(attrs));
+  if (style === FightingStyle.TotalParry) items.push(...totalParryCanonNotes(attrs));
+  if (style === FightingStyle.AimedBlow) items.push(...aimerPhysicalsNotes(attrs));
 
   return items;
+}
+
+// Basher note from Assur's "Bash Bros" — bashers either tank up on
+// constitution/will (scum-basher) or hit hard (high ST for damage); a basher
+// short on both has no canon identity.
+function basherCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  const tank = attrs.CN >= T.KEY_ATTR_GOOD && attrs.WL >= T.KEY_ATTR_GOOD;
+  const smasher = attrs.ST >= T.KEY_ATTR_GOOD && attrs.ST + attrs.SZ >= 24;
+  if (tank || smasher) return [];
+  return [
+    {
+      axis: 'style',
+      verdict: 'info',
+      title: 'Basher identity',
+      detail:
+        'Bash Bros doctrine: bashers commit to constitution+will (scum) or strength for damage — this frame is short of both.',
+    },
+  ];
+}
+
+// Parry-riposte note — the hybrid style lives on the riposte engine, so it
+// wants deftness/speed over brute physicals; low both is the canon failure.
+function parryRiposteCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  if (attrs.DF >= T.KEY_ATTR_OK && attrs.SP >= T.KEY_ATTR_OK) return [];
+  return [
+    {
+      axis: 'style',
+      verdict: 'info',
+      title: 'Riposteur frame',
+      detail:
+        'Parry-riposte is the hybrid style — it earns on deftness and speed feeding the riposte; this build is thin on both.',
+    },
+  ];
+}
+
+// Total-parry note — the scum archetype is a pure constitution/will tank;
+// physicals short of that leave a style with no engine at all.
+function totalParryCanonNotes(attrs: Attributes): DesignReviewItem[] {
+  if (attrs.CN + attrs.WL >= 26) return [];
+  return [
+    {
+      axis: 'style',
+      verdict: 'info',
+      title: 'Scum frame',
+      detail:
+        'Total-parry doctrine is a wall of constitution+will — the style only works when physicals carry it.',
+    },
+  ];
+}
+
+// Aimed-blow physicals note — canon warns aimer designs are glass surgeons;
+// short endurance/HP behind the precision leaves them dead before they fire.
+function aimerPhysicalsNotes(attrs: Attributes): DesignReviewItem[] {
+  const endurance = computeEnduranceTier(attrs.ST, attrs.CN, attrs.WL);
+  if (enduranceAtLeast(endurance, 'N')) return [];
+  return [
+    {
+      axis: 'physicals',
+      verdict: 'warn',
+      title: 'Aimer fragility',
+      detail: `Endurance ${ENDURANCE_LABELS[endurance as TierLetter] ?? endurance} — aimed-blow surgeons still need the stamina to survive to their openings.`,
+    },
+  ];
 }
 
 // Slasher notes from the Arena 93 slasher articles — the scimitar criterion
@@ -486,6 +553,17 @@ function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewI
     },
   ];
 
+  // Canon "Little damage" flag — damage class 1 is the named bottom rung on
+  // the overview; the articles treat it as a real handicap outside scum.
+  if (damage <= 1 && style !== FightingStyle.TotalParry) {
+    items.push({
+      axis: 'physicals',
+      verdict: 'warn',
+      title: 'Little damage',
+      detail: 'Damage rating "Little" — canon flags this as a serious handicap; only dedicated scum builds shrug it off.',
+    });
+  }
+
   if (style === FightingStyle.StrikingAttack) {
     // Assur's acceptable pairings: Normal endurance/Normal damage,
     // Poor/Good, or Very Little/Great — a striker must reach at least one.
@@ -515,7 +593,7 @@ function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewI
   return items;
 }
 
-function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewItem {
+function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const suited = WEAPONS.filter(
     (w) => w.slot === 'weapon' && w.id !== 'fist'
   ).map((w) => ({
@@ -538,12 +616,27 @@ function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewIte
   const names = (list: { name: string }[]) =>
     list.length ? list.map((x) => x.name).join(', ') : 'none';
 
-  return {
-    axis: 'weapons',
-    verdict,
-    title: 'Weapon suitability',
-    detail: `Well-suited now: ${names(met)} · within a couple trains: ${names(inReach)}.`,
-  };
+  const items: DesignReviewItem[] = [
+    {
+      axis: 'weapons',
+      verdict,
+      title: 'Weapon suitability',
+      detail: `Well-suited now: ${names(met)} · within a couple trains: ${names(inReach)}.`,
+    },
+  ];
+
+  // Deftness 11 is the weapon gate — most well-suited blades across the
+  // styles ask DF 11; below it the rack narrows to daggers and oddities.
+  if (attrs.DF < 11) {
+    items.push({
+      axis: 'weapons',
+      verdict: 'info',
+      title: 'Deftness 11 gate',
+      detail: `Deftness ${attrs.DF} under the 11 gate — most style-suited weapons want DF 11+; below it the usable rack narrows sharply.`,
+    });
+  }
+
+  return items;
 }
 
 function reviewTrainability(
@@ -580,6 +673,18 @@ function reviewTrainability(
       verdict: 'info',
       title: 'Premium trains',
       detail: `${maxed.join(' · ')} at 21+ — every further train yields quick, significant skills.`,
+    });
+  }
+
+  // Will dead-zone — the skill chart's big will breakpoints sit at 9/15/17/21;
+  // 10–14 buys steady but minor yields, so the articles nudge designs toward
+  // a named breakpoint instead of drifting mid-band.
+  if (attrs.WL >= 10 && attrs.WL <= 14) {
+    items.push({
+      axis: 'trainability',
+      verdict: 'info',
+      title: 'Will dead zone',
+      detail: `Will ${attrs.WL} sits between the named breakpoints (9/15/17/21) — minor per-point yields; either spend down to 9 or push to 15+.`,
     });
   }
 
@@ -645,7 +750,7 @@ export function reviewWarriorDesign(
   return [
     ...reviewStyle(attrs, style),
     ...reviewPhysicals(attrs, style),
-    reviewWeapons(attrs, style),
+    ...reviewWeapons(attrs, style),
     ...reviewTrainability(attrs, style),
     ...reviewLongevity(attrs, style),
   ];

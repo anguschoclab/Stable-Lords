@@ -9,7 +9,7 @@ import { getTempoBonus, type Phase as StylePhase } from '../../stylePassives';
 import type { StylePassiveResult } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
 import type { DynamicTraitMods } from '../../traits';
-import { MOMENTUM_INI_MULT } from '@/constants/combat';
+import { MOMENTUM_INI_MULT, DEC_INI_COEFF } from '@/constants/combat';
 import { alIniMod, type DefensiveMods } from '../mechanics/tacticResolution';
 import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { getStyleWeatherModifier } from '@/constants/arena';
@@ -40,6 +40,9 @@ function sumInitiative(args: SumInitiativeArgs): number {
   const styleWeatherMod = getStyleWeatherModifier(f.style, ctx.weather, ctx.arenaConfig.tags);
   return (
     f.skills.INI +
+    // Canon: decisiveness skill leans the strike order (separate from the
+    // named tactic's tacticIni edge below).
+    f.skills.DEC * DEC_INI_COEFF +
     alIniMod(AL) +
     matchup +
     fat +

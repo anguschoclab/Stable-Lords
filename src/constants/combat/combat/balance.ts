@@ -83,6 +83,14 @@ export const MOMENTUM_FLOOR = -3;
 /** Multiplier applied to momentum when computing initiative bonus. */
 export const MOMENTUM_INI_MULT = 2;
 
+// ─── Decisiveness → strike order ───────────────────────────────────────────
+// Canon (Noblish Island): the decisiveness SKILL feeds who strikes first —
+// distinct from the named Decisiveness tactic's tacticIni edge. Fractional
+// coeff keeps DEC meaningful but subordinate to raw INI (decise is a lean,
+// not a replacement for speed).
+/** Coefficient on skills.DEC inside the initiative contest sum. */
+export const DEC_INI_COEFF = 0.2;
+
 // ─── Whiff & Riposte ──────────────────────────────────────────────────────
 /** Endurance cost multiplier on a whiffed attack (fraction of normal cost). */
 export const WHIFF_ENDURANCE_COST_MULT = 0.5;

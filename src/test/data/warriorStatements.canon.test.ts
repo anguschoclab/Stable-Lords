@@ -1,6 +1,6 @@
 /**
  * V22 canon wit-statement specs — Noblish Island HIGH WIT STATEMENT chart
- * (Warrior Skill Base article). RED until Phase-2 persona/floor fixes land.
+ * (Warrior Skill Base article).
  *
  * Canon at WT15 (the high-wit row): a statement only appears when the skill
  * reaches its low-order floor — INI ≥10, RIP ≥10, ATT ≥7, PAR ≥6, DEF ≥3,

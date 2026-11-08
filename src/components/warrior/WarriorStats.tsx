@@ -2,7 +2,8 @@ import { type Warrior } from '@/types/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ATTRIBUTE_TRAINING, SKILL_MAX_DEFAULT } from '@/constants/training';
 import { growthNarrative } from './GrowthHelpers';
-import { generateWarriorStatements } from '@/data/warriorStatements';
+import { generateWarriorStatements, physicalProfileLines, skillRating } from '@/data/warriorStatements';
+import { computeEnduranceTier, computeEncumbranceClass, computeDamageClass, computeHP } from '@/data/terrabloodCharts';
 import { StatBattery } from '@/components/ui/StatBattery';
 
 /**
@@ -85,16 +86,30 @@ export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
     warrior.attributes.DF,
     warrior.baseSkills
   );
+  const { ST, CN, SZ, WL } = warrior.attributes;
+  const skills = warrior.baseSkills;
+  // Canon overview: skill statements carry an Expert (16+) / Advanced Expert
+  // (20+) rating suffix; physical profile lines flag non-normal physicals.
+  const rate = (text: string, skill: number) =>
+    text && skillRating(skill) ? `${text} — ${skillRating(skill)}` : text;
+  const physical = physicalProfileLines({
+    enduranceTier: computeEnduranceTier(ST, CN, WL),
+    hp: warrior.derivedStats?.hp ?? computeHP(CN, SZ, WL),
+    encumbranceClass: computeEncumbranceClass(ST, CN),
+    damageClass: warrior.derivedStats?.damage ?? computeDamageClass(ST, SZ),
+  });
   const lines = [
-    statements.initiative,
-    statements.riposte,
-    statements.attack,
-    statements.parry,
-    statements.defense,
-    statements.endurance,
+    rate(statements.initiative, skills.INI),
+    rate(statements.riposte, skills.RIP),
+    rate(statements.attack, skills.ATT),
+    rate(statements.parry, skills.PAR),
+    rate(statements.defense, skills.DEF),
+    rate(statements.endurance, skills.DEC),
     statements.coordination,
     statements.quickness,
     statements.activity,
+    ...physical,
+    warrior.handedness === 'ambidextrous' ? 'Is Ambidextrous' : '',
   ].filter(Boolean);
 
   if (lines.length === 0)

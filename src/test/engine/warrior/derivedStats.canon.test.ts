@@ -1,7 +1,7 @@
 /**
  * V22 canon derived-stats specs — verified against the live Terrablood
  * charts (fetched 2026): hit-point-chart (n=3650, 100% accuracy) and
- * warrior-endurance-chart (postulated table). RED until Phase-3 lands.
+ * warrior-endurance-chart (postulated table).
  *
  * Anchors (Chronic Pain, 9-6-18-15-9-10-17): HP 22 → "Cannot take a lot";
  * endurance ST+CN=15 × WL9 → VERY LITTLE.

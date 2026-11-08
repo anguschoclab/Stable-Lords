@@ -1,7 +1,7 @@
 /**
  * V22 canon profile surfaces — physical statements (endurance, punishment,
  * carry, damage) + Expert/Advanced-Expert ratings + ambidextrous line.
- * RED until Phase-2 lands.
+ *
  */
 import { describe, it, expect } from 'vitest';
 import { physicalProfileLines, skillRating } from '@/data/warriorStatements';

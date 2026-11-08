@@ -182,6 +182,11 @@ export interface Warrior {
    *  warriors simply have a higher lust for the kill. Feeds the vitals
    *  roll when this warrior attacks; never displayed. */
   bloodlust?: number;
+  /** Persisted handedness rolled once at creation (~85% right / ~7.5% left /
+   *  ~7.5% ambidextrous). Ambidextrous grants +1 ATT (canon) and eases
+   *  dual-wield deftness requirements; the intro override keeps bout
+   *  narration deterministic. */
+  handedness?: 'right' | 'left' | 'ambidextrous';
   derivedStats?: DerivedStats;
   fame: number;
   popularity: number;

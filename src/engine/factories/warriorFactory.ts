@@ -4,7 +4,13 @@
  */
 import type { Warrior } from '@/types/state.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
-import { computeWarriorStats, rollBloodlust, rollLuckfactor } from '@/engine/warrior/skillCalc';
+import {
+  computeWarriorStats,
+  rollBloodlust,
+  rollHandedness,
+  rollLuckfactor,
+  applyHandednessAttack,
+} from '@/engine/warrior/skillCalc';
 import { generateFavorites } from '@/engine/favorites';
 import { generateTraits } from '@/engine/traits';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
@@ -39,7 +45,9 @@ interface MakeWarriorArgs {
 export function makeWarrior(args: MakeWarriorArgs): Warrior {
   const { id, name, style, attrs, overrides } = args;
   const { rng } = args;
+  const handedness = rng ? rollHandedness(rng) : undefined;
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
+  applyHandednessAttack(baseSkills, handedness);
   const favorites = generateFavorites(style, rng ?? entropyRng());
   // Traits are now consumed in combat (see src/engine/traits.ts) — generate
   // them at creation so warriors carry inherent quirks. Tests/explicit
@@ -62,6 +70,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     // warriors; rng-less test builds stay luck-neutral.
     luckfactor: rng ? rollLuckfactor(rng, style) : undefined,
     bloodlust: rng ? rollBloodlust(rng) : undefined,
+    handedness,
     derivedStats,
     ...newWarriorDefaults(),
     age: 18 + Math.floor((rng ? rng.next() : 0.5) * 8),

@@ -1,7 +1,7 @@
 /**
  * V22 canon handedness specs — Noblish Island: ~85% right / ~7.5% left /
  * ~7.5% ambidextrous; ambidextrous adds +1 ATT at creation and eases
- * dual-wield deftness requirements. RED until Phase-2 lands.
+ * dual-wield deftness requirements.
  */
 import { describe, it, expect } from 'vitest';
 import { SeededRNG } from '@/utils/random';

@@ -104,7 +104,7 @@ const OFFENSIVE_TACTIC_MAP: Record<
     dmgBonus: 0,
     defPenalty: 0,
     endCost: 1,
-    decBonus: Math.round(3 * mult),
+    decBonus: Math.round(6 * mult),
     parryBypass: 0,
   }),
 };

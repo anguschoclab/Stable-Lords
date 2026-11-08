@@ -1,6 +1,6 @@
 import { type BaseSkills, type DerivedStats, type WarriorId } from '@/types/shared.types';
 import { type Warrior } from '@/types/warrior.types';
-import { rollBloodlust, rollLuckfactor } from '../../warrior/skillCalc';
+import { applyHandednessAttack, rollBloodlust, rollHandedness, rollLuckfactor } from '../../warrior/skillCalc';
 import { generatePotential } from '../../warrior/potential';
 import { generateFavorites } from '../../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -23,13 +23,16 @@ export function warriorToPoolWarrior(
   const fame = w.fame ?? 0;
   const tier: RecruitTier =
     fame >= 200 ? 'Prodigy' : fame >= 80 ? 'Exceptional' : fame >= 30 ? 'Promising' : 'Common';
+  const handedness = w.handedness ?? rollHandedness(rng);
+  const baseSkills = { ...(w.baseSkills ?? ({} as BaseSkills)) };
+  if (!w.handedness) applyHandednessAttack(baseSkills, handedness);
   return {
     id: w.id as string,
     name: w.name,
     style: w.style,
     attributes: { ...w.attributes },
     potential: w.potential ?? generatePotential(w.attributes, tier, rng),
-    baseSkills: w.baseSkills ?? ({} as BaseSkills),
+    baseSkills,
     derivedStats: w.derivedStats ?? ({} as DerivedStats),
     tier,
     cost: computeFreeAgentCost(w),
@@ -42,6 +45,7 @@ export function warriorToPoolWarrior(
     lineage: w.lineage,
     luckfactor: w.luckfactor ?? rollLuckfactor(rng, w.style),
     bloodlust: w.bloodlust ?? rollBloodlust(rng),
+    handedness,
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source,
     avatarSeed: w.avatarSeed,

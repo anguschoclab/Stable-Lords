@@ -88,7 +88,7 @@ describe('weaponChart through simulateFight', () => {
 
     let crits = 0;
     let swings = 0;
-    for (const seed of [42, 777, 2024, 9001, 5]) {
+    for (const seed of [42, 777, 2024, 9001, 5, 31337, 123, 8]) {
       const out = runNarratedVsHeadless(A, D, seed).headless;
       const row = out.post?.weaponChartA?.[equipped];
       crits += row?.crits ?? 0;

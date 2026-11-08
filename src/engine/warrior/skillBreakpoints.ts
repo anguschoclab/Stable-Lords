@@ -314,16 +314,16 @@ export const STYLE_PENALTIES: Record<
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
   [FightingStyle.AimedBlow]: /*AB*/ [-22, -8, -11, -8, -6, +1], // V22: canon AB doubles DF→ATT (+7 at DF15); global +DEF/+PAR buff left AB at 60.1% despite ATT -19 — deepened ATT -19→-22 to pull AB→WS under 80 (85 → ~78)
   [FightingStyle.ParryRiposte]: /*PR*/ [-12, -5, -13, -6, -1, -1], // re-ratchet: PAR -6→-5 (-39→-38) to offset low-KD riposte gate + SL edge (39.6% → 44.0% flat)
-  [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -5, -3, 0], // re-ratchet: lightened INI -7→-5 to offset encumbrance INI penalty from equipment changes
+  [FightingStyle.ParryStrike]: /*PS*/ [-10, -7, -12, -5, -7, 0], // V22: PAR -5→-7, DEF -10→-12, RIP -3→-7 — canon DF tables pushed fixture defense past SL's attrition window; PS keeps parry identity over riposte
   [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
   [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -11, -3, -3, 0], // V22: global +DEF buff inflated LU's wall-vs-ram cell (aged LU beat prime BA 60%); deepened DEF -9→-11
-  [FightingStyle.SlashingAttack]: /*SL*/ [-10, -14, -15, -4, -7, -2], // 2026-09: lightened ATT -12→-10 — SL sat at the bottom of both surfaces (fixture 45.5%, world 44%)
+  [FightingStyle.SlashingAttack]: /*SL*/ [-7, -10, -11, -4, -7, -2], // V22: ATT -10→-7, PAR -14→-10, DEF -15→-11 — canon-chart DEF/PAR inflation left SL at 17.5% vs PS (bleed needs survival+landed hits); prior lighten -12→-10 for bottom-of-surface
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
   [FightingStyle.BashingAttack]: /*BA*/ [-9, -11, -15, -2, -5, 0], // re-ratchet: deepened ATT -8→-9, PAR -10→-11, DEF -14→-15, RIP -4→-5; BA was 64.8% pre-existing, now 61.6%
-  [FightingStyle.StrikingAttack]: /*ST*/ [-9, -9, -12, -6, -4, +1], // V22: canon DEF/PAR yields rose for everyone — lightened ATT -13→-9 to pull ST off the floor and WS→ST under 80
+  [FightingStyle.StrikingAttack]: /*ST*/ [-10, -9, -12, -6, -4, +1], // V22: ATT -13→-10 — canon DEF/PAR yields rose for everyone; -9 overshot to 60.3 after PS/SL retunes
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -14, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-14

@@ -89,7 +89,7 @@ function CustomWarriorTab({
           </h3>
           <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-relaxed">
             Unit Cost: <span className="text-arena-gold font-display font-black">200G</span> ·
-            Allocation: <span className="text-foreground font-black">66 Attribute Points</span> ·
+            Allocation: <span className="text-foreground font-black">70 Attribute Points</span> ·
             Full customization available.
           </p>
         </div>

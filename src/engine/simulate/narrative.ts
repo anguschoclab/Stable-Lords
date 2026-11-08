@@ -56,6 +56,7 @@ export function generateIntroductions(args: GenerateIntroductionsArgs): MinuteEv
       helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm,
       attributes: warriorA?.attributes,
       backupWeaponId: (warriorA?.equipment as { backup?: string } | undefined)?.backup,
+      handedness: warriorA?.handedness,
     },
     warriorA?.attributes?.SZ
   );
@@ -69,6 +70,7 @@ export function generateIntroductions(args: GenerateIntroductionsArgs): MinuteEv
       helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm,
       attributes: warriorD?.attributes,
       backupWeaponId: (warriorD?.equipment as { backup?: string } | undefined)?.backup,
+      handedness: warriorD?.handedness,
     },
     warriorD?.attributes?.SZ
   );

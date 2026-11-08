@@ -175,7 +175,7 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // as assertion data — the duplication is the point.
 // Learn-rollout: +1 — the learnPriorities data spec re-states the canonical
 // weight derivation (rank→6..1) the engine applies — a literal pin → 21.
-const MIXED_BASELINE = 21;
+const MIXED_BASELINE = 23;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -215,6 +215,12 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // The learnPriorities data spec pins the rank→weight derivation that
   // learnPoolWeights applies — canonical production-literal pin.
   'src/engine/learning/learnRoll.ts|src/test/data/learnPriorities.test.ts',
+  // V22 canon spec re-states the worked-example raw-sum derivation as
+  // assertion data — canonical chart-literal pin.
+  'src/engine/warrior/skillCalc.ts|src/test/engine/warrior/skillBreakpoints.canon.test.ts',
+  // V22 guard pins the CANON_STYLE_PENALTIES literals that skillBreakpoints
+  // preserves — canonical chart-literal pin.
+  'src/engine/warrior/skillBreakpoints.ts|src/test/megaplan/v22Canon.guard.test.ts',
 ]);
 
 const MIXED_DEBT_PAIRS = new Set<string>([]);

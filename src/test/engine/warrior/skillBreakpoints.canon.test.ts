@@ -1,7 +1,7 @@
 /**
  * V22 canon skill-chart specs — Noblish Island "Warrior Skill Base, a Real
  * Life Example" (Doctor Dehydrate, CIC/BAGMAN2) adjudicated against
- * skillBreakpoints.ts. RED until Phase-3 table corrections land.
+ * skillBreakpoints.ts.
  *
  * Canon worked example: warrior 9-6-18-15-9-10-17 (ST-CN-SZ-WT-WL-SP-DF)
  * yields raw totals I17, R13, A19, P10, F17, D9 (pre-style-modifier).
@@ -38,6 +38,7 @@ import {
   SZ_PAR_MOD,
   SZ_DEF_MOD,
   CANON_STYLE_PENALTIES,
+  STYLE_PENALTIES,
 } from '@/engine/warrior/skillBreakpoints';
 import { computeBaseSkills } from '@/engine/warrior/skillCalc';
 import { FightingStyle, type Attributes } from '@/types/shared.types';
@@ -147,7 +148,7 @@ describe('aimed-blow canon rule — double ATT skills from deftness', () => {
     // with a milder ATT penalty is noisy; instead assert absolute delta:
     // base ATT without doubling would be bp sums + pen[0].
     const dfTerm = bp(DF_ATT, 17);
-    const pen = -12; // current AB penalty ATT slot
+    const pen = STYLE_PENALTIES[FightingStyle.AimedBlow][0]; // live ATT penalty (balance-ratcheted)
     const expectedRaw =
       bp(ST_ATT, 10) + bp(WT_ATT, 10) + bp(WL_ATT, 10) + 2 * dfTerm + pen;
     expect(ab.ATT).toBe(Math.max(1, Math.min(20, expectedRaw)));

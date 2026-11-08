@@ -41,4 +41,4 @@ export const ST_TEMPO_OPENING = 1;
 export const ST_TEMPO_MID = 0;
 export const ST_TEMPO_LATE = 0;
 /** Striking Attack endurance burn rate (1.0 = baseline). */
-export const ST_ENDURANCE_MULT = 0.96;
+export const ST_ENDURANCE_MULT = 0.97;

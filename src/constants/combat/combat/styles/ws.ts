@@ -29,4 +29,4 @@ export const WS_TEMPO_MID = 0;
 export const WS_TEMPO_LATE = 1;
 /** Canon burn: "similar to lungers, they have a high endurance burn"
  *  (Assur's Bash Bros) — the wall keeps the blade moving all fight. */
-export const WS_ENDURANCE_MULT = 1.02;
+export const WS_ENDURANCE_MULT = 1.03;

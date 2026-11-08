@@ -53,4 +53,4 @@ export const PR_TEMPO_LATE = 0;
 /** Canon burn: low endurance burn is a headline PR advantage (Arena 93 ripper
  *  articles; STYLE_IDENTITY.fatigueBurn = 'Low'). Was 1.04 — the highest burn
  *  in the game — now below 1.0 to match. */
-export const PR_ENDURANCE_MULT = 0.94;
+export const PR_ENDURANCE_MULT = 0.96;

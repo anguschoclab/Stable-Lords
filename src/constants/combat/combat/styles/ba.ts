@@ -37,4 +37,4 @@ export const BA_TEMPO_OPENING = 1;
 export const BA_TEMPO_MID = 0;
 export const BA_TEMPO_LATE = 0;
 /** Bashing Attack endurance burn rate (1.0 = baseline). */
-export const BA_ENDURANCE_MULT = 0.98;
+export const BA_ENDURANCE_MULT = 1.0;

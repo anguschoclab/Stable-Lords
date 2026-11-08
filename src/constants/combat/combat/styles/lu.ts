@@ -25,4 +25,4 @@ export const LU_TEMPO_OPENING = 1;
 export const LU_TEMPO_MID = 0;
 export const LU_TEMPO_LATE = -1;
 /** Lunging Attack endurance burn rate (1.0 = baseline). */
-export const LU_ENDURANCE_MULT = 1.02;
+export const LU_ENDURANCE_MULT = 1.05;

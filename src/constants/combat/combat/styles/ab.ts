@@ -39,4 +39,4 @@ export const AB_TEMPO_OPENING = 0;
 export const AB_TEMPO_MID = 0;
 export const AB_TEMPO_LATE = 1;
 /** Aimed Blow endurance burn rate (1.0 = baseline). */
-export const AB_ENDURANCE_MULT = 0.94;
+export const AB_ENDURANCE_MULT = 0.95;

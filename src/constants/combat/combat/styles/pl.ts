@@ -20,4 +20,4 @@ export const PL_TEMPO_OPENING = 0;
 export const PL_TEMPO_MID = 2;
 export const PL_TEMPO_LATE = 0;
 /** Parry-Lunge endurance burn rate (1.0 = baseline). */
-export const PL_ENDURANCE_MULT = 1;
+export const PL_ENDURANCE_MULT = 0.99;

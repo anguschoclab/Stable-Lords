@@ -29,4 +29,4 @@ export const PS_TEMPO_OPENING = 0;
 export const PS_TEMPO_MID = 0;
 export const PS_TEMPO_LATE = 0;
 /** Parry-Strike endurance burn rate (1.0 = baseline). */
-export const PS_ENDURANCE_MULT = 0.96;
+export const PS_ENDURANCE_MULT = 0.93;

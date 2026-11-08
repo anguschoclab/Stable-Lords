@@ -35,4 +35,4 @@ export const SL_TEMPO_OPENING = 1;
 export const SL_TEMPO_MID = 0;
 export const SL_TEMPO_LATE = 0;
 /** Canon burn: slashers "burn endurance very quickly" — the fastest burner. */
-export const SL_ENDURANCE_MULT = 1.05;
+export const SL_ENDURANCE_MULT = 1.01;

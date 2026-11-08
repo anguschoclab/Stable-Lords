@@ -19,7 +19,7 @@ export function AllTimeGreats({ warriors, fights }: AllTimeGreatsProps) {
           <Flame className="h-5 w-5 text-arena-gold" /> All-Time Greats
         </h2>
         <span className="text-[10px] text-muted-foreground font-mono mb-0.5 uppercase">
-          First Annual Inductions at Week 52
+          Ranked by career fame
         </span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

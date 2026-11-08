@@ -5,10 +5,12 @@
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, Skull } from 'lucide-react';
+import { Crown, Skull, BookOpen } from 'lucide-react';
 import { useHallOfFame } from './hooks/useHallOfFame';
+import { useAlmanac } from './hooks/useAlmanac';
 import { YearAwardsSection } from './components/YearAwardsSection';
 import { AllTimeGreats } from './components/AllTimeGreats';
+import { AlmanacSection } from './components/AlmanacSection';
 import { GraveyardTabs } from './components/GraveyardTabs';
 
 /** Header stat pair: total fallen vs player-stable fallen. */
@@ -55,6 +57,7 @@ export default function HallOfFame() {
     getFightsForYear,
     getUpsetsForYear,
   } = useHallOfFame();
+  const almanac = useAlmanac();
 
   return (
     <PageFrame className="space-y-8">
@@ -74,6 +77,12 @@ export default function HallOfFame() {
             <Crown className="h-3.5 w-3.5" /> Hall of Fame
           </TabsTrigger>
           <TabsTrigger
+            value="almanac"
+            className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
+          >
+            <BookOpen className="h-3.5 w-3.5" /> Almanac
+          </TabsTrigger>
+          <TabsTrigger
             value="graveyard"
             className="flex-1 rounded-none gap-2 font-black uppercase text-[10px] tracking-widest data-[state=active]:bg-destructive data-[state=active]:text-primary-foreground transition-all motion-reduce:transition-none"
           >
@@ -82,21 +91,22 @@ export default function HallOfFame() {
         </TabsList>
 
         <TabsContent value="halloffame" className="mt-8 space-y-8">
-          {yearlyAwards.length > 0 ? (
-            yearlyAwards.map(({ year, awards }) => (
-              <YearAwardsSection
-                key={year}
-                year={year}
-                awards={awards}
-                warriorById={warriorById}
-                player={player}
-                yearFights={getFightsForYear(year)}
-                yearUpsets={getUpsetsForYear(year)}
-              />
-            ))
-          ) : (
-            <AllTimeGreats warriors={allTimeGreats} fights={allFights} />
-          )}
+          {yearlyAwards.map(({ year, awards }) => (
+            <YearAwardsSection
+              key={year}
+              year={year}
+              awards={awards}
+              warriorById={warriorById}
+              player={player}
+              yearFights={getFightsForYear(year)}
+              yearUpsets={getUpsetsForYear(year)}
+            />
+          ))}
+          <AllTimeGreats warriors={allTimeGreats} fights={allFights} />
+        </TabsContent>
+
+        <TabsContent value="almanac" className="mt-8">
+          <AlmanacSection data={almanac} />
         </TabsContent>
 
         <TabsContent value="graveyard" className="mt-8">

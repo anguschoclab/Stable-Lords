@@ -37,6 +37,9 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
+// WarriorLink pulls a Tooltip + Sheet dossier — flat testid spans instead.
+vi.mock('@/components/EntityLink', () => ({ ...__SHARED_MOCKS.entityLinks }));
+
 /**
  * Utility to create a dummy warrior for testing.
  * @param name - The warrior's name.
@@ -150,6 +153,7 @@ describe('HallOfFame Component', () => {
       retired: mockState.retired,
       rivals: mockState.rivals,
       player: mockState.player,
+      arenaHistory: [fight1, fight2],
     });
   });
 
@@ -200,7 +204,7 @@ describe('HallOfFame Component', () => {
     render(<HallOfFame />);
 
     const tab = screen.getByRole('tab', { name: /almanac/i });
-    fireEvent.click(tab);
+    fireEvent.mouseDown(tab);
 
     // The career-records section shows all-time ranked boards…
     const winsBoard = screen.getByTestId('almanac-board-wins');
@@ -219,7 +223,7 @@ describe('HallOfFame Component', () => {
 
   it('Almanac surfaces honest caveats on windowed boards', () => {
     render(<HallOfFame />);
-    fireEvent.click(screen.getByRole('tab', { name: /almanac/i }));
+    fireEvent.mouseDown(screen.getByRole('tab', { name: /almanac/i }));
     // Streak boards must label that they only cover the retained fight window.
     expect(screen.getAllByText(/recorded/i).length).toBeGreaterThan(0);
   });

@@ -157,9 +157,16 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
  * @param - { all fights }.
  */
 export function BestByStyle({ allFights }: LeaderboardProps) {
+  // Styles are derived from the fight data itself — the previous hardcoded
+  // list ('Brawler', 'Technician', …) named no real FightingStyle values,
+  // so every row rendered "No Data" forever.
   const styles = useMemo(
-    () => ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'],
-    []
+    () => [
+      ...new Set(
+        allFights.flatMap((f) => [f.styleA, f.styleD]).filter((s): s is string => Boolean(s))
+      ),
+    ],
+    [allFights]
   );
   const bestData = useMemo(() => calculateBestByStyle(allFights, styles), [allFights, styles]);
 

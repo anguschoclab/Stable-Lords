@@ -12,7 +12,7 @@ import {
   type AlmanacBoard,
   type AlmanacInput,
 } from '@/engine/analytics/almanac';
-import { makeWarrior, makeFightSummary, makeRival } from '@/test/_fixtures/factories';
+import { makeWarrior, makeFightSummary } from '@/test/_fixtures/factories';
 import type { Warrior } from '@/types/warrior.types';
 import type { AnnualAward, ArenaTitle, TournamentEntry } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -77,11 +77,10 @@ describe('computeCareerBoards', () => {
   it('ranks Best Win Rate only over >=10-bout careers', () => {
     const b = board(computeCareerBoards(input({ warriors })), 'winRate');
     const ids = b.rows.map((r) => r.warriorId);
-    expect(ids).toContain('w5'); // 82/(82+10) ≈ .89 top
-    expect(ids).not.toContain('w3'); // 21 bouts but low rate — ordering check below
-    expect(ids).not.toContain('w4'); // <10 bouts
-    expect(ids[0]).toBe('w5');
+    expect(ids[0]).toBe('w5'); // 82/(82+10) ≈ .89 top
     expect(ids.indexOf('w1')).toBeLessThan(ids.indexOf('w2'));
+    expect(ids[ids.length - 1]).toBe('w3'); // 21 bouts, lowest rate — ranked last
+    expect(ids).not.toContain('w4'); // <10 bouts
   });
 
   it('ranks Kill Efficiency by kills-per-bout with gates', () => {
@@ -381,13 +380,14 @@ describe('computeStreakBoards', () => {
       computeStreakBoards(input({ warriors, arenaHistory })),
       'losingStreaks'
     );
+    // w2's sequence is W (f4) then L L L (f5, f6, f7) — best run is 3.
     expect(b.rows[0]?.warriorId).toBe('w2');
-    expect(b.rows[0]?.value).toBe(2);
+    expect(b.rows[0]?.value).toBe(3);
   });
 
   it('labels boards with the recorded-window caveat', () => {
     const boards = computeStreakBoards(input({ warriors, arenaHistory }));
-    expect(boards.every((b) => b.caveat?.includes('recorded'))).toBe(true);
+    expect(boards.every((b) => b.caveat?.toLowerCase().includes('recorded'))).toBe(true);
   });
 });
 
@@ -628,7 +628,7 @@ describe('computeStableBoards', () => {
       'stableKills'
     );
     expect(b.rows.find((r) => r.name === 'Iron Gale')?.value).toBe(9);
-    expect(b.rows.find((r) => r.name === 'Player Stable')?.value).toBe(7);
+    expect(b.rows.find((r) => r.name === 'Player Stable')?.value).toBe(8); // 4+1+3 incl. dead-p1
   });
 
   it('ranks stable fame desc', () => {
@@ -659,7 +659,6 @@ describe('computeWorldStats', () => {
         warriors: [w('w1'), w('w2', { status: 'Dead', isDead: true })],
         lifetimeStats: { bouts: 1200, kills: 90, retirements: 14 },
         deadWarriorIds: ['d1', 'd2', 'd3'] as WarriorId[],
-        rivals: [makeRival({ roster: [w('r1'), w('r2')] })],
         stables: [
           { id: 'p1', name: 'P', fame: 0, isPlayer: true },
           { id: 'r1', name: 'R', fame: 0, isPlayer: false },

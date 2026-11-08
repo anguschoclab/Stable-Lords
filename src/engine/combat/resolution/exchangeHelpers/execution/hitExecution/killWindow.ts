@@ -9,6 +9,7 @@ import { resolveEffectiveTactics } from '../../../tactics';
 import { getKillMechanic, Phase as StylePhase } from '@/engine/stylePassives';
 import { getDynamicTraitMods } from '@/engine/traits';
 import { calculateKillWindow, VITAL_LOCATIONS } from '../../../../mechanics/combatDamage';
+import { lungingKnockdownBonus } from '../../../../mechanics/weaponStats';
 import { deathRollFailChance, infirmaryFailChance } from '../../../../mechanics/deathRolls';
 import type { HitLocation } from '../../../../mechanics/combatDamage';
 import {
@@ -50,6 +51,8 @@ function checkKnockdown(args: CheckKnockdownArgs): void {
         KNOCKDOWN_CHANCE_CAP,
         damageRatio +
           defender.legHits * KNOCKDOWN_LEG_BONUS +
+          // V24 canon (Assur): lunging weapons have the best knock-down.
+          lungingKnockdownBonus(attacker.weaponId) +
           // V23: small coordination susceptibility — clumsy fighters fall easier.
           (COORD_KD_SUSCEPT[defender.coordination ?? ''] ?? 0)
       )

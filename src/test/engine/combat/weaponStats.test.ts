@@ -54,10 +54,12 @@ describe('weaponStats', () => {
   });
 
   describe('newly-added canonical weapons', () => {
-    it('war hammer hits harder than a neutral weapon and is slower', () => {
+    it('war hammer hits harder than a neutral weapon and is a canon fast blade', () => {
       expect(weaponDamageBonus('war_hammer')).toBeGreaterThan(0);
       expect(weaponDamageBonus('war_hammer')).toBeGreaterThan(weaponDamageBonus('longsword'));
-      expect(getWeaponInitiativeMod('war_hammer')).toBeLessThan(0);
+      // V24 canon (Assur): WH is one of the fast weapons — its weight penalty
+      // is cancelled by the fast-blade edge, landing at 0.
+      expect(getWeaponInitiativeMod('war_hammer')).toBe(0);
     });
 
     it('long spear carries a small heft bonus (its real edge is reach, handled by range)', () => {

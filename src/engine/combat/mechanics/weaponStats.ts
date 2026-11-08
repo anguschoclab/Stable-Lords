@@ -10,7 +10,12 @@
  */
 import type { FightingStyle } from '@/types/shared.types';
 import { WEAPONS } from '@/data/equipment/weapons';
-import { DISARM_UNARMED_WEAPON_ID } from '@/constants/combat';
+import {
+  DISARM_UNARMED_WEAPON_ID,
+  FAST_WEAPON_INI,
+  LUNGE_KNOCKDOWN_BONUS,
+  TWOHANDED_PARRY_ENDURANCE_SURCHARGE,
+} from '@/constants/combat';
 import {
   getWeaponSuitability,
   weaponSuitabilityDamageMod,
@@ -50,7 +55,11 @@ export function getWeaponInitiativeMod(weaponId?: string): number {
   if (!weaponId) return 0;
   const w = WEAPON_BY_ID.get(weaponId);
   if (!w) return 0;
-  return -Math.round((w.weight - 3) * 0.5);
+  // Canon (Assur): HA/QS/WH/SS are the fast blades — a flat initiative edge
+  // on top of the weight-derived formula.
+  const fastEdge = (FAST_WEAPON_INI as readonly string[]).includes(weaponId) ? 1 : 0;
+  const base = -Math.round((w.weight - 3) * 0.5);
+  return fastEdge === 0 ? base : base + fastEdge;
 }
 
 /**
@@ -58,19 +67,21 @@ export function getWeaponInitiativeMod(weaponId?: string): number {
  * Bare fists can never be "dropped"; anything else defaults to droppable
  * unless the item data opts out via `disarmable: false`.
  */
-/** V24 canon (Assur): lunging weapons have the best knock-down ability.
- *  Scaffolding: 0 until Phase 7 wires it into the knockdown check. */
+/** Canon (Assur): lunging/thrusting weapons have the best knock-down
+ *  ability — the spears get an additive bump on the knockdown check. */
+const LUNGING_WEAPON_IDS: readonly string[] = ['long_spear', 'short_spear'];
+
 export function lungingKnockdownBonus(weaponId?: string): number {
-  void weaponId;
-  return 0;
+  if (!weaponId) return 0;
+  return LUNGING_WEAPON_IDS.includes(weaponId) ? LUNGE_KNOCKDOWN_BONUS : 0;
 }
 
-/** V24 canon (Assur): 2-handed weapons pay an endurance surcharge on the
- *  parry side ("break often when used to parry"). Scaffolding: 1 until
- *  Phase 7 wires it into endurance costs. */
+/** Canon (Assur): 2-handed weapons pay an endurance surcharge on the
+ *  parry side ("break often when used to parry"). */
 export function twoHandedParryEnduranceMult(weaponId?: string): number {
-  void weaponId;
-  return 1;
+  if (!weaponId) return 1;
+  const w = WEAPON_BY_ID.get(weaponId);
+  return w?.twoHanded ? TWOHANDED_PARRY_ENDURANCE_SURCHARGE : 1;
 }
 
 export function isDisarmable(weaponId?: string): boolean {

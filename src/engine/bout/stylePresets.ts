@@ -517,19 +517,6 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
   ],
 
   [FightingStyle.TotalParry]: [
-    // Arena 93 pure defensive ("scum"): 1 OE / 1 AL behind a shield and heavy
-    // armor, Parry tactic — win by never getting hit until the foe drops.
-    makePreset(
-      FightingStyle.TotalParry,
-      'Scum Wall',
-      'True 1-1 parry wall: minimum effort, shield up, outlast everything.',
-      { OE: 1, AL: 1, KD: 1, defensiveTactic: 'Parry' },
-      {
-        opening: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
-        mid: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
-        late: { OE: 2, AL: 1, KD: 3, defTac: 'Parry' },
-      }
-    ),
     makePreset(
       FightingStyle.TotalParry,
       'Endurance Wall',
@@ -550,6 +537,21 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
         opening: { OE: 3, AL: 4, KD: 2 },
         mid: { OE: 4, AL: 4, KD: 4 },
         late: { OE: 5, AL: 4, KD: 6 },
+      }
+    ),
+    // Arena 93 pure defensive ("scum"): 1 OE / 1 AL behind a shield and heavy
+    // armor, Parry tactic — win by never getting hit until the foe drops.
+    // Deliberately NOT first: index 0 is the default plan, and defaulting
+    // every TP to the pure scum line would re-baseline the whole matchup.
+    makePreset(
+      FightingStyle.TotalParry,
+      'Scum Wall',
+      'True 1-1 parry wall: minimum effort, shield up, outlast everything.',
+      { OE: 1, AL: 1, KD: 1, defensiveTactic: 'Parry' },
+      {
+        opening: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
+        mid: { OE: 1, AL: 1, KD: 1, defTac: 'Parry' },
+        late: { OE: 2, AL: 1, KD: 3, defTac: 'Parry' },
       }
     ),
   ],

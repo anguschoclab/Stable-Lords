@@ -183,8 +183,9 @@ export const FAVORITE_WEAPON_CRIT_CHANCE = 0.2;
  *  — the tactic "enhances" its area while draining the rest twice as fast. */
 export const TACTIC_U_MULT = -0.5;
 /** Consortium canon: running an offensive AND a defensive tactic together is
- *  "very limiting" — flat per-skill tax while both are active. */
-export const DOUBLE_TACTIC_SKILL_PENALTY = 1;
+ *  "very limiting" — the tactics' own benefits are halved while both are
+ *  active (the warrior itself is untaxed; the pairing loses punch). */
+export const DOUBLE_TACTIC_EFFECTIVENESS = 0.5;
 /** Pagan's jump: each clash re-draws a string term into both totals until a
  *  clear disparity emerges. Jitter added per clash per side. */
 export const JUMP_CLASH_JITTER = 2;
@@ -199,14 +200,19 @@ export const FAST_WEAPON_INI: readonly string[] = [
   'quarterstaff',
   'short_sword',
 ];
-/** Assur: lunging weapons have the best knock-down ability. */
-export const LUNGE_KNOCKDOWN_BONUS = 1;
+/** Assur: lunging weapons have the best knock-down ability — additive
+ *  knockdown-chance bump before KNOCKDOWN_CHANCE_CAP. */
+export const LUNGE_KNOCKDOWN_BONUS = 0.1;
 /** Assur: 2-handed weapons "break often when used to parry" and burn
  *  endurance faster — parry-side endurance surcharge for two-handed weapons. */
 export const TWOHANDED_PARRY_ENDURANCE_SURCHARGE = 1.2;
 /** Per-weapon armor overrides layered before the damage-type table
- *  (weaponArmor.canon): e.g. dagger penalised vs mid armor per Jalopy. */
-export const WEAPON_ARMOR_OVERRIDES: Record<string, Record<string, number>> = {};
+ *  (weaponArmor.canon). Jalopy: the dagger is "poor or ineffective at ASM
+ *  or higher" — reconciled with Assur's "surprisingly good vs APA/APM" as a
+ *  mid-armor penalty only; the plate tiers stay at dtype parity. */
+export const WEAPON_ARMOR_OVERRIDES: Record<string, Record<string, number>> = {
+  dagger: { scale_mail: 0.7, chain_mail: 0.7 },
+};
 /** Favorite tactic fires hidden (weapon-crit parity — Godling Heresy:
  *  favorites matter before you know them). */
 export const FAVORITE_TACTIC_BONUS = 2;

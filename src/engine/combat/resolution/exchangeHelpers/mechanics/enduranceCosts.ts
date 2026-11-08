@@ -5,6 +5,7 @@ import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState } from '../../types';
 import type { ResolutionContext } from '../../types';
 import { enduranceCost } from '../../../mechanics/combatFatigue';
+import { twoHandedParryEnduranceMult } from '../../../mechanics/weaponStats';
 import { PSYCH_STATE_MODS } from '../../../mechanics/conditionEngine';
 import { getEnduranceMult } from '@/engine/stylePassives';
 import { DEFENDER_ENDURANCE_DISCOUNT, EXHAUSTION_STOP_HP_RATIO } from '@/constants/combat';
@@ -114,7 +115,12 @@ function enduranceMultipliers(
   const attEquipEndMult = (attArmor?.enduranceCostMod ?? 1.0) * (attHelm?.enduranceCostMod ?? 1.0);
   const defArmor = def.armorId ? getItemById(def.armorId) : undefined;
   const defHelm = def.helmId ? getItemById(def.helmId) : undefined;
-  const defEquipEndMult = (defArmor?.enduranceCostMod ?? 1.0) * (defHelm?.enduranceCostMod ?? 1.0);
+  const defEquipEndMult =
+    (defArmor?.enduranceCostMod ?? 1.0) *
+    (defHelm?.enduranceCostMod ?? 1.0) *
+    // V24 canon (Assur): 2-handed weapons "break often when used to parry"
+    // — defending with a two-hander costs extra endurance.
+    twoHandedParryEnduranceMult(def.weaponId);
 
   return {
     arenaEndMult,

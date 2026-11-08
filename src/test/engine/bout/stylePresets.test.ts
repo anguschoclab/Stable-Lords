@@ -133,7 +133,14 @@ describe('Specific preset values (from spec)', () => {
     expect(plan.defensiveTactic).toBe('Dodge');
     expect(plan.target).toBe('Right Leg');
     expect(plan.protect).toBe('Body');
-    expect(plan.desperatePlan).toMatchObject({ OE: 9, AL: 9, killDesire: 9 });
+    // V24 canon (Drake, Arena 93): the lunger's desperation line is
+    // 10-10-4 Dodge — flat-out activity, moderate kill intent.
+    expect(plan.desperatePlan).toMatchObject({
+      OE: 10,
+      AL: 10,
+      killDesire: 4,
+      defensiveTactic: 'Dodge',
+    });
   });
 
   it("Snorri's Tempo runs hi-hi-mod and throttles both dials after the opening", () => {

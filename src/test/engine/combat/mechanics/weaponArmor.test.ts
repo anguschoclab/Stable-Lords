@@ -46,8 +46,9 @@ describe('weaponArmor', () => {
       // mace = bash, padded = bash: 0.9
       expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
 
-      // dagger = pierce, chain_mail = pierce: 0.8
-      expect(applyArmorTypeMod(100, 'dagger', 'chain_mail')).toBe(80);
+      // dagger = pierce, chain_mail: V24 weapon override 0.7 (Jalopy — DA
+      // poor vs ASM+) supersedes the pierce baseline 0.8
+      expect(applyArmorTypeMod(100, 'dagger', 'chain_mail')).toBe(70);
 
       // longsword = slash, chain_mail = slash: 1.1
       expect(applyArmorTypeMod(100, 'longsword', 'chain_mail')).toBe(110);
@@ -103,8 +104,9 @@ describe('weaponArmor', () => {
     it('applies scale_mail multipliers for slash and pierce', () => {
       // longsword = slash, scale_mail = slash: 0.8
       expect(applyArmorTypeMod(100, 'longsword', 'scale_mail')).toBe(80);
-      // dagger = pierce, scale_mail = pierce: 1.15
-      expect(applyArmorTypeMod(100, 'dagger', 'scale_mail')).toBe(115);
+      // dagger = pierce, scale_mail: V24 weapon override 0.7 supersedes the
+      // pierce baseline 1.15
+      expect(applyArmorTypeMod(100, 'dagger', 'scale_mail')).toBe(70);
     });
 
     it('applies plate_mail multipliers for slash, bash, and pierce', () => {

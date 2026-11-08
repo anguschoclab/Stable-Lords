@@ -12,7 +12,7 @@ import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
   calculateFinalOEAL,
-  doubleTacticSkillPenalty,
+  doubleTacticEffectiveness,
   killDesirePenalty,
 } from '../mechanics/tacticResolution';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
@@ -106,15 +106,18 @@ function resolveTacticMods(
     offT: typeof tactA.offTactic,
     defT: typeof tactA.defTactic
   ) => {
-    const p = doubleTacticSkillPenalty(offT, defT);
+    // Canon: the pairing's "very limiting value" lands on the secondary
+    // defensive shell — the offensive plan keeps its punch.
+    const mult = doubleTacticEffectiveness(offT, defT);
+    const scale = (v: number) => (mult !== 1 && v > 0 ? Math.floor(v * mult) : v);
     return {
-      off: { ...off, attBonus: off.attBonus + p.attBonus, decBonus: off.decBonus + p.decBonus },
+      off: { ...off },
       def: {
         ...def,
-        parBonus: def.parBonus + p.parBonus,
-        defBonus: def.defBonus + p.defBonus,
-        iniBonus: def.iniBonus + p.iniBonus,
-        ripBonus: def.ripBonus + p.ripBonus,
+        parBonus: scale(def.parBonus),
+        defBonus: scale(def.defBonus),
+        iniBonus: scale(def.iniBonus),
+        ripBonus: scale(def.ripBonus),
       },
     };
   };

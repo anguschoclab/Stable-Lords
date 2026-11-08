@@ -3,6 +3,7 @@
  */
 
 import { getItemById } from '@/data/equipment/equipment.utils';
+import { WEAPON_ARMOR_OVERRIDES } from '@/constants/combat';
 
 type DamageType = 'slash' | 'bash' | 'pierce' | 'none';
 
@@ -51,7 +52,10 @@ export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: s
   if (!weaponId || !armorId) return damage;
   const dtype = WEAPON_DAMAGE_TYPE[weaponId];
   if (!dtype || dtype === 'none') return damage;
-  const mult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
+  const mult =
+    WEAPON_ARMOR_OVERRIDES[weaponId]?.[armorId] ??
+    ARMOR_TYPE_MULT[armorId]?.[dtype] ??
+    1.0;
   return Math.round(damage * mult);
 }
 

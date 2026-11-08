@@ -9,7 +9,7 @@ import {
   OE_ATT_SCALING,
   OE_DEF_SCALING,
   AL_INI_SCALING,
-  DOUBLE_TACTIC_SKILL_PENALTY,
+  DOUBLE_TACTIC_EFFECTIVENESS,
   KD_HIGH_PENALTY,
 } from '@/constants/combat';
 import { clamp } from '@/utils/math';
@@ -154,17 +154,16 @@ const ZERO_DEF: DefensiveMods = { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonu
 
 /**
  * V24 canon (Consortium "Tactics"): running an offensive AND a defensive
- * tactic at once has "very limiting value" — flat per-skill tax while both
- * are active.
+ * tactic at once has "very limiting value" — the effectiveness multiplier
+ * applied to the pair's positive fields while both are active.
  */
-export function doubleTacticSkillPenalty(
+export function doubleTacticEffectiveness(
   offTactic: OffensiveTactic | undefined,
   defTactic: DefensiveTactic | undefined
-): { attBonus: number; parBonus: number; defBonus: number; iniBonus: number; ripBonus: number; decBonus: number } {
+): number {
   const both =
     !!offTactic && offTactic !== 'none' && !!defTactic && defTactic !== 'none';
-  const p = both ? -DOUBLE_TACTIC_SKILL_PENALTY : 0;
-  return { attBonus: p, parBonus: p, defBonus: p, iniBonus: p, ripBonus: p, decBonus: p };
+  return both ? DOUBLE_TACTIC_EFFECTIVENESS : 1;
 }
 
 /** V24 canon (Assur): KD 9-10 makes warriors "fight somewhat strangely" —

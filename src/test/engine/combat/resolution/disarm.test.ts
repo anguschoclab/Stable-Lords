@@ -412,9 +412,9 @@ describe('simulateFight — disarm integration', () => {
   });
 
   it('disarms surface in real bouts — projected into exchangeLog + reasonCodes', () => {
-    // Seed 1002 (ST mirror): A is disarmed and never re-arms. (Re-seeded for
-    // V23: weapon-side gating means only weapon-arm hits can disarm.)
-    const out = runBout(1002);
+    // Seed 694 (ST mirror): A is disarmed and never re-arms. (Re-seeded for
+    // V23/V24: weapon-side gating means only weapon-arm hits can disarm.)
+    const out = runBout(694);
     const log = out.exchangeLog ?? [];
     const disarmEntry = log.find((e) => e.disarm);
     expect(disarmEntry?.disarm).toBe('A');
@@ -425,7 +425,7 @@ describe('simulateFight — disarm integration', () => {
   it('the swap is mechanical, not cosmetic — post-disarm attacks use the fist pool', () => {
     // Same bout: after the drop, A_ST's strikes come out of pbp.attacks.fist
     // (knuckles/haymakers/uppercuts) — only reachable via weaponId === 'fist'.
-    const out = runBout(1002);
+    const out = runBout(694);
     const texts = (out.log ?? []).map((l) => l.text ?? '');
     expect(texts.some((t) => /fist|knuckle|haymaker|uppercut|punch/i.test(t))).toBe(true);
   });

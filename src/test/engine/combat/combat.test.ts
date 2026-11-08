@@ -123,7 +123,10 @@ describe('simulateFight — kill logic', () => {
 
     let killsHigh = 0;
     let killsLow = 0;
-    const trials = 30;
+    // V24 (Assur): KD 9-10 "fights somewhat strangely" — the flat ATT/INI tax
+    // now cancels the raw kill-intent edge, so the margin needs more trials
+    // to be robust against seed noise (measured parity at 120).
+    const trials = 120;
 
     for (let seed = 1; seed <= trials; seed++) {
       const rHigh = simulateFight({

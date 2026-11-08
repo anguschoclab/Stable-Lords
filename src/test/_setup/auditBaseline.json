@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T12:08:52.969Z",
+  "generatedAt": "2026-11-08T13:42:33.999Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
     "src/test/engine/grudgeMap.test.ts",
@@ -14,6 +14,8 @@
     "src/test/engine/combat/equipmentIntegration.test.ts"
   ],
   "missingJsdomPragma": [
-    "src/test/engine/analytics/almanac.test.ts"
+    "src/test/engine/analytics/almanac.test.ts",
+    "src/test/engine/learning/learnCapAndBurn.canon.test.ts",
+    "src/test/engine/matchmaking/bloodfeud.canon.test.ts"
   ]
 }

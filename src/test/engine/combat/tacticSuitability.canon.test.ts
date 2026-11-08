@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
-  doubleTacticSkillPenalty,
+  doubleTacticEffectiveness,
 } from '@/engine/combat/mechanics/tacticResolution';
 import {
   getOffensiveSuitability,
@@ -17,6 +17,7 @@ import {
   getBestOffensiveTactic,
   getBestDefensiveTactic,
 } from '@/engine/ai/plan/tacticAdvisor';
+import { DOUBLE_TACTIC_EFFECTIVENESS } from '@/constants/combat';
 import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 
@@ -54,20 +55,18 @@ describe('unsuited tactics are net-negative (Pagan: U drains more than it gives)
 });
 
 describe('double tactics are very limiting (Consortium canon)', () => {
-  it('offensive + defensive tactic together tax every skill', () => {
-    const p = doubleTacticSkillPenalty('Lunge', 'Parry');
-    for (const k of Object.keys(p) as (keyof typeof p)[]) {
-      expect(p[k]).toBe(-1);
-    }
+  it('offensive + defensive tactic together halve the pair\'s benefits', () => {
+    expect(doubleTacticEffectiveness('Lunge', 'Parry')).toBe(DOUBLE_TACTIC_EFFECTIVENESS);
+    expect(DOUBLE_TACTIC_EFFECTIVENESS).toBeLessThan(1);
   });
 
   it('a single tactic incurs no tax', () => {
     for (const p of [
-      doubleTacticSkillPenalty('Lunge', 'none' as DefensiveTactic),
-      doubleTacticSkillPenalty('none' as OffensiveTactic, 'Parry'),
-      doubleTacticSkillPenalty(undefined, undefined),
+      doubleTacticEffectiveness('Lunge', 'none' as DefensiveTactic),
+      doubleTacticEffectiveness('none' as OffensiveTactic, 'Parry'),
+      doubleTacticEffectiveness(undefined, undefined),
     ]) {
-      for (const k of Object.keys(p) as (keyof typeof p)[]) expect(p[k]).toBe(0);
+      expect(p).toBe(1);
     }
   });
 });

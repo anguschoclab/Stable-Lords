@@ -5,4 +5,5 @@ One row per megaplan commit, chronological. Restore tag: `pre-megaplan-v25`
 
 | # | Commit | Phase | Scope | Verify |
 |---|--------|-------|-------|--------|
-| 0 | (this commit) | 0 | docs: plan, findings, ledger open; restore tag set | typecheck — |
+| 0 | 32a56a58 | 0 | docs: plan, findings, ledger open; restore tag set | typecheck |
+| 1 | 881d124a | 1 | spec batch ×10 RED-first + inert scaffolds | typecheck, 43 assertion-RED observed |

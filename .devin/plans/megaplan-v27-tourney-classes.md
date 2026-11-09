@@ -3,6 +3,8 @@
 One-sentence summary: Port the Duel2 tournament metagame (Pagan's Arena-93 articles) onto the existing bracket engine — a canon `fightEquivalents` counter (arena bout = 1 FE, tourney = 1 FE per odd round fought), five FE-banded classes per seasonal under a T−2 freeze date with hybrid invite+open entry, tourney-bout consequence parity (learns/XP/discovery/injuries/fame currently skipped on the interactive path), an AI breakpoint-sandbagging metagame, a design-review "tourney prospect" axis, all-class day resolution, and post-tourney grudge matches — while leaving the week-52 Grand Championship untouched.
 
 > **Validation status:** every claim below was audited against the code on the review pass. Inline markers: ✅ = verified as drafted, ⚠️ = verified but required correction (correction stated), ❌ = disproved. Phase 1 enforces strict test-first: **all** new specs + compile stubs land before any production change.
+>
+> **Implementation status (2026-11-09):** Phases 0–11 all landed. Suite green (996 files / 10743 tests), typecheck + lint clean, megaplan guards re-ratcheted. Deferred items tracked in `MEGAPLAN_V27_DEFERRED.md`.
 
 ## Scope Decision (user-confirmed)
 

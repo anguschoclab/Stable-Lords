@@ -18,7 +18,7 @@
 | 8 | Multi-bracket day resolution | — | advanceTournamentDay + drainTournamentRounds: day-outer/bracket-inner, i*16 seed stride (single-bracket stream preserved); collectTournamentPairings all unfinished brackets; class tabs on Tournaments page |
 | 9 | Design-review tourney axis | — | reviewTourney: WT21+SZ≤6 good; WT21 info; WT17–20 info; scum/AB CN15+WL15+ TP/AB/PR info; WT<11 warn; always ≥1 item |
 | 10 | Grudge matches | — | buildGrudgeOffers: loser-vs-killer rematches ≤1/warrior, boutWeek=state.week+1, Proposed offers filed at bracket completion (finalizeRound → boutOffers) |
-| 11 | Close-out + docs | — | |
+| 11 | Close-out + docs | — | 996 files / 10743 tests green; typecheck + lint (0 err) clean; guards re-ratcheted (fileBudget, paramBudget via options objects, scanInLoop +7 reviewed, v18Srp scoreCandidate split); TickOrchestrator threading preserved via threaded-map drain; DEFERRED.md written; slow battery pending |
 
 ## RNG stream changes (re-baseline triggers)
 

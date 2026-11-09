@@ -155,6 +155,13 @@ export function CombatColumn({
           </p>
         )}
 
+        {card.tournamentAdvice.grudgeWarning && (
+          <p className="text-[10px] text-destructive/90 flex items-center gap-1.5 font-medium pt-1 border-t border-white/5">
+            <Swords className="h-3 w-3 shrink-0" />
+            <span>{card.tournamentAdvice.grudgeWarning}</span>
+          </p>
+        )}
+
         {card.crownStanding && (
           <p className="text-[10px] text-amber-400/90 flex items-center gap-1.5 font-medium pt-1 border-t border-white/5">
             <Crown className="h-3 w-3 shrink-0" />

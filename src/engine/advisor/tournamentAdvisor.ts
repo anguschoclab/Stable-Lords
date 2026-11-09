@@ -52,6 +52,29 @@ function classLayer(warrior: Warrior, state: GameState) {
 }
 
 /**
+ * V27 grudge breakpoint warning: a pending grudge rematch banks +1 FE on
+ * resolution — if that tips the warrior over the next class breakpoint at
+ * the next freeze, flag it so a manager keeping them low knows the cost.
+ * Uses live FE: the current cycle's class is already locked, so only the
+ * NEXT freeze cares about post-freeze gains.
+ */
+function grudgeBreakpointWarning(warrior: Warrior, state: GameState): string | undefined {
+  const hasGrudge = Object.values(state.boutOffers ?? {}).some(
+    (o) => o.grudgeOfTournamentId && o.status === 'Proposed' && o.warriorIds.includes(warrior.id)
+  );
+  if (!hasGrudge) return undefined;
+  const liveFE = fightEquivalentsOf(warrior);
+  const current = classForFE(liveFE);
+  const after = classForFE(liveFE + 1);
+  if (current === after) return undefined;
+  const nextSpec = TOURNAMENT_CLASSES.find((c) => c.id === after);
+  return (
+    `The pending grudge rematch banks +1 FE — enough to move ${warrior.name} ` +
+    `into ${nextSpec?.name ?? after} at the next freeze. Decline it if the lower class matters.`
+  );
+}
+
+/**
  * Evaluate seasonal tournament status and pacing directives for a warrior.
  */
 export function evaluateTournamentAdvice(
@@ -80,6 +103,7 @@ export function evaluateTournamentAdvice(
     fe,
     breakpointGap,
     entered,
+    grudgeWarning: grudgeBreakpointWarning(warrior, state),
   };
 
   // 1. Live tournament week

@@ -3,6 +3,7 @@ import type { TournamentCycle, TournamentEntry } from '@/types/state.types';
 import type { StableId, TournamentId, WarriorId } from '@/types/shared.types';
 import type { GameStore } from '@/state/useGameStore';
 import { classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
+import { fileGrudgeCallout } from '@/engine/matchmaking/grudgeMatches';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /** V27: max declarations a stable may file per class per cycle. */
@@ -24,6 +25,12 @@ export interface TournamentSlice {
   declareTournamentEntry: (warriorId: WarriorId) => void;
   /** V27: scratch a warrior from the cycle (invite declined or entry pulled). */
   scratchTournamentEntry: (warriorId: WarriorId) => void;
+  /** V27: player-initiated grudge call-out on a completed class bracket. */
+  callOutGrudgeMatch: (
+    tournamentId: TournamentId,
+    loserId: WarriorId,
+    killerId: WarriorId
+  ) => void;
 }
 
 /**
@@ -69,5 +76,11 @@ export const createTournamentSlice: StateCreator<GameStore, [], [], TournamentSl
       return {
         tournamentCycle: { ...cycle, declared, scratched: [...cycle.scratched, warriorId] },
       };
+    }),
+  callOutGrudgeMatch: (tournamentId, loserId, killerId) =>
+    set((s) => {
+      const offer = fileGrudgeCallout(s, tournamentId, loserId, killerId);
+      if (!offer) return {};
+      return { boutOffers: { ...(s.boutOffers ?? {}), [offer.id]: offer } };
     }),
 });

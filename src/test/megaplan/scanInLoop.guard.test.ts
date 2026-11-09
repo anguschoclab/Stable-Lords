@@ -478,8 +478,18 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
   },
   {
     file: 'src/state/slices/tournamentSlice.ts',
-    match: 'declared[key].filter((id) => id !== warriorId)',
+    match: '(declared[key] ?? []).filter((id) => id !== warriorId)',
     why: 'per-iteration collection — each stable\'s own declared list (≤4 entries)',
+  },
+  {
+    file: 'src/engine/advisor/tournamentAdvisor.ts',
+    match: 'o.warriorIds.includes(warrior.id)',
+    why: 'bounded inner scan — warriorIds is a 2-element pair inside the offers .some',
+  },
+  {
+    file: 'src/engine/matchmaking/grudgeMatches.ts',
+    match: '(tour.participants ?? []).find(',
+    why: 'bounded scan — participants ≤ field cap (~64) per bracket bout (≤63), stablemate lookup',
   },
 ];
 

@@ -129,12 +129,16 @@ describe('megaplan: orphan guard', () => {
   // isolation) — its prod caller is in-file (processTournamentPrep),
   // matching the learningSeekBonus precedent. GRUDGE_MATCHMAKING and
   // ClassEmissionResult were unexported instead (zero external refs).
+  // Relaxed 173 → 174 (V27 deferred pass): tourneyDraftBonus carries a
+  // test-only consumer (tourneyDraftBias spec pins the archetype-weighted
+  // bonus in isolation) — its prod caller is in-file (scoreCandidate),
+  // same precedent. fileGrudgeCallout is wired via tournamentSlice.
   it('dead-export count does not grow past the V2 audit level', () => {
     const srcDead = report.deadExports.filter((d: { file: string }) => d.file.startsWith('src/'));
     expect(
       srcDead.length,
-      `dead exports grew past the V2 audit level (${srcDead.length} > 173) — ` +
+      `dead exports grew past the V2 audit level (${srcDead.length} > 174) — ` +
         `wire the new export or remove it:\n${srcDead.map((d: { file: string; symbol: string }) => `  ${d.file} :: ${d.symbol}`).join('\n')}`
-    ).toBeLessThanOrEqual(173);
+    ).toBeLessThanOrEqual(174);
   });
 });

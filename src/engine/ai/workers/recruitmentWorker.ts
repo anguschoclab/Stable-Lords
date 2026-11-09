@@ -15,6 +15,7 @@ import { AI_RECRUITS_PER_WEEK_MAX } from '@/constants/world';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
 import { signWarrior } from '@/engine/recruitment/recruitment';
 import { competenceJitter } from '../competence';
+import { classifyArchetype } from '@/data/warriorArchetypes';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 import type { FightingStyle } from '@/types/shared.types';
 import { keySet } from '@/utils/collections';
@@ -122,15 +123,15 @@ interface ScoreCandidatesArgs {
 type DraftWeights = typeof DEFAULT_DRAFT_WEIGHTS;
 
 /**
- * V27 tourney-archetype bias — campaign stables scout wit first (the
- * article's signal): 21+ WT is the Champions-class frame, 17+ still viable.
+ * V27 tourney-archetype bias — campaign stables scout winning frames, not
+ * just wit: the best classifyArchetype fit drives the bonus, so a scum/AB
+ * Rookies profile and a 21-WT Champions frame both score. 0–40 ceiling
+ * matches the pre-archetype WT threshold's weight.
  */
-function tourneyDraftBonus(w: PoolWarrior, intent: string | undefined): number {
+export function tourneyDraftBonus(w: PoolWarrior, intent: string | undefined): number {
   if (intent !== 'TOURNAMENT_CAMPAIGN') return 0;
-  const wt = w.attributes?.WT ?? 0;
-  if (wt >= 21) return 40;
-  if (wt >= 17) return 20;
-  return 0;
+  const best = classifyArchetype(w.attributes ?? {}, w.style)[0]?.score ?? 0;
+  return Math.round(best * 0.4);
 }
 
 /** Scores one pool candidate against the personality weights table. */

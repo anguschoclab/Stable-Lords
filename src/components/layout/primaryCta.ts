@@ -27,7 +27,7 @@ export const PRIMARY_CTA_BY_ROUTE: Record<string, PrimaryCtaDef> = {
   '/stable': { label: 'EXECUTE WEEK', intent: 'advance' },
   '/stable/bouts': { label: 'BEGIN CYCLE', intent: 'advance' },
   '/stable/arena': { label: 'VIEW CARD', intent: 'page' },
-  '/world/tournaments': { label: 'ADVANCE BRACKET', intent: 'page' },
+  '/world/tournaments': { label: 'ADVANCE BRACKETS', intent: 'page' },
   '/stable/training': { label: 'COMMIT REGIMEN', intent: 'advance' },
   '/stable/planner': { label: 'COMMIT REGIMEN', intent: 'advance' },
   '/stable/recruit': { label: 'SIGN CONTRACT', intent: 'page' },

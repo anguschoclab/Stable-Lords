@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
  *   '/'                        → EXECUTE WEEK N ›   (advances week)
  *   '/stable/bouts'            → BEGIN CYCLE ›
  *   '/stable/arena'            → VIEW CARD ›
- *   '/world/tournaments'       → ADVANCE BRACKET ›
+ *   '/world/tournaments'       → ADVANCE BRACKETS › (all unfinished class brackets)
  *   '/stable/training', '/stable/planner' → COMMIT REGIMEN ›
  *   '/stable/recruit', '/world/scouting'  → SIGN CONTRACT › (disabled until selection)
  *   '/stable/offseason'        → CLOSE SEASON ›
@@ -43,7 +43,7 @@ describe('appShell per-route primary CTA (MEGAPLAN-L1)', () => {
     });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/bouts']).toMatchObject({ label: /BEGIN CYCLE/ });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/arena']).toMatchObject({ label: /VIEW CARD/ });
-    expect(PRIMARY_CTA_BY_ROUTE['/world/tournaments']).toMatchObject({ label: /ADVANCE BRACKET/ });
+    expect(PRIMARY_CTA_BY_ROUTE['/world/tournaments']).toMatchObject({ label: /ADVANCE BRACKETS/ });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/training']).toMatchObject({ label: /COMMIT REGIMEN/ });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/planner']).toMatchObject({ label: /COMMIT REGIMEN/ });
     expect(PRIMARY_CTA_BY_ROUTE['/stable/recruit']).toMatchObject({ label: /SIGN CONTRACT/ });

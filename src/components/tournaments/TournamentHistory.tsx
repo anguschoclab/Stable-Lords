@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Trophy, ChevronDown, ChevronRight, Swords } from 'lucide-react';
+import { Trophy, ChevronDown, ChevronRight, Swords, Flame } from 'lucide-react';
 import type { TournamentEntry } from '@/types/game';
-import type { Season } from '@/types/shared.types';
+import type { Season, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { getFightsForTournament } from '@/engine/core/historyUtils';
 import { Surface } from '@/components/ui/Surface';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { Button } from '@/components/ui/button';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { groupBy } from '@/utils/collections';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +18,86 @@ interface TournamentHistoryProps {
   seasonNames: Record<string, string>;
   currentSeason: string;
   arenaHistory?: FightSummary[];
+}
+
+/** One call-out candidate: a player loser, their killer, and the file action. */
+interface CalloutPair {
+  loserId: WarriorId;
+  killerId: WarriorId;
+  loserName: string;
+  killerName: string;
+  onCallOut?: () => void;
+}
+
+/**
+ * Player-loss pairs in a completed class bracket that haven't been booked as
+ * grudges yet — the call-out candidates. The AI auto-files its own losers;
+ * the player chooses here (same rule, different chooser).
+ */
+function useCalloutPairs(entry: TournamentEntry) {
+  const { roster, boutOffers, callOutGrudgeMatch } = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      boutOffers: s.boutOffers,
+      callOutGrudgeMatch: s.callOutGrudgeMatch,
+    }))
+  );
+  if (!entry.classId || !entry.completed) return [];
+  const playerIds = new Set(roster.map((w) => w.id));
+  const booked = new Set(
+    Object.values(boutOffers ?? {})
+      .filter((o) => o.grudgeOfTournamentId === entry.id && o.status === 'Proposed')
+      .flatMap((o) => o.warriorIds)
+  );
+  const nameOf = (id: string) =>
+    entry.participants.find((p) => p.id === id)?.name ?? 'Unknown';
+  const pairs: CalloutPair[] = [];
+  for (const b of entry.bracket) {
+    if (b.isBronzeMatch || !b.winner) continue;
+    const loserId = (b.winner === 'A' ? b.warriorIdD : b.warriorIdA) as WarriorId;
+    const killerId = (b.winner === 'A' ? b.warriorIdA : b.warriorIdD) as WarriorId;
+    if (!loserId || !killerId || !playerIds.has(loserId)) continue;
+    if (booked.has(loserId) || booked.has(killerId)) continue;
+    pairs.push({
+      loserId,
+      killerId,
+      loserName: nameOf(loserId),
+      killerName: nameOf(killerId),
+    });
+  }
+  return pairs.map((p) => ({
+    ...p,
+    onCallOut: () => callOutGrudgeMatch(entry.id, p.loserId, p.killerId),
+  }));
+}
+
+/** Grudge call-out affordances on a completed class bracket. */
+function CalloutSection({ callouts }: { callouts: CalloutPair[] }) {
+  if (callouts.length === 0) return null;
+  return (
+    <div className="pt-2 border-t border-white/5 space-y-1.5">
+      <p className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
+        Grudge call-outs — a rematch banks +1 FE on the loser
+      </p>
+      {callouts.map((c) => (
+        <div
+          key={`${c.loserId}_${c.killerId}`}
+          className="flex items-center justify-between text-[10px] py-1.5 px-2 bg-destructive/[0.04] border-l-2 border-destructive/40"
+        >
+          <span className="text-foreground/80">
+            {c.loserName} <span className="text-muted-foreground/50">vs</span> {c.killerName}
+          </span>
+          <Button
+            variant="outline"
+            onClick={c.onCallOut}
+            className="h-5 px-2 text-[8px] font-black uppercase tracking-widest gap-1 rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+          >
+            <Flame className="h-2.5 w-2.5" /> Call out
+          </Button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 /** One archived tournament row with an expandable bout list. */
@@ -30,6 +113,7 @@ function TournamentEntryRow({
   onToggle: () => void;
 }) {
   const bouts = expanded ? getFightsForTournament(arenaHistory, entry.id) : [];
+  const callouts = useCalloutPairs(entry);
 
   return (
     <div className="bg-black/20 border border-white/5">
@@ -75,6 +159,7 @@ function TournamentEntryRow({
               </div>
             ))
           )}
+          <CalloutSection callouts={callouts} />
         </div>
       )}
     </div>

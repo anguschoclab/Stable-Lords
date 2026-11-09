@@ -81,6 +81,48 @@ describe('evaluateTournamentAdvice — FE classes', () => {
     expect(advice.entered).toBe(false);
   });
 
+  it('warns when a pending grudge bout (+1 FE) would tip the next-freeze breakpoint', () => {
+    const warrior = w('g', 4); // live FE 4 — one bout under Initiates
+    const state = makeTournamentBaseState(9);
+    state.roster = [warrior];
+    state.tournamentCycle = {
+      forWeek: 10,
+      season: 'Spring',
+      frozenAtAbsWeek: 8,
+      feByWarrior: { [warrior.id]: 3 } as never, // frozen 3 — safe inside Apprentices
+      invited: { apprentices: [warrior.id] } as never,
+      declared: {},
+      scratched: [],
+      elevated: [],
+    };
+    state.boutOffers = {
+      grudge_1: {
+        id: 'grudge_1',
+        warriorIds: [warrior.id, 'opp_1'],
+        grudgeOfTournamentId: 't-apprentices',
+        status: 'Proposed',
+      } as never,
+    } as never;
+    const advice = evaluateTournamentAdvice(warrior, state);
+    expect(advice.grudgeWarning).toMatch(/initiates|breakpoint|next/i);
+  });
+
+  it('no grudge warning when the +1 stays inside the class', () => {
+    const warrior = w('h', 2); // live FE 2 — grudge +1 lands at 3, still Apprentices
+    const state = makeTournamentBaseState(9);
+    state.roster = [warrior];
+    state.boutOffers = {
+      grudge_1: {
+        id: 'grudge_1',
+        warriorIds: [warrior.id, 'opp_1'],
+        grudgeOfTournamentId: 't-apprentices',
+        status: 'Proposed',
+      } as never,
+    } as never;
+    const advice = evaluateTournamentAdvice(warrior, state);
+    expect(advice.grudgeWarning).toBeUndefined();
+  });
+
   it('live tournament week: participant detected inside its OWN class bracket', () => {
     const warrior = w('e', 2);
     const state = makeTournamentBaseState(10);

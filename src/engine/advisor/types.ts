@@ -100,6 +100,8 @@ export interface WarriorTournamentAdvice {
   breakpointGap?: number;
   /** V27: true once the warrior is on the entered roster for this cycle. */
   entered?: boolean;
+  /** V27: set when a pending grudge bout's +1 FE would cross a class breakpoint. */
+  grudgeWarning?: string;
 }
 
 /**

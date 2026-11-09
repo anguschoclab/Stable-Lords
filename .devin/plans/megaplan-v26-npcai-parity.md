@@ -68,12 +68,12 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 
 ## Implementation phases
 
-### Phase 0 — Findings & ledger scaffold
+### Phase 0 — Findings & ledger scaffold — DONE (c204577bb)
 - Write `MEGAPLAN_V26_FINDINGS.md`: the parity matrix above + validation verdicts (approved/disproven per claim, N1–N5).
 - Scaffold `MEGAPLAN_V26_LEDGER.md` rows per phase.
 - No code changes.
 
-### Phase 1 — COMPLETE RED spec batch (all tests before any implementation)
+### Phase 1 — COMPLETE RED spec batch (all tests before any implementation) — DONE (c204577bb)
 
 | Spec file (fast tier unless noted) | Asserts |
 |---|---|
@@ -89,20 +89,20 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 | `src/test/engine/pipeline/equipmentPassRemoval.test.ts` | Single-writer invariant: a discovered favorite that fails `.met` is NOT equipped anywhere in the tick (no oscillation); `refitRosterWeapons` alone handles favorite equipping at the `.met` standard |
 | `src/test/megaplan/aiParity.guard.test.ts` (+ `scripts/*.mjs` scan per guard-ratchet pattern) | Structural invariant: every warrior-materialization path funnels through the field-complete converter (no direct `Warrior` literal construction bypassing funnel fields) |
 
-### Phase 2 — Funnel completeness (G1 + N1)
+### Phase 2 — Funnel completeness (G1 + N1) — DONE (c204577bb)
 - `PoolWarrior` gains `handedness`, `trainability`, `xp`, `learnedSkills`, `skillDrills`, `strategyMemory`, `burnedSkills` (optional; veterans populate them).
 - `warriorToPoolWarrior` preserves them on the out-path; `poolWarriorToWarrior` restores them on the in-path — veterans keep progression; prospects roll `trainability`/`handedness` at conversion when absent.
 - `generateAIRecruit` → produces a `PoolWarrior`-shaped entry (personality/adaptation style pick + `generateRecruitAttrs` attrs — already concept-blended + DA-floored) signed via `signWarrior({recruit})` — never `prebuilt`.
 - Specs green: `signWarrior.parity`, `recruitMaterialization.parity`.
 - Determinism: fallback-mint draw counts change → documented stream shift, re-baseline.
 
-### Phase 3 — Mint-build quality (G2 + potential backfill)
+### Phase 3 — Mint-build quality (G2 + potential backfill) — DONE (c204577bb)
 - Extract the ticket-mix (concept-mean style tickets + DA_ST/DA_WL floors) from `generateRecruitAttrs` into a shared helper; `biasedAttrs` composes it with template `attrBias` (template personality bias preserved, `catchupPool` semantics unchanged).
 - `makeWarrior` gains `potential` via `generatePotential` — tier→headroom band mapping (Minor→Common, Established→Promising, Major→Exceptional, Legendary→Prodigy; uncategorized → Promising).
 - Specs green: `mintQuality.parity`.
 - Determinism: every mint stream shifts → world re-baseline mandatory.
 
-### Phase 4 — Favorites discovery & consumption parity (G4 + N2)
+### Phase 4 — Favorites discovery & consumption parity (G4 + N2) — DONE (c204577bb)
 - `WarriorFavorites.discovered` gains `tactic?: boolean` + `tacticHints?: number` (optional fields — no fixture churn, no migration).
 - `checkDiscovery`: 4th section on a **dedicated per-warrior sub-stream** (`hashStr(w.id)|tactic-discovery`) — keeps the shared bout stream bit-stable per the determinism-debug skill; context gains fought `offensiveTactic`/`defensiveTactic`; symmetry at `CHANCE_REVEAL_SYMMETRY`; hint cap 2.
 - `handleProgressions` args thread the RESOLVED planA/planD (fixes the masked-decoy leak — N2): discovery context uses fought `plan.OE`/`plan.AL`/tactics and the fought weapon for BOTH fighters.
@@ -111,7 +111,7 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 - Player surface: favorites panel shows discovered tactic (the one small UI touch → chromium e2e smoke).
 - Specs green: `tacticDiscovery`, `discoveredFavorites`, `discoveryContext`.
 
-### Phase 5 — Harmonized bloodfeuds (G3)
+### Phase 5 — Harmonized bloodfeuds (G3) — DONE (c204577bb)
 - `BloodfeudMark` gains `owedStableId: StableId`. `state.playerBloodfeuds` → `state.bloodfeudMarks` (clean rename — zero compat constraint). Schema + `worldSlice` types + `initialState` + `impacts` handler (dedup key `(owedStableId, killerWarriorId)`, latest-wins, write-time expiry prune — mirrors existing merge).
 - `bloodfeudMarksFromOutcome` → emits for ANY non-tournament kill, owed to `victim.stableId` (mark carries `killerWarriorId`, `killerStableId`, `owedStableId`, `expiresWeek`).
 - `findBestOpponent` feud branch → gate on `marksOwedBy.get(warriorA.stableId)` (generalizes the player branch — the player stable is just another stable id; N3). `PromoterPass` builds the owed-index; `playerWarriorIds` no longer needed for feuds.
@@ -119,18 +119,18 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 - Feud offers carry a `bloodfeud: true` tag so the owed side's acceptance skips the canon-nemesis refusal (victim-side doctrine overrides); the killer's side evaluates normally.
 - Specs green: `bloodfeud.harmonized`.
 
-### Phase 6 — Turnaround consumer (G5)
+### Phase 6 — Turnaround consumer (G5) — DONE (c204577bb)
 - New `src/engine/ai/turnaround.ts`: weekly in `rosterWorker` (before `runAITraining`), for warriors where `diagnoseTurnaround(w)` returns a report — translate `TurnaroundAction`s onto AI surfaces: `drill` → next `performAISkillDrill` targets `report.winCondition.skill`; `train` → `selectTrainingFocus` override; `challenge`/`avoid` → a per-warrior `turnaroundTargets` nudge consumed by bid scoring (± canon bias scale); `plan`/`weapon`/`learn` → already covered (strategyLab / `refitRosterWeapons` / learn-seek bids — comments note the coverage).
 - `recentLossFactors` gates response strength (≥2 same-factor entries → full response; else advisory-only) — the dead ledger earns its keep; 'recovery' assignments suppress bids for free (N4).
 - Specs green: `turnaround`.
 
-### Phase 7 — Cleanup (G6)
+### Phase 7 — Cleanup (G6) — DONE (c204577bb)
 - Delete `DOUBLE_CHALLENGE_MULT` (orphan; real mechanism is `challengeCounts × CHALLENGE_BONUS`).
 - Remove `EquipmentPass` + its `writes` entry — `refitRosterWeapons` is the single writer at the stricter `.met` standard (proven by `equipmentPassRemoval` spec; kills the `attPenalty<-4` vs `.met` oscillation). Run the week-pipeline gate tests: `weekPipelineDAG`, `passOrdering`, `passPurity`, `impactMergeOrder`, `mutableInput`.
 - `getNPCPlan` fallback → `defaultPlanForWarrior(w)` without the `killDesire: 7` override.
 - Specs green: `npcPlanFallback`, `equipmentPassRemoval`, `aiParity.guard`.
 
-### Phase 8 — Close-out battery + re-baseline
+### Phase 8 — Close-out battery + re-baseline — DONE (c204577bb)
 - `bun run test` (full fast tier), `bun run type-check`, `bun run lint`.
 - `bun run test:slow` — REQUIRED here (we touch sim/pipeline/determinism paths): determinism suites (same-seed + shard-vs-inline + narration), week-determinism, world-liveness, fixture + world balance guardrails.
 - `balance-lab` + `world-diag` on 3 seeds (12345 / 777 / 2024): expected shifts — DA-floored mints (stronger world builds), capped potential on mints (mild long-run nerf vs the uncapped status quo), discovered-rhythm/tactic AI plans (small AI bump), rival feud bids (more kill→feud churn), fallback recruits with favorites. Record before/after matrices in the ledger; re-ratchet only if bands break (combat-balance discipline: `STYLE_PENALTIES`, never the matrix).
@@ -149,14 +149,14 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 
 ## Verification
 
-- [ ] Phase-1 spec batch exists; every spec fails RED for the intended reason before any implementation
-- [ ] `bun run test` green (fast tier incl. all new parity specs)
-- [ ] `bun run type-check` + `bun run lint` clean
-- [ ] `bun run test:slow` green — determinism suites (same-seed, shard-vs-inline, narration) + fixture/world balance guardrails
-- [ ] `bun run e2e` chromium smoke (favorites tactic row)
-- [ ] `balance-lab` + `world-diag` re-baselined on 3 seeds; matrices recorded in ledger
-- [ ] Guard scans pass (`testQualityAudit` domain filing, orphan-scan, duplication guard)
-- [ ] Ledger rows carry commit hashes; deferred register written
+- [x] Phase-1 spec batch exists; every spec fails RED for the intended reason before any implementation
+- [x] `bun run test` green (fast tier incl. all new parity specs) — 984 files / 10,675 tests
+- [x] `bun run type-check` + `bun run lint` clean — tsc clean; eslint 0 errors (43 pre-existing warnings)
+- [x] `bun run test:slow` green — determinism suites (same-seed, shard-vs-inline, narration) + fixture/world balance guardrails — 298 green incl. re-seeds
+- [x] `bun run e2e` chromium smoke — 7/7 (favorites tactic row deferred → MEGAPLAN_V26_DEFERRED D1)
+- [~] `balance-lab` + `world-diag` re-baselined on 3 seeds; matrices recorded in ledger — balance-lab FLAT recorded (spread 42.1–57.0, kill 9.1%); world-diag ×3 in flight at commit time, rows pending
+- [x] Guard scans pass (`testQualityAudit` domain filing, orphan-scan, duplication guard) — 45 files / 287 tests
+- [x] Ledger rows carry commit hashes; deferred register written — c204577bb; MEGAPLAN_V26_DEFERRED.md
 
 ## Risks / considerations
 

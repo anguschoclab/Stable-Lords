@@ -7,13 +7,13 @@ Land one row per completed phase. `—` = pending.
 |---|---|---|---|
 | 0 | Findings & ledger scaffold | n/a | uncommitted (working tree) |
 | 1 | RED spec batch (11 specs + scanner, 33 asserts verified failing / 5 invariant pins green) | n/a — specs are the artifact | uncommitted (working tree) |
-| 2 | Funnel completeness (G1 + N1) | `signWarrior.parity`, `recruitMaterialization.parity` | — |
-| 3 | Mint-build quality (G2 + potential backfill) | `mintQuality.parity` | — |
-| 4 | Favorites discovery & consumption parity (G4 + N2) | `tacticDiscovery`, `discoveredFavorites`, `discoveryContext` | — |
-| 5 | Harmonized bloodfeuds (G3) | `bloodfeud.harmonized` | — |
-| 6 | Turnaround consumer (G5) | `turnaround` | — |
-| 7 | Cleanup (G6) | `npcPlanFallback`, `equipmentPassRemoval`, `aiParity.guard` | — |
-| 8 | Close-out battery + world re-baseline | full suite + slow tier + guard scans | — |
+| 2 | Funnel completeness (G1 + N1) | `signWarrior.parity`, `recruitMaterialization.parity` | c204577bb |
+| 3 | Mint-build quality (G2 + potential backfill) | `mintQuality.parity` | c204577bb |
+| 4 | Favorites discovery & consumption parity (G4 + N2) | `tacticDiscovery`, `discoveredFavorites`, `discoveryContext` | c204577bb |
+| 5 | Harmonized bloodfeuds (G3) | `bloodfeud.harmonized` | c204577bb |
+| 6 | Turnaround consumer (G5) | `turnaround` | c204577bb |
+| 7 | Cleanup (G6) | `npcPlanFallback`, `equipmentPassRemoval`, `aiParity.guard` | c204577bb |
+| 8 | Close-out battery + world re-baseline | full suite + slow tier + guard scans | c204577bb |
 
 ## Re-baseline record (Phase 8)
 

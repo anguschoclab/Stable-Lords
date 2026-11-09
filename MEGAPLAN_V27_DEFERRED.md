@@ -1,14 +1,16 @@
 # MEGAPLAN V27 — Deferred scope
 
 Items designed in `.devin/plans/megaplan-v27-tourney-classes.md` that shipped
-partially or were consciously deferred at close-out.
+partially or were consciously deferred at close-out. Every deferred item has
+since landed — the file remains as the record of what shipped when.
 
 ## Phase 6 — Player entry surfaces
 
-- **Warrior dossier depth**: the advisor surfaces `classId`/`fe`/`breakpointGap`
-  and the Entry Desk shows frozen FE + breakpoint edge per warrior. A richer
-  per-warrior dossier (favorite-weapon scouting, style-vs-class fit readout)
-  remains future work.
+- ~~**Warrior dossier depth**~~: done — the Entry Desk row now carries a
+  dossier line per warrior: winning-archetype fit (`classifyArchetype` best
+  frame + score) and the favorite-weapon scout state (`Fav <name>` when
+  discovered, `Chart → <name>?` on a chart suspect, `Fav uncharted`
+  otherwise) via `suspectedFavoriteWeapon`.
 
 ## Phase 7 — AI metagame
 
@@ -32,8 +34,12 @@ partially or were consciously deferred at close-out.
 - ~~**Advisor breakpoint warning**~~: done — `grudgeWarning` fires when a
   pending grudge's +1 FE tips the next-freeze class breakpoint; rendered in
   the advisor council card.
-- **Player stablemate hunts**: the manual call-out lane covers loser→killer
-  only; letting the player send a stablemate after a killer is future work.
+- ~~**Player stablemate hunts**~~: done — `fileStablemateHunt` mirrors the AI
+  lane's rule (the avenger must be an unbooked bracket finisher whose
+  stablemate the killer felled, by frozen bracket stableIds) via the
+  `sendStablemateHunt` slice action. Completed brackets surface hunt rows
+  whenever a player victim is already booked but the killer isn't — one
+  button per eligible stablemate.
 
 ## Phase 11 — Close-out
 

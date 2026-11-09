@@ -50,6 +50,32 @@ export interface TournamentEntry {
   participants: Warrior[];
   champion?: string;
   completed: boolean;
+  /** V27: FE-class discriminator for class-bracket tournaments. Absent on
+   *  legacy tiered brackets and the week-52 Grand Championship. */
+  classId?: import('@/engine/matchmaking/tournamentSelection/classes').TournamentClassId;
+}
+
+/**
+ * V27 tournament cycle — the frozen FE snapshot + entry ledger written at
+ * the freeze date (T−TOURNAMENT_FREEZE_OFFSET). Class membership is locked
+ * here; post-freeze fights add experience on top of the locked class.
+ */
+export interface TournamentCycle {
+  /** Display week the bracket runs (the freeze target). */
+  forWeek: number;
+  season: Season;
+  /** Absolute week the snapshot was taken. */
+  frozenAtAbsWeek: number;
+  /** Fight-equivalents per warrior at the freeze — the class authority. */
+  feByWarrior: Record<WarriorId, number>;
+  /** Committee auto-invites per class (top-ranked in each band). */
+  invited: Record<string, WarriorId[]>;
+  /** Stable declarations per stable id (≤ STABLE_CLASS_ENTRY_CAP each). */
+  declared: Record<StableId, WarriorId[]>;
+  /** Warriors scratched from the cycle (invite declined or entry pulled). */
+  scratched: WarriorId[];
+  /** Class champions elevated into next cycle's Champions-class invites. */
+  elevated: WarriorId[];
 }
 
 /**
@@ -290,6 +316,9 @@ export interface RivalStableData {
   /** Season index of the last poach bid tabled by this stable — enforces the
    *  once-per-season poaching cadence (G.2). */
   lastPoachSeason?: number;
+  /** V27: warrior ids this stable has declared into the upcoming seasonal's
+   *  class brackets — consumed by emitClassTournaments at emission. */
+  tournamentEntryIds?: WarriorId[];
 }
 
 /**

@@ -101,7 +101,6 @@ describe('applyBoutResults — arena attribution', () => {
       tId: 't1',
       tName: 'Gold Cup',
       rng: new SeededRNG(12345),
-      skipFatigue: true,
       arenaId: 'sundered_coliseum',
     });
 
@@ -125,7 +124,6 @@ describe('applyBoutResults — career.byArena accounting', () => {
       tId: 't1',
       tName: 'Gold Cup',
       rng: new SeededRNG(12345),
-      skipFatigue: true,
       arenaId: 'sundered_coliseum',
     });
 
@@ -165,7 +163,6 @@ describe('applyBoutResults — career.byArena accounting', () => {
       tId: 't1',
       tName: 'Gold Cup',
       rng: new SeededRNG(12345),
-      skipFatigue: true,
       arenaId: 'sundered_coliseum',
     });
 

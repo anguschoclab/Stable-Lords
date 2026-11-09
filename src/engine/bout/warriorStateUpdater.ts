@@ -1,6 +1,11 @@
 import type { Warrior } from '@/types/warrior.types';
 import { milestoneEpithet } from '@/data/names/epithets';
-import { boutSeasonPoints, flashyFlair, nextCareerRecord } from '@/engine/warrior/careerUpdate';
+import {
+  boutSeasonPoints,
+  fightEquivalentsOf,
+  flashyFlair,
+  nextCareerRecord,
+} from '@/engine/warrior/careerUpdate';
 
 /**
  *
@@ -14,6 +19,8 @@ interface UpdateWarriorAfterBoutArgs {
   tags: string[];
   skipFatigue?: boolean;
   arenaId?: string;
+  /** V27: fight-equivalents earned by this bout (Phase 2 accrual). */
+  feDelta?: number;
 }
 
 /**
@@ -47,6 +54,7 @@ export function updateWarriorAfterBout(args: UpdateWarriorAfterBoutArgs): Warrio
     fame: Math.max(0, (warrior.fame || 0) + fameDelta),
     popularity: Math.max(0, (warrior.popularity || 0) + popularityDelta),
     career,
+    ...(args.feDelta ? { fightEquivalents: fightEquivalentsOf(warrior) + args.feDelta } : {}),
     flair: flair ?? warrior.flair,
     fatigue,
     seasonPoints: boutSeasonPoints(warrior.seasonPoints, isWinner, wasKilled),

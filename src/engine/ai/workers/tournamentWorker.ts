@@ -21,7 +21,8 @@ const CAMPAIGN_REST_COUNT = 2;
  */
 export function processTournamentPrep(
   rival: RivalStableData,
-  week: number
+  week: number,
+  _state?: unknown
 ): { updatedRival: RivalStableData; gazetteItems: string[] } {
   const gazetteItems: string[] = [];
   if (rival.strategy?.intent !== 'TOURNAMENT_CAMPAIGN') {
@@ -61,4 +62,19 @@ export function processTournamentPrep(
   );
 
   return { updatedRival, gazetteItems };
+}
+
+/**
+ * V27 tourney metagame — Phase-1 stub. The real implementation gates on the
+ * seasonal calendar (freeze countdown), holds breakpoint-edge warriors in
+ * recovery, writes `rival.tournamentEntryIds` declarations spread across
+ * classes during the entry window, and scratches under RECOVERY/SURVIVAL.
+ * Must stay deterministic — sorts only, no rng draws (shard parity).
+ */
+export function planTournamentEntries(
+  rival: RivalStableData,
+  _nextWeek: number,
+  _state?: unknown
+): { updatedRival: RivalStableData; gazetteItems: string[] } {
+  return { updatedRival: rival, gazetteItems: [] };
 }

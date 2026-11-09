@@ -22,6 +22,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { hashStr, resolveRng } from '@/utils/random';
 import { STYLE_LEARN_WEIGHTS } from '@/data/learnPriorities';
 import { effectiveLearnCap } from './skillBurn';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import {
   LEARN_ATTEMPTS,
   LEARN_WT_FACTOR,
@@ -104,11 +105,14 @@ export interface BoutLearnResult {
  * @param rng - Bout RNG; falls back to a per-warrior-per-bout seeded stream
  */
 export function rollBoutLearns(
-  warrior: Pick<Warrior, 'id' | 'style' | 'attributes' | 'learnedSkills' | 'burnedSkills' | 'career'>,
+  warrior: Pick<
+    Warrior,
+    'id' | 'style' | 'attributes' | 'learnedSkills' | 'burnedSkills' | 'career' | 'fightEquivalents'
+  >,
   opponentStyle: FightingStyle | undefined,
   rng?: IRNGService
 ): BoutLearnResult {
-  const careerBouts = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+  const careerBouts = fightEquivalentsOf(warrior);
   const rngService = resolveRng(rng, hashStr(`learn|${warrior.id}|${careerBouts}`));
 
   const favorite = favoriteLearnOf(warrior);

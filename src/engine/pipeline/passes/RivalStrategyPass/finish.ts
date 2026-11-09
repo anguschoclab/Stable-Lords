@@ -9,6 +9,8 @@ import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { processPoachMarket } from '@/engine/ai/market/poachBid';
 import { isSeasonalTournamentWeek, isChampionsTournamentWeek } from '@/engine/core/absoluteWeek';
 import { buildChampionsTournament } from '@/engine/championship/championsTournament';
+import { isTournamentFreezeWeek } from '@/engine/matchmaking/tournamentSelection/classes';
+import { handleTournamentFreeze } from '@/engine/matchmaking/tournamentSelection/freeze';
 import type { RivalShardOutput } from '../rivalStableShard';
 import { buildWeekOffers } from './offers';
 import { runRosterManagement } from './roster';
@@ -113,6 +115,11 @@ function weekEndImpacts(
   globalGazetteItems: string[]
 ): StateImpact[] {
   const impacts: StateImpact[] = [];
+  // T−2 freeze: the FE snapshot + class invites for the coming seasonal.
+  // Runs before emission so the tournament week reads a settled cycle.
+  if (isTournamentFreezeWeek(nextWeek)) {
+    impacts.push(handleTournamentFreeze(state, nextWeek, rng, headless));
+  }
   if (isSeasonalTournamentWeek(nextWeek)) {
     impacts.push(handleSeasonalTournaments(state, nextWeek, rng, headless));
   } else if (isChampionsTournamentWeek(nextWeek)) {

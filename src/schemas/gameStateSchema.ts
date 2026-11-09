@@ -193,6 +193,18 @@ export const GameStateSchema = z
     day: z.number(),
     isTournamentWeek: z.boolean(),
     activeTournamentId: z.string().optional(),
+    tournamentCycle: z
+      .object({
+        forWeek: z.number(),
+        season: SeasonSchema,
+        frozenAtAbsWeek: z.number(),
+        feByWarrior: z.record(z.string(), z.number()),
+        invited: z.record(z.string(), z.array(z.string())),
+        declared: z.record(z.string(), z.array(z.string())),
+        scratched: z.array(z.string()),
+        elevated: z.array(z.string()),
+      })
+      .optional(),
     promoters: z.record(z.string(), PromoterSchema),
     boutOffers: z.record(z.string(), BoutOfferSchema),
     arenaChampions: z.record(z.string(), ArenaTitleSchema).optional(),

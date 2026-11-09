@@ -103,7 +103,7 @@ describe('applyRecords', () => {
     expect(updatedA.career?.losses).toBe(1);
     expect(updatedA.career?.kills).toBe(0);
     expect(updatedA.fatigue).toBe(35); // normal fatigue for losing
-    expect(updatedA.flair).not.toContain('Flashy');
+    expect(updatedA.flair ?? []).not.toContain('Flashy'); // patches carry only changed fields
 
     // D won, and got a kill
     expect(updatedD.career?.wins).toBe(1);
@@ -191,8 +191,9 @@ describe('applyRecords', () => {
     const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
     const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
 
-    expect(updatedA.fatigue).toBe(20); // No change
-    expect(updatedD.fatigue).toBe(30); // No change
+    // No change — skipped fields are absent from the patch, not rewritten.
+    expect(updatedA.fatigue).toBeUndefined();
+    expect(updatedD.fatigue).toBeUndefined();
   });
 
   it('resumes fatigue accrual once the tournament is completed — the lingering flag only exempts live participants', () => {

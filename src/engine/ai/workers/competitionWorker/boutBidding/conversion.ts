@@ -37,6 +37,7 @@ import {
   AI_LEARN_TEACH_WEIGHT_MIN,
 } from '@/constants/ai';
 import { suspectedFavoriteLearn } from '@/engine/learning';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { STYLE_LEARN_WEIGHTS } from '@/data/learnPriorities';
 import {
   AI_DOWN_CHALLENGE_PENALTY,
@@ -189,8 +190,7 @@ function fameFilter(
   });
 }
 
-const careerBouts = (w: Warrior): number =>
-  (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+const careerBouts = (w: Warrior): number => fightEquivalentsOf(w);
 
 /**
  * Canon "challenge a very experienced warrior" to learn: young warriors of

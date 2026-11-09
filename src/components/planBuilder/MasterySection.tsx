@@ -2,6 +2,7 @@ import { Gauge } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { Warrior } from '@/types/game';
 import { getMastery } from '@/engine/stylePassives';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 interface MasterySectionProps {
   warrior?: Warrior;
@@ -11,7 +12,7 @@ interface MasterySectionProps {
  *
  */
 export default function MasterySection({ warrior }: MasterySectionProps) {
-  const totalFights = (warrior?.career?.wins || 0) + (warrior?.career?.losses || 0);
+  const totalFights = warrior ? fightEquivalentsOf(warrior) : 0;
   const mastery = getMastery(totalFights);
 
   return (

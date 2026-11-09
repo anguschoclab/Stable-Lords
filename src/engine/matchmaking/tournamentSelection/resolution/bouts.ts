@@ -4,7 +4,7 @@ import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import { getAIPlan } from '../utils';
-import type { FightOutcome } from '@/types/combat.types';
+import type { FightOutcome, FightPlan } from '@/types/combat.types';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { selectArenaForTournamentBout } from '../../tournament/tournamentArenaSelection';
 import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
@@ -49,6 +49,8 @@ interface SimulateTournamentBoutArgs {
 function simulateTournamentBout(args: SimulateTournamentBoutArgs): {
   outcome: FightOutcome;
   arenaId: string;
+  planA: FightPlan;
+  planD: FightPlan;
 } {
   const { updatedState, resolvedTournament, wA, wD, rng } = args;
   const { headless } = args;
@@ -85,7 +87,7 @@ function simulateTournamentBout(args: SimulateTournamentBoutArgs): {
     outcome.winner = hitsA === hitsD ? (rng.next() < 0.5 ? 'A' : 'D') : hitsA > hitsD ? 'A' : 'D';
   }
 
-  return { outcome, arenaId };
+  return { outcome, arenaId, planA, planD };
 }
 
 interface ResolveBoutArgs {
@@ -145,7 +147,7 @@ function resolveBout(args: ResolveBoutArgs): GameState {
   const cA = liveA;
   const cD = liveD;
 
-  const { outcome, arenaId } = simulateTournamentBout({
+  const { outcome, arenaId, planA, planD } = simulateTournamentBout({
     updatedState: updatedState,
     resolvedTournament: resolvedTournament,
     wA: cA,
@@ -169,8 +171,11 @@ function resolveBout(args: ResolveBoutArgs): GameState {
     tId: resolvedTournament.id,
     tName: resolvedTournament.name,
     rng: rng,
-    skipFatigue: undefined,
+    headless: headless,
     arenaId: arenaId,
+    round: bout.round,
+    planA: planA,
+    planD: planD,
   });
 }
 

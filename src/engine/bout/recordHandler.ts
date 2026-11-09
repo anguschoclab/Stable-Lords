@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
+import { changedFields, isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { StateImpact, type WarriorEpithetAward } from '@/engine/impacts';
 import { updateWarriorAfterBout } from './warriorStateUpdater';
 
@@ -31,6 +31,11 @@ interface ApplyRecordsArgs {
   fameD: number;
   popD: number;
   arenaId?: string;
+  /** V27: FE earned by this bout — 1 arena, odd/even round parity for tour_*. */
+  feDelta?: number;
+  /** V27: combatant ids exempt from fatigue beyond the state participant lists —
+   * a tournament bout's own fighters are participants by construction. */
+  extraParticipantIds?: readonly string[];
 }
 
 /**
@@ -61,6 +66,7 @@ export function applyRecords(args: ApplyRecordsArgs): StateImpact {
 
   // 🔒 Tournament fatigue exemption: Check if warriors are tournament participants
   const participantIds = tournamentParticipantIds(s);
+  for (const id of args.extraParticipantIds ?? []) participantIds.add(id);
   const skipFatigueA = participantIds.has(wA.id);
   const skipFatigueD = participantIds.has(wD.id);
 
@@ -84,9 +90,13 @@ export function applyRecords(args: ApplyRecordsArgs): StateImpact {
         tags: tags,
         skipFatigue: side.skip,
         arenaId: arenaId,
+        feDelta: args.feDelta,
       });
       queueEpithet(side.w, updated);
-      rosterUpdates.set(side.w.id, updated);
+      // Diffed like the rival path — a full-object write would let stale
+      // snapshot fields (xp, favorites) overwrite progressions' patches.
+      const diff = changedFields(side.w, updated);
+      rosterUpdates.set(side.w.id, { ...(rosterUpdates.get(side.w.id) ?? {}), ...diff });
     } else {
       // Rivals track no popularity from bouts (unchanged from the prior D-side path).
       const updated = updateWarriorAfterBout({
@@ -98,6 +108,7 @@ export function applyRecords(args: ApplyRecordsArgs): StateImpact {
         tags: tags,
         skipFatigue: side.skip,
         arenaId: arenaId,
+        feDelta: args.feDelta,
       });
       queueEpithet(side.w, updated);
       patchRivalWarrior(rivalWarriorPatches, side.w, updated);

@@ -9,6 +9,7 @@ import { clamp } from '@/utils/math';
 import { pickStrategyTarget, pickTacticProbe } from '@/engine/ai/plan/strategyLab';
 import { getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
 import { OFFENSIVE_TACTICS } from '@/types/enumSources';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 import {
   ARCHETYPE_DESIGN_BARS,
@@ -66,7 +67,7 @@ function applyStyleCaps(plan: FightPlan, w: Warrior): void {
     // knockdown is already applied upstream). Veterans may free-run Dante's
     // defensive 6-4-6 sheets. Every article runs activity moderate-to-low
     // and keeps KD at 6 or under — 7+ belongs to desperation saves.
-    const fights = (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+    const fights = fightEquivalentsOf(w);
     if (fights < 10) plan.OE = Math.max(plan.OE, 6);
     plan.AL = Math.min(plan.AL, 7);
     plan.killDesire = Math.min(plan.killDesire ?? 5, 7);

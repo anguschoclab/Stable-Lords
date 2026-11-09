@@ -165,6 +165,9 @@ const CareerRecordSchema = z.object({
   byArena: z
     .record(z.string(), z.object({ wins: z.number(), losses: z.number(), kills: z.number() }))
     .optional(),
+  tourneyRecord: z
+    .object({ entries: z.number(), wins: z.number(), losses: z.number(), titles: z.number() })
+    .optional(),
 });
 
 /**
@@ -295,6 +298,7 @@ export const WarriorSchema = z.object({
   baseSkills: BaseSkillsSchema.optional(),
   luckfactor: LuckfactorSchema.optional(),
   bloodlust: z.number().optional(),
+  fightEquivalents: z.number().optional(),
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),

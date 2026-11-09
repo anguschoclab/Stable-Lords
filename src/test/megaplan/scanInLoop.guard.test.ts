@@ -284,16 +284,8 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     match: "o.warriorIds.includes(selectedWarriorId as WarriorId)",
     why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
   },
-  {
-    file: 'src/engine/matchmaking/tournamentSelection/resolution/results.ts',
-    match: "r.roster.some((w) => w.id === victim.id)",
-    why: 'disjoint per-stable roster scan — total work is linear in roster size; the .some gate also preserves referential identity for untouched stables',
-  },
-  {
-    file: 'src/engine/matchmaking/tournamentSelection/resolution/results.ts',
-    match: "r.roster.filter((w) => w.id !== victim.id)",
-    why: 'disjoint per-stable roster scan — total work is linear in roster size; the .some gate also preserves referential identity for untouched stables',
-  },
+  // V27 Phase-3 removed two stale results.ts entries — applyTournamentKill's
+  // per-stable roster scans left when canonical handleDeath took over.
   {
     file: 'src/engine/owner/grudges.ts',
     match: "PERSONALITY_CLASH[persA]?.includes(persB)",

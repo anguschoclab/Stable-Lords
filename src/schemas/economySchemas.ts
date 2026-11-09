@@ -257,6 +257,7 @@ export const RivalStableDataSchema = z.object({
   needsRecruit: z.boolean().optional(),
   weeksBelowMin: z.number().int().nonnegative().optional(),
   lastPoachSeason: z.number().int().nonnegative().optional(),
+  tournamentEntryIds: z.array(z.string()).optional(),
 });
 
 /**

@@ -27,6 +27,7 @@ import type {
   ScoutReportData,
   InsightToken,
   TournamentEntry,
+  TournamentCycle,
   ProgressionState,
   ArenaTitle,
   GrandChampionEntry,
@@ -147,6 +148,8 @@ export interface StateImpact {
   tournaments?: TournamentEntry[];
   isTournamentWeek?: boolean;
   activeTournamentId?: TournamentId;
+  /** V27: frozen FE snapshot + entry ledger — replace-write (freeze/clear). */
+  tournamentCycle?: TournamentCycle;
 
   // Training
   trainers?: Trainer[];

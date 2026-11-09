@@ -25,6 +25,16 @@ export function tournamentIdFromContractId(contractId?: string): string | undefi
   return parts.slice(1, -2).join('_');
 }
 
+/** Extract the bracket round from a synthetic `tour_*` contractId (V27 FE). */
+export function tournamentRoundFromContractId(contractId?: string): number | undefined {
+  if (!contractId?.startsWith('tour_')) return undefined;
+  const parts = contractId.split('_');
+  // tour_<tournamentId>_<round>_<matchIndex> — round is always second-last.
+  if (parts.length < 4) return undefined;
+  const round = Number(parts[parts.length - 2]);
+  return Number.isFinite(round) ? round : undefined;
+}
+
 /**
  * Result of pairing generation. `voidedOffers` are Signed contracts that lost
  * the one-bout-per-warrior dedupe — callers must cancel them explicitly.

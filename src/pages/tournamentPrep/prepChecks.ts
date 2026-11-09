@@ -4,10 +4,11 @@ import { hasInjuries, countInjuries } from '@/engine/injuries/utils';
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import type { Warrior } from '@/types/state.types';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
-/** Fight experience — completed bouts (wins + losses). */
+/** Fight experience — the Duel2 fight-equivalents counter (arena + odd tourney rounds). */
 export function fightExperience(w: Warrior): number {
-  return (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+  return fightEquivalentsOf(w);
 }
 
 /** A single prep-checklist finding: advisory or blocking. */

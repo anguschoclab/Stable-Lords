@@ -93,6 +93,7 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.tournaments = state.tournaments || [];
   draft.isTournamentWeek = state.isTournamentWeek || false;
   draft.activeTournamentId = state.activeTournamentId;
+  draft.tournamentCycle = state.tournamentCycle;
   draft.year = state.year || 1;
   draft.absoluteWeek = state.absoluteWeek ?? deriveAbsoluteWeek(state.year, state.week);
 

@@ -27,6 +27,7 @@ import type {
   Rivalry,
   ScoutReportData,
   SeasonalGrowth,
+  TournamentCycle,
   TournamentEntry,
   TrainingAssignment,
 } from './game';
@@ -58,6 +59,7 @@ export interface BloodfeudMark {
   expiresWeek: number;
 }
 
+/** The full serializable game state — single source of truth for a save. */
 export interface GameState {
   meta: {
     gameName: string;
@@ -157,6 +159,9 @@ export interface GameState {
   day: number; // 0-7
   isTournamentWeek: boolean;
   activeTournamentId?: TournamentId;
+  /** V27: frozen FE snapshot + entry ledger for the upcoming seasonal —
+   *  written at the freeze date (T−2), consumed by class-bracket emission. */
+  tournamentCycle?: TournamentCycle;
   // ─── Promoter System ───
   promoters: Record<PromoterId, Promoter>;
   boutOffers: Record<BoutOfferId, BoutOffer>;

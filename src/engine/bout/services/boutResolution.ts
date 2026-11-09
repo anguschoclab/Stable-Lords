@@ -229,6 +229,8 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
       fameD: fameD,
       popD: popD,
       arenaId: boutArenaId,
+      // Arena bouts always accrue 1 FE; tournament bouts only on odd rounds.
+      feDelta: ctx.tournamentRound !== undefined ? ctx.tournamentRound % 2 : 1,
     })
   );
 

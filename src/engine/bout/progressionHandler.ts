@@ -10,7 +10,7 @@ import { LEARN_SKILL_NAMES } from '@/constants/combat/combat/learn';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
-import { patchRivalWarrior } from './warriorRouting';
+import { changedFields, patchRivalWarrior } from './warriorRouting';
 
 /**
  * Routes a per-warrior update to either the player's rosterUpdates map or to
@@ -39,8 +39,13 @@ function routeUpdate(
 ): void {
   const isPlayer = isPlayerWarrior(s, warrior);
   if (isPlayer) {
+    // Diff like patchRivalWarrior: `partial` may be a full warrior derived
+    // from the same pre-bout snapshot, so an unfiltered merge would let a
+    // stale field (e.g. `career`) clobber an earlier impact's real change.
+    const diff = changedFields(warrior, partial);
+    if (Object.keys(diff).length === 0) return;
     const existing = rosterUpdates.get(warrior.id) ?? {};
-    rosterUpdates.set(warrior.id, { ...existing, ...partial });
+    rosterUpdates.set(warrior.id, { ...existing, ...diff });
     return;
   }
   // Rival-owned: per-warrior patch of just the changed fields. The old

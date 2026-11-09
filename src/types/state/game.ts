@@ -319,6 +319,8 @@ export interface RivalStableData {
   /** V27: warrior ids this stable has declared into the upcoming seasonal's
    *  class brackets — consumed by emitClassTournaments at emission. */
   tournamentEntryIds?: WarriorId[];
+  /** V27: cycle scratches filed by the AI — supersede invites at emission. */
+  tournamentScratchIds?: WarriorId[];
 }
 
 /**

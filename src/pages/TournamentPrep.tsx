@@ -4,7 +4,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { ShieldCheck } from 'lucide-react';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { EmptyPrepState, PrepNotice, TierSection } from './tournamentPrep/sections';
+import { EmptyPrepState, EntryDeskSection, PrepNotice, TierSection } from './tournamentPrep/sections';
 
 /** Entrant/your-warrior stat pair for the page header. */
 function PrepHeaderStats({
@@ -38,15 +38,32 @@ function PrepHeaderStats({
  * injuries, fatigue, weather aversion) — blocking vs advisory issues labeled.
  */
 export default function TournamentPrep() {
-  const { tournaments, week, player, rivals, weather } = useGameStore(
+  const {
+    tournaments,
+    week,
+    player,
+    rivals,
+    weather,
+    tournamentCycle,
+    roster,
+    declareTournamentEntry,
+    scratchTournamentEntry,
+  } = useGameStore(
     useShallow((s) => ({
       tournaments: s.tournaments,
       week: s.week,
       player: s.player,
       rivals: s.rivals,
       weather: s.weather,
+      tournamentCycle: s.tournamentCycle,
+      roster: s.roster,
+      declareTournamentEntry: s.declareTournamentEntry,
+      scratchTournamentEntry: s.scratchTournamentEntry,
     }))
   );
+
+  // Desk closes once the brackets draw — the cycle lingers for the tourney week.
+  const deskOpen = !!tournamentCycle && week < tournamentCycle.forWeek;
 
   const pendingTournaments = useMemo(
     () => (tournaments ?? []).filter((t) => t.week === week && !t.completed),
@@ -87,8 +104,20 @@ export default function TournamentPrep() {
         }
       />
 
+      {deskOpen && tournamentCycle && player && (
+        <div className="mb-12">
+          <EntryDeskSection
+            cycle={tournamentCycle}
+            roster={roster}
+            playerId={player.id}
+            onDeclare={declareTournamentEntry}
+            onScratch={scratchTournamentEntry}
+          />
+        </div>
+      )}
+
       {pendingTournaments.length === 0 ? (
-        <EmptyPrepState />
+        deskOpen ? null : <EmptyPrepState />
       ) : (
         <div className="space-y-12">
           <PrepNotice />

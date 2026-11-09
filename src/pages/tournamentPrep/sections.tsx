@@ -182,3 +182,166 @@ export function PrepNotice() {
     </Surface>
   );
 }
+
+import { Button } from '@/components/ui/button';
+import { TOURNAMENT_CLASSES, classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
+import type { TournamentCycle } from '@/types/state.types';
+import type { StableId, WarriorId } from '@/types/shared.types';
+import { Swords, XCircle } from 'lucide-react';
+
+type EntryStatus = 'INVITED' | 'DECLARED' | 'SCRATCHED' | 'NONE';
+
+function entryStatus(
+  cycle: TournamentCycle,
+  classId: string,
+  warriorId: string,
+  playerId: StableId
+): EntryStatus {
+  if (cycle.scratched.includes(warriorId)) return 'SCRATCHED';
+  if ((cycle.invited[classId] ?? []).includes(warriorId)) return 'INVITED';
+  if ((cycle.declared[playerId] ?? []).includes(warriorId)) return 'DECLARED';
+  return 'NONE';
+}
+
+function statusBadge(status: EntryStatus) {
+  switch (status) {
+    case 'INVITED':
+      return 'bg-arena-gold/10 text-arena-gold border-arena-gold/30';
+    case 'DECLARED':
+      return 'bg-primary/10 text-primary border-primary/30';
+    case 'SCRATCHED':
+      return 'bg-destructive/10 text-destructive border-destructive/30';
+    default:
+      return 'bg-white/[0.03] text-muted-foreground/50 border-white/10';
+  }
+}
+
+/** One freeze-window roster row: frozen class, FE, breakpoint gap, desk action. */
+function EntryRow({
+  cycle,
+  warrior: w,
+  classId,
+  playerId,
+  onDeclare,
+  onScratch,
+}: {
+  cycle: TournamentCycle;
+  warrior: Warrior;
+  classId: string;
+  playerId: StableId;
+  onDeclare: (id: WarriorId) => void;
+  onScratch: (id: WarriorId) => void;
+}) {
+  const fe = cycle.feByWarrior[w.id] ?? fightEquivalentsOf(w);
+  const next = TOURNAMENT_CLASSES.find((c) => c.minFE > fe);
+  const gap = next ? next.minFE - fe : 0;
+  const status = entryStatus(cycle, classId, w.id, playerId);
+  return (
+    <div className="flex items-center justify-between gap-4 p-3 border border-white/5 bg-white/[0.02]">
+      <div className="flex items-center gap-3 min-w-0">
+        <AvatarForEntity
+          entityId={w.id}
+          entityType="warrior"
+          source={w}
+          size="xs"
+          className="border border-white/10 bg-neutral-950 shrink-0"
+        />
+        <div className="min-w-0">
+          <EntrantName w={w} isPlayerOwned />
+          <span className="text-[9px] text-muted-foreground/50 uppercase tracking-widest">
+            {STYLE_DISPLAY_NAMES[w.style]} · {fe} FE
+            {gap === 1 && next ? ' · one bout under breakpoint' : ''}
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5 shrink-0">
+        <Badge className={cn('rounded-none text-[7px] font-black uppercase tracking-widest', statusBadge(status))}>
+          {status === 'NONE' ? 'Open' : status}
+        </Badge>
+        {status === 'NONE' && (
+          <Button
+            variant="outline"
+            onClick={() => onDeclare(w.id)}
+            className="h-6 px-2 text-[8px] font-black uppercase tracking-widest gap-1 rounded-none border-primary/30 hover:bg-primary/10"
+          >
+            <Swords className="h-2.5 w-2.5" /> Declare
+          </Button>
+        )}
+        {(status === 'INVITED' || status === 'DECLARED') && (
+          <Button
+            variant="outline"
+            onClick={() => onScratch(w.id)}
+            className="h-6 px-2 text-[8px] font-black uppercase tracking-widest gap-1 rounded-none border-destructive/30 hover:bg-destructive/10 text-destructive"
+          >
+            <XCircle className="h-2.5 w-2.5" /> Scratch
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * V27 Entry Desk — the freeze-window surface. FE is locked at the snapshot;
+ * the player files declarations (≤4 per class) and scratches before brackets draw.
+ */
+export function EntryDeskSection({
+  cycle,
+  roster,
+  playerId,
+  onDeclare,
+  onScratch,
+}: {
+  cycle: TournamentCycle;
+  roster: Warrior[];
+  playerId: StableId;
+  onDeclare: (id: WarriorId) => void;
+  onScratch: (id: WarriorId) => void;
+}) {
+  return (
+    <section className="space-y-8">
+      <SectionDivider label={`Entry Desk — ${cycle.season} Week ${cycle.forWeek}`} />
+      <Surface
+        variant="glass"
+        className="p-5 border-l-2 border-arena-gold/40 bg-white/[0.01]"
+      >
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 leading-relaxed">
+          Fight equivalents froze at week {cycle.frozenAtAbsWeek}. Bouts fought now add real
+          experience on top of the locked class — they cannot move a warrior up a bracket.
+        </p>
+      </Surface>
+      {TOURNAMENT_CLASSES.map((spec) => {
+        const entrants = roster.filter(
+          (w) => classAtFreeze({ tournamentCycle: cycle }, w.id, fightEquivalentsOf(w)) === spec.id
+        );
+        if (entrants.length === 0) return null;
+        return (
+          <div key={spec.id}>
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-[0.15em] text-arena-gold">
+                {spec.name}
+              </span>
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground/50">
+                {spec.minFE}+ FE{spec.id !== 'champions' ? '' : ' · Champions'}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {entrants.map((w) => (
+                <EntryRow
+                  key={w.id}
+                  cycle={cycle}
+                  warrior={w}
+                  classId={spec.id}
+                  playerId={playerId}
+                  onDeclare={onDeclare}
+                  onScratch={onScratch}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </section>
+  );
+}

@@ -110,6 +110,7 @@ interface ScoreCandidatesArgs {
   meta: StyleMeta | undefined;
   favoredStyles?: FightingStyle[];
   owner?: Pick<RivalStableData['owner'], 'id' | 'competence'>;
+  intent?: string;
 }
 
 /**
@@ -130,6 +131,7 @@ function scoreCandidate(
     meta: StyleMeta | undefined;
     owner: Pick<RivalStableData['owner'], 'id' | 'competence'> | undefined;
     week: number;
+    intent?: string;
   }
 ): number {
   const { prefsSet, activeStyleCounts, meta, owner, week } = ctx;
@@ -137,6 +139,14 @@ function scoreCandidate(
   score += weights.tierBonus[w.tier] ?? 0;
   if (prefsSet.has(w.style)) score += weights.styleMatchBonus;
   if (w.veteran) score += weights.veteranBonus;
+
+  // V27 tourney-archetype bias — campaign stables scout wit first (the
+  // article's signal): 21+ WT is the Champions-class frame, 17+ still viable.
+  if (ctx.intent === 'TOURNAMENT_CAMPAIGN') {
+    const wt = w.attributes?.WT ?? 0;
+    if (wt >= 21) score += 40;
+    else if (wt >= 17) score += 20;
+  }
 
   // ⚡ TSA: Meta-Fit Scoring
   const drift = meta?.[w.style] || 0;
@@ -198,7 +208,9 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
     const w = pool[i];
     if (!w) continue;
     const score = scoreCandidate(
-      w, weights, { prefsSet, activeStyleCounts, meta, owner: args.owner, week }
+      w,
+      weights,
+      { prefsSet, activeStyleCounts, meta, owner: args.owner, week, intent: args.intent }
     );
     if (score > bestScore) {
       bestScore = score;
@@ -255,6 +267,7 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): {
       meta: meta,
       favoredStyles: favoredStyles,
       owner: updatedRival.owner,
+      intent: updatedRival.strategy?.intent,
     });
     if (bestIdx < 0) break;
     const recruit = visible[bestIdx];

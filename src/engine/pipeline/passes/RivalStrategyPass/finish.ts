@@ -11,6 +11,7 @@ import { isSeasonalTournamentWeek, isChampionsTournamentWeek } from '@/engine/co
 import { buildChampionsTournament } from '@/engine/championship/championsTournament';
 import { isTournamentFreezeWeek } from '@/engine/matchmaking/tournamentSelection/classes';
 import { handleTournamentFreeze } from '@/engine/matchmaking/tournamentSelection/freeze';
+import { emitClassTournaments } from '@/engine/matchmaking/tournamentSelection/emission';
 import type { RivalShardOutput } from '../rivalStableShard';
 import { buildWeekOffers } from './offers';
 import { runRosterManagement } from './roster';
@@ -182,12 +183,20 @@ function handleSeasonalTournaments(
   rng: IRNGService,
   headless?: boolean
 ): StateImpact {
-  const tournaments = TournamentSelectionService.generateSeasonalTiers(
-    state,
-    week,
-    state.season,
-    ((state.absoluteWeek ?? week - 1) + 1) * 881
-  );
+  // V27 class brackets: when the freeze cycle is live, one bracket per
+  // populated FE class replaces the legacy rank-tiered seasonals. A missing
+  // cycle falls back to the old committee path so tournament weeks never go
+  // silent mid-migration.
+  const classEmission = emitClassTournaments(state, week, rng);
+  const tournaments =
+    classEmission.tournaments.length > 0
+      ? classEmission.tournaments
+      : TournamentSelectionService.generateSeasonalTiers(
+          state,
+          week,
+          state.season,
+          ((state.absoluteWeek ?? week - 1) + 1) * 881
+        );
   const tournamentNews: string[] = tournaments.map(
     (tour) => `🏆 ${tour.name} announced! Brackets set for the coming week.`
   );
@@ -196,7 +205,7 @@ function handleSeasonalTournaments(
     { tournaments: [...(state.tournaments || []), ...tournaments] },
     {
       isTournamentWeek: true,
-      activeTournamentId: tournaments[0]?.id,
+      activeTournamentId: classEmission.activeTournamentId ?? tournaments[0]?.id,
       day: 0,
       // Player-facing flavor — suppressed in headless mode per pipeline convention.
       newsletterItems: headless

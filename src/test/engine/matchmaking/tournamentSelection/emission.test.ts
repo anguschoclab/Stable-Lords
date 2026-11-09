@@ -32,11 +32,14 @@ function cycleState(entries: {
   if (entries.apprentices?.length)
     invited.apprentices = entries.apprentices.map((x) => x.id);
   const declaredStable = entries.declaredStable ?? TOURNEY_PLAYER_ID;
+  const rookieIds = new Set((entries.rookies ?? []).map((x) => x.id));
   state.tournamentCycle = {
     forWeek: 10,
     season: 'Spring',
     frozenAtAbsWeek: 8,
-    feByWarrior: Object.fromEntries(all.map((x) => [x.id, 0])),
+    // Frozen FE must place each warrior in the class the fixture invites
+    // them to — apprentices get an FE inside the 1–4 band.
+    feByWarrior: Object.fromEntries(all.map((x) => [x.id, rookieIds.has(x.id) ? 0 : 2])),
     invited,
     declared: entries.apprentices?.length
       ? { [declaredStable]: entries.apprentices.map((x) => x.id) }

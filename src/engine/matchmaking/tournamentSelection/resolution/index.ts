@@ -122,6 +122,26 @@ function finalizeRound(args: FinalizeRoundArgs): {
     updatedState = awardTournamentPrizes(updatedTournament ?? resolvedTournament, updatedState);
   }
 
+  // V27 TV elevation: a class champion earns a Champions-class invite in the
+  // next cycle — winning a lower class promotes you regardless of frozen FE.
+  if (isComplete && resolvedTournament.classId && resolvedTournament.classId !== 'champions') {
+    const finalsBout = [...bracket]
+      .filter((b) => !b.isBronzeMatch)
+      .sort((a, b) => b.round - a.round || a.matchIndex - b.matchIndex)[0];
+    const championId = finalsBout?.winner
+      ? finalsBout.winner === 'A'
+        ? finalsBout.warriorIdA
+        : finalsBout.warriorIdD
+      : undefined;
+    const cycle = updatedState.tournamentCycle;
+    if (championId && cycle && !cycle.elevated.includes(championId)) {
+      updatedState.tournamentCycle = {
+        ...cycle,
+        elevated: [...cycle.elevated, championId],
+      };
+    }
+  }
+
   return {
     updatedState,
     roundResults:

@@ -67,6 +67,17 @@ export function handleTournamentFreeze(
     invited[spec.id] = pool.slice(0, CLASS_INVITE_COUNT);
   }
 
+  // TV elevation: last cycle's class champions jump the Champions queue —
+  // they promoted by winning, not by FE. Dedupe against the ranked pool.
+  const elevated = (state.tournamentCycle?.elevated ?? []).filter(
+    (id) => id in feByWarrior
+  );
+  if (elevated.length > 0) {
+    invited.champions = [
+      ...new Set([...elevated, ...invited.champions]),
+    ].slice(0, CLASS_INVITE_COUNT);
+  }
+
   const tournamentCycle: TournamentCycle = {
     forWeek,
     season: state.season,

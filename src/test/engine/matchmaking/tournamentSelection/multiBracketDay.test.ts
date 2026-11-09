@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { advanceDay } from '@/engine/pipeline/tick/dayAdvance';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { buildActiveWarriorMap } from '@/utils/roster';
+import type { WarriorId } from '@/types/shared.types';
+import type { Warrior } from '@/types/state.types';
 import {
   makeTournamentBaseState,
   makeTournamentWarrior,
@@ -31,7 +33,7 @@ function twoBracketState() {
   state.day = 0;
   // Roster/rivals are assigned after the base fixture builds its (empty)
   // warriorMap — rebuild the cache so pairing lookups see all combatants.
-  state.warriorMap = buildActiveWarriorMap(state);
+  state.warriorMap = buildActiveWarriorMap(state) as Map<WarriorId, Warrior>;
   return state;
 }
 

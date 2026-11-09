@@ -246,7 +246,11 @@ describe('Autosim Integration', () => {
       // Should complete in reasonable time. The living-world floor refills a
       // fresh state to ~90 rival stables on week 1, so 30 weeks now cost
       // ~0.4s/week — the old 10s cap assumed the 8-rival fresh world.
-      expect(elapsed).toBeLessThan(30000);
+      // V27: tournament weeks now resolve all five class brackets (~5× bout
+      // volume vs the single legacy bracket). 36.7s was measured under
+      // full-suite CPU contention (isolated ~14s); cap keeps headroom for
+      // suite-parallel runs.
+      expect(elapsed).toBeLessThan(60000);
     });
   });
 

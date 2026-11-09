@@ -58,5 +58,7 @@ describe('batch teardown parity', () => {
       expect(q.state.deferredBoutLogs ?? []).toEqual([]);
     }
     expect((result.state.tournaments ?? []).every((t) => t.completed)).toBe(true);
-  }, 60_000); // 52 headless weeks exceed bun's 5s default test timeout (~11s there).
+  }, 180_000); // 52 headless weeks exceed bun's 5s default test timeout;
+  // V27 multi-bracket tourneys add bout volume on the four seasonal weeks —
+  // 60s failed under full-suite load (isolated ~25s). Headroom for contention.
 });

@@ -184,7 +184,7 @@ export function PrepNotice() {
 }
 
 import { Button } from '@/components/ui/button';
-import { TOURNAMENT_CLASSES, classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
+import { TOURNAMENT_CLASSES, classAtFreeze, type TournamentClassId } from '@/engine/matchmaking/tournamentSelection/classes';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import type { TournamentCycle } from '@/types/state.types';
 import type { StableId, WarriorId } from '@/types/shared.types';
@@ -194,8 +194,8 @@ type EntryStatus = 'INVITED' | 'DECLARED' | 'SCRATCHED' | 'NONE';
 
 function entryStatus(
   cycle: TournamentCycle,
-  classId: string,
-  warriorId: string,
+  classId: TournamentClassId,
+  warriorId: WarriorId,
   playerId: StableId
 ): EntryStatus {
   if (cycle.scratched.includes(warriorId)) return 'SCRATCHED';
@@ -233,7 +233,7 @@ function EntryRow({
 }: {
   cycle: TournamentCycle;
   warrior: Warrior;
-  classId: string;
+  classId: TournamentClassId;
   desk: EntryDesk;
 }) {
   const { playerId, onDeclare, onScratch } = desk;
@@ -337,7 +337,6 @@ export function EntryDeskSection({
                   cycle={cycle}
                   warrior={w}
                   classId={spec.id}
-                  playerId={playerId}
                   desk={{ playerId, onDeclare, onScratch }}
                 />
               ))}

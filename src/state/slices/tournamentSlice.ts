@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import type { TournamentCycle, TournamentEntry } from '@/types/state.types';
-import type { TournamentId, WarriorId } from '@/types/shared.types';
+import type { StableId, TournamentId, WarriorId } from '@/types/shared.types';
 import type { GameStore } from '@/state/useGameStore';
 import { classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
@@ -63,8 +63,8 @@ export const createTournamentSlice: StateCreator<GameStore, [], [], TournamentSl
       const cycle = s.tournamentCycle;
       if (!cycle || cycle.scratched.includes(warriorId)) return {};
       const declared = { ...cycle.declared };
-      for (const key of Object.keys(declared)) {
-        declared[key] = declared[key].filter((id) => id !== warriorId);
+      for (const key of Object.keys(declared) as StableId[]) {
+        declared[key] = (declared[key] ?? []).filter((id) => id !== warriorId);
       }
       return {
         tournamentCycle: { ...cycle, declared, scratched: [...cycle.scratched, warriorId] },

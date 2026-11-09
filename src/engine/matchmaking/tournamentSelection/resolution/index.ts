@@ -145,7 +145,7 @@ function finalizeRound(args: FinalizeRoundArgs): {
     // V27 grudge lane: the completed bracket's losers file week-T+1
     // exhibition rematches — Proposed offers through the normal lane.
     if (resolvedTournament.classId) {
-      const grudges = buildGrudgeOffers(updatedState, tournamentId);
+      const grudges = buildGrudgeOffers(updatedState, tournamentId as TournamentId);
       if (grudges.length > 0) {
         updatedState.boutOffers = {
           ...(updatedState.boutOffers ?? {}),

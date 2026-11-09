@@ -10,7 +10,7 @@ import { generateFreelancer } from './utils';
 import { TOURNAMENT_CLASSES, classForFE, type TournamentClassId } from './classes';
 
 /** Class-bracket emission output: emitted entries + the active bracket id. */
-export interface ClassEmissionResult {
+interface ClassEmissionResult {
   tournaments: TournamentEntry[];
   activeTournamentId?: TournamentId;
 }

@@ -3,7 +3,7 @@ import type { BoutOfferId, PromoterId, TournamentId, WarriorId } from '@/types/s
 import { TOURNAMENT_CLASSES } from './tournamentSelection/classes';
 
 /** Grudge-match promoter — the arena office booking exhibition rematches. */
-export const GRUDGE_MATCHMAKING = 'GRUDGE_MATCHMAKING' as PromoterId;
+const GRUDGE_MATCHMAKING = 'GRUDGE_MATCHMAKING' as PromoterId;
 
 /**
  * Grudge matches — post-tournament exhibition bouts (V27, Phase 10).

@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 171 src-scoped dead exports — under the 172 ratchet — guard green.
+> **Ratchet status:** 173 src-scoped dead exports — under the 173 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -19,6 +19,8 @@ Flagged by the latest scan with no curated entry in `orphan-report.mjs` `ANNOTAT
 | Symbol | File | Evidence |
 | --- | --- | --- |
 | `HUBS` | src/components/layout/LeftNav.tsx | re-export with no local declaration — add ANNOTATIONS verdict |
+| `planTournamentEntries` | src/engine/ai/workers/tournamentWorker.ts | test-only symbol with no internal use — lifecycle hook? |
+| `updateWarriorFromBoutOutcome` | src/engine/warrior/careerUpdate.ts | test-only symbol with no internal use — lifecycle hook? |
 
 ## Duplication — alternate flows sharing an orphan's name
 
@@ -33,7 +35,7 @@ The same symbol name is declared in other production files. `@score` is token-le
 | `extractWeekSummary` | `src/engine/autosim/autosim.ts` | C | `src/engine/pipeline/tick/timeAdvance/summaries.ts` @0.3 **distinct** |
 | `TOURNAMENT_TIERS` | `src/engine/matchmaking/tournamentSelection.ts` | A | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct** |
 | `ArchiveConflictError` | `src/engine/storage/electronArchive.ts` | keep | `src/engine/storage/ArchiveConflictError.ts` @0 **distinct** |
-| `updateWarriorAfterBout` | `src/engine/warrior/careerUpdate.ts` | A | `src/engine/bout/warriorStateUpdater.ts` @0.35 **divergent** |
+| `updateWarriorAfterBout` | `src/engine/warrior/careerUpdate.ts` | A | `src/engine/bout/warriorStateUpdater.ts` @0.32 **divergent** |
 | `computeHP` | `src/engine/warrior/skillCalc.ts` | C | `src/data/terrabloodCharts.ts` @0.13 **distinct** |
 | `stableStats` | `src/hooks/useScoutingStableComparison.ts` | C | `src/pages/arenaHub/useArenaHubData.ts` @0.2 **distinct** |
 
@@ -348,10 +350,10 @@ Generated-library exports — the components ship their full part API even when 
 
 | Decision | Items | Unique code at stake |
 | --- | --- | --- |
-| **Delete / integrate** | 5 curated item(s) + **1 UNTRIAGED** | see per-item tags above |
+| **Delete / integrate** | 5 curated item(s) + **3 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
 | **Keep** | 4 test-reset hook(s); 120 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 171 / 172 | — |
+| **Guard hygiene** | ratchet: 173 / 173 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

@@ -90,5 +90,7 @@ describe('world liveness — 104 weeks', () => {
     if (yearEndPulse) {
       expect(yearEndPulse.avgChampionFatigue).toBeLessThan(70);
     }
-  }, 240000);
+  }, 360000); // V27: five class brackets per seasonal add bout volume on
+  // tournament weeks; the 240s cap failed once under full-suite load
+  // (isolated re-run ~90s). Headroom for suite-parallel CPU contention.
 });

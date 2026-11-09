@@ -72,7 +72,12 @@ export function ExecuteWeekButton({ ctaLabel }: { ctaLabel?: string }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="inline-flex">{button}</span>
+        <span
+          tabIndex={0}
+          className="inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+        >
+          {button}
+        </span>
       </TooltipTrigger>
       <TooltipContent>
         <p>{disabledReason}</p>

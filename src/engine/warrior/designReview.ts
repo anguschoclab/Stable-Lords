@@ -1078,6 +1078,84 @@ function reviewDoctrine(attrs: Attributes, style: FightingStyle): DesignReviewIt
   return items;
 }
 
+/**
+ * The tourney-projection axis — how the roll maps onto the V27 FE classes.
+ * The article's doctrine: 21+ wit on a small frame is the Champions-class
+ * signal; 17+ still makes a Rookies/Apprentices career; physical-tank
+ * low-wit frames are the scum/AB rookie profile.
+ */
+function reviewTourney(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
+  const items: DesignReviewItem[] = [];
+
+  if (attrs.WT >= 21 && attrs.SZ <= 6) {
+    items.push({
+      axis: 'tourney',
+      verdict: 'good',
+      title: 'Champions-class frame',
+      id: 'tourney-champions-frame',
+      detail: `WT ${attrs.WT} on SZ ${attrs.SZ} — the article's stud tourney roll: 21-wit learns feed every class from Initiates up, and the small frame spends the point budget on the stats that win brackets.`,
+    });
+    return items;
+  }
+  if (attrs.WT >= 21) {
+    items.push({
+      axis: 'tourney',
+      verdict: 'info',
+      title: 'Champions wit, open-class body',
+      id: 'tourney-wit-21',
+      detail: `WT ${attrs.WT} hits the Champions-class signal, but SZ ${attrs.SZ} spends the budget the article would put into physicals — viable, not the stud frame.`,
+    });
+    return items;
+  }
+  if (attrs.WT >= 17) {
+    items.push({
+      axis: 'tourney',
+      verdict: 'info',
+      title: 'Capped-classes viable',
+      id: 'tourney-wit-17',
+      detail: `WT ${attrs.WT} is viable through Rookies and Apprentices — the article's 17-wit floor — but Initiates+ brackets will out-learn it.`,
+    });
+    return items;
+  }
+
+  // Physical-tank low-wit — the scum/AB rookie profile (TP/AB/PR shells).
+  const TANK_SHELLS = [
+    FightingStyle.TotalParry,
+    FightingStyle.AimedBlow,
+    FightingStyle.ParryRiposte,
+  ];
+  if (TANK_SHELLS.includes(style) && attrs.CN >= 15 && attrs.WL >= 15) {
+    items.push({
+      axis: 'tourney',
+      verdict: 'info',
+      title: 'Rookie-window profile',
+      id: 'tourney-scum-rookie',
+      detail: `CN ${attrs.CN}/WL ${attrs.WL} shell on ${style} — the scum/AB rookie build: it wins Rookies on durability, not learns. Retire it before Initiates eats it.`,
+    });
+    return items;
+  }
+
+  if (attrs.WT < 11) {
+    items.push({
+      axis: 'tourney',
+      verdict: 'warn',
+      title: 'Fights uphill in Initiates+ classes',
+      id: 'tourney-low-wit',
+      detail: `WT ${attrs.WT} is under the article's 17-wit viability floor and far under the 21 signal — without a physical shell this roll bleeds learns in every class past Rookies.`,
+    });
+    return items;
+  }
+
+  items.push({
+    axis: 'tourney',
+    verdict: 'info',
+    title: 'Lower-class prospect',
+    id: 'tourney-mid-wit',
+    detail: `WT ${attrs.WT} fights through Rookies and Apprentices — plan the class transition before Initiates, where learn-rate decides brackets.`,
+  });
+  return items;
+}
+
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 /**
@@ -1097,5 +1175,6 @@ export function reviewWarriorDesign(
     ...reviewMinimums(attrs, style),
     ...reviewDoctrine(attrs, style),
     ...reviewLongevity(attrs, style),
+    ...reviewTourney(attrs, style),
   ];
 }

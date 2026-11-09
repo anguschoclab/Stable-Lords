@@ -6,6 +6,7 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { findCurrentRoundBouts } from '../../tournament/bracketUtils';
 import { CHAMPIONS_TOURNEY } from '@/constants/arena';
 import { awardTournamentPrizes } from '../awards';
+import { buildGrudgeOffers } from '../../grudgeMatches';
 import { resolveRoundBouts, type BracketWarrior } from './bouts';
 import { resolveChampion, seedNextRound } from './seeding';
 
@@ -139,6 +140,18 @@ function finalizeRound(args: FinalizeRoundArgs): {
         ...cycle,
         elevated: [...cycle.elevated, championId],
       };
+    }
+
+    // V27 grudge lane: the completed bracket's losers file week-T+1
+    // exhibition rematches — Proposed offers through the normal lane.
+    if (resolvedTournament.classId) {
+      const grudges = buildGrudgeOffers(updatedState, tournamentId);
+      if (grudges.length > 0) {
+        updatedState.boutOffers = {
+          ...(updatedState.boutOffers ?? {}),
+          ...Object.fromEntries(grudges.map((o) => [o.id, o])),
+        };
+      }
     }
   }
 

@@ -18,7 +18,14 @@ const A = (over: Partial<Attributes> = {}): Attributes => ({
   ...over,
 });
 
-const AXES: DesignAxis[] = ['style', 'physicals', 'weapons', 'trainability', 'longevity'];
+const AXES: DesignAxis[] = [
+  'style',
+  'physicals',
+  'weapons',
+  'trainability',
+  'longevity',
+  'tourney',
+];
 const VERDICTS: DesignVerdict[] = ['good', 'ok', 'warn', 'info'];
 
 const itemsOn = (

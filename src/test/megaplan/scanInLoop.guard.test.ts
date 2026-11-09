@@ -446,6 +446,41 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     match: 't.participants.filter( (w) => w.stableId === player?.id )',
     why: 'per-iteration collection — each tournament\'s own participants',
   },
+  {
+    file: 'src/engine/advisor/tournamentAdvisor.ts',
+    match: 't.participants.some((p) => p.id === warrior.id)',
+    why: 'bounded scan — ≤6 live tournaments per week, each participant list already in memory; first-hit early return',
+  },
+  {
+    file: 'src/engine/ai/workers/tournamentWorker.ts',
+    match: 'TOURNAMENT_CLASSES.find((c) => fe >= c.minFE && fe <= c.maxFE)',
+    why: 'bounded scan — TOURNAMENT_CLASSES is a fixed 5-element table',
+  },
+  {
+    file: 'src/engine/bout/core/pairings.ts',
+    match: 'tournament.bracket.filter(',
+    why: 'per-iteration collection — each tournament\'s own bracket (≤64 bouts)',
+  },
+  {
+    file: 'src/engine/matchmaking/tournamentSelection/emission.ts',
+    match: 't.participants.filter((p) => p.stableId === state.player.id)',
+    why: 'per-iteration collection — each emitted bracket\'s own participants (≤5 brackets)',
+  },
+  {
+    file: 'src/engine/pipeline/tick/weekSkip.ts',
+    match: '(currentState.tournaments || []).filter((t) => !t.completed)',
+    why: 'bounded scan — ≤6 live tournaments per week; rebuilt per day to pick up completions',
+  },
+  {
+    file: 'src/pages/tournamentPrep/sections.tsx',
+    match: 'roster.filter(',
+    why: 'bounded scan — roster ≤ ~20 warriors against a fixed 5-class table',
+  },
+  {
+    file: 'src/state/slices/tournamentSlice.ts',
+    match: 'declared[key].filter((id) => id !== warriorId)',
+    why: 'per-iteration collection — each stable\'s own declared list (≤4 entries)',
+  },
 ];
 
 interface ScanViolation {

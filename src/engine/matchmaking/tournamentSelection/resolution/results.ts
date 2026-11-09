@@ -130,13 +130,14 @@ function boutConsequenceImpacts(
       week,
       rng: boutRng,
       headless,
-      planA: planA!,
-      planD: planD!,
+      planA: planA ?? wA.plan,
+      planD: planD ?? wD.plan,
     }),
     lastBoutWeekImpact(s, wA, wD, week),
   ];
 }
 
+/** Apply one interactive tournament bout's full consequence stack to state. */
 export function applyBoutResults(args: ApplyBoutResultsArgs): GameState {
   const { state, wA, wD, outcome, tId, tName, arenaId, rng } = args;
 

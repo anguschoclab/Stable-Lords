@@ -2,7 +2,7 @@
  * Stable Lords — Seasonal Tournaments (Refactored)
  * Modularized for better maintainability and strict type safety.
  */
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -122,6 +122,35 @@ function CampaignStatus() {
   );
 }
 
+/** Class tab bar — one tab per unfinished bracket of the current week. */
+function ClassTabBar(props: {
+  live: { id: string; name: string; classId?: string }[];
+  selectedId: string | undefined;
+  onSelect: (id: string) => void;
+}) {
+  const { live, selectedId, onSelect } = props;
+  return (
+    <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Tournament classes">
+      {live.map((t) => (
+        <button
+          key={t.id}
+          role="tab"
+          aria-selected={t.id === selectedId}
+          onClick={() => onSelect(t.id)}
+          className={cn(
+            'px-4 py-2 text-[10px] font-black uppercase tracking-[0.15em] border transition-all motion-reduce:transition-none',
+            t.id === selectedId
+              ? 'border-arena-gold/60 bg-arena-gold/10 text-arena-gold'
+              : 'border-white/10 bg-white/[0.02] text-muted-foreground/60 hover:border-white/25'
+          )}
+        >
+          {t.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /** Readiness banner, live manifest, and campaign archives. */
 function TournamentBody(props: {
   tournamentState: ReturnType<typeof useTournamentState>;
@@ -137,30 +166,88 @@ function TournamentBody(props: {
   const { onOpenPrep, showBookmarkedOnly, onToggleBookmarked } = props;
   const {
     season,
-    week,
     arenaHistory,
-    currentTournament,
-    playerWarriorsInTournament,
     pastTournaments,
     bookmarkedCount,
-    isTournamentReadyToStart,
   } = tournamentState;
 
   return (
     <>
-      {/* ── Pre-tournament readiness banner ── */}
-      {currentTournament && playerWarriorsInTournament.length > 0 && (
-        <WarriorReadinessBanner
-          tournament={currentTournament}
-          warriors={playerWarriorsInTournament}
+      <LiveBracketPanel
+        tournamentState={tournamentState}
+        expandedBout={expandedBout}
+        onToggleExpand={onToggleExpand}
+        isSimulating={isSimulating}
+        onExecuteRound={onExecuteRound}
+        onOpenPrep={onOpenPrep}
+      />
+
+      <CampaignArchives
+        showBookmarkedOnly={showBookmarkedOnly}
+        onToggleBookmarked={onToggleBookmarked}
+        bookmarkedCount={bookmarkedCount}
+        pastTournaments={pastTournaments}
+        season={season}
+        arenaHistory={arenaHistory}
+      />
+    </>
+  );
+}
+
+/** Class tabs, readiness banner, and the live bracket manifest. */
+function LiveBracketPanel(props: {
+  tournamentState: ReturnType<typeof useTournamentState>;
+  expandedBout: string | null;
+  onToggleExpand: (id: string | null) => void;
+  isSimulating: boolean;
+  onExecuteRound: () => void;
+  onOpenPrep: () => void;
+}) {
+  const { tournamentState, expandedBout, onToggleExpand, isSimulating } = props;
+  const { onExecuteRound, onOpenPrep } = props;
+  const {
+    season,
+    week,
+    arenaHistory,
+    currentTournament,
+    liveTournaments,
+    player,
+    isTournamentReadyToStart,
+  } = tournamentState;
+
+  // Class tabs: the featured bracket is default; a manual pick overrides.
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const displayTournament =
+    liveTournaments.find((t) => t.id === selectedId) ?? currentTournament;
+  const displayWarriors = useMemo(() => {
+    if (!displayTournament || !player) return [];
+    return displayTournament.participants.filter((w) => w.stableId === player.id);
+  }, [displayTournament, player]);
+
+  return (
+    <>
+      {/* ── Class tabs (multi-bracket weeks) ── */}
+      {liveTournaments.length > 1 && (
+        <ClassTabBar
+          live={liveTournaments}
+          selectedId={displayTournament?.id}
+          onSelect={setSelectedId}
         />
       )}
 
-      {!currentTournament && <CampaignStatus />}
+      {/* ── Pre-tournament readiness banner ── */}
+      {displayTournament && displayWarriors.length > 0 && (
+        <WarriorReadinessBanner
+          tournament={displayTournament}
+          warriors={displayWarriors}
+        />
+      )}
 
-      {currentTournament && (
+      {!displayTournament && <CampaignStatus />}
+
+      {displayTournament && (
         <ActiveTournamentManifest
-          tournament={currentTournament}
+          tournament={displayTournament}
           arenaHistory={arenaHistory}
           week={week}
           expandedBout={expandedBout}
@@ -172,15 +259,6 @@ function TournamentBody(props: {
           seasonIcon={SEASON_ICONS[season] ?? ''}
         />
       )}
-
-      <CampaignArchives
-        showBookmarkedOnly={showBookmarkedOnly}
-        onToggleBookmarked={onToggleBookmarked}
-        bookmarkedCount={bookmarkedCount}
-        pastTournaments={pastTournaments}
-        season={season}
-        arenaHistory={arenaHistory}
-      />
     </>
   );
 }

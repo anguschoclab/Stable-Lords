@@ -35,27 +35,38 @@ function drainTournamentRounds(
   currentDay: number
 ): { state: GameState; weeklyNewsItems: string[] } {
   const weeklyNewsItems: string[] = [];
-  if (!state.isTournamentWeek || !state.activeTournamentId) {
+  if (!state.isTournamentWeek) {
     return { state, weeklyNewsItems };
   }
-  const tournamentId = state.activeTournamentId;
   let currentState = state;
-  let tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
+  // Day-outer / bracket-inner — MUST mirror advanceTournamentDay's order so
+  // a skip produces the same seeded outcomes as day-by-day play. Each
+  // bracket's updated entry is threaded through its own next-day call so
+  // resolution sees the freshest bracket (and stops once completed).
+  const threaded = new Map<string, GameState['tournaments'][number]>();
   for (let day = currentDay + 1; day < 7; day++) {
-    if (!tour || tour.completed) break;
-    const { updatedState, roundResults, isComplete, updatedTournament } = resolveTournamentDay(
-      currentState,
-      tournamentId,
-      day,
-      true,
-      tour
-    );
-    currentState = updatedState;
-    tour = updatedTournament ?? tour;
-    if (roundResults.length > 0) {
-      weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
+    const pending = (currentState.tournaments || []).filter((t) => !t.completed);
+    if (pending.length === 0) break;
+    for (const [i, bracket] of pending.entries()) {
+      const entry = threaded.get(bracket.id) ?? bracket;
+      if (entry.completed) continue;
+      const { updatedState, roundResults, isComplete, updatedTournament } = resolveTournamentDay({
+        state: currentState,
+        tournamentId: entry.id,
+        day,
+        headless: true,
+        tournament: entry,
+        seedOffset: i * 16,
+      });
+      currentState = updatedState;
+      if (updatedTournament) threaded.set(entry.id, updatedTournament);
+      if (roundResults.length > 0) {
+        weeklyNewsItems.push(...roundResults.map((r) => `[Day ${day}] ${r}`));
+      }
+      if (isComplete) {
+        threaded.set(entry.id, { ...(updatedTournament ?? entry), completed: true });
+      }
     }
-    if (isComplete) break;
   }
   return { state: currentState, weeklyNewsItems };
 }

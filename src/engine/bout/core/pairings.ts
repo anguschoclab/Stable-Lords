@@ -68,11 +68,12 @@ function collectTournamentPairings(
   committedWarriors: Set<string>
 ): BoutPairing[] {
   const tournamentPairings: BoutPairing[] = [];
-  if (state.isTournamentWeek && state.activeTournamentId) {
-    const tournament = state.tournaments.find((t) => t.id === state.activeTournamentId);
-    if (tournament) {
-      // Round 1 is Day 1, Round 2 is Day 2, etc.
-      const currentDay = state.day || 0;
+  if (state.isTournamentWeek) {
+    // Round 1 is Day 1, Round 2 is Day 2, etc. — across EVERY unfinished
+    // bracket, not just the featured one (V27 class tournaments).
+    const currentDay = state.day || 0;
+    for (const tournament of state.tournaments ?? []) {
+      if (tournament.completed) continue;
       const tournamentBouts = tournament.bracket.filter(
         (b) => b.round === currentDay && b.winner === undefined
       );

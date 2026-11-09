@@ -155,57 +155,46 @@ function rollLearnProgressions(
 /**
  * Compute per-bout progressions for both warriors and rival stables after a fight resolves.
  */
-export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
-  const { s, wA, wD, outcome, tags } = args;
-  const { week, rng } = args;
-  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
-  const newsletterItems: NewsletterItem[] = [];
-
-  // XP for both fighters — routed to the right roster regardless of ownership
-  const updatedA = applyXP(wA, calculateXP(outcome, 'A', tags, wA, wD), rng).warrior;
-  routeUpdate(s, wA, updatedA, rosterUpdates, rivalWarriorPatches);
-
-  const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags, wD, wA), rng).warrior;
-  routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
-
-  outcome.post = outcome.post ?? { xpA: 0, xpD: 0 };
-  const learnedFavorite: Record<'A' | 'D', boolean> = { A: false, D: false };
-  rollLearnProgressions(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
-
-  // Favorites discovery — also for both fighters (was player-only).
-  // The bout's per-weapon tally merges into the persistent charting ledger
-  // first, so players can deduce the favorite from crit rates before the
-  // epiphany/symmetry rolls formally reveal it.
-  const discRng = rng;
+/**
+ * Favorites discovery for both fighters. The bout's per-weapon tally merges
+ * into the persistent charting ledger first, so players can deduce the
+ * favorite from crit rates before the epiphany/symmetry rolls formally
+ * reveal it.
+ */
+function rollFavoritesDiscovery(
+  args: HandleProgressionsArgs,
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>,
+  rivalWarriorPatches: Map<WarriorId, Partial<Warrior>>,
+  newsletterItems: NewsletterItem[],
+  learnedFavorite: Record<'A' | 'D', boolean>
+): void {
+  const { s, wA, wD, outcome } = args;
+  const { week, rng: discRng } = args;
+  const fallbackRng = {
+    next: () => 0.5,
+    uuid: () => 'uuid',
+    pick: <T>(arr: T[]) => arr[0] as T,
+    roll: (min: number) => min,
+    shuffle: <T>(arr: T[]) => arr,
+    rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
+      Object.keys(weights)[0] as K,
+    chance: () => false,
+  };
   for (const w of [wA, wD]) {
     const tally = w === wA ? outcome.post?.weaponChartA : outcome.post?.weaponChartD;
     const mergedFav = mergeWeaponChart(w.favorites, tally);
     if (mergedFav) w.favorites = mergedFav;
 
     const fought = w === wA ? args.planA : args.planD;
-    const disc = checkDiscovery(
-      w,
-      discRng ?? {
-        next: () => 0.5,
-        uuid: () => 'uuid',
-        pick: <T>(arr: T[]) => arr[0] as T,
-        roll: (min: number) => min,
-        shuffle: <T>(arr: T[]) => arr,
-        rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
-          Object.keys(weights)[0] as K,
-        chance: () => false,
-      },
-      {
-        weaponId: w.equipment?.weapon,
-        oe: fought?.OE ?? w.plan?.OE,
-        al: fought?.AL ?? w.plan?.AL,
-        learnedFavorite: learnedFavorite[w === wA ? 'A' : 'D'],
-        week,
-        offensiveTactic: fought?.offensiveTactic ?? w.plan?.offensiveTactic,
-        defensiveTactic: fought?.defensiveTactic ?? w.plan?.defensiveTactic,
-      }
-    );
+    const disc = checkDiscovery(w, discRng ?? fallbackRng, {
+      weaponId: w.equipment?.weapon,
+      oe: fought?.OE ?? w.plan?.OE,
+      al: fought?.AL ?? w.plan?.AL,
+      learnedFavorite: learnedFavorite[w === wA ? 'A' : 'D'],
+      week,
+      offensiveTactic: fought?.offensiveTactic ?? w.plan?.offensiveTactic,
+      defensiveTactic: fought?.defensiveTactic ?? w.plan?.defensiveTactic,
+    });
     if ((disc.updated || mergedFav) && w.favorites) {
       // checkDiscovery mutates w.favorites in place; route a fresh copy so the
       // rival patch diff (by reference) sees the change. Shard workers hold
@@ -226,6 +215,28 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
       }
     }
   }
+}
+
+export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
+  const { s, wA, wD, outcome, tags } = args;
+  const { rng } = args;
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalWarriorPatches = new Map<WarriorId, Partial<Warrior>>();
+  const newsletterItems: NewsletterItem[] = [];
+
+  // XP for both fighters — routed to the right roster regardless of ownership
+  const updatedA = applyXP(wA, calculateXP(outcome, 'A', tags, wA, wD), rng).warrior;
+  routeUpdate(s, wA, updatedA, rosterUpdates, rivalWarriorPatches);
+
+  const updatedD = applyXP(wD, calculateXP(outcome, 'D', tags, wD, wA), rng).warrior;
+  routeUpdate(s, wD, updatedD, rosterUpdates, rivalWarriorPatches);
+
+  outcome.post = outcome.post ?? { xpA: 0, xpD: 0 };
+  const learnedFavorite: Record<'A' | 'D', boolean> = { A: false, D: false };
+  rollLearnProgressions(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
+
+  // Favorites discovery — also for both fighters (was player-only).
+  rollFavoritesDiscovery(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
 
   // Upset / Giant Killer Flair — also routed
   if (outcome.winner) {

@@ -30,8 +30,8 @@ export async function _advanceDayInner(
   if (nextDay >= 7) return finalizeWeekTransition(state, opts);
 
   // 2. Tournament Day (Skip to End Mode not active)
-  if (state.isTournamentWeek && state.activeTournamentId) {
-    return advanceTournamentDay(state, state.activeTournamentId, nextDay, opts?.headless);
+  if (state.isTournamentWeek && (state.tournaments || []).some((t) => !t.completed)) {
+    return advanceTournamentDay(state, nextDay, opts?.headless);
   }
 
   // 3. Regular Day
@@ -39,26 +39,36 @@ export async function _advanceDayInner(
 }
 
 /**
- * Single interactive tournament day: resolve one round through the shared
- * helper, advance the day counter, and append a results newsletter keyed
- * on the same tournament-day seed.
+ * Single interactive tournament day: resolve the current round of EVERY
+ * unfinished bracket through the shared helper — class tournaments run in
+ * parallel through the week, each on its own seed stride (`i*16`, same
+ * convention as the unfinished-tournament sweep) so their RNG streams can
+ * never collide. The stride is 0 for the first bracket, preserving the
+ * legacy single-bracket stream bit-for-bit.
  */
 function advanceTournamentDay(
   state: GameState,
-  tournamentId: string,
   nextDay: number,
   headless: boolean | undefined
 ): GameState {
   // Standardize seed generation
   const rng = new SeededRNG(tournamentDaySeed(state.year, state.week, nextDay));
-  const tour = (state.tournaments || []).find((t) => t.id === tournamentId);
-  const { updatedState, roundResults } = resolveTournamentDay(
-    state,
-    tournamentId,
-    nextDay,
-    headless,
-    tour
-  );
+  const pending = (state.tournaments || []).filter((t) => !t.completed);
+
+  let updatedState = state;
+  const roundResults: string[] = [];
+  for (const [i, bracket] of pending.entries()) {
+    const res = resolveTournamentDay({
+      state: updatedState,
+      tournamentId: bracket.id,
+      day: nextDay,
+      headless,
+      tournament: bracket,
+      seedOffset: i * 16,
+    });
+    updatedState = res.updatedState;
+    roundResults.push(...res.roundResults);
+  }
 
   const nextState = { ...updatedState, day: nextDay };
 

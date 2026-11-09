@@ -121,6 +121,18 @@ interface ScoreCandidatesArgs {
  */
 type DraftWeights = typeof DEFAULT_DRAFT_WEIGHTS;
 
+/**
+ * V27 tourney-archetype bias — campaign stables scout wit first (the
+ * article's signal): 21+ WT is the Champions-class frame, 17+ still viable.
+ */
+function tourneyDraftBonus(w: PoolWarrior, intent: string | undefined): number {
+  if (intent !== 'TOURNAMENT_CAMPAIGN') return 0;
+  const wt = w.attributes?.WT ?? 0;
+  if (wt >= 21) return 40;
+  if (wt >= 17) return 20;
+  return 0;
+}
+
 /** Scores one pool candidate against the personality weights table. */
 function scoreCandidate(
   w: PoolWarrior,
@@ -140,13 +152,7 @@ function scoreCandidate(
   if (prefsSet.has(w.style)) score += weights.styleMatchBonus;
   if (w.veteran) score += weights.veteranBonus;
 
-  // V27 tourney-archetype bias — campaign stables scout wit first (the
-  // article's signal): 21+ WT is the Champions-class frame, 17+ still viable.
-  if (ctx.intent === 'TOURNAMENT_CAMPAIGN') {
-    const wt = w.attributes?.WT ?? 0;
-    if (wt >= 21) score += 40;
-    else if (wt >= 17) score += 20;
-  }
+  score += tourneyDraftBonus(w, ctx.intent);
 
   // ⚡ TSA: Meta-Fit Scoring
   const drift = meta?.[w.style] || 0;

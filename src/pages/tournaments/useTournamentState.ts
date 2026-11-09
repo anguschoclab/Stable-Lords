@@ -42,6 +42,29 @@ function useTournamentStoreSlice() {
   );
 }
 
+/** Completed-tournament list with the bookmark filter applied. */
+function usePastTournaments(
+  tournaments: ReturnType<typeof useTournamentStoreSlice>['tournaments'],
+  bookmarks: ReturnType<typeof useTournamentStoreSlice>['bookmarks'],
+  showBookmarkedOnly: boolean
+) {
+  const allPastTournaments = useMemo(
+    () => tournaments.filter((t) => t.completed).reverse(),
+    [tournaments]
+  );
+  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
+  const pastTournaments = useMemo(() => {
+    if (!showBookmarkedOnly) return allPastTournaments;
+    const ids = bookmarkIds.get('tournament');
+    return allPastTournaments.filter((t) => ids?.has(t.id));
+  }, [allPastTournaments, showBookmarkedOnly, bookmarkIds]);
+
+  const bookmarkedCount = allPastTournaments.filter((t) =>
+    bookmarkIds.get('tournament')?.has(t.id)
+  ).length;
+  return { pastTournaments, bookmarkedCount };
+}
+
 /** Tournaments page state: store slice, derived lists, and actions. */
 export function useTournamentState(showBookmarkedOnly: boolean) {
   const {
@@ -70,6 +93,12 @@ export function useTournamentState(showBookmarkedOnly: boolean) {
     [tournaments, activeTournamentId, week]
   );
 
+  // V27: every unfinished bracket of the current week — the class tab set.
+  const liveTournaments = useMemo(
+    () => tournaments.filter((t) => t.week === week && !t.completed),
+    [tournaments, week]
+  );
+
   const activeWarriors = useMemo(() => roster.filter((w) => isActive(w)), [roster]);
 
   // Warriors belonging to the player that are in the active tournament
@@ -78,20 +107,11 @@ export function useTournamentState(showBookmarkedOnly: boolean) {
     return currentTournament.participants.filter((w) => w.stableId === player.id);
   }, [currentTournament, player]);
 
-  const allPastTournaments = useMemo(
-    () => tournaments.filter((t) => t.completed).reverse(),
-    [tournaments]
+  const { pastTournaments, bookmarkedCount } = usePastTournaments(
+    tournaments,
+    bookmarks,
+    showBookmarkedOnly
   );
-  const bookmarkIds = useMemo(() => bookmarkIdsByType(bookmarks), [bookmarks]);
-  const pastTournaments = useMemo(() => {
-    if (!showBookmarkedOnly) return allPastTournaments;
-    const ids = bookmarkIds.get('tournament');
-    return allPastTournaments.filter((t) => ids?.has(t.id));
-  }, [allPastTournaments, showBookmarkedOnly, bookmarkIds]);
-
-  const bookmarkedCount = allPastTournaments.filter((t) =>
-    bookmarkIds.get('tournament')?.has(t.id)
-  ).length;
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
   const isTournamentReadyToStart = useMemo(() => {
@@ -112,6 +132,7 @@ export function useTournamentState(showBookmarkedOnly: boolean) {
     setSimulating,
     isSimulating,
     currentTournament,
+    liveTournaments,
     activeWarriors,
     playerWarriorsInTournament,
     pastTournaments,

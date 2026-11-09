@@ -91,10 +91,31 @@ export function evaluateTournamentAdvice(
   // drive advice. This precedes the rank check: class membership is FE-based,
   // not rank-based, so an unranked warrior still has a locked class.
   if (cycle && spec) {
-    return frozenCycleAdvice(tierInfo, overallRank, weeksUntilTournament, spec, breakpointGap, entered, classFields);
+    return frozenCycleAdvice({
+      tierInfo,
+      overallRank,
+      weeksUntilTournament,
+      spec,
+      breakpointGap,
+      entered,
+      classFields,
+    });
   }
 
-  // 3. Unqualified
+  // 3. Pre-freeze season advice — qualification, tapering, campaign pacing.
+  return seasonalAdvice({ tierInfo, overallRank, isParticipant, weeksUntilTournament, classFields });
+}
+
+/** Pre-freeze season pacing: unqualified, taper-window, and campaign advice. */
+function seasonalAdvice(args: {
+  tierInfo: TierInfo | null;
+  overallRank: number | null;
+  isParticipant: boolean;
+  weeksUntilTournament: number;
+  classFields: Pick<WarriorTournamentAdvice, 'classId' | 'fe' | 'breakpointGap' | 'entered'>;
+}): WarriorTournamentAdvice {
+  const { tierInfo, overallRank, isParticipant, weeksUntilTournament, classFields } = args;
+
   if (!tierInfo) {
     return {
       qualifiedTier: null,
@@ -110,11 +131,10 @@ export function evaluateTournamentAdvice(
     };
   }
 
-  // 4. Tapering Window (final two weeks before the next seasonal)
   if (weeksUntilTournament <= 2) {
     return {
-      qualifiedTier: tierInfo?.tierId ?? null,
-      tierName: tierInfo?.tierName ?? null,
+      qualifiedTier: tierInfo.tierId,
+      tierName: tierInfo.tierName,
       overallRank,
       isParticipant,
       weeksUntilTournament,
@@ -125,10 +145,9 @@ export function evaluateTournamentAdvice(
     };
   }
 
-  // 5. Standard Season Campaign (outside the tapering window)
   return {
-    qualifiedTier: tierInfo?.tierId ?? null,
-    tierName: tierInfo?.tierName ?? null,
+    qualifiedTier: tierInfo.tierId,
+    tierName: tierInfo.tierName,
     overallRank,
     isParticipant,
     weeksUntilTournament,
@@ -140,18 +159,17 @@ export function evaluateTournamentAdvice(
 }
 
 /** Post-freeze entry window — class locked, breakpoint edge flips taper advice. */
-function frozenCycleAdvice(
-  tierInfo: TierInfo | null,
-  overallRank: number | null,
-  weeksUntilTournament: number,
-  spec: TournamentClassSpec,
-  breakpointGap: number,
-  entered: boolean,
-  classFields: Pick<
-    WarriorTournamentAdvice,
-    'classId' | 'fe' | 'breakpointGap' | 'entered'
-  >
-): WarriorTournamentAdvice {
+function frozenCycleAdvice(args: {
+  tierInfo: TierInfo | null;
+  overallRank: number | null;
+  weeksUntilTournament: number;
+  spec: TournamentClassSpec;
+  breakpointGap: number;
+  entered: boolean;
+  classFields: Pick<WarriorTournamentAdvice, 'classId' | 'fe' | 'breakpointGap' | 'entered'>;
+}): WarriorTournamentAdvice {
+  const { tierInfo, overallRank, weeksUntilTournament, spec } = args;
+  const { breakpointGap, entered, classFields } = args;
   // Breakpoint edge: frozen exactly at the class ceiling — the article's
   // exploit. Real bouts after the freeze can't move the class, so the usual
   // taper advice inverts: keep fighting for records, fame, and learns.

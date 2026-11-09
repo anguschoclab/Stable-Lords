@@ -217,22 +217,26 @@ function statusBadge(status: EntryStatus) {
   }
 }
 
+/** Entry-desk context shared by every row — stable id + the two desk actions. */
+interface EntryDesk {
+  playerId: StableId;
+  onDeclare: (id: WarriorId) => void;
+  onScratch: (id: WarriorId) => void;
+}
+
 /** One freeze-window roster row: frozen class, FE, breakpoint gap, desk action. */
 function EntryRow({
   cycle,
   warrior: w,
   classId,
-  playerId,
-  onDeclare,
-  onScratch,
+  desk,
 }: {
   cycle: TournamentCycle;
   warrior: Warrior;
   classId: string;
-  playerId: StableId;
-  onDeclare: (id: WarriorId) => void;
-  onScratch: (id: WarriorId) => void;
+  desk: EntryDesk;
 }) {
+  const { playerId, onDeclare, onScratch } = desk;
   const fe = cycle.feByWarrior[w.id] ?? fightEquivalentsOf(w);
   const next = TOURNAMENT_CLASSES.find((c) => c.minFE > fe);
   const gap = next ? next.minFE - fe : 0;
@@ -334,8 +338,7 @@ export function EntryDeskSection({
                   warrior={w}
                   classId={spec.id}
                   playerId={playerId}
-                  onDeclare={onDeclare}
-                  onScratch={onScratch}
+                  desk={{ playerId, onDeclare, onScratch }}
                 />
               ))}
             </div>

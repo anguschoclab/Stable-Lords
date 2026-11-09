@@ -163,6 +163,42 @@ function applyRivalAward(args: ApplyRivalAwardArgs): GameState {
 /**
  * Award tournament prizes.
  */
+/**
+ * Purse + token tier for a completed bracket. V27 class brackets carry their
+ * own purse scale; the token tier maps onto the legacy medal table so award
+ * flavor tracks class prestige.
+ */
+function resolvePrizeTier(tournament: TournamentEntry): {
+  tier: 'GOLD' | 'SILVER' | 'BRONZE' | 'IRON';
+  basePurse: number;
+} {
+  const classSpec = tournament.classId
+    ? TOURNAMENT_CLASSES.find((c) => c.id === tournament.classId)
+    : undefined;
+  const CLASS_TIER: Record<TournamentClassId, 'GOLD' | 'SILVER' | 'BRONZE' | 'IRON'> = {
+    rookies: 'IRON',
+    apprentices: 'BRONZE',
+    initiates: 'SILVER',
+    adepts: 'GOLD',
+    champions: 'GOLD',
+  };
+  const tierRaw = (tournament.tierId || tournament.id.split('-')[1] || 'Iron').toUpperCase();
+  const tier = classSpec
+    ? CLASS_TIER[classSpec.id]
+    : tierRaw.includes('GOLD')
+      ? 'GOLD'
+      : tierRaw.includes('SILVER')
+        ? 'SILVER'
+        : tierRaw.includes('BRONZE')
+          ? 'BRONZE'
+          : 'IRON';
+  const basePurse =
+    classSpec?.purse ??
+    (tier === 'GOLD' ? 5000 : tier === 'SILVER' ? 2500 : tier === 'BRONZE' ? 1200 : 600);
+  return { tier, basePurse };
+}
+
+/** Award 1st/2nd/3rd place prizes (purse, fame, award tokens) for a completed bracket. */
 export function awardTournamentPrizes(tournament: TournamentEntry, state: GameState): GameState {
   const bracket = tournament.bracket;
   // Championship bout = the latest non-bronze bout at matchIndex 0. The bronze
@@ -195,31 +231,7 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
     : undefined;
 
   let updatedState = { ...state };
-  // V27 class brackets carry their own purse scale; the token tier maps onto
-  // the legacy medal table so award flavor tracks class prestige.
-  const classSpec = tournament.classId
-    ? TOURNAMENT_CLASSES.find((c) => c.id === tournament.classId)
-    : undefined;
-  const CLASS_TIER: Record<TournamentClassId, 'GOLD' | 'SILVER' | 'BRONZE' | 'IRON'> = {
-    rookies: 'IRON',
-    apprentices: 'BRONZE',
-    initiates: 'SILVER',
-    adepts: 'GOLD',
-    champions: 'GOLD',
-  };
-  const tierRaw = (tournament.tierId || tournament.id.split('-')[1] || 'Iron').toUpperCase();
-  const tier = classSpec
-    ? CLASS_TIER[classSpec.id]
-    : tierRaw.includes('GOLD')
-      ? 'GOLD'
-      : tierRaw.includes('SILVER')
-        ? 'SILVER'
-        : tierRaw.includes('BRONZE')
-          ? 'BRONZE'
-          : 'IRON';
-  const basePurse =
-    classSpec?.purse ??
-    (tier === 'GOLD' ? 5000 : tier === 'SILVER' ? 2500 : tier === 'BRONZE' ? 1200 : 600);
+  const { tier, basePurse } = resolvePrizeTier(tournament);
   const awardRng = new SeededRNG(
     tournament.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
   );

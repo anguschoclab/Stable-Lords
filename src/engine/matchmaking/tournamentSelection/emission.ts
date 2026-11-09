@@ -1,5 +1,5 @@
 import type { GameState, TournamentEntry, Warrior } from '@/types/state.types';
-import type { TournamentId, WarriorId } from '@/types/shared.types';
+import type { TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG } from '@/utils/random';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
@@ -20,6 +20,69 @@ function nextPow2(n: number): number {
   return Math.pow(2, Math.ceil(Math.log2(n || 1)));
 }
 
+/**
+ * One class's bracket: invited ∪ declared-in-class − scratched, deduped and
+ * padded to the next power of two with class-scaled freelancers. Returns
+ * undefined when the padded field can't reach the class minimum.
+ */
+function emitClassBracket(args: {
+  spec: (typeof TOURNAMENT_CLASSES)[number];
+  cycle: NonNullable<GameState['tournamentCycle']>;
+  byId: Map<string, Warrior>;
+  declaredIds: string[];
+  scratched: Set<string>;
+  usedNames: Set<string>;
+  seedRng: SeededRNG;
+  nextWeek: number;
+  state: GameState;
+}): TournamentEntry | undefined {
+  const { spec, cycle, byId, declaredIds, scratched, usedNames } = args;
+  const { seedRng, nextWeek, state } = args;
+
+  const invited = (cycle.invited[spec.id] ?? []) as string[];
+  const declaredInClass = declaredIds.filter(
+    (id) => classOfEntrant(cycle, byId, id) === spec.id
+  );
+  const entrantIds = [...new Set([...invited, ...declaredInClass])].filter(
+    (id) => !scratched.has(id)
+  );
+  const entrants = entrantIds
+    .map((id) => byId.get(id))
+    .filter((w): w is Warrior => !!w && isActive(w))
+    .slice(0, spec.fieldCap);
+
+  // Viability is judged on the PADDED field — a scratched/depleted entry
+  // list that still reaches the minimum bracket size gets freelancer
+  // backfill rather than canceling the class outright.
+  const target = Math.min(nextPow2(entrants.length), spec.fieldCap);
+  if (target < spec.minField) return undefined;
+  const field = [...entrants];
+  for (const w of field) usedNames.add(w.name);
+  while (field.length < target) {
+    const freelancer = generateFreelancer(
+      spec.id,
+      field.length,
+      seedRng,
+      usedNames,
+      spec.freelancerPool
+    );
+    usedNames.add(freelancer.name);
+    field.push(freelancer);
+  }
+
+  const tournament = buildTournament({
+    tierId: spec.id,
+    tierName: spec.name,
+    warriors: field,
+    week: nextWeek,
+    season: cycle.season ?? state.season,
+    rng: seedRng,
+    year: state.year ?? 1,
+  });
+  tournament.classId = spec.id;
+  return tournament;
+}
+
 /** Every rostered warrior, indexed — the declared/invited id resolution pool. */
 function rosteredById(state: GameState): Map<string, Warrior> {
   const byId = new Map<string, Warrior>();
@@ -38,7 +101,10 @@ function classOfEntrant(
   byId: Map<string, Warrior>,
   id: string
 ): TournamentClassId {
-  const fe = cycle.feByWarrior[id] ?? fightEquivalentsOf(byId.get(id)!);
+  const w = byId.get(id);
+  // Stale declarations (dead/retired) land in the lowest class — the entrant
+  // filter drops them downstream regardless, so the pick is harmless.
+  const fe = cycle.feByWarrior[id] ?? (w ? fightEquivalentsOf(w) : 0);
   return classForFE(fe);
 }
 
@@ -81,48 +147,18 @@ export function emitClassTournaments(
   const tournaments: TournamentEntry[] = [];
 
   for (const spec of TOURNAMENT_CLASSES) {
-    const invited = (cycle.invited[spec.id] ?? []) as string[];
-    const declaredInClass = declaredIds.filter(
-      (id) => classOfEntrant(cycle, byId, id) === spec.id
-    );
-    const entrantIds = [...new Set([...invited, ...declaredInClass])].filter(
-      (id) => !scratched.has(id)
-    );
-    const entrants = entrantIds
-      .map((id) => byId.get(id))
-      .filter((w): w is Warrior => !!w && isActive(w))
-      .slice(0, spec.fieldCap);
-
-    // Viability is judged on the PADDED field — a scratched/depleted entry
-    // list that still reaches the minimum bracket size gets freelancer
-    // backfill rather than canceling the class outright.
-    const target = Math.min(nextPow2(entrants.length), spec.fieldCap);
-    if (target < spec.minField) continue;
-    const field = [...entrants];
-    for (const w of field) usedNames.add(w.name);
-    while (field.length < target) {
-      const freelancer = generateFreelancer(
-        spec.id,
-        field.length,
-        seedRng,
-        usedNames,
-        spec.freelancerPool
-      );
-      usedNames.add(freelancer.name);
-      field.push(freelancer);
-    }
-
-    const tournament = buildTournament({
-      tierId: spec.id,
-      tierName: spec.name,
-      warriors: field,
-      week: nextWeek,
-      season: cycle.season ?? state.season,
-      rng: seedRng,
-      year: state.year ?? 1,
+    const tournament = emitClassBracket({
+      spec,
+      cycle,
+      byId,
+      declaredIds,
+      scratched,
+      usedNames,
+      seedRng,
+      nextWeek,
+      state,
     });
-    tournament.classId = spec.id;
-    tournaments.push(tournament);
+    if (tournament) tournaments.push(tournament);
   }
 
   // Active bracket: most player-stable entrants; a tie keeps class order.

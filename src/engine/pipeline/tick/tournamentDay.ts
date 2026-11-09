@@ -16,18 +16,20 @@ export function tournamentDaySeed(year: number, week: number, day: number): numb
  * skipToWeekEnd (batched loop) so the two paths can never drift apart —
  * same seed formula, same tournament-entry threading, same headless flag.
  */
-export function resolveTournamentDay(
-  state: GameState,
-  tournamentId: string,
-  day: number,
-  headless: boolean | undefined,
-  tournament?: GameState['tournaments'][number]
-) {
+export function resolveTournamentDay(args: {
+  state: GameState;
+  tournamentId: string;
+  day: number;
+  headless: boolean | undefined;
+  tournament?: GameState['tournaments'][number];
+  seedOffset?: number;
+}) {
+  const { state, tournamentId, day, headless } = args;
   return TournamentSelectionService.resolveRound(
     state,
     tournamentId,
-    tournamentDaySeed(state.year, state.week, day),
+    tournamentDaySeed(state.year, state.week, day) + (args.seedOffset ?? 0),
     headless,
-    tournament
+    args.tournament
   );
 }

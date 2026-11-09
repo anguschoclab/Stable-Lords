@@ -90,6 +90,39 @@ export function fileGrudgeCallout(
   return makeGrudgeOffer(state, tour, bout, loserId, killerId);
 }
 
+/**
+ * Player stablemate hunt — the manual counterpart of the AI's second pass.
+ * An unbooked bracket finisher hunts a killer who felled one of its
+ * stablemates (stable membership is frozen in the bracket's stableIdA/D).
+ * The victim avenging itself is the call-out lane's job, not a hunt.
+ */
+export function fileStablemateHunt(
+  state: Pick<GameState, 'tournaments' | 'boutOffers' | 'week' | 'year' | 'absoluteWeek'>,
+  tournamentId: TournamentId,
+  avengerId: WarriorId,
+  killerId: WarriorId
+): BoutOffer | null {
+  const tour = (state.tournaments ?? []).find((t) => t.id === tournamentId);
+  if (!tour || !tour.completed) return null;
+  const avenger = (tour.participants ?? []).find((p) => p.id === avengerId);
+  if (!avenger || avengerId === killerId) return null;
+  const bout = tour.bracket.find((b) => {
+    if (b.isBronzeMatch || !b.winner) return false;
+    const loserId = b.winner === 'A' ? b.warriorIdD : b.warriorIdA;
+    const winId = b.winner === 'A' ? b.warriorIdA : b.warriorIdD;
+    const loserStable = b.winner === 'A' ? b.stableIdD : b.stableIdA;
+    return winId === killerId && loserStable === avenger.stableId && loserId !== avengerId;
+  });
+  if (!bout) return null;
+  const booked = new Set(
+    Object.values(state.boutOffers ?? {})
+      .filter((o) => o.grudgeOfTournamentId === tournamentId && o.status === 'Proposed')
+      .flatMap((o) => o.warriorIds)
+  );
+  if (booked.has(avengerId) || booked.has(killerId)) return null;
+  return makeGrudgeOffer(state, tour, bout, avengerId, killerId);
+}
+
 /** Shared offer construction — class purse quarter, week T+1, Proposed. */
 function makeGrudgeOffer(
   state: Pick<GameState, 'week' | 'year' | 'absoluteWeek'>,

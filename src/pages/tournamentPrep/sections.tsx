@@ -186,6 +186,9 @@ export function PrepNotice() {
 import { Button } from '@/components/ui/button';
 import { TOURNAMENT_CLASSES, classAtFreeze, type TournamentClassId } from '@/engine/matchmaking/tournamentSelection/classes';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
+import { WINNING_ARCHETYPES, classifyArchetype } from '@/data/warriorArchetypes';
+import { suspectedFavoriteWeapon } from '@/engine/favorites';
+import { getItemById } from '@/data/equipment';
 import type { TournamentCycle } from '@/types/state.types';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import { Swords, XCircle } from 'lucide-react';
@@ -224,6 +227,26 @@ interface EntryDesk {
   onScratch: (id: WarriorId) => void;
 }
 
+/** Dossier readout: winning-frame fit + favorite-weapon scouting state. */
+function DossierLine({ w }: { w: Warrior }) {
+  const fit = classifyArchetype(w.attributes, w.style)[0];
+  const fav = w.favorites;
+  const suspect = fav ? suspectedFavoriteWeapon(fav) : undefined;
+  const favText = !fav
+    ? 'Fav uncharted'
+    : fav.discovered.weapon
+      ? `Fav ${getItemById(fav.weaponId)?.name ?? fav.weaponId}`
+      : suspect
+        ? `Chart → ${getItemById(suspect)?.name ?? suspect}?`
+        : 'Fav uncharted';
+  return (
+    <span className="block text-[8px] text-muted-foreground/40 uppercase tracking-widest">
+      {fit ? `${WINNING_ARCHETYPES[fit.archetype].label} · ${Math.round(fit.score)} fit · ` : ''}
+      {favText}
+    </span>
+  );
+}
+
 /** One freeze-window roster row: frozen class, FE, breakpoint gap, desk action. */
 function EntryRow({
   cycle,
@@ -257,6 +280,7 @@ function EntryRow({
             {STYLE_DISPLAY_NAMES[w.style]} · {fe} FE
             {gap === 1 && next ? ' · one bout under breakpoint' : ''}
           </span>
+          <DossierLine w={w} />
         </div>
       </div>
       <div className="flex items-center gap-1.5 shrink-0">

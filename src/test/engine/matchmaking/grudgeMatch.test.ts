@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { buildGrudgeOffers, fileGrudgeCallout } from '@/engine/matchmaking/grudgeMatches';
+import {
+  buildGrudgeOffers,
+  fileGrudgeCallout,
+  fileStablemateHunt,
+} from '@/engine/matchmaking/grudgeMatches';
 import {
   makeTournamentBaseState,
   makeTournamentWarrior,
@@ -136,6 +140,119 @@ describe('buildGrudgeOffers — post-tournament exhibition bouts', () => {
     const offers = buildGrudgeOffers(state, 't-rookies' as never);
     const pairs = offers.map((o) => o.warriorIds.join('→')).sort();
     expect(pairs).toEqual(['r0→p0', 'r3→p2', 'rx→r1']);
+  });
+
+  it('fileStablemateHunt lets the player send a stablemate after a killer', () => {
+    //   R1: r0 beats p1  → p1 (player) loses to r0
+    //   → player may send unbooked stablemate finisher p2 after r0.
+    const mk = (id: string, name: string, rival?: boolean) =>
+      makeTournamentWarrior(id, name, undefined, rival ? TOURNEY_RIVAL_ID : TOURNEY_PLAYER_ID);
+    const [p1, p2, r0, r7] = [mk('p1', 'P One'), mk('p2', 'P Two'), mk('r0', 'R Zero', true), mk('r7', 'R Sev', true)];
+    const bout = (
+      round: number, matchIndex: number, a: typeof p1, d: typeof p1, winner: 'A' | 'D'
+    ) => ({
+      round, matchIndex,
+      warriorIdA: a.id, warriorIdD: d.id,
+      stableIdA: a.stableId, stableIdD: d.stableId,
+      winner, by: 'Stoppage' as const,
+    });
+    const tour = {
+      ...makeCompletedTournament([p1, p2, r0, r7], 'A', 'A', 'rookies', 't-rookies'),
+      classId: 'rookies' as const,
+      participants: [p1, p2, r0, r7],
+      bracket: [
+        bout(1, 0, r0, p1, 'A'),   // r0 kills p1
+        bout(1, 1, r7, p2, 'A'),   // p2 fell too — still a bracket finisher
+      ],
+    };
+    const state = makeTournamentBaseState(10);
+    state.roster = [p1, p2];
+    state.rivals = [makeTournamentRival([r0, r7])];
+    state.tournaments = [tour];
+
+    const offer = fileStablemateHunt(state, 't-rookies' as never, 'p2' as never, 'r0' as never);
+    expect(offer).not.toBeNull();
+    expect(offer!.warriorIds).toEqual(['p2', 'r0']);
+    expect(offer!.grudgeOfTournamentId).toBe('t-rookies');
+    expect(offer!.boutWeek).toBe(11);
+  });
+
+  it('fileStablemateHunt refuses when the killer never beat a stablemate', () => {
+    const mk = (id: string, name: string, rival?: boolean) =>
+      makeTournamentWarrior(id, name, undefined, rival ? TOURNEY_RIVAL_ID : TOURNEY_PLAYER_ID);
+    const [p1, p2, r0, r7] = [mk('p1', 'P One'), mk('p2', 'P Two'), mk('r0', 'R Zero', true), mk('r7', 'R Sev', true)];
+    const bout = (
+      round: number, matchIndex: number, a: typeof p1, d: typeof p1, winner: 'A' | 'D'
+    ) => ({
+      round, matchIndex,
+      warriorIdA: a.id, warriorIdD: d.id,
+      stableIdA: a.stableId, stableIdD: d.stableId,
+      winner, by: 'Stoppage' as const,
+    });
+    const tour = {
+      ...makeCompletedTournament([p1, p2, r0, r7], 'A', 'A', 'rookies', 't-rookies'),
+      classId: 'rookies' as const,
+      participants: [p1, p2, r0, r7],
+      bracket: [
+        bout(1, 0, r0, p1, 'A'),   // r0 beat p1 — but r7 only beat a rival
+        bout(1, 1, r7, mk('r9', 'R Nine', true), 'A'),
+      ],
+    };
+    const state = makeTournamentBaseState(10);
+    state.roster = [p1, p2];
+    state.rivals = [makeTournamentRival([r0, r7])];
+    state.tournaments = [tour];
+
+    expect(fileStablemateHunt(state, 't-rookies' as never, 'p2' as never, 'r7' as never)).toBeNull();
+    // And a non-participant cannot avenge.
+    expect(fileStablemateHunt(state, 't-rookies' as never, 'ghost' as never, 'r0' as never)).toBeNull();
+  });
+
+  it('fileStablemateHunt refuses an already-booked killer or avenger — and the victim itself', () => {
+    const mk = (id: string, name: string, rival?: boolean) =>
+      makeTournamentWarrior(id, name, undefined, rival ? TOURNEY_RIVAL_ID : TOURNEY_PLAYER_ID);
+    const [p1, p2, r0, r7] = [mk('p1', 'P One'), mk('p2', 'P Two'), mk('r0', 'R Zero', true), mk('r7', 'R Sev', true)];
+    const bout = (
+      round: number, matchIndex: number, a: typeof p1, d: typeof p1, winner: 'A' | 'D'
+    ) => ({
+      round, matchIndex,
+      warriorIdA: a.id, warriorIdD: d.id,
+      stableIdA: a.stableId, stableIdD: d.stableId,
+      winner, by: 'Stoppage' as const,
+    });
+    const tour = {
+      ...makeCompletedTournament([p1, p2, r0, r7], 'A', 'A', 'rookies', 't-rookies'),
+      classId: 'rookies' as const,
+      participants: [p1, p2, r0, r7],
+      bracket: [
+        bout(1, 0, r0, p1, 'A'),
+        bout(1, 1, r7, p2, 'A'),
+      ],
+    };
+    const state = makeTournamentBaseState(10);
+    state.roster = [p1, p2];
+    state.rivals = [makeTournamentRival([r0, r7])];
+    state.tournaments = [tour];
+
+    // The victim avenging itself is the call-out lane's job, not a hunt.
+    expect(fileStablemateHunt(state, 't-rookies' as never, 'p1' as never, 'r0' as never)).toBeNull();
+
+    // A pending grudge involving the killer blocks the hunt…
+    state.boutOffers = {
+      ['pre' as never]: {
+        id: 'pre' as never, warriorIds: ['rx', 'r0'] as never,
+        grudgeOfTournamentId: 't-rookies' as never, status: 'Proposed',
+      } as never,
+    };
+    expect(fileStablemateHunt(state, 't-rookies' as never, 'p2' as never, 'r0' as never)).toBeNull();
+    // …and a pending grudge involving the avenger blocks it too.
+    state.boutOffers = {
+      ['pre2' as never]: {
+        id: 'pre2' as never, warriorIds: ['p2', 'r9'] as never,
+        grudgeOfTournamentId: 't-rookies' as never, status: 'Proposed',
+      } as never,
+    };
+    expect(fileStablemateHunt(state, 't-rookies' as never, 'p2' as never, 'r0' as never)).toBeNull();
   });
 
   it('ignores incomplete tournaments', () => {

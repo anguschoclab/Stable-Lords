@@ -491,6 +491,11 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     match: '(tour.participants ?? []).find(',
     why: 'bounded scan — participants ≤ field cap (~64) per bracket bout (≤63), stablemate lookup',
   },
+  {
+    file: 'src/components/tournaments/TournamentHistory.tsx',
+    match: 'entry.participants',
+    why: 'bounded scan — bracket participants ≤ field cap (~64) per bracket bout, stablemate-hunt eligibility',
+  },
 ];
 
 interface ScanViolation {

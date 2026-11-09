@@ -29,20 +29,37 @@ interface CalloutPair {
   onCallOut?: () => void;
 }
 
+/** One stablemate-hunt candidate: a booked victim, the unbooked killer, and
+ *  the unbooked player finishers who could avenge them. */
+interface HuntPair {
+  victimId: WarriorId;
+  killerId: WarriorId;
+  victimName: string;
+  killerName: string;
+  hunters: { id: WarriorId; name: string; onHunt: () => void }[];
+}
+
 /**
- * Player-loss pairs in a completed class bracket that haven't been booked as
- * grudges yet — the call-out candidates. The AI auto-files its own losers;
- * the player chooses here (same rule, different chooser).
+ * Player-facing grudge lanes on a completed class bracket. The AI auto-files
+ * both lanes for itself; the player chooses here (same rules, different
+ * chooser):
+ *  - call-outs: a player loser rematches their unbooked killer (+1 FE), and
+ *  - hunts: when the victim is already booked, an unbooked stablemate
+ *    finisher goes after the still-unbooked killer.
  */
-function useCalloutPairs(entry: TournamentEntry) {
-  const { roster, boutOffers, callOutGrudgeMatch } = useGameStore(
+function useGrudgeLanes(entry: TournamentEntry): {
+  callouts: CalloutPair[];
+  hunts: HuntPair[];
+} {
+  const { roster, boutOffers, callOutGrudgeMatch, sendStablemateHunt } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       boutOffers: s.boutOffers,
       callOutGrudgeMatch: s.callOutGrudgeMatch,
+      sendStablemateHunt: s.sendStablemateHunt,
     }))
   );
-  if (!entry.classId || !entry.completed) return [];
+  if (!entry.classId || !entry.completed) return { callouts: [], hunts: [] };
   const playerIds = new Set(roster.map((w) => w.id));
   const booked = new Set(
     Object.values(boutOffers ?? {})
@@ -51,29 +68,57 @@ function useCalloutPairs(entry: TournamentEntry) {
   );
   const nameOf = (id: string) =>
     entry.participants.find((p) => p.id === id)?.name ?? 'Unknown';
-  const pairs: CalloutPair[] = [];
+  const callouts: CalloutPair[] = [];
+  const hunts: HuntPair[] = [];
   for (const b of entry.bracket) {
     if (b.isBronzeMatch || !b.winner) continue;
     const loserId = (b.winner === 'A' ? b.warriorIdD : b.warriorIdA) as WarriorId;
     const killerId = (b.winner === 'A' ? b.warriorIdA : b.warriorIdD) as WarriorId;
-    if (!loserId || !killerId || !playerIds.has(loserId)) continue;
-    if (booked.has(loserId) || booked.has(killerId)) continue;
-    pairs.push({
-      loserId,
-      killerId,
-      loserName: nameOf(loserId),
-      killerName: nameOf(killerId),
-    });
+    if (!loserId || !killerId || !playerIds.has(loserId) || booked.has(killerId)) continue;
+    if (!booked.has(loserId)) {
+      callouts.push({
+        loserId,
+        killerId,
+        loserName: nameOf(loserId),
+        killerName: nameOf(killerId),
+      });
+      continue;
+    }
+    const hunters = entry.participants
+      .filter((p) => playerIds.has(p.id) && p.id !== loserId && !booked.has(p.id))
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        onHunt: () => sendStablemateHunt(entry.id, p.id, killerId),
+      }));
+    if (hunters.length > 0) {
+      hunts.push({
+        victimId: loserId,
+        killerId,
+        victimName: nameOf(loserId),
+        killerName: nameOf(killerId),
+        hunters,
+      });
+    }
   }
-  return pairs.map((p) => ({
-    ...p,
-    onCallOut: () => callOutGrudgeMatch(entry.id, p.loserId, p.killerId),
-  }));
+  return {
+    callouts: callouts.map((p) => ({
+      ...p,
+      onCallOut: () => callOutGrudgeMatch(entry.id, p.loserId, p.killerId),
+    })),
+    hunts,
+  };
 }
 
-/** Grudge call-out affordances on a completed class bracket. */
-function CalloutSection({ callouts }: { callouts: CalloutPair[] }) {
-  if (callouts.length === 0) return null;
+/** Grudge call-out + stablemate-hunt affordances on a completed class bracket. */
+function CalloutSection({
+  callouts,
+  hunts,
+}: {
+  callouts: CalloutPair[];
+  hunts: HuntPair[];
+}) {
+  if (callouts.length === 0 && hunts.length === 0) return null;
   return (
     <div className="pt-2 border-t border-white/5 space-y-1.5">
       <p className="text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
@@ -96,6 +141,28 @@ function CalloutSection({ callouts }: { callouts: CalloutPair[] }) {
           </Button>
         </div>
       ))}
+      {hunts.map((h) => (
+        <div
+          key={`hunt_${h.victimId}_${h.killerId}`}
+          className="flex items-center justify-between gap-2 text-[10px] py-1.5 px-2 bg-arena-gold/[0.04] border-l-2 border-arena-gold/40"
+        >
+          <span className="text-foreground/80 truncate">
+            {h.victimName} <span className="text-muted-foreground/50">felled by</span> {h.killerName}
+          </span>
+          <span className="flex items-center gap-1 shrink-0">
+            {h.hunters.map((hh) => (
+              <Button
+                key={hh.id}
+                variant="outline"
+                onClick={hh.onHunt}
+                className="h-5 px-2 text-[8px] font-black uppercase tracking-widest gap-1 rounded-none border-arena-gold/40 text-arena-gold hover:bg-arena-gold/10"
+              >
+                <Swords className="h-2.5 w-2.5" /> {hh.name}
+              </Button>
+            ))}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -113,7 +180,7 @@ function TournamentEntryRow({
   onToggle: () => void;
 }) {
   const bouts = expanded ? getFightsForTournament(arenaHistory, entry.id) : [];
-  const callouts = useCalloutPairs(entry);
+  const { callouts, hunts } = useGrudgeLanes(entry);
 
   return (
     <div className="bg-black/20 border border-white/5">
@@ -159,7 +226,7 @@ function TournamentEntryRow({
               </div>
             ))
           )}
-          <CalloutSection callouts={callouts} />
+          <CalloutSection callouts={callouts} hunts={hunts} />
         </div>
       )}
     </div>

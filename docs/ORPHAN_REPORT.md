@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 174 src-scoped dead exports — ⚠️ **over the 173 ratchet by 1** — the guard is red.
+> **Ratchet status:** 174 src-scoped dead exports — under the 174 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -354,7 +354,7 @@ Generated-library exports — the components ship their full part API even when 
 | **Delete / integrate** | 5 curated item(s) + **3 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
 | **Keep** | 4 test-reset hook(s); 121 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 174 / 173 | — |
+| **Guard hygiene** | ratchet: 174 / 174 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

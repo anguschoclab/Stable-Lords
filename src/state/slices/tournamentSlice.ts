@@ -3,7 +3,7 @@ import type { TournamentCycle, TournamentEntry } from '@/types/state.types';
 import type { StableId, TournamentId, WarriorId } from '@/types/shared.types';
 import type { GameStore } from '@/state/useGameStore';
 import { classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
-import { fileGrudgeCallout } from '@/engine/matchmaking/grudgeMatches';
+import { fileGrudgeCallout, fileStablemateHunt } from '@/engine/matchmaking/grudgeMatches';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /** V27: max declarations a stable may file per class per cycle. */
@@ -29,6 +29,13 @@ export interface TournamentSlice {
   callOutGrudgeMatch: (
     tournamentId: TournamentId,
     loserId: WarriorId,
+    killerId: WarriorId
+  ) => void;
+  /** V27: player-initiated stablemate hunt — an unbooked bracket finisher
+   *  avenges a felled stablemate when the victim itself is already booked. */
+  sendStablemateHunt: (
+    tournamentId: TournamentId,
+    avengerId: WarriorId,
     killerId: WarriorId
   ) => void;
 }
@@ -80,6 +87,12 @@ export const createTournamentSlice: StateCreator<GameStore, [], [], TournamentSl
   callOutGrudgeMatch: (tournamentId, loserId, killerId) =>
     set((s) => {
       const offer = fileGrudgeCallout(s, tournamentId, loserId, killerId);
+      if (!offer) return {};
+      return { boutOffers: { ...(s.boutOffers ?? {}), [offer.id]: offer } };
+    }),
+  sendStablemateHunt: (tournamentId, avengerId, killerId) =>
+    set((s) => {
+      const offer = fileStablemateHunt(s, tournamentId, avengerId, killerId);
       if (!offer) return {};
       return { boutOffers: { ...(s.boutOffers ?? {}), [offer.id]: offer } };
     }),

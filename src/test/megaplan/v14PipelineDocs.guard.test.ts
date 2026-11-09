@@ -69,9 +69,11 @@ describe('megaplan V14: pipeline docs match WEEK_PIPELINE_PASSES', () => {
     expect(phantom, `phantom passes in DEPENDENCY_MAP: ${phantom.join(', ')}`).toEqual([]);
   });
 
-  it('audit doc does not repeat the stale "15 passes" count', () => {
-    expect(AUDIT, 'PIPELINE_AUDIT still claims 15 passes — actual table has 16').not.toMatch(
-      /15 passes?|15 staged passes/i
-    );
+  it('audit doc pass counts match the declared table', () => {
+    const declared = WEEK_PIPELINE_PASSES.length;
+    const claimed = [...AUDIT.matchAll(/(\d+) (?:staged )?passes/gi)].map((m) => Number(m[1]));
+    for (const n of claimed) {
+      expect(n, `PIPELINE_AUDIT claims ${n} passes — actual table has ${declared}`).toBe(declared);
+    }
   });
 });

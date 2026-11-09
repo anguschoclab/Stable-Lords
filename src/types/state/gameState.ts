@@ -47,11 +47,14 @@ import type { ContentPack } from '@/lib/contentPacks';
 /**
  * Defines the shape of game state.
  */
-/** A live bloodfeud entitlement (V24): the killer's warrior can be priority-
- *  challenged by any player stablemate until `expiresWeek`. */
+/** A live bloodfeud entitlement (V24/V26): any stablemate of the victim's
+ *  stable — player or rival — may priority-challenge the killer's warrior
+ *  until `expiresWeek`. `owedStableId` is the creditor: the victim's own
+ *  stable, or the player's stable id for roster victims. */
 export interface BloodfeudMark {
   killerWarriorId: string;
   killerStableId?: string;
+  owedStableId: string;
   expiresWeek: number;
 }
 
@@ -136,9 +139,10 @@ export interface GameState {
   /** Stable-level avoids (canon "avoid team numbers") — vetoes every warrior
    *  of a listed stable in matchmaking and inbound player-bound bids. */
   playerStableAvoids: string[];
-  /** V24 canon: four-week bloodfeud entitlements created when a rival kills
-   *  a player warrior — any stablemate may challenge the killer's warrior. */
-  playerBloodfeuds?: BloodfeudMark[];
+  /** V24/V26 canon: four-week bloodfeud entitlements created when any arena
+   *  warrior is killed — owed to the victim's stable, spendable by any of
+   *  its stablemates. One mechanism covers every feud direction. */
+  bloodfeudMarks?: BloodfeudMark[];
   /** Player-written gazette ads — flushed into the newsletter on week advance. */
   playerAds?: string[];
   /** Player-authored warrior spotlights — flushed into the newsletter on week advance. */

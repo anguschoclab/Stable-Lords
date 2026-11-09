@@ -78,9 +78,10 @@ export interface StateImpact {
   deadWarriorIds?: WarriorId[];
   /** Delta additions to `state.killEvents` (append, id-deduped). */
   killEvents?: KillEvent[];
-  /** Delta additions to `state.playerBloodfeuds` — killer-keyed, latest
-   *  expiry wins; expired marks are pruned on write (V24 canon). */
-  playerBloodfeuds?: BloodfeudMark[];
+  /** Delta additions to `state.bloodfeudMarks` — keyed by (owed stable,
+   *  killer), latest expiry wins; expired marks are pruned on write
+   *  (V24/V26 canon — every stable's marks live in one table). */
+  bloodfeudMarks?: BloodfeudMark[];
 
   // Rivals
   rivalsUpdates?: Map<StableId, Partial<RivalStableData>>;

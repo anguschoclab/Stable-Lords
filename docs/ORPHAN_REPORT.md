@@ -4,7 +4,7 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 172 src-scoped dead exports — under the 172 ratchet — guard green.
+> **Ratchet status:** 171 src-scoped dead exports — under the 172 ratchet — guard green.
 
 ## Uniqueness tags
 
@@ -160,7 +160,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `PlanConditionSchema` | `src/schemas/warriorSchemas.ts` | FightPlanSchema | — |
 | `FightPlanSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema | — |
 
-### AI decisioning (21)
+### AI decisioning (20)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
@@ -178,7 +178,6 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `retireChanceFor` | `src/engine/ai/seasonalRetirementService.ts` | SeasonalRetirementService | — |
 | `TRAIT_POLICY` | `src/engine/ai/traitPolicy.ts` | policyFor | — |
 | `WEATHER_AI_DISPOSITION` | `src/engine/ai/weatherSuitability.ts` | HAZARDOUS_WEATHER, acceptanceWeatherBlock, offerWeatherDecline, committeeWeatherSkip, weatherBidModifier | — |
-| `BASE_RESERVE` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
 | `projectCashFlow` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
 | `learningSeekBonus` | `src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts` | pickBestCandidate | — |
 | `NegotiationOutcome *(type)*` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
@@ -351,8 +350,8 @@ Generated-library exports — the components ship their full part API even when 
 | --- | --- | --- |
 | **Delete / integrate** | 5 curated item(s) + **1 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 4 test-reset hook(s); 121 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 172 / 172 | — |
+| **Keep** | 4 test-reset hook(s); 120 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 171 / 172 | — |
 | **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

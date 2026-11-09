@@ -280,16 +280,17 @@ export function handleDeath(args: HandleDeathArgs): HandleDeathResult {
     rng: rng,
   });
 
-  // V24 canon: a player victim earns the stable a four-week bloodfeud on
-  // the killer. Tournament kills don't feed the feud (exhibition deaths).
-  const playerBloodfeuds = tournamentId
+  // V24/V26 canon: ANY arena kill earns the victim's stable a four-week
+  // bloodfeud on the killer — player and rival stables alike. Tournament
+  // kills don't feed the feud (exhibition deaths).
+  const bloodfeudMarks = tournamentId
     ? []
     : bloodfeudMarksFromOutcome({
         outcome,
         warriorA: wA,
         warriorD: wD,
         week,
-        playerWarriorIds: new Set(s.roster.map((w) => w.id)),
+        playerStableId: s.player?.id as string,
       });
 
   return assembleDeathImpact({
@@ -302,7 +303,7 @@ export function handleDeath(args: HandleDeathArgs): HandleDeathResult {
     week: week,
     rng: rng,
     tournamentId: tournamentId,
-    playerBloodfeuds,
+    bloodfeudMarks,
   });
 }
 
@@ -316,13 +317,13 @@ interface AssembleDeathImpactArgs {
   week: number;
   rng: IRNGService;
   tournamentId?: string;
-  playerBloodfeuds?: BloodfeudMark[];
+  bloodfeudMarks?: BloodfeudMark[];
 }
 
 /** Assemble the death impact: roster updates, obituary, event, fame delta. */
 function assembleDeathImpact(args: AssembleDeathImpactArgs) {
   const { s, victim, killer, isPlayerVictim, graveyardEntry } = args;
-  const { narrative, week, rng, tournamentId, playerBloodfeuds } = args;
+  const { narrative, week, rng, tournamentId, bloodfeudMarks } = args;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const newsletterItems: NewsletterItem[] = [];
   const isOnPlayerRoster = s.roster.some((w) => w.id === victim.id);
@@ -372,7 +373,7 @@ function assembleDeathImpact(args: AssembleDeathImpactArgs) {
     // Resolution-time kill accounting: the persistent death registry plus an
     // audit event, so counting never depends on the capped arenaHistory.
     deadWarriorIds: [victim.id],
-    playerBloodfeuds,
+    bloodfeudMarks,
     killEvents: [
       {
         id: `kill_${week}_${victim.id}`,

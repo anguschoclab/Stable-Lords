@@ -142,6 +142,11 @@ export interface WarriorFavorites {
      *  (the derived favorite learn). Optional for legacy saves. */
     learn?: boolean;
     learnHints?: number;
+    /** V26 — the favorite tactic joins the shared discovery channel:
+     *  epiphany rolls can reveal it like weapon/rhythm. Optional for
+     *  legacy saves. */
+    tactic?: boolean;
+    tacticHints?: number;
   };
   /** Per-weapon performance ledger accumulated across bouts. Keyed by weapon id. */
   chart?: Record<string, WeaponChartEntry>;

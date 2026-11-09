@@ -67,7 +67,7 @@ export const defaultWorldState: Omit<
   playerChallenges: [],
   playerAvoids: [],
   playerStableAvoids: [],
-  playerBloodfeuds: [],
+  bloodfeudMarks: [],
   playerAds: [],
   playerSpotlights: [],
   ownerGrudges: [],

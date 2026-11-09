@@ -137,19 +137,20 @@ const killEvents = (state: GameState, value: KillEvent[]) => {
 };
 
 /**
- * Apply bloodfeud-mark additions (V24 canon): keyed by killer — a renewed
- * feud keeps the latest expiry. Expired marks are pruned whenever the list
- * is written so stale entitlements can't linger.
+ * Apply bloodfeud-mark additions (V24/V26 canon): keyed by (owed stable,
+ * killer) — a renewed feud keeps the latest expiry. Expired marks are
+ * pruned whenever the list is written so stale entitlements can't linger.
  */
-const playerBloodfeuds = (state: GameState, value: BloodfeudMark[]) => {
+const bloodfeudMarks = (state: GameState, value: BloodfeudMark[]) => {
   if (value.length === 0) return;
   const now = state.absoluteWeek ?? state.week;
-  const byKiller = new Map<string, BloodfeudMark>();
-  for (const m of state.playerBloodfeuds || []) {
-    if (m.expiresWeek > now) byKiller.set(m.killerWarriorId, m);
+  const key = (m: BloodfeudMark) => `${m.owedStableId}|${m.killerWarriorId}`;
+  const byKey = new Map<string, BloodfeudMark>();
+  for (const m of state.bloodfeudMarks || []) {
+    if (m.expiresWeek > now) byKey.set(key(m), m);
   }
-  for (const m of value) byKiller.set(m.killerWarriorId, m);
-  state.playerBloodfeuds = [...byKiller.values()];
+  for (const m of value) byKey.set(key(m), m);
+  state.bloodfeudMarks = [...byKey.values()];
 };
 
 /**
@@ -195,6 +196,6 @@ export const warriorsHandlers = {
   retired,
   deadWarriorIds,
   killEvents,
-  playerBloodfeuds,
+  bloodfeudMarks,
   warriorEpithets,
 };

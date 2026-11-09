@@ -18,6 +18,7 @@ import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { generateId } from '@/utils/idUtils';
 import { entropyRng } from '@/utils/random';
 import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
+import { generatePotential, rollPotentialTier } from '@/engine/warrior/potential';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
@@ -59,6 +60,11 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
   // requirements, otherwise the best weapon the style allows that they can
   // actually wield (an unusable favorite costs −2 ATT per missing point).
   const equipment = overrides?.equipment ?? getFittedLoadout(style, attrs);
+  // Minted warriors roll the same tier distribution as the recruit pool so
+  // their growth ceilings aren't uncapped headroom (V26 parity). rng-less
+  // builds stay potential-free like the other seeded-only fields.
+  const potential =
+    overrides?.potential ?? (rng ? generatePotential(attrs, rollPotentialTier(rng), rng) : undefined);
 
   return {
     id: id ?? (rng ? (rng.uuid() as WarriorId) : (generateId(undefined, 'warrior') as WarriorId)),
@@ -78,6 +84,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     traits,
     trainability,
     equipment,
+    potential,
     lore: overrides?.lore ?? '',
     origin: overrides?.origin ?? '',
     avatarSeed: overrides?.avatarSeed ?? (rng ? Math.floor(rng.next() * 1000000) : 0),

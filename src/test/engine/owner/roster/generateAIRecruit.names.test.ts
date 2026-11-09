@@ -6,7 +6,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
 import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
-import type { Warrior } from '@/types/warrior.types';
 
 const NAME_RE = /^[A-Z][A-Z '-]{1,19}$/;
 
@@ -47,8 +46,8 @@ describe('generateAIRecruit — naming', () => {
 
   it('is deterministic for a seed', () => {
     const rival = makeRival();
-    const a = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 }) as Warrior;
-    const b = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 }) as Warrior;
-    expect(a.name).toBe(b.name);
+    const a = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 });
+    const b = generateAIRecruit({ rival: rival, week: 10, meta: undefined, seed: 42 });
+    expect(a!.name).toBe(b!.name);
   });
 });

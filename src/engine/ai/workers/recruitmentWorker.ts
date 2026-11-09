@@ -64,7 +64,7 @@ function signGeneratedRecruit(
   });
   if (!generated) return null;
   const signed = signWarrior({
-    prebuilt: generated,
+    recruit: generated,
     roster: updatedRival.roster,
     maxRoster: aiRosterMax(updatedRival.owner.personality),
     treasury: updatedRival.treasury,

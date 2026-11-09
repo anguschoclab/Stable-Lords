@@ -30,6 +30,19 @@ const POTENTIAL_MIN = 8;
 const POTENTIAL_ABSOLUTE_MAX = ATTRIBUTE_MAX; // 25
 
 /**
+ * Roll a recruit tier by the canonical pool distribution — 5% Prodigy,
+ * 15% Exceptional, 30% Promising, 50% Common. Shared by recruit generation
+ * and world-mint paths so minted warriors carry the same headroom mix as
+ * the recruit pool (V26 parity).
+ */
+export function rollPotentialTier(rng: IRNGService): RecruitTier {
+  if (rng.next() < 0.05) return 'Prodigy';
+  if (rng.next() < 0.2) return 'Exceptional';
+  if (rng.next() < 0.5) return 'Promising';
+  return 'Common';
+}
+
+/**
  * Generate per-attribute potential ceilings for a warrior.
  * Each attribute gets: current + random(headroom_min, headroom_max), clamped to [POTENTIAL_MIN, 25].
  */

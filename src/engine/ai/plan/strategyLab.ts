@@ -11,6 +11,8 @@
  * seeded worlds reproduce exactly.
  */
 import type { StrategyMemory } from '@/types/warrior.types';
+import type { FightingStyle } from '@/types/shared.types';
+import { favoriteTacticPool } from '@/engine/favorites/favorites';
 
 /** Canon effort bands (Jorja taxonomy): very-low 1-2, low 3-4, moderate 5-6, high 7-8, very-high 9-10. */
 export type RhythmBand = 'VL' | 'L' | 'M' | 'H' | 'VH';
@@ -117,4 +119,23 @@ export function pickStrategyTarget(
   if (!bestKey) return null;
   const [o, a] = bestKey.split('/') as [RhythmBand, RhythmBand];
   return { oe: BAND_MID[o], al: BAND_MID[a], exploring };
+}
+
+/**
+ * The tactic an exploring manager tries this week — a seeded pick from the
+ * style's possible-favorite pool (V26). Probing only WS-suited tactics means
+ * the AI tinkers the way a real manager does AND can organically earn the
+ * same tactic discoveries players get by fighting their favorite.
+ * Deterministic: pure hash of (warrior id, week), same salt domain as the
+ * rhythm probe.
+ */
+export function pickTacticProbe(
+  style: FightingStyle,
+  warriorId: string,
+  week: number
+): string | undefined {
+  const pool = favoriteTacticPool(style);
+  if (pool.length === 0) return undefined;
+  const idx = Math.floor(hash(warriorId, week, 3) * pool.length);
+  return pool[idx]?.tactic;
 }

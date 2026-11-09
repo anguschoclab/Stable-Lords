@@ -171,11 +171,12 @@ export const GameStateSchema = z
     playerChallenges: z.array(z.string()),
     playerAvoids: z.array(z.string()),
     playerStableAvoids: z.array(z.string()).default([]),
-    playerBloodfeuds: z
+    bloodfeudMarks: z
       .array(
         z.object({
           killerWarriorId: z.string(),
           killerStableId: z.string().optional(),
+          owedStableId: z.string(),
           expiresWeek: z.number(),
         })
       )

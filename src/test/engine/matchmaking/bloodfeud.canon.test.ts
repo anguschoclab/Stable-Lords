@@ -7,35 +7,8 @@
  *  - A double challenge "appx doubles" the odds.
  */
 import { describe, it, expect } from 'vitest';
-import { findBestOpponent, type OpponentSearchContext } from '@/engine/promoters/offerMatchmaking';
 import { bloodfeudMarksFromOutcome, BLOODFEUD_TURNS } from '@/engine/matchmaking/bloodfeud';
-import { makeWarrior } from '@/test/_fixtures/factories';
-import type { Warrior } from '@/types/warrior.types';
-import type { WarriorId, StableId } from '@/types/shared.types';
-
-const w = (id: string, stableId?: string) =>
-  makeWarrior({ id: id as WarriorId, stableId: stableId as StableId });
-
-const promoter = { personality: 'Showman' } as never;
-
-const ctx = (over: Partial<OpponentSearchContext> = {}): OpponentSearchContext => ({
-  promoter,
-  matchedIds: new Set(),
-  recentFightPairs: new Set(),
-  playerWarriorIds: new Set(),
-  avoidSet: new Set(),
-  challengeSet: new Set(),
-  gapThreshold: 0.5,
-  ...over,
-});
-
-const search = (
-  a: Warrior,
-  scoreA: number,
-  cands: Warrior[],
-  scores: number[],
-  c: OpponentSearchContext
-) => findBestOpponent(a, scoreA, cands, scores, c);
+import { w, opponentCtx as ctx, searchBest as search } from './_helpers';
 
 describe('bloodfeud entitlement (canon: 4 turns, any stablemate, top priority)', () => {
   it('a killed player warrior creates a mark on the killer, expiring in 4 weeks', () => {
@@ -46,23 +19,35 @@ describe('bloodfeud entitlement (canon: 4 turns, any stablemate, top priority)',
       warriorA: killer,
       warriorD: victim,
       week: 10,
-      playerWarriorIds: new Set(['victim-1']),
+      playerStableId: 'player-1',
     });
     expect(marks).toEqual([
-      { killerWarriorId: 'killer-1', killerStableId: 'rival-stable', expiresWeek: 14 },
+      {
+        killerWarriorId: 'killer-1',
+        killerStableId: 'rival-stable',
+        owedStableId: 'player-1',
+        expiresWeek: 14,
+      },
     ]);
     expect(marks[0]!.expiresWeek - 10).toBe(BLOODFEUD_TURNS);
   });
 
-  it('a rival victim creates no player entitlement', () => {
+  it('a rival victim creates a mark owed to ITS stable (V26 harmonized)', () => {
     const marks = bloodfeudMarksFromOutcome({
-      outcome: { by: 'Kill', winner: 'D' },
-      warriorA: w('r1'),
-      warriorD: w('r2'),
+      outcome: { by: 'Kill', winner: 'A' },
+      warriorA: w('r1', 'stable-a'),
+      warriorD: w('r2', 'stable-b'),
       week: 10,
-      playerWarriorIds: new Set(['p1']),
+      playerStableId: 'player-1',
     });
-    expect(marks).toEqual([]);
+    expect(marks).toEqual([
+      {
+        killerWarriorId: 'r1',
+        killerStableId: 'stable-a',
+        owedStableId: 'stable-b',
+        expiresWeek: 14,
+      },
+    ]);
   });
 
   it('a bloodfeud target wins the offer even outside the score window', () => {
@@ -70,7 +55,17 @@ describe('bloodfeud entitlement (canon: 4 turns, any stablemate, top priority)',
     const killer = w('killer-1');
     const near = w('near-1');
     // killer's score is way outside the ±gapThreshold window.
-    const out = search(a, 100, [near, killer], [100, 10], ctx({ bloodfeudSet: new Set(['killer-1']), playerWarriorIds: new Set(['p1']) }));
+    const out = search(
+      a,
+      100,
+      [near, killer],
+      [100, 10],
+      ctx({
+        feudTargetsByStable: new Map([['player-1', new Set(['killer-1'])]]),
+        playerStableId: 'player-1',
+        playerWarriorIds: new Set(['p1']),
+      })
+    );
     expect(out?.id).toBe('killer-1');
   });
 });

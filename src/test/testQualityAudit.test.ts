@@ -153,6 +153,7 @@ const NON_MIRROR_DIRS = new Set([
 // current guards pin regressable invariants (T6 wave-2 audit); new guards
 // must register here.
 const GUARD_REGISTRY: Record<string, string> = {
+  'aiParityFunnel.guard.test.ts': 'LIVE_RATCHET',
   'appShell.cta.test.tsx': 'LIVE_RATCHET',
   'arenaLookup.guard.test.ts': 'LIVE_RATCHET',
   'documentationParity.test.ts': 'LIVE_RATCHET',

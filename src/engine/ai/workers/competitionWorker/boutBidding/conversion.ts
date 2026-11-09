@@ -168,6 +168,10 @@ function collectCandidates(
       }
     }
   }
+  // V26: a warrior-pinned bid (bloodfeud) binds to that warrior only.
+  if (bid.targetWarriorId) {
+    candidates = candidates.filter((c) => c.warrior.id === bid.targetWarriorId);
+  }
   return candidates;
 }
 

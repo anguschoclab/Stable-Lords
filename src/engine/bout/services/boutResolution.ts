@@ -76,7 +76,7 @@ export function getNPCPlan(
   opponentStableId?: string
 ): FightPlan {
   const rival = state.rivalMap?.get(w.stableId as string);
-  if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
+  if (!rival) return defaultPlanForWarrior(w);
 
   // E.2 — a committed plan written for THIS opponent THIS week is honored
   // verbatim; a stale or opponent-mismatched plan is recomputed.
@@ -142,19 +142,25 @@ function runBoutSimulation(
     _ctx.contract
   );
 
-  return simulateFight({
+  return {
+    outcome: simulateFight({
+      planA: planA,
+      planD: planD,
+      warriorA: validCW,
+      warriorD: validCO,
+      providedRng: boutSeed,
+      trainers: state.trainers,
+      weather: weather,
+      arenaId: arenaId,
+      crowdMood: state.crowdMood,
+      headless: _ctx.headless,
+      deathRateMult: state.houseRules?.deathRateMult,
+    }),
+    // The plans the bout actually simulated — discovery symmetry grades
+    // these, not the persisted (possibly decoy-masked) w.plan.
     planA: planA,
     planD: planD,
-    warriorA: validCW,
-    warriorD: validCO,
-    providedRng: boutSeed,
-    trainers: state.trainers,
-    weather: weather,
-    arenaId: arenaId,
-    crowdMood: state.crowdMood,
-    headless: _ctx.headless,
-    deathRateMult: state.houseRules?.deathRateMult,
-  });
+  };
 }
 
 /**
@@ -187,6 +193,8 @@ interface CollectBoutImpactsArgs {
   validCO: Warrior;
   outcome: FightOutcome;
   boutSeed: number;
+  planA: FightPlan;
+  planD: FightPlan;
 }
 
 function collectBoutImpacts(args: CollectBoutImpactsArgs) {
@@ -228,6 +236,8 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
     state: state,
     ctx: ctx,
     validCW: validCW,
+    planA: args.planA,
+    planD: args.planD,
     validCO: validCO,
     outcome: outcome,
     tags: tags,
@@ -262,6 +272,8 @@ interface PostResolutionImpactsArgs {
   rng: IRNGService;
   boutSeed: number;
   impacts: StateImpact[];
+  planA: FightPlan;
+  planD: FightPlan;
 }
 
 /**
@@ -304,6 +316,8 @@ function postResolutionImpacts(args: PostResolutionImpactsArgs): {
       week: ctx.week,
       rng: rng,
       headless: ctx.headless,
+      planA: args.planA,
+      planD: args.planD,
     }),
     ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
   );
@@ -403,7 +417,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const { cW, cO } = combatants;
   const boutSeed = hashStr(`${ctx.week}|${cW.id}|${cO.id}`);
 
-  const outcome = runBoutSimulation(state, ctx, cW, cO, boutSeed);
+  const { outcome, planA, planD } = runBoutSimulation(state, ctx, cW, cO, boutSeed);
   const { impacts, deathRes, injuryRes, announcement } = collectBoutImpacts({
     state: state,
     ctx: ctx,
@@ -411,6 +425,8 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
     validCO: cO,
     outcome: outcome,
     boutSeed: boutSeed,
+    planA: planA,
+    planD: planD,
   });
 
   return {

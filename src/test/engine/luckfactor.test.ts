@@ -62,6 +62,45 @@ describe('luckfactor', () => {
     expect(rngPS.next()).toBe(rngLU.next());
   });
 
+  it('D1: WS positive luck lands only in ATT/PAR — Drake: "bonused only in Attack and Parry"', () => {
+    const rng = new SeededRNG(31337);
+    let sawPositivePool = false;
+    let sawNegativeOffPool = false;
+    for (let i = 0; i < 500; i++) {
+      const luck = rollLuckfactor(rng, FightingStyle.WallOfSteel);
+      for (const s of SKILLS) {
+        if (s === 'ATT' || s === 'PAR') continue;
+        expect(luck[s], `WS.${s} must never be positive (got ${luck[s]})`).toBeLessThanOrEqual(0);
+        if (luck[s] < 0) sawNegativeOffPool = true;
+      }
+      if (luck.ATT > 0 || luck.PAR > 0) sawPositivePool = true;
+    }
+    // positives still reach the pool; hosed stays canon — negatives anywhere
+    expect(sawPositivePool).toBe(true);
+    expect(sawNegativeOffPool).toBe(true);
+  });
+
+  it('D1: styles without a positive pool keep unrestricted luck (V23 parity)', () => {
+    // Only WS is canon-conditioned; every other style's positives may land
+    // on any skill — the V23 knack-parity lock covers range, pools cover
+    // nothing.
+    const rng = new SeededRNG(2024);
+    const offPoolPositives = new Set<string>();
+    for (let i = 0; i < 500; i++) {
+      const luck = rollLuckfactor(rng, FightingStyle.LungingAttack);
+      for (const s of SKILLS) if (luck[s] > 0) offPoolPositives.add(s);
+    }
+    expect(offPoolPositives.size).toBeGreaterThan(2); // far beyond {ATT,PAR}
+  });
+
+  it('D1: WS pool conditioning consumes the same six draws (stream alignment)', () => {
+    const rngWS = new SeededRNG(555);
+    const rngLU = new SeededRNG(555);
+    rollLuckfactor(rngWS, FightingStyle.WallOfSteel);
+    rollLuckfactor(rngLU, FightingStyle.LungingAttack);
+    expect(rngWS.next()).toBe(rngLU.next());
+  });
+
   it('applyLuckfactor adds deltas and floors each skill at 1', () => {
     const base: BaseSkills = { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 };
     expect(applyLuckfactor(base, { ATT: 3, DEF: -2 })).toMatchObject({ ATT: 13, DEF: 8 });

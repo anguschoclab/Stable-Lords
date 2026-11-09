@@ -44,6 +44,19 @@ describe('deftness weapon-tier guidance (Consortium: DF 11 unlocks the real arse
   });
 });
 
+describe('dagger favored-style advisory (Jalopy: dagger fully suited only to ST/AB)', () => {
+  it('a dagger-tier build on a non-ST/AB style is noted', () => {
+    expect(ids({ ...base, DF: 9 }, FightingStyle.LungingAttack)).toContain('dagger-style-fit');
+  });
+  it('ST and AB dagger-tier builds are on-style (no note)', () => {
+    expect(ids({ ...base, DF: 9 }, FightingStyle.StrikingAttack)).not.toContain('dagger-style-fit');
+    expect(ids({ ...base, DF: 9 }, FightingStyle.AimedBlow)).not.toContain('dagger-style-fit');
+  });
+  it('DF 11+ builds never see the note — the dagger tier does not bind them', () => {
+    expect(ids({ ...base, DF: 11 }, FightingStyle.LungingAttack)).not.toContain('dagger-style-fit');
+  });
+});
+
 describe('low-burn style steering (Consortium: PR/PS/AB/TP/ST tolerate low burns)', () => {
   it('contains exactly the article set', () => {
     expect(new Set(LOW_BURN_STYLES)).toEqual(

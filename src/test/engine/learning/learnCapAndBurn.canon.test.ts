@@ -7,7 +7,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { effectiveLearnCap } from '@/engine/learning/skillBurn';
-import { LEARN_PER_SKILL_CAP } from '@/constants/combat/combat/learn';
+import { LEARN_PER_SKILL_CAP, LEARN_CAREER_CAP } from '@/constants/combat/combat/learn';
 import { computeBaseSkills } from '@/engine/warrior/skillCalc';
 import { calculateKillWindow } from '@/engine/combat/mechanics/damageCalc';
 import { FightingStyle } from '@/types/shared.types';
@@ -22,6 +22,17 @@ const attrs = (over: Partial<Attributes> = {}): Attributes => ({
   SP: 10,
   DF: 10,
   ...over,
+});
+
+describe('canon learn-cap literals (Rose of Shanon: ~20 skills per area)', () => {
+  it('per-skill cap is the canon ~20 — the compressed 6-ladder is replaced', () => {
+    expect(LEARN_PER_SKILL_CAP).toBe(20);
+  });
+  it('career cap allows maxing every area — canon bounds per-area only', () => {
+    // 6 skill areas × per-skill cap: a lifetime learner is bounded per
+    // area, never shorted by a career ceiling.
+    expect(LEARN_CAREER_CAP).toBeGreaterThanOrEqual(LEARN_PER_SKILL_CAP * 6);
+  });
 });
 
 describe('burn shrinks the effective learn cap (canon semantics)', () => {

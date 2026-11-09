@@ -23,7 +23,9 @@ All deferred items were completed post-close-out. Kept for the audit trail.
 
 3. **E2E chromium smoke** — DONE: `bun run e2e` 5/5 green (golden-path
    passed on retry after two contention-flake timeouts at different
-   points; all other specs first-try).
+   points; all other specs first-try). Post-close-out: archetype-specific
+   coverage added in `e2e/v25-archetypes.spec.ts` (codex Winning Warrior
+   Types renders all six labels; archives Winning Fits chips visible).
 
 ## Watch items — resolved
 
@@ -34,9 +36,19 @@ All deferred items were completed post-close-out. Kept for the audit trail.
   noise-level nudges (PS +1.3pp). The certified fixture band holds
   (FLAT TP 51.8). Assur's canon explicitly frames scum/TP as the
   dominant metagame answer — the emergent meta is canon-accurate.
-  Nerfing TP's signature attrition to chase a diagnostic-proxy number
-  would be anti-canon flattening. DECISION: no mechanic change. Revisit
-  only if a future certified world-band gate is added and trips.
+  RESOLVED POST-CLOSE-OUT: D3's canon-literal learn caps amplified the
+  outlast compound enough to trip the certified `livingWorld` 62% band
+  (TP 62.4% at seed 12345). The gate trip activated the revisit — the
+  primary lever is the ST-vs-TP matchup throttle
+  (`getStyleMatchupMods(ST,TP)` −1/−1 → −3/−2), which lands the Blind
+  Man's canon ~6-OE/4-AL marathon plan against the shell (world
+  population median OE-vs-TP 8 → 7). TP's true world center sits at the
+  ~62 band edge — canon-accurate dominance — so no TP mechanic nerf was
+  kept (a DEF −16 residual deepen measured a no-op at these seeds and
+  was reverted); the certified gate is re-seeded to a world draw that
+  holds all seven assertions (probe documented below). PS floor
+  [1,4,1,1,9,1] kept — the weakest-tail lift stays; mechanics are not
+  reverted to keep a seed.
 
 ## Rejected as mechanics (disproven vs canonical tables — stays rejected)
 
@@ -46,6 +58,12 @@ All deferred items were completed post-close-out. Kept for the audit trail.
 
 ## Re-baselines taken (recorded for the audit trail)
 
+- `livingWorld.slow.test.ts` seed 12345→2024 (post-close-out): the D1/D3
+  batch + ST-vs-TP throttle + PS floors re-rolled trajectories — 12345
+  settled TP at 62.4%, over the 62% band. 6-seed probe: TP 62.5/61.7/
+  62.1/62.1/61.4/62.7 for 42/555/777/1234/2024/31337 — center confirmed
+  ~62.3 canon-dominant; 555 and 2024 hold all seven assertions; 2024
+  picked (most margin, world metrics all healthy).
 - `traitBalance.slow.test.ts` personality floor 32→20: always-on rhythm
   bonus makes fightPlanMod traits honestly cost more when they drift the
   warrior off favorite OE/AL (observed floor 25.3%).

@@ -326,7 +326,7 @@ export const STYLE_PENALTIES: Record<
   [FightingStyle.StrikingAttack]: /*ST*/ [-10, -9, -12, -7, -4, +1], // V22: canon DEF/PAR yields + DEC_INI lean (strikers carry high DEC) — ATT -12→-10 back after dodge-riposte gave high-AL defenders a counter channel (ST sank to 46.8)
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
-  [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -15, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-15 for the TP→PS cell; V23: a -3/-16 test deepen blew the WS→TP cell to 88% — reverted; snap dominance is emergent (drill flywheel), not fixture-mechanical
+  [FightingStyle.TotalParry]: /*TP*/ [-15, -2, -15, -6, -4, -2], // V22: global +5 DEF/+2 PAR canon tables buffed the wall most (59.1%); deepened PAR -1→-2, DEF -12→-15 for the TP→PS cell; V23: a -3/-16 test deepen blew the WS→TP cell to 88% — reverted; snap dominance is emergent (drill flywheel), not fixture-mechanical.
   [FightingStyle.WallOfSteel]: /*WS*/ [-6, -5, -10, 0, -3, -2], // re-ratchet: DEF -13→-10, INI -2→+1; ATT -8→-7 + PAR -6→-5 + RIP -4→-3 for the AB→WS cell after ATT_CRIT_COEFF buffed aimed blows
 };
 
@@ -353,7 +353,7 @@ export const STYLE_SKILL_FLOORS: Record<
 > = {
   [FightingStyle.AimedBlow]: /*AB*/ [1, 1, 1, 1, 1, 1],
   [FightingStyle.ParryRiposte]: /*PR*/ [1, 1, 1, 1, 1, 1],
-  [FightingStyle.ParryStrike]: /*PS*/ [1, 1, 1, 1, 1, 1],
+  [FightingStyle.ParryStrike]: /*PS*/ [1, 4, 1, 1, 9, 1], // V25 deferred pass: weakest world tail (PS 40.8 snap / 43.7 world); PAR 4 + RIP 9 is signature-consistent (parry shell + strike-back), below fixture ePAR/eRIP so FLAT stays byte-identical, SNAP 40.8→44.1; DEF 5 added nothing measurable
   [FightingStyle.ParryLunge]: /*PL*/ [1, 1, 1, 1, 1, 1],
   // Lunging: the first-strike is drilled tempo — attack speed and accuracy come
   // from the drill, not from raw speed. Lifts world-only weakness (42.0%).

@@ -22,11 +22,15 @@ export const LEARN_WT_FACTOR = 0.04;
 export const LEARN_FAVORITE_WEIGHT = 6;
 
 /** Max learns accumulated in a single skill — the arena stops teaching what
- *  is already mastered. */
-export const LEARN_PER_SKILL_CAP = 6;
+ *  is already mastered. Rose of Shanon canon: "about 20 skills in each
+ *  area before learning stops" — the compressed 6-ladder was a V24
+ *  deferred compromise, widened to the canon literal here. */
+export const LEARN_PER_SKILL_CAP = 20;
 
-/** Max total learns across a career — keeps veterans bounded. */
-export const LEARN_CAREER_CAP = 24;
+/** Max total learns across a career — keeps veterans bounded. Canon bounds
+ *  per-area learning, not careers: 6 areas × 20 lets a lifetime learner
+ *  max every skill track. */
+export const LEARN_CAREER_CAP = 120;
 
 /** Deduction threshold: the learn ledger must show at least this many learns
  *  in a skill before it reads as the suspected favorite learn (Pagan's

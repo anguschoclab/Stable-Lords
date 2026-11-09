@@ -27,6 +27,7 @@ import {
   AMBI_REVERSED_CHANCE,
   LUCKFACTOR_RANGE,
   STRIKER_ENDURANCE_POOL_BONUS,
+  STYLE_POSITIVE_LUCK_POOLS,
 } from '@/constants/combat';
 import { STYLE_FAMILY } from '@/data/designDoctrine';
 import {
@@ -126,20 +127,29 @@ export function computeBaseSkills(
 
 /**
  * Roll a per-warrior luckfactor: a hidden ±LUCKFACTOR_RANGE modifier for
- * each of the 6 skills (±PS_LUCKFACTOR_RANGE for Parry-Strike). Generated
- * once at creation and stored on the warrior. Every style consumes the same
- * six RNG draws at the same range — V23 knack parity (user-locked): pikers
- * no longer get a widened ±6 range; LUCKFACTOR_RANGE is the single knob.
+ * each of the 6 skills. Generated once at creation and stored on the
+ * warrior. Every style consumes the same six RNG draws at the same range —
+ * V23 knack parity (user-locked): pikers no longer get a widened ±6 range;
+ * LUCKFACTOR_RANGE is the single knob. D1: styles listed in
+ * STYLE_POSITIVE_LUCK_POOLS (WS only — canon-documented) have positive
+ * draws conditioned on the pool; negatives land anywhere.
  *
  * @param rng - Seeded RNG service for deterministic generation.
- * @param style - Kept for call-site compatibility; no longer affects the roll.
+ * @param style - Fighting style, used for positive-pool conditioning.
  * @returns A BaseSkills object of deltas.
  */
 export function rollLuckfactor(rng: IRNGService, style?: FightingStyle): BaseSkills {
-  void style;
   const range = LUCKFACTOR_RANGE;
   const d = () => rng.roll(-range, range); // roll is inclusive on both ends
-  return { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
+  const luck: BaseSkills = { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
+  const pool = style ? STYLE_POSITIVE_LUCK_POOLS[style] : undefined;
+  if (pool) {
+    const poolSet = new Set(pool);
+    for (const s of Object.keys(luck) as (keyof BaseSkills)[]) {
+      if (luck[s] > 0 && !poolSet.has(s)) luck[s] = 0;
+    }
+  }
+  return luck;
 }
 
 /**

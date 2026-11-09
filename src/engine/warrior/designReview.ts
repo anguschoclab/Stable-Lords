@@ -994,6 +994,17 @@ function reviewDoctrine(attrs: Attributes, style: FightingStyle): DesignReviewIt
       id: 'df-weapon-tier',
       detail: `DF ${attrs.DF} < 11 — the crippled weapon tier: most worthwhile weapons demand DF 11+, so this build is fenced into the light arsenal.`,
     });
+    // Jalopy: the dagger is only fully suited to ST/AB — a build fenced into
+    // the light tier on another style loses the one fully-favored option.
+    if (style !== FightingStyle.StrikingAttack && style !== FightingStyle.AimedBlow) {
+      items.push({
+        axis: 'weapons',
+        verdict: 'info',
+        title: 'Dagger tier favors strikers and aimers',
+        id: 'dagger-style-fit',
+        detail: `Fenced into the light arsenal on ${style} — Jalopy rates the dagger fully suited only to ST/AB; this build's best-fitting small weapon is second-tier.`,
+      });
+    }
   }
 
   // Low-burn steering (Consortium): a build with a very low speed ceiling

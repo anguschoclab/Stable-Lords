@@ -1,6 +1,6 @@
 # Orphan Report — Stable Lords
 
-**Generated:** 2026-11-08 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
+**Generated:** 2026-11-09 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 

@@ -19,6 +19,15 @@ export const ABSOLUTE_POWER_HIGH = 0.6;
  *  (V23 parity: pikers no longer get a widened ±6 range). */
 export const LUCKFACTOR_RANGE = 4;
 
+/** Style-conditioned positive luck pools (Drake's canon note): positive
+ *  luckfactor draws may only land on the listed skills; negatives stay
+ *  free to land anywhere ("hosed stays canon"). Styles absent from the
+ *  map keep unrestricted luck — V23 range parity is untouched. Only WS
+ *  carries a canon-documented pool. */
+export const STYLE_POSITIVE_LUCK_POOLS: Partial<Record<string, readonly string[]>> = {
+  'WALL OF STEEL': ['ATT', 'PAR'],
+};
+
 // ─── Coordination (V23 — SJJ "Effects of Coordination") ────────────────────
 /** Additive disarm-chance modifier by coordination rating — clumsy fighters
  *  fumble grips more. Applied in rollDisarmChance alongside armHits/damage/crit. */

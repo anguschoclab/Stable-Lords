@@ -30,6 +30,7 @@ import { getDefensiveSuitability, getOffensiveSuitability } from '@/engine/strat
 import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
 import type { FightingStyle } from '@/types/shared.types';
 import type { PlanModifiers } from './modifiers';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /** WT floor for holding a committed deception script through the masked window. */
 const DECOY_MIN_WT = 13;
@@ -232,7 +233,7 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
     plan,
     personality,
     w.style,
-    (w.career?.wins ?? 0) + (w.career?.losses ?? 0)
+    fightEquivalentsOf(w)
   );
 
   // Desperate plan — wired into resolution.ts at HP<30% or END<20%

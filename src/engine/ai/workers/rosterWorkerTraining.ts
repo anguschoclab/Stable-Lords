@@ -40,6 +40,7 @@ import {
 import { suspectedFavoriteLearn } from '@/engine/learning';
 import type { Trainer } from '@/types/shared.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /**
  * AI training runs at ~80% player effectiveness per the Training Mechanics spec.
@@ -99,7 +100,7 @@ export function selectTrainingFocus(
   // low WT is paying for fights and skipping the lesson. Burn WT to the
   // learn-rate floor while the career window is open; veterans past it keep
   // their normal focus.
-  const bouts = (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+  const bouts = fightEquivalentsOf(w);
   if (
     w.attributes.WT < AI_WT_LEARN_FLOOR &&
     bouts < AI_WT_TRAIN_MAX_BOUTS &&

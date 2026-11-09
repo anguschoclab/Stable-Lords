@@ -21,6 +21,7 @@ import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
 import type { Attributes } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
 import { canGrow, diminishingReturnsFactor, revealPotential } from './potential';
+import { fightEquivalentsOf } from './careerUpdate';
 
 const XP_PER_LEVEL = 5;
 const TOTAL_ATTR_CAP = 80;
@@ -37,8 +38,7 @@ const LEARN_WT_DIVISOR = 15;
 /** Hard cap on the experience bonus (base XP is untouched). */
 const LEARN_BONUS_CAP = 2;
 
-const careerBouts = (w: Warrior): number =>
-  (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+const careerBouts = (w: Warrior): number => fightEquivalentsOf(w);
 
 /**
  * Bonus XP for fighting a more seasoned opponent: one notch per

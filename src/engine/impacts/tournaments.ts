@@ -2,7 +2,7 @@
  * Tournaments Domain Impacts
  * Handles tournament entries, tournament week flag, and active tournament ID.
  */
-import type { GameState, TournamentEntry } from '@/types/state.types';
+import type { GameState, TournamentCycle, TournamentEntry } from '@/types/state.types';
 import type { TournamentId } from '@/types/shared.types';
 
 /**
@@ -36,10 +36,19 @@ const activeTournamentId = (state: GameState, value: TournamentId) => {
 };
 
 /**
+ * Apply the frozen tournament cycle (V27) — replace-write; the freeze
+ * snapshot is authoritative until the next freeze or post-emit clear.
+ */
+const tournamentCycle = (state: GameState, value: TournamentCycle | undefined) => {
+  state.tournamentCycle = value;
+};
+
+/**
  * Tournaments impact handlers map.
  */
 export const tournamentsHandlers = {
   tournaments,
   isTournamentWeek,
   activeTournamentId,
+  tournamentCycle,
 };

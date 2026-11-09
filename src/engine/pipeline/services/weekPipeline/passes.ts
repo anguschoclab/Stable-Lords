@@ -1,7 +1,6 @@
 import { validatePipelinePasses, type WeekPassSpec } from '@/engine/pipeline/pipelineStages';
 import { runWarriorPass } from '../../passes/WarriorPass';
 import { runEconomyPass } from '../../passes/EconomyPass';
-import { runEquipmentPass } from '../../passes/EquipmentPass';
 import { runWorldPass } from '../../passes/WorldPass';
 import { runRecruitmentPass } from '../../passes/RecruitmentPass';
 import { runSystemPass } from '../../passes/SystemPass';
@@ -34,12 +33,6 @@ export const WEEK_PIPELINE_PASSES: WeekPassSpec[] = [
     stage: 'core',
     run: (s, ctx) => runEconomyPass(s, ctx.rootRng),
     writes: ['treasuryDelta', 'ledgerEntries', 'popularityDelta', 'fameDelta'],
-  },
-  {
-    id: 'equipment',
-    stage: 'core',
-    run: (s) => runEquipmentPass(s),
-    writes: ['rivalsUpdates'],
   },
   {
     id: 'recruitment',

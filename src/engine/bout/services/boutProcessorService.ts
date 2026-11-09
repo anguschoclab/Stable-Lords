@@ -7,7 +7,11 @@ import { BoutOffer, GameState } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
-import { generatePairings, tournamentIdFromContractId } from '../core/pairings';
+import {
+  generatePairings,
+  tournamentIdFromContractId,
+  tournamentRoundFromContractId,
+} from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildActiveWarriorMap } from '@/utils/roster';
@@ -157,6 +161,7 @@ export function processWeekBouts(state: GameState, headless?: boolean): WeekBout
       headless,
       isTournamentBout,
       tournamentId: tournamentIdFromContractId(p.contractId),
+      tournamentRound: tournamentRoundFromContractId(p.contractId),
     });
     impacts.push(res.impact);
     if (res.voidedOffer) voidedOffers.push(res.voidedOffer);

@@ -82,6 +82,7 @@ type GameStateValues = {
   tournaments: GameState['tournaments'];
   isTournamentWeek: GameState['isTournamentWeek'];
   activeTournamentId: GameState['activeTournamentId'];
+  tournamentCycle: GameState['tournamentCycle'];
   year: GameState['year'];
   popularity: GameState['popularity'];
   fame: GameState['fame'];
@@ -162,6 +163,7 @@ function collectStoreValues(store: GameStore): GameStateValues {
     tournaments: store.tournaments,
     isTournamentWeek: store.isTournamentWeek,
     activeTournamentId: store.activeTournamentId,
+    tournamentCycle: store.tournamentCycle,
     year: store.year,
     popularity: store.popularity,
     fame: store.fame,

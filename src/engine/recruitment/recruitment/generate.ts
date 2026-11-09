@@ -8,7 +8,7 @@ import {
   rollLuckfactor,
   applyHandednessAttack,
 } from '../../warrior/skillCalc';
-import { generatePotential } from '../../warrior/potential';
+import { generatePotential, rollPotentialTier } from '../../warrior/potential';
 import { generateFavorites } from '../../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
@@ -30,10 +30,7 @@ import { TIER_COST, type PoolWarrior, type RecruitTier } from './types';
  * @returns The rolled RecruitTier
  */
 function rollTier(rng: IRNGService): RecruitTier {
-  if (rng.next() < 0.05) return 'Prodigy';
-  if (rng.next() < 0.2) return 'Exceptional';
-  if (rng.next() < 0.5) return 'Promising';
-  return 'Common';
+  return rollPotentialTier(rng);
 }
 
 /**

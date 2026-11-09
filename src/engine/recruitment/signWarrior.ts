@@ -12,6 +12,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng, hashStr } from '@/utils/random';
 import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import { veteranSigningPatch } from './recruitment/freeAgents';
+import { rollHandedness, applyHandednessAttack } from '@/engine/warrior/skillCalc';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { conceptPrimaryAttr } from '@/data/fighterConcepts';
@@ -24,14 +25,8 @@ export type SignWarriorFailure =
 
 /** Inputs to the signing funnel — everything the gates need to decide. */
 export interface SignWarriorArgs {
-  /** The pool entry being signed — omit only when `prebuilt` is set. */
+  /** The pool entry being signed. */
   recruit?: PoolWarrior;
-  /**
-   * An already-materialized Warrior (e.g. generateAIRecruit's output) — the
-   * funnel applies the same capacity/funds/dead-identity gates but skips
-   * pool-to-warrior conversion. Its generator collision-proofed the id.
-   */
-  prebuilt?: Warrior;
   /** The signing stable's current roster — active warriors count toward the cap. */
   roster: Warrior[];
   /** Active-roster cap for this stable (aiRosterMax / BASE_ROSTER_CAP + bonus). */
@@ -126,6 +121,12 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
     flair.push('Academy Graduate');
   }
 
+  // Handedness persists from the recruit sheet — entries minted before the
+  // field existed get a roll here (the +1 ATT bump applies only to the
+  // freshly-rolled case; baked-in sheets already carry it).
+  const handedness = recruit.handedness ?? rollHandedness(rng, recruit.style);
+  if (!recruit.handedness) applyHandednessAttack(baseSkills, handedness);
+
   const warrior: Warrior = {
     ...newWarriorDefaults(),
     // Veterans keep their original id; prospects take a fresh minted one.
@@ -147,7 +148,26 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
     favorites: recruit.favorites,
     luckfactor: { ...recruit.luckfactor },
     bloodlust: recruit.bloodlust,
-    equipment: getFittedLoadout(recruit.style, attributes),
+    handedness,
+    trainability: recruit.trainability ?? 0.4 + rng.next() * 0.5,
+    // Veteran bout progression rides the pool entry — preserved verbatim so
+    // a re-signed warrior keeps everything they earned. Prospects leave
+    // these at the fresh-mint defaults above.
+    xp: recruit.xp,
+    learnedSkills: { ...(recruit.learnedSkills ?? {}) },
+    skillDrills: recruit.skillDrills ? { ...recruit.skillDrills } : undefined,
+    strategyMemory: recruit.strategyMemory
+      ? {
+          cells: { ...recruit.strategyMemory.cells },
+          recentLossFactors: recruit.strategyMemory.recentLossFactors
+            ? [...recruit.strategyMemory.recentLossFactors]
+            : undefined,
+        }
+      : undefined,
+    burnedSkills: recruit.burnedSkills ? { ...recruit.burnedSkills } : undefined,
+    equipment: recruit.equipment
+      ? { ...recruit.equipment }
+      : getFittedLoadout(recruit.style, attributes),
     isStarInvestment: recruit.tier === 'Prodigy',
     lore: recruit.lore,
     origin: recruit.origin,
@@ -176,7 +196,7 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
  *     DUPLICATE_ID; otherwise a unique id is minted.
  */
 export function signWarrior(args: SignWarriorArgs): SignWarriorResult {
-  const { recruit, roster, maxRoster, prebuilt } = args;
+  const { recruit, roster, maxRoster } = args;
   const { treasury, signingBonus = false, stableId } = args;
   const { usedIds, deadIds, forceId, pool, freeAgents } = args;
 
@@ -190,23 +210,13 @@ export function signWarrior(args: SignWarriorArgs): SignWarriorResult {
     return { ok: false, reason: 'INSUFFICIENT_FUNDS' };
   }
 
-  const recruitId = String(prebuilt?.id ?? recruit?.id);
+  const recruitId = String(recruit?.id);
   if (deadIds?.has(recruitId)) {
     return { ok: false, reason: 'DEAD_IDENTITY' };
   }
 
   const drain = (shelf: PoolWarrior[] | undefined) =>
     shelf === undefined ? undefined : shelf.filter((p) => p.id !== recruitId);
-
-  if (prebuilt) {
-    return {
-      ok: true,
-      warrior: prebuilt,
-      costPaid,
-      updatedPool: drain(pool),
-      updatedFreeAgents: drain(freeAgents),
-    };
-  }
 
   if (forceId !== undefined && (usedIds?.has(forceId) || deadIds?.has(forceId))) {
     return { ok: false, reason: 'DUPLICATE_ID' };

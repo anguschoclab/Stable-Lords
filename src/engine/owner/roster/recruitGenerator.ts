@@ -1,5 +1,4 @@
 import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG, hashStr } from '@/utils/random';
@@ -13,7 +12,10 @@ import { generateWarriorName } from '@/data/names/nameGenerator';
 import { cultureForOwner, cultureForArchetype } from '@/data/names/cultures';
 import { getPhilosophyStyles } from '@/data/ownerData';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
-import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
+import type { PoolWarrior } from '@/engine/recruitment/recruitment/types';
+import { generatePotential } from '@/engine/warrior/potential';
+import { generateFavorites } from '@/engine/favorites';
+import { AI_GENERATED_RECRUIT_COST } from '@/constants/world';
 
 /** Function type for meta-adaptation recruit style pickers. */
 type AdaptationStyleFn = (
@@ -150,9 +152,12 @@ interface GenerateAIRecruitArgs {
 }
 
 /**
- * Generates a new warrior for an AI owner's roster.
+ * Generates a new recruit for an AI owner's roster — a PoolWarrior-shaped
+ * entry routed through `signWarrior`'s funnel like every other signing, so
+ * the fallback produces the same field-complete warriors as pool drafts
+ * (favorites, potential, handedness, fitted equipment, trainability).
  */
-export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
+export function generateAIRecruit(args: GenerateAIRecruitArgs): PoolWarrior | null {
   const { rival, week, meta, seed, usedNames } = args;
   const { usedIds } = args;
   // `owner.id.length` (~constant) made every stable's same-week fallback
@@ -199,21 +204,25 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): Warrior | null {
   usedIds?.add(id);
 
   return {
-    id,
+    id: id as string,
     name,
     style,
     attributes: attrs,
+    potential: generatePotential(attrs, 'Common', rng),
     baseSkills: finalBaseSkills,
+    derivedStats: finalDerivedStats,
+    tier: 'Common',
+    cost: AI_GENERATED_RECRUIT_COST,
+    age: 17 + Math.floor(rng.next() * 5),
+    lore,
+    origin,
+    traits,
+    addedWeek: week,
+    favorites: generateFavorites(style, rng),
     luckfactor: rollLuckfactor(rng, style),
     bloodlust: rollBloodlust(rng),
     handedness,
-    derivedStats: finalDerivedStats,
-    ...newWarriorDefaults(),
-    age: 17 + Math.floor(rng.next() * 5),
-    stableId: rival.id,
-    traits,
-    origin,
-    lore,
+    source: 'generated',
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
 }

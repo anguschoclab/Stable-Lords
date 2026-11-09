@@ -297,7 +297,7 @@ function buildRoster(
 
     // Catch-up Attribute Scaling: +1 point per week (cap +40)
     const catchupStats = Math.min(40, week);
-    const attrs = biasedAttrs(() => rng.next(), tmpl.attrBias, catchupStats);
+    const attrs = biasedAttrs(() => rng.next(), tmpl.attrBias, catchupStats, style);
 
     const wId = rng.uuid('warrior');
     warriors.push(

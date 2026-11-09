@@ -8,6 +8,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { FightingStyle } from '@/types/shared.types';
 import { rollWeighted } from '@/utils/random';
 import { makeWarrior } from '../factories/warriorFactory';
+import { conceptMean } from '@/data/fighterConcepts';
+import { DA_ST_FLOOR, DA_WL_FLOOR } from '@/data/designDoctrine';
 
 /**
  * Generates biased attributes based on a bias configuration.
@@ -16,13 +18,27 @@ import { makeWarrior } from '../factories/warriorFactory';
 export function biasedAttrs(
   rng: () => number,
   bias: Record<string, number>,
-  catchupPool: number = 0
+  catchupPool: number = 0,
+  style?: FightingStyle
 ): Attributes {
-  const attrs = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };
-  let pool = 70 - 21 + catchupPool;
+  // Drake's Dark-Arena rule (V23 parity with generateRecruitAttrs): WL < 7
+  // or ST < 7 is a DOA roll — the world mint floors at the same values the
+  // recruit generator enforces, keeping the 70-point budget exact.
+  const attrs = { ST: DA_ST_FLOOR, CN: 3, SZ: 3, WT: 3, WL: DA_WL_FLOOR, SP: 3, DF: 3 };
+  let pool = 70 - (DA_ST_FLOOR + DA_WL_FLOOR + 15) + catchupPool;
+
+  // Style-aware blend (parity with generateRecruitAttrs): the warrior's
+  // fighting style mixes its canonical Arena-93 concept mean into the
+  // ticket pool alongside the template's attrBias.
+  const styleMean = style ? conceptMean(style) : undefined;
+  const styleTickets = (k: keyof typeof attrs): number => {
+    if (!styleMean) return 0;
+    return Math.max(1, Math.round(styleMean[k] / 5));
+  };
+
   const weighted: (keyof typeof attrs)[] = [];
   for (const k of Object.keys(attrs) as (keyof typeof attrs)[]) {
-    const w = bias[k] ?? 1;
+    const w = (bias[k] ?? 1) + styleTickets(k);
     for (let i = 0; i < w; i++) weighted.push(k);
   }
   while (pool > 0) {

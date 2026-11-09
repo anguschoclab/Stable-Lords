@@ -46,6 +46,22 @@ export function warriorToPoolWarrior(
     luckfactor: w.luckfactor ?? rollLuckfactor(rng, w.style),
     bloodlust: w.bloodlust ?? rollBloodlust(rng),
     handedness,
+    trainability: w.trainability,
+    // Bout progression is part of the veteran's sheet — it rides the pool
+    // entry so a re-signed warrior keeps everything they earned.
+    xp: w.xp,
+    learnedSkills: w.learnedSkills ? { ...w.learnedSkills } : undefined,
+    skillDrills: w.skillDrills ? { ...w.skillDrills } : undefined,
+    strategyMemory: w.strategyMemory
+      ? {
+          cells: { ...w.strategyMemory.cells },
+          recentLossFactors: w.strategyMemory.recentLossFactors
+            ? [...w.strategyMemory.recentLossFactors]
+            : undefined,
+        }
+      : undefined,
+    burnedSkills: w.burnedSkills ? { ...w.burnedSkills } : undefined,
+    equipment: w.equipment ? { ...w.equipment } : undefined,
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source,
     avatarSeed: w.avatarSeed,

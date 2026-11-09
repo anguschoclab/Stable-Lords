@@ -15,7 +15,8 @@ import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import { reconcileGearTwoHanded } from '@/engine/strategy/planBias';
 import { computePlanModifiers, mergePlanModifiers } from './modifiers';
 import { applyStrategicLayer } from './strategicLayer';
-import type { ChallengePlans } from '@/types/shared/fightPlan';
+import { OFFENSIVE_TACTICS } from '@/types/enumSources';
+import type { OffensiveTactic, DefensiveTactic, ChallengePlans } from '@/types/shared/fightPlan';
 
 /**
  * Canon "special strategy" preparation by personality: planners (Tactician/
@@ -96,6 +97,38 @@ function assembleBasePlan(args: AiPlanForWarriorArgs): {
 
 export { applyStyleDoctrine } from './doctrine';
 
+/**
+ * V26 — the AI consumes the same discovered favorites a player sees on the
+ * favorites panel. STRICT information parity: only `discovered.*` fields
+ * steer the plan; hidden values are never read.
+ *
+ * - rhythm → the plan's OE/AL move onto the revealed natural rhythm, then
+ *   doctrine re-clamps (a TP scum can't hot-rhythm because the dice said
+ *   9/9 — the favorite is honored inside the style's canon bounds).
+ * - tactic → fills whichever slot matches its side; favorites are drawn
+ *   from the style's WS-suited pool at generation, so no re-validation.
+ *
+ * Weapon/learn discoveries are consumed elsewhere (armory fitting /
+ * training drills), not in the fight plan.
+ */
+function applyDiscoveredFavorites(plan: FightPlan, w: Warrior): void {
+  const fav = w.favorites;
+  if (!fav?.discovered) return;
+  if (fav.discovered.rhythm) {
+    plan.OE = fav.rhythm.oe;
+    plan.AL = fav.rhythm.al;
+    applyStyleDoctrine(plan, w);
+  }
+  const tactic = fav.discovered.tactic ? fav.tactic : undefined;
+  if (tactic && tactic !== 'none') {
+    if ((OFFENSIVE_TACTICS as readonly string[]).includes(tactic)) {
+      plan.offensiveTactic = tactic as OffensiveTactic;
+    } else {
+      plan.defensiveTactic = tactic as DefensiveTactic;
+    }
+  }
+}
+
 /** Strategy-score validation and style-suitability bias on the assembled plan. */
 function applyPlanValidation(plan: FightPlan, w: Warrior): void {
   // Strategy score validation with retry logic
@@ -128,6 +161,8 @@ export function aiPlanForWarrior(args: AiPlanForWarriorArgs): FightPlan {
     mods: mods,
     competence: args.competence,
   });
+
+  applyDiscoveredFavorites(plan, w);
 
   applyChallengePlanEmission(plan, personality, intent);
 

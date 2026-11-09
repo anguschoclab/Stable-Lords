@@ -5,6 +5,7 @@ import { hashStr, resolveRng } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { StateImpact } from '@/engine/impacts';
 import { filterActive } from '@/utils/roster';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 interface TierStats {
   totalWins: number;
@@ -73,7 +74,7 @@ export function processTierProgression(
     for (const w of r.roster) {
       stats.totalWins += w.career.wins;
       stats.totalKills += w.career.kills;
-      stats.totalFights += w.career.wins + w.career.losses;
+      stats.totalFights += fightEquivalentsOf(w);
     }
     stats.activeCount = filterActive(r.roster).length;
 

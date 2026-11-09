@@ -104,6 +104,7 @@ const WarriorFavoritesSchema = z.object({
     oe: z.number(),
     al: z.number(),
   }),
+  tactic: z.string().optional(),
   discovered: z.object({
     weapon: z.boolean(),
     rhythm: z.boolean(),
@@ -111,6 +112,8 @@ const WarriorFavoritesSchema = z.object({
     rhythmHints: z.number(),
     learn: z.boolean().optional(),
     learnHints: z.number().optional(),
+    tactic: z.boolean().optional(),
+    tacticHints: z.number().optional(),
   }),
   chart: z
     .record(
@@ -161,6 +164,9 @@ const CareerRecordSchema = z.object({
     .optional(),
   byArena: z
     .record(z.string(), z.object({ wins: z.number(), losses: z.number(), kills: z.number() }))
+    .optional(),
+  tourneyRecord: z
+    .object({ entries: z.number(), wins: z.number(), losses: z.number(), titles: z.number() })
     .optional(),
 });
 
@@ -292,6 +298,7 @@ export const WarriorSchema = z.object({
   baseSkills: BaseSkillsSchema.optional(),
   luckfactor: LuckfactorSchema.optional(),
   bloodlust: z.number().optional(),
+  fightEquivalents: z.number().optional(),
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),
@@ -371,6 +378,15 @@ export const PoolWarriorSchema = z.object({
   lineage: WarriorLineageSchema.optional(),
   luckfactor: LuckfactorSchema,
   bloodlust: z.number().optional(),
+  handedness: z.enum(['right', 'left', 'ambidextrous', 'ambi-reversed']).optional(),
+  trainability: z.number().optional(),
+  // Veteran bout progression riding the pool entry (V26 funnel parity).
+  xp: z.number().optional(),
+  learnedSkills: z.record(z.string(), z.number()).optional(),
+  skillDrills: z.record(z.string(), z.number()).optional(),
+  strategyMemory: StrategyMemorySchema.optional(),
+  burnedSkills: z.record(z.string(), z.number()).optional(),
+  equipment: EquipmentLoadoutSchema.optional(),
   veteran: z
     .object({
       fame: z.number(),
@@ -382,7 +398,9 @@ export const PoolWarriorSchema = z.object({
   academyStableId: z.string().optional(),
   academyClaimExpiryWeek: z.number().optional(),
   shelfWeeksRemaining: z.number().optional(),
-  source: z.enum(['orphanage', 'academy', 'freeAgent', 'generated']).optional(),
+  source: z
+    .enum(['orphanage', 'academy', 'freeAgent', 'released', 'apprentice', 'generated'])
+    .optional(),
   avatarSeed: z.number().optional(),
 });
 

@@ -137,6 +137,8 @@ describe('generateFavorites', () => {
       rhythm: false,
       learn: false,
       learnHints: 0,
+      tactic: false,
+      tacticHints: 0,
       weaponHints: 0,
       rhythmHints: 0,
     });
@@ -172,6 +174,7 @@ describe('checkDiscovery', () => {
       weaponRevealed: false,
       rhythmRevealed: false,
       learnRevealed: false,
+      tacticRevealed: false,
     });
   });
 

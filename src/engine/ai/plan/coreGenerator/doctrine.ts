@@ -6,8 +6,11 @@ import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/game';
 import { clamp } from '@/utils/math';
-import { pickStrategyTarget } from '@/engine/ai/plan/strategyLab';
+import { pickStrategyTarget, pickTacticProbe } from '@/engine/ai/plan/strategyLab';
 import { getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
+import { OFFENSIVE_TACTICS } from '@/types/enumSources';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
+import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 import {
   ARCHETYPE_DESIGN_BARS,
   classifyArchetype,
@@ -64,7 +67,7 @@ function applyStyleCaps(plan: FightPlan, w: Warrior): void {
     // knockdown is already applied upstream). Veterans may free-run Dante's
     // defensive 6-4-6 sheets. Every article runs activity moderate-to-low
     // and keeps KD at 6 or under — 7+ belongs to desperation saves.
-    const fights = (w.career?.wins ?? 0) + (w.career?.losses ?? 0);
+    const fights = fightEquivalentsOf(w);
     if (fights < 10) plan.OE = Math.max(plan.OE, 6);
     plan.AL = Math.min(plan.AL, 7);
     plan.killDesire = Math.min(plan.killDesire ?? 5, 7);
@@ -149,4 +152,18 @@ export function applyStrategyLabSteering(plan: FightPlan, w: Warrior, week: numb
   if (!target) return;
   plan.OE = clamp(Math.round(plan.OE + (target.oe - plan.OE) * 0.6), 1, 10);
   plan.AL = clamp(Math.round(plan.AL + (target.al - plan.AL) * 0.6), 1, 10);
+  // Explore probes tinker with tactics too (V26): the week's seeded pick
+  // from the style's possible-favorite pool fills the matching slot, so a
+  // losing stable can organically earn the tactic discovery a tinkering
+  // player earns.
+  if (target.exploring) {
+    const probe = pickTacticProbe(w.style, String(w.id), week);
+    if (probe) {
+      if ((OFFENSIVE_TACTICS as readonly string[]).includes(probe)) {
+        plan.offensiveTactic = probe as OffensiveTactic;
+      } else {
+        plan.defensiveTactic = probe as DefensiveTactic;
+      }
+    }
+  }
 }

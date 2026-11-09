@@ -152,7 +152,7 @@ describe('applyBoutResults', () => {
     expect(updated.arenaHistory[0]!.tournamentId).toBe('t-gold-spring-1');
   });
 
-  it('updates fatigue for both warriors', () => {
+  it('never accrues fatigue for bracket combatants', () => {
     const w1 = makeTournamentWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID, {
       fatigue: 0,
     });
@@ -179,8 +179,10 @@ describe('applyBoutResults', () => {
     const updatedW1 = updated.roster.find((w) => w.id === 'w1');
     const updatedW2 = updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2');
 
-    expect(updatedW1!.fatigue).toBeGreaterThan(0);
-    expect(updatedW2!.fatigue).toBeGreaterThan(0);
+    // Canon: tournament combatants never accrue fatigue — this resolver only
+    // runs bracket bouts, so both fighters are participants by construction.
+    expect(updatedW1!.fatigue).toBe(0);
+    expect(updatedW2!.fatigue).toBe(0);
   });
 
   it('skips fatigue when isTournamentWeek is true', () => {

@@ -148,9 +148,12 @@ export interface OpponentSearchContext {
   /** V24: challenge multiplicity — a warrior listed N times earns
    *  CHALLENGE_BONUS × N (canon double-challenge ≈ doubles the chance). */
   challengeCounts?: Map<string, number>;
-  /** V24: bloodfeud entitlement targets — top-priority offers that also
-   *  bypass the score window (canon: bloodfeuds transcend classes). */
-  bloodfeudSet?: Set<string>;
+  /** V24/V26: bloodfeud entitlement targets keyed by the OWED stable —
+   *  top-priority offers that also bypass the score window (canon:
+   *  bloodfeuds transcend classes). Every stable spends its own marks. */
+  feudTargetsByStable?: Map<string, Set<string>>;
+  /** The player stable's id — the feud-owner key for roster warriors. */
+  playerStableId?: string;
   gapThreshold: number;
 }
 
@@ -176,14 +179,19 @@ export function findBestOpponent(
   const lo = lowerBound(sortedScores, minScoreB);
   const hi = upperBound(sortedScores, maxScoreB);
 
-  // V24 canon (Rose of Shanon): a player warrior chasing their stable's
+  // V24/V26 canon (Rose of Shanon): a warrior chasing its own stable's
   // bloodfeud transcends the score window and outranks every ordinary
-  // candidate. Real constraints still apply — already booked this pass,
-  // fought within the recent window, or individually avoided.
-  if (ctx.playerWarriorIds.has(warriorA.id) && ctx.bloodfeudSet?.size) {
+  // candidate — player stables and rival stables alike. The searcher's
+  // owed key is its stableId (rivals) or the player key (roster warriors).
+  // Real constraints still apply — already booked this pass, fought within
+  // the recent window, or individually avoided.
+  const feudTargets = ctx.feudTargetsByStable?.get(
+    warriorA.stableId ?? ctx.playerStableId ?? ''
+  );
+  if (feudTargets?.size) {
     for (let i = 0; i < sortedByScore.length; i++) {
       const candidate = sortedByScore[i];
-      if (!candidate || !ctx.bloodfeudSet.has(candidate.id)) continue;
+      if (!candidate || !feudTargets.has(candidate.id)) continue;
       if (candidate.id === warriorA.id) continue;
       if (ctx.matchedIds.has(candidate.id)) continue;
       if (ctx.recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;

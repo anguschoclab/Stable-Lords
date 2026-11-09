@@ -27,6 +27,7 @@ import {
   aiTrainingLimit,
 } from './rosterWorkerTraining';
 import { applyGearUpgrade, refitRosterWeapons } from './rosterWorkerEquipment';
+import { applyTurnaroundDiagnosis } from '@/engine/ai/turnaround';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 // Re-export public symbols for backward compatibility
@@ -197,6 +198,11 @@ export function processRoster(
   // 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays.
 
   runAITraining(updatedRival, season, healingBonus, rngService);
+
+  // V26 — the shared turnaround diagnosis prescribes drill/WT assignments
+  // for confidently-diagnosed losers (the same "one win condition" doctrine
+  // the player's advisor teaches).
+  updatedRival = applyTurnaroundDiagnosis(updatedRival);
 
   updatedRival = applyTraitDevelopment(updatedRival, currentWeek, rngService);
   updatedRival = applyGearPolicy(updatedRival, intent, currentWeek, rngService);

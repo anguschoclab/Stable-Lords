@@ -48,6 +48,7 @@ export const BoutOfferSchema = z.object({
   titleArenaId: z.string().optional(),
   responseNotes: z.record(z.string(), z.string()).optional(),
   negotiationRound: z.number().optional(),
+  grudgeOfTournamentId: z.string().optional(),
 });
 
 /**
@@ -88,6 +89,9 @@ export const TournamentEntrySchema = z.object({
   participants: z.array(WarriorSchema),
   champion: z.string().optional(),
   completed: z.boolean(),
+  classId: z
+    .enum(['rookies', 'apprentices', 'initiates', 'adepts', 'champions'])
+    .optional(),
 });
 
 /**

@@ -9,7 +9,9 @@ import type { PromoterId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
 import { canonTargetingBias } from '@/engine/ai/matchup/canonTargeting';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
+import { turnaroundMatchupBias } from '@/engine/ai/turnaround';
 import type { BoutBid } from '../types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { clamp } from '@/utils/math';
@@ -62,7 +64,7 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
             ? (ctx.state.player.id as string)
             : ((opponent.stableId ?? ctx.targetStableId) as string),
       });
-      const attFights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+      const attFights = fightEquivalentsOf(warrior);
       const score =
         clamp((matchupScore - 100) / 20, -5, 5) +
         canonTargetingBias(warrior.style, opponent.style, attFights);
@@ -70,15 +72,18 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
       foundOpponent = true;
     }
   } else if (ctx.intent !== 'VENDETTA') {
-    const attFights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+    const attFights = fightEquivalentsOf(warrior);
     for (const opponent of ctx.nonVendettaOpponents) {
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
         aStableId,
         bStableId: opponent.stableId as string,
       });
+      // V26 turnaround steer: a losing warrior seeks the matrix's winnable
+      // foes — the same matchup doctrine the player's advisor teaches.
       const score =
         clamp((matchupScore - 100) / 20, -5, 5) +
-        canonTargetingBias(warrior.style, opponent.style, attFights);
+        canonTargetingBias(warrior.style, opponent.style, attFights) +
+        turnaroundMatchupBias(warrior, opponent.style);
       matchupModifier = Math.max(matchupModifier, score);
       foundOpponent = true;
     }
@@ -230,6 +235,31 @@ interface WarriorBidContext {
  */
 type IntentEmitter = (ctx: WarriorBidContext) => BoutBid | null | undefined;
 
+/**
+ * V26 canon: a stable owed a live bloodfeud mark sends its next bookable
+ * warrior after the killer — the feud is an ENTITLEMENT, not a posture, so
+ * it outranks even VENDETTA targeting. The pinned targetWarriorId binds the
+ * bid to the killer specifically (conversion filters to that warrior);
+ * bookability/recency/lock constraints still apply downstream.
+ */
+const emitBloodfeudBid: IntentEmitter = (c) => {
+  const state = c.env.state;
+  if (!state) return undefined;
+  const now = state.absoluteWeek ?? state.week;
+  const mark = (state.bloodfeudMarks ?? []).find(
+    (m) => m.owedStableId === c.rival.id && m.expiresWeek > now
+  );
+  if (!mark) return undefined;
+  return {
+    proposingWarriorId: c.warrior.id,
+    targetStableId: mark.killerStableId,
+    targetWarriorId: mark.killerWarriorId,
+    bloodfeud: true,
+    priority: 10,
+    description: 'Bloodfeud — avenging the stablemate the killer put down.',
+  };
+};
+
 const emitVendettaBid: IntentEmitter = (c) => {
   if (c.intent !== 'VENDETTA') return undefined;
   const targetStableId = c.rival.strategy?.targetStableId;
@@ -310,6 +340,7 @@ const emitStandardBid = (c: WarriorBidContext): BoutBid => ({
 });
 
 const INTENT_EMITTERS: readonly IntentEmitter[] = [
+  emitBloodfeudBid,
   emitVendettaBid,
   emitSurvivalBid,
   emitCrownCampaignBid,

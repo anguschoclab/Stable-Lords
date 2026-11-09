@@ -133,7 +133,11 @@ const DEBT_PAIRS = new Set<string>([]);
 // archetype spec batch echo the same fixture shapes (attrs-bag helper,
 // reviewWarriorDesign item assertions, simulateFight preamble) — the pin
 // is the point; all 11 pairs registered exempt → 32.
-const TEST_TO_TEST_BASELINE = 32;
+// V27 Phase-1: +6 — tourneyDesignAxis re-states the designReview attrs-bag/
+// item-assertion shape like the V23–V25 design specs (5 pairs), and
+// emission↔freeze share the tournamentCycle fixture preamble — same
+// literal-pin/call-shape category as above (registered exempt) → 38.
+const TEST_TO_TEST_BASELINE = 38;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -208,6 +212,16 @@ const TEST_EXEMPT_PAIRS = new Set([
   'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
   'src/test/engine/warrior/v23DesignReview.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
   'src/test/constants/burnOrder.test.ts|src/test/engine/combat/v25MechanicsAudit.test.ts',
+  // ─── V27 — tourneyDesignAxis re-states the design-review attrs-bag helper
+  // and item-assertion shape as fixture data, same literal-pin category as
+  // the V23–V25 design-review pairs above; emission↔freeze share the
+  // tournamentCycle state-builder preamble.
+  'src/test/engine/learning/learnCapAndBurn.canon.test.ts|src/test/engine/warrior/tourneyDesignAxis.test.ts',
+  'src/test/engine/equipment/archetypeArmor.test.ts|src/test/engine/warrior/tourneyDesignAxis.test.ts',
+  'src/test/engine/warrior/tourneyDesignAxis.test.ts|src/test/engine/warrior/v23DesignReview.test.ts',
+  'src/test/engine/warrior/tourneyDesignAxis.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
+  'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/tourneyDesignAxis.test.ts',
+  'src/test/engine/matchmaking/tournamentSelection/emission.test.ts|src/test/engine/matchmaking/tournamentSelection/freeze.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

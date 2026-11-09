@@ -71,6 +71,9 @@ export interface CareerRecord {
     silver: number;
     bronze: number;
   };
+  /** Tournament-track record (V27): class-bracket entries/results and class
+   *  titles — the dossier's "personal records" the articles say to keep. */
+  tourneyRecord?: { entries: number; wins: number; losses: number; titles: number };
   /** Per-arena cumulative breakdown. Key = arenaId. */
   byArena?: Record<string, { wins: number; losses: number; kills: number }>;
 }
@@ -142,6 +145,11 @@ export interface WarriorFavorites {
      *  (the derived favorite learn). Optional for legacy saves. */
     learn?: boolean;
     learnHints?: number;
+    /** V26 — the favorite tactic joins the shared discovery channel:
+     *  epiphany rolls can reveal it like weapon/rhythm. Optional for
+     *  legacy saves. */
+    tactic?: boolean;
+    tacticHints?: number;
   };
   /** Per-weapon performance ledger accumulated across bouts. Keyed by weapon id. */
   chart?: Record<string, WeaponChartEntry>;
@@ -171,6 +179,7 @@ export interface StrategyMemory {
   recentLossFactors?: string[];
 }
 
+/** A warrior: attributes, career, hidden factors, and tournament state. */
 export interface Warrior {
   id: WarriorId;
   name: string;
@@ -185,6 +194,11 @@ export interface Warrior {
    *  warriors simply have a higher lust for the kill. Feeds the vitals
    *  roll when this warrior attacks; never displayed. */
   bloodlust?: number;
+  /** Fight Equivalents (V27 canon): +1 per arena bout, +1 per odd tournament
+   *  round fought — the counter that locks tournament-class membership at
+   *  the freeze date. Career W/L stays the full record; FE is the
+   *  experience counter the Duel2 class system runs on. */
+  fightEquivalents?: number;
   /** Persisted handedness rolled once at creation (style-conditioned —
    *  defensive styles produce more lefties/ambis; ~85/7.5/7.5 baseline).
    *  'ambi-reversed' is the rare canon variant whose primary side is the

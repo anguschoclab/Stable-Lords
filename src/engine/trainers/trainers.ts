@@ -6,6 +6,7 @@ import {
 } from '@/types/shared.types';
 import { TRAINER_FIRST_NAMES } from '@/engine/rivals/rivalNamePool';
 import type { Warrior } from '@/types/warrior.types';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import type { Trainer } from '@/types/state.types';
 
 export type { TrainerTier, TrainerFocus };
@@ -140,7 +141,7 @@ export function convertRetiredToTrainer(warrior: Warrior): Trainer {
   };
 
   const focus = styleFocusMap[warrior.style] ?? 'Endurance';
-  const totalFights = warrior.career.wins + warrior.career.losses;
+  const totalFights = fightEquivalentsOf(warrior);
   const tier: TrainerTier =
     totalFights >= 15 || warrior.career.kills >= 3
       ? 'Master'

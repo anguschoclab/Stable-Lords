@@ -161,14 +161,18 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
 
   // 🏆 Ranking Incentive: Sort by fame (desc) then by inactivity (lastBoutWeek)
   // This ensures top-tier warriors fight to keep their tournament slots.
+  // The fame window is a FIXED bucket, not a sliding ±100 gate — a sliding
+  // comparator isn't transitive, so V8/JSC produce different pool orders for
+  // the same input (seed parity breaks across engines).
   const pool = [...eligibleWarriors].sort((a, b) => {
     const fameB = b.warrior.fame || 0;
     const fameA = a.warrior.fame || 0;
-    if (Math.abs(fameB - fameA) > 100) return fameB - fameA;
+    const bucket = Math.floor(fameB / 100) - Math.floor(fameA / 100);
+    if (bucket !== 0) return bucket;
 
     const lastBoutA = a.warrior.lastBoutWeek || 0;
     const lastBoutB = b.warrior.lastBoutWeek || 0;
-    return lastBoutA - lastBoutB; // Prioritize those who haven't fought in a while
+    return lastBoutA - lastBoutB || fameB - fameA;
   });
 
   for (let i = 0; i < pool.length; i++) {

@@ -16,6 +16,8 @@ export interface CareerUpdateInput {
   isVictim: boolean;
   fameDelta?: number;
   popularityDelta?: number;
+  /** V27: fight-equivalents earned by this bout (arena=1, tourney odd rounds=1, else 0). */
+  feDelta?: number;
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
   skipFatigue?: boolean;
   /** Arena where the bout took place — used to maintain the per-arena career breakdown */
@@ -54,6 +56,21 @@ export function nextCareerRecord(
   };
 }
 
+/**
+ * Fight Equivalents (Duel2 canon): the experience counter tournament classes
+ * run on. Unset on pre-V27 warriors — falls back to career W/L, which equals
+ * FE before any tournament bouts are fought (tourneys accrue FE on odd
+ * rounds only, while the career record still counts every bout).
+ */
+export function fightEquivalentsOf(
+  warrior: Pick<Warrior, 'fightEquivalents' | 'career'>
+): number {
+  return (
+    warrior.fightEquivalents ??
+    (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0)
+  );
+}
+
 /** Season-points race contribution for a bout result. */
 export function boutSeasonPoints(
   prev: number | undefined,
@@ -87,6 +104,8 @@ interface CareerUpdateResult {
   popularity?: number;
   flair?: string[];
   seasonPoints?: number;
+  /** Materialized FE counter — only present when the bout accrued FE. */
+  fightEquivalents?: number;
   /** Newly-earned milestone epithet — only present on an upgrade. */
   epithet?: string;
 }
@@ -105,6 +124,7 @@ export function calculateCareerUpdate(
     isVictim,
     fameDelta = 0,
     popularityDelta = 0,
+    feDelta = 0,
     skipFatigue = false,
     arenaId,
   } = input;
@@ -139,6 +159,12 @@ export function calculateCareerUpdate(
     seasonPoints,
   };
 
+  // FE accrual — the counter materializes on first accrual (baseline W/L +
+  // delta), so never-fought warriors carry no dead field.
+  if (feDelta !== 0) {
+    result.fightEquivalents = fightEquivalentsOf(warrior) + feDelta;
+  }
+
   // Milestone epithet — only a living winner can earn one; upgrades only.
   if (!isVictim) {
     const epithet = milestoneEpithet(warrior.id, career, warrior.epithet);
@@ -168,6 +194,10 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
 
   if (result.popularity !== undefined) {
     update.popularity = result.popularity;
+  }
+
+  if (result.fightEquivalents !== undefined) {
+    update.fightEquivalents = result.fightEquivalents;
   }
 
   if (result.flair !== undefined) {
@@ -227,6 +257,8 @@ interface UpdateWarriorFromBoutOutcomeArgs {
   isKill: boolean;
   skipFatigue?: boolean;
   arenaId?: string;
+  /** V27: odd-round tournament bouts pass 1; even rounds and byes pass 0. */
+  feDelta?: number;
 }
 
 /**
@@ -235,7 +267,7 @@ interface UpdateWarriorFromBoutOutcomeArgs {
  */
 export function updateWarriorFromBoutOutcome(args: UpdateWarriorFromBoutOutcomeArgs): Warrior {
   const { warrior, isAttacker, winnerSide, isKill, skipFatigue } = args;
-  const { arenaId } = args;
+  const { arenaId, feDelta } = args;
   const isWinner = (isAttacker && winnerSide === 'A') || (!isAttacker && winnerSide === 'D');
   const isVictim = !isWinner && isKill;
 
@@ -245,6 +277,7 @@ export function updateWarriorFromBoutOutcome(args: UpdateWarriorFromBoutOutcomeA
     isVictim,
     skipFatigue,
     arenaId,
+    feDelta,
   };
 
   const result = calculateCareerUpdate(warrior, input);

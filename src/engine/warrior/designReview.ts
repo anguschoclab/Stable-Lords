@@ -43,8 +43,14 @@ import {
 } from '@/data/warriorArchetypes';
 import * as BPS from './skillBreakpoints';
 
-/** The five design axes from the article. */
-export type DesignAxis = 'style' | 'physicals' | 'weapons' | 'trainability' | 'longevity';
+/** The five design axes from the article, plus the V27 tourney-projection axis. */
+export type DesignAxis =
+  | 'style'
+  | 'physicals'
+  | 'weapons'
+  | 'trainability'
+  | 'longevity'
+  | 'tourney';
 
 /** Review outcome: 'good' passes, 'ok' is thin, 'warn' needs work, 'info' is advisory. */
 export type DesignVerdict = 'good' | 'ok' | 'warn' | 'info';

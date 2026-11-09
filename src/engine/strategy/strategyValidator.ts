@@ -15,6 +15,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { getPhaseByMinute } from '@/engine/combat/phase';
 import { getMastery } from '@/engine/stylePassives';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /**
  * Warning severity type.
@@ -226,7 +227,7 @@ export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWa
   // Riposte defensive tactic is redundant — the style's natural parry already
   // generates counters, so veteran rippers run Parry instead.
   if (warrior && plan.style === FightingStyle.ParryRiposte) {
-    const fights = (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
+    const fights = fightEquivalentsOf(warrior);
     const tier = getMastery(fights).tier;
     const riposteTactic =
       plan.defensiveTactic === 'Riposte' ||

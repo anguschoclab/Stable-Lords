@@ -8,7 +8,7 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
 | Scale   | Entry point                                                                             | Notes                                                                            |
 | ------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | Day     | `TickOrchestrator.advanceDay` (`src/engine/pipeline/tick/TickOrchestrator.ts`)          | Tournament rounds only; week boundary delegates to `advanceWeek`.                |
-| Week    | `advanceWeek` (`src/engine/pipeline/services/weekPipelineService.ts`)                   | 16 passes emitting `StateImpact`s, resolved in three staged snapshots.           |
+| Week    | `advanceWeek` (`src/engine/pipeline/services/weekPipelineService.ts`)                   | 15 passes emitting `StateImpact`s, resolved in three staged snapshots.           |
 | Month   | `TimeAdvanceService.advanceMonth` / `skipToMonthEnd`                                    | 4-week stride; shares `advanceSpan` machinery with quarter.                      |
 | Quarter | `TimeAdvanceService.advanceQuarter` (`src/engine/pipeline/tick/timeAdvance/service.ts`) | 13-week loop, headless mode, per-week stop conditions.                           |
 | Year    | `TimeAdvanceService.advanceYear`                                                        | 4 quarters; `mutableInput` ownership chains across quarters after the first.     |
@@ -122,7 +122,7 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
     whether the stage emitted membership-changing impacts (`caches.ts`);
     the season-boundary rebuild in `finalize.ts` stays unconditional.
     Development pass-purity coverage: `passPurity.test.ts` deep-freezes the
-    stage snapshot and asserts all 16 passes run without mutation.
+    stage snapshot and asserts all 15 passes run without mutation.
 22. **Shard re-attempt measured and gated off** — rival-shard inputs were
     narrowed (`narrowRivalShardState`) and the parallel bench re-run:
     0.33× vs the ≥1.30× gate. `poolSize=1` stays the shipped default; see

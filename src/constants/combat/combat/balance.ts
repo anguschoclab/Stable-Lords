@@ -228,8 +228,6 @@ export const FAVORITE_TACTIC_BONUS = 2;
 /** Smithy (hedged canon): a warrior too small for a weapon takes NO skill
  *  penalty from the SZ shortfall — only the endurance tax remains. */
 export const SZ_REQ_NO_ATT_PENALTY = true;
-/** Consortium Q&A: double-challenging "appx doubles" the chance. */
-export const DOUBLE_CHALLENGE_MULT = 2;
 /** Canon: a bloodfeud challenge is near-guaranteed — dominant offer bonus. */
 export const BLOODFEUD_PRIORITY = 500;
 /** Smithy: off-hand weapon attacks come from the highly coordinated OR the

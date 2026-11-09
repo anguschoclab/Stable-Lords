@@ -1,7 +1,12 @@
 import { StateCreator } from 'zustand';
-import { TournamentEntry } from '@/types/state.types';
-import { type TournamentId } from '@/types/shared.types';
+import type { TournamentCycle, TournamentEntry } from '@/types/state.types';
+import type { TournamentId, WarriorId } from '@/types/shared.types';
 import type { GameStore } from '@/state/useGameStore';
+import { classAtFreeze } from '@/engine/matchmaking/tournamentSelection/classes';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
+
+/** V27: max declarations a stable may file per class per cycle. */
+const MAX_DECLARED_PER_CLASS = 4;
 
 /**
  * Defines the shape of tournament slice.
@@ -10,9 +15,15 @@ export interface TournamentSlice {
   tournaments: TournamentEntry[];
   isTournamentWeek: boolean;
   activeTournamentId?: TournamentId;
+  /** V27: frozen FE snapshot + entry ledger for the upcoming seasonal. */
+  tournamentCycle?: TournamentCycle;
   setTournaments: (tournaments: TournamentEntry[]) => void;
   setTournamentWeek: (isTournamentWeek: boolean) => void;
   setActiveTournament: (id?: TournamentId) => void;
+  /** V27: declare a player warrior into their frozen class bracket. */
+  declareTournamentEntry: (warriorId: WarriorId) => void;
+  /** V27: scratch a warrior from the cycle (invite declined or entry pulled). */
+  scratchTournamentEntry: (warriorId: WarriorId) => void;
 }
 
 /**
@@ -22,8 +33,41 @@ export const createTournamentSlice: StateCreator<GameStore, [], [], TournamentSl
   tournaments: [],
   isTournamentWeek: false,
   activeTournamentId: undefined,
+  tournamentCycle: undefined,
 
   setTournaments: (tournaments) => set({ tournaments }),
   setTournamentWeek: (isTournamentWeek) => set({ isTournamentWeek }),
   setActiveTournament: (activeTournamentId) => set({ activeTournamentId }),
+  declareTournamentEntry: (warriorId) =>
+    set((s) => {
+      const cycle = s.tournamentCycle;
+      if (!cycle || !s.roster.some((w) => w.id === warriorId)) return {};
+      if (cycle.scratched.includes(warriorId)) return {};
+      const cls = (id: WarriorId) => {
+        const w = s.roster.find((r) => r.id === id);
+        return classAtFreeze(s, id, w ? fightEquivalentsOf(w) : 0);
+      };
+      const classId = cls(warriorId);
+      const mine = cycle.declared[s.player.id] ?? [];
+      const inClass = mine.filter((id) => cls(id) === classId);
+      if (mine.includes(warriorId) || inClass.length >= MAX_DECLARED_PER_CLASS) return {};
+      return {
+        tournamentCycle: {
+          ...cycle,
+          declared: { ...cycle.declared, [s.player.id]: [...mine, warriorId] },
+        },
+      };
+    }),
+  scratchTournamentEntry: (warriorId) =>
+    set((s) => {
+      const cycle = s.tournamentCycle;
+      if (!cycle || cycle.scratched.includes(warriorId)) return {};
+      const declared = { ...cycle.declared };
+      for (const key of Object.keys(declared)) {
+        declared[key] = declared[key].filter((id) => id !== warriorId);
+      }
+      return {
+        tournamentCycle: { ...cycle, declared, scratched: [...cycle.scratched, warriorId] },
+      };
+    }),
 });

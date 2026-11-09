@@ -73,9 +73,9 @@ export interface WorldSlice {
   playerChallenges: string[];
   playerAvoids: string[];
   playerStableAvoids: string[];
-  /** V24 canon: four-week bloodfeud entitlements created when a rival kills
-   *  a player warrior — any stablemate may challenge the killer's warrior. */
-  playerBloodfeuds?: BloodfeudMark[];
+  /** V24/V26 canon: four-week bloodfeud entitlements created on any arena
+   *  kill — owed to the victim's stable, spendable by its stablemates. */
+  bloodfeudMarks?: BloodfeudMark[];
   playerAds: string[];
   playerSpotlights: { warriorId: string; text: string }[];
   ownerGrudges: OwnerGrudge[];

@@ -151,6 +151,7 @@ const MERGE_CONFIG: MergeConfig = {
   stewardReport: { strategy: 'replace', defaultValue: undefined },
   isTournamentWeek: { strategy: 'replace', defaultValue: undefined },
   activeTournamentId: { strategy: 'replace', defaultValue: undefined },
+  tournamentCycle: { strategy: 'replace', defaultValue: undefined },
   day: { strategy: 'replace', defaultValue: undefined },
   week: { strategy: 'replace', defaultValue: undefined },
   season: { strategy: 'replace', defaultValue: undefined },

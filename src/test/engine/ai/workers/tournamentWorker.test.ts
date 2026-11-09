@@ -26,7 +26,7 @@ function campaignRival() {
 describe('tournamentWorker', () => {
   it('rests the top-2 fame warriors during TOURNAMENT_CAMPAIGN', () => {
     const rival = campaignRival();
-    const { updatedRival } = processTournamentPrep(rival, 11);
+    const { updatedRival } = processTournamentPrep(rival, 9) // 1 wk before the week-10 seasonal;
     const rested = new Set(
       updatedRival.trainingAssignments
         .filter((a) => a.type === 'recovery')
@@ -40,7 +40,7 @@ describe('tournamentWorker', () => {
 
   it('logs a ROSTER event with cause TOURNAMENT_PREP', () => {
     const rival = campaignRival();
-    const { updatedRival } = processTournamentPrep(rival, 11);
+    const { updatedRival } = processTournamentPrep(rival, 9) // 1 wk before the week-10 seasonal;
     const event = updatedRival.actionHistory!.find((e) => e.cause === 'TOURNAMENT_PREP');
     expect(event).toBeDefined();
     expect(event!.type).toBe('ROSTER');
@@ -49,7 +49,7 @@ describe('tournamentWorker', () => {
   it('no-op outside TOURNAMENT_CAMPAIGN', () => {
     const rival = campaignRival();
     rival.strategy = { intent: 'CONSOLIDATION', planWeeksRemaining: 3 };
-    const { updatedRival } = processTournamentPrep(rival, 11);
+    const { updatedRival } = processTournamentPrep(rival, 9) // 1 wk before the week-10 seasonal;
     expect(updatedRival.trainingAssignments).toHaveLength(0);
     expect(updatedRival.actionHistory).toHaveLength(0);
   });

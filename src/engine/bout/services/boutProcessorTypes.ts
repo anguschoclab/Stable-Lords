@@ -81,4 +81,6 @@ export interface BoutContext {
   isTournamentBout?: boolean;
   /** Owning tournament id for `tour_*` pairings — stamped on kill events. */
   tournamentId?: string;
+  /** Bracket round parsed from the `tour_*` contractId — drives odd-round FE. */
+  tournamentRound?: number;
 }

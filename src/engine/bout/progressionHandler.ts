@@ -1,7 +1,7 @@
 import type { GameState, NewsletterItem } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
-import type { FightOutcome } from '@/types/combat.types';
+import type { FightOutcome, FightPlan } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { calculateXP, applyXP } from '@/engine/warrior/progression';
 import { checkDiscovery, mergeWeaponChart } from '@/engine/favorites';
@@ -10,7 +10,7 @@ import { LEARN_SKILL_NAMES } from '@/constants/combat/combat/learn';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
-import { patchRivalWarrior } from './warriorRouting';
+import { changedFields, patchRivalWarrior } from './warriorRouting';
 
 /**
  * Routes a per-warrior update to either the player's rosterUpdates map or to
@@ -39,8 +39,13 @@ function routeUpdate(
 ): void {
   const isPlayer = isPlayerWarrior(s, warrior);
   if (isPlayer) {
+    // Diff like patchRivalWarrior: `partial` may be a full warrior derived
+    // from the same pre-bout snapshot, so an unfiltered merge would let a
+    // stale field (e.g. `career`) clobber an earlier impact's real change.
+    const diff = changedFields(warrior, partial);
+    if (Object.keys(diff).length === 0) return;
     const existing = rosterUpdates.get(warrior.id) ?? {};
-    rosterUpdates.set(warrior.id, { ...existing, ...partial });
+    rosterUpdates.set(warrior.id, { ...existing, ...diff });
     return;
   }
   // Rival-owned: per-warrior patch of just the changed fields. The old
@@ -61,6 +66,12 @@ interface HandleProgressionsArgs {
   rng?: IRNGService;
   /** Headless bouts keep outcome.log empty — no transcript lines are pushed. */
   headless?: boolean;
+  /** The RESOLVED plans the bout actually simulated (post-challenge-context,
+   *  decoys unmasked). Discovery symmetry grades the fight that happened —
+   *  Tactician/Methodical rivals persist a decoy `w.plan`, so reading the
+   *  persisted plan could credit or deny a reveal on a plan never fought. */
+  planA?: Pick<FightPlan, 'OE' | 'AL' | 'offensiveTactic' | 'defensiveTactic'>;
+  planD?: Pick<FightPlan, 'OE' | 'AL' | 'offensiveTactic' | 'defensiveTactic'>;
 }
 
 /** Display names for the skills gained this bout, in fixed learn order. */
@@ -172,6 +183,7 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
     const mergedFav = mergeWeaponChart(w.favorites, tally);
     if (mergedFav) w.favorites = mergedFav;
 
+    const fought = w === wA ? args.planA : args.planD;
     const disc = checkDiscovery(
       w,
       discRng ?? {
@@ -186,9 +198,12 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
       },
       {
         weaponId: w.equipment?.weapon,
-        oe: w.plan?.OE,
-        al: w.plan?.AL,
+        oe: fought?.OE ?? w.plan?.OE,
+        al: fought?.AL ?? w.plan?.AL,
         learnedFavorite: learnedFavorite[w === wA ? 'A' : 'D'],
+        week,
+        offensiveTactic: fought?.offensiveTactic ?? w.plan?.offensiveTactic,
+        defensiveTactic: fought?.defensiveTactic ?? w.plan?.defensiveTactic,
       }
     );
     if ((disc.updated || mergedFav) && w.favorites) {

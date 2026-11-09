@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { biasedAttrs, createRivalWarrior } from '@/engine/rivals/rivalWarriorFactory';
 import { FightingStyle } from '@/types/shared.types';
+import { DA_ST_FLOOR } from '@/data/designDoctrine';
 
 vi.mock('@/engine/factories/warriorFactory', () => ({
   makeWarrior: vi.fn(
@@ -48,8 +49,9 @@ describe('rivalWarriorFactory', () => {
     it('handles bias containing zero values', () => {
       const bias = { ST: 0, CN: 1 };
       const attrs = biasedAttrs(() => 0.99, bias);
-      // ST should remain at base 3
-      expect(attrs.ST).toBe(3);
+      // ST sits at Drake's Dark-Arena floor (V26 parity with the recruit
+      // generator) — a zero bias keeps it there rather than base 3.
+      expect(attrs.ST).toBe(DA_ST_FLOOR);
     });
 
     it('handles floating point values properly in RNG', () => {

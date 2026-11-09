@@ -81,9 +81,25 @@ export interface WarriorTournamentAdvice {
   overallRank: number | null;
   isParticipant: boolean;
   weeksUntilTournament: number;
-  status: 'CONTENDER_REST' | 'ACTIVE_ROUND' | 'QUALIFYING' | 'OFF_SEASON' | 'NONE';
+  status:
+    | 'CONTENDER_REST'
+    | 'ACTIVE_ROUND'
+    | 'QUALIFYING'
+    | 'OFF_SEASON'
+    | 'NONE'
+    | 'FREEZE_WATCH'
+    | 'ENTERED'
+    | 'CLASS_LOCKED';
   headline: string;
   details: string;
+  /** V27: FE class the warrior is locked/projected into (frozen FE wins). */
+  classId?: import('@/engine/matchmaking/tournamentSelection/classes').TournamentClassId | null;
+  /** V27: fight-equivalents at the freeze (or live, pre-freeze). */
+  fe?: number;
+  /** V27: FE needed to reach the next class breakpoint (0 = exactly at one). */
+  breakpointGap?: number;
+  /** V27: true once the warrior is on the entered roster for this cycle. */
+  entered?: boolean;
 }
 
 /**

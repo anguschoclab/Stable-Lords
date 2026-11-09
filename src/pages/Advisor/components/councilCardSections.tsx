@@ -140,10 +140,18 @@ export function CombatColumn({
           </p>
         ))}
 
-        {card.tournamentAdvice.qualifiedTier && (
+        {(card.tournamentAdvice.qualifiedTier || card.tournamentAdvice.classId) && (
           <p className="text-[10px] text-arena-gold/90 flex items-center gap-1.5 font-medium pt-1 border-t border-white/5">
             <Trophy className="h-3 w-3 shrink-0" />
-            <span>{card.tournamentAdvice.headline}</span>
+            <span>
+              {card.tournamentAdvice.headline}
+              {card.tournamentAdvice.classId && card.tournamentAdvice.fe !== undefined && (
+                <span className="text-muted-foreground/60">
+                  {' '}
+                  · {card.tournamentAdvice.fe} FE
+                </span>
+              )}
+            </span>
           </p>
         )}
 

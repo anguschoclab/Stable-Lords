@@ -36,7 +36,9 @@ interface PromoterPassContext {
   avoidSet: Set<string>;
   stableAvoidSet: Set<string>;
   challengeCounts: Map<string, number>;
-  bloodfeudSet: Set<string>;
+  /** Live bloodfeud targets keyed by the owed stable (V26 — every stable's
+   *  marks, not only the player's). */
+  feudTargetsByStable: Map<string, Set<string>>;
   recentFightPairs: ReturnType<typeof buildRecentFightPairs>;
 }
 
@@ -88,7 +90,8 @@ function generatePromoterOffers(
     challengeSet: ctx.challengeSet,
     stableAvoidSet: ctx.stableAvoidSet,
     challengeCounts: ctx.challengeCounts,
-    bloodfeudSet: ctx.bloodfeudSet,
+    feudTargetsByStable: ctx.feudTargetsByStable,
+    playerStableId: state.player?.id as string | undefined,
     gapThreshold,
   };
   const offerCtx: OfferBuildContext = { playerWarriorIds: ctx.playerWarriorIds, weather };
@@ -169,12 +172,16 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
       m.set(id, (m.get(id) ?? 0) + 1);
       return m;
     }, new Map<string, number>()),
-    // V24 canon: live bloodfeud marks (killers the stable may hunt).
-    bloodfeudSet: new Set(
-      (state.playerBloodfeuds || [])
-        .filter((m) => m.expiresWeek > state.absoluteWeek)
-        .map((m) => m.killerWarriorId)
-    ),
+    // V24/V26 canon: live bloodfeud marks grouped by owed stable — every
+    // stable (player and rivals) hunts the killers it is owed.
+    feudTargetsByStable: (state.bloodfeudMarks || [])
+      .filter((m) => m.expiresWeek > state.absoluteWeek)
+      .reduce((m, mark) => {
+        const set = m.get(mark.owedStableId) ?? new Set<string>();
+        set.add(mark.killerWarriorId);
+        m.set(mark.owedStableId, set);
+        return m;
+      }, new Map<string, Set<string>>()),
     // Repeat-opponent avoidance: pairs that fought within last 4 weeks
     recentFightPairs: buildRecentFightPairs(state.arenaHistory || [], state.absoluteWeek, 4),
   };

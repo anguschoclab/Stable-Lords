@@ -21,6 +21,7 @@ import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
 import { applyLuckfactor } from '@/engine/warrior/skillCalc';
+import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { computeCoordination } from '@/data/terrabloodCharts';
 import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { type FighterState } from '../combat/resolution/types';
@@ -268,7 +269,7 @@ function assembleFighterState(args: {
     favorites: warrior?.favorites,
     traits: warrior?.traits,
     staticEnduranceMult: traitMods.enduranceMult,
-    totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
+    totalFights: warrior ? fightEquivalentsOf(warrior) : 0,
     encumbrancePenalty: {
       iniPenalty: encPenalties.iniPenalty,
       defPenalty: encPenalties.defPenalty,

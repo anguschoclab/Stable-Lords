@@ -7,10 +7,12 @@ import {
 import {
   type AttributePotential,
   type CareerRecord,
+  type StrategyMemory,
   type WarriorFavorites,
   type WarriorLineage,
   type Warrior,
 } from '@/types/warrior.types';
+import type { EquipmentLoadout } from '@/data/equipment';
 import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { clamp } from '@/utils/math';
@@ -56,6 +58,21 @@ export interface PoolWarrior {
    *  (already baked into `baseSkills`) and eases dual-wield requirements.
    *  'ambi-reversed' is the rare canon variant (primary side = left). */
   handedness?: 'right' | 'left' | 'ambidextrous' | 'ambi-reversed';
+  /** Hidden trait aptitude — rolled at materialization when absent. */
+  trainability?: number;
+  /**
+   * Veteran progression carried through the free-agent round-trip — a
+   * displaced warrior's xp, drills, arena lessons, plan memory, and burned
+   * learn slots are part of their sheet, not reset on re-sign. Ordinary
+   * pool recruits leave these undefined.
+   */
+  xp?: number;
+  learnedSkills?: Partial<Record<keyof BaseSkills, number>>;
+  skillDrills?: Partial<Record<keyof BaseSkills, number>>;
+  strategyMemory?: StrategyMemory;
+  burnedSkills?: Partial<Record<keyof BaseSkills, number>>;
+  /** Veteran loadout — kept on re-sign; prospects get a fitted loadout. */
+  equipment?: EquipmentLoadout;
   /**
    * Present when this pool entry is a displaced roster veteran — a warrior
    * whose stable dissolved (bankruptcy, seasonal churn). Signing paths must

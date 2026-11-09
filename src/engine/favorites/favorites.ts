@@ -13,6 +13,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
+import { SeededRNG, hashStr } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { favoriteLearnOf } from '@/engine/learning';
 import { FAVORITE_TACTIC_BONUS } from '@/constants/combat';
@@ -105,6 +106,16 @@ function defaultFavoriteTacticPool(style: FightingStyle): { tactic: string; weig
   return suited.map((tactic) => ({ tactic, weight: 1 }));
 }
 
+/**
+ * Every tactic a style can roll as a favorite — the canon weighted pool
+ * where published, else the uniform WS-suited set. Shared by generation
+ * and the strategy lab's explore probes (V26: the AI can only organically
+ * *earn* a tactic discovery by fighting tactics the dice could roll).
+ */
+export function favoriteTacticPool(style: FightingStyle): { tactic: string; weight: number }[] {
+  return FAVORITE_TACTIC_POOLS[style] ?? defaultFavoriteTacticPool(style);
+}
+
 /** Generate hidden favorites for a warrior at creation */
 export function generateFavorites(style: FightingStyle, rng: IRNGService): WarriorFavorites {
   const r = () => rng.next();
@@ -127,7 +138,7 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
   }
 
   // Favorite tactic (V24 canon): weighted draw from the style's WS pool.
-  const tacticPool = FAVORITE_TACTIC_POOLS[style] ?? defaultFavoriteTacticPool(style);
+  const tacticPool = favoriteTacticPool(style);
   const tacticTotal = tacticPool.reduce((s, p) => s + p.weight, 0);
   let tacticRoll = r() * tacticTotal;
   let tactic = tacticPool[0]?.tactic;
@@ -150,6 +161,8 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
       rhythmHints: 0,
       learn: false,
       learnHints: 0,
+      tactic: false,
+      tacticHints: 0,
     },
   };
 }
@@ -169,6 +182,121 @@ export interface DiscoveryResult {
   weaponRevealed: boolean;
   rhythmRevealed: boolean;
   learnRevealed: boolean;
+  tacticRevealed: boolean;
+}
+
+interface RollOutcome {
+  revealed: boolean;
+  hint?: string;
+}
+
+const HINT_CAP = 2;
+
+/** Symmetry-or-base reveal + capped hint accrual — the shape every channel
+ *  shares. `revealChance: null` skips the reveal draw entirely (the learn
+ *  channel only rolls reveal when the bout actually learned the affinity —
+ *  preserving its original one-draw shape when it didn't). */
+function rollChannel(
+  revealChance: number | null,
+  revealedLine: string,
+  hintLine: string,
+  hintsUsed: number,
+  next: () => number
+): { outcome: RollOutcome; hintAccrued: boolean } {
+  if (revealChance !== null && next() < revealChance) {
+    return { outcome: { revealed: true, hint: revealedLine }, hintAccrued: false };
+  }
+  if (next() < CHANCE_HINT && hintsUsed < HINT_CAP) {
+    return { outcome: { revealed: false, hint: hintLine }, hintAccrued: true };
+  }
+  return { outcome: { revealed: false }, hintAccrued: false };
+}
+
+function rollWeaponDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+  if (fav.discovered.weapon) return { revealed: false };
+  const isUsingFav = context.weaponId === fav.weaponId;
+  const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
+  const name = weaponItem?.name ?? fav.weaponId;
+  const { outcome, hintAccrued } = rollChannel(
+    isUsingFav ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE,
+    isUsingFav
+      ? `EUREKA! ${warriorDisplayName(warrior)} has mastered the ${name}!`
+      : `Insight: ${warriorDisplayName(warrior)} realizes their true weapon preference is the ${name}.`,
+    `Observing: ${warriorDisplayName(warrior)} is developing a distinct feel for certain weapons...`,
+    fav.discovered.weaponHints,
+    r
+  );
+  if (outcome.revealed) fav.discovered.weapon = true;
+  else if (hintAccrued) fav.discovered.weaponHints++;
+  return outcome;
+}
+
+function rollRhythmDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+  if (fav.discovered.rhythm) return { revealed: false };
+  const isMatchingRhythm =
+    context.oe != null &&
+    context.al != null &&
+    Math.abs(context.oe - fav.rhythm.oe) <= 1 &&
+    Math.abs(context.al - fav.rhythm.al) <= 1;
+  const { outcome, hintAccrued } = rollChannel(
+    isMatchingRhythm ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE,
+    `EUREKA! ${warriorDisplayName(warrior)} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`,
+    `Observing: ${warriorDisplayName(warrior)} is finding their own unique rhythm in the chaos of battle.`,
+    fav.discovered.rhythmHints,
+    r
+  );
+  if (outcome.revealed) fav.discovered.rhythm = true;
+  else if (hintAccrued) fav.discovered.rhythmHints++;
+  return outcome;
+}
+
+/** A warrior who just learned in their hidden affinity skill may realize the
+ *  pattern (symmetry epiphany). `learn` is absent on legacy saves; `?? false`
+ *  keeps them eligible. */
+function rollLearnDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+  if (fav.discovered.learn ?? false) return { revealed: false };
+  const learnedFavorite = context.learnedFavorite === true;
+  const { outcome, hintAccrued } = rollChannel(
+    learnedFavorite ? CHANCE_REVEAL_SYMMETRY : null,
+    `EUREKA! ${warriorDisplayName(warrior)} senses an unusual aptitude for ${favoriteLearnOf(warrior)} — lessons in it come easily!`,
+    `Observing: ${warriorDisplayName(warrior)} is absorbing some lessons faster than others...`,
+    fav.discovered.learnHints ?? 0,
+    r
+  );
+  if (outcome.revealed) fav.discovered.learn = true;
+  else if (hintAccrued) fav.discovered.learnHints = (fav.discovered.learnHints ?? 0) + 1;
+  return outcome;
+}
+
+/** The fought plan ran the hidden favorite → symmetry epiphany. Draws on a
+ *  dedicated (warrior, week) sub-stream so the shared bout stream's
+ *  consumption order is untouched whether or not the bout supplied tactic
+ *  context (V26 parity — one shared discovery system for every stable). */
+function rollTacticDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext): RollOutcome {
+  if ((fav.discovered.tactic ?? false) || !fav.tactic) return { revealed: false };
+  const sub = new SeededRNG(hashStr(`${warrior.id}|tactic-discovery|${context.week ?? 0}`));
+  const isUsingFavTactic =
+    context.offensiveTactic === fav.tactic || context.defensiveTactic === fav.tactic;
+  const { outcome, hintAccrued } = rollChannel(
+    isUsingFavTactic ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE,
+    `EUREKA! ${warriorDisplayName(warrior)} feels an uncanny instinct for ${fav.tactic}!`,
+    `Observing: ${warriorDisplayName(warrior)} keeps gravitating toward a favorite technique...`,
+    fav.discovered.tacticHints ?? 0,
+    () => sub.next()
+  );
+  if (outcome.revealed) fav.discovered.tactic = true;
+  else if (hintAccrued) fav.discovered.tacticHints = (fav.discovered.tacticHints ?? 0) + 1;
+  return outcome;
+}
+
+interface DiscoveryContext {
+  weaponId?: string;
+  oe?: number;
+  al?: number;
+  learnedFavorite?: boolean;
+  week?: number;
+  offensiveTactic?: string;
+  defensiveTactic?: string;
 }
 
 /**
@@ -177,92 +305,33 @@ export interface DiscoveryResult {
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,
-  context?: { weaponId?: string; oe?: number; al?: number; learnedFavorite?: boolean }
+  context?: DiscoveryContext
 ): DiscoveryResult {
   const r = () => rng.next();
   const fav = warrior.favorites;
-  if (!fav)
-    return { updated: false, hints: [], weaponRevealed: false, rhythmRevealed: false, learnRevealed: false };
+  const result: DiscoveryResult = {
+    updated: false,
+    hints: [],
+    weaponRevealed: false,
+    rhythmRevealed: false,
+    learnRevealed: false,
+    tacticRevealed: false,
+  };
+  if (!fav) return result;
 
-  const hints: string[] = [];
-  let updated = false;
-  let weaponRevealed = false;
-  let rhythmRevealed = false;
-  let learnRevealed = false;
-
-  // 1. Weapon Discovery Roll
-  if (!fav.discovered.weapon) {
-    const isUsingFav = context?.weaponId === fav.weaponId;
-    const revealRoll = isUsingFav ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE;
-
-    if (r() < revealRoll) {
-      fav.discovered.weapon = true;
-      weaponRevealed = true;
-      const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
-      const sparkLine = isUsingFav
-        ? `EUREKA! ${warriorDisplayName(warrior)} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
-        : `Insight: ${warriorDisplayName(warrior)} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
-      hints.push(sparkLine);
-      updated = true;
-    } else if (r() < CHANCE_HINT && fav.discovered.weaponHints < 2) {
-      fav.discovered.weaponHints++;
-      hints.push(
-        `Observing: ${warriorDisplayName(warrior)} is developing a distinct feel for certain weapons...`
-      );
-      updated = true;
-    }
+  const ctx = context ?? {};
+  const rolls: [RollOutcome, keyof Pick<DiscoveryResult, 'weaponRevealed' | 'rhythmRevealed' | 'learnRevealed' | 'tacticRevealed'>][] = [
+    [rollWeaponDiscovery(warrior, fav, ctx, r), 'weaponRevealed'],
+    [rollRhythmDiscovery(warrior, fav, ctx, r), 'rhythmRevealed'],
+    [rollLearnDiscovery(warrior, fav, ctx, r), 'learnRevealed'],
+    [rollTacticDiscovery(warrior, fav, ctx), 'tacticRevealed'],
+  ];
+  for (const [roll, flag] of rolls) {
+    if (roll.revealed) result[flag] = true;
+    if (roll.hint) result.hints.push(roll.hint);
+    if (roll.revealed || roll.hint) result.updated = true;
   }
-
-  // 2. Rhythm Discovery Roll
-  if (!fav.discovered.rhythm) {
-    const isMatchingRhythm =
-      context?.oe != null &&
-      context?.al != null &&
-      Math.abs(context.oe - fav.rhythm.oe) <= 1 &&
-      Math.abs(context.al - fav.rhythm.al) <= 1;
-    const revealRoll = isMatchingRhythm ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE;
-
-    if (r() < revealRoll) {
-      fav.discovered.rhythm = true;
-      rhythmRevealed = true;
-      hints.push(
-        `EUREKA! ${warriorDisplayName(warrior)} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`
-      );
-      updated = true;
-    } else if (r() < CHANCE_HINT && fav.discovered.rhythmHints < 2) {
-      fav.discovered.rhythmHints++;
-      hints.push(
-        `Observing: ${warriorDisplayName(warrior)} is finding their own unique rhythm in the chaos of battle.`
-      );
-      updated = true;
-    }
-  }
-
-  // 3. Favorite-Learn Discovery Roll — a warrior who just learned in their
-  //    hidden affinity skill may realize the pattern (symmetry epiphany).
-  //    `learn` is absent on legacy saves; `?? false` keeps them eligible.
-  if (!(fav.discovered.learn ?? false)) {
-    const learnedFavorite = context?.learnedFavorite === true;
-    const revealRoll = learnedFavorite ? CHANCE_REVEAL_SYMMETRY : CHANCE_REVEAL_BASE;
-
-    if (learnedFavorite && r() < revealRoll) {
-      fav.discovered.learn = true;
-      learnRevealed = true;
-      const skill = favoriteLearnOf(warrior);
-      hints.push(
-        `EUREKA! ${warriorDisplayName(warrior)} senses an unusual aptitude for ${skill} — lessons in it come easily!`
-      );
-      updated = true;
-    } else if (r() < CHANCE_HINT && (fav.discovered.learnHints ?? 0) < 2) {
-      fav.discovered.learnHints = (fav.discovered.learnHints ?? 0) + 1;
-      hints.push(
-        `Observing: ${warriorDisplayName(warrior)} is absorbing some lessons faster than others...`
-      );
-      updated = true;
-    }
-  }
-
-  return { updated, hints, weaponRevealed, rhythmRevealed, learnRevealed };
+  return result;
 }
 
 // ─── Combat Bonuses ─────────────────────────────────────────────────────

@@ -48,8 +48,13 @@ export function handleInjuries(args: HandleInjuriesArgs) {
     injured = true;
     refs.push({ id: wA.id, name: wA.name });
     if (s.roster.some((w) => w.id === wA.id)) {
-      const existing = rosterUpdates.get(wA.id) || wA;
-      rosterUpdates.set(wA.id, { ...existing, injuries: [...(existing.injuries || []), injA] });
+      const existing = rosterUpdates.get(wA.id);
+      // Patch injuries only — seeding from `wA` would write a stale full
+      // snapshot that clobbers records/progressions patches on merge.
+      rosterUpdates.set(wA.id, {
+        ...existing,
+        injuries: [...(existing?.injuries ?? wA.injuries ?? []), injA],
+      });
     } else {
       // Rival-owned (either side of a world bout): per-warrior patch. The old
       // whole-roster rivalsUpdates write was clobbered by later bout impacts.
@@ -65,8 +70,11 @@ export function handleInjuries(args: HandleInjuriesArgs) {
     injured = true;
     refs.push({ id: wD.id, name: wD.name });
     if (s.roster.some((w) => w.id === wD.id)) {
-      const existing = rosterUpdates.get(wD.id) || wD;
-      rosterUpdates.set(wD.id, { ...existing, injuries: [...(existing.injuries || []), injD] });
+      const existing = rosterUpdates.get(wD.id);
+      rosterUpdates.set(wD.id, {
+        ...existing,
+        injuries: [...(existing?.injuries ?? wD.injuries ?? []), injD],
+      });
     } else {
       // Rival-owned (either side of a world bout): per-warrior patch. The old
       // whole-roster rivalsUpdates write was clobbered by later bout impacts.

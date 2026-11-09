@@ -1,4 +1,10 @@
-import type { BoutOfferId, PromoterId, StableId, WarriorId } from '../shared.types';
+import type {
+  BoutOfferId,
+  PromoterId,
+  StableId,
+  TournamentId,
+  WarriorId,
+} from '../shared.types';
 
 /**
  * Defines the shape of ranking entry.
@@ -53,6 +59,9 @@ export interface BoutOffer {
   /** Escalation counter for bounded negotiation: 0 = first counter
    *  round live, 1 = second round consumed — the offer is take-it-or-leave-it. */
   negotiationRound?: number;
+  /** V27 grudge match: this offer is a post-tournament exhibition between
+   *  same-class participants of the named tournament (week T+1, +1 FE). */
+  grudgeOfTournamentId?: TournamentId;
 }
 
 /**

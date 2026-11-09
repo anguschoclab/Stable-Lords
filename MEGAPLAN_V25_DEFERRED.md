@@ -1,46 +1,50 @@
-# MEGAPLAN V25 — DEFERRED / OUT-OF-SCOPE
+# MEGAPLAN V25 — DEFERRED / OUT-OF-SCOPE (RESOLVED)
 
-Items surfaced during V25 that were consciously NOT implemented, with rationale.
+All deferred items were completed post-close-out. Kept for the audit trail.
 
-## Deferred
+## Resolved
 
-1. **styleCompendium prose enrichment** — planned "light-touch" edits to
-   `hallmarks`/`counterplay` (TP no-parry-bonus, BA worst weapon selection,
-   ST endurance conservation) were skipped: existing entries are already
-   flavor-rich and the new taxonomy is surfaced through the codex section +
-   StyleCard archetype chips, which carry the same canon. Adding prose
-   risked duplication-guard hits with no information gain.
+1. **styleCompendium prose enrichment** — DONE: BA hallmark "thinnest
+   weapon pool" and TP hallmark "no parry bonus — the shell wins on
+   stamina and damage soak, not technique" added. ST needed nothing —
+   endurance conservation already covered by 'tempo falls fast' +
+   'out-endures scum'.
 
-2. **getStyleMatchupMods magnitude tuning (Phase-7.2 residue)** — audit
-   found the offense-vs-scum tempo channel already mechanically complete:
-   burn-order lock (LU>…>TP), encumbrance endurance burn, and phase
-   overrides all verified. Hot OE/AL vs TP attrition emerges from locked
-   constants; no magnitude change justified. Assur's "don't run 10-10 vs
-   pure defensives" is player doctrine (surfaced in codex/Design Review),
-   not an engine fix.
+2. **Offense-vs-scum tempo (Phase-7.2)** — AUDITED AND FIXED: matchup
+   steering already differentiated counters (precision/momentum AB/SL/BA
+   press, tempo LU/ST throttle), but measurement on the world population
+   showed ST plans vs TP still landing median OE 8 (42/60 at OE>=8) —
+   the cited Blind Man "sustained 6-OE marathon" under-delivered at -1/-1.
+   Deepened `getStyleMatchupMods(ST, TP)` to {oe:-3, al:-2, kd:0};
+   measured median OE 7 with only 24/60 at >=8, AL med 5 (collapsing
+   activity). Spec updated with the measurement rationale. BA/SL pressing
+   retained — momentum stacking is their canon anti-shell answer, not a
+   tempo error.
 
-3. **Assur's player heuristics rejected as mechanics** (per plan §canon-vs
-   -heuristic): SP-13 threshold, Assur's carry formula (ENC_TABLE stays),
-   weapon requirement lists omitting SZ (items.ts table stays canonical).
+3. **E2E chromium smoke** — DONE: `bun run e2e` 5/5 green (golden-path
+   passed on retry after two contention-flake timeouts at different
+   points; all other specs first-try).
 
-4. **E2E chromium smoke** — UI additions are data-driven accordion/chips
-   rendering the WinningArchetype module; covered by component specs
-   (`archetypeTags.test.tsx`, codex section test). A full playwright smoke
-   is deferred to the next UI-touching pass.
+## Watch items — resolved
 
-## Watch items
+- **TP world-proxy strength** — investigated with style-probe + lab floor
+  overrides. TP's lead is structural (ePAR 16.3, HP 39.5, END 32.2,
+  def-check 54.2%), not skill-floor-bound, so `STYLE_SKILL_FLOORS` cannot
+  touch it — and lifting weak styles at fixture-safe levels gave only
+  noise-level nudges (PS +1.3pp). The certified fixture band holds
+  (FLAT TP 51.8). Assur's canon explicitly frames scum/TP as the
+  dominant metagame answer — the emergent meta is canon-accurate.
+  Nerfing TP's signature attrition to chase a diagnostic-proxy number
+  would be anti-canon flattening. DECISION: no mechanic change. Revisit
+  only if a future certified world-band gate is added and trips.
 
-- **TP world-proxy strength** — post-V25 lab read: FLAT in band
-  (42.1–57.0), SNAP proxy TP 68.7% / spread 27.9pp. The certified
-  `worldBalance`/`balance` slow guardrails both pass, and world-diag
-  seed 12345 reads TP 61.7% (elevated but in-band). The SNAP proxy
-  exaggerates gaps (random pairing, no survivorship). Likely drivers:
-  archetype armor fitting lengthens fights → favors conserving styles;
-  always-on rhythm INI helps TP's low-INI profile. Watch on the next
-  balance pass; if the certified world band breaks, lift weak-style
-  `STYLE_SKILL_FLOORS` (world-only lever), never `MATCHUP_MATRIX`.
+## Rejected as mechanics (disproven vs canonical tables — stays rejected)
 
-## Re-baselines taken (not deferrals — recorded for the audit trail)
+- Assur's player heuristics: SP-13 threshold, his carry formula
+  (ENC_TABLE stays), weapon requirement lists omitting SZ (items.ts
+  table stays canonical — spec asserts the real table).
+
+## Re-baselines taken (recorded for the audit trail)
 
 - `traitBalance.slow.test.ts` personality floor 32→20: always-on rhythm
   bonus makes fightPlanMod traits honestly cost more when they drift the

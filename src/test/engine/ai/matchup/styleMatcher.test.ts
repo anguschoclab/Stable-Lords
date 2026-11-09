@@ -98,9 +98,11 @@ describe('styleMatcher', () => {
     it('returns canon mods for StrikingAttack vs TotalParry — the anti-scum grind', () => {
       // Arena 93 (Blind Man): sustained 6-OE, collapsing-AL marathon, not the
       // 10-10 burst — out-endure the shell over 8+ minutes.
+      // V25 audit: -1/-1 left world-population ST plans at median OE 8 vs TP
+      // (42/60 at OE>=8). -3/-2 lands the intended ~6-OE/4-AL marathon.
       const mods = getStyleMatchupMods(FightingStyle.StrikingAttack, FightingStyle.TotalParry);
-      expect(mods.oe).toBe(-1);
-      expect(mods.al).toBe(-1);
+      expect(mods.oe).toBe(-3);
+      expect(mods.al).toBe(-2);
       expect(mods.kd).toBe(0);
     });
 

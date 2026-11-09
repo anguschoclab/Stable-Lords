@@ -38,6 +38,7 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
       'Momentum stacking on consecutive hits',
       'Devastating against passive defenses',
       'Early-round aggression',
+      'Thinnest weapon pool on the circuit — few blades suit the bash',
     ],
     counterplay:
       'Break the chain. Riposte the first blow, parry the second, and the avalanche never forms. A wall of steel only feeds it.',
@@ -133,6 +134,7 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
       'Near-total defensive commitment',
       'Stamina attrition strategy',
       'Most durable style in the game',
+      'No parry bonus — the shell wins on stamina and damage soak, not technique',
     ],
     counterplay:
       'Momentum and flurries. Bashers build on unbroken defense, and aimed shots find the seams the shell leaves. Patience loses to inevitability.',

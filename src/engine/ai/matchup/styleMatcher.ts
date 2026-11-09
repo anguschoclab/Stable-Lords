@@ -85,7 +85,9 @@ export function getStyleMatchupMods(
       if (opp === FightingStyle.WallOfSteel) return { oe: -1, al: 0, kd: 0 };
       // Blind Man's anti-scum grind: a sustained 6-OE marathon with collapsing
       // activity, not the 10-10 burst — out-endure the shell over 8+ minutes.
-      if (opp === FightingStyle.TotalParry) return { oe: -1, al: -1, kd: 0 };
+      // V25 audit measured -1/-1 at median OE 8 vs TP on the world population;
+      // -3/-2 is the magnitude that actually lands the ~6-OE/4-AL marathon.
+      if (opp === FightingStyle.TotalParry) return { oe: -3, al: -2, kd: 0 };
       // Rippers weather the first blow — moderate effort, pick shots.
       if (opp === FightingStyle.ParryRiposte) return { oe: -1, al: 0, kd: 0 };
       return null;

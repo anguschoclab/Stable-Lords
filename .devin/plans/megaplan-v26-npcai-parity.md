@@ -154,7 +154,7 @@ One-sentence summary: Validated audit of the V22–V25 window (~118 commits): fi
 - [x] `bun run type-check` + `bun run lint` clean — tsc clean; eslint 0 errors (43 pre-existing warnings)
 - [x] `bun run test:slow` green — determinism suites (same-seed, shard-vs-inline, narration) + fixture/world balance guardrails — 298 green incl. re-seeds
 - [x] `bun run e2e` chromium smoke — 7/7 (favorites tactic row deferred → MEGAPLAN_V26_DEFERRED D1)
-- [~] `balance-lab` + `world-diag` re-baselined on 3 seeds; matrices recorded in ledger — balance-lab FLAT recorded (spread 42.1–57.0, kill 9.1%); world-diag ×3 in flight at commit time, rows pending
+- [x] `balance-lab` + `world-diag` re-baselined on 3 seeds; matrices recorded in ledger — FLAT spread 42.1–57.0 kill 9.1%; world-diag ×3 kill 4.78–4.85%, TP 63.5–64.2 (watch item, canon-dominant meta per V24)
 - [x] Guard scans pass (`testQualityAudit` domain filing, orphan-scan, duplication guard) — 45 files / 287 tests
 - [x] Ledger rows carry commit hashes; deferred register written — c204577bb; MEGAPLAN_V26_DEFERRED.md
 

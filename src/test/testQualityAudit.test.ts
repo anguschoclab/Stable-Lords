@@ -163,6 +163,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'informationArchitecture.test.ts': 'LIVE_RATCHET',
   'legibility.contract.test.ts': 'LIVE_RATCHET',
   'markdownSanitize.guard.test.ts': 'LIVE_RATCHET',
+  'megaplanDocLayout.guard.test.ts': 'LIVE_RATCHET',
   'orphanScan.guard.slow.test.ts': 'LIVE_RATCHET',
   'pagePrimitives.conformance.test.tsx': 'LIVE_RATCHET',
   'paramBudget.guard.test.ts': 'LIVE_RATCHET',

@@ -1,6 +1,6 @@
 # MEGAPLAN V27 — Ledger
 
-**Plan:** `.devin/plans/megaplan-v27-tourney-classes.md`
+**Plan:** `MEGAPLAN_V27_PLAN.md`
 **Findings:** `MEGAPLAN_V27_FINDINGS.md`
 
 ## Phase commits

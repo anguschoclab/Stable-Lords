@@ -1,6 +1,6 @@
 # MEGAPLAN V27 — Deferred scope
 
-Items designed in `.devin/plans/megaplan-v27-tourney-classes.md` that shipped
+Items designed in `MEGAPLAN_V27_PLAN.md` that shipped
 partially or were consciously deferred at close-out. Every deferred item has
 since landed — the file remains as the record of what shipped when.
 

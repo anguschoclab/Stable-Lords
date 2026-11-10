@@ -1,6 +1,6 @@
 # MEGAPLAN V27 — Findings: Tournament Classes, FE & Freeze Dates
 
-**Plan:** `.devin/plans/megaplan-v27-tourney-classes.md`
+**Plan:** `MEGAPLAN_V27_PLAN.md`
 **Source material:** Duel2 / Arena 93 Noblish Island articles — "What Is a Tourney Warrior?" and Pagan's "Are You Ready To Take Tournament Play Seriously?"
 **Audit status:** every claim below verified against the code during plan validation (✅ verified, ⚠️ corrected, ❌ disproved).
 

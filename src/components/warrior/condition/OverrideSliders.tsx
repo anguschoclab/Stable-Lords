@@ -36,7 +36,7 @@ function OverrideCell(props: {
         >
           {label} {value !== undefined ? value : '—'}
         </Label>
-        <button
+        <button type="button"
           onClick={() => onSliderChange(key_, value !== undefined ? undefined : 5)}
           className={cn(
             'text-[8px] font-black uppercase text-muted-foreground/40',

@@ -71,7 +71,7 @@ function WinActions({
 }) {
   return (
     <div className="flex gap-4">
-      <button
+      <button type="button"
         onClick={acknowledgeWin}
         aria-label="Continue Legacy"
         className={cn(
@@ -82,7 +82,7 @@ function WinActions({
       >
         Continue Legacy
       </button>
-      <button
+      <button type="button"
         onClick={doReset}
         aria-label="New Game"
         className={cn(

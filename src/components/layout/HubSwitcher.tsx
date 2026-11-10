@@ -50,7 +50,7 @@ export function HubSwitcher(props: HubSwitcherProps) {
             <Icon className={cn('h-3.5 w-3.5 shrink-0', iconClassName)} />
             <span className="flex-1">{hub.label}</span>
             {alertCount > 0 && (
-              <button
+              <button type="button"
                 aria-label={`${alertCount} alerts for ${hub.label}`}
                 className="flex items-center justify-center bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-[10px] font-mono font-black h-5 min-w-[20px] px-1 rounded-none border border-primary/30 motion-reduce:transition-none"
                 onClick={(e) => {

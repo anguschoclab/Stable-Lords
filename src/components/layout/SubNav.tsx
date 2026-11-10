@@ -38,7 +38,7 @@ export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
         {tabs.map((tab) => (
           <Tooltip key={tab.id}>
             <TooltipTrigger asChild>
-              <button
+              <button type="button"
                 aria-label={`Switch to ${tab.label} tab`}
                 onClick={() => onTabChange(tab.id)}
                 aria-current={activeTab === tab.id ? 'page' : undefined}

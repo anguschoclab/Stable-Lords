@@ -49,7 +49,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
           A fatal error occurred. The arena scribe cannot continue.
         </p>
         {/* Error details are hidden to prevent information leakage */}
-        <button
+        <button type="button"
           aria-label="Try Again"
           onClick={() => this.setState({ hasError: false, error: null })}
           className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.15em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"

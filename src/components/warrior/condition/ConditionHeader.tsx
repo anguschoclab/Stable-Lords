@@ -22,7 +22,7 @@ export function ConditionHeader({ idx, label, onRemove }: ConditionHeaderProps) 
             {label}
           </span>
         )}
-        <button
+        <button type="button"
           onClick={onRemove}
           className="text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-none motion-reduce:transition-none"
           aria-label="Remove condition"

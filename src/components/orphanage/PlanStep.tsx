@@ -36,7 +36,7 @@ function TacticGrid({
         {PLAN_TACTICS.map((t) => {
           const isActive = isPlanTactic(plan, t);
           return (
-            <button
+            <button type="button"
               key={t.id}
               onClick={() => onSelect(t)}
               aria-label={`Select Tactic: ${t.label}`}

@@ -3,6 +3,7 @@
 ## Plan files
 
 All session plans and MEGAPLAN drafts live **in the repo** at `.devin/plans/`.
+
 - Write plan files with the `write` tool directly to `.devin/plans/<name>.md`
   (NOT `~/.devin/plans/` — that location is deprecated; it was migrated
   2026-11-08).

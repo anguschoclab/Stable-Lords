@@ -121,7 +121,7 @@ function FormShell({ onBack, children }: { onBack: () => void; children: React.R
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative bg-background">
       <div className="relative z-10 w-full max-w-xl space-y-6">
-        <button
+        <button type="button"
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground/60 hover:text-accent text-[11px] font-black uppercase tracking-widest transition-colors duration-150 motion-reduce:transition-none"
         >

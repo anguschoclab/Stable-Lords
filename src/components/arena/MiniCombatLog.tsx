@@ -131,7 +131,7 @@ function LogHeader({
           <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
         )}
         {onClose && (
-          <button
+          <button type="button"
             aria-label="Close combat log"
             onClick={(e) => {
               e.stopPropagation();

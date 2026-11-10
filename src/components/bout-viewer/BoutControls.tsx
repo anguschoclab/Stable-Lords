@@ -47,7 +47,7 @@ function TransportControls({
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
+          <button type="button"
             onClick={onTogglePlay}
             className={cn(
               'flex items-center justify-center p-2.5 rounded-full transition-all motion-reduce:transition-none motion-reduce:transform-none active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
@@ -96,7 +96,7 @@ function SpeedSelector({ speed, setSpeed }: Pick<BoutControlsProps, 'speed' | 's
   return (
     <div className="flex items-center bg-black border border-white/5 rounded-none p-1">
       {[1, 2, 3].map((s) => (
-        <button
+        <button type="button"
           key={s}
           onClick={() => setSpeed(s as 1 | 2 | 3)}
           className={cn(

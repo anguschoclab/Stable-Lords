@@ -31,7 +31,7 @@ export function SelectableCard({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
+        <button type="button"
           aria-label={ariaLabel}
           className={cn(
             'w-full text-left group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',

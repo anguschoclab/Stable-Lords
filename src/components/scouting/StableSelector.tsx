@@ -98,7 +98,7 @@ function StableRow(props: {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
+        <button type="button"
           aria-label={`Select ${r.owner.stableName} as ${ariaRole}`}
           onClick={() => onSelect(r.owner.id === selectedId ? null : r.owner.id)}
           disabled={r.owner.id === otherId}

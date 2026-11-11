@@ -19,7 +19,7 @@ was carried forward (see §1 status notes).
 ## 1. Open deferred register
 
 | Prov | Item | Severity | Entry points | Status (verified 2026-11-10) |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | V22-D3 | **Pagan literal damage model** — canon: damage = ST + class-variance + weapon-variance; armor soak = weight + 12 + type-bonus; ≤1 → bounce. Current model is `(class+4)×locMult×variance` + flat mitigation — same shape, different parameters. Needs a soak-rework pass + end-to-end damage/KO/kill distribution re-verification. | Own pass | `src/engine/combat/mechanics/damageCalc.ts:21-24`, `src/engine/combat/resolution/weaponArmor.ts` | **Open** — "stays deferred" reaffirmed by V23 findings |
 | V22-D4 | **ADM / graduation tier** — canon: basic caps 3–21, ADM caps 3–25; WL>21 grants INI bonus; graduation is a separate advancement tier. | Feature | `ATTRIBUTE_MAX` (`types/shared.types`), `src/engine/warrior/potential.ts`, training passes | **Open** — caps are 3–25 throughout, no tier exists |
 | V24-D5 | **Out-of-scope game modes** — Bloodgames tournaments, Primus/ADM-tier play, PP (programmer prize) systems. | Scope boundary | No engine surface exists to pin them to | **Standing deferral** — revisit only if those modes ever land |
@@ -110,7 +110,7 @@ findings don't re-litigate them.
 Families whose deferred work all landed — details in the archived docs.
 
 | Prov | Items | Disposition |
-|---|---|---|
+| --- | --- | --- |
 | V9 | traitDedup `effectHash` key-order follow-up | Landed — keys sorted, pinned by spec |
 | V22 | D1 dual-wield/off-hand, D2 trains-burn-skills | Landed V23 (`46e26119`, `c967fbb9`) |
 | V24 | D1 luck pools, D2 dagger advisory, D3 learn-cap literals, D4 rhythm gate | Landed post-close-out (D4 → V25's always-on) |
@@ -127,7 +127,7 @@ via rename). Themes are one-liners; the docs themselves are the audit
 trail.
 
 | Version | Theme | Docs | Restore tag |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | unversioned (~V8) | Full-repo exhaustive review & verdict tables | FINDINGS, LEDGER | `pre-megaplan-v8` |
 | MEGAPLAN_V9 | 12 open PRs + closed-PR salvage + V5–V8 re-adjudication | FINDINGS, LEDGER | `pre-megaplan-v9` |
 | MEGAPLAN_V10 | 6 open PRs + orphan branches + latent findings | FINDINGS, LEDGER | `pre-megaplan-v10` |

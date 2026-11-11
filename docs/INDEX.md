@@ -5,7 +5,7 @@ The docs/ catalogue. Layout convention lives in [`AGENTS.md`](../AGENTS.md)
 every non-archive doc must appear here.
 
 | Dir | Family |
-|---|---|
+| --- | --- |
 | `design/` | Canon specs + UI-design docs — the in-game Help bible corpus |
 | `engineering/` | Testing, RNG, pipeline, setup references + live audits |
 | `reports/` | Generated committed reports |

@@ -6,7 +6,7 @@
 ## Phase commits
 
 | Phase | Description | Commit | Notes |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 0 | V28 doc scaffold + V27 archive + megaplanDocLayout docs-home rewrite | — | un-reds the suite after `54d856dd9`'s move; guard 5/5 green post-rewrite |
 | 1 | `docsLayout.guard.test.ts` authored RED + `GUARD_REGISTRY` + `runnerGroups.json` regen | — | 5/7 failed as designed on the pre-taxonomy layout; link check scoped to doc targets after the master bible's lineage code-refs proved unfixable |
 | 2 | Root restore: README.md + AGENTS.md (convention rewrite) + CLAUDE.md ref | — | manual link fixed (`docs/manual/user-manual.md`); AGENTS.md gains the taxonomy table + kebab + INDEX + archive rules |
@@ -17,7 +17,7 @@
 ## Doc-layout changes (re-baseline triggers)
 
 | Change | Surface affected | Direction |
-|---|---|---|
+| --- | --- | --- |
 | bibleIndex glob `docs/*.md` → `docs/design/*.md` | Help page corpus + app bundle | 20-doc design corpus; ~15 admin/engineering docs leave the bundle |
 | `REPORT_FILE` paths → `docs/reports/` | daily_sim/daily_bard nightly workflows | `git add` repointed — watch first scheduled run (backlog §2) |
 | megaplan lineage home repo root → docs root | `megaplanDocLayout` guard | convention updated; V27 set archived |

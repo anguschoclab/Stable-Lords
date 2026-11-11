@@ -18,7 +18,7 @@ All session plans and MEGAPLAN drafts live **in the repo** at `.devin/plans/`.
 `docs/` is organized into fixed families:
 
 | Dir | Contents |
-|---|---|
+| --- | --- |
 | `docs/design/` | Canon specs (`stable-lords-*`) + UI-design docs — the in-game Help bible corpus (`bibleIndex.ts` globs only this dir) |
 | `docs/engineering/` | Testing, RNG policy, pipeline, setup references + live audits |
 | `docs/reports/` | Generated committed reports (daily sim, daily bard, orphan scan) |

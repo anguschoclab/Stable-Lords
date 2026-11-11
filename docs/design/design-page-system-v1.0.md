@@ -2,7 +2,7 @@
 
 ## Extending the Control Center shell to every route
 
-> Companion to [DESIGN_BIBLE_UI_v1.0.md](DESIGN_BIBLE_UI_v1.0.md) and [DESIGN_CONTROL_CENTER_v1.0.md](DESIGN_CONTROL_CENTER_v1.0.md).
+> Companion to [design-bible-ui-v1.0.md](design-bible-ui-v1.0.md) and [design-control-center-v1.0.md](design-control-center-v1.0.md).
 > Purpose: make every screen feel like another wall of the same tablinum. One shell, many rooms.
 
 ---

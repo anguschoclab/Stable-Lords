@@ -31,7 +31,7 @@ describe('Pipeline Performance Benchmarks', () => {
     // Fresh states floor-refill to ~90 rivals on week 1; the old 5s cap
     // assumed the 8-rival fresh world. Ceiling is catastrophic-regression
     // only: ~1.43s/wk measured at the 160-stable band → ~18.6s/quarter.
-    // Precise bands live in the scale-band tests and docs/PIPELINE_BASELINE.md.
+    // Precise bands live in the scale-band tests and docs/engineering/pipeline-baseline.md.
     expect(duration).toBeLessThan(20000);
   });
 
@@ -121,7 +121,7 @@ describe('Determinism vs Performance Trade-offs', () => {
 // Time a populated world at the floor (90 stables) and near the soft cap
 // (160 stables). Timings are recorded to the console and gated generously —
 // the assertion is "no pathological regression", sub-ms precision lives in
-// docs/PIPELINE_BASELINE.md.
+// docs/engineering/pipeline-baseline.md.
 describe('Living-world scale bands', () => {
   const measure = async (extraRivals: number, label: string) => {
     const { populateInitialWorld } = await import('@/engine/core/worldSeeder');
@@ -157,7 +157,7 @@ describe('Living-world scale bands', () => {
   it('160-stable band stays under the perf ceiling', async () => {
     const msPerWeek = await measure(70, '160-stable');
     // ~1.4s/week locally, ~3.5s/week on the hosted runner — ceiling carries
-    // headroom for CI variance; the real band lives in PIPELINE_BASELINE.md.
+    // headroom for CI variance; the real band lives in docs/engineering/pipeline-baseline.md.
     expect(msPerWeek).toBeLessThan(6000);
   }, 180000);
 });

@@ -38,7 +38,7 @@ describe('RivalStrategyPass perf gate', () => {
       expect(perceptionSpy).toHaveBeenCalledTimes(1);
     }
     // Perf bound — measured 43–73ms on dev hardware at implementation time
-    // (recorded in docs/ai-behavior-audit.md), ~250–310ms today. 2000ms keeps
+    // (recorded in docs/archive/audits/ai-behavior-audit-v1.md), ~250–310ms today. 2000ms keeps
     // ~6× headroom over a loaded min-of-3 while still catching a reintroduced
     // per-rival world scan (also caught by the spy assertion above) or the
     // structuredClone-per-rival churn removed in G17 — both are ~10×+ events.

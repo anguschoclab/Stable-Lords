@@ -35,7 +35,7 @@ sequential code path for every scale of advancement.
   call-time-captured epoch guard so stale results (queued or running when
   `loadGame`/reset fires) can never be committed.
 - `src/engine/pool/enginePool.ts` — opt-in shard pool (`configureEnginePool`).
-  Ships at `poolSize=1` — see `docs/PIPELINE_PARALLELISM.md` for the
+  Ships at `poolSize=1` — see `docs/engineering/pipeline-parallelism.md` for the
   measured ship-gate result.
 
 ## Telemetry events
@@ -88,7 +88,7 @@ There is no runtime flag. The escape hatches are:
 2. Shard parallelism is a measured pessimization — 0.33× on the 52-week
    bench even after rival-shard inputs were narrowed (`narrowRivalShardState`).
    Kept opt-in at `poolSize=1`; the next viable step is persistent shard
-   state, not further payload dieting (`docs/PIPELINE_PARALLELISM.md`).
+   state, not further payload dieting (`docs/engineering/pipeline-parallelism.md`).
 3. Graveyard entries are death-time snapshots; a rival victim that remains
    roster-addressable via `lastBoutWeek` rebuilds can accumulate post-death
    progression on the roster copy without affecting the memorial.

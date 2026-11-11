@@ -126,7 +126,7 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
 22. **Shard re-attempt measured and gated off** — rival-shard inputs were
     narrowed (`narrowRivalShardState`) and the parallel bench re-run:
     0.33× vs the ≥1.30× gate. `poolSize=1` stays the shipped default; see
-    `docs/PIPELINE_PARALLELISM.md`.
+    `docs/engineering/pipeline-parallelism.md`.
 
 <!-- markdownlint-enable MD029 -->
 
@@ -143,7 +143,7 @@ Findings are marked **fixed** (implemented and test-covered) or **open**.
 - **True parallelism** (worker pool, rival/bout sharding) — re-attempted with
   narrowed shard inputs; measured 0.33× on the 52-week bench vs the ≥1.30×
   gate. `poolSize=1` remains the shipped config; the machinery stays opt-in.
-  See `docs/PIPELINE_PARALLELISM.md` for why the next step is persistent
+  See `docs/engineering/pipeline-parallelism.md` for why the next step is persistent
   shard state, not further payload dieting.
 - **Comlink double-serialization** on the week path — inherent to the worker
   boundary; mitigated by `stripNonSerializable` but not eliminated.

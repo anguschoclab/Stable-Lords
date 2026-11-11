@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { gotoInApp, navigateNavLink, startNewGame } from './helpers';
 
 /**
- * Route-aware primary CTA (DESIGN_PAGE_SYSTEM_v1.0 §1):
+ * Route-aware primary CTA (design-page-system-v1.0.md §1):
  * the shared top-bar action swaps label + behavior per route; detail and
  * lore routes get none. This spec boots a real game and asserts the
  * rendered CTA contract on every mapped route.

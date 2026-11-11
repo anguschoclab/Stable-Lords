@@ -109,7 +109,7 @@ records per-test windows, so `beforeAll`-heavy files (multi-week sims,
 subprocesses) under-report — `livingWorld` reads 95ms despite a
 1000-week `beforeAll`. Last curated 2026-10-23: zero fast files >5s;
 files in the 1.3–2s band are watchlisted until they cross consistently
-(see `archive/megaplans/TEST_SUITE_AUDIT_LEDGER.md`).
+(see `docs/archive/megaplans/TEST_SUITE_AUDIT_LEDGER.md`).
 
 The slow suite is **not** a per-PR gate. It runs nightly and on
 `workflow_dispatch` in `.github/workflows/nightly.yml`; run it locally when

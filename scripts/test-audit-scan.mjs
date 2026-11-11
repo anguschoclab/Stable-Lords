@@ -294,7 +294,7 @@ const CATEGORY_DOMAIN = {
   hooks: ['src/hooks'],
   lore: ['src/lore'],
 };
-// Non-mirror dirs: suite infrastructure and repo-audit homes (docs/TESTING.md).
+// Non-mirror dirs: suite infrastructure and repo-audit homes (docs/engineering/testing.md).
 // The category check above only evaluates dirs present in CATEGORY_DOMAIN, so
 // any dir not in either set escapes conformance silently — emit them for the
 // testQualityAudit registration guard (shrink-only baseline list).

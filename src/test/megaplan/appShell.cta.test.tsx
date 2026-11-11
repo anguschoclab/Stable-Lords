@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 /**
  * MEGAPLAN-L1 spec (authored test-first, live since Phase 6):
  *
- * DESIGN_PAGE_SYSTEM_v1.0 §1 mandates a per-route primary CTA in the shared
+ * design-page-system-v1.0.md §1 mandates a per-route primary CTA in the shared
  * top bar. The spec's route names predate the hub reorganization; the
  * canonical mapping is:
  *

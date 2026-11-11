@@ -1,6 +1,6 @@
 /**
- * Design Bible index — loads the spec corpus from /docs as raw markdown and
- * provides section-level search for the Help page's bible browser.
+ * Design Bible index — loads the spec corpus from /docs/design as raw markdown
+ * and provides section-level search for the Help page's bible browser.
  */
 
 /**
@@ -28,7 +28,7 @@ interface BibleHit {
   score: number;
 }
 
-const rawDocs = import.meta.glob('../../docs/*.md', {
+const rawDocs = import.meta.glob('../../docs/design/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,

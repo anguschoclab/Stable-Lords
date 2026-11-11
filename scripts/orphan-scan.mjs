@@ -545,7 +545,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(OUT_FILE, JSON.stringify(report, null, 2));
 
 // PO-facing markdown companion — regenerated with every scan so the report
-// and the JSON never drift (docs/ORPHAN_REPORT.md, committed).
+// and the JSON never drift (docs/reports/orphan-report.md, committed).
 const reportMd = generateOrphanReport(report, triageBuckets);
 
 // ─── stdout summary ─────────────────────────────────────────────────────────

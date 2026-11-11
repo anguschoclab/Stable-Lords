@@ -26,4 +26,12 @@ describe('bibleIndex (design bible search)', () => {
     const hits = searchBibleDocs('long term fighter');
     expect(hits.some((h) => h.docId === doc!.id)).toBe(true);
   });
+
+  it('indexes only the docs/design corpus — no admin docs leak in', () => {
+    const ids = BIBLE_DOCS.map((d) => d.id);
+    expect(
+      ids.filter((id) => /MEGAPLAN|README|AGENTS|INDEX|Daily|REPORT/i.test(id)),
+      'admin docs leaked into the in-game bible corpus'
+    ).toEqual([]);
+  });
 });

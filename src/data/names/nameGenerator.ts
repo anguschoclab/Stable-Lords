@@ -9,7 +9,7 @@
  *
  * Determinism: callers on engine/pipeline paths MUST pass an `IRNGService`.
  * Callers that want entropy (UI randomizers) may omit `rng`, which falls back
- * to `entropyRng()` — see docs/RNG_POLICY.md.
+ * to `entropyRng()` — see docs/engineering/rng-policy.md.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { entropyRng, SeededRNG } from '@/utils/random';

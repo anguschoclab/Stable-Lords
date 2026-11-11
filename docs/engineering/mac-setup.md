@@ -125,7 +125,7 @@ source ~/.zshrc
 
 If you encounter issues not covered here:
 
-1. Check the [main README.md](README.md) for general setup information
+1. Check the [main README.md](../../README.md) for general setup information
 2. Delete `node_modules` and reinstall: `rm -rf node_modules && bun install`
 3. Check that your macOS version is up to date
 

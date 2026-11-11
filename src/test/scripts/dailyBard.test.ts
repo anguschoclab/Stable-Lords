@@ -237,7 +237,7 @@ describe('commit_to_archive', () => {
     const written = JSON.parse(String(combatWrite![1]));
     expect(written.strikes.slash).toEqual(['existing', 'brand new %A line']);
 
-    expect(writes.some(([p]) => String(p).endsWith('Daily_Bard_Report.md'))).toBe(true);
+    expect(writes.some(([p]) => String(p).endsWith('daily-bard-report.md'))).toBe(true);
   });
 
   it('writes nothing when every supplied template is a duplicate', async () => {

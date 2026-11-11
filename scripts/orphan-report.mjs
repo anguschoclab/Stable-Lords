@@ -9,8 +9,8 @@
  * items, and auto-surfaces any NEW flagged symbol as UNTRIAGED so the report
  * stays accurate as the codebase drifts.
  *
- * Output: docs/ORPHAN_REPORT.md (committed — PO triage doc; the JSON data
- * stays in gitignored scripts/out/orphan-scan.json). Zero dependencies.
+ * Output: docs/reports/orphan-report.md (committed — PO triage doc; the JSON
+ * data stays in gitignored scripts/out/orphan-scan.json). Zero dependencies.
  * Run: `node scripts/orphan-report.mjs` (after orphan-scan has written its
  * JSON) — or it runs automatically at the end of `node scripts/orphan-scan.mjs`.
  */
@@ -20,7 +20,7 @@ import path from 'node:path';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT_DIR = path.join(ROOT, 'scripts', 'out');
 const SCAN_JSON = path.join(OUT_DIR, 'orphan-scan.json');
-const OUT_FILE = path.join(ROOT, 'docs', 'ORPHAN_REPORT.md');
+const OUT_FILE = path.join(ROOT, 'docs', 'reports', 'orphan-report.md');
 const GUARD_TEST = path.join(ROOT, 'src', 'test', 'megaplan', 'orphanScan.guard.slow.test.ts');
 const SOURCE_EXT = ['.ts', '.tsx', '.mts', '.cts'];
 

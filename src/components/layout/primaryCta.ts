@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 /**
- * Per-route primary CTA registry — DESIGN_PAGE_SYSTEM_v1.0 §1.
+ * Per-route primary CTA registry — design-page-system-v1.0.md §1.
  * The top-bar CTA swaps by route context; detail and lore routes get none.
  *
  * Two action shapes:

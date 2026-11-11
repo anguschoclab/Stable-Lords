@@ -9,11 +9,11 @@ function readFile(relPath: string): string {
 }
 
 describe('workflow-config', () => {
-  it('Daily_Balance_Report.md is NOT gitignored', () => {
+  it('daily-balance-report.md is NOT gitignored', () => {
     const gitignore = readFile('.gitignore');
     const lines = gitignore.split('\n');
     const matches = lines.filter(
-      (l) => l.trim() === 'Daily_Balance_Report.md' && !l.trim().startsWith('#')
+      (l) => l.trim() === 'daily-balance-report.md' && !l.trim().startsWith('#')
     );
     expect(matches).toHaveLength(0);
   });

@@ -6,7 +6,7 @@ import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipeline/pa
 /**
  * MEGAPLAN-V14 pipeline-docs drift guard (authored test-first, live since Phase 5e):
  *
- * L1/A-finding — docs/PIPELINE_DEPENDENCY_MAP.md's stage table drifted from
+ * L1/A-finding — docs/engineering/pipeline-dependency-map.md's stage table drifted from
  * WEEK_PIPELINE_PASSES: it lists `recruitment` under `world` (code: `core`),
  * `progression` under `content` (code: `world`), omits `arenaChampionship`
  * and `seasonal` entirely, and lists `boutSimulation` as a pass when it is a
@@ -15,8 +15,14 @@ import { WEEK_PIPELINE_PASSES } from '@/engine/pipeline/services/weekPipeline/pa
  */
 
 const REPO = path.resolve(__dirname, '../../..');
-const DEP_MAP = readFileSync(path.join(REPO, 'docs/PIPELINE_DEPENDENCY_MAP.md'), 'utf8');
-const AUDIT = readFileSync(path.join(REPO, 'docs/PIPELINE_AUDIT.md'), 'utf8');
+const DEP_MAP = readFileSync(
+  path.join(REPO, 'docs/engineering/pipeline-dependency-map.md'),
+  'utf8'
+);
+const AUDIT = readFileSync(
+  path.join(REPO, 'docs/engineering/pipeline-audit.md'),
+  'utf8'
+);
 
 /** Parse `| \`stage\` | id, id, id |` rows from the dependency map. */
 function docStageTable(): Record<string, string[]> {
@@ -73,7 +79,7 @@ describe('megaplan V14: pipeline docs match WEEK_PIPELINE_PASSES', () => {
     const declared = WEEK_PIPELINE_PASSES.length;
     const claimed = [...AUDIT.matchAll(/(\d+) (?:staged )?passes/gi)].map((m) => Number(m[1]));
     for (const n of claimed) {
-      expect(n, `PIPELINE_AUDIT claims ${n} passes — actual table has ${declared}`).toBe(declared);
+      expect(n, `pipeline-audit.md claims ${n} passes — actual table has ${declared}`).toBe(declared);
     }
   });
 });

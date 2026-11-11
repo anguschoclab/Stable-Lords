@@ -11,7 +11,7 @@
  *   screaming-copy    SCREAMING_SNAKE_CASE or caps+underscore display strings
  *                     in JSX text / string literals.
  *   rng-violation     Math.random() outside utils/random.ts + engine RNG
- *                     service (docs/RNG_POLICY.md).
+ *                     service (docs/engineering/rng-policy.md).
  *   motion-violation  animate-FOO / transition classes without a
  *                     motion-reduce sibling on the same line (WCAG).
  *   fake-chrome       decorative telemetry-style strings (SECTOR/LIVE SECURE/

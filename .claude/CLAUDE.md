@@ -22,4 +22,4 @@ expensive tiers are deliberate, not automatic:
   takes >~2s, and tag e2e specs `{ tag: '@slow' }` if they drive long
   sessions. File the spec under the `src/test/<domain>/` dir matching its
   subject's domain — `testQualityAudit` fails on misfiled tests. See
-  `docs/TESTING.md` for the full conventions.
+  `docs/engineering/testing.md` for the full conventions.

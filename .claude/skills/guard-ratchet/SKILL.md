@@ -33,7 +33,7 @@ and asserts the bad-thing list stays empty (or never grows past an allowlist).
   megaplan = repo-structure/tooling guards.
 - `*.slow.test.*` if it simulates many weeks, execs a subprocess, or runs >~2s.
 - e2e specs get `{ tag: '@slow' }` if they drive long sessions.
-- See `docs/TESTING.md` for the full conventions.
+- See `docs/engineering/testing.md` for the full conventions.
 
 ## Checklist for a new ratchet
 

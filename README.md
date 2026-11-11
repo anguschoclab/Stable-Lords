@@ -44,4 +44,4 @@ bun run e2e          # Playwright smoke (chromium, @slow specs skipped)
 bun run e2e:all      # full browser matrix + marathon specs — ad hoc/nightly
 ```
 
-The player-facing manual lives in [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md); design docs are in [`docs/`](docs/).
+The player-facing manual lives in [`docs/manual/user-manual.md`](docs/manual/user-manual.md); the full docs catalogue is [`docs/INDEX.md`](docs/INDEX.md).

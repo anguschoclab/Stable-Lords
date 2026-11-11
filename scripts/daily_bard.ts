@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { logger } from '@/utils/logger';
 
 const NARRATIVE_DIR = path.join(process.cwd(), 'src/data/narrative');
-const REPORT_FILE = path.join(process.cwd(), 'Daily_Bard_Report.md');
+const REPORT_FILE = path.join(process.cwd(), 'docs/reports/daily-bard-report.md');
 
 // Domain file → keys mapping (must match src/data/narrative/index.ts)
 const DOMAIN_FILES: Record<string, string[]> = {

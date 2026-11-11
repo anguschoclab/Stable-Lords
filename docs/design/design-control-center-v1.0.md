@@ -4,7 +4,7 @@
 
 > _"The patron sits in the tablinum. Before him: the ledger of the week, the roar of tomorrow's crowd, the whispers of the Senate. Everything that matters, carved into one wall of stone."_
 
-Design system: **Codex Sanguis** (see [DESIGN_BIBLE_UI_v1.0.md](DESIGN_BIBLE_UI_v1.0.md))
+Design system: **Codex Sanguis** (see [design-bible-ui-v1.0.md](design-bible-ui-v1.0.md))
 Route: `/` (replaces current Dashboard)
 Status: Ready for implementation
 

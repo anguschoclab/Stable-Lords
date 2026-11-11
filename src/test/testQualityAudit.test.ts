@@ -132,7 +132,7 @@ const CATEGORY_DOMAIN: Record<string, string[]> = {
   lore: ['src/lore'],
 };
 // Non-mirror dirs: suite infrastructure and repo-audit homes that exist by
-// design (see docs/TESTING.md). Any other src/test/<dir>/ is drift — the
+// design (see docs/engineering/testing.md). Any other src/test/<dir>/ is drift — the
 // category check below skips unlisted dirs entirely, so registration here is
 // what keeps a stray dir from silently escaping conformance.
 const NON_MIRROR_DIRS = new Set([
@@ -157,6 +157,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'appShell.cta.test.tsx': 'LIVE_RATCHET',
   'arenaLookup.guard.test.ts': 'LIVE_RATCHET',
   'documentationParity.test.ts': 'LIVE_RATCHET',
+  'docsLayout.guard.test.ts': 'LIVE_RATCHET',
   'duplication.guard.test.ts': 'LIVE_RATCHET',
   'entriesInLoop.guard.test.ts': 'LIVE_RATCHET',
   'fileBudget.test.ts': 'LIVE_RATCHET',

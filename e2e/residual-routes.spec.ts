@@ -5,7 +5,7 @@ import { gotoInApp, startNewGame } from './helpers';
  * Residual route coverage — utility/lore routes not reachable through the
  * hub nav (/mods, /import-export, /admin, /lore/hall-of-fights).
  *
- * Per DESIGN_PAGE_SYSTEM §1 none of these carry a registered primary CTA, so
+ * Per design-page-system-v1.0.md §1 none of these carry a registered primary CTA, so
  * the shared top bar must render no CTA action on them. Each page is also
  * smoke-checked for its header title so a blank/crashed render fails loudly.
  */

@@ -9,7 +9,7 @@ import { logger } from '@/utils/logger';
 
 const WEEKS_TO_SIMULATE = 1000;
 
-const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
+const REPORT_FILE = path.join(process.cwd(), 'docs/reports/daily-balance-report.md');
 const ARCHIVE_DIR = path.join(process.cwd(), 'archives');
 
 /** Fold the simulation result into headline metrics. */
@@ -192,7 +192,7 @@ async function main() {
   const report = buildReport(metrics, recommendations);
 
   await fs.writeFile(REPORT_FILE, report);
-  logger.log(`\nWrote Daily_Balance_Report.md`);
+  logger.log(`\nWrote daily-balance-report.md`);
 }
 
 // Guard like daily_bard.ts — importing this module under a test runner must

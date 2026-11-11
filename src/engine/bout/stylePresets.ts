@@ -1,6 +1,6 @@
 /**
  * Per-style strategy presets — named fight plans transcribed from
- * docs/Stable_Lords_Strategy_Editor_Spec_v1.0.md §5 (two per style), plus
+ * docs/design/stable-lords-strategy-editor-spec-v1.0.md §5 (two per style), plus
  * canon strategies from the Arena 93 newsletter corpus (ripper, slasher,
  * striker, piker, and wall sheets from the Noblish Island articles).
  *

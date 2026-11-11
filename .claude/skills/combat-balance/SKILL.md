@@ -46,7 +46,7 @@ Balance is certified on **two surfaces**, and they do not move together:
 | Surface     | What it is                                                                            | Guardrail                                                                       |
 | ----------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | **Fixture** | identical all-15s warriors (105 pts), default plans                                   | `src/test/engine/economy/balance.slow.test.ts`                                  |
-| **World**   | what players meet: 70–90 pt warriors, fitted weapons, training, AI plans, matchmaking | `src/test/engine/economy/worldBalance.slow.test.ts` + `Daily_Balance_Report.md` |
+| **World**   | what players meet: 70–90 pt warriors, fitted weapons, training, AI plans, matchmaking | `src/test/engine/economy/worldBalance.slow.test.ts` + `docs/reports/daily-balance-report.md` |
 
 The fixture isolates mechanics; the world is the truth. They diverge because
 `STYLE_PENALTIES` are sized for 105-point attribute sums — real warriors' raw

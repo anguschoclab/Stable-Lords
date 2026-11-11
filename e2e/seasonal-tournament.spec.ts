@@ -131,7 +131,7 @@ const ADVANCE_RE = /(EXECUTE WEEK|ADVANCE DAY) \d+/;
 
 /**
  * Ensures the app is on a route whose top-bar CTA is the week/day advance.
- * Per DESIGN_PAGE_SYSTEM_v1.0 §1 the shared CTA swaps by route — only the
+ * Per design-page-system-v1.0.md §1 the shared CTA swaps by route — only the
  * overview (`EXECUTE WEEK N`, or `ADVANCE DAY N` during tournament weeks)
  * carries a numbered advance label. Other routes show static or
  * page-specific CTAs that don't drive the year loop.

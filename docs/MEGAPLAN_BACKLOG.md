@@ -8,9 +8,9 @@ first: at each megaplan close-out, open deferred items and watch items fold
 into this document; the per-version docs are immutable audit records and
 archive to `docs/archive/megaplans/` when a newer megaplan lands. Only the
 latest version's `MEGAPLAN_V<N>_{PLAN,FINDINGS,LEDGER,DEFERRED}.md` set stays
-at repo root.
+at docs/ root.
 
-**Current latest:** MEGAPLAN V27 (tournament classes / FE / freeze dates).
+**Current latest:** MEGAPLAN V28 (docs taxonomy & convention ratchet).
 **Compiled:** 2026-11-10 — every row re-verified against the code the day it
 was carried forward (see §1 status notes).
 
@@ -52,6 +52,13 @@ Logged trends — re-measure at each world re-baseline, not per commit.
 - **Slow-suite flakes under load** (V22 §4): `killDeathDivergence`, perf
   160-stable ceiling, autosim timing, worldLiveness gradient each pass
   standalone — re-run clean before assuming a regression.
+- **First scheduled `daily_sim`/`daily_bard` run post-V28** (V28): confirm
+  `git add docs/reports/*` lands regenerated reports and no root-level
+  `Daily_*` files resurrect. Emitter paths + workflow `git add` repointed;
+  can't be verified until the next nightly run.
+- **`tacticDiscovery.parity.test.ts` suite-load flake** (V28): passed
+  standalone; failure signature matches the flake-under-load pattern above.
+  Pre-existing, not V28-caused.
 
 ## 3. House divergences (adjudicated keeps)
 
@@ -139,6 +146,6 @@ trail.
 | MEGAPLAN_V24 | Noblish Island strategy canon | DEFERRED, FINDINGS, LEDGER, PLAN | `pre-megaplan-v24` |
 | MEGAPLAN_V25 | Winning Warrior Types canon | DEFERRED, FINDINGS, LEDGER, PLAN | `pre-megaplan-v25` |
 | MEGAPLAN_V26 | NPC/player parity audit | DEFERRED, FINDINGS, LEDGER, PLAN | untagged |
-| MEGAPLAN_V27 | Tournament classes / FE / freeze dates | DEFERRED, FINDINGS, LEDGER, PLAN — **at root (latest)** | untagged |
+| MEGAPLAN_V27 | Tournament classes / FE / freeze dates | DEFERRED, FINDINGS, LEDGER, PLAN | untagged |
 | CONSOLIDATION_V5–V7 | PR consolidation waves | FINDINGS×3, LEDGER×2 | `pre-consolidation-*`, `pre-v7-consolidation` |
 | TEST_SUITE_AUDIT | Test-suite audit & reorganization (Waves 1–2) | PLAN, LEDGER + TEST_AUDIT_FINDINGS | `pre-test-audit-v2` |

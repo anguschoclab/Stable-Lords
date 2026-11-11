@@ -113,4 +113,4 @@ contaminated by a concurrent full-test-suite run inflating the sequential
 leg — always run the gate on an idle machine.)
 Determinism leg passes (`parallelDeterminism.slow`, pool 1 vs 4 byte-identical);
 the wall-clock leg remains the blocker. Full history in
-`docs/PIPELINE_PARALLELISM.md`.
+`docs/engineering/pipeline-parallelism.md`.

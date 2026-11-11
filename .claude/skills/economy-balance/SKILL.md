@@ -59,7 +59,7 @@ bun run test --reporter=verbose src/test/engine/metaDrift.test.ts
 
 ## Notes
 
-- Daily oracle runs 100-week simulation and generates Daily_Balance_Report.md
+- Daily oracle runs 100-week simulation and generates docs/reports/daily-balance-report.md
 - Report includes: treasury tracking, lethality rate, meta-drift by style, economic recommendations
 - Meta-drift range: -10 (Struggling) to +10 (Dominant)
 - Lethality rate should stay below 10% to prevent rapid roster depletion

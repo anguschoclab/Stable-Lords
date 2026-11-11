@@ -76,7 +76,7 @@ bun run electron:dev
 
 ### The Title Screen
 
-![Title screen — continue, new game, and save slots](images/manual/title-screen.png)
+![Title screen — continue, new game, and save slots](images/title-screen.png)
 
 From the title screen you can:
 
@@ -95,7 +95,7 @@ Founding a stable walks you through five steps:
 
 ### Step 1 — Identity
 
-![New game form — owner, stable name, crest, backstory, realm caliber](images/manual/new-game-form.png)
+![New game form — owner, stable name, crest, backstory, realm caliber](images/new-game-form.png)
 
 Name your **owner** and your **stable**, design a **heraldic crest**, pick a **backstory**, and choose a **realm caliber** (difficulty).
 
@@ -119,7 +119,7 @@ Several backstories also quietly steer the orphanage toward the owner's favored 
 
 ### Step 2 — Choose Warriors
 
-![The orphanage — pick three gladiators from the intake pool](images/manual/orphanage-selection.png)
+![The orphanage — pick three gladiators from the intake pool](images/orphanage-selection.png)
 
 The **orphanage** presents an intake pool of candidate gladiators. You choose **three** to found your roster. Each candidate shows their physique (the attribute radar), their fighting style, and an assessment of how they carry themselves. If none of the batch appeals, **New Batch** rerolls the intake.
 
@@ -127,13 +127,13 @@ This is the single most consequential decision in a new game. See §6 and §23 f
 
 ### Step 3 — Set the Plan
 
-![Setting a first fight plan — OE, AL, KD and tactics](images/manual/orphanage-plan.png)
+![Setting a first fight plan — OE, AL, KD and tactics](images/orphanage-plan.png)
 
 You'll write a first **fight plan** for one of your warriors: sliders for **Offensive Effort (OE)**, **Activity Level (AL)**, and **Kill Desire (KD)**, plus an offensive and defensive tactic. Don't agonize — the defaults are survivable, and you'll rewrite plans constantly. §10 explains the whole system.
 
 ### Step 4 — First Blood
 
-![The First Blood tutorial bout, narrated exchange by exchange](images/manual/first-blood.png)
+![The First Blood tutorial bout, narrated exchange by exchange](images/first-blood.png)
 
 Your chosen warrior fights a **tutorial bout**, narrated exchange by exchange. Read the narration — it's not just flavor. It tells you which exchanges your warrior won, where the fight turned, and (often) hints about the warrior's hidden aptitudes.
 
@@ -175,7 +175,7 @@ There are **52 weeks per in-game year**, split into four 13-week seasons. At the
 
 ### Auto-Advance and the War Council
 
-![The War Council — advisor recommendations and autopilot](images/manual/war-council.png)
+![The War Council — advisor recommendations and autopilot](images/war-council.png)
 
 Two helpers exist for hands-off stretches:
 
@@ -194,11 +194,11 @@ The screen is organized into three bands:
 - **Left rail** — the two hubs: **Stable** (everything you own) and **World** (everything you don't), plus utility pages. `/` opens global **search** — warriors, stables, arenas, promoters.
 - **Arena Feed** (right rail on arena pages) — the world's ticker: retirements, deaths, voided contracts, new rivalries, intelligence reports. Unread count badges until you mark it read.
 
-![The Arena hub — crowd temperament, conditions, chronicle, and the feed](images/manual/arena-hub.png)
+![The Arena hub — crowd temperament, conditions, chronicle, and the feed](images/arena-hub.png)
 
 ### The Stable Hub
 
-![Stable overview — objectives, meta drift, season chronicle](images/manual/stable-overview.png)
+![Stable overview — objectives, meta drift, season chronicle](images/stable-overview.png)
 
 | Page | What you do there |
 | --- | --- |
@@ -247,15 +247,15 @@ The screen is organized into three bands:
 
 Warriors are the heart of the game. Each has **attributes**, derived **combat skills**, a **fighting style**, **traits**, equipment, and a career record — everything on their **dossier** page.
 
-![The roster — your active warriors at a glance](images/manual/roster.png)
+![The roster — your active warriors at a glance](images/roster.png)
 
-![A warrior dossier — record, standing, wounds, and the Grant Rudis option](images/manual/warrior-dossier.png)
+![A warrior dossier — record, standing, wounds, and the Grant Rudis option](images/warrior-dossier.png)
 
 ### 6.1 Attributes
 
 Seven core attributes, each from **3** (floor) to **25** (hard cap). A standard new warrior is built on a **70-point allocation**:
 
-![A warrior's physique and combat vitals](images/manual/warrior-attributes.png)
+![A warrior's physique and combat vitals](images/warrior-attributes.png)
 
 | Attribute | Abbr. | What it feeds |
 | --- | --- | --- |
@@ -307,7 +307,7 @@ Every warrior fights in one of **10 styles** — their class, chosen at intake a
 
 **Matchups matter.** Style-vs-style relationships are real — some styles feast on others, and the realm's **meta drift** (§17) tracks which styles are fashionable. The **Style Archives** page shows how each style is actually performing realm-wide this season — the closest thing to a live matchup matrix the game will hand you.
 
-![Style Archives — realm-wide style performance](images/manual/style-archives.png)
+![Style Archives — realm-wide style performance](images/style-archives.png)
 
 ### 6.4 Traits & Assessments
 
@@ -343,7 +343,7 @@ The manager's job is charting: bout logs, weapon charts, lesson reports, and the
 
 Your roster cap is **10 warriors** (base — roster bonuses can raise it). Fresh blood comes from the **Recruit** page:
 
-![The recruit intake pool](images/manual/recruit.png)
+![The recruit intake pool](images/recruit.png)
 
 - **Intake pool** — a batch of recruits refreshes automatically; reroll it for **50g** when nothing appeals.
 - **Free agents** — experienced warriors between stables occasionally appear here. They cost more but arrive with records, skills, and sometimes reputations.
@@ -367,7 +367,7 @@ Every recruit shows physique, recommended style, and attribute spread before you
 
 Every week, each warrior can be assigned **one regimen** on the Training page. Training costs **20g per warrior**; an unassigned warrior idles — they still draw upkeep and learn nothing, so keep them working.
 
-![The training page — regimens, stamina, seasonal growth](images/manual/training.png)
+![The training page — regimens, stamina, seasonal growth](images/training.png)
 
 ### Regimens
 
@@ -396,7 +396,7 @@ Hired trainers improve gain odds and blunt injury severity. They draw a weekly s
 
 Trainers age and die too — they start around 45, retire from 65, and none are immortal. A Master with the **Healing** specialty materially shortens injury recovery; a **WT specialist** helps prospect warriors hit that critical WT 11 breakpoint (§6.2).
 
-![The trainers page](images/manual/trainers.png)
+![The trainers page](images/trainers.png)
 
 ### Arena learning
 
@@ -408,7 +408,7 @@ Fighting teaches too. Each bout gives a warrior up to **six learning attempts** 
 
 Every warrior carries a **weapon**, **armor**, and **helm** into the arena. Equipment is assigned per warrior on the Equipment page — watch the encumbrance, because heavier loads drain endurance and drag speed-based skills down.
 
-![The equipment page](images/manual/equipment.png)
+![The equipment page](images/equipment.png)
 
 ### Weapons (22)
 
@@ -437,7 +437,7 @@ None · Leather Cap · Steel Cap · Helm · Full Helm
 
 The **fight plan** is your pre-bout instruction set — written per warrior on the **Planner** page and revisited constantly. The planner scores each plan (the **Strategy Score**) and simulates the warrior's **stamina curve** so you can see a collapse coming before it happens.
 
-![The planner — strategy score, stamina curve, tactic bank](images/manual/fight-planner.png)
+![The planner — strategy score, stamina curve, tactic bank](images/fight-planner.png)
 
 ### The core dials
 
@@ -535,7 +535,7 @@ Warriors age one year every 52 weeks (careers start at ~18):
 
 Death is permanent. There is no resurrection.
 
-![The World Cemetery — the realm's fallen](images/manual/graveyard.png)
+![The World Cemetery — the realm's fallen](images/graveyard.png)
 
 The fallen get a memorial: cause of death, the fatal opponent, service record, final fame, and an epitaph. Under the default house rules a killing blow kills — mods (§22) can soften this into severe injuries if you'd rather run a kinder world.
 
@@ -545,7 +545,7 @@ The fallen get a memorial: cause of death, the fatal opponent, service record, f
 
 Warriors earn nothing without bookings. Each week, promoters route **bout offers** to the **Bouts** page:
 
-![The booking office](images/manual/bout-offers.png)
+![The booking office](images/bout-offers.png)
 
 Each offer shows the opponent (name, style, record — as much as your scouting knows), the purse, the arena, and an expiry. Accept, decline, or let it lapse. One bout a week per warrior is the natural cadence — more invites overwork — and a **Moderate or worse injury blocks bookings outright**.
 
@@ -561,7 +561,7 @@ Five personalities work the circuit:
 | Flashy | Spectacle and theatrical staging |
 | Corporate | Steady, low-risk, low-reward |
 
-![The promoters page](images/manual/promoters.png)
+![The promoters page](images/promoters.png)
 
 Promoters remember. Taking their offers builds the relationship; repeatedly declining cools it.
 
@@ -577,7 +577,7 @@ Promoters remember. Taking their offers builds the relationship; repeatedly decl
 
 Gold keeps the whole machine running. The **Finance** page is a full ledger — every purse, salary, and fee, week by week.
 
-![The ledger](images/manual/finance.png)
+![The ledger](images/finance.png)
 
 ### Income
 
@@ -619,7 +619,7 @@ Small mercies: a **25g idle stipend** arrives in weeks where your stable fights 
 
 The realm holds **dozens of venues** — from the Proving Grounds and the Bloodsands to stranger ground like the Flooded Vault, the Crystal Cavern, and the Mudpit.
 
-![The arena circuit — venues, crowns, tiers](images/manual/arenas.png)
+![The arena circuit — venues, crowns, tiers](images/arenas.png)
 
 Each venue card shows its **size** (Cramped / Standard / Open), **tier** (1–3 — which multiplies purses), any **hazards** (water hazard and friends), and its **crown**: the reigning arena champion or _TITLE VACANT_.
 
@@ -641,7 +641,7 @@ Claim crowns deliberately — an arena title is one of the eight progression obj
 
 The year has rhythm. Tournaments run on **weeks 10, 20, 30, and 42** — one per season, give or take — at neutral venues, and the whole season ends with the Grand Championship on **week 52**.
 
-![The tournaments page](images/manual/tournaments.png)
+![The tournaments page](images/tournaments.png)
 
 ### Seasonal tournaments
 
@@ -656,7 +656,7 @@ Each seasonal tournament brackets the realm's warriors into four tiers by rankin
 
 Tournament week changes everything: entry lists, seedings, and bracket odds appear on the **Prep Mode** page — a dedicated planning surface for writing tournament-specific plans and managing your entrants before the draw runs.
 
-![Prep Mode — tournament planning](images/manual/tournament-prep.png)
+![Prep Mode — tournament planning](images/tournament-prep.png)
 
 Tournament wins feed fame, medals, legacy — and the **Tournament Victor** objective.
 
@@ -670,7 +670,7 @@ The season finale at **The Iron Cage**: living arena champions only, field cappe
 
 Your stable is one of many. The realm runs itself whether you watch or not.
 
-![World overview — census and league rankings](images/manual/rankings.png)
+![World overview — census and league rankings](images/rankings.png)
 
 - **Rival stables** — the world opens with 8 rival stables and grows toward a living ecosystem (roughly 90 stables at the floor, ~160 at the soft cap, 200 hard). Each has an owner personality, competence rating, favored styles, economy, and its own roster to feed and bury. Stables recruit, train, go broke, fold, and are replaced by **legacy founders**.
 - **Rankings** — the league table sorts stables by prestige; individual warrior rankings drive tournament seeding.
@@ -686,7 +686,7 @@ The Arena Feed on the right rail is how the world talks to you: retirements, voi
 
 Scouting buys certainty. Order a report on any rival warrior from the **Scouting** page:
 
-![The scouting page](images/manual/scouting.png)
+![The scouting page](images/scouting.png)
 
 | Tier | Cost | Precision |
 | --- | --- | --- |
@@ -696,7 +696,7 @@ Scouting buys certainty. Order a report on any rival warrior from the **Scouting
 
 Reports land in your scout archive and sharpen the opponent card on future offers — you'll see real attribute bands instead of shrugs. Until you've scouted a warrior, their dossier is **fog of war**: record and style visible, attributes hidden.
 
-![A rival dossier — what fog of war looks like](images/manual/rival-dossier.png)
+![A rival dossier — what fog of war looks like](images/rival-dossier.png)
 
 > **Spend scouting on decisions, not curiosity.** Scout the opponent you might actually book: a dangerous name before a big purse, the bracket favorites before tournament week.
 
@@ -708,15 +708,15 @@ Reports land in your scout archive and sharpen the opponent card on future offer
 
 - **Chronicle / Gazette** — the weekly newspaper: bout results, deaths, upsets, standings, meta commentary, rumors. The Arena page hosts the same content under Arena Chronicle.
 
-![The Gazette](images/manual/chronicle.png)
+![The Gazette](images/chronicle.png)
 
 - **Hall of Fame** — the immortal warriors and stables: records, titles, and legends of the realm.
 
-![Hall of Fame](images/manual/hall-of-fame.png)
+![Hall of Fame](images/hall-of-fame.png)
 
 - **Hall of Fights** — legendary recorded bouts, preserved with their full transcripts.
 
-![Hall of Fights](images/manual/hall-of-fights.png)
+![Hall of Fights](images/hall-of-fights.png)
 
 - **Graveyard** — two tabs: **Private Memorial** (your fallen) and **World Cemetery** (the realm's). Every death is archived — who killed them, when, their final fame.
 - **Bookmarks** — pin warriors, stables, promoters, trainers, tournaments, offers, and scout reports for quick access.
@@ -724,7 +724,7 @@ Reports land in your scout archive and sharpen the opponent card on future offer
 
 The in-game **Help Codex** (left rail, bottom) is a condensed version of this manual — good for quick reference mid-week.
 
-![The Help Codex](images/manual/help-codex.png)
+![The Help Codex](images/help-codex.png)
 
 ---
 
@@ -732,7 +732,7 @@ The in-game **Help Codex** (left rail, bottom) is a condensed version of this ma
 
 Crossing from week 52 to week 1 fires the seasonal pipeline: annual awards are handed out, warriors and trainers age a year, retirement rolls are made, rosters churn, champions are audited — and then the world rolls **one offseason event** from a pool of ~70.
 
-![The offseason page](images/manual/offseason.png)
+![The offseason page](images/offseason.png)
 
 Most are benign season-flavor — festivals, merchant blessings, wandering healers. Some are strange: Chaos Rifts, Shadow Tournaments, Temporal Anomalies, Goblin Raids. A dozen impossible weathers (Eclipse of Chaos, Diamond Rain, Moonlight Duel, Threads of Chaos…) exist **only** as offseason phenomena — you'll never see them in the regular season.
 
@@ -767,19 +767,19 @@ Eight objectives track your stable's climb. They're checked automatically and su
 - **Autosave** after every weekly simulation — close the game anytime mid-week without losing anything.
 - **Import / Export** — pack a save to a file (JSON/YAML) for backup or sharing; import restores it to a slot.
 
-![Import / Export](images/manual/import-export.png)
+![Import / Export](images/import-export.png)
 
 ### Mods & house rules
 
 The **Mods** page manages content packs and house rules — alternate data sets (arenas, names, lore) and rule variants (e.g., turning fatal blows into severe injuries instead of deaths).
 
-![The mods page](images/manual/mods.png)
+![The mods page](images/mods.png)
 
 ### Simulator
 
 The **Physicals Simulator** is a sandbox: build warriors by hand and test physiques, styles, and plans without spending a save slot's gold or blood. Excellent for learning what a "good" Parry-Riposte actually looks like.
 
-![Physicals Simulator](images/manual/simulator.png)
+![Physicals Simulator](images/simulator.png)
 
 ---
 

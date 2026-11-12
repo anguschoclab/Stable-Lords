@@ -818,17 +818,35 @@
       "{{attacker}} is eagerly seeking the death blow!",
       "{{attacker}} is going for the kill!",
       "{{attacker}} seeks the death of their opponent!",
-      "{{attacker}} aims to slay {{defender}}!"
+      "{{attacker}} aims to slay {{defender}}!",
+      "{{attacker}} shows no mercy, intent on a lethal strike!",
+      "{{attacker}}'s eyes lock on {{defender}}, promising death!",
+      "{{attacker}} prepares to end {{defender}}'s life!",
+      "{{attacker}} readies a finishing blow to claim {{defender}}'s life!"
     ],
     "doomed": [
       "{{name}} is mortally wounded — hanging on by a thread!",
       "{{name}} reels from a mortal blow — the end is near!",
-      "{{name}}'s wound is fatal; only the formality remains!"
+      "{{name}}'s wound is fatal; only the formality remains!",
+      "{{name}} stumbles, their lifeblood ebbing away!",
+      "{{name}} is visibly dying on their feet!",
+      "{{name}}'s strength fails; they are surely doomed!",
+      "{{name}} is beyond saving, standing only on borrowed time!",
+      "{{name}} looks down at a fatal wound in disbelief!",
+      "{{name}}'s eyes glass over; the end approaches rapidly!",
+      "{{name}} sways, the light of life fading fast!"
     ],
     "died_of_wounds": [
       "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
       "{{defender}} succumbs to the accumulated wounds dealt by {{attacker}} — dead on the sand.",
-      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted."
+      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted.",
+      "Unable to endure any more, {{defender}} falls lifeless to the ground.",
+      "The accumulation of injuries proves too much; {{defender}} expires on the sand.",
+      "{{defender}} bleeds out, their life claimed by {{attacker}}'s relentless assault.",
+      "{{defender}}'s body gives out entirely, succumbing to the terrible wounds.",
+      "With a final ragged breath, {{defender}} dies from the brutal injuries sustained.",
+      "The toll is absolute — {{defender}} perishes under the weight of their wounds.",
+      "{{defender}}'s heart stops as the massive blood loss takes its toll."
     ]
   }
 }

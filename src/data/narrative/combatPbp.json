@@ -2085,7 +2085,11 @@
         "{{defender}}'s guard crumbles under the assault!",
         "The parry shatters under the force of the blow!",
         "The parry breaks!",
-        "{{defender}}'s parry is entirely overwhelmed, the force shattering their defensive stance."
+        "{{defender}}'s parry is entirely overwhelmed, the force shattering their defensive stance.",
+        "{{attacker}}'s crushing blow shatters {{defender}}'s parry attempt!",
+        "{{defender}}'s parry is easily broken by {{attacker}}'s heavy strike!",
+        "{{attacker}} powers right through {{defender}}'s desperate parry!",
+        "With brute force, {{attacker}} sweeps aside {{defender}}'s parry!"
       ],
       "riposte": {
         "success": [
@@ -3041,7 +3045,11 @@
           "{{name}} slowly levers themselves off the blood-stained sand.",
           "Leaning heavily on their weapon, {{name}} pushes back up.",
           "{{name}} rises with a painful grimace, clearly worse for wear.",
-          "Shaking their head to clear the daze, {{name}} gets up."
+          "Shaking their head to clear the daze, {{name}} gets up.",
+          "{{name}} labors to stand, muscles screaming in protest.",
+          "Taking a ragged breath, {{name}} unsteadily climbs back to their feet.",
+          "{{name}} painfully hauls themselves upright, swaying dangerously.",
+          "It is a slow, agonizing process, but {{name}} gets back on their feet."
         ],
         "fast": [
           "{{name}} springs back up, refusing to stay grounded.",
@@ -3053,7 +3061,11 @@
           "No hesitation—{{name}} is back on their feet in a blur.",
           "{{name}} uses the momentum of the fall to spring right back up.",
           "Brushing off the dirt mid-motion, {{name}} returns to stance.",
-          "{{name}} flips gracefully back to a standing position."
+          "{{name}} flips gracefully back to a standing position.",
+          "{{name}} snaps back up almost instantly, refusing to stay down.",
+          "With feline grace, {{name}} springs back to their feet in a blur.",
+          "{{name}} rolls with the fall and pops up instantly.",
+          "Hardly missing a beat, {{name}} kip-ups back into a fighting stance."
         ]
       }
     },

@@ -94,7 +94,7 @@ Format: `## YYYY-MM-DD - [Title]` / `**Learning:** [UX/a11y insight]` / `**Actio
 
 1. 🔍 **OBSERVE** — Look for UX opportunities:
 
-   ACCESSIBILITY: missing ARIA labels/roles/descriptions · insufficient color contrast · missing keyboard navigation (tab order, focus states) · images without alt text · forms without proper labels or error associations · missing focus indicators · screen-reader-unfriendly content · missing skip-to-content links
+   ACCESSIBILITY: missing ARIA labels/roles/descriptions · insufficient color contrast · missing keyboard navigation (tab order, focus states) · focus traps missing or leaking in modals/drawers (Radix `Dialog` handles most of this — check custom overlays) · images without alt text · forms without proper labels or error associations · missing focus indicators · missing `prefers-reduced-motion` fallbacks for transitions/animations (`framer-motion` + `tailwindcss-animate` both support it) · screen-reader-unfriendly content · missing skip-to-content links
 
    INTERACTION: missing loading states for async ops (week advance, autosim, imports) · no feedback on clicks/submissions · missing disabled states with explanations · no progress indicators for multi-step processes (e.g. the wizard/StartGame flow) · missing empty states (`EmptyState` in `src/components/ui/` is the established component) · no confirmation for destructive actions (`ConfirmDestructiveDialog` exists) · missing success/error toasts (`sonner` is in the stack)
 

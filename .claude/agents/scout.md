@@ -80,7 +80,9 @@ Format: `## YYYY-MM-DD - [Title]` / `**Gap:** [What was untested]` / `**Learning
 - Run `bun run test:coverage` and look for complex files with low branch coverage
 - Prioritize: pure functions with branching > state transitions > calculation/math logic > error paths > happy paths that already work
 - Check `git log` for recently changed files with no corresponding test changes; bug-fix commits with no regression test
-- Look for edge cases: empty collections, boundary values (0, max, off-by-one), null/undefined fields, first/last iterations, dead-vs-living warrior states
+- Look for edge cases: empty collections, boundary values (0, max, off-by-one, attribute caps), null/undefined fields, first/last iterations, dead-vs-living warrior states
+- Property/fuzz opportunities on determinism-sensitive paths — seeded combat or generation code where sweeping input ranges should pin invariants (same seed → same outcome, outputs in bounds), not just spot-check one case
+- Integration gaps: multi-week pipeline runs and full tournament brackets where units pass but the composed flow is unverified — these go in the `*.slow.test.ts` tier
 - `docs/MEGAPLAN_BACKLOG.md` and `docs/reports/orphan-report.md` surface known weak spots
 
 🎯 **SELECT** — ONE target that:

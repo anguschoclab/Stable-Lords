@@ -34,9 +34,11 @@ title. Persistent learnings append to `.claude/agent-journals/<name>.md`
 Improvement agents: `bard` (narrative content), `bolt` (perf), `curator`
 (surface tracked data), `lens` (charts), `mason` (structure/dead code),
 `palette` (micro-UX/a11y), `polish` (UX friction), `scout` (test coverage),
-`scribe` (docs), `sentinel` (security), `perf-auditor` + `engine-reviewer` +
-`combat-engine-reviewer` (audit/review).
+`scribe` (docs), `sentinel` (security), `chaos-weaver` (offseason/surprise
+features), `perf-auditor` + `engine-reviewer` + `combat-engine-reviewer`
+(audit/review).
 
-Domain agents (rival AI & game systems): `crisis-agent`, `finance-agent`,
-`governance-agent`, `media-agent`, `narrative-agent`, `recruitment-agent`,
+Domain agents (rival AI & game systems): `arena-architect` (venues/weather),
+`crisis-agent`, `finance-agent`, `governance-agent`, `lore-keeper`
+(lore/traits content), `media-agent`, `narrative-agent`, `recruitment-agent`,
 `rivalry-agent`.

@@ -1,0 +1,119 @@
+# Port 19 Jules agents from Basho to Stable Lords .claude/agents
+
+Migrate all 19 agent definitions from Basho's .claude/agents/ into Stable Lords' .claude/agents/: rewrite the 12 improvement agents' repo pointers for this codebase, convert the 7 PascalCase NPC-brain specs into domain tweak-agents for the equivalent Stable Lords systems, and relocate the journal convention to .claude/agent-journals/.
+
+## Context & decisions (user-confirmed)
+
+- **Source:** `C:/Users/amauricia/Documents/GitHub/Basho/.claude/agents/` — 19 files. **Target:** `C:/Users/amauricia/Documents/GitHub/Stable-Lords/.claude/agents/` (tracked; currently holds only `combat-engine-reviewer.md`).
+- **7 PascalCase files** (Crisis/Finance/Governance/Media/Narrative/Recruitment/Rivalry) are NPC decision specs, not tweak agents → **convert each into a tweak agent for the equivalent Stable Lords domain** (user's choice: "Convert to equivalent tweak agents, that works for this game").
+- **Journals** → `.claude/agent-journals/` (tracked; `docs/` taxonomy is guard-enforced by `src/test/megaplan/docsLayout.guard.test.ts` and a new docs family would need allowlist+INDEX changes — avoid).
+- **Landing** → agents keep "commit directly to main" convention with conventional-commit titles.
+- **No megaplan ritual** — normal session.
+
+## Repo-convention deltas every adapted file must reflect
+
+| Basho text | Stable Lords replacement |
+|---|---|
+| `bun run test` (never `bun test`) | `bun run test` = `bun x vitest run` (fast tier; `bun run test:bun` is the separate bun-parity job — vitest specs must still be bun-safe: sync mock factories, no async `vi.mock`) |
+| `bun run test:slow` (needs build first) | `bun run test:slow` = `vitest.config.slow.ts`, runs `*.slow.test.*` incl. `src/test/perf/` |
+| `bun run test:perf` | No equivalent — perf tests are slow-tier: `src/test/perf/*.perf.slow.test.ts` |
+| `bun run lint:commit` (`lint` always exits 0) | `bun run lint` is real eslint and fails on error; `bun run lint:fix` exists |
+| `bun run type-check` (tsgo) | `bun run type-check` — **also regenerates `src/routeTree.gen.ts`** (`bunx tsr generate` + typescript7 `tsc --build --force`) |
+| `bun run analyze` / bundle budgets | No bundle analyzer; structural budgets live in `src/test/megaplan/` guards (`fileBudget`, `paramBudget`) |
+| `tests/unit/**`, `tests/helpers/utils/MockFactory.ts` | `src/test/<domain>/` mirroring production tree; `_fixtures/factories.ts` shared builders; `_mocks/` sync-only; `_setup/` |
+| Meta gates in `tests/unit/meta/` | `src/test/testQualityAudit.test.ts` (domain conformance, `.slow` terminal naming, no colocated tests, no local factories, sync mocks) + `src/test/megaplan/` GUARD_REGISTRY |
+| Coverage 73/61/64/75 | Coverage thresholds **84 stmts / 74 branches / 78 funcs / 85.5 lines** (`vitest.config.ts`) |
+| `.claude/CLAUDE.md` codebase reference | `.claude/CLAUDE.md` (execution rules + testing discipline) **and `AGENTS.md`** (docs/plan conventions) |
+| `docs/TESTING.md` | `docs/engineering/testing.md` |
+| `docs/agent-journals/<name>.md` | `.claude/agent-journals/<name>.md` |
+| `Math.random` → `rngForWorld`/`rngFromSeed`/`SeededRNG` | `Math.random` banned repo-wide (eslint `no-restricted-properties` + `src/test/engine/determinismAudit.test.ts`); use `resolveRng`/`SeededRNG`/`entropyRng` (`src/utils/random.ts`) or `cryptoRandom`/`cryptoRandomInt` (`src/utils/cryptoRandom.ts`) — see `docs/engineering/rng-policy.md` incl. the load-bearing seed-expression table + shard position-independent seeds |
+| `EngineCommand` union / worker `COMMAND_HANDLERS` | Worker = `src/engine/runtime/worker.ts` (Comlink, FIFO `jobQueue`) + `src/engine/pool/enginePool.ts`/`shardWorker.ts`; UI state = zustand `useGameStore` + `src/state/slices/` + `src/state/selectors.ts` |
+| Components may not import `@/engine/**` | Same boundary, narrower exemption: components/pages may only import `engine/types/common` + `engine/worker/*` (eslint `no-restricted-imports`); engine may not import UI layers |
+| `runAutoSim` → `result.finalWorld` | `runAutosim` (`src/engine/autosim/autosim.ts`); `scripts/simulation-harness.ts`, `scripts/soak.mjs`, `scripts/balance-lab.ts` for measurement |
+| React Compiler enabled | **Not enabled** (swc plugin only) — manual `useMemo`/`useCallback`/`memo` still matters; `useShallow` from zustand is the selector-memoization idiom (`src/state/selectors.ts`) |
+| shadcn/ui + Tailwind | Radix primitives + Tailwind 4 (`src/components/ui/` — `EmptyState.tsx`, `chart.tsx`, `Surface`, `PageFrame`, etc.), sonner, lucide-react, framer-motion |
+| `src/routes.tsx` central route table | TanStack file-routing `src/routes/` + generated `routeTree.gen.ts`; `__root.tsx` uses `React.lazy`+`Suspense` |
+| `docs/` folders audit/research/superpowers | `docs/` families: `design` (canon specs + bible corpus), `engineering`, `reports`, `manual`, `archive`; kebab-case enforced; `INDEX.md` must link every non-archive doc |
+| Domain nouns (rikishi/heya/oyakata/basho/banzuke/kimarite/JSA/myoseki) | warriors / stables (`RivalStableData`) / owners (`OwnerPersonality`: Aggressive, Methodical, Showman, Pragmatic, Tactician) / tournaments & seasons / `realmRankings` / fighting styles & techniques / politics+promoters / — (no myoseki; closest = facility/staff investment via `expansionService`) |
+
+## The 12 improvement agents — per-file adaptation spec
+
+Keep persona, philosophy, process, boundaries, "one small X per run" shape, journal section (repointed), and closer line. Replace only repo-specifics:
+
+1. **bard.md** — content domain becomes `src/data/narrative/*.json` (10 domain files: announcer, combatConclusions, combatKillText, combatPassives, combatPbp, gazette, offseason, recruitment, uiMeta + `src/lore/`, `src/engine/narrative/lore/`). Two token syntaxes: canonical `%A`/`%D`/`%H`/`%W`/`%BP` (combat PBP) and `{{token}}` (`src/engine/narrative/templateHelpers.ts`). Verify via `bun scripts/narrative_validate.ts` (tag-reference validator) + narrative tests `src/test/engine/narrative/`/`gazette/` + `v*Narrative` guard specs. Skill pointer → `narrative-validate`. Note `bun run bard:daily` generates `docs/reports/daily-bard-report.md`. Replace "sumo terminology" with arena/gladiator voice (see `docs/design/stable-lords-*` specs). Keep: study 20+ sibling entries, no unfilled tokens, seeded-RNG selection only.
+
+2. **bolt.md** — drop React Compiler pointer (absent). Hot paths: `src/engine/pipeline/passes/*Pass.ts` (week pipeline), `rivalStableShard.ts` + pool workers, `runtime/worker.ts` job queue; UI: `src/state/selectors.ts` `useShallow` idiom, re-renders. Scanners: `bun scripts/entries-in-loop.mjs`, `scan-in-loop.mjs`, `srp-census.mjs`, `function-length.mjs`, `param-count.mjs` (allowlists live in matching `src/test/megaplan/*guard*` files). Measurement: `scripts/simulation-harness.ts`, `parallel-bench.mjs`, `balance-lab.ts`. Perf tests: `src/test/perf/*.perf.slow.test.ts` via `bun run test:slow`. Determinism clause → seed-table in `docs/engineering/rng-policy.md` (never reorder RNG consumption; shard seeds must stay position-independent).
+
+3. **curator.md** — data path: `src/state/selectors.ts` + `useGameStore` + `reconstructGameState` (zustand store holds game state; no presenters dir). Surface fields on `GameState`/`RivalStableData`/`Warrior` (`src/types/state.types.ts`) — arenaHistory, ledger, actionHistory, agentMemory, realmRankings, graveyard, rivals dossiers. Screens: `src/pages/` domain pages + `src/components/`. Boundary: components may only import `engine/types/common` + `engine/worker/*`. Empirical check: `runAutosim`/dev server, `EmptyState` for fresh games. Read-only rule identical.
+
+4. **lens.md** — chart lib = recharts + `src/components/ui/chart.tsx` wrapper; existing viz in `src/components/` + `StandingsTable`, `RosterWall` etc. Series shaping belongs in `src/state/selectors.ts`/hooks (memoized), not component render. Colors: semantic tokens only — `src/index.css` vars; `uiTokens.guard.test.ts` + `legibility.contract.test.ts` enforce. Empty/thin-data state via `EmptyState` with a progress cue. Same verify-against-raw-state discipline.
+
+5. **mason.md** — structural gates are **fast-tier guards** here: `src/test/megaplan/` (`fileBudget`, `paramBudget`, `duplication.guard`, `v*Dedup`, `v*Srp`, `entriesInLoop`, `scanInLoop` with allowlists). Scans: `bun run dead-code` (knip), `bun run dead-code:report`, `bun run dupes` (jscpd ≥10 lines/100 tokens), `bun scripts/orphan-scan.mjs`. `as any` census: ~3 production files — keep near-zero. Save-compat: `SAVE_STATE_VERSION` (`src/constants/core/core.ts`), `src/schemas/` zod, `src/state/serialization.ts` — never tighten serialized types. `auditBaseline.json`/`runnerGroups.json` are generated + shrink-only — regenerate via `bun scripts/test-audit-scan.mjs`, don't hand-edit. No barrels convention — verify before claiming. Known-good traps: check `AGENTS.md` + `.claude/CLAUDE.md` before "fixing" structure.
+
+6. **palette.md** — stack: Radix primitives + Tailwind 4 + `tailwindcss-animate`, sonner, lucide-react, framer-motion. Components `src/components/ui/`. DOM tests need `// @vitest-environment jsdom` pragma. Token/legibility guards mean no hardcoded hex/spacing (`uiTokens.guard`, `legibility.contract`). Keep ARIA/focus/keyboard standards block verbatim.
+
+7. **polish.md** — `src/routes/` file-routing; entity pages (`WarriorDetail`, `StableDetail`, `ArenaDetail`, `PromoterDetail`) own not-found branches — verify current pattern; `routeTree.gen.ts` regenerates on `type-check`. `EmptyState` component exists. Keep `ui-honesty-audit` skill pointer (exists here too). App-shell: `src/components/layout/` (LeftNav etc.).
+
+8. **scout.md** — heaviest rewrite: `src/test/` mirror layout, `_fixtures/factories.ts` builders (local factories only as thin delegating adapters; real local factories fail `testQualityAudit` unless allowlisted in `src/test/_setup/auditBaseline.json` — shrink-only). Domain conformance rule, `.slow` terminal naming, jsdom pragma for DOM tests, `@vitest-isolate` pin for unsafe-shared files, `runnerGroups.json` regenerated via `bun scripts/test-audit-scan.mjs`. Bun-parity: sync mock factories only (`bunRunnerSafety`). New guards register in `GUARD_REGISTRY`. Coverage 84/74/78/85.5. No `write-engine-test` skill → point at `docs/engineering/testing.md` + `guard-ratchet` skill for new guard specs. Keep: test must fail when logic breaks, seeded inputs, <80 lines.
+
+9. **scribe.md** — docs taxonomy per `AGENTS.md`: `design/engineering/reports/manual/archive` families, kebab-case, `INDEX.md` freshness ratchet, `docsLayout.guard` + `documentationParity.test.ts` enforce. Living refs: `AGENTS.md`, `.claude/CLAUDE.md`, `docs/INDEX.md`, skills in `.claude/skills/*/SKILL.md` (skillPathScan.guard validates paths inside SKILL.md). "New top-level docs" → ask first AND note the taxonomy guard.
+
+10. **sentinel.md** — attack surface: Electron `electron/main.ts` (`contextIsolation: true, nodeIntegration: false, sandbox: true` — already hardened, verify don't regress); save import/export (`src/routes/import-export.tsx`, `ImportExport` page, `src/engine/storage/` + `archiveWorker`, `src/state/serialization.ts`, `src/schemas/` zod); markdown rendering `react-markdown`+`rehype-sanitize` (`markdownSanitize.guard.test.ts` pins sanitization — keep it on); worker boundary `runtime/worker.ts`; scripts secrets (daily_bard/daily_oracle use `@google/generative-ai` — env keys only, never committed); dependabot alerts exist. Same N/A list (no server/DB/auth).
+
+11. **perf-auditor.md** — rewrite scanner commands to `bun scripts/scan-in-loop.mjs` + `entries-in-loop.mjs` (+ `srp-census.mjs`, `function-length.mjs`, `param-count.mjs`); guard allowlists `src/test/megaplan/scanInLoop.guard.test.ts`/`entriesInLoop.guard.test.ts`. Cardinality examples → this repo's populations (rival stables, arenaHistory bouts, per-week pass cost, shard workers). Keep triage discipline + "clean bill is a valid result" + determinism warning (position-independent shard seeds, fixed RNG order).
+
+12. **engine-reviewer.md** — rewrite checklist to this engine's invariants: `Math.random` ban (eslint + `determinismAudit.test.ts`); `IRNGService` param + `resolveRng` only-resolver rule (only `src/utils/random.ts` may inline-construct fallbacks); seed expressions load-bearing (rng-policy table — changing one IS a content change); shard seeds position-independent; `generateId`/uuid banned on sim paths unless seeded (`rivalWarriorFactory` precedent); narrated-vs-headless parity (`narratedVsHeadless` fixture); pipeline pass purity per `week-pipeline` skill (stage/writes/after/playerFacing, StateImpact merging); mutable state leaking across weeks; `narrativeContent` lazy-load race (`runtime/worker.ts` awaits `loadCombatNarrative()`). Complements existing `combat-engine-reviewer.md` (combat invariants) — state the split explicitly in its description.
+
+## The 7 conversions — NPC specs → domain tweak agents
+
+Each becomes a "one small improvement to <domain>" agent in the lowercase agents' shape (Mission → Repo Commands → Repo Pointers → Boundaries → Philosophy → Journal → Process → Avoids → closer). The Basho decision tables get re-expressed as "domain instincts + verified code pointers," carrying over the persona's domain sense. Filenames = kebab (`crisis-agent.md`) to match `combat-engine-reviewer.md` convention; `name:` frontmatter matches filename.
+
+13. **crisis-agent.md** — rival-stable adversity & event-response domain: `src/engine/ai/intentEngine/skepticism.ts` (financial crisis, roster depletion, meta hostility checks), `bankruptcyService`, `turnaround`, `expansionService`, `seasonalRetirementService`, `intentStates.ts` + 10 `AI_INTENTS`, `pipeline/passes/EventPass.ts`, `pipeline/offseasonEvents/`, `engine/injuries/`. Mission: make NPC adversity response richer/more personality-true (owners react per personality/philosophy/`metaAdaptation`).
+
+14. **finance-agent.md** — `src/engine/ai/workers/budgetWorker.ts` (+ its test dir `src/test/engine/ai/workers/`), `src/engine/economy/weeklyBreakdown.ts`, treasury/`ledger` + `logFinanceEvent` (`agentCore.ts`), `expansionService`, `bankruptcyService`; `economy-balance` skill. Mission: tune rival treasury decisions — runway math, investment timing, solvency behavior — with determinism + ledger honesty intact.
+
+15. **governance-agent.md** — `src/engine/politics/honorCulture.ts`, `ai/workers/crownWorker.ts`, `engine/promoters/`, `matchmaking/tournamentSelection/committee.ts`, fame/reputation fields, `PERSONALITY_CLASH`/`personalityEngine`. Mission: deepen political/standing play — honor, reputation, crown campaigns, committee influence — per owner personality.
+
+16. **media-agent.md** — `src/engine/gazette/` (detections, narrative, factory, templateHelpers), `src/engine/newsletter/feed.ts`, `src/lore/AnnouncerAI.ts`, `src/engine/owner/narrative.ts`. Mission: improve media-facing surfaces — gazette items, newsletter beats, owner/announcer voice — where bard owns JSON prose but this agent owns event selection & framing logic.
+
+17. **narrative-agent.md** — `src/engine/pipeline/passes/NarrativePass.ts`, `pipeline/offseasonEvents/`, `engine/narrative/` orchestration (narrativeStatus, fightAnalysis, loreGenerator), `offseason-event` skill. Mission: tune when/how narrative events fire — triggers, priorities, tones — not the prose itself (that's bard).
+
+18. **recruitment-agent.md** — `src/engine/recruitment/` (draftService, recruitScouting, signWarrior, `recruitment/`), `ai/workers/recruitmentWorker.ts`, `engine/scouting/`, `src/data/orphanPool.ts` + `Orphanage` page, `recruitment-scout` skill. Mission: improve rival recruiting — bid sizing, talent valuation, competition vs the player — keeping deterministic seeds intact.
+
+19. **rivalry-agent.md** — `src/engine/ai/plan/rivalPlan.ts`, `src/engine/owner/grudges.ts`, `src/engine/rivals/` (rivalryDisplay, factories), `VENDETTA` intent + `computePlayerThreatLevel`, `hooks/useRivalries*.ts`. Mission: deepen rival dynamics — grudges, vendettas, escalation/de-escalation, matchmaking targeting — per personality and threat level.
+
+## New shared sections added to every ported agent
+
+- **Repo Commands** (the delta table above, compressed to each agent's needs)
+- **House rules** (~6 lines): seeded RNG only; engine↔UI import boundary; `routeTree.gen.ts`/`runnerGroups.json`/`auditBaseline.json` are generated — regenerate, never hand-edit; commit to `main` with a conventional-commit title only after `bun run test` (+ `type-check`/`lint`/`build` as relevant) is green.
+- **Journal** repointed to `.claude/agent-journals/<name>.md` (create if missing; append-only; same "critical learnings only" format).
+- **Skill pointers** rewritten to skills that exist here: `narrative-validate`, `ui-honesty-audit`, `safe-codemod`, `guard-ratchet`, `combat-balance`, `determinism-debug`, `economy-balance`, `week-pipeline`, `pipeline-seasonal`, `offseason-event`, `honest-assessment`; slash/test-runner skills (`ai-agent`, `combat-sim`, `integration-autosim`, `tournament-bracket`, `training-coach`, `recruitment-scout`) referenced only where they genuinely run relevant tests.
+
+## Files to create
+
+- `.claude/agents/` — 19 files as enumerated above (filenames: `bard.md`, `bolt.md`, `crisis-agent.md`, `curator.md`, `engine-reviewer.md`, `finance-agent.md`, `governance-agent.md`, `lens.md`, `mason.md`, `media-agent.md`, `narrative-agent.md`, `palette.md`, `perf-auditor.md`, `polish.md`, `recruitment-agent.md`, `rivalry-agent.md`, `scout.md`, `scribe.md`, `sentinel.md`)
+- `.claude/agent-journals/README.md` — one short doc explaining the journal convention + entry format (keeps dir tracked, orients future agents)
+- Small addition to `.claude/CLAUDE.md` — an "Agents" section listing the roster with one-line triggers so they're discoverable
+
+## Implementation order
+
+1. Shared-blocks draft (Repo Commands + House rules + journal boilerplate) reused across files
+2. The 12 ports (adapt pointers per spec above)
+3. The 7 conversions (compose from lowercase-agent template + domain pointers above)
+4. `.claude/agent-journals/README.md` + CLAUDE.md agents section
+5. Verification pass
+
+## Verification
+
+- [ ] `grep` every repo path each agent file claims (spot-check ~5/file, 100% for code paths) — no stale Basho paths
+- [ ] `grep` ported files for Basho-specific nouns (rikishi, heya, oyakata, basho-as-tournament, banzuke, kimarite, myoseki, JSA, presenters, tests/unit, MockFactory, lint:commit, test:perf, `docs/agent-journals`) — must be zero outside intentional "migrated from" notes (better: none at all)
+- [ ] `bun run test` — green (no guard should see `.claude/`; `docsLayout` unaffected)
+- [ ] `bun run lint` + `bun run type-check` — clean (md files unaffected but confirm no stray artifacts)
+- [ ] Frontmatter `name:` matches each filename; `description` fields accurate after conversion
+
+## Risks
+
+- **Frontmatter format**: keep exactly `name` + `description` (matches existing `combat-engine-reviewer.md`; no model/tools fields used here).
+- **Stale-pointer drift**: these agents will rot if commands change — the house-rules block deliberately points at `AGENTS.md`/`.claude/CLAUDE.md`/`docs/engineering/testing.md` as sources of truth rather than duplicating numbers where avoidable.
+- **engine-reviewer vs combat-engine-reviewer overlap**: descriptions disambiguate (determinism/pipeline vs combat invariants).
+- `.jules/` is gitignored — no artifacts from there will be ported; everything lives under tracked `.claude/`.

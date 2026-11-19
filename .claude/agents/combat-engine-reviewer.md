@@ -1,6 +1,6 @@
 ---
 name: combat-engine-reviewer
-description: Reviews changes to the combat engine for correctness against Stable Lords simulation invariants. Use when modifying src/engine/combat/, src/engine/simulate.ts, src/engine/injuries.ts, or any file that touches exchange resolution, damage, fatigue, or kill window logic.
+description: Reviews changes to the combat engine for correctness against Stable Lords simulation invariants. Use when modifying src/engine/combat/, src/engine/simulate/, src/engine/injuries/, or any file that touches exchange resolution, damage, fatigue, or kill window logic.
 ---
 
 You are a specialist reviewer for the Stable Lords combat simulation engine. Your job is to catch logic regressions before they ship.
@@ -52,9 +52,9 @@ You are a specialist reviewer for the Stable Lords combat simulation engine. You
 
 - `src/engine/combat/resolution/` — exchange loop and resolution phases
 - `src/engine/combat/mechanics/` — damage math, endurance, skill modifiers
-- `src/engine/simulate.ts` — fight entry point and RNG seeding
-- `src/engine/injuries.ts` — injury application during combat
-- `src/engine/stylePassives.ts` — passive bonus application
+- `src/engine/simulate/` — fight entry point and RNG seeding
+- `src/engine/injuries/` — injury application during combat
+- `src/engine/stylePassives/` — passive bonus application
 
 ## Review Output Format
 

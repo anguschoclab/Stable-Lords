@@ -11,12 +11,12 @@ it's named, what it imports, or how it mocks. Get the placement right first.
 
 ## 1. Pick the right tier and location
 
-| Tier | Location | Runs via | Belongs here |
-|------|----------|----------|--------------|
-| Fast (default) | `src/test/<domain>/…` mirroring the subject path | `bun run test` — every change | Pure logic, single-week ticks, UI components |
-| Slow | `src/test/<domain>/*.slow.test.ts` (`.slow` must be **terminal**: `foo.integration.slow.test.ts`, never `foo.slow.integration.test.ts`) | `bun run test:slow` — nightly CI, not a per-PR gate | Many-week sims, balance/determinism harnesses, subprocess tests, >~2s wall time |
-| E2E | `e2e/*.spec.ts` | `bun run e2e` (chromium, `@slow` excluded) / `bun run e2e:all` | Browser flows; `{ tag: '@slow' }` when `test.setTimeout` >5min or it drives long sessions |
-| Perf | `src/test/perf/` | perf runs | Timing gates |
+| Tier           | Location                                                                                                                                | Runs via                                                       | Belongs here                                                                              |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Fast (default) | `src/test/<domain>/…` mirroring the subject path                                                                                        | `bun run test` — every change                                  | Pure logic, single-week ticks, UI components                                              |
+| Slow           | `src/test/<domain>/*.slow.test.ts` (`.slow` must be **terminal**: `foo.integration.slow.test.ts`, never `foo.slow.integration.test.ts`) | `bun run test:slow` — nightly CI, not a per-PR gate            | Many-week sims, balance/determinism harnesses, subprocess tests, >~2s wall time           |
+| E2E            | `e2e/*.spec.ts`                                                                                                                         | `bun run e2e` (chromium, `@slow` excluded) / `bun run e2e:all` | Browser flows; `{ tag: '@slow' }` when `test.setTimeout` >5min or it drives long sessions |
+| Perf           | `src/test/perf/`                                                                                                                        | perf runs                                                      | Timing gates                                                                              |
 
 - **Mirror the production path:** `src/engine/pipeline/passes/EventPass.ts` →
   `src/test/engine/pipeline/passes/EventPass.test.ts`. Never colocate tests

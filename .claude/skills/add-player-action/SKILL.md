@@ -85,7 +85,7 @@ slice — see the `week-pipeline` skill (`src/engine/pipeline/passes/` +
   (early-return `state`/`{}` when nothing changes — see `updateBoutOfferStatus`).
 - **No `Math.random()`/`Date.now()`/`crypto.*` in engine code.** Actions are
   pure; if one needs randomness thread a seeded rng (`resolveRng` precedent,
-  `docs/engineering/rng-policy.md`), and remember a *player choice* modulates
+  `docs/engineering/rng-policy.md`), and remember a _player choice_ modulates
   weights inside the seeded sequence — it never becomes part of a seed string.
 - **Don't skip the commit path** — worker results only reach the store via
   `commitWorkerResult`/`loadGame`; slice changes only persist via `set()`.

@@ -21,7 +21,7 @@ Changing a money/roster mechanic means knowing which side owns it.
   transaction guards.
 - **Weekly tick:** money actually moves in pipeline passes — `EconomyPass` and
   friends under `src/engine/pipeline/passes/` (see `week-pipeline`). The slice
-  records results; the passes *decide* them. New "every week" economy logic is
+  records results; the passes _decide_ them. New "every week" economy logic is
   a pass, not a slice action.
 - **Constants:** `src/constants/economy/economy.ts` — `STARTING_TREASURY` (500),
   `FIGHT_PURSE`, `WIN_BONUS`, `FAME_DIVIDEND`, `WARRIOR_UPKEEP_BASE`,
@@ -31,21 +31,21 @@ Changing a money/roster mechanic means knowing which side owns it.
 
 ## Subsystems
 
-| Domain | Lives in | Notes |
-|--------|----------|-------|
-| Roster & warriors | `rosterSlice` (`src/state/slices/rosterSlice/`); `src/engine/warrior/` (`skillCalc`, `potential`, `progression`, `retirement`, `health`, `warriorValue`) | roster moves are slice actions; lifecycle rules are engine |
-| Stable identity | `src/engine/stable/stableReputation.ts` | reputation math |
-| Trainers & facilities | `src/engine/trainers/` (`trainers.ts`, `trainerSpecialties.ts`, `trainerAging.ts`), `src/engine/training/facilityUpkeep.ts`, `src/engine/training/coachLogic.ts` | upkeep scales with facility level + trainer count; `src/constants/training/` |
-| Promoters & offers | `src/engine/promoters/` (`offerMatchmaking`, `hypeCalculator`, `promoterGenerator`, `promoterHistory`, `warriorFilters`), `src/engine/pipeline/passes/PromoterPass.ts` | offer lifecycle → `bout/mutations/contractMutations.ts` (accept/decline/counter; void-decline tags) |
-| Recruitment & scouting | `src/engine/recruitment/` (`draftService.ts`, `signWarrior.ts`, `recruitScouting.ts`), `src/engine/scouting/` | pool cap 36, weekly partial refresh, meta-aware style bias, legacy bloodlines, `src/constants/recruitment/` |
-| Rivals & AI | `src/engine/rivals/` (`rivalStableFactory`, `rivalWarriorFactory`, `rivalTrainerFactory`), `src/engine/ai/` (`intentEngine/`, `workers/`, `stableManager.ts`, `bankruptcyService.ts`, `expansionService.ts`, `seasonalRetirementService.ts`) | 7 intents; skeptical-memory + hierarchical delegation; `src/constants/world.ts` rival population floors/caps |
-| Owner flavor | `src/engine/owner/` (grudges, philosophy, narrative, roster) | owner persona feeding AI decisions |
+| Domain                 | Lives in                                                                                                                                                                                                                                     | Notes                                                                                                        |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Roster & warriors      | `rosterSlice` (`src/state/slices/rosterSlice/`); `src/engine/warrior/` (`skillCalc`, `potential`, `progression`, `retirement`, `health`, `warriorValue`)                                                                                     | roster moves are slice actions; lifecycle rules are engine                                                   |
+| Stable identity        | `src/engine/stable/stableReputation.ts`                                                                                                                                                                                                      | reputation math                                                                                              |
+| Trainers & facilities  | `src/engine/trainers/` (`trainers.ts`, `trainerSpecialties.ts`, `trainerAging.ts`), `src/engine/training/facilityUpkeep.ts`, `src/engine/training/coachLogic.ts`                                                                             | upkeep scales with facility level + trainer count; `src/constants/training/`                                 |
+| Promoters & offers     | `src/engine/promoters/` (`offerMatchmaking`, `hypeCalculator`, `promoterGenerator`, `promoterHistory`, `warriorFilters`), `src/engine/pipeline/passes/PromoterPass.ts`                                                                       | offer lifecycle → `bout/mutations/contractMutations.ts` (accept/decline/counter; void-decline tags)          |
+| Recruitment & scouting | `src/engine/recruitment/` (`draftService.ts`, `signWarrior.ts`, `recruitScouting.ts`), `src/engine/scouting/`                                                                                                                                | pool cap 36, weekly partial refresh, meta-aware style bias, legacy bloodlines, `src/constants/recruitment/`  |
+| Rivals & AI            | `src/engine/rivals/` (`rivalStableFactory`, `rivalWarriorFactory`, `rivalTrainerFactory`), `src/engine/ai/` (`intentEngine/`, `workers/`, `stableManager.ts`, `bankruptcyService.ts`, `expansionService.ts`, `seasonalRetirementService.ts`) | 7 intents; skeptical-memory + hierarchical delegation; `src/constants/world.ts` rival population floors/caps |
+| Owner flavor           | `src/engine/owner/` (grudges, philosophy, narrative, roster)                                                                                                                                                                                 | owner persona feeding AI decisions                                                                           |
 
 ## Player actions touching this domain
 
 Slice actions per `add-player-action`: offer responses (`respondToBoutOffer`),
 challenge/avoid marks (`playerActions`), naming. Anything that must resolve
-*every week* belongs in a pipeline pass, not an action.
+_every week_ belongs in a pipeline pass, not an action.
 
 ## Verification
 

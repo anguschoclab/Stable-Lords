@@ -44,7 +44,7 @@ Verify the **substance**, then trust the tests as a secondary signal.
    These silently break seed-reproducibility — the engine's core guarantee —
    and the suite stays green. **Counter:** grep (below). Draws come from
    `ctx.rootRng` or a passed rng (`resolveRng` fallback precedent), and choices
-   modulate weights *within* the seeded sequence, never the seed itself.
+   modulate weights _within_ the seeded sequence, never the seed itself.
    Known pre-existing offenders are registered in `docs/MEGAPLAN_BACKLOG.md`
    (e.g. V26-D3 `meta.createdAt`, V26-D4 gazette crypto fallback) — distinguish
    registered debt from new violations.
@@ -110,7 +110,7 @@ If any hop is missing, the feature is incomplete regardless of tests.
 
 ### 3. Run independent empirical checks (don't trust the author's assertions)
 
-If a feature claims to *change behavior* (win-rate, growth, lethality, money),
+If a feature claims to _change behavior_ (win-rate, growth, lethality, money),
 measure it yourself over a seeded sample rather than reading the table. Write a
 throwaway spec in `src/test/...` or a `bunx tsx` script, **call the function
 exactly how production calls it**, and observe the distribution — e.g.
@@ -118,7 +118,7 @@ exactly how production calls it**, and observe the distribution — e.g.
 harnesses (`bun run scripts/balance-lab.ts`, world confirmation on seeds
 12345 / 777 / 2024 — the world-diag convention). Assert direction AND magnitude.
 Delete the throwaway when done. If your check disagrees with the author's green
-test, suspect *your* harness first (step 6), then theirs.
+test, suspect _your_ harness first (step 6), then theirs.
 
 ### 4. Run the full suite, the build, and determinism greps
 

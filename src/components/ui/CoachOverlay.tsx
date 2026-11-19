@@ -134,50 +134,55 @@ export function CoachOverlay() {
     <div className="fixed bottom-6 right-6 z-[100] w-80 space-y-3 pointer-events-none">
       <AnimatePresence>
         {warnings.map((w) => (
-          <motion.div
-            key={w.id}
-            initial={{ opacity: 0, x: 50, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-            // Passive warning card — no interactive children. Keep it
-            // click-through: at z-[100] it renders above the resolution
-            // modal (z-50) and would otherwise swallow clicks on modal
-            // buttons it happens to overlap.
-            className="pointer-events-none"
-          >
-            <Card
-              className={cn(
-                'border-2 backdrop-blur-xl shadow-2xl relative overflow-hidden',
-                w.color
-              )}
-            >
-              <div className="absolute top-0 left-0 w-1 h-full bg-current opacity-60" />
-              <CardContent className="p-4 flex gap-4">
-                <div className="shrink-0 mt-0.5">
-                  <w.icon className="w-5 h-5" />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest leading-none">
-                      {w.label}
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="text-[7px] font-black tracking-widest px-1 py-0 border-current opacity-40"
-                    >
-                      {w.type}
-                    </Badge>
-                  </div>
-                  <p className="text-[11px] font-medium leading-relaxed opacity-90">
-                    {w.description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <WarningCard key={w.id} w={w} />
         ))}
       </AnimatePresence>
     </div>
+  );
+}
+
+function WarningCard({ w }: { w: CoachWarning }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 50, scale: 0.9 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+      // Passive warning card — no interactive children. Keep it
+      // click-through: at z-[100] it renders above the resolution
+      // modal (z-50) and would otherwise swallow clicks on modal
+      // buttons it happens to overlap.
+      className="pointer-events-none"
+    >
+      <Card
+        className={cn(
+          'border-2 backdrop-blur-xl shadow-2xl relative overflow-hidden',
+          w.color
+        )}
+      >
+        <div className="absolute top-0 left-0 w-1 h-full bg-current opacity-60" />
+        <CardContent className="p-4 flex gap-4">
+          <div className="shrink-0 mt-0.5">
+            <w.icon className="w-5 h-5" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+                {w.label}
+              </span>
+              <Badge
+                variant="outline"
+                className="text-[7px] font-black tracking-widest px-1 py-0 border-current opacity-40"
+              >
+                {w.type}
+              </Badge>
+            </div>
+            <p className="text-[11px] font-medium leading-relaxed opacity-90">
+              {w.description}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 

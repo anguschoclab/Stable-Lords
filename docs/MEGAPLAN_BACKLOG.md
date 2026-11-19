@@ -52,13 +52,18 @@ Logged trends — re-measure at each world re-baseline, not per commit.
 - **Slow-suite flakes under load** (V22 §4): `killDeathDivergence`, perf
   160-stable ceiling, autosim timing, worldLiveness gradient each pass
   standalone — re-run clean before assuming a regression.
+- **Hook-timeout flake class — root-caused (V29)**:`vitest.config.ts`
+  `hookTimeout: 10000` vs `testTimeout: 120000`; `setup.node.ts` reset hooks
+  lazy-import `useGameStore`'s heavy graph and exceed 10s on starved
+  workers. Aligned to 30000 (slow-config precedent). Covers
+  `opfsArchiverFlush` (V29 baseline) and `tacticDiscovery.parity` (V28).
 - **First scheduled `daily_sim`/`daily_bard` run post-V28** (V28): confirm
   `git add docs/reports/*` lands regenerated reports and no root-level
   `Daily_*` files resurrect. Emitter paths + workflow `git add` repointed;
   can't be verified until the next nightly run.
 - **`tacticDiscovery.parity.test.ts` suite-load flake** (V28): passed
-  standalone; failure signature matches the flake-under-load pattern above.
-  Pre-existing, not V28-caused.
+  standalone; signature matches the hook-timeout class above — root cause
+  now fixed via `hookTimeout: 30000`.
 
 ## 3. House divergences (adjudicated keeps)
 

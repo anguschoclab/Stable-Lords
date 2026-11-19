@@ -21,7 +21,10 @@ const baseTest = {
     '#scripts': path.resolve(import.meta.dirname, './scripts'),
   },
   testTimeout: 120000,
-  hookTimeout: 10000,
+  // Reset hooks lazy-import heavy graphs (useGameStore → worker proxies,
+  // storage, enginePool); under suite load the first import in a worker can
+  // exceed 10s — the opfsArchiverFlush/tacticDiscovery.parity flake class.
+  hookTimeout: 30000,
   pool: 'threads' as const,
   dir: './src/test',
 };

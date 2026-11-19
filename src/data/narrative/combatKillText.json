@@ -834,7 +834,11 @@
       "{{attacker}} goes for the throat!",
       "{{attacker}}'s eyes lock onto a fatal opening!",
       "{{attacker}} prepares to end it all!",
-      "{{attacker}} commits to a final, deadly blow!"
+      "{{attacker}} commits to a final, deadly blow!",
+      "{{attacker}} shows no mercy, intent on a lethal strike!",
+      "{{attacker}}'s eyes lock on {{defender}}, promising death!",
+      "{{attacker}} prepares to end {{defender}}'s life!",
+      "{{attacker}} readies a finishing blow to claim {{defender}}'s life!"
     ],
     "doomed": [
       "{{name}} is mortally wounded — hanging on by a thread!",
@@ -860,7 +864,14 @@
       "{{name}} has taken a lethal strike, it's only a matter of time!",
       "{{name}}'s legs buckle under the weight of a deathblow!",
       "{{name}} spits blood, knowing the end has come!",
-      "{{name}} cannot survive this much punishment!"
+      "{{name}} cannot survive this much punishment!",
+      "{{name}} stumbles, their lifeblood ebbing away!",
+      "{{name}} is visibly dying on their feet!",
+      "{{name}}'s strength fails; they are surely doomed!",
+      "{{name}} is beyond saving, standing only on borrowed time!",
+      "{{name}} looks down at a fatal wound in disbelief!",
+      "{{name}}'s eyes glass over; the end approaches rapidly!",
+      "{{name}} sways, the light of life fading fast!"
     ],
     "died_of_wounds": [
       "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
@@ -886,7 +897,14 @@
       "The accumulation of gashes proves fatal as {{defender}} bleeds out on the sand.",
       "{{defender}} falls, their mangled body unable to sustain life any longer.",
       "A final twitch, and {{defender}} expires from the massive trauma.",
-      "{{defender}}'s eyes roll back as they perish from the sheer volume of wounds."
+      "{{defender}}'s eyes roll back as they perish from the sheer volume of wounds.",
+      "Unable to endure any more, {{defender}} falls lifeless to the ground.",
+      "The accumulation of injuries proves too much; {{defender}} expires on the sand.",
+      "{{defender}} bleeds out, their life claimed by {{attacker}}'s relentless assault.",
+      "{{defender}}'s body gives out entirely, succumbing to the terrible wounds.",
+      "With a final ragged breath, {{defender}} dies from the brutal injuries sustained.",
+      "The toll is absolute — {{defender}} perishes under the weight of their wounds.",
+      "{{defender}}'s heart stops as the massive blood loss takes its toll."
     ]
   }
 }

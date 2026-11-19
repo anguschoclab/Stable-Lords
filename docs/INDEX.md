@@ -18,6 +18,7 @@ every non-archive doc must appear here.
 - [`MEGAPLAN_V29_PLAN.md`](MEGAPLAN_V29_PLAN.md) — exhaustive review & full branch consolidation plan
 - [`MEGAPLAN_V29_FINDINGS.md`](MEGAPLAN_V29_FINDINGS.md) — validation audit + adjudication findings
 - [`MEGAPLAN_V29_LEDGER.md`](MEGAPLAN_V29_LEDGER.md) — phase commits & baseline/final gates
+- [`MEGAPLAN_V29_DEFERRED.md`](MEGAPLAN_V29_DEFERRED.md) — deferred scope & watch items folded to the backlog
 
 ## Design — the bible corpus
 

@@ -40,7 +40,9 @@ describe('NF7: hardcoded year 2024', () => {
     if (fs.existsSync(factoryPath)) {
       const content = fs.readFileSync(factoryPath, 'utf-8');
       expect(content).not.toContain("'2024-01-01");
-      expect(content).toContain('new Date().toISOString()');
+      // V29-D3: seeded state must not read wall-clock — deterministic default is weekToTimestamp(0)
+      expect(content).not.toContain('new Date(');
+      expect(content).toContain('weekToTimestamp(0)');
     }
   });
 });

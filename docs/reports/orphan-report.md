@@ -4,23 +4,13 @@
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 174 src-scoped dead exports — under the 174 ratchet — guard green.
+> **Ratchet status:** 172 src-scoped dead exports — under the 174 ratchet — guard green.
 
 ## Uniqueness tags
 
 - 🟣 **UNIQUE** — the only implementation of this behavior in the repo; deleting permanently removes capability (or a pinned spec of it).
 - 🔵 **DUPLICATE** — functionally equivalent logic ships elsewhere.
 - ⚪ **PASS-THROUGH** — pure re-export/config surface; contains no logic.
-
-## ⚠️ UNTRIAGED — new orphans since last annotation pass
-
-Flagged by the latest scan with no curated entry in `orphan-report.mjs` `ANNOTATIONS`. Triage these first, then record the verdict there.
-
-| Symbol | File | Evidence |
-| --- | --- | --- |
-| `HUBS` | src/components/layout/LeftNav.tsx | re-export with no local declaration — add ANNOTATIONS verdict |
-| `planTournamentEntries` | src/engine/ai/workers/tournamentWorker.ts | test-only symbol with no internal use — lifecycle hook? |
-| `updateWarriorFromBoutOutcome` | src/engine/warrior/careerUpdate.ts | test-only symbol with no internal use — lifecycle hook? |
 
 ## Duplication — alternate flows sharing an orphan's name
 
@@ -29,8 +19,6 @@ The same symbol name is declared in other production files. `@score` is token-le
 | Symbol | Orphan file | Class | Alternate flow(s) |
 | --- | --- | --- | --- |
 | `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/warrior/BiometricsTab.tsx` @0.19 **distinct**<br>`src/components/WarriorDossier.tsx` @0.19 **distinct** |
-| `HUBS` | `src/components/layout/LeftNav.tsx` | untriaged | `src/components/layout/navigationHubs.ts` @0 **distinct** |
-| `HubId` | `src/components/layout/LeftNav.tsx` | C | `src/components/layout/AlertStrip.tsx` @1 **identical**<br>`src/components/layout/HubSwitcher.tsx` @1 **identical**<br>`src/components/layout/MobileNav.tsx` @1 **identical**<br>`src/components/layout/navigationHubs.ts` @0.22 **distinct**<br>`src/components/layout/SubPageList.tsx` @1 **identical** |
 | `RhythmBand` | `src/engine/ai/plan/strategyLab.ts` | B | `src/components/warrior/favorites/FavoritesCharting.tsx` @0.08 **distinct** |
 | `extractWeekSummary` | `src/engine/autosim/autosim.ts` | C | `src/engine/pipeline/tick/timeAdvance/summaries.ts` @0.3 **distinct** |
 | `TOURNAMENT_TIERS` | `src/engine/matchmaking/tournamentSelection.ts` | A | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct** |
@@ -100,6 +88,10 @@ The only reset paths for module-level state between tests — product-dead but t
 | `resetArenaRegistry` | `src/data/arenas/index.ts` | The only reset path for the arena data-registry singleton — product-dead
   but test-alive; deleting it breaks test isolation. **Recommendation:**
   **keep** (a `_test` suffix convention would document intent). |
+| `planTournamentEntries` | `src/engine/ai/workers/tournamentWorker.ts` | The AI-stable tournament-declaration entry point — product-dead
+  (tournamentWorker is exercised via the pipeline, not this export) but
+  test-alive: `tournamentMetagame.test.ts` drives AI declarations through
+  it. **Recommendation:** **keep** — deleting breaks the metagame spec. |
 | `clearDeathHandlers` | `src/engine/core/deathNotifier.ts` | The only reset path for the `onWarriorDeath` listener registry —
   product-dead but test-alive. **Recommendation:** **keep**. |
 | `clearHistoryResolverCaches` | `src/engine/core/historyResolver.ts` | The only reset path for the name/stable resolution caches —
@@ -109,6 +101,10 @@ The only reset paths for module-level state between tests — product-dead but t
   `scripts/nodeArchiveService.ts` and archive tests. The class itself is
   unique; this line is just its public doorway. **Recommendation:** **keep**
   — deleting forces consumers onto a deep import. |
+| `updateWarriorFromBoutOutcome` | `src/engine/warrior/careerUpdate.ts` | Post-bout career-update convenience wrapper — no production importer
+  (the bout path uses `warriorStateUpdater.ts` via `recordHandler.ts`)
+  but `careerUpdate.test.ts` exercises it directly. **Recommendation:**
+  **keep** — deleting breaks the career-update spec. |
 
 ## Section B — Over-exports: zero external references (unexport candidates)
 
@@ -126,11 +122,10 @@ All 🟣 **unique code that is already live** — used inside its own module by 
 
 Every symbol below **runs in production** — called inside its own module by a live sibling. The `export` exists so unit/guard tests can pin internals directly (documented house pattern — see the ratchet comments in `orphanScan.guard.slow.test.ts`).
 
-### UI, hooks & state (10)
+### UI, hooks & state (9)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
-| `HubId` | `src/components/layout/LeftNav.tsx` | LeftNav | identical |
 | `PRIMARY_CTA_BY_ROUTE` | `src/components/layout/primaryCta.ts` | resolvePrimaryCta, resolvePrimaryCtaKey | — |
 | `buildFavoritesChart` | `src/components/warrior/favorites/FavoritesCharting.tsx` | FavoritesCharting | — |
 | `stableStats` | `src/hooks/useScoutingStableComparison.ts` | useStableComparison | distinct |
@@ -351,10 +346,10 @@ Generated-library exports — the components ship their full part API even when 
 
 | Decision | Items | Unique code at stake |
 | --- | --- | --- |
-| **Delete / integrate** | 5 curated item(s) + **3 UNTRIAGED** | see per-item tags above |
+| **Delete / integrate** | 5 curated item(s) | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 4 test-reset hook(s); 121 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 174 / 174 | — |
-| **Duplication** | 10 orphan(s) with same-name alternate flow(s) | 1 identical · 1 divergent · 8 distinct |
+| **Keep** | 6 test-reset hook(s); 120 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 172 / 174 | — |
+| **Duplication** | 8 orphan(s) with same-name alternate flow(s) | 0 identical · 1 divergent · 7 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

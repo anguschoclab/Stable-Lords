@@ -96,4 +96,72 @@ SRP/function-length census (existing, not V29-attributed): `classTraits.ts` 517L
 
 ## §V — Verdict matrix
 
-_Pending Phase 7 — every adjudication, claim, and backlog row APPROVED / DISPROVED / CORRECTED with `file:line` evidence._
+Every adjudication, claim, and backlog row — APPROVED / DISPROVED /
+CORRECTED — with `file:line` evidence.
+
+### PR adjudications (§1)
+
+| PR | Verdict | Outcome |
+| --- | --- | --- |
+| #1079 lore+traits | MERGE-WITH-FIXES | **APPROVED** — landed; `LEGACY_TRAIT_ORDER` synced, `fightPlanMod:{OE:-2}` shape corrected at pin-time; `v29Traits` guard green |
+| #1080 combat JSON | MERGE | **APPROVED** — union-landed clean vs main |
+| #1081 test coverage | MERGE-WITH-FIXES | **APPROVED** — `plan.md` stripped, generated files regenerated, `caches.test.ts` type concern cleared (B7) |
+| #1082 lore | MERGE | **APPROVED** — union-landed; +5/+3/+3/+2 pins verified |
+| #1083 combat JSON + dedupe threshold | MERGE-MINUS-HUNKS | **APPROVED** — content landed; `fuzzy_dedupe` 0.8→0.85 hunk **rejected** (would admit more near-dupes) |
+| #1084 memo() | MERGE-MINUS-HUNKS | **APPROVED** — memo firewall landed; `.jules/bolt.md` junk stripped |
+| #1085 lore | MERGE | **APPROVED** — union-landed; pins verified |
+| #1086 component specs | MERGE-WITH-FIXES | **APPROVED** — specs landed; generated metadata regenerated |
+| #1087 a11y tabIndex | MERGE (+fix-forward note) | **CORRECTED** — the "redundant tabIndex" concern was disproved: all three spans wrap disabled/non-focusable tooltip anchors (`ExecuteWeekButton`, `WarriorBadges`, status tooltips); attributes are required. Merged clean, no fix-forward |
+| #1088 useMemo | MERGE | **APPROVED** — single-pass memo landed |
+| #1089 combat JSON | MERGE | **APPROVED** — union-landed; verbatim `"RIGHT/LEFT TRICEP"` dupes stripped |
+| #1090 button types | MERGE | **APPROVED** — landed; superset of #1091 verified line-by-line |
+| #1091 button types | SUPERSEDED | **APPROVED** — unique hunk was stale generated `ORPHAN_REPORT.md`; left un-merged |
+| #1092 useShallow | MERGE | **APPROVED** — landed; `fileBudget` rebaselined 19→20 (CoachOverlay +7 lines, legitimate) |
+| #1093 combat JSON + uiMeta | MERGE-MINUS-HUNKS | **APPROVED** — content landed; generated timestamp churn stripped |
+
+### Plan-structure audit (§0)
+
+| Claim | Verdict | Evidence |
+| --- | --- | --- |
+| `.devin/plans/` accepts any filename | **DISPROVED** | `megaplanDocLayout.guard.test.ts:136-147` rejects `^megaplan-*` drafts; mirror renamed `plan-a90ed5c661debd60.md` |
+| `weaponArmor.ts` under `resolution/` | **CORRECTED** | lives at `src/engine/combat/mechanics/weaponArmor.ts` |
+| `cloneObject`/`copyDataProperties` residual | **CORRECTED** | symbols gone; residual is `structuredClone` at `weekPipeline/context.ts:53-64` |
+| INDEX freshness at close-out | **CORRECTED** | docsLayout guard requires it at scaffold time — moved to Phase 0 |
+| #1091 ⊂ #1090 strict | **CORRECTED** | unique hunk exists (stale `ORPHAN_REPORT.md`) — strip-and-supersede holds on code |
+| `bun audit` script | **DISPROVED** | no such script; Dependabot API used instead |
+
+### Backlog rows (§B)
+
+| Row | Verdict | Evidence |
+| --- | --- | --- |
+| V26-D1 tactic row missing | **APPROVED + FIXED** | `FavoritesCharting.tsx` tactics cell+rows; `tacticRow.test.tsx` green |
+| V26-D2 dead `processTierProgression` | **APPROVED + FIXED** | `SystemPass.ts:36-58` now passes `computeNextSeason(nextWeek)`+rng |
+| V26-D3 wall-clock `createdAt` | **APPROVED + FIXED** | `gameStateFactory.ts` defaults `weekToTimestamp(0)`; `hardcodedYearAudit` spec updated to forbid `new Date(` |
+| V26-D4 crypto fallback | **APPROVED + FIXED** | `gazetteTemplateHelpers.ts` — fallback deleted, deterministic pick |
+| V16-A11 stale bid weather | **APPROVED + FIXED** | `RivalStrategyPass/offers.ts` derives bout-week weather on `SeededRNG` stream |
+| V21-B3 stamina incoherence | **APPROVED + FIXED (3 violators)** | `weatherStats.ts` Abyssal display 60→160%; `weatherEffects/table.ts` Chaos Storm 0.8→1.25, Squall 0.85→1.15 |
+| V21-B6 zero KD differential | **DISPROVED** | `balance.slow.test.ts:308,402` pass on current engine |
+| V15 structuredClone residual | **DISPROVED-as-defect** | `mutableInput` bypasses owned-state clones; residual is required boundary copy |
+| V22-D3 / V22-D4 | **APPROVED-as-deferred** | feature-scale; `MEGAPLAN_V29_DEFERRED.md` |
+
+### Architecture & test strategy
+
+| Decision | Verdict | Evidence |
+| --- | --- | --- |
+| Union-merge per cluster | **APPROVED** | 4 JSON + 3 lore merges; 0 non-allowlisted dupes post-union |
+| Test-first hard gate (Phase 3 before Phase 4/5) | **APPROVED** | 19 observed REDs pre-implementation; all flipped GREEN; zero implementation before REDs |
+| Floor-form guard conversion (v21 pins) | **APPROVED** | matches `v20Narrative` precedent; guards survived union-landing |
+| Reject #1083 dedupe-threshold loosening | **APPROVED** | 0.85 admits near-dupes the union itself would have tripped |
+| Direct-to-main merges | **APPROVED** | per user direction; 14 merges + 8 work commits, all gates green at each push |
+| Slow-tier flake policy (isolate, not mask) | **APPROVED** | `opfsArchiverFlush` 6/6 standalone; registered watch item |
+
+### Final gates (Phase 6)
+
+| Gate | Result |
+| --- | --- |
+| `bun run type-check` | clean |
+| `bun run lint` | 0 errors / 42 warnings (baseline) |
+| `bun run test` | 1012/1012 files — 10878 tests pass (sole initial failure = obsolete `new Date(` pin, corrected to deterministic contract) |
+| Slow subset (determinism×3, balance, traitBalance, RivalStrategyPass, stateInvariants) | 7/7 files, 100/100 tests |
+| Orphan scan | 172 dead exports < 174 ratchet; **0 untriaged** |
+| Docs layout guards | 12/12 green |

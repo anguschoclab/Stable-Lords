@@ -132,6 +132,28 @@ const ANNOTATIONS = {
       'product-dead but test-alive. **Recommendation:** **keep**.',
     ].join('\n  '),
   },
+  'src/engine/ai/workers/tournamentWorker.ts::planTournamentEntries': {
+    section: 'KEEP',
+    uniq: UNIQ.unique,
+    title: 'test-only lifecycle hook',
+    body: [
+      'The AI-stable tournament-declaration entry point — product-dead',
+      '(tournamentWorker is exercised via the pipeline, not this export) but',
+      'test-alive: `tournamentMetagame.test.ts` drives AI declarations through',
+      'it. **Recommendation:** **keep** — deleting breaks the metagame spec.',
+    ].join('\n  '),
+  },
+  'src/engine/warrior/careerUpdate.ts::updateWarriorFromBoutOutcome': {
+    section: 'KEEP',
+    uniq: UNIQ.unique,
+    title: 'test-only lifecycle hook',
+    body: [
+      'Post-bout career-update convenience wrapper — no production importer',
+      '(the bout path uses `warriorStateUpdater.ts` via `recordHandler.ts`)',
+      'but `careerUpdate.test.ts` exercises it directly. **Recommendation:**',
+      '**keep** — deleting breaks the career-update spec.',
+    ].join('\n  '),
+  },
   'src/engine/storage/electronArchive.ts::ArchiveConflictError': {
     section: 'KEEP',
     uniq: UNIQ.passThrough,

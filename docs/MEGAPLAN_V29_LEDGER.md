@@ -47,7 +47,8 @@ Registered: `v29Narrative`, `v29Traits`, `v29WeatherStamina` → `GUARD_REGISTRY
 | 2–3 | Scanner delta + FINDINGS §W–§P/§B + Phase-3 RED inventory + guard floors + registry | `1c54226ac` | spec-first contract honored: 19 observed REDs, zero implementation |
 | 4 | Merge train — 14 PRs landed (perf×3, a11y, tests×2, button-types superset, combat-JSON union×4, lore+traits union×3); #1091 SUPERSEDED un-merged; junk/generation hunks stripped; `lore.ts` `},{` boundary repair; fileBudget 19→20 rebaseline (CoachOverlay +7 via #1092) | `b2170899`..`1f245a39` | all cluster gates green; union pins verified by v29 guards |
 | 5a | Backlog burn-down — D2 tier wiring, D3 createdAt, D4 crypto fallback, A11 bout-week weather, B3 stamina coherence ×3, D1 tactic row | `865148fe` | all 11 Phase-3 RED specs flipped GREEN; weatherEffects pins updated to contract |
-| 5b | Residual: B6 re-verified GREEN; V15 resolved-by-design; #1087 fix-forward DISPROVED (all tabIndex spans wrap non-focusable/disabled elements); orphan triage — dead `LeftNav` re-export deleted; V22-D3/D4 NO-GO deferred | — | BACKLOG statuses folded |
+| 5b | Residual: B6 re-verified GREEN; V15 resolved-by-design; #1087 fix-forward DISPROVED (all tabIndex spans wrap non-focusable/disabled elements); orphan triage — dead `LeftNav` re-export deleted; V22-D3/D4 NO-GO deferred | `04f1c15f5` | BACKLOG statuses folded |
+| 6 | Validation battery + close-out docs — `hardcodedYearAudit` updated to deterministic contract; DEFERRED + INDEX + §V verdict matrix; orphan ANNOTATIONS completed (0 untriaged); metadata regen | — | type-check clean · lint 0e/42w · fast 1012/1012 · slow-subset 7/7 (100 tests) · orphan 172<174 |
 
 ## Verification record
 

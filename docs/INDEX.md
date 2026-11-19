@@ -15,10 +15,9 @@ every non-archive doc must appear here.
 ## Megaplan (protocol)
 
 - [`MEGAPLAN_BACKLOG.md`](MEGAPLAN_BACKLOG.md) — living register of open deferred items, watch items, and house divergences
-- [`MEGAPLAN_V28_PLAN.md`](MEGAPLAN_V28_PLAN.md) — docs taxonomy & convention ratchet plan
-- [`MEGAPLAN_V28_FINDINGS.md`](MEGAPLAN_V28_FINDINGS.md) — validated findings
-- [`MEGAPLAN_V28_LEDGER.md`](MEGAPLAN_V28_LEDGER.md) — phase commits & stream changes
-- [`MEGAPLAN_V28_DEFERRED.md`](MEGAPLAN_V28_DEFERRED.md) — deferred scope & watch items
+- [`MEGAPLAN_V29_PLAN.md`](MEGAPLAN_V29_PLAN.md) — exhaustive review & full branch consolidation plan
+- [`MEGAPLAN_V29_FINDINGS.md`](MEGAPLAN_V29_FINDINGS.md) — validation audit + adjudication findings
+- [`MEGAPLAN_V29_LEDGER.md`](MEGAPLAN_V29_LEDGER.md) — phase commits & baseline/final gates
 
 ## Design — the bible corpus
 
@@ -77,7 +76,7 @@ UI design system:
 Frozen history — docs here are immutable audit records; stale internal
 references are left verbatim.
 
-- [`archive/megaplans/`](archive/megaplans/) — megaplan lineage docs V8-era through V27 (indexed in `MEGAPLAN_BACKLOG.md` §6)
+- [`archive/megaplans/`](archive/megaplans/) — megaplan lineage docs V8-era through V28 (indexed in `MEGAPLAN_BACKLOG.md` §6)
 - [`archive/audits/`](archive/audits/) — `ai-behavior-audit-v{1,2}.md`, `orphan-feature-audit-v{1,2}.md`
 - [`archive/summaries/`](archive/summaries/) — `refactoring-summary.md`, `pipeline-tick-implementation-summary.md`
 - [`archive/superpowers/`](archive/superpowers/) — June-2026 superpowers `plans/` + `specs/` + the combat-spatial impl plan

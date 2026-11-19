@@ -56,7 +56,7 @@ const ARCHIVED_DOCS = [
     `MEGAPLAN_V${n}_LEDGER.md`,
     `MEGAPLAN_V${n}_PLAN.md`,
   ]),
-  ...[24, 25, 26, 27].flatMap((n) => [
+  ...[24, 25, 26, 27, 28].flatMap((n) => [
     `MEGAPLAN_V${n}_DEFERRED.md`,
     `MEGAPLAN_V${n}_FINDINGS.md`,
     `MEGAPLAN_V${n}_LEDGER.md`,
@@ -74,7 +74,7 @@ const ARCHIVED_DOCS = [
 
 /** Versions whose docs must be indexed in MEGAPLAN_BACKLOG.md. */
 const ARCHIVED_VERSIONS = [
-  9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+  9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
 ];
 
 const docsRootFiles = (): string[] => readdirSync(DOCS);

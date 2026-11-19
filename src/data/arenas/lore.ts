@@ -1086,6 +1086,8 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Drowned Idol',
     narrative:
       'An arrogant champion was knocked into the shallow waters at the edge of the arena and pinned beneath a collapsed stone statue of a forgotten god.',
+  },
+  {
     id: 'standard_arena_the_shattered_shields',
     arenaId: 'standard_arena',
     type: 'historical_battle',
@@ -1100,6 +1102,8 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Choking Trench',
     narrative:
       'A deep, jagged depression near the center of the pit where fighters often get stuck; those who control the trench control the flow of blood.',
+  },
+  {
     id: 'mudpit_arena_smothered_cry',
     arenaId: 'mudpit_arena',
     type: 'famous_death',

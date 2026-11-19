@@ -16,14 +16,13 @@ interface CoachWarning {
   color: string;
 }
 
-type CoachState = ReturnType<typeof useGameStore.getState>;
-
 /** Styles fast enough that heavy gear drags them below their endurance. */
 const FAST_STYLES = new Set(['LUNGING ATTACK', 'SLASHING ATTACK']);
 
 /** Computes the active coach warnings: insolvency, critical injuries, gear mismatches. */
 function buildWarnings(
-  state: Pick<CoachState, 'roster' | 'arenaHistory'>,
+  inActiveBoutIdsList: string[],
+  rosterStats: (string | number | undefined)[],
   rosterLength: number,
   trainersLength: number,
   treasury: number
@@ -44,24 +43,18 @@ function buildWarnings(
   }
 
   // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
-  const inActiveBoutIds = new Set(
-    (state.arenaHistory ?? []).flatMap((f) =>
-      f.winner === null ? [f.warriorIdA, f.warriorIdD] : []
-    )
-  );
-  const { injuredActive } = state.roster.reduce(
-    (acc, w) => {
-      const inActiveBout = inActiveBoutIds.has(w.id);
-      if (!inActiveBout) return acc;
-      acc.activeFighters.push(w);
-      if ((w.derivedStats?.hp || 0) < 30) acc.injuredActive.push(w);
-      return acc;
-    },
-    {
-      activeFighters: [] as typeof state.roster,
-      injuredActive: [] as typeof state.roster,
+  const inActiveBoutIds = new Set(inActiveBoutIdsList);
+  const injuredActive: { name: string }[] = [];
+
+  for (let i = 0; i < rosterStats.length; i += 6) {
+    const id = rosterStats[i] as string;
+    const name = rosterStats[i + 1] as string;
+    const hp = (rosterStats[i + 3] as number) || 0;
+
+    if (inActiveBoutIds.has(id)) {
+      if (hp < 30) injuredActive.push({ name });
     }
-  );
+  }
   if (injuredActive.length > 0) {
     list.push({
       id: 'crit_injury',
@@ -74,11 +67,19 @@ function buildWarnings(
   }
 
   // ⚖️ Encumbrance Check (Heavy gear on fast style) - needs full roster for derivedStats
-  const mismatchedSprints = state.roster.filter((w) => {
-    const isFast = FAST_STYLES.has(w.style);
-    const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
-    return isFast && isHeavy;
-  });
+  const mismatchedSprints: { name: string }[] = [];
+  for (let i = 0; i < rosterStats.length; i += 6) {
+    const name = rosterStats[i + 1] as string;
+    const style = rosterStats[i + 2] as string;
+    const endurance = (rosterStats[i + 4] as number) || 0;
+    const encumbrance = (rosterStats[i + 5] as number) || 0;
+
+    const isFast = FAST_STYLES.has(style);
+    const isHeavy = endurance < encumbrance;
+    if (isFast && isHeavy) {
+      mismatchedSprints.push({ name });
+    }
+  }
   if (mismatchedSprints.length > 0) {
     list.push({
       id: 'encumbrance_mismatch',
@@ -97,11 +98,25 @@ function buildWarnings(
  * Coach overlay.
  */
 export function CoachOverlay() {
-  const state = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      arenaHistory: s.arenaHistory,
-    }))
+  // ⚡ Bolt: Extract only necessary primitive fields as flat arrays instead of the whole roster
+  // object to prevent continuous re-renders when unrelated properties like fatigue change.
+  const inActiveBoutIdsList = useGameStore(
+    useShallow((s) =>
+      (s.arenaHistory ?? []).flatMap((f) => (f.winner === null ? [f.warriorIdA, f.warriorIdD] : []))
+    )
+  );
+
+  const rosterStats = useGameStore(
+    useShallow((s) =>
+      s.roster.flatMap((w) => [
+        w.id,
+        w.name,
+        w.style,
+        w.derivedStats?.hp,
+        w.derivedStats?.endurance,
+        w.derivedStats?.encumbrance,
+      ])
+    )
   );
 
   const rosterLength = useGameStore((s) => s.roster.length);
@@ -109,8 +124,8 @@ export function CoachOverlay() {
   const treasury = useGameStore((s) => s.treasury);
 
   const warnings = useMemo(
-    () => buildWarnings(state, rosterLength, trainersLength, treasury),
-    [state, rosterLength, trainersLength, treasury]
+    () => buildWarnings(inActiveBoutIdsList, rosterStats, rosterLength, trainersLength, treasury),
+    [inActiveBoutIdsList, rosterStats, rosterLength, trainersLength, treasury]
   );
 
   if (warnings.length === 0) return null;

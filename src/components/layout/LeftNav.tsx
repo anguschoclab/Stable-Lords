@@ -73,5 +73,3 @@ export function LeftNav({ className }: LeftNavProps) {
     </nav>
   );
 }
-
-export { HUBS, type HubId };

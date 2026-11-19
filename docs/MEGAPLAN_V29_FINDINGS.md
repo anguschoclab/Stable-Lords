@@ -80,19 +80,19 @@ SRP/function-length census (existing, not V29-attributed): `classTraits.ts` 517L
 
 | ID | Item | Status |
 | --- | --- | --- |
-| B0 | 30 open dependabot alerts on default branch | triage in Phase 5 — no blind-fix |
-| B1 | V26-D2 tier progression never fires (SystemPass.ts:53 + tierProgression.ts:64) | **SPEC RED** — `SystemPass.test.ts` V29-D2 describe (promote/demote fail, mid-season invariant green) |
-| B2 | V26-D3 `createFreshState` wall-clock `createdAt` | **SPEC RED** — `gameStateFactory.test.ts` V29-D3 (2 specs fail: wall-clock vs `weekToTimestamp(0)`, cross-call `toEqual`) |
-| B3 | V26-D4 `t()` crypto fallback (unreachable in prod; breaks seeded-sim purity) | **SPEC RED** — `gazetteTemplateHelpers.test.ts` V29-D4 (20 draws × 8-item pool → Set size ≠ 1) |
-| B4 | V26-D1 discovered favorite tactic never surfaces | **SPEC RED** — `tacticRow.test.tsx` renders `FavoritesCharting` with discovered tactic → no tactic row in DOM |
-| B5 | V16-A11 bid priority priced on current-week weather (offers.ts:46) | **SPEC RED** — `rivalBidsWeather.test.ts` mock captures `weather='Chaos Storm'` vs expected bout-week `'Blood Rain'` |
-| B6 | V21-B3 weather stamina incoherence — **three** violators: Chaos Storm, Chaos Squall, Abyssal Tempest | **SPEC RED** — `v29WeatherStamina.guard.test.ts` (3/65 fail) |
-| B7 | #1081 `caches.test.ts` WarriorId-indexing type error (admitted in its own `plan.md`) | merge-time typecheck gate |
+| B0 | 30 open dependabot alerts on default branch | recorded — dependency triage is out of merge scope; flagged for a dedicated security pass |
+| B1 | V26-D2 tier progression never fires | **FIXED (GREEN)** — `SystemPass` now passes `computeNextSeason(nextWeek)` + threads pass rng; promote/demote verified at boundary |
+| B2 | V26-D3 `createFreshState` wall-clock `createdAt` | **FIXED (GREEN)** — defaults to `weekToTimestamp(0)`; cross-call `toEqual` passes |
+| B3 | V26-D4 `t()` crypto fallback | **FIXED (GREEN)** — fallback removed; deterministic first-element pick; unused imports dropped |
+| B4 | V26-D1 discovered favorite tactic never surfaces | **FIXED (GREEN)** — "Tactics Revealed" cell + "Favorite Tactics" rows in `FavoritesCharting` |
+| B5 | V16-A11 bid priority on current-week weather | **FIXED (GREEN)** — bout-week weather derived on independent `SeededRNG` stream; spec captured `'Chaos Storm'`→`'Blood Rain'` |
+| B6 | V21-B3 weather stamina incoherence — **three** violators | **FIXED (GREEN)** — Chaos Storm/Squall effect-side corrected; Abyssal Tempest display-side corrected; 65/65 coherent |
+| B7 | #1081 `caches.test.ts` WarriorId-indexing type error | **cleared** — type-check clean post-merge; admitted issue did not materialize under the current config |
 | B8 | `opfsArchiverFlush` afterEach hook-timeout flake under suite load | watch item — same class as V28's `tacticDiscovery.parity` |
-| B9 | pre-existing duplicate strings: `combatPbp` 'SOLAR PLEXUS', `uiMeta` 'Fallen in combat.' (legit shared labels) | allowlisted in `v29Narrative` live guard; ratchet now forbids NEW dupes |
-| B10 | V21-B6 kill-desire differential — needs re-run/re-baseline decision | Phase 5 |
-| B11 | V22-D3 canonical damage model, V22-D4 ADM/graduation — feature-scale | go/no-go at Phase 5 per plan |
-| B12 | V15 structuredClone perf residuals | re-audit at Phase 5 |
+| B9 | pre-existing duplicate strings: pbp 'SOLAR PLEXUS', uiMeta 'Fallen in combat.' | allowlisted in `v29Narrative` live guard; ratchet now forbids NEW dupes — post-union suite shows 0 real dupes |
+| B10 | V21-B6 kill-desire differential | **DISPROVED suspicion** — slow-tier re-run: both kill specs (`:308`,`:402`) PASS on current engine; no re-baseline |
+| B11 | V22-D3 damage model, V22-D4 ADM/graduation | **NO-GO** — both deferred: feature-scale; V22-D3 rewrites invalidate all combat baselines; V22-D4 is a design-level advancement tier. BACKLOG notes sharpened |
+| B12 | V15 structuredClone residuals | **RESOLVED-by-design** — `mutableInput` ownership flag bypasses clones on owned state; residual clone is the semantically-required boundary copy |
 
 ## §V — Verdict matrix
 

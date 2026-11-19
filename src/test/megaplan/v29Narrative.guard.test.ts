@@ -148,7 +148,15 @@ describe('MEGAPLAN-V29: union-merged combat JSON pools', () => {
 
   it('uiMeta keeps the shared "Flashy" entry exactly once', () => {
     // #1089 and #1093 both add this key verbatim — union keeps one
-    const meta = uiMeta as Record<string, string>;
-    expect(meta['Flashy']).toBe('Crowd favorite — earns +2 Popularity per flashy fight.');
+    const matches: string[] = [];
+    const walk = (node: unknown): void => {
+      if (!node || typeof node !== 'object') return;
+      for (const [k, v] of Object.entries(node as Record<string, unknown>)) {
+        if (k === 'Flashy' && typeof v === 'string') matches.push(v);
+        else walk(v);
+      }
+    };
+    walk(uiMeta);
+    expect(matches).toEqual(['Crowd favorite — earns +2 Popularity per flashy fight.']);
   });
 });

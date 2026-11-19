@@ -420,4 +420,9 @@ export const ORIGINS: string[] = [
   'Abandoned in the flooded cellars of the Drowned Market and raised by beggars',
   'Found shivering in the rusted ventilation grates above the Black Iron Forge',
   'Raised in the lightless, suffocating basements of the Cinderstone Foundling Home',
+  'Raised by the grim overseers of the Hollowstone Orphanage, learning to fight for scraps',
+  'Left shivering in a rusted crate behind the Slaughterhouse of the Ash Dunes',
+  'Survived the silent starvation of the Weeping Convent by scavenging rat carcasses',
+  'Found clinging to the iron gates of the Blackwood Orphanage during a brutal winter',
+  'Abandoned wrapped in a tattered shroud near the whispering crypts of the Old City',
 ];

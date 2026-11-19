@@ -252,4 +252,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed a terrifying habit of chewing on rusted iron to strengthen their jaw',
   'learned to accurately throw heavy cobblestones with lethal precision during slum riots',
   'would meticulously collect the splintered bone fragments of fallen alley fighters',
+  'developed a grim habit of gnawing on splintered bones to strengthen their jaw for a fight',
+  'would purposefully corner feral dogs to practice striking first without hesitation',
+  'learned to gauge an opponent’s fatigue by the way their shoulders slumped during heavy labor',
 ];

@@ -230,4 +230,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until they survived the cull of the Sump by suffocating an armed enforcer with their bare hands',
   'realizing that the roar of the colosseum was just a louder version of the screaming alleys',
   'until they watched a legendary pit fighter die and realized that even gods bleed red',
+  'until they strangled a rabid fighting pit brute with his own rusted chain, finding their true calling',
+  'realizing that the hollow applause of the wealthy was the exact same sound as silver hitting their palm',
+  'until they gutted a corrupt overseer with a broken glass bottle, embracing the chaos of the sands',
 ];

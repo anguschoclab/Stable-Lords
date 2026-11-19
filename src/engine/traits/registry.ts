@@ -204,6 +204,8 @@ const LEGACY_TRAIT_ORDER = [
   'gut_survivor',
   'ash_breather',
   'street_rat',
+  'orphan_despair',
+  'orphan_paranoia',
 ];
 
 const MERGED: Record<string, TraitDef> = {

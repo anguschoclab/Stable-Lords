@@ -1071,6 +1071,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A legendary brute refused to fall until the sun bleached the color from his armor, finally collapsing as an immaculate, lifeless statue.',
   },
+  {
+    id: 'charnel_pits_the_hollow_chorus',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Hollow Chorus',
+    narrative:
+      'When the wind blows across the scattered bones in the pits, it creates a terrifying whistling sound that resembles a chorus of the damned.',
+  },
+  {
+    id: 'sunken_temple_drowned_idol',
+    arenaId: 'sunken_temple',
+    type: 'famous_death',
+    title: 'The Drowned Idol',
+    narrative:
+      'An arrogant champion was knocked into the shallow waters at the edge of the arena and pinned beneath a collapsed stone statue of a forgotten god.',
+  },
 ];
 
 const loreIndex = new Map<string, ArenaLoreEntry[]>();

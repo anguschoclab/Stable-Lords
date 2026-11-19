@@ -127,4 +127,22 @@ export const FLAWS_TRAITS: Record<string, TraitDef> = {
     tier: 'Flaw',
     sign: 'negative',
   },
+  orphan_despair: {
+    id: 'orphan_despair',
+    name: 'Orphan Despair',
+    description: 'Crumbles when heavily wounded, believing fate has finally caught up.',
+    effect: { defModLowHp: -1, parModLate: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  orphan_paranoia: {
+    id: 'orphan_paranoia',
+    name: 'Orphan Paranoia',
+    description: 'Never fully commits to a strike for fear of a counterattack.',
+    effect: { attMod: -1, fightPlanMod: { OE: -2 } },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
 };

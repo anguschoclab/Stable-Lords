@@ -47,7 +47,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     }
     // V21: floor (>=) — later narrative unions grow the pool; presence pins
     // above keep the V20 union verified without guaranteed-red churn.
-    expect(ORIGINS.length).toBeGreaterThanOrEqual(387); // 373 + 8 (#1065) + 6 (#1068)
+    expect(ORIGINS.length).toBeGreaterThanOrEqual(392); // 373 + 8 (#1065) + 6 (#1068) + 5 new
   });
 
   it('childhoodTraits contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
@@ -57,7 +57,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     ]) {
       expect(CHILDHOOD_TRAITS).toContain(s);
     }
-    expect(CHILDHOOD_TRAITS.length).toBeGreaterThanOrEqual(228); // 219 + 5 (#1065) + 4 (#1068)
+    expect(CHILDHOOD_TRAITS.length).toBeGreaterThanOrEqual(231); // 219 + 5 (#1065) + 4 (#1068) + 3 new
   });
 
   it('definingMoments contains the union of #1065 + #1068 entries (MEGAPLAN-V6)', () => {
@@ -67,7 +67,7 @@ describe('MEGAPLAN-V6: V20 union-merged lore pools', () => {
     ]) {
       expect(DEFINING_MOMENTS).toContain(s);
     }
-    expect(DEFINING_MOMENTS.length).toBeGreaterThanOrEqual(205); // 196 + 5 (#1065) + 4 (#1068)
+    expect(DEFINING_MOMENTS.length).toBeGreaterThanOrEqual(208); // 196 + 5 (#1065) + 4 (#1068) + 3 new
   });
 
   it('loreBackfill2 contains all six V20 arena lore ids (MEGAPLAN-V6)', () => {

@@ -17,12 +17,35 @@
 | safety | `pre-megaplan-v29` tag + 15 `refs/megaplan/v29/pr-*` | pushed |
 | contaminated-run note | first `bun run test` attempt discarded | ran concurrently with tsc+eslint → mass ~10s hook timeouts; re-ran serially for the honest baseline above |
 
+## §2 — Scanner delta (Phase 2)
+
+Read-only suite vs V28 baseline — **zero new violations**. Full detail in FINDINGS §W–§P. `test-audit-scan` regenerated `runnerGroups`/`auditBaseline` (timestamp drift only — rides into the Phase-3 commit).
+
+## §3 — Test inventory (Phase 3 hard gate)
+
+All specs authored and **observed RED** before any implementation (2026-11-19). 19 intended failures, each for the pinned reason:
+
+| Spec | Failing tests | RED observed |
+| --- | --- | --- |
+| `v29Narrative.guard.test.ts` | 6 | union entries/counts 426/254/232/248 missing; per-PR killText adds; uiMeta 'Flashy' — uniqueness describes GREEN (pbp 'SOLAR PLEXUS' / uiMeta 'Fallen in combat.' allowlisted as pre-existing shared labels) |
+| `v29Traits.guard.test.ts` | 3 | orphan traits absent; count 184 |
+| `v29WeatherStamina.guard.test.ts` | 3 | Abyssal Tempest, Chaos Storm, Chaos Squall — 3 violators found (B3 broader than backlog's 1) |
+| `SystemPass.test.ts` V29-D2 | 2 | promote/demote dead (tier unchanged); mid-season invariant GREEN |
+| `gameStateFactory.test.ts` V29-D3 | 2 | wall-clock `createdAt`; cross-call `toEqual` fails |
+| `gazetteTemplateHelpers.test.ts` V29-D4 | 1 | 20 draws → Set size ≠ 1 (deterministic) |
+| `rivalBidsWeather.test.ts` V16-A11 | 1 | `weather='Chaos Storm'` vs bout-week `'Blood Rain'` — mock captured the buggy call |
+| `tacticRow.test.tsx` V29-D1 | 1 | no tactic row in rendered DOM |
+| v21Narrative/v21Traits floor conversions | 0 | GREEN — `toBe` → `toBeGreaterThanOrEqual` on 6 count pins |
+
+Registered: `v29Narrative`, `v29Traits`, `v29WeatherStamina` → `GUARD_REGISTRY` LIVE_RATCHET.
+
 ## Phase commits
 
 | Phase | Description | Commit | Notes |
 | --- | --- | --- | --- |
-| 0 | Tag + backup refs + V29 doc scaffold + V28 archive + guard/INDEX/BACKLOG atomic swap | — | exactly-one-lineage invariant preserved |
+| 0 | Tag + backup refs + V29 doc scaffold + V28 archive + guard/INDEX/BACKLOG atomic swap | `dcb4b1b5` | exactly-one-lineage invariant preserved |
+| 2–3 | Scanner delta + FINDINGS §W–§P/§B + Phase-3 RED inventory + guard floors + registry | — | spec-first contract honored: 19 observed REDs, zero implementation |
 
 ## Verification record
 
-_Pending — updated per phase._
+- Phase 3 RED observation: 19 failing tests across 8 files, every failure matching its pinned reason (see §3).

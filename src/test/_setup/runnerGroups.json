@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-11T18:12:46.019Z",
+  "generatedAt": "2026-11-19T14:27:03.794Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -154,6 +154,7 @@
     "src/test/components/warrior/condition/OverrideSliders.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierHeader.test.tsx",
     "src/test/components/warrior/dossier/WarriorDossierStats.test.tsx",
+    "src/test/components/warrior/favorites/tacticRow.test.tsx",
     "src/test/components/warriorBuilder/DesignReviewCard.test.tsx",
     "src/test/components/warriorBuilder/WarriorBuilder.test.tsx",
     "src/test/components/widgets/PreAdvanceChecklist.test.tsx",
@@ -202,6 +203,7 @@
     "src/test/engine/pipeline/passes/PromoterPass.test.ts",
     "src/test/engine/pipeline/passes/RecruitmentPass.test.ts",
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
+    "src/test/engine/pipeline/passes/rivalBidsWeather.test.ts",
     "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
     "src/test/engine/pipeline/truncationCadence.slow.test.ts",

@@ -162,3 +162,11 @@ describe('resolveMoodTone', () => {
     expect(resolveMoodTone('Neutral')).toBe(MOOD_TONE[DEFAULT_CROWD_MOOD]);
   });
 });
+
+describe('V29-D4: t() deterministic array fallback', () => {
+  it('selects the same template deterministically when no rng is supplied', () => {
+    const pool = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const results = new Set(Array.from({ length: 20 }, () => t(pool, {})));
+    expect(results.size).toBe(1);
+  });
+});

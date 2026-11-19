@@ -58,11 +58,41 @@
 
 ## §W — Wiring audit · §D — Duplication audit · §A — SRP audit · §K — Dead-code audit · §P — Perf audit
 
-_Pending Phase 2 delta-verified read._
+Phase-2 delta-verified read complete (2026-11-19). Read-only scanner suite run and diffed against the V28 baseline — **zero new violations introduced**:
+
+- `orphan-scan`: 0 unreachable page files; 148 unique-code findings, 10 alternate flows, **3 untriaged orphans** (triage in Phase 5 or defer).
+- `data-array-dup-scan`, `dedupe` (no `--fix`), `dup-scan`, `param-count`, `ui-audit` (tracking/dead-keyframe), `skill-path` (145/145 refs resolve): all clean.
+- `fuzzy_dedupe.mjs` deliberately NOT executed — it rewrites files in place; dedupe is a Phase-4 controlled step.
+
+Deep-dive wiring confirmations (feed §B + Phase-5 specs):
+
+- `SystemPass.ts:53` — `processTierProgression(state, state.season, nextWeek)` dead call confirmed; `tierProgression.ts:64` early-returns when seasons match. `computeNextSeason` already imported (L19); `runSystemPass`'s `rng` (L274) is never threaded into `processSystemicProgression` — fix = pass `computeNextSeason(nextWeek)` + `rng`.
+- `gameStateFactory.ts:109` — `createdAt` param-2 defaults to `new Date().toISOString()`; `createFreshState(SEED)` is the only wall-clock read in the engine besides the gazette fallback.
+- `gazetteTemplateHelpers.ts:61-66` — `t()` crypto-random array fallback; **unreachable from production callers** (gazetteNarrative/gazetteFactory always thread seeded rng or preselect). Decision: remove fallback → deterministic first-element pick.
+- `RivalStrategyPass/offers.ts:46` — bids for `_currentWeek = absoluteWeek+1` priced with `weather: state.weather` (current week). `generateBoutBids` is invoked unconditionally per rival (L43); `buildWeekOffers` already receives `rng` (L19). Fix = derive bout-week weather on an independent stream `rollWeather(SeededRNG(nextWeek*13), computeNextSeason(nextWeek))` — same derivation WorldPass uses (`WorldPass.ts:30-31`), decoupled from the shared chain.
+- `weatherStats.ts:61` vs `weatherEffects/table.ts:419` — B3 confirmed **×3, not ×1**: Chaos Storm (DRAIN 125% ↔ `staminaMult` 0.8), Chaos Squall (115% ↔ 0.85), Abyssal Tempest (60% ↔ 1.6). Every other weather follows `DRAIN N% ↔ N/100`, `CONSERVATION N% ↔ 1−N/100`.
+- `damageCalc.ts:16-24` vs `mechanics/weaponArmor.ts` — V22-D3 canonical-model gap confirmed live (backlog's `resolution/` path stale, corrected).
+- `structuredClone` residual sites for the V15 perf re-audit: `engine/autosim/autosim.ts`, `engine/pipeline/services/weekPipeline/context.ts`, `engine/runtime/worker.ts` — original `cloneObject`/`copyDataProperties` names no longer exist.
+
+SRP/function-length census (existing, not V29-attributed): `classTraits.ts` 517L, `hallOfFame.ts` 511, `weather/config.ts` 509, `weatherEffects/table.ts` 496 — recorded for future campaigns; not blocking.
 
 ## §B — Bug register
 
-_Pending Phase 2. Seed entry: 30 open dependabot alerts on default branch (Phase-0 advisory scan) — triage, not blind-fix._
+| ID | Item | Status |
+| --- | --- | --- |
+| B0 | 30 open dependabot alerts on default branch | triage in Phase 5 — no blind-fix |
+| B1 | V26-D2 tier progression never fires (SystemPass.ts:53 + tierProgression.ts:64) | **SPEC RED** — `SystemPass.test.ts` V29-D2 describe (promote/demote fail, mid-season invariant green) |
+| B2 | V26-D3 `createFreshState` wall-clock `createdAt` | **SPEC RED** — `gameStateFactory.test.ts` V29-D3 (2 specs fail: wall-clock vs `weekToTimestamp(0)`, cross-call `toEqual`) |
+| B3 | V26-D4 `t()` crypto fallback (unreachable in prod; breaks seeded-sim purity) | **SPEC RED** — `gazetteTemplateHelpers.test.ts` V29-D4 (20 draws × 8-item pool → Set size ≠ 1) |
+| B4 | V26-D1 discovered favorite tactic never surfaces | **SPEC RED** — `tacticRow.test.tsx` renders `FavoritesCharting` with discovered tactic → no tactic row in DOM |
+| B5 | V16-A11 bid priority priced on current-week weather (offers.ts:46) | **SPEC RED** — `rivalBidsWeather.test.ts` mock captures `weather='Chaos Storm'` vs expected bout-week `'Blood Rain'` |
+| B6 | V21-B3 weather stamina incoherence — **three** violators: Chaos Storm, Chaos Squall, Abyssal Tempest | **SPEC RED** — `v29WeatherStamina.guard.test.ts` (3/65 fail) |
+| B7 | #1081 `caches.test.ts` WarriorId-indexing type error (admitted in its own `plan.md`) | merge-time typecheck gate |
+| B8 | `opfsArchiverFlush` afterEach hook-timeout flake under suite load | watch item — same class as V28's `tacticDiscovery.parity` |
+| B9 | pre-existing duplicate strings: `combatPbp` 'SOLAR PLEXUS', `uiMeta` 'Fallen in combat.' (legit shared labels) | allowlisted in `v29Narrative` live guard; ratchet now forbids NEW dupes |
+| B10 | V21-B6 kill-desire differential — needs re-run/re-baseline decision | Phase 5 |
+| B11 | V22-D3 canonical damage model, V22-D4 ADM/graduation — feature-scale | go/no-go at Phase 5 per plan |
+| B12 | V15 structuredClone perf residuals | re-audit at Phase 5 |
 
 ## §V — Verdict matrix
 

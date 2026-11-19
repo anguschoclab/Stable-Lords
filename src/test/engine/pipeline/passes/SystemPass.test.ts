@@ -310,3 +310,64 @@ describe('SystemPass — player roster floor', () => {
     expect(added[0]?.stableId).toBe(state.player.id);
   });
 });
+
+describe('V29-D2: tier progression fires at the season boundary', () => {
+  function tierRival(over: Record<string, unknown> = {}) {
+    return makeRival({
+      tier: 'Minor',
+      // 5 active warriors × 3 wins / 1 kill → 15 wins, 5 kills, 5 active:
+      // clears every 'Established' threshold.
+      roster: Array.from({ length: 5 }, () =>
+        makeWarrior({ career: { wins: 3, losses: 0, kills: 1 } as never })
+      ),
+      ...over,
+    });
+  }
+
+  it('promotes Minor→Established when thresholds met (week 13→14)', () => {
+    const baseState = createFreshState('seed-tier-promote');
+    baseState.week = 13;
+    baseState.season = 'Spring';
+    baseState.year = 1;
+    const rival = tierRival();
+    baseState.rivals = [rival];
+    baseState.roster = [];
+
+    const impact = runSystemPass(baseState);
+
+    expect(impact.rivalsUpdates?.get(rival.id)?.tier).toBe('Established');
+  });
+
+  it('demotes Established→Minor when the active roster drops below the floor', () => {
+    const baseState = createFreshState('seed-tier-demote');
+    baseState.week = 13;
+    baseState.season = 'Spring';
+    baseState.year = 1;
+    const rival = tierRival({
+      tier: 'Established',
+      roster: Array.from({ length: 2 }, () =>
+        makeWarrior({ career: { wins: 30, losses: 0, kills: 0 } as never })
+      ),
+    });
+    baseState.rivals = [rival];
+    baseState.roster = [];
+
+    const impact = runSystemPass(baseState);
+
+    expect(impact.rivalsUpdates?.get(rival.id)?.tier).toBe('Minor');
+  });
+
+  it('does not re-evaluate tiers mid-season (invariant)', () => {
+    const baseState = createFreshState('seed-tier-mid');
+    baseState.week = 5; // 5→6 stays inside Spring
+    baseState.season = 'Spring';
+    baseState.year = 1;
+    const rival = tierRival();
+    baseState.rivals = [rival];
+    baseState.roster = [];
+
+    const impact = runSystemPass(baseState);
+
+    expect(impact.rivalsUpdates?.get(rival.id)?.tier).toBeUndefined();
+  });
+});

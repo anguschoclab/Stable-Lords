@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { SAVE_STATE_VERSION } from '@/constants/core/core';
+import { weekToTimestamp } from '@/constants/core/dates';
 import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { BACKSTORY_IDS } from '@/data/backstories';
@@ -574,5 +575,15 @@ describe('createFreshState', () => {
       const { meta: m2, ...rest2 } = s2;
       expect(rest1).toEqual(rest2);
     });
+  });
+});
+
+describe('V29-D3: deterministic createdAt', () => {
+  it('defaults meta.createdAt to the week-0 timestamp, not wall-clock', () => {
+    expect(createFreshState(SEED).meta.createdAt).toBe(weekToTimestamp(0));
+  });
+
+  it('produces identical states across repeated createFreshState calls', () => {
+    expect(createFreshState(SEED)).toEqual(createFreshState(SEED));
   });
 });

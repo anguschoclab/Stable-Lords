@@ -1,6 +1,6 @@
 # Orphan Report — Stable Lords
 
-**Generated:** 2026-11-11 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
+**Generated:** 2026-11-19 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
@@ -28,9 +28,9 @@ The same symbol name is declared in other production files. `@score` is token-le
 
 | Symbol | Orphan file | Class | Alternate flow(s) |
 | --- | --- | --- | --- |
-| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/WarriorDossier.tsx` @0.19 **distinct**<br>`src/components/warrior/BiometricsTab.tsx` @0.19 **distinct** |
+| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/warrior/BiometricsTab.tsx` @0.19 **distinct**<br>`src/components/WarriorDossier.tsx` @0.19 **distinct** |
 | `HUBS` | `src/components/layout/LeftNav.tsx` | untriaged | `src/components/layout/navigationHubs.ts` @0 **distinct** |
-| `HubId` | `src/components/layout/LeftNav.tsx` | C | `src/components/layout/AlertStrip.tsx` @1 **identical**<br>`src/components/layout/HubSwitcher.tsx` @1 **identical**<br>`src/components/layout/MobileNav.tsx` @1 **identical**<br>`src/components/layout/SubPageList.tsx` @1 **identical**<br>`src/components/layout/navigationHubs.ts` @0.22 **distinct** |
+| `HubId` | `src/components/layout/LeftNav.tsx` | C | `src/components/layout/AlertStrip.tsx` @1 **identical**<br>`src/components/layout/HubSwitcher.tsx` @1 **identical**<br>`src/components/layout/MobileNav.tsx` @1 **identical**<br>`src/components/layout/navigationHubs.ts` @0.22 **distinct**<br>`src/components/layout/SubPageList.tsx` @1 **identical** |
 | `RhythmBand` | `src/engine/ai/plan/strategyLab.ts` | B | `src/components/warrior/favorites/FavoritesCharting.tsx` @0.08 **distinct** |
 | `extractWeekSummary` | `src/engine/autosim/autosim.ts` | C | `src/engine/pipeline/tick/timeAdvance/summaries.ts` @0.3 **distinct** |
 | `TOURNAMENT_TIERS` | `src/engine/matchmaking/tournamentSelection.ts` | A | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct** |

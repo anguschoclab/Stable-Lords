@@ -55,8 +55,9 @@ export const FormSparkline = React.memo(function FormSparkline({
               <Tooltip key={fight.id}>
                 <TooltipTrigger asChild>
                   <div
+                    tabIndex={0}
                     className={cn(
-                      'w-3 h-3 rounded-none transition-transform hover:scale-125 motion-reduce:transition-none motion-reduce:transform-none',
+                      'w-3 h-3 rounded-none transition-transform hover:scale-125 motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
                       colorClass
                     )}
                   />

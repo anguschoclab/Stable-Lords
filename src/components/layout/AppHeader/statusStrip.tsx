@@ -101,8 +101,9 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <span
+            tabIndex={0}
             className={cn(
-              'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all motion-reduce:transition-none motion-reduce:transform-none hover:bg-white/10 uppercase tracking-widest',
+              'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all motion-reduce:transition-none motion-reduce:transform-none hover:bg-white/10 uppercase tracking-widest focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
               config.colorClass
             )}
           >

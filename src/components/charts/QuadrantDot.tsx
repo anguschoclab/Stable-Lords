@@ -17,8 +17,9 @@ export function QuadrantDotItem({ dot }: QuadrantDotProps) {
     <Tooltip>
       <TooltipTrigger asChild>
         <div
+          tabIndex={0}
           className={cn(
-            'absolute w-3 h-3 rounded-none -translate-x-1/2 -translate-y-1/2 cursor-default transition-transform hover:scale-150 motion-reduce:transition-none motion-reduce:transform-none',
+            'absolute w-3 h-3 rounded-none -translate-x-1/2 -translate-y-1/2 cursor-default transition-transform hover:scale-150 motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
             dot.isPlayer
               ? 'bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)] z-10'
               : 'bg-white/30 hover:bg-white/50'

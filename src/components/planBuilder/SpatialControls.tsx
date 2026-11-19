@@ -84,7 +84,13 @@ function FeintTendency({ warrior, plan }: { warrior: Warrior; plan: FightPlan })
           </Label>
           <Tooltip>
             <TooltipTrigger asChild>
-              <HelpCircle className="h-3 w-3 text-muted-foreground/40 cursor-help" />
+              <button
+                type="button"
+                aria-label="Feint tendency info"
+                className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded-full inline-flex"
+              >
+                <HelpCircle className="h-3 w-3 text-muted-foreground/40 cursor-help" />
+              </button>
             </TooltipTrigger>
             <TooltipContent
               side="top"

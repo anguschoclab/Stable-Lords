@@ -818,17 +818,38 @@
       "{{attacker}} is eagerly seeking the death blow!",
       "{{attacker}} is going for the kill!",
       "{{attacker}} seeks the death of their opponent!",
-      "{{attacker}} aims to slay {{defender}}!"
+      "{{attacker}} aims to slay {{defender}}!",
+      "{{attacker}} tightens their grip, eyes fixed on a fatal strike!",
+      "{{attacker}} abandons all defense, solely intent on ending {{defender}}'s life!",
+      "A grim silence falls over {{attacker}}, seeking only the killing blow!",
+      "{{attacker}} presses forward with a terrifying, singular focus on murder!",
+      "{{attacker}} looks past {{defender}}'s guard, seeking the heart!",
+      "{{attacker}} snarls, completely committed to a lethal finish!",
+      "The bloodlust is palpable as {{attacker}} aims for a fatal blow!"
     ],
     "doomed": [
       "{{name}} is mortally wounded — hanging on by a thread!",
       "{{name}} reels from a mortal blow — the end is near!",
-      "{{name}}'s wound is fatal; only the formality remains!"
+      "{{name}}'s wound is fatal; only the formality remains!",
+      "{{name}} staggers blindly, a dead warrior walking!",
+      "{{name}}'s lifeblood paints the sand — the final curtain approaches!",
+      "{{name}} gasps for breath, desperately fighting off the inevitable!",
+      "{{name}} slumps, their body failing before the eyes of the crowd!",
+      "{{name}} clutches a ruinous wound, knowing the end is here!",
+      "{{name}}'s eyes glaze over — they are already a ghost on the sand!",
+      "{{name}} sways violently, a hollow shell waiting to fall!"
     ],
     "died_of_wounds": [
       "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
       "{{defender}} succumbs to the accumulated wounds dealt by {{attacker}} — dead on the sand.",
-      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted."
+      "The punishment was too much — {{defender}} dies of the wounds {{attacker}} inflicted.",
+      "{{defender}}'s legs give out at last, succumbing to {{attacker}}'s relentless punishment.",
+      "{{defender}} sinks to the sands, bleeding out from {{attacker}}'s earlier strikes.",
+      "Without another blow landing, {{defender}} collapses, overwhelmed by fatal trauma.",
+      "{{defender}} shudders and falls limp, finally yielding to the brutal wounds dealt by {{attacker}}.",
+      "{{defender}} pitches forward into the dirt, their body unable to sustain {{attacker}}'s damage.",
+      "{{defender}} drops their weapon and falls, their life drained by {{attacker}}'s cruel work.",
+      "{{defender}} quietly slips away, collapsing on the blood-soaked sand."
     ]
   }
 }

@@ -830,7 +830,11 @@
       "{{attacker}} fights with ruthless intent, seeking the final blow!",
       "{{attacker}} abandons all restraint—they want blood!",
       "A sinister focus falls over {{attacker}}—they want a corpse, not just a victory!",
-      "{{attacker}} presses forward with a chilling, lethal determination."
+      "{{attacker}} presses forward with a chilling, lethal determination.",
+      "{{attacker}} goes for the throat!",
+      "{{attacker}}'s eyes lock onto a fatal opening!",
+      "{{attacker}} prepares to end it all!",
+      "{{attacker}} commits to a final, deadly blow!"
     ],
     "doomed": [
       "{{name}} is mortally wounded — hanging on by a thread!",
@@ -849,7 +853,14 @@
       "{{name}} collapses to one knee, the grim reaper already standing over them.",
       "{{name}} tries to stay standing, but the final curtain is drawing close.",
       "A shadow passes over {{name}}'s face; their doom is sealed.",
-      "{{name}} is dead on their feet—it's only a matter of time."
+      "{{name}} is dead on their feet—it's only a matter of time.",
+      "{{name}} is clutching a fatal wound!",
+      "{{name}}'s lifeblood spills rapidly onto the sand!",
+      "{{name}} staggers, death already written on their face!",
+      "{{name}} has taken a lethal strike, it's only a matter of time!",
+      "{{name}}'s legs buckle under the weight of a deathblow!",
+      "{{name}} spits blood, knowing the end has come!",
+      "{{name}} cannot survive this much punishment!"
     ],
     "died_of_wounds": [
       "{{attacker}}'s {{weapon}} found its mark — {{defender}} collapses, dead of wounds.",
@@ -868,7 +879,14 @@
       "A final, ragged breath escapes {{defender}} as they fall lifeless to the arena floor.",
       "{{attacker}} watches coldly as {{defender}} bleeds out, unable to sustain the grievous damage.",
       "The battle takes its final toll—{{defender}} collapses and breathes their last.",
-      "{{defender}}'s body gives out entirely under the relentless punishment from {{attacker}}."
+      "{{defender}}'s body gives out entirely under the relentless punishment from {{attacker}}.",
+      "{{defender}} drops to their knees, their body finally giving out from the wounds.",
+      "The blood loss is too great; {{defender}} slumps over, dead.",
+      "{{defender}} takes one last ragged breath before succumbing to their injuries.",
+      "The accumulation of gashes proves fatal as {{defender}} bleeds out on the sand.",
+      "{{defender}} falls, their mangled body unable to sustain life any longer.",
+      "A final twitch, and {{defender}} expires from the massive trauma.",
+      "{{defender}}'s eyes roll back as they perish from the sheer volume of wounds."
     ]
   }
 }

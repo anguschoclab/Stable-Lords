@@ -207,7 +207,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
               {owned && onFire && (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button
+                    <button type="button"
                       onClick={onFire}
                       aria-label="Release Trainer"
                       className="p-2.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all motion-reduce:transition-none motion-reduce:transform-none group/fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"

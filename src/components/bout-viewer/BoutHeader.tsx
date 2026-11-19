@@ -36,7 +36,7 @@ function ExpandToggleButton({ expanded, onToggleExpanded }: ExpandToggleButtonPr
     <div className="absolute -top-4 -right-4 flex items-center gap-2">
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
+          <button type="button"
             onClick={onToggleExpanded}
             className="p-2 rounded-none bg-neutral-900 border border-white/10 text-muted-foreground hover:text-foreground transition-all motion-reduce:transition-none motion-reduce:transform-none hover:border-white/30"
             aria-label={expanded ? 'Minimize battle log' : 'Reveal battle log'}

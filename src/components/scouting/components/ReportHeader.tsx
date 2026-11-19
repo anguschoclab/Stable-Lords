@@ -42,7 +42,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
+          <button type="button"
             aria-label="More Info"
             className="p-2 rounded-none bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors motion-reduce:transition-none"
           >

@@ -28,7 +28,7 @@ export function IconTabStrip<T extends string>({
       className={cn('flex items-center gap-8 border-b border-white/5', className)}
     >
       {tabs.map((tab) => (
-        <button
+        <button type="button"
           key={tab.id}
           role="tab"
           aria-selected={activeTab === tab.id}

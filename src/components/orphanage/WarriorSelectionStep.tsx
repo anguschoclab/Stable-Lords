@@ -53,7 +53,7 @@ export default function WarriorSelectionStep(props: WarriorSelectionStepProps) {
             </div>
           </div>
         </div>
-        <button
+        <button type="button"
           onClick={onRerollPool}
           className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-accent transition-colors px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"
         >

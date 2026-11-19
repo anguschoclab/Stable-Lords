@@ -102,7 +102,7 @@ function WarriorSelectionCard(props: WarriorSelectionCardProps) {
   const colors = colorClasses[colorVariant];
 
   return (
-    <button
+    <button type="button"
       onClick={onSelect}
       disabled={isDisabled}
       className={selectionRowClasses({

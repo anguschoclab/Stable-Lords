@@ -37,7 +37,7 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
               : getDefensiveSuitability(plan.style, t.id as DefensiveTactic)
             : null;
           return (
-            <button
+            <button type="button"
               key={t.id}
               aria-label={`Select Tactic: ${t.id}`}
               onClick={() => handleClick(t)}

@@ -28,19 +28,22 @@ export function TreasuryOverview() {
   const breakdown = useMemo(() => computeWeeklyBreakdown({ ...state, isPlayer: true }), [state]);
   const gold = state.treasury ?? 0;
 
-  const activeWarriorsCount = (state.roster ?? []).filter((w) => isActive(w)).length;
-
-  // ⚡ Bolt: Fast accumulation without allocating objects per iteration
-  let totalWins = 0;
-  let totalKills = 0;
-  const roster = state.roster ?? [];
-  for (let i = 0; i < roster.length; i++) {
-    const w = roster[i];
-    if (w) {
-      totalWins += w.career.wins ?? 0;
-      totalKills += w.career.kills ?? 0;
+  // ⚡ Bolt: Use a single O(N) pass inside useMemo to avoid recomputing on every render
+  const { activeWarriorsCount, totalWins, totalKills } = useMemo(() => {
+    let wins = 0;
+    let kills = 0;
+    let active = 0;
+    const roster = state.roster ?? [];
+    for (let i = 0; i < roster.length; i++) {
+      const w = roster[i];
+      if (w) {
+        wins += w.career.wins ?? 0;
+        kills += w.career.kills ?? 0;
+        if (isActive(w)) active++;
+      }
     }
-  }
+    return { activeWarriorsCount: active, totalWins: wins, totalKills: kills };
+  }, [state.roster]);
 
   const recentLedger = (state.ledger ?? []).slice(-15).reverse();
   const totalLedgerEntries = state.ledger?.length ?? 0;

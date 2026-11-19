@@ -102,7 +102,14 @@ findings don't re-litigate them.
 - **Retained probe scripts** — `scripts/livingworld-seed-probe.ts <seed>`
   (200-week livingWorld assertions) and `scripts/probe-liveness-seed.ts
   <seed>` (104-week competence-gradient/coherence) are dev-time
-  re-baseline tools, excluded from `tsconfig.e2e.json`.
+  re-baseline tools, excluded from `tsconfig.e2e.json`. **V29 caveat**:
+  `probe-liveness-seed.ts` does NOT replicate the
+  `worldLiveness.integration` spec's module environment (the spec's
+  `vi.mock(opfsArchive)` shared stub diverges the seeded trajectory), so
+  its per-seed metrics are unreliable predictors of in-spec results —
+  re-baseline sweeps for that spec must run in-spec (temp probe specs
+  mirroring its env), then the winner is verified in-spec as before.
+  V29's re-baseline to seed 42 was done this way.
 - **Fold convention** — every megaplan close-out writes/updates this
   register; `*_DEFERRED.md` files describe what shipped vs punted *within*
   their version; this file is the only cross-version backlog.

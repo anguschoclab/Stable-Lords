@@ -59,7 +59,7 @@ describe('combat JSON pool uniqueness (live guard)', () => {
       const seen = new Set<string>();
       const dupes: string[] = [];
       for (const s of collectStrings(pool)) {
-        if (seen.has(s) && !ALLOWED_SHARED[name].has(s)) dupes.push(s.slice(0, 60));
+        if (seen.has(s) && !ALLOWED_SHARED[name]?.has(s)) dupes.push(s.slice(0, 60));
         seen.add(s);
       }
       expect(dupes).toEqual([]);

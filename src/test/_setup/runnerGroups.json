@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T14:27:03.794Z",
+  "generatedAt": "2026-11-19T15:49:37.031Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -88,10 +88,13 @@
     "src/test/components/layout/SubPageList.test.tsx",
     "src/test/components/layout/TacticalBar.test.tsx",
     "src/test/components/layout/useNavAlerts.test.tsx",
+    "src/test/components/ledger/ContractManager/ContractManager.test.tsx",
     "src/test/components/ledger/ContractManager/hooks/useContractData.test.ts",
     "src/test/components/ledger/DivisionalStandings.test.tsx",
+    "src/test/components/ledger/InsightManager/InsightManager.test.tsx",
     "src/test/components/ledger/InsightManager/hooks/useInsightManager.test.ts",
     "src/test/components/ledger/Ledger.test.tsx",
+    "src/test/components/ledger/SeasonSynthesis/SeasonSynthesis.test.tsx",
     "src/test/components/modals/Modals.test.tsx",
     "src/test/components/orphanage/PlanStep.test.tsx",
     "src/test/components/orphanage/WarriorCard.test.tsx",
@@ -204,6 +207,7 @@
     "src/test/engine/pipeline/passes/RecruitmentPass.test.ts",
     "src/test/engine/pipeline/passes/WarriorPass.test.ts",
     "src/test/engine/pipeline/passes/rivalBidsWeather.test.ts",
+    "src/test/engine/pipeline/services/weekPipelineService.test.ts",
     "src/test/engine/pipeline/skipToWeekEndOwnership.test.ts",
     "src/test/engine/pipeline/stateInvariants.slow.test.ts",
     "src/test/engine/pipeline/truncationCadence.slow.test.ts",

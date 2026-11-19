@@ -1,6 +1,9 @@
 import { GameState, RivalStableData } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { SeededRNG } from '@/utils/random';
+import { rollWeather } from '@/engine/weather/seasonalWeather';
+import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import {
   generateBoutBids,
   convertBidsToOffers,
@@ -34,7 +37,15 @@ export function buildWeekOffers(
     });
   }
 
-  // 1.7. Generate bout bids for each rival and convert to offers
+  // 1.7. Generate bout bids for each rival and convert to offers.
+  // Bid priority must price the BOUT-RESOLUTION week's weather, not the
+  // stale current-week field — derive it the same way WorldPass does, on
+  // an independent seeded stream so the shared rng chain is untouched.
+  const boutWeek = state.absoluteWeek + 1;
+  const boutWeather = rollWeather(
+    new SeededRNG(boutWeek * 13),
+    computeNextSeason(boutWeek)
+  );
   const allBids: {
     bid: import('@/engine/ai/workers/competitionWorker/types').BoutBid;
     rivalId: string;
@@ -42,8 +53,8 @@ export function buildWeekOffers(
   for (const rival of currentRivals) {
     const { bids } = generateBoutBids({
       rival: rival,
-      _currentWeek: state.absoluteWeek + 1,
-      weather: state.weather ?? 'Clear',
+      _currentWeek: boutWeek,
+      weather: boutWeather,
       crowdMood: state.crowdMood ?? 'Calm',
       rivals: currentRivals,
       state: state,

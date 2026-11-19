@@ -25,7 +25,7 @@ function warriorWithDiscoveredTactic(tactic: string) {
 describe('V29-D1: discovered favorite tactic surfaces in favorites charting', () => {
   it('renders a tactic row once the tactic is discovered', () => {
     render(<FavoritesCharting warriors={[warriorWithDiscoveredTactic('Decisive')]} />);
-    expect(screen.getByText(/tactic/i)).toBeInTheDocument();
+    expect(screen.getByText(/favorite tactics/i)).toBeInTheDocument();
     expect(screen.getByText(/Decisive/)).toBeInTheDocument();
   });
 });

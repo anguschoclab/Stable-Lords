@@ -36,7 +36,8 @@ import {
 function processSystemicProgression(
   state: GameState,
   nextWeek: number,
-  nextYear: number
+  nextYear: number,
+  rng?: IRNGService
 ): StateImpact {
   const hofImpact = processHallOfFame(state, nextWeek);
   const weeklyHofImpact = recordWeeklyHallOfFame(state);
@@ -50,7 +51,7 @@ function processSystemicProgression(
     snapshotImpact = createYearlySnapshots(state, nextYear);
   }
 
-  const tierImpact = processTierProgression(state, state.season, nextWeek);
+  const tierImpact = processTierProgression(state, computeNextSeason(nextWeek), nextWeek, rng);
 
   // mergeImpacts — never object spread: sub-impacts share update maps
   // (rosterUpdates / rivalsUpdates / rivalWarriorPatches), and a naive
@@ -274,7 +275,7 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
   const rng = resolveRng(rootRng, (state.absoluteWeek ?? state.week) * 881 + 17);
 
   // 1. Systemic Progression (Draft-heavy)
-  const impact = processSystemicProgression(state, nextWeek, nextYear);
+  const impact = processSystemicProgression(state, nextWeek, nextYear, rng);
 
   // 2. Player Bankruptcy Check (after economy pass)
   const bankruptcyResult = BankruptcyService.processPlayerBankruptcy(state, rng);

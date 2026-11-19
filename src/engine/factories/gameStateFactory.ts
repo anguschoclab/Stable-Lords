@@ -21,6 +21,7 @@ import { generatePotential } from '@/engine/warrior/potential';
 import { BACKSTORY_IDS } from '@/data/backstories';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import { SAVE_STATE_VERSION } from '@/constants/core';
+import { weekToTimestamp } from '@/constants/core/dates';
 import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 import { OWNER_PERSONALITIES_WITH_POLICY } from '@/engine/ai/traitPolicy';
 
@@ -106,7 +107,7 @@ function baseFreshState(createdAt: string): GameState {
  */
 export function createFreshState(
   seed: string,
-  createdAt: string = new Date().toISOString(),
+  createdAt: string = weekToTimestamp(0),
   worldOptions?: WorldOptions
 ): GameState {
   const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);

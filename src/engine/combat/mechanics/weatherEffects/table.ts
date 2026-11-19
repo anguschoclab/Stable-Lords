@@ -416,7 +416,7 @@ export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
       'A bizarre rain of frogs covers the arena, causing widespread confusion and making footing treacherous.',
   },
   'Chaos Storm': {
-    staminaMult: 0.8,
+    staminaMult: 1.25,
     initiativeMod: -5,
     riposteMod: 10,
     damageMult: 1.5,
@@ -453,7 +453,7 @@ export const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description: 'A shimmering gale of stardust accelerates initiative but drains stamina faster.',
   },
   'Chaos Squall': {
-    staminaMult: 0.85,
+    staminaMult: 1.15,
     initiativeMod: 3,
     riposteMod: -2,
     damageMult: 1.1,

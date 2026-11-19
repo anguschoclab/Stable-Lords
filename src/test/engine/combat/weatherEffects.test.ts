@@ -102,7 +102,7 @@ describe('weatherEffects', () => {
 
     it('returns Chaos Storm effect with correct modifiers', () => {
       const effect = getWeatherEffect('Chaos Storm' as WeatherType);
-      expect(effect.staminaMult).toBe(0.8);
+      expect(effect.staminaMult).toBe(1.25);
       expect(effect.initiativeMod).toBe(-5);
       expect(effect.riposteMod).toBe(10);
       expect(effect.damageMult).toBe(1.5);
@@ -112,7 +112,7 @@ describe('weatherEffects', () => {
 
     it('returns Chaos Squall effect with correct modifiers', () => {
       const effect = getWeatherEffect('Chaos Squall' as WeatherType);
-      expect(effect.staminaMult).toBe(0.85);
+      expect(effect.staminaMult).toBe(1.15);
       expect(effect.initiativeMod).toBe(3);
       expect(effect.riposteMod).toBe(-2);
       expect(effect.damageMult).toBe(1.1);

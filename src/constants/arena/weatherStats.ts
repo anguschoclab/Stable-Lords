@@ -3,7 +3,7 @@ import type { WeatherType } from '@/types/shared.types';
 /** Combat modifier stat strings displayed per weather type in the WeatherWidget tooltip. */
 export const WEATHER_STATS: Record<WeatherType, string> = {
   'Cosmic Anomaly': 'STAMINA CONSERVATION 10% | INITIATIVE +5 | RIPOSTE -2 | DAMAGE +25%',
-  'Abyssal Tempest': 'STAMINA DRAIN 60% | INITIATIVE -2 | RIPOSTE -2 | DAMAGE +10%',
+  'Abyssal Tempest': 'STAMINA DRAIN 160% | INITIATIVE -2 | RIPOSTE -2 | DAMAGE +10%',
 
   Zephyr: 'STAMINA CONSERVATION 15% | INITIATIVE +2',
   'Wild Magic': 'UNPREDICTABLE SURGES | DAMAGE +10%',

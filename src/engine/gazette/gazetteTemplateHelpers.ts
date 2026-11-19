@@ -6,8 +6,7 @@ import { narrativeContent } from '@/data/narrative';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNG } from '@/utils/random';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';
+
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { escapeHtml } from '@/utils/escapeHtml';
 
@@ -59,13 +58,7 @@ export function styleName(style: string): string {
  * Replaces {{key}} placeholders in templates with data values.
  */
 export function t(template: string | string[], data: TemplateData, rng?: IRNGService): string {
-  const result = Array.isArray(template)
-    ? rng
-      ? rng.pick(template)
-      : template[
-          Math.floor(new SeededRNG(cryptoRandomInt(0, 2147483647)).next() * template.length)
-        ] || ''
-    : template;
+  const result = Array.isArray(template) ? (rng ? rng.pick(template) : template[0]) : template;
 
   if (!result || typeof result !== 'string' || !result.includes('{{')) return result || '';
 

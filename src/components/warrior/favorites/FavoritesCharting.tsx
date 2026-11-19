@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Swords, Activity, Eye } from 'lucide-react';
+import { Swords, Activity, Eye, Crosshair } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { getItemById } from '@/data/equipment';
@@ -39,10 +39,13 @@ interface FavoritesChart {
   total: number;
   weaponDiscovered: number;
   rhythmDiscovered: number;
+  tacticDiscovered: number;
   weaponRows: WeaponCount[];
   rhythmRows: RhythmBand[];
+  tacticRows: RhythmBand[];
   maxWeapon: number;
   maxRhythm: number;
+  maxTactic: number;
 }
 
 /** Aggregates discovered favorites across the active roster. */
@@ -50,8 +53,10 @@ export function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
   const withFavorites = warriors.filter((w) => isActive(w) && w.favorites);
   const weaponCounts = new Map<string, number>();
   const rhythmBands = new Map<string, number>();
+  const tacticCounts = new Map<string, number>();
   let weaponDiscovered = 0;
   let rhythmDiscovered = 0;
+  let tacticDiscovered = 0;
 
   for (const w of withFavorites) {
     const fav = w.favorites;
@@ -64,6 +69,10 @@ export function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
       rhythmDiscovered += 1;
       const band = `${oeLabel(fav.rhythm.oe)} / ${alLabel(fav.rhythm.al)}`;
       rhythmBands.set(band, (rhythmBands.get(band) ?? 0) + 1);
+    }
+    if (fav.discovered.tactic && fav.tactic) {
+      tacticDiscovered += 1;
+      tacticCounts.set(fav.tactic, (tacticCounts.get(fav.tactic) ?? 0) + 1);
     }
   }
 
@@ -79,14 +88,21 @@ export function buildFavoritesChart(warriors: Warrior[]): FavoritesChart {
     .map(([band, count]) => ({ band, count }))
     .sort((a, b) => b.count - a.count);
 
+  const tacticRows = [...tacticCounts.entries()]
+    .map(([band, count]) => ({ band, count }))
+    .sort((a, b) => b.count - a.count);
+
   return {
     total: withFavorites.length,
     weaponDiscovered,
     rhythmDiscovered,
+    tacticDiscovered,
     weaponRows,
     rhythmRows,
+    tacticRows,
     maxWeapon: weaponRows[0]?.count ?? 0,
     maxRhythm: rhythmRows[0]?.count ?? 0,
+    maxTactic: tacticRows[0]?.count ?? 0,
   };
 }
 
@@ -94,9 +110,10 @@ function DiscoverySummary({ chart }: { chart: FavoritesChart }) {
   const cells: { icon: typeof Swords; label: string; count: number }[] = [
     { icon: Swords, label: 'Weapons Revealed', count: chart.weaponDiscovered },
     { icon: Activity, label: 'Rhythms Charted', count: chart.rhythmDiscovered },
+    { icon: Crosshair, label: 'Tactics Revealed', count: chart.tacticDiscovered },
   ];
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-3 gap-4">
       {cells.map(({ icon: Icon, label, count }) => (
         <div key={label} className="p-3 bg-white/[0.02] border border-white/5">
           <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
@@ -193,7 +210,17 @@ export function FavoritesCharting({ warriors }: FavoritesChartingProps) {
         />
       )}
 
-      {chart.weaponDiscovered === 0 && chart.rhythmDiscovered === 0 && (
+      {chart.tacticRows.length > 0 && (
+        <DistributionRows
+          title="Favorite Tactics"
+          rows={chart.tacticRows.map((r) => ({ key: r.band, label: r.band, count: r.count }))}
+          labelWidth="w-32"
+          max={chart.maxTactic}
+          barClass="bg-arena-blood/70"
+        />
+      )}
+
+      {chart.weaponDiscovered === 0 && chart.rhythmDiscovered === 0 && chart.tacticDiscovered === 0 && (
         <Surface
           variant="glass"
           className="p-6 text-center border-dashed border-white/10 flex items-center justify-center gap-3"

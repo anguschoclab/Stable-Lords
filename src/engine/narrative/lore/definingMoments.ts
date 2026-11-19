@@ -233,4 +233,7 @@ export const DEFINING_MOMENTS: string[] = [
   'until they strangled a rabid fighting pit brute with his own rusted chain, finding their true calling',
   'realizing that the hollow applause of the wealthy was the exact same sound as silver hitting their palm',
   'until they gutted a corrupt overseer with a broken glass bottle, embracing the chaos of the sands',
+  'until they tasted their own blood in a gutter brawl and realized they enjoyed the metallic tang',
+  'realizing that the only way out of the slums was to build a staircase out of shattered opponents',
+  'until they watched a champion fall and realized that even gods bleed when cut deep enough',
 ];

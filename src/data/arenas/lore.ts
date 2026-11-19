@@ -1100,6 +1100,20 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Choking Trench',
     narrative:
       'A deep, jagged depression near the center of the pit where fighters often get stuck; those who control the trench control the flow of blood.',
+    id: 'mudpit_arena_smothered_cry',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Smothered Cry',
+    narrative:
+      'A boastful champion was dragged beneath the sucking muck by a dying opponent, their final challenge reduced to a frantic stream of bubbles.',
+  },
+  {
+    id: 'charnel_pits_bone_splinter_massacre',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Bone Splinter Massacre',
+    narrative:
+      'A desperate fighter turned the arena against their heavily armored foes, shattering the packed-bone walls to create a deadly shrapnel storm.',
   },
 ];
 

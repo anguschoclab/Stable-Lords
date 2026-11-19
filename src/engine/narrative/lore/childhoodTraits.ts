@@ -255,4 +255,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'developed a grim habit of gnawing on splintered bones to strengthen their jaw for a fight',
   'would purposefully corner feral dogs to practice striking first without hesitation',
   'learned to gauge an opponent’s fatigue by the way their shoulders slumped during heavy labor',
+  'developed a habit of silently tracking the pulse points on anyone who stood too close',
+  'learned to identify a weapon\'s balance by the sound it made when dropped on stone',
+  'would instinctively drop their center of gravity at the first sound of a drawn blade',
 ];

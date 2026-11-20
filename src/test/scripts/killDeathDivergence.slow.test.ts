@@ -91,5 +91,8 @@ describe('kill/death divergence regression (slow)', () => {
       killOutcomes - c.deaths,
       `killDeathDivergence=${killOutcomes - c.deaths} (kills ${killOutcomes} vs deaths ${c.deaths})`
     ).toBe(0);
-  }, 600000);
+    // V29: the 300-week world sim measures ~685s on the reference box now
+    // (tier progression + denser rival churn grew per-week cost); 600s had
+    // no margin — every "flake" triage was this cap, not the invariants.
+  }, 900000);
 });

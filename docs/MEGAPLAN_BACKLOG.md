@@ -64,6 +64,16 @@ Logged trends — re-measure at each world re-baseline, not per commit.
 - **`tacticDiscovery.parity.test.ts` suite-load flake** (V28): passed
   standalone; signature matches the hook-timeout class above — root cause
   now fixed via `hookTimeout: 30000`.
+- **`killDeathDivergence` 300wk vs 600s cap** (V29): the world sim outgrew
+  the budget (~685s semi-solo); per-test cap raised to 900s — verified
+  green solo at 628s. If per-week cost keeps climbing this re-fails.
+- **e2e console findings** (V29, pre-existing, observed in `bun run e2e`):
+  (a) `Cannot update RouterHooks while rendering AvatarForEntity` —
+  setState-in-render warning; (b) hydration error: `<button>` nested
+  inside `<button>` — `BookmarkButton` renders inside `SelectableCard`'s
+  button element on `WarriorListItem`. Real DOM-validity/a11y bug, not
+  test-visible. Needs a markup fix (make the outer a non-button or hoist
+  the bookmark control).
 
 ## 3. House divergences (adjudicated keeps)
 

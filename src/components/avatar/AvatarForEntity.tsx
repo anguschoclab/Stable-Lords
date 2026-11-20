@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Avatar, type AvatarProps } from './Avatar';
@@ -106,21 +106,25 @@ export function AvatarForEntity({
       ensureAvatar: s.ensureAvatar,
     }))
   );
+  // Read the cache reactively; generating inside render would call set()
+  // during render and warn ("Cannot update X while rendering Y").
+  const portrait = useGameStore((s) => s.avatarCache?.[entityId]) as AvatarData | undefined;
 
   const config = useMemo<AvatarConfig>(
     () => buildAvatarConfig(entityId, entityType, source, player, rivals),
     [entityId, entityType, source, player, rivals]
   );
 
-  const portrait = useMemo<AvatarData | null>(() => {
-    if (!catalogReady) return null;
+  useEffect(() => {
+    if (!catalogReady || portrait) return;
     try {
-      return ensureAvatar(config);
+      ensureAvatar(config);
     } catch {
-      return null;
+      // placeholder path — a failed generate must not break the row
     }
-  }, [catalogReady, config, ensureAvatar]);
+  }, [catalogReady, portrait, config, ensureAvatar]);
 
   if (!portrait) return <AvatarPlaceholder size={size} className={className} />;
+
   return <Avatar portrait={portrait} size={size} className={className} />;
 }

@@ -68,12 +68,17 @@ Logged trends — re-measure at each world re-baseline, not per commit.
   the budget (~685s semi-solo); per-test cap raised to 900s — verified
   green solo at 628s. If per-week cost keeps climbing this re-fails.
 - **e2e console findings** (V29, pre-existing, observed in `bun run e2e`):
-  (a) `Cannot update RouterHooks while rendering AvatarForEntity` —
-  setState-in-render warning; (b) hydration error: `<button>` nested
-  inside `<button>` — `BookmarkButton` renders inside `SelectableCard`'s
-  button element on `WarriorListItem`. Real DOM-validity/a11y bug, not
-  test-visible. Needs a markup fix (make the outer a non-button or hoist
-  the bookmark control).
+  **RESOLVED** — (a) `Cannot update RouterHooks while rendering
+  AvatarForEntity`: `ensureAvatar` ran inside `useMemo` during render and
+  called `set()` on cache misses; now the component subscribes to
+  `avatarCache[entityId]` and generates via `useEffect` — also gains
+  reactive refresh on `rerollAvatar`/`invalidateAvatar`. (b) Hydration
+  error: `SelectableCard`'s outer element was `<button>` with
+  `BookmarkButton` nested inside (`RivalWarriorList`); converted to
+  `div role="button" tabIndex={0} aria-pressed` + Enter/Space handler —
+  keyboard/focus/query parity preserved, nested controls legal. Full
+  chromium e2e re-run: 7/7, zero console warnings; 186 component files /
+  1319 tests green.
 
 ## 3. House divergences (adjudicated keeps)
 

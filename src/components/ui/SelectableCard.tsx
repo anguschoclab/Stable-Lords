@@ -31,13 +31,24 @@ export function SelectableCard({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button type="button"
+        {/* role=button (not <button>): rows may embed their own controls
+            (e.g. BookmarkButton) — a nested <button> is invalid HTML and
+            breaks hydration. tabIndex + Enter/Space keep keyboard parity. */}
+        <div role="button"
+          tabIndex={0}
           aria-label={ariaLabel}
+          aria-pressed={selected}
           className={cn(
-            'w-full text-left group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
+            'w-full text-left group relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
             selected ? 'z-10' : 'z-0'
           )}
           onClick={onSelect}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onSelect();
+            }
+          }}
         >
           <Surface
             variant={selected ? 'paper' : 'glass'}
@@ -54,7 +65,7 @@ export function SelectableCard({
               <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
             )}
           </Surface>
-        </button>
+        </div>
       </TooltipTrigger>
       <TooltipContent side="right" className={tooltip.className}>
         {tooltip.content}

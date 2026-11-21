@@ -185,9 +185,7 @@ export function findBestOpponent(
   // owed key is its stableId (rivals) or the player key (roster warriors).
   // Real constraints still apply — already booked this pass, fought within
   // the recent window, or individually avoided.
-  const feudTargets = ctx.feudTargetsByStable?.get(
-    warriorA.stableId ?? ctx.playerStableId ?? ''
-  );
+  const feudTargets = ctx.feudTargetsByStable?.get(warriorA.stableId ?? ctx.playerStableId ?? '');
   if (feudTargets?.size) {
     for (let i = 0; i < sortedByScore.length; i++) {
       const candidate = sortedByScore[i];

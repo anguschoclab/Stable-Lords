@@ -23,8 +23,6 @@ import path from 'node:path';
 
 const SRC = path.resolve(__dirname, '../..');
 
-
-
 const ENGINE_PROXY_CALL_RE = /engineProxy\.(\w+)\s*\(/g;
 
 /** Production files permitted to call engineProxy, with their serializer. */

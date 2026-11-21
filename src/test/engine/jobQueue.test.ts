@@ -2,8 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { createJobQueue } from '@/engine/runtime/jobQueue';
 import { deferred } from '@/test/_helpers/deferred';
 
-
-
 describe('jobQueue', () => {
   it('serializes jobs FIFO — a second job cannot interleave with a running one', async () => {
     const queue = createJobQueue();

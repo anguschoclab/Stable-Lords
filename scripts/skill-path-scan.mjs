@@ -27,7 +27,17 @@ const SKILL_DIRS = ['.claude/skills', '.devin/skills', '.agents/skills'];
 // Prefixes that count as repo paths when they appear in skill docs.
 const PATH_RE = /(?<![\w./-])(src|scripts|docs|e2e|test|public|\.github)\/[A-Za-z0-9_./{}*+\\-]+/g;
 const TRAILING = /[.,;:)\]`'"]+$/;
-const PROBED_SUFFIXES = ['', '.ts', '.tsx', '.test.ts', '.test.tsx', '.slow.test.ts', '.mjs', '.py', '.md'];
+const PROBED_SUFFIXES = [
+  '',
+  '.ts',
+  '.tsx',
+  '.test.ts',
+  '.test.tsx',
+  '.slow.test.ts',
+  '.mjs',
+  '.py',
+  '.md',
+];
 
 function* skillFiles() {
   for (const dir of SKILL_DIRS) {
@@ -123,7 +133,10 @@ for (const file of skillFiles()) {
 }
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
-fs.writeFileSync(path.join(OUT_DIR, 'skill-path-scan.json'), JSON.stringify(report, null, 2) + '\n');
+fs.writeFileSync(
+  path.join(OUT_DIR, 'skill-path-scan.json'),
+  JSON.stringify(report, null, 2) + '\n'
+);
 
 const totalRefs = report.skills.reduce((n, s) => n + s.refs, 0);
 console.log(`scanned ${report.skills.length} skills, ${totalRefs} path references`);

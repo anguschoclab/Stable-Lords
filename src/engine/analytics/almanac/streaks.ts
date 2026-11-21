@@ -82,7 +82,12 @@ export function computeStreakBoards(input: AlmanacInput): AlmanacBoard[] {
     cap(
       [...stats.entries()]
         .filter(([id, s]) => pick(s) > 0 && (gate ? gate(id) : true))
-        .sort(by(numDesc(([, s]) => pick(s)), strAsc(([id]) => id)))
+        .sort(
+          by(
+            numDesc(([, s]) => pick(s)),
+            strAsc(([id]) => id)
+          )
+        )
         .map(([id, s]) => {
           const w = byId.get(id);
           return w ? warriorRow({ w, input, value: pick(s), valueLabel: label }) : null;
@@ -94,7 +99,13 @@ export function computeStreakBoards(input: AlmanacInput): AlmanacBoard[] {
   const isActive = (id: string) => warriorStatus(byId.get(id) ?? ({} as Warrior)) === 'Active';
 
   return [
-    mkBoard('winStreaks', 'Best Win Streaks', 'warrior', rows((s) => s.bestWin, 'streak'), STREAK_CAVEAT),
+    mkBoard(
+      'winStreaks',
+      'Best Win Streaks',
+      'warrior',
+      rows((s) => s.bestWin, 'streak'),
+      STREAK_CAVEAT
+    ),
     mkBoard(
       'currentStreaks',
       'Active Win Streaks',
@@ -102,7 +113,19 @@ export function computeStreakBoards(input: AlmanacInput): AlmanacBoard[] {
       rows((s) => s.cur, 'streak', isActive),
       STREAK_CAVEAT
     ),
-    mkBoard('losingStreaks', 'Longest Slumps', 'warrior', rows((s) => s.bestLoss, 'streak'), STREAK_CAVEAT),
-    mkBoard('killStreaks', 'Kill Streaks', 'warrior', rows((s) => s.bestKill, 'kills'), STREAK_CAVEAT),
+    mkBoard(
+      'losingStreaks',
+      'Longest Slumps',
+      'warrior',
+      rows((s) => s.bestLoss, 'streak'),
+      STREAK_CAVEAT
+    ),
+    mkBoard(
+      'killStreaks',
+      'Kill Streaks',
+      'warrior',
+      rows((s) => s.bestKill, 'kills'),
+      STREAK_CAVEAT
+    ),
   ].filter((b) => b.rows.length > 0);
 }

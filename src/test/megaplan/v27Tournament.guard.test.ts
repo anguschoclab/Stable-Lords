@@ -47,9 +47,7 @@ describe('V27 tournament-class guard', () => {
   });
 
   it('tournamentSelection sources expose no leftover applyTournamentKill', () => {
-    const files = readdirSync(join(SRC, 'resolution')).map((f) =>
-      join(SRC, 'resolution', f)
-    );
+    const files = readdirSync(join(SRC, 'resolution')).map((f) => join(SRC, 'resolution', f));
     for (const file of files) {
       const src = readFileSync(file, 'utf8');
       expect(src.includes('applyTournamentKill'), `${file} keeps the bespoke kill path`).toBe(

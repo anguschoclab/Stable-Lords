@@ -9,11 +9,18 @@ import {
   getFavoriteTacticBonus,
   FAVORITE_TACTIC_POOLS,
 } from '@/engine/favorites/favorites';
-import { getOffensiveSuitability, getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
+import {
+  getOffensiveSuitability,
+  getDefensiveSuitability,
+} from '@/engine/strategy/tacticSuitability';
 import { FightingStyle } from '@/types/shared.types';
 import { FAVORITE_TACTIC_BONUS } from '@/constants/combat';
 
-const rng = { next: () => 0.5, roll: (a: number, _b: number) => a, rollWeighted: (w: Record<string, number>) => Object.keys(w)[0] } as never;
+const rng = {
+  next: () => 0.5,
+  roll: (a: number, _b: number) => a,
+  rollWeighted: (w: Record<string, number>) => Object.keys(w)[0],
+} as never;
 
 describe('favorite tactic generation', () => {
   it('every generated warrior has a favorite tactic', () => {
@@ -39,12 +46,18 @@ describe('favorite tactic generation', () => {
       { tactic: 'Riposte', weight: 11 },
       { tactic: 'Parry', weight: 6 },
     ]);
-    expect(FAVORITE_TACTIC_POOLS[FightingStyle.ParryStrike]?.map((p) => p.tactic)).toEqual(
-      ['Decisiveness', 'Responsiveness', 'Dodge', 'Riposte', 'Parry']
-    );
-    expect(FAVORITE_TACTIC_POOLS[FightingStyle.ParryLunge]?.map((p) => p.tactic)).toEqual(
-      ['Lunge', 'Dodge', 'Parry']
-    );
+    expect(FAVORITE_TACTIC_POOLS[FightingStyle.ParryStrike]?.map((p) => p.tactic)).toEqual([
+      'Decisiveness',
+      'Responsiveness',
+      'Dodge',
+      'Riposte',
+      'Parry',
+    ]);
+    expect(FAVORITE_TACTIC_POOLS[FightingStyle.ParryLunge]?.map((p) => p.tactic)).toEqual([
+      'Lunge',
+      'Dodge',
+      'Parry',
+    ]);
   });
 });
 

@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD001 MD024 MD025 MD033 MD060 -->
+
 # MEGAPLAN V24 PLAN — Noblish Island Strategy Canon Integration (VALIDATED)
 
 **Branch:** `main` (direct commits, V18–V23 precedent). **Restore tag:**
@@ -21,18 +22,18 @@ design, they pin canon.
 
 ## Phase 1 — Spec batch RED (commit 1) — NO implementation
 
-| Spec | Asserts | Status |
-|---|---|---|
-| `src/test/data/equipment/weaponReqs.canon.test.ts` | 22 Assur rows; SS=shortsword; BA reqSZ3+offhandCarryReq; SZ-deficit endurance-only | RED |
-| `src/test/engine/equipment/offhandWield.canon.test.ts` | OH ignores WT+SZ, same ST; DF grid (5×7→9, 15×15→22); BA+offhand SZ9; ambi gate on OFFHAND_ATTACK | RED |
-| `src/test/engine/combat/tacticSuitability.canon.test.ts` | per-U-tactic net bonus sum ≤−1; double-tactic −1/skill; AI no-U | RED |
-| `src/test/engine/favorites/favoriteTactic.canon.test.ts` | tactic from WS pool; PR/PS/PL weights; bonus fires hidden | RED |
-| `src/test/engine/combat/clashLoop.canon.test.ts` | jitter, early-exit, ≤MAX, seed-deterministic | RED |
-| `src/test/engine/combat/weaponArmor.canon.test.ts` | DA vs {scale,chain} < pierce baseline; DA vs plate ≥ baseline; lunge KD; 2H parry surcharge; WH/HA/QS/SS ini | RED |
-| `src/test/engine/matchmaking/bloodfeud.canon.test.ts` | victim-side entitlement; 4wk expiry; priority offer; stable-avoid penalty; double-challenge 2× | RED |
-| `src/test/engine/combat/kdAndPresets.canon.test.ts` | KD≥9 tax; TP Scum Wall 1/1/Parry; PL Dodge Wall; LU desperate-dodge | RED |
-| `src/test/engine/warrior/designDoctrine.canon.test.ts` | ST/WL<7, DF tiers, AB DF 17/21 [regression-lock]; low-burn steering RED; tier labels 16/20/26/34 RED | mixed |
-| `src/test/engine/learning/learnCapAndBurn.canon.test.ts` | `effectiveLearnCap` = cap − burns; CN yields 0 skills; vital-target kill bump | [regression-lock] |
+| Spec                                                     | Asserts                                                                                                      | Status            |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------- |
+| `src/test/data/equipment/weaponReqs.canon.test.ts`       | 22 Assur rows; SS=shortsword; BA reqSZ3+offhandCarryReq; SZ-deficit endurance-only                           | RED               |
+| `src/test/engine/equipment/offhandWield.canon.test.ts`   | OH ignores WT+SZ, same ST; DF grid (5×7→9, 15×15→22); BA+offhand SZ9; ambi gate on OFFHAND_ATTACK            | RED               |
+| `src/test/engine/combat/tacticSuitability.canon.test.ts` | per-U-tactic net bonus sum ≤−1; double-tactic −1/skill; AI no-U                                              | RED               |
+| `src/test/engine/favorites/favoriteTactic.canon.test.ts` | tactic from WS pool; PR/PS/PL weights; bonus fires hidden                                                    | RED               |
+| `src/test/engine/combat/clashLoop.canon.test.ts`         | jitter, early-exit, ≤MAX, seed-deterministic                                                                 | RED               |
+| `src/test/engine/combat/weaponArmor.canon.test.ts`       | DA vs {scale,chain} < pierce baseline; DA vs plate ≥ baseline; lunge KD; 2H parry surcharge; WH/HA/QS/SS ini | RED               |
+| `src/test/engine/matchmaking/bloodfeud.canon.test.ts`    | victim-side entitlement; 4wk expiry; priority offer; stable-avoid penalty; double-challenge 2×               | RED               |
+| `src/test/engine/combat/kdAndPresets.canon.test.ts`      | KD≥9 tax; TP Scum Wall 1/1/Parry; PL Dodge Wall; LU desperate-dodge                                          | RED               |
+| `src/test/engine/warrior/designDoctrine.canon.test.ts`   | ST/WL<7, DF tiers, AB DF 17/21 [regression-lock]; low-burn steering RED; tier labels 16/20/26/34 RED         | mixed             |
+| `src/test/engine/learning/learnCapAndBurn.canon.test.ts` | `effectiveLearnCap` = cap − burns; CN yields 0 skills; vital-target kill bump                                | [regression-lock] |
 
 ## Phase 2 — Canon data fixes
 

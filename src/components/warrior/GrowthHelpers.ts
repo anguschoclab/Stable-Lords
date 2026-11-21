@@ -67,6 +67,7 @@ export function overallGrowthNarrative(warrior: Warrior): string {
     return 'Nearing the end of their growth. Focus training on what remains.';
   if (totalGap >= HEADROOM.VAST)
     return 'Brimming with untapped potential. The right training could forge a legend.';
-  if (totalGap >= HEADROOM.SOLID) return 'Still growing. There are gains to be made across the board.';
+  if (totalGap >= HEADROOM.SOLID)
+    return 'Still growing. There are gains to be made across the board.';
   return 'Approaching their natural limits, but a few areas can still sharpen.';
 }

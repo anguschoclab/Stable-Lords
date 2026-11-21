@@ -11,7 +11,13 @@ import type { FightSummary } from '@/types/combat.types';
 import type { WarriorRef } from '@/types/shared.types';
 import uiMeta from '@/data/narrative/uiMeta.json';
 
-import { GazetteStep, InjuriesStep, BoutsStep, StewardStep, MemorialStep } from './resolution-reveal';
+import {
+  GazetteStep,
+  InjuriesStep,
+  BoutsStep,
+  StewardStep,
+  MemorialStep,
+} from './resolution-reveal';
 
 type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'steward' | 'memorial';
 

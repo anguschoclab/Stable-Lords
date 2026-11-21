@@ -7,7 +7,13 @@
 import { describe, it, expect } from 'vitest';
 import { persistNPCPlans } from '@/engine/ai/plan/agentPlan';
 import { getNPCPlan } from '@/engine/bout/services/boutResolution';
-import { makeGameState, makeRival, makeWarrior, makeBoutOffer , makeSignedOffer } from '@/test/_fixtures/factories';
+import {
+  makeGameState,
+  makeRival,
+  makeWarrior,
+  makeBoutOffer,
+  makeSignedOffer,
+} from '@/test/_fixtures/factories';
 
 const signedOfferFor = makeSignedOffer;
 

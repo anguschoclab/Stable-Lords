@@ -69,7 +69,8 @@ describe('tickStableHealth (V30 unified ruleset)', () => {
   });
 
   it('produces identical per-warrior outcomes for a player-roster and rival-roster shape', () => {
-    const mk = () => makeWarrior({ id: 'w1' as WarriorId, fatigue: 40, injuries: [inj('Bruise', 6)] });
+    const mk = () =>
+      makeWarrior({ id: 'w1' as WarriorId, fatigue: 40, injuries: [inj('Bruise', 6)] });
     const playerOut = tickStableHealth({ warriors: [mk()] });
     const rivalOut = tickStableHealth({ warriors: [mk()] });
     expect(rivalOut.warriors[0]!.fatigue).toBe(playerOut.warriors[0]!.fatigue);

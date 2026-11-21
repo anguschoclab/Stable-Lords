@@ -56,18 +56,17 @@ export function makeBidScenario(args: {
   return { state, rivals, bid, proposerW, candidateWarriors: candidates };
 }
 
-
 /** Run the scenario through bid→offer conversion with a fixed seed. */
 export function runBidConversion(
-    scenario: BidScenario,
-    rivalId: string = 'stable-proposer',
-    seed: number = 11
+  scenario: BidScenario,
+  rivalId: string = 'stable-proposer',
+  seed: number = 11
 ) {
-    return convertBidsToOffers(
-        [{ bid: scenario.bid, rivalId }],
-        scenario.rivals,
-        scenario.state,
-        new SeededRNG(seed),
-        new Set()
-    );
+  return convertBidsToOffers(
+    [{ bid: scenario.bid, rivalId }],
+    scenario.rivals,
+    scenario.state,
+    new SeededRNG(seed),
+    new Set()
+  );
 }

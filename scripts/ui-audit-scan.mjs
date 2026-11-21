@@ -90,7 +90,8 @@ const isFakeChrome = (l) => FAKE_CHROME_UPPER_RE.test(l) || FAKE_CHROME_COPY_RE.
 // prose like "rounded shoulders" stays exempt.
 const RADIUS_SIZE_RE = /\brounded-(?:xs|sm|md|lg|xl|2xl|3xl)\b/;
 const RADIUS_BARE_RE = /(?:^|[\s'"`{:=])rounded(?=$|[\s'"`},;)])/;
-const CLASS_CONTEXT_RE = /\bclass(?:Name)?\s*=|ClassName\s*=|particleClassName|extraClass|className:/;
+const CLASS_CONTEXT_RE =
+  /\bclass(?:Name)?\s*=|ClassName\s*=|particleClassName|extraClass|className:/;
 const isRadiusViolation = (l) =>
   RADIUS_SIZE_RE.test(l) || (RADIUS_BARE_RE.test(l) && CLASS_CONTEXT_RE.test(l));
 
@@ -109,7 +110,11 @@ const trackingOverflows = (l) => {
 const PROJECT_CLASS_RE =
   /(?<![a-zA-Z0-9_-])(?:text-glow|glow|animate)-[a-z][a-z0-9-]*(?:\/\d+)?\b/g;
 const ANIMATE_BUILTINS = new Set([
-  'animate-none', 'animate-spin', 'animate-ping', 'animate-pulse', 'animate-bounce',
+  'animate-none',
+  'animate-spin',
+  'animate-ping',
+  'animate-pulse',
+  'animate-bounce',
 ]);
 const ANIMATE_PLUGIN_RE =
   /^animate-(?:in|out|fade(?:-in|-out)?(?:-\d+)?|zoom-(?:in|out)(?:-\d+)?|spin-(?:in|out)(?:-\d+)?|slide-in-from-\S+|slide-out-to-\S+|accordion-(?:down|up))$/;
@@ -242,8 +247,7 @@ export function collectUiAudit() {
       const l = lines[i];
       const n = i + 1;
       const trimmed = l.trim();
-      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*'))
-        continue;
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue;
       if (isRadiusViolation(l))
         findings['radius-violation'].push({ file: r, line: n, text: trimmed.slice(0, 140) });
       if (isItalicTabular(l))

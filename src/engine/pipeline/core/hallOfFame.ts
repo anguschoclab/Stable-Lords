@@ -113,7 +113,10 @@ function recordAward(
   } else if (recipient.w.stableId) {
     const base =
       (ledger.rivalWarriorPatches.get(recipient.w.id) as Warrior | undefined) ?? recipient.w;
-    ledger.rivalWarriorPatches.set(recipient.w.id, applyAward(base, award, fameBonus).updatedWarrior);
+    ledger.rivalWarriorPatches.set(
+      recipient.w.id,
+      applyAward(base, award, fameBonus).updatedWarrior
+    );
   }
   ledger.awards.push(award);
 }
@@ -356,8 +359,7 @@ function awardTournamentRank(
   completedYear: number,
   ledger: AwardLedger
 ): void {
-  const medalScore = (e: WarriorStats) =>
-    e.medals.gold * 3 + e.medals.silver * 2 + e.medals.bronze;
+  const medalScore = (e: WarriorStats) => e.medals.gold * 3 + e.medals.silver * 2 + e.medals.bronze;
 
   const best = pickBest(
     eligible,

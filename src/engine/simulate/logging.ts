@@ -77,11 +77,7 @@ function projectBoutEnd(e: CombatEvent, entry: ExchangeLogEntry, reasonCodes: st
 // Psych transitions, desperate-plan activation, and condition-fire
 // annotations (CONDITION_*, CONDITION_*@CORNER) are real engine facts — the
 // debug drawer reads them verbatim from reasonCodes.
-function projectStateChange(
-  e: CombatEvent,
-  entry: ExchangeLogEntry,
-  reasonCodes: string[]
-): void {
+function projectStateChange(e: CombatEvent, entry: ExchangeLogEntry, reasonCodes: string[]): void {
   if (e.result) reasonCodes.push(String(e.result));
   projectConditionFire(e, entry);
 }

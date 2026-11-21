@@ -1,6 +1,11 @@
 import { type BaseSkills, type DerivedStats, type WarriorId } from '@/types/shared.types';
 import { type Warrior } from '@/types/warrior.types';
-import { applyHandednessAttack, rollBloodlust, rollHandedness, rollLuckfactor } from '../../warrior/skillCalc';
+import {
+  applyHandednessAttack,
+  rollBloodlust,
+  rollHandedness,
+  rollLuckfactor,
+} from '../../warrior/skillCalc';
 import { generatePotential } from '../../warrior/potential';
 import { generateFavorites } from '../../favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';

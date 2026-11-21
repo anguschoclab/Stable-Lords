@@ -15,10 +15,6 @@ import { WS_HARMONY_PAR } from '@/constants/combat';
  * Parry bonus for a Wall of Steel whose resolved OE equals its kill desire.
  * Zero for every other style and for a disharmonized wall.
  */
-export function getWallHarmonyBonus(
-  style: FightingStyle,
-  OE: number,
-  killDesire: number
-): number {
+export function getWallHarmonyBonus(style: FightingStyle, OE: number, killDesire: number): number {
   return style === FightingStyle.WallOfSteel && OE === killDesire ? WS_HARMONY_PAR : 0;
 }

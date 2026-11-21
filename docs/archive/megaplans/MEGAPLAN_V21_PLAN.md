@@ -48,16 +48,16 @@ constants → test infra → scripts/e2e/electron; spec-vs-shipped re-audit vs
 
 ## Phase 3 — Test inventory committed before ANY merge (hard gate)
 
-| Spec / change | Covers | State at commit | Turns green |
-| ------------- | ------ | --------------- | ----------- |
-| `v21Weather.guard.test.ts` | 'Threads of Chaos' surfaces + disposition↔pool coherence + stats↔effects parity + magnitude band; count 65 | RED | Phase 4 step 3 |
-| `v21Narrative.guard.test.ts` | union entries in 5 pools incl. ARENA_LORE; deduped counts; zero dupes + cross-pool id collisions | RED | steps 4–8 |
-| `v21Traits.guard.test.ts` | surviving ids in TRAITS+LEGACY_TRAIT_ORDER; effect keys ⊆ TraitEffect; final count 184/187; `_2`-verdict encoded | RED | steps 5–8 |
-| `v20Narrative.guard` floors | exact pins → `>=` floors | GREEN | — |
-| `ChronicleTab`/`useShallow*` pin | GazetteComposer identical options | GREEN | invariant |
-| `traitBalance.slow` COMBAT_TRAITS | surviving direct-mod traits | test-only | Phase 6 |
-| `GUARD_REGISTRY` += 3 LIVE_RATCHET | registration enforced | GREEN | — |
-| regen `runnerGroups`/`auditBaseline` | test-audit-scan | GREEN | — |
+| Spec / change                        | Covers                                                                                                           | State at commit | Turns green    |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- | --------------- | -------------- |
+| `v21Weather.guard.test.ts`           | 'Threads of Chaos' surfaces + disposition↔pool coherence + stats↔effects parity + magnitude band; count 65       | RED             | Phase 4 step 3 |
+| `v21Narrative.guard.test.ts`         | union entries in 5 pools incl. ARENA_LORE; deduped counts; zero dupes + cross-pool id collisions                 | RED             | steps 4–8      |
+| `v21Traits.guard.test.ts`            | surviving ids in TRAITS+LEGACY_TRAIT_ORDER; effect keys ⊆ TraitEffect; final count 184/187; `_2`-verdict encoded | RED             | steps 5–8      |
+| `v20Narrative.guard` floors          | exact pins → `>=` floors                                                                                         | GREEN           | —              |
+| `ChronicleTab`/`useShallow*` pin     | GazetteComposer identical options                                                                                | GREEN           | invariant      |
+| `traitBalance.slow` COMBAT_TRAITS    | surviving direct-mod traits                                                                                      | test-only       | Phase 6        |
+| `GUARD_REGISTRY` += 3 LIVE_RATCHET   | registration enforced                                                                                            | GREEN           | —              |
+| regen `runnerGroups`/`auditBaseline` | test-audit-scan                                                                                                  | GREEN           | —              |
 
 ## Phase 4 — Merge sequence (one branch per commit, gates between)
 
@@ -75,7 +75,7 @@ Confirmed conflict surface (merge-tree-verified): tail-appends in
 4. #1077 → 5. #1073 → 6. #1075 → 7. #1071 → 8. #1070 — narrative
    union-merges; #1073 drop `.claude/backups` hunk; #1070 strip generated
    hunks + regen; EXPECTED_COUNT running 179→181→183/184→184/187.
-9. Post-all: regen; cross-PR dedupe cleanup commit; all REDs GREEN.
+5. Post-all: regen; cross-PR dedupe cleanup commit; all REDs GREEN.
 
 ## Phase 5 — Findings & bug fixes (specs first)
 
@@ -92,7 +92,7 @@ explainable; weather adds zero in-season change); coverage floors
 ## Phase 7 — GitHub cleanup & verdict publication
 
 1. Push `main`. 2. Disposition all 8 PRs w/ evidence; close. 3. Delete all
-8 remote branches (heads preserved under `refs/megaplan/v21/*`). 4. Tag
-`post-megaplan-v21`. 5. FINDINGS §V verdict matrix: every adjudication +
-finding APPROVED / DISPROVED / CORRECTED with `file:line` evidence;
-LEDGER close-out baseline → final → Δ.
+   8 remote branches (heads preserved under `refs/megaplan/v21/*`). 4. Tag
+   `post-megaplan-v21`. 5. FINDINGS §V verdict matrix: every adjudication +
+   finding APPROVED / DISPROVED / CORRECTED with `file:line` evidence;
+   LEDGER close-out baseline → final → Δ.

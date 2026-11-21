@@ -24,9 +24,7 @@ function SummaryCards({ stewardReport }: StewardStepProps) {
           <div
             className={`text-2xl font-mono font-bold ${(stewardReport?.treasuryChange ?? 0) >= 0 ? 'text-primary' : 'text-arena-gold'}`}
           >
-            {stewardReport?.treasuryChange && stewardReport.treasuryChange > 0
-              ? '+'
-              : ''}
+            {stewardReport?.treasuryChange && stewardReport.treasuryChange > 0 ? '+' : ''}
             {stewardReport?.treasuryChange ?? 0} GC
           </div>
         </CardContent>
@@ -50,8 +48,7 @@ function SummaryCards({ stewardReport }: StewardStepProps) {
 function TrainingAndAging({ stewardReport }: StewardStepProps) {
   const isEmpty =
     !stewardReport ||
-    (stewardReport.trainingGains.length === 0 &&
-      stewardReport.agingEvents.length === 0);
+    (stewardReport.trainingGains.length === 0 && stewardReport.agingEvents.length === 0);
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">

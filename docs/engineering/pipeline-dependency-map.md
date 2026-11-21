@@ -43,7 +43,7 @@ main thread persistence
 
 | Stage     | Passes (order in WEEK_PIPELINE_PASSES)                                                                       |
 | --------- | ------------------------------------------------------------------------------------------------------------ |
-| `core`    | warrior, economy, recruitment                                                                     |
+| `core`    | warrior, economy, recruitment                                                                                |
 | `world`   | world, system, rankings, progression, promoter, promoterLifecycle, trainer, arenaChampionship, rivalStrategy |
 | `content` | event, narrative, seasonal                                                                                   |
 

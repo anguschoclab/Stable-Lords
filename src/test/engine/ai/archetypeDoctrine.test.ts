@@ -11,8 +11,12 @@ import { makeComputedWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
 
-const plan = (oe: number, al: number, kd: number, style = FightingStyle.StrikingAttack): FightPlan =>
-  ({ style, OE: oe, AL: al, killDesire: kd }) as FightPlan;
+const plan = (
+  oe: number,
+  al: number,
+  kd: number,
+  style = FightingStyle.StrikingAttack
+): FightPlan => ({ style, OE: oe, AL: al, killDesire: kd }) as FightPlan;
 
 // Canon tank frame: heavy ST+CN, encumbrance capacity for plate.
 const TANK_BA = makeComputedWarrior(

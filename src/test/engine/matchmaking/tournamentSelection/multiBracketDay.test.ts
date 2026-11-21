@@ -19,7 +19,10 @@ function twoBracketState() {
     makeTournamentWarrior('a2', 'Alpha Two'),
     makeTournamentWarrior('d2', 'Delta Two', undefined, TOURNEY_RIVAL_ID),
   ];
-  const t1 = { ...makeOpenTournament('t-rookies', 'Rookies Cup', a1, d1), classId: 'rookies' as const };
+  const t1 = {
+    ...makeOpenTournament('t-rookies', 'Rookies Cup', a1, d1),
+    classId: 'rookies' as const,
+  };
   const t2 = {
     ...makeOpenTournament('t-apprentices', 'Apprentices Cup', a2, d2),
     classId: 'apprentices' as const,

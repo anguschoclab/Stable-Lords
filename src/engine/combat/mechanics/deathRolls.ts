@@ -109,6 +109,7 @@ export function rollInfirmaryOutcome(
         maxHp: f.maxHp,
         totalFights: f.totalFights,
         enduranceRatio,
-      }) * deathMult
+      }) *
+        deathMult
   );
 }

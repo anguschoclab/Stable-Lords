@@ -3,7 +3,7 @@ import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { GameState } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import * as recruitmentModule from '@/engine/recruitment/recruitment';
-import { makePoolWarrior, makeRival , VETERAN_60 } from '@/test/_fixtures/factories';
+import { makePoolWarrior, makeRival, VETERAN_60 } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { StableId } from '@/types/shared.types';
 

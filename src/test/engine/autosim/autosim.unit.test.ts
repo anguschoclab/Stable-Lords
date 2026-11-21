@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { processPlayerOffers, extractAutosimWeekSummary, runAutosim } from '@/engine/autosim/autosim';
+import {
+  processPlayerOffers,
+  extractAutosimWeekSummary,
+  runAutosim,
+} from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import type { GameState, BoutOffer, TournamentEntry } from '@/types/state.types';

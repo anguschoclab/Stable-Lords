@@ -6,7 +6,13 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import { AvatarForEntity } from '@/components/avatar';
 
 /** Crest + stable name + roster/personality/philosophy chip row. */
-export function RivalIdentity({ rival, isSelected }: { rival: RivalStableData; isSelected: boolean }) {
+export function RivalIdentity({
+  rival,
+  isSelected,
+}: {
+  rival: RivalStableData;
+  isSelected: boolean;
+}) {
   return (
     <div className="flex items-center gap-4 min-w-0">
       <div

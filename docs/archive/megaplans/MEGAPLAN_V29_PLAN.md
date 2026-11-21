@@ -23,14 +23,14 @@ One-sentence summary: Run the full house megaplan ritual over the entire repo un
 
 ## PR inventory & conflict map (file-level overlap pre-mapped; merge-tree verified Phase 1)
 
-| Cluster | PRs | Shared surface | Verdict shape |
-| --- | --- | --- | --- |
-| Narrative lore pools | 1079, 1082, 1085 | `origins`, `childhoodTraits`, `definingMoments`, `arenas/lore.ts`, `v21Narrative.guard` | union + dedupe; #1079 adds trait defs (`flaws.ts`, `registry.ts`, `traitDedup.test.ts`, guard pins) |
-| Combat narrative JSON | 1080, 1083, 1089, 1093 | `combatKillText.json`, `combatPbp.json` (+`combatStrikes`, `uiMeta`) | union; #1083 edits `scripts/fuzzy_dedupe.mjs` itself — adjudicated on merit |
-| Button types | 1090, 1091 | `WarriorLeaderboardFilters.tsx`, `FilterToggleButton.test.tsx` | 1090 near-superset; #1091's unique hunk is generated `docs/ORPHAN_REPORT.md` at a stale pre-V28 path → strip |
-| Perf memoization | 1084, 1088, 1092 | independent files | verify referential-equality semantics vs merged `useShallow` precedent |
-| Test coverage | 1081, 1086 | `auditBaseline.json`, `runnerGroups.json` (generated — strip+regen) | #1081 adds `src/test/engine/pipeline/services/` mirroring `src/engine/pipeline/services/` — domain-filing valid |
-| A11y tooltips | 1087 | 6 standalone component files | keyboard-handler correctness + determinism check |
+| Cluster               | PRs                    | Shared surface                                                                          | Verdict shape                                                                                                   |
+| --------------------- | ---------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Narrative lore pools  | 1079, 1082, 1085       | `origins`, `childhoodTraits`, `definingMoments`, `arenas/lore.ts`, `v21Narrative.guard` | union + dedupe; #1079 adds trait defs (`flaws.ts`, `registry.ts`, `traitDedup.test.ts`, guard pins)             |
+| Combat narrative JSON | 1080, 1083, 1089, 1093 | `combatKillText.json`, `combatPbp.json` (+`combatStrikes`, `uiMeta`)                    | union; #1083 edits `scripts/fuzzy_dedupe.mjs` itself — adjudicated on merit                                     |
+| Button types          | 1090, 1091             | `WarriorLeaderboardFilters.tsx`, `FilterToggleButton.test.tsx`                          | 1090 near-superset; #1091's unique hunk is generated `docs/ORPHAN_REPORT.md` at a stale pre-V28 path → strip    |
+| Perf memoization      | 1084, 1088, 1092       | independent files                                                                       | verify referential-equality semantics vs merged `useShallow` precedent                                          |
+| Test coverage         | 1081, 1086             | `auditBaseline.json`, `runnerGroups.json` (generated — strip+regen)                     | #1081 adds `src/test/engine/pipeline/services/` mirroring `src/engine/pipeline/services/` — domain-filing valid |
+| A11y tooltips         | 1087                   | 6 standalone component files                                                            | keyboard-handler correctness + determinism check                                                                |
 
 ## Phase 0 — Safety, baseline & docs scaffold (atomic)
 
@@ -57,20 +57,20 @@ One-sentence summary: Run the full house megaplan ritual over the entire repo un
 
 **Contract:** every Phase-4 merge pin and Phase-5 fix spec authored, committed, observed RED here. Sole exception: a spec that cannot exist pre-implementation lands as a spec-only RED commit immediately before its fix — LEDGER-logged.
 
-| Spec / change | Covers | State at commit | Turns green |
-| --- | --- | --- | --- |
-| `v21Narrative.guard` exact pins → `>=` floors | pool counts only grow | GREEN | — |
-| `v21Traits.guard` count 184 → `>=` floor (SURVIVING asserts stay) | trait count only grows | GREEN | — |
-| `v29Narrative.guard.test.ts` (new LIVE_RATCHET) | union entries + deduped exact counts + zero dupes/id-collisions | RED | Phase 4 lore merges |
-| `v29Traits.guard.test.ts` (new, iff #1079 traits land) | ids ⊆ TRAITS+LEGACY_TRAIT_ORDER, effect keys ⊆ whitelist, count pin | RED | Phase 4 trait merge |
-| V26-D2 spec: `SystemPass` passes `computeNextSeason(nextWeek)` — promotion fires on boundary | backlog fix | RED | Phase 5 |
-| V26-D3 spec: fresh-state digest stable across two `createFreshState` calls | backlog fix | RED | Phase 5 |
-| V26-D4 spec: gazette `t()` deterministic under seeded rng | backlog fix | RED | Phase 5 |
-| V26-D1 spec: favorites renders discovered-tactic row | backlog fix | RED | Phase 5 |
-| V16-A11 spec: bid priority under bout-week weather | backlog fix | RED | Phase 5 |
-| V21-B3 spec: `WEATHER_STATS` token ↔ `staminaMult` coherence | backlog fix | RED | Phase 5 |
-| Phase-2 §B bug specs | per discovered bug | RED | Phase 5 |
-| `GUARD_REGISTRY` += v29 guards + runnerGroups/auditBaseline regen | registration enforced | GREEN | — |
+| Spec / change                                                                                | Covers                                                              | State at commit | Turns green         |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------------- | ------------------- |
+| `v21Narrative.guard` exact pins → `>=` floors                                                | pool counts only grow                                               | GREEN           | —                   |
+| `v21Traits.guard` count 184 → `>=` floor (SURVIVING asserts stay)                            | trait count only grows                                              | GREEN           | —                   |
+| `v29Narrative.guard.test.ts` (new LIVE_RATCHET)                                              | union entries + deduped exact counts + zero dupes/id-collisions     | RED             | Phase 4 lore merges |
+| `v29Traits.guard.test.ts` (new, iff #1079 traits land)                                       | ids ⊆ TRAITS+LEGACY_TRAIT_ORDER, effect keys ⊆ whitelist, count pin | RED             | Phase 4 trait merge |
+| V26-D2 spec: `SystemPass` passes `computeNextSeason(nextWeek)` — promotion fires on boundary | backlog fix                                                         | RED             | Phase 5             |
+| V26-D3 spec: fresh-state digest stable across two `createFreshState` calls                   | backlog fix                                                         | RED             | Phase 5             |
+| V26-D4 spec: gazette `t()` deterministic under seeded rng                                    | backlog fix                                                         | RED             | Phase 5             |
+| V26-D1 spec: favorites renders discovered-tactic row                                         | backlog fix                                                         | RED             | Phase 5             |
+| V16-A11 spec: bid priority under bout-week weather                                           | backlog fix                                                         | RED             | Phase 5             |
+| V21-B3 spec: `WEATHER_STATS` token ↔ `staminaMult` coherence                                 | backlog fix                                                         | RED             | Phase 5             |
+| Phase-2 §B bug specs                                                                         | per discovered bug                                                  | RED             | Phase 5             |
+| `GUARD_REGISTRY` += v29 guards + runnerGroups/auditBaseline regen                            | registration enforced                                               | GREEN           | —                   |
 
 ## Phase 4 — Merge sequence (one branch per commit; type-check+test+lint between each)
 

@@ -93,11 +93,7 @@ function weaponLinkedMods(fighter: FighterState, weaponId: string | undefined) {
 }
 
 /** Re-baseline `skills` and live `ctx.weaponReq*` after a weapon swap. */
-function applyWeaponSwap(
-  fighter: FighterState,
-  label: 'A' | 'D',
-  ctx?: ResolutionContext
-): void {
+function applyWeaponSwap(fighter: FighterState, label: 'A' | 'D', ctx?: ResolutionContext): void {
   const next = weaponLinkedMods(fighter, fighter.weaponId);
   const prev = fighter.weaponMods ?? { att: 0, par: 0, def: 0 };
   fighter.skills.ATT += next.att - prev.att;

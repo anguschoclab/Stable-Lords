@@ -26,8 +26,7 @@ const flatRng = (v: number): IRNGService => ({
   pick: <T>(arr: T[]): T => arr[0] as T,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
-  rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K =>
-    Object.keys(wts)[0] as K,
+  rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K => Object.keys(wts)[0] as K,
   chance: () => v < 1,
 });
 
@@ -86,9 +85,7 @@ describe('checkDiscovery — tactic section', () => {
     // 25%/week → a reveal within 60 weeks is a near-certainty; the seeded
     // sub-stream makes the concrete week deterministic.
     expect(revealedWeek).toBeGreaterThan(0);
-    expect(
-      (w.favorites!.discovered as Record<string, unknown>).tactic
-    ).toBe(true);
+    expect((w.favorites!.discovered as Record<string, unknown>).tactic).toBe(true);
   });
 
   it('reveals earlier under symmetry (fought favorite) than base rate', () => {

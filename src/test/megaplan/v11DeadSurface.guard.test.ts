@@ -27,8 +27,6 @@ import path from 'node:path';
 const REPO = path.resolve(__dirname, '../../..');
 const SRC = path.join(REPO, 'src');
 
-
-
 const allSrc = [...walkTsFiles(SRC)];
 
 function body(rel: string): string {

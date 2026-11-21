@@ -22,15 +22,16 @@ import { WEATHER_AI_DISPOSITION } from '@/engine/ai/weatherSuitability';
  *   - effect-magnitude envelope ratchet (post-merge observed range)
  */
 describe('weather surface coherence (live guard)', () => {
-
   it('weather effect magnitudes stay inside the observed envelope', () => {
     const violations: string[] = [];
     for (const w of WEATHER_TYPES) {
       const e = WEATHER_EFFECTS[w];
-      if (e.damageMult < 0.8 || e.damageMult > 1.5) violations.push(`${w}: damageMult ${e.damageMult}`);
+      if (e.damageMult < 0.8 || e.damageMult > 1.5)
+        violations.push(`${w}: damageMult ${e.damageMult}`);
       if (Math.abs(e.initiativeMod) > 10) violations.push(`${w}: initiativeMod ${e.initiativeMod}`);
       if (Math.abs(e.riposteMod) > 12) violations.push(`${w}: riposteMod ${e.riposteMod}`);
-      if (e.staminaMult < 0.7 || e.staminaMult > 2.0) violations.push(`${w}: staminaMult ${e.staminaMult}`);
+      if (e.staminaMult < 0.7 || e.staminaMult > 2.0)
+        violations.push(`${w}: staminaMult ${e.staminaMult}`);
     }
     expect(violations).toEqual([]);
   });

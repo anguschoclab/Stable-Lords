@@ -13,10 +13,7 @@ import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.typ
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SKILL_DRILL_CAP, TOTAL_CAP } from '@/engine/training/trainingGains';
-import {
-  runTrainingAttempt,
-  runSkillDrillAttempt,
-} from '@/engine/training/trainingAttempt';
+import { runTrainingAttempt, runSkillDrillAttempt } from '@/engine/training/trainingAttempt';
 import {
   traitCapacity,
   meritsTraitDevelopment,
@@ -72,10 +69,7 @@ export function selectTrainingFocus(
   // WL/CN/ST two-to-three deep, then DF for parry breakpoints; SP dead last
   // ("does not help a scum at all"). Un-Scum builds (WT≥15 & DF≥11) keep the
   // generic focus — their edge is skill-learning, not burning.
-  if (
-    w.style === FightingStyle.TotalParry &&
-    !(w.attributes.WT >= 15 && w.attributes.DF >= 11)
-  ) {
+  if (w.style === FightingStyle.TotalParry && !(w.attributes.WT >= 15 && w.attributes.DF >= 11)) {
     const trainable = new Set(trainableKeys);
     for (const k of TP_SCUM_TRAIN_ORDER) {
       if (trainable.has(k) && w.attributes[k] < ATTRIBUTE_MAX) return k;

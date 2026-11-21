@@ -45,12 +45,7 @@ import * as BPS from './skillBreakpoints';
 
 /** The five design axes from the article, plus the V27 tourney-projection axis. */
 export type DesignAxis =
-  | 'style'
-  | 'physicals'
-  | 'weapons'
-  | 'trainability'
-  | 'longevity'
-  | 'tourney';
+  'style' | 'physicals' | 'weapons' | 'trainability' | 'longevity' | 'tourney';
 
 /** Review outcome: 'good' passes, 'ok' is thin, 'warn' needs work, 'info' is advisory. */
 export type DesignVerdict = 'good' | 'ok' | 'warn' | 'info';
@@ -368,7 +363,9 @@ function strikerCanonNotes(attrs: Attributes): DesignReviewItem[] {
       title: 'Striker minimums',
       detail: `Below Assur's striker minimums — ${short
         .map(([k, min]) => `${k} ${attrs[k]} < ${min}`)
-        .join(', ')} (canon floor: ST ${T.ST_MIN_ST} / WT ${T.ST_MIN_WT} / WL ${T.ST_MIN_WL} / DF ${T.ST_MIN_DF}).`,
+        .join(
+          ', '
+        )} (canon floor: ST ${T.ST_MIN_ST} / WT ${T.ST_MIN_WT} / WL ${T.ST_MIN_WL} / DF ${T.ST_MIN_DF}).`,
     },
   ];
 }
@@ -387,8 +384,7 @@ function pikerCanonNotes(attrs: Attributes): DesignReviewItem[] {
       detail: `Wit ${attrs.WT} — the canon articles call wit the keystone of the style: tournament pikers ran 17-21, and even scum variants want ~11.`,
     });
   }
-  const spread =
-    Math.max(...Object.values(attrs)) - Math.min(...Object.values(attrs));
+  const spread = Math.max(...Object.values(attrs)) - Math.min(...Object.values(attrs));
   if (spread <= T.PS_FLAT_SPREAD) {
     items.push({
       axis: 'style',
@@ -589,12 +585,10 @@ function tankFrameNote(
   attrs: Attributes,
   top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
 ): DesignReviewItem | undefined {
-  const isTank =
-    top.archetype === 'tankHybrid' || top.archetype === 'lowWillTankHybrid';
+  const isTank = top.archetype === 'tankHybrid' || top.archetype === 'lowWillTankHybrid';
   if (
     !isTank ||
-    (attrs.ST >= ARCHETYPE_DESIGN_BARS.TANK_ST_MIN &&
-      attrs.CN >= ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
+    (attrs.ST >= ARCHETYPE_DESIGN_BARS.TANK_ST_MIN && attrs.CN >= ARCHETYPE_DESIGN_BARS.TANK_CN_MIN)
   )
     return undefined;
   return {
@@ -611,10 +605,7 @@ function offensiveWitNote(
   attrs: Attributes,
   top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
 ): DesignReviewItem | undefined {
-  if (
-    top.archetype !== 'pureOffensive' ||
-    attrs.WT >= ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN
-  )
+  if (top.archetype !== 'pureOffensive' || attrs.WT >= ARCHETYPE_DESIGN_BARS.OFFENSIVE_WT_MIN)
     return undefined;
   return {
     axis: 'style',
@@ -648,8 +639,7 @@ function bigHybridNote(
   top: NonNullable<ReturnType<typeof classifyArchetype>[number]>
 ): DesignReviewItem | undefined {
   const guide = WINNING_ARCHETYPES[top.archetype];
-  if (guide.family !== 'hybrid' || attrs.SZ < ARCHETYPE_DESIGN_BARS.BIG_HYBRID_SZ)
-    return undefined;
+  if (guide.family !== 'hybrid' || attrs.SZ < ARCHETYPE_DESIGN_BARS.BIG_HYBRID_SZ) return undefined;
   return {
     axis: 'style',
     verdict: 'info',
@@ -660,10 +650,7 @@ function bigHybridNote(
 }
 
 /** Surgeon chassis — AB with ST under the viability floor can't damage. */
-function surgeonChassisNote(
-  attrs: Attributes,
-  style: FightingStyle
-): DesignReviewItem | undefined {
+function surgeonChassisNote(attrs: Attributes, style: FightingStyle): DesignReviewItem | undefined {
   if (style !== FightingStyle.AimedBlow || attrs.ST >= ARCHETYPE_DESIGN_BARS.AB_ST_VIABILITY)
     return undefined;
   return {
@@ -676,11 +663,7 @@ function surgeonChassisNote(
 }
 
 /** Archetypes whose win condition requires plate — the frame must carry it. */
-const ARMOR_DEPENDENT: WinningArchetype[] = [
-  'tankHybrid',
-  'lowWillTankHybrid',
-  'pureDefensive',
-];
+const ARMOR_DEPENDENT: WinningArchetype[] = ['tankHybrid', 'lowWillTankHybrid', 'pureDefensive'];
 
 /** Encumbrance ceiling — an armor-dependent build that can't carry plate. */
 function encumbranceCeilingNote(
@@ -728,8 +711,7 @@ function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewI
   const damage = computeDamageClass(attrs.ST, attrs.SZ);
   const hp = computeHP(attrs.CN, attrs.SZ, attrs.WL);
 
-  const good =
-    enduranceAtLeast(endurance, 'G') || damage >= 3 || hp >= T.HP_GOOD;
+  const good = enduranceAtLeast(endurance, 'G') || damage >= 3 || hp >= T.HP_GOOD;
 
   const items: DesignReviewItem[] = [
     {
@@ -747,7 +729,8 @@ function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewI
       axis: 'physicals',
       verdict: 'warn',
       title: 'Little damage',
-      detail: 'Damage rating "Little" — canon flags this as a serious handicap; only dedicated scum builds shrug it off.',
+      detail:
+        'Damage rating "Little" — canon flags this as a serious handicap; only dedicated scum builds shrug it off.',
     });
   }
 
@@ -781,9 +764,7 @@ function reviewPhysicals(attrs: Attributes, style: FightingStyle): DesignReviewI
 }
 
 function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
-  const suited = WEAPONS.filter(
-    (w) => w.slot === 'weapon' && w.id !== 'fist'
-  ).map((w) => ({
+  const suited = WEAPONS.filter((w) => w.slot === 'weapon' && w.id !== 'fist').map((w) => ({
     name: w.name,
     suit: getWeaponSuitability(w.id, style),
     req: checkWeaponRequirements(w.id, attrs),
@@ -826,15 +807,10 @@ function reviewWeapons(attrs: Attributes, style: FightingStyle): DesignReviewIte
   return items;
 }
 
-function reviewTrainability(
-  attrs: Attributes,
-  style: FightingStyle
-): DesignReviewItem[] {
+function reviewTrainability(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const items: DesignReviewItem[] = [];
 
-  const primed = (
-    Object.entries(PRIMED_TABLES) as [keyof Attributes, number[]][]
-  )
+  const primed = (Object.entries(PRIMED_TABLES) as [keyof Attributes, number[]][])
     .filter(([key, table]) => {
       const next = nextThreshold(table, attrs[key]);
       return next !== undefined && next - attrs[key] <= 2;
@@ -942,7 +918,7 @@ function reviewMinimums(attrs: Attributes, style: FightingStyle): DesignReviewIt
     verdict: 'info',
     title: 'Rollup-first allocation',
     detail:
-      'Drake\'s rollup method: decide the stat order, pour points into each stat until it hits its target, then move on — dribbling points across the sheet produces mediocre builds.',
+      "Drake's rollup method: decide the stat order, pour points into each stat until it hits its target, then move on — dribbling points across the sheet produces mediocre builds.",
   });
   return items;
 }
@@ -1058,10 +1034,7 @@ function reviewDoctrine(attrs: Attributes, style: FightingStyle): DesignReviewIt
     ['WL', 21, 'breakpoint-wl-21'],
   ];
   if (style === FightingStyle.AimedBlow) {
-    rungs.push(
-      ['DF', 17, 'breakpoint-df-ab-17'],
-      ['DF', 21, 'breakpoint-df-ab-21']
-    );
+    rungs.push(['DF', 17, 'breakpoint-df-ab-17'], ['DF', 21, 'breakpoint-df-ab-21']);
   }
   for (const [stat, rung, id] of rungs) {
     if (attrs[stat] >= rung) {
@@ -1162,10 +1135,7 @@ function reviewTourney(attrs: Attributes, style: FightingStyle): DesignReviewIte
  * Review a warrior design against the Arena-93 design doctrine.
  * Pure — identical inputs produce identical items.
  */
-export function reviewWarriorDesign(
-  attrs: Attributes,
-  style: FightingStyle
-): DesignReviewItem[] {
+export function reviewWarriorDesign(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   return [
     ...reviewStyle(attrs, style),
     ...reviewArchetype(attrs, style),

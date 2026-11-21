@@ -1,4 +1,10 @@
-import { makeBidWarrior, makeBidRival, generateTestBids, convertToTestOffers, bidContext } from '@/test/_fixtures/bidRoster';
+import {
+  makeBidWarrior,
+  makeBidRival,
+  generateTestBids,
+  convertToTestOffers,
+  bidContext,
+} from '@/test/_fixtures/bidRoster';
 import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -126,7 +132,11 @@ describe('convertBidsToOffers', () => {
     });
     const state = makeMinimalState([rivalA, rivalB, rivalC]);
 
-    const { bids } = generateBoutBids({ rival: rivalA, ...bidContext(5), rivals: [rivalB, rivalC] });
+    const { bids } = generateBoutBids({
+      rival: rivalA,
+      ...bidContext(5),
+      rivals: [rivalB, rivalC],
+    });
     expect(bids.length).toBeGreaterThan(0);
     expect(bids[0]!.maxFame).toBe(50);
 
@@ -151,7 +161,7 @@ describe('convertBidsToOffers', () => {
     const state = makeMinimalState([rivalA, rivalB]);
 
     const { bids } = generateTestBids(rivalA, rivalB, 5);
-        // warriorA already has an offer — should not be paired again
+    // warriorA already has an offer — should not be paired again
     const existing = new Set<string>([warriorA.id]);
     const offers = convertToTestOffers(bids, rivalA, [rivalA, rivalB], state, existing);
 

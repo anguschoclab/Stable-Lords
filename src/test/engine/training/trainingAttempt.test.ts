@@ -23,47 +23,41 @@ vi.mock('@/engine/training/trainingGains/injuryAndRecovery', async (importActual
 });
 
 const mkWarrior = (over = {}) =>
-  makeComputedWarrior(
-    { ST: 10 },
-    FightingStyle.StrikingAttack,
-    {
-      id: 'w1' as WarriorId,
-      fame: 0,
-      age: 20,
-      potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
-      ...over,
-    }
-  );
-
-const args = (over: Partial<Parameters<typeof runTrainingAttempt>[0]> = {}) =>
-  ({
-    warrior: mkWarrior(),
-    attribute: 'ST' as const,
-    state: { season: 'Summer', trainers: [] } as never,
-    seasonalGrowth: [],
-    healingBonus: 0,
-    weather: 'Rainy' as const,
-    rng: scriptRng(0.99),
+  makeComputedWarrior({ ST: 10 }, FightingStyle.StrikingAttack, {
+    id: 'w1' as WarriorId,
+    fame: 0,
+    age: 20,
+    potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
     ...over,
   });
+
+const args = (over: Partial<Parameters<typeof runTrainingAttempt>[0]> = {}) => ({
+  warrior: mkWarrior(),
+  attribute: 'ST' as const,
+  state: { season: 'Summer', trainers: [] } as never,
+  seasonalGrowth: [],
+  healingBonus: 0,
+  weather: 'Rainy' as const,
+  rng: scriptRng(0.99),
+  ...over,
+});
 
 const attrResult = (
   over: Partial<ReturnType<typeof processAttributeTraining>> = {}
-): ReturnType<typeof processAttributeTraining> =>
-  ({
-    updatedWarrior: mkWarrior(),
-    updatedSeasonalGrowth: null,
-    result: { type: 'gain', warriorId: 'w1' as WarriorId, message: 'gained' },
-    hardCapped: false,
-    ...over,
-  });
+): ReturnType<typeof processAttributeTraining> => ({
+  updatedWarrior: mkWarrior(),
+  updatedSeasonalGrowth: null,
+  result: { type: 'gain', warriorId: 'w1' as WarriorId, message: 'gained' },
+  hardCapped: false,
+  ...over,
+});
 
 describe('runTrainingAttempt (V30 unified executor)', () => {
   beforeEach(() => {
-    vi.mocked(processAttributeTraining).mockClear().mockImplementation(attrResult as never);
-    vi.mocked(rollForTrainingInjury)
+    vi.mocked(processAttributeTraining)
       .mockClear()
-      .mockReturnValue({ injury: null, result: null });
+      .mockImplementation(attrResult as never);
+    vi.mocked(rollForTrainingInjury).mockClear().mockReturnValue({ injury: null, result: null });
   });
 
   it('forwards the ambient weather to the injury roll', () => {

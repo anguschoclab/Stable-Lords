@@ -108,7 +108,10 @@ export function evaluateTournamentAdvice(
 
   // 1. Live tournament week
   if (state.isTournamentWeek || weeksUntilTournament === 0) {
-    return { ...liveTournamentAdvice(tierInfo, currentTournament, isParticipant, overallRank), ...classFields };
+    return {
+      ...liveTournamentAdvice(tierInfo, currentTournament, isParticipant, overallRank),
+      ...classFields,
+    };
   }
 
   // 2. Frozen cycle live — the class is locked; entry status + breakpoint edge
@@ -127,7 +130,13 @@ export function evaluateTournamentAdvice(
   }
 
   // 3. Pre-freeze season advice — qualification, tapering, campaign pacing.
-  return seasonalAdvice({ tierInfo, overallRank, isParticipant, weeksUntilTournament, classFields });
+  return seasonalAdvice({
+    tierInfo,
+    overallRank,
+    isParticipant,
+    weeksUntilTournament,
+    classFields,
+  });
 }
 
 /** Pre-freeze season pacing: unqualified, taper-window, and campaign advice. */

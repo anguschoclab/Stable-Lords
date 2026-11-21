@@ -9,11 +9,7 @@
  * Implemented generically: burn = bp(table,new) − bp(table,old) per skill.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  breakpointBurns,
-  applySkillBurns,
-  effectiveLearnCap,
-} from '@/engine/learning/skillBurn';
+import { breakpointBurns, applySkillBurns, effectiveLearnCap } from '@/engine/learning/skillBurn';
 import { rollBoutLearns } from '@/engine/learning/learnRoll';
 import { processAttributeTraining } from '@/engine/training/trainingGains/attributeTraining';
 import { LEARN_PER_SKILL_CAP } from '@/constants/combat/combat/learn';

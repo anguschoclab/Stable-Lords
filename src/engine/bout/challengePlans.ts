@@ -24,9 +24,7 @@ import { tournamentIdFromContractId } from './core/pairings';
 /** Merge a partial plan override over the base plan, ignoring undefined keys. */
 function mergeOverride(plan: FightPlan, override: Partial<FightPlan> | undefined): FightPlan {
   if (!override) return plan;
-  const defined = Object.fromEntries(
-    Object.entries(override).filter(([, v]) => v !== undefined)
-  );
+  const defined = Object.fromEntries(Object.entries(override).filter(([, v]) => v !== undefined));
   return { ...plan, ...defined };
 }
 

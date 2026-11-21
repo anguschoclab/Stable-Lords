@@ -30,7 +30,7 @@ describe('weekPipelineService', () => {
         player: { id: 'p' },
         roster: [{ id: 'w1' }],
         rivals: [],
-        meta: {}
+        meta: {},
       } as unknown as GameState;
 
       const result = await advanceWeek(mockState);

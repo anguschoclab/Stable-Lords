@@ -51,8 +51,7 @@ function stampRiposteSources(s: OffenseDefenseCtx): void {
 function prKillDesireRipostePenalty(s: OffenseDefenseCtx): number {
   const { def } = s;
   if (def.style !== FightingStyle.ParryRiposte) return 0;
-  const kd =
-    def.activePlan.phases?.[s.phaseKey]?.killDesire ?? def.activePlan.killDesire ?? 5;
+  const kd = def.activePlan.phases?.[s.phaseKey]?.killDesire ?? def.activePlan.killDesire ?? 5;
   return kd <= PR_LOW_KD_THRESHOLD ? -PR_LOW_KD_RIPOSTE_PENALTY : 0;
 }
 

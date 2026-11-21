@@ -4,13 +4,13 @@ The docs/ catalogue. Layout convention lives in [`AGENTS.md`](../AGENTS.md)
 §Docs layout; `src/test/megaplan/docsLayout.guard.test.ts` enforces it —
 every non-archive doc must appear here.
 
-| Dir | Family |
-| --- | --- |
-| `design/` | Canon specs + UI-design docs — the in-game Help bible corpus |
-| `engineering/` | Testing, RNG, pipeline, setup references + live audits |
-| `reports/` | Generated committed reports |
-| `manual/` | Player-facing manual + screenshots |
-| `archive/` | Frozen history: `megaplans/`, `audits/`, `summaries/`, `superpowers/` |
+| Dir            | Family                                                                |
+| -------------- | --------------------------------------------------------------------- |
+| `design/`      | Canon specs + UI-design docs — the in-game Help bible corpus          |
+| `engineering/` | Testing, RNG, pipeline, setup references + live audits                |
+| `reports/`     | Generated committed reports                                           |
+| `manual/`      | Player-facing manual + screenshots                                    |
+| `archive/`     | Frozen history: `megaplans/`, `audits/`, `summaries/`, `superpowers/` |
 
 ## Megaplan (protocol)
 

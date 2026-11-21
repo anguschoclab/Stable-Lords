@@ -89,7 +89,7 @@ Ledger: `MEGAPLAN_V22_LEDGER.md` · Restore tag: `pre-megaplan-v22`.
   it). Canon has no discovery layer; this is the project's own mechanic.
 - **Encumbrance top-end (C12)** — `ENC_TABLE` (Terrablood class chart)
   stays the class-letter source; the article formula `ST+min(ST,CN)−6` is
-  an alternative canon source that *disagrees on cells* (ST10/CN10 →
+  an alternative canon source that _disagrees on cells_ (ST10/CN10 →
   B-band vs table A) — no consistent merger exists. Swapping the capacity
   number to the formula reshapes every warrior's `encumbrancePenalty`:
   its own ratchet pass if encumbrance economics are revisited. Divergent

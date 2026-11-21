@@ -121,7 +121,12 @@ export function computeStableCouncilReport(state: GameState): StableCouncilRepor
     });
   }
 
-  const ctx: CardBuildContext = { state, contenderIndex, championArenaByWarrior, standingByWarrior };
+  const ctx: CardBuildContext = {
+    state,
+    contenderIndex,
+    championArenaByWarrior,
+    standingByWarrior,
+  };
   const cards: WarriorAdvisorCard[] = activeWarriors.map((w) => buildWarriorCard(w, ctx));
 
   const kpis = computeCardKpis(cards);

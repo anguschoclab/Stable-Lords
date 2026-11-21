@@ -273,10 +273,7 @@ function routeAgingOutcome(
 
   if (result.retired && result.retiredObj) {
     acc.retiredWarriors.push(result.retiredObj);
-    if (
-      isLegacyFounderCaliber(result.retiredObj, crownedIds) &&
-      rng.next() < LEGACY_FOUND_CHANCE
-    ) {
+    if (isLegacyFounderCaliber(result.retiredObj, crownedIds) && rng.next() < LEGACY_FOUND_CHANCE) {
       acc.founderEnqueued.push(buildLegacyFounderQueueEntry(result.retiredObj));
     }
     if (isPlayer) {
@@ -329,7 +326,8 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
     routeAgingOutcome(acc, result, w, { isPlayer, rivalId, crownedIds, state, rng });
   }
 
-  const { ageEvents, rosterUpdates, rivalsUpdates, toRetire, retiredWarriors, founderEnqueued } = acc;
+  const { ageEvents, rosterUpdates, rivalsUpdates, toRetire, retiredWarriors, founderEnqueued } =
+    acc;
   removeRetiredFromRivalRosters(state, retiredWarriors, rivalsUpdates);
 
   return {

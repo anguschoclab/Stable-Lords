@@ -52,9 +52,7 @@ describe('aimedBlowShellGapBonus', () => {
     });
     const shallow = fighter({ skills: { ...fighter({}).skills, PAR: 4 } });
     const deep = fighter({ skills: { ...fighter({}).skills, PAR: 8 } });
-    expect(aimedBlowShellGapBonus(att, deep)).toBeGreaterThan(
-      aimedBlowShellGapBonus(att, shallow)
-    );
+    expect(aimedBlowShellGapBonus(att, deep)).toBeGreaterThan(aimedBlowShellGapBonus(att, shallow));
   });
 
   it('caps at AB_SHELL_GAP_ATT_MAX', () => {
@@ -103,10 +101,16 @@ describe('AB gap-finder integration', () => {
     let wins = 0;
     const N = 8000;
     for (let i = 0; i < N; i++) {
-      const r = simulateFight({ warriorA: wA, warriorD: wD, planA, planD, providedRng: i * 7919 + 42 });
+      const r = simulateFight({
+        warriorA: wA,
+        warriorD: wD,
+        planA,
+        planD,
+        providedRng: i * 7919 + 42,
+      });
       if (r.winner === 'A') wins++;
     }
     // Measured 45.5% pre-payoff; the gap bonus should restore a clear AB edge.
-    expect(100 * wins / N).toBeGreaterThan(53);
+    expect((100 * wins) / N).toBeGreaterThan(53);
   });
 });

@@ -7,10 +7,7 @@
  *   bun run scripts/style-card.ts        # all-styles tempo table
  *   LAB='{"penD":{"WS":[0,0,0,1,0,0]}}' bun run scripts/style-card.ts WS
  */
-import {
-  STYLE_PENALTIES,
-  STYLE_SKILL_FLOORS,
-} from '@/engine/warrior/skillBreakpoints';
+import { STYLE_PENALTIES, STYLE_SKILL_FLOORS } from '@/engine/warrior/skillBreakpoints';
 import { getMatchupBonus, STYLE_ORDER } from '@/constants/combat';
 import {
   getTempoBonus,

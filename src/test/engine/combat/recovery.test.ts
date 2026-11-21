@@ -4,11 +4,13 @@
  * only ever draining. Live guard on applyEnduranceRecovery (Phase-4).
  */
 import { describe, it, expect } from 'vitest';
-import { applyEnduranceRecovery, RECOVERY_ACTIVITY_CAP } from '@/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery';
+import {
+  applyEnduranceRecovery,
+  RECOVERY_ACTIVITY_CAP,
+} from '@/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery';
 import { makeFighterState } from '@/test/_fixtures/factories';
 
-const gassed = () =>
-  makeFighterState({ endurance: 5, maxEndurance: 40 });
+const gassed = () => makeFighterState({ endurance: 5, maxEndurance: 40 });
 
 describe('applyEnduranceRecovery', () => {
   it('a low-activity beat (OE+AL under cap) restores endurance', () => {

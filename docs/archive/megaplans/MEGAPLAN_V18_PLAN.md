@@ -5,7 +5,7 @@
 **Branch:** `main` (direct commits per house convention — no consolidation PR)
 · **Constraints:** zero save-file/backwards-compat — `SAVE_STATE_VERSION`
 `'3.0.0'` (`src/constants/core/core.ts:12`) is free to bump; strict
-**test-first invariant** — Phase 2 constructs the *complete* test inventory
+**test-first invariant** — Phase 2 constructs the _complete_ test inventory
 RED before any implementation commit; slow suite deferred to covered-path
 gates (adhoc/nightly tier per user directive).
 **Safety:** restore tag `pre-megaplan-v18` created at Phase-0 HEAD
@@ -35,27 +35,27 @@ against live scans on 2026-10-21 (see FINDINGS §0).
    must not contaminate the baseline.
 3. Full gate matrix, recorded in LEDGER §0:
 
-   | Gate | Command | Baseline expectation |
-   | ---- | ------- | -------------------- |
-   | type-check | `bun run type-check` | 0 errors |
-   | lint | `bun run lint` | 0 errors |
-   | fast tests | `bun run test` | all pass; skip count = registered tickets only |
-   | build | `bun run build` | OK |
-   | narrative | `bun run narrative-validate` | clean |
-   | dup-scan exact w8 | `node scripts/dup-scan.mjs` | src↔src 27 (all registered), test↔test 150, mixed 27 |
-   | dup-scan exact w12 | `--window 12` | 7 src↔src / 18 test↔test / 4 mixed |
-   | dup-scan ident w20 | `--ident --window 20` | 181 src↔src audit queue |
-   | dup-scan ident w16 | `--ident --window 16` | 484 src↔src deep tier |
-   | function-length | `node scripts/function-length.mjs` | 19 fns >80, 0 >120 |
-   | param-count | `node scripts/param-count.mjs` | 0 violations over `PARAM_LIMIT`=5 |
-   | orphan-scan | `node scripts/orphan-scan.mjs` → `scripts/out/orphan-scan.json` | 0 unreachable |
-   | entries-in-loop | `node scripts/entries-in-loop.mjs` | KNOWN_EXCEPTIONS only (V12/V15) |
-   | ui-audit | `node scripts/ui-audit-scan.mjs` | report |
-   | data-array dups | `node scripts/data-array-dup-scan.mjs` | report |
-   | knip | `bun run dead-code` | report-only baseline |
-   | jscpd | `bun run dupes` (`src scripts e2e electron`) | report-only baseline |
-   | soak 40w | `node scripts/soak.mjs --weeks 40 --seed 20260919` | 0 invariant violations |
-   | determinism | `src/test/engine/determinismAudit.test.ts` | pass |
+   | Gate               | Command                                                         | Baseline expectation                                 |
+   | ------------------ | --------------------------------------------------------------- | ---------------------------------------------------- |
+   | type-check         | `bun run type-check`                                            | 0 errors                                             |
+   | lint               | `bun run lint`                                                  | 0 errors                                             |
+   | fast tests         | `bun run test`                                                  | all pass; skip count = registered tickets only       |
+   | build              | `bun run build`                                                 | OK                                                   |
+   | narrative          | `bun run narrative-validate`                                    | clean                                                |
+   | dup-scan exact w8  | `node scripts/dup-scan.mjs`                                     | src↔src 27 (all registered), test↔test 150, mixed 27 |
+   | dup-scan exact w12 | `--window 12`                                                   | 7 src↔src / 18 test↔test / 4 mixed                   |
+   | dup-scan ident w20 | `--ident --window 20`                                           | 181 src↔src audit queue                              |
+   | dup-scan ident w16 | `--ident --window 16`                                           | 484 src↔src deep tier                                |
+   | function-length    | `node scripts/function-length.mjs`                              | 19 fns >80, 0 >120                                   |
+   | param-count        | `node scripts/param-count.mjs`                                  | 0 violations over `PARAM_LIMIT`=5                    |
+   | orphan-scan        | `node scripts/orphan-scan.mjs` → `scripts/out/orphan-scan.json` | 0 unreachable                                        |
+   | entries-in-loop    | `node scripts/entries-in-loop.mjs`                              | KNOWN_EXCEPTIONS only (V12/V15)                      |
+   | ui-audit           | `node scripts/ui-audit-scan.mjs`                                | report                                               |
+   | data-array dups    | `node scripts/data-array-dup-scan.mjs`                          | report                                               |
+   | knip               | `bun run dead-code`                                             | report-only baseline                                 |
+   | jscpd              | `bun run dupes` (`src scripts e2e electron`)                    | report-only baseline                                 |
+   | soak 40w           | `node scripts/soak.mjs --weeks 40 --seed 20260919`              | 0 invariant violations                               |
+   | determinism        | `src/test/engine/determinismAudit.test.ts`                      | pass                                                 |
 
 4. Retroactive ledger — V18 numbering formalizes already-landed dedup
    history so the record is honest (FINDINGS §0b):
@@ -118,7 +118,7 @@ the FINDINGS verdict tables.
 
 - **§A SRP targets** — function-level queue: the 19 functions >80 lines
   first (seeded list in FINDINGS §A), then the ~300-function 60–80 band
-  triaged by *responsibility-mix*, not length. God-components/hooks from
+  triaged by _responsibility-mix_, not length. God-components/hooks from
   the census join this table.
 - **§D dup clusters** — one row per cluster per tier (exact w8/w12, ident
   w20; w16 staged) with EXEMPT/DEBT verdict and a **named harmonization
@@ -146,7 +146,7 @@ commits RED first. No Phase-3+ commit may precede it.
    triage promotes them.
 2. **Characterization specs** — per §D DEBT cluster (v12Dedup/v11Dedup
    precedent: dynamic imports, clean assertion reds), pinning current
-   behavior of every DEBT pair *before* consolidation. Test↔test
+   behavior of every DEBT pair _before_ consolidation. Test↔test
    boilerplate clusters (competitionWorker spec families sharing 37–53L
    pairwise — `playerPressure`/`venueCounter`/`styleMatchupGate`/
    `desperationGate`; `_fixtures/weather.ts`↔`enumSourcesSync` 42L;

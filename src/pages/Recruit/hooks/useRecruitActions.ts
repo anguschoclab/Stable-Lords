@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
 import { type GameStore } from '@/state/useGameStore';
-import {
-  type PoolWarrior,
-} from '@/engine/recruitment/recruitment';
+import { type PoolWarrior } from '@/engine/recruitment/recruitment';
 import {
   revealRecruitPotential,
   type PotentialScoutReport,
@@ -10,13 +8,8 @@ import {
 import type { FightingStyle, Attributes } from '@/types/game';
 import type { LedgerEntry } from '@/types/state.types';
 import { toast } from 'sonner';
-import {
-  recruitFromPool,
-} from './recruitActions/recruitSigning';
-import {
-  customCreate,
-  refreshPool,
-} from './recruitActions/recruitPoolOps';
+import { recruitFromPool } from './recruitActions/recruitSigning';
+import { customCreate, refreshPool } from './recruitActions/recruitPoolOps';
 
 const SCOUT_COST = 25;
 

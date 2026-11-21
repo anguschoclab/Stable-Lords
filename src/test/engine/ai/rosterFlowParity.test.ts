@@ -40,9 +40,7 @@ describe('AI↔player training parity (V30 same ruleset)', () => {
       trainers: [],
       season: 'Summer',
       weather: 'Clear',
-      trainingAssignments: [
-        { warriorId: wP.id, type: 'attribute', attribute: aiOut.chosen },
-      ],
+      trainingAssignments: [{ warriorId: wP.id, type: 'attribute', attribute: aiOut.chosen }],
     });
     const impact = computeTrainingImpact(state, scriptRng(0.5), 'Clear');
     const playerW = impact.updatedRoster.find((x) => x.id === wP.id)!;
@@ -70,15 +68,15 @@ describe('AI↔player training parity (V30 same ruleset)', () => {
       trainers: [],
       season: 'Summer',
       weather: 'Clear',
-      trainingAssignments: [
-        { warriorId: wP.id, type: 'attribute', attribute: aiOut.chosen },
-      ],
+      trainingAssignments: [{ warriorId: wP.id, type: 'attribute', attribute: aiOut.chosen }],
     });
     const impact = computeTrainingImpact(state, scriptRng(0.0), 'Clear');
     const playerW = impact.updatedRoster.find((x) => x.id === wP.id)!;
 
     expect(playerW.injuries?.length ?? 0).toBe(aiOut.warrior.injuries?.length ?? 0);
-    expect((aiOut.warrior.injuries?.length ?? 0) > 0 || playerW.injuries === undefined).toBeTruthy();
+    expect(
+      (aiOut.warrior.injuries?.length ?? 0) > 0 || playerW.injuries === undefined
+    ).toBeTruthy();
   });
 
   it('skill drill: AI drill rolls a training injury at the same odds as the player path', () => {

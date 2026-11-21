@@ -5,7 +5,6 @@ import { walkTsFiles as walk } from '@/test/_helpers/fsWalk';
 
 const ENGINE_ROOT = join(__dirname, '../../engine');
 
-
 /**
  * Engine code runs inside Web Workers and the Electron renderer where the
  * Node `process` global does not exist — a bare `process.env.FOO` read is a

@@ -133,7 +133,7 @@ describe('MEGAPLAN-V29: union-merged combat JSON pools', () => {
       // #1083
       '{{attacker}} has murder in their eyes!',
       // #1093
-      "{{attacker}} shows no mercy, intent on a lethal strike!",
+      '{{attacker}} shows no mercy, intent on a lethal strike!',
     ]) {
       expect(strings).toContain(s);
     }
@@ -141,9 +141,7 @@ describe('MEGAPLAN-V29: union-merged combat JSON pools', () => {
 
   it('combatStrikes keeps the #1080 additions', () => {
     const strings = collectStrings(strikes);
-    expect(strings).toContain(
-      'The blade grazes {{defender}}, leaving only a superficial scratch.'
-    );
+    expect(strings).toContain('The blade grazes {{defender}}, leaving only a superficial scratch.');
   });
 
   it('uiMeta keeps the shared "Flashy" entry exactly once', () => {

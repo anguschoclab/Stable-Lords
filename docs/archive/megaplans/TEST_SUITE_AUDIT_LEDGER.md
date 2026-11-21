@@ -107,21 +107,21 @@ Docs updated: `docs/TESTING.md` (layout/conformance/suffix rules, audit list),
 Baseline (fresh scans; plan `TEST_SUITE_AUDIT_PLAN.md` §"Wave 2"; findings
 `TEST_AUDIT_FINDINGS.md` §5). Restore tag: `pre-test-audit-v2`.
 
-| Metric | Before (wave-1 close) | Wave-2 baseline | Target |
-| ------ | --------------------- | --------------- | ------ |
-| Default-suite files | 799 | **880** | — |
-| Default-suite tests | 8,867 | **9,469** (0 fail, 2 deliberate pending) | green |
-| `bunx vitest run` wall | 52.9s | ~66s (V18 baseline 10-21) | measured wins, no hard target |
-| Files >2s / >5s | 23 >2s (stale TSV) | **52 / 11** | tail drained or demoted |
-| jscpd clones in `src/test` | 0 (repo-wide run) | **88** (scoped run — new canonical measure) | 0 or EXEMPT-registered |
-| dup-scan TEST_DEBT pairs | 150 registered → budget 70 | **70 remaining** | 0 |
-| importSetClusters | 37 | 37 | distinct-subject groups only |
-| basenameCollisions / missingPragma | 0 / 0 | 0 / 0 | hold |
-| Category-misplaced files | 2 allowlisted | 2 + **layout/ dir drift (2 files, unguarded)** | conform |
-| Non-taxonomy qualifier files | unguarded | **48** | ratcheted via word rule |
-| CI bun-test shard coverage | unknown | **70 non-slow files unsharded** | 0 |
-| megaplan guards | — | **28, all LIVE_RATCHET** | registered via T6 |
-| Audit guards (testQualityAudit checks) | 11 | 11 | +T1–T5 (+T6 registry) |
+| Metric                                 | Before (wave-1 close)      | Wave-2 baseline                                | Target                        |
+| -------------------------------------- | -------------------------- | ---------------------------------------------- | ----------------------------- |
+| Default-suite files                    | 799                        | **880**                                        | —                             |
+| Default-suite tests                    | 8,867                      | **9,469** (0 fail, 2 deliberate pending)       | green                         |
+| `bunx vitest run` wall                 | 52.9s                      | ~66s (V18 baseline 10-21)                      | measured wins, no hard target |
+| Files >2s / >5s                        | 23 >2s (stale TSV)         | **52 / 11**                                    | tail drained or demoted       |
+| jscpd clones in `src/test`             | 0 (repo-wide run)          | **88** (scoped run — new canonical measure)    | 0 or EXEMPT-registered        |
+| dup-scan TEST_DEBT pairs               | 150 registered → budget 70 | **70 remaining**                               | 0                             |
+| importSetClusters                      | 37                         | 37                                             | distinct-subject groups only  |
+| basenameCollisions / missingPragma     | 0 / 0                      | 0 / 0                                          | hold                          |
+| Category-misplaced files               | 2 allowlisted              | 2 + **layout/ dir drift (2 files, unguarded)** | conform                       |
+| Non-taxonomy qualifier files           | unguarded                  | **48**                                         | ratcheted via word rule       |
+| CI bun-test shard coverage             | unknown                    | **70 non-slow files unsharded**                | 0                             |
+| megaplan guards                        | —                          | **28, all LIVE_RATCHET**                       | registered via T6             |
+| Audit guards (testQualityAudit checks) | 11                         | 11                                             | +T1–T5 (+T6 registry)         |
 
 ### Phase 0 — baseline freeze
 
@@ -223,17 +223,18 @@ All of T1–T9 landed before implementation began:
   Duration; baseline ~48–54s, config override via temporary env-injected
   `vitest.config.knobs.ts` — deleted after use):
 
-  | Variant | Wall | Verdict |
-  | ------- | ---- | ------- |
-  | `--maxWorkers=5` | 57s | REJECT — −15% slower; cores under-subscribed |
-  | `--maxWorkers=8` | 51s | no gain — default already saturates |
-  | `minWorkers=10, maxWorkers=10` | 54s | no gain — pool warm-up is not the bottleneck |
-  | `--sequence.concurrent` | 70s + 501 fails | REJECT — in-file concurrency defeats state-reset ordering (isolation sentinels fail wholesale) |
-  | `poolOptions.threads.singleThread` | 50s | no gain — thread-per-worker parity, more processes |
+  | Variant                            | Wall            | Verdict                                                                                        |
+  | ---------------------------------- | --------------- | ---------------------------------------------------------------------------------------------- |
+  | `--maxWorkers=5`                   | 57s             | REJECT — −15% slower; cores under-subscribed                                                   |
+  | `--maxWorkers=8`                   | 51s             | no gain — default already saturates                                                            |
+  | `minWorkers=10, maxWorkers=10`     | 54s             | no gain — pool warm-up is not the bottleneck                                                   |
+  | `--sequence.concurrent`            | 70s + 501 fails | REJECT — in-file concurrency defeats state-reset ordering (isolation sentinels fail wholesale) |
+  | `poolOptions.threads.singleThread` | 50s             | no gain — thread-per-worker parity, more processes                                             |
 
   All measured on a clean tree (worktree at HEAD for the two contaminated
   variants — a concurrent narrative regen had left `gazette.json` empty in
   the main tree). **Default configuration stands; no knob change landed.**
+
 - **Timing TSV completed:** slow suite re-run
   (`bunx vitest run --config vitest.config.slow.ts --reporter=json` →
   `scripts/out/slow-suite-timings.json`; 41 files / 268 pass / 0 fail / 1
@@ -259,20 +260,20 @@ All of T1–T9 landed before implementation began:
 
 ### Wave-2 final metrics
 
-| Metric | Wave-2 baseline | Wave-2 final |
-| ------ | --------------- | ------------ |
-| Default-suite tests | 9,469 | 9,493 (9,491 pass, 0 fail, 2 deliberate pending; +24 net from new guard/contract specs) |
-| `bunx vitest run` wall | ~66s | ~53s |
-| Files >5s | 11 | **0** |
-| Files >2s | 52 | **2** (fresh TSV, 888 default rows) |
-| p50 / p90 / p99 | 38ms / 1.49s / 6.2s | **10.6ms / 357ms / 1.40s** |
-| dup-scan TEST_DEBT pairs | 70 | **0** |
-| test↔test live pair baseline | 79 | **12** (all EXEMPT) |
-| jscpd `src/test` | 88 / 1.02% | 73 / 0.86% |
-| CI bun-test shard gap | 70 files | **0** (find-driven) |
-| testQualityAudit checks | 11 | **16** (+T1–T5 +T6 registry) |
-| megaplan guard registry | unguarded | all enumerated LIVE_RATCHET |
-| Audit contracts (A-tickets) | — | A1–A5 green |
+| Metric                       | Wave-2 baseline     | Wave-2 final                                                                            |
+| ---------------------------- | ------------------- | --------------------------------------------------------------------------------------- |
+| Default-suite tests          | 9,469               | 9,493 (9,491 pass, 0 fail, 2 deliberate pending; +24 net from new guard/contract specs) |
+| `bunx vitest run` wall       | ~66s                | ~53s                                                                                    |
+| Files >5s                    | 11                  | **0**                                                                                   |
+| Files >2s                    | 52                  | **2** (fresh TSV, 888 default rows)                                                     |
+| p50 / p90 / p99              | 38ms / 1.49s / 6.2s | **10.6ms / 357ms / 1.40s**                                                              |
+| dup-scan TEST_DEBT pairs     | 70                  | **0**                                                                                   |
+| test↔test live pair baseline | 79                  | **12** (all EXEMPT)                                                                     |
+| jscpd `src/test`             | 88 / 1.02%          | 73 / 0.86%                                                                              |
+| CI bun-test shard gap        | 70 files            | **0** (find-driven)                                                                     |
+| testQualityAudit checks      | 11                  | **16** (+T1–T5 +T6 registry)                                                            |
+| megaplan guard registry      | unguarded           | all enumerated LIVE_RATCHET                                                             |
+| Audit contracts (A-tickets)  | —                   | A1–A5 green                                                                             |
 
 Push-CI verdict on the landed commit: `test`, `bun-test`, `type-check`,
 `lint`, `build`, `electron`, `e2e` green; `coverage` reported by the
@@ -291,10 +292,10 @@ audited against the promote/demote rules in `docs/TESTING.md`; e2e
 
 ### Moves
 
-| File | Direction | Rule applied |
-| --- | --- | --- |
-| `megaplan/orphanScan.guard.test.ts` → `.guard.slow.test.ts` | fast → slow | `execFileSync`s `orphan-scan.mjs` (~5s subprocess); also moved `runScan()` from describe scope into `beforeAll` so the exec no longer fires at collection |
-| `engine/simulateArenaBalance.test.ts` → `.slow.test.ts` | fast → slow | ~1,800 `simulateFight` calls in a win-rate band check — balance harness (closes the stale `TEST_AUDIT_FINDINGS` "likely .slow" recommendation from the original audit) |
+| File                                                        | Direction   | Rule applied                                                                                                                                                           |
+| ----------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `megaplan/orphanScan.guard.test.ts` → `.guard.slow.test.ts` | fast → slow | `execFileSync`s `orphan-scan.mjs` (~5s subprocess); also moved `runScan()` from describe scope into `beforeAll` so the exec no longer fires at collection              |
+| `engine/simulateArenaBalance.test.ts` → `.slow.test.ts`     | fast → slow | ~1,800 `simulateFight` calls in a win-rate band check — balance harness (closes the stale `TEST_AUDIT_FINDINGS` "likely .slow" recommendation from the original audit) |
 
 `GUARD_REGISTRY` key updated to `orphanScan.guard.slow.test.ts`
 (LIVE_RATCHET). The rename was verified RED→GREEN through the guard
@@ -303,20 +304,20 @@ assertions; the key update + baseline regen restored green.
 
 ### Reviewed, kept slow (sub-2s but categorical)
 
-| File | ms | Category |
-| --- | --- | --- |
-| `pipeline/truncationCadence` | 1,712 | 4-week ×2-path byte-compare |
-| `megaplan/v11Dedup.guard` | 1,504 | dup-scan subprocess |
-| `pool/enginePool` | 1,465 | timing-sensitive worker orchestration (deliberate keep) |
-| `perf/rivalStrategyPass.perf` | 1,302 | timing gate — flake-prone under fast parallelism |
-| `scripts/narrativeValidate` | 1,088 | `execSync('npx tsx …')` |
-| `engine/simulateArenaBalance` | 1,156 | moved in this pass |
-| `megaplan/orphanScan.guard` | (wall ~5s) | moved in this pass |
-| `combat/styleWinConditions` | 463 | `simulateFight` style-matrix harness |
-| `scripts/narrativeValidatorExtension` | 313 | `execSync` |
-| `config/electronCompile` | 277 | `execSync('bun build')` |
-| `integration/livingWorld` | 95* | `runSimulation({weeks:1000})` in `beforeAll` |
-| `sim/_seedProbe` | 0 | env-gated manual probe, not a gate |
+| File                                  | ms         | Category                                                |
+| ------------------------------------- | ---------- | ------------------------------------------------------- |
+| `pipeline/truncationCadence`          | 1,712      | 4-week ×2-path byte-compare                             |
+| `megaplan/v11Dedup.guard`             | 1,504      | dup-scan subprocess                                     |
+| `pool/enginePool`                     | 1,465      | timing-sensitive worker orchestration (deliberate keep) |
+| `perf/rivalStrategyPass.perf`         | 1,302      | timing gate — flake-prone under fast parallelism        |
+| `scripts/narrativeValidate`           | 1,088      | `execSync('npx tsx …')`                                 |
+| `engine/simulateArenaBalance`         | 1,156      | moved in this pass                                      |
+| `megaplan/orphanScan.guard`           | (wall ~5s) | moved in this pass                                      |
+| `combat/styleWinConditions`           | 463        | `simulateFight` style-matrix harness                    |
+| `scripts/narrativeValidatorExtension` | 313        | `execSync`                                              |
+| `config/electronCompile`              | 277        | `execSync('bun build')`                                 |
+| `integration/livingWorld`             | 95*        | `runSimulation({weeks:1000})` in `beforeAll`            |
+| `sim/_seedProbe`                      | 0          | env-gated manual probe, not a gate                      |
 
 *Under-reported: the TSV records per-test windows, so `beforeAll`-heavy
 files show near-zero rows.
@@ -353,11 +354,11 @@ files show near-zero rows.
 
 ### Metrics
 
-| Metric | Before | After |
-| --- | --- | --- |
-| Default-suite files | 884 | 882 |
-| Default-suite tests | 9,515 | 9,509 |
-| Slow-suite files | 43 | 45 |
-| `bunx vitest run` wall | ~54s | ~49s |
-| `baseline-test-timings.tsv` | 924 rows | 927 rows (882 default + 45 slow) |
-| Collection-time subprocess in fast suite | orphan-scan (~5s) | none |
+| Metric                                   | Before            | After                            |
+| ---------------------------------------- | ----------------- | -------------------------------- |
+| Default-suite files                      | 884               | 882                              |
+| Default-suite tests                      | 9,515             | 9,509                            |
+| Slow-suite files                         | 43                | 45                               |
+| `bunx vitest run` wall                   | ~54s              | ~49s                             |
+| `baseline-test-timings.tsv`              | 924 rows          | 927 rows (882 default + 45 slow) |
+| Collection-time subprocess in fast suite | orphan-scan (~5s) | none                             |

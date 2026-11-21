@@ -28,8 +28,6 @@ import { ROOT, walk, rel, isTest, writeReport, isMain } from './lib/scanLib.mjs'
 const SRC = path.join(ROOT, 'src');
 const OUT_FILE = 'arena-lookup-scan.json';
 
-
-
 const ARENA_GETTERS = new Set([
   'getAllArenas',
   'getNormalArenas',

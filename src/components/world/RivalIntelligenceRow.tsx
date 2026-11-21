@@ -11,8 +11,7 @@ import { tryGetArenaById } from '@/data/arenas';
 import type { ArenaTitle } from '@/types/state.types';
 import { cn } from '@/lib/utils';
 
-const arenaDisplayName = (arenaId: string): string =>
-  tryGetArenaById(arenaId)?.name ?? arenaId;
+const arenaDisplayName = (arenaId: string): string => tryGetArenaById(arenaId)?.name ?? arenaId;
 
 /**
  * Title posture for one stable: which crowns its roster holds, and whether a

@@ -88,8 +88,7 @@ export function computeBaseSkills(
   // get +1 ATT (Terrablood skill chart notes).
   const dfAtt = bp(DF_ATT, DF) * (style === FightingStyle.AimedBlow ? 2 : 1);
   const ambiAtt = handedness === 'ambidextrous' ? 1 : 0;
-  const ATT_raw =
-    bp(ST_ATT, ST) + bp(WT_ATT, WT) + bp(WL_ATT, WL) + dfAtt + ambiAtt + pen[0];
+  const ATT_raw = bp(ST_ATT, ST) + bp(WT_ATT, WT) + bp(WL_ATT, WL) + dfAtt + ambiAtt + pen[0];
   const PAR_raw = bp(ST_PAR, ST) + szMod(SZ_PAR_MOD, SZ) + bp(WL_PAR, WL) + bp(DF_PAR, DF) + pen[1];
   const DEF_raw =
     szMod(SZ_DEF_MOD, SZ) +
@@ -208,9 +207,7 @@ const HANDEDNESS_BY_FAMILY: Record<
  * ambidextrous variant. Absent style keeps the baseline for tests/legacy calls.
  */
 export function rollHandedness(rng: IRNGService, style?: FightingStyle): Handedness {
-  const row = style
-    ? HANDEDNESS_BY_FAMILY[STYLE_FAMILY[style]]
-    : { right: 0.85, leftOfRest: 0.5 };
+  const row = style ? HANDEDNESS_BY_FAMILY[STYLE_FAMILY[style]] : { right: 0.85, leftOfRest: 0.5 };
   if (rng.next() < row.right) return 'right';
   if (rng.next() < row.leftOfRest) return 'left';
   // Rare canon variant: the ambidextrous fighter carries primary in the

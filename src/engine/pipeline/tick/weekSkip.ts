@@ -16,10 +16,7 @@ export async function skipToWeekEnd(
 ): Promise<GameState> {
   // The pipeline always receives a shallow copy — never the caller's object —
   // which matters when mutableInput grants it in-place mutation rights.
-  const { state: drained, weeklyNewsItems } = drainTournamentRounds(
-    { ...state },
-    state.day || 0
-  );
+  const { state: drained, weeklyNewsItems } = drainTournamentRounds({ ...state }, state.day || 0);
   const withRecap = appendTournamentRecap(drained, state.week, weeklyNewsItems);
   return finalizeWeekTransition(withRecap, opts);
 }

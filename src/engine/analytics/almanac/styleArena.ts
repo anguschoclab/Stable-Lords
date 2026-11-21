@@ -74,7 +74,12 @@ const styleStandingsBoard = (styleAgg: Map<string, StyleAgg>, n: number): Almana
     'stable',
     cap(
       [...styleAgg.entries()]
-        .sort(by(numDesc(([, a]) => a.wins), strAsc(([style]) => style)))
+        .sort(
+          by(
+            numDesc(([, a]) => a.wins),
+            strAsc(([style]) => style)
+          )
+        )
         .map(([style, a]) => ({
           key: style,
           name: style,
@@ -105,10 +110,7 @@ function arenaLeaders(input: AlmanacInput): {
     for (const w of input.warriors) {
       const rec = w.career?.byArena?.[arenaId];
       if (!rec) continue;
-      const better = (
-        cand: Warrior | undefined,
-        metric: 'wins' | 'kills'
-      ): boolean =>
+      const better = (cand: Warrior | undefined, metric: 'wins' | 'kills'): boolean =>
         rec[metric] > 0 &&
         (!cand ||
           rec[metric] > (cand.career?.byArena?.[arenaId]?.[metric] ?? 0) ||
@@ -136,8 +138,18 @@ function arenaLeaders(input: AlmanacInput): {
       });
     }
   }
-  legendRows.sort(by(numDesc((r) => r.value), strAsc((r) => r.key)));
-  killRows.sort(by(numDesc((r) => r.value), strAsc((r) => r.key)));
+  legendRows.sort(
+    by(
+      numDesc((r) => r.value),
+      strAsc((r) => r.key)
+    )
+  );
+  killRows.sort(
+    by(
+      numDesc((r) => r.value),
+      strAsc((r) => r.key)
+    )
+  );
   return { legendRows, killRows };
 }
 

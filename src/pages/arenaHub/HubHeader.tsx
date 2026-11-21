@@ -5,7 +5,11 @@ import { useGameStore } from '@/state/useGameStore';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /** Hub page header with the active-warrior count badge. */
-export function HubHeader({ roster }: { roster: ReturnType<typeof useGameStore.getState>['roster'] }) {
+export function HubHeader({
+  roster,
+}: {
+  roster: ReturnType<typeof useGameStore.getState>['roster'];
+}) {
   return (
     <PageHeader
       icon={Swords}

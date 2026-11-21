@@ -99,7 +99,7 @@ describe('canonTargetingBias — SL doctrine', () => {
 describe('canonTargetingBias — PL doctrine (Arena 93)', () => {
   const PL = FightingStyle.ParryLunge;
 
-  it('preys on strikers, pikers, rippers, and slashers — the AP article\'s hunting list', () => {
+  it("preys on strikers, pikers, rippers, and slashers — the AP article's hunting list", () => {
     expect(canonTargetingBias(PL, ST)).toBeGreaterThanOrEqual(1);
     expect(canonTargetingBias(PL, FightingStyle.ParryStrike)).toBeGreaterThanOrEqual(1);
     expect(canonTargetingBias(PL, FightingStyle.ParryRiposte)).toBeGreaterThanOrEqual(1);
@@ -135,7 +135,7 @@ describe('canonTargetingBias — ST doctrine (Arena 93)', () => {
   const PL = FightingStyle.ParryLunge;
   const PR = FightingStyle.ParryRiposte;
 
-  it('hunts bashers and slashers — Assur\'s best matchups', () => {
+  it("hunts bashers and slashers — Assur's best matchups", () => {
     expect(canonTargetingBias(ST, BA)).toBeGreaterThanOrEqual(1.5);
     expect(canonTargetingBias(ST, SL)).toBeGreaterThanOrEqual(1.5);
   });
@@ -201,7 +201,7 @@ describe('canonTargetingBias — LU doctrine (Arena 93)', () => {
     expect(canonTargetingBias(LU, TP)).toBeLessThanOrEqual(-3);
   });
 
-  it('feeds on strikers and bashers — Assur\'s best matchups', () => {
+  it("feeds on strikers and bashers — Assur's best matchups", () => {
     expect(canonTargetingBias(LU, ST)).toBeGreaterThanOrEqual(2);
     expect(canonTargetingBias(LU, FightingStyle.BashingAttack)).toBeGreaterThanOrEqual(2);
   });

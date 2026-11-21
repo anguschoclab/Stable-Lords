@@ -49,7 +49,9 @@ export const LEARN_SKILL_KEYS: readonly (keyof BaseSkills)[] = [
  * and costs no creation-time RNG draw.
  */
 export function favoriteLearnOf(warrior: Pick<Warrior, 'id'>): keyof BaseSkills {
-  return LEARN_SKILL_KEYS[hashStr(String(warrior.id)) % LEARN_SKILL_KEYS.length] as keyof BaseSkills;
+  return LEARN_SKILL_KEYS[
+    hashStr(String(warrior.id)) % LEARN_SKILL_KEYS.length
+  ] as keyof BaseSkills;
 }
 
 /**
@@ -135,7 +137,10 @@ export function rollBoutLearns(
     const full = learnPoolWeights(warrior.style, opponentStyle, favorite);
     const weights: Partial<Record<keyof BaseSkills, number>> = {};
     for (const skill of LEARN_SKILL_KEYS) {
-      if ((learnedSkills[skill] ?? 0) < effectiveLearnCap(warrior, skill) && (full[skill] ?? 0) > 0) {
+      if (
+        (learnedSkills[skill] ?? 0) < effectiveLearnCap(warrior, skill) &&
+        (full[skill] ?? 0) > 0
+      ) {
         weights[skill] = full[skill];
       }
     }

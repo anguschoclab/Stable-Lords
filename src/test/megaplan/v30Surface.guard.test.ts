@@ -26,9 +26,7 @@ describe('v30Surface guard', () => {
   it('worldSlice no longer carries the dead appendFight/updateWarriorStatus actions', () => {
     // The file that hosted them must stay deleted — it contained only the
     // two dead actions, so its return would reintroduce both.
-    expect(
-      existsSync(path.join(REPO, 'src/state/slices/worldSlice/combatActions.ts'))
-    ).toBe(false);
+    expect(existsSync(path.join(REPO, 'src/state/slices/worldSlice/combatActions.ts'))).toBe(false);
     const types = read('src/state/slices/worldSlice/types.ts');
     expect(types).not.toMatch(/appendFight:/);
     expect(types).not.toMatch(/updateWarriorStatus:/);
@@ -49,7 +47,8 @@ describe('v30Surface guard', () => {
     const src = read('src/engine/combat/resolution/offenseDefense/types.ts');
     // Post-consolidation one of the pair is a type alias — no second
     // identical interface may regrow.
-    const interfaces = src.match(/interface (OffenseDefenseArgs|ResolveCombatOffenseDefenseArgs)/g) ?? [];
+    const interfaces =
+      src.match(/interface (OffenseDefenseArgs|ResolveCombatOffenseDefenseArgs)/g) ?? [];
     expect(interfaces.length).toBe(1);
   });
 

@@ -12,7 +12,6 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: (state: any) => any) => (selector ? selector(mockStore) : mockStore),
 }));
 
-
 describe('useAtRiskWarriors', () => {
   beforeEach(() => {
     mockStore.roster = [];

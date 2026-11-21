@@ -40,7 +40,10 @@ describe('shard sync protocol', () => {
 
     let seqState = seedWorld();
     let parState = structuredClone(seqState);
-    const pool = createEnginePool(3, { spawnShardWorker: fakeSyncedShardWorker, syncedWorkers: true });
+    const pool = createEnginePool(3, {
+      spawnShardWorker: fakeSyncedShardWorker,
+      syncedWorkers: true,
+    });
 
     for (let w = 0; w < 4; w++) {
       let n = 0;

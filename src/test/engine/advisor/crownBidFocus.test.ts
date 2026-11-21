@@ -11,8 +11,6 @@ beforeEach(() => resetFixtureIds());
 
 const ARENA = 'standard_arena';
 
-
-
 describe('evaluateCampaignFocus — CROWN_BID', () => {
   it('marks a ranked contender for crown pursuit', () => {
     const contender = makeArenaContender('w1', 4);

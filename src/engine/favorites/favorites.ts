@@ -210,7 +210,12 @@ function rollChannel(
   return { outcome: { revealed: false }, hintAccrued: false };
 }
 
-function rollWeaponDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+function rollWeaponDiscovery(
+  warrior: Warrior,
+  fav: WarriorFavorites,
+  context: DiscoveryContext,
+  r: () => number
+): RollOutcome {
   if (fav.discovered.weapon) return { revealed: false };
   const isUsingFav = context.weaponId === fav.weaponId;
   const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
@@ -229,7 +234,12 @@ function rollWeaponDiscovery(warrior: Warrior, fav: WarriorFavorites, context: D
   return outcome;
 }
 
-function rollRhythmDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+function rollRhythmDiscovery(
+  warrior: Warrior,
+  fav: WarriorFavorites,
+  context: DiscoveryContext,
+  r: () => number
+): RollOutcome {
   if (fav.discovered.rhythm) return { revealed: false };
   const isMatchingRhythm =
     context.oe != null &&
@@ -251,7 +261,12 @@ function rollRhythmDiscovery(warrior: Warrior, fav: WarriorFavorites, context: D
 /** A warrior who just learned in their hidden affinity skill may realize the
  *  pattern (symmetry epiphany). `learn` is absent on legacy saves; `?? false`
  *  keeps them eligible. */
-function rollLearnDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext, r: () => number): RollOutcome {
+function rollLearnDiscovery(
+  warrior: Warrior,
+  fav: WarriorFavorites,
+  context: DiscoveryContext,
+  r: () => number
+): RollOutcome {
   if (fav.discovered.learn ?? false) return { revealed: false };
   const learnedFavorite = context.learnedFavorite === true;
   const { outcome, hintAccrued } = rollChannel(
@@ -270,7 +285,11 @@ function rollLearnDiscovery(warrior: Warrior, fav: WarriorFavorites, context: Di
  *  dedicated (warrior, week) sub-stream so the shared bout stream's
  *  consumption order is untouched whether or not the bout supplied tactic
  *  context (V26 parity — one shared discovery system for every stable). */
-function rollTacticDiscovery(warrior: Warrior, fav: WarriorFavorites, context: DiscoveryContext): RollOutcome {
+function rollTacticDiscovery(
+  warrior: Warrior,
+  fav: WarriorFavorites,
+  context: DiscoveryContext
+): RollOutcome {
   if ((fav.discovered.tactic ?? false) || !fav.tactic) return { revealed: false };
   const sub = new SeededRNG(hashStr(`${warrior.id}|tactic-discovery|${context.week ?? 0}`));
   const isUsingFavTactic =
@@ -316,7 +335,13 @@ export function checkDiscovery(
   if (!fav) return result;
 
   const ctx = context ?? {};
-  const rolls: [RollOutcome, keyof Pick<DiscoveryResult, 'weaponRevealed' | 'rhythmRevealed' | 'learnRevealed' | 'tacticRevealed'>][] = [
+  const rolls: [
+    RollOutcome,
+    keyof Pick<
+      DiscoveryResult,
+      'weaponRevealed' | 'rhythmRevealed' | 'learnRevealed' | 'tacticRevealed'
+    >,
+  ][] = [
     [rollWeaponDiscovery(warrior, fav, ctx, r), 'weaponRevealed'],
     [rollRhythmDiscovery(warrior, fav, ctx, r), 'rhythmRevealed'],
     [rollLearnDiscovery(warrior, fav, ctx, r), 'learnRevealed'],
@@ -440,10 +465,7 @@ export function mergeWeaponChart(
 }
 
 /** Apply Insight Token — instantly reveals weapon, rhythm, or favorite learn */
-export function applyInsightToken(
-  warrior: Warrior,
-  type: 'weapon' | 'rhythm' | 'learn'
-): string {
+export function applyInsightToken(warrior: Warrior, type: 'weapon' | 'rhythm' | 'learn'): string {
   const fav = warrior.favorites;
   if (!fav) return `${warriorDisplayName(warrior)} has no hidden favorites.`;
 

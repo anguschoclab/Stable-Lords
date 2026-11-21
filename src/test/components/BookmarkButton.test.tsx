@@ -2,8 +2,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { bookmarkedIds, mockToggleBookmark as mockToggle, resetBookmarkState } from '@/test/_mocks/bookmarkStore';
-
+import {
+  bookmarkedIds,
+  mockToggleBookmark as mockToggle,
+  resetBookmarkState,
+} from '@/test/_mocks/bookmarkStore';
 
 describe('BookmarkButton', () => {
   beforeEach(() => resetBookmarkState());

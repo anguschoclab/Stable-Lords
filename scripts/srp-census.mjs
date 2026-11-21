@@ -31,7 +31,15 @@ const SRC = path.join(ROOT, 'src');
 const OUT_DIR = path.join(ROOT, 'scripts', 'out');
 const OUT_FILE = path.join(OUT_DIR, 'srp-census.json');
 
-const LIMITS = { domains: 4, fanOut: 12, exportCount: 6, exportKinds: 3, families: 4, familyMinExports: 8, banners: 3 };
+const LIMITS = {
+  domains: 4,
+  fanOut: 12,
+  exportCount: 6,
+  exportKinds: 3,
+  families: 4,
+  familyMinExports: 8,
+  banners: 3,
+};
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -66,7 +74,8 @@ function domainRoot(spec, fileDir) {
   return segs.slice(0, 2).join('/');
 }
 
-const VERB_PREFIX = /^(?:use|get|set|is|are|has|have|can|compute|apply|resolve|build|make|create|select|emit|handle|process|format|parse|render|map|to|from|derive|calc|update|add|remove|find|filter|collect|run|init|register|read|write|load|save|merge|normalize|validate|check|roll|pick|draw|schedule|advance|applyOr)/;
+const VERB_PREFIX =
+  /^(?:use|get|set|is|are|has|have|can|compute|apply|resolve|build|make|create|select|emit|handle|process|format|parse|render|map|to|from|derive|calc|update|add|remove|find|filter|collect|run|init|register|read|write|load|save|merge|normalize|validate|check|roll|pick|draw|schedule|advance|applyOr)/;
 const firstToken = (name) => name.match(/^[a-z]+|[A-Z]+(?![a-z])/)?.[0] ?? name;
 
 function exportFamily(name) {
@@ -92,13 +101,18 @@ function exportKind(node, sf) {
     return isFn ? 'function' : 'const';
   }
   if (ts.isClassDeclaration(node)) return 'class';
-  if (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isEnumDeclaration(node))
+  if (
+    ts.isInterfaceDeclaration(node) ||
+    ts.isTypeAliasDeclaration(node) ||
+    ts.isEnumDeclaration(node)
+  )
     return 'type';
   return 'other';
 }
 
 const BANNER_RE = /^\s*\/\/\s*[─—═=]{2,}|^\s*\/\/\s*-{3,}\s*[A-Z]/;
-const FETCH_RE = /\b(?:useGameStore|useStore|use[A-Z]\w*Store|\.getState\(|useShallow|fetch\(|useQuery|invoke\()/;
+const FETCH_RE =
+  /\b(?:useGameStore|useStore|use[A-Z]\w*Store|\.getState\(|useShallow|fetch\(|useQuery|invoke\()/;
 const DERIVE_RE = /\b(?:useMemo|useCallback|\.reduce\(|\.sort\(|\.filter\(|\.groupBy\()/;
 const JSX_RE = /<[A-Z][A-Za-z]*[\s/>]|return\s*\(\s*<>|return\s*\(\s*<div|jsx/i;
 
@@ -144,7 +158,11 @@ export function collectSrpCensus() {
         } else if (stmt.name) name = stmt.name.getText(sf);
         exports.push({ name, kind: exportKind(stmt, sf) });
       }
-      if (ts.isExportDeclaration(stmt) && stmt.exportClause && ts.isNamedExports(stmt.exportClause)) {
+      if (
+        ts.isExportDeclaration(stmt) &&
+        stmt.exportClause &&
+        ts.isNamedExports(stmt.exportClause)
+      ) {
         for (const el of stmt.exportClause.elements)
           exports.push({ name: el.name.getText(sf), kind: 'reexport' });
       }
@@ -162,7 +180,8 @@ export function collectSrpCensus() {
     const hasFetch = FETCH_RE.test(text);
     const hasDerive = DERIVE_RE.test(text);
     const hasRender = JSX_RE.test(text);
-    const godUnit = r.endsWith('.tsx') || /use[A-Z]/.test(r) ? hasFetch && hasDerive && hasRender : false;
+    const godUnit =
+      r.endsWith('.tsx') || /use[A-Z]/.test(r) ? hasFetch && hasDerive && hasRender : false;
 
     const signals = {
       'multi-domain': domains.size >= LIMITS.domains ? domains.size : 0,
@@ -193,8 +212,7 @@ export function collectSrpCensus() {
       signals: Object.fromEntries(fired),
     };
     files.push(rec);
-    if (fired.length >= 2)
-      candidates.push({ ...rec, signalCount: fired.length });
+    if (fired.length >= 2) candidates.push({ ...rec, signalCount: fired.length });
   }
 
   candidates.sort((a, b) => b.signalCount - a.signalCount || b.lines - a.lines);
@@ -203,9 +221,14 @@ export function collectSrpCensus() {
     candidates: candidates.length,
     bySignal: Object.fromEntries(
       Object.keys(LIMITS).length
-        ? ['multi-domain', 'fan-out', 'export-mix', 'name-families', 'banner-blocks', 'god-unit'].map(
-            (s) => [s, files.filter((f) => f.signals[s]).length]
-          )
+        ? [
+            'multi-domain',
+            'fan-out',
+            'export-mix',
+            'name-families',
+            'banner-blocks',
+            'god-unit',
+          ].map((s) => [s, files.filter((f) => f.signals[s]).length])
         : []
     ),
     limits: LIMITS,
@@ -228,7 +251,9 @@ function main() {
     const sigs = Object.entries(c.signals)
       .map(([k, v]) => `${k}=${v === 1 ? '✓' : v}`)
       .join(' ');
-    console.log(`  ${String(c.signalCount)}sig ${String(c.lines).padStart(4)}L  ${c.file}  [${sigs}]`);
+    console.log(
+      `  ${String(c.signalCount)}sig ${String(c.lines).padStart(4)}L  ${c.file}  [${sigs}]`
+    );
   }
   console.log(`\nwrote ${rel(OUT_FILE)}`);
 }

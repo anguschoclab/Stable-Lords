@@ -25,8 +25,7 @@ export const bandOf = (v: number): RhythmBand =>
   BANDS[Math.min(4, Math.max(0, Math.floor((v - 1) / 2)))] ?? 'VL';
 
 /** Ledger key for a plan — the band pair, e.g. "M/H". */
-export const cellKey = (oe: number, al: number): string =>
-  `${bandOf(oe)}/${bandOf(al)}`;
+export const cellKey = (oe: number, al: number): string => `${bandOf(oe)}/${bandOf(al)}`;
 
 /** Deep-clone a ledger so outcome recording never mutates the source warrior. */
 export function cloneStrategyMemory(memory: StrategyMemory | undefined): StrategyMemory {
@@ -50,7 +49,8 @@ export function recordPlanOutcome(
 ): void {
   const key = cellKey(oe, al);
   const cell = (memory.cells[key] ??= { w: 0, l: 0 });
-  if (won) cell.w++; else cell.l++;
+  if (won) cell.w++;
+  else cell.l++;
 }
 
 /** Laplace-smoothed win rate — a 3-0 cell beats a 1-0 cell. */
@@ -113,9 +113,7 @@ export function pickStrategyTarget(
   if (!bestKey) {
     // Probe the least-visited cell, seeded so the same week picks the same cell.
     const all = BANDS.flatMap((o) => BANDS.map((a) => `${o}/${a}`));
-    all.sort(
-      (a, b) => visits(cells[a]) - visits(cells[b]) || a.localeCompare(b)
-    );
+    all.sort((a, b) => visits(cells[a]) - visits(cells[b]) || a.localeCompare(b));
     const idx = Math.floor(hash(warriorId, week, 2) * Math.min(4, all.length));
     bestKey = all[idx] ?? 'M/M';
   }

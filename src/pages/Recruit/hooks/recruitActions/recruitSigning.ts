@@ -31,12 +31,7 @@ const FAILURE_TOAST: Record<string, string> = {
  * converts, enforces the cap against the draft, drains both shelves, and
  * writes the newsletter entry.
  */
-function applyRecruitDraft(
-  draft: GameStore,
-  w: PoolWarrior,
-  bonus: boolean,
-  totalCost: number
-) {
+function applyRecruitDraft(draft: GameStore, w: PoolWarrior, bonus: boolean, totalCost: number) {
   const recruitRng = new SeededRNG(draft.week + hashStr(w.name));
   const result = signWarrior({
     recruit: w,

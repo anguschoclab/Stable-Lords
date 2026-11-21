@@ -39,6 +39,11 @@ function stableStringify(value: unknown): string {
     .join(',')}}`;
 }
 
+/**
+ * FNV-1a receipt hash of the state's canonical serialization — the value
+ * the coordinator compares against a worker's post-replay hash to verify
+ * shard-state sync.
+ */
 export function shardStateHash(state: GameState): string {
   const s = stableStringify(stripNonSerializable(state));
   // Two interleaved 32-bit FNV-1a lanes (offset-basis + position-mixed):

@@ -3,8 +3,7 @@ import { truncateState } from '@/engine/storage/truncation';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { FightSummary } from '@/types/state.types';
 import { makeStubFight } from '@/test/_fixtures/factories';
-import {
-  PromoterId } from '@/types/shared.types';
+import { PromoterId } from '@/types/shared.types';
 
 function makeFightSummary(id: string, week: number): FightSummary {
   return makeStubFight({

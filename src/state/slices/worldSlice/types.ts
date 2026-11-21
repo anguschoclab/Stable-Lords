@@ -21,7 +21,6 @@ import type {
 import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
 
-
 /** Arena-view presentation preferences persisted per player. */
 export interface ArenaPreferences {
   defaultViewMode: 'log' | 'arena';

@@ -26,8 +26,7 @@ export function bloodfeudMarksFromOutcome(args: {
   playerStableId: string;
 }): BloodfeudMark[] {
   const { outcome, warriorA, warriorD, week, playerStableId } = args;
-  if (outcome.by !== 'Kill' || (outcome.winner !== 'A' && outcome.winner !== 'D'))
-    return [];
+  if (outcome.by !== 'Kill' || (outcome.winner !== 'A' && outcome.winner !== 'D')) return [];
   const victim = outcome.winner === 'A' ? warriorD : warriorA;
   const killer = outcome.winner === 'A' ? warriorA : warriorD;
   return [

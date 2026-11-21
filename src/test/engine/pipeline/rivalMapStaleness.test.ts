@@ -3,10 +3,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { StateImpact } from '@/engine/impacts';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
-import {
-    makeGameState as fixtureGameState,
-  makeRivalStable,
-} from '@/test/_fixtures/factories';
+import { makeGameState as fixtureGameState, makeRivalStable } from '@/test/_fixtures/factories';
 import { makeBareWarrior } from '@/test/_fixtures/statWarrior';
 
 const makeWarrior = makeBareWarrior;

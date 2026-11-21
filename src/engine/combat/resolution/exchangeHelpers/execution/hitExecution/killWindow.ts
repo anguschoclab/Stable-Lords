@@ -145,8 +145,7 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
           metadata: { location: hitLoc },
         });
         // The death roll: the struck warrior rolls to survive the fight.
-        if (
-          rng() <
+        const deathRollChance =
           deathRollFailChance({
             hitLoc: hitLoc,
             armorId: defender.armorId,
@@ -155,8 +154,8 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
             maxHp: defender.maxHp,
             totalFights: defender.totalFights,
             enduranceRatio: defender.endurance / defender.maxEndurance,
-          }) * deathMult
-        ) {
+          }) * deathMult;
+        if (rng() < deathRollChance) {
           defender.doomed = true;
           defender.doomedBy = attLabel;
           events.push({
@@ -189,22 +188,22 @@ function checkKillWindow(args: CheckKillWindowArgs): void {
     } else {
       // Hit points ran out without a death intent — the infirmary roll.
       // Failing it sends the warrior to the death roll: "died of wounds".
-      const diedOfWounds =
-        rng() <
-          infirmaryFailChance({
-            will: defender.attributes.WL,
-            enduranceRatio: defender.endurance / defender.maxEndurance,
-          }) * deathMult &&
-        rng() <
-          deathRollFailChance({
-            hitLoc: hitLoc,
-            armorId: defender.armorId,
-            helmId: defender.helmId,
-            will: defender.attributes.WL,
-            maxHp: defender.maxHp,
-            totalFights: defender.totalFights,
-            enduranceRatio: defender.endurance / defender.maxEndurance,
-          }) * deathMult;
+      const infirmaryChance =
+        infirmaryFailChance({
+          will: defender.attributes.WL,
+          enduranceRatio: defender.endurance / defender.maxEndurance,
+        }) * deathMult;
+      const deathRollChance =
+        deathRollFailChance({
+          hitLoc: hitLoc,
+          armorId: defender.armorId,
+          helmId: defender.helmId,
+          will: defender.attributes.WL,
+          maxHp: defender.maxHp,
+          totalFights: defender.totalFights,
+          enduranceRatio: defender.endurance / defender.maxEndurance,
+        }) * deathMult;
+      const diedOfWounds = rng() < infirmaryChance && rng() < deathRollChance;
       if (diedOfWounds) {
         events.push({
           type: 'BOUT_END',

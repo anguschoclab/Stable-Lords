@@ -81,9 +81,7 @@ export function LearnAffinitySection({ warrior, actions }: LearnAffinitySectionP
         <div
           className={cn(
             'h-full transition-all motion-reduce:transition-none motion-reduce:transform-none duration-1000',
-            isLearnDiscovered
-              ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]'
-              : 'bg-white/10'
+            isLearnDiscovered ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]' : 'bg-white/10'
           )}
           style={{ width: `${learnProgress}%` }}
         />

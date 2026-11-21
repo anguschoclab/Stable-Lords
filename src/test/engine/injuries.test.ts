@@ -4,7 +4,11 @@ import { computeHealthImpact } from '@/engine/warrior/health';
 import { FightingStyle, type WarriorId, type InjuryId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { makeGameState, makeWarrior, makeInjury as sharedMakeInjury } from '@/test/_fixtures/factories';
+import {
+  makeGameState,
+  makeWarrior,
+  makeInjury as sharedMakeInjury,
+} from '@/test/_fixtures/factories';
 
 describe('generateInjury', () => {
   const mockWarrior = makeWarrior({

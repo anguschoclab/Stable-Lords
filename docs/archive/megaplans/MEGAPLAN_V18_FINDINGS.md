@@ -8,23 +8,23 @@ these tables.
 
 ## §0 Baseline metrics
 
-| Metric | Value (2026-10-21) | Source |
-| ------ | ------------------ | ------ |
-| Source files / LOC | 1,243 files / 140,340 loc | `function-length.mjs` |
-| Test files / LOC | 954 files / 146,704 loc | `function-length.mjs` |
-| Functions >80 lines | **19** (0 >120, 0 >200) | `function-length.mjs` |
-| Functions 60–80 lines | **293** | `function-length.mjs` |
-| Files >800 lines | 2 (`commonCorpus.ts` 1,223; `arenas/lore.ts` 1,051 — both data) | `function-length.mjs` |
-| dup-scan exact w8 | src↔src **27** · test↔test **150** · mixed **27** | `collectDuplicates()` |
-| dup-scan exact w12 | src↔src **7** · test↔test **18** · mixed **4** | `collectDuplicates({window:12})` |
-| dup-scan ident w20 | src↔src **181** · test↔test **50** · mixed **139** | `collectDuplicates({ident:true,window:20})` |
-| dup-scan ident w16 | src↔src **484** · test↔test **125** · mixed **286** | `collectDuplicates({ident:true,window:16})` |
-| dup-scan ident w8 | 13,926 src↔src — import-preamble noise, **unusable raw** | validation scan |
-| Dupe ledger | `EXEMPT_PAIRS` 27 · `DEBT_PAIRS` **0** · baseline 27 | `duplication.guard.test.ts` |
-| Coverage floors | 84 stmts / 74 branch / 78 funcs / 85.5 lines | `vitest.config.ts:67-72` |
-| `SAVE_STATE_VERSION` | `'3.0.0'` (free to bump) | `src/constants/core/core.ts:12` |
-| Skip registry | empty — every ticketed phase landed | `skipCount.guard.test.ts` |
-| Restore point | tag `pre-megaplan-v18` (Phase 0) | `pre-megaplan-v8`…`v17` exist |
+| Metric                | Value (2026-10-21)                                              | Source                                      |
+| --------------------- | --------------------------------------------------------------- | ------------------------------------------- |
+| Source files / LOC    | 1,243 files / 140,340 loc                                       | `function-length.mjs`                       |
+| Test files / LOC      | 954 files / 146,704 loc                                         | `function-length.mjs`                       |
+| Functions >80 lines   | **19** (0 >120, 0 >200)                                         | `function-length.mjs`                       |
+| Functions 60–80 lines | **293**                                                         | `function-length.mjs`                       |
+| Files >800 lines      | 2 (`commonCorpus.ts` 1,223; `arenas/lore.ts` 1,051 — both data) | `function-length.mjs`                       |
+| dup-scan exact w8     | src↔src **27** · test↔test **150** · mixed **27**               | `collectDuplicates()`                       |
+| dup-scan exact w12    | src↔src **7** · test↔test **18** · mixed **4**                  | `collectDuplicates({window:12})`            |
+| dup-scan ident w20    | src↔src **181** · test↔test **50** · mixed **139**              | `collectDuplicates({ident:true,window:20})` |
+| dup-scan ident w16    | src↔src **484** · test↔test **125** · mixed **286**             | `collectDuplicates({ident:true,window:16})` |
+| dup-scan ident w8     | 13,926 src↔src — import-preamble noise, **unusable raw**        | validation scan                             |
+| Dupe ledger           | `EXEMPT_PAIRS` 27 · `DEBT_PAIRS` **0** · baseline 27            | `duplication.guard.test.ts`                 |
+| Coverage floors       | 84 stmts / 74 branch / 78 funcs / 85.5 lines                    | `vitest.config.ts:67-72`                    |
+| `SAVE_STATE_VERSION`  | `'3.0.0'` (free to bump)                                        | `src/constants/core/core.ts:12`             |
+| Skip registry         | empty — every ticketed phase landed                             | `skipCount.guard.test.ts`                   |
+| Restore point         | tag `pre-megaplan-v18` (Phase 0)                                | `pre-megaplan-v8`…`v17` exist               |
 
 ## §0b Dupe-ledger investigation — recent-additions analysis
 
@@ -33,14 +33,14 @@ which normalized quote style and line wrapping across already-parallel
 handlers and unmasked nine 8-line-block pairs that formatting differences
 had hidden. V18 retroactively formalizes the drain:
 
-| Commit | Action |
-| ------ | ------ |
-| `66a8a5a0` | Split the ledger: 27 `EXEMPT_PAIRS` (structural overlap — prop-name echoes, shard barrels, vendor/parallel implementations) + 9 `DEBT_PAIRS` (genuine cloned logic) |
-| `4ac89484` | `statGrantOutcome` + `makeMinorInjury` extracted — drained 7 offseason pairs |
-| `8529759f` | `DriftParticles` extracted across 5 weather effect files |
-| `5f82051f` | `rivalFightPlan` extracted across the 3 plan builders (grudge + aiPlan tail) |
-| `3245263b` | `DEBT_PAIRS` empty → `SRC_TO_SRC_BASELINE` ratcheted 36 → 27 |
-| `e6dcc447`, `672e4045` | Stale phase-pending docblocks retired; skip registry drained |
+| Commit                 | Action                                                                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `66a8a5a0`             | Split the ledger: 27 `EXEMPT_PAIRS` (structural overlap — prop-name echoes, shard barrels, vendor/parallel implementations) + 9 `DEBT_PAIRS` (genuine cloned logic) |
+| `4ac89484`             | `statGrantOutcome` + `makeMinorInjury` extracted — drained 7 offseason pairs                                                                                        |
+| `8529759f`             | `DriftParticles` extracted across 5 weather effect files                                                                                                            |
+| `5f82051f`             | `rivalFightPlan` extracted across the 3 plan builders (grudge + aiPlan tail)                                                                                        |
+| `3245263b`             | `DEBT_PAIRS` empty → `SRC_TO_SRC_BASELINE` ratcheted 36 → 27                                                                                                        |
+| `e6dcc447`, `672e4045` | Stale phase-pending docblocks retired; skip registry drained                                                                                                        |
 
 Live rescan confirms: exactly 27 src↔src pairs, all registered, `DEBT_PAIRS`
 empty, zero stale entries (live-ledger test enforces this going forward).
@@ -59,27 +59,27 @@ fetch+derive+render.
 
 First queue — all 19 functions >80 lines (contract tickets `MEGAPLAN-S1`…`S19`):
 
-| # | Fn | File:line | Len |
-| - | -- | --------- | --- |
-| S1 | `WarriorBuilder` | `src/components/WarriorBuilder/index.tsx:35` | 100 |
-| S2 | `resolveDecision` | `src/engine/bout/decisionLogic.ts:209` | 100 |
-| S3 | `useRecruitActions` | `src/pages/Recruit/hooks/useRecruitActions.ts:181` | 99 |
-| S4 | `ComparisonHeader` | `src/components/scouting/ComparisonHeader.tsx:40` | 96 |
-| S5 | `createRosterActions` | `src/state/slices/rosterSlice/actions.ts:166` | 96 |
-| S6 | `prepareExchange` | `src/engine/combat/resolution/exchangePrep.ts:268` | 91 |
-| S7 | `resolveCounteredOffers` | `src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts:66` | 88 |
-| S8 | `scheduleTitleBouts` | `src/engine/championship/arenaChampionship/phases/scheduling.ts:38` | 88 |
-| S9 | `RosterWarriorRow` | `src/components/stable/RosterWarriorRow.tsx:90` | 86 |
-| S10 | `WarriorDossierHeader` | `src/components/warrior/dossier/WarriorDossierHeader.tsx:26` | 85 |
-| S11 | `applyBoutResults` | `src/engine/matchmaking/tournamentSelection/resolution/results.ts:35` | 85 |
-| S12 | `generateWarriorStatements` | `src/data/warriorStatements.ts:125` | 84 |
-| S13 | `buildFTUEInitialState` | `src/components/orphanage/ftueStateBuilder.ts:71` | 83 |
-| S14 | `DominantCombatantsSection` | `src/components/scouting/components/DominantCombatantsSection.tsx:27` | 83 |
-| S15 | `computeAgingImpact` | `src/engine/aging/agingSystem.ts:215` | 83 |
-| S16 | `aiPlanForWarrior` | `src/engine/ai/plan/coreGenerator/index.ts:50` | 83 |
-| S17 | `processRecruitment` | `src/engine/ai/workers/recruitmentWorker.ts:372` | 83 |
-| S18 | `MathStep` | `src/components/resolution-reveal/MathStep.tsx:18` | 81 |
-| S19 | `computeTrainingImpact` | `src/engine/training/trainingImpact.ts:172` | 81 |
+| #   | Fn                          | File:line                                                               | Len |
+| --- | --------------------------- | ----------------------------------------------------------------------- | --- |
+| S1  | `WarriorBuilder`            | `src/components/WarriorBuilder/index.tsx:35`                            | 100 |
+| S2  | `resolveDecision`           | `src/engine/bout/decisionLogic.ts:209`                                  | 100 |
+| S3  | `useRecruitActions`         | `src/pages/Recruit/hooks/useRecruitActions.ts:181`                      | 99  |
+| S4  | `ComparisonHeader`          | `src/components/scouting/ComparisonHeader.tsx:40`                       | 96  |
+| S5  | `createRosterActions`       | `src/state/slices/rosterSlice/actions.ts:166`                           | 96  |
+| S6  | `prepareExchange`           | `src/engine/combat/resolution/exchangePrep.ts:268`                      | 91  |
+| S7  | `resolveCounteredOffers`    | `src/engine/ai/workers/competitionWorker/offerProcessor/counters.ts:66` | 88  |
+| S8  | `scheduleTitleBouts`        | `src/engine/championship/arenaChampionship/phases/scheduling.ts:38`     | 88  |
+| S9  | `RosterWarriorRow`          | `src/components/stable/RosterWarriorRow.tsx:90`                         | 86  |
+| S10 | `WarriorDossierHeader`      | `src/components/warrior/dossier/WarriorDossierHeader.tsx:26`            | 85  |
+| S11 | `applyBoutResults`          | `src/engine/matchmaking/tournamentSelection/resolution/results.ts:35`   | 85  |
+| S12 | `generateWarriorStatements` | `src/data/warriorStatements.ts:125`                                     | 84  |
+| S13 | `buildFTUEInitialState`     | `src/components/orphanage/ftueStateBuilder.ts:71`                       | 83  |
+| S14 | `DominantCombatantsSection` | `src/components/scouting/components/DominantCombatantsSection.tsx:27`   | 83  |
+| S15 | `computeAgingImpact`        | `src/engine/aging/agingSystem.ts:215`                                   | 83  |
+| S16 | `aiPlanForWarrior`          | `src/engine/ai/plan/coreGenerator/index.ts:50`                          | 83  |
+| S17 | `processRecruitment`        | `src/engine/ai/workers/recruitmentWorker.ts:372`                        | 83  |
+| S18 | `MathStep`                  | `src/components/resolution-reveal/MathStep.tsx:18`                      | 81  |
+| S19 | `computeTrainingImpact`     | `src/engine/training/trainingImpact.ts:172`                             | 81  |
 
 Second tier — `scripts/srp-census.mjs` (Phase 1, `collectSrpCensus` →
 `scripts/out/srp-census.json`): 1,242 files scanned → **142 candidates**
@@ -101,23 +101,23 @@ Classified-by-reading verdicts:
 - **Promoted to the queue (S20+)** — convergent signals confirmed by
   reading:
 
-| # | Unit | File | Signals |
-| - | ---- | ---- | ------- |
-| S20 | `navigationShared.tsx` — 6 export families + 6 banners in one module | `src/components/layout/navigationShared.tsx` | multi-domain 4, export-mix 6, banners 6, god 1 |
-| S21 | `PromoterDirectory` — 10 domains, 15 fan-out | `src/pages/PromoterDirectory.tsx` | multi-domain 10, fan-out 15, god 1 |
-| S22 | `useFtueFlow` — 13 domains, 13 fan-out | `src/pages/orphanage/useFtueFlow.ts` | multi-domain 13, fan-out 13, god 1 |
-| S23 | `useStartGame` — 11 domains, 12 fan-out | `src/pages/startGame/useStartGame.ts` | multi-domain 11, fan-out 12, god 1 |
-| S24 | `RosterWall` — 12 domains, 15 fan-out | `src/components/stable/RosterWall.tsx` | multi-domain 12, fan-out 15, god 1 |
-| S25 | `ArenaHub` — 9 domains, 16 fan-out | `src/pages/ArenaHub.tsx` | multi-domain 9, fan-out 16, god 1 |
-| S26 | `Training` — 7 domains, 12 fan-out | `src/pages/Training.tsx` | multi-domain 7, fan-out 12, god 1 |
-| S27 | `useWarriorDetail` — 9 domains | `src/pages/WarriorDetail/hooks/useWarriorDetail.ts` | multi-domain 9, god 1 |
-| S28 | `useBookingOffice` — 7 domains | `src/pages/BookingOffice/hooks/useBookingOffice.ts` | multi-domain 7, god 1 |
-| S29 | `useArenaDetail` — 7 domains | `src/pages/arenaDetail/useArenaDetail.ts` | multi-domain 7, god 1 |
-| S30 | `RosterSnapshot` — 9 domains | `src/pages/ControlCenter/components/RosterSnapshot.tsx` | multi-domain 9, god 1 |
-| S31 | `RivalStableList` — 9 domains | `src/components/scouting/RivalStableList.tsx` | multi-domain 9, god 1 |
-| S32 | `AppShell` — banner-partitioned inline components (LoadingOverlay, EventLogRail, route-toggle) | `src/components/AppShell.tsx` | multi-domain 10, fan-out 17, banners 3 |
-| S33 | `rivalStableShard` — 7 domains, 16 fan-out, 8 name-families | `src/engine/pipeline/passes/rivalStableShard.ts` | multi-domain 7, fan-out 16, name-families 8 |
-| S34 | `Gazette` — god-unit + banner partitions | `src/pages/Gazette.tsx` | multi-domain 4, banners 3, god 1 |
+| #   | Unit                                                                                           | File                                                    | Signals                                        |
+| --- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------- |
+| S20 | `navigationShared.tsx` — 6 export families + 6 banners in one module                           | `src/components/layout/navigationShared.tsx`            | multi-domain 4, export-mix 6, banners 6, god 1 |
+| S21 | `PromoterDirectory` — 10 domains, 15 fan-out                                                   | `src/pages/PromoterDirectory.tsx`                       | multi-domain 10, fan-out 15, god 1             |
+| S22 | `useFtueFlow` — 13 domains, 13 fan-out                                                         | `src/pages/orphanage/useFtueFlow.ts`                    | multi-domain 13, fan-out 13, god 1             |
+| S23 | `useStartGame` — 11 domains, 12 fan-out                                                        | `src/pages/startGame/useStartGame.ts`                   | multi-domain 11, fan-out 12, god 1             |
+| S24 | `RosterWall` — 12 domains, 15 fan-out                                                          | `src/components/stable/RosterWall.tsx`                  | multi-domain 12, fan-out 15, god 1             |
+| S25 | `ArenaHub` — 9 domains, 16 fan-out                                                             | `src/pages/ArenaHub.tsx`                                | multi-domain 9, fan-out 16, god 1              |
+| S26 | `Training` — 7 domains, 12 fan-out                                                             | `src/pages/Training.tsx`                                | multi-domain 7, fan-out 12, god 1              |
+| S27 | `useWarriorDetail` — 9 domains                                                                 | `src/pages/WarriorDetail/hooks/useWarriorDetail.ts`     | multi-domain 9, god 1                          |
+| S28 | `useBookingOffice` — 7 domains                                                                 | `src/pages/BookingOffice/hooks/useBookingOffice.ts`     | multi-domain 7, god 1                          |
+| S29 | `useArenaDetail` — 7 domains                                                                   | `src/pages/arenaDetail/useArenaDetail.ts`               | multi-domain 7, god 1                          |
+| S30 | `RosterSnapshot` — 9 domains                                                                   | `src/pages/ControlCenter/components/RosterSnapshot.tsx` | multi-domain 9, god 1                          |
+| S31 | `RivalStableList` — 9 domains                                                                  | `src/components/scouting/RivalStableList.tsx`           | multi-domain 9, god 1                          |
+| S32 | `AppShell` — banner-partitioned inline components (LoadingOverlay, EventLogRail, route-toggle) | `src/components/AppShell.tsx`                           | multi-domain 10, fan-out 17, banners 3         |
+| S33 | `rivalStableShard` — 7 domains, 16 fan-out, 8 name-families                                    | `src/engine/pipeline/passes/rivalStableShard.ts`        | multi-domain 7, fan-out 16, name-families 8    |
+| S34 | `Gazette` — god-unit + banner partitions                                                       | `src/pages/Gazette.tsx`                                 | multi-domain 4, banners 3, god 1               |
 
 - **Watch-list (reviewed, not promoted):** the remaining single-signal
   god-units (`useControlCenter`, `useTrainers`, `useWorldOverview`,
@@ -128,46 +128,46 @@ Classified-by-reading verdicts:
   `EventLog`, `ResolutionReveal`, `StableDossier`, `HeadToHead`,
   `WarriorFightHistory`, `AvatarForEntity`, sparkline/table charts,
   `arenaHub/leaderboard`, `ledger/*`, `widgets/*`) — multi-domain aggregation
-  is the *page-hook idiom* of this codebase (already EXEMPT-registered in the
+  is the _page-hook idiom_ of this codebase (already EXEMPT-registered in the
   dup ledger); a lone flag is weak evidence of responsibility-mix. Revisit if
   any grows a second signal.
 
 ## §D Dup clusters — per-tier verdict tables (Phase-1 triage complete — D1–D14 drained)
 
-| Tier | src↔src | test↔test | mixed | Disposition |
-| ---- | ------- | --------- | ----- | ----------- |
-| exact w8 | 27 — all EXEMPT (registered) | 150 → **74 live** (4 EXEMPT + 70 residual DEBT) after D1–D14 drains | 27 → **17 live** EXEMPT | gate tier — `duplication.guard.test.ts` |
-| exact w12 | 7 — subset of the 27, same verdicts | 18 — verdicts inherit w8 clusters | 4 — literal pins | secondary audit tier |
-| ident w20 | 181 — **all EXEMPT** (read-verified) | 50 — cluster verdicts inherit + enum-list echoes EXEMPT | 139 — all EXEMPT | audit queue — verdicts recorded here |
-| ident w16 | 484 → **430 live** (all triaged) | 125 | 286 → **277 live** | deep tier — triage complete, verdicts below; never a raw-count gate |
+| Tier      | src↔src                              | test↔test                                                           | mixed                   | Disposition                                                         |
+| --------- | ------------------------------------ | ------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------- |
+| exact w8  | 27 — all EXEMPT (registered)         | 150 → **74 live** (4 EXEMPT + 70 residual DEBT) after D1–D14 drains | 27 → **17 live** EXEMPT | gate tier — `duplication.guard.test.ts`                             |
+| exact w12 | 7 — subset of the 27, same verdicts  | 18 — verdicts inherit w8 clusters                                   | 4 — literal pins        | secondary audit tier                                                |
+| ident w20 | 181 — **all EXEMPT** (read-verified) | 50 — cluster verdicts inherit + enum-list echoes EXEMPT             | 139 — all EXEMPT        | audit queue — verdicts recorded here                                |
+| ident w16 | 484 → **430 live** (all triaged)     | 125                                                                 | 286 → **277 live**      | deep tier — triage complete, verdicts below; never a raw-count gate |
 
 ### exact-w8 test↔test — 4 EXEMPT pairs
 
-| Pair | Reason |
-| ---- | ------ |
-| `_fixtures/weather.ts`↔`schemas/enumSourcesSync.test.ts` | Sync guard re-enumerates the weather union — the literal pin **is** the test |
-| `data/equipment/weaponStyles.characterization`↔`weaponStyles.test` | Characterization spec deliberately re-pins the weapon→style tables |
-| `matchmaking/tournament/awardsTokens`↔`tournamentSelection` | Shared `tournamentState` fixture import preamble |
-| `ai/weatherDisposition.completeness`↔`weatherSuitability` | Shared `weatherSuitability` import preamble |
+| Pair                                                               | Reason                                                                       |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| `_fixtures/weather.ts`↔`schemas/enumSourcesSync.test.ts`           | Sync guard re-enumerates the weather union — the literal pin **is** the test |
+| `data/equipment/weaponStyles.characterization`↔`weaponStyles.test` | Characterization spec deliberately re-pins the weapon→style tables           |
+| `matchmaking/tournament/awardsTokens`↔`tournamentSelection`        | Shared `tournamentState` fixture import preamble                             |
+| `ai/weatherDisposition.completeness`↔`weatherSuitability`          | Shared `weatherSuitability` import preamble                                  |
 
 ### exact-w8 test↔test — DEBT clusters (146 pairs, `MEGAPLAN-D1`…`D14`)
 
-| # | Cluster | Pattern | Harmonization target |
-| - | ------- | ------- | -------------------- |
-| D1 | competitionWorker eval harness (11 pairs: `playerPressure`, `venueCounter`, `styleMatchupGate`, `desperationGate`, `promoterAwareness`, `responseNotes`, `offerProcessor`, `crownWorker.dominance`) | `evaluateBoutOffer({offer, rival, warrior, currentWeek:5, weather:'Clear', …})` arg-shape + verbatim `dominantRankings`/`playerState` clones (up to 53L/11blk) | `src/test/engine/ai/workers/competitionWorker/_helpers.ts` (`evalOffer` arg builder) + `makeDominantRankings` in `_fixtures` |
-| D2 | warrior-factory wrapper clones | per-file `createMockWarrior`/`makeWarrior`-wrap around `fixtureWarrior` (~20 sites: hooks, dossier, combat, pipeline specs) | repoint to `_fixtures/factories` (`makeWarrior` w/ overrides) |
-| D3 | zero-state `GameState`/`Warrior` literal tails | verbatim `{scoutReports:[], rivalries:[], …}` / `{champion:false, status:'Active', …}` blocks | repoint to `makeGameState`/`makeWarrior` |
-| D4 | `title()`/`ArenaTitle` literal clones (championsTournament, stateInvariants, ArenaCircuit, intentEngine.crown, aging/ai/integration family — ~16 pairs) | verbatim `title(partial)` helpers + arenaTitle literals | `_fixtures/arenaTitle.ts` (`makeArenaTitle`) |
-| D5 | `statWarrior`-shaped warrior literals (strategyValidator, boutProcessorService, rosterSlice, PlanBuilder, v12Dedup, veteranCompensation, idleStipend + cross-pairs — ~24 pairs) | inline copies of the fixture's derived-warrior tail | repoint to `_fixtures/statWarrior`/`makeWarrior` |
-| D6 | inline router-link mocks (CouncilBriefingWidget, Advisor, PreAdvanceChecklist, LeftNav, stable-routes, world-routes, Virtualized pair) | duplicated `vi.mock('@tanstack/react-router', () => ({Link: …}))` | `_mocks/routerLink.tsx` + shared-mock entry |
-| D7 | component `vi.mock` boilerplate | per-file Button/Badge/Dossier/framer/PaperDoll/sonner/workerProxy mock blocks | extend `__SHARED_MOCKS` + `mock*` helpers |
-| D8 | determinism harnesses (`resolutionDeterminism`↔`narrationDeterminism` 23.5L, `combat`↔`simulate`, sequentialMemoryGrowth↔harnessTruncation) | run-twice-and-compare scaffolding | shared `expectDeterministic(run)` in test helpers |
-| D9 | weather-roll harness (`bloodMoon`/`bloodRain`↔`seasonalWeather`) | `SeededRNG` + `spyOn(rng,'next')` + `rollWeather` triplet | `_fixtures` `rollStubbedWeather()` |
-| D10 | offseason-event harness (`makeCtx` clones; handler-call shape; seasonal* family) | verbatim `OffseasonEventContext` factory + `handle*({state,nextWeek:5,e,rng,ctx})` call | `_fixtures/offseasonCtx.ts` (`makeOffseasonCtx` + `runOffseasonHandler`) |
-| D11 | fight-summary literals (Awards↔EventLog, resolveImpacts↔truncationBounds) | verbatim `FightSummary` literal rows | `_fixtures` `makeFightSummary` |
-| D12 | rival/`rivalMap` literals (boutBidding family, offerProcessor↔weatherAwareMatchmaking, entityIndex↔routeCrumbs) | verbatim rival/owner/map literals | `makeRival`/`makeOwner` repoint |
-| D13 | `_fixtures/*`↔spec echoes (statWarrior×7, storeState×3, arenaTitle, bidRoster×2, factories×2, signedBout, advisorSeed) | spec files carrying verbatim copies of fixture content | repoint to the fixture they clone |
-| D14 | misc cloned helpers | `walk()` dir-crawler (envSafety↔moduleCacheRegistry), `mockWorkerCtor`+comlink mock, `championsTourney`, `makeInjury`, `signedOfferFor`/`setup`, `getPassive`, `makeArena`, BookmarkButton store-inject, recruit/promoter/potential/equipment/digest literals | per-pair repoint to `_fixtures`/`_mocks`/`_helpers` |
+| #   | Cluster                                                                                                                                                                                             | Pattern                                                                                                                                                                                                                                                       | Harmonization target                                                                                                         |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| D1  | competitionWorker eval harness (11 pairs: `playerPressure`, `venueCounter`, `styleMatchupGate`, `desperationGate`, `promoterAwareness`, `responseNotes`, `offerProcessor`, `crownWorker.dominance`) | `evaluateBoutOffer({offer, rival, warrior, currentWeek:5, weather:'Clear', …})` arg-shape + verbatim `dominantRankings`/`playerState` clones (up to 53L/11blk)                                                                                                | `src/test/engine/ai/workers/competitionWorker/_helpers.ts` (`evalOffer` arg builder) + `makeDominantRankings` in `_fixtures` |
+| D2  | warrior-factory wrapper clones                                                                                                                                                                      | per-file `createMockWarrior`/`makeWarrior`-wrap around `fixtureWarrior` (~20 sites: hooks, dossier, combat, pipeline specs)                                                                                                                                   | repoint to `_fixtures/factories` (`makeWarrior` w/ overrides)                                                                |
+| D3  | zero-state `GameState`/`Warrior` literal tails                                                                                                                                                      | verbatim `{scoutReports:[], rivalries:[], …}` / `{champion:false, status:'Active', …}` blocks                                                                                                                                                                 | repoint to `makeGameState`/`makeWarrior`                                                                                     |
+| D4  | `title()`/`ArenaTitle` literal clones (championsTournament, stateInvariants, ArenaCircuit, intentEngine.crown, aging/ai/integration family — ~16 pairs)                                             | verbatim `title(partial)` helpers + arenaTitle literals                                                                                                                                                                                                       | `_fixtures/arenaTitle.ts` (`makeArenaTitle`)                                                                                 |
+| D5  | `statWarrior`-shaped warrior literals (strategyValidator, boutProcessorService, rosterSlice, PlanBuilder, v12Dedup, veteranCompensation, idleStipend + cross-pairs — ~24 pairs)                     | inline copies of the fixture's derived-warrior tail                                                                                                                                                                                                           | repoint to `_fixtures/statWarrior`/`makeWarrior`                                                                             |
+| D6  | inline router-link mocks (CouncilBriefingWidget, Advisor, PreAdvanceChecklist, LeftNav, stable-routes, world-routes, Virtualized pair)                                                              | duplicated `vi.mock('@tanstack/react-router', () => ({Link: …}))`                                                                                                                                                                                             | `_mocks/routerLink.tsx` + shared-mock entry                                                                                  |
+| D7  | component `vi.mock` boilerplate                                                                                                                                                                     | per-file Button/Badge/Dossier/framer/PaperDoll/sonner/workerProxy mock blocks                                                                                                                                                                                 | extend `__SHARED_MOCKS` + `mock*` helpers                                                                                    |
+| D8  | determinism harnesses (`resolutionDeterminism`↔`narrationDeterminism` 23.5L, `combat`↔`simulate`, sequentialMemoryGrowth↔harnessTruncation)                                                         | run-twice-and-compare scaffolding                                                                                                                                                                                                                             | shared `expectDeterministic(run)` in test helpers                                                                            |
+| D9  | weather-roll harness (`bloodMoon`/`bloodRain`↔`seasonalWeather`)                                                                                                                                    | `SeededRNG` + `spyOn(rng,'next')` + `rollWeather` triplet                                                                                                                                                                                                     | `_fixtures` `rollStubbedWeather()`                                                                                           |
+| D10 | offseason-event harness (`makeCtx` clones; handler-call shape; seasonal* family)                                                                                                                    | verbatim `OffseasonEventContext` factory + `handle*({state,nextWeek:5,e,rng,ctx})` call                                                                                                                                                                       | `_fixtures/offseasonCtx.ts` (`makeOffseasonCtx` + `runOffseasonHandler`)                                                     |
+| D11 | fight-summary literals (Awards↔EventLog, resolveImpacts↔truncationBounds)                                                                                                                           | verbatim `FightSummary` literal rows                                                                                                                                                                                                                          | `_fixtures` `makeFightSummary`                                                                                               |
+| D12 | rival/`rivalMap` literals (boutBidding family, offerProcessor↔weatherAwareMatchmaking, entityIndex↔routeCrumbs)                                                                                     | verbatim rival/owner/map literals                                                                                                                                                                                                                             | `makeRival`/`makeOwner` repoint                                                                                              |
+| D13 | `_fixtures/*`↔spec echoes (statWarrior×7, storeState×3, arenaTitle, bidRoster×2, factories×2, signedBout, advisorSeed)                                                                              | spec files carrying verbatim copies of fixture content                                                                                                                                                                                                        | repoint to the fixture they clone                                                                                            |
+| D14 | misc cloned helpers                                                                                                                                                                                 | `walk()` dir-crawler (envSafety↔moduleCacheRegistry), `mockWorkerCtor`+comlink mock, `championsTourney`, `makeInjury`, `signedOfferFor`/`setup`, `getPassive`, `makeArena`, BookmarkButton store-inject, recruit/promoter/potential/equipment/digest literals | per-pair repoint to `_fixtures`/`_mocks`/`_helpers`                                                                          |
 
 ### exact-w8 mixed — 27 → 17 live pairs, all EXEMPT
 
@@ -218,7 +218,7 @@ Verdicts:
 
 - **~830 EXEMPT** — the same classes as w20, plus two new ident-normalized
   families: **record-shape echoes** (`return {k: v}` literals that collide on
-  *shape*, not content — e.g. `seasonal.ts` shares a 51L block with
+  _shape_, not content — e.g. `seasonal.ts` shares a 51L block with
   `offenseDefense/prepare.ts` yet contains zero `OffenseDefense` fields) and
   **engine-factory call-shape echoes** (`makeWarrior({…attrs…})` arg blocks
   with divergent params, e.g. `aiIntentTelemetry`↔`narrationDeterminism`).
@@ -243,34 +243,34 @@ Verdicts:
 Per-cluster divergent behavior that must provably survive consolidation.
 Each row gets a preservation spec in Phase 2 (`v18Preservation`).
 
-| # | Cluster | Site A | Site B | Divergent behavior |
-| - | ------- | ------ | ------ | ------------------ |
-| U1 | combat-log event icons | `MiniCombatLog.getEventIcon` → text badges `'HIT'/'CRT'/'KIL'…` | `TacticalLogView.getEventIcon` → Lucide JSX icons | Shared `classifyEvent` vocabulary; divergent render payload — both survive |
-| U2 | weather effects | `stormEffects`/`windEffects`/`heatEffects`/`fogEffects`/`specialEffects` | shared `DriftParticles` idiom | Per-effect colors, animation classes, particle geometry are the divergent payload |
-| U3 | competitionWorker specs | per-spec scenario semantics (desperation/pressure/venue/style/promoter) | shared eval-harness (D1) | Scenario setup stays per-site; only arg-shape + rankings helpers move |
-| U4 | shadcn overlays | `dialog`/`sheet`/`alert-dialog`/`select`/`tabs`/`toast` | vendor boilerplate | Distinct primitives, styling, and behavior per component |
-| U5 | page-hook return shapes | `useAdminTools`/`useControlCenter`/`useTrainers`/`useBookmarkGroups`/`useStartGame`/`useFtueFlow` | `useShallow` selector idiom | Distinct field sets per page — no shared selector |
-| U6 | offseason handlers | per-event `handle*` branches (`EVENT_HANDLERS` map) | shared `OffseasonEventContext` shape | Per-event effectType keys + narrative literals unique |
-| U7 | ordered design data | `COMMON_CORPUS`, lore arrays, name pools, crest pick-tables, template name lists | ident-normalized shape echo | Array ORDER + literal contents are load-bearing (rollWeighted pick tables, narrative lists) — never merged |
-| U8 | state-field key lists | `EXCLUSIVE_STRATEGY_KEYS` (pipelineStages) | `ARRAY_FIELDS` (plausibility) / `LEGACY_TRAIT_ORDER` (registry) | Distinct key sets over the same literal shape — no merge |
-| U9 | countered-offer branches | `resolveCounteredOffers` per-counter-type branches | extracted sibling units (S7) | Each branch's verdict semantics preserved verbatim |
-| U10 | enum literal pins | `enumSourcesSync`, `terminology` bannedTerms, `ALL_EVENT_TYPES`, arena-id lists, ctx key lists | canonical prod enums | Tests re-enumerate literals deliberately — importing the source would make the guard vacuous |
+| #   | Cluster                  | Site A                                                                                            | Site B                                                          | Divergent behavior                                                                                         |
+| --- | ------------------------ | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| U1  | combat-log event icons   | `MiniCombatLog.getEventIcon` → text badges `'HIT'/'CRT'/'KIL'…`                                   | `TacticalLogView.getEventIcon` → Lucide JSX icons               | Shared `classifyEvent` vocabulary; divergent render payload — both survive                                 |
+| U2  | weather effects          | `stormEffects`/`windEffects`/`heatEffects`/`fogEffects`/`specialEffects`                          | shared `DriftParticles` idiom                                   | Per-effect colors, animation classes, particle geometry are the divergent payload                          |
+| U3  | competitionWorker specs  | per-spec scenario semantics (desperation/pressure/venue/style/promoter)                           | shared eval-harness (D1)                                        | Scenario setup stays per-site; only arg-shape + rankings helpers move                                      |
+| U4  | shadcn overlays          | `dialog`/`sheet`/`alert-dialog`/`select`/`tabs`/`toast`                                           | vendor boilerplate                                              | Distinct primitives, styling, and behavior per component                                                   |
+| U5  | page-hook return shapes  | `useAdminTools`/`useControlCenter`/`useTrainers`/`useBookmarkGroups`/`useStartGame`/`useFtueFlow` | `useShallow` selector idiom                                     | Distinct field sets per page — no shared selector                                                          |
+| U6  | offseason handlers       | per-event `handle*` branches (`EVENT_HANDLERS` map)                                               | shared `OffseasonEventContext` shape                            | Per-event effectType keys + narrative literals unique                                                      |
+| U7  | ordered design data      | `COMMON_CORPUS`, lore arrays, name pools, crest pick-tables, template name lists                  | ident-normalized shape echo                                     | Array ORDER + literal contents are load-bearing (rollWeighted pick tables, narrative lists) — never merged |
+| U8  | state-field key lists    | `EXCLUSIVE_STRATEGY_KEYS` (pipelineStages)                                                        | `ARRAY_FIELDS` (plausibility) / `LEGACY_TRAIT_ORDER` (registry) | Distinct key sets over the same literal shape — no merge                                                   |
+| U9  | countered-offer branches | `resolveCounteredOffers` per-counter-type branches                                                | extracted sibling units (S7)                                    | Each branch's verdict semantics preserved verbatim                                                         |
+| U10 | enum literal pins        | `enumSourcesSync`, `terminology` bannedTerms, `ALL_EVENT_TYPES`, arena-id lists, ctx key lists    | canonical prod enums                                            | Tests re-enumerate literals deliberately — importing the source would make the guard vacuous               |
 
 ## Scanner-interface reference (for Phase-2 test authors)
 
 Two harness shapes exist — pick per scanner:
 
-| Scanner | Interface | Notes |
-| ------- | --------- | ----- |
-| `dup-scan.mjs` | `collectDuplicates({ident, window, minBlock})` | importable; `@ts-expect-error` on the .mjs import |
-| `function-length.mjs` | `collectSizes()` → `{functions}` | importable (v12Srp precedent) |
-| `param-count.mjs` | `collectParamCounts()` + `PARAM_LIMIT`=5 | importable |
-| `entries-in-loop.mjs` | `collectEntriesInLoop()` | importable |
-| `ui-audit-scan.mjs` | `collectUiAudit()` | importable |
-| `orphan-scan.mjs` | **no exports** — subprocess + read `scripts/out/orphan-scan.json` | `orphanScan.guard.test.ts` precedent (`execFileSync` + JSON read) |
-| `data-array-dup-scan.mjs` | **no exports** — subprocess | data-array dupe report/rewrite |
-| `test-audit-scan.mjs` | **no exports** — subprocess; **regenerates** `runnerGroups.json`/`auditBaseline.json` | never hand-edit generated JSON (V17 C3) |
-| `srp-census.mjs` | `collectSrpCensus()` → `{summary, candidates}` | landed in Phase 1; writes `scripts/out/srp-census.json` |
+| Scanner                   | Interface                                                                             | Notes                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `dup-scan.mjs`            | `collectDuplicates({ident, window, minBlock})`                                        | importable; `@ts-expect-error` on the .mjs import                 |
+| `function-length.mjs`     | `collectSizes()` → `{functions}`                                                      | importable (v12Srp precedent)                                     |
+| `param-count.mjs`         | `collectParamCounts()` + `PARAM_LIMIT`=5                                              | importable                                                        |
+| `entries-in-loop.mjs`     | `collectEntriesInLoop()`                                                              | importable                                                        |
+| `ui-audit-scan.mjs`       | `collectUiAudit()`                                                                    | importable                                                        |
+| `orphan-scan.mjs`         | **no exports** — subprocess + read `scripts/out/orphan-scan.json`                     | `orphanScan.guard.test.ts` precedent (`execFileSync` + JSON read) |
+| `data-array-dup-scan.mjs` | **no exports** — subprocess                                                           | data-array dupe report/rewrite                                    |
+| `test-audit-scan.mjs`     | **no exports** — subprocess; **regenerates** `runnerGroups.json`/`auditBaseline.json` | never hand-edit generated JSON (V17 C3)                           |
+| `srp-census.mjs`          | `collectSrpCensus()` → `{summary, candidates}`                                        | landed in Phase 1; writes `scripts/out/srp-census.json`           |
 
 ## Conventions confirmed for V18 docs/guards
 

@@ -21,9 +21,7 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
   const rng = resolveRng(rngService, state.week);
 
   const recoveryWarriorIds = new Set<WarriorId>(
-    (state.trainingAssignments ?? [])
-      .filter((a) => a.type === 'recovery')
-      .map((a) => a.warriorId)
+    (state.trainingAssignments ?? []).filter((a) => a.type === 'recovery').map((a) => a.warriorId)
   );
   const healingBonus = getHealingTrainerBonus(state.trainers ?? []);
 

@@ -180,7 +180,11 @@ const narrateDisarmEvent: EventNarrator = (event, h, minute) => {
 const narrateRearmEvent: EventNarrator = (event, h, minute) => [
   {
     minute,
-    text: narrateRearm(h.rng, h.getName(event.actor), event.metadata?.weaponId as string | undefined),
+    text: narrateRearm(
+      h.rng,
+      h.getName(event.actor),
+      event.metadata?.weaponId as string | undefined
+    ),
     events: [event],
   },
 ];

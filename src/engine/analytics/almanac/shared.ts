@@ -135,12 +135,20 @@ export const by = <T>(cmp: Cmp<T>, ...chain: Cmp<T>[]): Cmp<T> => {
   };
 };
 /** Numeric descending comparator from a projection. */
-export const numDesc = <T>(f: (t: T) => number): Cmp<T> => (a, b) => f(b) - f(a);
+export const numDesc =
+  <T>(f: (t: T) => number): Cmp<T> =>
+  (a, b) =>
+    f(b) - f(a);
 /** Numeric ascending comparator from a projection. */
-export const numAsc = <T>(f: (t: T) => number): Cmp<T> => (a, b) => f(a) - f(b);
+export const numAsc =
+  <T>(f: (t: T) => number): Cmp<T> =>
+  (a, b) =>
+    f(a) - f(b);
 /** String ascending comparator from a projection. */
-export const strAsc = <T>(f: (t: T) => string): Cmp<T> => (a, b) =>
-  f(a) < f(b) ? -1 : f(a) > f(b) ? 1 : 0;
+export const strAsc =
+  <T>(f: (t: T) => string): Cmp<T> =>
+  (a, b) =>
+    f(a) < f(b) ? -1 : f(a) > f(b) ? 1 : 0;
 
 /** Career record with a zeroed fallback for career-less warriors. */
 export const career = (w: Warrior) => w.career ?? { wins: 0, losses: 0, kills: 0 };

@@ -11,10 +11,7 @@ import { getDefensiveSuitability } from '@/engine/strategy/tacticSuitability';
 import { OFFENSIVE_TACTICS } from '@/types/enumSources';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
-import {
-  ARCHETYPE_DESIGN_BARS,
-  classifyArchetype,
-} from '@/data/warriorArchetypes';
+import { ARCHETYPE_DESIGN_BARS, classifyArchetype } from '@/data/warriorArchetypes';
 
 /** Canon per-style plan doctrine — hard ceilings applied after all modifiers. */
 function applyStyleCaps(plan: FightPlan, w: Warrior): void {
@@ -125,10 +122,7 @@ function applyArchetypeShaping(plan: FightPlan, w: Warrior): void {
       plan.killDesire = Math.min(plan.killDesire ?? 5, 5);
       return;
     case 'ripostingHybrid':
-      if (
-        !plan.defensiveTactic &&
-        getDefensiveSuitability(w.style, 'Riposte') === 'WS'
-      ) {
+      if (!plan.defensiveTactic && getDefensiveSuitability(w.style, 'Riposte') === 'WS') {
         plan.defensiveTactic = 'Riposte';
       }
       return;

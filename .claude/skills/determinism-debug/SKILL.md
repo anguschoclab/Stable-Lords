@@ -23,7 +23,7 @@ bugs: something changed the number, order, or shape of RNG draws.
 
 1. **Pool/array length changed.** `randomPick` draws one index — removing or
    adding an entry shifts every downstream draw. Deduping narrative strings,
-   adding an offseason event, or growing a name pool will *legitimately*
+   adding an offseason event, or growing a name pool will _legitimately_
    change seeded picks; characterization tests flag it, it's usually fine.
 2. **New unconditional draw.** A `rng.next()` added on a hot path consumes a
    value every other consumer expected. Gate new draws behind the same
@@ -56,10 +56,10 @@ bun run test:slow src/test/engine/sim/determinism.slow.test.ts src/test/engine/w
 
 ## Notes
 
-- Characterization tests encode *current* behavior as truth — a legit content
+- Characterization tests encode _current_ behavior as truth — a legit content
   change (new event, deduped pool) updating expected characterization output
   is the suite working as designed; re-baseline only after confirming the
-  *mechanical* stream is stable.
+  _mechanical_ stream is stable.
 - `hashStr` seeds per-entity draws — renaming an entity changes its stream.
 - JS object key order is deterministic but insertion-order-dependent —
   different construction order = different iteration = different draws.

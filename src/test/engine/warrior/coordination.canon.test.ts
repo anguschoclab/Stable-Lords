@@ -61,16 +61,14 @@ describe('coordination → disarm susceptibility (canon: clumsy drops more)', ()
     const slight = rollDisarmChance({ ...base, coordination: 'Slightly Uncoordinated' });
     const normal = rollDisarmChance({ ...base, coordination: 'Normal' });
     expect(slight).toBeGreaterThan(normal);
-    expect(slight).toBeLessThan(
-      rollDisarmChance({ ...base, coordination: 'Clumsy' })
-    );
+    expect(slight).toBeLessThan(rollDisarmChance({ ...base, coordination: 'Clumsy' }));
   });
 
   it('VHC fighters get no clumsy penalty', () => {
     const base = { armHits: 2, damageRatio: 0.2, isCrit: false };
-    expect(
-      rollDisarmChance({ ...base, coordination: 'Very Highly Coordinated' })
-    ).toBe(rollDisarmChance({ ...base, coordination: 'Normal' }));
+    expect(rollDisarmChance({ ...base, coordination: 'Very Highly Coordinated' })).toBe(
+      rollDisarmChance({ ...base, coordination: 'Normal' })
+    );
   });
 });
 

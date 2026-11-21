@@ -28,8 +28,6 @@ interface ApplyBoutResultsArgs {
   planD?: FightPlan;
 }
 
-
-
 /**
  * Apply bout results.
  *

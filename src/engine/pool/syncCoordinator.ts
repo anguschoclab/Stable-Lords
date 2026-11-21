@@ -15,6 +15,7 @@ import type { SyncedShardWorkerApi, WeekSyncLedger } from '@/engine/pool/engineP
  * can't match is marked broken — its chunks run in-line instead.
  */
 
+/** A pipeline stage boundary workers can be synced to (in chain order). */
 export type SyncTarget = 'weekStart' | 'postCore' | 'weekResult';
 
 interface WorkerSyncState {
@@ -27,6 +28,7 @@ interface WorkerSyncState {
   broken: boolean;
 }
 
+/** Coordinator-side handle: per-worker sync positioning + week ledger. */
 export interface SyncCoordinator {
   /** The active week's ledger — null between weeks. */
   ledger?: WeekSyncLedger;
@@ -182,12 +184,22 @@ async function ensureStage(
   if (!w || !ctx.ledger) return;
   const ws = (ctx.wstate[i] ??= { stage: 'none', pristineInput: false, broken: false });
   if (ws.broken) return;
-  const chain: [SyncTarget, (c: CoordCtx, w: SyncedShardWorkerApi, s: WorkerSyncState) => Promise<void>][] =
+  const chain: [
+    SyncTarget,
+    (c: CoordCtx, w: SyncedShardWorkerApi, s: WorkerSyncState) => Promise<void>,
+  ][] =
     target === 'weekStart'
       ? [['weekStart', stepWeekStart]]
       : target === 'postCore'
-        ? [['weekStart', stepWeekStart], ['postCore', stepPostCore]]
-        : [['weekStart', stepWeekStart], ['postCore', stepPostCore], ['weekResult', stepWeekResult]];
+        ? [
+            ['weekStart', stepWeekStart],
+            ['postCore', stepPostCore],
+          ]
+        : [
+            ['weekStart', stepWeekStart],
+            ['postCore', stepPostCore],
+            ['weekResult', stepWeekResult],
+          ];
   try {
     for (const [step, run] of chain) {
       if (STAGE_ORD[ws.stage] >= STAGE_ORD[step]) continue;
@@ -202,6 +214,11 @@ async function ensureStage(
   }
 }
 
+/**
+ * Create the sync coordinator for `size` pool slots. `getWorker` spawns a
+ * worker when one isn't running yet; `peekWorker` only observes — sync
+ * skips slots with no live worker since a fresh spawn heals on first use.
+ */
 export function createSyncCoordinator(
   size: number,
   getWorker: (i: number) => SyncedShardWorkerApi | null,
@@ -215,8 +232,7 @@ export function createSyncCoordinator(
     set ledger(l: WeekSyncLedger | undefined) {
       ctx.ledger = l;
     },
-    ensure: (i, target, spawnIfMissing = true) =>
-      ensureStage(ctx, i, target, spawnIfMissing),
+    ensure: (i, target, spawnIfMissing = true) => ensureStage(ctx, i, target, spawnIfMissing),
     ensureAll: async (target, spawnIfMissing = true) => {
       // Workers are independent — transitions can be replayed in parallel.
       await Promise.all(

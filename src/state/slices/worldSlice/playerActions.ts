@@ -20,9 +20,7 @@ function gazetteActions(set: (fn: (state: GameStore) => Partial<GameStore>) => v
       set((state) => {
         const trimmed = text.trim();
         if (!trimmed || !warriorId) return {};
-        const pending = (state.playerSpotlights || []).filter(
-          (s) => s.warriorId !== warriorId
-        );
+        const pending = (state.playerSpotlights || []).filter((s) => s.warriorId !== warriorId);
         return {
           playerSpotlights: [...pending, { warriorId, text: trimmed }].slice(-3),
         };
@@ -47,7 +45,7 @@ function findRivalWarrior(
 /** Canon: challenge/avoid marks only bind once a warrior is listed in the
  *  newsletter — i.e. has fought at least once (draws count as losses). */
 function isListedInArena(warrior: Warrior): boolean {
-  return ((warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0)) > 0;
+  return (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0) > 0;
 }
 
 /** Player-facing world actions — week/identity/arena-preference setters. */

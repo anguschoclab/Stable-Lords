@@ -6,8 +6,6 @@ import path from 'node:path';
 const SRC = path.resolve(__dirname, '../..');
 const SCAN_DIRS = ['components', 'pages', 'hooks', 'routes'];
 
-
-
 function sourceFiles(): string[] {
   return SCAN_DIRS.flatMap((dir) => listTsFiles(path.join(SRC, dir))).map((file) =>
     path.relative(SRC, file)

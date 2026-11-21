@@ -91,7 +91,12 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
         favorites: fav('medium_shield', false, {
           fist: { swings: 20, crits: 6, knockdowns: 1 },
         }),
-        equipment: { weapon: 'medium_shield', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
+        equipment: {
+          weapon: 'medium_shield',
+          armor: 'APL',
+          shield: 'none_shield',
+          helm: 'leather_cap',
+        },
       }
     );
     const out = refitRosterWeapons([tp])[0]!;

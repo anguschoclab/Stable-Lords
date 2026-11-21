@@ -40,9 +40,7 @@ logger.log('SCHEMA OK');
 logger.log(
   `  rivals=${rt.rivals.length} legacyFounded=${founded.length} founderQueue=${rt.legacyFounderQueue?.length ?? 0}`
 );
-logger.log(
-  `  freeAgents=${rt.freeAgents?.length ?? 0} recruitPool=${rt.recruitPool?.length ?? 0}`
-);
+logger.log(`  freeAgents=${rt.freeAgents?.length ?? 0} recruitPool=${rt.recruitPool?.length ?? 0}`);
 const gens = founded.reduce((m: Map<number, number>, r) => {
   const g = r.owner.generation ?? 1;
   m.set(g, (m.get(g) ?? 0) + 1);

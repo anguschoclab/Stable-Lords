@@ -17,10 +17,7 @@ const GRUDGE_MATCHMAKING = 'GRUDGE_MATCHMAKING' as PromoterId;
  * rival-owned losers only (the AI's standing decision), while player-owned
  * losses surface as manual call-outs via `fileGrudgeCallout`.
  */
-export function buildGrudgeOffers(
-  state: GameState,
-  tournamentId: TournamentId
-): BoutOffer[] {
+export function buildGrudgeOffers(state: GameState, tournamentId: TournamentId): BoutOffer[] {
   const tour = (state.tournaments ?? []).find((t) => t.id === tournamentId);
   if (!tour || !tour.completed) return [];
 

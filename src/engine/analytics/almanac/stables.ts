@@ -130,7 +130,12 @@ const crownsBoard = (
     cap(
       stables
         .filter((s) => (counts.get(s.id) ?? 0) > 0)
-        .sort(by(numDesc((s) => counts.get(s.id) ?? 0), strAsc((s) => s.id)))
+        .sort(
+          by(
+            numDesc((s) => counts.get(s.id) ?? 0),
+            strAsc((s) => s.id)
+          )
+        )
         .map((s) => stableRow(s, counts.get(s.id) ?? 0, 'crowns')),
       n
     )
@@ -183,7 +188,12 @@ const rivalriesBoard = (
         extra: { startWeek: rv.startWeek ?? 0 },
       };
     })
-    .sort(by(numDesc((r) => r.value), strAsc((r) => r.key)));
+    .sort(
+      by(
+        numDesc((r) => r.value),
+        strAsc((r) => r.key)
+      )
+    );
   return mkBoard('stableRivalries', 'Fiercest Rivalries', 'stable', cap(rows, n));
 };
 

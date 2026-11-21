@@ -14,15 +14,9 @@
 import { FightingStyle, type Attributes } from '@/types/shared.types';
 import type { EquipmentLoadout } from '@/data/equipment';
 import { getAvailableItems } from '@/data/equipment';
-import {
-  getEncumbranceRatio,
-  getEncumbranceTier,
-} from '@/data/equipment/encumbrance';
+import { getEncumbranceRatio, getEncumbranceTier } from '@/data/equipment/encumbrance';
 import { computeEncumbranceCapacity } from '@/data/terrabloodCharts';
-import {
-  WINNING_ARCHETYPES,
-  classifyArchetype,
-} from '@/data/warriorArchetypes';
+import { WINNING_ARCHETYPES, classifyArchetype } from '@/data/warriorArchetypes';
 
 /** Encumbrance ratio ceiling — OVER starts at 1.2; the fitter never lands there. */
 const MAX_RATIO = 1.2;
@@ -56,9 +50,7 @@ export function fitArchetypeArmor(
   // heaviest-first as fallback — deduped.
   const legalIds = new Set(legal.map((i) => i.id));
   const byWeight = [...legal].sort((a, b) => b.weight - a.weight).map((i) => i.id);
-  const ladder = [...new Set([...preferred, ...byWeight])].filter((id) =>
-    legalIds.has(id)
-  );
+  const ladder = [...new Set([...preferred, ...byWeight])].filter((id) => legalIds.has(id));
 
   for (const id of ladder) {
     const ratio = getEncumbranceRatio({ ...loadout, armor: id }, capacity);

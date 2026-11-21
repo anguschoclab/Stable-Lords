@@ -46,8 +46,7 @@ export function generateFreelancer(
   const styles = Object.values(FightingStyle);
   const style = rng.pick(styles);
   const pool =
-    poolBudget ??
-    (tier === 'Gold' ? 120 : tier === 'Silver' ? 100 : tier === 'Bronze' ? 85 : 70);
+    poolBudget ?? (tier === 'Gold' ? 120 : tier === 'Silver' ? 100 : tier === 'Bronze' ? 85 : 70);
   const attrs = { ST: 5, CN: 5, SZ: 10, WT: 10, WL: 10, SP: 5, DF: 5 };
   let remaining = pool - 50;
   const keys: (keyof typeof attrs)[] = ['ST', 'CN', 'SP', 'DF', 'WL', 'WT'];

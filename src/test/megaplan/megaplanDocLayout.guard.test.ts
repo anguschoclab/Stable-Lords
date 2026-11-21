@@ -27,10 +27,7 @@ const RETIRED_ROOT_RE =
 const ARCHIVED_DOCS = [
   'MEGAPLAN_FINDINGS.md',
   'MEGAPLAN_LEDGER.md',
-  ...[9, 10, 11, 12].flatMap((n) => [
-    `MEGAPLAN_V${n}_FINDINGS.md`,
-    `MEGAPLAN_V${n}_LEDGER.md`,
-  ]),
+  ...[9, 10, 11, 12].flatMap((n) => [`MEGAPLAN_V${n}_FINDINGS.md`, `MEGAPLAN_V${n}_LEDGER.md`]),
   'MEGAPLAN_V14_LEDGER.md',
   ...[15, 16].flatMap((n) => [
     `MEGAPLAN_V${n}_FINDINGS.md`,
@@ -82,9 +79,7 @@ const docsRootFiles = (): string[] => readdirSync(DOCS);
 describe('megaplan doc layout', () => {
   it('docs/ root carries exactly one MEGAPLAN_V<N>_ lineage + MEGAPLAN_BACKLOG.md', () => {
     const files = docsRootFiles();
-    const versions = new Set(
-      files.map((f) => VERSIONED_RE.exec(f)?.[1]).filter(Boolean)
-    );
+    const versions = new Set(files.map((f) => VERSIONED_RE.exec(f)?.[1]).filter(Boolean));
     expect(
       versions.size,
       `multiple megaplan lineages at docs/ root: ${[...versions].join(', ')} — archive the older set`
@@ -127,10 +122,9 @@ describe('megaplan doc layout', () => {
     const missing = ARCHIVED_VERSIONS.filter(
       (n) => !backlog.includes(`MEGAPLAN_V${n}`) && !backlog.includes(`MEGAPLAN V${n}`)
     );
-    expect(
-      missing,
-      `archived versions missing from backlog index: ${missing.join(', ')}`
-    ).toEqual([]);
+    expect(missing, `archived versions missing from backlog index: ${missing.join(', ')}`).toEqual(
+      []
+    );
   });
 
   it('.devin/plans top level holds no megaplan-* drafts (normalize to MEGAPLAN_V<N>_PLAN.md)', () => {

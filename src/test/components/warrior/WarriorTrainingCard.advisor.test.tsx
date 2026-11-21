@@ -9,7 +9,10 @@ import { makeTrainingWarrior, makeTrainingCardProps } from '@/test/_fixtures/tra
 
 vi.mock('@/engine/training', () => __SHARED_MOCKS.warriorTrainingDeps.training(50));
 vi.mock('@/engine/warrior/potential', () => __SHARED_MOCKS.warriorTrainingDeps.potential);
-vi.mock('@/engine/training/trainingGains/traitTraining', () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining);
+vi.mock(
+  '@/engine/training/trainingGains/traitTraining',
+  () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining
+);
 
 const makeWarrior = makeTrainingWarrior;
 

@@ -11,7 +11,7 @@ import { STYLE_ARCHETYPE_FIT, WINNING_ARCHETYPES } from '@/data/warriorArchetype
 import { FightingStyle } from '@/types/shared.types';
 
 describe('StyleCard — archetype chips', () => {
-  it('renders the style\'s archetype-fit labels from the FIT map', () => {
+  it("renders the style's archetype-fit labels from the FIT map", () => {
     const style = FightingStyle.TotalParry;
     render(<StyleCard style={style} />);
     for (const fit of STYLE_ARCHETYPE_FIT[style] ?? []) {

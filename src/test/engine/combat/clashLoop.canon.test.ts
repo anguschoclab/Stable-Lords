@@ -41,7 +41,10 @@ describe('clash loop re-evaluates disparity (Pagan)', () => {
     const events: CombatEvent[] = [];
     // Alternating extremes: once the jitter re-draws lands unevenly the gap
     // clears JUMP_DISPARITY and the loop must exit before the max.
-    const ctx = makeResolutionContext({ exchange: 0, rng: scriptRng([0.5, 0.01, 0.99, 0.01, 0.99]) });
+    const ctx = makeResolutionContext({
+      exchange: 0,
+      rng: scriptRng([0.5, 0.01, 0.99, 0.01, 0.99]),
+    });
     resolveInitiativePhase(baseArgs(ctx, events));
     const clashes = events.filter((e) => e.type === 'CLASH');
     expect(clashes.length).toBeLessThan(JUMP_CLASH_MAX);
@@ -49,7 +52,10 @@ describe('clash loop re-evaluates disparity (Pagan)', () => {
 
   it('the reported gap changes between clashes — totals are re-drawn', () => {
     const events: CombatEvent[] = [];
-    const ctx = makeResolutionContext({ exchange: 0, rng: scriptRng([0.5, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6]) });
+    const ctx = makeResolutionContext({
+      exchange: 0,
+      rng: scriptRng([0.5, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6]),
+    });
     resolveInitiativePhase(baseArgs(ctx, events));
     const values = events.filter((e) => e.type === 'CLASH').map((e) => e.value);
     expect(new Set(values).size).toBeGreaterThan(1);
@@ -68,8 +74,6 @@ describe('clash loop re-evaluates disparity (Pagan)', () => {
     const events: CombatEvent[] = [];
     const ctx = makeResolutionContext({ exchange: 0, rng: () => 0.5 });
     resolveInitiativePhase(baseArgs(ctx, events));
-    expect(events.filter((e) => e.type === 'CLASH').length).toBeLessThanOrEqual(
-      JUMP_CLASH_MAX
-    );
+    expect(events.filter((e) => e.type === 'CLASH').length).toBeLessThanOrEqual(JUMP_CLASH_MAX);
   });
 });

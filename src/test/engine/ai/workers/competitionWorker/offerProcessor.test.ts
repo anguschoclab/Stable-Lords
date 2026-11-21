@@ -11,11 +11,7 @@ import type { RivalStableData, BoutOffer } from '@/types/state.types';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
 import { STABLE_DISSOLVED_REASON } from '@/engine/bout/mutations/contractMutations';
 import { makeWarrior as fixtureWarrior } from '@/test/_fixtures/factories';
-import {
-  makeOfferRival,
-  makePendingOffer,
-  offerState,
-} from '@/test/_fixtures/competitionWorker';
+import { makeOfferRival, makePendingOffer, offerState } from '@/test/_fixtures/competitionWorker';
 
 const makeWarrior = (
   id: string,

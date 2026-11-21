@@ -26,8 +26,11 @@ import { collectDuplicates } from '../../../scripts/dup-scan.mjs';
  * V23 D2: +1 — skillBurn imports the canonical bp tables from
  * skillBreakpoints; the table-list preamble echoes skillCalc's own import
  * of the same data (registered exempt) → 28.
+ * 2026-11 whole-repo prettier pass (printWidth 100): +1 — reflowed import
+ * lists normalized orphanPool's skillCalc preamble against warriorFactory's
+ * (registered exempt) → 29.
  */
-const SRC_TO_SRC_BASELINE = 28;
+const SRC_TO_SRC_BASELINE = 29;
 
 const EXEMPT_PAIRS = new Set([
   // ─── Page↔hook / barrel extraction seams — thin interface overlap (prop
@@ -85,6 +88,10 @@ const EXEMPT_PAIRS = new Set([
   // table usage — both consume the same canonical skillBreakpoints data;
   // a shared-data preamble, not cloned logic.
   'src/engine/learning/skillBurn.ts|src/engine/warrior/skillCalc.ts',
+  // 2026-11 prettier pass: orphanPool's 5-fn skillCalc import list reflowed
+  // into the same shape as warriorFactory's — a shared import preamble,
+  // not cloned logic (same category as skillBurn↔skillCalc above).
+  'src/data/orphanPool.ts|src/engine/factories/warriorFactory.ts',
 ]);
 
 // ─── DEBT — genuine cloned logic, drain to zero. V17's whole-repo prettier
@@ -137,7 +144,12 @@ const DEBT_PAIRS = new Set<string>([]);
 // item-assertion shape like the V23–V25 design specs (5 pairs), and
 // emission↔freeze share the tournamentCycle fixture preamble — same
 // literal-pin/call-shape category as above (registered exempt) → 38.
-const TEST_TO_TEST_BASELINE = 38;
+// 2026-11 whole-repo prettier pass (printWidth 100): +3 — reflowed fixture
+// literals/harness calls aligned _abmargin↔aimedBlow (AB-margin fixture),
+// playerPressure↔styleMatchupGate (rivalOffer/evalBoutOffer call shape),
+// electronArchive↔electronIPCBounds (archiveServiceEach preamble) — all
+// registered exempt → 41.
+const TEST_TO_TEST_BASELINE = 41;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -222,6 +234,18 @@ const TEST_EXEMPT_PAIRS = new Set([
   'src/test/engine/warrior/tourneyDesignAxis.test.ts|src/test/engine/warrior/v25DesignReview.test.ts',
   'src/test/engine/warrior/designReview.test.ts|src/test/engine/warrior/tourneyDesignAxis.test.ts',
   'src/test/engine/matchmaking/tournamentSelection/emission.test.ts|src/test/engine/matchmaking/tournamentSelection/freeze.test.ts',
+  // ─── 2026-11 prettier pass — reflowed literals aligned these pairs; all
+  // are the same literal-pin/call-shape/harness-preamble categories above.
+  // _abmargin↔aimedBlow: identical AB-vs-TP margin fixture warriors (attrs +
+  // baseSkills literals) and the simulateFight win-count loop — the margin
+  // fixture literals are the pin.
+  'src/test/engine/combat/_abmargin.slow.test.ts|src/test/engine/combat/aimedBlow.test.ts',
+  // playerPressure↔styleMatchupGate: sibling competitionWorker specs
+  // re-state the rivalOffer/evalBoutOffer call shape as fixture data.
+  'src/test/engine/ai/workers/competitionWorker/playerPressure.test.ts|src/test/engine/ai/workers/competitionWorker/styleMatchupGate.test.ts',
+  // electronArchive↔electronIPCBounds: sibling storage specs share the
+  // archiveServiceEach harness preamble only.
+  'src/test/engine/storage/electronArchive.test.ts|src/test/engine/storage/electronIPCBounds.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the
@@ -239,7 +263,10 @@ const TEST_DEBT_PAIRS = new Set<string>([]);
 // V23 D2: +1 — skillBurn's table map echoes the canon spec's breakpoint
 // literals (same literal-pin category); net +1 after the learnRoll pair
 // went stale and was pruned → 25.
-const MIXED_BASELINE = 25;
+// 2026-11 whole-repo prettier pass (printWidth 100): +1 — reflowed armor
+// rows align armor.ts's canonical table with the canon spec's literals
+// (same literal-pin category as skillBreakpoints.canon) → 26.
+const MIXED_BASELINE = 26;
 
 const MIXED_EXEMPT_PAIRS = new Set([
   // fighterConcepts spec re-states a canonical newsletter spread as
@@ -292,6 +319,10 @@ const MIXED_EXEMPT_PAIRS = new Set([
   // OpponentSearchContext/OfferBuildContext (orphan-scan wiring), so the
   // pass's literal ctx fields echo the spec's makeCtx bag — ctx-shape pin.
   'src/engine/pipeline/passes/PromoterPass.ts|src/test/engine/promoters/offerMatchmaking.test.ts',
+  // 2026-11 prettier pass: armor.canon re-states the canonical armor rows
+  // verbatim — a canonical production-literal pin, same category as the
+  // skillBreakpoints.canon pair above.
+  'src/data/equipment/armor.ts|src/test/data/equipment/armor.canon.test.ts',
 ]);
 
 const MIXED_DEBT_PAIRS = new Set<string>([]);

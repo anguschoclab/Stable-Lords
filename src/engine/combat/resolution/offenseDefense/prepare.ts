@@ -197,32 +197,29 @@ export function prepareOffenseDefense(args: OffenseDefenseArgs): {
   // still rolls so the RNG stream keeps its usual shape.
   const attSucc =
     performAttackCheck({
-    rng: rng,
-    att: att,
-    curAttOE: curAttOE,
-    matchup: args.aGoesFirst ? args.ctx.matchupA : args.ctx.matchupD,
-    fat: args.aGoesFirst ? args.fatA : args.fatD,
-    curOffMods: curOffMods,
-    curPass: curPassA,
-    curAntiSyn: v.curAntiSyn,
-    curBiasAtt: v.curBiasAtt,
-    overAtt: v.overAtt,
-    _curAttWepReq: v.curAttWepReq,
-    extraBonus:
-      bonuses.momentumBonus +
-      bonuses.psychMod +
-      (args.aGoesFirst ? args.es.rangeModA : args.es.rangeModD) +
-      args.attCommit.attBonus +
-      args.feintAttBonus +
-      bonuses.weaponRangeMod +
-      bonuses.dynTraitAtt +
-      bonuses.counterstrikeAtt +
-      aimedBlowShellGapBonus(att, def) +
-      strikerParryPierce(
-        att.style,
-        (args.aGoesFirst ? args.tactD : args.tactA).defTactic
-      ),
-  }) || def.doomed === true;
+      rng: rng,
+      att: att,
+      curAttOE: curAttOE,
+      matchup: args.aGoesFirst ? args.ctx.matchupA : args.ctx.matchupD,
+      fat: args.aGoesFirst ? args.fatA : args.fatD,
+      curOffMods: curOffMods,
+      curPass: curPassA,
+      curAntiSyn: v.curAntiSyn,
+      curBiasAtt: v.curBiasAtt,
+      overAtt: v.overAtt,
+      _curAttWepReq: v.curAttWepReq,
+      extraBonus:
+        bonuses.momentumBonus +
+        bonuses.psychMod +
+        (args.aGoesFirst ? args.es.rangeModA : args.es.rangeModD) +
+        args.attCommit.attBonus +
+        args.feintAttBonus +
+        bonuses.weaponRangeMod +
+        bonuses.dynTraitAtt +
+        bonuses.counterstrikeAtt +
+        aimedBlowShellGapBonus(att, def) +
+        strikerParryPierce(att.style, (args.aGoesFirst ? args.tactD : args.tactA).defTactic),
+    }) || def.doomed === true;
 
   // The attack was thrown — chart it (hits, whiffs, parried and dodged
   // swings all count toward the weapon's ledger).

@@ -138,7 +138,13 @@ export function scheduleTitleBouts(
     if (liveTitleArenas.has(arenaId)) continue;
 
     const arenaArgs: ScheduleArenaArgs = {
-      state, delta, rng, arenaId, targetWeek, now, bookedNext,
+      state,
+      delta,
+      rng,
+      arenaId,
+      targetWeek,
+      now,
+      bookedNext,
     };
     const booked = title.champion
       ? scheduleChampionDefense(arenaArgs, title.champion)

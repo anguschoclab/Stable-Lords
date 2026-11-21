@@ -55,10 +55,7 @@ describe('favoriteLearnOf', () => {
 
 describe('learnPoolWeights', () => {
   it('sums both combatants\u2019 style priorities', () => {
-    const weights = learnPoolWeights(
-      FightingStyle.AimedBlow,
-      FightingStyle.TotalParry
-    );
+    const weights = learnPoolWeights(FightingStyle.AimedBlow, FightingStyle.TotalParry);
     const own = STYLE_LEARN_WEIGHTS[FightingStyle.AimedBlow];
     const opp = STYLE_LEARN_WEIGHTS[FightingStyle.TotalParry];
     for (const skill of SKILL_KEYS) {
@@ -68,11 +65,7 @@ describe('learnPoolWeights', () => {
 
   it('adds LEARN_FAVORITE_WEIGHT on the favorite learn only', () => {
     const base = learnPoolWeights(FightingStyle.LungingAttack, FightingStyle.StrikingAttack);
-    const fav = learnPoolWeights(
-      FightingStyle.LungingAttack,
-      FightingStyle.StrikingAttack,
-      'DEF'
-    );
+    const fav = learnPoolWeights(FightingStyle.LungingAttack, FightingStyle.StrikingAttack, 'DEF');
     expect(fav.DEF).toBe(base.DEF + LEARN_FAVORITE_WEIGHT);
     for (const skill of SKILL_KEYS.filter((k) => k !== 'DEF')) {
       expect(fav[skill]).toBe(base[skill]);
@@ -157,9 +150,7 @@ describe('rollBoutLearns', () => {
     expect(a.gained).toEqual(b.gained);
     // A constant-0.5 stub would always succeed at WT21 — assert the fallback
     // actually rolls rather than sweeping all six attempts.
-    expect(Object.values(a.gained).reduce((s, v) => s + v, 0)).toBeLessThanOrEqual(
-      LEARN_ATTEMPTS
-    );
+    expect(Object.values(a.gained).reduce((s, v) => s + v, 0)).toBeLessThanOrEqual(LEARN_ATTEMPTS);
   });
 });
 

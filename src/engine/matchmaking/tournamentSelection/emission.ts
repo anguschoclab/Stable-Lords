@@ -40,9 +40,7 @@ function emitClassBracket(args: {
   const { seedRng, nextWeek, state } = args;
 
   const invited = (cycle.invited[spec.id] ?? []) as string[];
-  const declaredInClass = declaredIds.filter(
-    (id) => classOfEntrant(cycle, byId, id) === spec.id
-  );
+  const declaredInClass = declaredIds.filter((id) => classOfEntrant(cycle, byId, id) === spec.id);
   const entrantIds = [...new Set([...invited, ...declaredInClass])].filter(
     (id) => !scratched.has(id)
   );
@@ -134,13 +132,13 @@ export function emitClassTournaments(
   // stables pull their invites through tournamentScratchIds).
   const scratched = new Set<string>([
     ...(cycle.scratched ?? []),
-    ...(state.rivals ?? []).flatMap((r) => r.tournamentScratchIds ?? [] as string[]),
+    ...(state.rivals ?? []).flatMap((r) => r.tournamentScratchIds ?? ([] as string[])),
   ]);
   // Declarations = the player-filed ledger ∪ every rival's tournamentEntryIds
   // (AI stables file through planTournamentEntries, not the cycle ledger).
   const declaredIds = [
     ...(Object.values(cycle.declared ?? {}).flat() as string[]),
-    ...(state.rivals ?? []).flatMap((r) => r.tournamentEntryIds ?? [] as string[]),
+    ...(state.rivals ?? []).flatMap((r) => r.tournamentEntryIds ?? ([] as string[])),
   ];
   const usedNames = collectUsedWarriorNames(state);
   const seedRng = rng as SeededRNG;

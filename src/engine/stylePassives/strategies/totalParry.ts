@@ -32,8 +32,7 @@ export const totalParry: StyleStrategy = {
     attBonus: TP_PASSIVE_ATT,
     parBonus: TP_PASSIVE_PAR + (ctx.phase === 'LATE' ? m.bonus : 0),
     iniBonus: TP_PASSIVE_INI,
-    hasPassiveNarrative:
-      ctx.phase === 'LATE' && ctx.endRatio > TP_PASSIVE_NARRATIVE_END_RATIO,
+    hasPassiveNarrative: ctx.phase === 'LATE' && ctx.endRatio > TP_PASSIVE_NARRATIVE_END_RATIO,
   }),
   getKillMechanic: (ctx) => ({
     killBonus:

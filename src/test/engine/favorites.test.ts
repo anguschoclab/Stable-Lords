@@ -110,7 +110,10 @@ describe('generateFavorites', () => {
 
   it('SL rhythm range follows the canon 65-graduate distribution (OE 5-10, AL 1-6)', () => {
     // rng sequence: weapon idx=0, useStyleRange=true (<0.8), OE draw, AL draw
-    const max = generateFavorites(FightingStyle.SlashingAttack, makeMockRng([0, 0.5, 0.999, 0.999]));
+    const max = generateFavorites(
+      FightingStyle.SlashingAttack,
+      makeMockRng([0, 0.5, 0.999, 0.999])
+    );
     expect(max.rhythm.oe).toBe(10);
     expect(max.rhythm.al).toBe(6);
     const min = generateFavorites(FightingStyle.SlashingAttack, makeMockRng([0, 0.5, 0, 0]));
@@ -452,7 +455,9 @@ describe('mergeWeaponChart', () => {
   });
 
   it('returns undefined when there is no favorites record or no tally', () => {
-    expect(mergeWeaponChart(undefined, { x: { swings: 1, crits: 0, knockdowns: 0 } })).toBeUndefined();
+    expect(
+      mergeWeaponChart(undefined, { x: { swings: 1, crits: 0, knockdowns: 0 } })
+    ).toBeUndefined();
     expect(mergeWeaponChart(baseFav(), undefined)).toBeUndefined();
     expect(mergeWeaponChart(baseFav(), {})).toBeUndefined();
   });
@@ -478,7 +483,12 @@ describe('mergeWeaponChart', () => {
       scimitar: { swings: 5, crits: 1, knockdowns: 0 },
       short_spear: { swings: 15, crits: 7, knockdowns: 2 },
     });
-    expect(second?.chart?.scimitar).toEqual({ swings: 21, crits: 3, knockdowns: 1, critDamages: 0 });
+    expect(second?.chart?.scimitar).toEqual({
+      swings: 21,
+      crits: 3,
+      knockdowns: 1,
+      critDamages: 0,
+    });
     expect(second?.chart?.short_spear).toEqual({
       swings: 15,
       crits: 7,
@@ -568,13 +578,13 @@ describe('suspectedFavoriteWeapon', () => {
   });
 });
 
-  it('WS rhythm range follows the canon wall corpus (OE 5-9, AL 2-7)', () => {
-    // Canon composite: berserker sheets open OE 9; the 18-11 graduate favored
-    // a moderate OE with low AL — lows reach AL 2.
-    const max = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0.999, 0.999]));
-    expect(max.rhythm.oe).toBe(9);
-    expect(max.rhythm.al).toBe(7);
-    const min = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0, 0]));
-    expect(min.rhythm.oe).toBe(5);
-    expect(min.rhythm.al).toBe(2);
-  });
+it('WS rhythm range follows the canon wall corpus (OE 5-9, AL 2-7)', () => {
+  // Canon composite: berserker sheets open OE 9; the 18-11 graduate favored
+  // a moderate OE with low AL — lows reach AL 2.
+  const max = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0.999, 0.999]));
+  expect(max.rhythm.oe).toBe(9);
+  expect(max.rhythm.al).toBe(7);
+  const min = generateFavorites(FightingStyle.WallOfSteel, makeMockRng([0, 0.5, 0, 0]));
+  expect(min.rhythm.oe).toBe(5);
+  expect(min.rhythm.al).toBe(2);
+});

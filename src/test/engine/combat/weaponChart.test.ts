@@ -29,7 +29,12 @@ describe('weaponChart tally helpers', () => {
     recordWeaponSwing(f);
     recordWeaponCrit(f);
     recordWeaponKnockdown(f);
-    expect(f.weaponChart?.warhammer).toEqual({ swings: 2, crits: 1, knockdowns: 1, critDamages: 0 });
+    expect(f.weaponChart?.warhammer).toEqual({
+      swings: 2,
+      crits: 1,
+      knockdowns: 1,
+      critDamages: 0,
+    });
   });
 
   it('attributes tallies per weapon across a disarm weapon swap', () => {
@@ -39,7 +44,12 @@ describe('weaponChart tally helpers', () => {
     f.weaponId = 'fist';
     recordWeaponSwing(f);
     recordWeaponKnockdown(f);
-    expect(f.weaponChart?.warhammer).toEqual({ swings: 1, crits: 1, knockdowns: 0, critDamages: 0 });
+    expect(f.weaponChart?.warhammer).toEqual({
+      swings: 1,
+      crits: 1,
+      knockdowns: 0,
+      critDamages: 0,
+    });
     expect(f.weaponChart?.fist).toEqual({ swings: 1, crits: 0, knockdowns: 1, critDamages: 0 });
   });
 

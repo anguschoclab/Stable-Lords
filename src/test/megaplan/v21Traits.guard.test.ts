@@ -18,19 +18,54 @@ const SURVIVING: { id: string; tier: string; effect: Record<string, unknown>; we
   { id: 'gut_survivor', tier: 'Common', effect: { enduranceMult: 0.98 }, weight: 0.6 },
   { id: 'ash_breather', tier: 'Common', effect: { enduranceMult: 0.97 }, weight: 0.6 },
   // #1075
-  { id: 'orphan_iron_will', tier: 'Exceptional', effect: { defModEarly: 1, attModLate: 1 }, weight: 0.3 },
-  { id: 'gutter_shadow_striker', tier: 'Notable', effect: { iniModEarly: 1, attModEarly: 1 }, weight: 0.4 },
+  {
+    id: 'orphan_iron_will',
+    tier: 'Exceptional',
+    effect: { defModEarly: 1, attModLate: 1 },
+    weight: 0.3,
+  },
+  {
+    id: 'gutter_shadow_striker',
+    tier: 'Notable',
+    effect: { iniModEarly: 1, attModEarly: 1 },
+    weight: 0.4,
+  },
   // #1073
-  { id: 'orphan_shadow_fury', tier: 'Notable', effect: { attModLate: 1, dmgBonus: 1 }, weight: 0.5 },
+  {
+    id: 'orphan_shadow_fury',
+    tier: 'Notable',
+    effect: { attModLate: 1, dmgBonus: 1 },
+    weight: 0.5,
+  },
 ];
 
 const REJECTED = ['orphan_survivor_guilt_2', 'shadow_fighter_2', 'gutter_phantom_two'] as const;
 
 const TRAIT_EFFECT_KEYS = new Set([
-  'attMod', 'parMod', 'defMod', 'iniMod', 'ripMod', 'decMod', 'dmgBonus', 'enduranceMult',
-  'attModLowHp', 'defModLowHp', 'parModHighHp', 'defModEarly', 'iniModEarly', 'attModEarly',
-  'defModLate', 'attModLate', 'parModLate', 'iniModFresh', 'killWindowBonus',
-  'attModConsecutiveHits', 'disarmResist', 'unarmedDmgBonus', 'fightPlanMod', 'attrBonus',
+  'attMod',
+  'parMod',
+  'defMod',
+  'iniMod',
+  'ripMod',
+  'decMod',
+  'dmgBonus',
+  'enduranceMult',
+  'attModLowHp',
+  'defModLowHp',
+  'parModHighHp',
+  'defModEarly',
+  'iniModEarly',
+  'attModEarly',
+  'defModLate',
+  'attModLate',
+  'parModLate',
+  'iniModFresh',
+  'killWindowBonus',
+  'attModConsecutiveHits',
+  'disarmResist',
+  'unarmedDmgBonus',
+  'fightPlanMod',
+  'attrBonus',
 ]);
 
 describe('MEGAPLAN-V7: V21 narrative traits', () => {

@@ -25,10 +25,8 @@ describe('style matchup gate (F4)', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }) },
-      offerOver: { purse: 400,
-      hype: 80 },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Methodical' }) },
+      offerOver: { purse: 400, hype: 80 },
     });
     expect(
       evalBoutOffer({
@@ -46,10 +44,8 @@ describe('style matchup gate (F4)', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }) },
-      offerOver: { purse: 400,
-      hype: 80 },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Methodical' }) },
+      offerOver: { purse: 400, hype: 80 },
     });
     expect(
       evalBoutOffer({
@@ -75,24 +71,27 @@ describe('style matchup gate (F4)', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }),
-      agentMemory: makeAgentMemory({
-        opponentDossiers: {
-          opp_stable: {
-            lastSeenWeek: 4,
-            knownStyles: [],
-            estimatedThreat: 0.6,
-            recordVs: { w: 0, l: 0, k: 0 },
-            observedTells: { oe: 0.9, al: 0.2, samples: 4, lastSeenWeek: 4 },
+      rivalOver: {
+        treasury: 5000,
+        owner: makeOwner({ personality: 'Methodical' }),
+        agentMemory: makeAgentMemory({
+          opponentDossiers: {
+            opp_stable: {
+              lastSeenWeek: 4,
+              knownStyles: [],
+              estimatedThreat: 0.6,
+              recordVs: { w: 0, l: 0, k: 0 },
+              observedTells: { oe: 0.9, al: 0.2, samples: 4, lastSeenWeek: 4 },
+            },
           },
-        },
-      }) },
-      offerOver: { purse: 400,
-      hype: 80 },
+        }),
+      },
+      offerOver: { purse: 400, hype: 80 },
     });
     const state = makeGameState({ rivals: [rival, oppStable], absoluteWeek: 5, week: 5 });
-    expect<ReturnType<typeof evaluateBoutOffer>>(verdict(offer, rival, warrior, opponent, state)).toBe('Declined');
+    expect<ReturnType<typeof evaluateBoutOffer>>(
+      verdict(offer, rival, warrior, opponent, state)
+    ).toBe('Declined');
   });
 
   it('an Aggressive stable ignores an unfavorable matchup', () => {
@@ -101,10 +100,8 @@ describe('style matchup gate (F4)', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Aggressive' }) },
-      offerOver: { purse: 400,
-      hype: 80 },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Aggressive' }) },
+      offerOver: { purse: 400, hype: 80 },
     });
     expect(
       evalBoutOffer({

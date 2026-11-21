@@ -60,7 +60,9 @@ describe('resolveTacticCounters — canon Response↔Decise RPS', () => {
   it('decise attacker beats every defense except Response: keeps its decBonus edge', () => {
     for (const def of ['none', 'Dodge', 'Parry', 'Riposte'] as const) {
       const c = counter('Decisiveness', def);
-      expect(c.tacticIniA, `Decise vs ${def} should keep the edge`).toBe(offMods('Decisiveness').decBonus);
+      expect(c.tacticIniA, `Decise vs ${def} should keep the edge`).toBe(
+        offMods('Decisiveness').decBonus
+      );
       expect(c.tacticIniA).toBeGreaterThan(0);
     }
   });
@@ -196,11 +198,7 @@ describe('simulateFight — decise is live and Response counters it', () => {
       makePlan(ST, { OE: 10, AL: 9, offensiveTactic: 'Decisiveness' }),
       makePlan(ST, { OE: 10, AL: 9 })
     );
-    const noneWins = winsFor(
-      'A',
-      makePlan(ST, { OE: 10, AL: 9 }),
-      makePlan(ST, { OE: 10, AL: 9 })
-    );
+    const noneWins = winsFor('A', makePlan(ST, { OE: 10, AL: 9 }), makePlan(ST, { OE: 10, AL: 9 }));
     expect(deciseWins).toBeGreaterThan(noneWins);
   });
 

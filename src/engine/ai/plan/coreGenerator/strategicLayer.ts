@@ -26,7 +26,10 @@ import {
   getAITactics,
 } from '@/engine/ai/plan/levers';
 import { aiFeature } from '@/engine/ai/featureFlags';
-import { getDefensiveSuitability, getOffensiveSuitability } from '@/engine/strategy/tacticSuitability';
+import {
+  getDefensiveSuitability,
+  getOffensiveSuitability,
+} from '@/engine/strategy/tacticSuitability';
 import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
 import type { FightingStyle } from '@/types/shared.types';
 import type { PlanModifiers } from './modifiers';
@@ -229,12 +232,7 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   // Phase-stratified effort curves — opening is conservative, late is
   // personality-modified; young Walls of Steel open like offensives (canon:
   // "run them offensively while they are young").
-  plan.phases = buildPhasePlan(
-    plan,
-    personality,
-    w.style,
-    fightEquivalentsOf(w)
-  );
+  plan.phases = buildPhasePlan(plan, personality, w.style, fightEquivalentsOf(w));
 
   // Desperate plan — wired into resolution.ts at HP<30% or END<20%
   plan.desperatePlan = buildDesperatePlan(plan, personality);

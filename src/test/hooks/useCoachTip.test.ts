@@ -18,7 +18,6 @@ vi.mock('@/state/useGameStore', () => ({
   useWorldState: () => storeState,
 }));
 
-
 function setStore(overrides: Partial<GameState> = {}) {
   storeState = {
     ftueComplete: true,

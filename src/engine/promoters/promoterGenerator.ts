@@ -135,9 +135,7 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
       // Promoters book any venue at or below their tier: Local → 1,
       // Regional → 1–2, National/Legendary → 1–3. Mid/high venues need a
       // carrier tier, or they sit dark the whole season.
-      arenaPool: [
-        ...arenaPoolForMaxTier(tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3),
-      ],
+      arenaPool: [...arenaPoolForMaxTier(tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3)],
       history: {
         totalPursePaid: 0,
         notableBouts: [],

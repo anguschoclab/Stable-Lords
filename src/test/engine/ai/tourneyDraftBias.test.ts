@@ -6,7 +6,7 @@ import type { PoolWarrior } from '@/types/state.types';
 
 /** Minimal pool-candidate shape — the fields tourneyDraftBonus reads. */
 const cand = (attrs: Record<string, number>, style: FightingStyle): PoolWarrior =>
-  ({ id: `c_${style}`, style, attributes: attrs } as never);
+  ({ id: `c_${style}`, style, attributes: attrs }) as never;
 
 describe('tourneyDraftBonus — archetype-driven tournament draft bias', () => {
   it('returns 0 outside a tournament campaign', () => {

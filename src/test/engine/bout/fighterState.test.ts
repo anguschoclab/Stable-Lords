@@ -587,9 +587,7 @@ describe('fighterState', () => {
       });
       const plan = createMockPlan();
       expect(createFighterState('A', plan, clumsy).coordination).toBe('Clumsy');
-      expect(createFighterState('A', plan, vhc).coordination).toBe(
-        'Very Highly Coordinated'
-      );
+      expect(createFighterState('A', plan, vhc).coordination).toBe('Very Highly Coordinated');
     });
 
     it('carries the off-hand weapon id when the loadout dual-wields', () => {

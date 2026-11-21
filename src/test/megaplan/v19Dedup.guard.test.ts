@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  candidateExists,
-  fileText,
-  occurrences,
-} from './_probeHelpers';
+import { candidateExists, fileText, occurrences } from './_probeHelpers';
 
 /**
  * MEGAPLAN-V19 test-tier deduplication spec (authored test-first).
@@ -117,8 +113,7 @@ describe('megaplan V19: test-tier deduplication', () => {
     expect(wrapperOffenders, 'local venue-warrior wrappers still inline').toEqual([]);
 
     const fixtureText =
-      fileText('src/test/_fixtures/factories.ts') +
-      fileText('src/test/_fixtures/determinism.ts');
+      fileText('src/test/_fixtures/factories.ts') + fileText('src/test/_fixtures/determinism.ts');
     expect(fixtureText, 'fixtures must export makeFlatWarrior').toMatch(/makeFlatWarrior/);
     const flatRe =
       /attrs:\s*\{\s*ST:\s*15,\s*CN:\s*15,\s*SZ:\s*15,\s*WT:\s*15,\s*WL:\s*15,\s*SP:\s*15,\s*DF:\s*15\s*\}/g;

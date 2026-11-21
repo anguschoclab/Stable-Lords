@@ -86,7 +86,6 @@ describe('weaponArmor', () => {
   });
 
   describe('applyArmorTypeMod additional armor types', () => {
-
     it('applies ringmail multipliers — crushing absorb, thin-blade weak', () => {
       // longsword = slash, ringmail: no slash baseline → identity
       expect(applyArmorTypeMod(100, 'longsword', 'ARM')).toBe(100);

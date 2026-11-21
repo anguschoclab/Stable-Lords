@@ -80,9 +80,7 @@ describe('getCanonicalCrumbs — /warrior/$id', () => {
 describe('getCanonicalCrumbs — other detail routes', () => {
   it('/world/stable/$id → World › Scouting › stable name', () => {
     const s = makeState({
-      rivals: [
-        makeIronWolvesRival(),
-      ],
+      rivals: [makeIronWolvesRival()],
     });
     const crumbs = getCanonicalCrumbs('/world/stable/r1', s as never)!;
     expect(crumbs.map((c) => c.label)).toEqual(['World', 'Scouting', 'Iron Wolves']);

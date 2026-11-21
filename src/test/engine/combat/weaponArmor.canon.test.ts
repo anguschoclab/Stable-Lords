@@ -41,12 +41,8 @@ describe('lunging weapons knock down best (Assur)', () => {
 
 describe('two-handed weapons tire when parrying (Assur)', () => {
   it('2H weapons pay an endurance surcharge on the parry side', () => {
-    expect(twoHandedParryEnduranceMult('greatsword')).toBe(
-      TWOHANDED_PARRY_ENDURANCE_SURCHARGE
-    );
-    expect(twoHandedParryEnduranceMult('halberd')).toBe(
-      TWOHANDED_PARRY_ENDURANCE_SURCHARGE
-    );
+    expect(twoHandedParryEnduranceMult('greatsword')).toBe(TWOHANDED_PARRY_ENDURANCE_SURCHARGE);
+    expect(twoHandedParryEnduranceMult('halberd')).toBe(TWOHANDED_PARRY_ENDURANCE_SURCHARGE);
     expect(twoHandedParryEnduranceMult('scimitar')).toBe(1);
   });
 });

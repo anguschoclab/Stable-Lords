@@ -15,7 +15,11 @@ import {
 
 const CANON_SPREADS: { style: FightingStyle; name: RegExp; spread: number[] }[] = [
   // WS low-will tank-riposte line (article order ST-CN-SZ-WT-WL-SP-DF).
-  { style: FightingStyle.WallOfSteel, name: /21-15|flagship|perfect/i, spread: [21, 15, 6, 11, 7, 13, 11] },
+  {
+    style: FightingStyle.WallOfSteel,
+    name: /21-15|flagship|perfect/i,
+    spread: [21, 15, 6, 11, 7, 13, 11],
+  },
   { style: FightingStyle.WallOfSteel, name: /./, spread: [17, 16, 5, 11, 8, 16, 11] },
   { style: FightingStyle.WallOfSteel, name: /./, spread: [21, 13, 5, 11, 10, 13, 11] },
   { style: FightingStyle.WallOfSteel, name: /./, spread: [17, 10, 8, 15, 10, 7, 17] },
@@ -32,15 +36,27 @@ const CANON_SPREADS: { style: FightingStyle; name: RegExp; spread: number[] }[] 
 const sum = (a: Attributes) => ATTRIBUTE_KEYS.reduce((s, k) => s + a[k], 0);
 
 describe('V25 fighter concepts — canon spreads', () => {
-  it.each(CANON_SPREADS)('$style concept $spread ported with 84-pt canonStats', ({ style, spread }) => {
-    const [ST, CN, SZ, WT, WL, SP, DF] = spread as [
-      number, number, number, number, number, number, number,
-    ];
-    const canon: Attributes = { ST, CN, SZ, WT, WL, SP, DF };
-    expect(FIGHTER_CONCEPTS[style].concepts.some((c) => {
-      return ATTRIBUTE_KEYS.every((k) => c.canonStats[k] === canon[k]);
-    }), `no concept with canonStats ${spread.join('-')} on ${style}`).toBe(true);
-  });
+  it.each(CANON_SPREADS)(
+    '$style concept $spread ported with 84-pt canonStats',
+    ({ style, spread }) => {
+      const [ST, CN, SZ, WT, WL, SP, DF] = spread as [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+      ];
+      const canon: Attributes = { ST, CN, SZ, WT, WL, SP, DF };
+      expect(
+        FIGHTER_CONCEPTS[style].concepts.some((c) => {
+          return ATTRIBUTE_KEYS.every((k) => c.canonStats[k] === canon[k]);
+        }),
+        `no concept with canonStats ${spread.join('-')} on ${style}`
+      ).toBe(true);
+    }
+  );
 
   it.each(CANON_SPREADS)('each 84-pt canonStats sums to 84', ({ spread }) => {
     expect(spread.reduce((a, b) => a + b, 0)).toBe(84);

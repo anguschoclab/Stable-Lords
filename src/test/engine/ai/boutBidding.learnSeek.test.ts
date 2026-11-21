@@ -46,11 +46,7 @@ describe('learningSeekBonus — teach matchup', () => {
       style: FightingStyle.LungingAttack,
       career: { wins: 8, losses: 4, kills: 0 },
     });
-    const base = learningSeekBonus(
-      { ...proposer, learnedSkills: { INI: 0 } },
-      teacher,
-      studious()
-    );
+    const base = learningSeekBonus({ ...proposer, learnedSkills: { INI: 0 } }, teacher, studious());
     expect(learningSeekBonus(proposer, teacher, studious())).toBe(base);
   });
 });

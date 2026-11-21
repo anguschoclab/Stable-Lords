@@ -45,9 +45,7 @@ describe('eslint config smoke test', () => {
     );
     expect(tsConfig).toBeDefined();
 
-    const loggerConfig = configs.find(
-      (c) => c.files?.some((f) => f === 'src/utils/logger.ts')
-    );
+    const loggerConfig = configs.find((c) => c.files?.some((f) => f === 'src/utils/logger.ts'));
     expect(loggerConfig?.rules?.['no-console']).toBe('off');
   });
 });

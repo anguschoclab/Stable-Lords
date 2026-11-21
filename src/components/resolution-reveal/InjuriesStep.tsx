@@ -74,7 +74,11 @@ function CasualtySection({
 export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
   return (
     <StepShell className="flex flex-col gap-6">
-      <StepHeader icon={Activity} iconClassName="text-arena-gold" title={uiMeta.fanfare.report_medical} />
+      <StepHeader
+        icon={Activity}
+        iconClassName="text-arena-gold"
+        title={uiMeta.fanfare.report_medical}
+      />
 
       {deaths.length > 0 && (
         <CasualtySection title="Fallen Warriors" icon={Skull} items={deaths} tone="destructive" />

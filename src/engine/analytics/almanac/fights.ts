@@ -26,7 +26,12 @@ const fightRow = (f: FightSummary, extra: Partial<AlmanacRow>): AlmanacRow => ({
 });
 
 /** Hall-of-fame label archive — newest entries first, append order within a week. */
-function hallBoard(input: AlmanacInput, label: HallEntry['label'], id: string, title: string): AlmanacBoard {
+function hallBoard(
+  input: AlmanacInput,
+  label: HallEntry['label'],
+  id: string,
+  title: string
+): AlmanacBoard {
   const fightById = new Map((input.arenaHistory ?? []).map((f) => [f.id as string, f]));
   const entries = (input.hallOfFame ?? []).filter((e) => e.label === label);
   const rows = [...entries].reverse().map((e, i): AlmanacRow => {
@@ -60,7 +65,12 @@ const upsetsBoard = (fights: FightSummary[], n: number): AlmanacBoard =>
           return { f, gap: loserFame - winnerFame };
         })
         .filter(({ gap }) => gap > 0)
-        .sort(by(numDesc(({ gap }) => gap), strAsc(({ f }) => f.id as string)))
+        .sort(
+          by(
+            numDesc(({ gap }) => gap),
+            strAsc(({ f }) => f.id as string)
+          )
+        )
         .map(({ f, gap }) => fightRow(f, { detail: `fame gap ${gap}`, value: gap })),
       n
     )
@@ -118,7 +128,12 @@ const fameBoutsBoard = (fights: FightSummary[], n: number): AlmanacBoard =>
       fights
         .map((f) => ({ f, delta: (f.fameDeltaA ?? 0) + (f.fameDeltaD ?? 0) }))
         .filter(({ delta }) => delta > 0)
-        .sort(by(numDesc(({ delta }) => delta), strAsc(({ f }) => f.id as string)))
+        .sort(
+          by(
+            numDesc(({ delta }) => delta),
+            strAsc(({ f }) => f.id as string)
+          )
+        )
         .map(({ f, delta }) => fightRow(f, { value: delta, valueLabel: 'fame' })),
       n
     )
@@ -165,7 +180,12 @@ function rivalriesBoard(input: AlmanacInput, fights: FightSummary[], n: number):
 
   const rows = [...pairCounts.entries()]
     .filter(([, p]) => p.count >= 3)
-    .sort(by(numDesc(([, p]) => p.count), strAsc(([key]) => key)))
+    .sort(
+      by(
+        numDesc(([, p]) => p.count),
+        strAsc(([key]) => key)
+      )
+    )
     .map(([key, p]) => ({
       key: `pair-${key}`,
       name: `${nameFor(p.a, 'a')} vs ${nameFor(p.d, 'd')}`,

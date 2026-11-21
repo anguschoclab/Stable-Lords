@@ -242,7 +242,15 @@ export function computeTrainingImpact(
     const warrior = currentRoster.get(assignment.warriorId);
     if (!warrior) continue;
     const outcome = processAssignment({
-      assignment, warrior, healingBonus, currentRoster, seasonalGrowth, results, state, rng, weather,
+      assignment,
+      warrior,
+      healingBonus,
+      currentRoster,
+      seasonalGrowth,
+      results,
+      state,
+      rng,
+      weather,
     });
     currentRoster = outcome.currentRoster;
     seasonalGrowth = outcome.seasonalGrowth;

@@ -16,15 +16,15 @@ Validates the Stable Lords narrative system for integrity, tag reference resolut
 
 ## Test Groups
 
-| Filter keyword | What it targets                                                                      |
-| -------------- | ------------------------------------------------------------------------------------ |
-| (none)         | All narrative validation tests                                                       |
-| combat         | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts          |
-| gazette        | src/test/engine/gazette/gazetteNarrative.test.ts + gazetteDetections.test.ts         |
-| status         | src/test/engine/narrative/narrativeStatus.test.ts                                    |
-| bout           | src/test/engine/narrative/narrativePostBout.test.ts                                  |
-| template       | src/test/engine/narrative/templateHelpers.test.ts                                    |
-| archive        | scripts/narrative_validate.ts (tag reference validation)                             |
+| Filter keyword | What it targets                                                              |
+| -------------- | ---------------------------------------------------------------------------- |
+| (none)         | All narrative validation tests                                               |
+| combat         | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts  |
+| gazette        | src/test/engine/gazette/gazetteNarrative.test.ts + gazetteDetections.test.ts |
+| status         | src/test/engine/narrative/narrativeStatus.test.ts                            |
+| bout           | src/test/engine/narrative/narrativePostBout.test.ts                          |
+| template       | src/test/engine/narrative/templateHelpers.test.ts                            |
+| archive        | scripts/narrative_validate.ts (tag reference validation)                     |
 
 ## Commands
 

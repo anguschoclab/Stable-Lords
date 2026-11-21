@@ -15,14 +15,8 @@ import { tournamentIdFromContractId } from '@/engine/bout/core/pairings';
 import type { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { collectBoutEvents, type BoutShardOutput } from '@/engine/pool/shardTypes';
 import type { StateImpact } from '@/engine/impacts';
-import type {
-  ShardAdvancePayload,
-  ShardSyncStage,
-} from '@/engine/pool/syncedShardState';
-import {
-  createSyncCoordinator,
-  type SyncCoordinator,
-} from '@/engine/pool/syncCoordinator';
+import type { ShardAdvancePayload, ShardSyncStage } from '@/engine/pool/syncedShardState';
+import { createSyncCoordinator, type SyncCoordinator } from '@/engine/pool/syncCoordinator';
 import { shardStateHash } from '@/engine/pool/stateHash';
 
 /**

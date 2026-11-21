@@ -38,7 +38,9 @@ describe('readFileInput', () => {
 
     readFileInput(changeEvent(new File(['x'], 'pack.json')), onText, onError);
 
-    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'Failed to read file.' }));
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Failed to read file.' })
+    );
     expect(onText).not.toHaveBeenCalled();
   });
 

@@ -9,9 +9,7 @@ import type { GameState, WarriorId } from '@/types/game';
 import { type FightSummary } from '@/types/game';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { makeFightSummary as fixtureFightSummary,
-  makeTrainer,
-} from '@/test/_fixtures/factories';
+import { makeFightSummary as fixtureFightSummary, makeTrainer } from '@/test/_fixtures/factories';
 import { makeEconomyWarrior } from '@/test/_fixtures/statWarrior';
 
 const makeTestWarrior = makeEconomyWarrior;
@@ -700,9 +698,7 @@ describe('Economy Engine', () => {
       const input = makeEconomyInput({
         roster: [makeTestWarrior({ id: 'w1' as WarriorId, fame: 0 })],
         weather: 'Blizzard',
-        trainers: [
-          makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 }),
-        ],
+        trainers: [makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 })],
         trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
       const impact = computeEconomyImpact(input);
@@ -837,9 +833,7 @@ describe('Economy Engine', () => {
         arenaHistory: [
           makeFight(5, { warriorIdA: 'p1', winner: 'A', fameA: 50, arenaId: 'standard_arena' }),
         ],
-        trainers: [
-          makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 }),
-        ],
+        trainers: [makeTrainer({ name: 'T', fame: 1, contractWeeksLeft: 5 })],
         trainingAssignments: [{ warriorId: 'p1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
       const breakdown = computeWeeklyBreakdown(input);

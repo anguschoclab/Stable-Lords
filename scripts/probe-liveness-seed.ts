@@ -75,7 +75,11 @@ const noviceTreas = byTier.get('Novice') ?? [];
 const gradient = med(topTreas) / Math.max(1, med(noviceTreas));
 const coherence = coherentWeeks / Math.max(1, objWeeks);
 const pass =
-  topTreas.length > 10 && noviceTreas.length > 10 && gradient > 1.3 && objWeeks > 1000 && coherence > 0.12;
+  topTreas.length > 10 &&
+  noviceTreas.length > 10 &&
+  gradient > 1.3 &&
+  objWeeks > 1000 &&
+  coherence > 0.12;
 console.log(
   `seed=${seed} masterN=${topTreas.length} noviceN=${noviceTreas.length} ` +
     `medM=${med(topTreas).toFixed(0)} medN=${med(noviceTreas).toFixed(0)} ` +

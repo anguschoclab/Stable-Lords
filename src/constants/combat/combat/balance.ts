@@ -231,7 +231,6 @@ export const BLOODFEUD_PRIORITY = 500;
  *  ambidextrous — handedness bypasses the VHC stat profile. */
 export const OFFHAND_AMBI_GATE = true;
 
-
 // ─── Trait Generation ───────────────────────────────────────────────────────
 /**
  * Synergy multiplier for archetype-matching traits

@@ -6,8 +6,14 @@ import { makeWarrior, makeRival, makeOwner } from '@/test/_fixtures/factories';
 
 /** Characterization pins for the in-loop find() → indexBy refactor. */
 describe('buildStableRows', () => {
-  const playerWarrior = makeWarrior({ id: 'pw1' as WarriorId, career: { wins: 4, losses: 1, kills: 1 } });
-  const rivalWarrior = makeWarrior({ id: 'rw1' as WarriorId, career: { wins: 2, losses: 3, kills: 0 } });
+  const playerWarrior = makeWarrior({
+    id: 'pw1' as WarriorId,
+    career: { wins: 4, losses: 1, kills: 1 },
+  });
+  const rivalWarrior = makeWarrior({
+    id: 'rw1' as WarriorId,
+    career: { wins: 2, losses: 3, kills: 0 },
+  });
   const rival = makeRival({
     id: 'r1' as StableId,
     owner: makeOwner({ id: 'r1' as StableId, stableName: 'Dark Legion', name: 'Morgath' }),
@@ -22,7 +28,9 @@ describe('buildStableRows', () => {
   };
 
   it('resolves rival mottos from the template matched by stableName', () => {
-    const templates = [{ stableName: 'Dark Legion', motto: 'Death Before Dishonor' }] as StableTemplate[];
+    const templates = [
+      { stableName: 'Dark Legion', motto: 'Death Before Dishonor' },
+    ] as StableTemplate[];
     const rows = buildStableRows(state, { field: 'name', dir: 'asc' }, templates);
     const rivalRow = rows.find((r) => r.id === 'r1')!;
     expect(rivalRow.motto).toBe('Death Before Dishonor');
@@ -47,7 +55,13 @@ describe('buildStableRows', () => {
     const injured = makeWarrior({ id: 'rw2' as WarriorId, status: 'Injured' as any });
     const s = {
       ...state,
-      rivals: [makeRival({ id: 'r2' as StableId, owner: makeOwner({ id: 'r2' as StableId }), roster: [rivalWarrior, injured] })],
+      rivals: [
+        makeRival({
+          id: 'r2' as StableId,
+          owner: makeOwner({ id: 'r2' as StableId }),
+          roster: [rivalWarrior, injured],
+        }),
+      ],
     };
     const rows = buildStableRows(s, { field: 'wins', dir: 'desc' }, []);
     expect(rows[0]!.isPlayer).toBe(true);
@@ -59,8 +73,16 @@ describe('buildStableRows', () => {
 });
 
 describe('buildWarriorRows', () => {
-  const playerWarrior = makeWarrior({ id: 'pw1' as WarriorId, name: 'Alpha', career: { wins: 5, losses: 0, kills: 2 } });
-  const rivalWarrior = makeWarrior({ id: 'rw1' as WarriorId, name: 'Beta', career: { wins: 1, losses: 4, kills: 0 } });
+  const playerWarrior = makeWarrior({
+    id: 'pw1' as WarriorId,
+    name: 'Alpha',
+    career: { wins: 5, losses: 0, kills: 2 },
+  });
+  const rivalWarrior = makeWarrior({
+    id: 'rw1' as WarriorId,
+    name: 'Beta',
+    career: { wins: 1, losses: 4, kills: 0 },
+  });
   const deadWarrior = makeWarrior({ id: 'dw1' as WarriorId, status: 'Dead' as any });
   const rival = makeRival({
     id: 'r1' as StableId,

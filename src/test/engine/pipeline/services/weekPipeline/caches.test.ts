@@ -1,5 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { impactsAffectWeekCaches, buildWeekCaches } from '@/engine/pipeline/services/weekPipeline/caches';
+import {
+  impactsAffectWeekCaches,
+  buildWeekCaches,
+} from '@/engine/pipeline/services/weekPipeline/caches';
 import { GameState, Warrior } from '@/types/game';
 import * as warriorLookup from '@/engine/core/warriorLookup';
 import { WarriorId } from '@/types/shared.types';
@@ -26,15 +29,9 @@ describe('weekPipeline/caches', () => {
       const mockState = {
         player: { id: 'player-stable' },
         roster: [{ id: 'w1' } as Warrior],
-        rivals: [
-          { id: 'rival-1', roster: [{ id: 'w2' } as Warrior] },
-        ],
-        rivalries: [
-          { stableIdA: 'player-stable', stableIdB: 'rival-1' },
-        ],
-        ownerGrudges: [
-          { ownerIdA: 'o1', ownerIdB: 'o2' },
-        ]
+        rivals: [{ id: 'rival-1', roster: [{ id: 'w2' } as Warrior] }],
+        rivalries: [{ stableIdA: 'player-stable', stableIdB: 'rival-1' }],
+        ownerGrudges: [{ ownerIdA: 'o1', ownerIdB: 'o2' }],
       } as unknown as GameState;
 
       buildWeekCaches(mockState);
@@ -47,8 +44,14 @@ describe('weekPipeline/caches', () => {
       expect(mockState.warriorMap?.get('w2' as WarriorId)).toEqual({ id: 'w2' });
 
       expect(mockState.warriorToStableMap).toBeDefined();
-      expect(mockState.warriorToStableMap?.get('w1')).toEqual({ stableId: 'player-stable', isPlayer: true });
-      expect(mockState.warriorToStableMap?.get('w2')).toEqual({ stableId: 'rival-1', isPlayer: false });
+      expect(mockState.warriorToStableMap?.get('w1')).toEqual({
+        stableId: 'player-stable',
+        isPlayer: true,
+      });
+      expect(mockState.warriorToStableMap?.get('w2')).toEqual({
+        stableId: 'rival-1',
+        isPlayer: false,
+      });
 
       expect(mockState.rivalMap).toBeDefined();
       expect(mockState.rivalMap?.get('rival-1')).toEqual(mockState.rivals![0]);

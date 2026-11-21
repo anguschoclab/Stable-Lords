@@ -81,9 +81,7 @@ describe('StewardStep', () => {
   it('renders the empty-state copy when the report has no gains or aging events', () => {
     render(
       <StewardStep
-        stewardReport={
-          { treasuryChange: 0, trainingGains: [], agingEvents: [] } as never
-        }
+        stewardReport={{ treasuryChange: 0, trainingGains: [], agingEvents: [] } as never}
       />
     );
     expect(screen.getByText('No training gains or age marks this week.')).toBeInTheDocument();

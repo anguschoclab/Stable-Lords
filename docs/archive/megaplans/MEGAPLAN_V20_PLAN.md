@@ -7,7 +7,7 @@ fallback `megaplan/v20` integration branch + PR if push is rejected).
 **Constraints:** zero save-file/backwards-compat — `SAVE_STATE_VERSION`
 (`src/constants/core/core.ts`) free to bump if any merge alters persisted
 shape (none currently do — verify per merge). Strict **test-first
-invariant** — Phase 3 commits the *complete* spec inventory before the
+invariant** — Phase 3 commits the _complete_ spec inventory before the
 first merge; merges turn RED→GREEN.
 **Safety:** restore tag `pre-megaplan-v20`; per-branch backup refs
 `refs/megaplan/v20/*` survive remote-branch deletion.
@@ -21,26 +21,26 @@ generated files (`routeTree.gen.ts`, `runnerGroups.json`,
 
 ## Validation ledger — plan claims audited against live code (2026-10-23)
 
-| # | Claim | Verdict | Evidence |
-| - | ----- | ------- | -------- |
-| V1 | MEGAPLAN house conventions | APPROVED | V15/V18/V19 docs + `pre/post-megaplan-v*` tags |
-| V2 | 6 remote branches / 5 open PRs (1065–1069), all CI green | APPROVED | `gh pr list`/`checks`; `git branch -r` |
-| V3 | Zero substantive PR comments (Jules boilerplate only) | APPROVED | `gh pr view`/`pulls/N/comments` — empty inline on all 5 |
-| V4 | Orphan `7dd7225c` (#1059 closed) = verbatim intra-array dup | APPROVED | `git diff` — existing strings re-appended; final dry-run Phase 1 |
-| V5 | #1066 wiring real (not #1048-class) | APPROVED | `chaos_squall_exposure`→`offseason_events`→`EVENT_HANDLERS` (seasonal.ts:100–127); `mysterious_trader`→`events`→`narrativeContent.events` (index.ts:19)→EventPass:197 |
-| V6 | #1067 roster-id selector correct | APPROVED | `roster` only feeds `playerWarriorIds` (WeeklyDigestMini.tsx:21) |
-| V7 | #1069 flatMap projection correct | APPROVED | 1D primitive shallow-compare valid; stride `as` casts cleaned at merge |
-| V8 | #1068 trait effects mechanically real | APPROVED | keys in `TraitEffect` (types.ts:27–52), consumed `mods.ts:84–144`; `killWindowBonus:0.01` inside <0.05 guard; `EXPECTED_COUNT` 178 consistent |
-| V9 | Conflict map #1065×#1068 same 4 tails; #1068×#1066 `offseason.json` | APPROVED | identical append positions; #1068 offseason hunks formatting-only, non-overlapping |
-| V10 | F1 `Events` interface stale (2 of 5 keys) | APPROVED+scoped | `types/narrative/events.ts:14–17`; sole consumer EventPass.ts:197 — fix contained |
-| V11 | Handler↔JSON offseason parity holds | APPROVED | comm-diff: 60 `effectType`s ≡ 60 `EVENT_HANDLERS` keys |
-| V12 | **F4 `effectType` union drift** | NEW FINDING | `cursed_treasure_discovery` in JSON + `EVENT_HANDLERS` (seasonal.ts:70) but missing from 59-member union (`offseasonEvents/types.ts:13–72`); hidden by `as unknown` (seasonal.ts:101) |
-| V13 | `narrative_validate` guards event wiring | DISPROVED | `narrative_validate.ts:126` checks `REQUIRED_KEYS` presence only — parity guard is a genuine gap |
-| V14 | Bolt targets need new characterization files | CORRECTED | `StyleMeterTable.test.tsx` + `WeeklyDigestMini.test.tsx` exist → extend, not create |
-| V15 | #1066 test coverage complete | CORRECTED | ships trader spec (call-order mock — brittle, accepted) but **no `handleChaosSquallExposure` spec** → authored in Phase 3 |
-| V16 | Slow suite auto-covers new traits | DISPROVED | `traitBalance.slow.test.ts:114–139` hardcoded lists — new traits need explicit list adds |
-| V17 | Coverage floors 84/74/78/85.5 | APPROVED | `vitest.config.ts:67–71` |
-| V18 | All cited scripts exist | APPROVED | `ls scripts/` — 13 scanners + soak (needs `bun`) + dedupe tools |
+| #   | Claim                                                               | Verdict         | Evidence                                                                                                                                                                              |
+| --- | ------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| V1  | MEGAPLAN house conventions                                          | APPROVED        | V15/V18/V19 docs + `pre/post-megaplan-v*` tags                                                                                                                                        |
+| V2  | 6 remote branches / 5 open PRs (1065–1069), all CI green            | APPROVED        | `gh pr list`/`checks`; `git branch -r`                                                                                                                                                |
+| V3  | Zero substantive PR comments (Jules boilerplate only)               | APPROVED        | `gh pr view`/`pulls/N/comments` — empty inline on all 5                                                                                                                               |
+| V4  | Orphan `7dd7225c` (#1059 closed) = verbatim intra-array dup         | APPROVED        | `git diff` — existing strings re-appended; final dry-run Phase 1                                                                                                                      |
+| V5  | #1066 wiring real (not #1048-class)                                 | APPROVED        | `chaos_squall_exposure`→`offseason_events`→`EVENT_HANDLERS` (seasonal.ts:100–127); `mysterious_trader`→`events`→`narrativeContent.events` (index.ts:19)→EventPass:197                 |
+| V6  | #1067 roster-id selector correct                                    | APPROVED        | `roster` only feeds `playerWarriorIds` (WeeklyDigestMini.tsx:21)                                                                                                                      |
+| V7  | #1069 flatMap projection correct                                    | APPROVED        | 1D primitive shallow-compare valid; stride `as` casts cleaned at merge                                                                                                                |
+| V8  | #1068 trait effects mechanically real                               | APPROVED        | keys in `TraitEffect` (types.ts:27–52), consumed `mods.ts:84–144`; `killWindowBonus:0.01` inside <0.05 guard; `EXPECTED_COUNT` 178 consistent                                         |
+| V9  | Conflict map #1065×#1068 same 4 tails; #1068×#1066 `offseason.json` | APPROVED        | identical append positions; #1068 offseason hunks formatting-only, non-overlapping                                                                                                    |
+| V10 | F1 `Events` interface stale (2 of 5 keys)                           | APPROVED+scoped | `types/narrative/events.ts:14–17`; sole consumer EventPass.ts:197 — fix contained                                                                                                     |
+| V11 | Handler↔JSON offseason parity holds                                 | APPROVED        | comm-diff: 60 `effectType`s ≡ 60 `EVENT_HANDLERS` keys                                                                                                                                |
+| V12 | **F4 `effectType` union drift**                                     | NEW FINDING     | `cursed_treasure_discovery` in JSON + `EVENT_HANDLERS` (seasonal.ts:70) but missing from 59-member union (`offseasonEvents/types.ts:13–72`); hidden by `as unknown` (seasonal.ts:101) |
+| V13 | `narrative_validate` guards event wiring                            | DISPROVED       | `narrative_validate.ts:126` checks `REQUIRED_KEYS` presence only — parity guard is a genuine gap                                                                                      |
+| V14 | Bolt targets need new characterization files                        | CORRECTED       | `StyleMeterTable.test.tsx` + `WeeklyDigestMini.test.tsx` exist → extend, not create                                                                                                   |
+| V15 | #1066 test coverage complete                                        | CORRECTED       | ships trader spec (call-order mock — brittle, accepted) but **no `handleChaosSquallExposure` spec** → authored in Phase 3                                                             |
+| V16 | Slow suite auto-covers new traits                                   | DISPROVED       | `traitBalance.slow.test.ts:114–139` hardcoded lists — new traits need explicit list adds                                                                                              |
+| V17 | Coverage floors 84/74/78/85.5                                       | APPROVED        | `vitest.config.ts:67–71`                                                                                                                                                              |
+| V18 | All cited scripts exist                                             | APPROVED        | `ls scripts/` — 13 scanners + soak (needs `bun`) + dedupe tools                                                                                                                       |
 
 ## Phase 0 — Safety, baseline & docs ✅ DONE
 
@@ -80,17 +80,17 @@ V19 baselined 2026-10-22 → delta-verified re-read, honestly recorded:
 Strict test-first: entire inventory authored + committed before the first
 merge; merge-blocked specs are RED at commit, parity specs GREEN.
 
-| Spec | Covers | State at commit | Turns green |
-| ---- | ------ | --------------- | ----------- |
-| `v20Wiring.guard.test.ts` — offseason parity | JSON `effectType`s ⊆ `EVENT_HANDLERS` keys AND handlers ⊆ JSON (1:1 per V11) | GREEN ratchet | — |
-| same — canonical tuple | `cursed_treasure_discovery` + `chaos_squall_exposure` ∈ `OFFSEASON_EFFECT_TYPES`; JSON ⊆ tuple | RED (F4) | Phase 5 F4 |
-| same — weekly events | `narrativeContent.events` ⊇ {tavern_brawl, celestial_blessing, lost_relic, mysterious_patron, goblin_merchant, mysterious_trader} | RED (awaits #1066) | Phase 4 step 3 |
-| same — chaos squall | `EVENT_HANDLERS['chaos_squall_exposure']` + JSON entry + handler grants xp:30/fatigue:15 via `withChosenWarrior` (V15 gap) | RED (awaits #1066) | Phase 4 step 3 |
-| `v20Traits.guard.test.ts` | `dark_survivor`/`gutter_brawler`/`street_specter` ∈ `TRAITS` + `LEGACY_TRAIT_ORDER`; effect fields spec'd; key whitelist = `TraitEffect`; `traitDedup` 178 | RED (awaits #1068) | Phase 4 step 4 |
-| `v20Narrative.guard.test.ts` | union-merged `origins`/`childhoodTraits`/`definingMoments`/`loreBackfill2` contain all post-merge entries, zero intra-pool dups | RED (awaits #1065/#1068) | Phase 4 steps 4–5 |
-| `traitBalance.slow` lists | `dark_survivor`→PERSONALITY, `gutter_brawler`/`street_specter`→COMBAT+PERSONALITY (V16) | test-only; green either way | Phase 6 |
-| extend `StyleMeterTable.test.tsx`/`WeeklyDigestMini.test.tsx` | behavioral pins identical pre/post perf swap (V14) | GREEN before & after | invariant |
-| F1 type spec | `Events`/`offseason_events` tightening assertions | RED until fix | Phase 5 |
+| Spec                                                          | Covers                                                                                                                                                     | State at commit             | Turns green       |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------- |
+| `v20Wiring.guard.test.ts` — offseason parity                  | JSON `effectType`s ⊆ `EVENT_HANDLERS` keys AND handlers ⊆ JSON (1:1 per V11)                                                                               | GREEN ratchet               | —                 |
+| same — canonical tuple                                        | `cursed_treasure_discovery` + `chaos_squall_exposure` ∈ `OFFSEASON_EFFECT_TYPES`; JSON ⊆ tuple                                                             | RED (F4)                    | Phase 5 F4        |
+| same — weekly events                                          | `narrativeContent.events` ⊇ {tavern_brawl, celestial_blessing, lost_relic, mysterious_patron, goblin_merchant, mysterious_trader}                          | RED (awaits #1066)          | Phase 4 step 3    |
+| same — chaos squall                                           | `EVENT_HANDLERS['chaos_squall_exposure']` + JSON entry + handler grants xp:30/fatigue:15 via `withChosenWarrior` (V15 gap)                                 | RED (awaits #1066)          | Phase 4 step 3    |
+| `v20Traits.guard.test.ts`                                     | `dark_survivor`/`gutter_brawler`/`street_specter` ∈ `TRAITS` + `LEGACY_TRAIT_ORDER`; effect fields spec'd; key whitelist = `TraitEffect`; `traitDedup` 178 | RED (awaits #1068)          | Phase 4 step 4    |
+| `v20Narrative.guard.test.ts`                                  | union-merged `origins`/`childhoodTraits`/`definingMoments`/`loreBackfill2` contain all post-merge entries, zero intra-pool dups                            | RED (awaits #1065/#1068)    | Phase 4 steps 4–5 |
+| `traitBalance.slow` lists                                     | `dark_survivor`→PERSONALITY, `gutter_brawler`/`street_specter`→COMBAT+PERSONALITY (V16)                                                                    | test-only; green either way | Phase 6           |
+| extend `StyleMeterTable.test.tsx`/`WeeklyDigestMini.test.tsx` | behavioral pins identical pre/post perf swap (V14)                                                                                                         | GREEN before & after        | invariant         |
+| F1 type spec                                                  | `Events`/`offseason_events` tightening assertions                                                                                                          | RED until fix               | Phase 5           |
 
 Placement per `docs/TESTING.md`; `runnerGroups.json`/`auditBaseline.json`
 regenerated via `test-audit-scan.mjs` same commit.
@@ -98,7 +98,8 @@ regenerated via `test-audit-scan.mjs` same commit.
 ## Phase 4 — Merge sequence (one branch per commit, gates between)
 
 `git merge --no-ff origin/<b>` → resolve → `tsr generate` + `type-check`
-+ `lint` + `test` → LEDGER row → next. `git merge-tree` prediction first.
+
+- `lint` + `test` → LEDGER row → next. `git merge-tree` prediction first.
 
 1. **#1069 bolt-stylemeter** — clean expected; optionally typed triple
    projection iff shallow-compare parity preserved.

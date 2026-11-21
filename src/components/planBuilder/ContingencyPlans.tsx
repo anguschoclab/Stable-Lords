@@ -37,11 +37,7 @@ function SpecialStrategySlot(props: {
           aria-label={title}
           checked={enabled}
           onCheckedChange={(on) =>
-            onChange(
-              on
-                ? { OE: base.OE, AL: base.AL, killDesire: base.killDesire }
-                : undefined
-            )
+            onChange(on ? { OE: base.OE, AL: base.AL, killDesire: base.killDesire } : undefined)
           }
         />
       </div>
@@ -65,7 +61,7 @@ function SpecialStrategySlot(props: {
             id={`${idPrefix}-kd`}
             label="Kill Desire"
             toneClass="text-arena-pop"
-            value={(override?.killDesire ?? base.killDesire) ?? 5}
+            value={override?.killDesire ?? base.killDesire ?? 5}
             onChange={(v) => onChange({ ...override, killDesire: v })}
           />
         </div>
@@ -129,10 +125,7 @@ export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlan
       )}
 
       <div className="flex items-center justify-between">
-        <Label
-          htmlFor="special-strategy-switch"
-          className="flex items-center gap-2 cursor-pointer"
-        >
+        <Label htmlFor="special-strategy-switch" className="flex items-center gap-2 cursor-pointer">
           <Swords className="w-4 h-4 text-arena-pop" />
           <span className="text-[10px] font-black uppercase tracking-widest text-arena-pop">
             Special Strategy

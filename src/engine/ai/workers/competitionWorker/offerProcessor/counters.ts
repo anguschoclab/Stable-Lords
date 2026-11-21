@@ -73,9 +73,7 @@ function proposerCanFund(
   wId: WarriorId,
   rivalMap: Map<StableId | string, RivalStableData>
 ): boolean {
-  const proposerStable = offer.proposerStableId
-    ? rivalMap.get(offer.proposerStableId)
-    : undefined;
+  const proposerStable = offer.proposerStableId ? rivalMap.get(offer.proposerStableId) : undefined;
   const bump = offer.counterPurseBump ?? 0;
   const proposerSide = proposerStable?.roster.some((w) => w.id === wId) ?? false;
   return (

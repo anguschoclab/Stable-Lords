@@ -18,7 +18,6 @@ const defaultStoreState = {
 const applyStore = (override: any = {}) =>
   useGameStore.setState({ ...defaultStoreState, ...override } as never);
 
-
 describe('useActiveRoster', () => {
   it('returns an empty array when roster is empty', () => {
     applyStore({ roster: [] });

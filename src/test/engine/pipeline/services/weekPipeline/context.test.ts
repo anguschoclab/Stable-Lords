@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { prepareWeekContext, createMutableWeekContext } from '@/engine/pipeline/services/weekPipeline/context';
+import {
+  prepareWeekContext,
+  createMutableWeekContext,
+} from '@/engine/pipeline/services/weekPipeline/context';
 import { GameState } from '@/types/game';
 
 describe('weekPipeline/context', () => {

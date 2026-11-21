@@ -44,10 +44,16 @@ describe('styleMatchupSymmetry', () => {
     // pushed ST→AB past the 80/20 guard (round-3 cell compression).
     expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.AimedBlow)).toBe(0);
     expect(getMatchupBonus(FightingStyle.AimedBlow, FightingStyle.StrikingAttack)).toBe(0);
-    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.ParryLunge)).toBeGreaterThan(0);
-    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.WallOfSteel)).toBeLessThan(0);
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.ParryLunge)).toBeGreaterThan(
+      0
+    );
+    expect(getMatchupBonus(FightingStyle.StrikingAttack, FightingStyle.WallOfSteel)).toBeLessThan(
+      0
+    );
     expect(getMatchupBonus(FightingStyle.ParryLunge, FightingStyle.StrikingAttack)).toBeLessThan(0);
-    expect(getMatchupBonus(FightingStyle.WallOfSteel, FightingStyle.StrikingAttack)).toBeGreaterThan(0);
+    expect(
+      getMatchupBonus(FightingStyle.WallOfSteel, FightingStyle.StrikingAttack)
+    ).toBeGreaterThan(0);
   });
 
   it('matchup modifiers should be bounded (no unbounded multipliers)', () => {

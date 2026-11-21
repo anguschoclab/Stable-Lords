@@ -5,7 +5,7 @@
 **Branch:** `main` (direct commits per house convention — no consolidation PR)
 · **Constraints:** zero save-file/backwards-compat — `SAVE_STATE_VERSION`
 `'3.0.0'` (`src/constants/core/core.ts:12`) is free to bump; strict
-**test-first invariant** — Phase 2 constructs the *complete* test inventory
+**test-first invariant** — Phase 2 constructs the _complete_ test inventory
 RED before any implementation commit; slow suite deferred to covered-path
 gates (per `docs/TESTING.md` + CLAUDE.md tiering).
 **Safety:** restore tag `pre-megaplan-v19` created at Phase-0 HEAD
@@ -23,26 +23,26 @@ conformance, §B bug register, §U unique-logic register.
 This campaign is a **full re-baseline**: every prior verdict
 (EXEMPT/DEBT/NOTE/DISPROVED from V8–V18) is a re-verification target, not
 an assumption. User mandate: wire/patch/hook up incomplete or disconnected
-systems at code *and* feature level; harmonize-or-combine before deletion
+systems at code _and_ feature level; harmonize-or-combine before deletion
 while strictly preserving unique code; evaluate everything against the
 quality-metric gates including the UI design bible
 (`docs/DESIGN_BIBLE_UI_v1.0.md`).
 
 ## Validation ledger — plan claims audited against live code (2026-10-22)
 
-| Claim | Verdict | Evidence |
-| ----- | ------- | -------- |
-| dup-scan w8 = 27 src / 79 test / 17 mixed | APPROVED | guard baselines + fresh `collectDuplicates` |
-| TEST_DEBT_PAIRS ~70 | CORRECTED → exactly 70 | counted entries = `TEST_DEBT_BUDGET` 70 |
-| Skip registry empty | CORRECTED | `REGISTERED_SKIP_TICKETS` permanently holds `S1–S34`+`D1–D14`; zero live skips; V19 uses fresh IDs |
-| knip 219 | CORRECTED → 222 (150 exports + 68 types + 4 intra-file duplicate symbols in `skillBreakpoints.ts`) | fresh `dead-code:report` |
-| orphan deadExports 215 | APPROVED | 159 src + 56 non-src |
-| writer-only state fields | CORRECTED | all audited `stateFields` status ok; `weatherMods` moved to `types/shared/spatial.ts:73` — reader-status re-verified, not assumed dead |
-| scan-in-loop 88 | APPROVED | 88 violations = 88 allowlisted exceptions (1:1); drain in flight at HEAD |
-| entries-in-loop 5 | APPROVED | 5 violations = 5 exceptions |
-| fns >80 = 0 | CORRECTED → **6** | fresh `function-length`: `processArenaEvent` 88, `assessCrownOpportunity` 83, `projectEvent` 82, `computeEffectiveSkills` 81, `createFighterState` 81, `recordGrandChampions` 81 |
-| LOC baselines | CORRECTED | 1,283 src/141,711 LOC; 994 test/149,849 LOC |
-| doc-guard couplings | NEW | `documentationParity` gates design-doc route tokens; `v14PipelineDocs` pins pipeline stage docs to `WEEK_PIPELINE_PASSES` |
+| Claim                                     | Verdict                                                                                            | Evidence                                                                                                                                                                         |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| dup-scan w8 = 27 src / 79 test / 17 mixed | APPROVED                                                                                           | guard baselines + fresh `collectDuplicates`                                                                                                                                      |
+| TEST_DEBT_PAIRS ~70                       | CORRECTED → exactly 70                                                                             | counted entries = `TEST_DEBT_BUDGET` 70                                                                                                                                          |
+| Skip registry empty                       | CORRECTED                                                                                          | `REGISTERED_SKIP_TICKETS` permanently holds `S1–S34`+`D1–D14`; zero live skips; V19 uses fresh IDs                                                                               |
+| knip 219                                  | CORRECTED → 222 (150 exports + 68 types + 4 intra-file duplicate symbols in `skillBreakpoints.ts`) | fresh `dead-code:report`                                                                                                                                                         |
+| orphan deadExports 215                    | APPROVED                                                                                           | 159 src + 56 non-src                                                                                                                                                             |
+| writer-only state fields                  | CORRECTED                                                                                          | all audited `stateFields` status ok; `weatherMods` moved to `types/shared/spatial.ts:73` — reader-status re-verified, not assumed dead                                           |
+| scan-in-loop 88                           | APPROVED                                                                                           | 88 violations = 88 allowlisted exceptions (1:1); drain in flight at HEAD                                                                                                         |
+| entries-in-loop 5                         | APPROVED                                                                                           | 5 violations = 5 exceptions                                                                                                                                                      |
+| fns >80 = 0                               | CORRECTED → **6**                                                                                  | fresh `function-length`: `processArenaEvent` 88, `assessCrownOpportunity` 83, `projectEvent` 82, `computeEffectiveSkills` 81, `createFighterState` 81, `recordGrandChampions` 81 |
+| LOC baselines                             | CORRECTED                                                                                          | 1,283 src/141,711 LOC; 994 test/149,849 LOC                                                                                                                                      |
+| doc-guard couplings                       | NEW                                                                                                | `documentationParity` gates design-doc route tokens; `v14PipelineDocs` pins pipeline stage docs to `WEEK_PIPELINE_PASSES`                                                        |
 
 ## Phase 0 — Safety, baseline & tag ✅ DONE
 
@@ -51,29 +51,29 @@ quality-metric gates including the UI design bible
 2. `bunx tsr generate` — fresh route tree before baselining.
 3. Full gate matrix → LEDGER §0 (all measured 2026-10-22):
 
-   | Gate | Command | Baseline |
-   | ---- | ------- | -------- |
-   | type-check | `bun run type-check` | 0 errors |
-   | lint | `bun run lint` | 0 errors / 22 jsdoc warnings |
-   | fast tests | `bun run test` | all pass |
-   | build | `bun run build` | OK |
-   | narrative | `bun run narrative-validate` | clean |
-   | dup-scan w8 | `node scripts/dup-scan.mjs` | 27 src / 79 test / 17 mixed |
-   | dup-scan w12 | `--window 12` | 6 src / 12 test / 3 mixed |
-   | dup-scan ident w20 | `--ident --window 20` | 170 src / 52 test / 135 mixed |
-   | dup-scan ident w16 | `--ident --window 16` | 454 src / 128 test / 288 mixed |
-   | function-length | `node scripts/function-length.mjs` | 6 fns >80, 0 >120; band 268 |
-   | param-count | `node scripts/param-count.mjs` | 0 violations |
-   | orphan-scan | `node scripts/orphan-scan.mjs` | 0 unreachable, 215 deadExports, 0 unlinked |
-   | entries-in-loop | `node scripts/entries-in-loop.mjs` | 5 = exceptions |
-   | scan-in-loop | `node scripts/scan-in-loop.mjs` | 88 = exceptions |
-   | ui-audit | `node scripts/ui-audit-scan.mjs` | 0 all rules |
-   | data-array | `node scripts/data-array-dup-scan.mjs` | clean |
-   | test-audit | `node scripts/test-audit-scan.mjs` | 3 localFactory / 2 deadPatterns / 37 importSetClusters / 23 over2s |
-   | knip | `bun run dead-code:report` | 150 exports + 68 types + 4 duplicates |
-   | jscpd | `bun run dupes` | 102 clones / 0.63% lines |
-   | soak 40w | `bun scripts/soak.mjs --weeks 40 --seed 20260919` | 0 violations, 257.7 ms/week |
-   | determinism | `determinismAudit.test.ts` | 4/4 pass |
+   | Gate               | Command                                           | Baseline                                                           |
+   | ------------------ | ------------------------------------------------- | ------------------------------------------------------------------ |
+   | type-check         | `bun run type-check`                              | 0 errors                                                           |
+   | lint               | `bun run lint`                                    | 0 errors / 22 jsdoc warnings                                       |
+   | fast tests         | `bun run test`                                    | all pass                                                           |
+   | build              | `bun run build`                                   | OK                                                                 |
+   | narrative          | `bun run narrative-validate`                      | clean                                                              |
+   | dup-scan w8        | `node scripts/dup-scan.mjs`                       | 27 src / 79 test / 17 mixed                                        |
+   | dup-scan w12       | `--window 12`                                     | 6 src / 12 test / 3 mixed                                          |
+   | dup-scan ident w20 | `--ident --window 20`                             | 170 src / 52 test / 135 mixed                                      |
+   | dup-scan ident w16 | `--ident --window 16`                             | 454 src / 128 test / 288 mixed                                     |
+   | function-length    | `node scripts/function-length.mjs`                | 6 fns >80, 0 >120; band 268                                        |
+   | param-count        | `node scripts/param-count.mjs`                    | 0 violations                                                       |
+   | orphan-scan        | `node scripts/orphan-scan.mjs`                    | 0 unreachable, 215 deadExports, 0 unlinked                         |
+   | entries-in-loop    | `node scripts/entries-in-loop.mjs`                | 5 = exceptions                                                     |
+   | scan-in-loop       | `node scripts/scan-in-loop.mjs`                   | 88 = exceptions                                                    |
+   | ui-audit           | `node scripts/ui-audit-scan.mjs`                  | 0 all rules                                                        |
+   | data-array         | `node scripts/data-array-dup-scan.mjs`            | clean                                                              |
+   | test-audit         | `node scripts/test-audit-scan.mjs`                | 3 localFactory / 2 deadPatterns / 37 importSetClusters / 23 over2s |
+   | knip               | `bun run dead-code:report`                        | 150 exports + 68 types + 4 duplicates                              |
+   | jscpd              | `bun run dupes`                                   | 102 clones / 0.63% lines                                           |
+   | soak 40w           | `bun scripts/soak.mjs --weeks 40 --seed 20260919` | 0 violations, 257.7 ms/week                                        |
+   | determinism        | `determinismAudit.test.ts`                        | 4/4 pass                                                           |
 
    **Correction vs V18 plan:** `soak.mjs` needs `bun` (not `node`) — it
    imports `@/types` via tsconfig paths.
@@ -131,16 +131,16 @@ permanently registered — V19 registers **new** IDs: `MEGAPLAN-W*`
 wiring, `S35+` SRP, `D15+` dedup, `K*` dead code, `P*` perf, `C*` CSS,
 `B*` bugs, `U*` preservation.
 
-| Table | Required artifacts |
-| ----- | ------------------ |
-| §W | `v19Wiring.guard.test.*` — `import.meta.glob` surface specs per gap (`wiring.wired.test.tsx` precedent) |
-| §D | Characterization spec per DEBT cluster pinning both sites pre-consolidation |
-| §A | `v19Srp.guard.test.ts` — `collectSizes` contract, per-unit budgets (S35–S40) |
-| §K | Export-surface parity specs per touched module (`typeSurface` precedent) |
-| §P | Guard-ceiling delta specs; re-tier `*.slow.test.ts` for drained >2s specs |
-| §C | Contract specs only for statically-enforceable violation classes (new `ui-audit-scan` rules) |
-| §U | `v19Preservation.guard.test.ts` — one assertion per entry (landed wave-2: 7 assertions U1–U7) |
-| §B | Failing characterization spec per confirmed bug before fix |
+| Table | Required artifacts                                                                                      |
+| ----- | ------------------------------------------------------------------------------------------------------- |
+| §W    | `v19Wiring.guard.test.*` — `import.meta.glob` surface specs per gap (`wiring.wired.test.tsx` precedent) |
+| §D    | Characterization spec per DEBT cluster pinning both sites pre-consolidation                             |
+| §A    | `v19Srp.guard.test.ts` — `collectSizes` contract, per-unit budgets (S35–S40)                            |
+| §K    | Export-surface parity specs per touched module (`typeSurface` precedent)                                |
+| §P    | Guard-ceiling delta specs; re-tier `*.slow.test.ts` for drained >2s specs                               |
+| §C    | Contract specs only for statically-enforceable violation classes (new `ui-audit-scan` rules)            |
+| §U    | `v19Preservation.guard.test.ts` — one assertion per entry (landed wave-2: 7 assertions U1–U7)           |
+| §B    | Failing characterization spec per confirmed bug before fix                                              |
 
 Placement per `docs/TESTING.md`; regen `runnerGroups.json`/
 `auditBaseline.json` via `test-audit-scan.mjs`.
@@ -193,17 +193,18 @@ audit-queues).
 **Residual-drain addendum (wave-2, 2026-10-22):** deferred/out-of-scope
 items closed — `v19Preservation.guard.test.ts` (§U); V19 ticket namespace
 registered; B2 fixed via per-tier dup-scan report filenames; final two
->2s fast-suite specs demoted to `.slow` (over2s queue → 0); srp-census
-re-run (135); ident-tier audit queues re-scanned into dedicated report
-files. See LEDGER residual-drain matrix.
+
+> 2s fast-suite specs demoted to `.slow` (over2s queue → 0); srp-census
+> re-run (135); ident-tier audit queues re-scanned into dedicated report
+> files. See LEDGER residual-drain matrix.
 
 ## Quality-metric mapping
 
-| Criterion | Concrete gates |
-| --------- | -------------- |
-| Best practices | `lint` 0 (`no-console`), `type-check` 0, `testQualityAudit`, `paramBudget`/`fileBudget`, `markdownSanitize` |
-| Bugs & edge cases | 40w soak 0 violations, `determinismAudit`, `stateInvariants`, `roundtrip-check.ts`, `narrative-validate`, §B dispositions |
-| Performance | `scan-in-loop`/`entries-in-loop` ceilings, ms/week band, `*.perf.test`, over-2s re-tiers |
-| Readability | `function-length` (drain 6 >80 to 0; band triage), `srp-census`, `fileBudget` |
-| CSS per design bible | `ui-audit` 0 + §C conformance verdicts + new enforceable scanner rules |
-| Duplication/dead code | Ratcheted `dup-scan` baselines, knip drained-or-registered, orphan-scan 0 unreachable |
+| Criterion             | Concrete gates                                                                                                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Best practices        | `lint` 0 (`no-console`), `type-check` 0, `testQualityAudit`, `paramBudget`/`fileBudget`, `markdownSanitize`               |
+| Bugs & edge cases     | 40w soak 0 violations, `determinismAudit`, `stateInvariants`, `roundtrip-check.ts`, `narrative-validate`, §B dispositions |
+| Performance           | `scan-in-loop`/`entries-in-loop` ceilings, ms/week band, `*.perf.test`, over-2s re-tiers                                  |
+| Readability           | `function-length` (drain 6 >80 to 0; band triage), `srp-census`, `fileBudget`                                             |
+| CSS per design bible  | `ui-audit` 0 + §C conformance verdicts + new enforceable scanner rules                                                    |
+| Duplication/dead code | Ratcheted `dup-scan` baselines, knip drained-or-registered, orphan-scan 0 unreachable                                     |

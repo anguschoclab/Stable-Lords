@@ -1043,7 +1043,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'famous_death',
     title: 'The Blind Butcher',
     narrative:
-      'A famous gladiator who fought blindfolded was finally killed here when the mud drowned out the sound of his opponent\'s footsteps.',
+      "A famous gladiator who fought blindfolded was finally killed here when the mud drowned out the sound of his opponent's footsteps.",
   },
   ...ARENA_LORE_BACKFILL_1,
   ...ARENA_LORE_BACKFILL_2,

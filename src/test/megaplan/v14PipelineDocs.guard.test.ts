@@ -19,10 +19,7 @@ const DEP_MAP = readFileSync(
   path.join(REPO, 'docs/engineering/pipeline-dependency-map.md'),
   'utf8'
 );
-const AUDIT = readFileSync(
-  path.join(REPO, 'docs/engineering/pipeline-audit.md'),
-  'utf8'
-);
+const AUDIT = readFileSync(path.join(REPO, 'docs/engineering/pipeline-audit.md'), 'utf8');
 
 /** Parse `| \`stage\` | id, id, id |` rows from the dependency map. */
 function docStageTable(): Record<string, string[]> {
@@ -79,7 +76,9 @@ describe('megaplan V14: pipeline docs match WEEK_PIPELINE_PASSES', () => {
     const declared = WEEK_PIPELINE_PASSES.length;
     const claimed = [...AUDIT.matchAll(/(\d+) (?:staged )?passes/gi)].map((m) => Number(m[1]));
     for (const n of claimed) {
-      expect(n, `pipeline-audit.md claims ${n} passes — actual table has ${declared}`).toBe(declared);
+      expect(n, `pipeline-audit.md claims ${n} passes — actual table has ${declared}`).toBe(
+        declared
+      );
     }
   });
 });

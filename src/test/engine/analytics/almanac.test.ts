@@ -139,7 +139,10 @@ describe('computeCareerBoards', () => {
     const oldGuard = w('old', { age: 45, career: { wins: 50, losses: 40, kills: 0 } });
     const vet = w('vet', { age: 45, career: { wins: 60, losses: 20, kills: 0 } });
     const rookie = w('rookie', { age: 18, career: { wins: 5, losses: 0, kills: 0 } });
-    const b = board(computeCareerBoards(input({ warriors: [oldGuard, vet, rookie] })), 'longestCareer');
+    const b = board(
+      computeCareerBoards(input({ warriors: [oldGuard, vet, rookie] })),
+      'longestCareer'
+    );
     // same age → bouts decides: old(90) before vet(80), rookie(18) last.
     expect(b.rows.map((r) => r.key)).toEqual(['old', 'vet', 'rookie']);
     expect(b.rows[0]?.value).toBe(45);
@@ -234,7 +237,12 @@ describe('computeAccoladeBoards', () => {
 describe('computeChampionshipBoards', () => {
   const arenaChampions: Record<string, ArenaTitle> = {
     arena_a: {
-      champion: { warriorId: 'w1' as WarriorId, startedAbsoluteWeek: 90, defenses: 3, lastActivityWeek: 100 },
+      champion: {
+        warriorId: 'w1' as WarriorId,
+        startedAbsoluteWeek: 90,
+        defenses: 3,
+        lastActivityWeek: 100,
+      },
       status: 'active',
       refusals: 0,
       deferrals: 0,
@@ -261,7 +269,12 @@ describe('computeChampionshipBoards', () => {
       ],
     },
     arena_b: {
-      champion: { warriorId: 'w1' as WarriorId, startedAbsoluteWeek: 95, defenses: 1, lastActivityWeek: 100 },
+      champion: {
+        warriorId: 'w1' as WarriorId,
+        startedAbsoluteWeek: 95,
+        defenses: 1,
+        lastActivityWeek: 100,
+      },
       status: 'dormant',
       refusals: 0,
       deferrals: 0,
@@ -282,14 +295,49 @@ describe('computeChampionshipBoards', () => {
   } as unknown as Record<string, ArenaTitle>;
 
   const grandChampions = [
-    { tournamentId: 't1', year: 1, warriorId: 'w9' as WarriorId, warriorName: 'Old King', stableName: 'Iron Gale' },
-    { tournamentId: 't2', year: 2, warriorId: 'w1' as WarriorId, warriorName: 'Champ', stableName: 'Player Stable' },
+    {
+      tournamentId: 't1',
+      year: 1,
+      warriorId: 'w9' as WarriorId,
+      warriorName: 'Old King',
+      stableName: 'Iron Gale',
+    },
+    {
+      tournamentId: 't2',
+      year: 2,
+      warriorId: 'w1' as WarriorId,
+      warriorName: 'Champ',
+      stableName: 'Player Stable',
+    },
   ];
 
   const tournaments = [
-    { id: 't1', name: 'Spring Invitational', champion: 'Old King', completed: true, tierId: 'regional', season: 'Spring', week: 13 },
-    { id: 't2', name: 'Live Tourney', completed: false, tierId: 'regional', season: 'Summer', week: 20 },
-    { id: 't3', name: 'Fall Classic', champion: 'Old King', completed: true, tierId: 'national', season: 'Fall', week: 39 },
+    {
+      id: 't1',
+      name: 'Spring Invitational',
+      champion: 'Old King',
+      completed: true,
+      tierId: 'regional',
+      season: 'Spring',
+      week: 13,
+    },
+    {
+      id: 't2',
+      name: 'Live Tourney',
+      completed: false,
+      tierId: 'regional',
+      season: 'Summer',
+      week: 20,
+    },
+    {
+      id: 't3',
+      name: 'Fall Classic',
+      champion: 'Old King',
+      completed: true,
+      tierId: 'national',
+      season: 'Fall',
+      week: 39,
+    },
   ] as unknown as TournamentEntry[];
 
   const ctx = input({ arenaChampions, grandChampions, tournaments, absoluteWeek: 100 });
@@ -359,13 +407,48 @@ describe('computeChampionshipBoards', () => {
 describe('computeStreakBoards', () => {
   // w1 wins 3 straight, loses, wins; w2 loses 2 straight
   const arenaHistory = [
-    fight('f1', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w9' as WarriorId, winner: 'A', week: 1 }),
-    fight('f2', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w9' as WarriorId, winner: 'A', week: 2 }),
-    fight('f3', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w9' as WarriorId, winner: 'A', week: 3 }),
-    fight('f4', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w2' as WarriorId, winner: 'D', week: 4 }),
-    fight('f5', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w2' as WarriorId, winner: 'A', week: 5 }),
-    fight('f6', { warriorIdA: 'w3' as WarriorId, warriorIdD: 'w2' as WarriorId, winner: 'A', week: 6 }),
-    fight('f7', { warriorIdA: 'w2' as WarriorId, warriorIdD: 'w3' as WarriorId, winner: 'D', week: 7 }),
+    fight('f1', {
+      warriorIdA: 'w1' as WarriorId,
+      warriorIdD: 'w9' as WarriorId,
+      winner: 'A',
+      week: 1,
+    }),
+    fight('f2', {
+      warriorIdA: 'w1' as WarriorId,
+      warriorIdD: 'w9' as WarriorId,
+      winner: 'A',
+      week: 2,
+    }),
+    fight('f3', {
+      warriorIdA: 'w1' as WarriorId,
+      warriorIdD: 'w9' as WarriorId,
+      winner: 'A',
+      week: 3,
+    }),
+    fight('f4', {
+      warriorIdA: 'w1' as WarriorId,
+      warriorIdD: 'w2' as WarriorId,
+      winner: 'D',
+      week: 4,
+    }),
+    fight('f5', {
+      warriorIdA: 'w1' as WarriorId,
+      warriorIdD: 'w2' as WarriorId,
+      winner: 'A',
+      week: 5,
+    }),
+    fight('f6', {
+      warriorIdA: 'w3' as WarriorId,
+      warriorIdD: 'w2' as WarriorId,
+      winner: 'A',
+      week: 6,
+    }),
+    fight('f7', {
+      warriorIdA: 'w2' as WarriorId,
+      warriorIdD: 'w3' as WarriorId,
+      winner: 'D',
+      week: 7,
+    }),
   ];
 
   const warriors = [
@@ -375,19 +458,13 @@ describe('computeStreakBoards', () => {
   ];
 
   it('computes best win streaks per warrior', () => {
-    const b = board(
-      computeStreakBoards(input({ warriors, arenaHistory })),
-      'winStreaks'
-    );
+    const b = board(computeStreakBoards(input({ warriors, arenaHistory })), 'winStreaks');
     expect(b.rows[0]?.warriorId).toBe('w1');
     expect(b.rows[0]?.value).toBe(3);
   });
 
   it('reports current streaks for active warriors only', () => {
-    const b = board(
-      computeStreakBoards(input({ warriors, arenaHistory })),
-      'currentStreaks'
-    );
+    const b = board(computeStreakBoards(input({ warriors, arenaHistory })), 'currentStreaks');
     // w2's last fight (f7) was a loss; w3 is dead → excluded
     const ids = b.rows.map((r) => r.warriorId);
     expect(ids).toContain('w1'); // won f5 → streak 1
@@ -396,10 +473,7 @@ describe('computeStreakBoards', () => {
   });
 
   it('computes longest losing streaks', () => {
-    const b = board(
-      computeStreakBoards(input({ warriors, arenaHistory })),
-      'losingStreaks'
-    );
+    const b = board(computeStreakBoards(input({ warriors, arenaHistory })), 'losingStreaks');
     // w2's sequence is W (f4) then L L L (f5, f6, f7) — best run is 3.
     expect(b.rows[0]?.warriorId).toBe('w2');
     expect(b.rows[0]?.value).toBe(3);
@@ -445,7 +519,10 @@ describe('computeStyleArenaBoards', () => {
         wins: 20,
         losses: 0,
         kills: 0,
-        byArena: { pit_a: { wins: 3, losses: 0, kills: 0 }, pit_b: { wins: 2, losses: 0, kills: 0 } },
+        byArena: {
+          pit_a: { wins: 3, losses: 0, kills: 0 },
+          pit_b: { wins: 2, losses: 0, kills: 0 },
+        },
       },
       style: FightingStyle.BashingAttack,
       name: 'Second',
@@ -554,10 +631,7 @@ describe('computeFightBoards', () => {
   });
 
   it('ranks biggest upsets by winner/loser fame gap', () => {
-    const b = board(
-      computeFightBoards(input({ warriors, arenaHistory, hallOfFame })),
-      'upsets'
-    );
+    const b = board(computeFightBoards(input({ warriors, arenaHistory, hallOfFame })), 'upsets');
     expect(b.rows[0]?.fightId).toBe('f1'); // loser 200 - winner 20 = 180
     expect(b.rows[0]?.value).toBe(180);
   });
@@ -571,10 +645,7 @@ describe('computeFightBoards', () => {
   });
 
   it('ranks flashiest bouts by tag count', () => {
-    const b = board(
-      computeFightBoards(input({ warriors, arenaHistory, hallOfFame })),
-      'flashiest'
-    );
+    const b = board(computeFightBoards(input({ warriors, arenaHistory, hallOfFame })), 'flashiest');
     expect(b.rows[0]?.fightId).toBe('f3');
     expect(b.rows[0]?.tags).toContain('Comeback');
   });
@@ -590,7 +661,12 @@ describe('computeFightBoards', () => {
           isRivalry: true,
         })
       ),
-      fight('q1', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w3' as WarriorId, winner: 'A', week: 9 }),
+      fight('q1', {
+        warriorIdA: 'w1' as WarriorId,
+        warriorIdD: 'w3' as WarriorId,
+        winner: 'A',
+        week: 9,
+      }),
     ];
     const b = board(
       computeFightBoards(input({ warriors, arenaHistory: pairFights })),
@@ -626,15 +702,19 @@ describe('computeStableBoards', () => {
     }),
   ];
   const rivalries = [
-    { id: 'rv1', stableIdA: 'p1', stableIdB: 'r1', intensity: 7, reason: 'Blood feud', startWeek: 12 },
+    {
+      id: 'rv1',
+      stableIdA: 'p1',
+      stableIdB: 'r1',
+      intensity: 7,
+      reason: 'Blood feud',
+      startWeek: 12,
+    },
     { id: 'rv2', stableIdA: 'p1', stableIdB: 'r2', intensity: 3, reason: 'Insult', startWeek: 30 },
   ] as never[];
 
   it('aggregates stable wins incl. dead warriors attributed by stableId', () => {
-    const b = board(
-      computeStableBoards(input({ warriors, stables })),
-      'stableWins'
-    );
+    const b = board(computeStableBoards(input({ warriors, stables })), 'stableWins');
     const p1 = b.rows.find((r) => r.name === 'Player Stable');
     expect(p1?.value).toBe(75); // 30+20+25 (dead-p1 counts; dead-folded does not)
     const r1 = b.rows.find((r) => r.name === 'Iron Gale');
@@ -643,19 +723,13 @@ describe('computeStableBoards', () => {
   });
 
   it('aggregates stable kills the same way', () => {
-    const b = board(
-      computeStableBoards(input({ warriors, stables })),
-      'stableKills'
-    );
+    const b = board(computeStableBoards(input({ warriors, stables })), 'stableKills');
     expect(b.rows.find((r) => r.name === 'Iron Gale')?.value).toBe(9);
     expect(b.rows.find((r) => r.name === 'Player Stable')?.value).toBe(8); // 4+1+3 incl. dead-p1
   });
 
   it('ranks stable fame desc', () => {
-    const b = board(
-      computeStableBoards(input({ warriors, stables })),
-      'stableFame'
-    );
+    const b = board(computeStableBoards(input({ warriors, stables })), 'stableFame');
     expect(b.rows.map((r) => r.name)).toEqual(['Player Stable', 'Iron Gale']);
     expect(b.rows[0]?.isPlayer).toBe(true);
   });
@@ -675,10 +749,7 @@ describe('computeStableBoards', () => {
       { type: 'STABLE_OF_YEAR', year: 2, stableId: 'p1', stableName: 'Player Stable', value: 44 },
       { type: 'WARRIOR_OF_YEAR', year: 2, warriorId: 'w9', warriorName: 'Champ', value: 20 },
     ] as AnnualAward[];
-    const b = board(
-      computeStableBoards(input({ warriors, stables, awards })),
-      'stableOfYear'
-    );
+    const b = board(computeStableBoards(input({ warriors, stables, awards })), 'stableOfYear');
     expect(b.rows.map((r) => r.name)).toEqual(['Player Stable', 'Iron Gale']);
     expect(b.rows[0]?.sub).toBe('Year 2');
     expect(b.rows[0]?.isPlayer).toBe(true);
@@ -726,7 +797,9 @@ describe('computeAlmanac', () => {
   it('returns every section and is deterministic on repeat calls', () => {
     const inp = input({
       warriors: [w('w1', { career: { wins: 10, losses: 2, kills: 1 }, fame: 50 })],
-      arenaHistory: [fight('f1', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w2' as WarriorId, winner: 'A' })],
+      arenaHistory: [
+        fight('f1', { warriorIdA: 'w1' as WarriorId, warriorIdD: 'w2' as WarriorId, winner: 'A' }),
+      ],
       awards: [
         { year: 1, type: 'WARRIOR_OF_YEAR', warriorName: 'A', value: 10, reason: 'x' },
       ] as AnnualAward[],
@@ -899,14 +972,26 @@ describe('computeAlmanac', () => {
       ] as unknown as HallEntry[],
       awards: [
         award('WARRIOR_OF_YEAR', { warriorId: 'p1w' as WarriorId, warriorName: 'p1w', value: 30 }),
-        award('KILLER_OF_YEAR', { warriorId: 'dead1' as WarriorId, warriorName: 'dead1', value: 8 }),
+        award('KILLER_OF_YEAR', {
+          warriorId: 'dead1' as WarriorId,
+          warriorName: 'dead1',
+          value: 8,
+        }),
         award('CLASS_MVP', {
           warriorId: 'champ' as WarriorId,
           warriorName: 'champ',
           style: FightingStyle.TotalParry,
         }),
-        award('STABLE_OF_YEAR', { stableId: 'p1' as StableId, stableName: 'Player Stable', value: 44 }),
-        award('TOURNAMENT_RANK', { warriorId: 'champ' as WarriorId, warriorName: 'champ', value: 9 }),
+        award('STABLE_OF_YEAR', {
+          stableId: 'p1' as StableId,
+          stableName: 'Player Stable',
+          value: 44,
+        }),
+        award('TOURNAMENT_RANK', {
+          warriorId: 'champ' as WarriorId,
+          warriorName: 'champ',
+          value: 9,
+        }),
       ],
       arenaChampions: richChampions,
       grandChampions: [
@@ -934,7 +1019,13 @@ describe('computeAlmanac', () => {
         { id: 'r1', name: 'Rival Stable', fame: 250, isPlayer: false },
       ],
       rivalries: [
-        { id: 'rv1', stableIdA: 'p1' as StableId, stableIdB: 'r1' as StableId, intensity: 7, reason: 'Blood feud' },
+        {
+          id: 'rv1',
+          stableIdA: 'p1' as StableId,
+          stableIdB: 'r1' as StableId,
+          intensity: 7,
+          reason: 'Blood feud',
+        },
       ] as never[],
       lifetimeStats: { bouts: 900, kills: 40, retirements: 5 },
       deadWarriorIds: ['dead1'] as WarriorId[],

@@ -27,7 +27,7 @@ export interface MatchupScore {
 
 /** A warrior is "listed" once they have fought at least once. */
 export function isWarriorListed(w: Warrior): boolean {
-  return ((w.career?.wins ?? 0) + (w.career?.losses ?? 0)) > 0;
+  return (w.career?.wins ?? 0) + (w.career?.losses ?? 0) > 0;
 }
 
 /**

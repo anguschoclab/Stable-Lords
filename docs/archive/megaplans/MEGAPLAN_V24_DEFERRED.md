@@ -16,7 +16,7 @@ Ledger: `MEGAPLAN_V24_LEDGER.md` · Restore tag: `pre-megaplan-v24`.
   user-locked (V23 knack-parity decision). Post-close-out the user
   unlocked it.
 - **Landed:** `STYLE_POSITIVE_LUCK_POOLS` in `constants/combat/combat/
-  balance.ts` — only WS carries the canon-documented pool {ATT,PAR};
+balance.ts` — only WS carries the canon-documented pool {ATT,PAR};
   off-pool positive draws clamp to 0 post-roll, negatives land anywhere,
   six draws consumed regardless (stream alignment pinned by spec).
 
@@ -43,8 +43,8 @@ Ledger: `MEGAPLAN_V24_LEDGER.md` · Restore tag: `pre-megaplan-v24`.
 
 - **Canon:** a warrior fights better at their favorite rhythm whether or
   not the manager has discovered it (favorite-weapon/tactic parity).
-- **Status:** V24 applied hidden-bonus parity to the favorite *weapon* and
-  favorite *tactic*; the rhythm gate was kept as a documented house
+- **Status:** V24 applied hidden-bonus parity to the favorite _weapon_ and
+  favorite _tactic_; the rhythm gate was kept as a documented house
   divergence. **V25 has since claimed it** — `rhythmAlwaysOn.test.ts`
   (V25 Phase-7.1 spec) asserts the always-on reading; that megaplan owns
   the change now.

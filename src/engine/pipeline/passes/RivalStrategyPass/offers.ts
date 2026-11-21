@@ -42,10 +42,7 @@ export function buildWeekOffers(
   // stale current-week field — derive it the same way WorldPass does, on
   // an independent seeded stream so the shared rng chain is untouched.
   const boutWeek = state.absoluteWeek + 1;
-  const boutWeather = rollWeather(
-    new SeededRNG(boutWeek * 13),
-    computeNextSeason(boutWeek)
-  );
+  const boutWeather = rollWeather(new SeededRNG(boutWeek * 13), computeNextSeason(boutWeek));
   const allBids: {
     bid: import('@/engine/ai/workers/competitionWorker/types').BoutBid;
     rivalId: string;

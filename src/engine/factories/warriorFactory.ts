@@ -61,7 +61,8 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
   // their growth ceilings aren't uncapped headroom (V26 parity). rng-less
   // builds stay potential-free like the other seeded-only fields.
   const potential =
-    overrides?.potential ?? (rng ? generatePotential(attrs, rollPotentialTier(rng), rng) : undefined);
+    overrides?.potential ??
+    (rng ? generatePotential(attrs, rollPotentialTier(rng), rng) : undefined);
 
   return {
     id: id ?? (rng ? (rng.uuid() as WarriorId) : (generateId(undefined, 'warrior') as WarriorId)),

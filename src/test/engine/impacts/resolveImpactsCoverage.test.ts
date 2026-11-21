@@ -2,9 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import {
-  makeGameState as fixtureGameState,
-} from '@/test/_fixtures/factories';
+import { makeGameState as fixtureGameState } from '@/test/_fixtures/factories';
 import { makeBareWarrior } from '@/test/_fixtures/statWarrior';
 
 const makeWarrior = makeBareWarrior;

@@ -25,7 +25,9 @@ describe('megaplan V19: single-responsibility decomposition', () => {
   const { functions } = collectSizes() as { functions: FnRec[] };
 
   const budgetFor = (file: string) =>
-    functions.filter((f) => f.file === file && f.len > FN_BUDGET).map((f) => `${f.name} (${f.len})`);
+    functions
+      .filter((f) => f.file === file && f.len > FN_BUDGET)
+      .map((f) => `${f.name} (${f.len})`);
 
   it('S35: processArenaEvent decomposed — no function exceeds budget — MEGAPLAN-S35', () => {
     expect(

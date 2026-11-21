@@ -49,9 +49,7 @@ const outcome = simulateFight({
   headless: false,
 });
 
-logger.log(
-  `=== ${warriorA.name} (${styleA}) vs ${warriorD.name} (${styleD}) — seed ${seed} ===\n`
-);
+logger.log(`=== ${warriorA.name} (${styleA}) vs ${warriorD.name} (${styleD}) — seed ${seed} ===\n`);
 
 let lastMinute = 0;
 for (const e of outcome.log) {
@@ -64,9 +62,7 @@ for (const e of outcome.log) {
 
 const winnerName =
   outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'nobody';
-logger.log(
-  `\n=== Result: ${winnerName} wins by ${outcome.by} in ${outcome.minutes} minute(s) ===`
-);
+logger.log(`\n=== Result: ${winnerName} wins by ${outcome.by} in ${outcome.minutes} minute(s) ===`);
 logger.log(
   `hits: A=${outcome.post?.hitsA ?? 0} D=${outcome.post?.hitsD ?? 0}` +
     (outcome.post?.tags?.length ? ` | tags: ${outcome.post.tags.join(', ')}` : '')

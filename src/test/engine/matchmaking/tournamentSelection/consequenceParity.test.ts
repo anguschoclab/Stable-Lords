@@ -84,7 +84,10 @@ describe('consequence parity — non-kill bouts', () => {
       wD,
       // fameFromTags reads post.tags — 'Flashy'+'bloody' yield +4 pop
       // for the winner, exercising the computed-delta path.
-      outcome: { ...makeFightOutcome('A'), post: { tags: ['Flashy', 'bloody'], xpA: 0, xpD: 0 } } as any,
+      outcome: {
+        ...makeFightOutcome('A'),
+        post: { tags: ['Flashy', 'bloody'], xpA: 0, xpD: 0 },
+      } as any,
       tId: 't1',
       tName: 'Cup',
       rng: new SeededRNG(9),

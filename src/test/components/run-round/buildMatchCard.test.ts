@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { buildMatchCard } from '@/components/run-round/buildMatchCard';
-import { makeGameState, makeWarrior, makeRival, makeOwner, makeBoutOffer } from '@/test/_fixtures/factories';
+import {
+  makeGameState,
+  makeWarrior,
+  makeRival,
+  makeOwner,
+  makeBoutOffer,
+} from '@/test/_fixtures/factories';
 import type { BoutOfferId, StableId, WarriorId } from '@/types/shared.types';
 
 /**

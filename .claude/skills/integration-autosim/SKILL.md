@@ -16,14 +16,14 @@ Tests end-to-end autosimulation including week advancement, stop conditions, det
 
 ## Test Groups
 
-| Filter keyword | What it targets                                    |
-| -------------- | -------------------------------------------------- |
-| (none)         | Full integration suite (slow tier)                 |
-| determinism    | src/test/engine/determinismAudit.test.ts (+ sim/determinism.slow.test.ts) |
-| long           | Long simulation (100 weeks)                        |
-| autosim        | src/test/integration/autosim.slow.test.ts + src/test/engine/autosim/ |
+| Filter keyword | What it targets                                                                          |
+| -------------- | ---------------------------------------------------------------------------------------- |
+| (none)         | Full integration suite (slow tier)                                                       |
+| determinism    | src/test/engine/determinismAudit.test.ts (+ sim/determinism.slow.test.ts)                |
+| long           | Long simulation (100 weeks)                                                              |
+| autosim        | src/test/integration/autosim.slow.test.ts + src/test/engine/autosim/                     |
 | week           | src/test/integration/weekAdvancement.slow.test.ts + src/test/engine/weekPipeline.test.ts |
-| smoke          | src/test/integration/autosim.slow.test.ts + weekAdvancement.slow.test.ts (SLOW tier) |
+| smoke          | src/test/integration/autosim.slow.test.ts + weekAdvancement.slow.test.ts (SLOW tier)     |
 
 ## Commands
 

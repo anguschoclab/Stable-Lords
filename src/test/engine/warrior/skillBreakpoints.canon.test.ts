@@ -100,24 +100,11 @@ describe('canon per-attribute yields (BAGMAN2 / Terrablood)', () => {
 describe('canon worked example — Chronic Pain 9-6-18-15-9-10-17', () => {
   it('raw totals (pre-style) are I17 R13 A19 P10 F17 D9', () => {
     const raw = {
-      INI:
-        szMod(SZ_INI_MOD, 18) +
-        bp(WT_INI, 15) +
-        bp(SP_INI, 10) +
-        bp(DF_INI, 17),
+      INI: szMod(SZ_INI_MOD, 18) + bp(WT_INI, 15) + bp(SP_INI, 10) + bp(DF_INI, 17),
       RIP: bp(WT_RIP, 15) + bp(SP_RIP, 10) + bp(DF_RIP, 17),
       ATT: bp(ST_ATT, 9) + bp(WT_ATT, 15) + bp(WL_ATT, 9) + bp(DF_ATT, 17),
-      PAR:
-        bp(ST_PAR, 9) +
-        szMod(SZ_PAR_MOD, 18) +
-        bp(WL_PAR, 9) +
-        bp(DF_PAR, 17),
-      DEF:
-        szMod(SZ_DEF_MOD, 18) +
-        bp(WT_DEF, 15) +
-        bp(WL_DEF, 9) +
-        bp(SP_DEF, 10) +
-        bp(DF_DEF, 17),
+      PAR: bp(ST_PAR, 9) + szMod(SZ_PAR_MOD, 18) + bp(WL_PAR, 9) + bp(DF_PAR, 17),
+      DEF: szMod(SZ_DEF_MOD, 18) + bp(WT_DEF, 15) + bp(WL_DEF, 9) + bp(SP_DEF, 10) + bp(DF_DEF, 17),
       DEC: bp(WT_DEC, 15) + bp(WL_DEC, 9) + bp(SP_DEC, 10),
     };
     expect(raw.INI).toBe(17);
@@ -149,8 +136,7 @@ describe('aimed-blow canon rule — double ATT skills from deftness', () => {
     // base ATT without doubling would be bp sums + pen[0].
     const dfTerm = bp(DF_ATT, 17);
     const pen = STYLE_PENALTIES[FightingStyle.AimedBlow][0]; // live ATT penalty (balance-ratcheted)
-    const expectedRaw =
-      bp(ST_ATT, 10) + bp(WT_ATT, 10) + bp(WL_ATT, 10) + 2 * dfTerm + pen;
+    const expectedRaw = bp(ST_ATT, 10) + bp(WT_ATT, 10) + bp(WL_ATT, 10) + 2 * dfTerm + pen;
     expect(ab.ATT).toBe(Math.max(1, Math.min(20, expectedRaw)));
   });
 });

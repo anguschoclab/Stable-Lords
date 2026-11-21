@@ -107,8 +107,7 @@ function drainExpiredFreeAgents(
     const clearanceCost = Math.max(25, Math.floor(recruit.cost * 0.5));
     const needy = orderRivalsForClearance([...rivalsById.values()], state.week).filter(
       (r) =>
-        (activeCounts.get(r.id) ?? 0) < aiRosterMin(r.owner?.personality) ||
-        r.needsRecruit === true
+        (activeCounts.get(r.id) ?? 0) < aiRosterMin(r.owner?.personality) || r.needsRecruit === true
     );
 
     let placed = false;

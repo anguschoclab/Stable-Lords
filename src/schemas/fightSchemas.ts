@@ -89,9 +89,7 @@ export const TournamentEntrySchema = z.object({
   participants: z.array(WarriorSchema),
   champion: z.string().optional(),
   completed: z.boolean(),
-  classId: z
-    .enum(['rookies', 'apprentices', 'initiates', 'adepts', 'champions'])
-    .optional(),
+  classId: z.enum(['rookies', 'apprentices', 'initiates', 'adepts', 'champions']).optional(),
 });
 
 /**

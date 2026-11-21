@@ -57,9 +57,9 @@ describe('deathRollFailChance', () => {
   };
 
   it('no armor dies more than armored — Staying Alive #2', () => {
-    expect(deathRollFailChance({ ...base, armorId: 'none_armor', helmId: 'none_helm' })).toBeGreaterThan(
-      deathRollFailChance(base)
-    );
+    expect(
+      deathRollFailChance({ ...base, armorId: 'none_armor', helmId: 'none_helm' })
+    ).toBeGreaterThan(deathRollFailChance(base));
   });
 
   it('bare head on a head hit dies more — helm matters', () => {
@@ -68,9 +68,7 @@ describe('deathRollFailChance', () => {
       deathRollFailChance(headHit)
     );
     // helm does not protect the chest
-    expect(deathRollFailChance({ ...base, helmId: 'none_helm' })).toBe(
-      deathRollFailChance(base)
-    );
+    expect(deathRollFailChance({ ...base, helmId: 'none_helm' })).toBe(deathRollFailChance(base));
   });
 
   it('willpower is the infirmary stat — Staying Alive #5', () => {
@@ -108,9 +106,7 @@ describe('rollInfirmaryOutcome', () => {
   });
 
   it('two-roll chain: both rolls must fail to die', () => {
-    const passFirst = () => expect(
-      rollInfirmaryOutcome(() => 0.5, downed, 1)
-    ).toBe(false);
+    const passFirst = () => expect(rollInfirmaryOutcome(() => 0.5, downed, 1)).toBe(false);
     passFirst();
     expect(infirmaryFailChance({ will: 5, enduranceRatio: 0 })).toBeLessThan(1);
   });

@@ -348,44 +348,20 @@ export const STYLE_ARCHETYPE_FIT: Record<FightingStyle, WinningArchetype[]> = {
     'highSkillHybrid',
     'ripostingHybrid',
   ],
-  [FightingStyle.AimedBlow]: [
-    'pureOffensive',
-    'highSkillHybrid',
-    'ripostingHybrid',
-  ],
-  [FightingStyle.BashingAttack]: [
-    'pureOffensive',
-    'tankHybrid',
-    'lowWillTankHybrid',
-  ],
+  [FightingStyle.AimedBlow]: ['pureOffensive', 'highSkillHybrid', 'ripostingHybrid'],
+  [FightingStyle.BashingAttack]: ['pureOffensive', 'tankHybrid', 'lowWillTankHybrid'],
   [FightingStyle.SlashingAttack]: ['pureOffensive', 'highSkillHybrid'],
   [FightingStyle.StrikingAttack]: ['pureOffensive', 'highSkillHybrid'],
-  [FightingStyle.ParryLunge]: [
-    'ripostingHybrid',
-    'highSkillHybrid',
-    'tankHybrid',
-  ],
-  [FightingStyle.ParryRiposte]: [
-    'ripostingHybrid',
-    'highSkillHybrid',
-    'pureDefensive',
-  ],
-  [FightingStyle.ParryStrike]: [
-    'pureDefensive',
-    'ripostingHybrid',
-    'highSkillHybrid',
-  ],
+  [FightingStyle.ParryLunge]: ['ripostingHybrid', 'highSkillHybrid', 'tankHybrid'],
+  [FightingStyle.ParryRiposte]: ['ripostingHybrid', 'highSkillHybrid', 'pureDefensive'],
+  [FightingStyle.ParryStrike]: ['pureDefensive', 'ripostingHybrid', 'highSkillHybrid'],
   [FightingStyle.WallOfSteel]: [
     'tankHybrid',
     'lowWillTankHybrid',
     'ripostingHybrid',
     'pureDefensive',
   ],
-  [FightingStyle.TotalParry]: [
-    'pureDefensive',
-    'tankHybrid',
-    'ripostingHybrid',
-  ],
+  [FightingStyle.TotalParry]: ['pureDefensive', 'tankHybrid', 'ripostingHybrid'],
 };
 
 /** A scored archetype-fit result. */
@@ -408,8 +384,7 @@ function barRatio(attrs: Attributes, bars: ArchetypeDesignBars): number {
   if (bars.wlMax !== undefined) ratios.push(max(attrs.WL, bars.wlMax));
   if (bars.spMax !== undefined) ratios.push(max(attrs.SP, bars.spMax));
   if (bars.dfMin !== undefined) ratios.push(min(attrs.DF, bars.dfMin));
-  if (bars.minRipBase !== undefined)
-    ratios.push(min(attrs.SP + attrs.DF, bars.minRipBase));
+  if (bars.minRipBase !== undefined) ratios.push(min(attrs.SP + attrs.DF, bars.minRipBase));
   return ratios.length === 0 ? 0 : ratios.reduce((a, b) => a + b, 0) / ratios.length;
 }
 
@@ -425,17 +400,14 @@ function styleFit(style: FightingStyle, guide: ArchetypeGuide): number {
  * fits ranked best-first. Pure and deterministic; consumed by Design
  * Review, Style Archives, and AI doctrine.
  */
-export function classifyArchetype(
-  attrs: Attributes,
-  style: FightingStyle
-): ArchetypeFit[] {
-  const fits = (
-    Object.entries(WINNING_ARCHETYPES) as [WinningArchetype, ArchetypeGuide][]
-  ).map(([archetype, guide]) => ({
-    archetype,
-    score: Math.round(
-      (0.7 * barRatio(attrs, guide.designBars) + 0.3 * styleFit(style, guide)) * 100
-    ) / 1,
-  }));
+export function classifyArchetype(attrs: Attributes, style: FightingStyle): ArchetypeFit[] {
+  const fits = (Object.entries(WINNING_ARCHETYPES) as [WinningArchetype, ArchetypeGuide][]).map(
+    ([archetype, guide]) => ({
+      archetype,
+      score:
+        Math.round((0.7 * barRatio(attrs, guide.designBars) + 0.3 * styleFit(style, guide)) * 100) /
+        1,
+    })
+  );
   return fits.sort((a, b) => b.score - a.score);
 }

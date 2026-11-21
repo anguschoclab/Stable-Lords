@@ -202,7 +202,7 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     id: 'walled_court_arena_blood_gutter',
     arenaId: 'walled_court_arena',
     type: 'architectural_quirk',
-    title: 'The Traitor\'s Gutter',
+    title: "The Traitor's Gutter",
     narrative:
       'The drainage ditches running along the walls are intentionally deep, designed to quickly clear blood, but often serve as deadly pitfalls for fighters backed into the corners.',
   },
@@ -244,7 +244,7 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     type: 'architectural_quirk',
     title: 'The Shattered Balcony',
     narrative:
-      'The rusted remnants of a nobles\' viewing box hang perilously over the east side of the arena, destroyed decades ago when a berserker hurled his opponent straight into the gilded seating.',
+      "The rusted remnants of a nobles' viewing box hang perilously over the east side of the arena, destroyed decades ago when a berserker hurled his opponent straight into the gilded seating.",
   },
   {
     id: 'charnel_pits_the_blood_tide',
@@ -285,5 +285,5 @@ export const ARENA_LORE_BACKFILL_2: ArenaLoreEntry[] = [
     title: 'The Blind Butcher’s Fall',
     narrative:
       'A famously cruel gladiator, known as the Blind Butcher, met a poetic end here when their opponent shattered their heavy visor, blinding them with sun-glare before delivering the final, fatal thrust.',
-  }
+  },
 ];

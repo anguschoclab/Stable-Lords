@@ -25,12 +25,7 @@ describe('DesignReviewCard', () => {
     const { rerender } = render(
       <DesignReviewCard attrs={ATTRS} style={FightingStyle.LungingAttack} />
     );
-    rerender(
-      <DesignReviewCard
-        attrs={{ ...ATTRS, WL: 5 }}
-        style={FightingStyle.LungingAttack}
-      />
-    );
+    rerender(<DesignReviewCard attrs={{ ...ATTRS, WL: 5 }} style={FightingStyle.LungingAttack} />);
     expect(screen.getByText('Design Review')).toBeInTheDocument();
   });
 });

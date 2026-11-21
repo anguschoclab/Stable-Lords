@@ -1,0 +1,10 @@
+# Generated diagnostic snapshot (scripts/world-diag.ts) — machine-written,
+# regenerated minified; formatting it only churns the diff.
+snap.json
+
+# Generated output dirs (gitignored too, but prettier doesn't read .gitignore)
+coverage/
+dist/
+playwright-report/
+test-results/
+archives/

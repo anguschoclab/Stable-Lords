@@ -1,10 +1,7 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import {
-  reviewWarriorDesign,
-  type DesignVerdict,
-} from '@/engine/warrior/designReview';
+import { reviewWarriorDesign, type DesignVerdict } from '@/engine/warrior/designReview';
 import type { Attributes, FightingStyle } from '@/types/game';
 
 interface DesignReviewCardProps {
@@ -54,9 +51,7 @@ export function DesignReviewCard({ attrs, style }: DesignReviewCardProps) {
                 >
                   {item.title}
                 </span>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  {item.detail}
-                </p>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{item.detail}</p>
               </div>
             </li>
           ))}

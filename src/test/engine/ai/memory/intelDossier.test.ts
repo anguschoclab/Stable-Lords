@@ -5,10 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { updateDossiers, decayDossiers, DOSSIER_CAP } from '@/engine/ai/memory/intelDossier';
-import {
-  makeRival,
-  makeGameState,
-} from '@/test/_fixtures/factories';
+import { makeRival, makeGameState } from '@/test/_fixtures/factories';
 import { selfVsOppState } from '@/test/_fixtures/intelDossier';
 import type { OpponentDossier } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';

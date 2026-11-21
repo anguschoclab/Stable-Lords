@@ -37,7 +37,7 @@ and asserts the bad-thing list stays empty (or never grows past an allowlist).
 
 ## Checklist for a new ratchet
 
-- [ ] Scanner prints *what* violated, not just a count — the guard failure
+- [ ] Scanner prints _what_ violated, not just a count — the guard failure
       message is only as good as the report.
 - [ ] Report written before `process.exit(1)` so the test can read it.
 - [ ] Scanner is idempotent and read-only on `src/` (writes only `scripts/out/`).

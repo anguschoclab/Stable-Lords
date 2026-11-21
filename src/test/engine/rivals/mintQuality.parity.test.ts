@@ -95,8 +95,7 @@ describe('biasedAttrs — doctrine parity', () => {
     };
     const styled = draws(FightingStyle.TotalParry);
     const blind = draws();
-    const mean = (rows: { WL: number }[]) =>
-      rows.reduce((s, a) => s + a.WL, 0) / rows.length;
+    const mean = (rows: { WL: number }[]) => rows.reduce((s, a) => s + a.WL, 0) / rows.length;
     expect(mean(styled)).toBeGreaterThan(mean(blind));
   });
 });

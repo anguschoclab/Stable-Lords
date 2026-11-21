@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD001 MD024 MD025 MD033 MD060 -->
+
 # MEGAPLAN V25 PLAN — Assur's Winning Warrior Types Canon Integration (VALIDATED)
 
 Port Assur's Arena-93 "winning warrior types" corpus (Pure Offensives, Pure Defensives, Tank Hybrids + low-will addendum, High-Skill Hybrids, Riposting Hybrids, Winning Warrior Types, What the Style) into the game as a new archetype data module, Design Review guidance, fighter concept builds, codex/archives content, AI doctrine and armor fitting, and a mechanics audit.
@@ -27,18 +28,18 @@ already-correct behavior are marked **[regression-lock]**.
 
 ## Phase 1 — Spec batch RED (commit 1) — NO implementation
 
-| Spec | Asserts | Status |
-|---|---|---|
-| `src/test/data/warriorArchetypes.canon.test.ts` | 6 archetypes w/ label/doctrine/keyStats/designBars/recommendedStyles/armor/strategy; `STYLE_ARCHETYPE_FIT` covers all 10 styles (LU ≥3 fits; TP ⊆ {pureDefensive,tankHybrid,ripostingHybrid}; ST ⊆ pureOffensive); weapon ids resolve in `items.ts`; armor ids respect each listed style's `restrictedStyles` | RED |
-| `src/test/engine/warrior/designReview.v25.test.ts` | classification items: tank ST/CN bar, offensive WT≥11 warn, SP 10–12 riposte dead-band info, high-SZ hybrid note, AB low-ST viability info, hybrid over-encumbrance warn via `computeEncumbranceCapacity` | RED |
-| `src/test/data/fighterConcepts.v25.test.ts` | each new build: `canonStats` sums 84, `stats` sums `ATTRIBUTE_TOTAL`, clamps honored; named entries (Snotling lineage, flagship WS tank) present | RED |
-| `src/test/components/styleArchives/archetypeTags.test.tsx` | StyleCard renders archetype-fit chips sourced from `STYLE_ARCHETYPE_FIT` | RED |
-| `src/test/pages/help/winningTypes.test.tsx` | codex section: three ways to win + archetype list + style tier notes | RED |
-| `src/test/engine/ai/archetypeDoctrine.test.ts` | tank-classified warrior → OE floored ≥5; pure-defensive-classified → capped low plan; riposte-classified non-riposte-learning styles eligible for Riposte tactic | RED |
-| `src/test/engine/equipment/archetypeArmor.test.ts` | archetype-aware armor fitting: tank → heaviest legal within carry + `restrictedStyles`; hybrid → no OVER; AB never plate | RED |
-| `src/test/megaplan/v25Archetypes.guard.test.ts` | data integrity: FIT coverage, bars in [3,25], concept sums, id resolution | RED |
-| `src/test/engine/combat/v25MechanicsAudit.test.ts` | regression-locks: burn order, dodge→riposte, Riposte tactic in WS pools, encumbrance endurance channel, `NO_ARMOR_ADD` | [regression-lock] |
-| `src/test/engine/favorites/rhythmAlwaysOn.test.ts` | `getFavoriteRhythmBonus` returns bonus with `discovered=false` | RED |
+| Spec                                                       | Asserts                                                                                                                                                                                                                                                                                                       | Status            |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| `src/test/data/warriorArchetypes.canon.test.ts`            | 6 archetypes w/ label/doctrine/keyStats/designBars/recommendedStyles/armor/strategy; `STYLE_ARCHETYPE_FIT` covers all 10 styles (LU ≥3 fits; TP ⊆ {pureDefensive,tankHybrid,ripostingHybrid}; ST ⊆ pureOffensive); weapon ids resolve in `items.ts`; armor ids respect each listed style's `restrictedStyles` | RED               |
+| `src/test/engine/warrior/designReview.v25.test.ts`         | classification items: tank ST/CN bar, offensive WT≥11 warn, SP 10–12 riposte dead-band info, high-SZ hybrid note, AB low-ST viability info, hybrid over-encumbrance warn via `computeEncumbranceCapacity`                                                                                                     | RED               |
+| `src/test/data/fighterConcepts.v25.test.ts`                | each new build: `canonStats` sums 84, `stats` sums `ATTRIBUTE_TOTAL`, clamps honored; named entries (Snotling lineage, flagship WS tank) present                                                                                                                                                              | RED               |
+| `src/test/components/styleArchives/archetypeTags.test.tsx` | StyleCard renders archetype-fit chips sourced from `STYLE_ARCHETYPE_FIT`                                                                                                                                                                                                                                      | RED               |
+| `src/test/pages/help/winningTypes.test.tsx`                | codex section: three ways to win + archetype list + style tier notes                                                                                                                                                                                                                                          | RED               |
+| `src/test/engine/ai/archetypeDoctrine.test.ts`             | tank-classified warrior → OE floored ≥5; pure-defensive-classified → capped low plan; riposte-classified non-riposte-learning styles eligible for Riposte tactic                                                                                                                                              | RED               |
+| `src/test/engine/equipment/archetypeArmor.test.ts`         | archetype-aware armor fitting: tank → heaviest legal within carry + `restrictedStyles`; hybrid → no OVER; AB never plate                                                                                                                                                                                      | RED               |
+| `src/test/megaplan/v25Archetypes.guard.test.ts`            | data integrity: FIT coverage, bars in [3,25], concept sums, id resolution                                                                                                                                                                                                                                     | RED               |
+| `src/test/engine/combat/v25MechanicsAudit.test.ts`         | regression-locks: burn order, dodge→riposte, Riposte tactic in WS pools, encumbrance endurance channel, `NO_ARMOR_ADD`                                                                                                                                                                                        | [regression-lock] |
+| `src/test/engine/favorites/rhythmAlwaysOn.test.ts`         | `getFavoriteRhythmBonus` returns bonus with `discovered=false`                                                                                                                                                                                                                                                | RED               |
 
 ## Phase 2 — Archetype data module
 

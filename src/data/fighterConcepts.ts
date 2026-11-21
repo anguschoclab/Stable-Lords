@@ -74,10 +74,7 @@ const rankOf = (k: keyof Attributes): number => KEY_RANK.get(k) ?? 0;
  * [ATTRIBUTE_MIN, ATTRIBUTE_MAX]; ties break in ATTRIBUTE_KEYS order so the
  * output is fully deterministic.
  */
-export function scaleToAttributeBudget(
-  spread: Attributes,
-  budget = ATTRIBUTE_TOTAL
-): Attributes {
+export function scaleToAttributeBudget(spread: Attributes, budget = ATTRIBUTE_TOTAL): Attributes {
   const total = ATTRIBUTE_KEYS.reduce((s, k) => s + spread[k], 0);
   if (total === budget) return { ...spread };
 
@@ -195,7 +192,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
   },
   [FightingStyle.LungingAttack]: {
     doctrine:
-      'The overlooked offensive — even-spread physicals behind the highest endurance burn in the game. Spend like a total parry: strength 9-13 (13 unlocks the long spear), constitution 9 or better despite the common never-spend-con advice, wit 12-17 (15 does fair), will ~15+, speed 7-11+, deftness 11+ to hit the legs. Assur\'s frame is the longsword well-suited triplet — ST 11+ / WT 13+ / DF 11+ — with 21 will. Run hot in minute 1 (7-10 or hi-hi-mod), then taper activity fast; a lunger paced like a scum is just a target. Feast on offensives and hybrids; avoid pure scum in plate armor like the plague.',
+      "The overlooked offensive — even-spread physicals behind the highest endurance burn in the game. Spend like a total parry: strength 9-13 (13 unlocks the long spear), constitution 9 or better despite the common never-spend-con advice, wit 12-17 (15 does fair), will ~15+, speed 7-11+, deftness 11+ to hit the legs. Assur's frame is the longsword well-suited triplet — ST 11+ / WT 13+ / DF 11+ — with 21 will. Run hot in minute 1 (7-10 or hi-hi-mod), then taper activity fast; a lunger paced like a scum is just a target. Feast on offensives and hybrids; avoid pure scum in plate armor like the plague.",
     concepts: [
       concept(
         'Scrapper',
@@ -206,7 +203,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Heavy Spear',
         { ST: 15, CN: 10, SZ: 9, WT: 15, WL: 15, SP: 7, DF: 13 },
-        'More average except the high strength for crippling blows — every weapon in reach except the epee, which would waste the strength. Purely offensive, trading the Scrapper\'s defensive edge for damage.',
+        "More average except the high strength for crippling blows — every weapon in reach except the epee, which would waste the strength. Purely offensive, trading the Scrapper's defensive edge for damage.",
         'Lunge — commit to the attack.'
       ),
       concept(
@@ -218,43 +215,43 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Even Spread',
         { ST: 13, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 11 },
-        'Elder Snorri\'s first lunger — the article\'s namesake even spread. No godling, but the long spear did wicked things and he very nearly won his DA match.',
+        "Elder Snorri's first lunger — the article's namesake even spread. No godling, but the long spear did wicked things and he very nearly won his DA match.",
         'Hi-hi-mod behind the long spear; kill desire inside the 5-8 band.'
       ),
       concept(
         'The Aesir',
         { ST: 13, CN: 10, SZ: 9, WT: 15, WL: 15, SP: 11, DF: 11 },
-        'Snorri\'s best skill base — 50% initiative and attack, 30% parry, 35% defense, 20% riposte off balanced 15-15 wit and will.',
+        "Snorri's best skill base — 50% initiative and attack, 30% parry, 35% defense, 20% riposte off balanced 15-15 wit and will.",
         'Long spear or longsword; hi-hi-mod, KD 5-8.'
       ),
       concept(
         'Riposte Gamble',
         { ST: 9, CN: 15, SZ: 8, WT: 15, WL: 13, SP: 11, DF: 13 },
-        'Snorri\'s 60%-riposte outlier — the highest riposte base he ever recorded on a lunger, but with no parry behind it the riposte was sort of useless.',
+        "Snorri's 60%-riposte outlier — the highest riposte base he ever recorded on a lunger, but with no parry behind it the riposte was sort of useless.",
         'Lunge; the con lets him gamble on the counter.'
       ),
       concept(
         "Boar's Perfect",
         { ST: 13, CN: 7, SZ: 4, WT: 21, WL: 17, SP: 5, DF: 17 },
-        'The Wild Boar\'s theoretical defensive lunger — 21 wit, 17 deftness, tiny frame; fighting defensively compensates for the speed at which lungers burn endurance. 14-5 over his trial run.',
+        "The Wild Boar's theoretical defensive lunger — 21 wit, 17 deftness, tiny frame; fighting defensively compensates for the speed at which lungers burn endurance. 14-5 over his trial run.",
         'Off 4, Act 6 tapering to 4, KD 4 — all-out 9s when desperate; never run defensively vs other lungers.'
       ),
       concept(
         "Boar's Graduate",
         { ST: 13, CN: 11, SZ: 6, WT: 17, WL: 19, SP: 5, DF: 13 },
-        'The Wild Boar\'s listed actual — graduated with an expert in attack off 19 will on the dodge-first defensive plan.',
+        "The Wild Boar's listed actual — graduated with an expert in attack off 19 will on the dodge-first defensive plan.",
         'Off 4, Act 6→4; dodge; protect the body, attack the legs.'
       ),
       concept(
         "Assur's Model",
         { ST: 11, CN: 14, SZ: 9, WT: 13, WL: 21, SP: 5, DF: 11 },
-        'Synthesized from Assur\'s published standards — the only spread that meets them all: STR 11+ for the longsword, CON 8ish++, WIT 13+, WIL 21, SPD 5+, DFT 11+. No graduate ever met every bar; this is the target.',
+        "Synthesized from Assur's published standards — the only spread that meets them all: STR 11+ for the longsword, CON 8ish++, WIT 13+, WIL 21, SPD 5+, DFT 11+. No graduate ever met every bar; this is the target.",
         'Lazy 7-10 minute 1; AL off fast, OE ~7; longsword, scimitar vs plate; no tactics.'
       ),
       concept(
         'The Fantastic',
         { ST: 12, CN: 13, SZ: 8, WT: 13, WL: 21, SP: 6, DF: 11 },
-        'Assur\'s 17-6 graduate in a difficult arena — only normal damage even after two strength trains, but fantastic anyway.',
+        "Assur's 17-6 graduate in a difficult arena — only normal damage even after two strength trains, but fantastic anyway.",
         'Longsword; 7-10 minute 1, taper activity.'
       ),
       concept(
@@ -266,7 +263,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'The Natural',
         { ST: 9, CN: 11, SZ: 8, WT: 15, WL: 21, SP: 7, DF: 13 },
-        'Assur\'s 14-7 graduate — no trains at all, did normal damage, walked out of basic on raw bases.',
+        "Assur's 14-7 graduate — no trains at all, did normal damage, walked out of basic on raw bases.",
         'Longsword; 7-10 rhythm.'
       ),
       concept(
@@ -284,14 +281,14 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Arena Ace',
         { ST: 9, CN: 9, SZ: 13, WT: 17, WL: 21, SP: 4, DF: 11 },
-        'Assur\'s easy-arena graduate — 17-4 with good damage and normal endurance off 21 will and 17 wit.',
+        "Assur's easy-arena graduate — 17-4 with good damage and normal endurance off 21 will and 17 wit.",
         'Longsword; 7-10 rhythm.'
       ),
     ],
   },
   [FightingStyle.ParryLunge]: {
     doctrine:
-      'The parry-lunger is an attack god waiting to be born — arguably the most diverse style in the game, fielding the scimitar, the dodge, and the lunge-decise pairing all at once. Design for damage first (normal or better), then wit and will 15-21 for attack, learning, and endurance; deftness 11+ feeds attack, parry, and defense together, and 15 unlocks the epee. Constitution is the flex stat — the armor-piercing build runs it at 5 and clings to life by luck — while speed is nearly free: initiative and parry come from wit and deftness, not a lunger mimic\'s legs. Armor at or under encumbrance; an offhand weapon over a shield for a dodge-leaning defense. Defensively dodge is king, parry is honest early work, and both fade from the sheet as skills mature — drop the tactics after Expert and let the natural tools run. Hunts strikers, pikers, rippers, and slashers; stays away from lungers and bashers while young, and respects them forever after. A fragile, high-work style that rewards attention — never an autopilot pick.',
+      "The parry-lunger is an attack god waiting to be born — arguably the most diverse style in the game, fielding the scimitar, the dodge, and the lunge-decise pairing all at once. Design for damage first (normal or better), then wit and will 15-21 for attack, learning, and endurance; deftness 11+ feeds attack, parry, and defense together, and 15 unlocks the epee. Constitution is the flex stat — the armor-piercing build runs it at 5 and clings to life by luck — while speed is nearly free: initiative and parry come from wit and deftness, not a lunger mimic's legs. Armor at or under encumbrance; an offhand weapon over a shield for a dodge-leaning defense. Defensively dodge is king, parry is honest early work, and both fade from the sheet as skills mature — drop the tactics after Expert and let the natural tools run. Hunts strikers, pikers, rippers, and slashers; stays away from lungers and bashers while young, and respects them forever after. A fragile, high-work style that rewards attention — never an autopilot pick.",
     concepts: [
       concept(
         'All-Around Fencer',
@@ -308,25 +305,25 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Armor-Piercer',
         { ST: 11, CN: 5, SZ: 8, WT: 21, WL: 17, SP: 5, DF: 17 },
-        'The article\'s perfect spread — 21 wit and 17 deftness build a massive, pinpoint attack that renders defensive openings fruitless. Five constitution means he clings to life by luck and trains nothing but skills from fight one. Not for the weak of heart.',
+        "The article's perfect spread — 21 wit and 17 deftness build a massive, pinpoint attack that renders defensive openings fruitless. Five constitution means he clings to life by luck and trains nothing but skills from fight one. Not for the weak of heart.",
         'Longsword with an offhand; aim head. Walls up minute 1, then hunts at 9-9-7. Spastic 10-10-10 desperation.'
       ),
       concept(
         'First Graduate',
         { ST: 10, CN: 10, SZ: 9, WT: 17, WL: 17, SP: 4, DF: 17 },
-        'Tripwire\'s first listed graduate — a VL/HI favorite rhythm behind the scimitar. Balanced physicals and max-deftness skills are the versatile template: nothing wasted, every tool live.',
+        "Tripwire's first listed graduate — a VL/HI favorite rhythm behind the scimitar. Balanced physicals and max-deftness skills are the versatile template: nothing wasted, every tool live.",
         'Scimitar; very low effort, high activity; dodge on defense.'
       ),
       concept(
         'Two-Time Televised',
         { ST: 11, CN: 12, SZ: 7, WT: 21, WL: 15, SP: 5, DF: 13 },
-        'Tripwire\'s strategy example and two-time tourney victor — slow on paper (9/8/13/5/8/6) but the dodge covers it. Attack and dodge, keep the initiative and riposte, and stay at or under encumbrance.',
+        "Tripwire's strategy example and two-time tourney victor — slow on paper (9/8/13/5/8/6) but the dodge covers it. Attack and dodge, keep the initiative and riposte, and stay at or under encumbrance.",
         'HI/HI rhythm, longsword; open moderate-high with dodge, bleed to low effort late.'
       ),
       concept(
         'Parry Adept',
         { ST: 11, CN: 9, SZ: 8, WT: 17, WL: 15, SP: 9, DF: 15 },
-        'A one-time TV whose favorite tactic was parry — proof the style\'s natural parry is real even when dodge leads the plan. Higher speed than most parry-lungers carry.',
+        "A one-time TV whose favorite tactic was parry — proof the style's natural parry is real even when dodge leads the plan. Higher speed than most parry-lungers carry.",
         'Scimitar; high-high with parry while young, tactic-free once skills mature.'
       ),
       concept(
@@ -356,19 +353,19 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Outlier",
         { ST: 21, CN: 12, SZ: 7, WT: 17, WL: 9, SP: 7, DF: 11 },
-        'Assur\'s lone TV parry-lunger — a 21-strength brawler who fits no model and graduated anyway. Proof the style tolerates damage-first frames Tripwire never recommended.',
+        "Assur's lone TV parry-lunger — a 21-strength brawler who fits no model and graduated anyway. Proof the style tolerates damage-first frames Tripwire never recommended.",
         'Anything heavy; moderate rhythm; hits hard enough to end it early.'
       ),
     ],
   },
   [FightingStyle.ParryRiposte]: {
     doctrine:
-      'Uses superior riposte to steal the initiative and strike while the foe is off balance. Design for damage first — a ripper who cannot hurt what he parries loses anyway — then carrying capacity, hit points, and parry skills. Both hybrids and scum-leaning builds graduate. Scimitar and longsword are the staples, epee and shortsword for the deft, short spear and long spear for low-wit recruits; keep armor light within carrying capacity. Find each warrior\'s own rhythm — start near 4-6 OE/AL and experiment — with lunge-or-nothing offensively and parry/riposte defensively. Rippers hunt strikers and scum, die to aimed blows, and find slashers a tough out. Well suited to the lunge tactic, less so slash, terribly to bash and decisiveness. Defensively riposte and parry; dodge and responsiveness poorly.',
+      "Uses superior riposte to steal the initiative and strike while the foe is off balance. Design for damage first — a ripper who cannot hurt what he parries loses anyway — then carrying capacity, hit points, and parry skills. Both hybrids and scum-leaning builds graduate. Scimitar and longsword are the staples, epee and shortsword for the deft, short spear and long spear for low-wit recruits; keep armor light within carrying capacity. Find each warrior's own rhythm — start near 4-6 OE/AL and experiment — with lunge-or-nothing offensively and parry/riposte defensively. Rippers hunt strikers and scum, die to aimed blows, and find slashers a tough out. Well suited to the lunge tactic, less so slash, terribly to bash and decisiveness. Defensively riposte and parry; dodge and responsiveness poorly.",
     concepts: [
       concept(
         'Webweaver',
         { ST: 9, CN: 11, SZ: 6, WT: 19, WL: 18, SP: 6, DF: 15 },
-        'Centered on parry: high wit plus the style\'s riposte strength weaves a tight defensive web. Will is great for later stat trains and pairs with constitution for endurance. Deftness props up the riposte\'s lower attack rating and unlocks the epee.',
+        "Centered on parry: high wit plus the style's riposte strength weaves a tight defensive web. Will is great for later stat trains and pairs with constitution for endurance. Deftness props up the riposte's lower attack rating and unlocks the epee.",
         'Parry, then riposte.'
       ),
       concept(
@@ -402,33 +399,33 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
         'Epee or shortsword; high activity, low effort; riposte first.'
       ),
       concept(
-        'Necrom\'s Paragon',
+        "Necrom's Paragon",
         { ST: 9, CN: 4, SZ: 5, WT: 17, WL: 21, SP: 11, DF: 17 },
         'The textbook "perfect" spread: tiny frame, huge will, elite wit and deftness — epee-capable out of the gate. Constitution is the glaring hole; protect him until stat trains close it.',
         'Epee; riposte and parry; train ST and CN early.'
       ),
       concept(
-        'Thror\'s Lesson',
+        "Thror's Lesson",
         { ST: 15, CN: 10, SZ: 9, WT: 15, WL: 15, SP: 6, DF: 14 },
-        'Necrom\'s real ripper — the cautionary tale. Solid across the board but nothing elite; the early stat trains (ST, then WT) decided whether he graduated. Rippers live and die by damage output.',
+        "Necrom's real ripper — the cautionary tale. Solid across the board but nothing elite; the early stat trains (ST, then WT) decided whether he graduated. Rippers live and die by damage output.",
         'Scimitar; parry/riposte; train ST before chasing skills.'
       ),
       concept(
         'Fantasy Duelist',
         { ST: 11, CN: 11, SZ: 11, WT: 15, WL: 15, SP: 6, DF: 15 },
-        'Palinc\'s dual-wield survivor: even stats let him carry a main-gauche off-hand without starving either skill line. Average everywhere is fine when the riposte is doing the talking.',
+        "Palinc's dual-wield survivor: even stats let him carry a main-gauche off-hand without starving either skill line. Average everywhere is fine when the riposte is doing the talking.",
         'Two weapons — scimitar plus an off-hand; moderate rhythm.'
       ),
       concept(
         'Dawnrain',
         { ST: 9, CN: 13, SZ: 5, WT: 15, WL: 17, SP: 8, DF: 17 },
-        'Jorja\'s Tailida — the little-damage lesson made flesh. Deft enough for any weapon and will to spare, but 9 strength on a small frame means every riposte lands softly; the published fix was training ST toward 14.',
+        "Jorja's Tailida — the little-damage lesson made flesh. Deft enough for any weapon and will to spare, but 9 strength on a small frame means every riposte lands softly; the published fix was training ST toward 14.",
         'Low/moderate rhythm; epee or scimitar; parry-heavy early.'
       ),
       concept(
         'Scovellie',
         { ST: 9, CN: 13, SZ: 8, WT: 17, WL: 17, SP: 5, DF: 15 },
-        'Cadmus\'s basic ripper: balanced wit, will, and deftness on a mid-size frame. The (ST+CN)×WL endurance math comes out respectable — the baseline every serious ripper design is measured against.',
+        "Cadmus's basic ripper: balanced wit, will, and deftness on a mid-size frame. The (ST+CN)×WL endurance math comes out respectable — the baseline every serious ripper design is measured against.",
         'Moderate effort; scimitar; riposte the counter.'
       ),
       concept(
@@ -464,37 +461,37 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Champion",
         { ST: 12, CN: 7, SZ: 7, WT: 21, WL: 21, SP: 5, DF: 11 },
-        'Assur\'s DYO-type Tournament Champion — proof the worst style can take the biggest prize. Wit and will both maxed for learning; eleven deftness was the only number that mattered after wit.',
+        "Assur's DYO-type Tournament Champion — proof the worst style can take the biggest prize. Wit and will both maxed for learning; eleven deftness was the only number that mattered after wit.",
         'ALE/L or no armor on a fast frame; 9-10 or 10-10, decisiveness throughout.'
       ),
       concept(
         'Quiet Qualifier',
         { ST: 17, CN: 12, SZ: 4, WT: 21, WL: 7, SP: 12, DF: 11 },
-        'Doesn\'t look like anything special, yet TV\'d for Assur — the counterpoint to the godling trap. A sturdy frame carried APA/F plate through the qualifier run.',
+        "Doesn't look like anything special, yet TV'd for Assur — the counterpoint to the godling trap. A sturdy frame carried APA/F plate through the qualifier run.",
         '10-10 decisiveness; heavy armor affordable behind CN 12.'
       ),
       concept(
         'The False Godling',
         { ST: 15, CN: 5, SZ: 10, WT: 21, WL: 17, SP: 5, DF: 11 },
-        'Near-perfect on paper and completely mediocre in tournaments — Assur\'s cautionary tale. It learns attack naturally, rolled well, and still failed. With pikers, great stats do not ensure success.',
+        "Near-perfect on paper and completely mediocre in tournaments — Assur's cautionary tale. It learns attack naturally, rolled well, and still failed. With pikers, great stats do not ensure success.",
         '10-10 decisiveness; longsword or scimitar.'
       ),
       concept(
         'Eleven-Wit Scum',
         { ST: 15, CN: 16, SZ: 5, WT: 11, WL: 21, SP: 5, DF: 11 },
-        'Assur\'s scum-piker addendum — TV\'d rookies and graduated 19-3. His failed scum versions ran 3-7 wit; the one feature that separated this success was eleven wit. Constitution and will do the tank\'s work.',
+        "Assur's scum-piker addendum — TV'd rookies and graduated 19-3. His failed scum versions ran 3-7 wit; the one feature that separated this success was eleven wit. Constitution and will do the tank's work.",
         'Slow it down for scum matchups; parry and responsiveness behind armor.'
       ),
       concept(
         "Priest's Edge",
         { ST: 15, CN: 7, SZ: 11, WT: 17, WL: 16, SP: 7, DF: 11 },
-        'The Priest\'s strength-led rollup — when ST runs high and DF low, the piker fights like a striker: get the first, and only, blow in.',
+        "The Priest's strength-led rollup — when ST runs high and DF low, the piker fights like a striker: get the first, and only, blow in.",
         'Offensive plan: 10-10-10 decisiveness all the way through, even in desperation.'
       ),
       concept(
         "Priest's Guard",
         { ST: 11, CN: 7, SZ: 10, WT: 17, WL: 17, SP: 7, DF: 15 },
-        'The Priest\'s deftness-led rollup — when DF runs high and ST low, speed benefits the ability to move in reaction to the opponent.',
+        "The Priest's deftness-led rollup — when DF runs high and ST low, speed benefits the ability to move in reaction to the opponent.",
         'Defensive plan: responsiveness minute one, decisiveness from minute two, responsiveness in desperation.'
       ),
       concept(
@@ -506,7 +503,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Easy Design',
         { ST: 10, CN: 13, SZ: 12, WT: 21, WL: 9, SP: 6, DF: 13 },
-        'The easiest piker in the Pikers article — twenty-one wit is clear, nine will, eleven-plus deftness, the leftover points to strength. A learner built to outgrow the style\'s weak starting skills.',
+        "The easiest piker in the Pikers article — twenty-one wit is clear, nine will, eleven-plus deftness, the leftover points to strength. A learner built to outgrow the style's weak starting skills.",
         'Decisiveness offensively; let wit buy the skills the style lacks.'
       ),
       concept(
@@ -554,37 +551,37 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Sacred Lord',
         { ST: 11, CN: 7, SZ: 7, WT: 17, WL: 17, SP: 9, DF: 16 },
-        'Bookie\'s baseline-perfect slasher: wit, will, and deftness all elite so attack and initiative max out, speed just high enough to keep tempo honest. Strength buys the scimitar at creation and the broadsword after a train or two — his defense is not being there.',
+        "Bookie's baseline-perfect slasher: wit, will, and deftness all elite so attack and initiative max out, speed just high enough to keep tempo honest. Strength buys the scimitar at creation and the broadsword after a train or two — his defense is not being there.",
         'Slash only; scimitar or hatchet; hot open, fade to low.'
       ),
       concept(
         'Arcane Slasher',
         { ST: 6, CN: 3, SZ: 11, WT: 15, WL: 21, SP: 11, DF: 17 },
-        'Arcane Kid\'s will-over-flesh answer to the burn problem — constitution nearly bottomed so will does all the work and never tires of attacking. Deft enough for the scimitar from day one; keep him out of heavy armor until the trains land.',
+        "Arcane Kid's will-over-flesh answer to the burn problem — constitution nearly bottomed so will does all the work and never tires of attacking. Deft enough for the scimitar from day one; keep him out of heavy armor until the trains land.",
         'Slash only; scimitar; never stop attacking.'
       ),
       concept(
         'Darque Slasher',
         { ST: 13, CN: 10, SZ: 7, WT: 17, WL: 17, SP: 9, DF: 11 },
-        'Master Darque\'s compact bruiser — deftness deliberately bottomed because the style needs almost no defense; strength buys the heavy blades and the damage that ends fights before the endurance bill comes due.',
+        "Master Darque's compact bruiser — deftness deliberately bottomed because the style needs almost no defense; strength buys the heavy blades and the damage that ends fights before the endurance bill comes due.",
         'Slash only; battle axe or scimitar; hit first, hit hard.'
       ),
       concept(
         'Unbiased Slasher',
         { ST: 7, CN: 9, SZ: 5, WT: 21, WL: 18, SP: 11, DF: 13 },
-        'Tex\'s tiny razor — size five with wit twenty-one: learn everything, carry nothing, dodge with deftness. Proof that a slasher can be small and still win early enough for it not to matter.',
+        "Tex's tiny razor — size five with wit twenty-one: learn everything, carry nothing, dodge with deftness. Proof that a slasher can be small and still win early enough for it not to matter.",
         'Slash only; shortsword or hatchet; high effort, low activity.'
       ),
       concept(
         'Profile Slasher',
         { ST: 9, CN: 7, SZ: 15, WT: 17, WL: 15, SP: 10, DF: 11 },
-        'Jorja\'s graduate Vic — a size-fifteen slasher who proved the archetype flexible: the big frame carries hit points and damage while wit and will cover skills and endurance. Ran him attacking the right arm, protecting the body.',
+        "Jorja's graduate Vic — a size-fifteen slasher who proved the archetype flexible: the big frame carries hit points and damage while wit and will cover skills and endurance. Ran him attacking the right arm, protecting the body.",
         'Slash; any heavy blade; attack right arm, protect body.'
       ),
       concept(
         'Anti-Thesis',
         { ST: 13, CN: 11, SZ: 12, WT: 10, WL: 16, SP: 11, DF: 11 },
-        'Talon\'s deliberately average slasher who made AD anyway — no elite stat, nothing starved, scimitar-capable at creation. The article\'s lesson: you do not need a perfect design, only adequate stats, a good blade, and the right rhythm.',
+        "Talon's deliberately average slasher who made AD anyway — no elite stat, nothing starved, scimitar-capable at creation. The article's lesson: you do not need a perfect design, only adequate stats, a good blade, and the right rhythm.",
         'Slash; scimitar; hot open, collapse to moderate.'
       ),
     ],
@@ -602,7 +599,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Classic Striker',
         { ST: 15, CN: 5, SZ: 9, WT: 17, WL: 15, SP: 7, DF: 15 },
-        'The traditional striker — uses the style\'s decise advantage and a good wit to stay ahead of other styles. Deftness adds attack because the first shot has to count with low constitution. Strength is high for great damage and nearly any weapon. Endurance is the weak point: he has to end it quick.',
+        "The traditional striker — uses the style's decise advantage and a good wit to stay ahead of other styles. Deftness adds attack because the first shot has to count with low constitution. Strength is high for great damage and nearly any weapon. Endurance is the weak point: he has to end it quick.",
         'Decisiveness only.'
       ),
       concept(
@@ -615,7 +612,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Godling",
         { ST: 21, CN: 4, SZ: 7, WT: 21, WL: 9, SP: 11, DF: 11 },
-        'Assur\'s maxed godling — twenty-one strength and wit with everything else at minimums. Brilliant on paper, but four constitution means the first minute is the whole fight; Assur offers him as the cautionary entry.',
+        "Assur's maxed godling — twenty-one strength and wit with everything else at minimums. Brilliant on paper, but four constitution means the first minute is the whole fight; Assur offers him as the cautionary entry.",
         'Decisiveness — the bout must end before the flaws do.'
       ),
       concept(
@@ -627,7 +624,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Stayer",
         { ST: 9, CN: 3, SZ: 16, WT: 17, WL: 17, SP: 9, DF: 13 },
-        'Assur\'s endurance experiment — three constitution behind a sixteen-size hit-point pool and seventeen will. Staying power bought with size and will instead of constitution.',
+        "Assur's endurance experiment — three constitution behind a sixteen-size hit-point pool and seventeen will. Staying power bought with size and will instead of constitution.",
         'Decisiveness — and he can actually outlast the counter.'
       ),
       concept(
@@ -645,7 +642,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Cutter",
         { ST: 15, CN: 3, SZ: 11, WT: 21, WL: 9, SP: 14, DF: 11 },
-        'Fifteen strength and fourteen speed — Assur\'s scimitar striker, built to put a damaging blow in flight before anyone answers.',
+        "Fifteen strength and fourteen speed — Assur's scimitar striker, built to put a damaging blow in flight before anyone answers.",
         'Decisiveness; slash situationally.'
       ),
       concept(
@@ -657,40 +654,40 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Assur's Scholar",
         { ST: 9, CN: 9, SZ: 12, WT: 21, WL: 10, SP: 12, DF: 11 },
-        'The balanced twenty-one-wit build — no stat starved below nine, nothing wasted. Assur\'s safest striker: learns everything, lacks only a signature.',
+        "The balanced twenty-one-wit build — no stat starved below nine, nothing wasted. Assur's safest striker: learns everything, lacks only a signature.",
         'Any offensive tactic the matchup calls for; decisiveness by default.'
       ),
       // ── Blind Man's brainy low-will pair ──
       concept(
         'Brainy Striker',
         { ST: 11, CN: 12, SZ: 10, WT: 19, WL: 9, SP: 6, DF: 17 },
-        'Blind Man\'s thesis build — nineteen wit does the learning that nine will cannot, and seventeen deftness makes the first blow count. His argument: will is the stat a striker can starve.',
+        "Blind Man's thesis build — nineteen wit does the learning that nine will cannot, and seventeen deftness makes the first blow count. His argument: will is the stat a striker can starve.",
         'Decisiveness opener; responsiveness against opposing offensives.'
       ),
       concept(
         'Glass Decider',
         { ST: 9, CN: 12, SZ: 12, WT: 19, WL: 7, SP: 4, DF: 21 },
-        'The extreme version — twenty-one deftness decides bouts in a single exchange while four speed and seven will leave him glass. Blind Man\'s proof one maxed stat can carry a striker.',
+        "The extreme version — twenty-one deftness decides bouts in a single exchange while four speed and seven will leave him glass. Blind Man's proof one maxed stat can carry a striker.",
         'Decisiveness — win before the flaws show.'
       ),
       // ── Sir Boyd's Striking Style ──
       concept(
         "Sir Boyd's Perfect",
         { ST: 13, CN: 4, SZ: 9, WT: 21, WL: 11, SP: 9, DF: 17 },
-        'Sir Boyd\'s ideal — clears every stated minimum with maxed wit and near-maxed deftness. ST+SZ is 22, past his durability bar of 21.',
+        "Sir Boyd's ideal — clears every stated minimum with maxed wit and near-maxed deftness. ST+SZ is 22, past his durability bar of 21.",
         'Decisiveness; responsiveness against enemy strikers.'
       ),
       concept(
         "Sir Boyd's Swift",
         { ST: 11, CN: 4, SZ: 11, WT: 17, WL: 11, SP: 15, DF: 15 },
-        'Boyd\'s speed variant — fifteen speed sharpens the decise edge, and ST+SZ still reaches his 21-point bar.',
+        "Boyd's speed variant — fifteen speed sharpens the decise edge, and ST+SZ still reaches his 21-point bar.",
         'Decisiveness; responsiveness against enemy strikers.'
       ),
       // ── Talon's Strikers R Us — the Biffs, the Solid, the Perfect ──
       concept(
         "Fool's Biff",
         { ST: 10, CN: 10, SZ: 11, WT: 4, WL: 17, SP: 17, DF: 15 },
-        'Talon\'s wit-starved biff — four wit, seventeen speed and will. Deliberately jank: the style forgives a bad stat line when the first blow lands.',
+        "Talon's wit-starved biff — four wit, seventeen speed and will. Deliberately jank: the style forgives a bad stat line when the first blow lands.",
         'None — a biff runs naked.'
       ),
       concept(
@@ -708,32 +705,32 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'Hulk Biff',
         { ST: 4, CN: 8, SZ: 17, WT: 15, WL: 13, SP: 10, DF: 17 },
-        'The hulk — four strength on a seventeen-size frame with seventeen deftness. Hits like a feather, cannot be dropped: Talon\'s most perverse workable biff.',
+        "The hulk — four strength on a seventeen-size frame with seventeen deftness. Hits like a feather, cannot be dropped: Talon's most perverse workable biff.",
         'None — survive to the counter-punch.'
       ),
       concept(
         'Godling Biff',
         { ST: 21, CN: 3, SZ: 15, WT: 21, WL: 5, SP: 8, DF: 11 },
-        'Two twenty-ones and three dump stats — Talon\'s godling experiment. Magnificent in minute one, nothing left after.',
+        "Two twenty-ones and three dump stats — Talon's godling experiment. Magnificent in minute one, nothing left after.",
         'Decisiveness — there is no plan B.'
       ),
       concept(
         "Talon's Solid",
         { ST: 13, CN: 6, SZ: 9, WT: 17, WL: 17, SP: 9, DF: 13 },
-        'Talon\'s solid citizen — no gimmick, just seventeen wit and will over adequate everything. The build he actually recommends.',
+        "Talon's solid citizen — no gimmick, just seventeen wit and will over adequate everything. The build he actually recommends.",
         'Decisiveness in minute one; responsiveness if a defensive tactic is wanted.'
       ),
       concept(
         'Primal Perfect',
         { ST: 15, CN: 3, SZ: 5, WT: 21, WL: 15, SP: 8, DF: 17 },
-        'Talon\'s perfect column — twenty-one wit, fifteen will and strength, near-maxed deftness on a five-size frame. The dream roll-up.',
+        "Talon's perfect column — twenty-one wit, fifteen will and strength, near-maxed deftness on a five-size frame. The dream roll-up.",
         'Decisiveness; responsiveness against enemy decise.'
       ),
       // ── Tex's Yet Another Striker Article — eight veterans ──
       concept(
         "Tex's Workhorse",
         { ST: 13, CN: 5, SZ: 17, WT: 17, WL: 10, SP: 9, DF: 13 },
-        'Tex\'s 69-fight veteran — a seventeen-size, seventeen-wit workhorse that simply outlasted everyone. Proof durability and learning beat elegance over a career.',
+        "Tex's 69-fight veteran — a seventeen-size, seventeen-wit workhorse that simply outlasted everyone. Proof durability and learning beat elegance over a career.",
         'Decisiveness; slash or bash by the matchup.'
       ),
       concept(
@@ -751,39 +748,39 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         "Tex's Godling",
         { ST: 11, CN: 13, SZ: 11, WT: 21, WL: 9, SP: 6, DF: 13 },
-        'Tex\'s godling — twenty-one wit headlining a balanced frame with no true weakness. The safe godling.',
+        "Tex's godling — twenty-one wit headlining a balanced frame with no true weakness. The safe godling.",
         'Decisiveness; responsiveness against enemy strikers.'
       ),
       concept(
         "Tex's Fireball",
         { ST: 17, CN: 8, SZ: 7, WT: 17, WL: 5, SP: 13, DF: 17 },
-        'Five will with seventeen strength, speed, and deftness — burns spectacularly and briefly. Tex\'s cautionary fireball.',
+        "Five will with seventeen strength, speed, and deftness — burns spectacularly and briefly. Tex's cautionary fireball.",
         'Decisiveness only — the flame does not last.'
       ),
       concept(
         "Tex's Stayer",
         { ST: 10, CN: 10, SZ: 10, WT: 21, WL: 14, SP: 11, DF: 8 },
-        'Twenty-one wit and fourteen will — Tex\'s stayer wins long fights he has no business surviving.',
+        "Twenty-one wit and fourteen will — Tex's stayer wins long fights he has no business surviving.",
         'Any tactic the book allows; he has the wit to use them all.'
       ),
       concept(
         "Tex's Accident",
         { ST: 12, CN: 15, SZ: 4, WT: 18, WL: 21, SP: 4, DF: 10 },
-        'The accident — a roll meant for another style: eighteen wit, twenty-one will, four speed and four size. Graduated anyway; the article\'s strangest success.',
+        "The accident — a roll meant for another style: eighteen wit, twenty-one will, four speed and four size. Graduated anyway; the article's strangest success.",
         'None — let the skills do the work.'
       ),
       concept(
         "Tex's Grinder",
         { ST: 12, CN: 12, SZ: 7, WT: 20, WL: 14, SP: 9, DF: 10 },
-        'Twenty wit over a grinder\'s frame — nothing fancy: outlasts and out-learns.',
+        "Twenty wit over a grinder's frame — nothing fancy: outlasts and out-learns.",
         'Decisiveness early; whatever the second minute demands.'
       ),
       // ── The Crimson Strategist's synthesized build ──
       concept(
         'Crimson Striker',
         { ST: 13, CN: 5, SZ: 10, WT: 17, WL: 11, SP: 10, DF: 17 },
-        'The Crimson Strategist\'s synthesized ideal — clears every stated minimum (strength 9, wit 11, will 9, deftness 11) with seventeen wit and deftness; five constitution says pure offensive.',
-        'Decisiveness or responsiveness — the answer depends on the opponent\'s tempo.'
+        "The Crimson Strategist's synthesized ideal — clears every stated minimum (strength 9, wit 11, will 9, deftness 11) with seventeen wit and deftness; five constitution says pure offensive.",
+        "Decisiveness or responsiveness — the answer depends on the opponent's tempo."
       ),
     ],
   },
@@ -866,7 +863,7 @@ export const FIGHTER_CONCEPTS: Record<FightingStyle, StyleConceptGuide> = {
       concept(
         'The Graduate',
         { ST: 11, CN: 9, SZ: 6, WT: 13, WL: 21, SP: 9, DF: 17 },
-        "The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack, and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a wall survives wit under 15 when everything else is elite.",
+        'The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack, and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a wall survives wit under 15 when everything else is elite.',
         'Canon favorites: Quarterstaff, moderate offensive effort, low activity; the Riposte tactic runs well; learns initiative first.'
       ),
       concept(

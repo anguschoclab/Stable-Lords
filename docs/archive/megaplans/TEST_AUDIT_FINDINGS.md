@@ -260,42 +260,42 @@ wave-2 continues the numbering.
 
 ### 5a. Baseline metrics (fresh, 2026-10-22)
 
-| Metric | Value | Source |
-| ------ | ----- | ------ |
-| `bunx vitest run` (default) | **880 files / 9,467 pass / 2 pending / 0 fail** | `scripts/out/default-suite-timings.json` |
-| Per-file wall | p50 38ms · p90 1,487ms · p99 6,216ms · Σ512s | same |
-| Files >2s / >5s | **52 / 11** | same (TSV refreshed → 888 rows) |
-| `test-audit.json` | 921 vitest · 41 slow · 254 jsdom / 49 node pragmas · 248 needsDom · 0 missing-pragma · 0 basename collisions · 3 localFactory · **37 importSetClusters** | `scripts/out/test-audit.json` |
-| jscpd `src/test` | **88 clones / 1.02% dup lines** | `bunx jscpd src/test` → `scripts/out/jscpd/` (canonical scoped command; wave-1's "0" was the repo-wide run) |
-| dup-scan registered | test↔test **70 DEBT** (budget) + 9 EXEMPT · mixed 17 EXEMPT · ident queues w20=50 / w16=125 | `duplication.guard.test.ts`, `dup-scan.json` |
-| knip | 150 unused exports · 68 types · 4 duplicate exports (report-only) | `bun run dead-code` |
-| orphan-scan | 0 unreachable · 0 test-only-reachable | `scripts/out/orphan-scan.json` |
-| Wall time trend | 90.14s (wave-0) → 63.5s → 52.9s (wave-1) → ~66s (V18 baseline 10-21) | ledgers |
+| Metric                      | Value                                                                                                                                                    | Source                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `bunx vitest run` (default) | **880 files / 9,467 pass / 2 pending / 0 fail**                                                                                                          | `scripts/out/default-suite-timings.json`                                                                    |
+| Per-file wall               | p50 38ms · p90 1,487ms · p99 6,216ms · Σ512s                                                                                                             | same                                                                                                        |
+| Files >2s / >5s             | **52 / 11**                                                                                                                                              | same (TSV refreshed → 888 rows)                                                                             |
+| `test-audit.json`           | 921 vitest · 41 slow · 254 jsdom / 49 node pragmas · 248 needsDom · 0 missing-pragma · 0 basename collisions · 3 localFactory · **37 importSetClusters** | `scripts/out/test-audit.json`                                                                               |
+| jscpd `src/test`            | **88 clones / 1.02% dup lines**                                                                                                                          | `bunx jscpd src/test` → `scripts/out/jscpd/` (canonical scoped command; wave-1's "0" was the repo-wide run) |
+| dup-scan registered         | test↔test **70 DEBT** (budget) + 9 EXEMPT · mixed 17 EXEMPT · ident queues w20=50 / w16=125                                                              | `duplication.guard.test.ts`, `dup-scan.json`                                                                |
+| knip                        | 150 unused exports · 68 types · 4 duplicate exports (report-only)                                                                                        | `bun run dead-code`                                                                                         |
+| orphan-scan                 | 0 unreachable · 0 test-only-reachable                                                                                                                    | `scripts/out/orphan-scan.json`                                                                              |
+| Wall time trend             | 90.14s (wave-0) → 63.5s → 52.9s (wave-1) → ~66s (V18 baseline 10-21)                                                                                     | ledgers                                                                                                     |
 
 ### 5b. Validation ledger (draft claims → verdicts)
 
-| # | Claim | Verdict |
-| - | ----- | ------- |
-| V1 | 880 files / 9,469 tests / 0 fail / 2 pending | **APPROVED** |
-| V2 | TSV stale (Oct-8, 809 rows) | **APPROVED** → refreshed 888 rows |
-| V3 | 52 >2s / 11 >5s | **APPROVED** (list §5d) |
-| V4 | test-audit summary | **APPROVED** |
-| V5 | jscpd 88 clones "regrown" | **CORRECTED** — measurement-basis caveat; 88 is scoped ground truth |
-| V6 | TEST_DEBT ≈70 | **APPROVED (exact 70)** |
-| V7 | ~69 files outside CI bun shard | **CORRECTED → exactly 70; CI-only gap** (list §5c) — local `bun run test:bun` covers all |
-| V8 | `clickNavLink` dead helper | **CORRECTED** — unused export, live internally via `navigateNavLink`; fix = un-export |
-| V9 | 48 non-taxonomy qualifier files | **APPROVED** — all 41 qualifiers match `^[a-z][a-zA-Z]*$` → word rule, zero renames |
-| V10 | CATEGORY_DOMAIN missing lore/layout | **APPROVED — sharper**: unlisted dirs escape conformance silently → dir-registration guard |
-| V11 | Parallel fs-walk helpers | **APPROVED — triple** (`_setup/fsHelpers` ×5, `_helpers/fsWalk` ×5, inline copy in `testQualityAudit`) |
-| V12 | avatar-catalog `beforeEach` for all ~9.4k tests | **APPROVED** (`setup.node.ts:13-39`) |
-| V13 | 28 megaplan guards need lifecycle audit | **APPROVED** → §5e all LIVE_RATCHET |
-| V14 | demote >5s → `.slow` | **CORRECTED** — coverage-delta measurement required per demotion |
-| V15 | orphan-scan clean | **APPROVED** |
-| V16 | `src/test/scripts/` needs map entry | **DISPROVED** — `#scripts/` imports → exempt; register as non-mirror |
-| V17 | `e2e/screenshots` tracked | **DISPROVED** — untracked |
-| V18 | jsdom-pragma lever exhausted | **APPROVED** (6 indirect renderers only) |
-| V19 | `timings-to-tsv.mjs` missing | **APPROVED** → Phase-0 deliverable |
-| V20 | skip-ticket registry free | **CORRECTED** — `S*/D*` taken by V18 → wave-2 uses `MEGAPLAN-A*` |
+| #   | Claim                                           | Verdict                                                                                                |
+| --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| V1  | 880 files / 9,469 tests / 0 fail / 2 pending    | **APPROVED**                                                                                           |
+| V2  | TSV stale (Oct-8, 809 rows)                     | **APPROVED** → refreshed 888 rows                                                                      |
+| V3  | 52 >2s / 11 >5s                                 | **APPROVED** (list §5d)                                                                                |
+| V4  | test-audit summary                              | **APPROVED**                                                                                           |
+| V5  | jscpd 88 clones "regrown"                       | **CORRECTED** — measurement-basis caveat; 88 is scoped ground truth                                    |
+| V6  | TEST_DEBT ≈70                                   | **APPROVED (exact 70)**                                                                                |
+| V7  | ~69 files outside CI bun shard                  | **CORRECTED → exactly 70; CI-only gap** (list §5c) — local `bun run test:bun` covers all               |
+| V8  | `clickNavLink` dead helper                      | **CORRECTED** — unused export, live internally via `navigateNavLink`; fix = un-export                  |
+| V9  | 48 non-taxonomy qualifier files                 | **APPROVED** — all 41 qualifiers match `^[a-z][a-zA-Z]*$` → word rule, zero renames                    |
+| V10 | CATEGORY_DOMAIN missing lore/layout             | **APPROVED — sharper**: unlisted dirs escape conformance silently → dir-registration guard             |
+| V11 | Parallel fs-walk helpers                        | **APPROVED — triple** (`_setup/fsHelpers` ×5, `_helpers/fsWalk` ×5, inline copy in `testQualityAudit`) |
+| V12 | avatar-catalog `beforeEach` for all ~9.4k tests | **APPROVED** (`setup.node.ts:13-39`)                                                                   |
+| V13 | 28 megaplan guards need lifecycle audit         | **APPROVED** → §5e all LIVE_RATCHET                                                                    |
+| V14 | demote >5s → `.slow`                            | **CORRECTED** — coverage-delta measurement required per demotion                                       |
+| V15 | orphan-scan clean                               | **APPROVED**                                                                                           |
+| V16 | `src/test/scripts/` needs map entry             | **DISPROVED** — `#scripts/` imports → exempt; register as non-mirror                                   |
+| V17 | `e2e/screenshots` tracked                       | **DISPROVED** — untracked                                                                              |
+| V18 | jsdom-pragma lever exhausted                    | **APPROVED** (6 indirect renderers only)                                                               |
+| V19 | `timings-to-tsv.mjs` missing                    | **APPROVED** → Phase-0 deliverable                                                                     |
+| V20 | skip-ticket registry free                       | **CORRECTED** — `S*/D*` taken by V18 → wave-2 uses `MEGAPLAN-A*`                                       |
 
 ### 5c. CI bun-test shard coverage gap (70 files)
 
@@ -328,19 +328,19 @@ covers everything; this is a CI-enumeration gap only).
 
 ### 5d. Tail queue — 11 files >5s (fresh timings)
 
-| ms | File | Notes |
-| -- | ---- | ----- |
-| 10,324 | engine/pipeline/truncationCadence.test.ts | demote vs fixture-light: measure coverage delta |
-| 10,213 | engine/pool/enginePool.test.ts | real-pool work — candidate demote |
-| 9,381 | engine/rivals/namePool.test.ts | |
-| 9,077 | engine/simulateArenaBalance.test.ts | balance-sim — likely `.slow` |
-| 8,863 | engine/pipeline/mutableInput.test.ts | |
-| 8,614 | engine/championship/championsTournament.test.ts | coverage-heavy — prefer rewrite |
-| 6,817 | engine/ai/expansionService.test.ts | |
-| 6,216 | components/VirtualizedFallenGrid.test.tsx | jsdom+virtualization |
-| 6,215 | config/eslintSmoke.test.ts | subprocess lint — demote candidate |
-| 5,044 | engine/pipeline/skipToWeekEndOwnership.test.ts | |
-| 5,018 | engine/pipeline/finalizeContracts.test.ts | |
+| ms     | File                                            | Notes                                           |
+| ------ | ----------------------------------------------- | ----------------------------------------------- |
+| 10,324 | engine/pipeline/truncationCadence.test.ts       | demote vs fixture-light: measure coverage delta |
+| 10,213 | engine/pool/enginePool.test.ts                  | real-pool work — candidate demote               |
+| 9,381  | engine/rivals/namePool.test.ts                  |                                                 |
+| 9,077  | engine/simulateArenaBalance.test.ts             | balance-sim — likely `.slow`                    |
+| 8,863  | engine/pipeline/mutableInput.test.ts            |                                                 |
+| 8,614  | engine/championship/championsTournament.test.ts | coverage-heavy — prefer rewrite                 |
+| 6,817  | engine/ai/expansionService.test.ts              |                                                 |
+| 6,216  | components/VirtualizedFallenGrid.test.tsx       | jsdom+virtualization                            |
+| 6,215  | config/eslintSmoke.test.ts                      | subprocess lint — demote candidate              |
+| 5,044  | engine/pipeline/skipToWeekEndOwnership.test.ts  |                                                 |
+| 5,018  | engine/pipeline/finalizeContracts.test.ts       |                                                 |
 
 Coverage-floor rule (V14): `*.slow.test.*` is excluded from `test:coverage`
 and `bun test` — every demotion requires a before/after coverage delta on the
@@ -355,36 +355,36 @@ doc-parity, preserved behaviors) — **none are one-shot historical checks**, so
 zero retirements this wave. T6 registers them formally; new guards must
 register going forward.
 
-| Guard | Guards | Verdict |
-| ----- | ------ | ------- |
-| duplication.guard | src↔src/test↔test/mixed dup ledgers + baselines | LIVE_RATCHET |
-| entriesInLoop.guard | Object.entries-in-loop exception list | LIVE_RATCHET |
-| scanInLoop.guard | in-loop linear-scan exception list | LIVE_RATCHET |
-| skipCount.guard | .skip policy + ticket registry | LIVE_RATCHET |
-| orphanScan.guard | no new unreachable/test-only-reachable | LIVE_RATCHET |
-| paramBudget.guard | PARAM_LIMIT=5 | LIVE_RATCHET |
-| fileBudget | file/function size ceilings | LIVE_RATCHET |
-| uiTokens.guard | design-token/RNG policy | LIVE_RATCHET |
-| markdownSanitize.guard | rehype-sanitize pipeline | LIVE_RATCHET |
-| typeSurface | type-module export parity | LIVE_RATCHET |
-| informationArchitecture | Stable/World hub structure | LIVE_RATCHET |
-| documentationParity | docs vs live routes | LIVE_RATCHET |
-| legibility.contract | tracking/py caps | LIVE_RATCHET |
-| pagePrimitives.conformance | PageFrame/PageHeader usage | LIVE_RATCHET |
-| wiring.wired | G2/G3 feature wiring contracts | LIVE_RATCHET |
-| styleArchives.wired | G1 style-archive wiring | LIVE_RATCHET |
-| appShell.cta | L1 per-route CTA registry | LIVE_RATCHET |
-| v11DeadSurface.guard | dead barrels stay deleted | LIVE_RATCHET |
-| v11Dedup.guard.slow | prod cluster ceiling ≤50 (subprocess) | LIVE_RATCHET |
-| v11Restructure.guard | monolith dir/budget structure | LIVE_RATCHET |
-| v11Wiring.contract | V11 export-consumption contracts | LIVE_RATCHET |
-| v12Dedup.guard | V12 shared-helper existence+behavior | LIVE_RATCHET |
-| v12Srp.guard | V12 decomposition budgets | LIVE_RATCHET |
-| v14EntryPoints.guard | engineProxy call-site allowlist | LIVE_RATCHET |
-| v14PipelineDocs.guard | pipeline docs ⇄ pass table parity | LIVE_RATCHET |
-| v18Dedup.guard | V18 test-tier dedup contracts | LIVE_RATCHET |
-| v18Preservation.guard | §U unique-logic preservation | LIVE_RATCHET |
-| v18Srp.guard | V18 decomposition budgets | LIVE_RATCHET |
+| Guard                      | Guards                                          | Verdict      |
+| -------------------------- | ----------------------------------------------- | ------------ |
+| duplication.guard          | src↔src/test↔test/mixed dup ledgers + baselines | LIVE_RATCHET |
+| entriesInLoop.guard        | Object.entries-in-loop exception list           | LIVE_RATCHET |
+| scanInLoop.guard           | in-loop linear-scan exception list              | LIVE_RATCHET |
+| skipCount.guard            | .skip policy + ticket registry                  | LIVE_RATCHET |
+| orphanScan.guard           | no new unreachable/test-only-reachable          | LIVE_RATCHET |
+| paramBudget.guard          | PARAM_LIMIT=5                                   | LIVE_RATCHET |
+| fileBudget                 | file/function size ceilings                     | LIVE_RATCHET |
+| uiTokens.guard             | design-token/RNG policy                         | LIVE_RATCHET |
+| markdownSanitize.guard     | rehype-sanitize pipeline                        | LIVE_RATCHET |
+| typeSurface                | type-module export parity                       | LIVE_RATCHET |
+| informationArchitecture    | Stable/World hub structure                      | LIVE_RATCHET |
+| documentationParity        | docs vs live routes                             | LIVE_RATCHET |
+| legibility.contract        | tracking/py caps                                | LIVE_RATCHET |
+| pagePrimitives.conformance | PageFrame/PageHeader usage                      | LIVE_RATCHET |
+| wiring.wired               | G2/G3 feature wiring contracts                  | LIVE_RATCHET |
+| styleArchives.wired        | G1 style-archive wiring                         | LIVE_RATCHET |
+| appShell.cta               | L1 per-route CTA registry                       | LIVE_RATCHET |
+| v11DeadSurface.guard       | dead barrels stay deleted                       | LIVE_RATCHET |
+| v11Dedup.guard.slow        | prod cluster ceiling ≤50 (subprocess)           | LIVE_RATCHET |
+| v11Restructure.guard       | monolith dir/budget structure                   | LIVE_RATCHET |
+| v11Wiring.contract         | V11 export-consumption contracts                | LIVE_RATCHET |
+| v12Dedup.guard             | V12 shared-helper existence+behavior            | LIVE_RATCHET |
+| v12Srp.guard               | V12 decomposition budgets                       | LIVE_RATCHET |
+| v14EntryPoints.guard       | engineProxy call-site allowlist                 | LIVE_RATCHET |
+| v14PipelineDocs.guard      | pipeline docs ⇄ pass table parity               | LIVE_RATCHET |
+| v18Dedup.guard             | V18 test-tier dedup contracts                   | LIVE_RATCHET |
+| v18Preservation.guard      | §U unique-logic preservation                    | LIVE_RATCHET |
+| v18Srp.guard               | V18 decomposition budgets                       | LIVE_RATCHET |
 
 ### 5f. Consolidation queues (Phase-1 triage)
 
@@ -416,7 +416,6 @@ register going forward.
   violation.
 - Residual allowlists (2 misplaced, 3 localFactory) re-verified — judgment
   calls stand.
-
 
 ### 5h. Wave-2 outcome (2026-10-22)
 

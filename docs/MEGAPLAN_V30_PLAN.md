@@ -19,28 +19,29 @@ One-sentence summary: audit-validated, test-first harmonization of every duplica
 
 ## Workstreams
 
-| WS | Item | Target | Key files |
-|----|------|--------|-----------|
-| W1.1 | Shared weekly health tick | one `tickStableHealth` — fatigue −25 all; baseline `tickInjuries` all; accelerated `processRecovery` only under `'recovery'` assignment | `engine/ai/stableManager.ts`, `engine/ai/workers/rosterWorker.ts`, `engine/warrior/health.ts`→`stableHealth.ts`, `pipeline/passes/WarriorPass.ts`, `training/trainingImpact.ts` |
-| W1.2 | Shared training executor | weather-aware, injury roll gated on real attempt; effectiveness → 1.0 | `engine/ai/workers/rosterWorkerTraining.ts`, `training/trainingImpact.ts` → `training/trainingAttempt.ts` |
-| W1.3 | Shared drill executor | post-selection mechanics identical incl. `healingBonus + 1` injury roll both sides | same W1.2 set |
-| W1.4 | Shared economy ledger emitter | rivals consume `computeEconomyImpact` + `TRUNCATION_CAPS.rivalLedger`; rival seed salt preserved | `engine/ai/stableManager.ts`, `economy/weeklyBreakdown.ts`, `engine/ai/agentCore.ts` |
-| W1.5 | lastBoutWeek stamp | single `stampLastBoutWeek` for pipeline + tournament paths | `bout/services/boutResolution.ts`, `tournamentSelection/resolution/results.ts` → `bout/lastBoutWeek.ts` |
-| W1.6 | Ownership resolver | `resolveWarriorOwner` (map-backed, scan fallback); single-entity lookups route through it | `bout/warriorRouting.ts`, `arenaChampionship/core.ts`, inline sites → `core/warriorOwnership.ts` |
-| W2 | Dead code + namesakes | delete dead `updateWarriorAfterBout`/`updateWarriorStatus`/`appendFight`; `.slice(-500)`→`TRUNCATION_CAPS`; autosim renames/dedup; intelWorker + RecordBoards internal dups | careerUpdate, combatActions/types/initialState, stableManager, agentCore, autosim, intelWorker, RecordBoards |
-| W3 | Seeded-id determinism | deterministic ids (zero draws) inside seeded paths | injuryAndRecovery, resolveHelpers, BoutSimulationPass, progressionHandler, reportingHandler, patronTokenService, warriorFactory |
-| W4 | Type consolidation | `OffenseDefenseArgs`/`ResolveCombatOffenseDefenseArgs` → single interface + alias | `combat/resolution/offenseDefense/types.ts` |
-| W5 | Scripts + tests consolidation | `scripts/lib/scanLib.mjs`; test↔test drain to `_fixtures`/`_helpers` | ~15 scanner scripts; flagged test pairs |
-| W7 | Store equipment validation | `updateWarriorEquipment` validates via `validateLoadout` | `state/slices/`, `data/equipment` reuse |
-| W8 | Autosim offer-acceptance parity | `processPlayerOffers` routes through `evaluateBoutOffer` + player→rival adapter | `engine/autosim/autosim.ts` → `engine/autosim/playerOfferView.ts` |
-| W9 | Required-rng hardening | `rng` required in engine-seeded signatures | warriorFactory, patronTokenService, progressionHandler, reportingHandler + callers |
-| G1–G3 | New guards | parityFlow, seededId, jscpdRatchet (slow) | `scripts/parity-flow-scan.mjs`, `scripts/seeded-id-scan.mjs`, `src/test/megaplan/{parityFlow,seededId,jscpdRatchet}*` |
+| WS    | Item                            | Target                                                                                                                                                                      | Key files                                                                                                                                                                       |
+| ----- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| W1.1  | Shared weekly health tick       | one `tickStableHealth` — fatigue −25 all; baseline `tickInjuries` all; accelerated `processRecovery` only under `'recovery'` assignment                                     | `engine/ai/stableManager.ts`, `engine/ai/workers/rosterWorker.ts`, `engine/warrior/health.ts`→`stableHealth.ts`, `pipeline/passes/WarriorPass.ts`, `training/trainingImpact.ts` |
+| W1.2  | Shared training executor        | weather-aware, injury roll gated on real attempt; effectiveness → 1.0                                                                                                       | `engine/ai/workers/rosterWorkerTraining.ts`, `training/trainingImpact.ts` → `training/trainingAttempt.ts`                                                                       |
+| W1.3  | Shared drill executor           | post-selection mechanics identical incl. `healingBonus + 1` injury roll both sides                                                                                          | same W1.2 set                                                                                                                                                                   |
+| W1.4  | Shared economy ledger emitter   | rivals consume `computeEconomyImpact` + `TRUNCATION_CAPS.rivalLedger`; rival seed salt preserved                                                                            | `engine/ai/stableManager.ts`, `economy/weeklyBreakdown.ts`, `engine/ai/agentCore.ts`                                                                                            |
+| W1.5  | lastBoutWeek stamp              | single `stampLastBoutWeek` for pipeline + tournament paths                                                                                                                  | `bout/services/boutResolution.ts`, `tournamentSelection/resolution/results.ts` → `bout/lastBoutWeek.ts`                                                                         |
+| W1.6  | Ownership resolver              | `resolveWarriorOwner` (map-backed, scan fallback); single-entity lookups route through it                                                                                   | `bout/warriorRouting.ts`, `arenaChampionship/core.ts`, inline sites → `core/warriorOwnership.ts`                                                                                |
+| W2    | Dead code + namesakes           | delete dead `updateWarriorAfterBout`/`updateWarriorStatus`/`appendFight`; `.slice(-500)`→`TRUNCATION_CAPS`; autosim renames/dedup; intelWorker + RecordBoards internal dups | careerUpdate, combatActions/types/initialState, stableManager, agentCore, autosim, intelWorker, RecordBoards                                                                    |
+| W3    | Seeded-id determinism           | deterministic ids (zero draws) inside seeded paths                                                                                                                          | injuryAndRecovery, resolveHelpers, BoutSimulationPass, progressionHandler, reportingHandler, patronTokenService, warriorFactory                                                 |
+| W4    | Type consolidation              | `OffenseDefenseArgs`/`ResolveCombatOffenseDefenseArgs` → single interface + alias                                                                                           | `combat/resolution/offenseDefense/types.ts`                                                                                                                                     |
+| W5    | Scripts + tests consolidation   | `scripts/lib/scanLib.mjs`; test↔test drain to `_fixtures`/`_helpers`                                                                                                        | ~15 scanner scripts; flagged test pairs                                                                                                                                         |
+| W7    | Store equipment validation      | `updateWarriorEquipment` validates via `validateLoadout`                                                                                                                    | `state/slices/`, `data/equipment` reuse                                                                                                                                         |
+| W8    | Autosim offer-acceptance parity | `processPlayerOffers` routes through `evaluateBoutOffer` + player→rival adapter                                                                                             | `engine/autosim/autosim.ts` → `engine/autosim/playerOfferView.ts`                                                                                                               |
+| W9    | Required-rng hardening          | `rng` required in engine-seeded signatures                                                                                                                                  | warriorFactory, patronTokenService, progressionHandler, reportingHandler + callers                                                                                              |
+| G1–G3 | New guards                      | parityFlow, seededId, jscpdRatchet (slow)                                                                                                                                   | `scripts/parity-flow-scan.mjs`, `scripts/seeded-id-scan.mjs`, `src/test/megaplan/{parityFlow,seededId,jscpdRatchet}*`                                                           |
 
 ## Strict test-first schedule
 
-**Phase T commits ALL specs/scanners/guards before ANY production edit.** RED = failing assertion or missing-symbol import failure, logged in LEDGER §3. Documented exception: characterization pins (`// V30 pin:`) asserting *preserved* behavior — GREEN on old and new code, the no-regression net.
+**Phase T commits ALL specs/scanners/guards before ANY production edit.** RED = failing assertion or missing-symbol import failure, logged in LEDGER §3. Documented exception: characterization pins (`// V30 pin:`) asserting _preserved_ behavior — GREEN on old and new code, the no-regression net.
 
 New specs (Phase T, all observed RED unless marked pin):
+
 1. `test/engine/warrior/stableHealth.test.ts` — unified tick: fatigue −25 both; baseline −1 heal all; accelerated only via `'recovery'` assignment; identical outcomes both rosters.
 2. `test/engine/training/trainingAttempt.test.ts` — weather forwarded; no roll on `hardCapped`/`blocked`; stats recompute; seasonalGrowth.
 3. `test/engine/training/skillDrillParity.test.ts` — drill injury roll both sides at `healingBonus + 1`; cap/fallback preserved.
@@ -70,14 +71,14 @@ New specs (Phase T, all observed RED unless marked pin):
 
 ## RNG / determinism ledger
 
-| Change | Stream | Digest |
-|--------|--------|--------|
-| W1.1 unified health | none | none |
-| W1.2 gated AI rolls | removes draws (AI no-op weeks) | shifts |
-| W1.3 AI drill rolls | adds draws (AI drill weeks) | shifts |
-| W1.2 weather + effectiveness | same draws, different odds/gate | outcome drift |
-| W3/W9 deterministic + required rng | none added | id values change → deterministic |
-| all other items | none | none |
+| Change                             | Stream                          | Digest                           |
+| ---------------------------------- | ------------------------------- | -------------------------------- |
+| W1.1 unified health                | none                            | none                             |
+| W1.2 gated AI rolls                | removes draws (AI no-op weeks)  | shifts                           |
+| W1.3 AI drill rolls                | adds draws (AI drill weeks)     | shifts                           |
+| W1.2 weather + effectiveness       | same draws, different odds/gate | outcome drift                    |
+| W3/W9 deterministic + required rng | none added                      | id values change → deterministic |
+| all other items                    | none                            | none                             |
 
 Net: **one** world re-baseline attributable to Phase 3 (+ id shapes Phase 4).
 

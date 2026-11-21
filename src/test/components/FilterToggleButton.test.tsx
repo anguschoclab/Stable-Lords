@@ -14,7 +14,8 @@ interface FilterToggleButtonProps {
 
 function FilterToggleButton({ active, onClick, label, ariaLabel }: FilterToggleButtonProps) {
   return (
-    <button type="button"
+    <button
+      type="button"
       onClick={onClick}
       aria-label={ariaLabel}
       aria-pressed={active}

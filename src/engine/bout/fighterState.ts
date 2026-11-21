@@ -57,8 +57,7 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   // Resolve against the fitted loadout — warriors without equipment fall back
   // to their style's default weapon, so `warrior.equipment` alone can miss.
-  const favWeapon =
-    warrior && isWieldingFavoriteWeapon(warrior.favorites, equip.weapon) ? 1 : 0;
+  const favWeapon = warrior && isWieldingFavoriteWeapon(warrior.favorites, equip.weapon) ? 1 : 0;
   const mastery = getMasteryBonus(plan.style, favWeapon > 0);
   const veteranDef = warrior ? getVeteranDefBonus(warrior.age ?? 18, attrs.WL) : 0;
 
@@ -67,8 +66,7 @@ function gatherSkillModifiers(ctx: ModifierContext) {
   const ohShield = getShieldModifiers(equip.offhand); // V23/D1 — item-declared mods only
 
   const weaponReq: LoadoutWieldResult = checkLoadoutWieldability(equip, attrs, {
-    ambidextrous:
-      warrior?.handedness === 'ambidextrous' || warrior?.handedness === 'ambi-reversed',
+    ambidextrous: warrior?.handedness === 'ambidextrous' || warrior?.handedness === 'ambi-reversed',
   });
 
   // 5-tier encumbrance system

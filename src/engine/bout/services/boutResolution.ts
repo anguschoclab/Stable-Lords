@@ -163,8 +163,6 @@ function runBoutSimulation(
   };
 }
 
-
-
 interface CollectBoutImpactsArgs {
   state: GameState;
   ctx: BoutContext;

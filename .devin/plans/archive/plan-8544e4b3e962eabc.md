@@ -5,6 +5,7 @@
 ## What shipped
 
 **Content port**
+
 - `src/data/designDoctrine.ts` — `StyleFamily` + `STYLE_FAMILY` (offensive LU/SL/ST/AB/BA, defensive TP/PR/PS, mixed WS/PL), `FAMILY_GUIDE` doctrines, `DESIGN_REVIEW_THRESHOLDS`.
 - `src/data/fighterConcepts.ts` — 3 new concepts (canon 84-pt → auto-scaled): LU "Broke Stroker" (8/8/8/13/13/9/11), SL "Scimitar Adept" (7/7/12/11/14/8/11), ST "Low-Will Wonder" (14/8/6/14/7/12/9). Flow into builder presets, Style Archives, AI recruits.
 - `src/pages/help/sections.tsx` + `Help.tsx` — new "Designing a Warrior" codex section (accordion value `design`).
@@ -12,6 +13,7 @@
 - `docs/Stable_Lords_Warrior_Design_Arena_93_v1.0.md` — companion doc with canon/scaled tables.
 
 **Live advisor**
+
 - `src/engine/warrior/designReview.ts` — pure `reviewWarriorDesign(attrs, style)` scoring the five axes: family key attrs (mixed uses min ATT/PAR/DEF), ≥1 physical at "good"+ (endurance tier/damage class/HP), well-suited weapons met via real reqs (SZ deficits never trainable; "in reach" = ST/WT/DF deficit ≤2), breakpoint-primed trains on {ST,WT,WL,SP,DF} + 21+ premium trains + TP scum-WT note + AB deftness canon tip, WT/WL longevity profiles.
 - `src/components/WarriorBuilder/components/DesignReviewCard.tsx` — verdict-colored item list, mounted between `PhysicalsPreview` and `CreateButton`.
 

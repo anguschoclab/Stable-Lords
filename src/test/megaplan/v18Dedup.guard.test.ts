@@ -1,11 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
-import {
-  REPO,
-  candidateExists,
-  fileText,
-  occurrences,
-} from './_probeHelpers';
+import { REPO, candidateExists, fileText, occurrences } from './_probeHelpers';
 
 /**
  * MEGAPLAN-V18 test-tier deduplication spec (authored test-first).
@@ -88,7 +83,8 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   it('D5: statWarrior-shaped warrior literals repointed — MEGAPLAN-D5', () => {
-    const re = /career:\s*\{\s*wins:\s*0,\s*losses:\s*0,\s*kills:\s*0\s*\},\s*\n\s*champion:\s*false,\s*\n\s*status:\s*'Active'/g;
+    const re =
+      /career:\s*\{\s*wins:\s*0,\s*losses:\s*0,\s*kills:\s*0\s*\},\s*\n\s*champion:\s*false,\s*\n\s*status:\s*'Active'/g;
     const offenders = [
       'src/test/engine/strategyValidator.test.ts',
       'src/test/engine/bout/boutProcessorService.test.ts',
@@ -154,7 +150,8 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   it('D10: offseason specs repointed to makeOffseasonCtx (verbatim ctx literals drained) — MEGAPLAN-D10', () => {
-    const re = /rosterUpdates:\s*new Map(?:<[^>]*>)?\(\),\s*\n\s*newsletterItems:\s*\[\],\s*\n\s*ledgerEntries:\s*\[\]/g;
+    const re =
+      /rosterUpdates:\s*new Map(?:<[^>]*>)?\(\),\s*\n\s*newsletterItems:\s*\[\],\s*\n\s*ledgerEntries:\s*\[\]/g;
     const offenders = [
       'src/test/engine/pipeline/seasonalChaosWeaver.test.ts',
       'src/test/engine/pipeline/seasonalMonolithEvent.test.ts',
@@ -191,7 +188,7 @@ describe('megaplan V18: test-tier deduplication', () => {
     expect(offenders, 'rivalMap literals still inline').toEqual([]);
   });
 
-  it('D13: _fixtures echo clones repointed — Dragon\'s Hearth player literal drained — MEGAPLAN-D13', () => {
+  it("D13: _fixtures echo clones repointed — Dragon's Hearth player literal drained — MEGAPLAN-D13", () => {
     const re = /stableName:\s*["']Dragon's Hearth["']/g;
     const offenders = [
       'src/test/components/RosterWallAnimation.test.tsx',
@@ -204,7 +201,8 @@ describe('megaplan V18: test-tier deduplication', () => {
   });
 
   it('D14: misc cloned helpers extracted — walk crawler, comlink/worker mock, injury + tourney factories — MEGAPLAN-D14', () => {
-    const helpers = fileText('src/test/_helpers/fsWalk.ts') + fileText('src/test/_fixtures/fsWalk.ts');
+    const helpers =
+      fileText('src/test/_helpers/fsWalk.ts') + fileText('src/test/_fixtures/fsWalk.ts');
     expect(
       /function\* walk|walkTsFiles|listTsFiles/.test(helpers),
       'no shared fs-walk helper found (envSafety/moduleCacheRegistry)'

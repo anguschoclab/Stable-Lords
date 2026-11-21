@@ -2,7 +2,13 @@ import type { RivalStableData, MetaAdaptation } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNG, hashStr } from '@/utils/random';
-import { computeWarriorStats, rollBloodlust, rollHandedness, rollLuckfactor, applyHandednessAttack } from '@/engine/warrior/skillCalc';
+import {
+  computeWarriorStats,
+  rollBloodlust,
+  rollHandedness,
+  rollLuckfactor,
+  applyHandednessAttack,
+} from '@/engine/warrior/skillCalc';
 import { applyTraitAttrBonuses, generateTraits } from '@/engine/traits';
 import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';

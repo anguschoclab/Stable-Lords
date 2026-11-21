@@ -277,7 +277,7 @@ describe('classifyEvent — disarm', () => {
   });
 
   it('classifies weapon-drop prose by keywords', () => {
-    expect(classifyEvent("The Broadsword is batted clean out of their grip")).toBe('disarm');
+    expect(classifyEvent('The Broadsword is batted clean out of their grip')).toBe('disarm');
     expect(classifyEvent('fingers spasm open — the Maul clatters to the ground')).toBe('disarm');
     expect(classifyEvent('snatches the Broadsword back up in one fluid motion')).toBe('disarm');
     expect(classifyEvent('a backup Dagger is already in their fist')).toBe('disarm');

@@ -147,9 +147,7 @@ describe('buildWeeklyPoints', () => {
   });
 
   it('keeps only the last 12 weeks', () => {
-    const ledger = makeLedger(
-      Array.from({ length: 14 }, (_, i) => ({ week: i + 1, amount: 10 }))
-    );
+    const ledger = makeLedger(Array.from({ length: 14 }, (_, i) => ({ week: i + 1, amount: 10 })));
     const result = buildWeeklyPoints(ledger, 14, 140);
     expect(result).toHaveLength(12);
     expect(result[0]).toEqual({ week: 3, value: 30 });
@@ -193,9 +191,7 @@ describe('buildWeeklyPoints', () => {
   // LedgerEntry.week/amount are required by the type — the `?? 0` guards only
   // fire on malformed (e.g. legacy persisted) data; the cast documents that.
   it('coerces missing week/amount on malformed entries', () => {
-    const bad = [
-      { id: 'le-x' as LedgerEntry['id'], label: 'x', category: 'other' } as LedgerEntry,
-    ];
+    const bad = [{ id: 'le-x' as LedgerEntry['id'], label: 'x', category: 'other' } as LedgerEntry];
     const result = buildWeeklyPoints(bad, 3, 42);
     expect(result).toEqual([
       { week: 0, value: 0 },

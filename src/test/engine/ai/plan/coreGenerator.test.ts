@@ -354,7 +354,7 @@ describe('coreGenerator', () => {
         opponentStyle: opp,
       });
 
-    it('a Tactician\'s Response-suited fighter answers a decise style with Responsiveness', () => {
+    it("a Tactician's Response-suited fighter answers a decise style with Responsiveness", () => {
       const plan = strikerVs('Tactician', FightingStyle.StrikingAttack);
       expect(plan.defensiveTactic).toBe('Responsiveness');
     });

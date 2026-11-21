@@ -2,7 +2,11 @@
  * Simulation Initialization - RNG setup, fighter state, weather effects
  */
 import { createFighterState } from '../bout/fighterState';
-import { DEFAULT_LOADOUT, checkLoadoutWieldability, type LoadoutWieldResult } from '@/data/equipment';
+import {
+  DEFAULT_LOADOUT,
+  checkLoadoutWieldability,
+  type LoadoutWieldResult,
+} from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
 import {
   applyArenaWeatherMods,
@@ -110,7 +114,6 @@ export function initializeResolutionContext(
   const { planA, planD, effectiveWeather, warriorA, warriorD } = args;
   const { trainers, arenaId = 'standard_arena', crowdMood, deathRateMult } = args;
 
-
   const modsA = trainers
     ? getTrainerMods(trainers, planA.style)
     : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
@@ -169,4 +172,3 @@ export function initializeResolutionContext(
     deathRateMult,
   };
 }
-

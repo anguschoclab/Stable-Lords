@@ -8,7 +8,6 @@ import { ALL_EVENT_TYPES } from '@/test/_fixtures/eventLog';
 import type { FightSummary } from '@/types/game';
 import { makeAliceBobFight, makeCarolDaveFight } from '@/test/_fixtures/factories';
 
-
 describe('WeekDivider', () => {
   it('renders week number', () => {
     render(<WeekDivider week={5} />);
@@ -47,9 +46,7 @@ describe('processFightEvents', () => {
   });
 
   it('processes fight events correctly', () => {
-    const fights: FightSummary[] = [
-      makeAliceBobFight(),
-    ];
+    const fights: FightSummary[] = [makeAliceBobFight()];
     const result = processFightEvents(fights);
     expect(result).toHaveLength(1);
     expect(result[0]!.type).toBe('fight');
@@ -57,9 +54,7 @@ describe('processFightEvents', () => {
   });
 
   it('marks kill events correctly', () => {
-    const fights: FightSummary[] = [
-      makeCarolDaveFight(),
-    ];
+    const fights: FightSummary[] = [makeCarolDaveFight()];
     const result = processFightEvents(fights);
     expect(result[0]!.type).toBe('kill');
   });

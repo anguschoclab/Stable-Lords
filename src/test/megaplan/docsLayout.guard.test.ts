@@ -136,9 +136,8 @@ describe('docs layout', () => {
     const missing = nonArchiveDocs.filter(
       (f) => !linked.has(path.join(REPO, f)) && f !== 'docs/INDEX.md'
     );
-    expect(
-      missing,
-      `docs not catalogued in INDEX.md — add a row: ${missing.join(', ')}`
-    ).toEqual([]);
+    expect(missing, `docs not catalogued in INDEX.md — add a row: ${missing.join(', ')}`).toEqual(
+      []
+    );
   });
 });

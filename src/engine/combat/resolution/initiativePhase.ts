@@ -163,11 +163,7 @@ export function resolveInitiativePhase(args: ResolveInitiativePhaseArgs): {
   // emerges (bounded by JUMP_CLASH_MAX). Only the opening exchange clashes;
   // later exchanges roll once as always.
   if (ctx.exchange === 0 && Math.abs(iniA - iniD) < JUMP_DISPARITY && args.events) {
-    for (
-      let i = 0;
-      i < JUMP_CLASH_MAX && Math.abs(iniA - iniD) < JUMP_DISPARITY;
-      i++
-    ) {
+    for (let i = 0; i < JUMP_CLASH_MAX && Math.abs(iniA - iniD) < JUMP_DISPARITY; i++) {
       args.events.push({
         type: 'CLASH',
         actor: aGoesFirst ? 'A' : 'D',

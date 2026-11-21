@@ -331,6 +331,28 @@ function resolveFatigueMods(
 }
 
 /**
+ * Knockdown recovery — canon (SJJ): clumsy fighters are slower to rise; the
+ * auto-clear is a gated roll on the disarm stream (Normal+ always rises, no draw).
+ */
+function rollKnockdownRecovery(
+  fA: FighterState,
+  fD: FighterState,
+  disarmRng: () => number,
+  events: CombatEvent[]
+): void {
+  for (const [f, label] of [
+    [fA, 'A'],
+    [fD, 'D'],
+  ] as const) {
+    if (!f.knockedDown) continue;
+    const failChance = COORD_RISE_FAIL_CHANCE[f.coordination ?? ''] ?? 0;
+    if (failChance > 0 && disarmRng() >= 1 - failChance) continue; // stays down
+    f.knockedDown = false;
+    events.push({ type: 'RECOVERY', actor: label });
+  }
+}
+
+/**
  * Knockdown recovery, boundary phase shifts, conditional-plan evaluation and
  * decoy masking — everything that mutates `activePlan` before tactics resolve.
  */
@@ -340,19 +362,14 @@ function recoverAndAdaptPlans(
   ctx: ResolutionContext,
   phaseKey: 'opening' | 'mid' | 'late',
   events: CombatEvent[]
-): { condResultA: ReturnType<typeof evaluateConditions>; condResultD: ReturnType<typeof evaluateConditions> } {
+): {
+  condResultA: ReturnType<typeof evaluateConditions>;
+  condResultD: ReturnType<typeof evaluateConditions>;
+} {
   const disarmRng = ctx.disarmRng ?? ctx.rng;
 
   // ── Recovery from knockdown ──
-  // Canon (SJJ): clumsy fighters are slower to rise — the auto-clear is a
-  // gated roll on the disarm stream; Normal+ always rises (no draw).
-  for (const [f, label] of [[fA, 'A'], [fD, 'D']] as const) {
-    if (!f.knockedDown) continue;
-    const failChance = COORD_RISE_FAIL_CHANCE[f.coordination ?? ''] ?? 0;
-    if (failChance > 0 && disarmRng() >= 1 - failChance) continue; // stays down
-    f.knockedDown = false;
-    events.push({ type: 'RECOVERY', actor: label });
-  }
+  rollKnockdownRecovery(fA, fD, disarmRng, events);
 
   // ── Pending quickdraw: a fumbled backup draw completes now (no roll —
   // the stumble was one beat of delay). A fighter finishing the draw does
@@ -404,7 +421,10 @@ function resolvePsychAndSpecialty(
     condResultD: ReturnType<typeof evaluateConditions>;
   },
   events: CombatEvent[]
-): { psychA: ReturnType<typeof getPsychStateMods>['psychA']; psychD: ReturnType<typeof getPsychStateMods>['psychD'] } {
+): {
+  psychA: ReturnType<typeof getPsychStateMods>['psychA'];
+  psychD: ReturnType<typeof getPsychStateMods>['psychD'];
+} {
   // ── Psych state evaluation ──
   events.push(...evaluatePsychState(fA, fD, ctx, conds.condResultA, conds.condResultD));
 
@@ -433,7 +453,8 @@ export function prepareExchange(
     phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
 
   const { condResultA, condResultD } = recoverAndAdaptPlans(fA, fD, ctx, phaseKey, events);
-  const { psychA, psychD } = resolvePsychAndSpecialty(fA, fD, ctx, { condResultA, condResultD }, events);
+  const conds = { condResultA, condResultD };
+  const { psychA, psychD } = resolvePsychAndSpecialty(fA, fD, ctx, conds, events);
 
   emitIntentTelemetry({
     fA: fA,

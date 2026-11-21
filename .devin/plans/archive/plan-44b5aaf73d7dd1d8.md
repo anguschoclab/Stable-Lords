@@ -11,9 +11,10 @@ Port the three Arena-93 lunger articles across the repo's six established articl
 ## Validation findings (audited against live code — approve / correct)
 
 ### Approved as drafted
+
 1. **`fighterConcepts.ts`** — LU has 3 concepts (Scrapper, Heavy Spear, Broke Stroker); `concept()` helper scales `canonStats` → `stats` via `scaleToAttributeBudget` (clamps to `ATTRIBUTE_MIN=3`/`MAX=25`, sums to `ATTRIBUTE_TOTAL=70`); canon-sum test accepts `[83,86]`; file ~750 lines, +~150 lands ~900 < 1300-line `fileBudget` data ceiling. Duplication-guard pair already exempted.
 2. **All 12 canon spreads sum to exactly 84** (verified arithmetically) — safely inside the 83–86 contract.
-3. **Weapon reqs**: `longsword` = ST 11 / SZ 3 / WT 13 / DF 11 — *exactly* Assur's published LO frame; `checkWeaponRequirements` + `trainableDeficit` already exist for the "in reach" warn pattern (SL scimitar precedent). Short spear is LU's CW favorite — consistent.
+3. **Weapon reqs**: `longsword` = ST 11 / SZ 3 / WT 13 / DF 11 — _exactly_ Assur's published LO frame; `checkWeaponRequirements` + `trainableDeficit` already exist for the "in reach" warn pattern (SL scimitar precedent). Short spear is LU's CW favorite — consistent.
 4. **`stylePresets.ts`** — `PhaseVals`/`PresetSpec` support `offTac`/`defTac`/`desperatePlan`/`target`/`protect`; `'none'` is a valid tactic; `getAITactics(LU)` already returns `Lunge`/`Dodge`. Two spec presets pinned by name at indices 0–1 — **appending canon sheets preserves pinned indices**; the spec two remain untouched.
 5. **`canonTargeting.ts`** — `Partial<Record>` allows partial rows; ≤−3 refusal gate at `boutAcceptance/index.ts:64` handles the −3 automatically.
 6. **Doctrine call order** (`coreGenerator/index.ts`): `applyPlanValidation` → `applyStyleDoctrine` runs **before** `applyStrategicLayer` → `buildPhasePlan`, so an AL floor on the base plan propagates into opening/mid/late phases automatically — correct insertion point confirmed.
@@ -21,10 +22,11 @@ Port the three Arena-93 lunger articles across the repo's six established articl
 8. **`DesperatePlan`** supports `{OE, AL, killDesire, offensiveTactic?, defensiveTactic?}` — no `target`/`protect` needed there.
 9. **Weather/venue LU rows already exist** (`arena.ts` STYLE_WEATHER_MODIFIERS, `offerMatchmaking.isWeatherDisadvantaged`); articles are silent on weather → **no change there** (explicitly approved, not an oversight).
 10. **`documentationParity.test.ts`** only scans DESIGN_BIBLE route tokens → doc edits unaffected.
-11. **`styleMatcher`** (`getStyleMatchupMods` oe/al/kd) is a *separate* system from `canonTargetingBias` — its pinned LU tests are unaffected; we do not touch it.
+11. **`styleMatcher`** (`getStyleMatchupMods` oe/al/kd) is a _separate_ system from `canonTargetingBias` — its pinned LU tests are unaffected; we do not touch it.
 12. `designReview.test.ts` LU usages are axis-filtered → new style-axis notes don't break them (one weapons-ok case gains an extra style-axis warn item — still passes).
 
 ### Corrections the audit forced into the plan
+
 - **R1 — `styleDoctrine.test.ts:42-46` BREAKS**: `'does not touch other styles'` uses an LU warrior and asserts `plan(9,9,9)` passes through unchanged; the LU KD-cap 8 makes `killDesire` 8. **Fix in the same test-first pass**: swap that control case to `BashingAttack` (a still-doctrine-free style) and update its comment.
 - **R2 — `generateRecruitAttrs.test.ts:40` AT RISK**: 'LU recruits trend toward canon WT' asserts `agile.WT > neutral.WT + 1`. Ticket counts should stay stable (WT mean ≈12.7→3 tickets before and after), but the mean leader shifts WT→WL. **Verify; if it fails, update the assertion to canon WL leadership** (canon-true).
 - **R3 — `conceptPrimaryAttr(LU)` flips WT→WL** (new mean WL ≈14.7 > WT ≈12.7): the apprentice bump in `signWarrior.ts:116` becomes **+1 WL**. Canon-consistent (all three articles name WL the lifeline) — an intended, noted behavior change; verify nothing else pins it.
@@ -46,7 +48,7 @@ Port the three Arena-93 lunger articles across the repo's six established articl
 
 ## Workflow — strict test-first (RED → GREEN)
 
-> Repo convention (V21 megaplan): commit the complete spec inventory (RED) *before* merges. All new tests go into **existing** spec files — correct domains, no new files needed.
+> Repo convention (V21 megaplan): commit the complete spec inventory (RED) _before_ merges. All new tests go into **existing** spec files — correct domains, no new files needed.
 
 ### Phase 0 — RED spec inventory (all tests written first, verified failing for the right reasons)
 
@@ -78,30 +80,31 @@ Extend these existing files; run `bun run test` and confirm each new spec fails 
 9. **`src/test/engine/owner/roster/generateRecruitAttrs.test.ts`** — **pre-fix if needed**: after Phase 1 lands, either WT pin still passes (keep) or update to canon WL/WL+WT leadership with a comment citing the mean shift.
 10. **Docs/help regression** — if a cheap assertion exists for help-bullet counts, extend; otherwise manual check during verification.
 
-*Phase-0 acceptance: `bun run test` shows only the new specs failing (RED), each for the stated reason; `bun run type-check` stays green (tests compile — data/test fixtures don't require new types).*
+_Phase-0 acceptance: `bun run test` shows only the new specs failing (RED), each for the stated reason; `bun run type-check` stays green (tests compile — data/test fixtures don't require new types)._
 
 ### Phase 1 — Concepts + doctrine text (GREEN: spec group 1, 8)
 
 `src/data/fighterConcepts.ts`:
+
 - Rewrite LU `doctrine` (Snorri+Assur: even spread; ST/CN/WL all spend-worthy; LO at 13 ST vs epee trade-off; endurance burn ⇒ conservative rhythm; best-vs-offensives/dies-vs-scum; early kill punch).
 - Append 12 `concept(...)` entries after Broke Stroker, canon order Snorri→Boar→Assur:
 
-| # | Name | canonStats | Line |
-|---|------|-----------|------|
-| 1 | Even Spread | 13-12-12-12-12-12-11 | Snorri's first — long spear, nearly won his DA match |
-| 2 | The Aesir | 13-10-9-15-15-11-11 | Snorri's best skill base (50% ini/att) |
-| 3 | Riposte Gamble | 9-15-8-15-13-11-13 | 60% riposte, no parry — "sort of useless" |
-| 4 | Boar's Perfect | 13-7-4-21-17-5-17 | Wild Boar's theoretical defensive lunger |
-| 5 | Boar's Graduate | 13-11-6-17-19-5-13 | Actual graduate w/ attack expert |
-| 6 | Assur's Model | 11-14-9-13-21-5-11 | Synthesized minimum-meeting build (marked synthesized in notes, Crimson-Striker precedent) |
-| 7 | The Fantastic | 12-13-8-13-21-6-11 | 17-6 despite normal damage |
-| 8 | Freshman Crown | 9-15-11-14-20-5-10 | TC'd freshman busting stats |
-| 9 | The Natural | 9-11-8-15-21-7-13 | Graduated 14-7, no trains |
-| 10 | Lucky Roll | 10-10-4-16-20-14-10 | 16-5 on luck; missed LO suitability |
-| 11 | The Standard | 9-11-13-13-19-9-10 | Trained → 11-13-13-14-21-9-11, then 18-6 |
-| 12 | Arena Ace | 9-9-13-17-21-4-11 | 17-4 in an easy arena |
+| #   | Name            | canonStats           | Line                                                                                       |
+| --- | --------------- | -------------------- | ------------------------------------------------------------------------------------------ |
+| 1   | Even Spread     | 13-12-12-12-12-12-11 | Snorri's first — long spear, nearly won his DA match                                       |
+| 2   | The Aesir       | 13-10-9-15-15-11-11  | Snorri's best skill base (50% ini/att)                                                     |
+| 3   | Riposte Gamble  | 9-15-8-15-13-11-13   | 60% riposte, no parry — "sort of useless"                                                  |
+| 4   | Boar's Perfect  | 13-7-4-21-17-5-17    | Wild Boar's theoretical defensive lunger                                                   |
+| 5   | Boar's Graduate | 13-11-6-17-19-5-13   | Actual graduate w/ attack expert                                                           |
+| 6   | Assur's Model   | 11-14-9-13-21-5-11   | Synthesized minimum-meeting build (marked synthesized in notes, Crimson-Striker precedent) |
+| 7   | The Fantastic   | 12-13-8-13-21-6-11   | 17-6 despite normal damage                                                                 |
+| 8   | Freshman Crown  | 9-15-11-14-20-5-10   | TC'd freshman busting stats                                                                |
+| 9   | The Natural     | 9-11-8-15-21-7-13    | Graduated 14-7, no trains                                                                  |
+| 10  | Lucky Roll      | 10-10-4-16-20-14-10  | 16-5 on luck; missed LO suitability                                                        |
+| 11  | The Standard    | 9-11-13-13-19-9-10   | Trained → 11-13-13-14-21-9-11, then 18-6                                                   |
+| 12  | Arena Ace       | 9-9-13-17-21-4-11    | 17-4 in an easy arena                                                                      |
 
-  Names are new and unique (no dupes across concepts). Notes carry the record/lineage; tactics strings cite the source ("hi-hi-mod", "Off 4/Act 6 taper", "7-10 minute 1, AL off fast").
+Names are new and unique (no dupes across concepts). Notes carry the record/lineage; tactics strings cite the source ("hi-hi-mod", "Off 4/Act 6 taper", "7-10 minute 1, AL off fast").
 
 ### Phase 2 — Design review (GREEN: spec group 3)
 
@@ -111,6 +114,7 @@ Extend these existing files; run `bun run test` and confirm each new spec fails 
 ### Phase 3 — Presets (GREEN: spec group 2)
 
 `src/engine/bout/stylePresets.ts` — append 3 LU presets after Sustained Pressure:
+
 - `Assur's Lazy 7-10` — `{OE:7,AL:10,KD:6}`, phases `{7,10,6}→{7,5,5}→{6,4,4}`, `offensiveTactic:'none'`, `desperatePlan:{OE:7,AL:10,killDesire:6}`.
 - `Defensive Lunger` — `{OE:4,AL:5,KD:4}`, phases `{4,6,4}→{4,4,4}→{4,4,5}`, `defensiveTactic:'Dodge'`, `offensiveTactic:'none'`, `target:'Right Leg'`, `protect:'Body'`, `desperatePlan:{OE:9,AL:9,killDesire:9}` (all-out when cornered).
 - `Snorri's Tempo` — `{OE:9,AL:9,KD:7}`, phases `{9,9,7}→{7,7,6}→{5,6,5}` (hi-hi-mod, 5–8 KD band), signature tactics Lunge/Dodge via defaults.
@@ -118,12 +122,13 @@ Extend these existing files; run `bun run test` and confirm each new spec fails 
 
 ### Phase 4 — AI canon targeting + plan doctrine (GREEN: spec groups 4, 5, 7)
 
-- `src/engine/ai/matchup/canonTargeting.ts` — add `LUNGER_TARGETING` row: `TP −3` ("avoid like the plague"); `ST +2`, `BA +2`, `PS +1` ("hybrids and strikers/bashers are your best matchups"); `PR +1` (assassin-style defensive — kill window exists before they settle in); `SL −1` ("very high attack or initiative offensives can cause problems"); `WS −1`, `AB −1`, `PL +1`... *final small magnitudes tuned to the row; every nonzero entry gets a source comment; omissions default 0.*
+- `src/engine/ai/matchup/canonTargeting.ts` — add `LUNGER_TARGETING` row: `TP −3` ("avoid like the plague"); `ST +2`, `BA +2`, `PS +1` ("hybrids and strikers/bashers are your best matchups"); `PR +1` (assassin-style defensive — kill window exists before they settle in); `SL −1` ("very high attack or initiative offensives can cause problems"); `WS −1`, `AB −1`, `PL +1`... _final small magnitudes tuned to the row; every nonzero entry gets a source comment; omissions default 0._
 - `src/engine/ai/plan/coreGenerator/doctrine.ts` — add `LungingAttack` branch after PL: `plan.AL = max(4, AL)` (a lunger too slow to move isn't a lunger); `plan.killDesire = min(8, KD)` (Snorri's 5–8 band). Canonical comment block citing all three managers; constants `LUNGER_AL_FLOOR=4`, `LUNGER_KD_CAP=8`.
 
 ### Phase 5 — Strategy validator (GREEN: spec group 6)
 
 `src/engine/strategy/strategyValidator.ts` (the **soft-warning** file — not `ai/plan/strategyValidator.ts`):
+
 - Named constants `LUNGER_AL_HIGH=6`, `LUNGER_OE_LOW=3`, `LUNGER_AL_LOW=5`, `LUNGER_TACTIC_COUNT=2`.
 - `lungerRhythmWarnings(plan, OE, AL, out)` — codes `LU_SUSTAINED_HIGH_AL` (warn), `LU_LOW_OFFENSE` (warn), `LU_TACTICS_HEAVY` (info); copy cites Snorri (endurance burn), Boar (taper), Assur (laziness). Wire in `validateStrategy` after `plCanonWarnings`.
 

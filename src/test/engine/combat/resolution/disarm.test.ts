@@ -46,9 +46,7 @@ describe('rollDisarmChance', () => {
   });
 
   it('caps at DISARM_CHANCE_CAP', () => {
-    expect(rollDisarmChance({ armHits: 50, damageRatio: 1, isCrit: true })).toBe(
-      DISARM_CHANCE_CAP
-    );
+    expect(rollDisarmChance({ armHits: 50, damageRatio: 1, isCrit: true })).toBe(DISARM_CHANCE_CAP);
   });
 });
 
@@ -262,18 +260,14 @@ describe('tryRearm', () => {
   it('no-ops when nothing was dropped', () => {
     const fighter = armed();
     const events: CombatEvent[] = [];
-    expect(tryRearm({ events: events, rng: () => 0, fighter: fighter, label: 'D' })).toBe(
-      false
-    );
+    expect(tryRearm({ events: events, rng: () => 0, fighter: fighter, label: 'D' })).toBe(false);
     expect(events).toHaveLength(0);
   });
 
   it('keeps the fighter unarmed on a failed roll', () => {
     const fighter = armed({ weaponId: 'fist', droppedWeaponId: 'broadsword' });
     const events: CombatEvent[] = [];
-    expect(tryRearm({ events: events, rng: () => 0.99, fighter: fighter, label: 'D' })).toBe(
-      false
-    );
+    expect(tryRearm({ events: events, rng: () => 0.99, fighter: fighter, label: 'D' })).toBe(false);
     expect(fighter.weaponId).toBe('fist');
     expect(fighter.droppedWeaponId).toBe('broadsword');
   });

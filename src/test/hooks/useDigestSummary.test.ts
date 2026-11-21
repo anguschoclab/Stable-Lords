@@ -4,12 +4,8 @@ import { renderHook } from '@testing-library/react';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
-import type {
-  BoutOfferId, PromoterId } from '@/types/shared.types';
-import {
-  makeDigestFight,
-  makeBoutOffer as fixtureBoutOffer,
-} from '@/test/_fixtures/factories';
+import type { BoutOfferId, PromoterId } from '@/types/shared.types';
+import { makeDigestFight, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 const makeFight = (overrides: Partial<FightSummary> = {}): FightSummary =>
   makeDigestFight(overrides);

@@ -132,11 +132,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
           {(() => {
             const arenaId = rival.strategy?.targetArenaId;
             if (!arenaId) return <span>Targeting: {targetName}</span>;
-            return (
-              <span>
-                Title campaign: {tryGetArenaById(arenaId)?.name ?? arenaId}
-              </span>
-            );
+            return <span>Title campaign: {tryGetArenaById(arenaId)?.name ?? arenaId}</span>;
           })()}
         </div>
       </CardContent>

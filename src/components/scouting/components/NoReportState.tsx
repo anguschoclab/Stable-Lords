@@ -67,7 +67,8 @@ function ScoutingButton({ quality, cost, canAfford, onClick }: ScoutingButtonPro
   const variance = getScoutAttributeVariance(quality);
 
   return (
-    <button type="button"
+    <button
+      type="button"
       disabled={!canAfford}
       onClick={onClick}
       className={cn(

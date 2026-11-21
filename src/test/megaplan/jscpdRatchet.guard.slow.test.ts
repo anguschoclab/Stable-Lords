@@ -22,19 +22,15 @@ const REPORT = path.join(REPO, 'scripts/out/jscpd/jscpd-report.json');
 const CLONE_COUNT_BASELINE = 96;
 
 describe('jscpd ratchet (V30)', () => {
-  it(
-    'total clone count stays at or below the ratchet baseline',
-    () => {
-      execFileSync('bun', ['run', 'dupes'], { cwd: REPO, stdio: 'pipe', timeout: 300_000 });
-      const report = JSON.parse(readFileSync(REPORT, 'utf8')) as {
-        statistics: { total: { clones: number } };
-      };
-      const clones = report.statistics.total.clones;
-      expect(
-        clones,
-        `jscpd found ${clones} clones (> baseline ${CLONE_COUNT_BASELINE}) — dedupe or tighten the constant deliberately`
-      ).toBeLessThanOrEqual(CLONE_COUNT_BASELINE);
-    },
-    300_000
-  );
+  it('total clone count stays at or below the ratchet baseline', () => {
+    execFileSync('bun', ['run', 'dupes'], { cwd: REPO, stdio: 'pipe', timeout: 300_000 });
+    const report = JSON.parse(readFileSync(REPORT, 'utf8')) as {
+      statistics: { total: { clones: number } };
+    };
+    const clones = report.statistics.total.clones;
+    expect(
+      clones,
+      `jscpd found ${clones} clones (> baseline ${CLONE_COUNT_BASELINE}) — dedupe or tighten the constant deliberately`
+    ).toBeLessThanOrEqual(CLONE_COUNT_BASELINE);
+  }, 300_000);
 });

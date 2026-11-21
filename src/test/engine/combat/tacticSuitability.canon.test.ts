@@ -13,10 +13,7 @@ import {
   getOffensiveSuitability,
   getDefensiveSuitability,
 } from '@/engine/strategy/tacticSuitability';
-import {
-  getBestOffensiveTactic,
-  getBestDefensiveTactic,
-} from '@/engine/ai/plan/tacticAdvisor';
+import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { DOUBLE_TACTIC_EFFECTIVENESS } from '@/constants/combat';
 import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
@@ -47,15 +44,15 @@ describe('unsuited tactics are net-negative (Pagan: U drains more than it gives)
   }
 
   it('WS tactics still give a real bonus', () => {
-    expect(offNet(getOffensiveTacticMods('Decisiveness', FightingStyle.StrikingAttack)))
-      .toBeGreaterThan(0);
-    expect(defNet(getDefensiveTacticMods('Parry', FightingStyle.TotalParry)))
-      .toBeGreaterThan(0);
+    expect(
+      offNet(getOffensiveTacticMods('Decisiveness', FightingStyle.StrikingAttack))
+    ).toBeGreaterThan(0);
+    expect(defNet(getDefensiveTacticMods('Parry', FightingStyle.TotalParry))).toBeGreaterThan(0);
   });
 });
 
 describe('double tactics are very limiting (Consortium canon)', () => {
-  it('offensive + defensive tactic together halve the pair\'s benefits', () => {
+  it("offensive + defensive tactic together halve the pair's benefits", () => {
     expect(doubleTacticEffectiveness('Lunge', 'Parry')).toBe(DOUBLE_TACTIC_EFFECTIVENESS);
     expect(DOUBLE_TACTIC_EFFECTIVENESS).toBeLessThan(1);
   });
@@ -76,10 +73,8 @@ describe('AI never plans an unsuited tactic (regression lock)', () => {
     for (const style of STYLES) {
       const off = getBestOffensiveTactic(style);
       const def = getBestDefensiveTactic(style);
-      if (off !== 'none')
-        expect(getOffensiveSuitability(style, off)).not.toBe('U');
-      if (def !== 'none')
-        expect(getDefensiveSuitability(style, def)).not.toBe('U');
+      if (off !== 'none') expect(getOffensiveSuitability(style, off)).not.toBe('U');
+      if (def !== 'none') expect(getDefensiveSuitability(style, def)).not.toBe('U');
     }
   });
 });

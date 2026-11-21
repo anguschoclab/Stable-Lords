@@ -5,10 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import type { FighterState } from '@/engine/combat/resolution/types';
 import { FightingStyle } from '@/types/shared.types';
-import {
-  setupExchange,
-  callResolveCombatOffenseDefense,
-} from '@/test/_fixtures/exchangeSetup';
+import { setupExchange, callResolveCombatOffenseDefense } from '@/test/_fixtures/exchangeSetup';
 
 const STRONG_ATT: FighterState['skills'] = {
   ATT: 20,

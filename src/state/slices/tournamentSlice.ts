@@ -26,11 +26,7 @@ export interface TournamentSlice {
   /** V27: scratch a warrior from the cycle (invite declined or entry pulled). */
   scratchTournamentEntry: (warriorId: WarriorId) => void;
   /** V27: player-initiated grudge call-out on a completed class bracket. */
-  callOutGrudgeMatch: (
-    tournamentId: TournamentId,
-    loserId: WarriorId,
-    killerId: WarriorId
-  ) => void;
+  callOutGrudgeMatch: (tournamentId: TournamentId, loserId: WarriorId, killerId: WarriorId) => void;
   /** V27: player-initiated stablemate hunt — an unbooked bracket finisher
    *  avenges a felled stablemate when the victim itself is already booked. */
   sendStablemateHunt: (

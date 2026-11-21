@@ -35,11 +35,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
-      <ShellTop
-        shell={shell}
-        compact={isCompactShell}
-        onResetPrompt={() => setResetOpen(true)}
-      />
+      <ShellTop shell={shell} compact={isCompactShell} onResetPrompt={() => setResetOpen(true)} />
 
       <ShellContent
         week={week}

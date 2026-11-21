@@ -31,7 +31,8 @@ export const parryRiposte: StyleStrategy = {
     attBonus: ctx.phase === 'OPENING' ? PR_PASSIVE_OPENING_ATT : 0,
     parBonus: PR_PASSIVE_PAR,
     ripBonus:
-      PR_PASSIVE_RIP + (ctx.ripostes >= PR_PASSIVE_RIP_STREAK_COUNT ? PR_PASSIVE_RIP_STREAK_ADD : 0),
+      PR_PASSIVE_RIP +
+      (ctx.ripostes >= PR_PASSIVE_RIP_STREAK_COUNT ? PR_PASSIVE_RIP_STREAK_ADD : 0),
     hasPassiveNarrative: ctx.ripostes >= PR_PASSIVE_NARRATIVE_RIPOSTES,
   }),
   getKillMechanic: () => ({

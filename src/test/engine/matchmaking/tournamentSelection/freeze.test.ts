@@ -24,9 +24,7 @@ const w = (id: string, fe: number, stableId = TOURNEY_PLAYER_ID) =>
 function stateWith(warriors: ReturnType<typeof w>[]) {
   const state = makeTournamentBaseState(8);
   state.roster = warriors.filter((x) => x.stableId === TOURNEY_PLAYER_ID);
-  state.rivals = [
-    makeTournamentRival(warriors.filter((x) => x.stableId === TOURNEY_RIVAL_ID)),
-  ];
+  state.rivals = [makeTournamentRival(warriors.filter((x) => x.stableId === TOURNEY_RIVAL_ID))];
   state.realmRankings = Object.fromEntries(
     warriors.map((x, i) => [x.id, ranked(i + 1, 1000 - i * 10)])
   );
@@ -34,7 +32,7 @@ function stateWith(warriors: ReturnType<typeof w>[]) {
 }
 
 describe('handleTournamentFreeze — FE snapshot & class invites', () => {
-  it('snapshots every rostered warrior\'s fight-equivalents at freeze', () => {
+  it("snapshots every rostered warrior's fight-equivalents at freeze", () => {
     const state = stateWith([w('a', 0), w('b', 4, TOURNEY_RIVAL_ID), w('c', 7)]);
     const impact = handleTournamentFreeze(state, 8, new SeededRNG(1));
     const cycle = impact.tournamentCycle!;

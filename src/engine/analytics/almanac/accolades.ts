@@ -27,7 +27,12 @@ export function computeAccoladeBoards(input: AlmanacInput): AlmanacBoard[] {
 
   const boards: AlmanacBoard[] = [];
   for (const [type, entries] of byType) {
-    entries.sort(by(numDesc((e) => e.award.year), numAsc((e) => e.idx)));
+    entries.sort(
+      by(
+        numDesc((e) => e.award.year),
+        numAsc((e) => e.idx)
+      )
+    );
     boards.push(
       mkBoard(
         `accolade-${type}`,

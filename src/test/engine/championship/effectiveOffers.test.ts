@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  createChampionshipDelta,
-  effectiveOffers,
-} from '@/engine/championship/arenaChampionship';
+import { createChampionshipDelta, effectiveOffers } from '@/engine/championship/arenaChampionship';
 import { makeBoutOffer, makeGameState } from '@/test/_fixtures/factories';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
@@ -19,8 +16,7 @@ const offer = (id: string, over: Partial<BoutOffer> = {}) =>
 const rec = (...os: BoutOffer[]) =>
   Object.fromEntries(os.map((o) => [o.id, o])) as Record<BoutOfferId, BoutOffer>;
 
-const stateWith = (boutOffers: Record<BoutOfferId, BoutOffer>) =>
-  makeGameState({ boutOffers });
+const stateWith = (boutOffers: Record<BoutOfferId, BoutOffer>) => makeGameState({ boutOffers });
 
 describe('effectiveOffers — delta overlay over state.boutOffers', () => {
   it('returns base offers in record order with delta newOffers appended after', () => {

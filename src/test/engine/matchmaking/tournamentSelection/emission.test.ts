@@ -24,13 +24,10 @@ function cycleState(entries: {
   const all = [...(entries.rookies ?? []), ...(entries.apprentices ?? [])];
   const state = makeTournamentBaseState(10);
   state.roster = all.filter((x) => x.stableId === TOURNEY_PLAYER_ID);
-  state.rivals = [
-    makeTournamentRival(all.filter((x) => x.stableId === TOURNEY_RIVAL_ID)),
-  ];
+  state.rivals = [makeTournamentRival(all.filter((x) => x.stableId === TOURNEY_RIVAL_ID))];
   const invited: TournamentCycle['invited'] = {};
   if (entries.rookies?.length) invited.rookies = entries.rookies.map((x) => x.id);
-  if (entries.apprentices?.length)
-    invited.apprentices = entries.apprentices.map((x) => x.id);
+  if (entries.apprentices?.length) invited.apprentices = entries.apprentices.map((x) => x.id);
   const declaredStable = entries.declaredStable ?? TOURNEY_PLAYER_ID;
   const rookieIds = new Set((entries.rookies ?? []).map((x) => x.id));
   state.tournamentCycle = {
@@ -56,11 +53,7 @@ describe('emitClassTournaments — one bracket per populated class', () => {
       w(`p${i}`, i % 2 === 0 ? TOURNEY_PLAYER_ID : TOURNEY_RIVAL_ID)
     );
     const state = cycleState({ rookies: field });
-    const { tournaments, activeTournamentId } = emitClassTournaments(
-      state,
-      10,
-      new SeededRNG(3)
-    );
+    const { tournaments, activeTournamentId } = emitClassTournaments(state, 10, new SeededRNG(3));
     expect(tournaments).toHaveLength(1);
     const t = tournaments[0]!;
     expect(t.classId).toBe('rookies');
@@ -80,11 +73,7 @@ describe('emitClassTournaments — one bracket per populated class', () => {
       w(`a${i}`, i < 4 ? TOURNEY_PLAYER_ID : TOURNEY_RIVAL_ID)
     );
     const state = cycleState({ rookies, apprentices });
-    const { tournaments, activeTournamentId } = emitClassTournaments(
-      state,
-      10,
-      new SeededRNG(3)
-    );
+    const { tournaments, activeTournamentId } = emitClassTournaments(state, 10, new SeededRNG(3));
     expect(tournaments).toHaveLength(2);
     const apprenticeBracket = tournaments.find((t) => t.classId === 'apprentices')!;
     expect(activeTournamentId).toBe(apprenticeBracket.id);

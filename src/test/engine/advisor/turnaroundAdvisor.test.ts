@@ -166,9 +166,9 @@ describe('diagnoseTurnaround', () => {
     // At least one of the two should exist — the matrix always has an opinion.
     expect(challenge ?? avoid).toBeDefined();
     if (challenge) {
-      expect(getMatchupBonus(FightingStyle.LungingAttack, challenge.target as never)).toBeGreaterThan(
-        0
-      );
+      expect(
+        getMatchupBonus(FightingStyle.LungingAttack, challenge.target as never)
+      ).toBeGreaterThan(0);
     }
     if (avoid) {
       expect(getMatchupBonus(FightingStyle.LungingAttack, avoid.target as never)).toBeLessThan(0);

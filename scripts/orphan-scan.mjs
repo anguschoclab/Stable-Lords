@@ -588,6 +588,8 @@ console.log(`-- Page files unreachable: ${unlinkedPages.length}`);
 for (const p of unlinkedPages) console.log(`   ${p}`);
 console.log('');
 console.log('');
-console.log(`-- Triage: ${triageSummary.uniqueCodeCount} unique-code, ${triageSummary.alternateFlowCount} with alternate flows, ${triageSummary.untriaged.length} untriaged`);
+console.log(
+  `-- Triage: ${triageSummary.uniqueCodeCount} unique-code, ${triageSummary.alternateFlowCount} with alternate flows, ${triageSummary.untriaged.length} untriaged`
+);
 console.log(`Full report: ${rel(OUT_FILE)}`);
 console.log(`PO report:   ${rel(reportMd)}`);

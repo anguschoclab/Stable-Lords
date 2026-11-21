@@ -248,5 +248,3 @@ export function physicalProfileLines(profile: PhysicalProfile): string[] {
 export function skillRating(skill: number): string | null {
   return skill >= SKILL_TIER_LABELS.expert.min ? skillTierLabel(skill) : null;
 }
-
-

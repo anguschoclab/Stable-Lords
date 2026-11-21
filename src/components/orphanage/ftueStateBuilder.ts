@@ -98,7 +98,11 @@ function splitByBoutDeath(
 function seedWorld(
   poolSeedValue: number,
   allWarriors: BuiltWarrior[]
-): { rivals: ReturnType<typeof generateRivalStables>; recruitPool: PoolWarrior[]; promoters: Record<string, Promoter> } {
+): {
+  rivals: ReturnType<typeof generateRivalStables>;
+  recruitPool: PoolWarrior[];
+  promoters: Record<string, Promoter>;
+} {
   const rivals = generateRivalStables(23, poolSeedValue + 777);
 
   const usedNames = new Set<string>();
@@ -135,9 +139,7 @@ export function buildFTUEInitialState(
     buildFTUEWarrior({ pw, idx, boutResult, playerPlan, finishRng, stableId })
   );
 
-  const { aliveWarriors, deadWarriors } = splitByBoutDeath(
-    warriors, boutResult, baseState.season
-  );
+  const { aliveWarriors, deadWarriors } = splitByBoutDeath(warriors, boutResult, baseState.season);
 
   const { rivals, recruitPool, promoters } = seedWorld(poolSeedValue, warriors);
 

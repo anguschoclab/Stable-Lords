@@ -35,9 +35,7 @@ describe('megaplan: ai-parity funnel guard', () => {
   const { violations } = collectFunnelBypasses() as { violations: Violation[] };
 
   it('no Warrior literal bypasses the two blessed constructors', () => {
-    const novel = violations.filter(
-      (v) => !KNOWN_EXCEPTIONS.some((k) => k.file === v.file)
-    );
+    const novel = violations.filter((v) => !KNOWN_EXCEPTIONS.some((k) => k.file === v.file));
     expect(
       novel,
       `new fresh-warrior literal introduced outside the funnel — route through signWarrior/makeWarrior or allowlist knowingly:\n${novel

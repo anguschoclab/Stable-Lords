@@ -362,10 +362,7 @@ export function convertBidsToOffers(
 
     // The stable that generated the bid owns the proposer; the cache map is
     // a hot-path fast lookup, with the bid's rivalId as the ground truth.
-    const proposerStable = resolveWarriorOwner(
-      state,
-      bid.proposingWarriorId as WarriorId
-    ) ?? {
+    const proposerStable = resolveWarriorOwner(state, bid.proposingWarriorId as WarriorId) ?? {
       stableId: rivalId,
       stableName: '',
       isPlayer: false,
@@ -397,13 +394,7 @@ export function convertBidsToOffers(
     if (candidates.length === 0) continue;
 
     // Pick the best matchup opponent (pairwise — player marks never leak)
-    const bestCandidate = pickBestCandidate(
-      proposer,
-      candidates,
-      proposerStable.stableId,
-      cx,
-      bid
-    );
+    const bestCandidate = pickBestCandidate(proposer, candidates, proposerStable.stableId, cx, bid);
     if (!bestCandidate) continue;
     const opponent = bestCandidate.warrior;
 

@@ -30,9 +30,9 @@ describe('getMatchupBonus', () => {
     expect(
       getMatchupBonus(FightingStyle.SlashingAttack, FightingStyle.ParryRiposte)
     ).toBeGreaterThan(0);
-    expect(
-      getMatchupBonus(FightingStyle.ParryRiposte, FightingStyle.SlashingAttack)
-    ).toBeLessThan(0);
+    expect(getMatchupBonus(FightingStyle.ParryRiposte, FightingStyle.SlashingAttack)).toBeLessThan(
+      0
+    );
   });
 });
 

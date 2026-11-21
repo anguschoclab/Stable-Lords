@@ -16,10 +16,7 @@
  * Live since Phase 6 — `src/engine/ai/turnaround.ts` is the consumer.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  applyTurnaroundDiagnosis,
-  turnaroundMatchupBias,
-} from '@/engine/ai/turnaround';
+import { applyTurnaroundDiagnosis, turnaroundMatchupBias } from '@/engine/ai/turnaround';
 import { diagnoseTurnaround } from '@/engine/advisor/turnaroundAdvisor';
 import { getMatchupBonus } from '@/constants/combat/combat';
 import { makeRival, makeWarrior } from '@/test/_fixtures/factories';
@@ -85,11 +82,14 @@ describe('applyTurnaroundDiagnosis — assignments from the shared diagnosis', (
     const w = loser();
     const rival = makeRival({
       roster: [w],
-      trainingAssignments: [{ warriorId: 'loser-1' as WarriorId, type: 'skillDrill', skill: 'ATT' }],
+      trainingAssignments: [
+        { warriorId: 'loser-1' as WarriorId, type: 'skillDrill', skill: 'ATT' },
+      ],
     });
     const out = applyTurnaroundDiagnosis(rival);
     expect(
-      (out.trainingAssignments ?? []).filter((a: TrainingAssignment) => a.warriorId === 'loser-1').length
+      (out.trainingAssignments ?? []).filter((a: TrainingAssignment) => a.warriorId === 'loser-1')
+        .length
     ).toBe(1);
   });
 });

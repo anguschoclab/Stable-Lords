@@ -18,8 +18,6 @@ beforeEach(() => resetFixtureIds());
 
 const ARENA = 'standard_arena';
 
-
-
 describe('assignCampaignRoles — rival per-warrior roles', () => {
   it('stamps the shared campaignFocus field on rival warriors', () => {
     const contender = makeArenaContender('w1', 5);

@@ -145,7 +145,8 @@ export function PresetBar(props: {
           Style Presets
         </span>
         {stylePresets.map((preset) => (
-          <button type="button"
+          <button
+            type="button"
             key={preset.name}
             aria-label={preset.name}
             onClick={() => onApplyPreset(preset.plan)}
@@ -156,14 +157,16 @@ export function PresetBar(props: {
         ))}
         {warrior && (
           <>
-            <button type="button"
+            <button
+              type="button"
               aria-label="Restore Default"
               onClick={onRestoreDefault}
               className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-muted-foreground/40 hover:text-muted-foreground text-muted-foreground/40 transition-colors motion-reduce:transition-none"
             >
               Restore Default
             </button>
-            <button type="button"
+            <button
+              type="button"
               aria-label="Apply Council Tactics"
               data-testid="apply-council-tactics-btn"
               onClick={onApplyCouncilTactics}
@@ -180,7 +183,8 @@ export function PresetBar(props: {
           Targeting
         </span>
         {BIAS_PRESETS.map((preset) => (
-          <button type="button"
+          <button
+            type="button"
             key={preset.label}
             aria-label={preset.label}
             onClick={() => onApplyBias(preset.bias)}

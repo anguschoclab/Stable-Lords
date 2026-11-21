@@ -50,7 +50,7 @@ const ANNOTATIONS = {
       '**Uniqueness:** not a pure duplicate — compared to the live',
       '`warriorStateUpdater.ts` twin (`wasKilled` = killer, fatigue resets for the',
       'killer, caller-computed fame deltas), this path treats `wasKilled` as the',
-      '*victim* (`isVictim` → `status: \'Dead\'`, fatigue resets for the dead),',
+      "*victim* (`isVictim` → `status: 'Dead'`, fatigue resets for the dead),",
       'auto-computes fame +1 win/+3 kill, rolls epithet for any non-victim, and',
       'overwrites `status` — semantics the current bout model deliberately moved',
       'out (death status lives in `mortalityHandler`).',
@@ -197,15 +197,12 @@ function walk(dir, out = []) {
 const SRC = path.join(ROOT, 'src');
 const srcFiles = walk(SRC).filter((f) => SOURCE_EXT.includes(path.extname(f)));
 const testFiles = srcFiles.filter(
-  (f) =>
-    f.includes('/test/') || /\.(test|spec)\.[tj]sx?$/.test(f) || f.includes('/_fixtures/')
+  (f) => f.includes('/test/') || /\.(test|spec)\.[tj]sx?$/.test(f) || f.includes('/_fixtures/')
 );
 const scriptFiles = walk(path.join(ROOT, 'scripts')).filter(
   (f) => SOURCE_EXT.includes(path.extname(f)) || /\.[cm]?js$/.test(f)
 );
-const e2eFiles = walk(path.join(ROOT, 'e2e')).filter((f) =>
-  SOURCE_EXT.includes(path.extname(f))
-);
+const e2eFiles = walk(path.join(ROOT, 'e2e')).filter((f) => SOURCE_EXT.includes(path.extname(f)));
 
 const fileCode = new Map();
 for (const f of [...srcFiles, ...scriptFiles, ...e2eFiles]) {
@@ -233,7 +230,9 @@ function internalCallers(fileAbs, symbol) {
   let cur = '(module top)';
   for (let i = 0; i < lines.length; i++) {
     const l = lines[i].trim();
-    const m = /^(?:export\s+)?(?:async\s+)?(?:function|const|class|interface|type)\s+([\w$]+)/.exec(l);
+    const m = /^(?:export\s+)?(?:async\s+)?(?:function|const|class|interface|type)\s+([\w$]+)/.exec(
+      l
+    );
     if (depth === 0 && m) cur = m[1];
     tops[i] = cur;
     for (const ch of lines[i]) {
@@ -414,8 +413,7 @@ function domainOf(file) {
   )
     return 'Matchmaking, scouting & reputation';
   if (file.startsWith('src/engine/')) return 'Engine core & services';
-  if (file.startsWith('src/data/') || file.startsWith('src/schemas/'))
-    return 'Data & schemas';
+  if (file.startsWith('src/data/') || file.startsWith('src/schemas/')) return 'Data & schemas';
   return 'UI, hooks & state';
 }
 
@@ -595,9 +593,8 @@ export function analyzeOrphans(report) {
     generatedAt: new Date().toISOString(),
     byClass: countClasses(report.deadExports),
     uniqueCodeCount: report.deadExports.filter((d) => d.triage?.unique === true).length,
-    alternateFlowCount: report.deadExports.filter(
-      (d) => d.triage?.duplication?.hasAlternateFlow
-    ).length,
+    alternateFlowCount: report.deadExports.filter((d) => d.triage?.duplication?.hasAlternateFlow)
+      .length,
     alternateFlows: report.deadExports
       .filter((d) => d.triage?.duplication?.hasAlternateFlow)
       .map((d) => ({
@@ -629,8 +626,7 @@ function countClasses(deadExports) {
 
 export function generateOrphanReport(report, bucketsArg) {
   const buckets = bucketsArg || analyzeOrphans(report).buckets;
-  const { sectionA, sectionB, keepHooks, lazyDead, uiKit, sectionC, untriaged } =
-    buckets;
+  const { sectionA, sectionB, keepHooks, lazyDead, uiKit, sectionC, untriaged } = buckets;
   const dead = report.deadExports.filter((d) => d.file.startsWith('src/'));
   const limit = ratchetLimit();
   const L = [];
@@ -658,10 +654,7 @@ export function generateOrphanReport(report, bucketsArg) {
     '**Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.',
     ''
   );
-  push(
-    `> **Ratchet status:** ${dead.length} src-scoped dead exports — ${status}.`,
-    ''
-  );
+  push(`> **Ratchet status:** ${dead.length} src-scoped dead exports — ${status}.`, '');
 
   push('## Uniqueness tags', '');
   push(
@@ -695,7 +688,7 @@ export function generateOrphanReport(report, bucketsArg) {
         .join('<br>'),
     ]);
   if (flowRows.length) {
-    push('## Duplication — alternate flows sharing an orphan\'s name', '');
+    push("## Duplication — alternate flows sharing an orphan's name", '');
     push(
       'The same symbol name is declared in other production files. `@score` is token-level body similarity: **identical** ≥0.9 (true duplicate — delete loses nothing), **divergent** 0.3–0.9 (alternate flow — the orphan carries its own semantics), **distinct** <0.3 (name collision only).',
       ''
@@ -765,7 +758,9 @@ export function generateOrphanReport(report, bucketsArg) {
   }
   push('### D2. Ambient declaration files', '');
   for (const f of report.unreachableFromProd.filter((f) => f.endsWith('.d.ts')))
-    push(`- \`${f}\` — global/ambient types; never imported *by design* (allowlisted in the guard).`);
+    push(
+      `- \`${f}\` — global/ambient types; never imported *by design* (allowlisted in the guard).`
+    );
   push('');
   if (uiKit.length) {
     push('### D3. shadcn/ui component-library surface', '');
@@ -780,7 +775,9 @@ export function generateOrphanReport(report, bucketsArg) {
   }
   push('### D4. Nav-hidden routes — intentional deep links', '');
   for (const r of (report.routes || []).filter((x) => x.path && !x.navLinked))
-    push(`- \`${r.path}\` (\`${r.file}\`) — detail page reached by in-game navigation, not static nav.`);
+    push(
+      `- \`${r.path}\` (\`${r.file}\`) — detail page reached by in-game navigation, not static nav.`
+    );
   push('');
 
   push('## Decision summary', '');
@@ -789,10 +786,15 @@ export function generateOrphanReport(report, bucketsArg) {
     [
       [
         '**Delete / integrate**',
-        `${sectionA.length} curated item(s)` + (untriaged.length ? ` + **${untriaged.length} UNTRIAGED**` : ''),
+        `${sectionA.length} curated item(s)` +
+          (untriaged.length ? ` + **${untriaged.length} UNTRIAGED**` : ''),
         'see per-item tags above',
       ],
-      ['**Unexport**', `${sectionB.length} export(s)`, '🟣 stays — code is live, only `export` goes'],
+      [
+        '**Unexport**',
+        `${sectionB.length} export(s)`,
+        '🟣 stays — code is live, only `export` goes',
+      ],
       [
         '**Keep**',
         `${keepHooks.length} test-reset hook(s); ${[...sectionC.values()].reduce((n, r) => n + r.length, 0)} test-visible export(s); ${lazyDead.length + uiKit.length} blind spots`,

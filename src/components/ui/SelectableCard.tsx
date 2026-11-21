@@ -34,7 +34,8 @@ export function SelectableCard({
         {/* role=button (not <button>): rows may embed their own controls
             (e.g. BookmarkButton) — a nested <button> is invalid HTML and
             breaks hydration. tabIndex + Enter/Space keep keyboard parity. */}
-        <div role="button"
+        <div
+          role="button"
           tabIndex={0}
           aria-label={ariaLabel}
           aria-pressed={selected}

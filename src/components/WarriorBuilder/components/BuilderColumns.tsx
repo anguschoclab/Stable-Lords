@@ -15,9 +15,20 @@ interface BuilderColumnsProps {
 /** The two-column editor: identity + attribute sliders | stat previews + create. */
 export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
   const {
-    name, setName, personality, style, setStyle, applyConcept,
-    attrs, total, remaining, isValid, rosterFull,
-    stats, updateAttr, handleCreate,
+    name,
+    setName,
+    personality,
+    style,
+    setStyle,
+    applyConcept,
+    attrs,
+    total,
+    remaining,
+    isValid,
+    rosterFull,
+    stats,
+    updateAttr,
+    handleCreate,
   } = builder;
   return (
     <div className="grid gap-6 lg:grid-cols-2">

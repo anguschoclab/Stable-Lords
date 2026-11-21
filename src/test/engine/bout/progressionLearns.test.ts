@@ -7,11 +7,7 @@
 import { describe, it, expect } from 'vitest';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
 import type { RivalStableData } from '@/types/state.types';
-import {
-  FightingStyle,
-  type WarriorId,
-  type StableId,
-} from '@/types/shared.types';
+import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import {
   mkLearnWarrior as mkWarrior,
@@ -145,7 +141,11 @@ describe('handleProgressions — skill learns', () => {
     const wA = mkWarrior();
     const wD = mkWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
     const s = mkState({ roster: [wA, wD] });
-    const outcome = mkOutcome({ winner: 'D', by: 'KO', post: { xpA: 50, xpD: 100, diedPostBout: 'A' } });
+    const outcome = mkOutcome({
+      winner: 'D',
+      by: 'KO',
+      post: { xpA: 50, xpD: 100, diedPostBout: 'A' },
+    });
 
     handleProgressions({
       s,
@@ -176,7 +176,9 @@ describe('handleProgressions — skill learns', () => {
         ['ra' as WarriorId, { stableId: rivalId, isPlayer: false }],
         ['rd' as WarriorId, { stableId: rivalId, isPlayer: false }],
       ]),
-      rivalMap: new Map([[rivalId, { id: rivalId, roster: [wA, wD] } as unknown as RivalStableData]]),
+      rivalMap: new Map([
+        [rivalId, { id: rivalId, roster: [wA, wD] } as unknown as RivalStableData],
+      ]),
     });
     const outcome = mkOutcome();
 

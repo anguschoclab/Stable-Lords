@@ -25,8 +25,6 @@ import { ROOT, walk, rel, isTest, writeReport, isMain } from './lib/scanLib.mjs'
 const SRC = path.join(ROOT, 'src');
 const OUT_FILE = 'entries-in-loop.json';
 
-
-
 const ITER_METHODS = new Set([
   'forEach',
   'map',

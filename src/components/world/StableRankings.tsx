@@ -53,9 +53,7 @@ export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {
                 )}
                 {items.map((vi) => {
                   const row = rows[vi.index];
-                  return row ? (
-                    <StableRankingsRow key={vi.key} row={row} index={vi.index} />
-                  ) : null;
+                  return row ? <StableRankingsRow key={vi.key} row={row} index={vi.index} /> : null;
                 })}
                 {items[items.length - 1] && (
                   <tr

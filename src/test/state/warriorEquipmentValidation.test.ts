@@ -24,14 +24,18 @@ describe('updateWarriorEquipment — store-boundary validation (V30)', () => {
     const st = seedStore();
     const before = st.roster.find((w) => w.id === ('w1' as WarriorId))!.equipment;
     st.updateWarriorEquipment('w1' as WarriorId, illegal);
-    const after = useGameStore.getState().roster.find((w) => w.id === ('w1' as WarriorId))!.equipment;
+    const after = useGameStore
+      .getState()
+      .roster.find((w) => w.id === ('w1' as WarriorId))!.equipment;
     expect(after).toBe(before);
   });
 
   it('applies a legal loadout', () => {
     const st = seedStore();
     st.updateWarriorEquipment('w1' as WarriorId, legal);
-    const after = useGameStore.getState().roster.find((w) => w.id === ('w1' as WarriorId))!.equipment;
+    const after = useGameStore
+      .getState()
+      .roster.find((w) => w.id === ('w1' as WarriorId))!.equipment;
     expect(after).toEqual(legal);
   });
 

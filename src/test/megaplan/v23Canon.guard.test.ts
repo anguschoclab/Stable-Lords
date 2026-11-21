@@ -59,9 +59,7 @@ describe('V23 canon knobs — locked values', () => {
   });
 
   it('design minimums cover all ten styles; DA floors pinned', () => {
-    expect(Object.keys(STYLE_DESIGN_MINIMUMS)).toHaveLength(
-      Object.values(FightingStyle).length
-    );
+    expect(Object.keys(STYLE_DESIGN_MINIMUMS)).toHaveLength(Object.values(FightingStyle).length);
     expect(DA_WL_FLOOR).toBe(7);
     expect(DA_ST_FLOOR).toBe(7);
   });

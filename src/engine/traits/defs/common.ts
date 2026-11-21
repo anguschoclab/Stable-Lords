@@ -106,7 +106,8 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
   gut_survivor: {
     id: 'gut_survivor',
     name: 'Gut Survivor',
-    description: 'Forged in the darkest alleys, possessing an unyielding will to fight back. Modest endurance boost.',
+    description:
+      'Forged in the darkest alleys, possessing an unyielding will to fight back. Modest endurance boost.',
     effect: { enduranceMult: 0.98 },
     weight: 0.6,
     tier: 'Common',
@@ -131,4 +132,3 @@ export const COMMON_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
   },
 };
-

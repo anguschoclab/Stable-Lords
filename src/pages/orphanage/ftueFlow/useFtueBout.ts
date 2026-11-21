@@ -2,11 +2,7 @@ import { useState, useCallback } from 'react';
 import { loadCombatNarrative } from '@/data/narrative';
 import type { FightPlan } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import {
-  simulateTutorialBout,
-  type FtueBoutResult,
-  type PoolWarrior,
-} from './tutorialBout';
+import { simulateTutorialBout, type FtueBoutResult, type PoolWarrior } from './tutorialBout';
 
 /** Tutorial-bout state: plan, seeded bout, run callback. */
 export function useFtueBout(selectedWarriors: PoolWarrior[]) {

@@ -15,10 +15,7 @@ describe('StyleCard — fighter concepts', () => {
     expect(screen.getByText(STYLE_DISPLAY_NAMES[style])).toBeTruthy();
     expect(screen.getByText(guide.doctrine)).toBeTruthy();
     for (const concept of guide.concepts) {
-      expect(
-        screen.getByText(concept.name),
-        `concept ${concept.name} not rendered`
-      ).toBeTruthy();
+      expect(screen.getByText(concept.name), `concept ${concept.name} not rendered`).toBeTruthy();
     }
   });
 

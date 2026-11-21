@@ -12,10 +12,7 @@
  * @param key - Key extractor
  * @returns Map of key → first item with that key
  */
-export function indexBy<T, K>(
-  items: readonly T[] | undefined,
-  key: (item: T) => K
-): Map<K, T> {
+export function indexBy<T, K>(items: readonly T[] | undefined, key: (item: T) => K): Map<K, T> {
   const map = new Map<K, T>();
   if (!items) return map;
   for (const item of items) {
@@ -34,10 +31,7 @@ export function indexBy<T, K>(
  * @param key - Bucket-key extractor
  * @returns Map of key → items sharing that key, in original order
  */
-export function groupBy<T, K>(
-  items: readonly T[] | undefined,
-  key: (item: T) => K
-): Map<K, T[]> {
+export function groupBy<T, K>(items: readonly T[] | undefined, key: (item: T) => K): Map<K, T[]> {
   const map = new Map<K, T[]>();
   if (!items) return map;
   for (const item of items) {

@@ -111,7 +111,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 3);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -124,7 +126,9 @@ describe('pipeline/health', () => {
     it('filters string-format injuries (legacy), only processes InjuryData objects', () => {
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: ['old_string'] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: ['old_string'] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -152,7 +156,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Sprained Wrist', 1);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state, makeMockRNG());
@@ -165,7 +171,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 3);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -178,7 +186,14 @@ describe('pipeline/health', () => {
       const injury2 = makeInjury('Sprained Wrist', 1);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury1, injury2] }],
+        roster: [
+          {
+            id: 'w1' as WarriorId,
+            status: 'Active' as const,
+            name: 'A',
+            injuries: [injury1, injury2],
+          },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state, makeMockRNG());
@@ -198,7 +213,15 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 2);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', fatigue: 50, injuries: [injury] }],
+        roster: [
+          {
+            id: 'w1' as WarriorId,
+            status: 'Active' as const,
+            name: 'A',
+            fatigue: 50,
+            injuries: [injury],
+          },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -212,7 +235,15 @@ describe('pipeline/health', () => {
     it('warrior with fatigue but no injuries only gets fatigue update', () => {
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', fatigue: 50, injuries: [] }],
+        roster: [
+          {
+            id: 'w1' as WarriorId,
+            status: 'Active' as const,
+            name: 'A',
+            fatigue: 50,
+            injuries: [],
+          },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -231,7 +262,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 1);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state, makeMockRNG('custom-id-123'));
@@ -243,7 +276,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 1);
       const state = {
         week: 5,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state);
@@ -257,7 +292,9 @@ describe('pipeline/health', () => {
       const injury = makeInjury('Bruised Ribs', 1);
       const state = {
         week: 7,
-        roster: [{ id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] }],
+        roster: [
+          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'A', injuries: [injury] },
+        ],
       } as any as GameState;
 
       const impact = computeHealthImpact(state, makeMockRNG());
@@ -286,8 +323,18 @@ describe('pipeline/health', () => {
       const state = {
         week: 5,
         roster: [
-          { id: 'w1' as WarriorId, status: 'Active' as const, name: 'Healer', injuries: [healingInjury] },
-          { id: 'w2' as WarriorId, status: 'Active' as const, name: 'StillHurt', injuries: [activeInjury] },
+          {
+            id: 'w1' as WarriorId,
+            status: 'Active' as const,
+            name: 'Healer',
+            injuries: [healingInjury],
+          },
+          {
+            id: 'w2' as WarriorId,
+            status: 'Active' as const,
+            name: 'StillHurt',
+            injuries: [activeInjury],
+          },
         ],
       } as any as GameState;
 

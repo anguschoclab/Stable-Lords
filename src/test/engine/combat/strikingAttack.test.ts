@@ -17,10 +17,7 @@ import {
   ST_EXECUTE_BONUS,
   ST_PARRY_PIERCE,
 } from '@/constants/combat/combat';
-import {
-  setupExchange,
-  callResolveCombatOffenseDefense,
-} from '@/test/_fixtures/exchangeSetup';
+import { setupExchange, callResolveCombatOffenseDefense } from '@/test/_fixtures/exchangeSetup';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import type { Warrior } from '@/types/game';
 
@@ -100,9 +97,7 @@ describe('strikerParryPierce (wiring)', () => {
         ctx: { rng: () => r / 100 },
       });
       callResolveCombatOffenseDefense(s, true);
-      const whiffed = s.events.some(
-        (e) => e.type === 'ATTACK' && e.result === 'WHIFF'
-      );
+      const whiffed = s.events.some((e) => e.type === 'ATTACK' && e.result === 'WHIFF');
       if (!whiffed) ok++;
     }
     return ok;
@@ -131,9 +126,7 @@ describe('strikerParryPierce (wiring)', () => {
           ctx: { rng: () => r / 100 },
         });
         callResolveCombatOffenseDefense(s, true);
-        const whiffed = s.events.some(
-          (e) => e.type === 'ATTACK' && e.result === 'WHIFF'
-        );
+        const whiffed = s.events.some((e) => e.type === 'ATTACK' && e.result === 'WHIFF');
         if (!whiffed) ok++;
       }
       return ok;

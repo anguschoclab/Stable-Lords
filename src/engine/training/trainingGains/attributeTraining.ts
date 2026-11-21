@@ -95,7 +95,9 @@ function applyAttributeGain(
     Object.values(burnSkills).reduce((s, v) => s + (v ?? 0), 0) > 0
       ? ` Crossing a breakpoint burned ${Object.entries(burnSkills)
           .map(([k, v]) => `${v} ${k}`)
-          .join(', ')} learn ${Object.values(burnSkills).reduce((s, v) => s + (v ?? 0), 0) > 1 ? 'slots' : 'slot'}.`
+          .join(
+            ', '
+          )} learn ${Object.values(burnSkills).reduce((s, v) => s + (v ?? 0), 0) > 1 ? 'slots' : 'slot'}.`
       : '';
 
   return {

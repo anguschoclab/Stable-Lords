@@ -16,22 +16,22 @@ Runs the Stable Lords combat test suite via `bun test` (Vitest).
 
 ## Test Groups
 
-| Filter keyword | What it targets                                                         |
-| -------------- | ----------------------------------------------------------------------- |
-| (none)         | All combat-related tests                                                |
-| `resolution`   | src/test/engine/combat/resolution.test.ts + resolution/ dir             |
-| `damage`       | src/test/engine/combat/mechanics/combatDamage.test.ts + damageCalc.test.ts |
-| `fatigue`      | src/test/engine/combat/mechanics/combatFatigue.test.ts                  |
-| `distance`     | src/test/engine/combat/distanceResolution.test.ts                       |
-| `exchange`     | src/test/engine/combat/exchangeSubPhases.test.ts                        |
-| `math`         | src/test/engine/combat/mechanics/combatMath.test.ts                     |
-| `determinism`  | src/test/engine/determinismAudit.test.ts + combat/resolutionDeterminism.test.ts |
-| `bout`         | src/test/engine/bout/boutProcessor.test.ts + boutProcessorService.test.ts |
-| `simulate`     | src/test/engine/combat/simulate.test.ts (+ simulate/ dir, simulateHelpers) |
+| Filter keyword | What it targets                                                                                                                                                     |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none)         | All combat-related tests                                                                                                                                            |
+| `resolution`   | src/test/engine/combat/resolution.test.ts + resolution/ dir                                                                                                         |
+| `damage`       | src/test/engine/combat/mechanics/combatDamage.test.ts + damageCalc.test.ts                                                                                          |
+| `fatigue`      | src/test/engine/combat/mechanics/combatFatigue.test.ts                                                                                                              |
+| `distance`     | src/test/engine/combat/distanceResolution.test.ts                                                                                                                   |
+| `exchange`     | src/test/engine/combat/exchangeSubPhases.test.ts                                                                                                                    |
+| `math`         | src/test/engine/combat/mechanics/combatMath.test.ts                                                                                                                 |
+| `determinism`  | src/test/engine/determinismAudit.test.ts + combat/resolutionDeterminism.test.ts                                                                                     |
+| `bout`         | src/test/engine/bout/boutProcessor.test.ts + boutProcessorService.test.ts                                                                                           |
+| `simulate`     | src/test/engine/combat/simulate.test.ts (+ simulate/ dir, simulateHelpers)                                                                                          |
 | `balance`      | src/test/engine/balance/traitNoise.test.ts + constants/balanceConstantBounds.test.ts + combat/styleMatchupSymmetry.test.ts + combat/traitMultiplierStacking.test.ts |
-| `hardening`    | src/test/engine/combat/simulation_hardening.slow.test.ts (SLOW tier)    |
-| `narrator`     | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts |
-| `factory`      | src/test/engine/factories/ (warriorFactory, gameStateFactory — no combatFactory) |
+| `hardening`    | src/test/engine/combat/simulation_hardening.slow.test.ts (SLOW tier)                                                                                                |
+| `narrator`     | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts                                                                                         |
+| `factory`      | src/test/engine/factories/ (warriorFactory, gameStateFactory — no combatFactory)                                                                                    |
 
 ## Commands
 

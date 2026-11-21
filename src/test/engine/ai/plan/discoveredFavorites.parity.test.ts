@@ -38,8 +38,10 @@ const favFor = (over: Partial<WarriorFavorites> = {}): WarriorFavorites =>
     ...over,
   }) as WarriorFavorites;
 
-const planFor = (w: Parameters<typeof aiPlanForWarrior>[0]['w'], personality = 'Pragmatic' as const) =>
-  aiPlanForWarrior({ w, personality, philosophy: 'Balanced', now: 10 });
+const planFor = (
+  w: Parameters<typeof aiPlanForWarrior>[0]['w'],
+  personality = 'Pragmatic' as const
+) => aiPlanForWarrior({ w, personality, philosophy: 'Balanced', now: 10 });
 
 describe('discovered rhythm steers the plan', () => {
   it('pulls OE/AL into the favorite band for a neutral style', () => {
@@ -126,7 +128,12 @@ describe('strategy-lab exploration probes WS-suited tactics', () => {
     });
     const tactics = new Set<string>();
     for (let week = 1; week <= 40; week++) {
-      const plan = aiPlanForWarrior({ w, personality: 'Pragmatic', philosophy: 'Balanced', now: week });
+      const plan = aiPlanForWarrior({
+        w,
+        personality: 'Pragmatic',
+        philosophy: 'Balanced',
+        now: week,
+      });
       if (plan.offensiveTactic) tactics.add(plan.offensiveTactic);
       if (plan.defensiveTactic) tactics.add(plan.defensiveTactic);
     }

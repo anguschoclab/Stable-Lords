@@ -164,12 +164,7 @@ function TournamentBody(props: {
 }) {
   const { tournamentState, expandedBout, onToggleExpand, isSimulating, onExecuteRound } = props;
   const { onOpenPrep, showBookmarkedOnly, onToggleBookmarked } = props;
-  const {
-    season,
-    arenaHistory,
-    pastTournaments,
-    bookmarkedCount,
-  } = tournamentState;
+  const { season, arenaHistory, pastTournaments, bookmarkedCount } = tournamentState;
 
   return (
     <>
@@ -217,8 +212,7 @@ function LiveBracketPanel(props: {
 
   // Class tabs: the featured bracket is default; a manual pick overrides.
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const displayTournament =
-    liveTournaments.find((t) => t.id === selectedId) ?? currentTournament;
+  const displayTournament = liveTournaments.find((t) => t.id === selectedId) ?? currentTournament;
   const displayWarriors = useMemo(() => {
     if (!displayTournament || !player) return [];
     return displayTournament.participants.filter((w) => w.stableId === player.id);
@@ -237,10 +231,7 @@ function LiveBracketPanel(props: {
 
       {/* ── Pre-tournament readiness banner ── */}
       {displayTournament && displayWarriors.length > 0 && (
-        <WarriorReadinessBanner
-          tournament={displayTournament}
-          warriors={displayWarriors}
-        />
+        <WarriorReadinessBanner tournament={displayTournament} warriors={displayWarriors} />
       )}
 
       {!displayTournament && <CampaignStatus />}

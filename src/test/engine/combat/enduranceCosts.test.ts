@@ -539,10 +539,7 @@ describe('applyEnduranceCosts — edge cases', () => {
     // (style mult included — canon burn order moved PL off the 1.0 pivot).
     expect(attExp).toBe(
       Math.round(
-        enduranceCost(10, 10, 'Sweltering') *
-          getEnduranceMult(FightingStyle.ParryLunge) *
-          10 *
-          1.25
+        enduranceCost(10, 10, 'Sweltering') * getEnduranceMult(FightingStyle.ParryLunge) * 10 * 1.25
       )
     );
   });

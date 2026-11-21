@@ -14,7 +14,8 @@ import { SeededRNG } from '@/utils/random';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
-import { makeInjury,
+import {
+  makeInjury,
   makeGameState as fixtureGameState,
   makeComputedWarrior as fixtureComputedWarrior,
 } from '@/test/_fixtures/factories';
@@ -135,14 +136,16 @@ describe('Training System', () => {
       ];
       // rng roll that succeeds at full chance but fails at halved chance:
       // WL15 → ~0.75 chance; halved ~0.375. A 0.5 roll lands between them.
-      const midRollRng = { next: () => 0.5, uuid: () => 'x', pick: <T,>(a: T[]) => a[0]!, roll: () => 1, shuffle: <T,>(a: T[]) => a, rollWeighted: () => 'x', chance: () => false } as any;
-      const first = trainingGains.processAttributeTraining(
-        warrior,
-        'ST',
-        state,
-        [],
-        midRollRng
-      );
+      const midRollRng = {
+        next: () => 0.5,
+        uuid: () => 'x',
+        pick: <T>(a: T[]) => a[0]!,
+        roll: () => 1,
+        shuffle: <T>(a: T[]) => a,
+        rollWeighted: () => 'x',
+        chance: () => false,
+      } as any;
+      const first = trainingGains.processAttributeTraining(warrior, 'ST', state, [], midRollRng);
       const repeat = trainingGains.processAttributeTraining(
         warrior,
         'ST',
@@ -160,10 +163,16 @@ describe('Training System', () => {
         { potential: { ST: 25, CN: 25, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 } }
       );
       const state = makeState({ season: 'Spring' });
-      const priorGrowth = [
-        { warriorId: warrior.id, season: 'Spring' as const, gains: { ST: 1 } },
-      ];
-      const midRollRng = { next: () => 0.5, uuid: () => 'x', pick: <T,>(a: T[]) => a[0]!, roll: () => 1, shuffle: <T,>(a: T[]) => a, rollWeighted: () => 'x', chance: () => false } as any;
+      const priorGrowth = [{ warriorId: warrior.id, season: 'Spring' as const, gains: { ST: 1 } }];
+      const midRollRng = {
+        next: () => 0.5,
+        uuid: () => 'x',
+        pick: <T>(a: T[]) => a[0]!,
+        roll: () => 1,
+        shuffle: <T>(a: T[]) => a,
+        rollWeighted: () => 'x',
+        chance: () => false,
+      } as any;
       const cnAttempt = trainingGains.processAttributeTraining(
         warrior,
         'CN',

@@ -50,10 +50,7 @@
 /** Weapon-specific factor composed on top of the armor dtype baseline. */
 export type ArmorMatrixCell = number | 'dtype-inherit';
 
-export const WEAPON_ARMOR_MATRIX: Record<
-  string,
-  Partial<Record<string, ArmorMatrixCell>>
-> = {
+export const WEAPON_ARMOR_MATRIX: Record<string, Partial<Record<string, ArmorMatrixCell>>> = {
   dagger: { ASM: 0.7, ACM: 0.7, APM: 1.0, APA: 1.0 },
   epee: { APA: 0.85 },
   hatchet: { APA: 0.85 },

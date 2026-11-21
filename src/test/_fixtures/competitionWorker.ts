@@ -1,7 +1,13 @@
 import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker';
 import type { EvaluateBoutOfferArgs } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import { makeBoutOffer, makeGameState, makeRival } from '@/test/_fixtures/factories';
-import type { BoutOffer, GameState, RankingEntry, RivalStableData, Warrior } from '@/types/state.types';
+import type {
+  BoutOffer,
+  GameState,
+  RankingEntry,
+  RivalStableData,
+  Warrior,
+} from '@/types/state.types';
 import type { BoutOfferId, InjuryId, StableId, WarriorId } from '@/types/shared.types';
 import type { InjuryData } from '@/types/warrior.types';
 
@@ -19,7 +25,9 @@ export const severeInjury: InjuryData = {
  * Shared eval harness for competitionWorker offer-acceptance specs — sane
  * defaults (Clear weather, week 5) so tests only state what they vary.
  */
-export function evalBoutOffer(args: Partial<EvaluateBoutOfferArgs> & Pick<EvaluateBoutOfferArgs, 'offer' | 'rival' | 'warrior'>) {
+export function evalBoutOffer(
+  args: Partial<EvaluateBoutOfferArgs> & Pick<EvaluateBoutOfferArgs, 'offer' | 'rival' | 'warrior'>
+) {
   return evaluateBoutOffer({ currentWeek: 5, weather: 'Clear', ...args });
 }
 

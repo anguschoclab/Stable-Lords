@@ -3,7 +3,12 @@ import { Swords, Shield } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, ATTRIBUTE_KEYS } from '@/types/shared.types';
+import {
+  FightingStyle,
+  STYLE_DISPLAY_NAMES,
+  STYLE_ABBREV,
+  ATTRIBUTE_KEYS,
+} from '@/types/shared.types';
 import { STYLE_COMPENDIUM } from '@/data/styleCompendium';
 import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
 import { STYLE_FAMILY, FAMILY_GUIDE } from '@/data/designDoctrine';
@@ -130,9 +135,7 @@ function ConceptsPanel({ style }: { style: FightingStyle }) {
             {ATTRIBUTE_KEYS.map((k) => `${k} ${c.stats[k]}`).join(' · ')}
           </p>
           <p className="text-[10px] text-muted-foreground/60 leading-relaxed">{c.notes}</p>
-          <p className="text-[9px] text-muted-foreground/50 italic leading-relaxed">
-            {c.tactics}
-          </p>
+          <p className="text-[9px] text-muted-foreground/50 italic leading-relaxed">{c.tactics}</p>
         </div>
       ))}
     </div>

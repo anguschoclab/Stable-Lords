@@ -166,7 +166,7 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
     makePreset(
       FightingStyle.LungingAttack,
       "Assur's Lazy 7-10",
-      'Arena 93 — Assur\'s Lunger Model: 7-10 minute 1 for a whole basic career, AL off fast to save the endurance burn, OE ~7, no tactics.',
+      "Arena 93 — Assur's Lunger Model: 7-10 minute 1 for a whole basic career, AL off fast to save the endurance burn, OE ~7, no tactics.",
       {
         OE: 7,
         AL: 10,
@@ -205,7 +205,7 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
     makePreset(
       FightingStyle.LungingAttack,
       "Snorri's Tempo",
-      'Arena 93 — Elder Snorri\'s hi-hi-mod: run hot minute 1, throttle both dials to moderate, KD inside the 5-8 band.',
+      "Arena 93 — Elder Snorri's hi-hi-mod: run hot minute 1, throttle both dials to moderate, KD inside the 5-8 band.",
       { OE: 9, AL: 9, KD: 7 },
       {
         opening: { OE: 9, AL: 9, KD: 7 },
@@ -245,7 +245,14 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       FightingStyle.ParryLunge,
       'Armor-Piercer',
       'Walls up the opening, then hunts the head at 9-9-7 — spastic when desperate.',
-      { OE: 6, AL: 7, KD: 5, target: 'Head', protect: 'Head', desperatePlan: { OE: 10, AL: 10, killDesire: 10 } },
+      {
+        OE: 6,
+        AL: 7,
+        KD: 5,
+        target: 'Head',
+        protect: 'Head',
+        desperatePlan: { OE: 10, AL: 10, killDesire: 10 },
+      },
       {
         opening: { OE: 2, AL: 6, KD: 2, defTac: 'Parry' },
         mid: { OE: 9, AL: 9, KD: 7 },
@@ -259,7 +266,13 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
       FightingStyle.ParryLunge,
       'Tripwire Tempo',
       'Dodges the opening at moderate effort, bleeds to low-low, re-dodges when desperate.',
-      { OE: 5, AL: 5, KD: 5, defensiveTactic: 'Dodge', desperatePlan: { OE: 3, AL: 8, killDesire: 6, defensiveTactic: 'Dodge' } },
+      {
+        OE: 5,
+        AL: 5,
+        KD: 5,
+        defensiveTactic: 'Dodge',
+        desperatePlan: { OE: 3, AL: 8, killDesire: 6, defensiveTactic: 'Dodge' },
+      },
       {
         opening: { OE: 5, AL: 8, KD: 5, defTac: 'Dodge' },
         mid: { OE: 6, AL: 5, KD: 5, defTac: 'Dodge' },

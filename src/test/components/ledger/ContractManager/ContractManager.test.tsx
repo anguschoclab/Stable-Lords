@@ -53,7 +53,7 @@ describe('ContractManager', () => {
           specialty: 'Offense',
           contractWeeksRemaining: 5,
           weeklyCost: 100,
-        }
+        },
       ] as any,
       totalWeeklyExpense: 100,
       expiringSoonCount: 0,

@@ -390,7 +390,10 @@ describe('WorldSlice', () => {
   });
 
   describe('toggleStableAvoid', () => {
-    const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({
+    const rivalWith = (
+      stableId: string,
+      warriors: { id: string; wins: number; losses: number }[]
+    ) => ({
       id: stableId,
       owner: { id: stableId, name: 'Rival', stableName: stableId, fame: 0, renown: 0, titles: 0 },
       roster: warriors.map(
@@ -499,7 +502,10 @@ describe('WorldSlice', () => {
   });
 
   describe('newsletter-listing gate (canon: marks need ≥1 career fight)', () => {
-    const rivalWith = (stableId: string, warriors: { id: string; wins: number; losses: number }[]) => ({
+    const rivalWith = (
+      stableId: string,
+      warriors: { id: string; wins: number; losses: number }[]
+    ) => ({
       id: stableId,
       owner: { id: stableId, name: 'Rival', stableName: stableId, fame: 0, renown: 0, titles: 0 },
       roster: warriors.map(

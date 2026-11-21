@@ -3,7 +3,13 @@
  *
  * Extracted from simulate.ts and simulate/resolution.ts to improve modularity.
  */
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP, INFIRMARY } from '@/constants/combat';
+import {
+  MAX_EXCHANGES,
+  EXCHANGES_PER_MINUTE,
+  WIN_XP,
+  LOSS_XP,
+  INFIRMARY,
+} from '@/constants/combat';
 import { rollInfirmaryOutcome } from '../combat/mechanics/deathRolls';
 import { resolveDecision } from '../bout/decisionLogic';
 import type { FighterState } from '../combat/resolution/types';

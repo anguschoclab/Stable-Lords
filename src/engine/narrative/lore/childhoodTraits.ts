@@ -223,7 +223,7 @@ export const CHILDHOOD_TRAITS: string[] = [
   'learned to gauge an adversary’s exhaustion by the trembling of their weapon hand',
   'always carried a piece of fractured mirror to watch their own back',
   'would meticulously catalog the dying breaths of strays to understand the final moments of life',
-  'learned to gauge an opponent\'s reach solely by the sound of their shifting weight',
+  "learned to gauge an opponent's reach solely by the sound of their shifting weight",
   'would intentionally draw first blood just to smell the iron and focus their rage',
   'developed a terrifying habit of humming a lullaby while snapping rat traps with their bare hands',
   'learned to map out an entire brawl in their head before throwing the first punch',
@@ -256,6 +256,6 @@ export const CHILDHOOD_TRAITS: string[] = [
   'would purposefully corner feral dogs to practice striking first without hesitation',
   'learned to gauge an opponent’s fatigue by the way their shoulders slumped during heavy labor',
   'developed a habit of silently tracking the pulse points on anyone who stood too close',
-  'learned to identify a weapon\'s balance by the sound it made when dropped on stone',
+  "learned to identify a weapon's balance by the sound it made when dropped on stone",
   'would instinctively drop their center of gravity at the first sound of a drawn blade',
 ];

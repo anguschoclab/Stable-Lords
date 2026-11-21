@@ -49,10 +49,6 @@ describe('MEGAPLAN-V5: V20 narrative traits (PR #1068)', () => {
     // throws at import on drift — ordering assertion guards the tail slot.
     const keys = Object.keys(TRAITS);
     const i = keys.indexOf('ash_choked_fury');
-    expect(keys.slice(i + 1, i + 4)).toEqual([
-      'dark_survivor',
-      'gutter_brawler',
-      'street_specter',
-    ]);
+    expect(keys.slice(i + 1, i + 4)).toEqual(['dark_survivor', 'gutter_brawler', 'street_specter']);
   });
 });

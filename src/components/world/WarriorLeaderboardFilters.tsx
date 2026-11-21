@@ -15,7 +15,8 @@ interface FilterToggleButtonProps {
 
 function FilterToggleButton({ active, onClick, label, ariaLabel }: FilterToggleButtonProps) {
   return (
-    <button type="button"
+    <button
+      type="button"
       onClick={onClick}
       aria-label={ariaLabel}
       aria-pressed={active}
@@ -93,7 +94,8 @@ export function WarriorLeaderboardFilters(props: WarriorLeaderboardFiltersProps)
       ))}
 
       {isFiltered && (
-        <button type="button"
+        <button
+          type="button"
           onClick={clearFilters}
           aria-label="Clear filters"
           className="ml-auto flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset motion-reduce:transition-none"

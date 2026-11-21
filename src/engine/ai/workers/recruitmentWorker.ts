@@ -214,11 +214,14 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
   for (let i = 0; i < pool.length; i++) {
     const w = pool[i];
     if (!w) continue;
-    const score = scoreCandidate(
-      w,
-      weights,
-      { prefsSet, activeStyleCounts, meta, owner: args.owner, week, intent: args.intent }
-    );
+    const score = scoreCandidate(w, weights, {
+      prefsSet,
+      activeStyleCounts,
+      meta,
+      owner: args.owner,
+      week,
+      intent: args.intent,
+    });
     if (score > bestScore) {
       bestScore = score;
       bestIdx = i;

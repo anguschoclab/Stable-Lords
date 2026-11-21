@@ -16,14 +16,14 @@ Tests the seasonal pipeline including offseason event execution, event impacts (
 
 ## Test Groups
 
-| Filter keyword | What it targets                                      |
-| -------------- | ---------------------------------------------------- |
-| (none)         | All seasonal pipeline tests                          |
-| seasonal       | src/test/engine/pipeline/seasonal*.test.ts           |
-| passes         | src/test/engine/pipeline/passes/SeasonalPass.test.ts |
+| Filter keyword | What it targets                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (none)         | All seasonal pipeline tests                                                                                                                                                     |
+| seasonal       | src/test/engine/pipeline/seasonal*.test.ts                                                                                                                                      |
+| passes         | src/test/engine/pipeline/passes/SeasonalPass.test.ts                                                                                                                            |
 | `<event_id>`   | Any offseason event named in a "should trigger the `<event_id>` offseason event" test, e.g. `chaos_rift`, `grand_feast`, `tavern_brawl`, `dreamweaver_visit`, `midnight_market` |
 
-Note: `-t` matches test *titles*, not event keys — keywords like `plague`, `epiphany`, `bard`, `winter`, and `fame_boost` hit unrelated suites (arena data, lucky-epiphany reveals, bard engine, weather seasons) or nothing at all.
+Note: `-t` matches test _titles_, not event keys — keywords like `plague`, `epiphany`, `bard`, `winter`, and `fame_boost` hit unrelated suites (arena data, lucky-epiphany reveals, bard engine, weather seasons) or nothing at all.
 
 ## Commands
 

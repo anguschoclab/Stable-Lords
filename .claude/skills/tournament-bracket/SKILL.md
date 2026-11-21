@@ -16,16 +16,16 @@ Tests the tournament system including bracket generation, round resolution, bron
 
 ## Test Groups
 
-| Filter keyword | What it targets                                                             |
-| -------------- | --------------------------------------------------------------------------- |
-| (none)         | All tournament system tests                                                 |
+| Filter keyword | What it targets                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| (none)         | All tournament system tests                                                                                              |
 | resolution     | src/test/engine/matchmaking/tournamentResolution.test.ts + tournamentSelection/resolveRound.test.ts + completion.test.ts |
-| selection      | src/test/engine/matchmaking/tournamentSelection/\*.test.ts                  |
-| builder        | src/test/engine/matchmaking/tournamentSelection/bracket.test.ts + generation.test.ts + tournament/bracketUtils.test.ts |
-| state          | src/test/state/slices/tournamentSlice.test.ts                               |
-| committee      | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts + ncaaCommittee.test.ts |
-| champions      | src/test/engine/championship/championsTournament.test.ts (week-52 Grand Championship) |
-| matchmaking    | src/test/engine/matchmaking/\*.test.ts                                      |
+| selection      | src/test/engine/matchmaking/tournamentSelection/\*.test.ts                                                               |
+| builder        | src/test/engine/matchmaking/tournamentSelection/bracket.test.ts + generation.test.ts + tournament/bracketUtils.test.ts   |
+| state          | src/test/state/slices/tournamentSlice.test.ts                                                                            |
+| committee      | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts + ncaaCommittee.test.ts                      |
+| champions      | src/test/engine/championship/championsTournament.test.ts (week-52 Grand Championship)                                    |
+| matchmaking    | src/test/engine/matchmaking/\*.test.ts                                                                                   |
 
 ## Commands
 

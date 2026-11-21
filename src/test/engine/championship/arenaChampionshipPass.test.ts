@@ -34,7 +34,6 @@ const ctx: WeekPipelineContext = {
   rootRng: rng,
 };
 
-
 function activeTitle(champId: string | null, over: Partial<ArenaTitle> = {}): ArenaTitle {
   return makeArenaTitle(champId, over);
 }

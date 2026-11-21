@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  STYLE_LEARN_PRIORITY,
-  STYLE_LEARN_WEIGHTS,
-} from '@/data/learnPriorities';
+import { STYLE_LEARN_PRIORITY, STYLE_LEARN_WEIGHTS } from '@/data/learnPriorities';
 import {
   LEARN_ATTEMPTS,
   LEARN_WT_FACTOR,
@@ -20,10 +17,7 @@ const SKILL_KEYS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DE
 describe('STYLE_LEARN_PRIORITY — canon coverage', () => {
   it('maps every canonical fighting style', () => {
     for (const style of ALL_STYLES) {
-      expect(
-        STYLE_LEARN_PRIORITY[style],
-        `${style} missing a learn-priority row`
-      ).toBeDefined();
+      expect(STYLE_LEARN_PRIORITY[style], `${style} missing a learn-priority row`).toBeDefined();
     }
   });
 
@@ -53,10 +47,9 @@ describe('STYLE_LEARN_WEIGHTS — derived weights', () => {
       const weights = STYLE_LEARN_WEIGHTS[style];
       const row = STYLE_LEARN_PRIORITY[style];
       row.forEach((skill, idx) => {
-        expect(
-          weights[skill],
-          `${style} ${skill} should weight ${6 - idx}`
-        ).toBe(SKILL_KEYS.length - idx);
+        expect(weights[skill], `${style} ${skill} should weight ${6 - idx}`).toBe(
+          SKILL_KEYS.length - idx
+        );
       });
     }
   });

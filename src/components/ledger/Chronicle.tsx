@@ -213,9 +213,7 @@ function GazetteComposer() {
         />
         <button type="submit" className={composerButtonClass}>
           Spotlight
-          {(playerSpotlights?.length ?? 0) > 0
-            ? ` (${(playerSpotlights ?? []).length}/3)`
-            : ''}
+          {(playerSpotlights?.length ?? 0) > 0 ? ` (${(playerSpotlights ?? []).length}/3)` : ''}
         </button>
       </form>
     </>

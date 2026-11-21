@@ -106,10 +106,7 @@ describe('processHallOfFame', () => {
     it('awards STABLE_OF_YEAR to the stable with the most year-delta wins', () => {
       // p1 stable: 3+2=5 year wins; r1 stable: 6 year wins → r1 takes it
       const state = yearEndState(
-        [
-          mkW('w1', 'PA', 3, 0, 10, 'p1'),
-          mkW('w2', 'PB', 2, 0, 10, 'p1'),
-        ],
+        [mkW('w1', 'PA', 3, 0, 10, 'p1'), mkW('w2', 'PB', 2, 0, 10, 'p1')],
         [
           {
             id: 'r1',

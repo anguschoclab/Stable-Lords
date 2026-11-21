@@ -15,8 +15,16 @@ describe('applyBoutResults — kill path', () => {
   const bystander = makeWarrior({ id: 'bystander-1' as WarriorId, stableId: 'r2' as any });
 
   function stateWith() {
-    const r1 = makeRival({ id: 'r1' as StableId, owner: makeOwner({ id: 'r1' as StableId }), roster: [victim] });
-    const r2 = makeRival({ id: 'r2' as StableId, owner: makeOwner({ id: 'r2' as StableId }), roster: [bystander] });
+    const r1 = makeRival({
+      id: 'r1' as StableId,
+      owner: makeOwner({ id: 'r1' as StableId }),
+      roster: [victim],
+    });
+    const r2 = makeRival({
+      id: 'r2' as StableId,
+      owner: makeOwner({ id: 'r2' as StableId }),
+      roster: [bystander],
+    });
     return {
       r1,
       r2,

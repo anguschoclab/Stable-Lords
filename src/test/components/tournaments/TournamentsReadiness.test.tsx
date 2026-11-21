@@ -67,8 +67,6 @@ const makeWarrior = (overrides: Record<string, unknown> = {}): Warrior =>
     ...overrides,
   } as any);
 
-
-
 // ─── TournamentPrizeBadge ─────────────────────────────────────────────────────
 describe('TournamentPrizeBadge', () => {
   it('renders the three prize values for a known tier', () => {

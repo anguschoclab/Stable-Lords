@@ -43,7 +43,6 @@ function career(over: Partial<CareerRecord> = {}): CareerRecord {
   return makeCareerRecord(over);
 }
 
-
 function makeTitleAt(
   _arenaId: string,
   championId: string | null,

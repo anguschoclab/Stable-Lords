@@ -29,33 +29,31 @@ const mkWarrior = () =>
     skillDrills: { ATT: 1 },
   });
 
-const args = (over: Partial<Parameters<typeof runSkillDrillAttempt>[0]> = {}) =>
-  ({
-    warrior: mkWarrior(),
-    skill: 'ATT' as const,
-    state: { trainers: [] } as never,
-    healingBonus: 2,
-    weather: 'Gale' as const,
-    rng: scriptRng(0.99),
-    ...over,
-  });
+const args = (over: Partial<Parameters<typeof runSkillDrillAttempt>[0]> = {}) => ({
+  warrior: mkWarrior(),
+  skill: 'ATT' as const,
+  state: { trainers: [] } as never,
+  healingBonus: 2,
+  weather: 'Gale' as const,
+  rng: scriptRng(0.99),
+  ...over,
+});
 
 const drillResult = (
   over: Partial<ReturnType<typeof processSkillDrillTraining>> = {}
-): ReturnType<typeof processSkillDrillTraining> =>
-  ({
-    updatedWarrior: mkWarrior(),
-    result: { type: 'gain', warriorId: 'w1' as WarriorId, message: 'drilled' },
-    hardCapped: false,
-    ...over,
-  });
+): ReturnType<typeof processSkillDrillTraining> => ({
+  updatedWarrior: mkWarrior(),
+  result: { type: 'gain', warriorId: 'w1' as WarriorId, message: 'drilled' },
+  hardCapped: false,
+  ...over,
+});
 
 describe('runSkillDrillAttempt (V30 unified executor)', () => {
   beforeEach(() => {
-    vi.mocked(processSkillDrillTraining).mockClear().mockImplementation(drillResult as never);
-    vi.mocked(rollForTrainingInjury)
+    vi.mocked(processSkillDrillTraining)
       .mockClear()
-      .mockReturnValue({ injury: null, result: null });
+      .mockImplementation(drillResult as never);
+    vi.mocked(rollForTrainingInjury).mockClear().mockReturnValue({ injury: null, result: null });
   });
 
   it('rolls a training injury with healingBonus + 1 — the same odds the player path uses', () => {

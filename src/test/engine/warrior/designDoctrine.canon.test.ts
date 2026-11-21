@@ -38,9 +38,7 @@ describe('deftness weapon-tier guidance (Consortium: DF 11 unlocks the real arse
     expect(ids({ ...base, DF: 9 }, FightingStyle.SlashingAttack)).toContain('df-weapon-tier');
   });
   it('DF 11+ clears the flag', () => {
-    expect(ids({ ...base, DF: 11 }, FightingStyle.SlashingAttack)).not.toContain(
-      'df-weapon-tier'
-    );
+    expect(ids({ ...base, DF: 11 }, FightingStyle.SlashingAttack)).not.toContain('df-weapon-tier');
   });
 });
 

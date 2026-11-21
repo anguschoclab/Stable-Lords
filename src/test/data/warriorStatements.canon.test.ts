@@ -66,8 +66,7 @@ describe('canon statement texts', () => {
       if (Array.isArray(o)) return o.forEach(walk);
       if (o && typeof o === 'object') {
         const rec = o as Record<string, unknown>;
-        if (typeof rec.text === 'string' && /\(\d+\)/.test(rec.text))
-          leaks.push(rec.text);
+        if (typeof rec.text === 'string' && /\(\d+\)/.test(rec.text)) leaks.push(rec.text);
         Object.values(rec).forEach(walk);
       }
     };

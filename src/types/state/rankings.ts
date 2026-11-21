@@ -1,10 +1,4 @@
-import type {
-  BoutOfferId,
-  PromoterId,
-  StableId,
-  TournamentId,
-  WarriorId,
-} from '../shared.types';
+import type { BoutOfferId, PromoterId, StableId, TournamentId, WarriorId } from '../shared.types';
 
 /**
  * Defines the shape of ranking entry.

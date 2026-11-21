@@ -43,4 +43,4 @@ Items consciously deferred at close-out. Open rows folded into
   ratchet-creep on future UI merges.
 - **Pre-existing JSON duplicate labels** — `combatPbp` "SOLAR PLEXUS" and
   `uiMeta` "Fallen in combat." are legitimate shared labels allowlisted in
-  `v29Narrative.guard.test.ts`; the ratchet forbids *new* value-dupes.
+  `v29Narrative.guard.test.ts`; the ratchet forbids _new_ value-dupes.

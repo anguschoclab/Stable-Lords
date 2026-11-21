@@ -16,13 +16,13 @@ Runs economic balance simulations to track treasury health, lethality rates, and
 
 ## Test Groups
 
-| Filter keyword | What it targets                                   |
-| -------------- | ------------------------------------------------- |
-| (none)         | Full 100-week balance simulation via daily oracle |
-| quick          | Quick 50-week balance check                       |
-| meta           | src/test/engine/metaDrift.test.ts                 |
-| economy        | src/test/engine/economy/                          |
-| balance        | src/test/engine/economy/balance.slow.test.ts (SLOW tier) |
+| Filter keyword | What it targets                                                      |
+| -------------- | -------------------------------------------------------------------- |
+| (none)         | Full 100-week balance simulation via daily oracle                    |
+| quick          | Quick 50-week balance check                                          |
+| meta           | src/test/engine/metaDrift.test.ts                                    |
+| economy        | src/test/engine/economy/                                             |
+| balance        | src/test/engine/economy/balance.slow.test.ts (SLOW tier)             |
 | hardening      | src/test/engine/combat/simulation_hardening.slow.test.ts (SLOW tier) |
 
 ## Commands

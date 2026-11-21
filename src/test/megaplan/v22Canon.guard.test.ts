@@ -8,10 +8,7 @@ import uiMeta from '@/data/narrative/uiMeta.json';
 import { CANON_STYLE_PENALTIES, STATEMENT_MIN_SKILLS } from '@/engine/warrior/skillBreakpoints';
 import { FightingStyle } from '@/types/shared.types';
 
-type Persona = Record<
-  string,
-  Record<string, Record<string, { min: number; text: string }[]>>
->;
+type Persona = Record<string, Record<string, Record<string, { min: number; text: string }[]>>>;
 const persona = uiMeta.persona as unknown as Persona;
 
 describe('persona category completeness (live guard)', () => {

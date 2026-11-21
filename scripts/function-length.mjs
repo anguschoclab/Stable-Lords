@@ -21,8 +21,6 @@ const OUT_FILE = 'megaplan-sizes.json';
 
 const FN_LIMITS = { report: 40, over80: 80, over120: 120, over200: 200 };
 
-
-
 function fnName(node) {
   if (
     ts.isFunctionDeclaration(node) ||

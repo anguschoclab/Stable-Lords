@@ -61,9 +61,7 @@ describe('RivalStableList (virtualized)', () => {
   it('search filters the rendered set', async () => {
     const { RivalStableList } = await import('@/components/scouting/RivalStableList');
     const rivals = [...makeRivals(3), makeRivalStable('needle', [])];
-    render(
-      <RivalStableList rivals={rivals} selectedRivalId={null} onSelectRival={vi.fn()} />
-    );
+    render(<RivalStableList rivals={rivals} selectedRivalId={null} onSelectRival={vi.fn()} />);
     fireEvent.change(screen.getByLabelText('Filter list'), { target: { value: 'needle' } });
     expect(screen.getByText('Stable needle')).toBeInTheDocument();
     expect(screen.queryByText('Stable r0')).not.toBeInTheDocument();
@@ -73,7 +71,11 @@ describe('RivalStableList (virtualized)', () => {
     const { RivalStableList } = await import('@/components/scouting/RivalStableList');
     const onSelectRival = vi.fn();
     render(
-      <RivalStableList rivals={makeRivals(2)} selectedRivalId={null} onSelectRival={onSelectRival} />
+      <RivalStableList
+        rivals={makeRivals(2)}
+        selectedRivalId={null}
+        onSelectRival={onSelectRival}
+      />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Select rival stable Stable r0' }));
     expect(onSelectRival).toHaveBeenCalledWith('owner-r0');
@@ -83,7 +85,11 @@ describe('RivalStableList (virtualized)', () => {
     const { RivalStableList } = await import('@/components/scouting/RivalStableList');
     const onSelectRival = vi.fn();
     render(
-      <RivalStableList rivals={makeRivals(2)} selectedRivalId={null} onSelectRival={onSelectRival} />
+      <RivalStableList
+        rivals={makeRivals(2)}
+        selectedRivalId={null}
+        onSelectRival={onSelectRival}
+      />
     );
     const card = screen.getByRole('button', { name: 'Select rival stable Stable r1' });
     fireEvent.keyDown(card, { key: 'Enter' });
@@ -96,11 +102,7 @@ describe('RivalStableList (virtualized)', () => {
   it('marks the selected card aria-pressed', async () => {
     const { RivalStableList } = await import('@/components/scouting/RivalStableList');
     render(
-      <RivalStableList
-        rivals={makeRivals(2)}
-        selectedRivalId="owner-r1"
-        onSelectRival={vi.fn()}
-      />
+      <RivalStableList rivals={makeRivals(2)} selectedRivalId="owner-r1" onSelectRival={vi.fn()} />
     );
     const selected = screen.getByRole('button', { name: 'Select rival stable Stable r1' });
     expect(selected).toHaveAttribute('aria-pressed', 'true');

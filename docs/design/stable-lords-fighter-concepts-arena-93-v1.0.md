@@ -1168,239 +1168,239 @@ rhythm.
 | ---- | ----- | ------ |
 | ST   | 11    | 9      |
 | CN   | 10    | 8      |
-| SZ   | 6    | 5      |
-| WT   | 19    | 16      |
-| WL   | 13    | 11      |
+| SZ   | 6     | 5      |
+| WT   | 19    | 16     |
+| WL   | 13    | 11     |
 | SP   | 11    | 9      |
-| DF   | 15    | 12      |
+| DF   | 15    | 12     |
 
 A sub-style against the trend — hunts other offensive styles rather than high-constitution targets. Deftness backs the attack rating with great wit behind it; speed helps decisiveness and initiative. Modest damage, but most offensives carry little constitution anyway.
 
-*Tactics:* Decisiveness; responsiveness can frustrate opposing strikers and bashers.
+_Tactics:_ Decisiveness; responsiveness can frustrate opposing strikers and bashers.
 
 ### Classic Striker
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 15    | 13      |
-| CN   | 5    | 4      |
-| SZ   | 9    | 7      |
-| WT   | 17    | 14      |
-| WL   | 15    | 13      |
-| SP   | 7    | 6      |
-| DF   | 15    | 13      |
+| ST   | 15    | 13     |
+| CN   | 5     | 4      |
+| SZ   | 9     | 7      |
+| WT   | 17    | 14     |
+| WL   | 15    | 13     |
+| SP   | 7     | 6      |
+| DF   | 15    | 13     |
 
 The traditional striker — uses the style's decise advantage and a good wit to stay ahead of other styles. Deftness adds attack because the first shot has to count with low constitution. Strength is high for great damage and nearly any weapon. Endurance is the weak point: he has to end it quick.
 
-*Tactics:* Decisiveness only.
+_Tactics:_ Decisiveness only.
 
 ### Low-Will Wonder
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 17    | 14      |
-| CN   | 9    | 8      |
-| SZ   | 7    | 6      |
-| WT   | 17    | 14      |
-| WL   | 9    | 7      |
-| SP   | 14    | 12      |
+| ST   | 17    | 14     |
+| CN   | 9     | 8      |
+| SZ   | 7     | 6      |
+| WT   | 17    | 14     |
+| WL   | 9     | 7      |
+| SP   | 14    | 12     |
 | DF   | 11    | 9      |
 
 This low will wonder needs help to reach normal endurance — hence the high strength, which has the bonus of guaranteeing good damage on a relatively small warrior. The 11 deftness opens suitability to almost every weapon.
 
-*Tactics:* Decisiveness only.
+_Tactics:_ Decisiveness only.
 
 ### Assur's Godling
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 21    | 18      |
-| CN   | 4    | 3      |
-| SZ   | 7    | 6      |
-| WT   | 21    | 18      |
-| WL   | 9    | 7      |
+| ST   | 21    | 18     |
+| CN   | 4     | 3      |
+| SZ   | 7     | 6      |
+| WT   | 21    | 18     |
+| WL   | 9     | 7      |
 | SP   | 11    | 9      |
 | DF   | 11    | 9      |
 
 Assur's maxed godling — twenty-one strength and wit with everything else at minimums. Brilliant on paper, but four constitution means the first minute is the whole fight; Assur offers him as the cautionary entry.
 
-*Tactics:* Decisiveness — the bout must end before the flaws do.
+_Tactics:_ Decisiveness — the bout must end before the flaws do.
 
 ### Assur's Giant
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 9    | 8      |
-| SZ   | 16    | 13      |
-| WT   | 21    | 17      |
+| ST   | 9     | 8      |
+| CN   | 9     | 8      |
+| SZ   | 16    | 13     |
+| WT   | 21    | 17     |
 | WL   | 10    | 8      |
-| SP   | 8    | 7      |
+| SP   | 8     | 7      |
 | DF   | 11    | 9      |
 
 The big striker — sixteen size supplies the hit points that nine constitution and ten will cannot, freeing wit for twenty-one. Slow, but a giant can afford to be.
 
-*Tactics:* Decisiveness; bash if the decise fails to land.
+_Tactics:_ Decisiveness; bash if the decise fails to land.
 
 ### Assur's Stayer
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 3    | 3      |
-| SZ   | 16    | 13      |
-| WT   | 17    | 14      |
-| WL   | 17    | 14      |
-| SP   | 9    | 7      |
-| DF   | 13    | 11      |
+| ST   | 9     | 8      |
+| CN   | 3     | 3      |
+| SZ   | 16    | 13     |
+| WT   | 17    | 14     |
+| WL   | 17    | 14     |
+| SP   | 9     | 7      |
+| DF   | 13    | 11     |
 
 Assur's endurance experiment — three constitution behind a sixteen-size hit-point pool and seventeen will. Staying power bought with size and will instead of constitution.
 
-*Tactics:* Decisiveness — and he can actually outlast the counter.
+_Tactics:_ Decisiveness — and he can actually outlast the counter.
 
 ### Assur's Hammer
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 17    | 14      |
-| CN   | 5    | 4      |
+| ST   | 17    | 14     |
+| CN   | 5     | 4      |
 | SZ   | 10    | 9      |
-| WT   | 21    | 18      |
+| WT   | 21    | 18     |
 | WL   | 10    | 8      |
 | SP   | 10    | 8      |
 | DF   | 11    | 9      |
 
 Seventeen strength does the talking — great damage on demand with twenty-one wit to learn the rest. Five constitution is the usual striker tax.
 
-*Tactics:* Decisiveness; bash against the soft matchups.
+_Tactics:_ Decisiveness; bash against the soft matchups.
 
 ### Assur's Sprinter
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
 | ST   | 11    | 9      |
-| CN   | 13    | 11      |
-| SZ   | 5    | 4      |
-| WT   | 21    | 18      |
-| WL   | 9    | 7      |
-| SP   | 14    | 12      |
+| CN   | 13    | 11     |
+| SZ   | 5     | 4      |
+| WT   | 21    | 18     |
+| WL   | 9     | 7      |
+| SP   | 14    | 12     |
 | DF   | 11    | 9      |
 
 The speed build — fourteen speed on a five-size frame presses the decisiveness edge to its limit. Thirteen constitution is a luxury few strikers get.
 
-*Tactics:* Decisiveness — first strike is the whole game plan.
+_Tactics:_ Decisiveness — first strike is the whole game plan.
 
 ### Assur's Cutter
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 15    | 13      |
-| CN   | 3    | 3      |
+| ST   | 15    | 13     |
+| CN   | 3     | 3      |
 | SZ   | 11    | 9      |
-| WT   | 21    | 17      |
-| WL   | 9    | 7      |
-| SP   | 14    | 12      |
+| WT   | 21    | 17     |
+| WL   | 9     | 7      |
+| SP   | 14    | 12     |
 | DF   | 11    | 9      |
 
 Fifteen strength and fourteen speed — Assur's scimitar striker, built to put a damaging blow in flight before anyone answers.
 
-*Tactics:* Decisiveness; slash situationally.
+_Tactics:_ Decisiveness; slash situationally.
 
 ### Assur's Duelist
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 17    | 14      |
-| CN   | 4    | 3      |
+| ST   | 17    | 14     |
+| CN   | 4     | 3      |
 | SZ   | 10    | 8      |
-| WT   | 21    | 18      |
-| WL   | 9    | 8      |
+| WT   | 21    | 18     |
+| WL   | 9     | 8      |
 | SP   | 10    | 8      |
-| DF   | 13    | 11      |
+| DF   | 13    | 11     |
 
 Seventeen strength with a thirteen-deft hand — the duelist variant, built to hit hard and hit where aimed.
 
-*Tactics:* Decisiveness; riposte when the opponent overcommits.
+_Tactics:_ Decisiveness; riposte when the opponent overcommits.
 
 ### Assur's Scholar
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 9    | 8      |
-| SZ   | 12    | 10      |
-| WT   | 21    | 17      |
+| ST   | 9     | 8      |
+| CN   | 9     | 8      |
+| SZ   | 12    | 10     |
+| WT   | 21    | 17     |
 | WL   | 10    | 8      |
-| SP   | 12    | 10      |
+| SP   | 12    | 10     |
 | DF   | 11    | 9      |
 
 The balanced twenty-one-wit build — no stat starved below nine, nothing wasted. Assur's safest striker: learns everything, lacks only a signature.
 
-*Tactics:* Any offensive tactic the matchup calls for; decisiveness by default.
+_Tactics:_ Any offensive tactic the matchup calls for; decisiveness by default.
 
 ### Brainy Striker
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
 | ST   | 11    | 9      |
-| CN   | 12    | 10      |
+| CN   | 12    | 10     |
 | SZ   | 10    | 8      |
-| WT   | 19    | 16      |
-| WL   | 9    | 8      |
-| SP   | 6    | 5      |
-| DF   | 17    | 14      |
+| WT   | 19    | 16     |
+| WL   | 9     | 8      |
+| SP   | 6     | 5      |
+| DF   | 17    | 14     |
 
 Blind Man's thesis build — nineteen wit does the learning that nine will cannot, and seventeen deftness makes the first blow count. His argument: will is the stat a striker can starve.
 
-*Tactics:* Decisiveness opener; responsiveness against opposing offensives.
+_Tactics:_ Decisiveness opener; responsiveness against opposing offensives.
 
 ### Glass Decider
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 12    | 10      |
-| SZ   | 12    | 10      |
-| WT   | 19    | 16      |
-| WL   | 7    | 6      |
-| SP   | 4    | 3      |
-| DF   | 21    | 17      |
+| ST   | 9     | 8      |
+| CN   | 12    | 10     |
+| SZ   | 12    | 10     |
+| WT   | 19    | 16     |
+| WL   | 7     | 6      |
+| SP   | 4     | 3      |
+| DF   | 21    | 17     |
 
 The extreme version — twenty-one deftness decides bouts in a single exchange while four speed and seven will leave him glass. Blind Man's proof one maxed stat can carry a striker.
 
-*Tactics:* Decisiveness — win before the flaws show.
+_Tactics:_ Decisiveness — win before the flaws show.
 
 ### Sir Boyd's Perfect
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 13    | 11      |
-| CN   | 4    | 3      |
-| SZ   | 9    | 8      |
-| WT   | 21    | 18      |
+| ST   | 13    | 11     |
+| CN   | 4     | 3      |
+| SZ   | 9     | 8      |
+| WT   | 21    | 18     |
 | WL   | 11    | 9      |
-| SP   | 9    | 7      |
-| DF   | 17    | 14      |
+| SP   | 9     | 7      |
+| DF   | 17    | 14     |
 
 Sir Boyd's ideal — clears every stated minimum with maxed wit and near-maxed deftness. ST+SZ is 22, past his durability bar of 21.
 
-*Tactics:* Decisiveness; responsiveness against enemy strikers.
+_Tactics:_ Decisiveness; responsiveness against enemy strikers.
 
 ### Sir Boyd's Swift
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
 | ST   | 11    | 9      |
-| CN   | 4    | 3      |
+| CN   | 4     | 3      |
 | SZ   | 11    | 9      |
-| WT   | 17    | 14      |
+| WT   | 17    | 14     |
 | WL   | 11    | 9      |
-| SP   | 15    | 13      |
-| DF   | 15    | 13      |
+| SP   | 15    | 13     |
+| DF   | 15    | 13     |
 
 Boyd's speed variant — fifteen speed sharpens the decise edge, and ST+SZ still reaches his 21-point bar.
 
-*Tactics:* Decisiveness; responsiveness against enemy strikers.
+_Tactics:_ Decisiveness; responsiveness against enemy strikers.
 
 ### Fool's Biff
 
@@ -1409,190 +1409,190 @@ Boyd's speed variant — fifteen speed sharpens the decise edge, and ST+SZ still
 | ST   | 10    | 9      |
 | CN   | 10    | 8      |
 | SZ   | 11    | 9      |
-| WT   | 4    | 3      |
-| WL   | 17    | 14      |
-| SP   | 17    | 14      |
-| DF   | 15    | 13      |
+| WT   | 4     | 3      |
+| WL   | 17    | 14     |
+| SP   | 17    | 14     |
+| DF   | 15    | 13     |
 
 Talon's wit-starved biff — four wit, seventeen speed and will. Deliberately jank: the style forgives a bad stat line when the first blow lands.
 
-*Tactics:* None — a biff runs naked.
+_Tactics:_ None — a biff runs naked.
 
 ### Clever Biff
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 7    | 6      |
+| ST   | 7     | 6      |
 | CN   | 11    | 9      |
-| SZ   | 17    | 14      |
-| WT   | 17    | 14      |
+| SZ   | 17    | 14     |
+| WT   | 17    | 14     |
 | WL   | 11    | 9      |
-| SP   | 6    | 5      |
-| DF   | 15    | 13      |
+| SP   | 6     | 5      |
+| DF   | 15    | 13     |
 
 The clever biff — seventeen wit and a seventeen-size frame carry seven strength; six speed is the price of admission.
 
-*Tactics:* None, or dodge when the first exchange goes wrong.
+_Tactics:_ None, or dodge when the first exchange goes wrong.
 
 ### Gambler's Biff
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 5    | 4      |
-| SZ   | 14    | 12      |
-| WT   | 17    | 14      |
+| ST   | 9     | 8      |
+| CN   | 5     | 4      |
+| SZ   | 14    | 12     |
+| WT   | 17    | 14     |
 | WL   | 11    | 9      |
-| SP   | 13    | 11      |
-| DF   | 15    | 12      |
+| SP   | 13    | 11     |
+| DF   | 15    | 12     |
 
 The gambler — five constitution behind a fourteen-size frame, betting the bout ends before endurance does.
 
-*Tactics:* None — bet it all on the opening.
+_Tactics:_ None — bet it all on the opening.
 
 ### Hulk Biff
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 4    | 3      |
-| CN   | 8    | 7      |
-| SZ   | 17    | 14      |
-| WT   | 15    | 13      |
-| WL   | 13    | 11      |
+| ST   | 4     | 3      |
+| CN   | 8     | 7      |
+| SZ   | 17    | 14     |
+| WT   | 15    | 13     |
+| WL   | 13    | 11     |
 | SP   | 10    | 8      |
-| DF   | 17    | 14      |
+| DF   | 17    | 14     |
 
 The hulk — four strength on a seventeen-size frame with seventeen deftness. Hits like a feather, cannot be dropped: Talon's most perverse workable biff.
 
-*Tactics:* None — survive to the counter-punch.
+_Tactics:_ None — survive to the counter-punch.
 
 ### Godling Biff
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 21    | 18      |
-| CN   | 3    | 3      |
-| SZ   | 15    | 12      |
-| WT   | 21    | 17      |
-| WL   | 5    | 4      |
-| SP   | 8    | 7      |
+| ST   | 21    | 18     |
+| CN   | 3     | 3      |
+| SZ   | 15    | 12     |
+| WT   | 21    | 17     |
+| WL   | 5     | 4      |
+| SP   | 8     | 7      |
 | DF   | 11    | 9      |
 
 Two twenty-ones and three dump stats — Talon's godling experiment. Magnificent in minute one, nothing left after.
 
-*Tactics:* Decisiveness — there is no plan B.
+_Tactics:_ Decisiveness — there is no plan B.
 
 ### Talon's Solid
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 13    | 11      |
-| CN   | 6    | 5      |
-| SZ   | 9    | 8      |
-| WT   | 17    | 14      |
-| WL   | 17    | 14      |
-| SP   | 9    | 7      |
-| DF   | 13    | 11      |
+| ST   | 13    | 11     |
+| CN   | 6     | 5      |
+| SZ   | 9     | 8      |
+| WT   | 17    | 14     |
+| WL   | 17    | 14     |
+| SP   | 9     | 7      |
+| DF   | 13    | 11     |
 
 Talon's solid citizen — no gimmick, just seventeen wit and will over adequate everything. The build he actually recommends.
 
-*Tactics:* Decisiveness in minute one; responsiveness if a defensive tactic is wanted.
+_Tactics:_ Decisiveness in minute one; responsiveness if a defensive tactic is wanted.
 
 ### Primal Perfect
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 15    | 13      |
-| CN   | 3    | 3      |
-| SZ   | 5    | 4      |
-| WT   | 21    | 17      |
-| WL   | 15    | 12      |
-| SP   | 8    | 7      |
-| DF   | 17    | 14      |
+| ST   | 15    | 13     |
+| CN   | 3     | 3      |
+| SZ   | 5     | 4      |
+| WT   | 21    | 17     |
+| WL   | 15    | 12     |
+| SP   | 8     | 7      |
+| DF   | 17    | 14     |
 
 Talon's perfect column — twenty-one wit, fifteen will and strength, near-maxed deftness on a five-size frame. The dream roll-up.
 
-*Tactics:* Decisiveness; responsiveness against enemy decise.
+_Tactics:_ Decisiveness; responsiveness against enemy decise.
 
 ### Tex's Workhorse
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 13    | 11      |
-| CN   | 5    | 4      |
-| SZ   | 17    | 14      |
-| WT   | 17    | 14      |
+| ST   | 13    | 11     |
+| CN   | 5     | 4      |
+| SZ   | 17    | 14     |
+| WT   | 17    | 14     |
 | WL   | 10    | 8      |
-| SP   | 9    | 8      |
-| DF   | 13    | 11      |
+| SP   | 9     | 8      |
+| DF   | 13    | 11     |
 
 Tex's 69-fight veteran — a seventeen-size, seventeen-wit workhorse that simply outlasted everyone. Proof durability and learning beat elegance over a career.
 
-*Tactics:* Decisiveness; slash or bash by the matchup.
+_Tactics:_ Decisiveness; slash or bash by the matchup.
 
 ### Tex's Graduate
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 9    | 8      |
-| CN   | 9    | 8      |
+| ST   | 9     | 8      |
+| CN   | 9     | 8      |
 | SZ   | 11    | 9      |
-| WT   | 17    | 14      |
+| WT   | 17    | 14     |
 | WL   | 11    | 9      |
 | SP   | 10    | 8      |
-| DF   | 17    | 14      |
+| DF   | 17    | 14     |
 
 The graduate — modest stats maximally deployed; seventeen wit and deftness carried him clean through to graduation.
 
-*Tactics:* Decisiveness; any defensive tactic but parry.
+_Tactics:_ Decisiveness; any defensive tactic but parry.
 
 ### Tex's Bruiser
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 17    | 14      |
-| CN   | 6    | 5      |
+| ST   | 17    | 14     |
+| CN   | 6     | 5      |
 | SZ   | 11    | 9      |
-| WT   | 17    | 14      |
-| WL   | 9    | 8      |
+| WT   | 17    | 14     |
+| WL   | 9     | 8      |
 | SP   | 11    | 9      |
-| DF   | 13    | 11      |
+| DF   | 13    | 11     |
 
 Seventeen strength does the talking — a wit-seventeen bruiser who hits hard and learns whatever else he needs.
 
-*Tactics:* Decisiveness; bash against bashers.
+_Tactics:_ Decisiveness; bash against bashers.
 
 ### Tex's Godling
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
 | ST   | 11    | 9      |
-| CN   | 13    | 11      |
+| CN   | 13    | 11     |
 | SZ   | 11    | 9      |
-| WT   | 21    | 18      |
-| WL   | 9    | 7      |
-| SP   | 6    | 5      |
-| DF   | 13    | 11      |
+| WT   | 21    | 18     |
+| WL   | 9     | 7      |
+| SP   | 6     | 5      |
+| DF   | 13    | 11     |
 
 Tex's godling — twenty-one wit headlining a balanced frame with no true weakness. The safe godling.
 
-*Tactics:* Decisiveness; responsiveness against enemy strikers.
+_Tactics:_ Decisiveness; responsiveness against enemy strikers.
 
 ### Tex's Fireball
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 17    | 14      |
-| CN   | 8    | 7      |
-| SZ   | 7    | 6      |
-| WT   | 17    | 14      |
-| WL   | 5    | 4      |
-| SP   | 13    | 11      |
-| DF   | 17    | 14      |
+| ST   | 17    | 14     |
+| CN   | 8     | 7      |
+| SZ   | 7     | 6      |
+| WT   | 17    | 14     |
+| WL   | 5     | 4      |
+| SP   | 13    | 11     |
+| DF   | 17    | 14     |
 
 Five will with seventeen strength, speed, and deftness — burns spectacularly and briefly. Tex's cautionary fireball.
 
-*Tactics:* Decisiveness only — the flame does not last.
+_Tactics:_ Decisiveness only — the flame does not last.
 
 ### Tex's Stayer
 
@@ -1601,63 +1601,62 @@ Five will with seventeen strength, speed, and deftness — burns spectacularly a
 | ST   | 10    | 8      |
 | CN   | 10    | 8      |
 | SZ   | 10    | 8      |
-| WT   | 21    | 18      |
-| WL   | 14    | 12      |
+| WT   | 21    | 18     |
+| WL   | 14    | 12     |
 | SP   | 11    | 9      |
-| DF   | 8    | 7      |
+| DF   | 8     | 7      |
 
 Twenty-one wit and fourteen will — Tex's stayer wins long fights he has no business surviving.
 
-*Tactics:* Any tactic the book allows; he has the wit to use them all.
+_Tactics:_ Any tactic the book allows; he has the wit to use them all.
 
 ### Tex's Accident
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 12    | 10      |
-| CN   | 15    | 13      |
-| SZ   | 4    | 3      |
-| WT   | 18    | 15      |
-| WL   | 21    | 18      |
-| SP   | 4    | 3      |
+| ST   | 12    | 10     |
+| CN   | 15    | 13     |
+| SZ   | 4     | 3      |
+| WT   | 18    | 15     |
+| WL   | 21    | 18     |
+| SP   | 4     | 3      |
 | DF   | 10    | 8      |
 
 The accident — a roll meant for another style: eighteen wit, twenty-one will, four speed and four size. Graduated anyway; the article's strangest success.
 
-*Tactics:* None — let the skills do the work.
+_Tactics:_ None — let the skills do the work.
 
 ### Tex's Grinder
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 12    | 10      |
-| CN   | 12    | 10      |
-| SZ   | 7    | 6      |
-| WT   | 20    | 17      |
-| WL   | 14    | 12      |
-| SP   | 9    | 7      |
+| ST   | 12    | 10     |
+| CN   | 12    | 10     |
+| SZ   | 7     | 6      |
+| WT   | 20    | 17     |
+| WL   | 14    | 12     |
+| SP   | 9     | 7      |
 | DF   | 10    | 8      |
 
 Twenty wit over a grinder's frame — nothing fancy: outlasts and out-learns.
 
-*Tactics:* Decisiveness early; whatever the second minute demands.
+_Tactics:_ Decisiveness early; whatever the second minute demands.
 
 ### Crimson Striker
 
 | Stat | Canon | Scaled |
 | ---- | ----- | ------ |
-| ST   | 13    | 11      |
-| CN   | 5    | 4      |
+| ST   | 13    | 11     |
+| CN   | 5     | 4      |
 | SZ   | 10    | 9      |
-| WT   | 17    | 14      |
+| WT   | 17    | 14     |
 | WL   | 11    | 9      |
 | SP   | 10    | 9      |
-| DF   | 17    | 14      |
+| DF   | 17    | 14     |
 
 The Crimson Strategist's synthesized ideal — clears every stated minimum (strength 9, wit 11, will 9, deftness 11) with seventeen wit and deftness; five constitution says pure offensive.
 
-*Tactics:* Decisiveness or responsiveness — the answer depends on the opponent's tempo.
-
+_Tactics:_ Decisiveness or responsiveness — the answer depends on the opponent's tempo.
 
 ## Total-Parry
 
@@ -1739,7 +1738,7 @@ Eli's undefeated DM-41 Duelmaster — a tourney-grade frame: low con tolerated
 because it runs fast and furious and most fights end in minute one, big
 enough for real damage, wit and will at 17, speed left at 3.
 
-*Tactics:* Run hot: 10-10-6 in minute one, then taper to high offensive
+_Tactics:_ Run hot: 10-10-6 in minute one, then taper to high offensive
 effort and low activity.
 
 ### Beowulf
@@ -1758,7 +1757,7 @@ Eli's Seam veteran — 54 learned skills and near the top of the arena. The
 balanced waste: 11 strength opens the broadsword and quarterstaff,
 everything else serves wit, will, and deftness.
 
-*Tactics:* Same high-low rhythm — offensive opening, low-activity finish.
+_Tactics:_ Same high-low rhythm — offensive opening, low-activity finish.
 
 ### Midnight
 
@@ -1776,7 +1775,7 @@ Eli's ADM build — ad-masters in attack and initiative on a 21-deftness
 chassis. The wit statement loadout carries the style's signature skills;
 will at 15 is the floor, not the aim.
 
-*Tactics:* Offensive minute one, then high-low.
+_Tactics:_ Offensive minute one, then high-low.
 
 ### Dante's Trainee
 
@@ -1794,7 +1793,7 @@ Dante Killatroll's worked example — four wit statements (INI 12, ATT 10,
 PAR 7, DEF 7) plus an endurance blessing. Trains strength to 11 early to
 un-hose damage and carry; learned 46 skills in a 14-8 start.
 
-*Tactics:* Open 6-4-6, then move effort and activity up or down by one until
+_Tactics:_ Open 6-4-6, then move effort and activity up or down by one until
 the parry locks in.
 
 ### Bash Bro Prime
@@ -1813,7 +1812,7 @@ Assur's first Bash Bro — a big 21-will hybrid a manager would be pleased
 with, just short of tourney quality. Spare points went to con over
 strength: at this size, strength buys little.
 
-*Tactics:* Hybrid wall — defensive structure, offensive answers.
+_Tactics:_ Hybrid wall — defensive structure, offensive answers.
 
 ### Bash Bro Hybrid
 
@@ -1831,7 +1830,7 @@ Assur's second — the 17-17 wit-will pairing most managers build for
 tournaments. Moderate con keeps it a hybrid rather than a true defensive
 wall.
 
-*Tactics:* Hybrid wall — parry the storm, answer in the seams.
+_Tactics:_ Hybrid wall — parry the storm, answer in the seams.
 
 ### Bash Bro Slow
 
@@ -1849,7 +1848,7 @@ Assur's big-guy burner — wit parked at 11 (the fallback breakpoint when 17
 is out of reach) and the rest dumped into physicals. Slow on paper; the
 will still carries the burn.
 
-*Tactics:* Hybrid wall — accept the tempo loss, lean on will and frame.
+_Tactics:_ Hybrid wall — accept the tempo loss, lean on will and frame.
 
 ### Bash Bro Brick
 
@@ -1867,7 +1866,7 @@ Assur's problem-child pick — a hit-point-maximizing burner at the expense
 of wit. Explicitly not a long-term design: the 6-wit Battle Axe is
 well-suited early, and the bulk wins more fights than cleverness would.
 
-*Tactics:* Offensive wall — a burner that closes fights before the learning
+_Tactics:_ Offensive wall — a burner that closes fights before the learning
 deficit matters.
 
 ### The Graduate
@@ -1886,12 +1885,12 @@ The lone Wasted Wastes graduate — 18-11 with masters in initiative, attack,
 and parry. Wit only 13: the 21 will and 17 deftness did the work. Proof a
 wall survives wit under 15 when everything else is elite.
 
-*Tactics:* Canon favorites: Quarterstaff, moderate offensive effort, low
+_Tactics:_ Canon favorites: Quarterstaff, moderate offensive effort, low
 activity; the Riposte tactic runs well; learns initiative first.
 
 ---
 
-*Source: Duel2 Arena 93 Newsletters — Noblish Island compilation, "Long Term
+_Source: Duel2 Arena 93 Newsletters — Noblish Island compilation, "Long Term
 Fighter Concepts," Gavin Rule, mgr Faux Tides (1482), DM 93; Eli's "My Take
 on the Parry Slash (Wall of Steel)"; Assur's "Bash Bros Waste"; Dante
-Killatroll's "Wall of Steel: Nerdy Style"; and "Wasted Wastes".*
+Killatroll's "Wall of Steel: Nerdy Style"; and "Wasted Wastes"._

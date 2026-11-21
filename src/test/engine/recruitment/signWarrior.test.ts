@@ -10,7 +10,7 @@ import {
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { SeededRNG, hashStr } from '@/utils/random';
-import { makePoolWarrior, makeWarrior , ATTRS_10 } from '@/test/_fixtures/factories';
+import { makePoolWarrior, makeWarrior, ATTRS_10 } from '@/test/_fixtures/factories';
 import {
   FightingStyle,
   ATTRIBUTE_KEYS,

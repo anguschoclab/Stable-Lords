@@ -16,7 +16,9 @@ import { SeededRNG } from '@/utils/random';
 const phaseArgs = (decA: number, decD: number, seed: number) => {
   const rng = new SeededRNG(seed);
   const ctx = makeResolutionContext({ rng: () => rng.next() });
-  const fA = makeFighterState({ skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: decA } });
+  const fA = makeFighterState({
+    skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: decA },
+  });
   const fD = makeFighterState({
     label: 'D',
     skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: decD },

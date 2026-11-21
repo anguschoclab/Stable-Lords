@@ -57,9 +57,7 @@ export function tickStableHealth(args: TickStableHealthArgs): TickStableHealthRe
       changed = true;
     }
 
-    const injuries = (next.injuries ?? []).filter(
-      (i): i is InjuryData => typeof i !== 'string'
-    );
+    const injuries = (next.injuries ?? []).filter((i): i is InjuryData => typeof i !== 'string');
     if (injuries.length > 0) {
       const healedNames: string[] = [];
       const ticked = tickInjuries(injuries);

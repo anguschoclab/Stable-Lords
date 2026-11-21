@@ -142,10 +142,7 @@ describe('flushDeferredArchivesOffThread', () => {
       });
       expect(listener.mock.calls[0]?.[0]?.boutId).toBe('bout_0');
       expect(listener.mock.calls[1]?.[0]?.boutId).toBe('bout_1');
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Archive retry listener threw:',
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Archive retry listener threw:', expect.any(Error));
     } finally {
       offThrowing();
       offListener();

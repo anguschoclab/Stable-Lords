@@ -72,16 +72,12 @@ export function generateWarriorIntro(
 
   // Weapon & Style
   const weaponName = getWeaponDisplayName(data.weaponId);
-  const offhandName = data.offhandWeaponId
-    ? getWeaponDisplayName(data.offhandWeaponId)
-    : undefined;
+  const offhandName = data.offhandWeaponId ? getWeaponDisplayName(data.offhandWeaponId) : undefined;
   if (weaponName === 'OPEN HAND') {
     lines.push(`${n} will fight using his OPEN HAND.`);
   } else if (offhandName) {
     // Dual wield — canon "weapon in each hand" profile.
-    lines.push(
-      `${n} is armed with a ${weaponName} and a ${offhandName} — a weapon in each hand.`
-    );
+    lines.push(`${n} is armed with a ${weaponName} and a ${offhandName} — a weapon in each hand.`);
   } else {
     const verb =
       getFromArchive(rng, ['fanfare', 'weapon_intro_verbs']) || 'is armed with {{weapon}}';

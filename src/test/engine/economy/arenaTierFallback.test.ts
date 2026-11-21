@@ -55,7 +55,13 @@ describe('computeWeeklyBreakdown — arenaTier lookup contract', () => {
 
   it('propagates a registry failure instead of silently degrading to tier 1', () => {
     const input = economyInput([
-      makeFightSummary({ week: 1, warriorIdA: 'p1' as never, winner: 'A', arenaId: 'ghost_arena', fameA: 0 }),
+      makeFightSummary({
+        week: 1,
+        warriorIdA: 'p1' as never,
+        winner: 'A',
+        arenaId: 'ghost_arena',
+        fameA: 0,
+      }),
     ]);
 
     expect(() => computeWeeklyBreakdown(input)).toThrow('arena registry unavailable');

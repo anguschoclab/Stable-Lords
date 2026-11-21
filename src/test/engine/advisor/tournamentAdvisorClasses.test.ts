@@ -13,7 +13,7 @@ const w = (id: string, fe: number) =>
   });
 
 describe('evaluateTournamentAdvice — FE classes', () => {
-  it('reports the warrior\'s classId + FE + breakpoint gap from the frozen cycle when present', () => {
+  it("reports the warrior's classId + FE + breakpoint gap from the frozen cycle when present", () => {
     const warrior = w('a', 4);
     const state = makeTournamentBaseState(9);
     state.roster = [warrior];

@@ -31,8 +31,8 @@ function MarkButtons({ warrior }: { warrior: Warrior }) {
 
   const isChallenged = playerChallenges?.includes(warrior.id) ?? false;
   const isAvoided =
-    (playerAvoids?.includes(warrior.id) ??
-      playerStableAvoids?.includes(warrior.stableId as string)) ??
+    playerAvoids?.includes(warrior.id) ??
+    playerStableAvoids?.includes(warrior.stableId as string) ??
     false;
   const isStableAvoided =
     warrior.stableId !== undefined &&
@@ -99,7 +99,11 @@ function HeaderActions({
 }
 
 /** Rank + composite-score badge pair under the action cluster. */
-function RankBadges({ rankings }: { rankings: NonNullable<WarriorDossierHeaderProps['rankings']> }) {
+function RankBadges({
+  rankings,
+}: {
+  rankings: NonNullable<WarriorDossierHeaderProps['rankings']>;
+}) {
   return (
     <div className="flex items-center gap-2">
       <Badge

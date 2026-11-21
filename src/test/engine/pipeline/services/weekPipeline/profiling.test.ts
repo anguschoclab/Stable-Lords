@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { isPipelineProfiling, recordPassTiming } from '@/engine/pipeline/services/weekPipeline/profiling';
+import {
+  isPipelineProfiling,
+  recordPassTiming,
+} from '@/engine/pipeline/services/weekPipeline/profiling';
 import { telemetry, TelemetryEvents } from '@/engine/core/telemetry';
 
 describe('weekPipeline/profiling', () => {

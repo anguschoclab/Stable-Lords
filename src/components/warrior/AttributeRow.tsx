@@ -154,7 +154,8 @@ function RowButton(props: {
   } = state;
 
   return (
-    <button type="button"
+    <button
+      type="button"
       disabled={disabled}
       onClick={() => onAssign(attrKey)}
       className={rowButtonClass(isSelected, disabled, isAdvisorRecommended)}

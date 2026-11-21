@@ -95,14 +95,20 @@ describe('megaplan V19: unique-logic preservation (§U)', () => {
       /export function \w*StatWarrior\(\s*style: FightingStyle,\s*id: string,\s*attrs\?/s
     );
     const det = fileText('src/test/_fixtures/determinism.ts');
-    expect(det).toMatch(/simulateDeterministically\(warriorA: Warrior, warriorD: Warrior, seed: number\)/);
+    expect(det).toMatch(
+      /simulateDeterministically\(warriorA: Warrior, warriorD: Warrior, seed: number\)/
+    );
   });
 
   it('U6: unexport drain keeps internal use — only the export keyword went — MEGAPLAN-U6', () => {
     const cases: [string, string, RegExp][] = [
       ['src/engine/simulate/initialization.ts', 'CROWD_KILL_BONUS', /CROWD_KILL_BONUS\[/],
       ['src/engine/ai/plan/rivalPlan.ts', 'RivalFightPlanOpts', /opts:\s*RivalFightPlanOpts/],
-      ['src/engine/pipeline/offseasonEvents/helpers.ts', 'ChosenWarriorOutcome', /:\s*ChosenWarriorOutcome/],
+      [
+        'src/engine/pipeline/offseasonEvents/helpers.ts',
+        'ChosenWarriorOutcome',
+        /:\s*ChosenWarriorOutcome/,
+      ],
       ['src/engine/pipeline/offseasonEvents/helpers.ts', 'GrantableStat', /GrantableStat/],
     ];
     for (const [file, sym, useRe] of cases) {
@@ -118,7 +124,10 @@ describe('megaplan V19: unique-logic preservation (§U)', () => {
 
   it('U7: radius remediations kept badge styling — only the radius class changed — MEGAPLAN-U7', () => {
     const badges: [string, string[]][] = [
-      ['src/components/warrior/AttributeRow.tsx', ['bg-arena-gold/20', 'text-arena-gold', 'border-arena-gold/40']],
+      [
+        'src/components/warrior/AttributeRow.tsx',
+        ['bg-arena-gold/20', 'text-arena-gold', 'border-arena-gold/40'],
+      ],
       ['src/components/layout/ExecuteWeekButton.tsx', ['bg-arena-gold/20', 'text-arena-gold']],
       ['src/components/warrior/WarriorTrainingCard.tsx', ['bg-arena-gold/20', 'text-arena-gold']],
       ['src/components/world/RivalIntelligenceRow.tsx', ['tabular-nums', 'tracking-widest']],

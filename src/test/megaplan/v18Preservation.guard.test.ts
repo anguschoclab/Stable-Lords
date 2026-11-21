@@ -60,9 +60,7 @@ describe('megaplan V18: unique-logic preservation (§U)', () => {
       'promoterAwareness.test.ts',
     ]) {
       const text = fileText(`src/test/engine/ai/workers/competitionWorker/${f}`);
-      expect(text, `${f} lost its scenario assertions`).toMatch(
-        /eval(uate)?BoutOffer/
-      );
+      expect(text, `${f} lost its scenario assertions`).toMatch(/eval(uate)?BoutOffer/);
       expect(text, `${f} lost its expectations`).toContain('expect(');
     }
   });
@@ -98,12 +96,7 @@ describe('megaplan V18: unique-logic preservation (§U)', () => {
 
   it('U6: offseason handler map keeps per-event effectType keys', () => {
     const text = fileText('src/engine/pipeline/seasonal.ts');
-    for (const key of [
-      'chaos_rift',
-      'fame_boost',
-      'tavern_brawl',
-      'plague_outbreak',
-    ]) {
+    for (const key of ['chaos_rift', 'fame_boost', 'tavern_brawl', 'plague_outbreak']) {
       expect(text, `seasonal.ts lost the ${key} handler`).toContain(key);
     }
   });

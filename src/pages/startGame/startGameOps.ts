@@ -2,12 +2,7 @@ import { toast } from 'sonner';
 import { useGameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import {
-  loadFromSlot,
-  saveToSlot,
-  newSlotId,
-  importSaveToNewSlot,
-} from '@/state/saveSlots';
+import { loadFromSlot, saveToSlot, newSlotId, importSaveToNewSlot } from '@/state/saveSlots';
 import type { CrestData } from '@/types/crest.types';
 import type { WorldDifficulty } from '@/types/state.types';
 import { applyBackstoryToPlayer, type BackstoryId } from '@/data/backstories';

@@ -89,5 +89,5 @@ deftness opens suitability to almost every weapon.
 
 ---
 
-*Source: Duel2 Arena 93 Newsletters — Noblish Island compilation, "How to
-Build a Better Warrior (version Y2K)," Neon Necromancer.*
+_Source: Duel2 Arena 93 Newsletters — Noblish Island compilation, "How to
+Build a Better Warrior (version Y2K)," Neon Necromancer._

@@ -1,9 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
-import {
-  planTournamentEntries,
-  processTournamentPrep,
-} from '@/engine/ai/workers/tournamentWorker';
+import { planTournamentEntries, processTournamentPrep } from '@/engine/ai/workers/tournamentWorker';
 import {
   makeTournamentRival,
   makeTournamentWarrior,

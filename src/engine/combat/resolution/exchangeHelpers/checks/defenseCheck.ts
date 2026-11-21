@@ -41,8 +41,8 @@ export function performDefenseCheck(args: PerformDefenseCheckArgs) {
   // Committed attacker is fully open — defender gets +15 on defense
   const commitPenalty = attacker?.committed ? 15 : 0;
   // Wild swings (KD ≥ threshold) are easier to read — defender bonus.
-  const wildBonus = Math.max(0, (args.attKD ?? 0) - KILL_DESIRE_WILD.THRESHOLD + 1) *
-    KILL_DESIRE_WILD.DEF_COEFF;
+  const wildBonus =
+    Math.max(0, (args.attKD ?? 0) - KILL_DESIRE_WILD.THRESHOLD + 1) * KILL_DESIRE_WILD.DEF_COEFF;
   if (isDodge) {
     const success = skillCheck(
       rng,

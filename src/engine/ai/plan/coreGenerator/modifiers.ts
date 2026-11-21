@@ -203,11 +203,7 @@ export function mergePlanModifiers(args: {
     ),
     feintTendency:
       (base.feintTendency ?? 0) > 0
-        ? clamp(
-            (base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0),
-            0,
-            10
-          )
+        ? clamp((base.feintTendency ?? 0) + (PERSONALITY_FEINT_MOD[personality] ?? 0), 0, 10)
         : 0,
   };
 }

@@ -159,16 +159,14 @@ export function doubleTacticEffectiveness(
   offTactic: OffensiveTactic | undefined,
   defTactic: DefensiveTactic | undefined
 ): number {
-  const both =
-    !!offTactic && offTactic !== 'none' && !!defTactic && defTactic !== 'none';
+  const both = !!offTactic && offTactic !== 'none' && !!defTactic && defTactic !== 'none';
   return both ? DOUBLE_TACTIC_EFFECTIVENESS : 1;
 }
 
 /** V24 canon (Assur): KD 9-10 makes warriors "fight somewhat strangely" —
  *  flat efficacy tax at/above the threshold (kill window scales as before). */
 export function killDesirePenalty(kd: number | undefined): { attBonus: number; iniBonus: number } {
-  if (kd === undefined || kd < KD_HIGH_PENALTY.threshold)
-    return { attBonus: 0, iniBonus: 0 };
+  if (kd === undefined || kd < KD_HIGH_PENALTY.threshold) return { attBonus: 0, iniBonus: 0 };
   return { attBonus: KD_HIGH_PENALTY.attPenalty, iniBonus: KD_HIGH_PENALTY.iniPenalty };
 }
 

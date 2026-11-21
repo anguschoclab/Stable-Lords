@@ -184,7 +184,11 @@ export function PrepNotice() {
 }
 
 import { Button } from '@/components/ui/button';
-import { TOURNAMENT_CLASSES, classAtFreeze, type TournamentClassId } from '@/engine/matchmaking/tournamentSelection/classes';
+import {
+  TOURNAMENT_CLASSES,
+  classAtFreeze,
+  type TournamentClassId,
+} from '@/engine/matchmaking/tournamentSelection/classes';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { WINNING_ARCHETYPES, classifyArchetype } from '@/data/warriorArchetypes';
 import { suspectedFavoriteWeapon } from '@/engine/favorites';
@@ -284,7 +288,12 @@ function EntryRow({
         </div>
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
-        <Badge className={cn('rounded-none text-[7px] font-black uppercase tracking-widest', statusBadge(status))}>
+        <Badge
+          className={cn(
+            'rounded-none text-[7px] font-black uppercase tracking-widest',
+            statusBadge(status)
+          )}
+        >
           {status === 'NONE' ? 'Open' : status}
         </Badge>
         {status === 'NONE' && (
@@ -330,10 +339,7 @@ export function EntryDeskSection({
   return (
     <section className="space-y-8">
       <SectionDivider label={`Entry Desk — ${cycle.season} Week ${cycle.forWeek}`} />
-      <Surface
-        variant="glass"
-        className="p-5 border-l-2 border-arena-gold/40 bg-white/[0.01]"
-      >
+      <Surface variant="glass" className="p-5 border-l-2 border-arena-gold/40 bg-white/[0.01]">
         <p className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60 leading-relaxed">
           Fight equivalents froze at week {cycle.frozenAtAbsWeek}. Bouts fought now add real
           experience on top of the locked class — they cannot move a warrior up a bracket.

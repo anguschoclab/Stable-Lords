@@ -108,8 +108,7 @@ export function runSeasonalPass(
   // Record<string, unknown>; the megaplan wiring guard asserts every
   // effectType in the data is a member of OFFSEASON_EFFECT_TYPES.
   const events = narrativeContent.offseason_events as
-    | Record<string, OffseasonEventNarrative>
-    | undefined;
+    Record<string, OffseasonEventNarrative> | undefined;
 
   if (!events) {
     return {};

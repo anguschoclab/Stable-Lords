@@ -95,9 +95,7 @@ describe('narrativeIntro', () => {
       const data: WarriorIntroData = { ...baseData, offhandWeaponId: 'dagger' };
       const lines = generateWarriorIntro(rng, data, 12);
       // "in each hand" canon phrasing or the off-hand item name must appear.
-      expect(
-        lines.some((l) => /each hand|both hands|DAGGER/i.test(l))
-      ).toBe(true);
+      expect(lines.some((l) => /each hand|both hands|DAGGER/i.test(l))).toBe(true);
     });
 
     it('V23: a reversed ambi is still introduced as ambidextrous', () => {

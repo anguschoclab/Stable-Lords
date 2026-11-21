@@ -28,7 +28,7 @@ See `MEGAPLAN_V28_FINDINGS.md` for the full evidence table. Headline items:
 
 ## Kebab-case transform rule
 
-`_`→`-`, lowercase, split internal CamelCase (`NONLOSSY`→`nonlossy`, `StableLordsNaming`→`stable-lords-naming`), preserve dots (`v1.0`→`v1.0`), drop `YYYY-MM-DD-` prefixes on *specs* (keep on superpowers plans — their convention), unversioned audits get explicit `-v1` for lineage clarity. Exempt: `MEGAPLAN_*`, `MEGAPLAN_BACKLOG.md`, `README.md`, `AGENTS.md`, `INDEX.md`, everything under `docs/archive/` (verbatim history).
+`_`→`-`, lowercase, split internal CamelCase (`NONLOSSY`→`nonlossy`, `StableLordsNaming`→`stable-lords-naming`), preserve dots (`v1.0`→`v1.0`), drop `YYYY-MM-DD-` prefixes on _specs_ (keep on superpowers plans — their convention), unversioned audits get explicit `-v1` for lineage clarity. Exempt: `MEGAPLAN_*`, `MEGAPLAN_BACKLOG.md`, `README.md`, `AGENTS.md`, `INDEX.md`, everything under `docs/archive/` (verbatim history).
 
 ## File move map (all `git mv`, history preserved)
 
@@ -47,24 +47,29 @@ See `MEGAPLAN_V28_FINDINGS.md` for the full evidence table. Headline items:
 ## Implementation steps (strict test-first for the new guard)
 
 ### Phase 0 — V28 scaffold + V27 archive (un-reds the suite)
+
 - Land `docs/MEGAPLAN_V28_{PLAN,FINDINGS,LEDGER}.md`.
 - `git mv docs/MEGAPLAN_V27_*.md docs/archive/megaplans/` — atomic with the guard update so the exactly-one-lineage invariant never breaks.
 - `megaplanDocLayout.guard.test.ts`: `REPO`→`DOCS` for lineage + `BACKLOG` reads; `ARCHIVED_DOCS` += 4 V27 files; `ARCHIVED_VERSIONS` += 27; docstring rewrite ("latest set lives at **docs/ root**").
 - `MEGAPLAN_BACKLOG.md`: "Current latest" → V28; §6 V27 row → archived; "repo root" → "docs/ root" wording.
 
 ### Phase 1 — `docsLayout.guard.test.ts` authored RED
+
 - New spec: docs-root allowlist; repo-root `.md` ⊆ `{README.md, AGENTS.md}`; approved docs dirs; kebab ratchet on `design|engineering|reports|manual`; relative-link integrity for non-archive docs + root README/AGENTS; INDEX freshness coverage.
 - Register `'docsLayout.guard.test.ts': 'LIVE_RATCHET'` in `GUARD_REGISTRY` (`testQualityAudit.test.ts`); regen `runnerGroups.json` via `bun scripts/test-audit-scan.mjs`.
 - Observe RED → commit spec alone.
 
 ### Phase 2 — Root restore
+
 - `git mv` README + AGENTS to root; fix manual link; rewrite `AGENTS.md` conventions (megaplan home = docs/ root, kebab rule + exemptions, INDEX rule, archive families, `archives/`≠`docs/archive/`).
 - `.claude/CLAUDE.md`: `docs/TESTING.md` → `docs/engineering/testing.md`.
 
 ### Phase 3 — Taxonomy moves
+
 - All `git mv` per the move map; optional `images/manual/`→`images/` flatten; `git rm src/test/.!39109!.DS_Store`.
 
 ### Phase 4 — Pointer pass
+
 - `bibleIndex.ts` glob → `docs/design/*.md`; `bibleIndex.test.ts` corpus-purity assertion.
 - Guards: `v14PipelineDocs` + `documentationParity` paths.
 - Emitters: `daily_bard.ts`/`daily_oracle.ts` `REPORT_FILE`; `orphan-report.mjs` `OUT_FILE` + header.
@@ -75,6 +80,7 @@ See `MEGAPLAN_V28_FINDINGS.md` for the full evidence table. Headline items:
 - Doc cross-links: DESIGN_* internals, `mac-setup.md`, `testing.md`; write `docs/INDEX.md`.
 
 ### Phase 5 — Close-out
+
 - `bun run test` + `type-check` + `lint` green; `node scripts/skill-path-scan.mjs` clean; `test:slow` for docs-path-sensitive specs (skillPathScan, orphanScan).
 - `bun run dev` → Help bible search spot-check (design docs only).
 - `MEGAPLAN_V28_DEFERRED.md` + ledger completion; fold leftovers into `MEGAPLAN_BACKLOG.md`.

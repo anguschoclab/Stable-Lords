@@ -24,14 +24,10 @@ vi.mock('@/state/useGameStore', () => ({
   },
 }));
 
-
 describe('useShallow memoization', () => {
   describe('useActiveRoster', () => {
     it('returns referentially stable result when roster is unchanged', () => {
-      const roster = [
-        makeHookWarrior('w1', { fame: 100 }),
-        makeHookWarrior('w2', { fame: 50 }),
-      ];
+      const roster = [makeHookWarrior('w1', { fame: 100 }), makeHookWarrior('w2', { fame: 50 })];
       Object.assign(mockStore, defaultStoreState, { roster });
 
       const { result, rerender } = renderHook(() => useActiveRoster());

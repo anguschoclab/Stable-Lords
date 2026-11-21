@@ -6,10 +6,7 @@
  *  - train WT on young slow-witted warriors so arena lessons actually land
  */
 import { describe, it, expect } from 'vitest';
-import {
-  performAISkillDrill,
-  selectTrainingFocus,
-} from '@/engine/ai/workers/rosterWorkerTraining';
+import { performAISkillDrill, selectTrainingFocus } from '@/engine/ai/workers/rosterWorkerTraining';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';

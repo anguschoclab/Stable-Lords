@@ -162,7 +162,12 @@ const crownsByWarriorBoard = (ctx: Ctx): AlmanacBoard => {
     'warrior',
     cap(
       [...counts.entries()]
-        .sort(by(numDesc(([, e]) => e.count), strAsc(([id]) => id)))
+        .sort(
+          by(
+            numDesc(([, e]) => e.count),
+            strAsc(([id]) => id)
+          )
+        )
         .map(([id, e]) => ({
           key: id,
           name: e.name,
@@ -190,7 +195,12 @@ const crownsByStableBoard = (ctx: Ctx): AlmanacBoard => {
     'stable',
     cap(
       [...counts.entries()]
-        .sort(by(numDesc(([, c]) => c), strAsc(([name]) => name)))
+        .sort(
+          by(
+            numDesc(([, c]) => c),
+            strAsc(([name]) => name)
+          )
+        )
         .map(([name, c]) => ({
           key: name,
           name,
@@ -242,7 +252,12 @@ const mostGrandChampionshipsBoard = (ctx: Ctx): AlmanacBoard => {
     'warrior',
     cap(
       [...counts.entries()]
-        .sort(by(numDesc(([, e]) => e.count), strAsc(([id]) => id)))
+        .sort(
+          by(
+            numDesc(([, e]) => e.count),
+            strAsc(([id]) => id)
+          )
+        )
         .map(([id, e]) => ({
           key: id,
           name: e.name,
@@ -287,7 +302,12 @@ const mostTournamentTitlesBoard = (
     'scroll',
     cap(
       [...counts.entries()]
-        .sort(by(numDesc(([, c]) => c), strAsc(([name]) => name)))
+        .sort(
+          by(
+            numDesc(([, c]) => c),
+            strAsc(([name]) => name)
+          )
+        )
         .map(([name, c]) => ({ key: name, name, value: c, valueLabel: 'titles' })),
       ctx.n
     )
@@ -306,7 +326,12 @@ const reignEndingsBoard = (ctx: Ctx): AlmanacBoard => {
     'stable',
     cap(
       [...counts.entries()]
-        .sort(by(numDesc(([, c]) => c), strAsc(([reason]) => reason)))
+        .sort(
+          by(
+            numDesc(([, c]) => c),
+            strAsc(([reason]) => reason)
+          )
+        )
         .map(([reason, c]) => ({ key: reason, name: reason, value: c, valueLabel: 'reigns' })),
       ctx.n
     )

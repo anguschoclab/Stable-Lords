@@ -126,8 +126,8 @@ export function runFeint(
   const defWT = def.attributes.WT;
   // Canon (Jest): wild, high-KD fighters are "feinted into bad dueling
   // decisions" — easier to feint.
-  const wildFeint = Math.max(0, defKD - KILL_DESIRE_WILD.THRESHOLD + 1) *
-    KILL_DESIRE_WILD.FEINT_COEFF;
+  const wildFeint =
+    Math.max(0, defKD - KILL_DESIRE_WILD.THRESHOLD + 1) * KILL_DESIRE_WILD.FEINT_COEFF;
   const roll = wt + feintTendency - defAL - defWT * 0.5 + wildFeint;
   const threshold = clamp(roll / 20, 0.05, 0.95);
   const succeeded = rng() < threshold;

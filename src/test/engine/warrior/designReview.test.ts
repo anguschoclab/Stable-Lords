@@ -28,10 +28,8 @@ const AXES: DesignAxis[] = [
 ];
 const VERDICTS: DesignVerdict[] = ['good', 'ok', 'warn', 'info'];
 
-const itemsOn = (
-  items: ReturnType<typeof reviewWarriorDesign>,
-  axis: DesignAxis
-) => items.filter((i) => i.axis === axis);
+const itemsOn = (items: ReturnType<typeof reviewWarriorDesign>, axis: DesignAxis) =>
+  items.filter((i) => i.axis === axis);
 
 describe('reviewWarriorDesign — item shape', () => {
   it('emits well-formed items for several builds', () => {
@@ -92,10 +90,7 @@ describe('reviewWarriorDesign — style axis', () => {
 describe('reviewWarriorDesign — physicals axis', () => {
   it('warns when nothing reaches a good physical level', () => {
     // endurance L (score 21), damage Little, HP 7.
-    const items = reviewWarriorDesign(
-      A({ ST: 3, CN: 3, SZ: 3, WL: 5 }),
-      FightingStyle.TotalParry
-    );
+    const items = reviewWarriorDesign(A({ ST: 3, CN: 3, SZ: 3, WL: 5 }), FightingStyle.TotalParry);
     expect(itemsOn(items, 'physicals')[0]?.verdict).toBe('warn');
   });
 
@@ -111,18 +106,12 @@ describe('reviewWarriorDesign — physicals axis', () => {
 
 describe('reviewWarriorDesign — weapons axis', () => {
   it('rewards a build suited to several style weapons', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 15, WT: 15, DF: 15 }),
-      FightingStyle.LungingAttack
-    );
+    const items = reviewWarriorDesign(A({ ST: 15, WT: 15, DF: 15 }), FightingStyle.LungingAttack);
     expect(itemsOn(items, 'weapons')[0]?.verdict).toBe('good');
   });
 
   it('warns when nothing well-suited is wieldable or close', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 3, SZ: 3, WT: 3, DF: 3 }),
-      FightingStyle.WallOfSteel
-    );
+    const items = reviewWarriorDesign(A({ ST: 3, SZ: 3, WT: 3, DF: 3 }), FightingStyle.WallOfSteel);
     expect(itemsOn(items, 'weapons')[0]?.verdict).toBe('warn');
   });
 
@@ -141,20 +130,14 @@ describe('reviewWarriorDesign — trainability axis', () => {
   it('names attributes primed for a quick breakpoint train', () => {
     // DF 10 sits one point below the next deftness breakpoint (11); every
     // other skill-bearing attribute is 3+ below its next threshold.
-    const items = reviewWarriorDesign(
-      A({ WT: 18, SP: 15, DF: 10 }),
-      FightingStyle.ParryRiposte
-    );
+    const items = reviewWarriorDesign(A({ WT: 18, SP: 15, DF: 10 }), FightingStyle.ParryRiposte);
     const train = itemsOn(items, 'trainability')[0];
     expect(train?.detail).toContain('DF');
     expect(train?.detail).not.toContain('WL');
   });
 
   it('notes high wit on a scum build as a spending trade-off', () => {
-    const items = reviewWarriorDesign(
-      A({ CN: 14, WT: 18, WL: 15 }),
-      FightingStyle.TotalParry
-    );
+    const items = reviewWarriorDesign(A({ CN: 14, WT: 18, WL: 15 }), FightingStyle.TotalParry);
     const scum = items.find((i) => i.verdict === 'info' && /scum|wit/i.test(i.detail));
     expect(scum).toBeDefined();
   });
@@ -163,9 +146,7 @@ describe('reviewWarriorDesign — trainability axis', () => {
 describe('reviewWarriorDesign — longevity axis', () => {
   it('marks high-wit builds as fast learners', () => {
     const items = reviewWarriorDesign(A({ WT: 18 }), FightingStyle.StrikingAttack);
-    const learner = items.find(
-      (i) => i.axis === 'longevity' && /learn/i.test(i.title + i.detail)
-    );
+    const learner = items.find((i) => i.axis === 'longevity' && /learn/i.test(i.title + i.detail));
     expect(learner).toBeDefined();
     expect(learner!.verdict).toBe('info');
   });
@@ -173,30 +154,21 @@ describe('reviewWarriorDesign — longevity axis', () => {
 
 describe('slasher canon notes (Arena 93 slasher articles)', () => {
   it('green-lights an SL design that meets the scimitar criterion (ST9+/WT11+/DF11+)', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 9, WT: 10, DF: 10 }),
-      FightingStyle.SlashingAttack
-    );
+    const items = reviewWarriorDesign(A({ ST: 9, WT: 10, DF: 10 }), FightingStyle.SlashingAttack);
     expect(
       items.find((x) => x.axis === 'style' && /scimitar/i.test(x.detail) && x.verdict === 'ok')
     ).toBeDefined();
   });
 
   it('warns when an SL design misses the scimitar criterion by more than a couple trains', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 7, WT: 7, DF: 9 }),
-      FightingStyle.SlashingAttack
-    );
+    const items = reviewWarriorDesign(A({ ST: 7, WT: 7, DF: 9 }), FightingStyle.SlashingAttack);
     expect(
       items.find((x) => x.axis === 'style' && /scimitar/i.test(x.detail) && x.verdict === 'warn')
     ).toBeDefined();
   });
 
   it('notes the negative-parry baseline when DF sits below the parry turnpoint', () => {
-    const items = reviewWarriorDesign(
-      A({ DF: 10, WT: 15, WL: 15 }),
-      FightingStyle.SlashingAttack
-    );
+    const items = reviewWarriorDesign(A({ DF: 10, WT: 15, WL: 15 }), FightingStyle.SlashingAttack);
     expect(
       items.find((x) => x.axis === 'style' && /parry/i.test(x.detail) && x.verdict === 'info')
     ).toBeDefined();
@@ -230,9 +202,7 @@ describe('striker canon notes (Arena 93 striker articles)', () => {
 
   it('names the short stats in the minimums warning', () => {
     const items = reviewWarriorDesign(A({ ST: 8, WL: 7 }), ST);
-    const warn = items.find(
-      (x) => x.axis === 'style' && /minimum/i.test(x.title + x.detail)
-    );
+    const warn = items.find((x) => x.axis === 'style' && /minimum/i.test(x.title + x.detail));
     expect(warn?.detail).toMatch(/ST/);
     expect(warn?.detail).toMatch(/WL/);
   });
@@ -250,9 +220,7 @@ describe('striker canon notes (Arena 93 striker articles)', () => {
     // ST7+SZ7 → damage Normal(2); WL6+CN5+ST7 → endurance 'L' — fails all three.
     const items = reviewWarriorDesign(A({ ST: 7, CN: 5, SZ: 7, WL: 6 }), ST);
     expect(
-      items.find(
-        (x) => x.axis === 'physicals' && x.verdict === 'warn' && /pairing/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'physicals' && x.verdict === 'warn' && /pairing/i.test(x.detail))
     ).toBeDefined();
   });
 
@@ -260,9 +228,7 @@ describe('striker canon notes (Arena 93 striker articles)', () => {
     // ST13+SZ13 → damage Good(3); WL9+CN7+ST13 → endurance 'P' — pairing two met.
     const items = reviewWarriorDesign(A({ ST: 13, CN: 7, SZ: 13, WL: 9 }), ST);
     expect(
-      items.find(
-        (x) => x.axis === 'physicals' && x.verdict === 'warn' && /pairing/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'physicals' && x.verdict === 'warn' && /pairing/i.test(x.detail))
     ).toBeUndefined();
   });
 
@@ -270,7 +236,8 @@ describe('striker canon notes (Arena 93 striker articles)', () => {
     const items = reviewWarriorDesign(A({ ST: 8, SZ: 8 }), ST);
     expect(
       items.find(
-        (x) => x.axis === 'physicals' && x.verdict === 'info' && /strength|size|damage/i.test(x.detail)
+        (x) =>
+          x.axis === 'physicals' && x.verdict === 'info' && /strength|size|damage/i.test(x.detail)
       )
     ).toBeDefined();
   });
@@ -278,7 +245,12 @@ describe('striker canon notes (Arena 93 striker articles)', () => {
   it('marks a Talon-Primal frame (WT 17+ / DF 15+ / WL 13+) as Primus-quality', () => {
     const items = reviewWarriorDesign(A({ WT: 17, DF: 15, WL: 13 }), ST);
     expect(
-      items.find((x) => x.axis === 'longevity' && x.verdict === 'info' && /primal|primus/i.test(x.title + x.detail))
+      items.find(
+        (x) =>
+          x.axis === 'longevity' &&
+          x.verdict === 'info' &&
+          /primal|primus/i.test(x.title + x.detail)
+      )
     ).toBeDefined();
   });
 });
@@ -310,7 +282,9 @@ describe('piker canon notes (Arena 93 parry-strike articles)', () => {
     );
     const flat = items.find(
       (x) =>
-        x.axis === 'style' && x.verdict === 'warn' && /average|extreme|spread/i.test(x.title + x.detail)
+        x.axis === 'style' &&
+        x.verdict === 'warn' &&
+        /average|extreme|spread/i.test(x.title + x.detail)
     );
     expect(flat).toBeDefined();
   });
@@ -319,7 +293,9 @@ describe('piker canon notes (Arena 93 parry-strike articles)', () => {
     const items = reviewWarriorDesign(A(), PS);
     const flat = items.find(
       (x) =>
-        x.axis === 'style' && x.verdict === 'warn' && /average|extreme|spread/i.test(x.title + x.detail)
+        x.axis === 'style' &&
+        x.verdict === 'warn' &&
+        /average|extreme|spread/i.test(x.title + x.detail)
     );
     expect(flat).toBeDefined();
   });
@@ -331,7 +307,9 @@ describe('piker canon notes (Arena 93 parry-strike articles)', () => {
     );
     const flat = items.find(
       (x) =>
-        x.axis === 'style' && x.verdict === 'warn' && /average|extreme|spread/i.test(x.title + x.detail)
+        x.axis === 'style' &&
+        x.verdict === 'warn' &&
+        /average|extreme|spread/i.test(x.title + x.detail)
     );
     expect(flat).toBeUndefined();
   });
@@ -343,9 +321,7 @@ describe('reviewWarriorDesign — lunger canon notes (Arena 93)', () => {
   it('warns when the longsword frame is out of reach — Assur wants ST 11 / WT 13 / DF 11', () => {
     const items = reviewWarriorDesign(A({ ST: 7, WT: 9, DF: 9 }), LU);
     expect(
-      items.find(
-        (x) => x.axis === 'style' && x.verdict === 'warn' && /longsword/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'style' && x.verdict === 'warn' && /longsword/i.test(x.detail))
     ).toBeDefined();
   });
 
@@ -353,26 +329,19 @@ describe('reviewWarriorDesign — lunger canon notes (Arena 93)', () => {
     // ST 9 sits one train below the LO requirement of 11.
     const items = reviewWarriorDesign(A({ ST: 9, WT: 13, WL: 15, DF: 11 }), LU);
     expect(
-      items.find(
-        (x) => x.axis === 'style' && x.verdict === 'ok' && /within|train/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'style' && x.verdict === 'ok' && /within|train/i.test(x.detail))
     ).toBeDefined();
   });
 
   it('green-lights the Assur frame — ST 11+ / WT 13+ / DF 11+ met', () => {
     const items = reviewWarriorDesign(A({ ST: 11, WT: 13, WL: 15, DF: 11 }), LU);
     expect(
-      items.find(
-        (x) => x.axis === 'style' && x.verdict === 'ok' && /longsword/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'style' && x.verdict === 'ok' && /longsword/i.test(x.detail))
     ).toBeDefined();
   });
 
   it('notes thin constitution — Snorri wants CN 9+ on a style that takes hits', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 11, CN: 6, WT: 13, WL: 15, DF: 11 }),
-      LU
-    );
+    const items = reviewWarriorDesign(A({ ST: 11, CN: 6, WT: 13, WL: 15, DF: 11 }), LU);
     expect(
       items.find(
         (x) => x.axis === 'style' && x.verdict === 'info' && /constitution/i.test(x.detail)
@@ -381,18 +350,13 @@ describe('reviewWarriorDesign — lunger canon notes (Arena 93)', () => {
   });
 
   it('notes the damage-rating caution — small size plus sub-13 strength hits light', () => {
-    const items = reviewWarriorDesign(
-      A({ ST: 11, SZ: 9, WT: 13, WL: 15, DF: 11 }),
-      LU
-    );
+    const items = reviewWarriorDesign(A({ ST: 11, SZ: 9, WT: 13, WL: 15, DF: 11 }), LU);
     expect(
-      items.find(
-        (x) => x.axis === 'style' && x.verdict === 'info' && /damage/i.test(x.detail)
-      )
+      items.find((x) => x.axis === 'style' && x.verdict === 'info' && /damage/i.test(x.detail))
     ).toBeDefined();
   });
 
-  it('praises the even spread — Snorri\'s core lunger doctrine', () => {
+  it("praises the even spread — Snorri's core lunger doctrine", () => {
     const items = reviewWarriorDesign(
       A({ ST: 11, CN: 9, SZ: 9, WT: 12, WL: 12, SP: 9, DF: 10 }),
       LU
@@ -408,8 +372,7 @@ describe('reviewWarriorDesign — lunger canon notes (Arena 93)', () => {
     const items = reviewWarriorDesign(A({ ST: 11, WT: 19, WL: 15, DF: 11 }), LU);
     expect(
       items.find(
-        (x) =>
-          x.axis === 'style' && x.verdict === 'info' && /wit/i.test(x.title + x.detail)
+        (x) => x.axis === 'style' && x.verdict === 'info' && /wit/i.test(x.title + x.detail)
       )
     ).toBeDefined();
   });
@@ -430,7 +393,8 @@ describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
   it('flags glass-jaw constitution — the armor-piercer "clings to life by luck"', () => {
     const items = reviewWarriorDesign(A({ CN: 5, WT: 17, WL: 17, DF: 17 }), PL);
     const note = items.find(
-      (x) => x.axis === 'style' && x.verdict === 'info' && /luck|fragile|glass/i.test(x.title + x.detail)
+      (x) =>
+        x.axis === 'style' && x.verdict === 'info' && /luck|fragile|glass/i.test(x.title + x.detail)
     );
     expect(note).toBeDefined();
   });
@@ -438,7 +402,10 @@ describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
   it('notes wasted speed — a PL is "not a lunger mimic"', () => {
     const items = reviewWarriorDesign(A({ SP: 12, WT: 17, WL: 17, DF: 17 }), PL);
     const note = items.find(
-      (x) => x.axis === 'style' && x.verdict === 'info' && /speed|SP|lunger mimic/i.test(x.title + x.detail)
+      (x) =>
+        x.axis === 'style' &&
+        x.verdict === 'info' &&
+        /speed|SP|lunger mimic/i.test(x.title + x.detail)
     );
     expect(note).toBeDefined();
   });
@@ -446,15 +413,22 @@ describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
   it('notes sub-15 deftness — DF 15 unlocks the epee', () => {
     const items = reviewWarriorDesign(A({ WT: 17, WL: 17, DF: 12 }), PL);
     const note = items.find(
-      (x) => x.axis === 'style' && x.verdict === 'info' && /epee|deftness|DF/i.test(x.title + x.detail)
+      (x) =>
+        x.axis === 'style' && x.verdict === 'info' && /epee|deftness|DF/i.test(x.title + x.detail)
     );
     expect(note).toBeDefined();
   });
 
   it('praises the armor-piercer spread — WT 17+ with DF 15+ is the attack-god chassis', () => {
-    const items = reviewWarriorDesign(A({ ST: 11, CN: 5, SZ: 8, WT: 21, WL: 17, SP: 5, DF: 17 }), PL);
+    const items = reviewWarriorDesign(
+      A({ ST: 11, CN: 5, SZ: 8, WT: 21, WL: 17, SP: 5, DF: 17 }),
+      PL
+    );
     const note = items.find(
-      (x) => x.axis === 'style' && x.verdict !== 'warn' && /attack god|attack-god/i.test(x.title + x.detail)
+      (x) =>
+        x.axis === 'style' &&
+        x.verdict !== 'warn' &&
+        /attack god|attack-god/i.test(x.title + x.detail)
     );
     expect(note).toBeDefined();
   });
@@ -464,9 +438,7 @@ describe('reviewWarriorDesign — Parry-Lunge canon notes (Arena 93)', () => {
       A({ CN: 5, SP: 12, WT: 17, WL: 17, DF: 12 }),
       FightingStyle.TotalParry
     );
-    const leaked = items.find(
-      (x) => /attack god|lunger mimic|epee/i.test(x.title + x.detail)
-    );
+    const leaked = items.find((x) => /attack god|lunger mimic|epee/i.test(x.title + x.detail));
     expect(leaked).toBeUndefined();
   });
 });
@@ -480,7 +452,7 @@ describe('wall-of-steel canon notes (Arena 93 wall articles)', () => {
 
   // "Wastes need Will, at the very least 15 and preferably 17 or 21, because
   // of the endurance burn of this fighting style." (Wasted Wastes)
-  it('warns below Dante\'s 11-will floor — a will-less wall is a wasted waste', () => {
+  it("warns below Dante's 11-will floor — a will-less wall is a wasted waste", () => {
     expect(find({ WL: 8 }, /endurance-burn will/i)?.verdict).toBe('warn');
   });
 
@@ -537,11 +509,11 @@ describe('wall-of-steel canon notes (Arena 93 wall articles)', () => {
     expect(find({ CN: 7 }, /low-con/i)?.verdict).toBe('info');
   });
 
-  it('praises ST+CN at 21 — Dante\'s endurance and carry bar', () => {
+  it("praises ST+CN at 21 — Dante's endurance and carry bar", () => {
     expect(find({ ST: 11, CN: 10 }, /physical spread/i)?.verdict).toBe('info');
   });
 
-  it('emits no canon-note warns on Dante\'s worked example', () => {
+  it("emits no canon-note warns on Dante's worked example", () => {
     // The generic mixed-family "style fit" check may still warn on thin
     // cut-offs — that verdict is orthogonal to the wall corpus notes.
     const items = onStyle({ ST: 10, CN: 12, SZ: 9, WT: 15, WL: 15, SP: 10, DF: 13 });
@@ -549,7 +521,7 @@ describe('wall-of-steel canon notes (Arena 93 wall articles)', () => {
     expect(warns).toHaveLength(0);
   });
 
-  it('emits no warns on Bender\'s undefeated frame', () => {
+  it("emits no warns on Bender's undefeated frame", () => {
     const items = onStyle({ ST: 9, CN: 7, SZ: 14, WT: 17, WL: 17, SP: 3, DF: 17 });
     expect(items.filter((x) => x.verdict === 'warn')).toHaveLength(0);
   });
@@ -571,7 +543,10 @@ describe('V22 canon notes — cross-cutting flags', () => {
   });
 
   it('does not flag Little damage on a total-parry scum', () => {
-    const items = reviewWarriorDesign(A({ ST: 3, SZ: 3, CN: 17, WL: 17 }), FightingStyle.TotalParry);
+    const items = reviewWarriorDesign(
+      A({ ST: 3, SZ: 3, CN: 17, WL: 17 }),
+      FightingStyle.TotalParry
+    );
     expect(items.find((i) => i.title === 'Little damage')).toBeUndefined();
   });
 

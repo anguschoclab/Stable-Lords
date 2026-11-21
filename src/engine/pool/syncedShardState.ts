@@ -3,7 +3,10 @@ import type { StateImpact } from '@/engine/impacts';
 import { resolveImpacts } from '@/engine/impacts';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { createMutableWeekContext } from '@/engine/pipeline/services/weekPipeline/context';
-import { buildWeekCaches, impactsAffectWeekCaches } from '@/engine/pipeline/services/weekPipeline/caches';
+import {
+  buildWeekCaches,
+  impactsAffectWeekCaches,
+} from '@/engine/pipeline/services/weekPipeline/caches';
 import { finalizeState } from '@/engine/pipeline/services/weekPipeline/finalize';
 import { flushGazette } from '@/engine/narrative/gazette';
 import { computeMetaDrift } from '@/engine/analytics/metaDrift';
@@ -18,10 +21,7 @@ import {
 import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { buildActiveWarriorMap } from '@/utils/roster';
 import { getMoodModifiers } from '@/engine/bout/crowdMood';
-import {
-  runBoutShardChunk,
-  type BoutShardInput,
-} from '@/engine/pool/enginePool';
+import { runBoutShardChunk, type BoutShardInput } from '@/engine/pool/enginePool';
 import type { BoutShardOutput } from '@/engine/pool/shardTypes';
 import { shardStateHash } from '@/engine/pool/stateHash';
 import type { WeekContext } from '@/engine/pipeline/services/weekPipeline/context';
@@ -45,6 +45,7 @@ import type { WeekContext } from '@/engine/pipeline/services/weekPipeline/contex
  */
 export type ShardSyncStage = 'input' | 'weekStart' | 'postCore' | 'weekResult';
 
+/** Replay inputs for one stage transition — one variant per stage. */
 export type ShardAdvancePayload =
   | { headless?: boolean } // weekStart: replay boundary fns
   | {
@@ -64,6 +65,10 @@ export type ShardAdvancePayload =
       headless?: boolean;
     };
 
+/**
+ * Worker's persistent shard state: the pristine input replica (`synced`)
+ * plus the mutable working copy (`work`) built from it at weekStart.
+ */
 export interface SyncedShardStore {
   synced?: GameState;
   work?: GameState;
@@ -72,6 +77,7 @@ export interface SyncedShardStore {
   inputWeek?: number;
 }
 
+/** Fresh store before any sync — stage 'input', no replica held. */
 export function createSyncedShardStore(): SyncedShardStore {
   return { stage: 'input' };
 }
@@ -103,6 +109,12 @@ function requireWork(store: SyncedShardStore): GameState {
   return store.work;
 }
 
+/**
+ * Replay one stage transition on the worker's held state and return the
+ * resulting stage-state hash — the worker-side counterpart the coordinator
+ * verifies against its ledger hash. Throws when the required base replica
+ * is missing (the coordinator then heals via forceShardState).
+ */
 export function advanceShardTo(
   store: SyncedShardStore,
   stage: 'weekStart' | 'postCore' | 'weekResult',

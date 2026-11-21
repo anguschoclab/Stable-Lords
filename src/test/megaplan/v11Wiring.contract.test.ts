@@ -18,8 +18,6 @@ import path from 'node:path';
 const REPO = path.resolve(__dirname, '../../..');
 const SRC = path.join(REPO, 'src');
 
-
-
 const prodFiles = [...walkTsFiles(SRC)].filter((f) => !f.includes(`${path.sep}test${path.sep}`));
 
 function consumersOf(symbol: string, exclude: string): string[] {

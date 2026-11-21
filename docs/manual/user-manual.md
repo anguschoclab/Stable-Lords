@@ -101,17 +101,17 @@ Name your **owner** and your **stable**, design a **heraldic crest**, pick a **b
 
 Your backstory is not just flavor — each of the nine backgrounds grants real starting modifiers:
 
-| Backstory | Starting modifiers |
-| --- | --- |
-| Former Gladiator | +5 Fame, +3 Renown, +0.5 Roster Bonus (and −100g) |
-| Rich Merchant | +500 Gold, −2 Renown |
-| Highborn Noble | +200 Gold, +10 Fame, +2 Renown |
-| Veteran Soldier | +2 Fame, +2 Renown, +1 Roster Bonus |
-| Scholar of Arms | +4 Renown, −100 Gold |
-| Arena Outcast | +300 Gold, −3 Fame |
-| Former Cutpurse | +250 Gold, −3 Fame |
-| Temple-Raised Priest | +3 Fame, +5 Renown, +0.5 Roster Bonus (−50g) |
-| Wandering Sellsword | +100 Gold, +0.5 Roster Bonus |
+| Backstory            | Starting modifiers                                |
+| -------------------- | ------------------------------------------------- |
+| Former Gladiator     | +5 Fame, +3 Renown, +0.5 Roster Bonus (and −100g) |
+| Rich Merchant        | +500 Gold, −2 Renown                              |
+| Highborn Noble       | +200 Gold, +10 Fame, +2 Renown                    |
+| Veteran Soldier      | +2 Fame, +2 Renown, +1 Roster Bonus               |
+| Scholar of Arms      | +4 Renown, −100 Gold                              |
+| Arena Outcast        | +300 Gold, −3 Fame                                |
+| Former Cutpurse      | +250 Gold, −3 Fame                                |
+| Temple-Raised Priest | +3 Fame, +5 Renown, +0.5 Roster Bonus (−50g)      |
+| Wandering Sellsword  | +100 Gold, +0.5 Roster Bonus                      |
 
 Several backstories also quietly steer the orphanage toward the owner's favored fighting styles, and adjust how the game models your owner's personality in rival AI's eyes.
 
@@ -200,46 +200,46 @@ The screen is organized into three bands:
 
 ![Stable overview — objectives, meta drift, season chronicle](images/stable-overview.png)
 
-| Page | What you do there |
-| --- | --- |
-| **Overview** | Dashboard — objectives, next bout, medical audit, arena conditions, style meta |
-| **War Council** | Advisor recommendations + autopilot toggle |
-| **Arena** | Combat operations — crowd temperament, arena conditions, meta drift |
-| **Bouts** | Booking office — accept/decline bout offers |
-| **Roster** | Your warriors — status, plans, quick actions |
-| **Training** | Assign weekly training regimens |
-| **Planner** | Fight plans for every warrior |
-| **Equipment** | Outfit your roster |
-| **Promoters** | The promoters working your circuit and their offers |
-| **Trainers** | Hire and manage trainers |
-| **Finance** | The ledger — every transaction, categorized |
-| **Recruit** | The intake pool + free agents |
-| **Offseason** | Season-boundary preview |
+| Page            | What you do there                                                              |
+| --------------- | ------------------------------------------------------------------------------ |
+| **Overview**    | Dashboard — objectives, next bout, medical audit, arena conditions, style meta |
+| **War Council** | Advisor recommendations + autopilot toggle                                     |
+| **Arena**       | Combat operations — crowd temperament, arena conditions, meta drift            |
+| **Bouts**       | Booking office — accept/decline bout offers                                    |
+| **Roster**      | Your warriors — status, plans, quick actions                                   |
+| **Training**    | Assign weekly training regimens                                                |
+| **Planner**     | Fight plans for every warrior                                                  |
+| **Equipment**   | Outfit your roster                                                             |
+| **Promoters**   | The promoters working your circuit and their offers                            |
+| **Trainers**    | Hire and manage trainers                                                       |
+| **Finance**     | The ledger — every transaction, categorized                                    |
+| **Recruit**     | The intake pool + free agents                                                  |
+| **Offseason**   | Season-boundary preview                                                        |
 
 ### The World Hub
 
-| Page | What you see there |
-| --- | --- |
-| **Rankings** | League table of stables + warrior rankings + world census |
-| **Arenas** | The full circuit — every venue, its crown, its tier |
-| **Tournaments** | Seasonal tournament brackets and history |
-| **Prep Mode** | Tournament-week planning surface |
-| **Scouting** | Order intel reports on rival warriors |
+| Page               | What you see there                                         |
+| ------------------ | ---------------------------------------------------------- |
+| **Rankings**       | League table of stables + warrior rankings + world census  |
+| **Arenas**         | The full circuit — every venue, its crown, its tier        |
+| **Tournaments**    | Seasonal tournament brackets and history                   |
+| **Prep Mode**      | Tournament-week planning surface                           |
+| **Scouting**       | Order intel reports on rival warriors                      |
 | **Style Archives** | The meta archive — how each style is performing realm-wide |
-| **Chronicle** | The Gazette — weekly news issues |
-| **Hall of Fame** | Immortal warriors and stables |
-| **Hall of Fights** | Legendary recorded bouts |
-| **Graveyard** | Fallen warriors — yours and the world's |
+| **Chronicle**      | The Gazette — weekly news issues                           |
+| **Hall of Fame**   | Immortal warriors and stables                              |
+| **Hall of Fights** | Legendary recorded bouts                                   |
+| **Graveyard**      | Fallen warriors — yours and the world's                    |
 
 ### Utility
 
-| Page | Purpose |
-| --- | --- |
-| **Simulator** | Physicals simulator — sandbox tool for testing builds |
-| **Help** | The in-game Codex (condensed reference) |
-| **Bookmarks** | Everything you've pinned — warriors, stables, offers |
-| **Import / Export** | Save-pack management |
-| **Mods** | Content packs and house rules |
+| Page                | Purpose                                               |
+| ------------------- | ----------------------------------------------------- |
+| **Simulator**       | Physicals simulator — sandbox tool for testing builds |
+| **Help**            | The in-game Codex (condensed reference)               |
+| **Bookmarks**       | Everything you've pinned — warriors, stables, offers  |
+| **Import / Export** | Save-pack management                                  |
+| **Mods**            | Content packs and house rules                         |
 
 ---
 
@@ -257,15 +257,15 @@ Seven core attributes, each from **3** (floor) to **25** (hard cap). A standard 
 
 ![A warrior's physique and combat vitals](images/warrior-attributes.png)
 
-| Attribute | Abbr. | What it feeds |
-| --- | --- | --- |
-| Strength | ST | Damage dealt; Endurance; Attack |
-| Constitution | CN | Hit Points; Endurance; absorbing punishment |
-| Size | SZ | Hit Points; modifies INI/PAR/DEF (big hits harder to dodge; small is harder to hit) |
-| Wit | WT | Initiative (sharp breakpoint at 11+); feinting; learning speed |
-| Will | WL | Endurance; morale; resisting collapse and finishing blows |
-| Speed | SP | Movement; Defense |
-| Deftness | DF | Riposte; precision; weapon work |
+| Attribute    | Abbr. | What it feeds                                                                       |
+| ------------ | ----- | ----------------------------------------------------------------------------------- |
+| Strength     | ST    | Damage dealt; Endurance; Attack                                                     |
+| Constitution | CN    | Hit Points; Endurance; absorbing punishment                                         |
+| Size         | SZ    | Hit Points; modifies INI/PAR/DEF (big hits harder to dodge; small is harder to hit) |
+| Wit          | WT    | Initiative (sharp breakpoint at 11+); feinting; learning speed                      |
+| Will         | WL    | Endurance; morale; resisting collapse and finishing blows                           |
+| Speed        | SP    | Movement; Defense                                                                   |
+| Deftness     | DF    | Riposte; precision; weapon work                                                     |
 
 Each attribute displays a **growth tag** on the dossier (_Developing_, _Maturing_, and so on) — a hint at how much headroom remains before that attribute's hidden ceiling (§6.5).
 
@@ -277,14 +277,14 @@ Each attribute displays a **growth tag** on the dossier (_Developing_, _Maturing
 
 Six skills are **derived** from attributes via a breakpoint table, then improved further through arena lessons and drilling. They run 1–20:
 
-| Skill | Abbr. | What it does |
-| --- | --- | --- |
-| Attack | ATT | Landing hits |
-| Parry | PAR | Active blocking |
-| Defense | DEF | Passive evasion |
-| Initiative | INI | Acting first in exchanges |
-| Riposte | RIP | Counter-attacking after a parry |
-| Decisiveness | DEC | Pressing advantages and seizing openings |
+| Skill        | Abbr. | What it does                             |
+| ------------ | ----- | ---------------------------------------- |
+| Attack       | ATT   | Landing hits                             |
+| Parry        | PAR   | Active blocking                          |
+| Defense      | DEF   | Passive evasion                          |
+| Initiative   | INI   | Acting first in exchanges                |
+| Riposte      | RIP   | Counter-attacking after a parry          |
+| Decisiveness | DEC   | Pressing advantages and seizing openings |
 
 Raising attributes raises the skills they feed: ST→ATT, DF→RIP/INI, WT→INI (big spike at 11+), SP→DEF, SZ→INI/PAR/DEF modifiers.
 
@@ -292,18 +292,18 @@ Raising attributes raises the skills they feed: ST→ATT, DF→RIP/INI, WT→INI
 
 Every warrior fights in one of **10 styles** — their class, chosen at intake and permanent. Each has its own stat demands, tempo, strengths, and vulnerabilities. Display names in the UI show the warrior's style moniker:
 
-| Style | Moniker | Identity |
-| --- | --- | --- |
-| Aimed Blow | Aimed-Blow | Surgical striker; rewards WT + DF; deadly precision, fragile margins |
-| Bashing Attack | Basher | Brute force; rewards ST + SZ; hits through armor |
-| Lunging Attack | Lunger | All-in aggression; rewards ST + SP; explosive, exhausts fast |
-| Parry-Lunge | Parry-Lunger | Bait and punish; balanced offense/defense |
-| Parry-Riposte | Parry-Riposte | Counter-fighter; rewards DF/RIP; wins on the reply |
-| Parry-Strike | Parry-Striker | Methodical patient blade; rewards CN + PAR |
-| Slashing Attack | Slasher | Fast flurries; rewards SP + DF; volume over single hits |
-| Striking Attack | Striker | Heavy single strikes with reach; rewards ST + WT |
-| Total Parry | Total-Parry | Pure defense; outlasts almost anything, wins little |
-| Wall of Steel | Wall of Steel | Offense and defense together; rewards all-round stats |
+| Style           | Moniker       | Identity                                                             |
+| --------------- | ------------- | -------------------------------------------------------------------- |
+| Aimed Blow      | Aimed-Blow    | Surgical striker; rewards WT + DF; deadly precision, fragile margins |
+| Bashing Attack  | Basher        | Brute force; rewards ST + SZ; hits through armor                     |
+| Lunging Attack  | Lunger        | All-in aggression; rewards ST + SP; explosive, exhausts fast         |
+| Parry-Lunge     | Parry-Lunger  | Bait and punish; balanced offense/defense                            |
+| Parry-Riposte   | Parry-Riposte | Counter-fighter; rewards DF/RIP; wins on the reply                   |
+| Parry-Strike    | Parry-Striker | Methodical patient blade; rewards CN + PAR                           |
+| Slashing Attack | Slasher       | Fast flurries; rewards SP + DF; volume over single hits              |
+| Striking Attack | Striker       | Heavy single strikes with reach; rewards ST + WT                     |
+| Total Parry     | Total-Parry   | Pure defense; outlasts almost anything, wins little                  |
+| Wall of Steel   | Wall of Steel | Offense and defense together; rewards all-round stats                |
 
 **Matchups matter.** Style-vs-style relationships are real — some styles feast on others, and the realm's **meta drift** (§17) tracks which styles are fashionable. The **Style Archives** page shows how each style is actually performing realm-wide this season — the closest thing to a live matchup matrix the game will hand you.
 
@@ -352,12 +352,12 @@ Your roster cap is **10 warriors** (base — roster bonuses can raise it). Fresh
 
 Each recruit is priced by **tier**, shown as a star rating with a visible point-total range:
 
-| Tier | Cost | Stars | Attribute total |
-| --- | --- | --- | --- |
-| Common | 100g | ☆ | 66–70 |
-| Promising | 150g | ★ | 70–74 |
-| Exceptional | 250g | ★★ | 74–78 |
-| Prodigy | 400g | ★★★ | 78–82 |
+| Tier        | Cost | Stars | Attribute total |
+| ----------- | ---- | ----- | --------------- |
+| Common      | 100g | ☆     | 66–70           |
+| Promising   | 150g | ★     | 70–74           |
+| Exceptional | 250g | ★★    | 74–78           |
+| Prodigy     | 400g | ★★★   | 78–82           |
 
 Every recruit shows physique, recommended style, and attribute spread before you buy. **Buy for style fit, not totals** — a 70-point warrior whose points feed their style will beat an 80-point warrior whose don't (§23).
 
@@ -371,12 +371,12 @@ Every week, each warrior can be assigned **one regimen** on the Training page. T
 
 ### Regimens
 
-| Regimen | What it does |
-| --- | --- |
-| **Attribute training** | Chance (~55% base, +5% per point of WL) to gain +1 in a chosen attribute |
-| **Skill drilling** | +1 to a chosen combat skill — each skill caps at 3 drills |
-| **Trait training** | Assign a trainer to coach one warrior for **4 weeks**; the outcome — a new positive trait, an accidental flaw, or nothing — arrives when the course ends. A warrior can hold at most **3 traits**, and the trainer's tier caps how rare the learnable traits can be (Novice → Notable, Seasoned → Exceptional, Master → Signature). |
-| **Recovery** | Reduces remaining weeks on an injury — always assign it to the wounded |
+| Regimen                | What it does                                                                                                                                                                                                                                                                                                                        |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Attribute training** | Chance (~55% base, +5% per point of WL) to gain +1 in a chosen attribute                                                                                                                                                                                                                                                            |
+| **Skill drilling**     | +1 to a chosen combat skill — each skill caps at 3 drills                                                                                                                                                                                                                                                                           |
+| **Trait training**     | Assign a trainer to coach one warrior for **4 weeks**; the outcome — a new positive trait, an accidental flaw, or nothing — arrives when the course ends. A warrior can hold at most **3 traits**, and the trainer's tier caps how rare the learnable traits can be (Novice → Notable, Seasoned → Exceptional, Master → Signature). |
+| **Recovery**           | Reduces remaining weeks on an injury — always assign it to the wounded                                                                                                                                                                                                                                                              |
 
 Training obeys seasonal limits:
 
@@ -388,11 +388,11 @@ Training obeys seasonal limits:
 
 Hired trainers improve gain odds and blunt injury severity. They draw a weekly salary and their bonuses apply roster-wide.
 
-| Tier | Salary | Effect |
-| --- | --- | --- |
-| Novice | 10g/week | Baseline |
-| Seasoned | 25g/week | Better gain odds, softer injuries |
-| Master | 75g/week | Strongest gains + a **specialty** (healing, a specific attribute, or a skill) |
+| Tier     | Salary   | Effect                                                                        |
+| -------- | -------- | ----------------------------------------------------------------------------- |
+| Novice   | 10g/week | Baseline                                                                      |
+| Seasoned | 25g/week | Better gain odds, softer injuries                                             |
+| Master   | 75g/week | Strongest gains + a **specialty** (healing, a specific attribute, or a skill) |
 
 Trainers age and die too — they start around 45, retire from 65, and none are immortal. A Master with the **Healing** specialty materially shortens injury recovery; a **WT specialist** helps prospect warriors hit that critical WT 11 breakpoint (§6.2).
 
@@ -418,12 +418,12 @@ Shields count as off-hand weapons and pair with parry-based styles; two-handed w
 
 ### Armor (9)
 
-| Weight | Options |
-| --- | --- |
-| Unarmored | None |
-| Light | Padded, Leather, Studded Leather |
-| Medium | Ring Mail, Scalemail, Chainmail |
-| Heavy | Platemail, Plate Armor |
+| Weight    | Options                          |
+| --------- | -------------------------------- |
+| Unarmored | None                             |
+| Light     | Padded, Leather, Studded Leather |
+| Medium    | Ring Mail, Scalemail, Chainmail  |
+| Heavy     | Platemail, Plate Armor           |
 
 ### Helms (5)
 
@@ -441,19 +441,19 @@ The **fight plan** is your pre-bout instruction set — written per warrior on t
 
 ### The core dials
 
-| Dial | Range | What it controls |
-| --- | --- | --- |
-| **Offensive Effort (OE)** | 1–10 | How hard the warrior presses attacks — burns endurance fast |
-| **Activity Level (AL)** | 1–10 | How much the warrior moves and repositions — steadier endurance drain |
-| **Kill Desire (KD)** | 1–10 | Willingness to press kill opportunities when they open |
+| Dial                      | Range | What it controls                                                      |
+| ------------------------- | ----- | --------------------------------------------------------------------- |
+| **Offensive Effort (OE)** | 1–10  | How hard the warrior presses attacks — burns endurance fast           |
+| **Activity Level (AL)**   | 1–10  | How much the warrior moves and repositions — steadier endurance drain |
+| **Kill Desire (KD)**      | 1–10  | Willingness to press kill opportunities when they open                |
 
 OE and AL together are the warrior's **rhythm** — every warrior has a hidden favorite combination (§6.5), and the planner flags when your settings look unsuited (_"well suited"_, _"poorly suited"_ on tactics).
 
 ### Tactics
 
-| Slot | Options |
-| --- | --- |
-| **Offensive tactic** | Lunge · Slash · Bash · Decisiveness · none |
+| Slot                 | Options                                         |
+| -------------------- | ----------------------------------------------- |
+| **Offensive tactic** | Lunge · Slash · Bash · Decisiveness · none      |
 | **Defensive tactic** | Dodge · Parry · Riposte · Responsiveness · none |
 
 Tactics modify whole exchanges — a well-suited Lunge or a Riposte counter-game can flip a matchup. The tactic bank shows suitability ratings per warrior.
@@ -508,7 +508,7 @@ A bout ends by one of: **Kill · KO · Stoppage · Exhaustion · Decision · Yie
 
 ### Reading a transcript
 
-The narration tells you *why*: _"slips inside the guard,"_ _"the crowd gasps as the blade bites deep,"_ _"staggers, clearly winded."_ Watch for your warrior's weapons landing vs. bouncing, their preferred range, where they got tired — it all feeds the next plan (§10) and the next booking (§13).
+The narration tells you _why_: _"slips inside the guard,"_ _"the crowd gasps as the blade bites deep,"_ _"staggers, clearly winded."_ Watch for your warrior's weapons landing vs. bouncing, their preferred range, where they got tired — it all feeds the next plan (§10) and the next booking (§13).
 
 ---
 
@@ -553,13 +553,13 @@ Each offer shows the opponent (name, style, record — as much as your scouting 
 
 Five personalities work the circuit:
 
-| Personality | Their offers |
-| --- | --- |
-| Greedy | Big purses, dangerous matchups |
-| Honorable | Fair matchmaking, reliable payouts |
-| Sadistic | Underdog feedings, crowd-pleasing blood |
-| Flashy | Spectacle and theatrical staging |
-| Corporate | Steady, low-risk, low-reward |
+| Personality | Their offers                            |
+| ----------- | --------------------------------------- |
+| Greedy      | Big purses, dangerous matchups          |
+| Honorable   | Fair matchmaking, reliable payouts      |
+| Sadistic    | Underdog feedings, crowd-pleasing blood |
+| Flashy      | Spectacle and theatrical staging        |
+| Corporate   | Steady, low-risk, low-reward            |
 
 ![The promoters page](images/promoters.png)
 
@@ -581,26 +581,26 @@ Gold keeps the whole machine running. The **Finance** page is a full ledger — 
 
 ### Income
 
-| Source | Amount |
-| --- | --- |
-| Fight purse | 90g base × arena multiplier (tier 1 ×1.0 · tier 2 ×1.5 · tier 3 ×2.25), plus fame scaling |
-| Win bonus | 35g base, same scaling |
-| Fame dividend | 0.5g per point of fame, per week |
-| Noble patronage | (fame − 40) ÷ 10 × 25g per famous warrior — kicks in above 40 fame |
-| Arena title purse | ×1.5 on championship bouts |
+| Source            | Amount                                                                                    |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| Fight purse       | 90g base × arena multiplier (tier 1 ×1.0 · tier 2 ×1.5 · tier 3 ×2.25), plus fame scaling |
+| Win bonus         | 35g base, same scaling                                                                    |
+| Fame dividend     | 0.5g per point of fame, per week                                                          |
+| Noble patronage   | (fame − 40) ÷ 10 × 25g per famous warrior — kicks in above 40 fame                        |
+| Arena title purse | ×1.5 on championship bouts                                                                |
 
 Fame's purse contribution is capped at 60 points' worth, so a legend's real money comes from patronage and tier-3 venues.
 
 ### Expenses
 
-| Item | Cost |
-| --- | --- |
-| Warrior upkeep | 60g + 1.5g × fame, per warrior per week |
-| Training | 20g per session |
-| Trainer salaries | 10 / 25 / 75g per week by tier |
-| Scout reports | 25 / 50 / 100g by tier |
-| Intake reroll | 50g |
-| Recruits | 100–400g by tier |
+| Item             | Cost                                    |
+| ---------------- | --------------------------------------- |
+| Warrior upkeep   | 60g + 1.5g × fame, per warrior per week |
+| Training         | 20g per session                         |
+| Trainer salaries | 10 / 25 / 75g per week by tier          |
+| Scout reports    | 25 / 50 / 100g by tier                  |
+| Intake reroll    | 50g                                     |
+| Recruits         | 100–400g by tier                        |
 
 ### Insolvency
 
@@ -647,12 +647,12 @@ The year has rhythm. Tournaments run on **weeks 10, 20, 30, and 42** — one per
 
 Each seasonal tournament brackets the realm's warriors into four tiers by ranking:
 
-| Tier | Field | Name |
-| --- | --- | --- |
-| Gold | ranks 1–64 | Imperial Gold Cup |
-| Silver | ranks 65–128 | Proconsul Silver Plate |
-| Bronze | ranks 129–192 | Steel Bronze Gauntlet |
-| Iron | ranks 193–256 | Foundry Iron Trials |
+| Tier   | Field         | Name                   |
+| ------ | ------------- | ---------------------- |
+| Gold   | ranks 1–64    | Imperial Gold Cup      |
+| Silver | ranks 65–128  | Proconsul Silver Plate |
+| Bronze | ranks 129–192 | Steel Bronze Gauntlet  |
+| Iron   | ranks 193–256 | Foundry Iron Trials    |
 
 Tournament week changes everything: entry lists, seedings, and bracket odds appear on the **Prep Mode** page — a dedicated planning surface for writing tournament-specific plans and managing your entrants before the draw runs.
 
@@ -688,11 +688,11 @@ Scouting buys certainty. Order a report on any rival warrior from the **Scouting
 
 ![The scouting page](images/scouting.png)
 
-| Tier | Cost | Precision |
-| --- | --- | --- |
-| Basic | 25g | rough numbers (±5 variance) |
-| Detailed | 50g | tighter estimates (±3) |
-| Expert | 100g | near-exact (±1) — plus plan intel, persona read, traits (probabilistically), and owner competence |
+| Tier     | Cost | Precision                                                                                         |
+| -------- | ---- | ------------------------------------------------------------------------------------------------- |
+| Basic    | 25g  | rough numbers (±5 variance)                                                                       |
+| Detailed | 50g  | tighter estimates (±3)                                                                            |
+| Expert   | 100g | near-exact (±1) — plus plan intel, persona read, traits (probabilistically), and owner competence |
 
 Reports land in your scout archive and sharpen the opponent card on future offers — you'll see real attribute bands instead of shrugs. Until you've scouted a warrior, their dossier is **fog of war**: record and style visible, attributes hidden.
 
@@ -744,16 +744,16 @@ You don't control the roll. You just live with what the realm does next.
 
 Eight objectives track your stable's climb. They're checked automatically and surfaced on the Stable overview:
 
-| # | Objective | Requirement |
-| --- | --- | --- |
-| 1 | **Reach Top 10** | Rank among the realm's top 10 stables |
-| 2 | **Reach Top 3** | Rank among the top 3 |
-| 3 | **Tournament Victor** | Win a seasonal tournament with one of your warriors |
-| 4 | **Arena Champion** | Hold an arena championship |
-| 5 | **Lord of the Circuit** | Hold three arena championships across three different warriors |
-| 6 | **Grand Champion** | Win the champions-only Grand Championship |
-| 7 | **Hall of Famer** | A warrior wins Warrior of the Year or Killer of the Year |
-| 8 | **Realm Champion** | Finish a year as the #1 stable in the realm |
+| #   | Objective               | Requirement                                                    |
+| --- | ----------------------- | -------------------------------------------------------------- |
+| 1   | **Reach Top 10**        | Rank among the realm's top 10 stables                          |
+| 2   | **Reach Top 3**         | Rank among the top 3                                           |
+| 3   | **Tournament Victor**   | Win a seasonal tournament with one of your warriors            |
+| 4   | **Arena Champion**      | Hold an arena championship                                     |
+| 5   | **Lord of the Circuit** | Hold three arena championships across three different warriors |
+| 6   | **Grand Champion**      | Win the champions-only Grand Championship                      |
+| 7   | **Hall of Famer**       | A warrior wins Warrior of the Year or Killer of the Year       |
+| 8   | **Realm Champion**      | Finish a year as the #1 stable in the realm                    |
 
 **Realm Champion** is the win condition — evaluated at the year boundary. Winning opens the victory screen: continue in **legacy mode** (keep playing; the realm doesn't stop) or start a new stable.
 
@@ -822,39 +822,39 @@ Hard-won advice for the first seasons:
 
 ## 24. Glossary
 
-| Term | Meaning |
-| --- | --- |
-| **Attribute** | A core warrior stat — ST, CN, SZ, WT, WL, SP, DF (3–25) |
-| **Skill** | A derived combat skill — ATT, PAR, DEF, INI, RIP, DEC (1–20) |
-| **OE / AL / KD** | Offensive Effort, Activity Level, Kill Desire — the plan dials (1–10) |
-| **Exchange** | One unit of combat; max 30 per bout (~3 per arena minute) |
-| **Kill window** | HP < 30% **and** endurance < 40% — death becomes possible, capped at 12% per exchange |
-| **Range / Zone** | Spatial combat position — Grapple/Tight/Striking/Extended; Center/Edge/Corner/Obstacle |
-| **Fame / Renown** | Warrior renown (fame) vs. stable/owner standing (renown); both feed economy |
-| **Season points** | Per-season warrior scoring that resets each season |
-| **Roster bonus** | Capacity modifier from backstories and effects — raises the 10-warrior cap |
-| **Free agent** | An unattached warrior hireable from the Recruit page |
-| **Grant Rudis** | Retiring a warrior — the wooden sword of a finished career |
-| **Insight token** | Earned currency spendable for pre-fight advantages |
-| **Meta drift** | The realm's evolving distribution of fighting styles |
-| **Offseason event** | One world event rolled at each year boundary |
-| **War Council** | The advisor page + autopilot for offers and training |
-| **Prep Mode** | The tournament-week planning surface |
-| **Fog of war** | Unscouted rivals show only public information on their dossier |
-| **House rules** | Mod-configurable rule variants (e.g., non-lethal blows) |
+| Term                | Meaning                                                                                |
+| ------------------- | -------------------------------------------------------------------------------------- |
+| **Attribute**       | A core warrior stat — ST, CN, SZ, WT, WL, SP, DF (3–25)                                |
+| **Skill**           | A derived combat skill — ATT, PAR, DEF, INI, RIP, DEC (1–20)                           |
+| **OE / AL / KD**    | Offensive Effort, Activity Level, Kill Desire — the plan dials (1–10)                  |
+| **Exchange**        | One unit of combat; max 30 per bout (~3 per arena minute)                              |
+| **Kill window**     | HP < 30% **and** endurance < 40% — death becomes possible, capped at 12% per exchange  |
+| **Range / Zone**    | Spatial combat position — Grapple/Tight/Striking/Extended; Center/Edge/Corner/Obstacle |
+| **Fame / Renown**   | Warrior renown (fame) vs. stable/owner standing (renown); both feed economy            |
+| **Season points**   | Per-season warrior scoring that resets each season                                     |
+| **Roster bonus**    | Capacity modifier from backstories and effects — raises the 10-warrior cap             |
+| **Free agent**      | An unattached warrior hireable from the Recruit page                                   |
+| **Grant Rudis**     | Retiring a warrior — the wooden sword of a finished career                             |
+| **Insight token**   | Earned currency spendable for pre-fight advantages                                     |
+| **Meta drift**      | The realm's evolving distribution of fighting styles                                   |
+| **Offseason event** | One world event rolled at each year boundary                                           |
+| **War Council**     | The advisor page + autopilot for offers and training                                   |
+| **Prep Mode**       | The tournament-week planning surface                                                   |
+| **Fog of war**      | Unscouted rivals show only public information on their dossier                         |
+| **House rules**     | Mod-configurable rule variants (e.g., non-lethal blows)                                |
 
 ---
 
 ## 25. Troubleshooting
 
-| Symptom | Likely cause / fix |
-| --- | --- |
-| Save won't load after an update | Save version mismatch — the app warns when a slot predates the current format (v3.0.0). Export/import usually rescues it; worst case, start fresh. |
-| Browser save disappeared | Browser storage was cleared. Web saves live in browser storage — the desktop build or exported save packs are safer for long campaigns. |
-| Warriors keep collapsing mid-bout | OE/AL outspends their endurance — check the planner's stamina warning and lower the rhythm or add phase overrides. |
-| "Warriors need training assignment" alert | Idle warriors. Assign regimens on the Training page (Recovery for the injured). |
-| IMPENDING INSOLVENCY | Treasury can't cover upkeep — win a bout or release assets before the bank sells your best warrior (see §14). |
-| The arena detail page shows the circuit list | Known navigation quirk — venue cards currently route back to the circuit page. |
+| Symptom                                      | Likely cause / fix                                                                                                                                 |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Save won't load after an update              | Save version mismatch — the app warns when a slot predates the current format (v3.0.0). Export/import usually rescues it; worst case, start fresh. |
+| Browser save disappeared                     | Browser storage was cleared. Web saves live in browser storage — the desktop build or exported save packs are safer for long campaigns.            |
+| Warriors keep collapsing mid-bout            | OE/AL outspends their endurance — check the planner's stamina warning and lower the rhythm or add phase overrides.                                 |
+| "Warriors need training assignment" alert    | Idle warriors. Assign regimens on the Training page (Recovery for the injured).                                                                    |
+| IMPENDING INSOLVENCY                         | Treasury can't cover upkeep — win a bout or release assets before the bank sells your best warrior (see §14).                                      |
+| The arena detail page shows the circuit list | Known navigation quirk — venue cards currently route back to the circuit page.                                                                     |
 
 ---
 

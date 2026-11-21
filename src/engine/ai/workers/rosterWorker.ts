@@ -175,10 +175,7 @@ export interface ProcessRosterArgs {
  * Weekly roster pass for one AI stable: shared health tick, then training,
  * turnaround diagnosis, trait development, and the intent-gated gear policy.
  */
-export function processRoster(
-  rival: RivalStableData,
-  args: ProcessRosterArgs
-): RivalStableData {
+export function processRoster(rival: RivalStableData, args: ProcessRosterArgs): RivalStableData {
   const { currentWeek, season, seed, rng, weather = 'Clear' } = args;
   const rngService = resolveRng(rng, seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };

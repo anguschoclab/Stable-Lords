@@ -154,10 +154,7 @@ function WarningCard({ w }: { w: CoachWarning }) {
       className="pointer-events-none"
     >
       <Card
-        className={cn(
-          'border-2 backdrop-blur-xl shadow-2xl relative overflow-hidden',
-          w.color
-        )}
+        className={cn('border-2 backdrop-blur-xl shadow-2xl relative overflow-hidden', w.color)}
       >
         <div className="absolute top-0 left-0 w-1 h-full bg-current opacity-60" />
         <CardContent className="p-4 flex gap-4">
@@ -176,9 +173,7 @@ function WarningCard({ w }: { w: CoachWarning }) {
                 {w.type}
               </Badge>
             </div>
-            <p className="text-[11px] font-medium leading-relaxed opacity-90">
-              {w.description}
-            </p>
+            <p className="text-[11px] font-medium leading-relaxed opacity-90">{w.description}</p>
           </div>
         </CardContent>
       </Card>

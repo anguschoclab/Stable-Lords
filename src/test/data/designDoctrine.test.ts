@@ -13,10 +13,7 @@ const ALL_FAMILIES: StyleFamily[] = ['offensive', 'defensive', 'mixed'];
 describe('STYLE_FAMILY — coverage', () => {
   it('maps every canonical fighting style to a family', () => {
     for (const style of ALL_STYLES) {
-      expect(
-        ALL_FAMILIES,
-        `${style} missing a family assignment`
-      ).toContain(STYLE_FAMILY[style]);
+      expect(ALL_FAMILIES, `${style} missing a family assignment`).toContain(STYLE_FAMILY[style]);
     }
   });
 
@@ -59,10 +56,9 @@ describe('FAMILY_GUIDE — content', () => {
       expect(guide, `missing guide for ${family}`).toBeDefined();
       expect(guide.label.length, `empty label for ${family}`).toBeGreaterThan(0);
       expect(guide.doctrine.length, `empty doctrine for ${family}`).toBeGreaterThan(0);
-      expect(
-        guide.keyAttributes.length,
-        `no key attributes for ${family}`
-      ).toBeGreaterThanOrEqual(1);
+      expect(guide.keyAttributes.length, `no key attributes for ${family}`).toBeGreaterThanOrEqual(
+        1
+      );
       for (const key of guide.keyAttributes) {
         expect(ATTRIBUTE_KEYS, `${family} key attribute ${key}`).toContain(key);
       }
@@ -90,9 +86,9 @@ describe('DESIGN_REVIEW_THRESHOLDS — sanity', () => {
   });
 });
 
-  it('pins the wall canon thresholds — will warn below 15, deftness floor at 11', () => {
-    expect(DESIGN_REVIEW_THRESHOLDS.WS_WL_WARN).toBe(15);
-    expect(DESIGN_REVIEW_THRESHOLDS.WS_DF_MIN).toBe(11);
-    expect(DESIGN_REVIEW_THRESHOLDS.WS_ST_MIN).toBe(9);
-    expect(DESIGN_REVIEW_THRESHOLDS.WS_COORD_MIN).toBe(18);
-  });
+it('pins the wall canon thresholds — will warn below 15, deftness floor at 11', () => {
+  expect(DESIGN_REVIEW_THRESHOLDS.WS_WL_WARN).toBe(15);
+  expect(DESIGN_REVIEW_THRESHOLDS.WS_DF_MIN).toBe(11);
+  expect(DESIGN_REVIEW_THRESHOLDS.WS_ST_MIN).toBe(9);
+  expect(DESIGN_REVIEW_THRESHOLDS.WS_COORD_MIN).toBe(18);
+});

@@ -1,8 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  verifyBoutAcceptance,
-} from '@/engine/ai/workers/competitionWorker/boutAcceptance';
+import { verifyBoutAcceptance } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker/offerProcessor';
 import {
   makeRival,

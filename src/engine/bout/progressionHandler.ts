@@ -115,13 +115,7 @@ function rollLearnProgressions(
     // Fresh copy in the patch: `w` is the rival diff's `before` snapshot, so
     // routing the same reference we just assigned would compare equal and
     // drop the change (same reason the favorites block below re-wraps).
-    routeUpdate(
-      s,
-      w,
-      { learnedSkills: { ...learnedSkills } },
-      rosterUpdates,
-      rivalWarriorPatches
-    );
+    routeUpdate(s, w, { learnedSkills: { ...learnedSkills } }, rosterUpdates, rivalWarriorPatches);
 
     // Transcript line — deterministic text built from the stored gains, so
     // it draws nothing from any RNG stream. Headless-gated like every other
@@ -142,7 +136,9 @@ function rollLearnProgressions(
         id: rng.uuid(),
         week,
         title: 'Training Insight',
-        items: [`${warriorDisplayName(w)} learned ${totalGained} skill${totalGained > 1 ? 's' : ''} this bout (${skillsLearned}).`],
+        items: [
+          `${warriorDisplayName(w)} learned ${totalGained} skill${totalGained > 1 ? 's' : ''} this bout (${skillsLearned}).`,
+        ],
       });
     }
   }
@@ -225,7 +221,13 @@ export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
   rollLearnProgressions(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
 
   // Favorites discovery — also for both fighters (was player-only).
-  rollFavoritesDiscovery(args, rosterUpdates, rivalWarriorPatches, newsletterItems, learnedFavorite);
+  rollFavoritesDiscovery(
+    args,
+    rosterUpdates,
+    rivalWarriorPatches,
+    newsletterItems,
+    learnedFavorite
+  );
 
   // Upset / Giant Killer Flair — also routed
   if (outcome.winner) {

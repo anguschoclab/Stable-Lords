@@ -7,6 +7,7 @@ Mine the seven Arena-93 ripper articles for 10 canonical PR fighter concepts plu
 Every claim in the draft was re-verified against the code. Verdicts:
 
 **APPROVED (verified accurate)**
+
 - `FIGHTER_CONCEPTS[ParryRiposte]` has exactly 2 concepts (Webweaver, Quicksilver). All 10 proposed canon spreads sum to exactly 84 → pass the `[83,86]` test guard automatically.
 - PR `tempo.enduranceMult` = **1.04, the highest of all 10 styles** (`strategies.ts:148`), applied multiplicatively to endurance cost via `getEnduranceMult` (`api.ts:27`) at `enduranceCosts.ts:54,68`. Canon + `STYLE_IDENTITY.fatigueBurn='Low'` (`identity.ts:43`) both contradict it → real discrepancy.
 - `MATCHUP_MATRIX` SL↔PR = 0/0 (`matchup.ts` rows 4 & 6); setting +1/−1 keeps pair sum 0 → antisymmetry guard stays green. Anti-striker (+1) and AB-bane (−1) already correct.
@@ -22,11 +23,12 @@ Every claim in the draft was re-verified against the code. Verdicts:
 - `getBestDefensiveTactic(PR)` returns 'Riposte' (payoff 4 vs Parry 2 in `tacticAdvisor.ts`) — the advisor is already canon-aligned for young rippers.
 
 **DISAPPROVED / corrected by validation**
+
 1. **`stylePresets.test.ts:8-11` asserts "exactly 2 presets per style (20 total)"** — the draft missed this; adding 2 PR presets breaks the guard. The test must be updated FIRST (≥2 global, plus explicit PR=4 name assertions).
 2. **Short Spear reqWT**: article chart says 7, game has 5 — the game matches the Terrablood canonical chart (off-limits canon data per combat-balance skill). **Do not "fix"**; reviewed and rejected.
 3. **`planBias.ts:46` autoTune sets `defensiveTactic:'Riposte'` for PR while `getAITactics` returns 'Parry'** — pre-existing inconsistency, not introduced by this change. Left as-is; the new validator warning will correctly flag autoTune's Riposte on Master-tier rippers (warning is info-level, non-blocking).
 4. **PR `STYLE_PENALTIES` RIP is tied with DEC at −1** for "least-penalised" — preserve that tie in any re-ratchet (shape rule: RIP must remain no-more-penalised than every other skill).
-5. **Article endurance formula** ((ST+CN)·WL ≈ 350) is a *design heuristic*, not the engine formula — the `terrabloodCharts` endurance chart is canonical and stays; the formula is used only inside concept notes text.
+5. **Article endurance formula** ((ST+CN)·WL ≈ 350) is a _design heuristic_, not the engine formula — the `terrabloodCharts` endurance chart is canonical and stays; the formula is used only inside concept notes text.
 6. `strategyValidator.test.ts` **already exists** with a `createMockWarrior` helper — the warning test extends it (not a new file); `career` must be populated in the mock for the mastery gate.
 7. Confirmed **out of scope**: off-hand attack simulation (no offhand strike mechanic exists in resolution — `dualWieldReq` is data-only), minute-level strategy arrays (engine uses 3 exchange-thirds via `getPhaseByExchange`), encumbrance formula swap (chart is canonical).
 
@@ -55,7 +57,7 @@ Every claim in the draft was re-verified against the code. Verdicts:
    - **Dawnrain** `9-13-5-15-17-8-17` — Jorja's Tailida; little-damage lesson + ST train to 14 plan; low/mod rhythm.
    - **Scovellie** `9-13-8-17-17-5-15` — meets Cadmus's basic-ripper physicals ((ST+CN)·WL≈374).
    - **Santee** `13-7-14-17-15-8-10` — the size-14 outlier; big rippers can graduate (mod/mod, slash fave, LO).
-   - Rewrite `doctrine`: GOOD+ damage first, then carry/HP/parry; hybrids and scum both viable; SC/LO staples + EP/SH (+SS/LS low-wit); light armor within carry; each warrior's own rhythm (start ~4-6, experiment); lunge-or-nothing offensively, parry/riposte defensively; hunts strikers and scum, dies to aimed blows, struggles vs slashers. Notes/tactics text *adapted* per the file's existing convention.
+   - Rewrite `doctrine`: GOOD+ damage first, then carry/HP/parry; hybrids and scum both viable; SC/LO staples + EP/SH (+SS/LS low-wit); light armor within carry; each warrior's own rhythm (start ~4-6, experiment); lunge-or-nothing offensively, parry/riposte defensively; hunts strikers and scum, dies to aimed blows, struggles vs slashers. Notes/tactics text _adapted_ per the file's existing convention.
    - Intended side effect: `generateArchetypeAttrs`/`conceptMean` pull AI PR recruits toward canon builds.
 9. **`src/data/styleCompendium.ts`** — PR hallmarks gain canon facts (low endurance burn, natural striker-killer/scum-hunter, low skill base requiring learned skills); counterplay names aimed blows starving the riposte.
 10. **`docs/Stable_Lords_Fighter_Concepts_Arena_93_v1.0.md`** — extend PR section: new build tables (canon + scaled), enriched doctrine, source articles cited.
@@ -81,6 +83,7 @@ Every claim in the draft was re-verified against the code. Verdicts:
 22. Manual spot-checks: Warrior Builder PR picker lists 12 builds; Style Archives PR card renders; plan builder shows the Master-tier Riposte info warning on a veteran PR; AI rippers challenge strikers/scum and decline AB offers in a world probe.
 
 ## Files to Modify
+
 - `src/data/fighterConcepts.ts`, `src/data/styleCompendium.ts`
 - `src/engine/bout/stylePresets.ts`, `src/engine/ai/matchup/canonTargeting.ts`
 - `src/engine/stylePassives/strategies.ts`, `src/engine/warrior/skillBreakpoints.ts` (re-ratchet only if harness demands)
@@ -90,6 +93,7 @@ Every claim in the draft was re-verified against the code. Verdicts:
 - Tests: `stylePresets.test.ts` (update guard), `fighterConcepts.test.ts`, `canonTargeting.test.ts`, `stylePassives.test.ts`, `resolution.test.ts`, `strategyValidator.test.ts` — all extended; **new** `src/test/engine/combat/prKillDesireRiposte.test.ts`.
 
 ## Verification
+
 - [ ] Phase-0 tests written first and confirmed failing before implementation (TDD red)
 - [ ] `bun run test` + `bun run type-check` + `bun run lint` — full suite green
 - [ ] `balance-lab` before/after; all 10 styles in [40,60] on fixture; `test:slow` green on both surfaces
@@ -97,8 +101,9 @@ Every claim in the draft was re-verified against the code. Verdicts:
 - [ ] UI spot-checks pass (picker, archives, validator warning)
 
 ## Risks / Notes
+
 - Concept-pool growth shifts AI PR recruit generation + `conceptMean` (higher ST/WL mean — the intended damage-first canon signal); world-seeded slow tests may drift → honest re-baseline with the file's comment convention.
 - Endurance buff (+10% effective stamina) vs SL edge + KD gate push PR power opposite directions; the lab/world runs decide the penalty re-ratchet.
 - `generateArchetypeAttrs` consumes the same RNG count (1 pick + 3 perturbations) — determinism structure preserved, values shift.
-- `duplication.guard.test.ts` fighterConcepts exemption covers canon literal pins; notes text must be *adapted* not verbatim per file convention.
+- `duplication.guard.test.ts` fighterConcepts exemption covers canon literal pins; notes text must be _adapted_ not verbatim per file convention.
 - StyleCard "Signature Weapons" shows CW only (Epée for PR) — by design; articles' full W-list lives in doctrine/compendium text instead.

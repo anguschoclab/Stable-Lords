@@ -159,8 +159,7 @@ export function canonTargetingBias(
   if (
     attStyle === FightingStyle.ParryLunge &&
     bias < 0 &&
-    (oppStyle === FightingStyle.LungingAttack ||
-      oppStyle === FightingStyle.BashingAttack) &&
+    (oppStyle === FightingStyle.LungingAttack || oppStyle === FightingStyle.BashingAttack) &&
     (attFights ?? 99) < 10
   ) {
     return -3; // "in his first few fights stay away from lungers and bashers"

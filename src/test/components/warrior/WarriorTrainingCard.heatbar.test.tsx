@@ -6,7 +6,10 @@ import { makeTrainingWarrior, makeTrainingCardProps } from '@/test/_fixtures/tra
 
 vi.mock('@/engine/training', () => __SHARED_MOCKS.warriorTrainingDeps.training(0));
 vi.mock('@/engine/warrior/potential', () => __SHARED_MOCKS.warriorTrainingDeps.potential);
-vi.mock('@/engine/training/trainingGains/traitTraining', () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining);
+vi.mock(
+  '@/engine/training/trainingGains/traitTraining',
+  () => __SHARED_MOCKS.warriorTrainingDeps.traitTraining
+);
 
 import { computeGainChance } from '@/engine/training';
 import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';

@@ -54,8 +54,7 @@ const HARD_SKIP = /\b(?:describe|it|test)\.skip\s*\(|\bx(?:describe|it|test)\s*\
 
 // walkTsFiles yields OS-native separators — normalize before substring
 // checks so the megaplan-dir exemption works on Windows as well as POSIX.
-const isMegaplanFile = (file: string): boolean =>
-  file.replace(/\\/g, '/').includes('/megaplan/');
+const isMegaplanFile = (file: string): boolean => file.replace(/\\/g, '/').includes('/megaplan/');
 
 describe('megaplan: skip-count guard', () => {
   const SELF = __filename;

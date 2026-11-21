@@ -86,12 +86,9 @@ describe('useRivalryAlerts', () => {
   it('still posts the escalation toast when Web Audio is unavailable', () => {
     // playImpactSFX must fail silently — an AudioContext constructor that
     // throws (or its absence) can never eat the escalation toast.
-    vi.stubGlobal(
-      'AudioContext',
-      function () {
-        throw new Error('no audio');
-      }
-    );
+    vi.stubGlobal('AudioContext', function () {
+      throw new Error('no audio');
+    });
     const { rerender } = renderHook(() => useRivalryAlerts());
     mockState = baseState([bout('Kill'), bout('Kill')]);
     rerender();

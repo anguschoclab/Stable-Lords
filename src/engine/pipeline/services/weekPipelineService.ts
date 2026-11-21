@@ -64,7 +64,12 @@ function createWeekSyncLedger(pool: EnginePool, state: GameState, headless?: boo
  * dispatch window (mapBoutShards runs before runBoutPhase's resolveImpacts)
  * — so the hash is computed eagerly, never re-derived late.
  */
-function installWeekStartStage(syncLedger: WeekSyncLedger, mutableState: GameState, ctx: WeekContext, pool: EnginePool): void {
+function installWeekStartStage(
+  syncLedger: WeekSyncLedger,
+  mutableState: GameState,
+  ctx: WeekContext,
+  pool: EnginePool
+): void {
   syncLedger.weekStartState = mutableState;
   syncLedger.weekStartHash = shardStateHash(mutableState);
   syncLedger.weekContext = {
@@ -80,7 +85,11 @@ function installWeekStartStage(syncLedger: WeekSyncLedger, mutableState: GameSta
  * rival shards dispatch inside the world stage's spec.run, before
  * resolveImpacts(world) mutates this object, so the hash is eager.
  */
-function recordPostCoreStage(syncLedger: WeekSyncLedger, coreImpacts: StateImpact[], stateAfterCore: GameState): void {
+function recordPostCoreStage(
+  syncLedger: WeekSyncLedger,
+  coreImpacts: StateImpact[],
+  stateAfterCore: GameState
+): void {
   syncLedger.coreImpacts = coreImpacts;
   syncLedger.postCoreState = stateAfterCore;
   syncLedger.postCoreHash = shardStateHash(stateAfterCore);

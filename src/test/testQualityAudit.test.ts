@@ -395,8 +395,7 @@ describe('testQualityAudit', () => {
       for (let i = 0; i < qualifiers.length; i++) {
         const q = qualifiers[i]!;
         if (q === 'slow') {
-          if (i !== qualifiers.length - 1)
-            violations.push(`${rel(f)} — .slow must be terminal`);
+          if (i !== qualifiers.length - 1) violations.push(`${rel(f)} — .slow must be terminal`);
         } else if (!CATEGORY_QUALIFIERS.has(q)) {
           if (!/^[a-z][a-zA-Z]*$/.test(q)) {
             violations.push(`${rel(f)} — malformed qualifier '.${q}'`);
@@ -431,10 +430,7 @@ describe('testQualityAudit', () => {
     // files (51) and unlisted dirs (19 more) silently never ran under bun in
     // CI (wave-2 finding V7: 70 files, incl. the bunViCompat canary itself).
     // Require filesystem-driven enumeration — a literal dir list drifts.
-    const ci = fs.readFileSync(
-      path.join(REPO_ROOT, '.github/workflows/ci.yml'),
-      'utf8'
-    );
+    const ci = fs.readFileSync(path.join(REPO_ROOT, '.github/workflows/ci.yml'), 'utf8');
     const shard = ci.slice(ci.indexOf('name: Run bun test suite'));
     expect(
       /for d in src\/test\//.test(shard),
@@ -457,7 +453,9 @@ describe('testQualityAudit', () => {
   });
 
   it('every megaplan guard is registered in GUARD_REGISTRY', () => {
-    const guards = listTsFiles(path.join(TEST_DIR, 'megaplan'), /\.test\.tsx?$/).map((f) => path.basename(f));
+    const guards = listTsFiles(path.join(TEST_DIR, 'megaplan'), /\.test\.tsx?$/).map((f) =>
+      path.basename(f)
+    );
     const unregistered = guards.filter((g) => !(g in GUARD_REGISTRY));
     const stale = Object.keys(GUARD_REGISTRY).filter((g) => !guards.includes(g));
     expect(

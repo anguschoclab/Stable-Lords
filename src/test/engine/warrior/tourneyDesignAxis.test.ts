@@ -40,10 +40,7 @@ describe('tourney design axis — the 21-wit / small-size doctrine', () => {
   });
 
   it('recognizes scum/AB rookie-tourney setups', () => {
-    const items = reviewWarriorDesign(
-      attrs({ WT: 13, CN: 17, WL: 17 }),
-      FightingStyle.TotalParry
-    );
+    const items = reviewWarriorDesign(attrs({ WT: 13, CN: 17, WL: 17 }), FightingStyle.TotalParry);
     const tourney = items.filter((i) => i.axis === 'tourney');
     expect(tourney.length).toBeGreaterThan(0);
     expect(tourney.every((i) => i.verdict !== 'warn')).toBe(true);

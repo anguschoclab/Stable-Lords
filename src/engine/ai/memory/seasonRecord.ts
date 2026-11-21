@@ -18,10 +18,7 @@ const freshRecord = (rival: RivalStableData): SeasonRecord => ({
 });
 
 /** The analysis factor the debrief credited against this stable's side. */
-function opponentFavoredFactor(
-  fight: FightSummary,
-  side: 'A' | 'D'
-): string | undefined {
+function opponentFavoredFactor(fight: FightSummary, side: 'A' | 'D'): string | undefined {
   const opp = side === 'A' ? 'D' : 'A';
   return fight.analysis?.factors.find((f) => f.favored === opp)?.label;
 }

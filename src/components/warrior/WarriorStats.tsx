@@ -2,8 +2,17 @@ import { type Warrior } from '@/types/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ATTRIBUTE_TRAINING, SKILL_MAX_DEFAULT } from '@/constants/training';
 import { growthNarrative } from './GrowthHelpers';
-import { generateWarriorStatements, physicalProfileLines, skillRating } from '@/data/warriorStatements';
-import { computeEnduranceTier, computeEncumbranceClass, computeDamageClass, computeHP } from '@/data/terrabloodCharts';
+import {
+  generateWarriorStatements,
+  physicalProfileLines,
+  skillRating,
+} from '@/data/warriorStatements';
+import {
+  computeEnduranceTier,
+  computeEncumbranceClass,
+  computeDamageClass,
+  computeHP,
+} from '@/data/terrabloodCharts';
 import { StatBattery } from '@/components/ui/StatBattery';
 
 /**

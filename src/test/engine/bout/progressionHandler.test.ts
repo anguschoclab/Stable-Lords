@@ -23,7 +23,6 @@ const STUB_RNG = {
 };
 
 describe('progressionHandler', () => {
-
   describe('handleProgressions', () => {
     it('applies XP to both fighters', () => {
       const s = createMockState();
@@ -249,7 +248,15 @@ describe('progressionHandler', () => {
 
       // Should not throw without rivalStableId
       expect(() =>
-        handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1, rng: STUB_RNG })
+        handleProgressions({
+          s: s,
+          wA: wA,
+          wD: wD,
+          outcome: outcome,
+          tags: [],
+          week: 1,
+          rng: STUB_RNG,
+        })
       ).not.toThrow();
     });
 

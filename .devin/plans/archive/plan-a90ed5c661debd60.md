@@ -20,14 +20,14 @@ Every claim in this draft was audited against the code on **2026-11-19** (second
 
 ## PR inventory & conflict map (file-level overlap mapped; merge-tree verification in Phase 1)
 
-| Cluster | PRs | Shared surface | Verdict shape |
-| --- | --- | --- | --- |
-| Narrative lore pools | 1079, 1082, 1085 | `origins`, `childhoodTraits`, `definingMoments`, `arenas/lore.ts`, `v21Narrative.guard` | union + dedupe; #1079 also adds trait defs (`flaws.ts`, `registry.ts`, `traitDedup.test.ts`, `v20/v21 guards`) |
-| Combat narrative JSON | 1080, 1083, 1089, 1093 | `combatKillText.json`, `combatPbp.json` (+`combatStrikes`, `uiMeta`) | union; #1083 edits `scripts/fuzzy_dedupe.mjs` itself — adjudicate scanner change on merit |
-| Button types | 1090, 1091 | `WarriorLeaderboardFilters.tsx`, `FilterToggleButton.test.tsx` | 1090 near-superset; #1091's unique hunk is generated `docs/ORPHAN_REPORT.md` — **stale pre-V28 path** (now `docs/reports/orphan-report.md`) → strip, never merge |
-| Perf memoization | 1084, 1088, 1092 | independent files | verify referential-equality semantics vs merged `useShallow` precedent (#1062/#1067/#1069/#1076) |
-| Test coverage | 1081, 1086 | `auditBaseline.json`, `runnerGroups.json` (generated — strip+regen) | #1081 adds `src/test/engine/pipeline/services/` (new dir mirroring `src/engine/pipeline/services/` ✅ domain-filing valid) |
-| A11y tooltips | 1087 | 6 standalone component files | keyboard-handler correctness + determinism check |
+| Cluster               | PRs                    | Shared surface                                                                          | Verdict shape                                                                                                                                                    |
+| --------------------- | ---------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Narrative lore pools  | 1079, 1082, 1085       | `origins`, `childhoodTraits`, `definingMoments`, `arenas/lore.ts`, `v21Narrative.guard` | union + dedupe; #1079 also adds trait defs (`flaws.ts`, `registry.ts`, `traitDedup.test.ts`, `v20/v21 guards`)                                                   |
+| Combat narrative JSON | 1080, 1083, 1089, 1093 | `combatKillText.json`, `combatPbp.json` (+`combatStrikes`, `uiMeta`)                    | union; #1083 edits `scripts/fuzzy_dedupe.mjs` itself — adjudicate scanner change on merit                                                                        |
+| Button types          | 1090, 1091             | `WarriorLeaderboardFilters.tsx`, `FilterToggleButton.test.tsx`                          | 1090 near-superset; #1091's unique hunk is generated `docs/ORPHAN_REPORT.md` — **stale pre-V28 path** (now `docs/reports/orphan-report.md`) → strip, never merge |
+| Perf memoization      | 1084, 1088, 1092       | independent files                                                                       | verify referential-equality semantics vs merged `useShallow` precedent (#1062/#1067/#1069/#1076)                                                                 |
+| Test coverage         | 1081, 1086             | `auditBaseline.json`, `runnerGroups.json` (generated — strip+regen)                     | #1081 adds `src/test/engine/pipeline/services/` (new dir mirroring `src/engine/pipeline/services/` ✅ domain-filing valid)                                       |
+| A11y tooltips         | 1087                   | 6 standalone component files                                                            | keyboard-handler correctness + determinism check                                                                                                                 |
 
 ## Phase 0 — Safety, baseline & docs scaffold (atomic)
 
@@ -55,20 +55,20 @@ Scanner suite re-run, diffed vs V28 close-out + Phase-0 baseline (2,913 tracked 
 
 **Contract:** every Phase-4 merge and Phase-5 fix has its spec authored, committed, and observed RED in this phase. Sole exception: a spec that cannot meaningfully exist pre-implementation lands as a spec-only commit observed RED immediately before its fix commit — the exception is logged in the LEDGER, never silent.
 
-| Spec / change | Covers | State at commit | Turns green |
-| ------------- | ------ | --------------- | ----------- |
-| `v21Narrative.guard` exact pins → `>=` floors | pool counts only grow | GREEN | — |
-| `v21Traits.guard` count pin `184` → `>=` floor; SURVIVING membership asserts unchanged (they remain valid — union only grows) ⚠️ corrected detail | trait count only grows | GREEN | — |
-| `v29Narrative.guard.test.ts` (new, LIVE_RATCHET) | union entries per source PR; deduped exact counts; intra-pool dupes `[]`; cross-pool lore-id collisions `[]` | RED | Phase 4 lore merges |
-| `v29Traits.guard.test.ts` (new, iff #1079 traits land) | new ids in `TRAITS`+`LEGACY_TRAIT_ORDER`; effect keys ⊆ `TRAIT_EFFECT_KEYS`; final count pin | RED | Phase 4 trait merge |
-| V26-D2 spec: `SystemPass` invokes `processTierProgression` with `computeNextSeason(nextWeek)` (or the call+function are gone) — promotion fires on season boundary | backlog fix | RED | Phase 5 |
-| V26-D3 spec: fresh-state digest stable across two `createFreshState` calls (no wall-clock field) | backlog fix | RED | Phase 5 |
-| V26-D4 spec: gazette `t()` picks deterministically under a seeded rng (no crypto fallback at deterministic call sites) | backlog fix | RED | Phase 5 |
-| V26-D1 spec: favorites section renders discovered-tactic row | backlog fix | RED | Phase 5 |
-| V16-A11 spec: bid priority evaluated under bout-week weather | backlog fix | RED | Phase 5 |
-| V21-B3 spec: display token ↔ `staminaMult` coherence across `WEATHER_STATS`×`weatherEffects/table` | backlog fix | RED | Phase 5 |
-| Phase-2 §B bug specs | per discovered bug | RED | Phase 5 |
-| `GUARD_REGISTRY` += v29 guards + `runnerGroups`/`auditBaseline` regen | registration enforced | GREEN | — |
+| Spec / change                                                                                                                                                      | Covers                                                                                                       | State at commit | Turns green         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | --------------- | ------------------- |
+| `v21Narrative.guard` exact pins → `>=` floors                                                                                                                      | pool counts only grow                                                                                        | GREEN           | —                   |
+| `v21Traits.guard` count pin `184` → `>=` floor; SURVIVING membership asserts unchanged (they remain valid — union only grows) ⚠️ corrected detail                  | trait count only grows                                                                                       | GREEN           | —                   |
+| `v29Narrative.guard.test.ts` (new, LIVE_RATCHET)                                                                                                                   | union entries per source PR; deduped exact counts; intra-pool dupes `[]`; cross-pool lore-id collisions `[]` | RED             | Phase 4 lore merges |
+| `v29Traits.guard.test.ts` (new, iff #1079 traits land)                                                                                                             | new ids in `TRAITS`+`LEGACY_TRAIT_ORDER`; effect keys ⊆ `TRAIT_EFFECT_KEYS`; final count pin                 | RED             | Phase 4 trait merge |
+| V26-D2 spec: `SystemPass` invokes `processTierProgression` with `computeNextSeason(nextWeek)` (or the call+function are gone) — promotion fires on season boundary | backlog fix                                                                                                  | RED             | Phase 5             |
+| V26-D3 spec: fresh-state digest stable across two `createFreshState` calls (no wall-clock field)                                                                   | backlog fix                                                                                                  | RED             | Phase 5             |
+| V26-D4 spec: gazette `t()` picks deterministically under a seeded rng (no crypto fallback at deterministic call sites)                                             | backlog fix                                                                                                  | RED             | Phase 5             |
+| V26-D1 spec: favorites section renders discovered-tactic row                                                                                                       | backlog fix                                                                                                  | RED             | Phase 5             |
+| V16-A11 spec: bid priority evaluated under bout-week weather                                                                                                       | backlog fix                                                                                                  | RED             | Phase 5             |
+| V21-B3 spec: display token ↔ `staminaMult` coherence across `WEATHER_STATS`×`weatherEffects/table`                                                                 | backlog fix                                                                                                  | RED             | Phase 5             |
+| Phase-2 §B bug specs                                                                                                                                               | per discovered bug                                                                                           | RED             | Phase 5             |
+| `GUARD_REGISTRY` += v29 guards + `runnerGroups`/`auditBaseline` regen                                                                                              | registration enforced                                                                                        | GREEN           | —                   |
 
 ## Phase 4 — Merge sequence (one branch per commit; type-check+test+lint between each)
 
@@ -109,31 +109,31 @@ Spec-first per the Phase-3 contract; lowest-risk first:
 
 ## Validation verdicts (draft claim → verdict → evidence)
 
-| # | Draft claim | Verdict | Evidence |
-| --- | --- | --- | --- |
-| 1 | `megaplanDocLayout` enforces one lineage; atomic swap needed | ✅ APPROVED | spec L83-93 `versions.size===1`; allowlists L27/L77 |
-| 2 | GUARD_REGISTRY at `testQualityAudit.test.ts:~155` | ✅ APPROVED | exact: L155, 47 LIVE_RATCHET entries |
-| 3 | `.devin/plans` accepts any name | ❌ DISPROVED | `^megaplan-*` drafts rejected L136-147 — mirror renamed `plan-a90ed5c661debd60.md` |
-| 4 | INDEX freshness needed only at close-out | ⚠️ CORRECTED | `docsLayout` enforces every non-archive doc indexed → Phase 0 |
-| 5 | `weaponArmor.ts` under `resolution/` | ❌ DISPROVED | actual: `mechanics/weaponArmor.ts` (BACKLOG row itself stale) |
-| 6 | V26-D2 dead call + createdAt hazard | ✅ APPROVED | `SystemPass.ts:53` passes `state.season`; `tierProgression.ts:66-67` verbatim; fix eased — `computeNextSeason` already imported L19 |
-| 7 | V26-D3 wall-clock default | ✅ APPROVED | `gameStateFactory.ts:109` verbatim; `weekToTimestamp` exists (`@/constants`) |
-| 8 | V26-D4 crypto fallback | ✅ APPROVED | `gazetteTemplateHelpers.ts:61-66` verbatim |
-| 9 | V26-D1 missing tactic row | ✅ APPROVED | zero `tactic` refs under `favorites/` |
-| 10 | V16-A11 stale weather in bids | ✅ APPROVED + deepened | `offers.ts:46`; `_currentWeek` is underscore-ignored — deeper than logged |
-| 11 | V21-B3 token↔effect contradiction | ✅ APPROVED | `weatherStats.ts:61` 125% vs `table.ts:419` `staminaMult:0.8` |
-| 12 | V21-B6 KD spec exists at balance.slow:308 | ✅ APPROVED | verbatim |
-| 13 | V15 `cloneObject`/`copyDataProperties` churn | ⚠️ CORRECTED | functions gone; residual now `structuredClone` at ~6 sites |
-| 14 | V22-D3 damage model shape | ✅ APPROVED | `damageCalc.ts:21-24` verbatim |
-| 15 | V22-D4 caps 3–25 | ✅ APPROVED | `ATTRIBUTE_MAX=25` `shared/attributes.ts:40` |
-| 16 | SAVE_STATE_VERSION bump optional | ✅ APPROVED | `'3.0.0'` `core.ts:12` |
-| 17 | Trait drift assert requires `LEGACY_TRAIT_ORDER` sync | ✅ APPROVED | `registry.ts:220-224` throws |
-| 18 | v21Traits floor conversion | ✅ APPROVED + scoped | count pin 184 → floor; SURVIVING asserts stay valid |
-| 19 | #1091 ⊆ #1090 | ⚠️ CORRECTED | unique hunk = generated `docs/ORPHAN_REPORT.md` (stale path) → strip; supersession holds on code |
-| 20 | `determinismAudit`, `soak.mjs`, chromium tier, coverage floors, nightly slow tier | ✅ APPROVED | all verified at cited paths |
-| 21 | `bun audit` advisory check | ⚠️ CORRECTED | no such script; use `gh api dependabot/alerts` (authed owner) w/ `bun audit` fallback |
-| 22 | Scanners all under `scripts/` | ⚠️ CORRECTED | `find-dupes.mjs` lives at repo root |
-| 23 | #1081 test-dir filing legal | ✅ APPROVED | `src/test/engine/pipeline/services/` mirrors `src/engine/pipeline/services/` per domain rule |
+| #   | Draft claim                                                                       | Verdict                | Evidence                                                                                                                            |
+| --- | --------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `megaplanDocLayout` enforces one lineage; atomic swap needed                      | ✅ APPROVED            | spec L83-93 `versions.size===1`; allowlists L27/L77                                                                                 |
+| 2   | GUARD_REGISTRY at `testQualityAudit.test.ts:~155`                                 | ✅ APPROVED            | exact: L155, 47 LIVE_RATCHET entries                                                                                                |
+| 3   | `.devin/plans` accepts any name                                                   | ❌ DISPROVED           | `^megaplan-*` drafts rejected L136-147 — mirror renamed `plan-a90ed5c661debd60.md`                                                  |
+| 4   | INDEX freshness needed only at close-out                                          | ⚠️ CORRECTED           | `docsLayout` enforces every non-archive doc indexed → Phase 0                                                                       |
+| 5   | `weaponArmor.ts` under `resolution/`                                              | ❌ DISPROVED           | actual: `mechanics/weaponArmor.ts` (BACKLOG row itself stale)                                                                       |
+| 6   | V26-D2 dead call + createdAt hazard                                               | ✅ APPROVED            | `SystemPass.ts:53` passes `state.season`; `tierProgression.ts:66-67` verbatim; fix eased — `computeNextSeason` already imported L19 |
+| 7   | V26-D3 wall-clock default                                                         | ✅ APPROVED            | `gameStateFactory.ts:109` verbatim; `weekToTimestamp` exists (`@/constants`)                                                        |
+| 8   | V26-D4 crypto fallback                                                            | ✅ APPROVED            | `gazetteTemplateHelpers.ts:61-66` verbatim                                                                                          |
+| 9   | V26-D1 missing tactic row                                                         | ✅ APPROVED            | zero `tactic` refs under `favorites/`                                                                                               |
+| 10  | V16-A11 stale weather in bids                                                     | ✅ APPROVED + deepened | `offers.ts:46`; `_currentWeek` is underscore-ignored — deeper than logged                                                           |
+| 11  | V21-B3 token↔effect contradiction                                                 | ✅ APPROVED            | `weatherStats.ts:61` 125% vs `table.ts:419` `staminaMult:0.8`                                                                       |
+| 12  | V21-B6 KD spec exists at balance.slow:308                                         | ✅ APPROVED            | verbatim                                                                                                                            |
+| 13  | V15 `cloneObject`/`copyDataProperties` churn                                      | ⚠️ CORRECTED           | functions gone; residual now `structuredClone` at ~6 sites                                                                          |
+| 14  | V22-D3 damage model shape                                                         | ✅ APPROVED            | `damageCalc.ts:21-24` verbatim                                                                                                      |
+| 15  | V22-D4 caps 3–25                                                                  | ✅ APPROVED            | `ATTRIBUTE_MAX=25` `shared/attributes.ts:40`                                                                                        |
+| 16  | SAVE_STATE_VERSION bump optional                                                  | ✅ APPROVED            | `'3.0.0'` `core.ts:12`                                                                                                              |
+| 17  | Trait drift assert requires `LEGACY_TRAIT_ORDER` sync                             | ✅ APPROVED            | `registry.ts:220-224` throws                                                                                                        |
+| 18  | v21Traits floor conversion                                                        | ✅ APPROVED + scoped   | count pin 184 → floor; SURVIVING asserts stay valid                                                                                 |
+| 19  | #1091 ⊆ #1090                                                                     | ⚠️ CORRECTED           | unique hunk = generated `docs/ORPHAN_REPORT.md` (stale path) → strip; supersession holds on code                                    |
+| 20  | `determinismAudit`, `soak.mjs`, chromium tier, coverage floors, nightly slow tier | ✅ APPROVED            | all verified at cited paths                                                                                                         |
+| 21  | `bun audit` advisory check                                                        | ⚠️ CORRECTED           | no such script; use `gh api dependabot/alerts` (authed owner) w/ `bun audit` fallback                                               |
+| 22  | Scanners all under `scripts/`                                                     | ⚠️ CORRECTED           | `find-dupes.mjs` lives at repo root                                                                                                 |
+| 23  | #1081 test-dir filing legal                                                       | ✅ APPROVED            | `src/test/engine/pipeline/services/` mirrors `src/engine/pipeline/services/` per domain rule                                        |
 
 ## Risks / considerations
 

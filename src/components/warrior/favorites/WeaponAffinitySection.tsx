@@ -187,9 +187,7 @@ function WeaponChart({
             <span className="text-right font-mono text-[10px] text-foreground/70">
               {row.swings}
             </span>
-            <span className="text-right font-mono text-[10px] text-foreground/70">
-              {row.crits}
-            </span>
+            <span className="text-right font-mono text-[10px] text-foreground/70">{row.crits}</span>
             <span
               className={cn(
                 'text-right font-mono text-[10px] font-black',

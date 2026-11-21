@@ -146,10 +146,7 @@ export function CombatColumn({
             <span>
               {card.tournamentAdvice.headline}
               {card.tournamentAdvice.classId && card.tournamentAdvice.fe !== undefined && (
-                <span className="text-muted-foreground/60">
-                  {' '}
-                  · {card.tournamentAdvice.fe} FE
-                </span>
+                <span className="text-muted-foreground/60"> · {card.tournamentAdvice.fe} FE</span>
               )}
             </span>
           </p>

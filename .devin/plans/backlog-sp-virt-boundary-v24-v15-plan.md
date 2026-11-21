@@ -19,11 +19,13 @@ Sequencing: **WS1 → WS2 → WS3 → WS4 → WS5 → WS6 → WS7**. WS3/WS4 re-
 ## WS1 — SP-boundary: remove residual `as unknown as` bout-boundary casts
 
 **Phase T (specs first, RED-verified):**
+
 - New `src/test/engine/bout/warriorRouting.test.ts` — `changedFields`: drops reference-identical fields, keeps changed fields, returns only changed keys; `patchRivalWarrior`: no-op on empty diff, merges per-warrior patches cumulatively. (Coverage gap: both functions currently untested.)
 - `handleReporting` spec (`src/test/engine/bout/`): returned `summary.stableIdA/stableIdD` equal `wA.stableId`/`wD.stableId` (incl. `undefined` pass-through) — behavior pin feeding `stableManager.weeklyIncome`/`ownerNarrative` lookups noted in the inline comment at `reportingHandler.ts:61-65`.
 - `generateFightNarrative` contract spec (`src/test/engine/gazette/`): a `Pick<FightSummary,'week'|'title'|'winner'|'by'|'styleA'|'styleD'>`-shaped input produces narrative (pins the narrowed signature).
 
 **Phase I (implement):**
+
 1. `reportingHandler.ts:66-67` — delete `as unknown as StableId` on both lines. Verified: `Warrior.stableId?: StableId` (`warrior.types.ts:254`) ≡ `FightSummary.stableIdA/D?: StableId` (`combat.types.ts:215-216`).
 2. `mortalityHandler.ts:133-150` — drop dead `a`/`d` fields from the literal (excess-property-only cast; `generateFightNarrative` reads only `week/title/winner/by/styleA/styleD` — verified `gazetteNarrative.ts:19-71`, names come from `getNamesFromTitle(fight.title)`), change `id: boutId` to `id: boutId as FightId` (single `as`, matching `reportingHandler.ts:52`), remove the outer `as unknown as FightSummary`. Optional hardening: narrow `generateFightNarrative`'s param to `Pick<FightSummary,'week'|'title'|'winner'|'by'|'styleA'|'styleD'>` — all other callers pass full summaries, no ripple.
 3. `warriorRouting.ts:17-24` — delete-based rewrite preserving the reference-inequality diff:
@@ -47,10 +49,12 @@ Sequencing: **WS1 → WS2 → WS3 → WS4 → WS5 → WS6 → WS7**. WS3/WS4 re-
 Precedent (verified): `WarriorLeaderboard.tsx` — `useVirtualizer({count, estimateSize:()=>48, overscan:10, getScrollElement:scrollRef})`, `<div max-h-[70vh] overflow-auto>` scroll container, `TableHeader sticky top-0`, spacer `<tr>` before/after virtual rows, `useFallback` plain-map when `getVirtualItems()` is empty. Non-table precedent: `VirtualizedFallenGrid.tsx`.
 
 **Phase T (specs first, RED-verified):**
+
 - `src/test/components/world/StableRankings.test.tsx` (new) — rendered row count is bounded (< total rows for a large `rows` prop), first and last visible rows carry correct rank/index, sort header still fires `onSort`, empty `rows` renders cleanly, fallback path renders all rows when virtualizer reports no items.
 - `src/test/components/scouting/RivalStableList.test.tsx` (new) — same bounded-render assertion for `list.visible`; selection callback fires with `rival.owner.id`; `SelectableCard` aria/`role="button"` + tooltip intact; search filters; `showAll` expansion renders the full filtered set virtualized (still bounded DOM nodes); `GrudgeFlames` renders when grudge present.
 
 **Phase I (implement):**
+
 - `src/components/world/StableRankings.tsx` — wrap `<Table>` in `ref`'d `max-h` scroll container (mirror WarriorLeaderboard: header inside scroll div, `sticky top-0`); replace `rows.map` in `TableBody` with virtual rows + spacer `<tr>`; `rows` prop is the full filtered set (~90–160 stables — the win is real here, no windowing exists today). `estimateSize`: measure `StableRankingsRow` (~44–48px).
 - `src/components/scouting/RivalStableList.tsx` — **keep `useListShell` + `ListToolbar` + the `+N more`/`Top N` toggle unchanged**; virtualize `list.visible` inside a bounded `max-h` scroll container using transform-positioned rows (FallenGrid pattern, not spacer `<tr>` — it's a card grid, not a table). At the 25-row default the virtualizer is a no-op; on `showAll` (90–160 rivals) it bounds DOM nodes. Measure a `RivalRow` card height (~70–80px) for `estimateSize`; preserve selection, `GrudgeFlames`, `RivalIdentity`, `SelectableCard` a11y contract verbatim.
 
@@ -62,27 +66,29 @@ Precedent (verified): `WarriorLeaderboard.tsx` — `useVirtualizer({count, estim
 
 Canon mapping (verified 1:1 by weight tier onto the extended Duel2 family; stats unchanged):
 
-| current id | → id / code | canon name | wt | description moves to |
-| --- | --- | --- | --- | --- |
-| `padded` | `ALE` | Leather | 2 | "Cured leather armor…" |
-| `leather` | `APL` | Padded Leather | 4 | "Quilted cloth armor…" |
-| `studded_leather` | `ASH` | Studded (Hide) | 5 | unchanged |
-| `ring_mail` | `ARM` | Ringmail | 6 | unchanged |
-| `scale_mail` | `ASM` | Scalemail | 8 | unchanged |
-| `chain_mail` | `ACM` | Chainmail | 10 | unchanged |
-| `plate_mail` | `APM` | Platemail | 12 | unchanged |
-| `plate_armor` | `APA` | Plate Armor | 14 | unchanged |
-| `none_armor` | unchanged | None | 0 | — |
+| current id        | → id / code | canon name     | wt  | description moves to   |
+| ----------------- | ----------- | -------------- | --- | ---------------------- |
+| `padded`          | `ALE`       | Leather        | 2   | "Cured leather armor…" |
+| `leather`         | `APL`       | Padded Leather | 4   | "Quilted cloth armor…" |
+| `studded_leather` | `ASH`       | Studded (Hide) | 5   | unchanged              |
+| `ring_mail`       | `ARM`       | Ringmail       | 6   | unchanged              |
+| `scale_mail`      | `ASM`       | Scalemail      | 8   | unchanged              |
+| `chain_mail`      | `ACM`       | Chainmail      | 10  | unchanged              |
+| `plate_mail`      | `APM`       | Platemail      | 12  | unchanged              |
+| `plate_armor`     | `APA`       | Plate Armor    | 14  | unchanged              |
+| `none_armor`      | unchanged   | None           | 0   | —                      |
 
 Canon prerequisite: **verify `ASH` and `APA-F` in a canon source first** (duel2.info charts / Assur). If `ASH` is unverifiable, keep `code:'AS'` and record a §3 house divergence instead of inventing a code. `APA-F` (full plate, ~wt 16–18) has no armor here — do NOT add a tier; document as canon tier not yet modeled. (Sibling note, not scope: `full_helm`'s code is `FF` vs canon `F` — record as a backlog watch note.)
 
 **Phase T (specs first, RED-verified):**
+
 - `src/test/data/equipment/armor.canon.test.ts` (new) — 8 armors: `id === code` canon letters, canon names, **explicit per-row stat pins** (weight/mitigation/defenseMod/enduranceCostMod/restrictedStyles — the codemod must not drift them), `getItemById('APM')`/`getItemByCode('ARM')` resolve; `DEFAULT_LOADOUT.armor === 'APL'`.
 - `src/test/data/equipment/equipmentData.test.ts`, `equipmentLookup.test.ts` — already iterate `ARMORS` generically (survive); any literal-id assertions re-keyed in the same pass.
 - Save-version pins: `retrieveHotStatePlausibility.test.ts:134` pins `'3.0.0'` → update to new version; `gameStateFactory.test.ts`/`opfsArchive.test.ts` use the constant (survive).
 - Stream-neutrality probe (temporary, not committed): same seed, N weeks, state-hash identical pre/post rename — disproves any armor-id RNG salting (salts found use `owner.id.length`, not equipment ids — expected clean).
 
 **Phase I (implement):**
+
 - `src/data/equipment/armor.ts` — rename `id`+`code`+`name`+`description` per table; stats untouched.
 - **Bump `SAVE_STATE_VERSION`** in `src/constants/core/core.ts:12` AND `electron/main.ts:25` (+ `package.json` version field, V11 precedent) — stale saves reject cleanly rather than silently unarmor. NO legacy-alias index (zero-constraint directive).
 - **Safe codemod** (`safe-codemod` skill) — transform ONLY whole-string armor-id occurrences:
@@ -100,14 +106,16 @@ Canon prerequisite: **verify `ASH` and `APA-F` in a canon source first** (duel2.
 
 Surface (verified): 20 damage-dtype weapons (`fist` is `bash`-dtype and in scope; the 3 shields are `'none'` → early-return before the armor lookup, `weaponArmor.ts:54`) × 9 armors (8 canon + `none_armor`). `ARMOR_TYPE_MULT` lives at `weaponArmor.ts:36-46`; `WEAPON_ARMOR_OVERRIDES` at `balance.ts:222-224`.
 
-**Adjudication deliverable (before any code):** a per-weapon canon table built from Assur's *"Which Weapons vs Which Armors?"* (bash-family sweet spot vs ASM; DA good vs APM/APA; most weapons struggle vs APA/APM; slash>bash>lunge), reality.com armor descriptions (ALE "surprisingly effective"; APL cushions smash, pierced/chopped easily; **ARM absorbs crushing blows but disadvantaged vs long thin blades**; ASM deflects slash, chinks to smash/pierce; ACM = ARM to greater degree; APM weak-spot attackers fare slightly worse, one weapon fares well; APA — lighter weapons + longspear bounce off, shell can be smashed), Jalopy DA-vs-ASM+ note, turnsheet light/medium/heavy weapon-vs-armor-weight guidance. Every matrix cell is either canon-cited or explicitly recorded `dtype-inherit` — nothing silently defaults.
+**Adjudication deliverable (before any code):** a per-weapon canon table built from Assur's _"Which Weapons vs Which Armors?"_ (bash-family sweet spot vs ASM; DA good vs APM/APA; most weapons struggle vs APA/APM; slash>bash>lunge), reality.com armor descriptions (ALE "surprisingly effective"; APL cushions smash, pierced/chopped easily; **ARM absorbs crushing blows but disadvantaged vs long thin blades**; ASM deflects slash, chinks to smash/pierce; ACM = ARM to greater degree; APM weak-spot attackers fare slightly worse, one weapon fares well; APA — lighter weapons + longspear bounce off, shell can be smashed), Jalopy DA-vs-ASM+ note, turnsheet light/medium/heavy weapon-vs-armor-weight guidance. Every matrix cell is either canon-cited or explicitly recorded `dtype-inherit` — nothing silently defaults.
 
 **Phase T (specs first, RED-verified):**
+
 - `src/test/engine/combat/mechanics/weaponArmorMatrix.test.ts` (new) — table-driven: each canon-cited cell returns its matrix value; `dtype-inherit` cells fall through to `ARMOR_TYPE_MULT`; missing dtype → 1.0; `none_armor`/missing weapon → identity.
 - `weaponArmor.canon.test.ts` — extend: dagger poor vs ASM/ACM preserved, ~baseline vs APM/APA (Aimed Blow bypass stays downstream — matrix never sees style); **ARM row corrected** (`bash < 1.0`, `pierce > 1.0` — current `{slash:0.9, pierce:0.9, bash:1.1}` is canon-inverted, verified).
 - Integration: `applyArmorTypeMod` exercised through all three call sites — hit damage (`hitExecution/damage.ts:117`), free riposte (`hitExecution/index.ts:47`), riposte (`riposteExecution.ts:50`).
 
 **Phase I (implement):**
+
 - New `src/constants/combat/combat/weaponArmorMatrix.ts` — `WEAPON_ARMOR_MATRIX: Record<weaponId, Record<armorId, number|'dtype-inherit'>>` keyed by canon ids, per-row citation comments; `applyArmorTypeMod` consults matrix → `ARMOR_TYPE_MULT[dtype]` → 1.0. Replace `WEAPON_ARMOR_OVERRIDES` (matrix subsumes it — dagger row becomes matrix cells).
 - Fix `ARMOR_TYPE_MULT.ARM` (canon-inverted bash/pierce).
 - **Boundary:** no `STYLE_PENALTIES`/`MATCHUP_MATRIX`/damage-scale/suitability/mortality edits (V22-D3's soak campaign stays separate).
@@ -123,6 +131,7 @@ Surface (verified): 20 damage-dtype weapons (`fist` is `bash`-dtype and in scope
 Grounded architecture (verified in `weekPipelineService.ts`, `stages.ts`, `finalize.ts`, `context.ts`, `enginePool.ts`, `shardContract.ts`): every week transition is deterministic pure boundary functions + `resolveImpacts`. Workers hold `syncedState` and consume **stage-granular sync messages** — required because the two shard passes read different mid-week state versions (bout shards: post-sweep `mutableState`; rival shards: `stateAfterCore`).
 
 **Sync protocol** (per worker, per week):
+
 1. `bootstrap(state)` — first sync sends the full state once (worker construction / after `invalidate`).
 2. `weekStart({headless})` — worker replays `sweepUnfinishedTournaments` (pure spread-based, seeded `year*10000+week*100+7+i*16` — verified `resolution/index.ts:205-247`), `flushGazette` when headed (`SeededRNG(week*977)` — verified `gazette.ts:26-28`), `buildWeekCaches` → post-sweep working state.
 3. Bout shards: wire `BoutShardContext` drops `state`/`warriorMap`/`moodMods` → worker derives all three (`getMoodModifiers(state.crowdMood)` — `crowdMood.ts:46`; `warriorMap` via `buildWeekCaches`).
@@ -136,6 +145,7 @@ Grounded architecture (verified in `weekPipelineService.ts`, `stages.ts`, `final
 **Simplifications:** drop `narrowRivalShardState` (`shardContract.ts:26-52`) — its whole purpose was wire-payload dieting; synced workers hold full state and the in-line path reads the same full state (equivalence already proven by `shardInputSize.test.ts`'s byte-identical-output spec — that's what makes dropping safe). Retire `shardInputSize.test.ts`, replacing its invariant with a synced-state equivalence spec. Update `pipeline-dependency-map.md` + `pipeline-parallelism.md`.
 
 **Phase T (specs first, RED-verified):**
+
 - `src/test/engine/pool/enginePool.test.ts` (new fast-tier) — fake `ShardWorkerApi` (mirroring `enginePool.slow.test.ts:30` + sync methods): bootstrap sends full state once; wire ctx omits `state` when synced, includes when not; message order weekStart→postCore→endWeek; fallback path unchanged for unsynced/in-line; `invalidate` forces re-bootstrap.
 - `src/test/engine/pool/syncedShardState.test.ts` (new) — worker replay on small fixture state: after each stage delta, worker's materialized state hash ≡ coordinator's state hash at the same boundary (the core sync-fidelity invariant).
 - `src/test/engine/pipeline/parallelDeterminism.slow.test.ts` — extend: synced pool 1 vs 4, 8 weeks, byte-identical final state + event stream (existing spec's contract, new mechanism).
@@ -154,11 +164,13 @@ Grounded architecture (verified in `weekPipelineService.ts`, `stages.ts`, `final
 Runs after WS3/WS4 — they re-roll streams; sweep once on the final tree. `probe-liveness-seed.ts` does NOT replicate spec env (opfsArchive shared mock + test-setup module env diverge the seeded trajectory — proven at V29 `f3636f927`). Process per spec:
 
 **worldLiveness competence-gradient** (`worldLiveness.integration.slow.test.ts:161-368`, seed 42 → gradient −463):
+
 - Temp probe spec(s) in `src/test/engine/sim/` mirroring env exactly: `vi.mock('@/engine/storage/opfsArchive', () => ({...__SHARED_MOCKS.opfsArchive}))`, `setMockIdGenerator(()=>'id_${++n}')`, `engineEventBus.clear()`, `runSimulation({weeks:104, seed, logFrequency:4, ignoreBankruptcy:true, onWeek: SERVICING-coherence counters})`.
 - Sweep ~10–15 seeds (~15–20 min each, sequential). Winner = **coherent-denominator** pass: medM>0 AND medN>0, gradient>1.3, masterN>10, noviceN>10, objWeeks>1000, coherence>0.12.
 - Update spec seed + append a V30 re-baseline comment block with the sweep table (matching the V23/V24/V26/V27/V29 block format at lines 174-343); delete temp specs; verify winner green in-spec.
 
 **worldBalance roster-fill** (`worldBalance.slow.test.ts:91`, fill 94.4% vs ≥95%):
+
 - Same env mirroring (opfsArchive mock + `wb_${++n}` ids + `engineEventBus.clear()`); 52-week runs per candidate.
 - Winner must hold ALL bands: fill≥0.95, floor≥`WORLD_RIVAL_FLOOR`, growth>floor, count variance>1, legacyFounders≥1, killRate∈[0.04,0.14], dark arenas≤2.
 - Prefer a new seed; a justified threshold re-baseline is acceptable ONLY with written reasoning recorded in the comment + backlog (94.4% = marginal single-roster miss inside noise — "do NOT loosen silently").
@@ -173,15 +185,15 @@ Update `docs/MEGAPLAN_BACKLOG.md`: move SP-boundary, SP-virt, V30×2, V24-F2, V2
 
 ## Verification matrix
 
-| WS | Phase-T specs | fast suite | typecheck/lint | slow suite | e2e | other |
-| --- | --- | --- | --- | --- | --- | --- |
-| WS1 | warriorRouting, handleReporting, gazette-contract | yes | yes | — | — | bout tests |
-| WS2 | StableRankings, RivalStableList | yes | yes | — | yes | bounded-render asserts |
-| WS3 | armor.canon, save-version pins | yes | yes | equip/combat | — | seeded parity probe |
-| WS4 | weaponArmorMatrix, canon ext, 3-path integration | yes | yes | combat/balance | — | balance-lab/style-probe deltas |
-| WS5 | enginePool sync, syncedShardState, parallelDeterminism ext | yes | yes | pool/determinism | — | parallel-bench.mjs ratio |
-| WS6 | (the sweeps are the work) | — | — | the 2 specs green | — | sweep tables recorded |
-| — | all | — | — | — | — | `bun scripts/test-audit-scan.mjs` regen for new spec files |
+| WS  | Phase-T specs                                              | fast suite | typecheck/lint | slow suite        | e2e | other                                                      |
+| --- | ---------------------------------------------------------- | ---------- | -------------- | ----------------- | --- | ---------------------------------------------------------- |
+| WS1 | warriorRouting, handleReporting, gazette-contract          | yes        | yes            | —                 | —   | bout tests                                                 |
+| WS2 | StableRankings, RivalStableList                            | yes        | yes            | —                 | yes | bounded-render asserts                                     |
+| WS3 | armor.canon, save-version pins                             | yes        | yes            | equip/combat      | —   | seeded parity probe                                        |
+| WS4 | weaponArmorMatrix, canon ext, 3-path integration           | yes        | yes            | combat/balance    | —   | balance-lab/style-probe deltas                             |
+| WS5 | enginePool sync, syncedShardState, parallelDeterminism ext | yes        | yes            | pool/determinism  | —   | parallel-bench.mjs ratio                                   |
+| WS6 | (the sweeps are the work)                                  | —          | —              | the 2 specs green | —   | sweep tables recorded                                      |
+| —   | all                                                        | —          | —              | —                 | —   | `bun scripts/test-audit-scan.mjs` regen for new spec files |
 
 ## Risks
 

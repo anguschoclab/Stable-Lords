@@ -62,13 +62,8 @@ export function nextCareerRecord(
  * FE before any tournament bouts are fought (tourneys accrue FE on odd
  * rounds only, while the career record still counts every bout).
  */
-export function fightEquivalentsOf(
-  warrior: Pick<Warrior, 'fightEquivalents' | 'career'>
-): number {
-  return (
-    warrior.fightEquivalents ??
-    (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0)
-  );
+export function fightEquivalentsOf(warrior: Pick<Warrior, 'fightEquivalents' | 'career'>): number {
+  return warrior.fightEquivalents ?? (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0);
 }
 
 /** Season-points race contribution for a bout result. */

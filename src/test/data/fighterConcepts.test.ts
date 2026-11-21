@@ -60,7 +60,9 @@ describe('FIGHTER_CONCEPTS — scaled spreads', () => {
         expect(sum(concept.stats), `${style}/${concept.name}`).toBe(ATTRIBUTE_TOTAL);
         for (const key of ATTRIBUTE_KEYS) {
           const v = concept.stats[key];
-          expect(Number.isInteger(v), `${style}/${concept.name} ${key}=${v} not integer`).toBe(true);
+          expect(Number.isInteger(v), `${style}/${concept.name} ${key}=${v} not integer`).toBe(
+            true
+          );
           expect(v).toBeGreaterThanOrEqual(ATTRIBUTE_MIN);
           expect(v).toBeLessThanOrEqual(ATTRIBUTE_MAX);
         }
@@ -128,10 +130,9 @@ describe('LU — Arena 93 lunger canon builds', () => {
   });
 
   const pin = (name: string, spread: Attributes) =>
-    expect(
-      luConcepts.find((c) => c.name === name)?.canonStats,
-      `${name} canonStats`
-    ).toEqual(spread);
+    expect(luConcepts.find((c) => c.name === name)?.canonStats, `${name} canonStats`).toEqual(
+      spread
+    );
 
   it("pins Snorri's first lunger — the even spread (13-12-12-12-12-12-11)", () =>
     pin('Even Spread', { ST: 13, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 11 }));
@@ -142,13 +143,13 @@ describe('LU — Arena 93 lunger canon builds', () => {
   it("pins Snorri's 60%-riposte gamble (9-15-8-15-13-11-13)", () =>
     pin('Riposte Gamble', { ST: 9, CN: 15, SZ: 8, WT: 15, WL: 13, SP: 11, DF: 13 }));
 
-  it("pins the Wild Boar perfect defensive lunger (13-7-4-21-17-5-17)", () =>
+  it('pins the Wild Boar perfect defensive lunger (13-7-4-21-17-5-17)', () =>
     pin("Boar's Perfect", { ST: 13, CN: 7, SZ: 4, WT: 21, WL: 17, SP: 5, DF: 17 }));
 
-  it("pins the Wild Boar graduate (13-11-6-17-19-5-13)", () =>
+  it('pins the Wild Boar graduate (13-11-6-17-19-5-13)', () =>
     pin("Boar's Graduate", { ST: 13, CN: 11, SZ: 6, WT: 17, WL: 19, SP: 5, DF: 13 }));
 
-  it("pins the synthesized Assur model — meets every standard (11-14-9-13-21-5-11)", () =>
+  it('pins the synthesized Assur model — meets every standard (11-14-9-13-21-5-11)', () =>
     pin("Assur's Model", { ST: 11, CN: 14, SZ: 9, WT: 13, WL: 21, SP: 5, DF: 11 }));
 
   it("pins Assur's 17-6 graduate — 'The Fantastic' (12-13-8-13-21-6-11)", () =>
@@ -204,10 +205,9 @@ describe('PL — Arena 93 parry-lunge canon builds', () => {
   });
 
   const pin = (name: string, spread: Attributes) =>
-    expect(
-      plConcepts.find((c) => c.name === name)?.canonStats,
-      `${name} canonStats`
-    ).toEqual(spread);
+    expect(plConcepts.find((c) => c.name === name)?.canonStats, `${name} canonStats`).toEqual(
+      spread
+    );
 
   it("pins the Armor-Piercer's perfect spread (11-5-8-21-17-5-17)", () =>
     pin('Armor-Piercer', { ST: 11, CN: 5, SZ: 8, WT: 21, WL: 17, SP: 5, DF: 17 }));
@@ -218,19 +218,19 @@ describe('PL — Arena 93 parry-lunge canon builds', () => {
   it("pins Tripwire's two-time TV strategy example (11-12-7-21-15-5-13)", () =>
     pin('Two-Time Televised', { ST: 11, CN: 12, SZ: 7, WT: 21, WL: 15, SP: 5, DF: 13 }));
 
-  it("pins the parry-favorite graduate (11-9-8-17-15-9-15)", () =>
+  it('pins the parry-favorite graduate (11-9-8-17-15-9-15)', () =>
     pin('Parry Adept', { ST: 11, CN: 9, SZ: 8, WT: 17, WL: 15, SP: 9, DF: 15 }));
 
-  it("pins the dodge-favorite graduate (9-13-10-21-15-5-11)", () =>
+  it('pins the dodge-favorite graduate (9-13-10-21-15-5-11)', () =>
     pin('Dodge Adept', { ST: 9, CN: 13, SZ: 10, WT: 21, WL: 15, SP: 5, DF: 11 }));
 
-  it("pins the will-engine graduate (7-11-13-17-21-4-11)", () =>
+  it('pins the will-engine graduate (7-11-13-17-21-4-11)', () =>
     pin('Endless Engine', { ST: 7, CN: 11, SZ: 13, WT: 17, WL: 21, SP: 4, DF: 11 }));
 
-  it("pins the low-effort longsword graduate (9-13-10-15-15-7-15)", () =>
+  it('pins the low-effort longsword graduate (9-13-10-15-15-7-15)', () =>
     pin('Low-Effort Razor', { ST: 9, CN: 13, SZ: 10, WT: 15, WL: 15, SP: 7, DF: 15 }));
 
-  it("pins the compact scimitar graduate (10-12-5-17-21-8-11)", () =>
+  it('pins the compact scimitar graduate (10-12-5-17-21-8-11)', () =>
     pin('Pocket Fencer', { ST: 10, CN: 12, SZ: 5, WT: 17, WL: 21, SP: 8, DF: 11 }));
 
   it("pins Assur's addendum outlier (21-12-7-17-9-7-11)", () =>
@@ -311,21 +311,20 @@ describe('PS — Arena 93 piker canon builds', () => {
   });
 
   const pin = (name: string, spread: Attributes) =>
-    expect(
-      psConcepts.find((c) => c.name === name)?.canonStats,
-      `${name} canonStats`
-    ).toEqual(spread);
+    expect(psConcepts.find((c) => c.name === name)?.canonStats, `${name} canonStats`).toEqual(
+      spread
+    );
 
   it("pins Assur's Tournament Champion (12-7-7-21-21-5-11)", () =>
     pin("Assur's Champion", { ST: 12, CN: 7, SZ: 7, WT: 21, WL: 21, SP: 5, DF: 11 }));
 
-  it("pins the unremarkable TV qualifier (17-12-4-21-7-12-11)", () =>
+  it('pins the unremarkable TV qualifier (17-12-4-21-7-12-11)', () =>
     pin('Quiet Qualifier', { ST: 17, CN: 12, SZ: 4, WT: 21, WL: 7, SP: 12, DF: 11 }));
 
-  it("pins the near-perfect mediocrity (15-5-10-21-17-5-11)", () =>
+  it('pins the near-perfect mediocrity (15-5-10-21-17-5-11)', () =>
     pin('The False Godling', { ST: 15, CN: 5, SZ: 10, WT: 21, WL: 17, SP: 5, DF: 11 }));
 
-  it("pins the eleven-wit scum piker (15-16-5-11-21-5-11)", () =>
+  it('pins the eleven-wit scum piker (15-16-5-11-21-5-11)', () =>
     pin('Eleven-Wit Scum', { ST: 15, CN: 16, SZ: 5, WT: 11, WL: 21, SP: 5, DF: 11 }));
 
   it("pins The Priest's offensive rollup (15-7-11-17-16-7-11)", () =>
@@ -334,19 +333,19 @@ describe('PS — Arena 93 piker canon builds', () => {
   it("pins The Priest's defensive rollup (11-7-10-17-17-7-15)", () =>
     pin("Priest's Guard", { ST: 11, CN: 7, SZ: 10, WT: 17, WL: 17, SP: 7, DF: 15 }));
 
-  it("pins the hit-points scum (17-18-17-3-16-6-7)", () =>
+  it('pins the hit-points scum (17-18-17-3-16-6-7)', () =>
     pin('Shell Piker', { ST: 17, CN: 18, SZ: 17, WT: 3, WL: 16, SP: 6, DF: 7 }));
 
-  it("pins the easy-design learner (10-13-12-21-9-6-13)", () =>
+  it('pins the easy-design learner (10-13-12-21-9-6-13)', () =>
     pin('Easy Design', { ST: 10, CN: 13, SZ: 12, WT: 21, WL: 9, SP: 6, DF: 13 }));
 
-  it("pins the hybrid burner (13-8-16-5-19-14-9)", () =>
+  it('pins the hybrid burner (13-8-16-5-19-14-9)', () =>
     pin('Burning Piker', { ST: 13, CN: 8, SZ: 16, WT: 5, WL: 19, SP: 14, DF: 9 }));
 
-  it("pins the wit burner (7-9-9-16-20-13-10)", () =>
+  it('pins the wit burner (7-9-9-16-20-13-10)', () =>
     pin('Wit Burn', { ST: 7, CN: 9, SZ: 9, WT: 16, WL: 20, SP: 13, DF: 10 }));
 
-  it("pins the attack-maxed piker (17-4-8-15-11-12-17)", () =>
+  it('pins the attack-maxed piker (17-4-8-15-11-12-17)', () =>
     pin('Attack Cutter', { ST: 17, CN: 4, SZ: 8, WT: 15, WL: 11, SP: 12, DF: 17 }));
 
   it('PS doctrine encodes the wit keystone and the LO/SC weapon staples', () => {
@@ -449,10 +448,9 @@ describe('ST — Arena 93 striker canon builds', () => {
   });
 
   const pin = (name: string, spread: Attributes) =>
-    expect(
-      stConcepts.find((c) => c.name === name)?.canonStats,
-      `${name} canonStats`
-    ).toEqual(spread);
+    expect(stConcepts.find((c) => c.name === name)?.canonStats, `${name} canonStats`).toEqual(
+      spread
+    );
 
   it("pins Assur's 21-wit godling (21-4-7-21-9-11-11)", () =>
     pin("Assur's Godling", { ST: 21, CN: 4, SZ: 7, WT: 21, WL: 9, SP: 11, DF: 11 }));

@@ -49,9 +49,7 @@ const isLosing = (w: Warrior): boolean =>
  * pass, a recovery, or a previous diagnosis owns their week).
  */
 export function applyTurnaroundDiagnosis(rival: RivalStableData): RivalStableData {
-  const assigned = new Set(
-    (rival.trainingAssignments ?? []).map((a) => a.warriorId as string)
-  );
+  const assigned = new Set((rival.trainingAssignments ?? []).map((a) => a.warriorId as string));
   const additions: TrainingAssignment[] = [];
 
   for (const w of rival.roster) {

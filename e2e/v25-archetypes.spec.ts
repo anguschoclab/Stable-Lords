@@ -41,9 +41,18 @@ test('style archives cards show archetype-fit chips', async ({ page, isMobile })
   const labels = ['Pure Offensive', 'Pure Defensive', 'Tank Hybrid', 'Riposting Hybrid'];
   let visible = 0;
   for (const label of labels) {
-    if (await page.getByText(label, { exact: true }).first().isVisible().catch(() => false)) {
+    if (
+      await page
+        .getByText(label, { exact: true })
+        .first()
+        .isVisible()
+        .catch(() => false)
+    ) {
       visible++;
     }
   }
-  expect(visible, 'expected ≥2 distinct archetype chips on the archives grid').toBeGreaterThanOrEqual(2);
+  expect(
+    visible,
+    'expected ≥2 distinct archetype chips on the archives grid'
+  ).toBeGreaterThanOrEqual(2);
 });

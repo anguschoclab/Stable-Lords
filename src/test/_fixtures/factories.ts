@@ -895,4 +895,3 @@ export const makeIronWolvesRival = (): RivalStableData =>
 export function makeOutcome(over: Partial<FightOutcome> = {}): FightOutcome {
   return { winner: 'A', by: 'KO', minutes: 5, log: [], ...over };
 }
-

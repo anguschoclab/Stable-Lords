@@ -66,8 +66,7 @@ function useGrudgeLanes(entry: TournamentEntry): {
       .filter((o) => o.grudgeOfTournamentId === entry.id && o.status === 'Proposed')
       .flatMap((o) => o.warriorIds)
   );
-  const nameOf = (id: string) =>
-    entry.participants.find((p) => p.id === id)?.name ?? 'Unknown';
+  const nameOf = (id: string) => entry.participants.find((p) => p.id === id)?.name ?? 'Unknown';
   const callouts: CalloutPair[] = [];
   const hunts: HuntPair[] = [];
   for (const b of entry.bracket) {
@@ -111,13 +110,7 @@ function useGrudgeLanes(entry: TournamentEntry): {
 }
 
 /** Grudge call-out + stablemate-hunt affordances on a completed class bracket. */
-function CalloutSection({
-  callouts,
-  hunts,
-}: {
-  callouts: CalloutPair[];
-  hunts: HuntPair[];
-}) {
+function CalloutSection({ callouts, hunts }: { callouts: CalloutPair[]; hunts: HuntPair[] }) {
   if (callouts.length === 0 && hunts.length === 0) return null;
   return (
     <div className="pt-2 border-t border-white/5 space-y-1.5">
@@ -147,7 +140,8 @@ function CalloutSection({
           className="flex items-center justify-between gap-2 text-[10px] py-1.5 px-2 bg-arena-gold/[0.04] border-l-2 border-arena-gold/40"
         >
           <span className="text-foreground/80 truncate">
-            {h.victimName} <span className="text-muted-foreground/50">felled by</span> {h.killerName}
+            {h.victimName} <span className="text-muted-foreground/50">felled by</span>{' '}
+            {h.killerName}
           </span>
           <span className="flex items-center gap-1 shrink-0">
             {h.hunters.map((hh) => (

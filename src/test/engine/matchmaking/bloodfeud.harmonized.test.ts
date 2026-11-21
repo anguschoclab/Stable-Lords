@@ -16,17 +16,10 @@
  * Live since Phase 5 — owed-stable schema + consumers.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  bloodfeudMarksFromOutcome,
-  BLOODFEUD_TURNS,
-} from '@/engine/matchmaking/bloodfeud';
+import { bloodfeudMarksFromOutcome, BLOODFEUD_TURNS } from '@/engine/matchmaking/bloodfeud';
 import { findBestOpponent } from '@/engine/promoters/offerMatchmaking';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
-import {
-  makeGameState,
-  makeRival,
-  makeStrategy,
-} from '@/test/_fixtures/factories';
+import { makeGameState, makeRival, makeStrategy } from '@/test/_fixtures/factories';
 import type { StableId } from '@/types/shared.types';
 import { w, opponentCtx as ctx } from './_helpers';
 

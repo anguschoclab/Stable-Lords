@@ -11,7 +11,13 @@ import {
 } from '@/engine/recruitment/recruitment';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { SeededRNG } from '@/utils/random';
-import { makeWarrior, makePoolWarrior, makeGameState, makeRival , VETERAN_60 } from '@/test/_fixtures/factories';
+import {
+  makeWarrior,
+  makePoolWarrior,
+  makeGameState,
+  makeRival,
+  VETERAN_60,
+} from '@/test/_fixtures/factories';
 import { FREE_AGENT_SHELF_WEEKS } from '@/constants/world';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { StableId } from '@/types/shared.types';

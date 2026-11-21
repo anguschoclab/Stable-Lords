@@ -10,10 +10,7 @@ import type { FighterState } from '@/engine/combat/resolution/types';
 import { FightingStyle } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import { SeededRNG } from '@/utils/random';
-import {
-  setupExchange,
-  callResolveCombatOffenseDefense,
-} from '@/test/_fixtures/exchangeSetup';
+import { setupExchange, callResolveCombatOffenseDefense } from '@/test/_fixtures/exchangeSetup';
 
 function defenderPlan(
   style: FightingStyle,
@@ -60,11 +57,7 @@ const countRipostes = (events: CombatEvent[]) =>
   events.filter((e) => e.type === 'DEFENSE' && e.result === 'RIPOSTE').length;
 
 /** Total riposte events across a seeded sample of exchanges. */
-function sampleRipostes(
-  defenderStyle: FightingStyle,
-  kd: number,
-  openingKd?: number
-): number {
+function sampleRipostes(defenderStyle: FightingStyle, kd: number, openingKd?: number): number {
   const plan = defenderPlan(defenderStyle, kd, openingKd);
   let n = 0;
   for (let seed = 1; seed <= 100; seed++) {

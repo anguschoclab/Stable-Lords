@@ -50,7 +50,7 @@ describe('WINNING_ARCHETYPES — taxonomy', () => {
     }
   });
 
-  it('armor guidance respects each recommended style\'s restrictedStyles', () => {
+  it("armor guidance respects each recommended style's restrictedStyles", () => {
     // Canon "APA/F is the norm" only applies where the armor is legal —
     // AB/LU/SL can never wear plate_armor, AB/LU never plate_mail.
     for (const a of ALL) {

@@ -220,17 +220,19 @@ export function FavoritesCharting({ warriors }: FavoritesChartingProps) {
         />
       )}
 
-      {chart.weaponDiscovered === 0 && chart.rhythmDiscovered === 0 && chart.tacticDiscovered === 0 && (
-        <Surface
-          variant="glass"
-          className="p-6 text-center border-dashed border-white/10 flex items-center justify-center gap-3"
-        >
-          <Eye className={cn('h-4 w-4 text-muted-foreground/30')} />
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
-            No favorites discovered yet — spend insight on the warrior dossier
-          </span>
-        </Surface>
-      )}
+      {chart.weaponDiscovered === 0 &&
+        chart.rhythmDiscovered === 0 &&
+        chart.tacticDiscovered === 0 && (
+          <Surface
+            variant="glass"
+            className="p-6 text-center border-dashed border-white/10 flex items-center justify-center gap-3"
+          >
+            <Eye className={cn('h-4 w-4 text-muted-foreground/30')} />
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
+              No favorites discovered yet — spend insight on the warrior dossier
+            </span>
+          </Surface>
+        )}
     </div>
   );
 }

@@ -61,9 +61,7 @@ describe('entityIndex — corpus coverage', () => {
 
   it('indexes player and rival stables', () => {
     const s = makeState({
-      rivals: [
-        makeIronWolvesRival(),
-      ],
+      rivals: [makeIronWolvesRival()],
     });
     const index = ensureEntityIndex(s as never);
     expect(index.stableIdByName.get('Iron Wolves')).toBe('r1');

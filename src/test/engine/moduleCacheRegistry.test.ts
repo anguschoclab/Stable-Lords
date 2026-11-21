@@ -5,7 +5,6 @@ import { walkTsFiles as walk } from '@/test/_helpers/fsWalk';
 
 const ENGINE_ROOT = join(__dirname, '../../engine');
 
-
 /**
  * Engine module-level mutable registry (D2/T12).
  *

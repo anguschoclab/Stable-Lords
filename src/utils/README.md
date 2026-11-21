@@ -137,8 +137,8 @@ HTML escaping utility.
 Entity-name sanitization for user-controlled names (warriors, stables, owners)
 at every input boundary, preventing markdown/HTML injection into the gazette.
 
-| Export               | Signature         | Purpose                                                       |
-| -------------------- | ----------------- | ------------------------------------------------------------- |
+| Export               | Signature         | Purpose                                                                  |
+| -------------------- | ----------------- | ------------------------------------------------------------------------ |
 | `sanitizeEntityName` | `(raw) => string` | Allowlist-strip to letters/digits/`'`-.,`, cap 40 chars; `''` when empty |
 
 ## Usage Guidelines

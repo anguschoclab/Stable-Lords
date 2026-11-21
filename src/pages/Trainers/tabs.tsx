@@ -107,8 +107,7 @@ export function CurrentStaffTab({
                   if (t.contractWeeksLeft > 0) {
                     bonusByFocus.set(
                       t.focus,
-                      (bonusByFocus.get(t.focus) ?? 0) +
-                        (TIER_BONUS[t.tier as TrainerTier] ?? 1)
+                      (bonusByFocus.get(t.focus) ?? 0) + (TIER_BONUS[t.tier as TrainerTier] ?? 1)
                     );
                   }
                 }

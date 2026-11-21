@@ -25,8 +25,7 @@ export function buildPhasePlan(
   style: FightingStyle,
   fights?: number
 ): FightPlan['phases'] {
-  const youngWall =
-    style === FightingStyle.WallOfSteel && fights !== undefined && fights < 10;
+  const youngWall = style === FightingStyle.WallOfSteel && fights !== undefined && fights < 10;
   const isDefensive =
     !youngWall &&
     (style === FightingStyle.TotalParry ||

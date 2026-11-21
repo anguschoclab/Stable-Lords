@@ -37,9 +37,7 @@ function CombatantCard({
   return (
     <div className={`p-4 border rounded-none ${borderColor} ${bgColor}`}>
       <div className="space-y-3">
-        <div
-          className={`text-[9px] font-black uppercase tracking-widest mb-3 opacity-60 ${color}`}
-        >
+        <div className={`text-[9px] font-black uppercase tracking-widest mb-3 opacity-60 ${color}`}>
           Top Warrior
         </div>
 

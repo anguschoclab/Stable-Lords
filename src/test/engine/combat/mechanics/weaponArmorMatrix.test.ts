@@ -30,9 +30,7 @@ describe('WEAPON_ARMOR_MATRIX structure', () => {
       expect(typeof weaponId).toBe('string');
       for (const [armorId, cell] of Object.entries(row)) {
         expect(armorId).toMatch(/^(none_armor|ALE|APL|ARM|ASM|ACM|APM|APA)$/);
-        expect(
-          typeof cell === 'number' ? cell > 0 : cell === 'dtype-inherit'
-        ).toBe(true);
+        expect(typeof cell === 'number' ? cell > 0 : cell === 'dtype-inherit').toBe(true);
       }
     }
   });

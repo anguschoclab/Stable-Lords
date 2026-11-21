@@ -17,13 +17,13 @@ All session plans and MEGAPLAN drafts live **in the repo** at `.devin/plans/`.
 
 `docs/` is organized into fixed families:
 
-| Dir | Contents |
-| --- | --- |
-| `docs/design/` | Canon specs (`stable-lords-*`) + UI-design docs — the in-game Help bible corpus (`bibleIndex.ts` globs only this dir) |
-| `docs/engineering/` | Testing, RNG policy, pipeline, setup references + live audits |
-| `docs/reports/` | Generated committed reports (daily sim, daily bard, orphan scan) |
-| `docs/manual/` | Player-facing manual + images |
-| `docs/archive/` | Frozen history — `megaplans/`, `audits/`, `summaries/`, `superpowers/` |
+| Dir                 | Contents                                                                                                              |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `docs/design/`      | Canon specs (`stable-lords-*`) + UI-design docs — the in-game Help bible corpus (`bibleIndex.ts` globs only this dir) |
+| `docs/engineering/` | Testing, RNG policy, pipeline, setup references + live audits                                                         |
+| `docs/reports/`     | Generated committed reports (daily sim, daily bard, orphan scan)                                                      |
+| `docs/manual/`      | Player-facing manual + images                                                                                         |
+| `docs/archive/`     | Frozen history — `megaplans/`, `audits/`, `summaries/`, `superpowers/`                                                |
 
 - `docs/` root carries only `INDEX.md` + megaplan protocol files (below).
 - Repo root carries only `README.md` + `AGENTS.md` — no other `.md` files.

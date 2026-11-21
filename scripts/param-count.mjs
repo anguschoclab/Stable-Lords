@@ -22,8 +22,6 @@ const OUT_FILE = 'megaplan-params.json';
 
 export const PARAM_LIMIT = 5;
 
-
-
 /** Resolve a readable name: identifier, owning variable declaration, or nearest call wrapper (memo/forwardRef). */
 function fnName(node) {
   if (node.name) return node.name.getText();

@@ -37,8 +37,10 @@ export function fakeSyncedShardWorker(): SyncedShardWorkerApi {
       runRivalShardChunk(structuredClone(inputs), structuredClone(ctx)),
     runBoutShardChunk: async (inputs, ctx) =>
       runBoutShardChunk(structuredClone(inputs), structuredClone(ctx)),
-    advanceShardTo: async (stage: 'weekStart' | 'postCore' | 'weekResult', payload: ShardAdvancePayload) =>
-      advanceShardTo(store, stage, structuredClone(payload)),
+    advanceShardTo: async (
+      stage: 'weekStart' | 'postCore' | 'weekResult',
+      payload: ShardAdvancePayload
+    ) => advanceShardTo(store, stage, structuredClone(payload)),
     forceShardState: async (state: GameState, stage: ShardSyncStage) =>
       forceShardState(store, structuredClone(state), stage),
     runSyncedBoutShardChunk: async (inputs, opts) =>

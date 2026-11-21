@@ -4,7 +4,12 @@ import { useGameStore } from '@/state/useGameStore';
 import { ShieldCheck } from 'lucide-react';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { EmptyPrepState, EntryDeskSection, PrepNotice, TierSection } from './tournamentPrep/sections';
+import {
+  EmptyPrepState,
+  EntryDeskSection,
+  PrepNotice,
+  TierSection,
+} from './tournamentPrep/sections';
 
 /** Entrant/your-warrior stat pair for the page header. */
 function PrepHeaderStats({
@@ -88,9 +93,7 @@ export default function TournamentPrep() {
       pendingTournaments.reduce(
         (acc, t) => {
           acc.totalEntrants += t.participants.length;
-          acc.yourEntrantCount += t.participants.filter(
-            (w) => w.stableId === player?.id
-          ).length;
+          acc.yourEntrantCount += t.participants.filter((w) => w.stableId === player?.id).length;
           return acc;
         },
         { totalEntrants: 0, yourEntrantCount: 0 }
@@ -163,7 +166,9 @@ function PrepBody({
       )}
 
       {pendingTournaments.length === 0 ? (
-        open ? null : <EmptyPrepState />
+        open ? null : (
+          <EmptyPrepState />
+        )
       ) : (
         <div className="space-y-12">
           <PrepNotice />

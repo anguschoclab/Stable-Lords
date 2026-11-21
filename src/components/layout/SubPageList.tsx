@@ -124,7 +124,12 @@ export function SubPageList(props: SubPageListProps) {
                 currentPath={currentPath}
                 isFirstInSection={startsSection}
                 LinkComponent={LinkComponent}
-                appearance={{ pageLinkClassName, iconClassName, useMotionIndicator, animationDuration }}
+                appearance={{
+                  pageLinkClassName,
+                  iconClassName,
+                  useMotionIndicator,
+                  animationDuration,
+                }}
               />
             );
           })}

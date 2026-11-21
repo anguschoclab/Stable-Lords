@@ -59,7 +59,7 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
   [FightingStyle.ParryLunge]: {
     archetype: 'The Fencer',
     description:
-      'The parry-lunge is the arena\'s quietest attack god — a versatile duelist who guards behind dodge or parry, then answers with a pinpoint thrust. The best-built ones open defensively to waste an opponent\'s first charge, then hunt the head until the job is done. Fragile frames are common: the deadliest versions are built on wit and deftness, not constitution, and they live their early careers one bad exchange from the infirmary.',
+      "The parry-lunge is the arena's quietest attack god — a versatile duelist who guards behind dodge or parry, then answers with a pinpoint thrust. The best-built ones open defensively to waste an opponent's first charge, then hunt the head until the job is done. Fragile frames are common: the deadliest versions are built on wit and deftness, not constitution, and they live their early careers one bad exchange from the infirmary.",
     hallmarks: [
       'Guard-then-thrust exchanges',
       'Precision attacks aimed at the head',
@@ -68,7 +68,7 @@ export const STYLE_COMPENDIUM: Record<FightingStyle, StyleCompendiumEntry> = {
       'Demanding to manage — rewards close attention',
     ],
     counterplay:
-      'Overwhelm the opening. Bashers and lungers who land early never let the fencer\'s counterattack form — a fragile frame cannot trade blows. Defensive styles starve it differently: outlast the thrust, and the fencer\'s thin endurance burns itself out.',
+      "Overwhelm the opening. Bashers and lungers who land early never let the fencer's counterattack form — a fragile frame cannot trade blows. Defensive styles starve it differently: outlast the thrust, and the fencer's thin endurance burns itself out.",
   },
   [FightingStyle.ParryRiposte]: {
     archetype: 'The Duelist',

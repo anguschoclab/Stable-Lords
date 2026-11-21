@@ -32,9 +32,7 @@ describe('validateLoadout — three legal states', () => {
 
 describe('validateLoadout — illegal combinations', () => {
   it('off-hand + shield is rejected with DUAL_WITH_SHIELD', () => {
-    const issues = validateLoadout(
-      legal({ offhand: 'dagger', shield: 'medium_shield' })
-    );
+    const issues = validateLoadout(legal({ offhand: 'dagger', shield: 'medium_shield' }));
     expect(issues.some((i) => i.code === 'DUAL_WITH_SHIELD')).toBe(true);
   });
 

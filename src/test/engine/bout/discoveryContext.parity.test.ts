@@ -22,8 +22,7 @@ const midRng: IRNGService = {
   pick: <T>(arr: T[]): T => arr[0] as T,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
-  rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K =>
-    Object.keys(wts)[0] as K,
+  rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K => Object.keys(wts)[0] as K,
   chance: () => false,
 };
 

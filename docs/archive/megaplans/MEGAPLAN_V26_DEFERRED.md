@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD001 MD024 MD025 MD033 MD060 -->
+
 # MEGAPLAN V26 DEFERRED — Intentionally Punted Work
 
 Items discovered during the parity implementation that are real but out of
@@ -18,7 +19,7 @@ follow-up UI task. The e2e smoke tier passes without it.
 — `newSeason === state.season` is always true, so the function early-returns
 `{}` every week. Tier promotion/demotion (Minor→Established→Major rules) never
 fires. Also: its `resolveRng(rng, hashStr(createdAt) + week)` fallback would seed
-from wall-clock `meta.createdAt` if it ever *did* fire without an rng — the only
+from wall-clock `meta.createdAt` if it ever _did_ fire without an rng — the only
 wall-clock reader in the pipeline. Either wire `computeNextSeason(nextWeek)` as
 `newSeason` or remove the call + function.
 

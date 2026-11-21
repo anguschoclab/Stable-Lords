@@ -21,29 +21,22 @@ import { OFFSEASON_EFFECT_TYPES } from '@/engine/pipeline/offseasonEvents';
  * of bug fails loudly here instead of shipping silently.
  */
 
-const offseasonEvents = offseasonData.offseason_events as Record<
-  string,
-  { effectType?: string }
->;
+const offseasonEvents = offseasonData.offseason_events as Record<string, { effectType?: string }>;
 
 describe('offseason event wiring parity (live guard)', () => {
   it('every offseason_events JSON effectType resolves to a registered handler', () => {
     const missing = Object.entries(offseasonEvents)
       .filter(([, e]) => !(e.effectType && e.effectType in EVENT_HANDLERS))
       .map(([key]) => key);
-    expect(
-      missing,
-      `offseason JSON events with no handler: ${missing.join(', ')}`
-    ).toEqual([]);
+    expect(missing, `offseason JSON events with no handler: ${missing.join(', ')}`).toEqual([]);
   });
 
   it('every EVENT_HANDLERS key is reachable by at least one offseason event', () => {
     const used = new Set(Object.values(offseasonEvents).map((e) => e.effectType));
     const dead = Object.keys(EVENT_HANDLERS).filter((k) => !used.has(k));
-    expect(
-      dead,
-      `registered handlers unreachable from the JSON pool: ${dead.join(', ')}`
-    ).toEqual([]);
+    expect(dead, `registered handlers unreachable from the JSON pool: ${dead.join(', ')}`).toEqual(
+      []
+    );
   });
 
   it('every offseason JSON entry carries a non-empty effectType string', () => {
@@ -105,9 +98,10 @@ describe('MEGAPLAN-V3: chaos_squall_exposure offseason event (PR #1066)', () => 
   });
 
   it('handleChaosSquallExposure grants +30 xp and +15 fatigue to an active warrior (MEGAPLAN-V3)', async () => {
-    const { handleChaosSquallExposure } = (await import(
-      '@/engine/pipeline/offseasonEvents'
-    )) as unknown as { handleChaosSquallExposure: (run: unknown) => void };
+    const { handleChaosSquallExposure } =
+      (await import('@/engine/pipeline/offseasonEvents')) as unknown as {
+        handleChaosSquallExposure: (run: unknown) => void;
+      };
     const ctx = {
       rosterUpdates: new Map(),
       newsletterItems: [],
@@ -135,7 +129,11 @@ describe('MEGAPLAN-V3: chaos_squall_exposure offseason event (PR #1066)', () => 
     handleChaosSquallExposure({
       state: { roster: [warrior] },
       nextWeek: 1,
-      e: { title: 'Caught in a Chaos Squall', effectType: 'chaos_squall_exposure', newsletter: ['n'] },
+      e: {
+        title: 'Caught in a Chaos Squall',
+        effectType: 'chaos_squall_exposure',
+        newsletter: ['n'],
+      },
       rng,
       ctx,
     });

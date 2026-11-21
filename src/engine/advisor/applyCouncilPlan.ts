@@ -99,7 +99,10 @@ export function applyCouncilPlan(state: GameState, report: StableCouncilReport):
   // originals keep their order followed by overrides in payload order.
   // Nothing in the payload loop reads trainingAssignments, so deferring the
   // write until after it preserves semantics across resolveImpacts swaps.
-  const overrides = new Map<string, (typeof report.summary.allActionPayloads)[number]['trainingAssignment']>();
+  const overrides = new Map<
+    string,
+    (typeof report.summary.allActionPayloads)[number]['trainingAssignment']
+  >();
   for (const payload of report.summary.allActionPayloads) {
     // delete+set keeps last-payload position, matching sequential re-push.
     overrides.delete(payload.warriorId);
@@ -112,9 +115,7 @@ export function applyCouncilPlan(state: GameState, report: StableCouncilReport):
   }
 
   const kept = (state.trainingAssignments ?? []).filter((a) => !overrides.has(a.warriorId));
-  const applied = [...overrides.values()].filter(
-    (a): a is NonNullable<typeof a> => a != null
-  );
+  const applied = [...overrides.values()].filter((a): a is NonNullable<typeof a> => a != null);
   if (kept.length > 0 || applied.length > 0 || state.trainingAssignments !== undefined) {
     state.trainingAssignments = [...kept, ...applied];
   }

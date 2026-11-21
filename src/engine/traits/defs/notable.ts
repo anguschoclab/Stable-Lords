@@ -50,7 +50,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   orphan_shadow_fury: {
     id: 'orphan_shadow_fury',
     name: 'Shadow Fury',
-    description: 'Bred in the dark alleys, their anger boils over unpredictably when they strike from unseen angles.',
+    description:
+      'Bred in the dark alleys, their anger boils over unpredictably when they strike from unseen angles.',
     effect: { attModLate: 1, dmgBonus: 1 },
     tier: 'Notable',
     sign: 'positive',
@@ -731,7 +732,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   dark_survivor: {
     id: 'dark_survivor',
     name: 'Dark Survivor',
-    description: 'Adapted to total darkness, making them uncannily evasive in the opening moments of combat.',
+    description:
+      'Adapted to total darkness, making them uncannily evasive in the opening moments of combat.',
     effect: { defModEarly: 2, iniModEarly: 1, fightPlanMod: { AL: 2 } },
     weight: 0.5,
     synergy: ['cunning', 'agile'],
@@ -742,7 +744,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   gutter_brawler: {
     id: 'gutter_brawler',
     name: 'Gutter Brawler',
-    description: 'Raised on back-alley skirmishes, striking with ruthless efficiency when unarmed or desperate.',
+    description:
+      'Raised on back-alley skirmishes, striking with ruthless efficiency when unarmed or desperate.',
     effect: { unarmedDmgBonus: 2, attModLowHp: 1, fightPlanMod: { killDesire: 1 } },
     weight: 0.5,
     synergy: ['brutal'],
@@ -753,7 +756,8 @@ export const NOTABLE_TRAITS: Record<string, TraitDef> = {
   street_specter: {
     id: 'street_specter',
     name: 'Street Specter',
-    description: 'A ghost in the slums. Master at vanishing and striking when the opponent drops their guard.',
+    description:
+      'A ghost in the slums. Master at vanishing and striking when the opponent drops their guard.',
     effect: { killWindowBonus: 0.01, decMod: 1, fightPlanMod: { feintTendency: 2 } },
     weight: 0.5,
     synergy: ['agile', 'cunning'],

@@ -233,9 +233,7 @@ export function assessCrownOpportunity(
       const rank = ctx.rankByArena.get(arenaId)?.get(w.id);
       const rankBonus = rank != null && rank >= 0 ? (rank === 0 ? 2 : rank <= 2 ? 1 : 0) : 0;
 
-      const champion = title.champion
-        ? ctx.warriorById.get(title.champion.warriorId)
-        : undefined;
+      const champion = title.champion ? ctx.warriorById.get(title.champion.warriorId) : undefined;
       const { score, reason } = scoreThrone(w, arenaId, title, {
         eligible,
         rankBonus,

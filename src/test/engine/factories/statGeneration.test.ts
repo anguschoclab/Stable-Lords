@@ -16,9 +16,7 @@ const JITTER = 3;
 function nearestConceptDistance(style: FightingStyle, attrs: Attributes): number {
   const concepts = FIGHTER_CONCEPTS[style].concepts;
   return Math.min(
-    ...concepts.map((c) =>
-      Math.max(...ATTRIBUTE_KEYS.map((k) => Math.abs(attrs[k] - c.stats[k])))
-    )
+    ...concepts.map((c) => Math.max(...ATTRIBUTE_KEYS.map((k) => Math.abs(attrs[k] - c.stats[k]))))
   );
 }
 

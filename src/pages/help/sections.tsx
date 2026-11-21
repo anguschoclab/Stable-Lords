@@ -95,8 +95,8 @@ export function FightingStylesSection() {
           </li>
           <li>
             <strong>Striker (ST)</strong> — The pure offensive: wins on the first blow or not at
-            all. Lives on decisiveness and initiative, hunts other offensives and out-endures
-            scum. Walls and rippers that weather the opener are its nightmare.
+            all. Lives on decisiveness and initiative, hunts other offensives and out-endures scum.
+            Walls and rippers that weather the opener are its nightmare.
           </li>
           <li>
             <strong>Slasher (SL)</strong> — Speed-dependent blade work. High ATT and INI, weak
@@ -116,8 +116,8 @@ export function FightingStylesSection() {
           </li>
           <li>
             <strong>Parry-Striker (PS)</strong> — The hardest style to win with and the most
-            flexible. Fights above its skill sheet, conserves endurance, pivots between offense
-            and defense. Needs WT and DF.
+            flexible. Fights above its skill sheet, conserves endurance, pivots between offense and
+            defense. Needs WT and DF.
           </li>
           <li>
             <strong>Total-Parry (TP)</strong> — Ultimate defense. Highest PAR and DEF seeds. Wins by
@@ -148,17 +148,14 @@ export function FighterConceptsSection() {
       <AccordionContent className="space-y-2 text-sm text-muted-foreground">
         <p>
           The Arena 93 archives record canonical long-term builds for every style — proven stat
-          spreads paired with the tactics that suit them. They are concepts, not requirements:
-          there is no perfect warrior, and challenges plus scouting matter more than the exact
-          numbers.
+          spreads paired with the tactics that suit them. They are concepts, not requirements: there
+          is no perfect warrior, and challenges plus scouting matter more than the exact numbers.
         </p>
         <ul className="list-disc list-inside space-y-1">
           <li>
-            <strong>Concept builds</strong> — Each style has named builds (e.g., the
-            Total-Parry "Ghost", the Basher "Workhorse", a dozen canonical rippers,
-            nine canonical slashers, eleven canonical parry-lungers, fifteen
-            canonical lungers) tuned for
-            long-term growth.
+            <strong>Concept builds</strong> — Each style has named builds (e.g., the Total-Parry
+            "Ghost", the Basher "Workhorse", a dozen canonical rippers, nine canonical slashers,
+            eleven canonical parry-lungers, fifteen canonical lungers) tuned for long-term growth.
           </li>
           <li>
             <strong>Presets</strong> — Apply a concept directly in the Warrior Builder's Fighter
@@ -184,42 +181,36 @@ export function FighterConceptsSection() {
 export function WinningTypesSection() {
   return (
     <AccordionItem value="archetypes">
-      <AccordionTrigger className="font-display text-lg">
-        Winning Warrior Types
-      </AccordionTrigger>
+      <AccordionTrigger className="font-display text-lg">Winning Warrior Types</AccordionTrigger>
       <AccordionContent className="space-y-2 text-sm text-muted-foreground">
         <p>
-          Style decides how a warrior fights; the winning archetype decides how the
-          build wins. Assur's Arena-93 guides sort every graduate into three
-          families:
+          Style decides how a warrior fights; the winning archetype decides how the build wins.
+          Assur's Arena-93 guides sort every graduate into three families:
         </p>
         <ul className="list-disc list-inside space-y-1.5">
           <li>
-            <strong>Pure Offensive</strong> — win by attacking. ST/WT/DF carry the
-            build; armor stays light because the fight should end in minute one.
-            OE 7-10, AL 7-10. Wit 11 is the bare minimum — below it the build
-            cannot learn its way out of a bad matchup.
+            <strong>Pure Offensive</strong> — win by attacking. ST/WT/DF carry the build; armor
+            stays light because the fight should end in minute one. OE 7-10, AL 7-10. Wit 11 is the
+            bare minimum — below it the build cannot learn its way out of a bad matchup.
           </li>
           <li>
-            <strong>Pure Defensive</strong> — win by refusing to lose. CN and WL do
-            the work; the heaviest plate the frame can carry (APA/F is the norm)
-            outlasts the opponent's endurance. OE/AL conservative, KD low.
+            <strong>Pure Defensive</strong> — win by refusing to lose. CN and WL do the work; the
+            heaviest plate the frame can carry (APA/F is the norm) outlasts the opponent's
+            endurance. OE/AL conservative, KD low.
           </li>
           <li>
-            <strong>Hybrids</strong> — win by fighting both sides of the exchange:
-            the <strong>Tank Hybrid</strong> (heavy frame + plate + OE 5+), the
-            <strong> Low-Will Tank</strong> (the addendum — WL spent on frame and
-            a real SP+DF riposte base), the <strong>High-Skill Hybrid</strong>
+            <strong>Hybrids</strong> — win by fighting both sides of the exchange: the{' '}
+            <strong>Tank Hybrid</strong> (heavy frame + plate + OE 5+), the
+            <strong> Low-Will Tank</strong> (the addendum — WL spent on frame and a real SP+DF
+            riposte base), the <strong>High-Skill Hybrid</strong>
             (WT/DF builds that out-fight rather than out-last), and the
-            <strong> Riposting Hybrid</strong> (parry and counter — beware the
-            SP 10-12 dead band).
+            <strong> Riposting Hybrid</strong> (parry and counter — beware the SP 10-12 dead band).
           </li>
         </ul>
         <p>
-          The Design Review classifies any build against all six archetypes, and
-          the Style Archives show which archetypes each style can express — the
-          lunger's four-way fit is why the archives call it the ultimate hybrid
-          chassis.
+          The Design Review classifies any build against all six archetypes, and the Style Archives
+          show which archetypes each style can express — the lunger's four-way fit is why the
+          archives call it the ultimate hybrid chassis.
         </p>
         <ContextLinks
           links={[
@@ -239,38 +230,34 @@ export function WarriorDesignSection() {
       <AccordionTrigger className="font-display text-lg">Designing a Warrior</AccordionTrigger>
       <AccordionContent className="space-y-2 text-sm text-muted-foreground">
         <p>
-          The Arena 93 archives record five design axes every manager weighs at
-          once — there is no perfect warrior, but these rules keep the other
-          99% alive:
+          The Arena 93 archives record five design axes every manager weighs at once — there is no
+          perfect warrior, but these rules keep the other 99% alive:
         </p>
         <ul className="list-disc list-inside space-y-1.5">
           <li>
-            <strong>Fighting style</strong> — Offensive styles (LU, SL, ST, AB, BA) key on
-            will and strength; defensive styles (TP, PR, PS) key on will and
-            constitution; mixed styles (WS, PL) key on will plus balanced
-            skill cut-offs.
+            <strong>Fighting style</strong> — Offensive styles (LU, SL, ST, AB, BA) key on will and
+            strength; defensive styles (TP, PR, PS) key on will and constitution; mixed styles (WS,
+            PL) key on will plus balanced skill cut-offs.
           </li>
           <li>
-            <strong>Physical capabilities</strong> — Endurance, damage, and the ability
-            to take a hit. At least one should reach the "good" level or above;
-            the more the better. Trading strength for deftness usually buys
-            more damage than the lost skills are worth.
+            <strong>Physical capabilities</strong> — Endurance, damage, and the ability to take a
+            hit. At least one should reach the "good" level or above; the more the better. Trading
+            strength for deftness usually buys more damage than the lost skills are worth.
           </li>
           <li>
-            <strong>Weapon suitability</strong> — Be well-suited to several weapons of
-            your style, and no more than a couple stat trains away from more.
-            It lets you change up and surprise your foes.
+            <strong>Weapon suitability</strong> — Be well-suited to several weapons of your style,
+            and no more than a couple stat trains away from more. It lets you change up and surprise
+            your foes.
           </li>
           <li>
-            <strong>Trainability</strong> — Leave a stat a couple points below a skill
-            breakpoint (deftness at 9 is the classic) and train it once your
-            skills are learned. Trains past 21 yield quick, significant skills.
+            <strong>Trainability</strong> — Leave a stat a couple points below a skill breakpoint
+            (deftness at 9 is the classic) and train it once your skills are learned. Trains past 21
+            yield quick, significant skills.
           </li>
           <li>
-            <strong>Longevity</strong> — Decide the career length at birth. High wit
-            learns fastest; high will finds easy trains. Canon tips: never
-            design an aimed-blow without top-tier deftness, and keep wit low
-            on scum warriors.
+            <strong>Longevity</strong> — Decide the career length at birth. High wit learns fastest;
+            high will finds easy trains. Canon tips: never design an aimed-blow without top-tier
+            deftness, and keep wit low on scum warriors.
           </li>
         </ul>
         <ContextLinks
@@ -359,11 +346,10 @@ export function EquipmentSection() {
             grant +1 damage. Two-handed weapons block shield use.
           </li>
           <li>
-            <strong>Dual wield</strong>: A second weapon replaces the shield slot — loadouts are
-            one weapon, weapon + shield, or two weapons. Very Highly Coordinated fighters
-            (SP+DF ≥ 32, both ≥ 15) gain a free off-hand strike each offensive exchange;
-            ambidextrous warriors ease the deftness requirement. Arm strikes disarm only the
-            weapon held in that arm.
+            <strong>Dual wield</strong>: A second weapon replaces the shield slot — loadouts are one
+            weapon, weapon + shield, or two weapons. Very Highly Coordinated fighters (SP+DF ≥ 32,
+            both ≥ 15) gain a free off-hand strike each offensive exchange; ambidextrous warriors
+            ease the deftness requirement. Arm strikes disarm only the weapon held in that arm.
           </li>
           <li>
             <strong>Shields</strong>: Buckler (+1 PAR), Small (+1 PAR/DEF), Medium (+2 DEF), Large
@@ -380,8 +366,8 @@ export function EquipmentSection() {
         </ul>
         <p className="mt-2">
           <strong>Over-Encumbered</strong>: Exceeding carry capacity penalizes INI, DEF, and
-          endurance — but never parry (canon: Assur's "Parry and Carry"). Keep total weight
-          at or below your Carry Cap.
+          endurance — but never parry (canon: Assur's "Parry and Carry"). Keep total weight at or
+          below your Carry Cap.
         </p>
         <p className="mt-2">
           <strong>Style Restrictions</strong>: Some items are restricted by style (e.g., Aimed-Blow
@@ -469,8 +455,8 @@ export function CombatResolutionSection() {
             extra.
           </li>
           <li>
-            <strong>Decisiveness (DEC)</strong> — Strike-order skill: wins initiative contests;
-            when the target is low HP+endurance it also opens the kill window.
+            <strong>Decisiveness (DEC)</strong> — Strike-order skill: wins initiative contests; when
+            the target is low HP+endurance it also opens the kill window.
           </li>
           <li>
             <strong>Endurance</strong> — Both fighters drain stamina each exchange. Higher OE/AL =
@@ -496,37 +482,32 @@ export function LearningSection() {
       <AccordionContent className="space-y-2 text-sm text-muted-foreground">
         <p>
           Warriors learn in the arena itself — after every bout a warrior banks
-          <strong> lessons</strong>, permanent +1 skill bonuses on top of their
-          trained sheet. Wit gates the roll: WT 15 ≈ 3–4 lessons per fight.
+          <strong> lessons</strong>, permanent +1 skill bonuses on top of their trained sheet. Wit
+          gates the roll: WT 15 ≈ 3–4 lessons per fight.
         </p>
         <ul className="list-disc list-inside space-y-1.5">
           <li>
-            <strong>Six skills</strong> — ATT, PAR, DEF, INI, RIP, DEC. What a
-            warrior tends to learn follows their style's teach order and the
-            opponent's: fight a riposte specialist and their RIP lessons rub
-            off. Caps: 6 per skill, 24 career.
+            <strong>Six skills</strong> — ATT, PAR, DEF, INI, RIP, DEC. What a warrior tends to
+            learn follows their style's teach order and the opponent's: fight a riposte specialist
+            and their RIP lessons rub off. Caps: 6 per skill, 24 career.
           </li>
           <li>
-            <strong>Favorite learn</strong> — Every warrior has one hidden
-            skill they absorb fastest. Watch the <em>Lessons Banked</em>{' '}
-            ledger: a skill at 3+ is flagged Suspected until a{' '}
-            <strong>Learn insight</strong> confirms it.
+            <strong>Favorite learn</strong> — Every warrior has one hidden skill they absorb
+            fastest. Watch the <em>Lessons Banked</em> ledger: a skill at 3+ is flagged Suspected
+            until a <strong>Learn insight</strong> confirms it.
           </li>
           <li>
-            <strong>Weapon charting</strong> — The dossier tallies swings,
-            crits, and extra-value hits per weapon. A weapon producing nothing
-            after a couple dozen swings is evidence to change hands.
+            <strong>Weapon charting</strong> — The dossier tallies swings, crits, and extra-value
+            hits per weapon. A weapon producing nothing after a couple dozen swings is evidence to
+            change hands.
           </li>
           <li>
-            <strong>Manager's Notebook</strong> — A losing warrior's dossier
-            shows the turnaround advisor's read: one win condition to build
-            around plus the plan, weapon, and matchup moves that evidence
-            supports.
+            <strong>Manager's Notebook</strong> — A losing warrior's dossier shows the turnaround
+            advisor's read: one win condition to build around plus the plan, weapon, and matchup
+            moves that evidence supports.
           </li>
         </ul>
-        <ContextLinks
-          links={[{ to: '/stable/warriors', label: 'Open the dossier' }]}
-        />
+        <ContextLinks links={[{ to: '/stable/warriors', label: 'Open the dossier' }]} />
       </AccordionContent>
     </AccordionItem>
   );
@@ -596,8 +577,8 @@ export function ProgressionSection() {
             one of your warriors.
           </li>
           <li>
-            <strong className="text-foreground">Arena Champion</strong> — Hold an arena
-            championship with one of your warriors.
+            <strong className="text-foreground">Arena Champion</strong> — Hold an arena championship
+            with one of your warriors.
           </li>
           <li>
             <strong className="text-foreground">Lord of the Circuit</strong> — Hold three arena

@@ -128,9 +128,7 @@ describe('TickOrchestrator', () => {
 
       // The newsletter id comes from a SeededRNG keyed on the resolved day —
       // deterministic per calendar day, matching the resolveRound seed.
-      expect(nextState.newsletter![0]!.id).toBe(
-        new SeededRNG(tournamentDaySeed(3, 9, 3)).uuid()
-      );
+      expect(nextState.newsletter![0]!.id).toBe(new SeededRNG(tournamentDaySeed(3, 9, 3)).uuid());
     });
 
     it('records ADVANCE_DAY timing with the tournament tag', async () => {
@@ -143,11 +141,9 @@ describe('TickOrchestrator', () => {
 
       await TickOrchestrator.advanceDay(mockState);
 
-      expect(timingSpy).toHaveBeenCalledWith(
-        TelemetryEvents.ADVANCE_DAY,
-        expect.any(Number),
-        { tournament: 'true' }
-      );
+      expect(timingSpy).toHaveBeenCalledWith(TelemetryEvents.ADVANCE_DAY, expect.any(Number), {
+        tournament: 'true',
+      });
     });
   });
 

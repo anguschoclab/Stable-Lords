@@ -30,8 +30,8 @@ describe('KD 9-10 efficacy tax (Assur: "fights somewhat strangely")', () => {
 
 describe('canon defensive presets', () => {
   it('TP gets a true scum sheet: 1 OE / 1 AL / Parry tactic', () => {
-    const scum = STYLE_PRESETS[FightingStyle.TotalParry]?.find(
-      (p) => p.name.toLowerCase().includes('scum')
+    const scum = STYLE_PRESETS[FightingStyle.TotalParry]?.find((p) =>
+      p.name.toLowerCase().includes('scum')
     );
     expect(scum).toBeDefined();
     expect(scum?.plan.OE).toBe(1);

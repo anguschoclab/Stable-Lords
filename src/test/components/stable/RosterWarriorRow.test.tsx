@@ -4,7 +4,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import type { Attributes } from '@/types/shared.types';
 import type { Warrior, AttributePotential } from '@/types/warrior.types';
-import { makeSpartacusWarrior , makeFlatPotential } from '@/test/_fixtures/factories';
+import { makeSpartacusWarrior, makeFlatPotential } from '@/test/_fixtures/factories';
 
 vi.mock('@/components/ui/tooltip', () => ({ ...__SHARED_MOCKS.tooltip }));
 

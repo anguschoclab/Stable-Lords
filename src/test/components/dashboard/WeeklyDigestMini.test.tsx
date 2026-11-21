@@ -5,10 +5,7 @@ import '@testing-library/jest-dom';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, PromoterId } from '@/types/shared.types';
-import {
-  makeDigestFight,
-  makeBoutOffer as fixtureBoutOffer,
-} from '@/test/_fixtures/factories';
+import { makeDigestFight, makeBoutOffer as fixtureBoutOffer } from '@/test/_fixtures/factories';
 
 let mockState: any = {};
 

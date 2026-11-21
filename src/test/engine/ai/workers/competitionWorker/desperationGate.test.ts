@@ -30,10 +30,8 @@ describe('desperation gate', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent: killer,
-      rivalOver: { treasury: 300,
-      strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 } },
-      offerOver: { purse: 400,
-      hype: 120 },
+      rivalOver: { treasury: 300, strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 } },
+      offerOver: { purse: 400, hype: 120 },
     });
     expect(
       evalBoutOffer({
@@ -51,10 +49,8 @@ describe('desperation gate', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent: superstar,
-      rivalOver: { treasury: 300,
-      strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 } },
-      offerOver: { purse: 400,
-      hype: 120 },
+      rivalOver: { treasury: 300, strategy: { intent: 'RECOVERY', planWeeksRemaining: 2 } },
+      offerOver: { purse: 400, hype: 120 },
     });
     expect(
       evalBoutOffer({
@@ -86,16 +82,18 @@ describe('desperation gate', () => {
     const warrior = makeWarrior({ fame: 50, injuries: [severeInjury] });
     const { rival, offer } = rivalOffer({
       warrior,
-      rivalOver: { treasury: 100,
-      owner: {
-        id: 'agg-owner' as never,
-        name: 'A',
-        stableName: 'A',
-        fame: 100,
-        renown: 0,
-        titles: 0,
-        personality: 'Aggressive',
-      } },
+      rivalOver: {
+        treasury: 100,
+        owner: {
+          id: 'agg-owner' as never,
+          name: 'A',
+          stableName: 'A',
+          fame: 100,
+          renown: 0,
+          titles: 0,
+          personality: 'Aggressive',
+        },
+      },
       offerOver: { purse: 400, hype: 120 },
     });
     expect(

@@ -47,7 +47,6 @@ export function handleWanderingHealer(run: OffseasonEventRun) {
   }
 }
 
-
 /** Wandering Fortune Teller event — costs 30g; Style insight token plus 15 XP. */
 export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
@@ -70,7 +69,6 @@ export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
     },
   });
 }
-
 
 /** Dreamweaver Visit event — Style insight token plus 15-25 XP. */
 export function handleDreamweaverVisit(run: OffseasonEventRun) {

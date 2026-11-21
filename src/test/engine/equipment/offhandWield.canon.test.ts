@@ -19,10 +19,12 @@ describe('off-hand requirement relax (canon: no WT, no SZ, same ST)', () => {
   it('an epee in the off hand needs no wit and no size', () => {
     // EP WT req is 15 — a WT-7, SZ-3 warrior can still carry it off-hand.
     // (DF grid still applies: DA(7)×EP(15) → 18.)
-    const res = checkLoadoutWieldability(
-      loadout('dagger', 'epee'),
-      { ST: 9, SZ: 3, WT: 7, DF: 18 }
-    );
+    const res = checkLoadoutWieldability(loadout('dagger', 'epee'), {
+      ST: 9,
+      SZ: 3,
+      WT: 7,
+      DF: 18,
+    });
     expect(res.failures.filter((f) => f.stat === 'WT')).toEqual([]);
     expect(res.failures.filter((f) => f.stat === 'SZ')).toEqual([]);
     expect(res.met).toBe(true);
@@ -30,10 +32,12 @@ describe('off-hand requirement relax (canon: no WT, no SZ, same ST)', () => {
 
   it('strength requirement still applies to the off-hand item', () => {
     // OH war_hammer needs ST 13 — ST 9 fails even though WT/SZ are ignored.
-    const res = checkLoadoutWieldability(
-      loadout('dagger', 'war_hammer'),
-      { ST: 9, SZ: 18, WT: 7, DF: 18 }
-    );
+    const res = checkLoadoutWieldability(loadout('dagger', 'war_hammer'), {
+      ST: 9,
+      SZ: 18,
+      WT: 7,
+      DF: 18,
+    });
     expect(res.met).toBe(false);
     expect(res.failures.some((f) => f.stat === 'ST')).toBe(true);
   });
@@ -49,12 +53,11 @@ describe('MH×OH deftness grid (canon anchors)', () => {
 
   it('the pair check uses the grid: ME(5)×LG(7) needs DF 9', () => {
     const attrs = { ST: 18, SZ: 18, WT: 18, DF: 8 };
+    expect(checkLoadoutWieldability(loadout('medium_shield', 'large_shield'), attrs).met).toBe(
+      false
+    );
     expect(
-      checkLoadoutWieldability(loadout('medium_shield', 'large_shield'), attrs).met
-    ).toBe(false);
-    expect(
-      checkLoadoutWieldability(loadout('medium_shield', 'large_shield'), { ...attrs, DF: 9 })
-        .met
+      checkLoadoutWieldability(loadout('medium_shield', 'large_shield'), { ...attrs, DF: 9 }).met
     ).toBe(true);
   });
 });

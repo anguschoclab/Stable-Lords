@@ -13,14 +13,14 @@ invariants are enforced by tests, not convention.
 
 Every pass is a `WeekPassSpec`:
 
-| Field           | Meaning                                                                                  |
-| --------------- | ---------------------------------------------------------------------------------------- |
-| `id`            | Unique pass name                                                                          |
-| `stage`         | `'core'` → `'world'` → `'content'` — resolves in that order                              |
-| `run`           | `(state, ctx) => StateImpact \| Promise<StateImpact>` — reads the shared stage snapshot  |
-| `writes`        | Declared `StateImpact` keys the pass may write — validated                              |
-| `after`         | Pass ids that must resolve earlier (ordering constraints, enforced)                     |
-| `playerFacing`  | Skipped when headless or playerStopped — set this for UI/newsletter-only output         |
+| Field          | Meaning                                                                                 |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `id`           | Unique pass name                                                                        |
+| `stage`        | `'core'` → `'world'` → `'content'` — resolves in that order                             |
+| `run`          | `(state, ctx) => StateImpact \| Promise<StateImpact>` — reads the shared stage snapshot |
+| `writes`       | Declared `StateImpact` keys the pass may write — validated                              |
+| `after`        | Pass ids that must resolve earlier (ordering constraints, enforced)                     |
+| `playerFacing` | Skipped when headless or playerStopped — set this for UI/newsletter-only output         |
 
 Passes in the same stage all read the **same snapshot** — a pass never sees
 another same-stage pass's writes. Impacts merge in declaration order.

@@ -94,9 +94,7 @@ function RowLine({ row, index }: { row: AlmanacRow; index: number }) {
           )}
         </div>
         {row.detail && (
-          <div className="text-[9px] font-mono text-muted-foreground/50 truncate">
-            {row.detail}
-          </div>
+          <div className="text-[9px] font-mono text-muted-foreground/50 truncate">{row.detail}</div>
         )}
         {row.tags && row.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-0.5">

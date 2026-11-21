@@ -38,12 +38,7 @@ export function expectDeterministic<T>(fn: () => T, label = 'run'): T {
 
 /** Flat-attribute deterministic fighter — the A/D twins pinned by the
  * determinism/narration specs (all attrs equal, seeded rng, no id). */
-export function makeFlatWarrior(
-  name: string,
-  style: FightingStyle,
-  flat = 15,
-  seed = 1
-): Warrior {
+export function makeFlatWarrior(name: string, style: FightingStyle, flat = 15, seed = 1): Warrior {
   return makeWarrior({
     id: undefined,
     name,

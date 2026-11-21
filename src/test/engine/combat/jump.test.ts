@@ -64,9 +64,7 @@ describe('opening clash loop (canon: contested jumps re-fight until disparity)',
     const events: CombatEvent[] = [];
     const ctx = makeResolutionContext({ exchange: 0, rng: () => 0.5 });
     resolveInitiativePhase(baseArgs(ctx, events));
-    expect(events.filter((e) => e.type === 'CLASH').length).toBeLessThanOrEqual(
-      JUMP_CLASH_MAX
-    );
+    expect(events.filter((e) => e.type === 'CLASH').length).toBeLessThanOrEqual(JUMP_CLASH_MAX);
   });
 
   it('later exchanges do not clash — the loop only runs at bout open', () => {

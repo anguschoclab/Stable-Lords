@@ -28,8 +28,6 @@ import {
 
 beforeEach(() => resetFixtureIds());
 
-
-
 describe('dominant-player offer pressure', () => {
   it('a Methodical stable declines a coin-flip bout vs a dominant player', () => {
     // BA vs AB is a mild -1 style edge — accepted at baseline skepticism (-2
@@ -44,8 +42,7 @@ describe('dominant-player offer pressure', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Methodical' }) },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Methodical' }) },
       offerOver: { purse: 400, hype: 80 },
     });
 
@@ -81,8 +78,7 @@ describe('dominant-player offer pressure', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Showman' }) },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Showman' }) },
       offerOver: { purse: 40, hype: 90 },
     });
 
@@ -118,8 +114,7 @@ describe('dominant-player offer pressure', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Pragmatic' }) },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Pragmatic' }) },
       offerOver: { purse: 60, hype: 80 },
     });
 
@@ -155,8 +150,7 @@ describe('dominant-player offer pressure', () => {
     const { rival, offer } = rivalOffer({
       warrior,
       opponent,
-      rivalOver: { treasury: 5000,
-      owner: makeOwner({ personality: 'Pragmatic' }) },
+      rivalOver: { treasury: 5000, owner: makeOwner({ personality: 'Pragmatic' }) },
       offerOver: { purse: 60, hype: 80 },
     });
     const oppStable = makeRival({ roster: [opponent] });
@@ -168,6 +162,8 @@ describe('dominant-player offer pressure', () => {
       rivals: [rival, oppStable],
       realmRankings: dominantRankings('pw1'),
     });
-    expect<ReturnType<typeof evaluateBoutOffer>>(verdict(offer, rival, warrior, opponent, state)).toBe('Accepted');
+    expect<ReturnType<typeof evaluateBoutOffer>>(
+      verdict(offer, rival, warrior, opponent, state)
+    ).toBe('Accepted');
   });
 });

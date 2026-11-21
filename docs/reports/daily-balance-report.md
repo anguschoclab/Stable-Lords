@@ -1,6 +1,7 @@
 # Daily Balance Report
 
 ## Simulation Results
+
 - **Weeks Simulated:** 1000
 - **Total Bouts:** 138235 (118383 weekly / 19852 tournament)
 - **Kill Outcomes:** 15650 (13109 weekly / 2541 tournament)
@@ -9,6 +10,7 @@
 - **Rival Stable Gold:** mean 21889 / median 17821 (final week)
 
 ## Style Win Rates
+
 - **TOTAL PARRY:** 55.69%
 - **PARRY-RIPOSTE:** 52.99%
 - **STRIKING ATTACK:** 50.40%
@@ -21,4 +23,5 @@
 - **PARRY-LUNGE:** 46.77%
 
 ## Suggested Variable Tweaks (For Product Owner Approval)
+
 - No mathematical anomalies detected. Meta is stable.

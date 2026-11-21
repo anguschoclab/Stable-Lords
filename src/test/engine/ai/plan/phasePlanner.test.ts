@@ -158,31 +158,17 @@ describe('buildPhasePlan — Wall-of-Steel canon pacing (Arena 93)', () => {
   // offensive opening taper (-1), not the defensive one (-2). Veterans keep
   // the defensive taper: Dante's watchful 6-4-6 is a real veteran sheet.
   it('treats a young wall like an offensive style in the opening', () => {
-    const phases = buildPhasePlan(
-      plan,
-      'Methodical',
-      FightingStyle.WallOfSteel,
-      3
-    );
+    const phases = buildPhasePlan(plan, 'Methodical', FightingStyle.WallOfSteel, 3);
     expect(phases?.opening?.OE).toBe(4); // 5 - 1, not 5 - 2
   });
 
   it('keeps the defensive taper for a veteran wall', () => {
-    const phases = buildPhasePlan(
-      plan,
-      'Methodical',
-      FightingStyle.WallOfSteel,
-      12
-    );
+    const phases = buildPhasePlan(plan, 'Methodical', FightingStyle.WallOfSteel, 12);
     expect(phases?.opening?.OE).toBe(3); // 5 - 2
   });
 
   it('defaults to the defensive taper when no fight count is provided', () => {
-    const phases = buildPhasePlan(
-      plan,
-      'Methodical',
-      FightingStyle.WallOfSteel
-    );
+    const phases = buildPhasePlan(plan, 'Methodical', FightingStyle.WallOfSteel);
     expect(phases?.opening?.OE).toBe(3); // 5 - 2
   });
 });

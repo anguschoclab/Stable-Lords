@@ -11,7 +11,7 @@ interface StableRankingsHeaderProps {
  */
 export function StableRankingsHeader({ sort, onSort }: StableRankingsHeaderProps) {
   return (
-    <TableHeader>
+    <TableHeader className="sticky top-0 z-10">
       <TableRow className="hover:bg-transparent border-white/5 bg-black/20">
         <TableHead className="w-12 text-center text-[10px] font-black uppercase tracking-widest opacity-40">
           #

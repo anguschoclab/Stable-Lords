@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T07:16:00.259Z",
+  "generatedAt": "2026-11-21T07:17:39.929Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
     "src/test/engine/grudgeMap.test.ts",
@@ -9,6 +9,7 @@
   "unregisteredTestDirs": [],
   "sameModuleBasenamePairs": [],
   "localFactoryFiles": [
+    "src/test/components/RivalStableList.test.tsx",
     "src/test/engine/combat/aiIntentTelemetry.test.ts",
     "src/test/engine/combat/conditionEngine.triggers.test.ts",
     "src/test/engine/combat/equipmentIntegration.test.ts"

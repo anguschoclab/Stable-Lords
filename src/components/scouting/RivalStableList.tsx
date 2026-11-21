@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { SelectableCard } from '@/components/ui/SelectableCard';
 import type { RivalStableData } from '@/types/game';
 import { useGameStore } from '@/state/useGameStore';
@@ -72,6 +74,31 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
     pageSize: 25,
   });
 
+  // Virtualize list.visible inside a bounded scroll container — the 25-row
+  // window and "show all" expansion stay useListShell's job; virtualization
+  // only bounds the DOM, not the data. Plain-map fallback when the
+  // virtualizer reports no items (jsdom, SSR).
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line react-hooks/incompatible-library -- @tanstack/react-virtual returns non-memoizable functions; no memo-safe alternative exists
+  const virtualizer = useVirtualizer({
+    count: list.visible.length,
+    estimateSize: () => 76,
+    overscan: 5,
+    getScrollElement: () => scrollRef.current,
+  });
+  const items = virtualizer.getVirtualItems();
+  const useFallback = items.length === 0 && list.visible.length > 0;
+
+  const renderRow = (rival: RivalStableData) => (
+    <RivalRow
+      key={rival.owner.id}
+      rival={rival}
+      isSelected={selectedRivalId === rival.owner.id}
+      grudge={grudgeByOwner.get(rival.owner.id)}
+      onSelectRival={onSelectRival}
+    />
+  );
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 px-2">
@@ -83,16 +110,39 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
 
       <ListToolbar list={list} sorts={RIVAL_SORTS} placeholder="Search stables…" />
 
-      <div className="grid grid-cols-1 gap-2">
-        {list.visible.map((rival) => (
-          <RivalRow
-            key={rival.owner.id}
-            rival={rival}
-            isSelected={selectedRivalId === rival.owner.id}
-            grudge={grudgeByOwner.get(rival.owner.id)}
-            onSelectRival={onSelectRival}
-          />
-        ))}
+      <div ref={scrollRef} className="max-h-[60vh] overflow-auto">
+        {useFallback ? (
+          <div className="grid grid-cols-1 gap-2">{list.visible.map(renderRow)}</div>
+        ) : (
+          <div
+            style={{
+              height: `${virtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {items.map((vi) => {
+              const rival = list.visible[vi.index];
+              if (!rival) return null;
+              return (
+                <div
+                  key={vi.key}
+                  data-index={vi.index}
+                  ref={virtualizer.measureElement}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${vi.start}px)`,
+                  }}
+                >
+                  <div className="pb-2">{renderRow(rival)}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

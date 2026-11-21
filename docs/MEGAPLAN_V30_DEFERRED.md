@@ -4,10 +4,14 @@ Per user directive, all V30-plan watch items are in scope (W7–W9, G3) — this
 
 ## Open items
 
-| Item | Evidence | Required work |
-| --- | --- | --- |
-| **worldLiveness competence-gradient seed re-baseline** | `src/test/engine/sim/worldLiveness.integration.slow.test.ts` — `med(topTreas)` = −463 vs gradient >1.3 at the current seed. V30's unified ruleset re-rolled world trajectories (AI now trains/pays unconditionally, drills roll injuries, weather-aware rolls, no free accelerated healing). Same failure class as V29's seed-88→42 inversion (`f3636f927`): deterministic stream shift, not a mechanics defect. | In-spec seed sweep per the V29 process (spec-env sweep, NOT `scripts/probe-liveness-seed.ts` — its module env diverges). Find a coherent-denominator seed (both medians positive, real gradient >1.3), update the spec, record the numbers in the comment. ~15–20 min per candidate seed. |
-| **worldBalance roster-fill re-baseline** | `src/test/engine/economy/worldBalance.slow.test.ts` — solvent-stable roster-fill 94.4% vs ≥95%. Marginal single-roster miss; plausibly the unified ruleset's honest AI training spend / injury risk tightening fill rate slightly. | Either re-baseline the threshold with a written justification or probe alternate seeds in-spec (same env caveat). Do NOT loosen the bar without recording why — the probe exists to catch AI-competitiveness collapse, and 94.4% is inside noise of the bar rather than a collapse. |
+_None — both seed re-baselines landed (see below)._
+
+## Resolved post-close-out (in-spec seed sweeps, 2026-11)
+
+| Item | Resolution |
+| --- | --- |
+| **worldLiveness competence-gradient seed re-baseline** | In-spec sweep of 42 candidates (temp specs replicating the spec's env — opfsArchive shared mock + id counter; the earlier probe-env caveat held). Re-seeded to **89**: medM=442, medN=52 (coherent denominator), gradient 8.500, coherence 0.135, masterN=19, noviceN=16, objWeeks 9224 — all verified in-spec; spec green in the slow tier. Runner-up 79 (gradient 26.286, but medN=21 — thin denominator). Observed pattern worth noting: most misses now fail the *coherence* floor, not the gradient — the unified ruleset legitimately diversified rival intent. |
+| **worldBalance roster-fill re-baseline** | In-spec sweep: seed 31337's fill had *recovered* to 0.952 on the current tree (the 94.4% reading predated the WS3/4 canon-armor stream re-roll) — marginal, so re-seeded rather than loosened. New seed **2024**: fill=1.000 (34/34), legacy=4, rivalCount min=90/max=91, kill=0.051, dark=2 — all bands verified in-spec; spec green in the slow tier. |
 
 ## Resolved at close-out
 

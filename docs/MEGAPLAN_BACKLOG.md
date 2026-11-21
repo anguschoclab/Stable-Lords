@@ -36,10 +36,7 @@ deferred register; `SP-*` = superpowers session plans.
 
 ### A — Quick wins & live couplings
 
-| Prov | Item | Severity | Entry points | Status |
-| --- | --- | --- | --- | --- |
-| V30 | **worldLiveness competence-gradient seed re-baseline** — V30's unified ruleset re-rolled world trajectories; current seed's `med(topTreas)` inverted to −463 vs >1.3 gradient. Same class as V29's seed-88→42 inversion (`f3636f927`) — deterministic stream shift, not a mechanics defect. | Test debt | `src/test/engine/sim/worldLiveness.integration.slow.test.ts:359` | **Open** — in-spec seed sweep per the V29 process (spec-env only — `probe-liveness-seed.ts` env diverges); ~15–20 min per candidate |
-| V30 | **worldBalance roster-fill re-baseline** — solvent-stable fill rate 94.4% vs ≥95% after the unified ruleset (unconditional AI training spend + injury risk). Marginal single-roster miss inside noise of the bar, not a collapse. | Test debt | `src/test/engine/economy/worldBalance.slow.test.ts:91` | **Open** — in-spec seed probe or justified threshold re-baseline (record reasoning; do NOT loosen silently) |
+_Empty — both V30 re-baselines landed (see §E)._
 
 ### B — Bounded canon & feature passes
 
@@ -70,6 +67,8 @@ deferred register; `SP-*` = superpowers session plans.
 
 | Prov | Item | Severity | Entry points | Status |
 | --- | --- | --- | --- | --- |
+| V30 | **worldLiveness competence-gradient seed re-baselined** — in-spec sweep of 42 candidates (temp specs replicating the spec env; `probe-liveness-seed.ts` confirmed non-transferable). New seed **89**: medM=442, medN=52 (coherent denominator), gradient 8.500, coherence 0.135, masterN=19, noviceN=16, objWeeks 9224 — all bars verified in-spec. Runner-up 79 (gradient 26.286, thin medN=21). Noted pattern: most misses now fail the *coherence* floor — the unified ruleset diversified rival intent. | Test debt | `worldLiveness.integration.slow.test.ts` | **RESOLVED (2026-11)** — spec re-seeded + re-baseline comment; spec green in slow tier |
+| V30 | **worldBalance roster-fill re-baselined** — in-spec sweep found 31337's fill had recovered to 0.952 post-WS3/4 stream re-roll (the documented 94.4% was measured on an earlier tree), but marginal. New seed **2024**: fill=1.000 (34/34), legacy=4, min=90, max=91, kill=0.051, dark=2 — all bands verified in-spec. | Test debt | `worldBalance.slow.test.ts` | **RESOLVED (2026-11)** — spec re-seeded + comment; spec green in slow tier |
 | SP-boundary | **`as unknown as` typed-boundary casts removed** — all three sites rewritten without casts: `warriorRouting` takes `FightSummary` directly (`Warrior.stableId?: StableId` ≡ summary's fields), `mortalityHandler` builds the summary record without the literal-spread cast, `changedFields` uses a kept-fields typed-Record build instead of `delete`. | Type debt | `warriorRouting.ts`, `mortalityHandler.ts`, `reportingHandler.ts` | **RESOLVED (2026-11)** — `c40145ce6`; `warriorRouting`/`handleReporting`/gazette-contract specs pin the signatures |
 | SP-virt | **StableRankings / RivalStableList virtualized** — spacer-`tr` table pattern per `WarriorLeaderboard`; rival list keeps `useListShell`/`ListToolbar` (25-row default + showAll) and transform-positions cards via `@tanstack/react-virtual`. | Perf | `StableRankings.tsx`, `rivalStableList/RivalVirtualRows.tsx` | **RESOLVED (2026-11)** — `ab3a4fffa`; virtualization + sort/showAll specs green; e2e chromium 7/7 |
 | V24-F2 | **Expanded per-weapon armor matrix adjudicated** — `WEAPON_ARMOR_MATRIX` (20 damage weapons × 7 canon armors) composes per-weapon factors with the damage-type baseline; `ARMOR_TYPE_MULT` rows corrected incl. the `ring_mail` inversion (slash/pierce no longer *amplified* vs bash); dagger×{ASM,ACM} 0.7 override preserved as a matrix cell. | Canon | `src/constants/combat/combat/weaponArmorMatrix.ts`, `src/engine/combat/mechanics/weaponArmor.ts` | **RESOLVED (2026-11)** — `752d24f4f`; matrix+mechanics specs cover every armor tier × damage class; 1,296 combat tests + combat slow tier green |

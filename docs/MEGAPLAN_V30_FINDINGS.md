@@ -18,7 +18,7 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 | F6 | `OffenseDefenseArgs` ≡ `ResolveCombatOffenseDefenseArgs` | `combat/resolution/offenseDefense/types.ts` — identical 36-field interfaces | ✅ type-level dup |
 | F7 | Rival weekly-ledger loop re-implements `computeEconomyImpact` | `stableManager.ts:78-98` vs `weeklyBreakdown.ts` `computeEconomyImpact`; rival salt `week*31+id.length`, rival-only `.slice(-500)` | ✅ same breakdown→ledger mapping |
 | F8 | Dead `updateWarriorAfterBout` — opposite `wasKilled` semantics vs live `warriorStateUpdater.ts` used by `recordHandler.ts:7,84,102` | `careerUpdate.ts:228-230`; only caller is its own test (`careerUpdate.test.ts:296-359`) | ✅ dead footgun |
-| F9 | Dead `updateWarriorStatus` + `appendFight` slice actions (`combatActions.ts:25,40`, `worldSlice/types.ts:88,98`, `initialState.ts:17,23`) — zero production call sites | ✅ dead duplicated bout-outcome application |
+| F9 | Dead `updateWarriorStatus` + `appendFight` slice actions — zero production call sites | `combatActions.ts:25,40`, `worldSlice/types.ts:88,98`, `initialState.ts:17,23` | ✅ dead duplicated bout-outcome application |
 | F10 | Hardcoded `.slice(-500)` vs `TRUNCATION_CAPS.rivalLedger` | `stableManager.ts:98`, `agentCore.ts:175`; `truncation.ts:48` + canonical `:184` | ✅ magic-number dup |
 | F11 | Four ownership-resolution paths | `isPlayerOwned` (`warriorRouting.ts`), `owningStableOf` (`arenaChampionship/core.ts:132`), `state.warriorToStableMap`, ~7 inline `stableId === player.id` | ✅ same question, four answers |
 | F12 | Autosim internal dups | `processPlayerOffers`/`processPlayerOffersScan` filter loops; `extractWeekSummary` namesakes (autosim vs `timeAdvance/summaries.ts`) | ✅ local dup + namesake |
@@ -29,7 +29,7 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 ### §0.2 DISPROVED — already unified or intentional; not re-litigated
 
 | ID | Suspected dup | Evidence | Verdict |
-|----|---------------|----------|---------|
+| --- | --- | --- | --- |
 | X1 | "Tournament day path bypasses bout consequences" | `results.ts` imports `applyRecords`, `handleDeath`, `handleInjuries`, `handleProgressions`, `calculateBoutFame` — V27 parity landed; only F5's stamp remains | ❌ resolved upstream |
 | X2 | "Duplicate week-advance pipelines" | Canonical `advanceWeek`; `finalizeWeekTransition` shared by `advanceDay`/`skipToWeekEnd`; autosim delegates | ❌ single canonical flow |
 | X3 | "Newsletter/gazette duplicated systems" | `newsletter/feed.ts:107` — old accumulator already deleted; gazette (announcement feed) vs newsletter (weekly issue) are distinct domains | ❌ intentional |
@@ -40,7 +40,7 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 ### §0.3 REFINED — real overlap, different contracts
 
 | ID | Finding | Verdict |
-|----|---------|---------|
+| --- | --- | --- |
 | R1 | Ownership resolution (F11) | Keep `warriorToStableMap` for bulk paths; single-entity lookups route through one resolver |
 | R2 | Player equipment validation | UI-gated only; store trusts callers → **W7** closes the programmatic gap |
 | R3 | `generateId()` UI-side uses | `economySlice:50,70`, `tutorialBout`, avatar/admin/hiring/startGame, `useRivalryAlerts` — allowlisted in G2 |

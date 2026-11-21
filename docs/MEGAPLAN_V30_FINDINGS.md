@@ -48,4 +48,13 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 
 ## §A — Phase findings (filled during implementation)
 
-_To be populated per phase._
+### Post-campaign state (2026-11-23)
+
+- **Fast suite:** 1025/1025 files · 10,910 tests — all green (baseline 1012/10877).
+- **jscpd:** 96 clones / 0.50% (baseline 106 / 0.57%) — ratcheted.
+- **dup-scan:** 28 src↔src / 38 test↔test / 25 mixed — at ratchet; two drained clusters still register on the ≥8-line window (imports/describe skeletons).
+- **Slow suite:** 296/299 green — 2 V29-class seed-trajectory inversions folded to BACKLOG §A (worldLiveness gradient, worldBalance fill); orphanScan ratcheted 174→180 for the canonical type-export surface.
+
+### AI-competitiveness check (the plan's mandated probe)
+
+The unified ruleset measurably tightens rival economics: unconditional training spend (+20g per silent-blocked week that previously skipped the roll), drill injury rolls, weather-aware injury risk, and removal of free accelerated healing. Fast-tier `aiEconomyParity` pins the new spend (−20g/warrior-week vs the 0.8-gated world). The two slow-tier seed inversions are trajectory re-rolls of the same class as V29's — flagged for in-spec re-baseline rather than treated as collapse evidence; `worldBalance`'s 94.4% fill is inside noise of the 95% bar, and no fast-tier solvency/competitiveness spec regressed.

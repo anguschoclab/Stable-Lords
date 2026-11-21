@@ -320,6 +320,7 @@ export const COMBAT_EVENT_TYPES = [
   'REARM',
   'CLASH',
   'FUMBLE',
+  'WEAPON_BREAK',
   'OFFHAND_ATTACK',
   'AI_INTENT',
   'ARENA_EVENT',

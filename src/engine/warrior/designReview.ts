@@ -1057,6 +1057,37 @@ function reviewDoctrine(attrs: Attributes, style: FightingStyle): DesignReviewIt
  * signal; 17+ still makes a Rookies/Apprentices career; physical-tank
  * low-wit frames are the scum/AB rookie profile.
  */
+/**
+ * V31 canon (Hoser #15 evaluation chart): WT+WL+DF composite marks the
+ * build's class ceiling — ≥49 "Primus-bound", ≥35 basic/ADM-viable.
+ */
+function reviewEvalComposite(attrs: Attributes): DesignReviewItem[] {
+  const sum = attrs.WT + attrs.WL + attrs.DF;
+  if (sum >= T.EVAL_PRIMUS_SUM) {
+    return [
+      {
+        axis: 'tourney',
+        verdict: 'info',
+        title: 'Primus-bound',
+        id: 'eval-primus-bound',
+        detail: `WT ${attrs.WT} + WL ${attrs.WL} + DF ${attrs.DF} = ${sum} — clears the article's 49-point Primus line; this frame has the wit/will/deftness triple every ADM-bound build wants.`,
+      },
+    ];
+  }
+  if (sum >= T.EVAL_VIABLE_SUM) {
+    return [
+      {
+        axis: 'tourney',
+        verdict: 'info',
+        title: 'Viable frame',
+        id: 'eval-viable-frame',
+        detail: `WT ${attrs.WT} + WL ${attrs.WL} + DF ${attrs.DF} = ${sum} — over the 35-point viability line but short of Primus-bound (49): a sound basic/ADM career, not a Primus frame.`,
+      },
+    ];
+  }
+  return [];
+}
+
 function reviewTourney(attrs: Attributes, style: FightingStyle): DesignReviewItem[] {
   const items: DesignReviewItem[] = [];
 
@@ -1145,6 +1176,7 @@ export function reviewWarriorDesign(attrs: Attributes, style: FightingStyle): De
     ...reviewMinimums(attrs, style),
     ...reviewDoctrine(attrs, style),
     ...reviewLongevity(attrs, style),
+    ...reviewEvalComposite(attrs),
     ...reviewTourney(attrs, style),
   ];
 }

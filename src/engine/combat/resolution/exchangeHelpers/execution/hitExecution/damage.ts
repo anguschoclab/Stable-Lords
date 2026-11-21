@@ -37,7 +37,7 @@ import { recordWeaponCrit, recordWeaponExtraValueHit } from '../../../weaponChar
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../../guardBreak';
 import { accumulateBleed } from '../../../bleed';
-import { tryDisarm } from '../../../disarm';
+import { tryDisarm, tryWeaponBreak } from '../../../disarm';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../../tempoMechanics';
 import {
   getFrontloadMult,
@@ -146,6 +146,28 @@ export function applyDamageMultipliers(
   return rawDamage;
 }
 
+interface MaybeBreakWeaponArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  attLabel: 'A' | 'D';
+  defender: FighterState;
+  ctx?: ResolutionContext;
+}
+
+/** V31 canon (DN-C8): a fragile weapon can snap when the blow clangs off
+ *  the defender's armor — the destroyed id is gone for the bout. */
+function maybeBreakWeapon(args: MaybeBreakWeaponArgs): void {
+  tryWeaponBreak({
+    events: args.events,
+    rng: args.rng,
+    attacker: args.attacker,
+    attLabel: args.attLabel,
+    defArmorId: args.defender.armorId,
+    ctx: args.ctx,
+  });
+}
+
 interface ApplyHitAndCountersArgs {
   events: CombatEvent[];
   rng: () => number;
@@ -233,6 +255,14 @@ export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
     hitLoc: hitLoc,
     damage: damage,
     isCrit: isCrit,
+    ctx: args.ctx,
+  });
+  maybeBreakWeapon({
+    events: events,
+    rng: args.disarmRng ?? rng,
+    attacker: attacker,
+    attLabel: attLabel,
+    defender: defender,
     ctx: args.ctx,
   });
 

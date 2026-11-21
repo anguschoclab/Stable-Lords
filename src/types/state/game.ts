@@ -409,7 +409,7 @@ export interface GazetteStory {
  * Insight token type type.
  */
 export type InsightTokenType =
-  'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait' | 'Learn';
+  'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic' | 'Trait' | 'Learn' | 'Knack';
 
 /**
  * Defines the shape of insight token.

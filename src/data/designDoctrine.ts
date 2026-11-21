@@ -117,6 +117,12 @@ export const DESIGN_REVIEW_THRESHOLDS = {
   ST_PRIMAL_DF: 15,
   ST_PRIMAL_WL: 13,
   /**
+   * Hoser #15 evaluation chart — WT+WL+DF composite: ≥49 is "Primus-bound",
+   * ≥35 is basic/ADM-viable (V31 DN-D3, user-adjudicated).
+   */
+  EVAL_PRIMUS_SUM: 49,
+  EVAL_VIABLE_SUM: 35,
+  /**
    * Parry-lunger constitution at/below which the glass-jaw note fires —
    * the armor-piercer's own graduate "clings to life by luck".
    */

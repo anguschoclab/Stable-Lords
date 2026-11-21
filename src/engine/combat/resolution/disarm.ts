@@ -22,7 +22,7 @@
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
 import type { HitLocation } from '../mechanics/combatDamage';
-import { isDisarmable } from '../mechanics/weaponStats';
+import { isDisarmable, weaponBreakChance } from '../mechanics/weaponStats';
 import {
   checkWeaponRequirements,
   getClassicWeaponBonus,
@@ -212,6 +212,69 @@ export function tryDisarm(args: TryDisarmArgs): boolean {
     metadata: {
       weaponId: dropped,
       toWeapon: defender.weaponId,
+      backup: !!backup,
+      fumbled,
+    },
+  });
+  return true;
+}
+
+interface TryWeaponBreakArgs {
+  events: CombatEvent[];
+  rng: () => number;
+  attacker: FighterState;
+  attLabel: 'A' | 'D';
+  /** Defender's worn armor id — the blow must clang off real armor. */
+  defArmorId?: string;
+  ctx?: ResolutionContext;
+}
+
+/**
+ * V31 canon (Hoser Report folklore, DN-C8): a fragile weapon can snap when
+ * the blow clangs off armor. Unlike a disarm the id is DESTROYED — never
+ * written to `droppedWeaponId`, so no REARM can retrieve it. The fighter
+ * swaps to their backup (or fists), with the same quickdraw-fumble risk a
+ * disarmed fighter faces.
+ */
+export function tryWeaponBreak(args: TryWeaponBreakArgs): boolean {
+  const { events, rng, attacker, attLabel, defArmorId, ctx } = args;
+  const held = attacker.weaponId;
+  const chance = weaponBreakChance(held);
+  // The clang gate: a landed hit against real armor — no armor, no snap.
+  if (
+    chance <= 0 ||
+    !held ||
+    !defArmorId ||
+    defArmorId === 'none_armor' ||
+    rng() >= chance
+  ) {
+    return false;
+  }
+
+  const backup = attacker.backupWeaponId;
+  attacker.weaponId = DISARM_UNARMED_WEAPON_ID;
+  // Deliberately NOT setting droppedWeaponId — a shattered weapon is gone
+  // for the bout; only a knocked-loose weapon can be retrieved.
+
+  let fumbled = false;
+  if (backup) {
+    const fumbleChance = QUICKDRAW_FUMBLE_CHANCE[attacker.coordination ?? ''] ?? 0;
+    if (fumbleChance > 0 && rng() < fumbleChance) {
+      fumbled = true;
+      attacker.pendingBackupDraw = true;
+      events.push({ type: 'FUMBLE', actor: attLabel, metadata: { weaponId: backup } });
+    } else {
+      attacker.weaponId = backup;
+      attacker.backupWeaponId = undefined;
+    }
+  }
+  applyWeaponSwap(attacker, attLabel, ctx);
+  events.push({
+    type: 'WEAPON_BREAK',
+    actor: attLabel,
+    metadata: {
+      weaponId: held,
+      toWeapon: attacker.weaponId,
       backup: !!backup,
       fumbled,
     },

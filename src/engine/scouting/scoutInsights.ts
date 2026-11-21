@@ -4,6 +4,7 @@
  */
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import type { BaseSkills } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type InsightId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
@@ -93,6 +94,56 @@ export function createTraitInsights(
   }));
 }
 
+/**
+ * V31 canon (Terrablood "luck factor" / knack; DN-V27-§5 adjudicated: land
+ * the rumor surface) — Expert scouts sense a strongly bonused/hosed skill
+ * channel without ever naming the modifier. |luckfactor| ≥ 3 on a channel
+ * earns one vague token per channel; milder luck stays invisible.
+ */
+const KNACK_THRESHOLD = 3;
+
+const KNACK_CHANNEL_LABEL: Record<keyof BaseSkills, { good: string; bad: string }> = {
+  ATT: { good: 'attacking', bad: 'attack' },
+  PAR: { good: 'parrying', bad: 'parry work' },
+  DEF: { good: 'defending', bad: 'defense' },
+  INI: { good: 'the first blow', bad: 'the opening exchange' },
+  RIP: { good: 'the riposte', bad: 'riposte work' },
+  DEC: { good: 'the decisive moment', bad: 'decisive moments' },
+};
+
+/** Vague rumor-grade knack tokens for Expert scouting (0 otherwise). */
+export function createKnackInsights(
+  warrior: Warrior,
+  quality: ScoutQuality,
+  week: number,
+  rng: IRNGService
+): InsightToken[] {
+  if (quality !== 'Expert' || !warrior.luckfactor) return [];
+
+  const tokens: InsightToken[] = [];
+  for (const [key, value] of Object.entries(warrior.luckfactor) as [
+    keyof BaseSkills,
+    number,
+  ][]) {
+    if (Math.abs(value) < KNACK_THRESHOLD) continue;
+    const labels = KNACK_CHANNEL_LABEL[key];
+    if (!labels) continue;
+    const detail =
+      value > 0
+        ? `Reports whisper of an uncanny knack for ${labels.good}`
+        : `Reports whisper of a jinxed ${labels.bad}`;
+    tokens.push({
+      id: rng.uuid() as InsightId,
+      type: 'Knack',
+      warriorId: warrior.id,
+      warriorName: warrior.name,
+      detail,
+      discoveredWeek: week,
+    });
+  }
+  return tokens;
+}
+
 interface GenerateScoutInsightsArgs {
   warrior: Warrior;
   quality: ScoutQuality;
@@ -132,5 +183,6 @@ export function generateScoutInsights(args: GenerateScoutInsightsArgs): InsightT
     ...createAttributeInsights(warrior, quality, week, rng),
     ...(tactic ? [tactic] : []),
     ...createTraitInsights(suspectedTraits ?? [], warrior, week, rng),
+    ...createKnackInsights(warrior, quality, week, rng),
   ];
 }

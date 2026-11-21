@@ -61,15 +61,26 @@ export const STYLE_ORDER = [
  * first blow (WS +2→−1); mirrors flipped to keep pair-sums antisymmetric.
  * Absolute ST power is re-ratcheted through STYLE_PENALTIES, not here.
  *
+ * Pass 5 (V31 DN-S6 two-source retune, N=400 style-typical probe): cells
+ * moved ONLY where the Terrablood archive record and live sim evidence both
+ * contradicted the matrix. LU 0→+1 vs BA (sim 68.5%), PR 0→+1 vs LU (sim
+ * 56.8%); mirrors flipped antisymmetrically.
+ * REJECTED: TP>AB — archive "scum answers the surgeon" unsupported (sim
+ * 35.8% TP); the matrix's AB edge stands.
+ * BLOCKED: TP>ST — archive + probe (52%) supported it, but every legal
+ * retune (+1/−1 → 81%, +1/0 → 84%) breaches the 80/20 balance invariant;
+ * passives dominate this pairing, so it needs a real TP/ST rebalance
+ * campaign, not a matrix nudge. Cell reverted to −1/+1.
+ *
  * Target: aggregate W% spread ≤ 20pp; per-matchup spread ≤ 30pp on samples ≥50.
  */
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
   [0, 1, 2, 1, 1, 1, 2, 0, 1, 3], // AB
-  [-1, 0, 0, -1, -1, 0, -1, -1, -1, 0], // BA
-  [-2, 0, 0, 0, 0, -1, -1, -1, 0, 0], // LU
+  [-1, 0, -1, -1, -1, 0, -1, -1, -1, 0], // BA
+  [-2, 1, 0, 0, 0, -1, -1, -1, 0, 0], // LU
   [-1, 1, 0, 0, 1, 1, 0, -1, 1, 1], // PL
-  [-1, 1, 0, 0, 0, 0, -1, 1, 1, 1], // PR
+  [-1, 1, 1, 0, 0, 0, -1, 1, 1, 1], // PR
   [-1, 0, 1, -1, 0, 0, 0, 1, 0, 2], // PS
   [-2, 1, 1, 0, 1, 0, 0, -1, -1, 1], // SL
   [0, 1, 1, 1, -1, -1, 1, 0, 1, -1], // ST

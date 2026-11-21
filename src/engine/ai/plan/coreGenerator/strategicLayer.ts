@@ -31,9 +31,10 @@ import {
   getOffensiveSuitability,
 } from '@/engine/strategy/tacticSuitability';
 import type { DecoyAxes, PhaseShiftDecl } from '@/types/shared/fightPlan';
-import type { FightingStyle } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 import type { PlanModifiers } from './modifiers';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
+import { classifyArchetype } from '@/data/warriorArchetypes';
 
 /** WT floor for holding a committed deception script through the masked window. */
 const DECOY_MIN_WT = 13;
@@ -193,6 +194,27 @@ function applyPhaseShift(plan: FightPlan, personality: OwnerPersonality): void {
 }
 
 /**
+ * V31 canon ("Aimed Blows My Way", DN-S2): a riposting-hybrid-fit AB runs
+ * the exhaust template — an actual defensive tactic through the opening
+ * phase to burn the opponent's endurance, then the real offensive plan
+ * takes over mid/late. The gate is a *competitive* hybrid fit: the
+ * riposting-hybrid score must sit within 10 of the build's top archetype,
+ * so a decisively pure-offensive aimer keeps the tactic-free open.
+ */
+function applyAbExhaustTemplate(plan: FightPlan, w: Warrior): void {
+  if (w.style !== FightingStyle.AimedBlow || !plan.phases?.opening) return;
+  const fits = classifyArchetype(w.attributes, w.style);
+  const hybridFit = fits.find((f) => f.archetype === 'ripostingHybrid');
+  const topScore = fits[0]?.score ?? 0;
+  if (!hybridFit || topScore - hybridFit.score > 10) return;
+  const planned = plan.defensiveTactic;
+  plan.phases.opening.defensiveTactic =
+    planned === 'Parry' || planned === 'Dodge' || planned === 'Riposte'
+      ? planned
+      : 'Dodge';
+}
+
+/**
  * Applies the strategic layer after core axes validate: tactic overrides for
  * rematch losers, target/protect/aggression/opening/range levers, phase
  * curves, desperate plan, fallback condition, and WIT-gated conditions.
@@ -233,6 +255,8 @@ export function applyStrategicLayer(args: ApplyStrategicLayerArgs): void {
   // personality-modified; young Walls of Steel open like offensives (canon:
   // "run them offensively while they are young").
   plan.phases = buildPhasePlan(plan, personality, w.style, fightEquivalentsOf(w));
+
+  applyAbExhaustTemplate(plan, w);
 
   // Desperate plan — wired into resolution.ts at HP<30% or END<20%
   plan.desperatePlan = buildDesperatePlan(plan, personality);

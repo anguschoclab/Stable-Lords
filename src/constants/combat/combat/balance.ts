@@ -119,6 +119,20 @@ export const DISARM_ARM_LOCATIONS = ['right arm', 'left arm'] as const;
  *  downstream rolls (guardrail samples are stream-deterministic). */
 export const DISARM_RNG_SEED_XOR = 0xd15a01;
 
+// ─── Weapon Breakage ──────────────────────────────────────────────────────
+/**
+ * V31 canon (Hoser Report folklore, DN-C8): brittle weapons can snap when a
+ * blow clangs off armor — "quarterstaff, great axe, and greatsword break a
+ * lot". Per-contact break probabilities keyed by weapon id; ids absent from
+ * the table never break. A broken weapon is destroyed for the bout (not a
+ * disarm — REARM never retrieves it).
+ */
+export const WEAPON_BREAK_CHANCES: Readonly<Record<string, number>> = {
+  quarterstaff: 0.06,
+  great_axe: 0.05,
+  greatsword: 0.05,
+};
+
 // ─── Post-Bout Injury Coupling ────────────────────────────────────────────
 /** Limb hits on one side at/above which post-bout injury selection is
  *  biased toward that limb's injuries (arms take priority over legs). */

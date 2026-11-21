@@ -15,6 +15,7 @@ import {
   FAST_WEAPON_INI,
   LUNGE_KNOCKDOWN_BONUS,
   TWOHANDED_PARRY_ENDURANCE_SURCHARGE,
+  WEAPON_BREAK_CHANCES,
 } from '@/constants/combat';
 import {
   getWeaponSuitability,
@@ -77,6 +78,16 @@ export function twoHandedParryEnduranceMult(weaponId?: string): number {
   if (!weaponId) return 1;
   const w = WEAPON_BY_ID.get(weaponId);
   return w?.twoHanded ? TWOHANDED_PARRY_ENDURANCE_SURCHARGE : 1;
+}
+
+/**
+ * V31 canon (Hoser Report folklore, DN-C8): per-armor-contact probability a
+ * weapon snaps — the folklore-fragile ids (quarterstaff, great axe,
+ * greatsword) carry a nonzero chance; everything else is unbreakable.
+ */
+export function weaponBreakChance(weaponId?: string): number {
+  if (!weaponId) return 0;
+  return WEAPON_BREAK_CHANCES[weaponId] ?? 0;
 }
 
 /**

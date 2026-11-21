@@ -122,6 +122,11 @@ const PROJECTORS: Record<string, Projector> = {
     entry.rearm ??= e.actor;
     reasonCodes.push('REARM');
   },
+  // actor is the fighter whose weapon shattered on armor contact
+  WEAPON_BREAK: (e, entry, reasonCodes) => {
+    entry.weaponBreak ??= e.actor;
+    reasonCodes.push('WEAPON_BREAK');
+  },
   ARENA_EVENT: projectArenaEvent,
   // first shift per exchange wins; subsequent parry/riposte swings in same
   // exchange are noise

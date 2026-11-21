@@ -439,7 +439,16 @@ export const MatchRecordSchema = z.object({
  */
 export const InsightTokenSchema = z.object({
   id: z.string(),
-  type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic', 'Trait', 'Learn']),
+  type: z.enum([
+    'Weapon',
+    'Rhythm',
+    'Style',
+    'Attribute',
+    'Tactic',
+    'Trait',
+    'Learn',
+    'Knack',
+  ]),
   warriorId: z.string(),
   warriorName: EntityNameSchema,
   detail: z.string(),

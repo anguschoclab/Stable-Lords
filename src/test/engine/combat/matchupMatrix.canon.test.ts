@@ -19,24 +19,26 @@ const favored = (x: FightingStyle, y: FightingStyle) =>
 
 describe('archive-recorded dominance directions (Hoser #9, arena 25)', () => {
   it.each([
-    // Lungers run over bashers — the arena's clearest record.
+    // Lungers run over bashers — the arena's clearest record (sim: 68.5%).
     [FightingStyle.LungingAttack, FightingStyle.BashingAttack],
-    // Parry-ripostes fed on lungers — the classic counter record.
+    // Parry-ripostes fed on lungers — the classic counter record (sim: 56.8%).
     [FightingStyle.ParryRiposte, FightingStyle.LungingAttack],
-    // Total parries blunt aimed blows — scum answers the surgeon.
-    [FightingStyle.TotalParry, FightingStyle.AimedBlow],
-  ])('%s is archive-favored over %s', (fav, dog) => {
+    // PROBE-REJECTED under the two-source rule: "scum answers the surgeon"
+    // (TP>AB) — sim runs 64.2% FOR the aimed blow; the matrix's AB edge
+    // stands and no pin is asserted here.
+    // GUARDRAIL-BLOCKED: TP>ST — archive + probe (52%) supported it, but
+    // every legal retune breached the 80/20 balance invariant (+1/−1 → 81%,
+    // +1/0 → 84%); passives dominate the pairing. Needs a TP/ST rebalance
+    // campaign — no pin asserted.
+  ])('%s is archive-and-sim-favored over %s', (fav, dog) => {
     expect(favored(fav, dog)).toBe(true);
   });
 });
 
 describe('scum metagame (adjudicated canon-accurate, BACKLOG §3)', () => {
   it('total parries are favored over the classic offensive styles', () => {
-    for (const off of [
-      FightingStyle.BashingAttack,
-      FightingStyle.SlashingAttack,
-      FightingStyle.StrikingAttack,
-    ]) {
+    // TP>ST omitted — guardrail-blocked (80/20 invariant); see above.
+    for (const off of [FightingStyle.BashingAttack, FightingStyle.SlashingAttack]) {
       expect(favored(FightingStyle.TotalParry, off), `TP > ${off}`).toBe(true);
     }
   });

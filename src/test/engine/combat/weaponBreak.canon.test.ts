@@ -9,10 +9,13 @@
  */
 import { describe, it, expect } from 'vitest';
 import { weaponBreakChance } from '@/engine/combat/mechanics/weaponStats';
+import { tryWeaponBreak } from '@/engine/combat/resolution/disarm';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { EquipmentLoadout } from '@/data/equipment';
+import type { FighterState } from '@/engine/combat/resolution/types';
+import type { CombatEvent } from '@/types/combat.types';
 
 const ATTRS = { ST: 17, CN: 14, SZ: 12, WT: 13, WL: 13, SP: 12, DF: 13 };
 
@@ -31,6 +34,8 @@ function makeW(weapon: string, armor = 'none_armor', backup?: string, style = Fi
   return { ...w, equipment: loadout(weapon, armor, backup) };
 }
 
+// exchangeLog populates under telemetry (!headless) — the structured
+// per-exchange record is the observable surface for the break channel.
 const fightOnce = (attacker: ReturnType<typeof makeW>, defender: ReturnType<typeof makeW>, seed: number) =>
   simulateFight({
     warriorA: attacker,
@@ -38,11 +43,10 @@ const fightOnce = (attacker: ReturnType<typeof makeW>, defender: ReturnType<type
     planA: defaultPlanForWarrior(attacker),
     planD: defaultPlanForWarrior(defender),
     providedRng: seed,
-    headless: true,
   });
 
-const breakEvents = (r: ReturnType<typeof fightOnce>) =>
-  (r.log ?? []).flatMap((m) => m.events ?? []).filter((e) => e.type === 'WEAPON_BREAK');
+const breakCount = (r: ReturnType<typeof fightOnce>) =>
+  (r.exchangeLog ?? []).filter((e) => e.weaponBreak !== undefined).length;
 
 describe('canon weapon-break table', () => {
   it('the folklore-fragile weapons carry a break chance', () => {
@@ -65,7 +69,7 @@ describe('breakage in resolution (seeded)', () => {
     let breaks = 0;
     for (let i = 0; i < N; i++) {
       const r = fightOnce(makeW('quarterstaff'), makeW('longsword', 'APA'), i * 104729 + 7);
-      breaks += breakEvents(r).length;
+      breaks += breakCount(r);
     }
     expect(breaks).toBeGreaterThanOrEqual(1);
   });
@@ -74,38 +78,57 @@ describe('breakage in resolution (seeded)', () => {
     let breaks = 0;
     for (let i = 0; i < N; i++) {
       const r = fightOnce(makeW('scimitar'), makeW('longsword', 'APA'), i * 104729 + 7);
-      breaks += breakEvents(r).length;
+      breaks += breakCount(r);
     }
     expect(breaks).toBe(0);
   });
 
-  it('a broken weapon is not rearmable — no REARM of the broken id follows a break', () => {
-    // A quarterstaff wielder carrying a scimitar backup: when the staff
-    // breaks, subsequent REARM events may restore only disarm-drops —
-    // never the destroyed quarterstaff.
-    for (let i = 0; i < N; i++) {
-      const r = fightOnce(
-        makeW('quarterstaff', 'none_armor', 'scimitar'),
-        makeW('longsword', 'APA'),
-        i * 104729 + 7
-      );
-      const entries = r.exchangeLog ?? [];
-      for (let j = 0; j < entries.length; j++) {
-        if (entries[j]?.weaponBreak) {
-          // After the break, the exchange-log disarm/rearm channel may
-          // still fire for OTHER weapons, but a destroyed id never returns:
-          // every later REARM must not restore 'quarterstaff'.
-          for (const e of entries.slice(j + 1)) {
-            if (e.rearm) {
-              const events = (r.log ?? []).flatMap((m) => m.events ?? []);
-              const rearmed = events.filter(
-                (x) => x.type === 'REARM' && x.metadata?.weaponId === 'quarterstaff'
-              );
-              expect(rearmed).toEqual([]);
-            }
-          }
-        }
-      }
-    }
+  it('a broken weapon is not rearmable — the destroyed id never enters droppedWeaponId', () => {
+    // REARM only retrieves `droppedWeaponId`; the invariant a break must
+    // keep is that the shattered id never lands there. Asserted directly
+    // on tryWeaponBreak — stronger than watching the exchange stream for
+    // an absence.
+    const events: CombatEvent[] = [];
+    const attacker = {
+      weaponId: 'quarterstaff',
+      backupWeaponId: 'scimitar',
+      coordination: 'Normal',
+      skills: { ATT: 10, PAR: 5, DEF: 5 },
+      hp: 30,
+      maxHp: 30,
+    } as unknown as FighterState;
+    // Force the break: a roll of 0 always clears the 6% staff chance.
+    const broke = tryWeaponBreak({
+      events: events,
+      rng: () => 0.0,
+      attacker: attacker,
+      attLabel: 'A',
+      defArmorId: 'APA',
+    });
+    expect(broke).toBe(true);
+    expect(attacker.droppedWeaponId).toBeUndefined();
+    expect(attacker.weaponId).toBe('scimitar');
+    const ev = events.find((e) => e.type === 'WEAPON_BREAK');
+    expect(ev?.metadata?.weaponId).toBe('quarterstaff');
+  });
+
+  it('the clang gate: no armor on the defender means no snap, forced roll', () => {
+    const events: CombatEvent[] = [];
+    const attacker = {
+      weaponId: 'quarterstaff',
+      coordination: 'Normal',
+      skills: { ATT: 10, PAR: 5, DEF: 5 },
+      hp: 30,
+      maxHp: 30,
+    } as unknown as FighterState;
+    const broke = tryWeaponBreak({
+      events: events,
+      rng: () => 0.0,
+      attacker: attacker,
+      attLabel: 'A',
+      defArmorId: 'none_armor',
+    });
+    expect(broke).toBe(false);
+    expect(attacker.weaponId).toBe('quarterstaff');
   });
 });

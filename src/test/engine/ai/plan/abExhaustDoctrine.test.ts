@@ -36,7 +36,11 @@ const OFFENSIVE_AB = { ST: 17, CN: 9, SZ: 9, WT: 13, WL: 9, SP: 7, DF: 17 };
 describe('AB exhaust-then-strike doctrine', () => {
   it('a riposting-fit AB opens with a defensive tactic and turns offensive later', () => {
     const w = abWarrior(DEFENSIVE_AB);
-    const plan = aiPlanForWarrior({ w, personality: 'Pragmatic' as OwnerPersonality });
+    const plan = aiPlanForWarrior({
+      w,
+      personality: 'Pragmatic' as OwnerPersonality,
+      philosophy: 'WIN_TODAY',
+    });
 
     // Every plan gets a generic OE-taper opening (buildPhasePlan); the
     // exhaust template is marked by an actual defensive tactic in the
@@ -53,7 +57,11 @@ describe('AB exhaust-then-strike doctrine', () => {
 
   it('an offensive-fit AB keeps a tactic-free opening', () => {
     const w = abWarrior(OFFENSIVE_AB);
-    const plan = aiPlanForWarrior({ w, personality: 'Pragmatic' as OwnerPersonality });
+    const plan = aiPlanForWarrior({
+      w,
+      personality: 'Pragmatic' as OwnerPersonality,
+      philosophy: 'WIN_TODAY',
+    });
     expect(plan.phases?.opening?.defensiveTactic).toBeUndefined();
   });
 });

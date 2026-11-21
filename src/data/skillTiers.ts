@@ -5,7 +5,15 @@
  * skills later at 26 total, he reaches 'master', and 8 more skills later he
  * reaches 'advanced Master'."
  */
-type SkillTierKey = 'novice' | 'adept' | 'expert' | 'advExpert' | 'master' | 'advMaster';
+type SkillTierKey =
+  | 'novice'
+  | 'adept'
+  | 'expert'
+  | 'advExpert'
+  | 'master'
+  | 'advMaster'
+  | 'grandmaster'
+  | 'archmaster';
 
 export const SKILL_TIER_LABELS: Record<SkillTierKey, { min: number; label: string }> = {
   novice: { min: 0, label: 'Novice' },
@@ -14,9 +22,15 @@ export const SKILL_TIER_LABELS: Record<SkillTierKey, { min: number; label: strin
   advExpert: { min: 20, label: 'Advanced Expert' },
   master: { min: 26, label: 'Master' },
   advMaster: { min: 34, label: 'Advanced Master' },
+  // V31 (Terrablood skill chart): the archive ladder runs to Grandmaster
+  // (44) and Archmaster (56) — user-adjudicated extension of the Q&A canon.
+  grandmaster: { min: 44, label: 'Grandmaster' },
+  archmaster: { min: 56, label: 'Archmaster' },
 };
 
 const TIERS = [
+  { min: 56, label: 'Archmaster' },
+  { min: 44, label: 'Grandmaster' },
   { min: 34, label: 'Advanced Master' },
   { min: 26, label: 'Master' },
   { min: 20, label: 'Advanced Expert' },

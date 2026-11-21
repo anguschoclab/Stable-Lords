@@ -197,7 +197,7 @@ describe('evaluateBoutOffers', () => {
     const warrior = mkWarrior('p1', FightingStyle.LungingAttack);
     // LU vs ParryStrike = -1 (unfavorable) but big purse; LU vs BashingAttack = 0 with small purse.
     const toughOpponent = mkWarrior('opp_tough', FightingStyle.ParryStrike);
-    const easyOpponent = mkWarrior('opp_easy', FightingStyle.BashingAttack);
+    const easyOpponent = mkWarrior('opp_easy', FightingStyle.ParryLunge);
     const lucrative = mkOffer('offer_lucrative', 'p1', 'opp_tough', { purse: 250 });
     const modest = mkOffer('offer_modest', 'p1', 'opp_easy', { purse: 100 });
     const rivals = [
@@ -238,7 +238,7 @@ describe('evaluateBoutOffers', () => {
   it('PURSE_HUNTER focus elevates purse weight even on a solvent treasury', () => {
     const warrior = mkWarrior('p1', FightingStyle.LungingAttack);
     const toughOpponent = mkWarrior('opp_tough', FightingStyle.ParryStrike);
-    const easyOpponent = mkWarrior('opp_easy', FightingStyle.BashingAttack);
+    const easyOpponent = mkWarrior('opp_easy', FightingStyle.ParryLunge);
     const lucrative = mkOffer('offer_lucrative', 'p1', 'opp_tough', { purse: 250 });
     const modest = mkOffer('offer_modest', 'p1', 'opp_easy', { purse: 100 });
     const rivals = [

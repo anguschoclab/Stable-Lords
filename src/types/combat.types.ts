@@ -140,6 +140,11 @@ export interface ExchangeLogEntry {
    * (cleared droppedWeaponId at exchange start).
    */
   rearm?: 'A' | 'D';
+  /**
+   * Which fighter's weapon broke on armor contact during this exchange —
+   * the id is destroyed for the bout (REARM never restores it).
+   */
+  weaponBreak?: 'A' | 'D';
   /** Momentum shift that occurred during this exchange (first shift wins if multiple). */
   momentumShift?: { actor: 'A' | 'D'; to: number; from: number };
 }

@@ -12,7 +12,12 @@ const seedStore = (w = makeWarrior({ id: 'w1' as WarriorId })) => {
 };
 
 const legal = { weapon: 'epee', armor: 'none', shield: 'none', helm: 'none' };
-const illegal = { weapon: 'QS', armor: 'none', shield: 'small_shield', helm: 'none' }; // two-handed + shield
+const illegal = {
+  weapon: 'quarterstaff',
+  armor: 'none',
+  shield: 'small_shield',
+  helm: 'none',
+}; // two-handed + shield
 
 describe('updateWarriorEquipment — store-boundary validation (V30)', () => {
   it('rejects a two-handed weapon paired with a shield (no state change)', () => {

@@ -6,6 +6,7 @@ import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
 import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
 import { getPairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 
 /**
  * Rivalry counter-meta (moved from processAIRosterManagement): a rival
@@ -29,8 +30,8 @@ function rivalDraftMeta(
   const playerFights = (state.arenaHistory ?? [])
     .filter(
       (f) =>
-        state.warriorToStableMap?.get(f.warriorIdA)?.stableId === state.player.id ||
-        state.warriorToStableMap?.get(f.warriorIdD)?.stableId === state.player.id
+        resolveWarriorOwner(state, f.warriorIdA)?.isPlayer === true ||
+        resolveWarriorOwner(state, f.warriorIdD)?.isPlayer === true
     )
     .slice(-10);
   return playerFights.length > 0 ? computeMetaDrift(playerFights, 10) : meta;

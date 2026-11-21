@@ -22,6 +22,7 @@ import {
 } from '@/engine/championship/arenaChampionship';
 import { ARENA_TITLE } from '@/constants/arena';
 import { bookable } from './bookable';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import {
   BID_MATCHMAKING_ID,
   MAX_PLAYER_OFFERS_GLOBAL,
@@ -361,8 +362,12 @@ export function convertBidsToOffers(
 
     // The stable that generated the bid owns the proposer; the cache map is
     // a hot-path fast lookup, with the bid's rivalId as the ground truth.
-    const proposerStable = state.warriorToStableMap?.get(bid.proposingWarriorId as WarriorId) ?? {
+    const proposerStable = resolveWarriorOwner(
+      state,
+      bid.proposingWarriorId as WarriorId
+    ) ?? {
       stableId: rivalId,
+      stableName: '',
       isPlayer: false,
     };
 

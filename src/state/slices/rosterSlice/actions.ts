@@ -16,6 +16,7 @@ import {
 import { SeededRNG, hashStr } from '@/utils/random';
 import { sanitizeEntityName } from '@/utils/entityName';
 import { LEGACY_FOUND_CHANCE } from '@/constants/world';
+import { validateLoadout } from '@/data/equipment';
 
 /** Apply an insight token's effect to a warrior draft. */
 function applyInsightToken(w: Warrior, token: InsightToken, state: GameStore): Warrior {
@@ -243,6 +244,9 @@ function rosterMetaActions(set: SetFn) {
       warriorId: WarriorId,
       equipment: { weapon: string; armor: string; shield: string; helm: string }
     ) => {
+      // V30-W7: the store boundary enforces the same legality the UI gating
+      // applies — programmatic callers can't bypass validateLoadout.
+      if (validateLoadout(equipment).length > 0) return;
       set((state) => ({
         roster: updateEntityInList(state.roster, warriorId, (w) => ({ ...w, equipment })),
       }));

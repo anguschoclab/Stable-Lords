@@ -9,6 +9,8 @@ import type { WarriorId, StableId } from '@/types/shared.types';
 
 const playerW = makeWarrior({ id: 'pw' as WarriorId, stableId: 'p1' as StableId });
 const rivalW = makeWarrior({ id: 'rw' as WarriorId, stableId: 'r1' as StableId });
+// The resolver returns the stable's full identity triple — one shape serves
+// both isPlayer checks and stableName consumers (arenaChampionship).
 
 const state = (extra: Record<string, unknown> = {}) =>
   makeAiTestState({
@@ -22,6 +24,7 @@ describe('resolveWarriorOwner (V30 single resolver)', () => {
     const s = state();
     expect(resolveWarriorOwner(s, 'pw' as WarriorId)).toEqual({
       stableId: 'p1',
+      stableName: s.player.stableName,
       isPlayer: true,
     });
   });
@@ -30,6 +33,7 @@ describe('resolveWarriorOwner (V30 single resolver)', () => {
     const s = state();
     expect(resolveWarriorOwner(s, 'rw' as WarriorId)).toEqual({
       stableId: 'r1',
+      stableName: s.rivals![0]!.owner.stableName,
       isPlayer: false,
     });
   });

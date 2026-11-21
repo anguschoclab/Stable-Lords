@@ -341,11 +341,17 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
  * @param rng -
  * * @returns The state impact containing treasury delta and ledger entries
  */
-export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGService): StateImpact {
+export function computeEconomyImpact(
+  input: StableEconomyInput,
+  rng?: IRNGService,
+  opts?: { seedOffset?: number }
+): StateImpact {
   const breakdown = computeWeeklyBreakdown(input);
   const entries: LedgerEntry[] = [];
 
-  const rngService = resolveRng(rng, input.week * 31);
+  // Player salt: week*31. Rival stables pass their id-length as seedOffset,
+  // reproducing the V26 rival salt week*31 + id.length under one emitter.
+  const rngService = resolveRng(rng, input.week * 31 + (opts?.seedOffset ?? 0));
 
   for (const i of breakdown.income) {
     entries.push({

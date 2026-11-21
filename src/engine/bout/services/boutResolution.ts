@@ -23,7 +23,7 @@ import {
 } from '../core/resolveHelpers';
 import { applyRecords } from '../recordHandler';
 import { handleDeath } from '../mortalityHandler';
-import { isPlayerOwned } from '../warriorRouting';
+import { stampLastBoutWeek } from '../lastBoutWeek';
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import { handleInjuries } from '../injuryHandler';
 import { handleProgressions } from '../progressionHandler';
@@ -163,28 +163,7 @@ function runBoutSimulation(
   };
 }
 
-/**
- * lastBoutWeek stamps for both combatants. Rival-owned combatants get a
- * per-warrior patch; this used to rebuild the owning rival's whole roster
- * from the pre-bout snapshot, which — merged last-wins — discarded that
- * bout's record, injury, XP and death updates for every rival warrior.
- * Favorites discovered in-place are routed explicitly by handleProgressions.
- */
-function rosterUpdateImpacts(
-  state: GameState,
-  validCW: Warrior,
-  validCO: Warrior,
-  week: number
-): StateImpact[] {
-  const rosterUpdates = new Map();
-  rosterUpdates.set(validCW.id, { lastBoutWeek: week });
-  rosterUpdates.set(validCO.id, { lastBoutWeek: week });
-  const rivalWarriorPatches = new Map<Warrior['id'], Partial<Warrior>>();
-  for (const w of [validCW, validCO]) {
-    if (!isPlayerOwned(state, w)) rivalWarriorPatches.set(w.id, { lastBoutWeek: week });
-  }
-  return [{ rosterUpdates, rivalWarriorPatches }];
-}
+
 
 interface CollectBoutImpactsArgs {
   state: GameState;
@@ -321,7 +300,7 @@ function postResolutionImpacts(args: PostResolutionImpactsArgs): {
       planA: args.planA,
       planD: args.planD,
     }),
-    ...rosterUpdateImpacts(state, validCW, validCO, ctx.week)
+    stampLastBoutWeek(state, validCW, validCO, ctx.week)
   );
   return { deathRes, injuryRes };
 }

@@ -22,7 +22,7 @@ import { hashStr, SeededRNG } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import { blendQuality } from '../competence';
 import { findWarriorById } from '@/engine/core/warriorLookup';
-import { keySet } from '@/utils/collections';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import {
   generateScoutReport,
   matchesScoutTarget,
@@ -77,7 +77,6 @@ function* titleOpponents(
   state: GameState
 ): Generator<{ otherId: string; oppStableId: string | undefined }> {
   const selfIds = new Set(rival.roster.map((w) => w.id));
-  const playerIds = keySet(state.roster, (w) => w.id);
   for (const offer of Object.values(state.boutOffers ?? {})) {
     if (!offer.titleArenaId) continue;
     if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
@@ -85,12 +84,7 @@ function* titleOpponents(
     if (!mine) continue;
     const otherId = offer.warriorIds.find((id) => id !== mine);
     if (!otherId) continue;
-    yield {
-      otherId,
-      oppStableId:
-        state.warriorToStableMap?.get(otherId)?.stableId ??
-        (playerIds.has(otherId) ? state.player.id : undefined),
-    };
+    yield { otherId, oppStableId: resolveWarriorOwner(state, otherId)?.stableId };
   }
 }
 

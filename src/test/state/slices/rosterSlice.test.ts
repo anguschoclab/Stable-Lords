@@ -192,17 +192,17 @@ describe('RosterSlice', () => {
     act(() => {
       useTestStore.getState().addWarrior(mockWarrior);
       useTestStore.getState().updateWarriorEquipment('w1' as any, {
-        weapon: 'sword',
-        armor: 'mail',
-        shield: 'kite',
-        helm: 'pot',
+        weapon: 'epee',
+        armor: 'none_armor',
+        shield: 'small_shield',
+        helm: 'none_helm',
       });
     });
     expect(useTestStore.getState().roster[0]!.equipment).toEqual({
-      weapon: 'sword',
-      armor: 'mail',
-      shield: 'kite',
-      helm: 'pot',
+      weapon: 'epee',
+      armor: 'none_armor',
+      shield: 'small_shield',
+      helm: 'none_helm',
     });
   });
 

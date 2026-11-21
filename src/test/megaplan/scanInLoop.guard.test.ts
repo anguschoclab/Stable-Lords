@@ -180,9 +180,9 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
   },
   {
-    file: 'src/engine/championship/arenaChampionship/core.ts',
+    file: 'src/engine/core/warriorOwnership.ts',
     match: "(r.roster ?? []).some((w) => w.id === warriorId)",
-    why: 'disjoint per-stable roster scan — total work is linear in roster size; the .some gate also preserves referential identity for untouched stables',
+    why: 'V30 resolver fallback — runs only when warriorToStableMap misses; disjoint per-stable scan, linear in roster size',
   },
   {
     file: 'src/engine/championship/arenaChampionship/core.ts',

@@ -33,6 +33,7 @@ import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import type { ArenaTitle } from '@/types/state/championship';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { indexBy, keySet } from '@/utils/collections';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 
 /** Weeks before the Grand Championship bracket in which champions rest. */
 const GRAND_CHAMP_PREP_WEEKS = 2;
@@ -126,7 +127,7 @@ function scoreThrone(
     // Witnessed-tells danger: a dossier that saw the champion's stable
     // brawl high-OE marks this throne as a bloodier climb.
     if (ctx.champion && ctx.rival.owner.personality !== 'Aggressive') {
-      const champStableId = ctx.state.warriorToStableMap?.get(ctx.champion.id)?.stableId;
+      const champStableId = resolveWarriorOwner(ctx.state, ctx.champion.id)?.stableId;
       const tells = champStableId
         ? ctx.rival.agentMemory?.opponentDossiers?.[champStableId]?.observedTells
         : undefined;

@@ -1,4 +1,5 @@
 import type { Warrior, RivalStableData, GameState } from '@/types/state.types';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import { computePlayerThreatLevel, type PlayerThreatLevel } from '@/engine/ai/agentCore';
 
 /**
@@ -12,7 +13,7 @@ export function buildThreatContext(
 ): { observedDanger: boolean; playerThreat: PlayerThreatLevel } {
   // Observed danger: witnessed-tells dossiers that saw the opponent's stable
   // brawl high-OE tighten the style-matchup tolerance for calculating owners.
-  const oppStableInfo = opponent ? state?.warriorToStableMap?.get(opponent.id) : undefined;
+  const oppStableInfo = opponent && state ? resolveWarriorOwner(state, opponent.id) : undefined;
   const oppTells = oppStableInfo?.stableId
     ? rival.agentMemory?.opponentDossiers?.[oppStableInfo.stableId]?.observedTells
     : undefined;
@@ -22,10 +23,7 @@ export function buildThreatContext(
   // rankings, rival owners adjust — calculating camps refuse to feed the
   // dominant stable, Showmen chase the upset, and everyone negotiates harder
   // because the dominant stable can afford it.
-  const playerBound =
-    !!opponent &&
-    !!state &&
-    (oppStableInfo?.isPlayer ?? (state.roster ?? []).some((w) => w.id === opponent.id));
+  const playerBound = !!opponent && !!state && (oppStableInfo?.isPlayer ?? false);
   const playerThreat: PlayerThreatLevel =
     playerBound && state ? computePlayerThreatLevel(state) : 'Neutral';
 

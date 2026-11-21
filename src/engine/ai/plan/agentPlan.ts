@@ -10,6 +10,7 @@
 import type { GameState, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import { rivalFightPlan } from './rivalPlan';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { clamp } from '@/utils/math';
@@ -28,7 +29,7 @@ export function agentPlanForWarrior(
   const resolvedOpponentStable =
     opponentStableId ??
     (opponent.stableId as string | undefined) ??
-    state.warriorToStableMap?.get(opponent.id)?.stableId;
+    resolveWarriorOwner(state, opponent.id)?.stableId;
   return rivalFightPlan(state, w, rival, {
     opponentStyle: opponent.style,
     // Stable id identifies the actual opponent — rivalFightPlan resolves it
@@ -88,8 +89,8 @@ export function persistNPCPlans(
     if (offer.status !== 'Signed' || offer.warriorIds.length < 2) continue;
     const [aId, dId] = offer.warriorIds;
     if (!aId || !dId) continue;
-    const aStable = state.warriorToStableMap?.get(aId)?.stableId;
-    const dStable = state.warriorToStableMap?.get(dId)?.stableId;
+    const aStable = resolveWarriorOwner(state, aId)?.stableId;
+    const dStable = resolveWarriorOwner(state, dId)?.stableId;
     if (aStable && aStable !== state.player.id && dStable) {
       addCommitment(aStable, aId as string, dId as string, dStable);
     }

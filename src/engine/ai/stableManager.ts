@@ -1,13 +1,11 @@
 import type { GameState, RivalStableData, Trainer, Warrior } from '@/types/state.types';
-import type { LedgerEntryId } from '@/types/shared.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
 import { updateSeasonRecord, recordBoutOutcome } from './memory/seasonRecord';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
-import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
+import { computeEconomyImpact, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
-import { SeededRNG } from '@/utils/random';
 import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { truncateArray } from '@/utils/stateUtils';
 import {
@@ -71,34 +69,14 @@ function applyWeeklyEconomy(
     treasury: updatedRival.treasury,
   };
 
-  const breakdown = computeWeeklyBreakdown(economyInput);
-
-  // Apply treasury delta
-  updatedRival.treasury += breakdown.net;
-
-  // Write ledger entries
-  const rngService = new SeededRNG(state.week * 31 + updatedRival.id.length);
-  const newEntries: import('@/types/state.types').LedgerEntry[] = [];
-  for (const i of breakdown.income) {
-    newEntries.push({
-      id: rngService.uuid() as LedgerEntryId,
-      week: state.week,
-      label: i.label,
-      amount: i.amount,
-      category: i.category,
-    });
-  }
-  for (const e of breakdown.expenses) {
-    newEntries.push({
-      id: rngService.uuid() as LedgerEntryId,
-      week: state.week,
-      label: e.label,
-      amount: -e.amount,
-      category: e.category,
-    });
-  }
+  // V30: one emitter — the rival salt (week*31 + id.length) is now a
+  // seedOffset on the shared computeEconomyImpact rather than a private loop.
+  const impact = computeEconomyImpact(economyInput, undefined, {
+    seedOffset: updatedRival.id.length,
+  });
+  updatedRival.treasury += impact.treasuryDelta ?? 0;
   updatedRival.ledger = truncateArray(
-    [...(updatedRival.ledger || []), ...newEntries],
+    [...(updatedRival.ledger || []), ...(impact.ledgerEntries ?? [])],
     TRUNCATION_CAPS.rivalLedger
   );
   return updatedRival;

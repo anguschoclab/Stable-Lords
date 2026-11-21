@@ -13,6 +13,7 @@ import type {
   FightSummary,
 } from '@/types/state.types';
 import type { FightingStyle, StableId } from '@/types/shared.types';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import { hashStr } from '@/utils/random';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { findWarriorById } from '@/engine/core/warriorLookup';
@@ -198,7 +199,7 @@ export function updateDossiers(
   const selfIds = new Set(rival.roster.map((w) => w.id));
   const stableOf = (wid: FightSummary['warriorIdA']): string | undefined => {
     if (selfIds.has(wid)) return rival.id;
-    return state.warriorToStableMap?.get(wid)?.stableId;
+    return resolveWarriorOwner(state, wid)?.stableId;
   };
 
   // Witnessed tells: a stable that watched this fight reads the participants'

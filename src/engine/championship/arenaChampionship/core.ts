@@ -12,6 +12,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId, BoutOfferId } from '@/types/shared.types';
 import { ARENA_TITLE } from '@/constants/arena';
 import { findWarriorById } from '@/engine/core/warriorLookup';
+import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import { earnEpithet, type EpithetCause } from '@/data/names/epithets';
 
 export const CHAMPIONSHIP_EXCLUDED_ARENAS: ReadonlySet<string> = new Set([
@@ -133,15 +134,7 @@ export function owningStableOf(
   state: GameState,
   warriorId: string
 ): { stableId: string; stableName: string; isPlayer: boolean } | null {
-  if ((state.roster ?? []).some((w) => w.id === warriorId)) {
-    return { stableId: state.player.id, stableName: state.player.stableName, isPlayer: true };
-  }
-  for (const r of state.rivals ?? []) {
-    if ((r.roster ?? []).some((w) => w.id === warriorId)) {
-      return { stableId: r.id, stableName: r.owner.stableName, isPlayer: false };
-    }
-  }
-  return null;
+  return resolveWarriorOwner(state, warriorId as WarriorId);
 }
 
 // ─── Reign transitions ──────────────────────────────────────────────────────

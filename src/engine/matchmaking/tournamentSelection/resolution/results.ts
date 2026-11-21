@@ -9,7 +9,7 @@ import { handleInjuries } from '@/engine/bout/injuryHandler';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
 import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { calculateBoutFame } from '@/engine/bout/core/resolveHelpers';
-import { isPlayerOwned } from '@/engine/bout/warriorRouting';
+import { stampLastBoutWeek } from '@/engine/bout/lastBoutWeek';
 
 /**
  *
@@ -31,27 +31,7 @@ interface ApplyBoutResultsArgs {
   planD?: FightPlan;
 }
 
-/**
- * lastBoutWeek stamps for both combatants — mirrors the pipeline path's
- * `rosterUpdateImpacts`: rival-owned combatants get a per-warrior patch so a
- * merged roster write can't clobber the bout's other consequences.
- */
-function lastBoutWeekImpact(
-  state: GameState,
-  wA: Warrior,
-  wD: Warrior,
-  week: number
-): StateImpact {
-  const rosterUpdates = new Map([
-    [wA.id, { lastBoutWeek: week }],
-    [wD.id, { lastBoutWeek: week }],
-  ]);
-  const rivalWarriorPatches = new Map<Warrior['id'], Partial<Warrior>>();
-  for (const w of [wA, wD]) {
-    if (!isPlayerOwned(state, w)) rivalWarriorPatches.set(w.id, { lastBoutWeek: week });
-  }
-  return { rosterUpdates, rivalWarriorPatches };
-}
+
 
 /**
  * Apply bout results.
@@ -133,7 +113,7 @@ function boutConsequenceImpacts(
       planA: planA ?? wA.plan,
       planD: planD ?? wD.plan,
     }),
-    lastBoutWeekImpact(s, wA, wD, week),
+    stampLastBoutWeek(s, wA, wD, week),
   ];
 }
 

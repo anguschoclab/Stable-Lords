@@ -102,41 +102,7 @@ export interface OffenseDefenseArgs {
 }
 
 /**
- *
+ * V30: single canonical args bag — `ResolveCombatOffenseDefenseArgs` was a
+ * field-for-field clone; it remains as an alias for the public entry point.
  */
-export interface ResolveCombatOffenseDefenseArgs {
-  ctx: ResolutionContext;
-  fA: FighterState;
-  fD: FighterState;
-  aGoesFirst: boolean;
-  OE_A: number;
-  AL_A: number;
-  OE_D: number;
-  AL_D: number;
-  fatA: number;
-  fatD: number;
-  offModsA: OffensiveMods;
-  offModsD: OffensiveMods;
-  defModsA: DefensiveMods;
-  defModsD: DefensiveMods;
-  passA: StylePassiveResult;
-  passD: StylePassiveResult;
-  biasAttA: number;
-  biasDefA: number;
-  biasAttD: number;
-  biasDefD: number;
-  tactA: ResolvedTactics;
-  tactD: ResolvedTactics;
-  psychA: PsychStateMod;
-  psychD: PsychStateMod;
-  dynTraitsA: DynamicTraitMods;
-  dynTraitsD: DynamicTraitMods;
-  feintAttBonus: number;
-  feintDefBonus: number;
-  attCommit: CommitResult;
-  defCommit: CommitResult;
-  es: ExchangeState;
-  phaseKey: 'opening' | 'mid' | 'late';
-  stylePhase: StylePhase;
-  events: CombatEvent[];
-}
+export type ResolveCombatOffenseDefenseArgs = OffenseDefenseArgs;

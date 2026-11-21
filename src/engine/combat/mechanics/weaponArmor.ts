@@ -35,19 +35,16 @@ export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
 
 const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
   none_armor: {},
-  padded: { bash: 0.9, pierce: 1.05 },
-  leather: { slash: 0.9, pierce: 1.05 },
-  studded_leather: { slash: 0.88, pierce: 1.05 },
-  ring_mail: { slash: 0.9, pierce: 0.9, bash: 1.1 },
-  scale_mail: { slash: 0.8, pierce: 1.15 },
-  chain_mail: { pierce: 0.8, slash: 1.1 },
-  plate_mail: { slash: 0.85, bash: 0.85, pierce: 0.85 },
-  plate_armor: { slash: 0.8, bash: 0.8, pierce: 0.8 },
+  ALE: { bash: 0.9, pierce: 1.05 },
+  APL: { slash: 0.9, pierce: 1.05 },
+  AS: { slash: 0.88, pierce: 1.05 },
+  ARM: { slash: 0.9, pierce: 0.9, bash: 1.1 },
+  ASM: { slash: 0.8, pierce: 1.15 },
+  ACM: { pierce: 0.8, slash: 1.1 },
+  APM: { slash: 0.85, bash: 0.85, pierce: 0.85 },
+  APA: { slash: 0.8, bash: 0.8, pierce: 0.8 },
 };
 
-/**
- *
- */
 export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: string): number {
   if (!weaponId || !armorId) return damage;
   const dtype = WEAPON_DAMAGE_TYPE[weaponId];

@@ -19,13 +19,13 @@ describe('dagger vs armor tiers (Jalopy + Assur, reconciled)', () => {
   it('DA is penalised vs mid armor — worse than the pierce baseline', () => {
     // pierce baseline vs scale_mail is 1.15 today; canon says DA should be
     // poor there — the override must land below the dtype baseline.
-    for (const armor of ['scale_mail', 'chain_mail']) {
+    for (const armor of ['ASM', 'ACM']) {
       expect(applyArmorTypeMod(100, 'dagger', armor)).toBeLessThan(115);
     }
   });
 
   it('DA holds up vs the plate tiers (Assur: surprisingly good vs APA/APM)', () => {
-    for (const armor of ['plate_mail', 'plate_armor']) {
+    for (const armor of ['APM', 'APA']) {
       expect(applyArmorTypeMod(100, 'dagger', armor)).toBeGreaterThanOrEqual(80);
     }
   });

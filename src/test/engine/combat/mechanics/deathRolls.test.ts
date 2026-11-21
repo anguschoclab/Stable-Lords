@@ -31,7 +31,7 @@ const killer = (id: string, st: FightingStyle, over: Partial<Warrior> = {}): War
     status: 'Active',
     traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
-    equipment: { weapon: 'scimitar', armor: 'leather', helm: 'cap' } as Warrior['equipment'],
+    equipment: { weapon: 'scimitar', armor: 'APL', helm: 'cap' } as Warrior['equipment'],
     ...over,
   }) as Warrior;
 
@@ -48,7 +48,7 @@ const weakVictim = () =>
 describe('deathRollFailChance', () => {
   const base = {
     hitLoc: 'chest' as const,
-    armorId: 'leather',
+    armorId: 'APL',
     helmId: 'cap',
     will: 10,
     maxHp: 60,

@@ -28,7 +28,7 @@ describe('fitArchetypeArmor — canon armor doctrine', () => {
       FightingStyle.TotalParry,
       attrs({ ST: 16, CN: 16, SZ: 5, WT: 9, WL: 19, SP: 3, DF: 11 })
     );
-    expect(['plate_armor', 'plate_mail', 'chain_mail']).toContain(pick);
+    expect(['APA', 'APM', 'ACM']).toContain(pick);
   });
 
   it('the pick is always legal for the style — AB never wears plate', () => {
@@ -38,7 +38,7 @@ describe('fitArchetypeArmor — canon armor doctrine', () => {
     );
     const legal = getAvailableItems('armor', FightingStyle.AimedBlow).some((i) => i.id === pick);
     expect(legal).toBe(true);
-    expect(['plate_armor', 'plate_mail']).not.toContain(pick);
+    expect(['APA', 'APM']).not.toContain(pick);
   });
 
   it('a weak frame never lands OVER encumbrance from the armor pick', () => {

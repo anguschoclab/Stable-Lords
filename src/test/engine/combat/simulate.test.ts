@@ -423,7 +423,7 @@ describe('simulateFight — equipment modifiers', () => {
       {
         equipment: {
           weapon: 'great_axe',
-          armor: 'scale_mail',
+          armor: 'ASM',
           helm: 'none_helm',
           shield: 'none_shield',
         },
@@ -434,7 +434,7 @@ describe('simulateFight — equipment modifiers', () => {
       FightingStyle.LungingAttack,
       { SP: 16 },
       {
-        equipment: { weapon: 'dagger', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+        equipment: { weapon: 'dagger', armor: 'APL', helm: 'none_helm', shield: 'none_shield' },
       }
     );
 
@@ -459,7 +459,7 @@ describe('simulateFight — equipment modifiers', () => {
         {
           equipment: {
             weapon: 'short_sword',
-            armor: 'chain_mail',
+            armor: 'ACM',
             helm: 'helm',
             shield: shielded ? 'medium_shield' : 'none_shield',
           },
@@ -709,7 +709,7 @@ describe('simulateFight — intro narration helm assignment (Bug 3)', () => {
       {
         equipment: {
           weapon: 'maul',
-          armor: 'chain_mail',
+          armor: 'ACM',
           shield: 'none_shield',
           helm: 'full_helm',
         },
@@ -720,7 +720,7 @@ describe('simulateFight — intro narration helm assignment (Bug 3)', () => {
       FightingStyle.AimedBlow,
       {},
       {
-        equipment: { weapon: 'epee', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+        equipment: { weapon: 'epee', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
       }
     );
 
@@ -840,7 +840,7 @@ describe('simulateFight — distance system', () => {
       {
         equipment: {
           weapon: 'short_spear',
-          armor: 'leather',
+          armor: 'APL',
           helm: 'none_helm',
           shield: 'none_shield',
         },

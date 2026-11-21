@@ -22,11 +22,11 @@ describe('hitLocation mechanics', () => {
     });
 
     it('returns chest and abdomen for body armor', () => {
-      expect(protectCovers('leather')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('padded')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('studded_leather')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('chain_mail')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('plate_armor')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('APL')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('ALE')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('AS')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('ACM')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('APA')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('body')).toEqual(['chest', 'abdomen']);
     });
 
@@ -72,7 +72,7 @@ describe('hitLocation mechanics', () => {
         .mockReturnValueOnce(0.3) // Misses target
         .mockReturnValueOnce(0.4) // Doesn't aim for exposed
         .mockReturnValueOnce(0.0); // Picks first from all ('head')
-      expect(rollHitLocation(rng, 'chest', 'leather')).toBe('head');
+      expect(rollHitLocation(rng, 'chest', 'APL')).toBe('head');
     });
 
     it('ignores invalid targets', () => {
@@ -88,7 +88,7 @@ describe('hitLocation mechanics', () => {
         .fn()
         .mockReturnValueOnce(0.2) // aims for exposed
         .mockReturnValueOnce(0.0); // picks first exposed (head, since head is not covered by leather)
-      expect(rollHitLocation(rng, undefined, 'leather')).toBe('head');
+      expect(rollHitLocation(rng, undefined, 'APL')).toBe('head');
     });
 
     it('ignores exposed if all are covered (impossible in game, but testable)', () => {
@@ -184,7 +184,7 @@ describe('hitLocation mechanics', () => {
     });
 
     it('covers chest/abdomen for includes("mail") branch', () => {
-      expect(protectCovers('ring_mail')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('ARM')).toEqual(['chest', 'abdomen']);
     });
   });
 
@@ -231,11 +231,11 @@ describe('Hit Location', () => {
     });
 
     it('returns chest/abdomen for body armor', () => {
-      expect(protectCovers('leather')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('padded')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('studded_leather')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('chain_mail')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('plate_armor')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('APL')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('ALE')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('AS')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('ACM')).toEqual(['chest', 'abdomen']);
+      expect(protectCovers('APA')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('body')).toEqual(['chest', 'abdomen']);
     });
 
@@ -263,11 +263,11 @@ describe('Hit Location', () => {
       // TARGET_MISS_CHANCE is 0.3
       // 0.2 < 0.3 -> hits target despite cover
       const rngHit = vi.fn().mockReturnValue(0.2);
-      expect(rollHitLocation(rngHit, 'chest', 'leather')).toBe('chest');
+      expect(rollHitLocation(rngHit, 'chest', 'APL')).toBe('chest');
 
       // 0.5 > 0.3 -> misses target due to cover, falls through to exposed/random logic
       // Next rng call for exposed is < 0.3, so it picks exposed.
-      // 'chest' and 'abdomen' are covered by 'leather', leaving 5 exposed parts.
+      // 'chest' and 'abdomen' are covered by 'APL', leaving 5 exposed parts.
       const rngMiss = vi
         .fn()
         .mockReturnValueOnce(0.5)
@@ -275,7 +275,7 @@ describe('Hit Location', () => {
         .mockReturnValueOnce(0.0);
       // Exposed array: ['head', 'right arm', 'left arm', 'right leg', 'left leg']
       // Pick index 0 -> 'head'
-      expect(rollHitLocation(rngMiss, 'chest', 'leather')).toBe('head');
+      expect(rollHitLocation(rngMiss, 'chest', 'APL')).toBe('head');
     });
 
     it('picks exposed area if not targeting and rng < 0.3', () => {

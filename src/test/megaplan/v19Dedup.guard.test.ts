@@ -138,7 +138,7 @@ describe('megaplan V19: test-tier deduplication', () => {
       'no shared equipment-loadout fixture'
     ).toBe(true);
     const loadoutRe =
-      /weapon:\s*'longsword',\s*\n\s*armor:\s*'plate_armor',\s*\n\s*shield:\s*'large_shield'/g;
+      /weapon:\s*'longsword',\s*\n\s*armor:\s*'APA',\s*\n\s*shield:\s*'large_shield'/g;
     const loadoutOffenders = [
       'src/test/components/equipment/EncumbranceBar.test.tsx',
       'src/test/engine/combat/equipmentIntegration.test.ts',

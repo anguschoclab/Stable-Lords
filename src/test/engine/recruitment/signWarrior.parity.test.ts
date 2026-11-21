@@ -49,7 +49,7 @@ describe('veteran free-agent round-trip — progression survives', () => {
       skillDrills: { ATT: 2 },
       strategyMemory: { cells: { 'M/M': { w: 2, l: 1 } }, recentLossFactors: ['outclassed'] },
       burnedSkills: { DEF: 1 },
-      equipment: { weapon: 'scimitar', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+      equipment: { weapon: 'scimitar', armor: 'APL', helm: 'none_helm', shield: 'none_shield' },
       fame: 60,
       popularity: 20,
       career: { wins: 5, losses: 2, kills: 1 },

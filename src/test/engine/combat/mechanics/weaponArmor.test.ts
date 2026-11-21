@@ -12,7 +12,7 @@ import * as equipmentUtils from '@/data/equipment/equipment.utils';
 describe('weaponArmor', () => {
   describe('applyArmorTypeMod', () => {
     it('returns unmodified damage if weaponId is undefined', () => {
-      expect(applyArmorTypeMod(100, undefined, 'leather')).toBe(100);
+      expect(applyArmorTypeMod(100, undefined, 'APL')).toBe(100);
     });
 
     it('returns unmodified damage if armorId is undefined', () => {
@@ -20,16 +20,16 @@ describe('weaponArmor', () => {
     });
 
     it('returns unmodified damage if weapon has no damage type', () => {
-      expect(applyArmorTypeMod(100, 'unknown_weapon', 'leather')).toBe(100);
+      expect(applyArmorTypeMod(100, 'unknown_weapon', 'APL')).toBe(100);
     });
 
     it('returns unmodified damage if weapon damage type is none', () => {
-      expect(applyArmorTypeMod(100, 'small_shield', 'leather')).toBe(100);
+      expect(applyArmorTypeMod(100, 'small_shield', 'APL')).toBe(100);
     });
 
     it('returns unmodified damage if armor has no multiplier for damage type', () => {
       // padded armor has no multiplier for slash
-      expect(applyArmorTypeMod(100, 'longsword', 'padded')).toBe(100);
+      expect(applyArmorTypeMod(100, 'longsword', 'ALE')).toBe(100);
     });
 
     it('returns unmodified damage for none_armor', () => {
@@ -38,27 +38,27 @@ describe('weaponArmor', () => {
 
     it('applies armor multiplier for specific combinations', () => {
       // dagger = pierce, leather = pierce: 1.05
-      expect(applyArmorTypeMod(100, 'dagger', 'leather')).toBe(105);
+      expect(applyArmorTypeMod(100, 'dagger', 'APL')).toBe(105);
 
       // longsword = slash, leather = slash: 0.9
-      expect(applyArmorTypeMod(100, 'longsword', 'leather')).toBe(90);
+      expect(applyArmorTypeMod(100, 'longsword', 'APL')).toBe(90);
 
       // mace = bash, padded = bash: 0.9
-      expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
+      expect(applyArmorTypeMod(100, 'mace', 'ALE')).toBe(90);
 
       // dagger = pierce, chain_mail: V24 weapon override 0.7 (Jalopy — DA
       // poor vs ASM+) supersedes the pierce baseline 0.8
-      expect(applyArmorTypeMod(100, 'dagger', 'chain_mail')).toBe(70);
+      expect(applyArmorTypeMod(100, 'dagger', 'ACM')).toBe(70);
 
       // longsword = slash, chain_mail = slash: 1.1
-      expect(applyArmorTypeMod(100, 'longsword', 'chain_mail')).toBe(110);
+      expect(applyArmorTypeMod(100, 'longsword', 'ACM')).toBe(110);
     });
 
     it('handles rounding correctly', () => {
       // 55 * 1.05 = 57.75 -> 58
-      expect(applyArmorTypeMod(55, 'dagger', 'leather')).toBe(58);
+      expect(applyArmorTypeMod(55, 'dagger', 'APL')).toBe(58);
       // 55 * 0.9 = 49.5 -> 50
-      expect(applyArmorTypeMod(55, 'longsword', 'leather')).toBe(50);
+      expect(applyArmorTypeMod(55, 'longsword', 'APL')).toBe(50);
     });
   });
 
@@ -87,44 +87,44 @@ describe('weaponArmor', () => {
   describe('applyArmorTypeMod additional armor types', () => {
     it('applies studded_leather multipliers for slash and pierce', () => {
       // longsword = slash, studded_leather = slash: 0.88
-      expect(applyArmorTypeMod(100, 'longsword', 'studded_leather')).toBe(88);
+      expect(applyArmorTypeMod(100, 'longsword', 'AS')).toBe(88);
       // dagger = pierce, studded_leather = pierce: 1.05
-      expect(applyArmorTypeMod(100, 'dagger', 'studded_leather')).toBe(105);
+      expect(applyArmorTypeMod(100, 'dagger', 'AS')).toBe(105);
     });
 
     it('applies ring_mail multipliers for slash, pierce, and bash', () => {
       // longsword = slash, ring_mail = slash: 0.9
-      expect(applyArmorTypeMod(100, 'longsword', 'ring_mail')).toBe(90);
+      expect(applyArmorTypeMod(100, 'longsword', 'ARM')).toBe(90);
       // dagger = pierce, ring_mail = pierce: 0.9
-      expect(applyArmorTypeMod(100, 'dagger', 'ring_mail')).toBe(90);
+      expect(applyArmorTypeMod(100, 'dagger', 'ARM')).toBe(90);
       // mace = bash, ring_mail = bash: 1.1
-      expect(applyArmorTypeMod(100, 'mace', 'ring_mail')).toBe(110);
+      expect(applyArmorTypeMod(100, 'mace', 'ARM')).toBe(110);
     });
 
     it('applies scale_mail multipliers for slash and pierce', () => {
       // longsword = slash, scale_mail = slash: 0.8
-      expect(applyArmorTypeMod(100, 'longsword', 'scale_mail')).toBe(80);
+      expect(applyArmorTypeMod(100, 'longsword', 'ASM')).toBe(80);
       // dagger = pierce, scale_mail: V24 weapon override 0.7 supersedes the
       // pierce baseline 1.15
-      expect(applyArmorTypeMod(100, 'dagger', 'scale_mail')).toBe(70);
+      expect(applyArmorTypeMod(100, 'dagger', 'ASM')).toBe(70);
     });
 
     it('applies plate_mail multipliers for slash, bash, and pierce', () => {
       // longsword = slash, plate_mail = slash: 0.85
-      expect(applyArmorTypeMod(100, 'longsword', 'plate_mail')).toBe(85);
+      expect(applyArmorTypeMod(100, 'longsword', 'APM')).toBe(85);
       // mace = bash, plate_mail = bash: 0.85
-      expect(applyArmorTypeMod(100, 'mace', 'plate_mail')).toBe(85);
+      expect(applyArmorTypeMod(100, 'mace', 'APM')).toBe(85);
       // dagger = pierce, plate_mail = pierce: 0.85
-      expect(applyArmorTypeMod(100, 'dagger', 'plate_mail')).toBe(85);
+      expect(applyArmorTypeMod(100, 'dagger', 'APM')).toBe(85);
     });
 
     it('applies plate_armor multipliers for slash, bash, and pierce', () => {
       // longsword = slash, plate_armor = slash: 0.8
-      expect(applyArmorTypeMod(100, 'longsword', 'plate_armor')).toBe(80);
+      expect(applyArmorTypeMod(100, 'longsword', 'APA')).toBe(80);
       // mace = bash, plate_armor = bash: 0.8
-      expect(applyArmorTypeMod(100, 'mace', 'plate_armor')).toBe(80);
+      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(80);
       // dagger = pierce, plate_armor = pierce: 0.8
-      expect(applyArmorTypeMod(100, 'dagger', 'plate_armor')).toBe(80);
+      expect(applyArmorTypeMod(100, 'dagger', 'APA')).toBe(80);
     });
 
     it('returns unmodified damage for unknown armorId', () => {
@@ -132,20 +132,20 @@ describe('weaponArmor', () => {
     });
 
     it('returns 0 for damage = 0 regardless of multiplier', () => {
-      expect(applyArmorTypeMod(0, 'dagger', 'leather')).toBe(0);
-      expect(applyArmorTypeMod(0, 'longsword', 'chain_mail')).toBe(0);
+      expect(applyArmorTypeMod(0, 'dagger', 'APL')).toBe(0);
+      expect(applyArmorTypeMod(0, 'longsword', 'ACM')).toBe(0);
     });
 
     it('returns unmodified damage for bash vs chain_mail (no bash entry)', () => {
       // chain_mail has pierce: 0.8 and slash: 1.1, but no bash entry → defaults to 1.0
-      expect(applyArmorTypeMod(100, 'mace', 'chain_mail')).toBe(100);
+      expect(applyArmorTypeMod(100, 'mace', 'ACM')).toBe(100);
     });
   });
 
   describe('applyFlatMitigation', () => {
     it('armor-only mitigation reduces damage by armor mitigation value', () => {
       // leather mitigation = 2, helm = none_helm (mitigation 0)
-      expect(applyFlatMitigation(20, 'leather', 'none_helm')).toBe(18);
+      expect(applyFlatMitigation(20, 'APL', 'none_helm')).toBe(18);
     });
 
     it('helm-only mitigation reduces damage by helm mitigation value', () => {
@@ -155,17 +155,17 @@ describe('weaponArmor', () => {
 
     it('armor + helm mitigation stack additively', () => {
       // chain_mail mitigation = 6, full_helm mitigation = 4 → total 10
-      expect(applyFlatMitigation(20, 'chain_mail', 'full_helm')).toBe(10);
+      expect(applyFlatMitigation(20, 'ACM', 'full_helm')).toBe(10);
     });
 
     it('floors damage at 1 (never reduces to 0)', () => {
       // plate_armor mitigation = 10, full_helm mitigation = 4 → total 14
       // damage 5 → 5 - 14 = -9 → floored at 1
-      expect(applyFlatMitigation(5, 'plate_armor', 'full_helm')).toBe(1);
+      expect(applyFlatMitigation(5, 'APA', 'full_helm')).toBe(1);
     });
 
     it('damage of 0 stays 0 (no negative floor for zero input)', () => {
-      expect(applyFlatMitigation(0, 'plate_armor', 'full_helm')).toBe(0);
+      expect(applyFlatMitigation(0, 'APA', 'full_helm')).toBe(0);
     });
 
     it('undefined armorId is treated as 0 mitigation', () => {
@@ -173,7 +173,7 @@ describe('weaponArmor', () => {
     });
 
     it('undefined helmId is treated as 0 mitigation', () => {
-      expect(applyFlatMitigation(20, 'leather', undefined)).toBe(18);
+      expect(applyFlatMitigation(20, 'APL', undefined)).toBe(18);
     });
 
     it('both undefined ids result in no mitigation', () => {
@@ -193,30 +193,30 @@ describe('weaponArmor', () => {
 describe('Weapon & Armor Mechanics', () => {
   describe('applyArmorTypeMod', () => {
     it('returns original damage if weaponId or armorId is missing', () => {
-      expect(applyArmorTypeMod(10, undefined, 'leather')).toBe(10);
+      expect(applyArmorTypeMod(10, undefined, 'APL')).toBe(10);
       expect(applyArmorTypeMod(10, 'dagger', undefined)).toBe(10);
       expect(applyArmorTypeMod(10, undefined, undefined)).toBe(10);
     });
 
     it('returns original damage if weapon type is none', () => {
-      expect(applyArmorTypeMod(10, 'small_shield', 'leather')).toBe(10);
+      expect(applyArmorTypeMod(10, 'small_shield', 'APL')).toBe(10);
     });
 
     it('returns original damage if weapon type is unknown', () => {
-      expect(applyArmorTypeMod(10, 'unknown_weapon', 'leather')).toBe(10);
+      expect(applyArmorTypeMod(10, 'unknown_weapon', 'APL')).toBe(10);
     });
 
     it('applies correct multiplier based on type match', () => {
       // dagger is pierce. leather vs pierce = 1.05
       // 10 * 1.05 = 10.5 -> round to 11
-      expect(applyArmorTypeMod(10, 'dagger', 'leather')).toBe(11);
+      expect(applyArmorTypeMod(10, 'dagger', 'APL')).toBe(11);
 
       // longsword is slash. plate_mail vs slash = 0.85
       // 10 * 0.85 = 8.5 -> round to 9
-      expect(applyArmorTypeMod(10, 'longsword', 'plate_mail')).toBe(9);
+      expect(applyArmorTypeMod(10, 'longsword', 'APM')).toBe(9);
 
       // mace is bash. scale_mail has no bash mod -> defaults to 1.0
-      expect(applyArmorTypeMod(10, 'mace', 'scale_mail')).toBe(10);
+      expect(applyArmorTypeMod(10, 'mace', 'ASM')).toBe(10);
     });
   });
 
@@ -225,8 +225,8 @@ describe('Weapon & Armor Mechanics', () => {
 
     beforeEach(() => {
       getItemByIdSpy = vi.spyOn(equipmentUtils, 'getItemById').mockImplementation((id: string) => {
-        if (id === 'plate_armor') return { mitigation: 10 } as any;
-        if (id === 'leather') return { mitigation: 2 } as any;
+        if (id === 'APA') return { mitigation: 10 } as any;
+        if (id === 'APL') return { mitigation: 2 } as any;
         if (id === 'full_helm') return { mitigation: 5 } as any;
         return undefined;
       });
@@ -237,24 +237,24 @@ describe('Weapon & Armor Mechanics', () => {
     });
 
     it('returns 0 if incoming damage is 0 or less', () => {
-      expect(applyFlatMitigation(0, 'leather', 'full_helm')).toBe(0);
-      expect(applyFlatMitigation(-5, 'leather', 'full_helm')).toBe(0);
+      expect(applyFlatMitigation(0, 'APL', 'full_helm')).toBe(0);
+      expect(applyFlatMitigation(-5, 'APL', 'full_helm')).toBe(0);
     });
 
     it('subtracts total mitigation from damage', () => {
       // plate_armor (10) + full_helm (5) = 15 mitigation
       // 20 - 15 = 5
-      expect(applyFlatMitigation(20, 'plate_armor', 'full_helm')).toBe(5);
+      expect(applyFlatMitigation(20, 'APA', 'full_helm')).toBe(5);
 
       // Only armor: leather (2)
       // 10 - 2 = 8
-      expect(applyFlatMitigation(10, 'leather', undefined)).toBe(8);
+      expect(applyFlatMitigation(10, 'APL', undefined)).toBe(8);
     });
 
     it('floors damage at 1 if base damage > 0', () => {
       // plate_armor (10) + full_helm (5) = 15 mitigation.
       // 10 damage - 15 mitigation = -5. Floors to 1.
-      expect(applyFlatMitigation(10, 'plate_armor', 'full_helm')).toBe(1);
+      expect(applyFlatMitigation(10, 'APA', 'full_helm')).toBe(1);
     });
 
     it('handles missing items correctly', () => {

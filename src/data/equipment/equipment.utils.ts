@@ -76,7 +76,7 @@ export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): bo
  */
 export const DEFAULT_LOADOUT: EquipmentLoadout = {
   weapon: 'broadsword',
-  armor: 'leather',
+  armor: 'APL',
   shield: 'none_shield',
   helm: 'leather_cap',
 };
@@ -95,7 +95,7 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
   const classic = STYLE_CLASSIC_WEAPONS[style] ?? 'broadsword';
   return {
     weapon: classic,
-    armor: 'leather',
+    armor: 'APL',
     shield: 'none_shield',
     helm: 'leather_cap',
   };

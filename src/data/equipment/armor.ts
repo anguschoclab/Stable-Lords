@@ -1,6 +1,11 @@
 /**
  * Armor data for Stable Lords.
  * Body armor with varying weights and style restrictions.
+ *
+ * V24-F3: ids/codes aligned to the canonical Duel2 armor table
+ * (ALE/APL/ARM/ASM/ACM/APM/APA). The weight-5 studded-hide row has no canon
+ * code — `AS` is a house divergence recorded in docs/MEGAPLAN_BACKLOG.md §3.
+ * Canon `APA-F` (full plate) is not modeled — APA is the heaviest tier.
  */
 
 import { FightingStyle } from '@/types/game';
@@ -22,29 +27,29 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 1.0,
   },
   {
-    id: 'padded',
-    code: 'AP',
-    name: 'Padded',
+    id: 'ALE',
+    code: 'ALE',
+    name: 'Leather',
     slot: 'armor',
     weight: 2,
-    description: 'Quilted cloth armor. Basic protection.',
+    description: 'Cured leather armor. Light and flexible.',
     mitigation: 1,
     defenseMod: 0,
     enduranceCostMod: 1.1,
   },
   {
-    id: 'leather',
-    code: 'AL',
-    name: 'Leather',
+    id: 'APL',
+    code: 'APL',
+    name: 'Padded Leather',
     slot: 'armor',
     weight: 4,
-    description: 'Cured leather armor. Light and flexible.',
+    description: 'Quilted cloth armor. Basic protection.',
     mitigation: 2,
     defenseMod: 1,
     enduranceCostMod: 1.2,
   },
   {
-    id: 'studded_leather',
+    id: 'AS',
     code: 'AS',
     name: 'Studded Leather',
     slot: 'armor',
@@ -55,9 +60,9 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 1.3,
   },
   {
-    id: 'ring_mail',
-    code: 'AR',
-    name: 'Ring Mail',
+    id: 'ARM',
+    code: 'ARM',
+    name: 'Ringmail',
     slot: 'armor',
     weight: 6,
     description: 'Leather with metal rings sewn on.',
@@ -66,7 +71,7 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 1.4,
   },
   {
-    id: 'scale_mail',
+    id: 'ASM',
     code: 'ASM',
     name: 'Scalemail',
     slot: 'armor',
@@ -77,7 +82,7 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 1.6,
   },
   {
-    id: 'chain_mail',
+    id: 'ACM',
     code: 'ACM',
     name: 'Chainmail',
     slot: 'armor',
@@ -88,7 +93,7 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 1.8,
   },
   {
-    id: 'plate_mail',
+    id: 'APM',
     code: 'APM',
     name: 'Platemail',
     slot: 'armor',
@@ -100,7 +105,7 @@ export const ARMORS: EquipmentItem[] = [
     enduranceCostMod: 2.0,
   },
   {
-    id: 'plate_armor',
+    id: 'APA',
     code: 'APA',
     name: 'Plate Armor',
     slot: 'armor',

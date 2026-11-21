@@ -10,7 +10,7 @@ import type { EquipmentLoadout } from '@/data/equipment';
 
 const legal = (over: Partial<EquipmentLoadout> = {}): EquipmentLoadout => ({
   weapon: 'broadsword',
-  armor: 'leather',
+  armor: 'APL',
   shield: 'none_shield',
   helm: 'leather_cap',
   ...over,

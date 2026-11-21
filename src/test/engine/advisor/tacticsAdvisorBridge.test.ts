@@ -52,7 +52,7 @@ describe('evaluateTacticsAdvice', () => {
   it('audits equipment encumbrance for agile styles', () => {
     const warrior = mkWarrior(FightingStyle.SlashingAttack, {
       equipment: {
-        armor: 'plate_armor',
+        armor: 'APA',
         helm: 'full_helm',
       } as any,
     });

@@ -2,9 +2,6 @@
  * Hit location system — location constants, targeting, and protection coverage.
  */
 
-/**
- *
- */
 export type HitLocation =
   'head' | 'chest' | 'abdomen' | 'right arm' | 'left arm' | 'right leg' | 'left leg';
 
@@ -49,16 +46,29 @@ export const LOCATION_KILL_MULT: Record<HitLocation, number> = {
  */
 export const VITAL_LOCATIONS: readonly HitLocation[] = ['head', 'chest', 'abdomen'];
 
-/**
- *
- */
+/** Canon + house armor ids that count as torso protection (lowercased). */
+const BODY_ARMOR_PROTECTION_IDS = new Set([
+  'ale',
+  'apl',
+  'as',
+  'arm',
+  'asm',
+  'acm',
+  'apm',
+  'apa',
+]);
+
 export function protectCovers(protect?: string): string[] {
   if (!protect || protect === 'Any' || protect === 'none_armor' || protect === 'none_helm')
     return [];
   const p = protect.toLowerCase();
 
   if (p.includes('helm') || p.includes('cap') || p === 'head') return ['head'];
+  // V24-F3 canon armor ids + free-text material/legacy reads — a protect
+  // field may carry an equipment id ('ARM') or descriptive text ('leather',
+  // 'chain mail').
   if (
+    BODY_ARMOR_PROTECTION_IDS.has(p) ||
     p === 'leather' ||
     p === 'padded' ||
     p === 'studded_leather' ||
@@ -73,9 +83,6 @@ export function protectCovers(protect?: string): string[] {
   return [];
 }
 
-/**
- *
- */
 export function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   const covered = protectCovers(protect);
 

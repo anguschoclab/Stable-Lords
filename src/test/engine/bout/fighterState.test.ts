@@ -19,7 +19,7 @@ describe('fighterState', () => {
       injuries: [],
       equipment: {
         weapon: 'broadsword',
-        armor: 'leather',
+        armor: 'APL',
         helm: 'none_helm',
         shield: 'none_shield',
       },
@@ -108,7 +108,7 @@ describe('fighterState', () => {
       const warrior = createMockWarrior({
         equipment: {
           weapon: 'short_spear',
-          armor: 'chain_mail',
+          armor: 'ACM',
           helm: 'none_helm',
           shield: 'none_shield',
         },
@@ -118,7 +118,7 @@ describe('fighterState', () => {
       const result = createFighterState('A', plan, warrior);
 
       expect(result.weaponId).toBe('short_spear');
-      expect(result.armorId).toBe('chain_mail');
+      expect(result.armorId).toBe('ACM');
     });
 
     it('calculates HP from derived stats', () => {
@@ -150,7 +150,7 @@ describe('fighterState', () => {
         baseSkills: { ATT: 5, DEF: 5, INI: 5, PAR: 5, RIP: 5, DEC: 5 },
         equipment: {
           weapon: 'halberd',
-          armor: 'leather',
+          armor: 'APL',
           helm: 'none_helm',
           shield: 'none_shield',
         },
@@ -237,7 +237,7 @@ describe('fighterState', () => {
       const warrior = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate_mail',
+          armor: 'APM',
           helm: 'none_helm',
           shield: 'large_shield',
         },
@@ -247,7 +247,7 @@ describe('fighterState', () => {
       const result = createFighterState('A', plan, warrior);
 
       expect(result.weaponId).toBe('halberd');
-      expect(result.armorId).toBe('plate_mail');
+      expect(result.armorId).toBe('APM');
       expect(result.shieldId).toBe('large_shield');
     });
 
@@ -282,7 +282,7 @@ describe('fighterState', () => {
           attributes: { ST: 13, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 11 },
           equipment: {
             weapon: 'morning_star',
-            armor: 'leather',
+            armor: 'APL',
             helm: 'none_helm',
             shield: 'none_shield',
           },
@@ -294,7 +294,7 @@ describe('fighterState', () => {
         createMockWarrior({
           equipment: {
             weapon: 'morning_star',
-            armor: 'leather',
+            armor: 'APL',
             helm: 'none_helm',
             shield: 'none_shield',
           },
@@ -317,7 +317,7 @@ describe('fighterState', () => {
       const armored = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -333,13 +333,13 @@ describe('fighterState', () => {
       const noHelm = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
       });
       const withHelm = createMockWarrior({
-        equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'helm' },
+        equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'helm' },
       });
       const plan = createMockPlan();
       const rNoHelm = createFighterState('A', plan, noHelm);
@@ -357,7 +357,7 @@ describe('fighterState', () => {
       const heavy = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate_mail',
+          armor: 'APM',
           shield: 'large_shield',
           helm: 'full_helm',
         },
@@ -367,7 +367,7 @@ describe('fighterState', () => {
       const unencumbered = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate_mail',
+          armor: 'APM',
           shield: 'large_shield',
           helm: 'full_helm',
         },
@@ -389,7 +389,7 @@ describe('fighterState', () => {
       const over = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate_mail',
+          armor: 'APM',
           shield: 'large_shield',
           helm: 'full_helm',
         },
@@ -398,7 +398,7 @@ describe('fighterState', () => {
       const heavy = createMockWarrior({
         equipment: {
           weapon: 'halberd',
-          armor: 'plate_mail',
+          armor: 'APM',
           shield: 'large_shield',
           helm: 'full_helm',
         },
@@ -417,7 +417,7 @@ describe('fighterState', () => {
       const light = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -426,7 +426,7 @@ describe('fighterState', () => {
       const none = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -447,7 +447,7 @@ describe('fighterState', () => {
       const noShield = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -455,7 +455,7 @@ describe('fighterState', () => {
       const withShield = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'small_shield',
           helm: 'none_helm',
         },
@@ -473,7 +473,7 @@ describe('fighterState', () => {
       const noShield = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -482,7 +482,7 @@ describe('fighterState', () => {
       const withWeaponShield = createMockWarrior({
         equipment: {
           weapon: 'large_shield',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -503,7 +503,7 @@ describe('fighterState', () => {
       const singleSlot = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'small_shield',
           helm: 'none_helm',
         },
@@ -511,7 +511,7 @@ describe('fighterState', () => {
       const dualSlot = createMockWarrior({
         equipment: {
           weapon: 'small_shield',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'medium_shield',
           helm: 'none_helm',
         },
@@ -597,7 +597,7 @@ describe('fighterState', () => {
         equipment: {
           weapon: 'broadsword',
           offhand: 'dagger',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'none_shield',
           helm: 'none_helm',
         },
@@ -610,7 +610,7 @@ describe('fighterState', () => {
       const w = createMockWarrior({
         equipment: {
           weapon: 'broadsword',
-          armor: 'leather',
+          armor: 'APL',
           shield: 'medium_shield',
           helm: 'none_helm',
         },

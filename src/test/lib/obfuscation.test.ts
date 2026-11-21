@@ -10,7 +10,7 @@ const makeWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     name: 'Test Warrior',
     attributes: { ST: 15, CN: 12, SZ: 10, WT: 8, WL: 6, SP: 4, DF: 22 },
     fame: 0,
-    equipment: { weapon: 'sword', armor: 'leather', shield: 'buckler' },
+    equipment: { weapon: 'sword', armor: 'APL', shield: 'buckler' },
     plan: {
       style: FightingStyle.BashingAttack,
       OE: 5,

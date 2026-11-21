@@ -11,14 +11,14 @@ export const LIGHT_LOADOUT: EquipmentLoadout = {
 
 export const MEDIUM_LOADOUT: EquipmentLoadout = {
   weapon: 'longsword',
-  armor: 'leather',
+  armor: 'APL',
   shield: 'small_shield',
   helm: 'none_helm',
 };
 
 export const HEAVY_LOADOUT: EquipmentLoadout = {
   weapon: 'longsword',
-  armor: 'plate_armor',
+  armor: 'APA',
   shield: 'large_shield',
   helm: 'full_helm',
 };

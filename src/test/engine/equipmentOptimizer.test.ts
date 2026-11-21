@@ -106,7 +106,7 @@ describe('Equipment Optimizer', () => {
     it('TotalParry tank recommendation uses plate_armor', () => {
       const recs = generateRecommendations(FightingStyle.TotalParry, 30);
       const tankRec = recs[0]; // tank is first profile for TotalParry
-      expect(tankRec?.loadout.armor).toBe('plate_armor');
+      expect(tankRec?.loadout.armor).toBe('APA');
     });
 
     it('TotalParry tank recommendation uses full_helm', () => {
@@ -118,14 +118,14 @@ describe('Equipment Optimizer', () => {
     it('WallOfSteel tank recommendation uses plate_armor', () => {
       const recs = generateRecommendations(FightingStyle.WallOfSteel, 30);
       const tankRec = recs[0]; // tank is first profile for WallOfSteel
-      expect(tankRec?.loadout.armor).toBe('plate_armor');
+      expect(tankRec?.loadout.armor).toBe('APA');
     });
 
     it('BashingAttack tank recommendation uses plate_armor', () => {
       // BashingAttack profiles: ['damage', 'tank'], so tank is index 1
       const recs = generateRecommendations(FightingStyle.BashingAttack, 30);
       const tankRec = recs[1];
-      expect(tankRec?.loadout.armor).toBe('plate_armor');
+      expect(tankRec?.loadout.armor).toBe('APA');
     });
   });
 
@@ -135,7 +135,7 @@ describe('Equipment Optimizer', () => {
       // ParryRiposte profiles: ['balanced', 'speed'], balanced is first
       const balancedRec = recs[0];
       // leather (weight 4) should score higher than padded (weight 2) for balanced
-      expect(balancedRec?.loadout.armor).toBe('leather');
+      expect(balancedRec?.loadout.armor).toBe('APL');
     });
   });
 
@@ -254,7 +254,7 @@ describe('Equipment Optimizer', () => {
       // Tank already prefers heavier armor, but mitigation should reinforce plate_armor
       const recs = generateRecommendations(FightingStyle.TotalParry, 30);
       const tankRec = recs[0];
-      expect(tankRec?.loadout.armor).toBe('plate_armor');
+      expect(tankRec?.loadout.armor).toBe('APA');
       const armorItem = tankRec?.breakdown.armor.item;
       expect(armorItem?.mitigation ?? 0).toBeGreaterThanOrEqual(8);
     });

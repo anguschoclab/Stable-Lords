@@ -55,7 +55,7 @@ describe('diagnoseTurnaround', () => {
 
   it('recommends equipping a chart-proven weapon over the current one', () => {
     const w = loser({
-      equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'none_helm' },
       favorites: {
         weaponId: 'scimitar',
         rhythm: { oe: 6, al: 6 },
@@ -74,7 +74,7 @@ describe('diagnoseTurnaround', () => {
 
   it('recommends a weapon change when the equipped weapon produces nothing', () => {
     const w = loser({
-      equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'none_helm' },
+      equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'none_helm' },
       favorites: {
         weaponId: 'scimitar',
         rhythm: { oe: 6, al: 6 },

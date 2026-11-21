@@ -137,7 +137,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     cautionStyles: [FightingStyle.WallOfSteel],
     weapons: ['maul', 'broadsword', 'battle_axe', 'war_flail', 'greatsword'],
     armor: {
-      ids: ['leather', 'padded', 'none_armor'],
+      ids: ['APL', 'ALE', 'none_armor'],
       notes:
         'Light or nothing — the build concedes mitigation for tempo. Leather ' +
         'at most; padded or bare when the frame is fast.',
@@ -170,7 +170,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     cautionStyles: [FightingStyle.WallOfSteel],
     weapons: ['quarterstaff', 'short_spear', 'scimitar'],
     armor: {
-      ids: ['plate_armor', 'plate_mail', 'chain_mail'],
+      ids: ['APA', 'APM', 'ACM'],
       notes:
         'APA/F is the norm — the heaviest protection the frame can carry. ' +
         'Recommended styles are all plate-legal.',
@@ -208,7 +208,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     ],
     weapons: ['maul', 'battle_axe', 'broadsword', 'long_spear'],
     armor: {
-      ids: ['plate_armor', 'plate_mail', 'chain_mail'],
+      ids: ['APA', 'APM', 'ACM'],
       notes:
         'APA/F is the norm — the heaviest legal plate. Lungers, strikers, and ' +
         'slashers cannot wear it, which is part of why the guide warns ' +
@@ -245,7 +245,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     cautionStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack],
     weapons: ['broadsword', 'battle_axe', 'scimitar'],
     armor: {
-      ids: ['plate_armor', 'plate_mail', 'chain_mail'],
+      ids: ['APA', 'APM', 'ACM'],
       notes: 'Same APA/F doctrine as the high-will tank — plate is the point.',
     },
     strategy: {
@@ -282,7 +282,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     ],
     weapons: ['scimitar', 'longsword', 'war_flail', 'short_spear'],
     armor: {
-      ids: ['scale_mail', 'studded_leather', 'leather'],
+      ids: ['ASM', 'AS', 'APL'],
       notes:
         'Moderate armor — enough to survive a mistake, light enough that the ' +
         'skills do the real work. NEVER over-encumbered.',
@@ -316,7 +316,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     cautionStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack],
     weapons: ['scimitar', 'longsword', 'quarterstaff'],
     armor: {
-      ids: ['chain_mail', 'scale_mail', 'leather'],
+      ids: ['ACM', 'ASM', 'APL'],
       notes:
         'Moderate protection — the riposting hybrid lives on its counters ' +
         'more than its plate. Encumbrance eats the endurance the archetype ' +

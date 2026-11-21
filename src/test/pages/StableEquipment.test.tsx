@@ -71,7 +71,7 @@ describe('StableEquipment page', () => {
       label: 'Power Build',
       loadout: {
         weapon: 'war_hammer',
-        armor: 'padded',
+        armor: 'ALE',
         shield: 'none_shield',
         helm: 'leather_cap',
       },

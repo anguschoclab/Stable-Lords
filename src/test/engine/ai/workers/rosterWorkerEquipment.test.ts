@@ -36,7 +36,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
     // Fist is always a losing fit-score — a pure refit would swap it out.
     const w = makeWarrior('w1', {
       favorites: fav('fist', true),
-      equipment: { weapon: 'fist', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      equipment: { weapon: 'fist', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
     });
     const out = refitRosterWeapons([w])[0]!;
     expect(out.equipment?.weapon).toBe('fist');
@@ -45,7 +45,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
   it('equips a discovered favorite the warrior was not carrying', () => {
     const w = makeWarrior('w2', {
       favorites: fav('dagger', true),
-      equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
     });
     const out = refitRosterWeapons([w])[0]!;
     expect(out.equipment?.weapon).toBe('dagger');
@@ -57,7 +57,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
         broadsword: { swings: 20, crits: 1, knockdowns: 0 },
         short_spear: { swings: 15, crits: 7, knockdowns: 2 },
       }),
-      equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
     });
     const out = refitRosterWeapons([w])[0]!;
     expect(out.equipment?.weapon).toBe('short_spear');
@@ -68,7 +68,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
       favorites: fav('war_hammer', false, {
         broadsword: { swings: 20, crits: 1, knockdowns: 0 }, // 5% — doubtful
       }),
-      equipment: { weapon: 'dagger', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      equipment: { weapon: 'dagger', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
     });
     const out = refitRosterWeapons([w])[0]!;
     // No signal → ordinary fit path picks a proper weapon for the stats.
@@ -91,7 +91,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
         favorites: fav('medium_shield', false, {
           fist: { swings: 20, crits: 6, knockdowns: 1 },
         }),
-        equipment: { weapon: 'medium_shield', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+        equipment: { weapon: 'medium_shield', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
       }
     );
     const out = refitRosterWeapons([tp])[0]!;
@@ -102,7 +102,7 @@ describe('refitRosterWeapons — AI favorite-weapon usage', () => {
     const w = makeWarrior('w6', {
       status: 'Dead',
       favorites: fav('dagger', true),
-      equipment: { weapon: 'broadsword', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      equipment: { weapon: 'broadsword', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' },
     });
     const out = refitRosterWeapons([w])[0]!;
     expect(out.equipment?.weapon).toBe('broadsword');

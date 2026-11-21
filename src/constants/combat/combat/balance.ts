@@ -220,7 +220,7 @@ export const TWOHANDED_PARRY_ENDURANCE_SURCHARGE = 1.2;
  *  or higher" — reconciled with Assur's "surprisingly good vs APA/APM" as a
  *  mid-armor penalty only; the plate tiers stay at dtype parity. */
 export const WEAPON_ARMOR_OVERRIDES: Record<string, Record<string, number>> = {
-  dagger: { scale_mail: 0.7, chain_mail: 0.7 },
+  dagger: { ASM: 0.7, ACM: 0.7 },
 };
 /** Favorite tactic fires hidden (weapon-crit parity — Godling Heresy:
  *  favorites matter before you know them). */

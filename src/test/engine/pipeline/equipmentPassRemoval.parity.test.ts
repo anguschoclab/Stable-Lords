@@ -29,7 +29,7 @@ describe('single legality standard — a .met-failing favorite is never equipped
     // attPenalty −4 — inside the old EquipmentPass's equip window.
     const w = makeWarrior({
       style: FightingStyle.StrikingAttack,
-      equipment: { weapon: 'short_spear', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+      equipment: { weapon: 'short_spear', armor: 'APL', helm: 'none_helm', shield: 'none_shield' },
       favorites: {
         weaponId: 'scimitar',
         rhythm: { oe: 5, al: 5 },

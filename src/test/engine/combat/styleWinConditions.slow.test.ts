@@ -50,7 +50,7 @@ describe('AB — inherent called shot (armor bypass)', () => {
     // So AB > non-AB whenever armor mitigates (raw > mitigated)
     const rawDamage = 10;
     const weaponId = 'longsword'; // slash
-    const armorId = 'plate_armor'; // slash: 0.8 → mitigated = 8
+    const armorId = 'APA'; // slash: 0.8 → mitigated = 8
 
     const mitigated = applyArmorTypeMod(rawDamage, weaponId, armorId);
     expect(mitigated).toBe(8); // 10 * 0.8 = 8
@@ -65,7 +65,7 @@ describe('AB — inherent called shot (armor bypass)', () => {
   it('AB bypass scales with DF — higher DF yields more bypass', () => {
     const rawDamage = 50;
     const weaponId = 'longsword';
-    const armorId = 'plate_armor';
+    const armorId = 'APA';
     const mitigated = applyArmorTypeMod(rawDamage, weaponId, armorId);
 
     // Use rawDamage=50 so the bypass differences survive Math.round
@@ -94,12 +94,12 @@ describe('AB — inherent called shot (armor bypass)', () => {
     const bypass = Math.max(0, Math.min(0.4, 15 / 50)); // DF=15
 
     // Light armor (leather): slash mult = 0.9
-    const lightMitigated = applyArmorTypeMod(rawDamage, weaponId, 'leather');
+    const lightMitigated = applyArmorTypeMod(rawDamage, weaponId, 'APL');
     const lightAB = Math.round(lightMitigated + bypass * (rawDamage - lightMitigated));
     const lightAdvantage = lightAB - lightMitigated;
 
     // Heavy armor (plate): slash mult = 0.8
-    const heavyMitigated = applyArmorTypeMod(rawDamage, weaponId, 'plate_armor');
+    const heavyMitigated = applyArmorTypeMod(rawDamage, weaponId, 'APA');
     const heavyAB = Math.round(heavyMitigated + bypass * (rawDamage - heavyMitigated));
     const heavyAdvantage = heavyAB - heavyMitigated;
 

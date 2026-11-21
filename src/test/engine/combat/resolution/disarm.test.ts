@@ -431,7 +431,7 @@ describe('simulateFight — disarm integration', () => {
   });
 
   it('a fist-armed build can never be disarmed', () => {
-    const FISTS = { weapon: 'fist', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' };
+    const FISTS = { weapon: 'fist', armor: 'APL', shield: 'none_shield', helm: 'leather_cap' };
     for (const seed of [113355, 50000, 50312, 7700042, 42, 7]) {
       const out = runBout(seed, { equipment: FISTS }, { equipment: FISTS });
       expect((out.exchangeLog ?? []).some((e) => e.disarm)).toBe(false);

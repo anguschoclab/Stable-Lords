@@ -9,7 +9,7 @@
 /**
  * Save state version — used as a tripwire in isPlausibleGameState and stamped into meta.version.
  */
-export const SAVE_STATE_VERSION = '3.0.0';
+export const SAVE_STATE_VERSION = '4.0.0';
 
 /**
  * Weeks per season

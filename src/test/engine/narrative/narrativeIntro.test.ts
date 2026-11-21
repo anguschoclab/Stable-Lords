@@ -13,7 +13,7 @@ const baseData: WarriorIntroData = {
   name: 'Rex',
   style: FightingStyle.SlashingAttack,
   weaponId: 'longsword',
-  armorId: 'leather',
+  armorId: 'APL',
   helmId: 'open_helm',
 };
 

@@ -153,7 +153,7 @@ describe('coreGenerator', () => {
       const w = createMockWarrior({
         equipment: {
           weapon: 'greatsword' as any,
-          armor: 'leather' as any,
+          armor: 'APL' as any,
           shield: 'kite_shield' as any,
           helm: 'none_helm' as any,
         },
@@ -170,7 +170,7 @@ describe('coreGenerator', () => {
       const w = createMockWarrior({
         equipment: {
           weapon: 'broadsword' as any,
-          armor: 'leather' as any,
+          armor: 'APL' as any,
           shield: 'kite_shield' as any,
           helm: 'none_helm' as any,
         },

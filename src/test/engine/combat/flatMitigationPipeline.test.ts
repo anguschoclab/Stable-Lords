@@ -15,8 +15,8 @@ describe('T7: flat mitigation in damage pipeline', () => {
   it('chaining applyArmorTypeMod then applyFlatMitigation gives lower damage than armor type alone', () => {
     // longsword (slash) vs chain_mail: 100 * 1.1 = 110 (armor type makes it worse)
     // then flat mitigation: chain_mail mitigation=6, full_helm mitigation=4 → 110 - 10 = 100
-    const afterType = applyArmorTypeMod(100, 'longsword', 'chain_mail');
-    const afterFlat = applyFlatMitigation(afterType, 'chain_mail', 'full_helm');
+    const afterType = applyArmorTypeMod(100, 'longsword', 'ACM');
+    const afterFlat = applyFlatMitigation(afterType, 'ACM', 'full_helm');
     expect(afterFlat).toBeLessThanOrEqual(afterType);
     expect(afterFlat).toBe(100);
   });
@@ -24,8 +24,8 @@ describe('T7: flat mitigation in damage pipeline', () => {
   it('flat mitigation applies after armor type mod even when type mod increases damage', () => {
     // longsword (slash) vs chain_mail: 100 * 1.1 = 110 (slash is weak vs chain)
     // chain_mail mitigation=6, none_helm mitigation=0 → 110 - 6 = 104
-    const afterType = applyArmorTypeMod(100, 'longsword', 'chain_mail');
-    const afterFlat = applyFlatMitigation(afterType, 'chain_mail', 'none_helm');
+    const afterType = applyArmorTypeMod(100, 'longsword', 'ACM');
+    const afterFlat = applyFlatMitigation(afterType, 'ACM', 'none_helm');
     expect(afterType).toBe(110);
     expect(afterFlat).toBe(104);
   });
@@ -34,8 +34,8 @@ describe('T7: flat mitigation in damage pipeline', () => {
     // dagger (pierce) vs plate_armor: 100 * 0.8 = 80
     // plate_armor mitigation=10, full_helm mitigation=4 → 80 - 14 = 66
     // But with low base: 10 * 0.8 = 8, then 8 - 14 = -6 → floored at 1
-    const afterType = applyArmorTypeMod(10, 'dagger', 'plate_armor');
-    const afterFlat = applyFlatMitigation(afterType, 'plate_armor', 'full_helm');
+    const afterType = applyArmorTypeMod(10, 'dagger', 'APA');
+    const afterFlat = applyFlatMitigation(afterType, 'APA', 'full_helm');
     expect(afterFlat).toBe(1);
   });
 

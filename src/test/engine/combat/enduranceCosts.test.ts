@@ -553,7 +553,7 @@ describe('applyEnduranceCosts — edge cases', () => {
 describe('applyEnduranceCosts — armor/helm enduranceCostMod', () => {
   it('armor enduranceCostMod increases att drain (chain_mail 1.8)', () => {
     const base = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
-    const armored = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10, fAArmorId: 'chain_mail' });
+    const armored = run({ fAWeaponPenalty: 10, fDWeaponPenalty: 10, fAArmorId: 'ACM' });
     const baseDrain = 1000 - base.fA.endurance;
     const armoredDrain = 1000 - armored.fA.endurance;
     const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.8 });
@@ -575,7 +575,7 @@ describe('applyEnduranceCosts — armor/helm enduranceCostMod', () => {
     const r = run({
       fAWeaponPenalty: 10,
       fDWeaponPenalty: 10,
-      fAArmorId: 'chain_mail',
+      fAArmorId: 'ACM',
       fAHelmId: 'full_helm',
     });
     const attExp = expectedAttDrain({ ...BASE, equipEndMult: 1.8 * 1.2 });
@@ -598,7 +598,7 @@ describe('applyEnduranceCosts — armor/helm enduranceCostMod', () => {
     const armored = run({
       fAWeaponPenalty: 10,
       fDWeaponPenalty: 10,
-      fDArmorId: 'plate_mail',
+      fDArmorId: 'APM',
     });
     const baseDefDrain = 1000 - base.fD.endurance;
     const armoredDefDrain = 1000 - armored.fD.endurance;

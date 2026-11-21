@@ -4,15 +4,15 @@ import { applyProtectMod, applyShieldZoneMod } from '@/engine/combat/mechanics/p
 describe('protectShield', () => {
   describe('applyProtectMod', () => {
     it('reduces damage by 25% if location is covered', () => {
-      // 'leather' covers 'chest' and 'abdomen'
+      // 'APL' covers 'chest' and 'abdomen'
       // 100 * 0.75 = 75
-      expect(applyProtectMod(100, 'chest', 'leather')).toBe(75);
+      expect(applyProtectMod(100, 'chest', 'APL')).toBe(75);
     });
 
     it('increases damage by 10% if location is not covered', () => {
-      // 'leather' does not cover 'head'
+      // 'APL' does not cover 'head'
       // 100 * 1.1 = 110
-      expect(applyProtectMod(100, 'head', 'leather')).toBe(110);
+      expect(applyProtectMod(100, 'head', 'APL')).toBe(110);
     });
 
     it('increases damage by 10% if protect is undefined', () => {
@@ -47,19 +47,19 @@ describe('protectShield', () => {
 
   describe('applyProtectMod edge cases', () => {
     it('returns 0 for damage = 0 on covered location', () => {
-      expect(applyProtectMod(0, 'chest', 'leather')).toBe(0);
+      expect(applyProtectMod(0, 'chest', 'APL')).toBe(0);
     });
 
     it('returns 0 for damage = 0 on uncovered location', () => {
-      expect(applyProtectMod(0, 'head', 'leather')).toBe(0);
+      expect(applyProtectMod(0, 'head', 'APL')).toBe(0);
     });
 
     it('returns 0 for damage = 1 on covered location (Math.floor(0.75) = 0)', () => {
-      expect(applyProtectMod(1, 'chest', 'leather')).toBe(0);
+      expect(applyProtectMod(1, 'chest', 'APL')).toBe(0);
     });
 
     it('returns 1 for damage = 1 on uncovered location (Math.floor(1.1) = 1)', () => {
-      expect(applyProtectMod(1, 'head', 'leather')).toBe(1);
+      expect(applyProtectMod(1, 'head', 'APL')).toBe(1);
     });
 
     it('covers head location with helm protection', () => {
@@ -67,11 +67,11 @@ describe('protectShield', () => {
     });
 
     it('Math.floor rounding edge: damage = 3 covered → floor(2.25) = 2', () => {
-      expect(applyProtectMod(3, 'chest', 'leather')).toBe(2);
+      expect(applyProtectMod(3, 'chest', 'APL')).toBe(2);
     });
 
     it('Math.floor rounding edge: damage = 3 uncovered → floor(3.3) = 3', () => {
-      expect(applyProtectMod(3, 'head', 'leather')).toBe(3);
+      expect(applyProtectMod(3, 'head', 'APL')).toBe(3);
     });
   });
 
@@ -105,13 +105,13 @@ describe('Protect & Shield Mechanics', () => {
     it('applies reduction if protect covers the hit location', () => {
       // leather covers chest
       // 10 * 0.75 = 7.5 -> floor to 7
-      expect(applyProtectMod(10, 'chest', 'leather')).toBe(7);
+      expect(applyProtectMod(10, 'chest', 'APL')).toBe(7);
     });
 
     it('applies penalty if protect does not cover the hit location', () => {
       // leather does NOT cover head
       // 10 * 1.1 = 11 -> floor to 11
-      expect(applyProtectMod(10, 'head', 'leather')).toBe(11);
+      expect(applyProtectMod(10, 'head', 'APL')).toBe(11);
     });
 
     it('applies penalty if protect is undefined', () => {

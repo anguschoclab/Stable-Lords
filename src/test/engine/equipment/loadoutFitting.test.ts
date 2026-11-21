@@ -84,7 +84,7 @@ describe('refitWeapon / getFittedLoadout', () => {
   it('only changes the weapon slot', () => {
     const loadout = {
       weapon: 'morning_star',
-      armor: 'leather',
+      armor: 'APL',
       shield: 'none_shield',
       helm: 'leather_cap',
     };
@@ -183,6 +183,6 @@ describe('fitted loadouts at the creation and roster seams', () => {
       weapon: next[0]!.equipment!.weapon,
     });
     expect(armor).toBe(expected);
-    expect(armor).not.toBe('leather');
+    expect(armor).not.toBe('APL');
   });
 });

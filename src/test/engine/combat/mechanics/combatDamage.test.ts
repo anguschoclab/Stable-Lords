@@ -17,7 +17,7 @@ describe('combatDamage engine', () => {
     });
 
     it('returns chest and abdomen for body armor', () => {
-      const bodyArmors = ['leather', 'chain_mail', 'plate_mail'];
+      const bodyArmors = ['APL', 'ACM', 'APM'];
       bodyArmors.forEach((armor) => {
         expect(protectCovers(armor)).toEqual(['chest', 'abdomen']);
       });
@@ -105,8 +105,8 @@ describe('combatDamage engine', () => {
     it('applies reduction if location is covered by protection', () => {
       // leather covers chest and abdomen
       // 100 * 0.75 = 75
-      expect(applyProtectMod(100, 'chest', 'leather')).toBe(75);
-      expect(applyProtectMod(100, 'abdomen', 'plate_mail')).toBe(75);
+      expect(applyProtectMod(100, 'chest', 'APL')).toBe(75);
+      expect(applyProtectMod(100, 'abdomen', 'APM')).toBe(75);
 
       // helm covers head
       expect(applyProtectMod(100, 'head', 'helm')).toBe(75);
@@ -115,8 +115,8 @@ describe('combatDamage engine', () => {
     it('applies penalty if location is NOT covered by protection', () => {
       // leather does NOT cover head or arms
       // 100 * 1.1 = 110
-      expect(applyProtectMod(100, 'head', 'leather')).toBe(110);
-      expect(applyProtectMod(100, 'right arm', 'chain_mail')).toBe(110);
+      expect(applyProtectMod(100, 'head', 'APL')).toBe(110);
+      expect(applyProtectMod(100, 'right arm', 'ACM')).toBe(110);
 
       // helm does NOT cover chest
       expect(applyProtectMod(100, 'chest', 'helm')).toBe(110);
@@ -124,10 +124,10 @@ describe('combatDamage engine', () => {
 
     it('correctly applies Math.floor to ensure integer damage values', () => {
       // Reduction: 10 * 0.75 = 7.5 -> Math.floor -> 7
-      expect(applyProtectMod(10, 'chest', 'leather')).toBe(7);
+      expect(applyProtectMod(10, 'chest', 'APL')).toBe(7);
 
       // Penalty: 11 * 1.1 = 12.1 -> Math.floor -> 12
-      expect(applyProtectMod(11, 'head', 'leather')).toBe(12);
+      expect(applyProtectMod(11, 'head', 'APL')).toBe(12);
 
       // Penalty with no armor: 15 * 1.1 = 16.5 -> Math.floor -> 16
       expect(applyProtectMod(15, 'right leg')).toBe(16);
@@ -135,14 +135,14 @@ describe('combatDamage engine', () => {
 
     it('handles zero damage correctly', () => {
       expect(applyProtectMod(0, 'head')).toBe(0);
-      expect(applyProtectMod(0, 'chest', 'leather')).toBe(0);
+      expect(applyProtectMod(0, 'chest', 'APL')).toBe(0);
     });
 
     it('handles negative damage correctly (though rare in engine)', () => {
       // -10 * 1.1 = -11
       expect(applyProtectMod(-10, 'head')).toBe(-11);
       // -10 * 0.75 = -7.5 -> Math.floor -> -8
-      expect(applyProtectMod(-10, 'chest', 'leather')).toBe(-8);
+      expect(applyProtectMod(-10, 'chest', 'APL')).toBe(-8);
     });
   });
 
@@ -209,38 +209,38 @@ describe('combatDamage engine', () => {
   describe('applyArmorTypeMod — armor ID corrections (Bug 2)', () => {
     it('padded armor resists bash damage', () => {
       // mace → bash; padded: { bash: 0.9 } → floor(100 * 0.9) = 90
-      expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
+      expect(applyArmorTypeMod(100, 'mace', 'ALE')).toBe(90);
     });
 
     it('padded armor is weak to pierce damage', () => {
       // dagger → pierce; padded: { pierce: 1.05 } → floor(100 * 1.05) = 105
-      expect(applyArmorTypeMod(100, 'dagger', 'padded')).toBe(105);
+      expect(applyArmorTypeMod(100, 'dagger', 'ALE')).toBe(105);
     });
 
     it('studded_leather armor resists slash damage', () => {
       // longsword → slash; studded_leather: { slash: 0.88 } → floor(100 * 0.88) = 88
-      expect(applyArmorTypeMod(100, 'longsword', 'studded_leather')).toBe(88);
+      expect(applyArmorTypeMod(100, 'longsword', 'AS')).toBe(88);
     });
 
     it('studded_leather armor is weak to pierce damage', () => {
       // dagger → pierce; studded_leather: { pierce: 1.05 } → floor(100 * 1.05) = 105
-      expect(applyArmorTypeMod(100, 'dagger', 'studded_leather')).toBe(105);
+      expect(applyArmorTypeMod(100, 'dagger', 'AS')).toBe(105);
     });
 
     it('plate_armor resists slash damage at least as well as plate_mail', () => {
       // plate_mail: { slash: 0.85 } = 85; plate_armor: { slash: 0.80 } = 80
-      const plateMailResult = applyArmorTypeMod(100, 'longsword', 'plate_mail');
-      const plateArmorResult = applyArmorTypeMod(100, 'longsword', 'plate_armor');
+      const plateMailResult = applyArmorTypeMod(100, 'longsword', 'APM');
+      const plateArmorResult = applyArmorTypeMod(100, 'longsword', 'APA');
       expect(plateArmorResult).toBeLessThanOrEqual(plateMailResult);
       expect(plateArmorResult).toBe(80);
     });
 
     it('plate_armor resists bash damage', () => {
-      expect(applyArmorTypeMod(100, 'mace', 'plate_armor')).toBe(80);
+      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(80);
     });
 
     it('plate_armor resists pierce damage', () => {
-      expect(applyArmorTypeMod(100, 'dagger', 'plate_armor')).toBe(80);
+      expect(applyArmorTypeMod(100, 'dagger', 'APA')).toBe(80);
     });
   });
 });

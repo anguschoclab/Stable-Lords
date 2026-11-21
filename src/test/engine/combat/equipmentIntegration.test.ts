@@ -35,7 +35,7 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
       const fs = createFighterState('A', plan, w);
 
       // FighterState should carry the equipment IDs
-      expect(fs.armorId).toBe('plate_armor');
+      expect(fs.armorId).toBe('APA');
       expect(fs.helmId).toBe('full_helm');
       expect(fs.shieldId).toBe('large_shield');
       expect(fs.weaponId).toBe('longsword');
@@ -71,7 +71,7 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     it('shield slot provides defBonus via getShieldModifiers', () => {
       const loadout: EquipmentLoadout = {
         weapon: 'longsword',
-        armor: 'leather',
+        armor: 'APL',
         shield: 'medium_shield',
         helm: 'none_helm',
       };
@@ -170,7 +170,7 @@ describe('T10: Equipment → FighterState → Combat integration', () => {
     it('over-encumbered fighter has reduced INI in FighterState', () => {
       const heavyLoadout: EquipmentLoadout = {
         weapon: 'greatsword',
-        armor: 'plate_armor',
+        armor: 'APA',
         shield: 'none_shield',
         helm: 'full_helm',
       };

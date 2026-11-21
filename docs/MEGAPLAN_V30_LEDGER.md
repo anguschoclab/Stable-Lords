@@ -51,4 +51,3 @@ all failures for the intended reason.** Verified 2026-11-23, pre-implementation.
 | `megaplan/megaplanDocLayout.guard.test.ts` | updated for V30 lineage — GREEN |
 
 **Guards registered:** `parityFlow`, `seededId`, `jscpdRatchet` (slow), `v30Surface` → `GUARD_REGISTRY` + test-audit metadata regenerated.
-

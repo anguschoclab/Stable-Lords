@@ -9,7 +9,7 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 ### §0.1 APPROVED — true duplicates / divergences to unify
 
 | ID | Finding | Evidence | Verdict |
-|----|---------|----------|---------|
+| --- | --- | --- | --- |
 | F1 | AI training-injury roll ignores weather (defaults `'Clear'`) and fires on `hardCapped`/blocked no-op attempts | `rosterWorkerTraining.ts:160` unconditional `rollForTrainingInjury(warrior, healingBonus, rng)` — no weather arg, no gate; player gates at `trainingImpact.ts:148`, passes `state.weather` (`:83`,`:148`); `hardCapped` on result (`attributeTraining.ts:54,170-171`) | ✅ duplicated flow, divergent rules |
 | F2 | AI skill drills never roll training injuries | `performAISkillDrill` (`rosterWorkerTraining.ts`) calls `processSkillDrillTraining` with no `rollForTrainingInjury`; player `processSkillDrillAssignment` rolls at `trainingImpact.ts:83` (`healingBonus + 1`) | ✅ duplicated flow, divergent rules |
 | F3 | AI heals every wounded warrior at accelerated `processRecovery` rate for free; player gets baseline `tickInjuries` (−1) + `'recovery'`-assignment-gated accelerated | `rosterWorker.ts:44-59` (`tickRecoveries`); `trainingImpact.ts:34-40,186`; `health.ts:14-38` → `tickInjuries` (`injurySystem.ts:221`) | ✅ duplicated flow, divergent rules |
@@ -17,7 +17,7 @@ Every candidate was re-read at file:line granularity during plan drafting. Verdi
 | F5 | `lastBoutWeek` stamping duplicated | `boutResolution.ts:173-187` `rosterUpdateImpacts` vs `results.ts:39-54` `lastBoutWeekImpact` | ✅ same impact shape, two emitters |
 | F6 | `OffenseDefenseArgs` ≡ `ResolveCombatOffenseDefenseArgs` | `combat/resolution/offenseDefense/types.ts` — identical 36-field interfaces | ✅ type-level dup |
 | F7 | Rival weekly-ledger loop re-implements `computeEconomyImpact` | `stableManager.ts:78-98` vs `weeklyBreakdown.ts` `computeEconomyImpact`; rival salt `week*31+id.length`, rival-only `.slice(-500)` | ✅ same breakdown→ledger mapping |
-| F8 | Dead `updateWarriorAfterBout` (`careerUpdate.ts:228-230`) — opposite `wasKilled` semantics vs live `warriorStateUpdater.ts` used by `recordHandler.ts:7,84,102`; only caller is its own test (`careerUpdate.test.ts:296-359`) | ✅ dead footgun |
+| F8 | Dead `updateWarriorAfterBout` — opposite `wasKilled` semantics vs live `warriorStateUpdater.ts` used by `recordHandler.ts:7,84,102` | `careerUpdate.ts:228-230`; only caller is its own test (`careerUpdate.test.ts:296-359`) | ✅ dead footgun |
 | F9 | Dead `updateWarriorStatus` + `appendFight` slice actions (`combatActions.ts:25,40`, `worldSlice/types.ts:88,98`, `initialState.ts:17,23`) — zero production call sites | ✅ dead duplicated bout-outcome application |
 | F10 | Hardcoded `.slice(-500)` vs `TRUNCATION_CAPS.rivalLedger` | `stableManager.ts:98`, `agentCore.ts:175`; `truncation.ts:48` + canonical `:184` | ✅ magic-number dup |
 | F11 | Four ownership-resolution paths | `isPlayerOwned` (`warriorRouting.ts`), `owningStableOf` (`arenaChampionship/core.ts:132`), `state.warriorToStableMap`, ~7 inline `stableId === player.id` | ✅ same question, four answers |

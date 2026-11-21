@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 // @ts-expect-error — .mjs scanner has no types
 import { collectParityViolations } from '../../../scripts/parity-flow-scan.mjs';
+import type { ScanViolation } from './_scanGuardHelpers';
 
 /**
  * Parity-flow guard — V30 same-ruleset ratchet.
@@ -16,7 +17,7 @@ import { collectParityViolations } from '../../../scripts/parity-flow-scan.mjs';
  */
 describe('parityFlow guard (V30)', () => {
   it('no duplicated AI-side mechanics outside the shared flows', () => {
-    const { violations } = collectParityViolations();
+    const { violations } = collectParityViolations() as { violations: ScanViolation[] };
     expect(
       violations,
       violations.map((v) => `${v.file}:${v.line} [${v.rule}] ${v.text}`).join('\n')

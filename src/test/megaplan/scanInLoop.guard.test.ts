@@ -382,9 +382,14 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
     why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
   },
   {
-    file: 'src/engine/warrior/health.ts',
-    match: "(w.injuries || []).filter((i): i is InjuryData => typeof i !== 'string')",
+    file: 'src/engine/warrior/stableHealth.ts',
+    match: "(next.injuries ?? []).filter(",
     why: 'per-iteration collection — the current item\'s own field',
+  },
+  {
+    file: 'src/engine/autosim/autosim.ts',
+    match: "offer.warriorIds.find((id) => id !== warriorId)",
+    why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
   },
   {
     file: 'src/hooks/useDigestSummary.ts',

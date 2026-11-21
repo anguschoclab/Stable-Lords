@@ -6,13 +6,13 @@
 import { updateEntityInList } from '@/utils/stateUtils';
 import type { RivalStableData, SeasonalGrowth, TrainingAssignment } from '@/types/state.types';
 import { TRAINING_COST } from '@/constants/economy';
-import type { Season } from '@/types/shared.types';
+import type { Season, WeatherType } from '@/types/shared.types';
 import { checkBudget } from './budgetWorker';
 import { logAgentAction, logFinanceEvent } from '../agentCore';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
-import { processRecovery } from '@/engine/training/trainingGains';
+import { tickStableHealth } from '@/engine/warrior/stableHealth';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { FightingStyle } from '@/types/shared.types';
 import {
@@ -42,22 +42,6 @@ export {
  * Implements "Risk-Tiered Execution" for gear.
  */
 /**
- * Tick injuries for all active wounded warriors, applying any healing trainer
- * bonus exactly as the player path does in training.ts.
- */
-function tickRecoveries(rival: RivalStableData, healingBonus: number): void {
-  for (const wounded of rival.roster) {
-    if (!isActive(wounded)) continue;
-    if ((wounded.injuries ?? []).length === 0) continue;
-    const { updatedInjuries } = processRecovery(wounded, healingBonus);
-    rival.roster = updateEntityInList(rival.roster, wounded.id, (w) => ({
-      ...w,
-      injuries: updatedInjuries,
-    }));
-  }
-}
-
-/**
  * AI training pass — ⚡ TSA: prioritize champion/high-fame units.
  * Injured warriors are excluded (they're in the recovery path) and warriors on
  * a 'recovery' assignment (tournament prep, crown posture) rest — no drills
@@ -67,7 +51,8 @@ function runAITraining(
   rival: RivalStableData,
   season: Season | undefined,
   healingBonus: number,
-  rngService: IRNGService
+  rngService: IRNGService,
+  weather: WeatherType
 ): void {
   let seasonalGrowth: SeasonalGrowth[] = rival.seasonalGrowth ?? [];
 
@@ -103,7 +88,7 @@ function runAITraining(
       const doDrill = rngService.next() < 0.25;
       if (doDrill) {
         rival.roster = updateEntityInList(rival.roster, trainee.id, (w) =>
-          performAISkillDrill(w, rival, rngService)
+          performAISkillDrill(w, rival, rngService, weather)
         );
         rival.trainingAssignments = [
           ...(rival.trainingAssignments || []),
@@ -121,6 +106,7 @@ function runAITraining(
           seasonalGrowth: seasonalGrowth,
           rng: rngService,
           healingBonus: healingBonus,
+          weather: weather,
         });
         seasonalGrowth = nextGrowth;
         rival.roster = updateEntityInList(rival.roster, warrior.id, () => warrior);
@@ -178,26 +164,44 @@ function buyGearUpgrade(args: BuyGearUpgradeArgs): RivalStableData {
  * RosterWorker: Handles training and equipment.
  * Implements "Risk-Tiered Execution" for gear.
  */
+export interface ProcessRosterArgs {
+  currentWeek: number;
+  season?: Season;
+  seed?: number;
+  rng?: IRNGService;
+  weather?: WeatherType;
+}
+
 export function processRoster(
   rival: RivalStableData,
-  currentWeek: number,
-  season?: Season,
-  seed?: number,
-  rng?: IRNGService
+  args: ProcessRosterArgs
 ): RivalStableData {
+  const { currentWeek, season, seed, rng, weather = 'Clear' } = args;
   const rngService = resolveRng(rng, seed ?? currentWeek * 7919 + 101);
   let updatedRival = { ...rival };
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
 
   const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
-  tickRecoveries(updatedRival, healingBonus);
+  // V30: one shared health tick — fatigue decay, baseline injury tick, and
+  // accelerated healing only for 'recovery'-assigned warriors (same ruleset
+  // as the player roster; rivals no longer get free accelerated healing).
+  const restingIds = new Set(
+    (updatedRival.trainingAssignments ?? [])
+      .filter((a) => a.type === 'recovery')
+      .map((a) => a.warriorId)
+  );
+  updatedRival.roster = tickStableHealth({
+    warriors: updatedRival.roster,
+    recoveryWarriorIds: restingIds,
+    healingBonus,
+  }).warriors;
 
   // ⚡ Bolt Optimization: Using updateEntityInList instead of .map()
   // 💡 What: Replaced .map() traversal with a targeted index update.
   // 🎯 Why: Avoids O(N) allocations and redundant iterations when modifying a single element.
   // 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays.
 
-  runAITraining(updatedRival, season, healingBonus, rngService);
+  runAITraining(updatedRival, season, healingBonus, rngService, weather);
 
   // V26 — the shared turnaround diagnosis prescribes drill/WT assignments
   // for confidently-diagnosed losers (the same "one win condition" doctrine

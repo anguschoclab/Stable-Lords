@@ -27,7 +27,7 @@ describe('rosterWorker — recovery-assigned warriors skip training', () => {
       trainingAssignments: [{ warriorId: resting.id, type: 'recovery' } as never],
     });
     const before = { ...resting.attributes };
-    const updated = processRoster(rival, CHAMPIONS_TOURNEY.WEEK - 1, 'Winter', 42);
+    const updated = processRoster(rival, { currentWeek: CHAMPIONS_TOURNEY.WEEK - 1, season: 'Winter', seed: 42 });
     const updatedResting = updated.roster.find((w) => w.id === resting.id)!;
     expect(updatedResting.attributes).toEqual(before);
     const trained = (updated.trainingAssignments ?? []).find(

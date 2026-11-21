@@ -78,8 +78,10 @@ describe('AI Economy Parity', () => {
     const result = processAIStable(rival, state);
 
     // Player path: fame=0, tier-1 → FIGHT_PURSE + WIN_BONUS - WARRIOR_UPKEEP_BASE
+    // V30: AI_TRAINING_EFFECTIVENESS gate removed — the warrior now trains
+    // deterministically every week and pays TRAINING_COST (20g) like the player.
     const expectedDelta = FIGHT_PURSE + WIN_BONUS - 60;
-    expect(result.updatedRival.treasury).toBe(1000 + expectedDelta);
+    expect(result.updatedRival.treasury).toBe(1000 + expectedDelta - 20);
   });
 
   it('AI scaled income exceeds base for fame-30 tier-3 fight', () => {
@@ -136,10 +138,10 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep = 60 base + Math.round(30*1.5) = 60 + 45 = 105
-    // No fights → idle stipend +25; fresh state sits below the rival floor so
-    // the league subsidy covers 0.65 × 105 upkeep gap = 68. Net = 25+68-105 = -12
-    expect(result.updatedRival.treasury).toBe(1000 - 12);
+    // Upkeep = 60 base + Math.round(30*1.5) = 60 + 45 = 105, plus training 20
+    // (V30: deterministic weekly training). No fights → idle stipend +25;
+    // subsidy covers 0.65 × 105 upkeep gap = 68. Net = 25+68-125 = -32
+    expect(result.updatedRival.treasury).toBe(1000 - 32);
   });
 
   it('AI gets Mana Surge income', () => {
@@ -175,10 +177,10 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 60 + weather 5 = 65. No fights → stipend +25 plus league subsidy
-    // 0.65 × 60 = 39 (subsidy covers roster upkeep, not the weather premium).
-    // Net = 25 + 39 - 65 = -1
-    expect(result.updatedRival.treasury).toBe(1000 - 1);
+    // Upkeep 60 + weather 5 + training 20 (V30) = 85. No fights → stipend +25
+    // plus league subsidy 0.65 × 60 = 39 (subsidy covers roster upkeep only).
+    // Net = 25 + 39 - 85 = -21
+    expect(result.updatedRival.treasury).toBe(1000 - 21);
   });
 
   it('AI gets weather expenses (Blizzard)', () => {
@@ -201,9 +203,9 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 60 + weather 10 = 70. No fights → stipend +25 plus league subsidy
-    // 0.65 × 60 = 39. Net = 25 + 39 - 70 = -6
-    expect(result.updatedRival.treasury).toBe(1000 - 6);
+    // Upkeep 60 + weather 10 + training 20 (V30) = 90. No fights → stipend +25
+    // plus league subsidy 0.65 × 60 = 39. Net = 25 + 39 - 90 = -26
+    expect(result.updatedRival.treasury).toBe(1000 - 26);
   });
 
   it('AI gets Noble Patronage for famous warriors', () => {
@@ -228,10 +230,10 @@ describe('AI Economy Parity', () => {
     const result = processAIStable(rival, state);
 
     // Patronage = Math.floor((50-40)/10)*25 = 25
-    // Upkeep = 60 + Math.round(50*1.5) = 60 + 75 = 135
+    // Upkeep = 60 + Math.round(50*1.5) = 60 + 75 = 135, plus training 20 (V30).
     // No fights → stipend +25 plus league subsidy 0.65 × 135 = 88.
-    // Net = 25 + 25 + 88 - 135 = +3
-    expect(result.updatedRival.treasury).toBe(1000 + 3);
+    // Net = 25 + 25 + 88 - 155 = -17
+    expect(result.updatedRival.treasury).toBe(1000 - 17);
   });
 
   it('AI only pays trainers with active contracts', () => {
@@ -313,9 +315,10 @@ describe('AI Economy Parity', () => {
 
     const result = processAIStable(rival, state);
 
-    // Upkeep 60 + training 20 = 80. No fights → stipend +25 plus league
-    // subsidy 0.65 × 60 = 39. Net = 25 + 39 - 80 = -16
-    expect(result.updatedRival.treasury).toBe(1000 - 16);
+    // Upkeep 60 + training 20×2 = 100 — the pre-existing assignment plus the
+    // one the now-deterministic AI generates this week (V30). No fights →
+    // stipend +25 plus league subsidy 0.65 × 60 = 39. Net = 25 + 39 - 100 = -36
+    expect(result.updatedRival.treasury).toBe(1000 - 36);
   });
 
   it('AI and player produce identical breakdowns for the same input', () => {

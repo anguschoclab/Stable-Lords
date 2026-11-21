@@ -37,7 +37,7 @@ export function computeGainChance(
     (warrior.age ?? 18) > AGING_PENALTY_START
       ? ((warrior.age ?? 18) - AGING_PENALTY_START) * 0.02
       : 0;
-  const hasInjury = warrior.injuries.length > 0;
+  const hasInjury = (warrior.injuries ?? []).length > 0;
   const injuryPenalty = hasInjury ? 0.1 : 0;
 
   const potentialVal = warrior.potential?.[attribute];

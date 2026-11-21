@@ -1,16 +1,10 @@
 import type { GameState, SeasonalGrowth, TrainingAssignment } from '@/types/state.types';
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { type StateImpact } from '../impacts';
-import {
-  computeGainChance,
-  processRecovery,
-  processAttributeTraining,
-  processSkillDrillTraining,
-  rollForTrainingInjury,
-  type TrainingResult,
-} from './trainingGains';
+import { computeGainChance, type TrainingResult } from './trainingGains';
+import { runTrainingAttempt, runSkillDrillAttempt } from './trainingAttempt';
 import { getHealingTrainerBonus } from './coachLogic';
 import { rollTraitTraining } from './trainingGains/traitTraining';
 import { TRAITS } from '@/engine/traits';
@@ -30,6 +24,10 @@ export interface TrainingImpact {
 
 /**
  * Helper to process the recovery training assignment.
+ * V30: the accelerated heal itself is applied by the shared tickStableHealth
+ * in the health pass — writing it here too double-wrote `injuries` on the
+ * merged impact (and historically lost to the baseline tick). This branch
+ * only emits the assignment's report message.
  */
 function processRecoveryAssignment(
   warrior: Warrior,
@@ -37,11 +35,14 @@ function processRecoveryAssignment(
   currentRoster: Map<WarriorId, Warrior>,
   results: TrainingResult[]
 ): Map<WarriorId, Warrior> {
-  const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
-  results.push({ type: 'recovery', warriorId: warrior.id, message });
-  currentRoster.set(warrior.id, {
-    ...(currentRoster.get(warrior.id) ?? warrior),
-    injuries: updatedInjuries as InjuryData[],
+  const healAmount = 1 + healingBonus;
+  results.push({
+    type: 'recovery',
+    warriorId: warrior.id,
+    message:
+      (warrior.injuries ?? []).length === 0
+        ? `${warriorDisplayName(warrior)} rested but has no injuries to heal.`
+        : `${warriorDisplayName(warrior)} underwent active recovery (${healAmount} weeks of healing).`,
   });
   return currentRoster;
 }
@@ -66,30 +67,23 @@ function processSkillDrillAssignment(
   const { assignment, warrior, healingBonus, currentRoster, results } = args;
   const { state, rng, weather } = args;
   if (!assignment.skill) return currentRoster;
-  const { updatedWarrior, result, hardCapped } = processSkillDrillTraining(
-    warrior,
-    assignment.skill,
-    state,
-    rng
-  );
-  if (result.message !== '') {
-    results.push(result);
+  // V30: shared executor — same drill mechanics + injury roll as the AI path.
+  const out = runSkillDrillAttempt({
+    warrior: warrior,
+    skill: assignment.skill,
+    state: state,
+    healingBonus: healingBonus,
+    weather: weather,
+    rng: rng,
+  });
+  if (out.result.message !== '') {
+    results.push(out.result);
   }
-  if (updatedWarrior) {
-    currentRoster.set(warrior.id, updatedWarrior);
+  if (out.injuryResult) {
+    results.push(out.injuryResult);
   }
-  if (hardCapped) return currentRoster;
-  // Skill drilling still carries injury risk, though slightly lower than attribute training
-  const { injury, result: injuryResult } = rollForTrainingInjury(
-    updatedWarrior || warrior,
-    healingBonus + 1,
-    rng,
-    weather
-  );
-  if (injury && injuryResult) {
-    const w = currentRoster.get(warrior.id) ?? warrior;
-    currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
-    results.push(injuryResult);
+  if (out.warrior !== warrior) {
+    currentRoster.set(warrior.id, out.warrior);
   }
   return currentRoster;
 }
@@ -118,46 +112,28 @@ function processAttributeAssignment(args: ProcessAttributeAssignmentArgs): {
   const attr = assignment.attribute;
   if (!attr) return { currentRoster, seasonalGrowth };
 
-  const { updatedWarrior, updatedSeasonalGrowth, result, hardCapped } = processAttributeTraining(
-    warrior,
-    attr,
-    state,
-    seasonalGrowth,
-    rng
-  );
+  // V30: shared executor — the same attempt ruleset the AI roster worker runs.
+  const out = runTrainingAttempt({
+    warrior: warrior,
+    attribute: attr,
+    state: state,
+    seasonalGrowth: seasonalGrowth,
+    healingBonus: healingBonus,
+    weather: weather,
+    rng: rng,
+  });
 
-  if (result.message !== '') {
-    results.push(result);
+  if (out.result.message !== '') {
+    results.push(out.result);
+  }
+  if (out.injuryResult) {
+    results.push(out.injuryResult);
+  }
+  if (out.warrior !== warrior) {
+    currentRoster.set(warrior.id, out.warrior);
   }
 
-  if (updatedWarrior) {
-    currentRoster.set(warrior.id, updatedWarrior);
-  }
-
-  let growth = seasonalGrowth;
-  if (updatedSeasonalGrowth) {
-    growth = updatedSeasonalGrowth;
-  }
-
-  // Skip injury rolls if training was blocked/capped
-  if (hardCapped || (result.type === 'blocked' && result.message !== '')) {
-    return { currentRoster, seasonalGrowth: growth };
-  }
-
-  // ── Training Injury Roll ──
-  const { injury, result: injuryResult } = rollForTrainingInjury(
-    updatedWarrior || warrior,
-    healingBonus,
-    rng,
-    weather
-  );
-  if (injury && injuryResult) {
-    const w = currentRoster.get(warrior.id) ?? warrior;
-    currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
-    results.push(injuryResult);
-  }
-
-  return { currentRoster, seasonalGrowth: growth };
+  return { currentRoster, seasonalGrowth: out.seasonalGrowth };
 }
 
 interface ProcessAssignmentArgs {

@@ -1,4 +1,4 @@
-import type { GameState, RivalStableData, Trainer, Warrior } from '@/types/state.types';
+import type { GameState, RivalStableData, Trainer } from '@/types/state.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
@@ -27,23 +27,6 @@ function leagueSubsidyScale(rivalCount: number): number {
   );
   return LEAGUE_SUBSIDY_RATE * ramp;
 }
-import { isActive } from '@/engine/warrior/warriorStatus';
-
-/**
- * Passive recovery for active warriors: fatigue -25 per week. Hit points are
- * not touched — `derivedStats.hp` is the warrior's maximum HP stat, and damage
- * taken in a bout never persists past it (lasting harm is modelled as injuries).
- */
-function decayFatigue(roster: Warrior[]): Warrior[] {
-  return roster.map((w): Warrior => {
-    // Intentional deviation: single-item status check inside map
-    if (isActive(w) && (w.fatigue ?? 0) > 0) {
-      return { ...w, fatigue: Math.max(0, (w.fatigue ?? 0) - 25) };
-    }
-    return w;
-  });
-}
-
 /** Weekly economy: compute the breakdown, apply treasury, append ledger entries. */
 function applyWeeklyEconomy(
   updatedRival: RivalStableData,
@@ -108,6 +91,23 @@ function detectMilestones(rival: RivalStableData, updatedRival: RivalStableData)
 }
 
 /**
+ * Background consolidation: record this week's bout outcomes into
+ * seasonRecord + typed BOUT events, then prune logs and update burn rate.
+ */
+function consolidateWeeklyMemory(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: import('./memory/perceptionSnapshot').PerceptionSnapshot
+): RivalStableData {
+  const weekFights =
+    perception?.weekFights ??
+    getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week);
+  let updated = updateSeasonRecord(rival, weekFights, state.week);
+  updated = recordBoutOutcome(updated, weekFights, state.week);
+  return consolidateAgentMemory(updated, state.week);
+}
+
+/**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
  * Implements "Hierarchical Delegation" and "Context Isolation".
  */
@@ -129,8 +129,8 @@ export function processAIStable(
   const gazetteItems: string[] = [];
   const impacts: StateImpact[] = [];
 
-  // ── Fatigue Decay & HP Recovery for AI Warriors ──
-  updatedRival.roster = decayFatigue(updatedRival.roster);
+  // ── Weekly Health (fatigue decay + injury tick) ──
+  // Handled inside processRoster by the shared tickStableHealth ruleset.
 
   // 2. Delegate to Workers (Hierarchical Delegation)
 
@@ -142,10 +142,15 @@ export function processAIStable(
   impacts.push({ hiringPool: currentHiringPool });
 
   // B) RosterWorker (Training/Gear)
-  const rosterSeed = state.week * 8123 + updatedRival.owner.id.length * 101;
-  // `processRoster` takes 5 args; the previous 6th (`context`) was silently
-  // dropped and has been removed. Agent context flows via `updatedRival` state.
-  updatedRival = processRoster(updatedRival, state.week, state.season, rosterSeed);
+  // Agent context flows via `updatedRival` state. Weather threads into the
+  // shared training executors so AI injury rolls see the same ambient risk
+  // the player's assignments do.
+  updatedRival = processRoster(updatedRival, {
+    currentWeek: state.week,
+    season: state.season,
+    seed: state.week * 8123 + updatedRival.owner.id.length * 101,
+    weather: state.weather,
+  });
 
   // 3. Calculate Weekly Economy via shared player path, then apply it.
   updatedRival = applyWeeklyEconomy(updatedRival, state, perception);
@@ -168,12 +173,7 @@ export function processAIStable(
 
   // 6. Background Consolidation: record this week's bout outcomes into
   // seasonRecord + typed BOUT events, then prune logs and update burn rate.
-  const weekFights =
-    perception?.weekFights ??
-    getFightsForWeek(state.arenaHistory, state.absoluteWeek ?? state.week);
-  updatedRival = updateSeasonRecord(updatedRival, weekFights, state.week);
-  updatedRival = recordBoutOutcome(updatedRival, weekFights, state.week);
-  updatedRival = consolidateAgentMemory(updatedRival, state.week);
+  updatedRival = consolidateWeeklyMemory(updatedRival, state, perception);
 
   // Collect impact for this rival
   const rivalsUpdates = new Map<

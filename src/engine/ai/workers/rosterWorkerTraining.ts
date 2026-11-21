@@ -8,18 +8,15 @@ import type {
   SeasonalGrowth,
   OwnerPersonality,
 } from '@/types/state.types';
-import type { Attributes, Season, BaseSkills } from '@/types/shared.types';
+import type { Attributes, Season, BaseSkills, WeatherType } from '@/types/shared.types';
 import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import { computeWarriorStats } from '../../warrior/skillCalc';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { SKILL_DRILL_CAP, TOTAL_CAP } from '@/engine/training/trainingGains';
 import {
-  processAttributeTraining,
-  processSkillDrillTraining,
-  rollForTrainingInjury,
-  SKILL_DRILL_CAP,
-  TOTAL_CAP,
-} from '@/engine/training/trainingGains';
+  runTrainingAttempt,
+  runSkillDrillAttempt,
+} from '@/engine/training/trainingAttempt';
 import {
   traitCapacity,
   meritsTraitDevelopment,
@@ -38,21 +35,10 @@ import {
   AI_WT_TRAIN_MAX_BOUTS,
 } from '@/constants/ai';
 import { suspectedFavoriteLearn } from '@/engine/learning';
+import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
 import type { Trainer } from '@/types/shared.types';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
-
-/**
- * AI training runs at ~80% player effectiveness per the Training Mechanics spec.
- * The 80% lever is a **pre-gate** on whether the week attempts training at all;
- * once we decide to attempt, the full shared pipeline runs so potential caps,
- * `TOTAL_CAP`, `SEASONAL_CAP_PER_ATTR`, diminishing returns, trainer bonuses,
- * and injury rolls all fire exactly the same way they do for the player.
- *
- * Net gain rate = 0.8 × `computeGainChance(...)` (modulo pipeline gates),
- * which matches the spec's multiplicative-effectiveness intent.
- */
-const AI_TRAINING_EFFECTIVENESS = 0.8;
 
 /** Weekly chance that a struggling or already-flawed warrior picks up a (further)
  *  flaw even when not developing positively — keeps multi-flaw churn alive. Knob. */
@@ -137,37 +123,35 @@ interface ExecuteTrainingAttemptArgs {
   seasonalGrowth: SeasonalGrowth[];
   rng: IRNGService;
   healingBonus: number;
+  weather: WeatherType;
 }
 
 /**
- * Execute a single training attempt: state adapter + processAttributeTraining + injury roll + stat recompute.
+ * Execute a single training attempt through the shared V30 executor —
+ * identical gating, weather-aware injury roll, and stat recompute as the
+ * player's training-assignment path.
  */
 function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): {
   warrior: Warrior;
   seasonalGrowth: SeasonalGrowth[];
 } {
   const { w, chosen, stable, season, seasonalGrowth } = args;
-  const { rng, healingBonus } = args;
+  const { rng, healingBonus, weather } = args;
   const stateAdapter = {
     season: season ?? 'Spring',
     trainers: stable.trainers ?? [],
   } as unknown as GameState;
 
-  const attemptResult = processAttributeTraining(w, chosen, stateAdapter, seasonalGrowth, rng);
-  let warrior = attemptResult.updatedWarrior ?? w;
-  const nextSeasonalGrowth = attemptResult.updatedSeasonalGrowth ?? seasonalGrowth;
-
-  const injuryRoll = rollForTrainingInjury(warrior, healingBonus, rng);
-  if (injuryRoll.injury) {
-    warrior = { ...warrior, injuries: [...(warrior.injuries ?? []), injuryRoll.injury] };
-  }
-
-  if (warrior !== w) {
-    const { baseSkills, derivedStats } = computeWarriorStats(warrior.attributes, warrior.style);
-    warrior = { ...warrior, baseSkills, derivedStats };
-  }
-
-  return { warrior, seasonalGrowth: nextSeasonalGrowth };
+  const out = runTrainingAttempt({
+    warrior: w,
+    attribute: chosen,
+    state: stateAdapter,
+    seasonalGrowth: seasonalGrowth,
+    healingBonus: healingBonus,
+    weather: weather,
+    rng: rng,
+  });
+  return { warrior: out.warrior, seasonalGrowth: out.seasonalGrowth };
 }
 
 /**
@@ -180,6 +164,7 @@ interface PerformAITrainingArgs {
   seasonalGrowth: SeasonalGrowth[];
   rng: IRNGService;
   healingBonus?: number;
+  weather?: WeatherType;
 }
 
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
@@ -189,8 +174,7 @@ export function performAITraining(args: PerformAITrainingArgs): {
   chosen?: keyof Attributes;
 } {
   const { w, stable, season, seasonalGrowth, rng } = args;
-  const { healingBonus = 0 } = args;
-  if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
+  const { healingBonus = 0, weather = 'Clear' } = args;
 
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
   if (total >= TOTAL_CAP) return { warrior: w, seasonalGrowth };
@@ -213,6 +197,7 @@ export function performAITraining(args: PerformAITrainingArgs): {
     seasonalGrowth: seasonalGrowth,
     rng: rng,
     healingBonus: healingBonus,
+    weather: weather,
   });
 
   return { warrior, seasonalGrowth: nextGrowth, chosen };
@@ -253,7 +238,8 @@ const DRILLABLE_SKILLS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP
 export function performAISkillDrill(
   w: Warrior,
   stable: RivalStableData,
-  rng: IRNGService
+  rng: IRNGService,
+  weather: WeatherType = 'Clear'
 ): Warrior {
   const primary = STYLE_PRIMARY_DRILL[w.style as FightingStyle];
   const drills = w.skillDrills ?? {};
@@ -281,8 +267,17 @@ export function performAISkillDrill(
   if (!skill) return w; // All skills at cap — nothing to drill.
 
   const stateAdapter = { trainers: stable.trainers ?? [] } as unknown as GameState;
-  const { updatedWarrior } = processSkillDrillTraining(w, skill, stateAdapter, rng);
-  return updatedWarrior ?? w;
+  // V30: shared drill executor — the AI roll now fires under the same odds
+  // (healingBonus + 1) and weather as the player's skillDrill assignment.
+  const out = runSkillDrillAttempt({
+    warrior: w,
+    skill: skill,
+    state: stateAdapter,
+    healingBonus: getHealingTrainerBonus(stable.trainers ?? []),
+    weather: weather,
+    rng: rng,
+  });
+  return out.warrior;
 }
 
 /**

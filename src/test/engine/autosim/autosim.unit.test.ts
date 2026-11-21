@@ -76,7 +76,7 @@ describe('processPlayerOffers', () => {
     );
   });
 
-  it('skips low-value offer', () => {
+  it('evaluates a low-value offer through the shared ruleset (V30)', () => {
     const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 50, purse: 50 });
@@ -84,8 +84,10 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
+    // The old hype/purse heuristic left low-value offers Pending; the unified
+    // ruleset gives every pending offer a verdict — a clean offer accepts.
     expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
-      'Pending'
+      'Accepted'
     );
   });
 

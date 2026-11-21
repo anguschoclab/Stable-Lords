@@ -393,9 +393,10 @@ describe('Training System', () => {
       const impact = computeTrainingImpact(state as any, rng as any);
 
       expect(impact.results.filter((r) => r.type === 'injury')).toHaveLength(0);
-      // When injury result is undefined, the injury should not be applied to the roster
+      // V30: a landed injury applies even without a result message — the
+      // consequence is real, the report is optional.
       if (impact.updatedRoster[0]) {
-        expect(impact.updatedRoster[0]!.injuries).toHaveLength(0);
+        expect(impact.updatedRoster[0]!.injuries).toHaveLength(1);
       }
       spy.mockRestore();
     });

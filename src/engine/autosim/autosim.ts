@@ -1,5 +1,6 @@
-import { type GameState } from '@/types/state.types';
+import { type GameState, type RivalStableData } from '@/types/state.types';
 import type { BoutOffer } from '@/types/state/rankings';
+import { evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { sweepUnfinishedTournaments } from '@/engine/matchmaking/tournamentSelection/resolution';
@@ -117,14 +118,47 @@ function* playerOfferCandidates(
 }
 
 /**
- * Process player bout offers after week advancement
+ * Process player bout offers after week advancement.
+ * V30: autopilot responses run through the same `evaluateBoutOffer` ruleset
+ * rival stables use — blocking injuries, weather risk, survivability and
+ * negotiation gates all apply. The player's stable is presented through a
+ * rival-shaped adapter so the shared evaluator needs no player special-casing.
  */
 export function processPlayerOffers(state: GameState): GameState {
+  const playerAsRival: RivalStableData = {
+    id: state.player.id,
+    owner: state.player,
+    fame: state.fame,
+    roster: state.roster,
+    treasury: state.treasury,
+    ledger: state.ledger ?? [],
+    trainingAssignments: state.trainingAssignments ?? [],
+  };
+  const rosterById = new Map(state.roster.map((w) => [w.id, w]));
   for (const { offer, warriorId } of playerOfferCandidates(state)) {
-    if (offer.hype > 100 || offer.purse > 200) {
-      const impact = respondToBoutOffer(state, offer.id, warriorId, 'Accepted');
-      state = resolveImpacts(state, [impact]);
-    }
+    const warrior = state.warriorMap?.get(warriorId) ?? rosterById.get(warriorId);
+    if (!warrior) continue;
+    // warriorIds is a ≤2-element list — a Set adds allocation without gain.
+    const opponentId = offer.warriorIds.find((id) => id !== warriorId);
+    const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
+    const verdict = evaluateBoutOffer({
+      offer: offer,
+      rival: playerAsRival,
+      warrior: warrior,
+      currentWeek: state.absoluteWeek,
+      weather: state.weather,
+      opponent: opponent,
+      state: state,
+    });
+    // Counter verdicts are a negotiation luxury — the autopilot plays it
+    // safe and simply declines offers it wouldn't outright accept.
+    const impact = respondToBoutOffer(
+      state,
+      offer.id,
+      warriorId,
+      verdict === 'Accepted' ? 'Accepted' : 'Declined'
+    );
+    state = resolveImpacts(state, [impact]);
   }
   return state;
 }

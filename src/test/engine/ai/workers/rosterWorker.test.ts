@@ -158,7 +158,7 @@ describe('processRoster', () => {
   it('returns a valid RivalStableData with roster intact', () => {
     const w = makeWarrior('w1');
     const rival = makeRivalStable({ roster: [w], treasury: 1000 });
-    const result = processRoster(rival, 1, 'Spring', 42);
+    const result = processRoster(rival, { currentWeek: 1, season: 'Spring', seed: 42 });
 
     expect(result.roster).toBeDefined();
     expect(result.roster.length).toBeGreaterThanOrEqual(1);
@@ -176,7 +176,7 @@ describe('processRoster', () => {
       }
     );
     const rival = makeRivalStable({ roster: [w], treasury: 1000 });
-    const result = processRoster(rival, 1, 'Spring', 42);
+    const result = processRoster(rival, { currentWeek: 1, season: 'Spring', seed: 42 });
 
     // Recovery should have ticked the injury
     const updated = result.roster.find((r) => r.id === w.id);
@@ -186,7 +186,7 @@ describe('processRoster', () => {
   it('does not train when treasury is below training cost', () => {
     const w = makeWarrior('w1');
     const rival = makeRivalStable({ roster: [w], treasury: 0 });
-    const result = processRoster(rival, 1, 'Spring', 42);
+    const result = processRoster(rival, { currentWeek: 1, season: 'Spring', seed: 42 });
 
     // Warrior should be unchanged (no budget for training)
     const updated = result.roster.find((r) => r.id === w.id);
@@ -196,7 +196,7 @@ describe('processRoster', () => {
   it('deducts training cost from treasury when training occurs', () => {
     const w = makeWarrior('w1');
     const rival = makeRivalStable({ roster: [w], treasury: 1000 });
-    const result = processRoster(rival, 1, 'Spring', 42);
+    const result = processRoster(rival, { currentWeek: 1, season: 'Spring', seed: 42 });
 
     // Treasury should be <= initial (training and/or gear costs deducted)
     expect(result.treasury).toBeLessThanOrEqual(1000);

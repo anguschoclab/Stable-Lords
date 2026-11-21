@@ -27,16 +27,27 @@ Every structural claim in the draft plan was audited against the code before lan
 
 ## §1 — Canon-claims audit
 
-_Filled in Phase F._ One verdict row per register claim — see `docs/engineering/terrablood-canon-claims.md` for the live register.
+Register: `docs/engineering/terrablood-canon-claims.md` (28 claims: 7 C-family, 7 D-family, 7 S-family, 7 M-family).
+
+**Verdict histogram:** 18 `implemented` · 7 `missing` · 1 `diverged` · 4 `disputed` (2 resolved via adopted model — C4 chart-formulas, D7 luckfactor-model — and D1/S6 carried to the gate).
+
+**Coverage limitation:** the original archive paste exceeded context capacity — the register covers the surviving claim set (AB concept list, Bloodgames article, archive TOC, plan-carried formulas). Article bodies that exist only as titles in the truncated TOC may hold additional unregistered claims; if the user re-supplies the corpus the register extends.
+
+**Headline finding — the V22-era canon layer already absorbed most of this archive.** `src/data/terrabloodCharts.ts` + ~18 `*.canon.test.ts` specs already pin: Terrablood measured charts (HP/damage/endurance/encumbrance), skill breakpoints, coordination/activity ratings, weapon stat reqs, weapon×armor matrix, tactic suitability, KD presets, learn cap + burn, favorite tactics/rhythms, archetypes + statements, bloodfeud entitlement + challenge bonus, canon targeting, offhand grid + VHC/ambi, and per-style design-review + plan-doctrine intelligence with article citations embedded in `designReview.ts` and `ai/plan/coreGenerator/doctrine.ts`. The genuine deltas remaining are concentrated in the M family plus a few bounded C/D/S items — all carried to §2.
 
 ## §2 — DECISION-NEEDED register
 
-_User-adjudication gate._ Every `diverged`/`disputed` claim and seeded conflict lands here with adjudication options (canon wins / keep house / hybrid).
+_User-adjudication gate._ Every `missing`/`diverged`/`disputed` claim with implementation consequence lands here. Options and rulings:
 
 | ID | Claim / conflict | Options | Ruling |
 | --- | --- | --- | --- |
-| — | _filled in Phase F_ | — | — |
+| DN-V24-F4 | Tournament-victor challenge precedence requires a `victor`/`tournamentVictor` state field that does not exist ("inventing one exceeds scope" per V24). Blocks V24-F1's TV leg. | invent field + full ordering / ordering minus TV leg / defer both | _pending_ |
+| DN-V24-F1 | Canon challenge ordering (DA → bloodfeud → TV → first → second → random); bloodfeud fast-path landed, strict ordering unbuilt | implement strict ordering / defer | _pending_ |
+| DN-V27-§5 | Knack (`luckfactor`/`bloodlust` hidden) scout-rumor surface — canon push delivered by the archive's luck-factor material | land rumor surface / keep hidden | _pending_ |
+| DN-M4 | Skill-rank ladder: code stops at Advanced Master (34) per Consortium Q&A; archive adds Grandmaster (44)/Archmaster (56) | extend ladder / keep Q&A canon | _pending_ |
+| DN-C8 | Weapon breakage folklore (QS/GA/GS "break a lot") — no mechanic exists | implement breakage / house deferral | _pending_ |
+| DN-S2 | Defensive AB exhaust-then-strike template — `ripostingHybrid` exists, no explicit curve | add AB exhaust template / keep archetype fit | _pending_ |
+| DN-S6 | Style-vs-style arena records (Hoser #9) vs tuned `MATCHUP_MATRIX` — retune toward records or keep house tuning (TP dominance already adjudicated canon-accurate) | retune probe / keep matrix | _pending_ |
+| DN-D3 | WT+WL+DF ≥ 49 "Primus-bound" / ≥ 35 viable eval thresholds into `designReview` | add eval notes / skip | _pending_ |
 
-**Seeded items (from plan validation):**
-- **DN-V24-F4** — tournament-victor precedence requires a `victor`/`tournamentVictor` state field that does not exist (BACKLOG: "inventing one exceeds scope" per V24). Options: invent the field (unblocks V24-F1 TV leg) / implement ordering without TV leg / defer both.
-- **DN-V27-§5** — knack (`luckfactor`/`bloodlust` hidden) scout-rumor surface. Options: land a rumor surface (canon push delivered) / keep hidden (intentional design deferral stands).
+**Evidence-fold items (no ruling needed — land in coupled backlog rows):** C4 archive formulas (chart wins), D5 + S7 + M2 + M7 Bloodgames material (→ V24-D5), M6 ADM (→ V22-D4), D7 luckfactor model (±4 adopted).

@@ -1,10 +1,10 @@
 # Orphan Report — Stable Lords
 
-**Generated:** 2026-11-19 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
+**Generated:** 2026-11-21 · **Source:** `scripts/orphan-scan.mjs` + this generator (`scripts/orphan-report.mjs`)
 **Scope:** all flagged `src/` exports + unreachable files + nav-hidden routes
 **Purpose:** product-owner triage — decide **integrate** (wire it in), **delete**, or **keep** per orphan.
 
-> **Ratchet status:** 172 src-scoped dead exports — under the 174 ratchet — guard green.
+> **Ratchet status:** 180 src-scoped dead exports — ⚠️ **over the 174 ratchet by 6** — the guard is red.
 
 ## Uniqueness tags
 
@@ -12,18 +12,29 @@
 - 🔵 **DUPLICATE** — functionally equivalent logic ships elsewhere.
 - ⚪ **PASS-THROUGH** — pure re-export/config surface; contains no logic.
 
+## ⚠️ UNTRIAGED — new orphans since last annotation pass
+
+Flagged by the latest scan with no curated entry in `orphan-report.mjs` `ANNOTATIONS`. Triage these first, then record the verdict there.
+
+| Symbol | File | Evidence |
+| --- | --- | --- |
+| `ContractPayoutArgs` | src/engine/bout/core/resolveHelpers.ts | zero external refs — likely over-export |
+| `isPlayerOwnedWarrior` | src/engine/core/warriorOwnership.ts | test-only symbol with no internal use — lifecycle hook? |
+| `RunTrainingAttemptArgs` | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export |
+| `RunSkillDrillAttemptArgs` | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export |
+| `TickStableHealthArgs` | src/engine/warrior/stableHealth.ts | zero external refs — likely over-export |
+| `TickStableHealthResult` | src/engine/warrior/stableHealth.ts | zero external refs — likely over-export |
+
 ## Duplication — alternate flows sharing an orphan's name
 
 The same symbol name is declared in other production files. `@score` is token-level body similarity: **identical** ≥0.9 (true duplicate — delete loses nothing), **divergent** 0.3–0.9 (alternate flow — the orphan carries its own semantics), **distinct** <0.3 (name collision only).
 
 | Symbol | Orphan file | Class | Alternate flow(s) |
 | --- | --- | --- | --- |
-| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/warrior/BiometricsTab.tsx` @0.19 **distinct**<br>`src/components/WarriorDossier.tsx` @0.19 **distinct** |
+| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/WarriorDossier.tsx` @0.19 **distinct**<br>`src/components/warrior/BiometricsTab.tsx` @0.19 **distinct** |
 | `RhythmBand` | `src/engine/ai/plan/strategyLab.ts` | B | `src/components/warrior/favorites/FavoritesCharting.tsx` @0.08 **distinct** |
-| `extractWeekSummary` | `src/engine/autosim/autosim.ts` | C | `src/engine/pipeline/tick/timeAdvance/summaries.ts` @0.3 **distinct** |
 | `TOURNAMENT_TIERS` | `src/engine/matchmaking/tournamentSelection.ts` | A | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct** |
 | `ArchiveConflictError` | `src/engine/storage/electronArchive.ts` | keep | `src/engine/storage/ArchiveConflictError.ts` @0 **distinct** |
-| `updateWarriorAfterBout` | `src/engine/warrior/careerUpdate.ts` | A | `src/engine/bout/warriorStateUpdater.ts` @0.32 **divergent** |
 | `computeHP` | `src/engine/warrior/skillCalc.ts` | C | `src/data/terrabloodCharts.ts` @0.13 **distinct** |
 | `stableStats` | `src/hooks/useScoutingStableComparison.ts` | C | `src/pages/arenaHub/useArenaHubData.ts` @0.2 **distinct** |
 
@@ -37,25 +48,6 @@ The same symbol name is declared in other production files. `@score` is token-le
   (`engine/advisor/tournamentAdvisor.ts`) deep-imports from `core` anyway.
   **Recommendation:** **delete the re-export** (1 line) or route the
   advisor through it — either direction is cheap.
-
-### `updateWarriorAfterBout` — legacy post-bout updater 🟣 **UNIQUE** *(superseded semantics)*
-
-- **File:** `src/engine/warrior/careerUpdate.ts`
-- **What it is:** A "legacy-compatible function matching the signature of the
-  original `updateWarriorAfterBout`" (its own docstring). Wraps
-  `calculateCareerUpdate` + `applyCareerUpdate` + `flashyFlair`.
-  **Uniqueness:** not a pure duplicate — compared to the live
-  `warriorStateUpdater.ts` twin (`wasKilled` = killer, fatigue resets for the
-  killer, caller-computed fame deltas), this path treats `wasKilled` as the
-  *victim* (`isVictim` → `status: 'Dead'`, fatigue resets for the dead),
-  auto-computes fame +1 win/+3 kill, rolls epithet for any non-victim, and
-  overwrites `status` — semantics the current bout model deliberately moved
-  out (death status lives in `mortalityHandler`).
-  **Why orphaned:** production uses `warriorStateUpdater.ts` (via
-  `recordHandler.ts`) and `updateWarriorFromBoutOutcome` for tournaments;
-  only `src/test/engine/warrior/careerUpdate.test.ts` calls this wrapper.
-  **Recommendation:** **delete** — two same-named functions with divergent
-  semantics in neighboring modules is a footgun, not a fallback.
 
 ### `clamp01` — unused clamp-to-[0,1] helper 🟣 **UNIQUE** *(trivial)*
 
@@ -157,7 +149,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `PlanConditionSchema` | `src/schemas/warriorSchemas.ts` | FightPlanSchema | — |
 | `FightPlanSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema | — |
 
-### AI decisioning (21)
+### AI decisioning (22)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
@@ -181,6 +173,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `walkAwayTolerance` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
 | `assessCrownOpportunity` | `src/engine/ai/workers/crownWorker.ts` | processCrownPosture | — |
 | `tourneyDraftBonus` | `src/engine/ai/workers/recruitmentWorker.ts` | module scope | — |
+| `ProcessRosterArgs *(type)*` | `src/engine/ai/workers/rosterWorker.ts` | processRoster | — |
 | `preferredTrainerFocus` | `src/engine/ai/workers/staffWorker.ts` | tryHireTrainer | — |
 
 ### Engine core & services (34)
@@ -188,7 +181,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
 | `processPlayerOffers` | `src/engine/autosim/autosim.ts` | runAutosim | — |
-| `extractWeekSummary` | `src/engine/autosim/autosim.ts` | runAutosim | distinct |
+| `extractAutosimWeekSummary` | `src/engine/autosim/autosim.ts` | runAutosim | — |
 | `seedForEntity` | `src/engine/avatar/avatarGenerator.ts` | generateAvatar | — |
 | `wearScore` | `src/engine/avatar/avatarGenerator.ts` | avatarDescription, generateAvatarFromCatalog | — |
 | `avatarDescription` | `src/engine/avatar/avatarGenerator.ts` | generateAvatarFromCatalog | — |
@@ -200,6 +193,7 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `ArenaWarriorEntry *(type)*` | `src/engine/core/leaderboards.ts` | ArenaLeaderboardData, cmpWarriors, cmpKillers, buildEntry, buildArenaLeaderboard, calculateArenaStyleLeaders | — |
 | `ArenaLeaderboardData *(type)*` | `src/engine/core/leaderboards.ts` | buildArenaLeaderboard, calculateArenaLeaderboard | — |
 | `ArenaStableEntry *(type)*` | `src/engine/core/leaderboards.ts` | calculateArenaStableStandings | — |
+| `WarriorOwner *(type)*` | `src/engine/core/warriorOwnership.ts` | resolveWarriorOwner | — |
 | `BEAST_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
 | `WEAPON_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
 | `SYMBOL_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
@@ -217,7 +211,6 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `addStat` | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome | — |
 | `StatGrantOutcomeOpts *(type)*` | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome | — |
 | `HONOR_DOWN_CHALLENGE_MARGIN` | `src/engine/politics/honorCulture.ts` | isDownChallenge | — |
-| `TRUNCATION_CAPS` | `src/engine/storage/truncation.ts` | ResolvedCaps, truncateState | — |
 | `defaultSpecialtyMods` | `src/engine/trainers/trainerSpecialties.ts` | getSpecialtyMods | — |
 | `validateArenaChampions` | `src/engine/validate/stateInvariants.ts` | validateStateInvariants | — |
 | `SEASONAL_WEATHER` | `src/engine/weather/seasonalWeather.ts` | rollWeather | — |
@@ -262,14 +255,16 @@ Every symbol below **runs in production** — called inside its own module by a 
 | `getTopFameWarriors` | `src/engine/stable/stableReputation.ts` | calculateFame, computeRivalReputation | — |
 | `computeFameScore` | `src/engine/stable/stableReputation.ts` | calculateFame | — |
 
-### Warrior & training (10)
+### Warrior & training (12)
 
 | Symbol(s) | File | Live via (internal caller) | Alt-flow |
 | --- | --- | --- | --- |
 | `generateRecruitAttrs` | `src/engine/owner/roster/recruitGenerator.ts` | generateAIRecruit | — |
-| `CareerUpdateInput *(type)*` | `src/engine/warrior/careerUpdate.ts` | calculateCareerUpdate, updateWarriorAfterBout, updateWarriorFromBoutOutcome | — |
-| `calculateCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorAfterBout, updateWarriorFromBoutOutcome | — |
-| `applyCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorAfterBout, updateWarriorFromBoutOutcome | — |
+| `TrainingAttemptOutcome *(type)*` | `src/engine/training/trainingAttempt.ts` | runTrainingAttempt | — |
+| `SkillDrillAttemptOutcome *(type)*` | `src/engine/training/trainingAttempt.ts` | runSkillDrillAttempt | — |
+| `CareerUpdateInput *(type)*` | `src/engine/warrior/careerUpdate.ts` | calculateCareerUpdate, updateWarriorFromBoutOutcome | — |
+| `calculateCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorFromBoutOutcome | — |
+| `applyCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorFromBoutOutcome | — |
 | `DesignAxis *(type)*` | `src/engine/warrior/designReview.ts` | DesignReviewItem | — |
 | `Handedness *(type)*` | `src/engine/warrior/skillCalc.ts` | computeBaseSkills | — |
 | `computeHP` | `src/engine/warrior/skillCalc.ts` | computeDerivedStats | distinct |
@@ -346,10 +341,10 @@ Generated-library exports — the components ship their full part API even when 
 
 | Decision | Items | Unique code at stake |
 | --- | --- | --- |
-| **Delete / integrate** | 5 curated item(s) | see per-item tags above |
+| **Delete / integrate** | 4 curated item(s) + **6 UNTRIAGED** | see per-item tags above |
 | **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 6 test-reset hook(s); 120 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 172 / 174 | — |
-| **Duplication** | 8 orphan(s) with same-name alternate flow(s) | 0 identical · 1 divergent · 7 distinct |
+| **Keep** | 6 test-reset hook(s); 123 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
+| **Guard hygiene** | ratchet: 180 / 174 | — |
+| **Duplication** | 6 orphan(s) with same-name alternate flow(s) | 0 identical · 0 divergent · 6 distinct |
 
 *Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*

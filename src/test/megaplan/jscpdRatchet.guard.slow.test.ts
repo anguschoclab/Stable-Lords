@@ -13,12 +13,13 @@ import path from 'node:path';
  *
  * Baseline history:
  *   - pre-campaign (V30 Phase 0): 106 clones / 0.57% duplicated lines
- *   - post-campaign baseline set at Phase 6 close-out (lower = ratchet holds)
+ *   - post-campaign (V30 Phase 6): 96 clones / 0.50% — scanLib extraction +
+ *     test-helper drains + dead-code removal netted −10 clones
  */
 const REPO = path.resolve(__dirname, '../../..');
 const REPORT = path.join(REPO, 'scripts/out/jscpd/jscpd-report.json');
 
-const CLONE_COUNT_BASELINE = 106;
+const CLONE_COUNT_BASELINE = 96;
 
 describe('jscpd ratchet (V30)', () => {
   it(

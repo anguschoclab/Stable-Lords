@@ -5,7 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { handleReporting } from '@/engine/bout/reportingHandler';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import type { WarriorId } from '@/types/shared.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeOutcome } from '@/test/_fixtures/factories';
 import { scriptRng } from '@/test/_fixtures/rngStub';
@@ -210,6 +210,50 @@ describe('reportingHandler', () => {
 
       // Summary should reflect the fighters involved
       expect(result.summary).toBeDefined();
+    });
+
+    it('carries both combatants’ stableIds onto the summary verbatim', () => {
+      // stableIdA/D feed stableManager.weeklyIncome (keyed by stableIdA/B) and
+      // ownerNarrative/schedulingAssistant rivalry lookups — the value must
+      // pass through unchanged, incl. undefined (no fabricated id).
+      const wA = createMockWarrior({ stableId: 'stable-a' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        stableId: 'stable-d' as StableId,
+      });
+      const result = handleReporting({
+        wA: wA,
+        wD: wD,
+        outcome: createMockOutcome(),
+        tags: [],
+        fA: 10,
+        pA: 5,
+        fD: 8,
+        pD: 4,
+        week: 1,
+        rng: scriptRng(0.5),
+      });
+      expect(result.summary.stableIdA).toBe('stable-a');
+      expect(result.summary.stableIdD).toBe('stable-d');
+    });
+
+    it('passes an absent stableId through as undefined', () => {
+      const wA = createMockWarrior();
+      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId });
+      const result = handleReporting({
+        wA: wA,
+        wD: wD,
+        outcome: createMockOutcome(),
+        tags: [],
+        fA: 10,
+        pA: 5,
+        fD: 8,
+        pD: 4,
+        week: 1,
+        rng: scriptRng(0.5),
+      });
+      expect(result.summary.stableIdA).toBeUndefined();
+      expect(result.summary.stableIdD).toBeUndefined();
     });
   });
 

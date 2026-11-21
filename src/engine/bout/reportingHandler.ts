@@ -1,5 +1,5 @@
 import type { Warrior } from '@/types/state.types';
-import type { StableId, FightId } from '@/types/shared.types';
+import type { FightId } from '@/types/shared.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
@@ -63,8 +63,8 @@ export function handleReporting(args: HandleReportingArgs) {
     // Prior code omitted these on regular bouts (only tournament summaries via
     // createFightSummary set them), so rival income from arenaHistory was always
     // 0 and rival treasuries never reflected bout earnings.
-    stableIdA: wA.stableId as unknown as StableId,
-    stableIdD: wD.stableId as unknown as StableId,
+    stableIdA: wA.stableId,
+    stableIdD: wD.stableId,
     winner: outcome.winner,
     by: outcome.by,
     styleA: wA.style,

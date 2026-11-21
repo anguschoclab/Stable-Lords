@@ -209,4 +209,21 @@ describe('generateFightNarrative', () => {
     expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
+
+  it('accepts the narrative-input subset (week/title/winner/by/styles only)', () => {
+    // The function only reads week/title/winner/by/styleA/styleD — callers must
+    // not be forced to fabricate the other ~25 FightSummary fields (this is the
+    // contract that lets mortalityHandler drop its `as unknown as` cast).
+    const minimal: Parameters<typeof generateFightNarrative>[0] = {
+      week: 3,
+      title: 'Alice vs Bob',
+      winner: 'A',
+      by: 'KO',
+      styleA: 'Brawler',
+      styleD: 'Swordsman',
+    };
+    const narrative = generateFightNarrative(minimal, 'Calm');
+    expect(typeof narrative).toBe('string');
+    expect(narrative.length).toBeGreaterThan(0);
+  });
 });

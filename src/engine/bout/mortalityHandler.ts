@@ -1,7 +1,7 @@
 import type { GameState, NewsletterItem, BloodfeudMark } from '@/types/state.types';
 import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
-import type { FightOutcome, FightSummary } from '@/types/combat.types';
+import type { FightOutcome } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -11,7 +11,6 @@ import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { isPlayerOwned, patchRivalWarrior } from './warriorRouting';
 import { bloodfeudMarksFromOutcome } from '@/engine/matchmaking/bloodfeud';
-import { weekToTimestamp } from '@/constants';
 
 interface ApplySevereInjuryRuleArgs {
   s: GameState;
@@ -132,21 +131,13 @@ function buildDeathArtifacts(args: BuildDeathArtifactsArgs) {
   const boutId = rng.uuid();
   const narrative = generateFightNarrative(
     {
-      id: boutId,
       week,
-      a: wA.name,
-      d: wD.name,
-      warriorIdA: wA.id,
-      warriorIdD: wD.id,
+      title: `${wA.name} vs ${wD.name}`,
       winner: outcome.winner,
       by: outcome.by,
       styleA: wA.style,
       styleD: wD.style,
-      transcript: [],
-      title: `${wA.name} vs ${wD.name}`,
-      phase: 'resolution',
-      createdAt: weekToTimestamp(week),
-    } as unknown as FightSummary,
+    },
     s.crowdMood
   );
 

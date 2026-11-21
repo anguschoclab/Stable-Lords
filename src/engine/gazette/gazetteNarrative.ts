@@ -14,10 +14,12 @@ import type { GazetteDetections } from './gazetteDetections';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 
 /**
- * Generates narrative for a single fight.
+ * Generates narrative for a single fight. Reads only the listed fields —
+ * callers (e.g. mortalityHandler's death artifacts) are not required to
+ * fabricate the rest of FightSummary.
  */
 export function generateFightNarrative(
-  fight: FightSummary,
+  fight: Pick<FightSummary, 'week' | 'title' | 'winner' | 'by' | 'styleA' | 'styleD'>,
   mood: CrowdMoodType,
   rng?: IRNGService
 ): string {

@@ -1,12 +1,16 @@
 import type { GameState } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import type { WeekPipelineContext } from '@/engine/pipeline/pipelineStages';
+import type { WeekSyncLedger } from '@/engine/pool/enginePool';
 import { telemetry, TelemetryEvents, isTelemetryEnabled } from '@/engine/core/telemetry';
 
 /** Pipeline context threaded through every pass — extends the shared
  * WeekPipelineContext with the headless flag and shard pool. */
 export interface WeekContext extends WeekPipelineContext {
   headless?: boolean;
+  /** V15: populated only when the shard pool runs synced workers — the
+   * pipeline records stage transitions here for worker replay. */
+  syncLedger?: WeekSyncLedger;
 }
 
 /** Computes next week/year (52-week rollover) and seeds the week RNG. */

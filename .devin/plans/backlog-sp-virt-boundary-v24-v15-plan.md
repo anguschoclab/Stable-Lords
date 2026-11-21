@@ -118,6 +118,8 @@ Surface (verified): 20 damage-dtype weapons (`fist` is `bash`-dtype and in scope
 
 ## WS5 — V15: engine-pool persistent shard state (full implementation)
 
+**LANDED** — `syncedShardState.ts` (worker store + replay), `syncCoordinator.ts` (stage ledger + heal), `stateHash.ts` (two-lane FNV receipts), stage-granular `mapStageShards`. Verified: sequential≡parallel hash-equal over 4 weeks + mid-week spawn + heal injection (`shardSync.slow.test.ts` 4/4, `parallelDeterminism` + enginePool slow 16/16). **Bench: 0.48× — gate FAILS (third documented)** — recorded in `pipeline-parallelism.md` + backlog §E. Landed divergences from the draft below: ledger stage states are **live aliases** verified by eager hashes (late clones would pollute); `ledger.input` reduced to an `inputWeek` token — workers never receive raw input (heal-to-target covers bootstrap; weekResult carries the replica); `narrowRivalShardState` **kept** (its equivalence spec still pins identical outputs — dropping was optional simplification); `shardInputSize.test.ts` **kept** likewise.
+
 Grounded architecture (verified in `weekPipelineService.ts`, `stages.ts`, `finalize.ts`, `context.ts`, `enginePool.ts`, `shardContract.ts`): every week transition is deterministic pure boundary functions + `resolveImpacts`. Workers hold `syncedState` and consume **stage-granular sync messages** — required because the two shard passes read different mid-week state versions (bout shards: post-sweep `mutableState`; rival shards: `stateAfterCore`).
 
 **Sync protocol** (per worker, per week):

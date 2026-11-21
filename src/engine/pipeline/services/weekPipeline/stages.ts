@@ -34,6 +34,12 @@ export async function runBoutPhase(state: GameState, ctx: WeekContext): Promise<
     injuries: summary.injuryRefs,
   };
 
+  // V15: record the bout settlement for synced-worker replay.
+  if (ctx.syncLedger) {
+    ctx.syncLedger.boutImpact = boutImpact;
+    ctx.syncLedger.lastWeekBoutDisplay = settledState.lastWeekBoutDisplay;
+  }
+
   // Resync all week caches only when the bout impact could have replaced
   // warrior/rival identities — a quiet week (no pairings) leaves every map
   // still accurate. (Supersedes the old invalidateDeadWarriors + manual
@@ -63,6 +69,10 @@ export async function runStage(
     const started = profiling ? performance.now() : 0;
     impacts.push(await spec.run(state, ctx));
     if (profiling) recordPassTiming(spec.id, stage, performance.now() - started);
+  }
+  // V15: record stage impacts for synced-worker endWeek replay.
+  if (ctx.syncLedger && (stage === 'world' || stage === 'content')) {
+    ctx.syncLedger.stageImpacts[stage] = impacts;
   }
   const resolved = resolveImpacts(state, impacts);
   if (impactsAffectWeekCaches(impacts)) buildWeekCaches(resolved);

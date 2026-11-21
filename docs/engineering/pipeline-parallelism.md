@@ -127,6 +127,48 @@ removed) was ~43% of all CPU.
 compute growing much faster than state size, or if inputs are narrowed to
 per-shard state slices rather than full state.
 
+## Persistent shard state — IMPLEMENTED, gate still fails (0.48×)
+
+The persistent-state architecture described above is now built
+(`pool/syncedShardState.ts` worker store + `pool/syncCoordinator.ts`
+coordinator). Synced workers hold a GameState replica and replay each
+week's stage transitions — `weekStart` (sweep + gazette + caches) →
+`postCore` (bout impact + core impacts) → `weekResult` (world/content
+impacts + `finalizeState`) — using the same deterministic boundary
+functions the pipeline runs, instead of receiving a full-state clone per
+shard call. Wire ctx drops every recomputable field: bout shards carry only
+`{headless}`, rival shards `{nextWeek}`.
+
+Verification is per-stage hash receipts (`pool/stateHash.ts` — two-lane
+32-bit FNV-1a over the strip-listed canonical stringify): the pipeline
+records each stage's hash eagerly at capture (`weekPipelineService.ts`),
+because the ledger's stage states are live aliases the pipeline keeps
+mutating past the boundary. A receipt mismatch heals by installing the
+stage state directly — workers that still can't match are marked broken
+and their chunks run in-line (identical output, just not parallel).
+weekResult replay leaves the result as next week's pristine input replica,
+so steady-state weeks pay zero full-state transports; mid-week spawns heal
+straight to the dispatch stage and take the result once.
+
+Measured (52 weeks, seed 20260919, pool=4, real module workers):
+
+| run                  | wall-clock                       |
+| -------------------- | -------------------------------- |
+| pool=1 (sequential)  | 13,045 ms                        |
+| pool=4 (distributed) | 27,092 ms                        |
+| **speedup**          | **0.48× — gate requires ≥1.30×** |
+
+Third documented gate failure, mechanism now precise: at ~250 ms
+sequential weeks the protocol's fixed cost — ~15 stage-hash receipts/week
+(11 ms each), duplicated worker-side replay of the boundary functions, and
+~20 Comlink round-trips — exceeds the parallelizable compute fraction
+(rival ~100 ms/wk + bouts ~30–80 ms/wk). The gap vs the legacy 0.33×
+transport design is entirely the removed per-chunk state clones; what
+remains is inherent to verification + duplicated replay, not transport.
+`poolSize=1` stays the default; `syncedWorkers` keeps the synced path
+correctness-verified (`shardSync.slow.test.ts`, `parallelDeterminism`) for
+workloads where shard compute eventually outweighs the protocol cost.
+
 ## SAB/Atomics evaluation — rejected for now
 
 SharedArrayBuffer could eliminate clone cost, but:

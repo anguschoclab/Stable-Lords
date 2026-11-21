@@ -23,6 +23,9 @@ import {
 } from '@/engine/training/trainingGains';
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 
+/**
+ * Args for a weekly attribute-training attempt.
+ */
 export interface RunTrainingAttemptArgs {
   warrior: Warrior;
   attribute: keyof Attributes;
@@ -34,6 +37,9 @@ export interface RunTrainingAttemptArgs {
   rng: IRNGService;
 }
 
+/**
+ * Result of a weekly attribute-training attempt.
+ */
 export interface TrainingAttemptOutcome {
   /** True when the week's effort counted — injury risk applies. */
   attempted: boolean;
@@ -44,6 +50,10 @@ export interface TrainingAttemptOutcome {
   seasonalGrowth: SeasonalGrowth[];
 }
 
+/**
+ * One weekly attribute attempt: progression + weather-aware injury roll,
+ * with the player ruleset's injury gate.
+ */
 export function runTrainingAttempt(args: RunTrainingAttemptArgs): TrainingAttemptOutcome {
   const { warrior, attribute, state, seasonalGrowth, healingBonus, weather, rng } = args;
   const attempt = processAttributeTraining(warrior, attribute, state, seasonalGrowth, rng);
@@ -79,6 +89,9 @@ export function runTrainingAttempt(args: RunTrainingAttemptArgs): TrainingAttemp
   };
 }
 
+/**
+ * Args for a weekly skill drill.
+ */
 export interface RunSkillDrillAttemptArgs {
   warrior: Warrior;
   skill: keyof BaseSkills;
@@ -88,6 +101,9 @@ export interface RunSkillDrillAttemptArgs {
   rng: IRNGService;
 }
 
+/**
+ * Result of a weekly skill drill.
+ */
 export interface SkillDrillAttemptOutcome {
   attempted: boolean;
   warrior: Warrior;
@@ -96,6 +112,10 @@ export interface SkillDrillAttemptOutcome {
   result: ReturnType<typeof processSkillDrillTraining>['result'];
 }
 
+/**
+ * One weekly skill drill: progression + injury roll at healingBonus + 1;
+ * only a hard cap gates the roll.
+ */
 export function runSkillDrillAttempt(args: RunSkillDrillAttemptArgs): SkillDrillAttemptOutcome {
   const { warrior, skill, state, healingBonus, weather, rng } = args;
   const attempt = processSkillDrillTraining(warrior, skill, state, rng);

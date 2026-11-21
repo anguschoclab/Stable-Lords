@@ -1,8 +1,8 @@
 import type { GameState, InsightToken, InsightTokenType } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
-import { generateId } from '@/utils/idUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { resolveRng } from '@/utils/random';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
 /**
@@ -19,9 +19,9 @@ export const PatronTokenService = {
     source: string,
     rng?: IRNGService
   ): GameState {
+    const idRng = resolveRng(rng, state.week * 7919 + 23);
     const newToken: InsightToken = {
-      id: (rng?.uuid() ||
-        generateId(undefined, 'insight')) as import('@/types/shared.types').InsightId,
+      id: idRng.uuid() as import('@/types/shared.types').InsightId,
       type,
       warriorId: '' as import('@/types/shared.types').WarriorId, // Initially unassigned
       warriorName: 'Unassigned',
@@ -35,7 +35,7 @@ export const PatronTokenService = {
       newsletter: [
         ...(state.newsletter || []),
         {
-          id: rng?.uuid() || generateId(undefined, 'newsletter'),
+          id: idRng.uuid(),
           week: state.week,
           title: 'Patronage Awarded',
           items: [`The stable has earned a ${type} Patron's Favor from ${source}.`],
@@ -89,6 +89,7 @@ export const PatronTokenService = {
       }
     }
 
+    const idRng = resolveRng(rng, state.week * 7919 + 37 + tokenId.length);
     const nextTokens = state.insightTokens.filter((t) => t.id !== tokenId);
 
     return {
@@ -98,7 +99,7 @@ export const PatronTokenService = {
       newsletter: [
         ...(state.newsletter || []),
         {
-          id: rng?.uuid() || generateId(undefined, 'newsletter'),
+          id: idRng.uuid(),
           week: state.week,
           title: 'Patronage Internalized',
           items: [

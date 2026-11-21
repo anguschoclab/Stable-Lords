@@ -62,6 +62,13 @@ const ALLOWLIST = new Map([
     'src/engine/simulate/initialization.ts',
     new Set(['cryptoGetRandomValues']), // sanctioned unseeded-fight fallback
   ],
+  [
+    'src/engine/factories/warriorFactory.ts',
+    // rng-less builds are the sanctioned init/test path: every seeded caller
+    // passes `id` or `rng` (worldSeeder, rivalWarriorFactory, tournament utils,
+    // recruitPoolOps) and rng-less mints deliberately stay potential-free.
+    new Set(['generateId']),
+  ],
 ]);
 
 /** Collect violations. Returns { violations, summary }. */

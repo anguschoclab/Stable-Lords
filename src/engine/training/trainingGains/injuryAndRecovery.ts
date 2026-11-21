@@ -1,6 +1,5 @@
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { generateId } from '@/utils/idUtils';
 import type { WeatherType, InjuryId } from '@/types/shared.types';
 import {
   BASE_TRAINING_INJURY_CHANCE,
@@ -41,7 +40,7 @@ export function rollForTrainingInjury(
     const [minW, maxW] = template.weeksRange;
     const weeks = rng.roll(minW || 1, (maxW ?? (minW || 1)) + 1);
     const injury: InjuryData = {
-      id: generateId() as InjuryId,
+      id: rng.uuid() as InjuryId,
       name: template.name,
       description: template.description,
       severity: 'Minor',

@@ -17,6 +17,9 @@ import { tickInjuries } from '@/engine/injuries';
 
 const FATIGUE_DECAY = 25;
 
+/**
+ * Args for tickStableHealth.
+ */
 export interface TickStableHealthArgs {
   warriors: Warrior[];
   /** Warrior ids on a 'recovery' assignment this week — they get the
@@ -26,6 +29,9 @@ export interface TickStableHealthArgs {
   healingBonus?: number;
 }
 
+/**
+ * Per-roster result produced by tickStableHealth.
+ */
 export interface TickStableHealthResult {
   /** Updated roster — same references for warriors nothing changed on. */
   warriors: Warrior[];
@@ -33,6 +39,10 @@ export interface TickStableHealthResult {
   healed: Map<WarriorId, string[]>;
 }
 
+/**
+ * Shared weekly health tick — fatigue decay, injury countdown, and
+ * recovery-assignment healing as ONE update per warrior (V30-W1.1).
+ */
 export function tickStableHealth(args: TickStableHealthArgs): TickStableHealthResult {
   const { warriors, recoveryWarriorIds, healingBonus = 0 } = args;
   const healed = new Map<WarriorId, string[]>();

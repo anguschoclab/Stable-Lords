@@ -188,13 +188,14 @@ function collectBoutImpacts(args: CollectBoutImpactsArgs) {
     ctx.isRivalry
   );
 
-  const impacts: StateImpact[] = processContractPayouts(
+  const impacts: StateImpact[] = processContractPayouts({
     state,
-    ctx.contract,
-    getWinnerId(outcome, validCW.id, validCO.id),
-    validCW.id,
-    validCO.id
-  );
+    contract: ctx.contract,
+    winnerId: getWinnerId(outcome, validCW.id, validCO.id),
+    currentWId: validCW.id,
+    currentOId: validCO.id,
+    rng,
+  });
   const boutArenaId = resolveBoutArenaId(ctx, boutSeed);
   impacts.push(
     applyRecords({

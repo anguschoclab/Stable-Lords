@@ -9,7 +9,6 @@ import {
   type WeekBoutSummary,
 } from '@/engine/bout/services/boutProcessorService';
 import type { EnginePool } from '@/engine/pool/enginePool';
-import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 import { gameYearWeekToTimestamp } from '@/constants';
 
@@ -40,7 +39,7 @@ export function runBoutSimulationPass(
 ): BoutPassOutput | Promise<BoutPassOutput>;
 export function runBoutSimulationPass(
   state: GameState,
-  _rng: IRNGService,
+  rng: IRNGService,
   headless?: boolean,
   pool?: EnginePool
 ): BoutPassOutput | Promise<BoutPassOutput> {
@@ -61,7 +60,7 @@ export function runBoutSimulationPass(
   }): BoutPassOutput => {
     // Attach the results to the state for telemetry
     const boutSummaries: FightSummary[] = results.map((r) => ({
-      id: (r.contractId || generateId()) as FightId,
+      id: (r.contractId || rng.uuid()) as FightId,
       week: state.week,
       absoluteWeek: state.absoluteWeek || state.week,
       title: `${r.a.name} vs ${r.d.name}`,
@@ -83,7 +82,7 @@ export function runBoutSimulationPass(
     }));
 
     boutImpact.stewardReport = {
-      id: _rng.uuid() as StewardReportId,
+      id: rng.uuid() as StewardReportId,
       week: state.week,
       absoluteWeek: state.absoluteWeek || state.week,
       treasuryChange: 0,

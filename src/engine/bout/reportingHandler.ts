@@ -2,9 +2,7 @@ import type { Warrior } from '@/types/state.types';
 import type { StableId, FightId } from '@/types/shared.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { generateId } from '@/utils/idUtils';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
-import { resolveRng } from '@/utils/random';
 import { weekToTimestamp } from '@/constants';
 
 /**
@@ -21,7 +19,7 @@ interface HandleReportingArgs {
   pD: number;
   week: number;
   isRivalry?: boolean;
-  rng?: IRNGService;
+  rng: IRNGService;
   arenaId?: string;
   weather?: import('@/types/shared.types').WeatherType;
   absoluteWeek?: number;
@@ -51,8 +49,7 @@ export function handleReporting(args: HandleReportingArgs) {
   const { pA, fD, pD, week } = args;
   const { isRivalry, rng, arenaId, weather } = args;
   const { absoluteWeek, contractId } = args;
-  const safeRng = rng;
-  const boutId = (safeRng ? safeRng.uuid() : generateId(undefined, 'bout')) as FightId;
+  const boutId = rng.uuid() as FightId;
   const summary: FightSummary = {
     id: boutId,
     week,
@@ -88,8 +85,7 @@ export function handleReporting(args: HandleReportingArgs) {
 
   const tone: AnnounceTone =
     outcome.by === 'Kill' ? 'grim' : tags.includes('Flashy') ? 'hype' : 'neutral';
-  // Fall back to a deterministic seeded RNG when none is provided
-  const rngService = resolveRng(safeRng, week * 12345 + 67890);
+  const rngService = rng;
   const announcement =
     outcome.by === 'Kill' || outcome.by === 'KO'
       ? commentatorFor(outcome.by, rngService)

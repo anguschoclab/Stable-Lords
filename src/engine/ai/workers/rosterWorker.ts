@@ -164,6 +164,9 @@ function buyGearUpgrade(args: BuyGearUpgradeArgs): RivalStableData {
  * RosterWorker: Handles training and equipment.
  * Implements "Risk-Tiered Execution" for gear.
  */
+/**
+ * Args for processRoster.
+ */
 export interface ProcessRosterArgs {
   currentWeek: number;
   season?: Season;

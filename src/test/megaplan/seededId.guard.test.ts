@@ -11,7 +11,8 @@ import path from 'node:path';
  * Engine code lives inside seeded simulation paths: ids minted there must
  * derive from the seeded stream or deterministic inputs, never unseeded
  * sources (generateId, crypto fallbacks, Math's random, getRandomValues).
- * Sole allowlist: simulate/initialization.ts's sanctioned unseeded-fight fallback.
+ * Allowlist: simulate/initialization.ts's sanctioned unseeded-fight fallback,
+ * and warriorFactory's rng-less init/test mint (seeded callers pass id or rng).
  */
 describe('seededId guard (V30)', () => {
   it('no unseeded randomness inside src/engine seeded paths', () => {

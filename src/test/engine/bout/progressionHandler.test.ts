@@ -11,6 +11,17 @@ import {
   mkBoutOutcome as createMockOutcome,
 } from './_helpers';
 
+const STUB_RNG = {
+  next: () => 0.5,
+  uuid: () => 'uuid',
+  pick: <T>(arr: T[]) => arr[0]!,
+  roll: (min: number) => min,
+  shuffle: <T>(arr: T[]) => arr,
+  rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
+    Object.keys(weights)[0] as K,
+  chance: () => false,
+};
+
 describe('progressionHandler', () => {
 
   describe('handleProgressions', () => {
@@ -27,6 +38,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result.rosterUpdates).toBeDefined();
@@ -45,6 +57,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result.rosterUpdates?.has('warrior-a' as WarriorId)).toBe(true);
@@ -71,6 +84,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result.rivalWarriorPatches?.has(warriorId)).toBe(true);
@@ -91,6 +105,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
@@ -112,6 +127,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
@@ -138,6 +154,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
@@ -159,6 +176,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       const aUpdate = result.rosterUpdates?.get('warrior-a' as WarriorId);
@@ -186,16 +204,6 @@ describe('progressionHandler', () => {
       });
       const s = createMockState();
       const outcome = createMockOutcome();
-      const rng = {
-        next: () => 0.5,
-        uuid: () => 'uuid',
-        pick: <T>(arr: T[]) => arr[0]!,
-        roll: (min: number) => min,
-        shuffle: <T>(arr: T[]) => arr,
-        rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
-          Object.keys(weights)[0] as K,
-        chance: () => false,
-      };
 
       const result = handleProgressions({
         s: s,
@@ -204,7 +212,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
-        rng: rng,
+        rng: STUB_RNG,
       });
 
       // Result should have impact structure
@@ -225,6 +233,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       // Returns proper StateImpact
@@ -240,7 +249,7 @@ describe('progressionHandler', () => {
 
       // Should not throw without rivalStableId
       expect(() =>
-        handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1 })
+        handleProgressions({ s: s, wA: wA, wD: wD, outcome: outcome, tags: [], week: 1, rng: STUB_RNG })
       ).not.toThrow();
     });
 
@@ -257,6 +266,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result).toHaveProperty('rosterUpdates');
@@ -276,6 +286,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result).toHaveProperty('rosterUpdates');
@@ -295,6 +306,7 @@ describe('progressionHandler', () => {
         outcome: outcome,
         tags: [],
         week: 1,
+        rng: STUB_RNG,
       });
 
       expect(result).toBeDefined();

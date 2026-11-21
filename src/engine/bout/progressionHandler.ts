@@ -8,7 +8,6 @@ import { checkDiscovery, mergeWeaponChart } from '@/engine/favorites';
 import { rollBoutLearns, favoriteLearnOf, LEARN_SKILL_KEYS } from '@/engine/learning';
 import { LEARN_SKILL_NAMES } from '@/constants/combat/combat/learn';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
-import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 import { changedFields, patchRivalWarrior } from './warriorRouting';
 
@@ -63,7 +62,7 @@ interface HandleProgressionsArgs {
   outcome: FightOutcome;
   tags: string[];
   week: number;
-  rng?: IRNGService;
+  rng: IRNGService;
   /** Headless bouts keep outcome.log empty — no transcript lines are pushed. */
   headless?: boolean;
   /** The RESOLVED plans the bout actually simulated (post-challenge-context,
@@ -143,7 +142,7 @@ function rollLearnProgressions(
     // are their own business.
     if (isPlayerWarrior(s, w)) {
       newsletterItems.push({
-        id: rng ? rng.uuid() : generateId(undefined, 'newsletter'),
+        id: rng.uuid(),
         week,
         title: 'Training Insight',
         items: [`${warriorDisplayName(w)} learned ${totalGained} skill${totalGained > 1 ? 's' : ''} this bout (${skillsLearned}).`],
@@ -170,23 +169,13 @@ function rollFavoritesDiscovery(
 ): void {
   const { s, wA, wD, outcome } = args;
   const { week, rng: discRng } = args;
-  const fallbackRng = {
-    next: () => 0.5,
-    uuid: () => 'uuid',
-    pick: <T>(arr: T[]) => arr[0] as T,
-    roll: (min: number) => min,
-    shuffle: <T>(arr: T[]) => arr,
-    rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>
-      Object.keys(weights)[0] as K,
-    chance: () => false,
-  };
   for (const w of [wA, wD]) {
     const tally = w === wA ? outcome.post?.weaponChartA : outcome.post?.weaponChartD;
     const mergedFav = mergeWeaponChart(w.favorites, tally);
     if (mergedFav) w.favorites = mergedFav;
 
     const fought = w === wA ? args.planA : args.planD;
-    const disc = checkDiscovery(w, discRng ?? fallbackRng, {
+    const disc = checkDiscovery(w, discRng, {
       weaponId: w.equipment?.weapon,
       oe: fought?.OE ?? w.plan?.OE,
       al: fought?.AL ?? w.plan?.AL,
@@ -207,7 +196,7 @@ function rollFavoritesDiscovery(
       routeUpdate(s, w, { favorites }, rosterUpdates, rivalWarriorPatches);
       if (disc.hints.length > 0) {
         newsletterItems.push({
-          id: discRng ? discRng.uuid() : generateId(undefined, 'newsletter'),
+          id: discRng.uuid(),
           week,
           title: 'Training Insight',
           items: disc.hints,
@@ -217,6 +206,9 @@ function rollFavoritesDiscovery(
   }
 }
 
+/**
+ * Compute per-bout progressions for both warriors and rival stables after a fight resolves.
+ */
 export function handleProgressions(args: HandleProgressionsArgs): StateImpact {
   const { s, wA, wD, outcome, tags } = args;
   const { rng } = args;

@@ -377,11 +377,11 @@ describe('rollForTrainingInjury', () => {
       expect(res.result!.message).toMatch(/Test suffered a Pulled Muscle.*\(1 week recovery\)/);
     });
 
-    it('injury id from generateId', () => {
+    it('injury id derives from the supplied rng stream', () => {
       const w = makeWarrior(defaultAttrs);
       const rng = makeInjuryRNG(0.0, TRAINING_INJURIES[0]!, 1);
       const res = rollForTrainingInjury(w, 0, rng, 'Clear');
-      expect(res.injury!.id).toBe('test-id' as InjuryId);
+      expect(res.injury!.id).toBe('mock-uuid' as InjuryId);
     });
 
     it('injury severity always Minor', () => {

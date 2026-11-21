@@ -5,7 +5,8 @@ import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
 import { fameFromTags } from '@/engine/bout/fame';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import { generateId } from '@/utils/idUtils';
+import { resolveRng } from '@/utils/random';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
  * Validate bout combatants — symmetric: both sides must exist, be Active,
@@ -64,6 +65,7 @@ interface BuildPurseImpactsArgs {
   currentWId: string;
   currentOId: string;
   isRivalBout: boolean;
+  rng?: IRNGService;
 }
 
 /**
@@ -77,10 +79,11 @@ interface BuildPurseImpactsArgs {
  */
 function buildPurseImpacts(args: BuildPurseImpactsArgs): StateImpact[] {
   const { state, contract, purse, showFee, winnerId } = args;
-  const { currentWId, currentOId, isRivalBout } = args;
+  const { currentWId, currentOId, isRivalBout, rng } = args;
   if (isRivalBout) return [];
+  const idRng = resolveRng(rng, state.week * 7919 + 11 + currentWId.length);
   const ledgerEntry = (label: string, amount: number) => ({
-    id: generateId(undefined, 'ledger') as LedgerEntryId,
+    id: idRng.uuid() as LedgerEntryId,
     week: state.week,
     label,
     amount,
@@ -132,15 +135,22 @@ function updatePromoterHistory(
 }
 
 /**
+ * Args for processContractPayouts.
+ */
+export interface ContractPayoutArgs {
+  state: GameState;
+  contract: BoutOffer | undefined;
+  winnerId: string | null;
+  currentWId: string;
+  currentOId: string;
+  rng?: IRNGService;
+}
+
+/**
  * Process contract payouts.
  */
-export function processContractPayouts(
-  state: GameState,
-  contract: BoutOffer | undefined,
-  winnerId: string | null,
-  currentWId: string,
-  currentOId: string
-): StateImpact[] {
+export function processContractPayouts(args: ContractPayoutArgs): StateImpact[] {
+  const { state, contract, winnerId, currentWId, currentOId, rng } = args;
   if (!contract) return [];
 
   const impacts: StateImpact[] = [];
@@ -164,6 +174,7 @@ export function processContractPayouts(
       currentWId: currentWId,
       currentOId: currentOId,
       isRivalBout: rivalA != null,
+      rng,
     })
   );
 

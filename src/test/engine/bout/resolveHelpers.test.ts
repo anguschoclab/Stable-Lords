@@ -198,7 +198,13 @@ describe('resolveHelpers', () => {
   describe('processContractPayouts', () => {
     it('returns empty array for no contract', () => {
       const state = {} as import('@/types/state.types').GameState;
-      const result = processContractPayouts(state, undefined, 'A', 'warrior-a', 'warrior-d');
+      const result = processContractPayouts({
+        state,
+        contract: undefined,
+        winnerId: 'A',
+        currentWId: 'warrior-a',
+        currentOId: 'warrior-d',
+      });
 
       expect(result).toEqual([]);
     });
@@ -225,13 +231,13 @@ describe('resolveHelpers', () => {
         purse: 500,
       } as unknown as BoutOffer;
 
-      const impacts = processContractPayouts(
+      const impacts = processContractPayouts({
         state,
         contract,
-        'warrior-a',
-        'warrior-a',
-        'warrior-d'
-      );
+        winnerId: 'warrior-a',
+        currentWId: 'warrior-a',
+        currentOId: 'warrior-d',
+      });
       const promoterImpact = impacts.find((i) => i.promoters);
       expect(promoterImpact).toBeDefined();
       const updatedPromoter = (promoterImpact!.promoters as any)['p1'];

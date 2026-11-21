@@ -8,6 +8,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeOutcome } from '@/test/_fixtures/factories';
+import { scriptRng } from '@/test/_fixtures/rngStub';
 
 describe('reportingHandler', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -37,6 +38,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
 
       expect(result).toHaveProperty('summary');
@@ -58,6 +60,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
 
       expect(result).toHaveProperty('announcement');
@@ -84,6 +87,7 @@ describe('reportingHandler', () => {
             fD: 8,
             pD: 4,
             week: 1,
+            rng: scriptRng(0.5),
           })
         ).not.toThrow();
       }
@@ -104,6 +108,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
         isRivalry: true,
       });
 
@@ -156,6 +161,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
 
       expect(result).toHaveProperty('summary');
@@ -177,6 +183,7 @@ describe('reportingHandler', () => {
         fD: 10,
         pD: 5,
         week: 1,
+        rng: scriptRng(0.5),
       });
 
       expect(result).toBeDefined();
@@ -198,6 +205,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
 
       // Summary should reflect the fighters involved
@@ -222,6 +230,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
       const arenaHistoryWrites = setItemSpy.mock.calls.filter(([key]) => key === 'sl.arenaHistory');
       expect(arenaHistoryWrites).toHaveLength(0);
@@ -244,6 +253,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
       const styleRollupWrites = setItemSpy.mock.calls.filter(
         ([key]) => typeof key === 'string' && key.startsWith('sl.styleRollups')
@@ -268,6 +278,7 @@ describe('reportingHandler', () => {
         fD: 8,
         pD: 4,
         week: 1,
+        rng: scriptRng(0.5),
       });
       const loreWrites = setItemSpy.mock.calls.filter(
         ([key]) => typeof key === 'string' && key.startsWith('sl.lore')

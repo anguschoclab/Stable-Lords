@@ -145,9 +145,7 @@ export function getFightsForTournament(
   return result.reverse(); // Reverse to maintain chronological order
 }
 
-/**
- *
- */
+/** Set of unordered warrior pairs that fought within `windowWeeks` (rematch avoidance). */
 export function buildRecentFightPairs(
   arenaHistory: FightSummary[],
   currentWeek: number,

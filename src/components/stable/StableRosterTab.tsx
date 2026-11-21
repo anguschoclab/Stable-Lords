@@ -42,9 +42,7 @@ interface StableRosterTabProps {
   activeRoster: Warrior[];
 }
 
-/**
- *
- */
+/** Sortable/searchable active-roster list. */
 export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
   const list = useListShell(activeRoster, {
     searchText: warriorSearchText,

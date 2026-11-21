@@ -5,9 +5,6 @@ import type { BoutOfferId } from '@/types/shared.types';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
-/**
- *
- */
 interface DigestSummary {
   totalFights: number;
   wins: number;
@@ -27,9 +24,7 @@ interface UseDigestSummaryOptions {
   playerWarriorIds: Set<WarriorId>;
 }
 
-/**
- *
- */
+/** Weekly digest counters — this week's fights, W/L/K/D, pending offers. */
 export function useDigestSummary({
   arenaHistory,
   boutOffers,

@@ -1,8 +1,6 @@
 import { TableRow, TableCell } from '@/components/ui/table';
 
-/**
- *
- */
+/** Placeholder table row when no bout data exists yet. */
 export function EmptyBoutsState() {
   return (
     <TableRow className="hover:bg-transparent border-none">

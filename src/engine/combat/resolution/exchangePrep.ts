@@ -25,9 +25,7 @@ import { COORD_RISE_FAIL_CHANCE } from '@/constants/combat';
 import { getWallHarmonyBonus } from './wallHarmony';
 import type { FighterState, ResolutionContext } from './types';
 
-/**
- *
- */
+/** Everything `prepareExchange` resolves once per exchange — conditions, effective tactics, modifiers, biases, fatigue. */
 export interface ExchangeSetup {
   condResultA: ReturnType<typeof evaluateConditions>;
   condResultD: ReturnType<typeof evaluateConditions>;

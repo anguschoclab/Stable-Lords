@@ -6,9 +6,7 @@ interface StableRankingsHeaderProps {
   onSort: (field: string) => void;
 }
 
-/**
- *
- */
+/** Sortable column header row for the stable rankings table. */
 export function StableRankingsHeader({ sort, onSort }: StableRankingsHeaderProps) {
   return (
     <TableHeader className="sticky top-0 z-10">

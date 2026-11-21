@@ -5,9 +5,7 @@ interface TournamentStatsHeaderProps {
   stats: { total: number; completed: number; byes: number; upcoming: number };
 }
 
-/**
- *
- */
+/** Stat tile row — total/completed/byes/upcoming bout counts. */
 export function TournamentStatsHeader({ stats }: TournamentStatsHeaderProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

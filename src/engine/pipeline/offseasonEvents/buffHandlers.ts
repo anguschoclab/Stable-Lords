@@ -11,9 +11,7 @@ import {
   grantInsightToken,
 } from './helpers';
 
-/**
- *
- */
+/** Fame Boost event — grants the chosen warrior +25 fame (mirrored to stable). */
 export function handleFameBoost(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -21,9 +19,7 @@ export function handleFameBoost(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Epiphany event — ST insight token plus small fame/XP grant. */
 export function handleEpiphany(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -39,9 +35,7 @@ export function handleEpiphany(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Bard's Song event — grants 15-34 fame. */
 export function handleBardsSong(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -53,9 +47,7 @@ export function handleBardsSong(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Mystic Vision event — grants 15 XP and 10 fame. */
 export function handleMysticVision(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -63,9 +55,7 @@ export function handleMysticVision(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Strange Dream event — grants 5-15 XP. */
 export function handleStrangeDream(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -77,9 +67,7 @@ export function handleStrangeDream(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Meteor Shower event — grants 15-25 XP and 10-15 fame. */
 export function handleMeteorShower(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -92,9 +80,7 @@ export function handleMeteorShower(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Gladiator Olympics event — grants 15-25 XP and 10-20 fame. */
 export function handleGladiatorOlympics(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -107,9 +93,7 @@ export function handleGladiatorOlympics(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Loyal Stray Dog event — grants 10 XP. */
 export function handleLoyalStrayDog(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -120,9 +104,7 @@ export function handleLoyalStrayDog(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Wandering Mystic event — adds the chaos_touched trait if absent. */
 export function handleWanderingMystic(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -138,9 +120,7 @@ export function handleWanderingMystic(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Chaos Spores event — grants 20-30 XP and the spore_kissed trait. */
 export function handleChaosSpores(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -162,9 +142,7 @@ export function handleChaosSpores(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Chaos Weaver's Gift event — tactic insight token plus 30 XP. */
 export function handleChaosWeaversGift(run: OffseasonEventRun) {
   withChosenWarrior({
     ...run,
@@ -180,9 +158,7 @@ export function handleChaosWeaversGift(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Shadow Training event — grants 20-30 XP at the cost of 5-10 fame. */
 export function handleShadowTraining(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({

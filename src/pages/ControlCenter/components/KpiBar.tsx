@@ -6,9 +6,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Coins, Crown, Users, TrendingUp, Skull, Flame } from 'lucide-react';
 
-/**
- *
- */
+/** KPI strip — treasury, fame, roster size, record, kill rate. */
 export function KpiBar() {
   const { roster, treasury, fame, arenaHistory } = useGameStore(
     useShallow((s) => ({

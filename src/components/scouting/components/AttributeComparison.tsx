@@ -8,9 +8,7 @@ interface AttributeComparisonProps {
   warriorB: Warrior;
 }
 
-/**
- *
- */
+/** Side-by-side attribute matrix for two warriors. */
 export function AttributeComparison({ warriorA, warriorB }: AttributeComparisonProps) {
   return (
     <Surface variant="glass" className="border-border/40 space-y-6">

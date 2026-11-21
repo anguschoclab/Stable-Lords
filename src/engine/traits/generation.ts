@@ -14,9 +14,6 @@ import {
 import { TRAITS } from './registry';
 import type { TraitDef, TraitTier, TraitId } from './types';
 
-/**
- *
- */
 // TraitId is defined as string in types.ts
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 

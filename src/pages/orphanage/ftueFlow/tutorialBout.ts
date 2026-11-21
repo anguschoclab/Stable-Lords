@@ -19,6 +19,7 @@ export interface FtueBoutResult {
   summary: FightSummary;
 }
 
+/** One recruit from the orphan pool, pre-conversion to a full Warrior. */
 export type PoolWarrior = ReturnType<typeof generateOrphanPool>[number];
 
 /** Run the FTUE exhibition bout between the first two selected orphans. */

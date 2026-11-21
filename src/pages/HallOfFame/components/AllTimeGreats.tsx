@@ -8,9 +8,7 @@ interface AllTimeGreatsProps {
   fights: Parameters<typeof InducteeCard>[0]['fights'];
 }
 
-/**
- *
- */
+/** All-time greats grid — top inductees ranked by career fame. */
 export function AllTimeGreats({ warriors, fights }: AllTimeGreatsProps) {
   return (
     <div className="space-y-6">

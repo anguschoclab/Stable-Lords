@@ -93,9 +93,7 @@ function BookmarkedEntityRow(props: {
   );
 }
 
-/**
- *
- */
+/** Bookmarks page — grouped, sortable saved entities. */
 export default function Bookmarks() {
   const { bookmarks, grouped, clearBookmarks, clearBookmarksByType } = useBookmarkGroups();
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');

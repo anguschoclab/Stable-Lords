@@ -12,9 +12,7 @@ interface FightAnalysisPanelProps {
   nameD: string;
 }
 
-/**
- *
- */
+/** "Why it went this way" panel — the factors that decided the bout. */
 export function FightAnalysisPanel({ analysis, nameA, nameD }: FightAnalysisPanelProps) {
   if (!analysis) return null;
 

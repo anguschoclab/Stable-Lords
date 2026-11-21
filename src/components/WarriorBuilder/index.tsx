@@ -19,9 +19,7 @@ interface WarriorBuilderProps {
   currentRosterSize?: number;
 }
 
-/**
- *
- */
+/** Warrior creation form — point-buy attributes, identity, and live preview. */
 export default function WarriorBuilder({
   onCreateWarrior,
   maxRoster = 10,

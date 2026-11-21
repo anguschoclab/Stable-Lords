@@ -4,9 +4,7 @@ import { GrudgeNetwork } from './components/GrudgeNetwork';
 import { StyleOfTheSeason } from './components/StyleOfTheSeason';
 import { SeasonDeclarations } from './components/SeasonDeclarations';
 
-/**
- *
- */
+/** Season synthesis page — standings, grudges, style meta, declarations. */
 export function SeasonSynthesis() {
   const { rivals, rivalPerformance, seasonGazette, metaData, grudges, rivalMap, season } =
     useSeasonData();

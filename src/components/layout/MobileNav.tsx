@@ -49,9 +49,7 @@ const SheetCloseLink = ({
   </SheetClose>
 );
 
-/**
- *
- */
+/** Slide-out navigation sheet for compact/mobile layouts. */
 export function MobileNav({ className }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const location = useLocation();

@@ -11,9 +11,7 @@ import {
 } from '@/components/ui/select';
 import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV } from '@/types/game';
 
-/**
- *
- */
+/** Simplified three-stat block for the quick-fight simulator. */
 export interface FighterStats {
   strength: number;
   quickness: number;
@@ -28,9 +26,7 @@ interface FighterConfigCardProps {
   setStats: (s: FighterStats) => void;
 }
 
-/**
- *
- */
+/** One simulator fighter card — style picker plus stat inputs. */
 export function FighterConfigCard({
   label,
   style,

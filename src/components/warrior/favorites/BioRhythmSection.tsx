@@ -17,9 +17,7 @@ interface BioRhythmSectionProps {
   >;
 }
 
-/**
- *
- */
+/** Favorite-rhythm section — discovery state, hints, apply control. */
 export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
   const {
     handleInsight,

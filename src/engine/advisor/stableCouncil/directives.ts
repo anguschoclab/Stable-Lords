@@ -28,9 +28,6 @@ export function computeCardKpis(cards: WarriorAdvisorCard[]): {
   return { combatReadyCount, rehabCount, tournamentContenderCount, projectedPurseGold };
 }
 
-/**
- *
- */
 interface BuildStableDirectivesArgs {
   state: GameState;
   cards: WarriorAdvisorCard[];
@@ -111,9 +108,6 @@ export function buildStableDirectives(args: BuildStableDirectivesArgs): string[]
   return stableDirectives;
 }
 
-/**
- *
- */
 interface CollectUnresolvedDirectivesArgs {
   state: GameState;
   cards: WarriorAdvisorCard[];

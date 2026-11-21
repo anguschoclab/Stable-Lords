@@ -17,9 +17,6 @@ function tournamentParticipantIds(state: GameState): Set<string> {
   return ids;
 }
 
-/**
- *
- */
 interface ApplyRecordsArgs {
   s: GameState;
   wA: Warrior;

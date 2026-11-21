@@ -19,9 +19,6 @@ interface ArenaConfig {
   description: string;
 }
 
-/**
- *
- */
 interface GenerateIntroductionsArgs {
   rng: IRNGService;
   nameA: string;

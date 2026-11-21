@@ -41,9 +41,7 @@ function chargeOrToast(
   return false;
 }
 
-/**
- *
- */
+/** Recruit actions — sign, scout (25g), refresh pool, custom create — with scouting state. */
 export function useRecruitActions({
   rosterFull,
   setState,

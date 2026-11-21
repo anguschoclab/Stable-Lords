@@ -8,9 +8,7 @@ import { canTransact } from '@/engine/economy/utils';
 import { useRecruitFilters } from './useRecruitFilters';
 import { useRecruitActions } from './useRecruitActions';
 
-/**
- *
- */
+/** Recruit page state — roster capacity, treasury, pool, and composed filter/action hooks. */
 export function useRecruit() {
   const { roster, treasury, rosterBonus, recruitPool, freeAgents, setState, deductFunds, week } =
     useGameStore(

@@ -143,9 +143,7 @@ function BookmarkCell({ row }: { row: WarriorRow }) {
   );
 }
 
-/**
- *
- */
+/** One warrior row in the leaderboard; player warriors highlighted. */
 export function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
   return (
     <TableRow

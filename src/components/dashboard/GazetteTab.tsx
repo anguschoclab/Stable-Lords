@@ -9,9 +9,7 @@ interface GazetteTabProps {
   stories: GazetteStory[];
 }
 
-/**
- *
- */
+/** Gazette story feed inside the intelligence hub. */
 export function GazetteTab({ stories }: GazetteTabProps) {
   const { warriorNames, stableNames } = useEntityNames();
 

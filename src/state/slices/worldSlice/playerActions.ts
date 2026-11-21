@@ -50,9 +50,7 @@ function isListedInArena(warrior: Warrior): boolean {
   return ((warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0)) > 0;
 }
 
-/**
- *
- */
+/** Player-facing world actions — week/identity/arena-preference setters. */
 export function createPlayerActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {
     setWeek: (week: number) => set(() => ({ week })),

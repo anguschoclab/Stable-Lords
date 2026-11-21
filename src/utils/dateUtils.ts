@@ -1,6 +1,4 @@
-/**
- *
- */
+/** Format an ISO timestamp as "Mon D, HH:MM"; returns the input on parse failure. */
 export const formatDate = (iso: string): string => {
   try {
     const d = new Date(iso);

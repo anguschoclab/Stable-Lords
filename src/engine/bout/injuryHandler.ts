@@ -7,9 +7,6 @@ import { addRestState } from '@/engine/matchmaking/historyLogic';
 import { patchRivalWarrior } from './warriorRouting';
 import { StateImpact } from '@/engine/impacts';
 
-/**
- *
- */
 interface HandleInjuriesArgs {
   s: GameState;
   wA: Warrior;

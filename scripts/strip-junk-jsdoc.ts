@@ -88,9 +88,11 @@ for (const file of walk(ROOT)) {
       return true;
     });
 
-    // If nothing meaningful remains, drop the block entirely.
+    // If nothing meaningful remains, drop the block entirely. The leading-*
+    // strip uses a lookahead so the closer's ` */` isn't reduced to a bare
+    // `/` that would falsely count as content.
     const meaningful = kept.filter((bl) => {
-      const t = bl.replace(/\/\*\*|\*\/|^\s*\*/g, '').trim();
+      const t = bl.replace(/\/\*\*|\*\/|^\s*\*(?!\/)/g, '').trim();
       return t.length > 0;
     });
 

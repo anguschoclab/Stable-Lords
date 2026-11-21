@@ -4,9 +4,7 @@ import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { toast } from 'sonner';
 import type { Warrior } from '@/types/game';
 
-/**
- *
- */
+/** Return shape of `useFavoritesActions` — handlers, display model, discovery/progress flags. */
 export interface UseFavoritesActionsResult {
   handleInsight: (type: 'weapon' | 'rhythm' | 'learn') => void;
   handleApplyRhythm: () => void;
@@ -69,9 +67,7 @@ function applyActions(
   return { handleApplyRhythm, handleEquipFavoriteWeapon };
 }
 
-/**
- *
- */
+/** Favorites-card actions — insight reveals, rhythm apply, favorite-weapon equip — plus derived progress. */
 export function useFavoritesActions(
   warrior: Warrior,
   onUpdate: () => void

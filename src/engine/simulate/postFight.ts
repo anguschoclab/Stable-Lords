@@ -43,9 +43,6 @@ function generateOutcomeTags(
   return Array.from(tags);
 }
 
-/**
- *
- */
 interface BuildPostFightStatsArgs {
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy | null;
@@ -86,9 +83,6 @@ function buildPostFightStats(args: BuildPostFightStatsArgs) {
   };
 }
 
-/**
- *
- */
 interface HandleTimeLimitArgs {
   fA: FighterState;
   fD: FighterState;
@@ -118,9 +112,6 @@ function handleTimeLimit(args: HandleTimeLimitArgs): {
   return { winner: finalOutcome.winner, by: finalOutcome.by };
 }
 
-/**
- *
- */
 interface ProcessPostFightArgs {
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy | null;

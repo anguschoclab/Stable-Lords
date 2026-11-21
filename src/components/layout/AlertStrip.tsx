@@ -17,9 +17,7 @@ interface AlertStripProps {
   itemClassName?: string;
 }
 
-/**
- *
- */
+/** Horizontal strip of pending-action alerts linking to their hubs. */
 export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: AlertStripProps) {
   const { isTournamentWeek } = useGameStore(
     useShallow((s) => ({ isTournamentWeek: s.isTournamentWeek }))

@@ -20,6 +20,7 @@ export function statusBadge(title: ArenaTitle | undefined): { label: string; cla
   return { label: 'REIGNING CHAMPION', className: 'border-arena-gold/40 text-arena-gold' };
 }
 
+/** Store slice for the arena detail page. */
 export function useArenaDetailStore() {
   return useGameStore(
     useShallow((s) => ({

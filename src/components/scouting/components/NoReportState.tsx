@@ -10,9 +10,7 @@ interface NoReportStateProps {
   onScout: (quality: ScoutQuality) => void;
 }
 
-/**
- *
- */
+/** No-scout-report state with the scout-quality purchase options. */
 export function NoReportState({ warriorName, treasury, onScout }: NoReportStateProps) {
   const QUALITIES: ScoutQuality[] = ['Basic', 'Detailed', 'Expert'];
 

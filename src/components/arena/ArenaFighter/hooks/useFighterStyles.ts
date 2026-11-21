@@ -12,9 +12,7 @@ const STANCE_ANIMATION_CLASSES: Record<FighterPose['stance'], string> = {
   defeated: 'animate-defeated motion-reduce:animate-none',
 };
 
-/**
- *
- */
+/** Map a pose stance to its CSS animation class. */
 export function getStanceAnimationClass(stance: FighterPose['stance']): string {
   return STANCE_ANIMATION_CLASSES[stance] ?? '';
 }
@@ -26,9 +24,7 @@ interface UseFighterStylesParams {
   className?: string;
 }
 
-/**
- *
- */
+/** Positioning/mirroring styles for a fighter figure at its pose. */
 export function useFighterStyles({ pose, isDead, isActive, className }: UseFighterStylesParams) {
   const containerClassName = cn(
     'absolute transition-all duration-300 motion-reduce:transition-none motion-reduce:transform-none',

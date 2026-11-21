@@ -65,9 +65,7 @@ function usePendingLoadout(props: {
   };
 }
 
-/**
- *
- */
+/** Stable equipment page state — style/warrior selection, loadout recs, apply flow. */
 export function useStableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore(
     useShallow((s) => ({ roster: s.roster, updateWarriorEquipment: s.updateWarriorEquipment }))

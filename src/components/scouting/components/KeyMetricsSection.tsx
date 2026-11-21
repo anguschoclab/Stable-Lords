@@ -15,9 +15,7 @@ interface KeyMetricsSectionProps {
   maxActive: number;
 }
 
-/**
- *
- */
+/** Headline metrics comparison (wins/kills/fame/active) for two stables. */
 export function KeyMetricsSection(props: KeyMetricsSectionProps) {
   const { rivalA, rivalB, statsA, statsB, maxWins } = props;
   const { maxKills, maxFame, maxActive } = props;

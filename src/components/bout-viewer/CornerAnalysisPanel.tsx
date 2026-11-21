@@ -14,9 +14,7 @@ interface CornerAnalysisPanelProps {
   nameD: string;
 }
 
-/**
- *
- */
+/** Post-bout panel listing which conditions fired, minute by minute. */
 export function CornerAnalysisPanel({ exchangeLog, nameA, nameD }: CornerAnalysisPanelProps) {
   if (!exchangeLog) return null;
   const fires = exchangeLog.flatMap((e) =>

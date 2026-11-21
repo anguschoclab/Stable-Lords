@@ -8,9 +8,7 @@ interface UpgradeButtonProps {
   onUpgrade: () => void;
 }
 
-/**
- *
- */
+/** Scout-report quality upgrade button (Basic→Detailed→Expert). */
 export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps) {
   const upgradePath: Record<ScoutQuality, ScoutQuality | null> = {
     Basic: 'Detailed',

@@ -7,9 +7,7 @@ interface WeaponRequirementBadgeProps {
   reqResult: WeaponReqResult;
 }
 
-/**
- *
- */
+/** Met/unmet weapon-requirement badge with a failure tooltip. */
 export function WeaponRequirementBadge({ reqResult }: WeaponRequirementBadgeProps) {
   if (reqResult.met) {
     return (

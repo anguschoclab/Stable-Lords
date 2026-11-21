@@ -11,9 +11,7 @@ import {
 } from '../helpers';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
-/**
- *
- */
+/** Wandering Healer event — costs 50-100g; removes one injury from a random injured warrior. */
 export function handleWanderingHealer(run: OffseasonEventRun) {
   const { state, nextWeek, e, rng, ctx } = run;
   const goldCost = 50 + Math.floor(rng.next() * 51);
@@ -49,13 +47,8 @@ export function handleWanderingHealer(run: OffseasonEventRun) {
   }
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Wandering Fortune Teller event — costs 30g; Style insight token plus 15 XP. */
 export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   const cost = 30;
@@ -78,13 +71,8 @@ export function handleWanderingFortuneTeller(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Dreamweaver Visit event — Style insight token plus 15-25 XP. */
 export function handleDreamweaverVisit(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -103,9 +91,7 @@ export function handleDreamweaverVisit(run: OffseasonEventRun) {
   });
 }
 
-/** Handles the Goblin Merchant offseason event outcome. */
-
-/** Handles the Goblin Merchant offseason event outcome. */
+/** Goblin Merchant event — costs 50-99g for strange herbs; +1 CN and +1 WL. */
 export function handleGoblinMerchant(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({

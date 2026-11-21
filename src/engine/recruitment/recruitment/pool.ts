@@ -12,9 +12,6 @@ import {
 } from './types';
 import { generateApprentice, generateRecruit } from './generate';
 
-/**
- *
- */
 interface GenerateRecruitPoolArgs {
   count?: number;
   week: number;
@@ -128,9 +125,6 @@ function isProtectedPoolEntry(w: PoolWarrior, week: number): boolean {
   );
 }
 
-/**
- *
- */
 interface PoolRefreshArgs {
   currentPool: PoolWarrior[];
   week: number;

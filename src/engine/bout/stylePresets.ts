@@ -21,9 +21,7 @@ import {
 } from '@/types/shared.types';
 import { getAITactics } from '@/engine/ai/plan/levers';
 
-/**
- *
- */
+/** A named canonical fight plan for a style (e.g. "The Classic"). */
 export interface StylePreset {
   name: string;
   description: string;
@@ -621,16 +619,12 @@ export const STYLE_PRESETS: Record<FightingStyle, StylePreset[]> = {
   ],
 };
 
-/**
- *
- */
+/** All plan presets registered for a style. */
 export function getStylePresets(style: FightingStyle): StylePreset[] {
   return STYLE_PRESETS[style] ?? [];
 }
 
-/**
- *
- */
+/** First preset for a style, falling back to the Striking Attack default. */
 export function defaultStylePreset(style: FightingStyle): StylePreset {
   return (STYLE_PRESETS[style]?.[0] ??
     STYLE_PRESETS[FightingStyle.StrikingAttack]?.[0]) as StylePreset;

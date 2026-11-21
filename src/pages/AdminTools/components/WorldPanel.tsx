@@ -11,9 +11,7 @@ interface WorldPanelProps {
   onSkipFTUE: () => void;
 }
 
-/**
- *
- */
+/** World admin panel — time-skip controls and FTUE bypass. */
 export function WorldPanel({ onSkipWeek, onSkipMonth, onSkipSeason, onSkipFTUE }: WorldPanelProps) {
   return (
     <div className="space-y-12">

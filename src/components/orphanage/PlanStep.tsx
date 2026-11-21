@@ -81,9 +81,7 @@ function PlanWarriorRow({ warrior }: { warrior: Warrior }) {
   );
 }
 
-/**
- *
- */
+/** FTUE plan step — pick OE/AL and tactics before the first bout. */
 export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }: PlanStepProps) {
   const handleTactic = (t: (typeof PLAN_TACTICS)[number]) => {
     onPlanChange(withPlanTactic(plan, t));

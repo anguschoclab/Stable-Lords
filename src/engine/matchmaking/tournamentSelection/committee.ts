@@ -121,9 +121,6 @@ function addStyleChampions(
   }
 }
 
-/**
- *
- */
 interface BuildTournamentArgs {
   tierId: string;
   tierName: string;

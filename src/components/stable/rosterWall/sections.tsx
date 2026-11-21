@@ -85,8 +85,8 @@ export function WallHeader({
   );
 }
 
-// warriorId → best contender standing across arenas (same index rival AI
-// campaigns against — the chip shows real ladder position, not decoration).
+/** warriorId → best contender standing across arenas (same index rival AI
+ *  campaigns against — the chip shows real ladder position, not decoration). */
 export function buildContenderBadges(state: GameState) {
   const index = buildContenderIndex(state);
   const badges = new Map<string, { arenaName: string; rank: number }>();

@@ -38,9 +38,7 @@ const TIER_LABELS: Record<EncumbranceTier, string> = {
   OVER: 'Over-encumbered',
 };
 
-/**
- *
- */
+/** Encumbrance meter — load vs carry capacity with the active penalty tier. */
 export function EncumbranceBar({ totalWeight, carryCap, loadout }: EncumbranceBarProps) {
   const ratio = getEncumbranceRatio(loadout, carryCap);
   const tier = getEncumbranceTier(ratio);

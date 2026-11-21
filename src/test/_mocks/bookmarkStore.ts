@@ -5,6 +5,7 @@ import { useGameStore } from '@/state/useGameStore';
 export const bookmarkedIds = new Set<string>();
 export const mockToggleBookmark: Mock = vi.fn();
 
+/** Clear fake bookmarks and re-inject the bookmark selectors into the store. */
 export function resetBookmarkState() {
   bookmarkedIds.clear();
   mockToggleBookmark.mockClear();

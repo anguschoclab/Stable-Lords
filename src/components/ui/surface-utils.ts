@@ -82,7 +82,5 @@ export const surfaceVariants = cva(
   }
 );
 
-/**
- *
- */
+/** Variant props accepted by the Surface component. */
 export type SurfaceVariants = VariantProps<typeof surfaceVariants>;

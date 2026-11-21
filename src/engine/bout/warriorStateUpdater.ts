@@ -7,9 +7,6 @@ import {
   nextCareerRecord,
 } from '@/engine/warrior/careerUpdate';
 
-/**
- *
- */
 interface UpdateWarriorAfterBoutArgs {
   warrior: Warrior;
   fameDelta: number;

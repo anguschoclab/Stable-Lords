@@ -99,9 +99,7 @@ function PhaseWeatherFooter({
   );
 }
 
-/**
- *
- */
+/** Season/weather summary widget on the dashboard. */
 export function SeasonWidget() {
   const state = useGameStore(
     useShallow((s) => ({

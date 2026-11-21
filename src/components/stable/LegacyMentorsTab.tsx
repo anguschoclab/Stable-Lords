@@ -8,9 +8,7 @@ interface LegacyMentorsTabProps {
   currentTrainers: Trainer[];
 }
 
-/**
- *
- */
+/** Trainers ranked by the legacy record they carried into coaching. */
 export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
   const ranked: { t: Trainer; score: number }[] = [];
   for (const t of currentTrainers) {

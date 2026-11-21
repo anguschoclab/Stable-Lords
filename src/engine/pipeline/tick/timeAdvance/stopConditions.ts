@@ -2,9 +2,7 @@ import type { GameState } from '@/types/state.types';
 import { isFightReady } from '@/engine/warrior/warriorStatus';
 import type { SoftStopCondition } from './types';
 
-/**
- *
- */
+/** First matching soft-stop reason, or `shouldStop: false` when none trip. */
 export function evaluateStopConditions(
   state: GameState,
   conditions: SoftStopCondition[]

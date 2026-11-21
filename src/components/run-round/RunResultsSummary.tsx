@@ -5,9 +5,7 @@ interface RunResultsSummaryProps {
   KOs: number;
 }
 
-/**
- *
- */
+/** Fight-results header strip — casualty and KO tallies for the round. */
 export function RunResultsSummary({ deaths, KOs }: RunResultsSummaryProps) {
   return (
     <div className="flex items-center gap-3 px-2">

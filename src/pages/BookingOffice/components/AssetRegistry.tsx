@@ -12,9 +12,7 @@ interface AssetRegistryProps {
   onSelect: (id: string | null) => void;
 }
 
-/**
- *
- */
+/** Selectable roster list for the booking office — shows signed/fatigue status per warrior. */
 export function AssetRegistry({
   roster,
   boutOffers,

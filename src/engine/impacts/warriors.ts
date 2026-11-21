@@ -55,9 +55,6 @@ const rosterRemovals = (state: GameState, value: WarriorId[]) => {
   state.roster = removeFromRoster(state.roster, value);
 };
 
-/**
- *
- */
 const rosterAdditions = (state: GameState, value: Warrior[]) => {
   if (value.length === 0) return;
   // The funnel is the gatekeeper — impacts are the last line of defense:

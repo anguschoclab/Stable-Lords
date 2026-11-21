@@ -7,9 +7,7 @@ interface BookmarkFilterToggleProps {
   count?: number;
 }
 
-/**
- *
- */
+/** "Bookmarked only" list-filter toggle with an optional count chip. */
 export function BookmarkFilterToggle({ active, onToggle, count }: BookmarkFilterToggleProps) {
   return (
     <button

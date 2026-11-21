@@ -227,9 +227,6 @@ interface RecruitCardProps {
 }
 
 /**
- *
- */
-/**
  * Card header — sigil ring, name, style/age/veteran badges, tier badge.
  */
 function RecruitCardHeader({ warrior }: { warrior: PoolWarrior }) {

@@ -25,6 +25,10 @@ export function useWarriorDetailStore() {
   );
 }
 
+/**
+ * Resolve the viewed warrior, whether the player owns it, and the obfuscated
+ * view model (insight tokens gate which fields are visible).
+ */
 export function useWarriorIdentity(props: {
   id: string;
   insightTokens: ReturnType<typeof useGameStore.getState>['insightTokens'];
@@ -46,6 +50,7 @@ export function useWarriorIdentity(props: {
   return { warrior, isPlayerOwned, displayWarrior };
 }
 
+/** Current and past arena title names held by a warrior. */
 export function useArenaCrowns(id: string, arenaChampions: GameState['arenaChampions']) {
   return useMemo(() => {
     if (!id) return { current: [] as string[], past: [] as string[] };

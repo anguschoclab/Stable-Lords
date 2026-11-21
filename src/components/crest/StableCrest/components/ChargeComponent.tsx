@@ -20,9 +20,7 @@ function getPostureTransform(posture?: CrestData['charge']['posture']): string {
   }
 }
 
-/**
- *
- */
+/** SVG charge (emblem) drawn on the shield face. */
 export function ChargeComponent({
   charge,
   metal,

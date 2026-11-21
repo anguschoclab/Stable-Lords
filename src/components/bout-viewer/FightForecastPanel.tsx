@@ -11,9 +11,7 @@ interface FightForecastPanelProps {
   nameD: string;
 }
 
-/**
- *
- */
+/** Pre-fight forecast panel — factors favoring each combatant. */
 export function FightForecastPanel({ forecast, nameA, nameD }: FightForecastPanelProps) {
   if (!forecast) return null;
 

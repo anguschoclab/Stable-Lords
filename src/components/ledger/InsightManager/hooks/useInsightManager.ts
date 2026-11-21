@@ -3,18 +3,13 @@ import type { InsightId, WarriorId } from '@/types/shared.types';
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 
-/**
- *
- */
 interface UseInsightManagerDeps {
   consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => void;
   insightTokens: InsightToken[];
   roster: Warrior[];
 }
 
-/**
- *
- */
+/** Selection + reveal-animation state for the insight token manager. */
 export function useInsightManager({
   consumeInsightToken,
   insightTokens,

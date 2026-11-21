@@ -32,6 +32,7 @@ const CELL_MIN_VISITS = 3;
 /** Hard cap on the action list — one page of advice, not a manifesto. */
 const MAX_ACTIONS = 5;
 
+/** One prescribed action — headline + the evidence-backed detail behind it. */
 export interface TurnaroundAction {
   kind: 'plan' | 'weapon' | 'challenge' | 'avoid' | 'train' | 'drill' | 'learn';
   headline: string;
@@ -40,6 +41,7 @@ export interface TurnaroundAction {
   target?: FightingStyle;
 }
 
+/** The full diagnosis: the chosen win condition plus the ranked action list. */
 export interface TurnaroundReport {
   /** The ONE reliable win condition — canon doctrine is to build around it. */
   winCondition: {

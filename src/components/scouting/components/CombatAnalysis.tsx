@@ -14,9 +14,7 @@ interface CombatAnalysisProps {
   suspectedCompetence?: string;
 }
 
-/**
- *
- */
+/** Scouted combat read — suspected OE/AL, injuries, competence estimate. */
 export function CombatAnalysis({
   suspectedOE,
   suspectedAL,

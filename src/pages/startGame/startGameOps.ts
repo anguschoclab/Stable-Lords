@@ -17,6 +17,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNG } from '@/utils/random';
 import { sanitizeEntityName } from '@/utils/entityName';
 
+/** The store's loadGame action — activates a save slot's state. */
 export type LoadGame = ReturnType<typeof useGameStore.getState>['loadGame'];
 
 /**

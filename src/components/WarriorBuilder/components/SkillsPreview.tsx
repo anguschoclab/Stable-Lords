@@ -5,9 +5,7 @@ interface SkillsPreviewProps {
   baseSkills: Record<string, number> | object;
 }
 
-/**
- *
- */
+/** Base-skills preview bars for the current attribute allocation. */
 export function SkillsPreview({ baseSkills }: SkillsPreviewProps) {
   return (
     <Card>

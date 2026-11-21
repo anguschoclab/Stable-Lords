@@ -7,9 +7,7 @@ export interface AlertBoxProps {
   message: string;
 }
 
-/**
- *
- */
+/** Colored alert strip for digest events (death/offer/tournament/…). */
 export function AlertBox({ type, message }: AlertBoxProps) {
   const configs = {
     death: {

@@ -53,9 +53,7 @@ function filterRounds(
   });
 }
 
-/**
- *
- */
+/** Schedule state for one tournament — filter, expanded rounds, stats, grouped bouts. */
 export function useTournamentSchedule(tournament: TournamentEntry): UseTournamentScheduleResult {
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [expandedRounds, setExpandedRounds] = useState<Set<number>>(new Set([1]));

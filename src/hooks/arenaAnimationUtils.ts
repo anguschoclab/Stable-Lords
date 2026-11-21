@@ -71,9 +71,6 @@ export function patchFighterPose(
   return { ...prev, [key]: { ...prev[key], ...pose } };
 }
 
-/**
- *
- */
 function getBubbleFromEvent(event: MinuteEvent, index: number): SpeechBubble | null {
   const type = classifyEvent(event);
 

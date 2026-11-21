@@ -174,9 +174,6 @@ function KillsCell({ row }: { row: StableRow }) {
   );
 }
 
-/**
- *
- */
 function BookmarkCell({ row }: { row: StableRow }) {
   return (
     <TableCell className="text-center w-10">
@@ -185,9 +182,7 @@ function BookmarkCell({ row }: { row: StableRow }) {
   );
 }
 
-/**
- *
- */
+/** One stable row in the rankings table; player row highlighted. */
 export function StableRankingsRow({ row, index }: StableRankingsRowProps) {
   return (
     <TableRow

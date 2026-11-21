@@ -13,9 +13,7 @@ interface StylePassivesProps {
   warrior?: Warrior;
 }
 
-/**
- *
- */
+/** Collapsible style-passives panel — tempo, mastery, kill mechanics, anti-synergy. */
 export default function StylePassives({ plan, warrior }: StylePassivesProps) {
   const [showStylePassives, setShowStylePassives] = useState(false);
 

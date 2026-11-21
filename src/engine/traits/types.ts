@@ -1,17 +1,11 @@
 import type { FightingStyle } from '@/types/shared.types';
 import type { Archetype } from '@/data/names/archetypeNames';
 
-/**
- *
- */
+/** Power-budget tier for a trait; 'Flaw' is the negative-only tier. */
 export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Flaw';
-/**
- *
- */
+/** Whether a trait's net effect helps or hurts its owner. */
 export type TraitSign = 'positive' | 'negative';
-/**
- *
- */
+/** Registry key into `TRAITS`. */
 export type TraitId = string;
 
 /**

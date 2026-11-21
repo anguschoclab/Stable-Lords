@@ -1,6 +1,4 @@
-/**
- *
- */
+/** Leaderboard row for one warrior — record, fame, composite ranking. */
 export interface WarriorRow {
   id: string;
   name: string;
@@ -17,9 +15,7 @@ export interface WarriorRow {
   compositeScore: number;
 }
 
-/**
- *
- */
+/** Rankings row for one stable — aggregate record, tier, motto. */
 export interface StableRow {
   id: string;
   name: string;

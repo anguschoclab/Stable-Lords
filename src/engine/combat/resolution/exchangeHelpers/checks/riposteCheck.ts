@@ -6,9 +6,6 @@ import type { FighterState } from '../../types';
 import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 
-/**
- *
- */
 interface PerformRiposteCheckArgs {
   rng: () => number;
   def: FighterState;

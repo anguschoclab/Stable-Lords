@@ -1,6 +1,4 @@
-/**
- *
- */
+/** SVG tournament helm rendered above the shield. */
 export function Helmet({ metal }: { metal: string }): React.ReactNode {
   const isGold = metal === '#D4AF37';
   const shadow = isGold ? '#8B7016' : '#808080';

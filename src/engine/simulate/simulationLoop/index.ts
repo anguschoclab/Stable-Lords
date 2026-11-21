@@ -105,9 +105,6 @@ function runExchange(args: RunExchangeArgs): boolean {
   return false;
 }
 
-/**
- *
- */
 interface RunSimulationLoopArgs {
   fA: FighterState;
   fD: FighterState;

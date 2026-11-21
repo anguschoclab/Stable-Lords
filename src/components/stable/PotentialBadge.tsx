@@ -6,9 +6,7 @@ interface PotentialBadgeProps {
   potential?: AttributePotential | null;
 }
 
-/**
- *
- */
+/** Letter-grade badge for a warrior's attribute potential. */
 export function PotentialBadge({ potential }: PotentialBadgeProps) {
   if (!potential) return null;
 

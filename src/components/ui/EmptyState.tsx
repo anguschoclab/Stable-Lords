@@ -9,9 +9,7 @@ interface EmptyStateProps {
   className?: string;
 }
 
-/**
- *
- */
+/** Shared empty-state panel — icon, title, description, optional action. */
 export function EmptyState({ icon: Icon, title, description, action, className }: EmptyStateProps) {
   return (
     <Surface

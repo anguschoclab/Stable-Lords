@@ -40,9 +40,7 @@ export {
 export type { OffenseDefenseCtx } from './phaseResolvers';
 export { styleRiposteBonus } from './styleRiposteBonus';
 
-/**
- *
- */
+/** Resolve one full exchange — prep, approach, initiative, offense/defense, commit, recovery — and emit its combat events. */
 export function resolveExchange(
   ctx: ResolutionContext,
   fA: FighterState,

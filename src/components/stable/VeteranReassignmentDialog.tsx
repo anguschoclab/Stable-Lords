@@ -17,9 +17,7 @@ interface VeteranReassignmentDialogProps {
   onConvert: (warriorId: string) => void;
 }
 
-/**
- *
- */
+/** Dialog for converting a retired veteran into a trainer. */
 export function VeteranReassignmentDialog({
   open,
   onOpenChange,

@@ -7,11 +7,13 @@ import { makeWarrior } from '@/test/_fixtures/factories';
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 
+/** Warrior shorthand — makeWarrior with branded id/stableId casts. */
 export const w = (id: string, stableId?: string) =>
   makeWarrior({ id: id as WarriorId, stableId: stableId as StableId });
 
 export const showmanPromoter = { personality: 'Showman' } as never;
 
+/** Legal OpponentSearchContext — empty sets, Showman promoter, 0.5 gap. */
 export const opponentCtx = (over: Partial<OpponentSearchContext> = {}): OpponentSearchContext =>
   ({
     promoter: showmanPromoter,
@@ -24,6 +26,7 @@ export const opponentCtx = (over: Partial<OpponentSearchContext> = {}): Opponent
     ...over,
   }) as OpponentSearchContext;
 
+/** findBestOpponent passthrough with positional args for spec readability. */
 export const searchBest = (
   a: Warrior,
   scoreA: number,

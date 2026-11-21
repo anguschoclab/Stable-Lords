@@ -4,9 +4,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 
-/**
- *
- */
+/** Compact weekly-digest summary for the dashboard rail. */
 export function WeeklyDigestMini() {
   const { week, absoluteWeek, arenaHistory, boutOffers } = useGameStore(
     useShallow((s) => ({

@@ -5,9 +5,7 @@ interface RankStripProps {
   rankIndex: number;
 }
 
-/**
- *
- */
+/** Rank ordinal strip beside a roster row (gold/primary/plain by rank). */
 export function RankStrip({ rankIndex }: RankStripProps) {
   return (
     <div

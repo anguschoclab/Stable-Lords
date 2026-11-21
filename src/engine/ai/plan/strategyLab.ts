@@ -20,9 +20,11 @@ const BANDS: RhythmBand[] = ['VL', 'L', 'M', 'H', 'VH'];
 /** Representative OE/AL inside each band (canon 1-2/3-4/5-6/7-8/9-10). */
 const BAND_MID: Record<RhythmBand, number> = { VL: 2, L: 4, M: 6, H: 8, VH: 10 };
 
+/** Map an OE/AL value (1-10) to its canon rhythm band. */
 export const bandOf = (v: number): RhythmBand =>
   BANDS[Math.min(4, Math.max(0, Math.floor((v - 1) / 2)))] ?? 'VL';
 
+/** Ledger key for a plan — the band pair, e.g. "M/H". */
 export const cellKey = (oe: number, al: number): string =>
   `${bandOf(oe)}/${bandOf(al)}`;
 
@@ -68,6 +70,7 @@ function hash(id: string, week: number, salt: number): number {
   return ((h >>> 0) % 10000) / 10000;
 }
 
+/** The OE/AL the AI commits to this week, and whether it was an explore pick. */
 export interface StrategyTarget {
   oe: number;
   al: number;

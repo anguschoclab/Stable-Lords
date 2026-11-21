@@ -5,9 +5,7 @@ interface WeaponRequirementDetailsProps {
   reqResult: WeaponReqResult;
 }
 
-/**
- *
- */
+/** Per-stat failure list shown under an unmet weapon requirement. */
 export function WeaponRequirementDetails({ reqResult }: WeaponRequirementDetailsProps) {
   return (
     <div className="pl-6 space-y-0.5">

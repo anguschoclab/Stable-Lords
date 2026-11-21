@@ -13,9 +13,7 @@ import type { TrainingResult } from './types';
 import { clamp } from '@/utils/math';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
-/**
- *
- */
+/** Probability (clamped) of a skill-drill gain — trainer focus, WT, age, and a per-drill diminishing-returns factor. */
 export function computeSkillDrillChance(
   warrior: Warrior,
   skill: keyof BaseSkills,
@@ -41,9 +39,7 @@ export function computeSkillDrillChance(
   return clamp(raw, SKILL_DRILL_GAIN_MIN, SKILL_DRILL_GAIN_MAX);
 }
 
-/**
- *
- */
+/** Resolve one week of skill drilling: drill-cap check, then a +1 roll against the drill chance. */
 export function processSkillDrillTraining(
   warrior: Warrior,
   skill: keyof BaseSkills,

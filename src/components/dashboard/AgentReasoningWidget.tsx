@@ -87,9 +87,7 @@ const INTENT_METRICS: Record<
   },
 };
 
-/**
- *
- */
+/** What a rival stable's AI is currently intent on doing, and against whom. */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
   const rivals = useGameStore((s) => s.rivals);
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';

@@ -1,8 +1,6 @@
 import { Crown, Shield, Trophy, Star, Medal } from 'lucide-react';
 
-/**
- *
- */
+/** Icon for a hall-of-fame award type. */
 export function AwardIcon({ type }: { type: string }) {
   switch (type) {
     case 'WARRIOR_OF_YEAR':

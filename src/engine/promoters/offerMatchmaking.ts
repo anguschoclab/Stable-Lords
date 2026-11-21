@@ -262,9 +262,6 @@ export interface OfferBuildContext {
   weather: WeatherType;
 }
 
-/**
- *
- */
 interface CreateBoutOfferArgs {
   warriorA: Warrior;
   opponentB: Warrior;

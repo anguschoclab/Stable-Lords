@@ -71,6 +71,7 @@ function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
 // We open the Event Log on the dashboard and high-stakes command screens.
 // We close it on management-heavy screens (Stable/World) to maximize workspace.
 
+/** Sync the event log's open state to the active route (open on dashboard/command screens). */
 export function useRouteAwareEventLog(activePath: string, isCompactShell: boolean) {
   useEffect(() => {
     const { eventLogOpen, setEventLogOpen } = useGameStore.getState();
@@ -169,6 +170,7 @@ export function ShellTop(props: {
   );
 }
 
+/** Shell body: left nav, main column, event-log rail/sheet, and global modals. */
 export function ShellContent(props: {
   week: number;
   isInitialized: boolean;

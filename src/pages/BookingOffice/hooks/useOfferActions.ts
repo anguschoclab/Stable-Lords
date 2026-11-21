@@ -8,9 +8,7 @@ import { toast } from 'sonner';
 import type { InjuryData, Warrior } from '@/types/warrior.types';
 import { Heart, Clock, AlertTriangle } from 'lucide-react';
 
-/**
- *
- */
+/** Fatigue band → display label, color class, and status icon. */
 export function getFatigueStatus(fatigue: number): {
   label: string;
   color: string;
@@ -38,9 +36,6 @@ export function getFatigueStatus(fatigue: number): {
   }
 }
 
-/**
- *
- */
 /** Severities that block bout acceptance. */
 const BLOCKING_SEVERITIES = new Set(['Moderate', 'Severe', 'Critical', 'Permanent']);
 
@@ -49,6 +44,10 @@ const SEVERITY_RANK = new Map(
   ['Minor', 'Moderate', 'Severe', 'Critical', 'Permanent'].map((s, i) => [s, i] as const)
 );
 
+/**
+ * Worst blocking injury on a warrior for the offer-row badge — returns null
+ * when no injury is severe enough to block acceptance.
+ */
 export function getInjuryBadge(
   injuries: InjuryData[]
 ): { label: string; color: string; count: number } | null {

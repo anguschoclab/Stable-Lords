@@ -10,9 +10,7 @@ import {
   grantInsightToken,
 } from '../helpers';
 
-/**
- *
- */
+/** Shadow Market Run event — costs 25-50g; Style insight token plus 15 fame. */
 export function handleShadowMarketRun(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -41,13 +39,8 @@ export function handleShadowMarketRun(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Loyal Stray event — costs 25g; chosen warrior gains 10 XP and 5 fame. */
 export function handleLoyalStray(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   const cost = 25;
@@ -61,13 +54,8 @@ export function handleLoyalStray(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Bounty Hunter Visit event — payout of 150-250g plus 10 fame. */
 export function handleBountyHunterVisit(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -90,13 +78,8 @@ export function handleBountyHunterVisit(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Midnight Market event — costs 40g; Tactic insight token plus 20 XP. */
 export function handleMidnightMarket(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -121,13 +104,8 @@ export function handleMidnightMarket(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Moonlight Duel event — one random warrior wins 150-299g in wagers. */
 export function handleMoonlightDuel(run: OffseasonEventRun) {
   const { state, nextWeek, rng, ctx } = run;
   const chosen = pickActiveWarrior(state, rng);
@@ -152,6 +130,3 @@ export function handleMoonlightDuel(run: OffseasonEventRun) {
   }
 }
 
-/**
- *
- */

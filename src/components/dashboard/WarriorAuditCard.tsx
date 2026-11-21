@@ -10,9 +10,7 @@ interface WarriorAuditCardProps {
   warrior: AtRiskWarrior;
 }
 
-/**
- *
- */
+/** One at-risk warrior card in the medical audit — condition and injuries. */
 export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
   const fatigue = warrior.fatigue ?? 0;
   const condition = Math.max(0, 100 - fatigue);

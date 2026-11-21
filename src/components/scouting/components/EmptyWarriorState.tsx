@@ -1,9 +1,7 @@
 import { Users } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 
-/**
- *
- */
+/** Empty state when fewer than two warriors are available to compare. */
 export function EmptyWarriorState() {
   return (
     <EmptyState

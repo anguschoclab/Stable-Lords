@@ -36,9 +36,7 @@ const CONCEPT_OPTIONS = Object.values(FightingStyle).flatMap((s) =>
   }))
 );
 
-/**
- *
- */
+/** Name/style/personality pickers plus the concept-build shortcuts. */
 export function IdentitySection({ name, style, personality, actions }: IdentitySectionProps) {
   const { setName, setStyle, applyConcept } = actions;
   return (

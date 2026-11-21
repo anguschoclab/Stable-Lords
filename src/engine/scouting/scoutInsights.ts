@@ -51,9 +51,6 @@ export function createAttributeInsights(
   }));
 }
 
-/**
- *
- */
 interface CreateTacticInsightArgs {
   warrior: Warrior;
   quality: ScoutQuality;
@@ -96,9 +93,6 @@ export function createTraitInsights(
   }));
 }
 
-/**
- *
- */
 interface GenerateScoutInsightsArgs {
   warrior: Warrior;
   quality: ScoutQuality;

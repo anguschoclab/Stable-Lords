@@ -24,9 +24,6 @@ interface BoutResult {
   summary: unknown;
 }
 
-/**
- *
- */
 /** Build one FTUE warrior record; applies bout-outcome fame/popularity when the orphan fought. */
 function buildFTUEWarrior(opts: {
   pw: SelectedWarrior;

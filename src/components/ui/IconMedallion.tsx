@@ -3,9 +3,7 @@ interface IconMedallionProps {
   className?: string;
 }
 
-/**
- *
- */
+/** Decorative radial medallion ring around an icon. */
 export function IconMedallion({ icon, className }: IconMedallionProps) {
   return (
     <div

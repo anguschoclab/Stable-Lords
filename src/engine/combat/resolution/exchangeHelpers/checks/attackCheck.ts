@@ -9,9 +9,6 @@ import { getOffensiveTacticMods } from '../../../mechanics/tacticResolution';
 import { getStylePassive } from '@/engine/stylePassives';
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 
-/**
- *
- */
 interface PerformAttackCheckArgs {
   rng: () => number;
   att: FighterState;

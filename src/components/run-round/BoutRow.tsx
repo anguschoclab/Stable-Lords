@@ -171,9 +171,7 @@ function ExpandedViewer({ res }: { res: BoutResult }) {
   );
 }
 
-/**
- *
- */
+/** One collapsible bout result row — summary trigger plus inline viewer. */
 export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
   return (
     <Collapsible open={isExpanded} onOpenChange={() => onToggleExpand(isExpanded ? null : id)}>

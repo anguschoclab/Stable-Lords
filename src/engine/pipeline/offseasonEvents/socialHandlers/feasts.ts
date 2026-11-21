@@ -8,9 +8,7 @@ import {
   statGrantOutcome,
 } from '../helpers';
 
-/**
- *
- */
+/** Grand Feast event — costs 200-400g; every active warrior gains 10 XP. */
 export function handleGrandFeast(run: OffseasonEventRun) {
   const { state, nextWeek, rng, ctx } = run;
   const goldCost = 200 + Math.floor(rng.next() * 201);
@@ -29,13 +27,8 @@ export function handleGrandFeast(run: OffseasonEventRun) {
   announceOffseasonEvent({ ...run, data: { gold: goldCost } });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Midnight Feast event — costs 40-100g; one warrior gains 15 XP and 10 fame. */
 export function handleMidnightFeast(run: OffseasonEventRun) {
   const { state, nextWeek, rng, ctx } = run;
   const cost = 40 + Math.floor(rng.next() * 61);
@@ -76,13 +69,8 @@ export function handleMidnightFeast(run: OffseasonEventRun) {
   }
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Street Performance event — 15 fame, Local Hero flair, 50-99g in tips. */
 export function handleStreetPerformance(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -110,13 +98,8 @@ export function handleStreetPerformance(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
 
-/**
- *
- */
+/** Traveling Circus event — costs 25g; chosen warrior gains 20-40 XP and 15-25 fame. */
 export function handleTravelingCircus(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -136,6 +119,3 @@ export function handleTravelingCircus(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */

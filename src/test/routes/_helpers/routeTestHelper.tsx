@@ -8,9 +8,7 @@ interface RouteLike {
   component?: ComponentType;
 }
 
-/**
- *
- */
+/** Assert a TanStack route object is defined at the expected path. */
 export function expectRouteDefinition(route: RouteLike, expectedPath: string) {
   expect(route).toBeDefined();
   if (route.id !== undefined) {
@@ -18,18 +16,13 @@ export function expectRouteDefinition(route: RouteLike, expectedPath: string) {
   }
 }
 
-/**
- *
- */
+/** Assert a route exposes a renderable component. */
 export function expectRouteComponent(route: RouteLike) {
   const component = route.options?.component ?? route.component;
   expect(component).toBeDefined();
   expect(typeof component).toBe('function');
 }
 
-/**
- *
- */
 function renderRouteComponent(route: RouteLike) {
   const Component = (route.options?.component ?? route.component) as ComponentType;
   expect(Component).toBeDefined();

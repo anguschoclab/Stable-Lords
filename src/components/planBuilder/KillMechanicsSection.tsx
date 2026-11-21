@@ -13,9 +13,7 @@ const DEFAULT_KILL_CONTEXT = {
   hitLocation: 'body',
 };
 
-/**
- *
- */
+/** Shows the style's kill-window mechanic for the plan. */
 export default function KillMechanicsSection({ plan }: KillMechanicsSectionProps) {
   const mechanic = getKillMechanic(plan.style, DEFAULT_KILL_CONTEXT);
 

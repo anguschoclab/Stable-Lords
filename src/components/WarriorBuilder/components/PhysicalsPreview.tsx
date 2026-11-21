@@ -7,9 +7,7 @@ interface PhysicalsPreviewProps {
   encumbrance: number;
 }
 
-/**
- *
- */
+/** Derived physical stats preview — HP, endurance, damage, encumbrance. */
 export function PhysicalsPreview({ hp, endurance, damage, encumbrance }: PhysicalsPreviewProps) {
   return (
     <Card>

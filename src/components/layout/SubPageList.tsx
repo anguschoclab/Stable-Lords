@@ -88,9 +88,7 @@ function NavPageLink({
   );
 }
 
-/**
- *
- */
+/** The active hub's sub-page links, with the animated active indicator. */
 export function SubPageList(props: SubPageListProps) {
   const {
     activeHubId,

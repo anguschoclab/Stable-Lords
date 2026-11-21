@@ -14,9 +14,7 @@ interface WarriorSelectorProps {
   colorVariant: 'primary' | 'accent';
 }
 
-/**
- *
- */
+/** Warrior picker for one side of the comparison. */
 export function WarriorSelector(props: WarriorSelectorProps) {
   const { warriors, selectedId, otherId, onSelect, label } = props;
   const { colorVariant } = props;

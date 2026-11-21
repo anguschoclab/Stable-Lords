@@ -6,9 +6,7 @@ interface TrainerTierBadgeProps {
   tier: Trainer['tier'];
 }
 
-/**
- *
- */
+/** Trainer tier badge (Master/Seasoned/Journeyman coloring). */
 export function TrainerTierBadge({ tier }: TrainerTierBadgeProps) {
   return (
     <Badge

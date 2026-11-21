@@ -6,9 +6,7 @@ interface QuadrantDotProps {
   dot: QuadrantDot;
 }
 
-/**
- *
- */
+/** One plotted stable dot on the quadrant, with a detail tooltip. */
 export function QuadrantDotItem({ dot }: QuadrantDotProps) {
   const x = dot.fame;
   const y = 100 - dot.notoriety;

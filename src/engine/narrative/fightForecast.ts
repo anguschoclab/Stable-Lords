@@ -9,9 +9,7 @@ import { hasInjuryOfSeverity } from '@/engine/injuries/utils';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
-/**
- *
- */
+/** Pre-fight forecast — style edge plus ranked pre-fight factors (opponent may be unknown). */
 export interface FightForecast {
   opponentKnown: boolean;
   styleMatchup: { styleA: string; styleD: string | null; edge: number };
@@ -60,9 +58,7 @@ function readinessRisk(w: ForecastWarrior): AnalysisFactor | null {
   };
 }
 
-/**
- *
- */
+/** Build the pre-fight forecast from what's knowable before the bout — styles, skill gap, readiness. */
 export function buildFightForecast(
   player: ForecastWarrior,
   opponent: ForecastWarrior | null

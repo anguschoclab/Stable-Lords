@@ -9,9 +9,7 @@ interface WarriorSelectorProps {
   onSelect: (id: string) => void;
 }
 
-/**
- *
- */
+/** Warrior pick-list for the training planner. */
 export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelectorProps) {
   return (
     <div className="grid grid-cols-1 gap-3">

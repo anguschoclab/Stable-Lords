@@ -1,8 +1,6 @@
 import type { LedgerEntry } from '@/types/game';
 
-/**
- *
- */
+/** Sparkline geometry — data range plus canvas box and padding. */
 export interface Viewport {
   min: number;
   range: number;
@@ -13,9 +11,7 @@ export interface Viewport {
 
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
-/**
- *
- */
+/** Cumulative treasury series by week, capped to the last 12 weeks. */
 export function buildWeeklyPoints(
   ledger: LedgerEntry[],
   week: number,
@@ -52,9 +48,7 @@ export function buildWeeklyPoints(
   return series.slice(-12); // last 12 weeks
 }
 
-/**
- *
- */
+/** SVG path string for the treasury sparkline within a viewport. */
 export function buildSparklinePath(
   points: { week: number; value: number }[],
   vp: Viewport

@@ -275,9 +275,6 @@ function gatherKillThreshold(args: GatherKillThresholdArgs): number {
   });
 }
 
-/**
- *
- */
 interface AfterHitEventsArgs {
   events: CombatEvent[];
   rng: () => number;

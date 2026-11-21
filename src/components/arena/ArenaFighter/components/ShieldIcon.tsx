@@ -4,9 +4,7 @@ interface ShieldIconProps {
   y: number;
 }
 
-/**
- *
- */
+/** SVG shield ellipse sized by shield class. */
 export function ShieldIcon({ size, x, y }: ShieldIconProps) {
   const radius = size === 'large' ? 14 : size === 'small' ? 8 : 11;
 

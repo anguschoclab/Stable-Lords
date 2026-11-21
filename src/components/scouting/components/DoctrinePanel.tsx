@@ -8,9 +8,7 @@ interface DoctrinePanelProps {
   textAlign?: 'left' | 'right';
 }
 
-/**
- *
- */
+/** One stable's style-doctrine breakdown panel. */
 export function DoctrinePanel({
   stableName,
   styleCounts,

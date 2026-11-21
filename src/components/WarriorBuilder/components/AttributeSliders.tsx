@@ -30,9 +30,7 @@ interface AttributeSlidersProps {
   remaining: number;
 }
 
-/**
- *
- */
+/** Attribute point-buy sliders with the remaining-points badge. */
 export function AttributeSliders({ attrs, updateAttr, total, remaining }: AttributeSlidersProps) {
   return (
     <Card>

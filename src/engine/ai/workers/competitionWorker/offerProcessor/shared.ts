@@ -13,9 +13,7 @@ export type OfferMap = Record<string, BoutOffer>;
  */
 export type FinalizedIndex = Map<string, RivalStableData>;
 
-/**
- *
- */
+/** Build warriorId→owning-rival map from the post-shard (finalized) rival list. */
 export function buildFinalizedIndex(rivals: RivalStableData[]): FinalizedIndex {
   const index: FinalizedIndex = new Map();
   for (const rival of rivals) {

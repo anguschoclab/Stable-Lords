@@ -5,9 +5,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
 import { weekToTimestamp } from '@/constants';
 
-/**
- *
- */
 interface HandleReportingArgs {
   wA: Warrior;
   wD: Warrior;

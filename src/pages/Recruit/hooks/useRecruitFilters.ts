@@ -5,9 +5,7 @@ import type { FightingStyle } from '@/types/game';
 
 type SortBy = 'cost-asc' | 'cost-desc' | 'random' | 'age-asc';
 
-/**
- *
- */
+/** Recruit pool filtering — tier/style filters and sort order. */
 export function useRecruitFilters(recruitPool: PoolWarrior[] | undefined, seed?: number) {
   const [activeTiers, setActiveTiers] = useState<Set<RecruitTier>>(
     new Set(['Common', 'Promising', 'Exceptional', 'Prodigy'])

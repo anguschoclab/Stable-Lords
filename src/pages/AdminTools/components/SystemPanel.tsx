@@ -10,9 +10,7 @@ interface SystemPanelProps {
   onReset: () => void;
 }
 
-/**
- *
- */
+/** System admin panel — save export/import and full reset. */
 export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
   return (
     <div className="space-y-12">

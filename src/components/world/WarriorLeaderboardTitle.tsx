@@ -6,9 +6,7 @@ interface WarriorLeaderboardTitleProps {
   filteredCount: number;
 }
 
-/**
- *
- */
+/** Title bar for the warrior leaderboard, with filtered-count readout. */
 export function WarriorLeaderboardTitle({
   isFiltered,
   filteredCount,

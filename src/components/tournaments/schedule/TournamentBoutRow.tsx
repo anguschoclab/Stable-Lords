@@ -12,9 +12,7 @@ interface TournamentBoutRowProps {
   totalRounds?: number;
 }
 
-/**
- *
- */
+/** One bout row in the tournament schedule list. */
 export function TournamentBoutRow({
   bout,
   state,

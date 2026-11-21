@@ -20,17 +20,12 @@ function buildNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   return map;
 }
 
-/**
- *
- */
+/** WarriorId → display name across player roster, graveyard, and rival rosters. */
 export function useNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   return useMemo(() => buildNameResolver(state), [state]);
 }
 
-// Custom Hook to gather player roster IDs
-/**
- *
- */
+/** All player-side warrior ids (roster + graveyard) as a membership set. */
 export function usePlayerRosterIds(state: RivalryStateSlice): Set<WarriorId> {
   return useMemo(
     () =>
@@ -41,10 +36,7 @@ export function usePlayerRosterIds(state: RivalryStateSlice): Set<WarriorId> {
   );
 }
 
-// Custom Hook to map rival warrior IDs to their stable
-/**
- *
- */
+/** Rival warrior id → owning stable name and owner id. */
 export function useRivalWarriorStable(
   state: RivalryStateSlice
 ): Map<WarriorId, { stableName: string; ownerId: string }> {
@@ -60,10 +52,7 @@ export function useRivalWarriorStable(
   }, [state.rivals]);
 }
 
-// Custom Hook to compute ongoing rivalries
-/**
- *
- */
+/** Derived rivalry list from recent arena history — bout counts, kills, intensity, sorted desc. */
 export function useRivalriesList(
   state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,
@@ -133,10 +122,7 @@ export function useRivalriesList(
   }, [state.arenaHistory, state.week, rosterIds, rivalWarriorStable, nameResolver]);
 }
 
-// Custom Hook to calculate the most wanted rival
-/**
- *
- */
+/** Rival warrior with the most wins (kills tiebreak) against the player's stable. */
 export function useMostWantedRival(
   state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,

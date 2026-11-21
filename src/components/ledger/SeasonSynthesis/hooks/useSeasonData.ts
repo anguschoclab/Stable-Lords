@@ -4,9 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeMetaDrift } from '@/engine/analytics/metaDrift';
 
-/**
- *
- */
+/** Per-rival season rollup — record and kill totals. */
 export interface RivalPerformance {
   id: string;
   name: string;
@@ -17,9 +15,7 @@ export interface RivalPerformance {
   totalKills: number;
 }
 
-/**
- *
- */
+/** Season synthesis data: standings, meta drift, grudges, gazette lines. */
 export function useSeasonData() {
   const { rivals, ownerGrudges, newsletter, arenaHistory, season } = useGameStore(
     useShallow((s) => ({

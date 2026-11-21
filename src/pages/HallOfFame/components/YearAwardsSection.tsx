@@ -20,9 +20,7 @@ interface YearAwardsSectionProps {
   yearUpsets: UpsetEntry[];
 }
 
-/**
- *
- */
+/** One year's award cards plus that year's notable fights and upsets. */
 export function YearAwardsSection(props: YearAwardsSectionProps) {
   const { year, awards, warriorById, player, yearFights } = props;
   const { yearUpsets } = props;

@@ -3,9 +3,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { isExhausted } from '@/engine/core/fatigueUtils';
 import { isActive } from '@/engine/warrior/warriorStatus';
 
-/**
- *
- */
+/** Minimal projection of a warrior flagged at-risk (fatigue/injury). */
 export interface AtRiskWarrior {
   id: string;
   name: string;
@@ -14,9 +12,7 @@ export interface AtRiskWarrior {
   injuries: { name: string }[] | string[];
 }
 
-/**
- *
- */
+/** Active warriors who are exhausted or injured, sorted by fatigue desc. */
 export function useAtRiskWarriors() {
   const roster = useGameStore((s) => s.roster);
 

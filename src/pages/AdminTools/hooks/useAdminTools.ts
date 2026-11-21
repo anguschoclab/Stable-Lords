@@ -11,9 +11,7 @@ import {
   skipToSeasonEnd,
 } from './adminActions';
 
-/**
- *
- */
+/** Admin tool panel categories shown in the left rail. */
 export type AdminCategory = 'SYSTEM' | 'ECONOMY' | 'WORLD' | 'TELEMETRY' | 'PREFERENCES';
 
 /** State-mutating admin actions: FTUE bypass, rival regen, favorite mastery. */
@@ -58,9 +56,7 @@ function useAdminActions(setState: ReturnType<typeof useGameStore.getState>['set
   return { skipFTUE, resetRivals, forceMastery };
 }
 
-/**
- *
- */
+/** State and action handlers for the admin tools page. */
 export function useAdminTools() {
   const {
     setState,

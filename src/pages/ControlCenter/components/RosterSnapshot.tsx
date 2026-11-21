@@ -4,9 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { SnapshotRow } from './SnapshotRow';
 
-/**
- *
- */
+/** Compact list of active warriors for the control-center overview. */
 export function RosterSnapshot() {
   const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
   const active = useMemo(() => roster.filter((w) => isActive(w)), [roster]);

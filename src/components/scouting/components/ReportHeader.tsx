@@ -7,9 +7,7 @@ interface ReportHeaderProps {
   report: ScoutReportData;
 }
 
-/**
- *
- */
+/** Scout-report header — warrior identity plus report quality. */
 export function ReportHeader({ report }: ReportHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">

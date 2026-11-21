@@ -45,9 +45,7 @@ export function bookmarkIdsByType(
   return map;
 }
 
-/**
- *
- */
+/** Bookmarks state + actions — toggle/remove/clear, type-filtered reads, dangling cleanup. */
 export interface BookmarksSlice {
   bookmarks: Bookmark[];
   toggleBookmark: (type: BookmarkEntityType, id: string) => void;
@@ -61,9 +59,7 @@ export interface BookmarksSlice {
   getBookmarksByType: (type: BookmarkEntityType) => Bookmark[];
 }
 
-/**
- *
- */
+/** Creates the bookmarks slice for the root store. */
 export const createBookmarksSlice: StateCreator<GameStore, [], [], BookmarksSlice> = (
   set,
   get

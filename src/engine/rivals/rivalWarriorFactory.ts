@@ -63,9 +63,6 @@ export function biasedAttrs(
   return attrs;
 }
 
-/**
- *
- */
 interface CreateRivalWarriorArgs {
   wId: string;
   wName: string;

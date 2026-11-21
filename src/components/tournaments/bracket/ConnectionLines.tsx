@@ -7,9 +7,7 @@ interface ConnectionLinesProps {
   bronze: boolean;
 }
 
-/**
- *
- */
+/** SVG connector lines feeding into a bracket node. */
 export function ConnectionLines({ rIdx, isBye, isPending, bronze }: ConnectionLinesProps) {
   if (rIdx === 0) return null;
 

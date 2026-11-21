@@ -6,9 +6,7 @@ interface AntiSynergySectionProps {
   plan: FightPlan;
 }
 
-/**
- *
- */
+/** Shows style×tactic anti-synergy penalties for the chosen plan. */
 export default function AntiSynergySection({ plan }: AntiSynergySectionProps) {
   if (!plan.offensiveTactic && !plan.defensiveTactic) {
     return null;

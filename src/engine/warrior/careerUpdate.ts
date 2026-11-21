@@ -211,9 +211,6 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
   return { ...warrior, ...update };
 }
 
-/**
- *
- */
 interface UpdateWarriorFromBoutOutcomeArgs {
   warrior: Warrior;
   isAttacker: boolean;

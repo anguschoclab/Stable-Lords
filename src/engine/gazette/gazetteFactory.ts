@@ -22,9 +22,6 @@ import {
 } from './gazetteDetections';
 import { generateGazetteHeadline, generateGazetteBody } from './gazetteNarrative';
 
-/**
- *
- */
 interface GenerateWeeklyGazetteArgs {
   fights: FightSummary[];
   mood: CrowdMoodType;

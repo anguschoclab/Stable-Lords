@@ -92,9 +92,7 @@ function SlotRow(props: {
   );
 }
 
-/**
- *
- */
+/** The two warrior slots of a bracket match, winner highlighted. */
 export function WarriorSlots(props: WarriorSlotsProps) {
   const { bout, boutKey, totalRounds, isAChosen, isDChosen } = props;
   const { isBye, gameState, onToggleExpand, isExpanded } = props;

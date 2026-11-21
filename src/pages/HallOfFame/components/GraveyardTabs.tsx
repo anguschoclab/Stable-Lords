@@ -11,9 +11,7 @@ interface GraveyardTabsProps {
   season: string;
 }
 
-/**
- *
- */
+/** Graveyard tabs — my fallen, world cemetery, kill analytics. */
 export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProps) {
   const arenaHistory = useGameStore((s) => s.arenaHistory);
   const graveyardState = useGameStore((s) => s.graveyard);

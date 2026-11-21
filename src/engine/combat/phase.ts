@@ -3,9 +3,7 @@
  * All other modules must use these functions instead of defining their own.
  */
 
-/**
- *
- */
+/** Canonical combat phase — the bout's equal-thirds progression. */
 export type PhaseKey = 'opening' | 'mid' | 'late';
 
 /**

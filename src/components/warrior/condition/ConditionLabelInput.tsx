@@ -6,9 +6,7 @@ interface ConditionLabelInputProps {
   onChange: (label: string | undefined) => void;
 }
 
-/**
- *
- */
+/** Optional free-text label input for a plan condition. */
 export function ConditionLabelInput({ cond, idx, onChange }: ConditionLabelInputProps) {
   return (
     <div className="space-y-1.5">

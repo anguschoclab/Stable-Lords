@@ -7,9 +7,7 @@ interface RevealModalProps {
   onClose: () => void;
 }
 
-/**
- *
- */
+/** Animated modal presenting the insight a token just revealed. */
 export function RevealModal({ data, onClose }: RevealModalProps) {
   if (!data) return null;
 

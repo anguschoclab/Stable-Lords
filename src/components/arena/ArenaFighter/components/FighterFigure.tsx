@@ -12,9 +12,7 @@ interface FighterFigureProps {
   pose: FighterPose;
 }
 
-/**
- *
- */
+/** SVG fighter figure — pose, weapon, and shield for one combatant. */
 export function FighterFigure({ isDead, weaponCategory, shieldInfo, pose }: FighterFigureProps) {
   return (
     <svg

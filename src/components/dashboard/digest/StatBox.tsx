@@ -8,9 +8,7 @@ export interface StatBoxProps {
   color: 'primary' | 'destructive' | 'arena-gold' | 'accent';
 }
 
-/**
- *
- */
+/** Small labeled stat tile inside the digest grid. */
 export function StatBox({ icon, label, value, color }: StatBoxProps) {
   const colorClasses = {
     primary: 'text-primary bg-primary/10',

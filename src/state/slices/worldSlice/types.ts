@@ -22,9 +22,7 @@ import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
 
 
-/**
- *
- */
+/** Arena-view presentation preferences persisted per player. */
 export interface ArenaPreferences {
   defaultViewMode: 'log' | 'arena';
   audioEnabled: boolean;
@@ -33,9 +31,7 @@ export interface ArenaPreferences {
   screenShakeIntensity: 'off' | 'low' | 'medium' | 'high';
 }
 
-/**
- *
- */
+/** World domain state — calendar, promoters, bout offers, rivals, gazettes, arena history — and its actions. */
 export interface WorldSlice {
   year: number;
   week: number;

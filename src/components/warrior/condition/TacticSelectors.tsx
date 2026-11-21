@@ -7,9 +7,7 @@ interface TacticSelectorsProps {
   onTacticChange: (key: 'offensiveTactic' | 'defensiveTactic', val: string) => void;
 }
 
-/**
- *
- */
+/** Offensive/defensive tactic selects for a condition override. */
 export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) {
   const offId = useId();
   const defId = useId();

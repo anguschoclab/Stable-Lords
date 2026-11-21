@@ -4,18 +4,13 @@ import type { Trainer } from '@/types/shared.types';
 import { computeGainChance } from '@/engine/training';
 import { ATTRIBUTE_TRAINING, ATTRIBUTE_NEAR_CEILING_BUFFER } from '@/constants/training';
 
-/**
- *
- */
 interface BurnWarning {
   attribute: keyof Attributes;
   reason: string;
   severity: 'low' | 'medium' | 'high';
 }
 
-/**
- *
- */
+/** Per-attribute burn warnings: at/near potential ceiling, low gain chance, age penalty. */
 export function assessBurnRisks(warrior: Warrior, trainers: Trainer[]): BurnWarning[] {
   const warnings: BurnWarning[] = [];
   const age = warrior.age ?? 18;
@@ -59,9 +54,7 @@ export function assessBurnRisks(warrior: Warrior, trainers: Trainer[]): BurnWarn
   return warnings;
 }
 
-/**
- *
- */
+/** Mean gain chance (0-100) across attributes still below cap/potential. */
 export function computeTrainability(warrior: Warrior, trainers: Trainer[]): number {
   let totalChance = 0;
   let trainable = 0;

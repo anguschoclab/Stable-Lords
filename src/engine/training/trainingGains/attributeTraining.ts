@@ -21,9 +21,7 @@ import { AGING_PENALTY_START } from '@/constants/combat/combat';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { breakpointBurns, applySkillBurns } from '@/engine/learning/skillBurn';
 
-/**
- *
- */
+/** Probability (clamped) of a +1 attribute gain — WL base, trainer bonus, age/injury penalties, diminishing returns near potential. */
 export function computeGainChance(
   warrior: Warrior,
   attribute: keyof Attributes,
@@ -144,9 +142,7 @@ function maybeRevealFromEffort(
   return blockedResult(warrior);
 }
 
-/**
- *
- */
+/** Resolve one week of attribute training: hard-cap checks, seasonal cap, gain roll, reveal-on-effort fallback. */
 export function processAttributeTraining(
   warrior: Warrior,
   attr: keyof Attributes,

@@ -98,9 +98,7 @@ function ComparisonSide({ props, label, colorClass, title, side }: ComparisonSid
   );
 }
 
-/**
- *
- */
+/** Header row for the side-by-side comparison (stable or warrior). */
 export function ComparisonHeader(props: ComparisonHeaderProps) {
   const leftTitle =
     props.kind === 'stable'

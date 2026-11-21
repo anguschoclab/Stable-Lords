@@ -83,9 +83,7 @@ function CombatantCard({
   );
 }
 
-/**
- *
- */
+/** Each side's top warrior head-to-head. */
 export function DominantCombatantsSection({
   topWarriorA,
   topWarriorB,

@@ -84,9 +84,6 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
   });
 }
 
-/**
- *
- */
 interface GetStrikeSeverityArgs {
   damage: number;
   maxHp: number;

@@ -19,9 +19,7 @@ interface VirtualizedFallenGridProps {
   emptyDesc: string;
 }
 
-/**
- *
- */
+/** Virtualized grid of fallen/retired warrior cards, grouped by season. */
 export function VirtualizedFallenGrid({
   warriors,
   season,

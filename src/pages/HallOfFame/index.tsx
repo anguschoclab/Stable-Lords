@@ -40,9 +40,7 @@ function FallenStats({
   );
 }
 
-/**
- *
- */
+/** Hall of Fame page — yearly accolades, all-time greats, graveyard tabs. */
 export default function HallOfFame() {
   const {
     year,

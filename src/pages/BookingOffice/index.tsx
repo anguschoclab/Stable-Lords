@@ -8,9 +8,7 @@ import { useOfferBookmarkFilter } from './hooks/useOfferBookmarkFilter';
 import { AssetRegistry } from './components/AssetRegistry';
 import { HeaderStats, RosterStatusBar, OfferTabs } from './sections';
 
-/**
- *
- */
+/** Booking office page — bout offers, roster registry, council advice. */
 export default function BookingOffice() {
   const office = useBookingOffice();
   const {

@@ -96,9 +96,7 @@ function CategoryPanels({ tools }: { tools: ReturnType<typeof useAdminTools> }) 
   );
 }
 
-/**
- *
- */
+/** Admin tools page — categorized dev/debug panels. */
 export default function AdminTools() {
   const tools = useAdminTools();
   const { activeCategory, setActiveCategory, ftueComplete } = tools;

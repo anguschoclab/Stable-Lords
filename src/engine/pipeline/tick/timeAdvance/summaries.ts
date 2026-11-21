@@ -1,9 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import type { WeekSummary, QuarterSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
 
-/**
- *
- */
+/** Per-week counters for span summaries; reads stewardReport (O(1)). */
 export function extractWeekSummary(state: GameState): WeekSummary {
   // Read from stewardReport instead of scanning arenaHistory (O(1) vs O(n))
   const report = state.stewardReport;
@@ -20,9 +18,7 @@ export function extractWeekSummary(state: GameState): WeekSummary {
   };
 }
 
-/**
- *
- */
+/** Aggregate a quarter's week summaries with the treasury delta. */
 export function buildQuarterSummary(
   state: GameState,
   startWeek: number,
@@ -40,9 +36,7 @@ export function buildQuarterSummary(
   };
 }
 
-/**
- *
- */
+/** Aggregate four quarter results into the year-end summary. */
 export function buildAnnualSummary(
   state: GameState,
   startYear: number,

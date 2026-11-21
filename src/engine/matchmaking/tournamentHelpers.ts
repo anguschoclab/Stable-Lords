@@ -18,16 +18,12 @@ export function isBronzeMatch(bout: TournamentBout, finalsRound?: number): boole
   );
 }
 
-/**
- *
- */
+/** Whether the bout is the championship match (final round, ≥6 rounds). */
 export function isChampionshipFinal(bout: TournamentBout, totalRounds: number): boolean {
   return bout.round === totalRounds && bout.round >= 6;
 }
 
-/**
- *
- */
+/** Display name for a bracket round ("Quarter-finals", "Championship", ...). */
 export function getRoundName(round: number, totalRounds: number): string {
   const roundNames: Record<number, string> = {
     1: 'Round of 64',
@@ -45,16 +41,12 @@ export function getRoundName(round: number, totalRounds: number): string {
   return roundNames[round] || `Round ${round}`;
 }
 
-/**
- *
- */
+/** Whether the bout is a bye (defender slot is the 'bye' sentinel). */
 export function isByeMatch(bout: TournamentBout): boolean {
   return bout.warriorIdD === 'bye';
 }
 
-/**
- *
- */
+/** Estimated week a round resolves — one week per round from the bracket start. */
 export function getEstimatedWeek(baseWeek: number, round: number): number {
   return baseWeek + (round - 1);
 }

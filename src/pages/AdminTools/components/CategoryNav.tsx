@@ -15,9 +15,7 @@ interface CategoryNavProps {
   onSelect: (cat: AdminCategory) => void;
 }
 
-/**
- *
- */
+/** Left-rail category picker for the admin tools page. */
 export function CategoryNav({ activeCategory, onSelect }: CategoryNavProps) {
   return (
     <div className="space-y-1">

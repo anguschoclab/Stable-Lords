@@ -7,9 +7,6 @@ import type { BookmarksSlice } from './slices/bookmarksSlice';
 import type { ProgressionSlice } from './slices/progressionSlice';
 import type { AvatarSlice } from './slices/avatarSlice';
 
-/**
- *
- */
 interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
@@ -25,9 +22,6 @@ interface GameStoreState {
   eventLogLastReadId: string | null;
 }
 
-/**
- *
- */
 interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
@@ -43,9 +37,7 @@ interface GameStoreActions {
   setState: (fn: (state: GameStore) => void) => void;
 }
 
-/**
- *
- */
+/** Root store type — core state/actions plus every domain slice. */
 export type GameStore = GameStoreState &
   GameStoreActions &
   EconomySlice &

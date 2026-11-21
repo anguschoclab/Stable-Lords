@@ -6,9 +6,7 @@ interface LiabilityBadgeProps {
   warrior: Warrior;
 }
 
-/**
- *
- */
+/** "Watch / consider releasing" badge on underperforming warriors. */
 export function LiabilityBadge({ warrior }: LiabilityBadgeProps) {
   const liab = computeWarriorLiability(warrior);
   if (liab.recommendation === 'Keep') return null;

@@ -12,9 +12,7 @@ import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import { QuadrantPlot } from './QuadrantPlot';
 import { QuadrantDotItem } from './QuadrantDot';
 
-/**
- *
- */
+/** Fame-vs-notoriety scatter of rival stables. */
 export function ReputationQuadrant({ className }: { className?: string }) {
   const worldState = useReputationState();
   const { rivals } = useGameStore(useShallow((s) => ({ rivals: s.rivals })));

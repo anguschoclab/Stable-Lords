@@ -11,9 +11,7 @@ interface SummaryCardProps {
   sublabel: string;
 }
 
-/**
- *
- */
+/** Icon + value summary tile for the contract portfolio header. */
 export function SummaryCard(props: SummaryCardProps) {
   const { icon: Icon, iconClass, borderClass, label, value } = props;
   const { sublabel } = props;

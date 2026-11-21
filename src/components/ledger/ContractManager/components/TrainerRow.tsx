@@ -5,9 +5,7 @@ import { TrainerTierBadge } from './TrainerTierBadge';
 import { TrainerTenureCell } from './TrainerTenureCell';
 import { getSalary } from '../hooks/useContractData';
 
-/**
- *
- */
+/** One trainer row in the contract table — name, tier, salary, tenure. */
 export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
   return (
     <TableRow

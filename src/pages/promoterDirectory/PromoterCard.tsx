@@ -121,6 +121,7 @@ interface PromoterCardProps {
   currentWeek: number;
 }
 
+/** Directory card for one promoter — identity, personality badge, offer stats. */
 export function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
   const personality = PERSONALITY_CONFIG[promoter.personality];
   const tierColor = TIER_COLORS[promoter.tier];

@@ -55,9 +55,7 @@ export function isFightReady(w: Warrior, isTournament: boolean = false): boolean
   return !isTooInjuredToFight(injObjs);
 }
 
-/**
- *
- */
+/** Whether the warrior can be offered a bout for `targetWeek` — active, uninjured, not resting or assigned to training. */
 export function isBookable(
   w: Warrior,
   opts: {

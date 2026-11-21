@@ -13,14 +13,9 @@
 import type { EquipmentLoadout } from './equipment.types';
 import { getLoadoutWeight } from './equipment.utils';
 
-/**
- *
- */
+/** Graduated encumbrance tier from load/capacity ratio (see module doc). */
 export type EncumbranceTier = 'NONE' | 'LIGHT' | 'MEDIUM' | 'HEAVY' | 'OVER';
 
-/**
- *
- */
 interface EncumbrancePenalties {
   iniPenalty: number;
   defPenalty: number;
@@ -48,17 +43,13 @@ const TIER_PENALTIES: Record<EncumbranceTier, EncumbrancePenalties> = {
   OVER: { iniPenalty: -4, defPenalty: -2, parPenalty: 0, enduranceMult: 2.0 },
 };
 
-/**
- *
- */
+/** Loadout weight over carry capacity; Infinity when capacity is non-positive. */
 export function getEncumbranceRatio(loadout: EquipmentLoadout, carryCap: number): number {
   if (carryCap <= 0) return Infinity;
   return getLoadoutWeight(loadout) / carryCap;
 }
 
-/**
- *
- */
+/** Highest tier whose threshold the ratio meets. */
 export function getEncumbranceTier(ratio: number): EncumbranceTier {
   for (const { tier, min } of TIER_THRESHOLDS) {
     if (ratio >= min) return tier;
@@ -66,9 +57,7 @@ export function getEncumbranceTier(ratio: number): EncumbranceTier {
   return 'NONE';
 }
 
-/**
- *
- */
+/** INI/DEF/endurance penalties for an encumbrance tier (canon: no parry hit). */
 export function getEncumbrancePenalties(tier: EncumbranceTier): EncumbrancePenalties {
   return TIER_PENALTIES[tier];
 }

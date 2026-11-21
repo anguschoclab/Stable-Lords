@@ -132,9 +132,7 @@ function PersonnelBlock({
   );
 }
 
-/**
- *
- */
+/** One roster row — rank, identity, record, condition, contender badge. */
 export function RosterWarriorRow({
   warrior,
   rankIndex,

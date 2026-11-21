@@ -35,6 +35,7 @@ export const mkLearnWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
     ...overrides,
   });
 
+/** Minimal GameState for bout handlers — empty roster, rival map, player id. */
 export const mkBoutState = (overrides: Partial<GameState> = {}): GameState =>
   ({
     week: 1,
@@ -45,6 +46,7 @@ export const mkBoutState = (overrides: Partial<GameState> = {}): GameState =>
     ...overrides,
   }) as unknown as GameState;
 
+/** Stub FightOutcome — A wins by KO in 5 minutes with fixed XP awards. */
 export const mkBoutOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
   winner: 'A',
   by: 'KO',
@@ -54,5 +56,6 @@ export const mkBoutOutcome = (overrides: Partial<FightOutcome> = {}): FightOutco
   ...overrides,
 });
 
+/** Sum a per-skill learn map into one total. */
 export const totalGained = (m?: Partial<Record<keyof BaseSkills, number>>): number =>
   Object.values(m ?? {}).reduce((s, v) => s + (v ?? 0), 0);

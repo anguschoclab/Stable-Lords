@@ -84,9 +84,7 @@ function ElapsedColumn({ minutesPassed }: { minutesPassed: number }) {
   );
 }
 
-/**
- *
- */
+/** Outcome panel for the quick-fight simulator. */
 export function SimulatorResults({ simulation }: SimulatorResultsProps) {
   return (
     <Surface variant="glass" className="border-accent/40 bg-accent/5 p-0 overflow-hidden">

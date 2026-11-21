@@ -85,9 +85,7 @@ function KillFeed({ r, rosterNames }: { r: DerivedRivalry; rosterNames: Set<stri
   );
 }
 
-/**
- *
- */
+/** One rivalry entry — grudge level, record, and heat. */
 export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
   const r = rivalry;
 

@@ -1,9 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 
-/**
- *
- */
+/** Schedule filter: everything, pending bouts, resolved bouts, or this round. */
 export type FilterStatus = 'all' | 'upcoming' | 'completed' | 'current-round';
 
 interface TournamentFilterBarProps {
@@ -13,9 +11,7 @@ interface TournamentFilterBarProps {
   collapseAll: () => void;
 }
 
-/**
- *
- */
+/** Filter buttons plus expand/collapse-all for the schedule rounds. */
 export function TournamentFilterBar({
   filter,
   setFilter,

@@ -72,9 +72,6 @@ export function generateFightNarrative(
   return t(safeRng.pick(g.Default), data);
 }
 
-/**
- *
- */
 interface GenerateGazetteHeadlineArgs {
   detections: GazetteDetections;
   fights: FightSummary[];
@@ -248,9 +245,6 @@ function graveyardParagraphs(
   return paragraphs;
 }
 
-/**
- *
- */
 interface GenerateGazetteBodyArgs {
   detections: GazetteDetections;
   fights: FightSummary[];

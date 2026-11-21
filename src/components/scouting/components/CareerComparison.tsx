@@ -7,9 +7,7 @@ interface CareerComparisonProps {
   warriorB: Warrior;
 }
 
-/**
- *
- */
+/** Career-stat comparison bars (wins/kills/fame) for two warriors. */
 export function CareerComparison({ warriorA, warriorB }: CareerComparisonProps) {
   const maxWins = Math.max(warriorA.career.wins, warriorB.career.wins, 1);
   const maxKills = Math.max(warriorA.career.kills, warriorB.career.kills, 1);

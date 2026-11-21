@@ -1,9 +1,6 @@
 import { TRAITS, type TraitTier } from '@/engine/traits';
 import { STYLE_DISPLAY_NAMES, type FightingStyle } from '@/types/shared.types';
 
-/**
- *
- */
 interface TraitBadgeMeta {
   id: string;
   name: string;
@@ -14,9 +11,7 @@ interface TraitBadgeMeta {
   classTag?: string;
 }
 
-/**
- *
- */
+/** Display metadata for a trait badge; null for unknown ids. */
 export function traitBadgeMeta(id: string): TraitBadgeMeta | null {
   const t = TRAITS[id];
   if (!t) return null;

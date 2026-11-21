@@ -4,16 +4,12 @@ import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
 import { TRAINER_SALARY_FALLBACK } from '@/constants/economy';
 import type { Trainer } from '@/types/game';
 
-/**
- *
- */
+/** Weekly salary for a trainer tier, falling back when unmapped. */
 export function getSalary(tier: Trainer['tier']): number {
   return TRAINER_WEEKLY_SALARY[tier] ?? TRAINER_SALARY_FALLBACK;
 }
 
-/**
- *
- */
+/** Active trainers, total weekly payroll, and expiring-soon count. */
 export function useContractData() {
   const trainers = useGameStore((s) => s.trainers);
 

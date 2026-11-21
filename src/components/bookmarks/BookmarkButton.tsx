@@ -22,9 +22,7 @@ interface BookmarkButtonProps {
   label?: string;
 }
 
-/**
- *
- */
+/** Toggle-a-bookmark button bound to the entity's store bookmark state. */
 export function BookmarkButton({
   entityType,
   entityId,

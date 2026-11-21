@@ -13,9 +13,6 @@ import {
 import { audioManager } from '@/lib/AudioManager';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
-/**
- *
- */
 interface NarrateAttackArgs {
   rng: IRNGService;
   attackerName: string;
@@ -294,9 +291,6 @@ export function narrateCounterstrike(
   return interpolateTemplate(template, { defender: defenderName, attacker: attackerName });
 }
 
-/**
- *
- */
 interface NarrateHitArgs {
   rng: IRNGService;
   defenderName: string;

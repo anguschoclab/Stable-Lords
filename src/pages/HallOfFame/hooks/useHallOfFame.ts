@@ -7,9 +7,6 @@ import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { AnnualAward } from '@/types/game';
 import type { UpsetEntry } from '@/components/awards/UpsetsList';
 
-/**
- *
- */
 type Fight = ReturnType<typeof ArenaHistory.all>[number];
 
 /** Per-year query helpers over the full fight log + fame index. */
@@ -43,9 +40,7 @@ function makeYearQueries(allFights: Fight[], fameByWarriorId: Map<string, number
   return { getFightsForYear, getUpsetsForYear };
 }
 
-/**
- *
- */
+/** Hall-of-fame data — yearly award groups, all-time greats, fallen warriors, fight lookups. */
 export function useHallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore(
     useShallow((s) => ({

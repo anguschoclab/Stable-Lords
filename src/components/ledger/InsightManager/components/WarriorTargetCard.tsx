@@ -11,9 +11,7 @@ interface WarriorTargetCardProps {
   onSelect: () => void;
 }
 
-/**
- *
- */
+/** Selectable warrior target card for spending an insight token on. */
 export function WarriorTargetCard({
   warrior,
   isSelected,

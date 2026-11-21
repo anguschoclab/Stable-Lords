@@ -62,9 +62,6 @@ export function orderRivalsForSnakeDraft(
   });
 }
 
-/**
- *
- */
 interface AiDraftFromPoolArgs {
   pool: PoolWarrior[];
   rivals: RivalStableData[];

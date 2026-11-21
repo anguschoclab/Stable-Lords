@@ -4,9 +4,6 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import type { CareerRecord, AttributePotential, InjuryData } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 
-/**
- *
- */
 interface ActiveRosterItem {
   id: string;
   name: string;
@@ -23,9 +20,7 @@ interface ActiveRosterItem {
   age?: number;
 }
 
-/**
- *
- */
+/** Active roster members projected for list UIs, sorted by fame desc. */
 export function useActiveRoster(): ActiveRosterItem[] {
   const roster = useGameStore((s) => s.roster);
 

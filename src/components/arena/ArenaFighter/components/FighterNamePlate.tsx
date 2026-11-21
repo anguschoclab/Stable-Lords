@@ -5,9 +5,7 @@ interface FighterNamePlateProps {
   isWinner?: boolean;
 }
 
-/**
- *
- */
+/** Floating name plate above the fighter figure; gold on the winner. */
 export function FighterNamePlate({ name, isWinner }: FighterNamePlateProps) {
   return (
     <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">

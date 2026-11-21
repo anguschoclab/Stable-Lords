@@ -10,9 +10,7 @@ interface EventListItemProps {
   onClick: () => void;
 }
 
-/**
- *
- */
+/** One clickable event row in the log — icon, title, subtitle. */
 export function EventListItem({
   event,
   allWarriorNames,

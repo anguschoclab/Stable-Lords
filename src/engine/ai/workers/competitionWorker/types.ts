@@ -1,6 +1,4 @@
-/**
- *
- */
+/** One rival stable's bout intent for the week — target, fame band, priority. */
 export interface BoutBid {
   proposingWarriorId: string;
   targetStableId?: string; // Specific ID for VENDETTA / bloodfeud

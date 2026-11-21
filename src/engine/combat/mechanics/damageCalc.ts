@@ -10,9 +10,7 @@ const DAMAGE_BASE_MIN = 4;
 const DAMAGE_VARIANCE_MIN = 0.7;
 const DAMAGE_VARIANCE_MAX = 1.3;
 
-/**
- *
- */
+/** Rolled hit damage — damage class plus base, scaled by location and variance. */
 export function computeHitDamage(
   rng: () => number,
   damageClass: number,
@@ -24,9 +22,6 @@ export function computeHitDamage(
   return Math.max(1, Math.round(base * locMult * variance));
 }
 
-/**
- *
- */
 interface CalculateKillWindowArgs {
   hpRatio: number;
   enduranceRatio: number;
@@ -48,9 +43,7 @@ interface CalculateKillWindowArgs {
   damageClass?: number;
 }
 
-/**
- *
- */
+/** Kill-intent threshold for this hit — HP/endurance bands, KD, phase, momentum, bloodlust. Zero when momentum is negative. */
 export function calculateKillWindow(args: CalculateKillWindowArgs): number {
   const { hpRatio, enduranceRatio, location, killDesire, phaseLevel } = args;
   const { attOE = 5, attAL = 5, matchupBonus = 0, decSkill = 10, momentum = 0 } = args;

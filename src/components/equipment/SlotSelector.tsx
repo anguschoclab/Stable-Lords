@@ -59,9 +59,6 @@ function groupWeaponsByStatus(
   );
 }
 
-/**
- *
- */
 /** Label row — icon, label, encumbrance badge, preferred star. */
 function LabelRow({
   slot,
@@ -152,9 +149,7 @@ function ItemOptions({
   );
 }
 
-/**
- *
- */
+/** Item picker for one equipment slot, with requirement checks and preferred marks. */
 export function SlotSelector(props: SlotSelectorProps) {
   const { slot, label, icon, selectedId, style } = props;
   const { disabled, warriorAttrs, onChange } = props;

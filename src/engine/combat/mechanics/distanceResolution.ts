@@ -141,9 +141,6 @@ interface DistanceContestResult {
   events: CombatEvent[];
 }
 
-/**
- *
- */
 interface ContestDistanceArgs {
   rng: () => number;
   fA: FighterState;

@@ -16,9 +16,7 @@ interface MatchViewerProps {
   onToggleExpand: (key: string | null) => void;
 }
 
-/**
- *
- */
+/** Flyout panel showing a match's fight summary/transcript. */
 export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: MatchViewerProps) {
   return (
     <div className="absolute top-0 left-full ml-4 z-50 w-full max-w-md animate-in motion-reduce:animate-none fade-in slide-in-from-left-4 duration-300">

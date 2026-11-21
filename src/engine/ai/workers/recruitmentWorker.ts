@@ -402,9 +402,6 @@ function visiblePool(pool: PoolWarrior[], rivalId: string, week: number): PoolWa
   );
 }
 
-/**
- *
- */
 interface ProcessRecruitmentArgs {
   rival: RivalStableData;
   pool: PoolWarrior[];

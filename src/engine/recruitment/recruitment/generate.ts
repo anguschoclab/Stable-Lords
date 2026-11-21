@@ -85,9 +85,6 @@ function pickRecruitName(
   return name;
 }
 
-/**
- *
- */
 interface GenerateRecruitArgs {
   rng: IRNGService;
   usedNames: Set<string>;

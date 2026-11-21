@@ -11,9 +11,6 @@ const TIER_RANK: Record<string, number> = {
   Legendary: 3,
 };
 
-/**
- *
- */
 interface FilteredOffersResult {
   thisWeekOffers: BoutOffer[];
   upcomingOffers: BoutOffer[];
@@ -36,9 +33,6 @@ function bestByPromoter(offers: BoutOffer[]): BoutOffer[] {
   return Array.from(map.values());
 }
 
-/**
- *
- */
 interface FilterAndSortOffersArgs {
   boutOffers: Record<BoutOfferId, BoutOffer>;
   roster: Warrior[];

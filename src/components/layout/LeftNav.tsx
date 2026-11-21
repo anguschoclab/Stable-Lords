@@ -21,9 +21,7 @@ interface LeftNavProps {
   className?: string;
 }
 
-/**
- *
- */
+/** Left navigation rail — hub switcher plus the active hub's sub-pages. */
 export function LeftNav({ className }: LeftNavProps) {
   const location = useLocation();
   const currentPath = location.pathname;

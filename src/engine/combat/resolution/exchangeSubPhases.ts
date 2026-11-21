@@ -46,9 +46,6 @@ export function makeExchangeState(): ExchangeState {
   };
 }
 
-/**
- *
- */
 interface RunApproachArgs {
   rng: () => number;
   fA: FighterState;
@@ -183,9 +180,6 @@ export function runCommit(fighter: FighterState, OE: number): CommitResult {
   return { level: 'Standard', attBonus: 0, defPenalty: 0, debtToWrite: 0 };
 }
 
-/**
- *
- */
 interface RunRecoveryArgs {
   fA: FighterState;
   fD: FighterState;

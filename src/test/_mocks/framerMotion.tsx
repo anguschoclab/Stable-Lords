@@ -11,4 +11,5 @@ export const motion = {
   ),
 };
 
+/** Passthrough AnimatePresence — renders children immediately, no exit timing. */
 export const AnimatePresence = ({ children }: { children: ReactNode }) => <>{children}</>;

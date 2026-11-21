@@ -7,9 +7,7 @@ interface MostWantedBannerProps {
   kills: number;
 }
 
-/**
- *
- */
+/** "High Priority Target" banner for the most dangerous rival warrior. */
 export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBannerProps) {
   return (
     <div className="border-t border-white/5 pt-6">

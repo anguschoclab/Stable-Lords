@@ -13,9 +13,7 @@ interface GearRowProps {
   status?: GearRowStatus;
 }
 
-/**
- *
- */
+/** One equipment row in a loadout — icon, name, weight, status styling. */
 export function GearRow({ icon: Icon, name, weight, high, status }: GearRowProps) {
   const { error, blocked } = status ?? {};
   return (

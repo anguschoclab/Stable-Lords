@@ -3,9 +3,7 @@ import { ArchiveConflictError } from '../ArchiveConflictError';
 
 export { ArchiveConflictError };
 
-/**
- *
- */
+/** Persistence surface for archived bout logs and hot save state (OPFS-backed). */
 export interface ArchiveService {
   isSupported: () => boolean;
 

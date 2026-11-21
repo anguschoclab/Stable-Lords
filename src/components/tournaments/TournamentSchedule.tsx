@@ -13,9 +13,7 @@ interface TournamentScheduleProps {
   currentWeek: number;
 }
 
-/**
- *
- */
+/** Full tournament schedule — filter bar, stats, and round cards. */
 export function TournamentSchedule({ tournament, currentWeek }: TournamentScheduleProps) {
   const state = useWorldState();
   const {

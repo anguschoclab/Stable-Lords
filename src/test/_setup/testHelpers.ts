@@ -84,9 +84,7 @@ export function populateTestState(state: GameState): GameState {
   return newState;
 }
 
-/**
- *
- */
+/** Build a flat-12 StrikingAttack warrior for autosim specs. */
 export function makeAutosimWarrior(
   id: string,
   name: string,

@@ -46,9 +46,6 @@ import {
   getExecuteBonus,
 } from '../../../strikingAttack';
 
-/**
- *
- */
 interface ComputePreArmorDamageArgs {
   rng: () => number;
   attacker: FighterState;
@@ -58,9 +55,7 @@ interface ComputePreArmorDamageArgs {
   attPassive: ReturnType<typeof getStylePassive>;
 }
 
-/**
- *
- */
+/** Location roll + raw pre-mitigation damage with tactic/passive/momentum bonuses; also ticks doomed-vitals, guard-break, and bleed state. */
 export function computePreArmorDamage(args: ComputePreArmorDamageArgs): {
   hitLoc: HitLocation;
   preArmor: number;
@@ -105,9 +100,7 @@ export function computePreArmorDamage(args: ComputePreArmorDamageArgs): {
   return { hitLoc, preArmor };
 }
 
-/**
- *
- */
+/** Apply armor matchup mult then flat armor+helm mitigation to raw damage. */
 export function applyDamageMultipliers(
   preArmor: number,
   attacker: FighterState,
@@ -153,9 +146,6 @@ export function applyDamageMultipliers(
   return rawDamage;
 }
 
-/**
- *
- */
 interface ApplyHitAndCountersArgs {
   events: CombatEvent[];
   rng: () => number;
@@ -172,9 +162,7 @@ interface ApplyHitAndCountersArgs {
   defLabel: 'A' | 'D';
 }
 
-/**
- *
- */
+/** Roll crit (suppressed on doomed victims), apply shield/protect mitigation, and emit the hit/counter events. */
 export function applyHitAndCounters(args: ApplyHitAndCountersArgs): {
   damage: number;
   isCrit: boolean;

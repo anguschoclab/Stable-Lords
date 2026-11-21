@@ -52,9 +52,6 @@ function routeUpdate(
   patchRivalWarrior(rivalWarriorPatches, warrior, partial);
 }
 
-/**
- *
- */
 interface HandleProgressionsArgs {
   s: GameState;
   wA: Warrior;

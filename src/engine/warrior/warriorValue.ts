@@ -2,9 +2,6 @@ import type { Warrior } from '@/types/warrior.types';
 import { TRAITS, type TraitTier } from '@/engine/traits';
 import { clamp } from '@/utils/math';
 
-/**
- *
- */
 interface LiabilityResult {
   score: number; // 0–100, higher = more of a liability
   factors: { name: string; weight: number }[];

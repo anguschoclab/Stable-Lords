@@ -291,6 +291,12 @@ function routeAgingOutcome(
   }
 }
 
+/**
+ * Weekly aging pass: ticks ages at the year boundary, applies SP/DF penalties,
+ * rolls forced retirements, and routes founder-caliber retirees onto the
+ * legacy-found queue. Player-roster deaths land as retire ids; rival-roster
+ * updates are merged into per-stable impact maps.
+ */
 export function computeAgingImpact(state: GameState, rng: IRNGService): StateImpact {
   const acc: AgingAccumulators = {
     ageEvents: [],

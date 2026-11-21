@@ -12,9 +12,7 @@ interface TrainingCardHeaderProps {
   trainers?: Trainer[];
 }
 
-/**
- *
- */
+/** Training card header — trainability read and burn-risk warnings. */
 export function TrainingCardHeader({
   warrior,
   total,

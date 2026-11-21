@@ -7,9 +7,7 @@ import { EmptyContractState } from './components/EmptyContractState';
 import { TrainerRow } from './components/TrainerRow';
 import { SummaryCard } from './components/SummaryCard';
 
-/**
- *
- */
+/** Trainer contract manager — portfolio summary plus the contract table. */
 export function ContractManager() {
   const { activeTrainers, totalWeeklyExpense, expiringSoonCount } = useContractData();
 

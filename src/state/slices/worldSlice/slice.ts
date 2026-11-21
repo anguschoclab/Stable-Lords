@@ -6,9 +6,7 @@ import { createBoutActions } from './boutActions';
 import { createPromoterActions } from './promoterActions';
 import { createPlayerActions } from './playerActions';
 
-/**
- *
- */
+/** Creates the world slice — calendar, promoters, offers, rivals, history. */
 export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, _get) => ({
   ...defaultWorldState,
   ...createBoutActions(set),

@@ -9,9 +9,7 @@ interface StyleOfTheSeasonProps {
   topStyle: [string, number] | null;
 }
 
-/**
- *
- */
+/** Style-meta panel — the season's dominant style and the meta table. */
 export function StyleOfTheSeason({ metaEntries, topStyle }: StyleOfTheSeasonProps) {
   return (
     <Surface variant="glass" padding="none" className="border-accent/10 overflow-hidden">

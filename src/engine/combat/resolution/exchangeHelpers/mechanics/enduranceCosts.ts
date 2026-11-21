@@ -13,9 +13,6 @@ import { getItemById } from '@/data/equipment/equipment.utils';
 import { rollWillCheck } from '../../../mechanics/willChecks';
 import { applyEnduranceRecovery } from './enduranceRecovery';
 
-/**
- *
- */
 interface ApplyEnduranceCostsArgs {
   events: CombatEvent[];
   ctx: ResolutionContext;

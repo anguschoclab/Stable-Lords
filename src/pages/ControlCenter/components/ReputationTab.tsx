@@ -86,9 +86,7 @@ function ReputationCard({ dim, val }: { dim: (typeof DIMS)[number]; val: number 
   );
 }
 
-/**
- *
- */
+/** Reputation tab — the stable's standing across each reputation dimension. */
 export function ReputationTab() {
   const worldState = useReputationState();
   const rep = useMemo(() => computeStableReputation(worldState), [worldState]);

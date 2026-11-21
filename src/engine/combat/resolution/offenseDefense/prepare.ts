@@ -172,9 +172,7 @@ function buildOffenseCtx(
   };
 }
 
-/**
- *
- */
+/** Compute the attacker's bonuses and the attack-success flag for this offense/defense resolution. */
 export function prepareOffenseDefense(args: OffenseDefenseArgs): {
   s: OffenseDefenseCtx;
   attSucc: boolean;

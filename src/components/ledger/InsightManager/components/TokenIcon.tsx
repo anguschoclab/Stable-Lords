@@ -18,9 +18,7 @@ interface TokenIconProps {
   type: InsightTokenType;
 }
 
-/**
- *
- */
+/** Colored icon for an insight token type. */
 export function TokenIcon({ type }: TokenIconProps) {
   const cfg = TOKEN_CFG[type] ?? TOKEN_CFG.Weapon;
   const Icon = cfg.Icon;

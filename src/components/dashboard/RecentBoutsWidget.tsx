@@ -85,9 +85,7 @@ function BoutsTable({
   );
 }
 
-/**
- *
- */
+/** Recent-bouts table widget on the dashboard. */
 export function RecentBoutsWidget() {
   const state = useGameStore(
     useShallow((s) => ({

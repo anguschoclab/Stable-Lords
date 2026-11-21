@@ -173,9 +173,7 @@ const CHANCE_REVEAL_BASE = 0.02; // 2% "Lucky Epiphany"
 const CHANCE_REVEAL_SYMMETRY = 0.25; // 25% if using correct gear
 const CHANCE_HINT = 0.1; // 10% chance to learn a hint regardless
 
-/**
- *
- */
+/** Outcome of a discovery roll — which favorite channels revealed and what hints accrued. */
 export interface DiscoveryResult {
   updated: boolean;
   hints: string[];
@@ -299,9 +297,7 @@ interface DiscoveryContext {
   defensiveTactic?: string;
 }
 
-/**
- *
- */
+/** Roll favorite-discovery checks for a warrior — symmetry reveals when using correct gear/tactics, plus hint accrual. */
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,

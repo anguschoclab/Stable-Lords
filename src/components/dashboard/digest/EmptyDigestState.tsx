@@ -3,17 +3,13 @@ import { Calendar, ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { EmptyState } from '@/components/ui/EmptyState';
 
-/**
- *
- */
+/** Props for the empty weekly-digest panel. */
 export interface EmptyDigestStateProps {
   week: number;
   season: string;
 }
 
-/**
- *
- */
+/** Empty-state panel for a week with no recorded activity. */
 export function EmptyDigestState({ week, season }: EmptyDigestStateProps) {
   return (
     <EmptyState

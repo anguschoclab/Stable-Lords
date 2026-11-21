@@ -68,9 +68,7 @@ function StandingsTable({ rows }: { rows: RivalPerformance[] }) {
   );
 }
 
-/**
- *
- */
+/** Sortable rival-stable standings table for the season. */
 export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
   const list = useListShell(rivals, {
     searchText: (r) => [r.name, r.philosophy ?? ''],

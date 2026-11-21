@@ -15,9 +15,7 @@ import {
 import { RivalryCard } from './RivalryCard';
 import { MostWantedBanner } from './MostWantedBanner';
 
-/**
- *
- */
+/** Active-rivalries widget on the dashboard. */
 export function RivalryWidget() {
   const state = useGameStore(
     useShallow((s) => ({

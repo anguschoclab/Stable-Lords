@@ -2,9 +2,6 @@ import type { FightSummary } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
 import { getNamesFromTitle } from '@/utils/fightTitle';
 
-/**
- *
- */
 interface LeaderboardEntry {
   name: string;
   w: number;
@@ -15,18 +12,12 @@ interface LeaderboardEntry {
   rate: number;
 }
 
-/**
- *
- */
 interface BestByStyleEntry {
   style: string;
   name: string;
   wins: number;
 }
 
-/**
- *
- */
 interface RisingStarEntry {
   name: string;
   wins: number;

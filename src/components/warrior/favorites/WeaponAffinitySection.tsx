@@ -25,9 +25,7 @@ interface WeaponAffinitySectionProps {
   >;
 }
 
-/**
- *
- */
+/** Favorite-weapon section — chart evidence, discovery, equip action. */
 export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectionProps) {
   const {
     handleInsight,

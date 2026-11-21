@@ -18,9 +18,7 @@ interface HubSwitcherProps {
   onAlertClick?: (hubId: HubId, link: string) => void;
 }
 
-/**
- *
- */
+/** Hub-level switcher listing each section with its alert badge. */
 export function HubSwitcher(props: HubSwitcherProps) {
   const { activeHubId, alerts, alertLinks, LinkComponent = Link, linkClassName } = props;
   const { iconClassName, showChevron = true, onAlertClick } = props;

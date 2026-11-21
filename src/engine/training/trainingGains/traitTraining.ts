@@ -23,9 +23,7 @@ const CONFLICT_GROUPS: string[][] = [
   ['heavy_handed', 'clumsy'],
 ];
 
-/**
- *
- */
+/** Highest trait tier a trainer of this tier can impart. */
 export function traitTrainingCeiling(tier: TrainerTier): TraitTier {
   return CEILING[tier];
 }
@@ -46,9 +44,7 @@ export function traitTrainingPool(warrior: Warrior, trainer: Trainer): TraitDef[
 
 const isPersonality = (id: string) => !!TRAITS[id]?.effect?.fightPlanMod;
 
-/**
- *
- */
+/** Whether a candidate trait contradicts any already-owned trait. */
 export function conflictsWith(traitId: string, existing: string[]): boolean {
   return CONFLICT_GROUPS.some((g) => g.includes(traitId) && existing.some((e) => g.includes(e)));
 }

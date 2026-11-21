@@ -1,6 +1,4 @@
-/**
- *
- */
+/** Categories of event shown in the event log. */
 export type EventType =
   | 'fight'
   | 'kill'
@@ -13,9 +11,7 @@ export type EventType =
   | 'event'
   | 'recovery';
 
-/**
- *
- */
+/** A single event-log entry — display fields plus a navigation link. */
 export interface GameEvent {
   id: string;
   week: number;

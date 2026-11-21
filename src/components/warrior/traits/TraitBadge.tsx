@@ -7,9 +7,7 @@ interface TraitBadgeProps {
   className?: string;
 }
 
-/**
- *
- */
+/** Trait badge with description tooltip; null for unknown ids. */
 export function TraitBadge({ traitId, className }: TraitBadgeProps) {
   const meta = traitBadgeMeta(traitId);
   if (!meta) return null;

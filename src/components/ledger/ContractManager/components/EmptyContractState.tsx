@@ -2,9 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { GraduationCap } from 'lucide-react';
 
-/**
- *
- */
+/** Empty state when the stable holds no trainer contracts. */
 export function EmptyContractState() {
   return (
     <div className="py-24 text-center flex flex-col items-center gap-6 group">

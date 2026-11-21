@@ -24,9 +24,6 @@ interface UseArenaAnimationReturn extends ArenaState {
   updatePose: (fighter: 'A' | 'D', pose: Partial<FighterPose>) => void;
 }
 
-/**
- *
- */
 interface UseArenaAnimationArgs {
   log: MinuteEvent[];
   visibleCount: number;

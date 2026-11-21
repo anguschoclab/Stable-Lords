@@ -62,15 +62,10 @@ export function getWeaponInitiativeMod(weaponId?: string): number {
   return fastEdge === 0 ? base : base + fastEdge;
 }
 
-/**
- * Whether the item in the weapon slot can be knocked loose by a disarm.
- * Bare fists can never be "dropped"; anything else defaults to droppable
- * unless the item data opts out via `disarmable: false`.
- */
-/** Canon (Assur): lunging/thrusting weapons have the best knock-down
- *  ability — the spears get an additive bump on the knockdown check. */
+// Canon (Assur): lunging/thrusting weapons have the best knock-down ability.
 const LUNGING_WEAPON_IDS: readonly string[] = ['long_spear', 'short_spear'];
 
+/** Additive knockdown-check bump for the lunging weapons (the spears); 0 otherwise. */
 export function lungingKnockdownBonus(weaponId?: string): number {
   if (!weaponId) return 0;
   return LUNGING_WEAPON_IDS.includes(weaponId) ? LUNGE_KNOCKDOWN_BONUS : 0;
@@ -84,6 +79,11 @@ export function twoHandedParryEnduranceMult(weaponId?: string): number {
   return w?.twoHanded ? TWOHANDED_PARRY_ENDURANCE_SURCHARGE : 1;
 }
 
+/**
+ * Whether the item in the weapon slot can be knocked loose by a disarm.
+ * Bare fists can never be "dropped"; anything else defaults to droppable
+ * unless the item data opts out via `disarmable: false`.
+ */
 export function isDisarmable(weaponId?: string): boolean {
   if (!weaponId || weaponId === DISARM_UNARMED_WEAPON_ID) return false;
   const w = WEAPON_BY_ID.get(weaponId);

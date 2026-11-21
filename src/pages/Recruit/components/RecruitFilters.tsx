@@ -140,9 +140,7 @@ function SortFilter({ sortBy, setSortBy }: Pick<RecruitFiltersProps, 'sortBy' | 
   );
 }
 
-/**
- *
- */
+/** Recruit filter sidebar — tier, style, sort, pool refresh. */
 export function RecruitFilters(props: RecruitFiltersProps) {
   const { activeTiers, toggleTier, activeStyle, setActiveStyle, sortBy } = props;
   const { setSortBy, onRefresh, canRefresh } = props;

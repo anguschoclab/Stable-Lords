@@ -2,9 +2,7 @@ interface WeaponGroupHeaderProps {
   type: 'class' | 'available' | 'unmet';
 }
 
-/**
- *
- */
+/** Section header inside the weapon list (class / available / unmet-reqs). */
 export function WeaponGroupHeader({ type }: WeaponGroupHeaderProps) {
   const headers = {
     class: { text: 'Class Weapons', color: 'text-arena-gold/70' },

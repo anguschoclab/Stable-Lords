@@ -1,8 +1,6 @@
 import type { TournamentBout } from '@/types/state.types';
 
-/**
- *
- */
+/** The earliest unresolved round and its pending bouts in a bracket. */
 export function findCurrentRoundBouts(bracket: TournamentBout[]): {
   currentRound: number | null;
   roundBouts: TournamentBout[];

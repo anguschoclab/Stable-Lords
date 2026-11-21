@@ -154,9 +154,6 @@ function executeTrainingAttempt(args: ExecuteTrainingAttemptArgs): {
   return { warrior: out.warrior, seasonalGrowth: out.seasonalGrowth };
 }
 
-/**
- *
- */
 interface PerformAITrainingArgs {
   w: Warrior;
   stable: RivalStableData;

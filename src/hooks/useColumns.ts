@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 
-/**
- *
- */
+/** Responsive grid column count — 1/2/3 across the md/lg breakpoints. */
 export function useColumns(): 1 | 2 | 3 {
   const [columns, setColumns] = useState<1 | 2 | 3>(1);
 

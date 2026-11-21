@@ -316,9 +316,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 // ─── Helper Functions ──────────────────────────────────────────────────────
 import type { FightingStyle, WeatherType } from '@/types/shared.types';
 
-/**
- *
- */
+/** Weather effects on a style at a given arena — INI/RIP mods, damage mult, and the descriptions that explain them. */
 export function getStyleWeatherModifier(
   style: FightingStyle,
   weather: WeatherType,

@@ -120,9 +120,7 @@ function PlanColumn({
   );
 }
 
-/**
- *
- */
+/** Training planner page — draft fight-plan sliders per warrior with commit/reset. */
 export default function TrainingPlanner() {
   const {
     activeWarriors,

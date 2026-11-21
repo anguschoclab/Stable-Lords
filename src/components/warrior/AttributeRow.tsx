@@ -198,9 +198,7 @@ function RowButton(props: {
   );
 }
 
-/**
- *
- */
+/** One trainable-attribute row — value, gains, cap state, assign button. */
 export function AttributeRow(props: AttributeRowProps) {
   const { warrior, attributeKey: key, assignment, seasonalGains, trainers } = props;
   const { atCap, onAssign, isAdvisorRecommended } = props;

@@ -149,9 +149,7 @@ function runBoutLoop(args: RunBoutLoopArgs) {
   return { ...loop, log: headless ? [] : [...introLog, ...loop.log] };
 }
 
-/**
- *
- */
+/** Inputs to `simulateFight` — plans, optional warriors/trainers, arena context, and headless toggle. */
 export interface SimulateFightArgs {
   planA: FightPlan;
   planD: FightPlan;

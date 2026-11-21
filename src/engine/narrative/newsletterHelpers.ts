@@ -2,9 +2,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { NewsletterItem } from '@/types/shared.types';
 import { interpolateData as t } from './templateHelpers';
 
-/**
- *
- */
 interface MakeNewsletterItemArgs {
   rng: IRNGService;
   week: number;
@@ -32,9 +29,6 @@ export function makeNewsletterItem(args: MakeNewsletterItemArgs): NewsletterItem
   };
 }
 
-/**
- *
- */
 interface PushNewsletterItemArgs {
   target: NewsletterItem[];
   rng: IRNGService;

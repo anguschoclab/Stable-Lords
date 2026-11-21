@@ -132,9 +132,7 @@ function evaluateObjectives(args: EvaluateObjectivesArgs): boolean {
   return realmChampionCompleted;
 }
 
-/**
- *
- */
+/** Advance objectives/records against the new state; emits milestone newsletters. */
 export function runProgressionPass(
   state: GameState,
   nextWeek: number,

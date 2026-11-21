@@ -29,9 +29,7 @@ export interface AnalysisFactor {
   weight: number;
 }
 
-/**
- *
- */
+/** Post-fight debrief — matchup edge, decisive exchange, fatigue crossover, tale-of-the-tape, ranked factors. */
 export interface FightAnalysis {
   styleMatchup: { styleA: string; styleD: string; edge: number };
   decisiveExchange: {
@@ -52,9 +50,6 @@ export interface FightAnalysis {
   factors: AnalysisFactor[];
 }
 
-/**
- *
- */
 interface AnalysisWarrior {
   id: string;
   name: string;
@@ -346,9 +341,7 @@ function buildFactors(
   return factors.slice(0, 5);
 }
 
-/**
- *
- */
+/** Build the post-fight debrief from a completed outcome and both warriors. */
 export function buildFightAnalysis(
   outcome: FightOutcome,
   warriorA: AnalysisWarrior,

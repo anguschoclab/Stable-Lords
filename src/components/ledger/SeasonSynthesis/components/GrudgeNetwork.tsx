@@ -7,9 +7,7 @@ interface GrudgeNetworkProps {
   rivalMap: Map<string, string>;
 }
 
-/**
- *
- */
+/** Owner grudges mapped to the rival stables they're aimed at. */
 export function GrudgeNetwork({ grudges, rivalMap }: GrudgeNetworkProps) {
   return (
     <Surface variant="glass" padding="none" className="border-arena-blood/20 overflow-hidden">

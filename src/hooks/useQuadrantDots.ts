@@ -3,9 +3,7 @@ import type { RivalStableData } from '@/types/state.types';
 import type { StableReputationInput } from '@/engine/stable/stableReputation';
 import { computeStableReputation, computeRivalReputation } from '@/engine/stable/stableReputation';
 
-/**
- *
- */
+/** One dot on the reputation quadrant chart — fame vs notoriety. */
 export interface QuadrantDot {
   id: string;
   label: string;
@@ -14,9 +12,7 @@ export interface QuadrantDot {
   isPlayer: boolean;
 }
 
-/**
- *
- */
+/** Player + rival stables plotted as fame/notoriety quadrant dots. */
 export function useQuadrantDots(
   worldState: StableReputationInput,
   rivals: RivalStableData[]

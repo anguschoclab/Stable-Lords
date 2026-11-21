@@ -22,9 +22,7 @@ interface BracketMatchNodeProps {
   gameState: NameResolutionState;
 }
 
-/**
- *
- */
+/** One match node in the bracket tree — slots, connectors, expandable transcript. */
 export function BracketMatchNode(props: BracketMatchNodeProps) {
   const { bout, boutKey, isExpanded, onToggleExpand, fightSummary } = props;
   const { rIdx, bIdx: _bIdx, totalRounds, gameState } = props;

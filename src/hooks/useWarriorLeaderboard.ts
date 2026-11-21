@@ -1,9 +1,7 @@
 import { useState, useMemo } from 'react';
 import type { WarriorRow } from '@/types/leaderboard';
 
-/**
- *
- */
+/** Leaderboard filter state — class/quick/my-warriors filters plus the filtered row set. */
 export function useWarriorLeaderboard(rows: WarriorRow[]) {
   const [classFilter, setClassFilter] = useState<string | null>(null);
   const [quickFilter, setQuickFilter] = useState<'kills' | 'wins' | 'winRate' | null>(null);

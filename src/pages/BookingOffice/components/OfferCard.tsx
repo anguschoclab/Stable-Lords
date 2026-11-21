@@ -27,9 +27,7 @@ interface OfferCardProps {
   councilWarning?: string | null;
 }
 
-/**
- *
- */
+/** One bout-offer card — matchup panel, purse details, accept/decline actions. */
 export function OfferCard(props: OfferCardProps) {
   const { offer, promoters, roster, rivalWarriorMap, signedOfferIds } = props;
   const { onResponse, isCouncilPick, councilWarning } = props;

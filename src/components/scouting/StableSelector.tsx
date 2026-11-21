@@ -147,9 +147,7 @@ function StableRow(props: {
   );
 }
 
-/**
- *
- */
+/** Two-column rival-stable picker sharing one filtered list. */
 export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelectorProps) {
   // One filter across both columns — the pair comparison reads better when
   // both sides scan the same (search + sort + windowed) list.

@@ -62,9 +62,7 @@ function PendingLoadoutReview({
   );
 }
 
-/**
- *
- */
+/** Stable equipment page — recommended loadouts per style applied to a chosen warrior. */
 export default function StableEquipment() {
   const {
     activeWarriors,

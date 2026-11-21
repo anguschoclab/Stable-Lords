@@ -9,9 +9,7 @@ interface BriefingTabProps {
   reports: NewsletterItem[];
 }
 
-/**
- *
- */
+/** Newsletter briefing feed inside the intelligence hub. */
 export function BriefingTab({ reports }: BriefingTabProps) {
   const { warriorNames, stableNames } = useEntityNames();
 

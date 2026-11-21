@@ -16,9 +16,7 @@ interface DoctrineIntelligenceSectionProps {
   grudge: { intensity: number; reason: string } | null;
 }
 
-/**
- *
- */
+/** Doctrine intel for a stable pair — style mix, plan mods, clashes, grudge. */
 export function DoctrineIntelligenceSection(props: DoctrineIntelligenceSectionProps) {
   const { rivalA, rivalB, modsA, modsB, clashes } = props;
   const { grudge } = props;

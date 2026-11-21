@@ -42,9 +42,7 @@ interface WarriorLeaderboardFiltersProps {
   clearFilters: () => void;
 }
 
-/**
- *
- */
+/** Filter bar over the leaderboard — class, quick filters, my-warriors. */
 export function WarriorLeaderboardFilters(props: WarriorLeaderboardFiltersProps) {
   const { classes, classFilter, setClassFilter, quickFilter, setQuickFilter } = props;
   const { myWarriorsOnly, setMyWarriorsOnly, onSort, isFiltered, clearFilters } = props;

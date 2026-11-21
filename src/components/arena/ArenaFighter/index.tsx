@@ -26,9 +26,7 @@ interface ArenaFighterProps {
   size?: number;
 }
 
-/**
- *
- */
+/** One combatant on the arena floor — figure, name plate, and HP/FP bars. */
 export default function ArenaFighter(props: ArenaFighterProps) {
   const { name, warriorId, pose, stats, style, weaponName = 'Longsword' } = props;
   const { shieldName, isWinner, isDead, isActive, className } = props;

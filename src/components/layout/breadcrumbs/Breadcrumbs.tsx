@@ -15,9 +15,7 @@ import type { EntityIndexState } from '@/engine/core/entityIndex';
 
 const CRUMB_TEXT = 'text-[10px] font-black uppercase tracking-[0.15em]';
 
-/**
- *
- */
+/** Route breadcrumbs with entity names resolved from the store. */
 export function Breadcrumbs() {
   const pathname = useLocation().pathname;
   const crumbState = useGameStore(

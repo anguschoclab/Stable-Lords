@@ -11,9 +11,7 @@ interface MatchCardHeaderProps {
   isBye: boolean;
 }
 
-/**
- *
- */
+/** Match card title bar — round label plus bronze/final highlighting. */
 export function MatchCardHeader({ bout, totalRounds, isPending, isBye }: MatchCardHeaderProps) {
   const bronze = isBronzeMatch(bout, totalRounds);
   const championship = isChampionshipFinal(bout, totalRounds);

@@ -107,9 +107,6 @@ interface LoadoutCardProps {
   disabled: boolean;
 }
 
-/**
- *
- */
 /** Synergy badge, loadout label, flavor quote. */
 function CardHead({ rec, isTop }: { rec: LoadoutRec; isTop: boolean }) {
   return (
@@ -210,9 +207,7 @@ function ApplyFooter({
   );
 }
 
-/**
- *
- */
+/** A recommended loadout card — gear rows, requirement check, apply action. */
 export function LoadoutCard(props: LoadoutCardProps) {
   const { rec, index, carryCap, targetWarrior, onApply } = props;
   const { disabled } = props;

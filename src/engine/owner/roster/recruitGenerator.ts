@@ -139,9 +139,6 @@ export function generateRecruitAttrs(
   return attrs;
 }
 
-/**
- *
- */
 interface GenerateAIRecruitArgs {
   rival: RivalStableData;
   week: number;

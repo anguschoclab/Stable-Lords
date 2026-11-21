@@ -5,9 +5,7 @@ interface OutcomeIconProps {
   by: FightOutcomeBy;
 }
 
-/**
- *
- */
+/** Skull/Zap icon for kill and KO outcomes; null otherwise. */
 export function OutcomeIcon({ by }: OutcomeIconProps) {
   if (by === 'Kill')
     return <Skull className="h-4 w-4 text-destructive animate-pulse motion-reduce:animate-none" />;

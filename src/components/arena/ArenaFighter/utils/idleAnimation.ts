@@ -13,9 +13,7 @@ const IDLE_ANIMATION_MAP: Record<FightingStyle, string> = {
   [FightingStyle.StrikingAttack]: 'animate-idle-striking motion-reduce:animate-none',
 };
 
-/**
- *
- */
+/** Map a fighting style to its idle-sway animation class. */
 export function getIdleAnimation(style: FightingStyle): string {
   return IDLE_ANIMATION_MAP[style] ?? 'animate-idle-balanced motion-reduce:animate-none';
 }

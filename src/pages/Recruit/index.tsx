@@ -104,9 +104,6 @@ function CustomWarriorTab({
   );
 }
 
-/**
- *
- */
 /** Contract-selection state + top-bar SIGN CONTRACT CTA wiring. */
 function useContractCta(
   recruitPool: PoolWarrior[],
@@ -168,9 +165,7 @@ function ScoutMarketTab({
   );
 }
 
-/**
- *
- */
+/** Recruit page — pool browser, free agents, custom warrior creation. */
 export default function Recruit() {
   const recruit = useRecruit();
   const { activeRosterSize, treasury, MAX_ROSTER, rosterFull, recruitPool, handleRecruit } =

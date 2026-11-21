@@ -17,6 +17,11 @@ import {
 } from '../../mechanics/tacticResolution';
 import { getFavoriteTacticBonus } from '@/engine/favorites/favorites';
 
+/**
+ * Apply the three per-fighter tactic adjustments to fresh copies of the mods:
+ * the double-tactic shell tax on defensive bonuses, the hidden favorite-tactic
+ * bonus on the favored tactic's area, and the KD 9-10 flat tax.
+ */
 export function applyPairAdjustments(
   off: OffensiveMods,
   def: DefensiveMods,

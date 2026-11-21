@@ -1,9 +1,7 @@
 import { type FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
-/**
- *
- */
+/** Fighter/context data the narrators draw from — names, weapons, styles, HP ratios (pre- and post-exchange). */
 export interface NarrationContext {
   rng: IRNGService;
   nameA: string;

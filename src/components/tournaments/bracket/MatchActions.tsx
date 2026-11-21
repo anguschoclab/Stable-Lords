@@ -7,9 +7,7 @@ interface MatchActionsProps {
   onToggleExpand: (key: string | null) => void;
 }
 
-/**
- *
- */
+/** Expand/collapse control shown on matches that have a transcript. */
 export function MatchActions({
   hasTranscript,
   isExpanded,

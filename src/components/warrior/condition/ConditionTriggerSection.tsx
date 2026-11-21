@@ -9,9 +9,7 @@ interface ConditionTriggerSectionProps {
   onValueChange: (raw: string) => void;
 }
 
-/**
- *
- */
+/** Trigger-type picker and its threshold input for a condition. */
 export function ConditionTriggerSection({
   cond,
   idx,

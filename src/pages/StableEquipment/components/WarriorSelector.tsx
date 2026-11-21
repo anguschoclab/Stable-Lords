@@ -9,9 +9,7 @@ interface WarriorSelectorProps {
   onSelect: (id: string) => void;
 }
 
-/**
- *
- */
+/** Warrior pick-list for choosing which warrior a loadout targets. */
 export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelectorProps) {
   if (warriors.length === 0) {
     return (

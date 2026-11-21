@@ -72,9 +72,7 @@ function WeaponShape({ category, x, y }: { category: string; x: number; y: numbe
   }
 }
 
-/**
- *
- */
+/** SVG weapon shape rotated into the current pose. */
 export function WeaponIcon({ category, pose, x, y }: WeaponIconProps) {
   const transform = `rotate(${POSE_ROTATION[pose] || 0} ${x} ${y})`;
 

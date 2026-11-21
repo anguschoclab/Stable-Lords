@@ -40,9 +40,7 @@ function VirtualizedRow({ vi, filtered, isFiltered }: VirtualizedRowProps) {
   return <WarriorLeaderboardRow row={row} index={vi.index} isFiltered={isFiltered} />;
 }
 
-/**
- *
- */
+/** Sortable, filterable warrior leaderboard table. */
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
   const {
     classes,

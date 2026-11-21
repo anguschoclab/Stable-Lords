@@ -19,9 +19,7 @@ const variantStyles: Record<StatCardVariant, { label: string; value: string }> =
   accent: { label: 'text-muted-foreground/50', value: 'text-accent' },
 };
 
-/**
- *
- */
+/** Label-over-value stat display with color variants. */
 export function StatCard(props: StatCardProps) {
   const { label, value, variant = 'default', className, labelClassName } = props;
   const { valueClassName } = props;

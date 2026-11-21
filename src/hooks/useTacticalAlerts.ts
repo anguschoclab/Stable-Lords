@@ -9,9 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { isActive, isFightReady } from '@/engine/warrior/warriorStatus';
 import { Dumbbell, ScrollText, Swords, Trophy } from 'lucide-react';
 
-/**
- *
- */
+/** One actionable alert for nav/status surfaces — severity, icon, message, optional link. */
 export interface TacticalAlert {
   id: string;
   type: 'warning' | 'info' | 'urgent' | 'success';
@@ -23,9 +21,7 @@ export interface TacticalAlert {
   };
 }
 
-/**
- *
- */
+/** Actionable alerts: unassigned training, pending offers, fight-ready warriors, tournament week. */
 export function useTacticalAlerts(): TacticalAlert[] {
   const { trainingAssignments, boutOffers, isTournamentWeek, day, roster } = useGameStore(
     useShallow((s) => ({

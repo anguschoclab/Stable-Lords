@@ -48,9 +48,7 @@ function HeaderLogo() {
   );
 }
 
-/**
- *
- */
+/** Top app bar — chronology, treasury/fame, weather, sim status, reset. */
 export function AppHeader(props: AppHeaderProps) {
   const { week, day, isTournamentWeek, treasury, fame } = props;
   const { crowdMood, weather, isSimulating, lastSavedAt, onResetPrompt } = props;

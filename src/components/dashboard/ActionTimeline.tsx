@@ -16,9 +16,7 @@ interface ActionTimelineProps {
   events: ActionEvent[];
 }
 
-/**
- *
- */
+/** Chronological feed of recent game actions with resolved entity names. */
 export function ActionTimeline({ events }: ActionTimelineProps) {
   const { warriorNames, stableNames } = useEntityNames();
 

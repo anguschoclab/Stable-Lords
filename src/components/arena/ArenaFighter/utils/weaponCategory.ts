@@ -1,11 +1,6 @@
-/**
- *
- */
 type WeaponCategory = 'slash' | 'bash' | 'pierce' | 'shield' | 'fist';
 
-/**
- *
- */
+/** Bucket a weapon name into the figure-drawing category (slash/bash/pierce/shield/fist). */
 export function getWeaponCategory(weaponName: string): WeaponCategory {
   const w = weaponName.toLowerCase();
   if (

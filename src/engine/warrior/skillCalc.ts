@@ -201,6 +201,12 @@ const HANDEDNESS_BY_FAMILY: Record<
   defensive: { right: 0.5, leftOfRest: 0.2 },
 };
 
+/**
+ * Seeded handedness roll. Defensive-family styles skew toward lefties and
+ * ambidextrous fighters (canon PR ~43% ambi); other styles keep the flat
+ * ~85/7.5/7.5 baseline. AMBI_REVERSED_CHANCE gates the rare left-primary
+ * ambidextrous variant. Absent style keeps the baseline for tests/legacy calls.
+ */
 export function rollHandedness(rng: IRNGService, style?: FightingStyle): Handedness {
   const row = style
     ? HANDEDNESS_BY_FAMILY[STYLE_FAMILY[style]]

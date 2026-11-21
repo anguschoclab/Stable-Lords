@@ -11,9 +11,6 @@ import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { calculateBoutFame } from '@/engine/bout/core/resolveHelpers';
 import { stampLastBoutWeek } from '@/engine/bout/lastBoutWeek';
 
-/**
- *
- */
 interface ApplyBoutResultsArgs {
   state: GameState;
   wA: Warrior;

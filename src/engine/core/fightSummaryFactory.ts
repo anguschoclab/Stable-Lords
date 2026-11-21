@@ -105,9 +105,6 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
   };
 }
 
-/**
- *
- */
 interface CreateBoutSummaryArgs {
   warriorA: Warrior;
   warriorD: Warrior;

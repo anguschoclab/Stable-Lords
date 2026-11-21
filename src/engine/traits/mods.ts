@@ -100,14 +100,7 @@ export interface DynamicTraitContext {
   consecutiveHits: number;
 }
 
-/**
- * Sums conditional skill mods that depend on per-exchange combat context.
- * Called per exchange (matches the trainer-specialty pattern).
- *
- * @param warrior - The warrior whose traits to evaluate
- * @param ctx - The dynamic combat context (phase, HP, etc.)
- * @returns Object containing cumulative dynamic modifiers
- */
+/** Cumulative conditional modifiers produced by `getDynamicTraitMods`. */
 export type DynamicTraitMods = {
   attMod: number;
   parMod: number;
@@ -117,7 +110,12 @@ export type DynamicTraitMods = {
 };
 
 /**
+ * Sums conditional skill mods that depend on per-exchange combat context.
+ * Called per exchange (matches the trainer-specialty pattern).
  *
+ * @param warrior - The warrior whose traits to evaluate
+ * @param ctx - The dynamic combat context (phase, HP, etc.)
+ * @returns Object containing cumulative dynamic modifiers
  */
 export function getDynamicTraitMods(
   warrior: { traits?: string[] } | undefined,

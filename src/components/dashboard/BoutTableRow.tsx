@@ -12,9 +12,7 @@ interface BoutTableRowProps {
   state: NameResolutionState;
 }
 
-/**
- *
- */
+/** One bout row in the digest table — player perspective win/loss coloring. */
 export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps) {
   const isPlayerA = bout.stableIdA === playerStableId;
   const playerWon = (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');

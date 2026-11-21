@@ -115,9 +115,7 @@ const OFFENSIVE_TACTIC_MAP: Record<
   }),
 };
 
-/**
- *
- */
+/** Suitability-scaled offensive tactic modifiers; an unsuited (U) tactic can only penalize. */
 export function getOffensiveTacticMods(
   tactic: OffensiveTactic | undefined,
   style: FightingStyle
@@ -208,9 +206,7 @@ const DEFENSIVE_TACTIC_MAP: Record<
   }),
 };
 
-/**
- *
- */
+/** Suitability-scaled defensive tactic modifiers; an unsuited (U) tactic can only penalize. */
 export function getDefensiveTacticMods(
   tactic: DefensiveTactic | undefined,
   style: FightingStyle
@@ -231,9 +227,6 @@ export function getDefensiveTacticMods(
   return mods;
 }
 
-/**
- *
- */
 interface CalculateFinalOEALArgs {
   effOE: number;
   effAL: number;

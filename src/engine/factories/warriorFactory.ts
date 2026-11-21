@@ -21,9 +21,6 @@ import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import { generatePotential, rollPotentialTier } from '@/engine/warrior/potential';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
-/**
- *
- */
 interface MakeWarriorArgs {
   id: WarriorId | undefined;
   name: string;

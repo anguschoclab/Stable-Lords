@@ -25,9 +25,7 @@ interface ConditionItemProps {
   updateCondition: (idx: number, partial: Partial<PlanCondition>) => void;
 }
 
-/**
- *
- */
+/** Editor card for one plan condition — trigger, overrides, tactics. */
 export function ConditionItem(props: ConditionItemProps) {
   const { cond, idx, removeCondition, updateTrigger, updateTriggerValue } = props;
   const { updateOverrideSlider, updateOverrideTactic, updateCondition } = props;

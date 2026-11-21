@@ -6,9 +6,7 @@ interface TempoSectionProps {
   plan: FightPlan;
 }
 
-/**
- *
- */
+/** Per-phase tempo bonuses and endurance multiplier for the plan's style. */
 export default function TempoSection({ plan }: TempoSectionProps) {
   return (
     <div className="space-y-2">

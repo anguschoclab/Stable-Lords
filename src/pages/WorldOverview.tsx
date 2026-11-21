@@ -115,9 +115,7 @@ function OverviewTabs({
   );
 }
 
-/**
- *
- */
+/** World overview page — rankings, leaderboards, reputation quadrant. */
 export default function WorldOverview() {
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 

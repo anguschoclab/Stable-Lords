@@ -8,9 +8,7 @@ interface TargetSummaryProps {
   onReveal: () => void;
 }
 
-/**
- *
- */
+/** Footer strip — selected warrior summary plus the reveal button. */
 export function TargetSummary({ warrior, canReveal, isRevealing, onReveal }: TargetSummaryProps) {
   return (
     <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">

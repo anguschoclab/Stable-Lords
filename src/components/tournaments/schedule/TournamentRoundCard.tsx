@@ -19,9 +19,7 @@ interface TournamentRoundCardProps {
   state: NameResolutionState;
 }
 
-/**
- *
- */
+/** One collapsible round card listing its bouts. */
 export function TournamentRoundCard(props: TournamentRoundCardProps) {
   const { round, bouts, isExpanded, tournamentWeek, currentWeek } = props;
   const { totalRounds, toggleRound, state } = props;

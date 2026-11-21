@@ -10,14 +10,10 @@ import { clamp } from '@/utils/math';
 // ─── Breakpoint Helper ────────────────────────────────────────────────────
 // Each entry is [attribute_threshold, bonus_granted_at_or_above_that_value].
 // Cumulative: sum all entries where attr >= threshold.
-/**
- *
- */
+/** Breakpoint table — [attribute threshold, cumulative bonus] pairs. */
 export type BP = [number, number][];
 
-/**
- *
- */
+/** Sum all bonuses whose threshold the attribute value meets. */
 export function bp(breakpoints: BP, val: number): number {
   let total = 0;
   for (const [threshold, bonus] of breakpoints) {
@@ -287,9 +283,7 @@ export const SZ_PAR_MOD: Record<number, number> = {
 };
 export const SZ_DEF_MOD = SZ_PAR_MOD; // Identical
 
-/**
- *
- */
+/** Look up a size-based modifier, clamping SZ into the table's 3-21 range. */
 export function szMod(table: Record<number, number>, sz: number): number {
   return table[clamp(sz, 3, 21)] ?? 0;
 }

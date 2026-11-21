@@ -10,9 +10,7 @@ interface AverageAttributesSectionProps {
   maxAttr: number;
 }
 
-/**
- *
- */
+/** Roster-average attribute comparison bars for two stables. */
 export function AverageAttributesSection({
   statsA,
   statsB,

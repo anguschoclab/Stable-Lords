@@ -11,9 +11,7 @@ import {
 } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 
-/**
- *
- */
+/** Roster domain state — active/graveyard/retired warriors, recruits, trainers, assignments — and its actions. */
 export interface RosterSlice {
   roster: Warrior[];
   graveyard: Warrior[];

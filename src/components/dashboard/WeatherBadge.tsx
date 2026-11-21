@@ -8,9 +8,7 @@ interface WeatherBadgeProps {
   weather: WeatherType | string;
 }
 
-/**
- *
- */
+/** Current-weather badge with an effect tooltip. */
 export function WeatherBadge({ weather }: WeatherBadgeProps) {
   const config = getWeatherConfig(weather);
   const WeatherIcon = config.icon;

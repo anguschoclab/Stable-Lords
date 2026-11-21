@@ -15,9 +15,6 @@ import { useShallow } from 'zustand/react/shallow';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 import { StatBox, AlertBox, EmptyDigestState } from './digest';
 
-/**
- *
- */
 interface WeeklyDigestProps {
   week: number;
   season: string;
@@ -101,9 +98,7 @@ function ScheduleBlock({ week, signedOffers }: { week: number; signedOffers: num
   );
 }
 
-/**
- *
- */
+/** Full weekly digest — results, offers, and alerts for the week. */
 export function WeeklyDigestWidget({
   week,
   season,

@@ -38,10 +38,6 @@ export {
 } from './rosterWorkerTraining';
 
 /**
- * RosterWorker: Handles training and equipment.
- * Implements "Risk-Tiered Execution" for gear.
- */
-/**
  * AI training pass — ⚡ TSA: prioritize champion/high-fame units.
  * Injured warriors are excluded (they're in the recovery path) and warriors on
  * a 'recovery' assignment (tournament prep, crown posture) rest — no drills
@@ -175,6 +171,10 @@ export interface ProcessRosterArgs {
   weather?: WeatherType;
 }
 
+/**
+ * Weekly roster pass for one AI stable: shared health tick, then training,
+ * turnaround diagnosis, trait development, and the intent-gated gear policy.
+ */
 export function processRoster(
   rival: RivalStableData,
   args: ProcessRosterArgs

@@ -1,8 +1,6 @@
 import { Trophy } from 'lucide-react';
 
-/**
- *
- */
+/** Title bar for the stable rankings table. */
 export function StableRankingsTitle() {
   return (
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">

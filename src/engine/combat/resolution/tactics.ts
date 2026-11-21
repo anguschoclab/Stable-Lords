@@ -13,9 +13,7 @@ export interface ResolvedTactics {
   target: string;
 }
 
-/**
- *
- */
+/** Phase-aware tactic/target resolution — phase overrides fall back to the base plan. */
 export function resolveEffectiveTactics(
   plan: FightPlan,
   phaseKey: 'opening' | 'mid' | 'late'

@@ -9,9 +9,7 @@ interface WeaponSelectItemProps {
   req: WeaponReqResult;
 }
 
-/**
- *
- */
+/** One weapon row in the select dropdown — name, badges, requirement state. */
 export function WeaponSelectItem({ item, preferred, req }: WeaponSelectItemProps) {
   return (
     <SelectItem key={item.id} value={item.id}>

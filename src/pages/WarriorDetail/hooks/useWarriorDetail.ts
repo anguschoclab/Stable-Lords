@@ -7,9 +7,7 @@ import {
   useWarriorMutations,
 } from './useWarriorSelectors';
 
-/**
- *
- */
+/** Warrior detail page state — identity, crowns, tab, and mutation handlers. */
 export function useWarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();

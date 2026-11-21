@@ -5,9 +5,7 @@ interface IntelligenceHubHeaderProps {
   totalCommCount: number;
 }
 
-/**
- *
- */
+/** Hub title bar with the unread communications count. */
 export function IntelligenceHubHeader({ totalCommCount }: IntelligenceHubHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">

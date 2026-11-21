@@ -4,9 +4,7 @@ interface AttributeMatrixProps {
   attributeRanges: Record<string, string>;
 }
 
-/**
- *
- */
+/** Scouted attribute-range grid for one warrior. */
 export function AttributeMatrix({ attributeRanges }: AttributeMatrixProps) {
   return (
     <div className="space-y-4">

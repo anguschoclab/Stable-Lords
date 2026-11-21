@@ -34,9 +34,6 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
   DIED_OF_WOUNDS: 'died_of_wounds',
 };
 
-/**
- *
- */
 interface NarrateBoutEndArgs {
   rng: IRNGService;
   by: string;

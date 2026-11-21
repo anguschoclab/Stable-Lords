@@ -6,9 +6,7 @@ import { makeMinorInjury } from '@/engine/injuries/utils';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import { withChosenWarrior, type OffseasonEventRun, statGrantOutcome } from './helpers';
 
-/**
- *
- */
+/** Tavern Brawl event — Bruised Ribs injury plus 10-20 fame (healthy warriors only). */
 export function handleTavernBrawl(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -36,9 +34,7 @@ export function handleTavernBrawl(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Plague Outbreak event — Camp Fever injury and 5-14 fame loss. */
 export function handlePlagueOutbreak(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -68,9 +64,7 @@ export function handlePlagueOutbreak(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Wild Animal Attack event — Bite Wound injury plus 5-10 fame. */
 export function handleWildAnimalAttack(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -98,9 +92,7 @@ export function handleWildAnimalAttack(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Goblin Raid event — Goblin Scratch injury and 20-50g stolen. */
 export function handleGoblinRaid(run: OffseasonEventRun) {
   const { nextWeek, rng, ctx } = run;
   withChosenWarrior({
@@ -131,9 +123,7 @@ export function handleGoblinRaid(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Underground Pit Fight event — Busted Knuckles injury plus 15-30 fame. */
 export function handleUndergroundPitFight(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -160,9 +150,7 @@ export function handleUndergroundPitFight(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Tavern Brawl Surprise event — Tavern Bruises injury plus 15-25 fame. */
 export function handleTavernBrawlSurprise(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -188,9 +176,7 @@ export function handleTavernBrawlSurprise(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Secret Fight Club event — Brawler Bruises plus 15-25 XP and 10-20 fame. */
 export function handleSecretFightClub(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({
@@ -217,9 +203,7 @@ export function handleSecretFightClub(run: OffseasonEventRun) {
   });
 }
 
-/**
- *
- */
+/** Chaotic Weather Experiment event — Magic Burns injury plus 15-24 XP. */
 export function handleChaoticWeatherExperiment(run: OffseasonEventRun) {
   const { rng } = run;
   withChosenWarrior({

@@ -38,7 +38,5 @@ export const buttonVariants = cva(
   }
 );
 
-/**
- *
- */
+/** Variant props accepted by the Button component. */
 export type ButtonVariants = VariantProps<typeof buttonVariants>;

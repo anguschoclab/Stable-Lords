@@ -8,9 +8,7 @@ interface CreateButtonProps {
   remaining: number;
 }
 
-/**
- *
- */
+/** Build-commit button — label reflects roster-full/invalid/valid status. */
 export function CreateButton({ disabled, onClick, status, remaining }: CreateButtonProps) {
   return (
     <Button onClick={onClick} disabled={disabled} size="lg" className="w-full gap-2">

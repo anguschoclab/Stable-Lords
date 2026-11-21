@@ -104,9 +104,6 @@ export function crowdReaction(
   return interpolateTemplate(template, { name: loserName, attacker: winnerName });
 }
 
-/**
- *
- */
 interface MinuteStatusLineArgs {
   rng: IRNGService;
   _minute: number;

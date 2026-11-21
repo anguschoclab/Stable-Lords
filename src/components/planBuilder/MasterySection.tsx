@@ -8,9 +8,7 @@ interface MasterySectionProps {
   warrior?: Warrior;
 }
 
-/**
- *
- */
+/** Shows the warrior's style-mastery tier from career fights. */
 export default function MasterySection({ warrior }: MasterySectionProps) {
   const totalFights = warrior ? fightEquivalentsOf(warrior) : 0;
   const mastery = getMastery(totalFights);

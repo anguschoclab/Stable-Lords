@@ -5,14 +5,10 @@ import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeStableReputation } from '@/engine/stable/stableReputation';
 
-/**
- *
- */
+/** Control-center tab identifiers. */
 export type TabId = 'overview' | 'roster' | 'rep';
 
-/**
- *
- */
+/** Aggregated state for the control-center page — KPIs, rank, reputation, tabs. */
 export function useControlCenter() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 

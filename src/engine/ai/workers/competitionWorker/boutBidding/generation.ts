@@ -91,9 +91,6 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
   return foundOpponent ? matchupModifier : 0;
 }
 
-/**
- *
- */
 interface GenerateBoutBidsArgs {
   rival: RivalStableData;
   _currentWeek: number;

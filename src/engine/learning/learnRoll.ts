@@ -81,6 +81,7 @@ export function learnsTotal(warrior: Pick<Warrior, 'learnedSkills'>): number {
   return Object.values(warrior.learnedSkills ?? {}).reduce((s, v) => s + (v ?? 0), 0);
 }
 
+/** Per-bout learn outcome: this bout's deltas plus the updated career ledger. */
 export interface BoutLearnResult {
   /** Skills gained in this bout (per-skill deltas). */
   gained: Partial<Record<keyof BaseSkills, number>>;

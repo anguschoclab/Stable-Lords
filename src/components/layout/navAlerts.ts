@@ -9,9 +9,7 @@ interface UseNavAlertsOptions {
   trackWeek?: boolean;
 }
 
-/**
- *
- */
+/** Per-hub alert counts + destination links for nav badges. */
 export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const { trackWeek = false } = options;
   const { week, isTournamentWeek } = useGameStore(

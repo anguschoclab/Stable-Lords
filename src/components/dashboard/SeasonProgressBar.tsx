@@ -5,9 +5,7 @@ interface SeasonProgressBarProps {
   progress: number;
 }
 
-/**
- *
- */
+/** Seasonal completion progress bar. */
 export function SeasonProgressBar({ progress }: SeasonProgressBarProps) {
   return (
     <div className="space-y-3">

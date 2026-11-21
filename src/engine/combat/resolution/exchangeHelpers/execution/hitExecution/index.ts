@@ -114,9 +114,6 @@ function preHitResolved(args: PreHitResolvedArgs): boolean {
   return false;
 }
 
-/**
- *
- */
 interface ExecuteHitArgs {
   events: CombatEvent[];
   rng: () => number;

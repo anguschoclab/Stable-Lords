@@ -97,10 +97,7 @@ function TrainingAndAging({ stewardReport }: StewardStepProps) {
   );
 }
 
-/**
- * Steward step.
- * @param - { steward report }.
- */
+/** Steward step — weekly steward-report panel inside the resolution reveal. */
 export function StewardStep({ stewardReport }: StewardStepProps) {
   return (
     <StepShell className="space-y-6">

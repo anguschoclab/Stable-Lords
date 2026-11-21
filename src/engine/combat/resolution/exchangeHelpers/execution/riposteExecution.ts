@@ -17,9 +17,6 @@ import { recordWeaponSwing } from '../../weaponChart';
 import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
 import { addCapped } from '@/utils/math';
 
-/**
- *
- */
 interface ExecuteRiposteArgs {
   events: CombatEvent[];
   rng: () => number;

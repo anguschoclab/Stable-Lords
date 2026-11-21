@@ -30,9 +30,7 @@ export const ARENA_EVENT_CONSTANTS = {
 } as const;
 import type { ArenaTag, WeatherType } from '@/types/shared.types';
 
-/**
- *
- */
+/** An arena-specific mid-fight event: trigger rule, gating tags/weather, and its narrative text. */
 export interface ArenaEventConfig {
   id: string;
   name: string;
@@ -367,9 +365,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 
-/**
- *
- */
+/** All arena events whose required tags the arena satisfies. */
 export function getEventsForArena(tags: ArenaTag[]): ArenaEventConfig[] {
   const tagSet = new Set<ArenaTag>(tags);
   return Object.values(ARENA_EVENTS).filter((event) =>
@@ -377,9 +373,7 @@ export function getEventsForArena(tags: ArenaTag[]): ArenaEventConfig[] {
   );
 }
 
-/**
- *
- */
+/** Whether an arena event's trigger condition is met this exchange. */
 export function shouldTriggerEvent(
   event: ArenaEventConfig,
   exchange: number,

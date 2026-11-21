@@ -6,16 +6,12 @@ import { useWeekReset, useOfferActions } from './useOfferActions';
 
 export { getFatigueStatus, getInjuryBadge } from './useOfferActions';
 
-/**
- *
- */
+/** Rival warrior id → warrior record with its stable name attached. */
 export interface RivalWarriorMap {
   [warriorId: string]: Warrior & { stableName: string };
 }
 
-/**
- *
- */
+/** Booking-office state — offers buckets, selection, response handlers. */
 export function useBookingOffice() {
   const state = useWorldState();
   const setState = useGameStore((s) => s.setState);

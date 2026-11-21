@@ -10,9 +10,7 @@ interface TokenCardProps {
   onSelect: () => void;
 }
 
-/**
- *
- */
+/** One selectable insight token card. */
 export function TokenCard({ token, isSelected, onSelect }: TokenCardProps) {
   return (
     <Surface

@@ -13,9 +13,7 @@ interface TelemetryPanelProps {
   player: Record<string, unknown>;
 }
 
-/**
- *
- */
+/** Telemetry admin panel — live engine/state snapshot plus queue depth. */
 export function TelemetryPanel(props: TelemetryPanelProps) {
   const { week, season, treasury, fame, rosterSize } = props;
   const { player } = props;

@@ -169,9 +169,6 @@ function buildDeathArtifacts(args: BuildDeathArtifactsArgs) {
   return { narrative, graveyardEntry };
 }
 
-/**
- *
- */
 interface HandleDeathArgs {
   s: GameState;
   wA: Warrior;

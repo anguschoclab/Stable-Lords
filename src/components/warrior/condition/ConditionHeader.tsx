@@ -7,9 +7,7 @@ interface ConditionHeaderProps {
   onRemove: () => void;
 }
 
-/**
- *
- */
+/** Condition card header — index badge, label, remove button. */
 export function ConditionHeader({ idx, label, onRemove }: ConditionHeaderProps) {
   return (
     <div className="flex items-center justify-between">

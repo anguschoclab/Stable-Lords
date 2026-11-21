@@ -62,9 +62,7 @@ function OverrideCell(props: {
   );
 }
 
-/**
- *
- */
+/** OE/AL/KD override sliders applied while the condition holds. */
 export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

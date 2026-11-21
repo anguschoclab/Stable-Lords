@@ -8,6 +8,7 @@ import { isActive } from '@/engine/warrior/warriorStatus';
 import type { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import type { useTrainingAssignments } from './useTrainingAssignments';
 
+/** Training-page header: roster training %, recovery count, and reset-all. */
 export function HeaderActions({
   trainingPct,
   recoveryCount,
@@ -46,6 +47,7 @@ export function HeaderActions({
   );
 }
 
+/** Empty-state panel with the recruit call-to-action. */
 export function EmptyRoster({ onNavigate }: { onNavigate: () => void }) {
   return (
     <Surface variant="glass" className="py-24 text-center border-dashed border-white/5">

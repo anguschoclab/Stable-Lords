@@ -6,9 +6,6 @@
 import type { Warrior } from '@/types/warrior.types';
 import { WEAPONS } from '@/data/equipment';
 
-/**
- *
- */
 interface FavoritesDisplayInfo {
   weapon: string | null;
   weaponHint: string | null;

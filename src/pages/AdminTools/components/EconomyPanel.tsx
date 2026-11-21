@@ -9,9 +9,7 @@ interface EconomyPanelProps {
   onResetRivals: () => void;
 }
 
-/**
- *
- */
+/** Economy admin panel — god-mode cheats (favorite mastery, rival regen). */
 export function EconomyPanel({ onForceMastery, onResetRivals }: EconomyPanelProps) {
   return (
     <div className="space-y-12">

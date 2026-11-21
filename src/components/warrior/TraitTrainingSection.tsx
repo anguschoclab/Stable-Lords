@@ -19,9 +19,7 @@ interface TraitTrainingSectionProps {
   onClear?: () => void;
 }
 
-/**
- *
- */
+/** Trait-training assignment section with trainer selection. */
 export function TraitTrainingSection(props: TraitTrainingSectionProps) {
   const { warrior, assignment, isRecovery, trainers, onAssignTraitTraining } = props;
   const { onClear } = props;

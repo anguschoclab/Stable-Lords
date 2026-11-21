@@ -75,9 +75,6 @@ function sumInitiative(args: SumInitiativeArgs): number {
   );
 }
 
-/**
- *
- */
 interface ResolveInitiativePhaseArgs {
   ctx: ResolutionContext;
   fA: FighterState;

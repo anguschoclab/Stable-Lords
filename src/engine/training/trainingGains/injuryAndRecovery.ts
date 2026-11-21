@@ -10,9 +10,7 @@ import {
 import type { TrainingResult } from './types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 
-/**
- *
- */
+/** Roll this week's training-injury chance (age, healing, weather modifiers); returns the injury and message when it hits. */
 export function rollForTrainingInjury(
   warrior: Warrior,
   healingBonus: number,
@@ -61,9 +59,7 @@ export function rollForTrainingInjury(
   return { injury: null, result: null };
 }
 
-/**
- *
- */
+/** Apply a recovery week — heal `1 + healingBonus` weeks off every injury and drop healed ones. */
 export function processRecovery(
   warrior: Warrior,
   healingBonus: number

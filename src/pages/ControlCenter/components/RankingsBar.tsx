@@ -38,9 +38,7 @@ function buildRankingItems({ stableRank, topWarriorRank, totalStables }: Ranking
   ];
 }
 
-/**
- *
- */
+/** Rankings strip — stable standing and best-ranked warrior. */
 export function RankingsBar() {
   const { roster, rivals, realmRankings, progression } = useGameStore(
     useShallow((s) => ({

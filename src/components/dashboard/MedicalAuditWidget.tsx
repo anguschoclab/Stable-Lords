@@ -6,9 +6,7 @@ import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import { WarriorAuditCard } from './WarriorAuditCard';
 import { countInjuries } from '@/engine/injuries/utils';
 
-/**
- *
- */
+/** At-risk warriors widget — fatigue and injury audit for the roster. */
 export function MedicalAuditWidget() {
   const atRisk = useAtRiskWarriors();
 

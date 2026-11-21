@@ -1,23 +1,20 @@
 import type { GameState } from '@/types/state.types';
 
-/**
- *
- */
+/** A soft-stop check an autosim span evaluates each week. */
 export type SoftStopCondition =
   | { type: 'rosterEmpty' }
   | { type: 'playerDeath' }
   | { type: 'noPairings' }
   | { type: 'custom'; check: (state: GameState) => boolean };
 
+/** Stops applied when the caller doesn't supply its own list. */
 export const DEFAULT_AUTOSIM_STOPS: SoftStopCondition[] = [
   { type: 'rosterEmpty' },
   { type: 'playerDeath' },
   { type: 'noPairings' },
 ];
 
-/**
- *
- */
+/** Options shared by advanceWeek/Month/Quarter/Year spans. */
 export interface AdvanceOptions {
   headless?: boolean;
   stopConditions?: SoftStopCondition[];
@@ -36,9 +33,7 @@ export interface AdvanceOptions {
   pool?: import('@/engine/pool/enginePool').EnginePool;
 }
 
-/**
- *
- */
+/** Per-week counters collected during a span advance. */
 export interface WeekSummary {
   week: number;
   year: number;
@@ -48,9 +43,7 @@ export interface WeekSummary {
   deaths: number;
 }
 
-/**
- *
- */
+/** Aggregated 13-week span summary. */
 export interface QuarterSummary {
   startWeek: number;
   endWeek: number;
@@ -60,9 +53,7 @@ export interface QuarterSummary {
   weekSummaries: WeekSummary[];
 }
 
-/**
- *
- */
+/** Result of advancing one quarter — state, summaries, stop reason. */
 export interface QuarterAdvanceResult {
   state: GameState;
   summaries: WeekSummary[];
@@ -82,9 +73,7 @@ export interface QuarterAdvanceResult {
  */
 export type MonthSummary = QuarterSummary;
 
-/**
- *
- */
+/** Result of advancing one 4-week month. */
 export interface MonthAdvanceResult {
   state: GameState;
   summaries: WeekSummary[];
@@ -95,9 +84,7 @@ export interface MonthAdvanceResult {
   pendingArchives: import('@/types/state.types').DeferredBoutLog[];
 }
 
-/**
- *
- */
+/** Result of advancing a full year — four quarter results plus annual summary. */
 export interface YearAdvanceResult {
   state: GameState;
   quarterResults: QuarterAdvanceResult[];

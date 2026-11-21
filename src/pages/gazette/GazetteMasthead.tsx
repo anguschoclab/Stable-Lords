@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 
 // ─── Gazette Masthead ──────────────────────────────────────────────────────────
 
+/** Newspaper masthead — title, season/week dateline, and edition indicator. */
 export function GazetteMasthead({
   season,
   week,
@@ -76,6 +77,7 @@ export function GazetteMasthead({
 
 // ─── Empty State ───────────────────────────────────────────────────────────────
 
+/** Empty state shown when no gazette editions have been written yet. */
 export function GazetteEmptyState() {
   return (
     <Surface

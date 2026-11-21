@@ -103,9 +103,6 @@ export function createAgentContext(
 const isAIIntent = (cause: AIEventCause): cause is AIIntent =>
   (AI_INTENTS as readonly string[]).includes(cause);
 
-/**
- *
- */
 interface LogAgentActionArgs {
   rival: RivalStableData;
   type: AIEvent['type'];

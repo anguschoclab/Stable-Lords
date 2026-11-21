@@ -6,9 +6,7 @@ interface ContractPortfolioHeaderProps {
   expiringSoonCount: number;
 }
 
-/**
- *
- */
+/** Header strip — active trainer count, weekly payroll, expiring contracts. */
 export function ContractPortfolioHeader({
   activeCount,
   totalWeeklyExpense,

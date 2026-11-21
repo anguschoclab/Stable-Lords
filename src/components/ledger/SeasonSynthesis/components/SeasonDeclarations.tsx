@@ -5,9 +5,7 @@ interface SeasonDeclarationsProps {
   seasonGazette: string[];
 }
 
-/**
- *
- */
+/** Season-gazette declaration blurbs; hidden when there are none. */
 export function SeasonDeclarations({ seasonGazette }: SeasonDeclarationsProps) {
   if (seasonGazette.length === 0) return null;
 

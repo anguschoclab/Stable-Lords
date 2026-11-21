@@ -19,9 +19,7 @@ import {
 } from '@/constants/combat';
 import type { FighterState } from './types';
 
-/**
- *
- */
+/** Per-style riposte bonuses — TP fatigue exploit, PL momentum, PR parry-counter/commit-punish chains. */
 export function styleRiposteBonus(
   def: FighterState,
   att: FighterState,

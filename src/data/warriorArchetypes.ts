@@ -282,7 +282,7 @@ export const WINNING_ARCHETYPES: Record<WinningArchetype, ArchetypeGuide> = {
     ],
     weapons: ['scimitar', 'longsword', 'war_flail', 'short_spear'],
     armor: {
-      ids: ['ASM', 'AS', 'APL'],
+      ids: ['ASM', 'APL'],
       notes:
         'Moderate armor — enough to survive a mistake, light enough that the ' +
         'skills do the real work. NEVER over-encumbered.',

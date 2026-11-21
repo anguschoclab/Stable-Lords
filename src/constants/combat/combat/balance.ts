@@ -219,9 +219,6 @@ export const TWOHANDED_PARRY_ENDURANCE_SURCHARGE = 1.2;
  *  (weaponArmor.canon). Jalopy: the dagger is "poor or ineffective at ASM
  *  or higher" — reconciled with Assur's "surprisingly good vs APA/APM" as a
  *  mid-armor penalty only; the plate tiers stay at dtype parity. */
-export const WEAPON_ARMOR_OVERRIDES: Record<string, Record<string, number>> = {
-  dagger: { ASM: 0.7, ACM: 0.7 },
-};
 /** Favorite tactic fires hidden (weapon-crit parity — Godling Heresy:
  *  favorites matter before you know them). */
 export const FAVORITE_TACTIC_BONUS = 2;

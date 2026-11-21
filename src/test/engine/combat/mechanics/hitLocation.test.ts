@@ -24,7 +24,7 @@ describe('hitLocation mechanics', () => {
     it('returns chest and abdomen for body armor', () => {
       expect(protectCovers('APL')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('ALE')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('AS')).toEqual(['chest', 'abdomen']);
+      
       expect(protectCovers('ACM')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('APA')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('body')).toEqual(['chest', 'abdomen']);
@@ -233,7 +233,7 @@ describe('Hit Location', () => {
     it('returns chest/abdomen for body armor', () => {
       expect(protectCovers('APL')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('ALE')).toEqual(['chest', 'abdomen']);
-      expect(protectCovers('AS')).toEqual(['chest', 'abdomen']);
+      
       expect(protectCovers('ACM')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('APA')).toEqual(['chest', 'abdomen']);
       expect(protectCovers('body')).toEqual(['chest', 'abdomen']);

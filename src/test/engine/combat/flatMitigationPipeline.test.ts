@@ -13,21 +13,21 @@ describe('T7: flat mitigation in damage pipeline', () => {
   });
 
   it('chaining applyArmorTypeMod then applyFlatMitigation gives lower damage than armor type alone', () => {
-    // longsword (slash) vs chain_mail: 100 * 1.1 = 110 (armor type makes it worse)
-    // then flat mitigation: chain_mail mitigation=6, full_helm mitigation=4 → 110 - 10 = 100
-    const afterType = applyArmorTypeMod(100, 'longsword', 'ACM');
+    // epee (pierce) vs chainmail: 100 * 1.15 = 115 (thin blades find gaps)
+    // then flat mitigation: chainmail mitigation=6, full_helm mitigation=4 → 115 - 10 = 105
+    const afterType = applyArmorTypeMod(100, 'epee', 'ACM');
     const afterFlat = applyFlatMitigation(afterType, 'ACM', 'full_helm');
     expect(afterFlat).toBeLessThanOrEqual(afterType);
-    expect(afterFlat).toBe(100);
+    expect(afterFlat).toBe(105);
   });
 
   it('flat mitigation applies after armor type mod even when type mod increases damage', () => {
-    // longsword (slash) vs chain_mail: 100 * 1.1 = 110 (slash is weak vs chain)
-    // chain_mail mitigation=6, none_helm mitigation=0 → 110 - 6 = 104
-    const afterType = applyArmorTypeMod(100, 'longsword', 'ACM');
+    // epee (pierce) vs chainmail: 100 * 1.15 = 115 (pierce is weak vs chain)
+    // chainmail mitigation=6, none_helm mitigation=0 → 115 - 6 = 109
+    const afterType = applyArmorTypeMod(100, 'epee', 'ACM');
     const afterFlat = applyFlatMitigation(afterType, 'ACM', 'none_helm');
-    expect(afterType).toBe(110);
-    expect(afterFlat).toBe(104);
+    expect(afterType).toBe(115);
+    expect(afterFlat).toBe(109);
   });
 
   it('flat mitigation floors at 1 even when armor type + mitigation would reduce below 0', () => {

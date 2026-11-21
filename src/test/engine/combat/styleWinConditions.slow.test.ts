@@ -50,16 +50,16 @@ describe('AB — inherent called shot (armor bypass)', () => {
     // So AB > non-AB whenever armor mitigates (raw > mitigated)
     const rawDamage = 10;
     const weaponId = 'longsword'; // slash
-    const armorId = 'APA'; // slash: 0.8 → mitigated = 8
+    const armorId = 'APA'; // cell 0.85 × slash 0.8 = 0.68 → mitigated = 7
 
     const mitigated = applyArmorTypeMod(rawDamage, weaponId, armorId);
-    expect(mitigated).toBe(8); // 10 * 0.8 = 8
+    expect(mitigated).toBe(7); // 10 * 0.68 → round(6.8) = 7
 
     // AB with DF=15: bypass = 15/50 = 0.3
     const bypass = Math.max(0, Math.min(0.4, 15 / 50));
     const abDamage = Math.round(mitigated + bypass * (rawDamage - mitigated));
     expect(abDamage).toBeGreaterThan(mitigated);
-    expect(abDamage).toBe(9); // 8 + 0.3 * 2 = 8.6 → 9
+    expect(abDamage).toBe(8); // 7 + 0.3 * 3 = 7.9 → 8
   });
 
   it('AB bypass scales with DF — higher DF yields more bypass', () => {

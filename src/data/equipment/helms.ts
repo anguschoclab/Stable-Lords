@@ -56,7 +56,7 @@ export const HELMS: EquipmentItem[] = [
   },
   {
     id: 'full_helm',
-    code: 'FF',
+    code: 'F',
     name: 'Full Helm',
     slot: 'helm',
     weight: 4,

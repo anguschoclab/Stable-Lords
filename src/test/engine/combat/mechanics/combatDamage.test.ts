@@ -207,36 +207,26 @@ describe('combatDamage engine', () => {
   });
 
   describe('applyArmorTypeMod — armor ID corrections (Bug 2)', () => {
-    it('padded armor resists bash damage', () => {
-      // mace → bash; padded: { bash: 0.9 } → floor(100 * 0.9) = 90
-      expect(applyArmorTypeMod(100, 'mace', 'ALE')).toBe(90);
+    it('padded leather resists bash damage', () => {
+      // mace → bash; APL: { bash: 0.9 } → floor(100 * 0.9) = 90
+      expect(applyArmorTypeMod(100, 'mace', 'APL')).toBe(90);
     });
 
-    it('padded armor is weak to pierce damage', () => {
-      // dagger → pierce; padded: { pierce: 1.05 } → floor(100 * 1.05) = 105
-      expect(applyArmorTypeMod(100, 'dagger', 'ALE')).toBe(105);
+    it('padded leather is weak to pierce damage', () => {
+      // dagger → pierce; APL: { pierce: 1.05 } → floor(100 * 1.05) = 105
+      expect(applyArmorTypeMod(100, 'dagger', 'APL')).toBe(105);
     });
 
-    it('studded_leather armor resists slash damage', () => {
-      // longsword → slash; studded_leather: { slash: 0.88 } → floor(100 * 0.88) = 88
-      expect(applyArmorTypeMod(100, 'longsword', 'AS')).toBe(88);
-    });
-
-    it('studded_leather armor is weak to pierce damage', () => {
-      // dagger → pierce; studded_leather: { pierce: 1.05 } → floor(100 * 1.05) = 105
-      expect(applyArmorTypeMod(100, 'dagger', 'AS')).toBe(105);
-    });
-
-    it('plate_armor resists slash damage at least as well as plate_mail', () => {
-      // plate_mail: { slash: 0.85 } = 85; plate_armor: { slash: 0.80 } = 80
+    it('plate armor resists slash damage at least as well as platemail', () => {
+      // longsword: 0.9 × APM slash 0.85 → 77; 0.85 × APA slash 0.80 → 68
       const plateMailResult = applyArmorTypeMod(100, 'longsword', 'APM');
       const plateArmorResult = applyArmorTypeMod(100, 'longsword', 'APA');
       expect(plateArmorResult).toBeLessThanOrEqual(plateMailResult);
-      expect(plateArmorResult).toBe(80);
+      expect(plateArmorResult).toBe(68);
     });
 
-    it('plate_armor resists bash damage', () => {
-      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(80);
+    it('plate armor resists bash damage least of all (shells smash)', () => {
+      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(85);
     });
 
     it('plate_armor resists pierce damage', () => {

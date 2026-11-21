@@ -152,9 +152,10 @@ describe('exchangeLog — endDeltas telemetry', () => {
   });
 
   it("captures an arena endurance_drain in the firing exchange's endDeltas", () => {
-    // the_gallows_tree + seed 14: shadow_tendrils (drain 5 both) fires on
-    // exchange 0 — deterministic, verified via ARENA_SHADOW_TENDRILS.
-    const outcome = bout('the_gallows_tree', 14);
+    // the_gallows_tree + seed 11: shadow_tendrils (drain 5 both) fires —
+    // deterministic, verified via ARENA_SHADOW_TENDRILS. (Re-seeded post-F2
+    // for the corrected armor-type matrix trajectory.)
+    const outcome = bout('the_gallows_tree', 11);
     const entry = (outcome.exchangeLog ?? []).find((e) =>
       e.reasonCodes?.includes('ARENA_SHADOW_TENDRILS')
     );

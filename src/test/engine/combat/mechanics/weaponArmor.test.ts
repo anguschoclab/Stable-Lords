@@ -28,8 +28,8 @@ describe('weaponArmor', () => {
     });
 
     it('returns unmodified damage if armor has no multiplier for damage type', () => {
-      // padded armor has no multiplier for slash
-      expect(applyArmorTypeMod(100, 'longsword', 'ALE')).toBe(100);
+      // ringmail has no multiplier for slash
+      expect(applyArmorTypeMod(100, 'scimitar', 'ARM')).toBe(100);
     });
 
     it('returns unmodified damage for none_armor', () => {
@@ -37,28 +37,29 @@ describe('weaponArmor', () => {
     });
 
     it('applies armor multiplier for specific combinations', () => {
-      // dagger = pierce, leather = pierce: 1.05
+      // dagger = pierce, padded leather = pierce: 1.05
       expect(applyArmorTypeMod(100, 'dagger', 'APL')).toBe(105);
 
-      // longsword = slash, leather = slash: 0.9
-      expect(applyArmorTypeMod(100, 'longsword', 'APL')).toBe(90);
+      // longsword = slash, padded leather = slash: 1.05 (chopped through readily)
+      expect(applyArmorTypeMod(100, 'longsword', 'APL')).toBe(105);
 
-      // mace = bash, padded = bash: 0.9
-      expect(applyArmorTypeMod(100, 'mace', 'ALE')).toBe(90);
+      // mace = bash, padded leather = bash: 0.9 (cushions smashing blows)
+      expect(applyArmorTypeMod(100, 'mace', 'APL')).toBe(90);
 
-      // dagger = pierce, chain_mail: V24 weapon override 0.7 (Jalopy — DA
-      // poor vs ASM+) supersedes the pierce baseline 0.8
-      expect(applyArmorTypeMod(100, 'dagger', 'ACM')).toBe(70);
+      // dagger = pierce, chain_mail: matrix cell 0.7 (Jalopy — DA poor vs
+      // ASM+) composed with the pierce baseline 1.15 → 0.805
+      expect(applyArmorTypeMod(100, 'dagger', 'ACM')).toBe(81);
 
-      // longsword = slash, chain_mail = slash: 1.1
-      expect(applyArmorTypeMod(100, 'longsword', 'ACM')).toBe(110);
+      // longsword = slash, chain_mail: no slash baseline → matrix cell for
+      // longsword only covers APM/APA → identity
+      expect(applyArmorTypeMod(100, 'longsword', 'ACM')).toBe(100);
     });
 
     it('handles rounding correctly', () => {
       // 55 * 1.05 = 57.75 -> 58
       expect(applyArmorTypeMod(55, 'dagger', 'APL')).toBe(58);
-      // 55 * 0.9 = 49.5 -> 50
-      expect(applyArmorTypeMod(55, 'longsword', 'APL')).toBe(50);
+      // 55 * 1.05 = 57.75 -> 58
+      expect(applyArmorTypeMod(55, 'longsword', 'APL')).toBe(58);
     });
   });
 
@@ -85,45 +86,40 @@ describe('weaponArmor', () => {
   });
 
   describe('applyArmorTypeMod additional armor types', () => {
-    it('applies studded_leather multipliers for slash and pierce', () => {
-      // longsword = slash, studded_leather = slash: 0.88
-      expect(applyArmorTypeMod(100, 'longsword', 'AS')).toBe(88);
-      // dagger = pierce, studded_leather = pierce: 1.05
-      expect(applyArmorTypeMod(100, 'dagger', 'AS')).toBe(105);
+
+    it('applies ringmail multipliers — crushing absorb, thin-blade weak', () => {
+      // longsword = slash, ringmail: no slash baseline → identity
+      expect(applyArmorTypeMod(100, 'longsword', 'ARM')).toBe(100);
+      // dagger = pierce, ringmail = pierce: 1.1 (thin blades)
+      expect(applyArmorTypeMod(100, 'dagger', 'ARM')).toBe(110);
+      // mace = bash, ringmail = bash: 0.85 (crushing absorbed)
+      expect(applyArmorTypeMod(100, 'mace', 'ARM')).toBe(85);
     });
 
-    it('applies ring_mail multipliers for slash, pierce, and bash', () => {
-      // longsword = slash, ring_mail = slash: 0.9
-      expect(applyArmorTypeMod(100, 'longsword', 'ARM')).toBe(90);
-      // dagger = pierce, ring_mail = pierce: 0.9
-      expect(applyArmorTypeMod(100, 'dagger', 'ARM')).toBe(90);
-      // mace = bash, ring_mail = bash: 1.1
-      expect(applyArmorTypeMod(100, 'mace', 'ARM')).toBe(110);
-    });
-
-    it('applies scale_mail multipliers for slash and pierce', () => {
-      // longsword = slash, scale_mail = slash: 0.8
+    it('applies scalemail multipliers for slash and pierce', () => {
+      // longsword = slash, scalemail = slash: 0.8
       expect(applyArmorTypeMod(100, 'longsword', 'ASM')).toBe(80);
-      // dagger = pierce, scale_mail: V24 weapon override 0.7 supersedes the
-      // pierce baseline 1.15
-      expect(applyArmorTypeMod(100, 'dagger', 'ASM')).toBe(70);
+      // dagger = pierce, scalemail: matrix cell 0.7 × pierce baseline 1.15
+      expect(applyArmorTypeMod(100, 'dagger', 'ASM')).toBe(81);
+      // mace = bash, scalemail = bash: 1.1 (Assur's bash sweet spot)
+      expect(applyArmorTypeMod(100, 'mace', 'ASM')).toBe(110);
     });
 
-    it('applies plate_mail multipliers for slash, bash, and pierce', () => {
-      // longsword = slash, plate_mail = slash: 0.85
-      expect(applyArmorTypeMod(100, 'longsword', 'APM')).toBe(85);
-      // mace = bash, plate_mail = bash: 0.85
+    it('applies platemail multipliers for slash, bash, and pierce', () => {
+      // longsword = slash: matrix cell 0.9 × platemail slash 0.85 → 76.5 → 77
+      expect(applyArmorTypeMod(100, 'longsword', 'APM')).toBe(77);
+      // mace = bash, platemail = bash: 0.85
       expect(applyArmorTypeMod(100, 'mace', 'APM')).toBe(85);
-      // dagger = pierce, plate_mail = pierce: 0.85
+      // dagger = pierce: matrix cell 1.0 × platemail pierce 0.85
       expect(applyArmorTypeMod(100, 'dagger', 'APM')).toBe(85);
     });
 
-    it('applies plate_armor multipliers for slash, bash, and pierce', () => {
-      // longsword = slash, plate_armor = slash: 0.8
-      expect(applyArmorTypeMod(100, 'longsword', 'APA')).toBe(80);
-      // mace = bash, plate_armor = bash: 0.8
-      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(80);
-      // dagger = pierce, plate_armor = pierce: 0.8
+    it('applies plate armor multipliers for slash, bash, and pierce', () => {
+      // longsword = slash: matrix cell 0.85 × plate armor slash 0.8 → 68
+      expect(applyArmorTypeMod(100, 'longsword', 'APA')).toBe(68);
+      // mace = bash, plate armor = bash: 0.85 (shells still smash)
+      expect(applyArmorTypeMod(100, 'mace', 'APA')).toBe(85);
+      // dagger = pierce: matrix cell 1.0 × plate armor pierce 0.8
       expect(applyArmorTypeMod(100, 'dagger', 'APA')).toBe(80);
     });
 
@@ -136,9 +132,9 @@ describe('weaponArmor', () => {
       expect(applyArmorTypeMod(0, 'longsword', 'ACM')).toBe(0);
     });
 
-    it('returns unmodified damage for bash vs chain_mail (no bash entry)', () => {
-      // chain_mail has pierce: 0.8 and slash: 1.1, but no bash entry → defaults to 1.0
-      expect(applyArmorTypeMod(100, 'mace', 'ACM')).toBe(100);
+    it('applies chainmail bash resist (heavier ringmail profile)', () => {
+      // chainmail has bash: 0.8 and pierce: 1.15
+      expect(applyArmorTypeMod(100, 'mace', 'ACM')).toBe(80);
     });
   });
 
@@ -211,12 +207,12 @@ describe('Weapon & Armor Mechanics', () => {
       // 10 * 1.05 = 10.5 -> round to 11
       expect(applyArmorTypeMod(10, 'dagger', 'APL')).toBe(11);
 
-      // longsword is slash. plate_mail vs slash = 0.85
-      // 10 * 0.85 = 8.5 -> round to 9
-      expect(applyArmorTypeMod(10, 'longsword', 'APM')).toBe(9);
+      // longsword is slash. matrix cell 0.9 × platemail slash 0.85 = 0.765
+      // 10 * 0.765 = 7.65 -> round to 8
+      expect(applyArmorTypeMod(10, 'longsword', 'APM')).toBe(8);
 
-      // mace is bash. scale_mail has no bash mod -> defaults to 1.0
-      expect(applyArmorTypeMod(10, 'mace', 'ASM')).toBe(10);
+      // mace is bash. scalemail bash 1.1 -> 11
+      expect(applyArmorTypeMod(10, 'mace', 'ASM')).toBe(11);
     });
   });
 

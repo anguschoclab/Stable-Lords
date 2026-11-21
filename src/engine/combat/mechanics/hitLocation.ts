@@ -2,6 +2,7 @@
  * Hit location system — location constants, targeting, and protection coverage.
  */
 
+/** Strikeable body locations for hit resolution. */
 export type HitLocation =
   'head' | 'chest' | 'abdomen' | 'right arm' | 'left arm' | 'right leg' | 'left leg';
 
@@ -47,17 +48,9 @@ export const LOCATION_KILL_MULT: Record<HitLocation, number> = {
 export const VITAL_LOCATIONS: readonly HitLocation[] = ['head', 'chest', 'abdomen'];
 
 /** Canon + house armor ids that count as torso protection (lowercased). */
-const BODY_ARMOR_PROTECTION_IDS = new Set([
-  'ale',
-  'apl',
-  'as',
-  'arm',
-  'asm',
-  'acm',
-  'apm',
-  'apa',
-]);
+const BODY_ARMOR_PROTECTION_IDS = new Set(['ale', 'apl', 'arm', 'asm', 'acm', 'apm', 'apa']);
 
+/** Locations the defender's protect gear/strategy covers (empty when none). */
 export function protectCovers(protect?: string): string[] {
   if (!protect || protect === 'Any' || protect === 'none_armor' || protect === 'none_helm')
     return [];
@@ -83,6 +76,7 @@ export function protectCovers(protect?: string): string[] {
   return [];
 }
 
+/** Roll the struck location — aimed target (with protect counter-chance), exposed pick, or uniform random. */
 export function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   const covered = protectCovers(protect);
 

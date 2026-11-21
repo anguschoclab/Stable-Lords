@@ -3,7 +3,7 @@
  */
 
 import { getItemById } from '@/data/equipment/equipment.utils';
-import { WEAPON_ARMOR_OVERRIDES } from '@/constants/combat';
+import { WEAPON_ARMOR_MATRIX } from '@/constants/combat';
 
 type DamageType = 'slash' | 'bash' | 'pierce' | 'none';
 
@@ -33,27 +33,36 @@ export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
   large_shield: 'none',
 };
 
+/**
+ * Canon weapon-damage-type baseline per armor id — see
+ * src/constants/combat/combat/weaponArmorMatrix.ts for the adjudication
+ * rationale. ARM pre-F2 was canon-inverted (bash bonus + pierce resist vs
+ * the documented crushing-absorb / thin-blade-weak profile).
+ */
 const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
   none_armor: {},
-  ALE: { bash: 0.9, pierce: 1.05 },
-  APL: { slash: 0.9, pierce: 1.05 },
-  AS: { slash: 0.88, pierce: 1.05 },
-  ARM: { slash: 0.9, pierce: 0.9, bash: 1.1 },
-  ASM: { slash: 0.8, pierce: 1.15 },
-  ACM: { pierce: 0.8, slash: 1.1 },
+  ALE: { slash: 0.9, pierce: 1.05 },
+  APL: { bash: 0.9, slash: 1.05, pierce: 1.05 },
+  ARM: { bash: 0.85, pierce: 1.1 },
+  ASM: { slash: 0.8, bash: 1.1, pierce: 1.15 },
+  ACM: { bash: 0.8, pierce: 1.15 },
   APM: { slash: 0.85, bash: 0.85, pierce: 0.85 },
-  APA: { slash: 0.8, bash: 0.8, pierce: 0.8 },
+  APA: { slash: 0.8, bash: 0.85, pierce: 0.8 },
 };
 
+/**
+ * Damage scaled by the weapon × armor interaction. Weapon-specific matrix
+ * cells compose on top of the armor's damage-type baseline; everything
+ * else falls through to ARMOR_TYPE_MULT (then 1.0).
+ */
 export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: string): number {
   if (!weaponId || !armorId) return damage;
   const dtype = WEAPON_DAMAGE_TYPE[weaponId];
   if (!dtype || dtype === 'none') return damage;
-  const mult =
-    WEAPON_ARMOR_OVERRIDES[weaponId]?.[armorId] ??
-    ARMOR_TYPE_MULT[armorId]?.[dtype] ??
-    1.0;
-  return Math.round(damage * mult);
+  const cell = WEAPON_ARMOR_MATRIX[weaponId]?.[armorId];
+  const weaponFactor = typeof cell === 'number' ? cell : 1.0;
+  const dtypeMult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
+  return Math.round(damage * weaponFactor * dtypeMult);
 }
 
 /**

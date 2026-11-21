@@ -3,9 +3,9 @@
  * Body armor with varying weights and style restrictions.
  *
  * V24-F3: ids/codes aligned to the canonical Duel2 armor table
- * (ALE/APL/ARM/ASM/ACM/APM/APA). The weight-5 studded-hide row has no canon
- * code — `AS` is a house divergence recorded in docs/MEGAPLAN_BACKLOG.md §3.
- * Canon `APA-F` (full plate) is not modeled — APA is the heaviest tier.
+ * (ALE/APL/ARM/ASM/ACM/APM/APA). Canon `APA-F` (full plate) is not modeled —
+ * APA is the heaviest tier; the old weight-5 studded-hide row was noncanon
+ * and removed.
  */
 
 import { FightingStyle } from '@/types/game';
@@ -47,17 +47,6 @@ export const ARMORS: EquipmentItem[] = [
     mitigation: 2,
     defenseMod: 1,
     enduranceCostMod: 1.2,
-  },
-  {
-    id: 'AS',
-    code: 'AS',
-    name: 'Studded Leather',
-    slot: 'armor',
-    weight: 5,
-    description: 'Leather reinforced with metal studs.',
-    mitigation: 3,
-    defenseMod: 1,
-    enduranceCostMod: 1.3,
   },
   {
     id: 'ARM',

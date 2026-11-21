@@ -5,10 +5,10 @@
  * APA Plate Armor(14).
  *
  * Canon adjudication (WS3):
- *  - `ASH` is NOT a canon code — the weight-5 studded-hide row keeps house
- *    code `AS` and is recorded as a §3 divergence in MEGAPLAN_BACKLOG.
+ *  - The weight-5 studded-hide row is NOT canon — removed outright (user
+ *    directive + strategy sheet confirms 7 armor codes).
  *  - `APA-F` (full plate) is a canon tier this game does not model — do not
- *    invent it (9 rows total, APA is the heaviest).
+ *    invent it (8 rows total: 7 canon + none_armor; APA is the heaviest).
  *  - ids equal codes on canon rows (F3 zero-compat rename — no alias index;
  *    stale saves reject via SAVE_STATE_VERSION 4.0.0).
  *  - Stats (mitigation/defenseMod/enduranceCostMod/restrictedStyles) are the
@@ -41,7 +41,6 @@ const CANON_ROWS: RowPin[] = [
   { id: 'none_armor', code: '', name: 'None', weight: 0, mitigation: 0, defenseMod: 0, enduranceCostMod: 1.0 },
   { id: 'ALE', code: 'ALE', name: 'Leather', weight: 2, mitigation: 1, defenseMod: 0, enduranceCostMod: 1.1 },
   { id: 'APL', code: 'APL', name: 'Padded Leather', weight: 4, mitigation: 2, defenseMod: 1, enduranceCostMod: 1.2 },
-  { id: 'AS', code: 'AS', name: 'Studded Leather', weight: 5, mitigation: 3, defenseMod: 1, enduranceCostMod: 1.3 },
   { id: 'ARM', code: 'ARM', name: 'Ringmail', weight: 6, mitigation: 4, defenseMod: 1, enduranceCostMod: 1.4 },
   { id: 'ASM', code: 'ASM', name: 'Scalemail', weight: 8, mitigation: 5, defenseMod: 2, enduranceCostMod: 1.6 },
   { id: 'ACM', code: 'ACM', name: 'Chainmail', weight: 10, mitigation: 6, defenseMod: 2, enduranceCostMod: 1.8 },
@@ -72,10 +71,12 @@ const CANON_ROWS: RowPin[] = [
 ];
 
 describe('armor canon table (V24-F3)', () => {
-  it('has exactly 9 rows — the 8 modeled tiers plus none_armor (no APA-F tier)', () => {
-    expect(ARMORS).toHaveLength(9);
+  it('has exactly 8 rows — the 7 canon tiers plus none_armor (no studded tier, no APA-F)', () => {
+    expect(ARMORS).toHaveLength(8);
     expect(ARMORS.some((a) => a.code === 'APA-F' || a.id === 'APA-F')).toBe(false);
     expect(ARMORS.some((a) => a.code === 'ASH' || a.id === 'ASH')).toBe(false);
+    expect(ARMORS.some((a) => a.code === 'AS' || a.id === 'AS')).toBe(false);
+    expect(ARMORS.some((a) => a.id === 'studded_leather')).toBe(false);
   });
 
   it.each(CANON_ROWS)('$id — canon id/code/name + pinned stats', (pin) => {
@@ -107,7 +108,6 @@ describe('armor canon table (V24-F3)', () => {
     expect(getItemById('APA')?.name).toBe('Plate Armor');
     expect(getItemById('ALE')?.name).toBe('Leather');
     expect(getItemById('APL')?.name).toBe('Padded Leather');
-    expect(getItemById('AS')?.name).toBe('Studded Leather');
   });
 
   it('getItemByCode resolves canon codes', () => {
@@ -121,7 +121,7 @@ describe('armor canon table (V24-F3)', () => {
     expect(getStyleDefaultLoadout(FightingStyle.StrikingAttack).armor).toBe('APL');
   });
 
-  it.each(['ALE', 'APL', 'AS', 'ARM', 'ASM', 'ACM', 'APM', 'APA'])(
+  it.each(['ALE', 'APL', 'ARM', 'ASM', 'ACM', 'APM', 'APA'])(
     'protectCovers(%s) still covers chest + abdomen',
     (id) => {
       expect(protectCovers(id)).toEqual(['chest', 'abdomen']);

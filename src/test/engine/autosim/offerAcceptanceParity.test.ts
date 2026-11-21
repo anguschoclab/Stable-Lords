@@ -5,7 +5,7 @@ import { processPlayerOffers } from '@/engine/autosim/autosim';
 import { makeAutosimOffer, makeSimmableState } from '@/test/_fixtures/autosimCouncil';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import type { InjuryData } from '@/types/warrior.types';
-import type { WarriorId } from '@/types/shared.types';
+import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 
 const severe: InjuryData = {
   id: 'i1' as InjuryData['id'],
@@ -22,12 +22,12 @@ describe('processPlayerOffers — evaluateBoutOffer ruleset (V30)', () => {
     const offer = makeAutosimOffer('o1', ['w1', 'r1-w'], { hype: 150, purse: 0 });
     const state = makeSimmableState({
       roster: [injured],
-      boutOffers: { o1: offer },
+      boutOffers: { ['o1' as BoutOfferId]: offer },
       warriorToOfferIds: undefined,
     });
     const out = processPlayerOffers(state);
-    const updated = out.boutOffers['o1' as keyof typeof out.boutOffers] ?? out.boutOffers.o1;
-    expect(updated.responses['w1' as WarriorId]).not.toBe('Accepted');
+    const updated = out.boutOffers['o1' as BoutOfferId];
+    expect(updated?.responses['w1' as WarriorId]).not.toBe('Accepted');
   });
 
   it('accepts a clean offer the evaluator approves', () => {
@@ -35,11 +35,11 @@ describe('processPlayerOffers — evaluateBoutOffer ruleset (V30)', () => {
     const offer = makeAutosimOffer('o2', ['w1', 'r1-w'], { hype: 50, purse: 50 });
     const state = makeSimmableState({
       roster: [healthy],
-      boutOffers: { o2: offer },
+      boutOffers: { ['o2' as BoutOfferId]: offer },
       warriorToOfferIds: undefined,
     });
     const out = processPlayerOffers(state);
-    const updated = out.boutOffers['o2' as keyof typeof out.boutOffers] ?? out.boutOffers.o2;
-    expect(updated.responses['w1' as WarriorId]).toBe('Accepted');
+    const updated = out.boutOffers['o2' as BoutOfferId];
+    expect(updated?.responses['w1' as WarriorId]).toBe('Accepted');
   });
 });

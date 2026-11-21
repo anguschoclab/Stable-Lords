@@ -1,4 +1,5 @@
 import { type GameState } from '@/types/state.types';
+import type { BoutOffer } from '@/types/state/rankings';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { sweepUnfinishedTournaments } from '@/engine/matchmaking/tournamentSelection/resolution';
@@ -83,52 +84,58 @@ export interface AutosimOptions {
 }
 
 /**
+ * Candidate player-offer/warrior pairs awaiting an autopilot response.
+ * Uses the `warriorToOfferIds` index when present (roster-order attribution);
+ * otherwise falls back to a roster scan (offer-order attribution). Each offer
+ * is yielded once.
+ */
+function* playerOfferCandidates(
+  state: GameState
+): Generator<{ offer: BoutOffer; warriorId: WarriorId }> {
+  const index = state.warriorToOfferIds;
+  if (index) {
+    const seen = new Set<string>();
+    for (const warrior of state.roster) {
+      const offerIds = index.get(warrior.id);
+      if (!offerIds) continue;
+      for (const offerId of offerIds) {
+        if (seen.has(offerId)) continue;
+        seen.add(offerId);
+        const offer = state.boutOffers[offerId as BoutOfferId];
+        if (offer && offer.status === 'Proposed') yield { offer, warriorId: warrior.id };
+      }
+    }
+    return;
+  }
+
+  const playerIds = new Set(state.roster.map((w) => w.id));
+  for (const offer of Object.values(state.boutOffers)) {
+    if (offer.status !== 'Proposed') continue;
+    const warriorId = offer.warriorIds.find((id) => playerIds.has(id));
+    if (warriorId) yield { offer, warriorId: warriorId as WarriorId };
+  }
+}
+
+/**
  * Process player bout offers after week advancement
  */
 export function processPlayerOffers(state: GameState): GameState {
-  const index = state.warriorToOfferIds;
-  if (!index) return processPlayerOffersScan(state);
-
-  const seen = new Set<string>();
-  for (const warrior of state.roster) {
-    const offerIds = index.get(warrior.id);
-    if (!offerIds) continue;
-    for (const offerId of offerIds) {
-      if (seen.has(offerId)) continue;
-      seen.add(offerId);
-      const offer = state.boutOffers[offerId as BoutOfferId];
-      if (!offer || offer.status !== 'Proposed') continue;
-      if (offer.hype > 100 || offer.purse > 200) {
-        const impact = respondToBoutOffer(state, offer.id, warrior.id, 'Accepted');
-        state = resolveImpacts(state, [impact]);
-      }
-    }
-  }
-  return state;
-}
-
-function processPlayerOffersScan(state: GameState): GameState {
-  const playerIds = new Set(state.roster.map((w) => w.id));
-  const playerOffers = Object.values(state.boutOffers).filter(
-    (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
-  );
-
-  playerOffers.forEach((offer) => {
-    const playerWarriorId = offer.warriorIds.find((id) => playerIds.has(id));
-    if (!playerWarriorId) return;
+  for (const { offer, warriorId } of playerOfferCandidates(state)) {
     if (offer.hype > 100 || offer.purse > 200) {
-      const impact = respondToBoutOffer(state, offer.id, playerWarriorId as WarriorId, 'Accepted');
+      const impact = respondToBoutOffer(state, offer.id, warriorId, 'Accepted');
       state = resolveImpacts(state, [impact]);
     }
-  });
-
+  }
   return state;
 }
 
 /**
  * Extract week summary from state after advancement.
  */
-export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
+export function extractAutosimWeekSummary(
+  state: GameState,
+  weekNumber: number
+): AutosimWeekSummary {
   const boutSummaries = state.stewardReport?.bouts ?? [];
   const deathNames: string[] = [];
   for (let i = 0; i < boutSummaries.length; i++) {
@@ -220,7 +227,7 @@ export async function runAutosim(
     }
 
     // 3. Extract week summary
-    weekSummaries.push(extractWeekSummary(state, state.week));
+    weekSummaries.push(extractAutosimWeekSummary(state, state.week));
     weeksSimmed++;
 
     // NF3: historical arrays are truncated by finalizeState at EVERY week

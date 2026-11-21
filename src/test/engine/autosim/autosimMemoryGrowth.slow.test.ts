@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { runAutosim, extractWeekSummary } from '@/engine/autosim/autosim';
+import { runAutosim, extractAutosimWeekSummary } from '@/engine/autosim/autosim';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
@@ -45,7 +45,7 @@ describe('NF3: autosim memory growth', () => {
     const state = createFreshState('autosim-summary-test');
     const next = await advanceWeek(state, { headless: true });
 
-    const summary = extractWeekSummary(next, next.week);
+    const summary = extractAutosimWeekSummary(next, next.week);
     expect(summary.week).toBe(next.week);
     expect(typeof summary.bouts).toBe('number');
     expect(typeof summary.deaths).toBe('number');

@@ -6,8 +6,9 @@ import { processAttributeTraining } from '@/engine/training/trainingGains';
 import { rollForTrainingInjury } from '@/engine/training/trainingGains';
 import { makeComputedWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/game';
-import type { WarriorId, InjuryData } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { WarriorId } from '@/types/shared.types';
+import type { InjuryData } from '@/types/warrior.types';
+import { scriptRng } from '@/test/_fixtures/rngStub';
 
 // Registry-level partial mocks so the barrel re-exports intercept correctly.
 vi.mock('@/engine/training/trainingGains/attributeTraining', async (importActual) => {
@@ -34,25 +35,15 @@ const mkWarrior = (over = {}) =>
     }
   );
 
-const makeRNG = (nextVal = 0.99): IRNGService =>
-  ({
-    next: () => nextVal,
-    pick: <T>(arr: T[]): T => arr[0]!,
-    roll: () => 1,
-    uuid: (p?: string) => (p ? `${p}-u` : 'u'),
-    shuffle: <T>(arr: T[]): T[] => arr,
-    chance: (p: number) => nextVal < p,
-  }) as unknown as IRNGService;
-
 const args = (over: Partial<Parameters<typeof runTrainingAttempt>[0]> = {}) =>
   ({
     warrior: mkWarrior(),
     attribute: 'ST' as const,
-    stableCtx: { season: 'Summer' as const, trainers: [] },
+    state: { season: 'Summer', trainers: [] } as never,
     seasonalGrowth: [],
     healingBonus: 0,
     weather: 'Rainy' as const,
-    rng: makeRNG(),
+    rng: scriptRng(0.99),
     ...over,
   });
 
@@ -61,7 +52,7 @@ const attrResult = (
 ): ReturnType<typeof processAttributeTraining> =>
   ({
     updatedWarrior: mkWarrior(),
-    updatedSeasonalGrowth: undefined,
+    updatedSeasonalGrowth: null,
     result: { type: 'gain', warriorId: 'w1' as WarriorId, message: 'gained' },
     hardCapped: false,
     ...over,
@@ -99,6 +90,18 @@ describe('runTrainingAttempt (V30 unified executor)', () => {
     const out = runTrainingAttempt(args());
     expect(out.attempted).toBe(false);
     expect(rollForTrainingInjury).not.toHaveBeenCalled();
+  });
+
+  it('DOES roll on a silent blocked result — the effort happened (player ruleset)', () => {
+    vi.mocked(processAttributeTraining).mockReturnValueOnce(
+      attrResult({
+        updatedWarrior: undefined,
+        result: { type: 'blocked', warriorId: 'w1' as WarriorId, message: '' },
+      })
+    );
+    const out = runTrainingAttempt(args());
+    expect(out.attempted).toBe(true);
+    expect(rollForTrainingInjury).toHaveBeenCalled();
   });
 
   it('rolls the injury and applies it to the returned warrior when the roll lands', () => {

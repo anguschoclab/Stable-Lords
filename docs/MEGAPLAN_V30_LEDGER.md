@@ -19,6 +19,8 @@
 | Commit | Phase | Contents | Gates |
 | --- | --- | --- | --- |
 | _scaffold_ | 0 | V30 doc set + V29 archive + allowlists + INDEX/BACKLOG pointers | doc-layout guard |
+| _phaseT_ | T | 13 specs + 4 guards authored & RED-verified; test-audit metadata regen | §3 RED log below |
+| _phase1_ | 1 | W2 dead code + namesakes: dead `updateWarriorAfterBout`+test block, `combatActions.ts` file+types+tests (dead `appendFight`/`updateWarriorStatus`), `.slice(-500)`→`TRUNCATION_CAPS` ×2, autosim `extractWeekSummary`→`extractAutosimWeekSummary` + offer-loop merge into `playerOfferCandidates` generator, intelWorker `titleOpponents` generator, RecordBoards `warriorRows` merge | full fast suite: 10868 pass / 14 fail — **all failures are the intended-RED V30 specs** (list in §3); typecheck red only on target-API specs; lint clean. Collateral fixes the suite caught: stale scanInLoop allowlist entry removed, `Math.random` literal reworded in seededId doc, spec boilerplate deduped into `_fixtures/rngStub.ts` + `_scanGuardHelpers.ts` (duplication.guard test↔test pairs resolved, not registered) |
 
 ## §3 — Test inventory (Phase T hard gate)
 

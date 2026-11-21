@@ -8,6 +8,8 @@ import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { SeededRNG } from '@/utils/random';
+import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
+import { truncateArray } from '@/utils/stateUtils';
 import {
   BANKRUPTCY_THRESHOLD,
   BANKRUPTCY_GRACE_WEEKS,
@@ -95,7 +97,10 @@ function applyWeeklyEconomy(
       category: e.category,
     });
   }
-  updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries].slice(-500);
+  updatedRival.ledger = truncateArray(
+    [...(updatedRival.ledger || []), ...newEntries],
+    TRUNCATION_CAPS.rivalLedger
+  );
   return updatedRival;
 }
 

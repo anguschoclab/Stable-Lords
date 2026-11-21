@@ -20,7 +20,7 @@ import type {
 } from '@/types/state.types';
 import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
-import type { UpdateWarriorStatusArgs } from './combatActions';
+
 
 /**
  *
@@ -85,7 +85,6 @@ export interface WorldSlice {
   setWeek: (week: number) => void;
   setArenaPreferences: (prefs: Partial<ArenaPreferences>) => void;
   initializeStable: (name: string, stableName: string) => void;
-  appendFight: (summary: FightSummary) => void;
   updateBoutOfferStatus: (offerId: BoutOfferId, status: BoutOffer['status']) => void;
   respondToBoutOffer: (
     offerId: BoutOfferId,
@@ -95,7 +94,6 @@ export interface WorldSlice {
   clearExpiredOffers: () => void;
   updatePromoterHistory: (promoterId: PromoterId, purse: number, boutId: FightId) => void;
   replacePromoter: (oldId: PromoterId, newPromoter: Promoter) => void;
-  updateWarriorStatus: (args: UpdateWarriorStatusArgs) => void;
   renameStable: (newName: string) => void;
   renamePlayer: (newName: string) => void;
   toggleChallenge: (warriorId: string) => void;

@@ -10,6 +10,8 @@ import type {
 import type { LedgerEntryId } from '@/types/shared.types';
 import { AI_INTENTS } from '@/types/enumSources';
 import { hashStr } from '../../utils/random';
+import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
+import { truncateArray } from '@/utils/stateUtils';
 import { computeMetaDrift } from '../analytics/metaDrift';
 import { refreshKnownRivals, updateDossiers } from './memory/intelDossier';
 import type { PerceptionSnapshot } from './memory/perceptionSnapshot';
@@ -172,7 +174,7 @@ export function logFinanceEvent(
   };
   const withLedger: RivalStableData = {
     ...rival,
-    ledger: [...(rival.ledger ?? []), entry].slice(-500),
+    ledger: truncateArray([...(rival.ledger ?? []), entry], TRUNCATION_CAPS.rivalLedger),
   };
   return logAgentAction({
     rival: withLedger,

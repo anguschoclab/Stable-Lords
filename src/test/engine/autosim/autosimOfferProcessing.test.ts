@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { processPlayerOffers, extractWeekSummary } from '@/engine/autosim/autosim';
+import { processPlayerOffers, extractAutosimWeekSummary } from '@/engine/autosim/autosim';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 
@@ -28,17 +28,17 @@ describe('autosimOfferProcessing', () => {
     expect(result).toBeDefined();
   });
 
-  it('extractWeekSummary handles missing stewardReport gracefully', async () => {
+  it('extractAutosimWeekSummary handles missing stewardReport gracefully', async () => {
     const state = createFreshState('autosim-summary-missing-test');
     state.stewardReport = undefined;
 
-    const summary = extractWeekSummary(state, 1);
+    const summary = extractAutosimWeekSummary(state, 1);
     expect(summary.bouts).toBe(0);
     expect(summary.deaths).toBe(0);
     expect(summary.deathNames).toEqual([]);
   });
 
-  it('extractWeekSummary correctly counts kills from stewardReport', async () => {
+  it('extractAutosimWeekSummary correctly counts kills from stewardReport', async () => {
     const state = createFreshState('autosim-summary-kills-test');
     state.stewardReport = {
       id: 'test-report' as any,
@@ -54,7 +54,7 @@ describe('autosimOfferProcessing', () => {
       ],
     } as any;
 
-    const summary = extractWeekSummary(state, 1);
+    const summary = extractAutosimWeekSummary(state, 1);
     expect(summary.bouts).toBe(2);
     expect(summary.deaths).toBe(1);
     expect(summary.deathNames).toContain('Bob');

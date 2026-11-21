@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
 
 /**
@@ -24,10 +24,12 @@ describe('v30Surface guard', () => {
   });
 
   it('worldSlice no longer carries the dead appendFight/updateWarriorStatus actions', () => {
-    const actions = read('src/state/slices/worldSlice/combatActions.ts');
+    // The file that hosted them must stay deleted — it contained only the
+    // two dead actions, so its return would reintroduce both.
+    expect(
+      existsSync(path.join(REPO, 'src/state/slices/worldSlice/combatActions.ts'))
+    ).toBe(false);
     const types = read('src/state/slices/worldSlice/types.ts');
-    expect(actions).not.toMatch(/appendFight:/);
-    expect(actions).not.toMatch(/updateWarriorStatus:/);
     expect(types).not.toMatch(/appendFight:/);
     expect(types).not.toMatch(/updateWarriorStatus:/);
   });

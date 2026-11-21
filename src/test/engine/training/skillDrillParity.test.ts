@@ -6,12 +6,13 @@ import { processSkillDrillTraining } from '@/engine/training/trainingGains';
 import { rollForTrainingInjury } from '@/engine/training/trainingGains';
 import { makeComputedWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/game';
-import type { WarriorId, InjuryData } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { WarriorId } from '@/types/shared.types';
+import type { InjuryData } from '@/types/warrior.types';
+import { scriptRng } from '@/test/_fixtures/rngStub';
 
-vi.mock('@/engine/training/trainingGains/skillDrillTraining', async (importActual) => {
+vi.mock('@/engine/training/trainingGains/skillDrilling', async (importActual) => {
   const actual =
-    await importActual<typeof import('@/engine/training/trainingGains/skillDrillTraining')>();
+    await importActual<typeof import('@/engine/training/trainingGains/skillDrilling')>();
   return { ...actual, processSkillDrillTraining: vi.fn(actual.processSkillDrillTraining) };
 });
 vi.mock('@/engine/training/trainingGains/injuryAndRecovery', async (importActual) => {
@@ -28,24 +29,14 @@ const mkWarrior = () =>
     skillDrills: { ATT: 1 },
   });
 
-const makeRNG = (): IRNGService =>
-  ({
-    next: () => 0.99,
-    pick: <T>(arr: T[]): T => arr[0]!,
-    roll: () => 1,
-    uuid: (p?: string) => (p ? `${p}-u` : 'u'),
-    shuffle: <T>(arr: T[]): T[] => arr,
-    chance: () => false,
-  }) as unknown as IRNGService;
-
 const args = (over: Partial<Parameters<typeof runSkillDrillAttempt>[0]> = {}) =>
   ({
     warrior: mkWarrior(),
     skill: 'ATT' as const,
-    stableCtx: { trainers: [] },
+    state: { trainers: [] } as never,
     healingBonus: 2,
     weather: 'Gale' as const,
-    rng: makeRNG(),
+    rng: scriptRng(0.99),
     ...over,
   });
 
@@ -83,6 +74,18 @@ describe('runSkillDrillAttempt (V30 unified executor)', () => {
     const out = runSkillDrillAttempt(args());
     expect(out.attempted).toBe(false);
     expect(rollForTrainingInjury).not.toHaveBeenCalled();
+  });
+
+  it('DOES roll on a no-progress drill — only hardCapped gates the roll (player ruleset)', () => {
+    vi.mocked(processSkillDrillTraining).mockReturnValueOnce(
+      drillResult({
+        updatedWarrior: null,
+        result: { type: 'blocked', warriorId: 'w1' as WarriorId, message: 'no progress' },
+      })
+    );
+    const out = runSkillDrillAttempt(args());
+    expect(out.attempted).toBe(true);
+    expect(rollForTrainingInjury).toHaveBeenCalled();
   });
 
   it('applies a landed injury to the returned warrior', () => {

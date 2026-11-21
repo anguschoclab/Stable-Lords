@@ -8,7 +8,7 @@ import { makeComputedWarrior, makeRivalStable } from '@/test/_fixtures/factories
 import { makeAiTestState } from '@/test/_fixtures/aiTestState';
 import { FightingStyle } from '@/types/game';
 import type { WarriorId, Warrior } from '@/types/game';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { scriptRng } from '@/test/_fixtures/rngStub';
 
 const mkWarrior = (): Warrior =>
   makeComputedWarrior({}, FightingStyle.StrikingAttack, {
@@ -18,17 +18,6 @@ const mkWarrior = (): Warrior =>
     potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
     skillDrills: {},
   });
-
-/** Scripted rng — every draw returns the same value so draw-order can't diverge. */
-const scriptRng = (nextVal: number): IRNGService =>
-  ({
-    next: () => nextVal,
-    pick: <T>(arr: T[]): T => arr[0]!,
-    roll: () => 1,
-    uuid: (p?: string) => (p ? `${p}-u` : 'u'),
-    shuffle: <T>(arr: T[]): T[] => arr,
-    chance: (p: number) => nextVal < p,
-  }) as unknown as IRNGService;
 
 describe('AI↔player training parity (V30 same ruleset)', () => {
   it('attribute attempt: AI flow and player assignment produce identical outcomes', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { processPlayerOffers, extractWeekSummary, runAutosim } from '@/engine/autosim/autosim';
+import { processPlayerOffers, extractAutosimWeekSummary, runAutosim } from '@/engine/autosim/autosim';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import type { GameState, BoutOffer, TournamentEntry } from '@/types/state.types';
@@ -218,7 +218,7 @@ describe('processPlayerOffers', () => {
   });
 });
 
-describe('extractWeekSummary', () => {
+describe('extractAutosimWeekSummary', () => {
   it('extracts death names from kill bouts', () => {
     const state = makeState();
     state.stewardReport = {
@@ -234,7 +234,7 @@ describe('extractWeekSummary', () => {
       ],
     };
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.deathNames).toHaveLength(2);
     expect(summary.deathNames).toContain('Bob');
     expect(summary.deathNames).toContain('Carol');
@@ -256,7 +256,7 @@ describe('extractWeekSummary', () => {
       ],
     };
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.deathNames).toEqual([]);
     expect(summary.deaths).toBe(0);
   });
@@ -265,7 +265,7 @@ describe('extractWeekSummary', () => {
     const state = makeState();
     state.stewardReport = undefined;
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.bouts).toBe(0);
     expect(summary.deaths).toBe(0);
     expect(summary.deathNames).toEqual([]);
@@ -283,7 +283,7 @@ describe('extractWeekSummary', () => {
       bouts: [],
     };
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.bouts).toBe(0);
     expect(summary.deaths).toBe(0);
     expect(summary.deathNames).toEqual([]);
@@ -305,7 +305,7 @@ describe('extractWeekSummary', () => {
       ],
     };
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.bouts).toBe(3);
   });
 
@@ -313,7 +313,7 @@ describe('extractWeekSummary', () => {
     const state = makeState();
     state.stewardReport = undefined;
 
-    const summary = extractWeekSummary(state, 42);
+    const summary = extractAutosimWeekSummary(state, 42);
     expect(summary.week).toBe(42);
   });
 
@@ -329,7 +329,7 @@ describe('extractWeekSummary', () => {
       bouts: [makeFightSummary('Alice versus Bob', 'A', 'Kill')],
     };
 
-    const summary = extractWeekSummary(state, 5);
+    const summary = extractAutosimWeekSummary(state, 5);
     expect(summary.deaths).toBe(1);
     expect(summary.deathNames).toHaveLength(1);
     expect(summary.deathNames).toContain('Unknown');

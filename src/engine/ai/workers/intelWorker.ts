@@ -69,6 +69,32 @@ function estimatePlan(
 const PLAN_TELL_WINDOW = 8;
 
 /**
+ * Our pending/signed title bouts → the opposing {warriorId, stableId} pair.
+ * Shared by the scout-target and report-warrior pickers.
+ */
+function* titleOpponents(
+  rival: RivalStableData,
+  state: GameState
+): Generator<{ otherId: string; oppStableId: string | undefined }> {
+  const selfIds = new Set(rival.roster.map((w) => w.id));
+  const playerIds = keySet(state.roster, (w) => w.id);
+  for (const offer of Object.values(state.boutOffers ?? {})) {
+    if (!offer.titleArenaId) continue;
+    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
+    const mine = offer.warriorIds.find((id) => selfIds.has(id));
+    if (!mine) continue;
+    const otherId = offer.warriorIds.find((id) => id !== mine);
+    if (!otherId) continue;
+    yield {
+      otherId,
+      oppStableId:
+        state.warriorToStableMap?.get(otherId)?.stableId ??
+        (playerIds.has(otherId) ? state.player.id : undefined),
+    };
+  }
+}
+
+/**
  * Pick the dossier most worth scouting: the vendetta target if there is one,
  * else the highest-threat observed stable, else the stable we meet in an
  * upcoming title bout, else the most famous rival, else the player.
@@ -91,19 +117,8 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
 
   // Upcoming title opponent — a pending/signed title bout involving one of
   // our warriors makes the other side's stable the most relevant read.
-  const selfIds = new Set(rival.roster.map((w) => w.id));
-  const playerIds = keySet(state.roster, (w) => w.id);
-  for (const offer of Object.values(state.boutOffers ?? {})) {
-    if (!offer.titleArenaId) continue;
-    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
-    const mine = offer.warriorIds.find((id) => selfIds.has(id));
-    if (!mine) continue;
-    const otherId = offer.warriorIds.find((id) => id !== mine);
-    if (!otherId) continue;
-    const oppStable =
-      state.warriorToStableMap?.get(otherId)?.stableId ??
-      (playerIds.has(otherId) ? state.player.id : undefined);
-    if (oppStable) return oppStable;
+  for (const { oppStableId } of titleOpponents(rival, state)) {
+    if (oppStableId) return oppStableId;
   }
 
   // Thin intel: no dossier has an edge — scout the most famous rival stable
@@ -166,19 +181,8 @@ function pickReportWarrior(
   targetRival: RivalStableData | undefined,
   state: GameState
 ): Warrior | undefined {
-  const selfIds = new Set(rival.roster.map((w) => w.id));
-  const playerIds = keySet(state.roster, (w) => w.id);
-  for (const offer of Object.values(state.boutOffers ?? {})) {
-    if (!offer.titleArenaId) continue;
-    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
-    const mine = offer.warriorIds.find((id) => selfIds.has(id));
-    if (!mine) continue;
-    const otherId = offer.warriorIds.find((id) => id !== mine);
-    if (!otherId) continue;
-    const oppStable =
-      state.warriorToStableMap?.get(otherId)?.stableId ??
-      (playerIds.has(otherId) ? state.player.id : undefined);
-    if (oppStable === targetId) return findWarriorById(state, otherId);
+  for (const { otherId, oppStableId } of titleOpponents(rival, state)) {
+    if (oppStableId === targetId) return findWarriorById(state, otherId);
   }
 
   const pool = (targetId === state.player.id ? state.roster : targetRival?.roster) ?? [];

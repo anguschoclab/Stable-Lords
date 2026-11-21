@@ -141,11 +141,6 @@ const KNOWN_EXCEPTIONS: { file: string; match: string; why: string }[] = [
   },
   {
     file: 'src/engine/autosim/autosim.ts',
-    match: "o.warriorIds.some((id) => playerIds.has(id))",
-    why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
-  },
-  {
-    file: 'src/engine/autosim/autosim.ts',
     match: "offer.warriorIds.find((id) => playerIds.has(id))",
     why: 'bounded scan — bout offer warriorIds is a ≤2-element list; a Set adds allocation without gain',
   },

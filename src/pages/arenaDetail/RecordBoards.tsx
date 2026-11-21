@@ -1,4 +1,5 @@
 import { Crown, Skull, Swords, Trophy, Building2 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import type { WarriorId } from '@/types/shared.types';
 import type {
   calculateArenaLeaderboard,
@@ -58,8 +59,16 @@ type KillerEntry = NonNullable<Leaderboard>['topKillers'][number];
 type StyleLeaderEntry = NonNullable<StyleLeaders[keyof StyleLeaders]>;
 type StableEntry = StableStandings[number];
 
-const topWarriorRows = (lb: Leaderboard | undefined, champId: WarriorId | undefined): TableRow[] =>
-  (lb?.topWarriors ?? []).map((e: WarriorEntry, i) => ({
+/**
+ * Shared warrior-leaderboard row shape: name tag → stable → W/L/K (with the
+ * kill-count order flip for executioners) → a trailing stat cell.
+ */
+const warriorRows = (
+  entries: (WarriorEntry | KillerEntry)[] | undefined,
+  champId: WarriorId | undefined,
+  opts: { killsFirst?: boolean; tail: (e: WarriorEntry | KillerEntry) => ReactNode }
+): TableRow[] =>
+  (entries ?? []).map((e, i) => ({
     key: e.warriorId,
     rank: i + 1,
     cells: [
@@ -71,34 +80,36 @@ const topWarriorRows = (lb: Leaderboard | undefined, champId: WarriorId | undefi
         isChampion={e.warriorId === champId}
       />,
       <StableCell key="s" name={e.stableName} />,
-      <RecordCells key="r" wins={e.wins} losses={e.losses} kills={e.kills} />,
-      <span key="w" className="font-mono font-black text-[11px] text-arena-gold">
-        {(e.winRate * 100).toFixed(0)}%
-      </span>,
+      <RecordCells
+        key="r"
+        wins={e.wins}
+        losses={e.losses}
+        kills={e.kills}
+        killsFirst={opts.killsFirst}
+      />,
+      opts.tail(e),
     ],
     isPlayer: e.isPlayer,
   }));
 
+const topWarriorRows = (lb: Leaderboard | undefined, champId: WarriorId | undefined): TableRow[] =>
+  warriorRows(lb?.topWarriors, champId, {
+    tail: (e) => (
+      <span key="w" className="font-mono font-black text-[11px] text-arena-gold">
+        {((e as WarriorEntry).winRate * 100).toFixed(0)}%
+      </span>
+    ),
+  });
+
 const topKillerRows = (lb: Leaderboard | undefined, champId: WarriorId | undefined): TableRow[] =>
-  (lb?.topKillers ?? []).map((e: KillerEntry, i) => ({
-    key: e.warriorId,
-    rank: i + 1,
-    cells: [
-      <WarriorNameTag
-        key="n"
-        id={e.warriorId}
-        name={e.name}
-        epithet={e.epithet}
-        isChampion={e.warriorId === champId}
-      />,
-      <StableCell key="s" name={e.stableName} />,
-      <RecordCells key="r" wins={e.wins} losses={e.losses} kills={e.kills} killsFirst />,
+  warriorRows(lb?.topKillers, champId, {
+    killsFirst: true,
+    tail: (e) => (
       <span key="k" className="font-mono font-black text-[11px] text-arena-blood">
         {e.kills}
-      </span>,
-    ],
-    isPlayer: e.isPlayer,
-  }));
+      </span>
+    ),
+  });
 
 const styleLeaderRows = (styleLeaders: StyleLeaders, champId: WarriorId | undefined): TableRow[] =>
   Object.entries(styleLeaders).flatMap(([style, e], i) =>

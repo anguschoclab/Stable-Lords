@@ -5,7 +5,6 @@ import { immer } from 'zustand/middleware/immer';
 import { createWorldSlice, WorldSlice } from '@/state/slices/worldSlice';
 import { createEconomySlice, EconomySlice } from '@/state/slices/economySlice';
 import { act } from '@testing-library/react';
-import type { FightSummary } from '@/types/combat.types';
 
 const createTestStore = () =>
   create<WorldSlice & EconomySlice>()(
@@ -31,41 +30,6 @@ describe('WorldSlice', () => {
     expect(player.name).toBe('Amau');
     expect(player.stableName).toBe('The Gilded Lions');
     expect(treasury).toBe(500);
-  });
-
-  it('should append a fight to the arena history', () => {
-    const mockFight = {
-      id: 'f1',
-      winner: 'a',
-      transcript: [{ text: 'Clang!' }],
-    } as any as FightSummary;
-
-    act(() => {
-      useTestStore.getState().appendFight(mockFight);
-    });
-
-    expect(useTestStore.getState().arenaHistory).toHaveLength(1);
-  });
-
-  it('should truncate arena history and remove old transcripts', () => {
-    // Fill history with 25 fights
-    act(() => {
-      for (let i = 0; i < 25; i++) {
-        const fight = {
-          id: `f${i}`,
-          transcript: [{ text: 'Heavy breathing...' }],
-        } as any as FightSummary;
-        useTestStore.getState().appendFight(fight);
-      }
-    });
-
-    const history = useTestStore.getState().arenaHistory;
-    expect(history).toHaveLength(25);
-
-    // The 0th fight (oldest) should have NO transcript if we keep only last 20
-    expect(history[0]!.transcript).toBeUndefined();
-    // The 24th fight (newest) SHOULD have a transcript
-    expect(history[24]!.transcript).toBeDefined();
   });
 
   it('should update bout offer status', () => {
@@ -204,101 +168,6 @@ describe('WorldSlice', () => {
     expect(useTestStore.getState()).toBe(stateBefore);
   });
 
-  it('should update player warrior status', () => {
-    act(() => {
-      useTestStore.setState({
-        roster: [
-          { id: 'w1', fame: 10, popularity: 10, career: { wins: 1, losses: 1, kills: 1 } } as any,
-        ],
-      });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'w1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-      });
-    });
-
-    const w = useTestStore.getState().roster[0]!;
-    expect(w.fame).toBe(15);
-    expect(w.popularity).toBe(15);
-    expect(w.career?.wins).toBe(2);
-    expect(w.career?.losses).toBe(1);
-    expect(w.career?.kills).toBe(2);
-  });
-
-  it('should update player warrior status (loss, no kill)', () => {
-    act(() => {
-      useTestStore.setState({
-        roster: [{ id: 'w1' } as any],
-      });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'w1' as any,
-        won: false,
-        killed: false,
-        fameDelta: -5,
-        popDelta: -5,
-      });
-    });
-
-    const w = useTestStore.getState().roster[0]!;
-    expect(w.fame).toBe(0);
-    expect(w.popularity).toBe(0);
-    expect(w.career?.wins).toBe(0);
-    expect(w.career?.losses).toBe(1);
-    expect(w.career?.kills).toBe(0);
-  });
-
-  it('should not crash if updateWarriorStatus targets non-existent player warrior', () => {
-    act(() => {
-      useTestStore.setState({ roster: [] });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'w1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-      });
-    });
-    expect(useTestStore.getState().roster).toEqual([]);
-  });
-
-  it('should update rival warrior status', () => {
-    act(() => {
-      useTestStore.setState({
-        rivals: [
-          {
-            owner: { id: 'r1' },
-            roster: [
-              {
-                id: 'rw1',
-                fame: 10,
-                popularity: 10,
-                career: { wins: 1, losses: 1, kills: 1 },
-              } as any,
-            ],
-          } as any,
-        ],
-      });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'rw1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-        rivalStableId: 'r1' as any,
-      });
-    });
-
-    const w = useTestStore.getState().rivals[0]!.roster[0]!;
-    expect(w.fame).toBe(15);
-    expect(w.popularity).toBe(15);
-    expect(w.career?.wins).toBe(2);
-    expect(w.career?.losses).toBe(1);
-    expect(w.career?.kills).toBe(2);
-  });
-
   it('should set week', () => {
     act(() => {
       useTestStore.getState().setWeek(10);
@@ -428,89 +297,6 @@ describe('WorldSlice', () => {
     });
     expect(useTestStore.getState().boutOffers['o1']?.responses['w1']).toBe('Accepted');
     expect(useTestStore.getState().boutOffers['o1']?.status).toBe('Signed');
-  });
-
-  it('should update player warrior status safely when fields are missing', () => {
-    act(() => {
-      useTestStore.setState({
-        roster: [{ id: 'w1' } as any],
-      });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'w1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-      });
-    });
-
-    const w = useTestStore.getState().roster[0]!;
-    expect(w.fame).toBe(5);
-    expect(w.popularity).toBe(5);
-    expect(w.career?.wins).toBe(1);
-    expect(w.career?.losses).toBe(0);
-    expect(w.career?.kills).toBe(1);
-  });
-
-  it('should update rival warrior status safely when fields are missing', () => {
-    act(() => {
-      useTestStore.setState({
-        rivals: [{ owner: { id: 'r1' }, roster: [{ id: 'rw1' } as any] } as any],
-      });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'rw1' as any,
-        won: false,
-        killed: false,
-        fameDelta: -5,
-        popDelta: -5,
-        rivalStableId: 'r1' as any,
-      });
-    });
-
-    const w = useTestStore.getState().rivals[0]!.roster[0]!;
-    expect(w.fame).toBe(0);
-    expect(w.popularity).toBe(0);
-    expect(w.career?.wins).toBe(0);
-    expect(w.career?.losses).toBe(1);
-    expect(w.career?.kills).toBe(0);
-  });
-
-  it('should not throw if updateWarriorStatus targets non-existent rival stable', () => {
-    act(() => {
-      useTestStore.setState({ rivals: [] });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'rw1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-        rivalStableId: 'r1' as any,
-      });
-    });
-    expect(useTestStore.getState().rivals).toEqual([]);
-  });
-
-  it('should not throw if updateWarriorStatus targets non-existent rival warrior', () => {
-    act(() => {
-      useTestStore.setState({ rivals: [{ owner: { id: 'r1' }, roster: [] } as any] });
-      useTestStore.getState().updateWarriorStatus({
-        warriorId: 'rw1' as any,
-        won: true,
-        killed: true,
-        fameDelta: 5,
-        popDelta: 5,
-        rivalStableId: 'r1' as any,
-      });
-    });
-    expect(useTestStore.getState().rivals[0]!.roster).toEqual([]);
-  });
-
-  it('should not throw if f.transcript is undefined in appendFight', () => {
-    act(() => {
-      useTestStore.setState({ arenaHistory: Array(21).fill({ id: 'f0' }) });
-      useTestStore.getState().appendFight({ id: 'f1' } as any);
-    });
-    expect(useTestStore.getState().arenaHistory).toHaveLength(22);
   });
 
   describe('toggleChallenge', () => {

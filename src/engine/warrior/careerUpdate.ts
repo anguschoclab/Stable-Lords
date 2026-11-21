@@ -214,42 +214,6 @@ export function applyCareerUpdate(warrior: Warrior, result: CareerUpdateResult):
 /**
  *
  */
-interface UpdateWarriorAfterBoutArgs {
-  warrior: Warrior;
-  fameDelta: number;
-  popularityDelta: number;
-  isWinner: boolean;
-  wasKilled: boolean;
-  tags: string[];
-}
-
-/**
- * Legacy-compatible function for bout record handling
- * Matches the signature of the original updateWarriorAfterBout
- */
-export function updateWarriorAfterBout(args: UpdateWarriorAfterBoutArgs): Warrior {
-  const { warrior, fameDelta, popularityDelta, isWinner, wasKilled } = args;
-  const { tags } = args;
-  const input: CareerUpdateInput = {
-    isWinner,
-    isKill: wasKilled,
-    isVictim: wasKilled,
-    fameDelta,
-    popularityDelta,
-  };
-
-  const result = calculateCareerUpdate(warrior, input);
-
-  // Add "Flashy" flair tag if applicable
-  const flair = flashyFlair(warrior, isWinner, tags);
-  if (flair) result.flair = flair;
-
-  return applyCareerUpdate(warrior, result);
-}
-
-/**
- *
- */
 interface UpdateWarriorFromBoutOutcomeArgs {
   warrior: Warrior;
   isAttacker: boolean;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-21T20:07:19.084Z",
+  "generatedAt": "2026-11-21T22:03:21.751Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -175,6 +175,7 @@
     "src/test/engine/ai/canonTargeting.test.ts",
     "src/test/engine/ai/intentEngine.tournament.test.ts",
     "src/test/engine/ai/intentStates.test.ts",
+    "src/test/engine/ai/plan/abExhaustDoctrine.test.ts",
     "src/test/engine/ai/plan/coreGenerator.test.ts",
     "src/test/engine/ai/styleDoctrine.test.ts",
     "src/test/engine/analytics/almanac.test.ts",

@@ -17,7 +17,9 @@
 
 | Commit | Phase | Contents | Gates |
 | --- | --- | --- | --- |
-| — | Phase 0 | scaffold: tag, V30 archive move, allowlist extension, V31 doc set | _in flight_ |
+| `4449c4547` | Phase 0 | scaffold: tag, V30 archive move, `ARCHIVED_DOCS`/`ARCHIVED_VERSIONS` extension, V31 doc set, INDEX | `megaplanDocLayout` + `docsLayout` green (12/12) |
+| `e4719945d` | Phase F | claims register (28→30 rows) + FINDINGS §1 audit + §2 register | register scanner clean |
+| (gate) | Gate | 8 DECISION-NEEDED rulings recorded: F1/F4 deferred-evidence; knack+M4+breakage+AB-exhaust+eval+probe = implement | — |
 
 ## §2 — Deferred register pointer
 
@@ -29,4 +31,11 @@ Every Phase T spec/pin/guard must be observed RED before its implementation phas
 
 | Spec / guard | Phase | RED evidence | Status |
 | --- | --- | --- | --- |
-| — | _filled in Phase T_ | — | — |
+| `skillTiers.canon.test.ts` (+4 rows, rungs assert) | T | 5 fails: `44/55/56/80 → GM/ARCH`, `grandmaster.min`/`archmaster.min` undefined | RED observed |
+| `scouting/knackInsights.canon.test.ts` | T | 2 fails (bonused + hosed Knack tokens); 2 pins GREEN (mild + non-Expert — vacuous until channel exists) | RED observed |
+| `combat/weaponBreak.canon.test.ts` | T | 3 fails (`weaponBreakChance` missing symbol; seeded QS break absent); 2 pins GREEN (scimitar/rearm — vacuous) | RED observed |
+| `ai/plan/abExhaustDoctrine.test.ts` | T | 1 fail (defensive opening tactic absent — generic `buildPhasePlan` taper carries no tactic); 1 pin GREEN | RED observed |
+| `combat/matchupMatrix.canon.test.ts` | T | 4 fails (LU>BA, PRP>LU, TP>AB, TP>offensives — all 0-vs-negative symmetric, not dominant) | RED observed |
+| `warrior/designReview.test.ts` (+3) | T | 2 fails ('Primus-bound'/'Viable frame' titles absent); 1 pin GREEN | RED observed |
+| `canonClaims.guard.slow.test.ts` + `scripts/canon-claims-scan.mjs` | T | GREEN — ratchet pins resolved-state (planted-violation check: fails as designed) | pin (ratchet) |
+| `test-audit-scan.mjs` regen | T | `runnerGroups.json` + `auditBaseline.json` regenerated | GREEN |

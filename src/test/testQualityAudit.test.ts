@@ -156,6 +156,7 @@ const GUARD_REGISTRY: Record<string, string> = {
   'aiParityFunnel.guard.test.ts': 'LIVE_RATCHET',
   'appShell.cta.test.tsx': 'LIVE_RATCHET',
   'arenaLookup.guard.test.ts': 'LIVE_RATCHET',
+  'canonClaims.guard.slow.test.ts': 'LIVE_RATCHET',
   'documentationParity.test.ts': 'LIVE_RATCHET',
   'docsLayout.guard.test.ts': 'LIVE_RATCHET',
   'duplication.guard.test.ts': 'LIVE_RATCHET',

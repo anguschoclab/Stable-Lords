@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2026-11-21T20:07:19.084Z",
+  "generatedAt": "2026-11-21T22:03:21.750Z",
   "strayTestFiles": [],
   "misplacedCategoryFiles": [
+    "src/test/engine/combat/matchupMatrix.canon.test.ts",
     "src/test/engine/grudgeMap.test.ts",
     "src/test/engine/warrior/profileStatements.canon.test.ts",
     "src/test/state/lastWeekBoutDisplay.test.ts"

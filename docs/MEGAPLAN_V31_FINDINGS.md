@@ -41,13 +41,13 @@ _User-adjudication gate._ Every `missing`/`diverged`/`disputed` claim with imple
 
 | ID | Claim / conflict | Options | Ruling |
 | --- | --- | --- | --- |
-| DN-V24-F4 | Tournament-victor challenge precedence requires a `victor`/`tournamentVictor` state field that does not exist ("inventing one exceeds scope" per V24). Blocks V24-F1's TV leg. | invent field + full ordering / ordering minus TV leg / defer both | _pending_ |
-| DN-V24-F1 | Canon challenge ordering (DA → bloodfeud → TV → first → second → random); bloodfeud fast-path landed, strict ordering unbuilt | implement strict ordering / defer | _pending_ |
-| DN-V27-§5 | Knack (`luckfactor`/`bloodlust` hidden) scout-rumor surface — canon push delivered by the archive's luck-factor material | land rumor surface / keep hidden | _pending_ |
-| DN-M4 | Skill-rank ladder: code stops at Advanced Master (34) per Consortium Q&A; archive adds Grandmaster (44)/Archmaster (56) | extend ladder / keep Q&A canon | _pending_ |
-| DN-C8 | Weapon breakage folklore (QS/GA/GS "break a lot") — no mechanic exists | implement breakage / house deferral | _pending_ |
-| DN-S2 | Defensive AB exhaust-then-strike template — `ripostingHybrid` exists, no explicit curve | add AB exhaust template / keep archetype fit | _pending_ |
-| DN-S6 | Style-vs-style arena records (Hoser #9) vs tuned `MATCHUP_MATRIX` — retune toward records or keep house tuning (TP dominance already adjudicated canon-accurate) | retune probe / keep matrix | _pending_ |
-| DN-D3 | WT+WL+DF ≥ 49 "Primus-bound" / ≥ 35 viable eval thresholds into `designReview` | add eval notes / skip | _pending_ |
+| DN-V24-F4 | Tournament-victor challenge precedence requires a `victor`/`tournamentVictor` state field that does not exist ("inventing one exceeds scope" per V24). Blocks V24-F1's TV leg. | invent field + full ordering / ordering minus TV leg / defer both | DEFER both — evidence fold into V24-F1/F4 backlog rows (Hoser #9 canon text) |
+| DN-V24-F1 | Canon challenge ordering (DA → bloodfeud → TV → first → second → random); bloodfeud fast-path landed, strict ordering unbuilt | implement strict ordering / defer | DEFER (with F4) — evidence fold |
+| DN-V27-§5 | Knack (`luckfactor`/`bloodlust` hidden) scout-rumor surface — canon push delivered by the archive's luck-factor material | land rumor surface / keep hidden | IMPLEMENT — land scout-rumor/intel surface for luckfactor/bloodlust (vague hints, not exact values) |
+| DN-M4 | Skill-rank ladder: code stops at Advanced Master (34) per Consortium Q&A; archive adds Grandmaster (44)/Archmaster (56) | extend ladder / keep Q&A canon | IMPLEMENT — extend SKILL_TIER_LABELS: Grandmaster (44), Archmaster (56) |
+| DN-C8 | Weapon breakage folklore (QS/GA/GS "break a lot") — no mechanic exists | implement breakage / house deferral | IMPLEMENT — per-weapon break chance on hard contacts (combat-domain + balance + determinism review) |
+| DN-S2 | Defensive AB exhaust-then-strike template — `ripostingHybrid` exists, no explicit curve | add AB exhaust template / keep archetype fit | IMPLEMENT — AB exhaust-then-strike plan curve in ai/plan generation |
+| DN-S6 | Style-vs-style arena records (Hoser #9) vs tuned `MATCHUP_MATRIX` — retune toward records or keep house tuning (TP dominance already adjudicated canon-accurate) | retune probe / keep matrix | PROBE — style-probe vs archive pairings; retune only cells contradicting BOTH sim evidence and archive (two-source agreement) |
+| DN-D3 | WT+WL+DF ≥ 49 "Primus-bound" / ≥ 35 viable eval thresholds into `designReview` | add eval notes / skip | IMPLEMENT — WT+WL+DF ≥49/≥35 composite eval notes in designReview |
 
 **Evidence-fold items (no ruling needed — land in coupled backlog rows):** C4 archive formulas (chart wins), D5 + S7 + M2 + M7 Bloodgames material (→ V24-D5), M6 ADM (→ V22-D4), D7 luckfactor model (±4 adopted).

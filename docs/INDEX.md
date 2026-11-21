@@ -15,10 +15,10 @@ every non-archive doc must appear here.
 ## Megaplan (protocol)
 
 - [`MEGAPLAN_BACKLOG.md`](MEGAPLAN_BACKLOG.md) — living register of open deferred items, watch items, and house divergences
-- [`MEGAPLAN_V30_PLAN.md`](MEGAPLAN_V30_PLAN.md) — harmonization & deduplication campaign plan
-- [`MEGAPLAN_V30_FINDINGS.md`](MEGAPLAN_V30_FINDINGS.md) — validation audit + adjudication findings
-- [`MEGAPLAN_V30_LEDGER.md`](MEGAPLAN_V30_LEDGER.md) — phase commits & baseline/final gates
-- [`MEGAPLAN_V30_DEFERRED.md`](MEGAPLAN_V30_DEFERRED.md) — deferred scope & watch items folded to the backlog
+- [`MEGAPLAN_V31_PLAN.md`](MEGAPLAN_V31_PLAN.md) — Terrablood canon harvest campaign plan
+- [`MEGAPLAN_V31_FINDINGS.md`](MEGAPLAN_V31_FINDINGS.md) — validation audit + canon-claims findings
+- [`MEGAPLAN_V31_LEDGER.md`](MEGAPLAN_V31_LEDGER.md) — phase commits & baseline/final gates
+- [`MEGAPLAN_V31_DEFERRED.md`](MEGAPLAN_V31_DEFERRED.md) — deferred scope & watch items folded to the backlog
 
 ## Design — the bible corpus
 
@@ -61,6 +61,7 @@ UI design system:
 - [`combat-subsystems-2026-06.md`](engineering/combat-subsystems-2026-06.md) — kill windows, distance contest, fatigue deep-dive
 - [`bard-engine-context.md`](engineering/bard-engine-context.md) — bard narrative engine context & audit
 - [`ai-behavior-audit-v3.md`](engineering/ai-behavior-audit-v3.md) — live AI-behavior audit register (v1/v2 archived)
+- [`terrablood-canon-claims.md`](engineering/terrablood-canon-claims.md) — V31 distilled register of Terrablood archive claims vs live code (per-article, verdict + file:line evidence)
 
 ## Reports (generated — regenerate, don't hand-edit)
 
@@ -77,7 +78,7 @@ UI design system:
 Frozen history — docs here are immutable audit records; stale internal
 references are left verbatim.
 
-- [`archive/megaplans/`](archive/megaplans/) — megaplan lineage docs V8-era through V29 (indexed in `MEGAPLAN_BACKLOG.md` §6)
+- [`archive/megaplans/`](archive/megaplans/) — megaplan lineage docs V8-era through V30 (indexed in `MEGAPLAN_BACKLOG.md` §6)
 - [`archive/audits/`](archive/audits/) — `ai-behavior-audit-v{1,2}.md`, `orphan-feature-audit-v{1,2}.md`
 - [`archive/summaries/`](archive/summaries/) — `refactoring-summary.md`, `pipeline-tick-implementation-summary.md`
 - [`archive/superpowers/`](archive/superpowers/) — June-2026 superpowers `plans/` + `specs/` + the combat-spatial impl plan

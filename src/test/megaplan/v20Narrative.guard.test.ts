@@ -3,6 +3,7 @@ import { ORIGINS } from '@/engine/narrative/lore/origins';
 import { CHILDHOOD_TRAITS } from '@/engine/narrative/lore/childhoodTraits';
 import { DEFINING_MOMENTS } from '@/engine/narrative/lore/definingMoments';
 import { ARENA_LORE_BACKFILL_2 } from '@/data/arenas/loreBackfill2';
+import { expectUniqueStrings } from './_scanGuardHelpers';
 
 /**
  * V20 narrative-pool guards (PRs #1065 + #1068 union-merge).
@@ -21,13 +22,7 @@ describe('narrative pool uniqueness (live guard)', () => {
 
   for (const [name, pool] of pools) {
     it(`${name} contains no duplicate strings`, () => {
-      const seen = new Set<string>();
-      const dupes: string[] = [];
-      for (const s of pool) {
-        if (seen.has(s)) dupes.push(s.slice(0, 60));
-        seen.add(s);
-      }
-      expect(dupes).toEqual([]);
+      expectUniqueStrings(pool);
     });
   }
 

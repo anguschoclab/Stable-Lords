@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 // @ts-expect-error — .mjs scanner has no types
 import { collectArenaLookupScans } from '../../../scripts/arena-lookup-scan.mjs';
+import { assertAllowlistFresh, assertExceptionsReviewed } from './_scanGuardHelpers';
 
 /**
  * Arena-lookup guard — megaplan ratchet.
@@ -43,18 +44,10 @@ describe('megaplan: arena-lookup guard', () => {
   });
 
   it('every allowlisted exception still exists (stale entries must be removed)', () => {
-    for (const k of KNOWN_EXCEPTIONS) {
-      expect(
-        violations.some((v) => v.file === k.file && norm(v.text).startsWith(k.match)),
-        `allowlisted exception no longer found: ${k.file} "${k.match}" — remove it from KNOWN_EXCEPTIONS`
-      ).toBe(true);
-    }
+    assertAllowlistFresh(violations, KNOWN_EXCEPTIONS, norm);
   });
 
   it('every exception carries a reviewed reason (no placeholders)', () => {
-    for (const e of KNOWN_EXCEPTIONS) {
-      expect(e.why.length, `${e.file} ${e.match}`).toBeGreaterThan(20);
-      expect(e.why).not.toMatch(/pending triage|todo|fixme|baseline/i);
-    }
+    assertExceptionsReviewed(KNOWN_EXCEPTIONS);
   });
 });

@@ -22,34 +22,12 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
+import { ROOT, walk, rel, isTest, writeReport, isMain } from './lib/scanLib.mjs';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
 const AI_DIR = path.join(ROOT, 'src', 'engine', 'ai');
 const ENGINE_DIR = path.join(ROOT, 'src', 'engine');
-const OUT_DIR = path.join(ROOT, 'scripts', 'out');
-const OUT_FILE = path.join(OUT_DIR, 'parity-flow.json');
-
-function walk(dir, out = []) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
-      walk(p, out);
-    } else if (/\.tsx?$/.test(entry.name)) {
-      out.push(p);
-    }
-  }
-  return out;
-}
-
-const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
-const isTest = (r) =>
-  r.includes('/test/') ||
-  /\.(test|spec)\.tsx?$/.test(r) ||
-  r.includes('/_fixtures/') ||
-  r.includes('/_setup/');
+const OUT_FILE = 'parity-flow.json';
 
 const FORBIDDEN_CALLS = new Set([
   'processRecovery',
@@ -126,13 +104,9 @@ export function collectParityViolations() {
 
 function main() {
   const { violations, summary } = collectParityViolations();
-
-  fs.mkdirSync(OUT_DIR, { recursive: true });
-  fs.writeFileSync(OUT_FILE, JSON.stringify({ summary, violations }, null, 2));
-
+  writeReport(OUT_FILE, { summary, violations });
   console.log(`parity-flow violations: ${summary.total}`);
   for (const v of violations) console.log(`  ${v.file}:${v.line}  [${v.rule}]  ${v.text}`);
-  console.log(`\nwrote ${rel(OUT_FILE)}`);
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (isMain(import.meta.url)) main();

@@ -13,35 +13,15 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
+import { ROOT, walk, rel, isTest, writeReport, isMain } from './lib/scanLib.mjs';
 
-const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'src');
-const OUT_DIR = path.join(ROOT, 'scripts', 'out');
-const OUT_FILE = path.join(OUT_DIR, 'megaplan-sizes.json');
+const OUT_FILE = 'megaplan-sizes.json';
 
 const FN_LIMITS = { report: 40, over80: 80, over120: 120, over200: 200 };
 
-function walk(dir, out = []) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const p = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
-      walk(p, out);
-    } else if (/\.tsx?$/.test(entry.name)) {
-      out.push(p);
-    }
-  }
-  return out;
-}
 
-const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');
-const isTest = (r) =>
-  r.includes('/test/') ||
-  /\.(test|spec)\.tsx?$/.test(r) ||
-  r.includes('/_fixtures/') ||
-  r.includes('/_setup/');
 
 function fnName(node) {
   if (
@@ -129,11 +109,7 @@ function main() {
     functions,
   } = collectSizes();
 
-  fs.mkdirSync(OUT_DIR, { recursive: true });
-  fs.writeFileSync(
-    OUT_FILE,
-    JSON.stringify({ summary, files: { source: srcFiles, test: testFiles }, functions }, null, 2)
-  );
+  writeReport(OUT_FILE, { summary, files: { source: srcFiles, test: testFiles }, functions });
 
   console.log(`source: ${summary.totalSourceFiles} files / ${summary.totalSourceLoc} loc`);
   console.log(`test:   ${summary.totalTestFiles} files / ${summary.totalTestLoc} loc`);
@@ -146,7 +122,6 @@ function main() {
     console.log(`  ${String(f.len).padStart(4)}  ${f.file}:${f.line}  ${f.name} (${f.kind})`);
   console.log('\nTop 15 source files:');
   for (const f of srcFiles.slice(0, 15)) console.log(`  ${String(f.lines).padStart(5)}  ${f.file}`);
-  console.log(`\nwrote ${rel(OUT_FILE)}`);
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (isMain(import.meta.url)) main();

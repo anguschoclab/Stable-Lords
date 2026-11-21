@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T16:15:37.734Z",
+  "generatedAt": "2026-11-21T03:16:44.755Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -228,6 +228,8 @@
     "src/test/engine/stylePassives.test.ts",
     "src/test/engine/tick/TickOrchestrator.test.ts",
     "src/test/engine/tick/daySeedParity.test.ts",
+    "src/test/engine/training/skillDrillParity.test.ts",
+    "src/test/engine/training/trainingAttempt.test.ts",
     "src/test/engine/traits/killWindowScale.test.ts",
     "src/test/engine/weekDeterminism.slow.test.ts",
     "src/test/engine/workerProxy.test.ts",

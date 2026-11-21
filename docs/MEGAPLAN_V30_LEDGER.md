@@ -22,4 +22,26 @@
 
 ## §3 — Test inventory (Phase T hard gate)
 
-_To be populated: every spec + observed RED._
+Phase-T RED run (`vitest run` on the 13 new files): **13 failed / 21 tests, 8 passing —
+all failures for the intended reason.** Verified 2026-11-23, pre-implementation.
+
+| Spec | RED evidence |
+| --- | --- |
+| `engine/warrior/stableHealth.test.ts` | module missing — `Cannot find package '@/engine/warrior/stableHealth'` |
+| `engine/training/trainingAttempt.test.ts` | module missing — `Cannot find package '@/engine/training/trainingAttempt'` |
+| `engine/training/skillDrillParity.test.ts` | module missing (trainingAttempt) |
+| `engine/bout/lastBoutWeek.test.ts` | module missing — `Cannot find package '@/engine/bout/lastBoutWeek'` |
+| `engine/core/warriorOwnership.test.ts` | module missing — `Cannot find package '@/engine/core/warriorOwnership'` |
+| `engine/ai/rosterFlowParity.test.ts` | **semantic pin**: AI drill rolled 0 injuries where player path rolls (`expected 0 to be greater than 0`) |
+| `engine/economy/weeklyLedgerParity.test.ts` | **semantic pin**: `seedOffset` arg absent — rival salt `week*31+offset` not reproducible (`8a4a64c1… ≠ 85fe7950…`) |
+| `engine/training/injuryIdDeterminism.test.ts` | **empirical determinism bug pinned**: identical seeds → different injury ids (`590988a5… ≠ 6a9ac5b1…`) — F13 root cause proven, not theoretical |
+| `state/warriorEquipmentValidation.test.ts` | **semantic pin**: 2H+shield loadout accepted at store boundary (undefined rejection) |
+| `engine/autosim/offerAcceptanceParity.test.ts` | **semantic pins**: injured-warrior offer accepted; clean offer left Pending (autosim gate diverges from `evaluateBoutOffer`) |
+| `megaplan/parityFlow.guard.test.ts` | scanner RED — 10 violations: `decayFatigue`/`tickRecoveries` decls, `processRecovery(`/`processAttributeTraining(`/`rollForTrainingInjury(`/`processSkillDrillTraining(` AI call sites, `AI_TRAINING_EFFECTIVENESS` ×2, `.slice(-500)` ×2 (agentCore:175 + stableManager:98 — agentCore site was **new evidence the plan's F11 list missed**) |
+| `megaplan/seededId.guard.test.ts` | scanner RED — 10 violations across 8 files (resolveHelpers, progressionHandler ×2, reportingHandler, warriorFactory, BoutSimulationPass, patronTokenService ×3, injuryAndRecovery) |
+| `megaplan/v30Surface.guard.test.ts` | 5/5 assertions RED — dead `updateWarriorAfterBout`, dead `appendFight`/`updateWarriorStatus`, 2× `extractWeekSummary`, 2× offense/defense interfaces, `lastBoutWeekImpact`/`rosterUpdateImpacts` present |
+| `megaplan/jscpdRatchet.guard.slow.test.ts` | GREEN at baseline 106 — ratchet starts holding from Phase 1 onward; tightened at Phase 6 |
+| `megaplan/megaplanDocLayout.guard.test.ts` | updated for V30 lineage — GREEN |
+
+**Guards registered:** `parityFlow`, `seededId`, `jscpdRatchet` (slow), `v30Surface` → `GUARD_REGISTRY` + test-audit metadata regenerated.
+

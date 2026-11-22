@@ -157,6 +157,119 @@ describe('player×rival grudges', () => {
     expect(gazetteItems.some((i) => i.includes('SLIGHTED'))).toBe(false);
   });
 
+  it('a player down-challenge win in an honor-bound venue creates a DISHONORED grudge', () => {
+    // The famous player warrior beat the rival's lesser name at Walled
+    // Court — the slighted stable's grudge runs deeper (canon honor culture).
+    const famous = makeWarrior({ id: 'star1' as WarriorId, fame: 300 });
+    const nobody = makeWarrior({ id: 'rw1' as WarriorId, fame: 40 });
+    const rival = makeRival({
+      id: 'rA' as StableId,
+      owner: makeOwner({ id: 'ownA' as never, personality: 'Pragmatic' }),
+      roster: [nobody],
+    });
+    const state = makeGameState({
+      roster: [famous],
+      rivals: [rival],
+      week: 6,
+      absoluteWeek: 6,
+      arenaHistory: [
+        makeFightSummary({
+          warriorIdA: 'star1' as WarriorId,
+          warriorIdD: 'rw1' as WarriorId,
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'walled_court_arena',
+          fameA: 300,
+          fameD: 40,
+          week: 5,
+          absoluteWeek: 5,
+        }),
+      ],
+    });
+
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    const g = grudges.find((x) => x.ownerIdA === 'ownA' || x.ownerIdB === 'ownA');
+    expect(g).toBeDefined();
+    expect(g!.intensity).toBe(1);
+    expect(gazetteItems.some((i) => i.includes('DISHONORED'))).toBe(true);
+  });
+
+  it('the same mismatch in a non-honor venue creates no grudge', () => {
+    const famous = makeWarrior({ id: 'star1' as WarriorId, fame: 300 });
+    const nobody = makeWarrior({ id: 'rw1' as WarriorId, fame: 40 });
+    const rival = makeRival({
+      id: 'rA' as StableId,
+      owner: makeOwner({ id: 'ownA' as never, personality: 'Pragmatic' }),
+      roster: [nobody],
+    });
+    const state = makeGameState({
+      roster: [famous],
+      rivals: [rival],
+      week: 6,
+      absoluteWeek: 6,
+      arenaHistory: [
+        makeFightSummary({
+          warriorIdA: 'star1' as WarriorId,
+          warriorIdD: 'rw1' as WarriorId,
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'mudpit_arena',
+          fameA: 300,
+          fameD: 40,
+          week: 5,
+          absoluteWeek: 5,
+        }),
+      ],
+    });
+
+    const { grudges } = processOwnerGrudges(state, []);
+    expect(grudges.every((g) => g.ownerIdA !== 'ownA' && g.ownerIdB !== 'ownA')).toBe(true);
+  });
+
+  it('a repeated honor-venue slight deepens a stale grudge', () => {
+    const famous = makeWarrior({ id: 'star1' as WarriorId, fame: 300 });
+    const nobody = makeWarrior({ id: 'rw1' as WarriorId, fame: 40 });
+    const rival = makeRival({
+      id: 'rA' as StableId,
+      owner: makeOwner({ id: 'ownA' as never, personality: 'Pragmatic' }),
+      roster: [nobody],
+    });
+    const existing = {
+      id: 'grudge_p' as never,
+      ownerIdA: 'ownA' as never,
+      ownerIdB: 'player-1' as never,
+      intensity: 2,
+      reason: 'old slight',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
+    const state = makeGameState({
+      roster: [famous],
+      rivals: [rival],
+      week: 6,
+      absoluteWeek: 6,
+      arenaHistory: [
+        makeFightSummary({
+          warriorIdA: 'star1' as WarriorId,
+          warriorIdD: 'rw1' as WarriorId,
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'walled_court_arena',
+          fameA: 300,
+          fameD: 40,
+          week: 5,
+          absoluteWeek: 5,
+        }),
+      ],
+    });
+    state.player = { ...state.player, id: 'player-1' as never };
+
+    const { grudges, gazetteItems } = processOwnerGrudges(state, [existing]);
+    const g = grudges.find((x) => x.id === 'grudge_p');
+    expect(g!.intensity).toBe(3);
+    expect(gazetteItems.some((i) => i.includes('GRUDGE DEEPENS'))).toBe(true);
+  });
+
   it('no grudge forms when the rival only fought other rivals', () => {
     const rival = makeRival({
       id: 'rA' as StableId,

@@ -186,6 +186,87 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     expect(gazetteItems).toHaveLength(0);
   });
 
+  it('should create a DISHONORED grudge on an honor-venue slight without a kill', () => {
+    // Aggressive vs Tactician clash; the famous w1 beat w2's lesser name at
+    // Walled Court — a mismatch the crowd remembers even without blood.
+    const state: any = {
+      week: 10,
+      arenaHistory: [
+        {
+          id: 'f1',
+          week: 9,
+          warriorIdA: 'w1',
+          warriorIdD: 'w2',
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'walled_court_arena',
+          fameA: 300,
+          fameD: 40,
+        },
+      ],
+      rivals: [
+        { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
+        { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
+      ],
+    };
+    const { grudges, gazetteItems } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(1);
+    expect(grudges[0]!.intensity).toBe(1);
+    expect(gazetteItems.some((i) => i.includes('DISHONORED'))).toBe(true);
+  });
+
+  it('should not create a grudge on a mismatch in a non-honor venue', () => {
+    const state: any = {
+      week: 10,
+      arenaHistory: [
+        {
+          id: 'f1',
+          week: 9,
+          warriorIdA: 'w1',
+          warriorIdD: 'w2',
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'mudpit_arena',
+          fameA: 300,
+          fameD: 40,
+        },
+      ],
+      rivals: [
+        { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
+        { owner: { id: 'o2', personality: 'Tactician', stableName: 'B' }, roster: [{ id: 'w2' }] },
+      ],
+    };
+    const { grudges } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(0);
+  });
+
+  it('should not create a grudge on an honor-venue slight without a personality clash', () => {
+    // Aggressive vs Pragmatic — no clash; slights only fester where
+    // animosity already exists.
+    const state: any = {
+      week: 10,
+      arenaHistory: [
+        {
+          id: 'f1',
+          week: 9,
+          warriorIdA: 'w1',
+          warriorIdD: 'w2',
+          winner: 'A',
+          by: 'KO',
+          arenaId: 'walled_court_arena',
+          fameA: 300,
+          fameD: 40,
+        },
+      ],
+      rivals: [
+        { owner: { id: 'o1', personality: 'Aggressive', stableName: 'A' }, roster: [{ id: 'w1' }] },
+        { owner: { id: 'o2', personality: 'Pragmatic', stableName: 'B' }, roster: [{ id: 'w2' }] },
+      ],
+    };
+    const { grudges } = processOwnerGrudges(state, []);
+    expect(grudges).toHaveLength(0);
+  });
+
   it('should not escalate existing grudge on cross-fight without kill', () => {
     const existingGrudge = {
       id: 'g1',

@@ -1,15 +1,67 @@
-import type { GameState, OwnerGrudge } from '@/types/state.types';
+import type { GameState, OwnerGrudge, FightSummary } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import { PERSONALITY_CLASH } from '@/data/ownerData';
 import { addCapped } from '@/utils/math';
 import { calculateRivalryScore } from '@/engine/rivals/rivalUtils';
+import { arenaIsHonorBound, HONOR_DOWN_CHALLENGE_MARGIN } from '@/engine/politics/honorCulture';
 
 /** Fight outcomes aggregated per rival-pair / rival-vs-player, single pass. */
 interface FightAggregation {
-  rivalPairAgg: Map<string, { hasCrossFight: boolean; hasKill: boolean }>;
+  rivalPairAgg: Map<string, { hasCrossFight: boolean; hasKill: boolean; hasSlight: boolean }>;
   rivalKillVsPlayer: Set<number>;
   rivalUpsetVsPlayer: Set<number>;
+  rivalSlightVsPlayer: Set<number>;
+}
+
+/**
+ * Honor-culture slight: the winner out-recognised the loser by the
+ * down-challenge margin inside an honor-bound venue — the loser's stable
+ * was fed to a famous blade and its owner remembers. Uses the fame stamped
+ * on the summary at bout time (works for dead/retired warriors).
+ */
+function isHonorSlight(f: FightSummary): boolean {
+  if (!f.winner || !arenaIsHonorBound(f.arenaId)) return false;
+  const fameW = f.winner === 'A' ? (f.fameA ?? 0) : (f.fameD ?? 0);
+  const fameL = f.winner === 'A' ? (f.fameD ?? 0) : (f.fameA ?? 0);
+  return fameW - fameL > HONOR_DOWN_CHALLENGE_MARGIN;
+}
+
+/** Kill/upset/slight buckets one rival×player fight can fill. */
+interface PlayerFightSets {
+  rivalKillVsPlayer: Set<number>;
+  rivalUpsetVsPlayer: Set<number>;
+  rivalSlightVsPlayer: Set<number>;
+}
+
+/** Attribute one rival×player fight to its kill/upset/slight buckets. */
+function aggregatePlayerCrossFight(
+  f: FightSummary,
+  rivalIdx: number,
+  rivalIsA: boolean,
+  state: GameState,
+  slight: boolean,
+  sets: PlayerFightSets
+): void {
+  if (f.by === 'Kill') {
+    sets.rivalKillVsPlayer.add(rivalIdx);
+    return;
+  }
+
+  // Upset: the rival's warrior beat a much more famous player warrior.
+  const rivalWon = (f.winner === 'A' && rivalIsA) || (f.winner === 'D' && !rivalIsA);
+  if (rivalWon) {
+    const loserId = rivalIsA ? f.warriorIdD : f.warriorIdA;
+    const winnerId = rivalIsA ? f.warriorIdA : f.warriorIdD;
+    const loserFame = state.warriorMap?.get(loserId)?.fame ?? 0;
+    const winnerFame = state.warriorMap?.get(winnerId)?.fame ?? 0;
+    if (loserFame - winnerFame >= 100) sets.rivalUpsetVsPlayer.add(rivalIdx);
+  }
+
+  // Honor slight: the player's famous blade beat the rival's lesser name
+  // in an honor-bound venue — the slighted stable's grudge runs deeper.
+  const playerWon = (f.winner === 'A' && !rivalIsA) || (f.winner === 'D' && rivalIsA);
+  if (playerWon && slight) sets.rivalSlightVsPlayer.add(rivalIdx);
 }
 
 /**
@@ -43,21 +95,31 @@ function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): F
   }
 
   const pairKey = (i: number, j: number) => (i < j ? `${i}|${j}` : `${j}|${i}`);
-  const rivalPairAgg = new Map<string, { hasCrossFight: boolean; hasKill: boolean }>();
+  const rivalPairAgg = new Map<
+    string,
+    { hasCrossFight: boolean; hasKill: boolean; hasSlight: boolean }
+  >();
   const rivalKillVsPlayer = new Set<number>();
   const rivalUpsetVsPlayer = new Set<number>();
+  const rivalSlightVsPlayer = new Set<number>();
 
   for (const f of recentFights) {
     if (!f) continue;
     const idxA = warriorToRival.get(f.warriorIdA);
     const idxD = warriorToRival.get(f.warriorIdD);
+    const slight = isHonorSlight(f);
 
     if (idxA !== undefined && idxD !== undefined) {
       if (idxA === idxD) continue; // intra-stable bout is never a cross-fight
       const key = pairKey(idxA, idxD);
-      const agg = rivalPairAgg.get(key) ?? { hasCrossFight: false, hasKill: false };
+      const agg = rivalPairAgg.get(key) ?? {
+        hasCrossFight: false,
+        hasKill: false,
+        hasSlight: false,
+      };
       agg.hasCrossFight = true;
       if (f.by === 'Kill') agg.hasKill = true;
+      if (slight) agg.hasSlight = true;
       rivalPairAgg.set(key, agg);
       continue;
     }
@@ -72,23 +134,14 @@ function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): F
       : playerWarriorIds.has(f.warriorIdA);
     if (!otherIsPlayer) continue;
 
-    if (f.by === 'Kill') {
-      rivalKillVsPlayer.add(rivalIdx);
-      continue;
-    }
-
-    // Upset: the rival's warrior beat a much more famous player warrior.
-    const rivalWon = (f.winner === 'A' && rivalIsA) || (f.winner === 'D' && !rivalIsA);
-    if (rivalWon) {
-      const loserId = rivalIsA ? f.warriorIdD : f.warriorIdA;
-      const winnerId = rivalIsA ? f.warriorIdA : f.warriorIdD;
-      const loserFame = state.warriorMap?.get(loserId)?.fame ?? 0;
-      const winnerFame = state.warriorMap?.get(winnerId)?.fame ?? 0;
-      if (loserFame - winnerFame >= 100) rivalUpsetVsPlayer.add(rivalIdx);
-    }
+    aggregatePlayerCrossFight(f, rivalIdx, rivalIsA, state, slight, {
+      rivalKillVsPlayer,
+      rivalUpsetVsPlayer,
+      rivalSlightVsPlayer,
+    });
   }
 
-  return { rivalPairAgg, rivalKillVsPlayer, rivalUpsetVsPlayer };
+  return { rivalPairAgg, rivalKillVsPlayer, rivalUpsetVsPlayer, rivalSlightVsPlayer };
 }
 
 // Order-independent owner-pair lookup replaces the per-pair `grudges.find`
@@ -105,7 +158,8 @@ interface ProcessRivalPairsArgs {
   gazetteItems: string[];
 }
 
-/** Rival×rival pairs: personality clashes escalate into grudges on kills. */
+/** Rival×rival pairs: personality clashes escalate into grudges on kills
+ *  and honor-venue slights. */
 function processRivalPairs(args: ProcessRivalPairsArgs): void {
   const { state, rivals, agg, grudges, grudgeByPair } = args;
   const { gazetteItems } = args;
@@ -127,17 +181,22 @@ function processRivalPairs(args: ProcessRivalPairsArgs): void {
       const pairAgg = agg.rivalPairAgg.get(rivalIdxKey(i, j));
       if (!pairAgg?.hasCrossFight) continue;
       const hasKill = pairAgg.hasKill;
+      const hasSlight = pairAgg.hasSlight;
 
       const existing = grudgeByPair.get(ownerPairKey(rA.owner.id, rB.owner.id));
 
       if (existing) {
-        if (hasKill && existing.lastEscalation < state.week - 4) {
+        if ((hasKill || hasSlight) && existing.lastEscalation < state.week - 4) {
           const prevIntensity = existing.intensity;
           existing.intensity = addCapped(existing.intensity, 1, 5);
           existing.lastEscalation = state.week;
-          existing.reason = `Blood spilled between ${rA.owner.stableName} and ${rB.owner.stableName}`;
+          existing.reason = hasKill
+            ? `Blood spilled between ${rA.owner.stableName} and ${rB.owner.stableName}`
+            : `Honor-venue slight between ${rA.owner.stableName} and ${rB.owner.stableName}`;
           gazetteItems.push(
-            `🔥 GRUDGE DEEPENS: ${rA.owner.name} (${persA}) and ${rB.owner.name} (${persB}) — their feud intensifies after another kill!`
+            hasKill
+              ? `🔥 GRUDGE DEEPENS: ${rA.owner.name} (${persA}) and ${rB.owner.name} (${persB}) — their feud intensifies after another kill!`
+              : `🔥 GRUDGE DEEPENS: ${rA.owner.name} (${persA}) and ${rB.owner.name} (${persB}) — their feud intensifies after an honor-venue slight!`
           );
           if (prevIntensity < 4 && existing.intensity >= 4) {
             gazetteItems.push(
@@ -145,20 +204,24 @@ function processRivalPairs(args: ProcessRivalPairsArgs): void {
             );
           }
         }
-      } else if (hasKill) {
+      } else if (hasKill || hasSlight) {
         const created: OwnerGrudge = {
           id: `grudge_${rA.owner.id}_${rB.owner.id}` as import('@/types/shared.types').GrudgeId,
           ownerIdA: rA.owner.id,
           ownerIdB: rB.owner.id,
-          intensity: 2,
-          reason: `Personality clash: ${persA} vs ${persB} — ignited by bloodshed`,
+          intensity: hasKill ? 2 : 1,
+          reason: hasKill
+            ? `Personality clash: ${persA} vs ${persB} — ignited by bloodshed`
+            : `Personality clash: ${persA} vs ${persB} — stoked by an honor-venue slight`,
           startWeek: state.week,
           lastEscalation: state.week,
         };
         grudges.push(created);
         grudgeByPair.set(ownerPairKey(created.ownerIdA, created.ownerIdB), created);
         gazetteItems.push(
-          `⚔️ NEW RIVALRY: ${rA.owner.name} the ${persA} and ${rB.owner.name} the ${persB} have declared a blood feud!`
+          hasKill
+            ? `⚔️ NEW RIVALRY: ${rA.owner.name} the ${persA} and ${rB.owner.name} the ${persB} have declared a blood feud!`
+            : `🏛️ DISHONORED: ${rA.owner.name} the ${persA} and ${rB.owner.name} the ${persB} feud over an honor-venue slight!`
         );
       }
     }
@@ -176,9 +239,10 @@ interface ProcessPlayerPairsArgs {
 }
 
 /**
- * Player × rival pairs: kills/upsets against the player's roster
- * create real grudges. Unlike rival×rival pairs these need no personality
- * clash — bloodshed is reason enough.
+ * Player × rival pairs: kills/upsets against the player's roster and
+ * honor-venue slights of rival warriors create real grudges. Unlike
+ * rival×rival pairs these need no personality clash — bloodshed is reason
+ * enough.
  */
 function processPlayerPairs(args: ProcessPlayerPairsArgs): void {
   const { state, rivals, agg, playerWarriorCount, grudges } = args;
@@ -190,18 +254,23 @@ function processPlayerPairs(args: ProcessPlayerPairsArgs): void {
     if (!r) continue;
     const hasKill = agg.rivalKillVsPlayer.has(idx);
     const hasUpset = agg.rivalUpsetVsPlayer.has(idx);
+    const hasSlight = agg.rivalSlightVsPlayer.has(idx);
 
-    if (!hasKill && !hasUpset) continue;
+    if (!hasKill && !hasUpset && !hasSlight) continue;
 
     const existing = grudgeByPair.get(ownerPairKey(r.owner.id, state.player.id));
 
     if (existing) {
-      if (hasKill && existing.lastEscalation < state.week - 4) {
+      if ((hasKill || hasSlight) && existing.lastEscalation < state.week - 4) {
         existing.intensity = addCapped(existing.intensity, 1, 5);
         existing.lastEscalation = state.week;
-        existing.reason = `Blood spilled between ${r.owner.stableName} and the player's stable`;
+        existing.reason = hasKill
+          ? `Blood spilled between ${r.owner.stableName} and the player's stable`
+          : `${r.owner.stableName} was slighted again by the player's stable in an honor venue`;
         gazetteItems.push(
-          `🔥 GRUDGE DEEPENS: ${r.owner.name} vows vengeance on the player's stable after another kill!`
+          hasKill
+            ? `🔥 GRUDGE DEEPENS: ${r.owner.name} vows vengeance on the player's stable after another kill!`
+            : `🔥 GRUDGE DEEPENS: ${r.owner.name} seethes — the player's stable keeps picking on lesser names in honor venues!`
         );
       }
     } else {
@@ -212,7 +281,9 @@ function processPlayerPairs(args: ProcessPlayerPairsArgs): void {
         intensity: hasKill ? 2 : 1,
         reason: hasKill
           ? `${r.owner.stableName} suffered a kill at the player's hands`
-          : `${r.owner.stableName} was humiliated by an underdog defeat`,
+          : hasSlight
+            ? `${r.owner.stableName} was slighted — the player's famous blade picked on their lesser name in an honor venue`
+            : `${r.owner.stableName} was humiliated by an underdog defeat`,
         startWeek: state.week,
         lastEscalation: state.week,
       };
@@ -221,15 +292,17 @@ function processPlayerPairs(args: ProcessPlayerPairsArgs): void {
       gazetteItems.push(
         hasKill
           ? `⚔️ BLOOD FEUD: ${r.owner.name} has sworn vengeance on the player's stable!`
-          : `😤 SLIGHTED: ${r.owner.name} seethes after an upset loss to the player's stable.`
+          : hasSlight
+            ? `🏛️ DISHONORED: ${r.owner.name} seethes — the player's stable sent a famous blade against their lesser name in an honor-bound venue.`
+            : `😤 SLIGHTED: ${r.owner.name} seethes after an upset loss to the player's stable.`
       );
     }
   }
 }
 
 /**
- * Detect and escalate owner-to-owner grudges based on personality clashes
- * and recent kill/loss history between stables.
+ * Detect and escalate owner-to-owner grudges based on personality clashes,
+ * recent kill/loss history, and honor-venue slights between stables.
  */
 export function processOwnerGrudges(
   state: GameState,

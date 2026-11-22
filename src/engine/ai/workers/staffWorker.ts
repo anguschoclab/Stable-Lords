@@ -2,6 +2,7 @@ import type { RivalStableData, GameState, Trainer } from '@/types/state.types';
 import type { FightingStyle, TrainerFocus } from '@/types/shared.types';
 import { checkBudget } from './budgetWorker';
 import { logAgentAction, logFinanceEvent, type AgentContext } from '../agentCore';
+import { policyFor, TRAIT_POLICY } from '../traitPolicy';
 
 const HIRE_COST: Record<string, number> = { Novice: 50, Seasoned: 100, Master: 200 };
 
@@ -136,13 +137,24 @@ function tryHireTrainer(pass: StaffPass, intent: string, week: number): void {
   );
 }
 
-/** Firing stage (RECOVERY tier + regional risk): release the most recent trainer under pressure. */
+/** Firing stage (RECOVERY tier + personality-scaled regional risk): release the most recent trainer under pressure. */
 function maybeFireTrainer(pass: StaffPass, intent: string, state: GameState, week: number): void {
   const isSolemn = state.crowdMood === 'Solemn';
   const isRainy = state.weather === 'Rainy';
   const underPressure = pass.treasury < 500 && (isSolemn || isRainy);
 
-  if (!(intent === 'RECOVERY' || intent === 'SURVIVAL' || pass.treasury < 100 || underPressure))
+  // A soft regional patch only spooks the fast-cutting archetypes into
+  // shedding staff: TRAIT_POLICY ranks Aggressive/Showman/Tactician below
+  // Pragmatic's liability threshold — they cut at the first sign of
+  // trouble. The loyal owners (Pragmatic, Methodical) hold camp staff
+  // through a rainy week and only release under true crisis
+  // (RECOVERY/SURVIVAL, or the treasury floor).
+  const panicFires =
+    underPressure &&
+    policyFor(pass.rival.owner.personality).cutLiabilityThreshold <
+      TRAIT_POLICY.Pragmatic.cutLiabilityThreshold;
+
+  if (!(intent === 'RECOVERY' || intent === 'SURVIVAL' || pass.treasury < 100 || panicFires))
     return;
   if (pass.trainers.length === 0) return;
 

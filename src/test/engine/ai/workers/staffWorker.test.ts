@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 import { processStaff } from '@/engine/ai/workers/staffWorker';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
-import { makeTrainer } from '@/test/_fixtures/factories';
+import { makeTrainer, makeOwner } from '@/test/_fixtures/factories';
 import { makeAiTestRival, makeAiTestState } from '@/test/_fixtures/aiTestState';
 
 function createMockTrainer(overrides: Partial<Trainer> = {}): Trainer {
@@ -238,24 +238,53 @@ describe('staffWorker — processStaff firing', () => {
     expect(gazetteItems.some((g) => g.includes('DOWNSIZING'))).toBe(true);
   });
 
-  it('fires a trainer when under pressure (treasury < 500 and crowdMood is Solemn)', () => {
+  it('fires a trainer when under pressure (treasury < 500 and crowdMood is Solemn) for a fast-cutting owner', () => {
     const rival = createMockRival({
       treasury: 400,
       trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
       strategy: { intent: 'CONSOLIDATION' } as any,
+      owner: makeOwner({ id: 'owner_1' as any, personality: 'Aggressive' }),
     });
     const state = createMockState({ crowdMood: 'Solemn' as any });
     const { updatedRival } = processStaff(rival, state, []);
     expect(updatedRival.trainers).toHaveLength(0);
   });
 
-  it('fires a trainer when under pressure (treasury < 500 and weather is Rainy)', () => {
+  it('fires a trainer when under pressure (treasury < 500 and weather is Rainy) for a fast-cutting owner', () => {
     const rival = createMockRival({
       treasury: 400,
       trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
       strategy: { intent: 'CONSOLIDATION' } as any,
+      owner: makeOwner({ id: 'owner_1' as any, personality: 'Tactician' }),
     });
     const state = createMockState({ weather: 'Rainy' as any });
+    const { updatedRival } = processStaff(rival, state, []);
+    expect(updatedRival.trainers).toHaveLength(0);
+  });
+
+  it.each(['Pragmatic', 'Methodical'] as const)(
+    'holds the trainer through soft pressure for a loyal %s owner',
+    (personality) => {
+      const rival = createMockRival({
+        treasury: 400,
+        trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
+        strategy: { intent: 'CONSOLIDATION' } as any,
+        owner: makeOwner({ id: 'owner_1' as any, personality }),
+      });
+      const state = createMockState({ crowdMood: 'Solemn' as any });
+      const { updatedRival } = processStaff(rival, state, []);
+      expect(updatedRival.trainers).toHaveLength(1);
+    }
+  );
+
+  it("still fires a loyal owner's trainer in true crisis (RECOVERY)", () => {
+    const rival = createMockRival({
+      treasury: 400,
+      trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
+      strategy: { intent: 'RECOVERY' } as any,
+      owner: makeOwner({ id: 'owner_1' as any, personality: 'Methodical' }),
+    });
+    const state = createMockState({ crowdMood: 'Solemn' as any });
     const { updatedRival } = processStaff(rival, state, []);
     expect(updatedRival.trainers).toHaveLength(0);
   });
@@ -300,6 +329,7 @@ describe('staffWorker — processStaff firing', () => {
       treasury: 400,
       trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
       strategy: { intent: 'CONSOLIDATION' } as any,
+      owner: makeOwner({ id: 'owner_1' as any, personality: 'Aggressive' }),
     });
     const state = createMockState({ crowdMood: 'Solemn' as any });
     const { gazetteItems } = processStaff(rival, state, []);
@@ -312,6 +342,7 @@ describe('staffWorker — processStaff firing', () => {
       treasury: 400,
       trainers: [createMockTrainer({ id: 't1', name: 'Bob' })],
       strategy: { intent: 'CONSOLIDATION' } as any,
+      owner: makeOwner({ id: 'owner_1' as any, personality: 'Aggressive' }),
     });
     const state = createMockState({ weather: 'Rainy' as any, crowdMood: 'Calm' });
     const { gazetteItems } = processStaff(rival, state, []);

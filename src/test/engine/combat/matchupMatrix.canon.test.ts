@@ -62,8 +62,18 @@ describe('emergent canon direction (win-rate pin, seeded)', () => {
     let xw = 0;
     for (let i = 0; i < N; i++) {
       const aIsX = i % 2 === 0;
-      const wX = makeComputedWarrior(STD, x, { id: `X${i}` as never, name: `X${i}`, fame: 0, age: 20 });
-      const wY = makeComputedWarrior(STD, y, { id: `Y${i}` as never, name: `Y${i}`, fame: 0, age: 20 });
+      const wX = makeComputedWarrior(STD, x, {
+        id: `X${i}` as never,
+        name: `X${i}`,
+        fame: 0,
+        age: 20,
+      });
+      const wY = makeComputedWarrior(STD, y, {
+        id: `Y${i}` as never,
+        name: `Y${i}`,
+        fame: 0,
+        age: 20,
+      });
       const pX = aiPlanForWarrior({
         w: wX,
         personality: 'Bold' as never,

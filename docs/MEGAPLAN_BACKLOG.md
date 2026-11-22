@@ -51,11 +51,11 @@ _Empty — both V30 re-baselines landed (see §E)._
 
 ### C — Campaign-scale (own megaplan each)
 
-| Prov   | Item                                                                                                                                                                                                                                                                                                                                                                                                                                         | Severity | Entry points                                                                                                                                   | Status                                                                                                                                                                                                         |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| S6     | **TP/ST rebalance campaign** — canon + probe support total-parry dominance over striking attack (archive record + N=400 probe at 52% TP), but every legal matrix retune breached the 80/20 balance invariant (+1/−1 → 81%, +1/0 → 84%): passives dominate this pairing, so it needs a real rebalance, not a matrix nudge. Cell reverted to −1/+1 at close-out. Most actionable of the campaign rows — failed-retune space is already mapped. | Balance  | `matchup.ts` Pass-5 note (TP vs ST cell), STYLE_PENALTIES / passives surface (`src/engine/stylePassives/`)                                     | **Open** — folded from V31_DEFERRED; `balance.slow` 80/20 watch (§2) tracks the live invariant                                                                                                                 |
-| V22-D3 | **Pagan literal damage model** — canon: damage = ST + class-variance + weapon-variance; armor soak = weight + 12 + type-bonus; ≤1 → bounce. Current model is `(class+4)×locMult×variance` + flat mitigation — same shape, different parameters. Needs a soak-rework pass + end-to-end damage/KO/kill distribution re-verification.                                                                                                           | Own pass | `src/engine/combat/mechanics/damageCalc.ts:16-24`, `src/engine/combat/mechanics/weaponArmor.ts` (V29 corrected path — `resolution/` was stale) | **Open** — V29 NO-GO reaffirmed: rewriting the damage scale invalidates every combat baseline (kill rates, bout length, mortality); requires its own campaign with a dedicated RED battery + soak verification |
-| V22-D4 | **ADM / graduation tier** — canon: basic caps 3–21, ADM caps 3–25; WL>21 grants INI bonus; graduation is a separate advancement tier.                                                                                                                                                                                                                                                                                                        | Feature  | `ATTRIBUTE_MAX` (`types/shared/attributes.ts:40` = 25), `src/engine/warrior/potential.ts`, training passes                                     | **Open** — V29 NO-GO reaffirmed: caps are 3–25 throughout, no tier exists; design-level feature needing its own campaign                                                                                       |
+| Prov   | Item                                                                                                                                                                                                                                                                                                                               | Severity | Entry points                                                                                                                                   | Status                                                                                                                                                                                                         |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S6     | ~~TP/ST rebalance campaign~~ — **moved to §E**: canon direction holds emergently; no campaign needed.                                                                                                                                                                                                                              | Balance  | §E resolved row                                                                                                                                | **RESOLVED (2026-11-22)**                                                                                                                                                                                      |
+| V22-D3 | **Pagan literal damage model** — canon: damage = ST + class-variance + weapon-variance; armor soak = weight + 12 + type-bonus; ≤1 → bounce. Current model is `(class+4)×locMult×variance` + flat mitigation — same shape, different parameters. Needs a soak-rework pass + end-to-end damage/KO/kill distribution re-verification. | Own pass | `src/engine/combat/mechanics/damageCalc.ts:16-24`, `src/engine/combat/mechanics/weaponArmor.ts` (V29 corrected path — `resolution/` was stale) | **Open** — V29 NO-GO reaffirmed: rewriting the damage scale invalidates every combat baseline (kill rates, bout length, mortality); requires its own campaign with a dedicated RED battery + soak verification |
+| V22-D4 | **ADM / graduation tier** — canon: basic caps 3–21, ADM caps 3–25; WL>21 grants INI bonus; graduation is a separate advancement tier.                                                                                                                                                                                              | Feature  | `ATTRIBUTE_MAX` (`types/shared/attributes.ts:40` = 25), `src/engine/warrior/potential.ts`, training passes                                     | **Open** — V29 NO-GO reaffirmed: caps are 3–25 throughout, no tier exists; design-level feature needing its own campaign                                                                                       |
 
 ### D — Standing & design deferrals (conditional revisit only)
 
@@ -67,7 +67,7 @@ _Empty — both V30 re-baselines landed (see §E)._
 | SP-spine   | **Progression-spine multi-tier escalating arc** — deferred MVP Option 3 from the 2026-06-22 win-condition plan.                                                                                                                                                                                                                                                                                              | Design         | No engine surface exists                                                         | **Design deferral** — revisit only on explicit product push         |
 | SP-bailout | **Player bailout/receivership economy** — declared non-goal in the world-sim-decouple plan; broke players climb out via promoter offers today.                                                                                                                                                                                                                                                               | Scope boundary | `src/engine/pipeline/tick/timeAdvance.ts` (`evaluateStopConditions`)             | **Standing deferral**                                               |
 | SP-reveal  | **prefight-advisor `revealLevel`** — style-only (no exact stats) forecast for partially-scouted opponents.                                                                                                                                                                                                                                                                                                   | Feature        | `src/engine/narrative/fightForecast.ts` (`buildFightForecast`)                   | **Conditional** — only if a partial-reveal tier is wanted           |
-| S6         | **TP>AB "scum answers the surgeon" — probe-rejected canon claim** — the archive's TP-over-AB dominance failed the two-source rule (N=400 style-typical probe: 35.8% TP); the matrix's AB edge was kept. Evidence preserved in `matchup.ts` Pass-5 note + `terrablood-canon-claims.md` (S6 row, disputed→resolved).                                                                                           | Canon claim    | `matchup.ts` Pass-5 REJECTED note; `terrablood-canon-claims.md`                  | **Standing deferral** — revisit only on new canon/sim evidence      |
+| S6         | **TP>AB "scum answers the surgeon" — probe-rejected canon claim** — the archive's TP-over-AB dominance failed the two-source rule (N=400 style-typical probe: 35.8% TP; 2026-11-22 re-probe all-15s+AI: 47.3% TP). The matrix's AB edge stands. Fresh read: canon direction DOES hold on the world surface (TP>AB ≈61–70%) — via TP's global dominance, not a pair edge → adjudicated house divergence (§3). | Canon claim    | `matchup.ts` Pass-5 note; `terrablood-canon-claims.md` (S6 row)                  | **RESOLVED (2026-11-22)** — adjudicated divergence, registered §3   |
 
 ### E — Resolved (verified — kept for the audit trail)
 
@@ -89,6 +89,7 @@ _Empty — both V30 re-baselines landed (see §E)._
 | V26-D2      | **`processTierProgression` dead call** — `SystemPass` passed `state.season` (always equal → early return); now passes `computeNextSeason(nextWeek)` and threads the pass rng through `processSystemicProgression`. Promotion/demotion verified at season boundary.                                                                                                                                                                                                                                                                    | Medium        | `SystemPass.ts:36-58`, `tierProgression.ts`                                                                                        | **RESOLVED (V29)** — V29-D2 describe pins promote/demote/no-op                                                                                                                                                                                                                                                                                                                 |
 | V26-D3      | **`meta.createdAt` wall-clock** — `createFreshState` now defaults `createdAt` to `weekToTimestamp(0)`; fresh states are bit-identical across calls.                                                                                                                                                                                                                                                                                                                                                                                   | Low           | `gameStateFactory.ts:109`                                                                                                          | **RESOLVED (V29)** — V29-D3 specs pin it                                                                                                                                                                                                                                                                                                                                       |
 | V26-D4      | **Gazette `t()` crypto fallback** — removed; array+no-rng picks the first template deterministically. Fallback was unreachable from all production callers.                                                                                                                                                                                                                                                                                                                                                                           | Low           | `gazetteTemplateHelpers.ts`                                                                                                        | **RESOLVED (V29)** — V29-D4 spec pins determinism                                                                                                                                                                                                                                                                                                                              |
+| S6          | **TP/ST canon direction — resolved emergently, no campaign needed** — V31 probe showed TP>ST at 52% but every matrix retune breached the 80/20 invariant. Controlled re-probe (N=400, all-15s + AI plans, both positions): TP>ST holds at **52.0%** on the isolated surface and **68–72%** on the world surface — the canon direction was never broken; the fixture's ~49% was a default-plan artifact. The matrix cell deliberately stays −1/+1; direction is pinned by a seeded win-rate spec.                                      | Balance       | `matchupMatrix.canon.test.ts` (emergent-direction block), `matchup.ts` Pass-5                                                      | **RESOLVED (2026-11-22)** — seeded win-rate pin green; matrix unchanged (guardrail-safe)                                                                                                                                                                                                                                                                                       |
 
 ## 2. Watch items
 
@@ -116,32 +117,44 @@ trail).
   run, stash-verified pre-V31): `PARRY-STRIKE vs WALL OF STEEL` 81%,
   `STRIKING ATTACK vs BASHING ATTACK` 81% — belongs to the next balance
   campaign, not V31 scope. Companion of the S6 TP/ST row (§1-C).
-- **`killDeathDivergence` 300wk vs 600s cap** (V29): the world sim outgrew
-  the budget (~685s semi-solo); per-test cap raised to 900s — verified
-  green solo at 628s. If per-week cost keeps climbing this re-fails.
-- **`fileBudget` ratchet-creep** (V29 — fold missed at close-out, restored
-  2026-11-21): #1092's CoachOverlay `useShallow` refactor pushed its spec
-  file over the 80-line budget (19→20 rows). Legitimate merge-induced
-  drift; watch for ratchet-creep on future UI merges — re-baseline only
-  for real growth, not as a friction escape valve.
-- **TP world dominance: 62→64.2%.** Slow structural climb across V22→V26
-  re-baselines (62.9% V22 → 61.7–62.8% V24 → 63.5–64.2% V26). Adjudicated
-  canon-accurate (scum/TP is the documented dominant metagame answer; the
-  certified FLAT lab band holds at ~51.8). The registered lever, if it ever
-  crosses band: damp TP drill accrual/development — NOT combat numbers.
-- **World kill rate 4.78–4.85%** post-V26 (was 6.8–6.9% V24) vs the ~8%
-  design floor — mint DA floors + capped potential → fewer glass-cannon
-  deaths. Watch whether the floor responds on the next world run.
-- **LU floor / PR band edge** (V22 §3): LU 42.7% bottom-of-band, PR 55.8%
-  approaching the edge — re-check on the next world-diag; both have
-  ratchet candidates documented in the V22 deferred archive.
+- ~~**`killDeathDivergence` 300wk vs 600s cap**~~ — **RESOLVED (2026-11-22)**:
+  re-measured at **253.9s under concurrent load** (was ~685s V29) — the
+  agent-sweep perf work (bolt memoization `aab91f55d`, perf-auditor scan
+  hoist `d3c67f4df`) cut per-week cost ~60%. The 900s cap now holds with
+  ~3.5× headroom; no rebaseline needed.
+- ~~**`fileBudget` ratchet-creep**~~ — **RESOLVED/stale (2026-11-22)**:
+  already green — V29's post-close-out WarningCard extraction restored the
+  > 80-function baseline to 19 rows (spec comment at `fileBudget.test.ts:65`).
+  > Watch stays conceptually; nothing to re-baseline.
+- **TP world dominance: 63.0%** (fresh 1000-wk re-baseline, seed 12345,
+  2026-11-22; was 62.9% V23 → 63.5–64.2% V26). Flat trend across the agent
+  sweep — adjudicated canon-accurate (scum is the documented dominant
+  metagame answer). **Lever tried and REJECTED by A/B**: `LEARN_CAREER_CAP`
+  120→80 (300wk same-seed) pushed TP 62.8→64.3% — the cap binds equally on
+  TP's counters, widening TP's early-career edge. The remaining documented
+  lever is development-side (retirement pressure / per-style learn-rate
+  scalar), NOT combat numbers — that's a campaign, not a tweak.
+- **World kill rate 4.68% weekly / 5.13% tournament** (fresh 1000-wk
+  re-baseline; was 6.68% V23). The `KILL_WINDOW.SCALE` 1.18 bump fixed
+  only the FLAT fixture — the world floor did NOT respond. Coupled
+  mechanism: TP kill-share is 2.0% with a 44%-Decision profile, so TP's
+  bout-share mechanically dilutes the world rate; the mint-DA-floors
+  explanation still stands as the second driver. Recovery is downstream
+  of the TP-development campaign, not a kill-window tweak.
+- **LU floor / PR band edge** (V22 §3): re-checked on the 2026-11-22
+  1000-week re-baseline — **LU 43.7%** (floor trigger is <40; holds),
+  **PR 59.4%** (at the ~60 edge, not over). No ratchet fired; keep
+  watching at each re-baseline — candidates remain in the V22 archive.
 - **Agent-sweep seeded-stream shift** (2026-11-22): the roster curation
   (`the_wailing_chasm`↔`the_desolate_heath`, `38f27a540`) changes the
   arena-selection pool order, and the KO-attribution fix (`17abe0fef`)
   re-buckets riposte/off-hand bout ends from `BLEED`/`Stoppage` to
   `RIPOSTE`/`OFFHAND` — bookkeeping only, no mechanic change, but
-  causeBucket distributions will move on the next world re-baseline.
-  Expect and accept drift; do not "fix" it back.
+  causeBucket distributions will move on each world re-baseline.
+  **Verified on the 2026-11-22 1000-wk re-baseline**: metrics shifted as
+  expected (kill 4.68%, TP 63.0%) and all invariants held
+  (`killDeathDivergence` 253.9s green) — drift is legitimate;
+  do not "fix" it back.
 - **ai-behavior-audit-v2 residual watches** (folded in the 2026-11-21
   completeness pass): `displaced` share of reign endings reflects stable
   churn more than title mechanics; `counterOfferRate` counts only standing
@@ -149,16 +162,17 @@ trail).
 - **Slow-suite flakes under load** (V22 §4): `killDeathDivergence`, perf
   160-stable ceiling, autosim timing, worldLiveness gradient each pass
   standalone — re-run clean before assuming a regression.
-- **Hook-timeout flake class — root-caused (V29)**:`vitest.config.ts`
-  `hookTimeout: 10000` vs `testTimeout: 120000`; `setup.node.ts` reset hooks
-  lazy-import `useGameStore`'s heavy graph and exceed 10s on starved
-  workers. Aligned to 30000 (slow-config precedent). Covers
-  `opfsArchiverFlush` (V29 baseline) and `tacticDiscovery.parity` (V28).
-- **`tacticDiscovery.parity.test.ts` suite-load flake** (V28): passed
-  standalone; signature matches the hook-timeout class above — root cause
-  now fixed via `hookTimeout: 30000`.
-- **e2e console findings** (V29, pre-existing, observed in `bun run e2e`):
-  **RESOLVED** — (a) `Cannot update RouterHooks while rendering
+- ~~**Hook-timeout flake class — root-caused (V29)**~~ — **VERIFIED
+  RESOLVED (2026-11-22)**: `hookTimeout: 30000` confirmed live in both
+  `vitest.config.ts:27` and `vitest.config.slow.ts:15`; covers
+  `opfsArchiverFlush` and `tacticDiscovery.parity` flake signatures.
+- ~~**`tacticDiscovery.parity.test.ts` suite-load flake**~~ — **VERIFIED
+  RESOLVED (2026-11-22)**: same root cause; the 30s hookTimeout fix
+  covers it.
+- ~~**e2e console findings** (V29, pre-existing)~~ — **VERIFIED RESOLVED
+  (2026-11-22)**: `AvatarForEntity` generates via `useEffect` (confirmed
+  at `AvatarForEntity.tsx:119`); `SelectableCard` is `role="button"`.
+  Original notes: (a) `Cannot update RouterHooks while rendering
 AvatarForEntity`: `ensureAvatar` ran inside `useMemo` during render and
   called `set()` on cache misses; now the component subscribes to
   `avatarCache[entityId]` and generates via `useEffect` — also gains
@@ -197,6 +211,12 @@ findings don't re-litigate them.
   lineage files keep their original (non-kebab) names as frozen audit
   records; `ARCHIVED_DOCS` in `megaplanDocLayout.guard.test.ts` pins them
   literally. Exempt from the kebab ratchet by design.
+- **TP>AB via global dominance, not a pair edge** (adjudicated 2026-11-22):
+  the isolated matchup keeps AB's +1 edge (probe-rejected: 35.8% V31,
+  47.3% re-probe TP), while the world surface reproduces the archive's
+  "scum answers the surgeon" direction (≈61–70% TP) through TP's overall
+  dominance. Do not "fix" the isolated pair to match the archive — the
+  two-source rule governs pair cells.
 
 ## 4. Engineering rules carried forward
 

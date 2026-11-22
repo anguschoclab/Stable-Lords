@@ -1,4 +1,10 @@
-import { type RivalStableData, type PoolWarrior, type GameState } from '@/types/state.types';
+import {
+  type RivalStableData,
+  type PoolWarrior,
+  type GameState,
+  type Rivalry,
+} from '@/types/state.types';
+import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { resolveRng } from '@/utils/random';
 import { processRecruitment } from '../ai/workers/recruitmentWorker';
@@ -6,7 +12,6 @@ import { computeMetaDrift, type StyleMeta } from '../analytics/metaDrift';
 import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
 import { getPairKey } from '@/utils/keyUtils';
 import { collectUsedWarriorIds, collectUsedWarriorNames } from '@/engine/core/warriorCollection';
-import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 
 /**
  * Rivalry counter-meta (moved from processAIRosterManagement): a rival
@@ -15,26 +20,42 @@ import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
  */
 function rivalDraftMeta(
   rival: RivalStableData,
-  state: GameState,
+  playerId: string,
   meta: StyleMeta,
-  rivalryMap: Map<string, (typeof state.rivalries)[number]>
+  rivalryMap: Map<string, Rivalry>,
+  playerFights: FightSummary[]
 ): StyleMeta {
   const adaptation = rival.owner.metaAdaptation ?? 'Opportunist';
   // Rivalry entries key on stable ids; older fixtures may key on owner ids.
   const rivalry =
-    rivalryMap.get(getPairKey(state.player.id, rival.id as string)) ??
-    rivalryMap.get(getPairKey(state.player.id, rival.owner.id));
+    rivalryMap.get(getPairKey(playerId, rival.id as string)) ??
+    rivalryMap.get(getPairKey(playerId, rival.owner.id));
   if (!rivalry || rivalry.intensity < 3 || adaptation === 'Traditionalist') return meta;
-  // Player-stable fights are resolved through the stable map — fight
-  // summaries carry warrior ids, not the player's stable id.
-  const playerFights = (state.arenaHistory ?? [])
-    .filter(
-      (f) =>
-        resolveWarriorOwner(state, f.warriorIdA)?.isPlayer === true ||
-        resolveWarriorOwner(state, f.warriorIdD)?.isPlayer === true
-    )
-    .slice(-10);
   return playerFights.length > 0 ? computeMetaDrift(playerFights, 10) : meta;
+}
+
+/**
+ * Last 10 arenaHistory fights involving a player warrior — the counter-meta
+ * window. Rival-invariant, so aiDraftFromPool resolves it once for the whole
+ * draft loop instead of per heated rival. The membership test mirrors
+ * resolveWarriorOwner's isPlayer answer exactly (a warriorToStableMap hit
+ * wins; a miss falls back to the live roster scan) without paying an
+ * O(all-rosters) resolver call per fight — the week pipeline strips
+ * warriorToStableMap before this pass runs.
+ */
+function lastPlayerFights(state: GameState): FightSummary[] {
+  const rosterIds = new Set((state.roster ?? []).map((w) => w.id as string));
+  const wts = state.warriorToStableMap;
+  const isPlayerSide = (id: string): boolean =>
+    wts?.has(id) === true ? wts.get(id)?.isPlayer === true : rosterIds.has(id);
+  const playerFights: FightSummary[] = [];
+  const history = state.arenaHistory ?? [];
+  for (let i = history.length - 1; i >= 0 && playerFights.length < 10; i--) {
+    const f = history[i];
+    if (f && (isPlayerSide(f.warriorIdA) || isPlayerSide(f.warriorIdD))) playerFights.push(f);
+  }
+  playerFights.reverse();
+  return playerFights;
 }
 
 /**
@@ -106,12 +127,14 @@ export function aiDraftFromPool(args: AiDraftFromPoolArgs): {
     (state.rivalries || []).map((rv) => [getPairKey(rv.stableIdA, rv.stableIdB), rv])
   );
 
+  const playerFights = lastPlayerFights(state);
+
   const sortedRivals = orderRivalsForSnakeDraft(rivals, week);
 
   const draftResults: Record<string, RivalStableData> = {};
 
   for (const rival of sortedRivals) {
-    const customMeta = rivalDraftMeta(rival, state, meta, rivalryMap);
+    const customMeta = rivalDraftMeta(rival, state.player.id, meta, rivalryMap, playerFights);
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment({
       rival: rival,
       pool: currentPool,

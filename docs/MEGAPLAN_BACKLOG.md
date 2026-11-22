@@ -10,8 +10,11 @@ archive to `docs/archive/megaplans/` when a newer megaplan lands. Only the
 latest version's `MEGAPLAN_V<N>_{PLAN,FINDINGS,LEDGER,DEFERRED}.md` set stays
 at docs/ root.
 
-**Current latest:** MEGAPLAN V30 (harmonization & deduplication campaign).
-**Compiled:** 2026-11-21 — fold-completeness pass: every `docs/archive/`
+**Current latest:** MEGAPLAN V31 (Terrablood canon-claims campaign).
+**Compiled:** 2026-11-22 — V31 fold: `MEGAPLAN_V31_DEFERRED.md`'s two
+unregistered rows folded below (S6 probe-reject → §D, S6 guardrail-block
+→ §C); V30's set archived to `docs/archive/megaplans/` and indexed in §6.
+2026-11-21 — fold-completeness pass: every `docs/archive/`
 register (all DEFERRED/FINDINGS/PLAN/LEDGER sets, CONSOLIDATION V5–V7,
 TEST_SUITE_AUDIT, audits/, summaries/, superpowers/) re-audited against
 live code. Caught: the V24 FINDINGS deferred register was never ticketed or
@@ -32,7 +35,8 @@ Ordered by priority: **A** (cheap wins / coupled to in-flight work) →
 **B** (bounded canon & feature passes) → **C** (campaign-scale, own
 megaplan each) → **D** (standing & design deferrals) → **E** (resolved —
 kept for the audit trail). Prov tags: `V24-F*` = V24 FINDINGS' unticketed
-deferred register; `SP-*` = superpowers session plans.
+deferred register; `SP-*` = superpowers session plans; `S6` = V31 DN-S6
+Terrablood canon-claims scan (`matchup.ts` Pass-5 note is the detail).
 
 ### A — Quick wins & live couplings
 
@@ -47,10 +51,11 @@ _Empty — both V30 re-baselines landed (see §E)._
 
 ### C — Campaign-scale (own megaplan each)
 
-| Prov   | Item                                                                                                                                                                                                                                                                                                                               | Severity | Entry points                                                                                                                                   | Status                                                                                                                                                                                                         |
-| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| V22-D3 | **Pagan literal damage model** — canon: damage = ST + class-variance + weapon-variance; armor soak = weight + 12 + type-bonus; ≤1 → bounce. Current model is `(class+4)×locMult×variance` + flat mitigation — same shape, different parameters. Needs a soak-rework pass + end-to-end damage/KO/kill distribution re-verification. | Own pass | `src/engine/combat/mechanics/damageCalc.ts:16-24`, `src/engine/combat/mechanics/weaponArmor.ts` (V29 corrected path — `resolution/` was stale) | **Open** — V29 NO-GO reaffirmed: rewriting the damage scale invalidates every combat baseline (kill rates, bout length, mortality); requires its own campaign with a dedicated RED battery + soak verification |
-| V22-D4 | **ADM / graduation tier** — canon: basic caps 3–21, ADM caps 3–25; WL>21 grants INI bonus; graduation is a separate advancement tier.                                                                                                                                                                                              | Feature  | `ATTRIBUTE_MAX` (`types/shared/attributes.ts:40` = 25), `src/engine/warrior/potential.ts`, training passes                                     | **Open** — V29 NO-GO reaffirmed: caps are 3–25 throughout, no tier exists; design-level feature needing its own campaign                                                                                       |
+| Prov   | Item                                                                                                                                                                                                                                                                                                                                                                                                                                         | Severity | Entry points                                                                                                                                   | Status                                                                                                                                                                                                         |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| S6     | **TP/ST rebalance campaign** — canon + probe support total-parry dominance over striking attack (archive record + N=400 probe at 52% TP), but every legal matrix retune breached the 80/20 balance invariant (+1/−1 → 81%, +1/0 → 84%): passives dominate this pairing, so it needs a real rebalance, not a matrix nudge. Cell reverted to −1/+1 at close-out. Most actionable of the campaign rows — failed-retune space is already mapped. | Balance  | `matchup.ts` Pass-5 note (TP vs ST cell), STYLE_PENALTIES / passives surface (`src/engine/stylePassives/`)                                     | **Open** — folded from V31_DEFERRED; `balance.slow` 80/20 watch (§2) tracks the live invariant                                                                                                                 |
+| V22-D3 | **Pagan literal damage model** — canon: damage = ST + class-variance + weapon-variance; armor soak = weight + 12 + type-bonus; ≤1 → bounce. Current model is `(class+4)×locMult×variance` + flat mitigation — same shape, different parameters. Needs a soak-rework pass + end-to-end damage/KO/kill distribution re-verification.                                                                                                           | Own pass | `src/engine/combat/mechanics/damageCalc.ts:16-24`, `src/engine/combat/mechanics/weaponArmor.ts` (V29 corrected path — `resolution/` was stale) | **Open** — V29 NO-GO reaffirmed: rewriting the damage scale invalidates every combat baseline (kill rates, bout length, mortality); requires its own campaign with a dedicated RED battery + soak verification |
+| V22-D4 | **ADM / graduation tier** — canon: basic caps 3–21, ADM caps 3–25; WL>21 grants INI bonus; graduation is a separate advancement tier.                                                                                                                                                                                                                                                                                                        | Feature  | `ATTRIBUTE_MAX` (`types/shared/attributes.ts:40` = 25), `src/engine/warrior/potential.ts`, training passes                                     | **Open** — V29 NO-GO reaffirmed: caps are 3–25 throughout, no tier exists; design-level feature needing its own campaign                                                                                       |
 
 ### D — Standing & design deferrals (conditional revisit only)
 
@@ -62,6 +67,7 @@ _Empty — both V30 re-baselines landed (see §E)._
 | SP-spine   | **Progression-spine multi-tier escalating arc** — deferred MVP Option 3 from the 2026-06-22 win-condition plan.                                                                                                                                                                                                                                                                                              | Design         | No engine surface exists                                                         | **Design deferral** — revisit only on explicit product push         |
 | SP-bailout | **Player bailout/receivership economy** — declared non-goal in the world-sim-decouple plan; broke players climb out via promoter offers today.                                                                                                                                                                                                                                                               | Scope boundary | `src/engine/pipeline/tick/timeAdvance.ts` (`evaluateStopConditions`)             | **Standing deferral**                                               |
 | SP-reveal  | **prefight-advisor `revealLevel`** — style-only (no exact stats) forecast for partially-scouted opponents.                                                                                                                                                                                                                                                                                                   | Feature        | `src/engine/narrative/fightForecast.ts` (`buildFightForecast`)                   | **Conditional** — only if a partial-reveal tier is wanted           |
+| S6         | **TP>AB "scum answers the surgeon" — probe-rejected canon claim** — the archive's TP-over-AB dominance failed the two-source rule (N=400 style-typical probe: 35.8% TP); the matrix's AB edge was kept. Evidence preserved in `matchup.ts` Pass-5 note + `terrablood-canon-claims.md` (S6 row, disputed→resolved).                                                                                           | Canon claim    | `matchup.ts` Pass-5 REJECTED note; `terrablood-canon-claims.md`                  | **Standing deferral** — revisit only on new canon/sim evidence      |
 
 ### E — Resolved (verified — kept for the audit trail)
 
@@ -106,6 +112,10 @@ trail).
   `scripts/out/knip-report.json` that don't exist in a fresh checkout.
   Fix = teach `scripts/skill-path-scan.mjs` to allowlist generated-output
   paths, or adjust the doc references.
+- **`balance.slow` 80/20 matchup invariant red at HEAD** (found in V31 slow
+  run, stash-verified pre-V31): `PARRY-STRIKE vs WALL OF STEEL` 81%,
+  `STRIKING ATTACK vs BASHING ATTACK` 81% — belongs to the next balance
+  campaign, not V31 scope. Companion of the S6 TP/ST row (§1-C).
 - **`killDeathDivergence` 300wk vs 600s cap** (V29): the world sim outgrew
   the budget (~685s semi-solo); per-test cap raised to 900s — verified
   green solo at 628s. If per-week cost keeps climbing this re-fails.
@@ -125,10 +135,13 @@ trail).
 - **LU floor / PR band edge** (V22 §3): LU 42.7% bottom-of-band, PR 55.8%
   approaching the edge — re-check on the next world-diag; both have
   ratchet candidates documented in the V22 deferred archive.
-- **`balance.slow` 80/20 matchup invariant red at HEAD** (found in V31 slow
-  run, stash-verified pre-V31): `PARRY-STRIKE vs WALL OF STEEL` 81%,
-  `STRIKING ATTACK vs BASHING ATTACK` 81% — belongs to the next balance
-  campaign, not V31 scope.
+- **Agent-sweep seeded-stream shift** (2026-11-22): the roster curation
+  (`the_wailing_chasm`↔`the_desolate_heath`, `38f27a540`) changes the
+  arena-selection pool order, and the KO-attribution fix (`17abe0fef`)
+  re-buckets riposte/off-hand bout ends from `BLEED`/`Stoppage` to
+  `RIPOSTE`/`OFFHAND` — bookkeeping only, no mechanic change, but
+  causeBucket distributions will move on the next world re-baseline.
+  Expect and accept drift; do not "fix" it back.
 - **ai-behavior-audit-v2 residual watches** (folded in the 2026-11-21
   completeness pass): `displaced` share of reign endings reflects stable
   churn more than title mechanics; `counterOfferRate` counts only standing
@@ -217,16 +230,19 @@ findings don't re-litigate them.
 
 Families whose deferred work all landed — details in the archived docs.
 
-| Prov                | Items                                                                    | Disposition                                  |
-| ------------------- | ------------------------------------------------------------------------ | -------------------------------------------- |
-| V9                  | traitDedup `effectHash` key-order follow-up                              | Landed — keys sorted, pinned by spec         |
-| V22                 | D1 dual-wield/off-hand, D2 trains-burn-skills                            | Landed V23 (`46e26119`, `c967fbb9`)          |
-| V24                 | D1 luck pools, D2 dagger advisory, D3 learn-cap literals, D4 rhythm gate | Landed post-close-out (D4 → V25's always-on) |
-| V25                 | All deferred + watch items                                               | Resolved — see archived V25_DEFERRED         |
-| V26                 | None (D1–D4 carried above, D5–D6 → §4)                                   | —                                            |
-| V27                 | All deferred items                                                       | Landed — V27_DEFERRED fully struck           |
-| Consolidation V5–V7 | All deferred                                                             | Resolved — registers empty/resolved          |
-| Test-suite audit    | All waves                                                                | Complete — 0 TEST_DEBT pairs at Wave-2 close |
+| Prov                | Items                                                                    | Disposition                                              |
+| ------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- |
+| V9                  | traitDedup `effectHash` key-order follow-up                              | Landed — keys sorted, pinned by spec                     |
+| V22                 | D1 dual-wield/off-hand, D2 trains-burn-skills                            | Landed V23 (`46e26119`, `c967fbb9`)                      |
+| V24                 | D1 luck pools, D2 dagger advisory, D3 learn-cap literals, D4 rhythm gate | Landed post-close-out (D4 → V25's always-on)             |
+| V25                 | All deferred + watch items                                               | Resolved — see archived V25_DEFERRED                     |
+| V26                 | None (D1–D4 carried above, D5–D6 → §4)                                   | —                                                        |
+| V27                 | All deferred items                                                       | Landed — V27_DEFERRED fully struck                       |
+| V28                 | markdownlint CI adoption                                                 | §D standing deferral                                     |
+| V29                 | None (watch items → §2)                                                  | —                                                        |
+| V30                 | Seed re-baselines (worldLiveness 89, worldBalance 2024)                  | Resolved — §E rows; orphanScan + jscpd ratchets re-based |
+| Consolidation V5–V7 | All deferred                                                             | Resolved — registers empty/resolved                      |
+| Test-suite audit    | All waves                                                                | Complete — 0 TEST_DEBT pairs at Wave-2 close             |
 
 ## 6. Archive index
 
@@ -257,5 +273,6 @@ trail.
 | MEGAPLAN_V27        | Tournament classes / FE / freeze dates                                        | DEFERRED, FINDINGS, LEDGER, PLAN   | untagged                                      |
 | MEGAPLAN_V28        | Docs taxonomy, bible-corpus boundary & convention ratchet                     | DEFERRED, FINDINGS, LEDGER, PLAN   | untagged                                      |
 | MEGAPLAN_V29        | Exhaustive review & full branch consolidation                                 | DEFERRED, FINDINGS, LEDGER, PLAN   | `pre-megaplan-v29`                            |
+| MEGAPLAN_V30        | Harmonization & deduplication campaign                                        | DEFERRED, FINDINGS, LEDGER, PLAN   | `pre-megaplan-v30`                            |
 | CONSOLIDATION_V5–V7 | PR consolidation waves                                                        | FINDINGS×3, LEDGER×2               | `pre-consolidation-*`, `pre-v7-consolidation` |
 | TEST_SUITE_AUDIT    | Test-suite audit & reorganization (Waves 1–2)                                 | PLAN, LEDGER + TEST_AUDIT_FINDINGS | `pre-test-audit-v2`                           |

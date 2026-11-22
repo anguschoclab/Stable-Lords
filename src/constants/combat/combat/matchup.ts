@@ -65,12 +65,16 @@ export const STYLE_ORDER = [
  * moved ONLY where the Terrablood archive record and live sim evidence both
  * contradicted the matrix. LU 0→+1 vs BA (sim 68.5%), PR 0→+1 vs LU (sim
  * 56.8%); mirrors flipped antisymmetrically.
- * REJECTED: TP>AB — archive "scum answers the surgeon" unsupported (sim
- * 35.8% TP); the matrix's AB edge stands.
- * BLOCKED: TP>ST — archive + probe (52%) supported it, but every legal
- * retune (+1/−1 → 81%, +1/0 → 84%) breaches the 80/20 balance invariant;
- * passives dominate this pairing, so it needs a real TP/ST rebalance
- * campaign, not a matrix nudge. Cell reverted to −1/+1.
+ * REJECTED: TP>AB — archive "scum answers the surgeon" unsupported on the
+ * isolated matchup (style-typical 35.8%, all-15s+AI re-probe 47.3% TP);
+ * the matrix's AB edge stands. World surface reproduces canon direction
+ * anyway (TP>AB ≈70%) via TP's global dominance — adjudicated house
+ * divergence (BACKLOG §3).
+ * RESOLVED EMERGENTLY: TP>ST — matrix retunes breached the 80/20 balance
+ * invariant (+1/−1 → 81%, +1/0 → 84%), but the canon direction already
+ * holds without one: 52% all-15s+AI, ≈72% world. TP's identity delivers
+ * the edge, so the cell deliberately stays −1/+1 (win-rate pinned in
+ * matchupMatrix.canon.test.ts).
  *
  * Target: aggregate W% spread ≤ 20pp; per-matchup spread ≤ 30pp on samples ≥50.
  */

@@ -1,12 +1,14 @@
 ---
 name: combat-sim
-description: Run the Stable Lords combat test suite (resolution, damage, fatigue, simulation, determinism) via bun test (Vitest).
+description: Run the Stable Lords combat test suite (resolution, damage, fatigue, simulation, determinism) via bun run test (Vitest).
 disable-model-invocation: true
 ---
 
 # combat-sim
 
-Runs the Stable Lords combat test suite via `bun test` (Vitest).
+Runs the Stable Lords combat test suite via `bun run test` (the Vitest fast
+tier — bare `bun test` is the native bun runner, the separate `bun run test:bun`
+parity job; see `run-all-tests` for the full tier table).
 
 ## Usage
 

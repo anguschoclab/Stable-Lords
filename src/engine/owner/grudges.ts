@@ -37,12 +37,10 @@ interface PlayerFightSets {
 /** Attribute one rival×player fight to its kill/upset/slight buckets. */
 function aggregatePlayerCrossFight(
   f: FightSummary,
-  rivalIdx: number,
-  rivalIsA: boolean,
-  state: GameState,
-  slight: boolean,
+  ctx: { rivalIdx: number; rivalIsA: boolean; state: GameState; slight: boolean },
   sets: PlayerFightSets
 ): void {
+  const { rivalIdx, rivalIsA, state, slight } = ctx;
   if (f.by === 'Kill') {
     sets.rivalKillVsPlayer.add(rivalIdx);
     return;
@@ -134,11 +132,11 @@ function aggregateRecentFights(state: GameState, rivals: GameState['rivals']): F
       : playerWarriorIds.has(f.warriorIdA);
     if (!otherIsPlayer) continue;
 
-    aggregatePlayerCrossFight(f, rivalIdx, rivalIsA, state, slight, {
-      rivalKillVsPlayer,
-      rivalUpsetVsPlayer,
-      rivalSlightVsPlayer,
-    });
+    aggregatePlayerCrossFight(
+      f,
+      { rivalIdx, rivalIsA, state, slight },
+      { rivalKillVsPlayer, rivalUpsetVsPlayer, rivalSlightVsPlayer }
+    );
   }
 
   return { rivalPairAgg, rivalKillVsPlayer, rivalUpsetVsPlayer, rivalSlightVsPlayer };

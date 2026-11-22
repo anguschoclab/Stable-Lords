@@ -76,6 +76,7 @@ export const OFFSEASON_EFFECT_TYPES = [
   'wandering_blacksmith',
   'fey_trickster',
   'chaos_squall_exposure',
+  'elegy_for_the_fallen',
 ] as const;
 
 /** Offseason event effect type — derived from the canonical tuple above. */

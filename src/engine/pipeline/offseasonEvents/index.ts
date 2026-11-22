@@ -70,3 +70,4 @@ export { handleDreamweaversMist } from './chaosHandlers';
 export { handlePrismaticGaleExposure } from './chaosHandlers';
 export { handleWanderingBlacksmith } from './buffHandlers';
 export { handleChaosSquallExposure } from './chaosHandlers';
+export { handleElegyForTheFallen } from './socialHandlers';

@@ -1,11 +1,14 @@
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 
+import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 import {
   getActiveWarriors,
   announceOffseasonEvent,
+  pickActiveWarrior,
   withChosenWarrior,
   type OffseasonEventRun,
   statGrantOutcome,
+  addStat,
 } from '../helpers';
 
 /** Grand Feast event — costs 200-400g; every active warrior gains 10 XP. */
@@ -93,6 +96,46 @@ export function handleStreetPerformance(run: OffseasonEventRun) {
         { updates: { flair: newFlair }, mirror: true, announce: { gold: goldGained } }
       );
     },
+  });
+}
+
+/**
+ * Elegy for the Fallen event — costs 40-80g for a memorial feast; a random
+ * active warrior delivers the elegy for +15 popularity and +10 fame. When the
+ * graveyard holds a fallen warrior, they are honored by name.
+ */
+export function handleElegyForTheFallen(run: OffseasonEventRun) {
+  const { state, nextWeek, e, rng, ctx } = run;
+  const chosen = pickActiveWarrior(state, rng);
+  if (!chosen) return;
+
+  const cost = 40 + Math.floor(rng.next() * 41);
+  ctx.treasuryDelta -= cost;
+  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Memorial Feast', -cost, 'other'));
+
+  const popularityGained = 15;
+  const fameGained = 10;
+  ctx.rosterUpdates.set(chosen.id, {
+    popularity: addStat(chosen.popularity, popularityGained),
+    fame: addStat(chosen.fame, fameGained),
+  });
+
+  // SeededRNG.pick throws on an empty array — guard like wandering_healer does.
+  const graveyard = state.graveyard ?? [];
+  const fallen = graveyard.length > 0 ? rng.pick(graveyard) : undefined;
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [
+      t((fallen ? e.newsletter[1] : e.newsletter[0]) || '', {
+        name: chosen.name,
+        fallen: fallen?.name ?? 'the fallen',
+        popularity: popularityGained,
+        fame: fameGained,
+        gold: cost,
+      }),
+    ],
   });
 }
 

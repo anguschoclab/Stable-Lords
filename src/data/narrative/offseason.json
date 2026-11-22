@@ -432,6 +432,14 @@
       "newsletter": [
         "A sudden Chaos Squall swept through the training grounds. {{name}} stood their ground and learned to anticipate the erratic winds, though the effort was exhausting. (+30 XP, Minor Fatigue)"
       ]
+    },
+    "elegy_for_the_fallen": {
+      "title": "An Elegy for the Fallen",
+      "effectType": "elegy_for_the_fallen",
+      "newsletter": [
+        "The stable held a memorial feast for the arena's fallen legends. {{name}} delivered the elegy and the crowd roared its approval. (+{{popularity}} Popularity, +{{fame}} Fame, -{{gold}} Gold)",
+        "The stable raised a funeral pyre for {{fallen}}, taken by the sands. {{name}}'s elegy moved even the bookmakers to silence. (+{{popularity}} Popularity, +{{fame}} Fame, -{{gold}} Gold)"
+      ]
     }
   },
   "events": {

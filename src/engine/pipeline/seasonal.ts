@@ -86,6 +86,7 @@ export const EVENT_HANDLERS = {
   prismatic_gale_exposure: offseason.handlePrismaticGaleExposure,
   wandering_blacksmith: offseason.handleWanderingBlacksmith,
   chaos_squall_exposure: offseason.handleChaosSquallExposure,
+  elegy_for_the_fallen: offseason.handleElegyForTheFallen,
 } satisfies Record<OffseasonEffectType, (run: OffseasonEventRun) => void>;
 
 /**

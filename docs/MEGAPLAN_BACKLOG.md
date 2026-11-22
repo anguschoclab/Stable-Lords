@@ -140,7 +140,10 @@ trail).
   mechanism: TP kill-share is 2.0% with a 44%-Decision profile, so TP's
   bout-share mechanically dilutes the world rate; the mint-DA-floors
   explanation still stands as the second driver. Recovery is downstream
-  of the TP-development campaign, not a kill-window tweak.
+  of the TP-development campaign, not a kill-window tweak. Per-style
+  differentiation itself verified canon-correct (TP/WS strictly lowest;
+  offensive cluster out-kills defensive) and pinned by
+  `killShare.canon.test.ts`.
 - **LU floor / PR band edge** (V22 §3): re-checked on the 2026-11-22
   1000-week re-baseline — **LU 43.7%** (floor trigger is <40; holds),
   **PR 59.4%** (at the ~60 edge, not over). No ratchet fired; keep

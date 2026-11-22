@@ -18,7 +18,7 @@ import { generateFavorites } from '@/engine/favorites/favorites';
 import { makeWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { WarriorFavorites } from '@/types/warrior.types';
+import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 
 const flatRng = (v: number): IRNGService => ({
   next: () => v,
@@ -60,7 +60,10 @@ const favWith = (over: Partial<WarriorFavorites> = {}): WarriorFavorites => ({
   ...over,
 });
 
-const warrior = () => makeWarrior({ favorites: favWith() });
+// Pin the id: the tactic roll hashes `w.id|week`, and makeWarrior's ids come
+// from a shared counter — a file-order shift would reseed the sub-stream and
+// break the same-rolls parity premise below.
+const warrior = () => makeWarrior({ id: 'tactic-parity' as Warrior['id'], favorites: favWith() });
 
 describe('generateFavorites — tactic discovery ledger', () => {
   it('initializes tactic + tacticHints on the discovered ledger', () => {

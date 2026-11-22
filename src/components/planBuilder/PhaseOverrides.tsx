@@ -4,6 +4,8 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Timer } from 'lucide-react';
+import { DEFENSIVE_TACTICS } from '@/types/enumSources';
+import type { DefensiveTactic } from '@/types/combat.types';
 import type { FightPlan } from '@/types/game';
 
 interface PhaseOverridesProps {
@@ -120,6 +122,49 @@ function PhaseCard({
           step={1}
         />
       </div>
+
+      <PhaseDefTacticSelect phase={p} plan={plan} onPlanChange={onPlanChange} />
+    </div>
+  );
+}
+
+/** Per-phase defensive-tactic picker — the player-facing counterpart to the
+ *  AI's phase-level tactics (e.g. the AB exhaust opening). */
+function PhaseDefTacticSelect({
+  phase: p,
+  plan,
+  onPlanChange,
+}: {
+  phase: PhaseKey;
+  plan: FightPlan;
+  onPlanChange: (plan: FightPlan) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-[9px] uppercase font-bold text-muted-foreground/60">Def tactic</Label>
+      <select
+        aria-label={`${p} phase defensive tactic`}
+        value={plan.phases?.[p]?.defensiveTactic ?? 'none'}
+        onChange={(e) => {
+          const v = e.target.value as DefensiveTactic;
+          const next = { ...(plan.phases || {}) };
+          const cur = next[p] ?? {
+            OE: plan.OE,
+            AL: plan.AL ?? 5,
+            killDesire: plan.killDesire ?? 5,
+          };
+          next[p] =
+            v === 'none' ? { ...cur, defensiveTactic: undefined } : { ...cur, defensiveTactic: v };
+          onPlanChange({ ...plan, phases: next });
+        }}
+        className="w-full bg-black/60 border border-white/10 text-[10px] uppercase font-bold text-muted-foreground rounded-none px-1 py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+      >
+        {DEFENSIVE_TACTICS.map((t) => (
+          <option key={t} value={t}>
+            {t === 'none' ? '—' : t}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

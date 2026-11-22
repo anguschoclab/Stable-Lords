@@ -4485,7 +4485,12 @@
           "A treacherous patch of slick moss causes a momentary loss of balance."
         ]
       }
-    }
+    },
+    "weapon_break": [
+      "The blow clangs off the armor — and {{name}}'s {{weapon}} SHATTERS into splinters!",
+      "Steel meets steel with a CRACK — {{name}}'s {{weapon}} snaps in half and the pieces hit the sand!",
+      "A shriek of tortured metal — {{name}}'s {{weapon}} breaks against the armored guard!"
+    ]
   },
   "crowd_reactions": {
     "Bloodthirsty": [

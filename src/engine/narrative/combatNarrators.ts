@@ -153,6 +153,18 @@ export function narrateBackupDraw(rng: IRNGService, name: string, weaponId?: str
 }
 
 /**
+ * Narrates a weapon break — a fragile weapon shatters on armor contact.
+ * The id is destroyed for the bout (no rearm follows).
+ */
+export function narrateWeaponBreak(rng: IRNGService, name: string, weaponId?: string): string {
+  const pool = peekArchive(['pbp', 'weapon_break']);
+  const template = pool
+    ? rng.pick(pool)
+    : "Steel meets steel with a CRACK — {{name}}'s {{weapon}} shatters!";
+  return interpolateTemplate(template, { name, weapon: getWeaponDisplayName(weaponId) });
+}
+
+/**
  * Narrates a rearm — the fighter retrieves their dropped weapon off the sand.
  */
 export function narrateRearm(rng: IRNGService, name: string, weaponId?: string): string {

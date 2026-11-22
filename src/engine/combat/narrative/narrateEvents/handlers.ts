@@ -27,6 +27,7 @@ import {
   narrateDisarm,
   narrateBackupDraw,
   narrateRearm,
+  narrateWeaponBreak,
 } from '../../../narrative/combatNarrators';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { CRIT_EXTRA_VALUE_MIN_DAMAGE } from '@/constants/combat';
@@ -188,6 +189,27 @@ const narrateRearmEvent: EventNarrator = (event, h, minute) => [
     events: [event],
   },
 ];
+
+/** Weapon break — a shattered weapon is an emphatic beat; a backup draw follows. */
+const narrateWeaponBreakEvent: EventNarrator = (event, h, minute) => {
+  const name = h.getName(event.actor);
+  const out: MinuteEvent[] = [
+    {
+      minute,
+      text: narrateWeaponBreak(h.rng, name, event.metadata?.weaponId as string | undefined),
+      events: [event],
+      emphasis: true,
+    },
+  ];
+  if (event.metadata?.backup) {
+    out.push({
+      minute,
+      text: narrateBackupDraw(h.rng, name, event.metadata?.toWeapon as string | undefined),
+      events: [event],
+    });
+  }
+  return out;
+};
 
 const narrateDefenseEvent: EventNarrator = (event, h, minute) => {
   const actorName = h.getName(event.actor);
@@ -617,6 +639,7 @@ export const EVENT_NARRATORS: Partial<Record<CombatEvent['type'], EventNarrator>
   RECOVERY: narrateRecoveryEvent,
   DISARM: narrateDisarmEvent,
   REARM: narrateRearmEvent,
+  WEAPON_BREAK: narrateWeaponBreakEvent,
   DEFENSE: narrateDefenseEvent,
   HIT: narrateHitEvent,
   FATIGUE: narrateFatigueEvent,

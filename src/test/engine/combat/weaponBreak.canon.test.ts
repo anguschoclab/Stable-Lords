@@ -83,6 +83,19 @@ describe('breakage in resolution (seeded)', () => {
     expect(breaks).toBe(0);
   });
 
+  it('a break surfaces in the narrated log — players see the shatter, not just telemetry', () => {
+    // Player-vs-NPC parity: the NPC headless path records exchangeLog.weaponBreak;
+    // the player's narrated path must print the beat and attach the event.
+    let saw = false;
+    for (let i = 0; i < N && !saw; i++) {
+      const r = fightOnce(makeW('quarterstaff'), makeW('longsword', 'APA'), i * 104729 + 7);
+      if (breakCount(r) === 0) continue;
+      const lines = r.log.filter((m) => m.events?.some((e) => e.type === 'WEAPON_BREAK'));
+      saw = lines.length > 0 && lines.every((m) => /shatter|snap|break/i.test(m.text));
+    }
+    expect(saw).toBe(true);
+  });
+
   it('a broken weapon is not rearmable — the destroyed id never enters droppedWeaponId', () => {
     // REARM only retrieves `droppedWeaponId`; the invariant a break must
     // keep is that the shattered id never lands there. Asserted directly

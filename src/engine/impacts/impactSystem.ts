@@ -121,7 +121,7 @@ const MERGE_CONFIG: MergeConfig = {
   retired: { strategy: 'append', defaultValue: [] },
   scoutReports: { strategy: 'append', defaultValue: [] },
   hallOfFame: { strategy: 'append', defaultValue: [] },
-  moodHistory: { strategy: 'append', defaultValue: [] },
+  moodHistory: { strategy: 'replace', defaultValue: [] },
   playerChallenges: { strategy: 'append', defaultValue: [] },
   playerAvoids: { strategy: 'append', defaultValue: [] },
   playerStableAvoids: { strategy: 'append', defaultValue: [] },

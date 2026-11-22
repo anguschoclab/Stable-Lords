@@ -34,10 +34,11 @@ const matchHistory = (state: GameState, value: MatchRecord[]) => {
 };
 
 /**
- * Apply mood history to state.
+ * Apply mood history to state — producers emit the full rolling window,
+ * so this replaces rather than appends.
  */
 const moodHistory = (state: GameState, value: { week: number; mood: CrowdMoodType }[]) => {
-  state.moodHistory = [...(state.moodHistory || []), ...value];
+  state.moodHistory = value;
 };
 
 /**

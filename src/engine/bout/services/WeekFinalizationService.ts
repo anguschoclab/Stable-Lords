@@ -4,6 +4,7 @@
  * Extracted from boutProcessorService.ts to enforce SRP
  */
 import type { GameState } from '@/types/state.types';
+import type { CrowdMoodType } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { BoutResult } from './boutProcessorService';
 import { computeCrowdMood } from '@/engine/bout/crowdMood';
@@ -25,13 +26,22 @@ export function finalizeWeekSideEffectsToImpact(
   const oldMood = state.crowdMood;
 
   // Unified fame tracking: player.fame is the authority
+  // Dedupe by week — older saves accumulated duplicated/out-of-order
+  // entries when this field was applied with append semantics.
+  const seen = new Set<number>();
+  const window: { week: number; mood: CrowdMoodType }[] = [];
+  for (let i = (state.moodHistory?.length ?? 0) - 1; i >= 0 && window.length < 19; i--) {
+    const entry = state.moodHistory![i]!;
+    if (seen.has(entry.week)) continue;
+    seen.add(entry.week);
+    window.unshift(entry);
+  }
+  window.sort((a, b) => a.week - b.week);
+
   const impact: StateImpact = {
     fameDelta: playerFameGain,
     crowdMood: newMood,
-    moodHistory: [
-      ...(state.moodHistory || []).slice(-19),
-      { week: state.absoluteWeek, mood: newMood },
-    ],
+    moodHistory: [...window, { week: state.absoluteWeek, mood: newMood }],
   };
 
   // Add mood change notification if mood changed significantly

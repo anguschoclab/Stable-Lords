@@ -2,30 +2,40 @@
 /**
  * run-agents.mjs — sweep the .claude/agents/ specialist agents headlessly.
  *
- * Each agent runs as its own `claude -p --agent <name>` session in this repo's
- * working tree, one at a time (shared tree — parallel runs would race the same
- * files and commits). Improvement agents commit one small change per their
- * contract; review agents (engine-reviewer, combat-engine-reviewer,
- * perf-auditor) report to stdout, which is captured to the per-agent log.
+ * Each agent runs as its own session in this repo's working tree, one at a
+ * time (shared tree — parallel runs would race the same files and commits).
+ * Improvement agents commit one small change per their contract; review
+ * agents (engine-reviewer, combat-engine-reviewer, perf-auditor) report to
+ * stdout, which is captured to the per-agent log.
+ *
+ * Two CLI backends are supported (--cli, default agy):
+ *   agy     Devin CLI — `agy --agent <name> -p <prompt>`. Discovers the
+ *           agents via the `.agents/agents -> ../.claude/agents` symlink
+ *           (project-scoped subagent profiles).
+ *   claude  Claude Code — `claude -p --agent <name> <prompt>`. Discovers
+ *           `.claude/agents/` natively. Requires `claude auth login` or
+ *           ANTHROPIC_API_KEY.
  *
  * Usage:
  *   bun scripts/run-agents.mjs [options]
  *   node scripts/run-agents.mjs [options]
  *
  * Options:
+ *   --cli <agy|claude>      backend CLI (default agy)
  *   --only <a,b>            run only these agents
  *   --skip <a,b>            skip these agents
  *   --resume-from <name>    start at this agent (runs are alphabetical)
  *   --limit <n>             run at most n agents
  *   --timeout-min <n>       per-agent wall-clock limit in minutes (default 25)
- *   --model <m>             pass through to `claude --model`
- *   --max-budget <usd>      pass through to `claude --max-budget-usd` (per agent)
- *   --permission-mode <m>   default bypassPermissions
- *   --dispatch              dispatch via "use the <name> subagent" prompt
- *                           instead of `--agent <name>` (fallback if the CLI
- *                           build doesn't resolve project agent names)
+ *   --model <m>             pass through to the CLI's --model
+ *   --max-budget <usd>      claude only — --max-budget-usd (per agent)
+ *   --permission-mode <m>   default bypassPermissions; for agy the values
+ *                           plan|auto|accept-edits map to --mode instead
+ *   --inject                don't pass --agent; prepend the agent .md body
+ *                           to the prompt instead (fallback if a CLI can't
+ *                           resolve project agent names)
  *   --allow-dirty           don't require a clean worktree before starting
- *   --ignore-auth           skip the `claude auth status` preflight
+ *   --ignore-auth           skip the auth/discovery preflight
  *   --dry-run               print the run plan without executing
  *
  * Output: archives/agent-runs/<timestamp>/<agent>.log + SUMMARY.md
@@ -46,6 +56,7 @@ const AGENTS_DIR = join(REPO, '.claude', 'agents');
 // ---------------------------------------------------------------- args
 function parseArgs(argv) {
   const o = {
+    cli: 'agy',
     only: null,
     skip: new Set(),
     resumeFrom: null,
@@ -54,7 +65,7 @@ function parseArgs(argv) {
     model: null,
     maxBudget: null,
     permissionMode: 'bypassPermissions',
-    dispatch: false,
+    inject: false,
     allowDirty: false,
     ignoreAuth: false,
     dryRun: false,
@@ -66,6 +77,10 @@ function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     switch (a) {
+      case '--cli':
+        o.cli = take(i);
+        i++;
+        break;
       case '--only':
         o.only = new Set(
           take(i)
@@ -104,8 +119,8 @@ function parseArgs(argv) {
         o.permissionMode = take(i);
         i++;
         break;
-      case '--dispatch':
-        o.dispatch = true;
+      case '--inject':
+        o.inject = true;
         break;
       case '--allow-dirty':
         o.allowDirty = true;
@@ -124,6 +139,8 @@ function parseArgs(argv) {
         fail(`unknown option ${a}`);
     }
   }
+  if (o.cli !== 'agy' && o.cli !== 'claude') fail(`--cli must be agy or claude, got ${o.cli}`);
+  if (o.maxBudget && o.cli !== 'claude') fail('--max-budget is claude-only');
   return o;
 }
 
@@ -158,18 +175,29 @@ function discoverAgents() {
 
 // ------------------------------------------------------------ preflight
 function preflight(opts) {
-  if (!shOk('command -v claude')) fail('`claude` CLI not on PATH');
+  if (!shOk(`command -v ${opts.cli}`)) fail(`\`${opts.cli}\` CLI not on PATH`);
   if (!opts.ignoreAuth) {
-    const raw = shOk('claude auth status') ?? '';
-    try {
-      if (!JSON.parse(raw).loggedIn) {
+    if (opts.cli === 'claude') {
+      const raw = shOk('claude auth status') ?? '';
+      try {
+        if (!JSON.parse(raw).loggedIn) {
+          fail(
+            'claude CLI is not authenticated — run `claude auth login` (or set ANTHROPIC_API_KEY) and retry, or pass --ignore-auth'
+          );
+        }
+      } catch (e) {
+        if (e instanceof SyntaxError) fail('`claude auth status` returned unparseable output');
+        throw e;
+      }
+    } else if (!opts.inject) {
+      // agy: verify it can discover the project agents (the .agents/agents
+      // symlink) — a silent discovery failure would run generic sessions.
+      const listed = shOk('agy agents') ?? '';
+      if (!listed.includes('scout') && !listed.includes('mason')) {
         fail(
-          'claude CLI is not authenticated — run `claude auth login` (or set ANTHROPIC_API_KEY) and retry, or pass --ignore-auth'
+          'agy does not see the project agents — expected the .agents/agents -> ../.claude/agents symlink. --inject bypasses this check'
         );
       }
-    } catch (e) {
-      if (e instanceof SyntaxError) fail('`claude auth status` returned unparseable output');
-      throw e;
     }
   }
   if (!opts.allowDirty && sh('git status --porcelain')) {
@@ -181,7 +209,7 @@ function preflight(opts) {
 }
 
 // ----------------------------------------------------------------- run
-function buildPrompt(name, dispatch) {
+function buildPrompt(name, injectBody) {
   const mission =
     `Perform your mission exactly as your agent instructions define — ` +
     `one small, verified improvement, or a review report if that is your role. ` +
@@ -192,20 +220,42 @@ function buildPrompt(name, dispatch) {
     `follow .claude/agent-journals/README.md). If nothing safe is worth ` +
     `doing, change nothing and say so plainly. Never push, never force-push, ` +
     `never rewrite history, never touch remotes.`;
-  return dispatch ? `Use the ${name} subagent for this task: ${mission}` : mission;
+  return injectBody ? `${injectBody}\n\n---\n\n${mission}` : mission;
+}
+
+function agentBody(agent) {
+  const text = readFileSync(join(AGENTS_DIR, agent.file), 'utf8');
+  const fm = text.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  return fm ? text.slice(fm[0].length) : text;
+}
+
+function cliArgs(agent, opts) {
+  const prompt = buildPrompt(agent.name, opts.inject ? agentBody(agent) : null);
+  if (opts.cli === 'claude') {
+    const args = ['-p', '--output-format', 'text', '--permission-mode', opts.permissionMode];
+    if (opts.model) args.push('--model', opts.model);
+    if (opts.maxBudget) args.push('--max-budget-usd', String(opts.maxBudget));
+    if (!opts.inject) args.push('--agent', agent.name);
+    args.push(prompt);
+    return args;
+  }
+  // agy: -p takes the prompt as its value; --mode has no bypass value, so
+  // bypassPermissions maps to the dedicated flag.
+  const args = [];
+  if (!opts.inject) args.push('--agent', agent.name);
+  if (opts.permissionMode === 'bypassPermissions') args.push('--dangerously-skip-permissions');
+  else args.push('--mode', opts.permissionMode.replace(/([A-Z])/g, '-$1').toLowerCase());
+  args.push('--print-timeout', `${Math.round(opts.timeoutMin * 60)}s`);
+  if (opts.model) args.push('--model', opts.model);
+  args.push('-p', prompt);
+  return args;
 }
 
 function runAgent(agent, opts, logPath) {
-  const args = ['-p', '--output-format', 'text', '--permission-mode', opts.permissionMode];
-  if (opts.model) args.push('--model', opts.model);
-  if (opts.maxBudget) args.push('--max-budget-usd', String(opts.maxBudget));
-  if (!opts.dispatch) args.push('--agent', agent.name);
-  args.push(buildPrompt(agent.name, opts.dispatch));
-
   const log = createWriteStream(logPath);
   const started = Date.now();
   return new Promise((resolve) => {
-    const child = spawn('claude', args, { cwd: REPO, env: process.env });
+    const child = spawn(opts.cli, cliArgs(agent, opts), { cwd: REPO, env: process.env });
     const killer = setTimeout(() => {
       child.kill('SIGTERM');
       setTimeout(() => child.kill('SIGKILL'), 10_000).unref();

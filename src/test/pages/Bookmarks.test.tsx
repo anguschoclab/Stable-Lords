@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import Bookmarks from '@/pages/Bookmarks';
 import '@/test/_setup/setup';
 
@@ -246,6 +246,34 @@ describe('Bookmarks Page', () => {
     render(<Bookmarks />);
     const clearButtons = screen.getAllByRole('button', { name: /clear/i });
     expect(clearButtons.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('confirms before clearing all bookmarks', async () => {
+    setStore({ bookmarks: [{ entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' }] });
+    setStore({ roster: [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }] });
+    render(<Bookmarks />);
+    const clearAll = useGameStore.getState().clearBookmarks;
+
+    fireEvent.click(screen.getByRole('button', { name: /clear all/i }));
+    const dialog = await screen.findByRole('alertdialog');
+    expect(clearAll).not.toHaveBeenCalled();
+
+    fireEvent.click(within(dialog).getByRole('button', { name: /clear all/i }));
+    expect(clearAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('confirms before clearing a bookmark group', async () => {
+    setStore({ bookmarks: [{ entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' }] });
+    setStore({ roster: [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }] });
+    render(<Bookmarks />);
+    const clearByType = useGameStore.getState().clearBookmarksByType;
+
+    fireEvent.click(screen.getByRole('button', { name: /^clear$/i }));
+    const dialog = await screen.findByRole('alertdialog');
+    expect(clearByType).not.toHaveBeenCalled();
+
+    fireEvent.click(within(dialog).getByRole('button', { name: /^clear$/i }));
+    expect(clearByType).toHaveBeenCalledWith('warrior');
   });
 
   it('sorts warriors alphabetically when sort is set to name', async () => {

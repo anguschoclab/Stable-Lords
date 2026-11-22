@@ -17,6 +17,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { ConfirmDestructiveDialog } from '@/components/ui/ConfirmDestructiveDialog';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -97,6 +98,7 @@ function BookmarkedEntityRow(props: {
 export default function Bookmarks() {
   const { bookmarks, grouped, clearBookmarks, clearBookmarksByType } = useBookmarkGroups();
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
+  const [pendingClear, setPendingClear] = useState<BookmarkEntityType | 'all' | null>(null);
 
   const totalBookmarks = bookmarks.length;
   const hasBookmarks = totalBookmarks > 0;
@@ -114,7 +116,7 @@ export default function Bookmarks() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={clearBookmarks}
+                onClick={() => setPendingClear('all')}
                 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 rounded-none"
               >
                 <Trash2 className="h-3 w-3 mr-1.5" />
@@ -134,23 +136,7 @@ export default function Bookmarks() {
       />
 
       {!hasBookmarks ? (
-        <Surface
-          variant="glass"
-          className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-        >
-          <ImperialRing size="lg" variant="bronze" className="opacity-20">
-            <Bookmark className="h-8 w-8" />
-          </ImperialRing>
-          <div className="space-y-2">
-            <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
-              No Entries Marked
-            </p>
-            <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">
-              Mark warriors, stables, promoters, and rivals from their detail pages to track them
-              here.
-            </p>
-          </div>
-        </Surface>
+        <BookmarksEmptyState />
       ) : (
         <div className="space-y-12">
           {(Object.keys(grouped) as BookmarkEntityType[]).map((type) => (
@@ -160,12 +146,84 @@ export default function Bookmarks() {
               items={grouped[type]}
               sortBy={sortBy}
               onToggleSort={() => setSortBy((s) => (s === 'date' ? 'name' : 'date'))}
-              onClear={() => clearBookmarksByType(type)}
+              onClear={() => setPendingClear(type)}
             />
           ))}
         </div>
       )}
+
+      <ClearBookmarksDialog
+        pending={pendingClear}
+        grouped={grouped}
+        total={totalBookmarks}
+        onClose={() => setPendingClear(null)}
+        onConfirm={() => {
+          if (pendingClear === 'all') clearBookmarks();
+          else if (pendingClear) clearBookmarksByType(pendingClear);
+        }}
+      />
     </PageFrame>
+  );
+}
+
+/** Static empty state shown when nothing is bookmarked yet. */
+function BookmarksEmptyState() {
+  return (
+    <Surface
+      variant="glass"
+      className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
+    >
+      <ImperialRing size="lg" variant="bronze" className="opacity-20">
+        <Bookmark className="h-8 w-8" />
+      </ImperialRing>
+      <div className="space-y-2">
+        <p className="text-[12px] font-black uppercase tracking-[0.15em] text-muted-foreground/40">
+          No Entries Marked
+        </p>
+        <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">
+          Mark warriors, stables, promoters, and rivals from their detail pages to track them here.
+        </p>
+      </div>
+    </Surface>
+  );
+}
+
+/** Confirmation gate for Clear All / per-group Clear — both are irreversible. */
+function ClearBookmarksDialog({
+  pending,
+  grouped,
+  total,
+  onClose,
+  onConfirm,
+}: {
+  pending: BookmarkEntityType | 'all' | null;
+  grouped: ReturnType<typeof groupBookmarks>;
+  total: number;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  const clearingAll = pending === 'all';
+  const count = pending === null ? 0 : clearingAll ? total : (grouped[pending]?.length ?? 0);
+  const label = clearingAll
+    ? 'all bookmarks'
+    : pending
+      ? ENTITY_CONFIG[pending].label.toLowerCase()
+      : '';
+
+  return (
+    <ConfirmDestructiveDialog
+      open={pending !== null}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      title={`Clear ${label}?`}
+      descriptionId="clear-bookmarks-description"
+      description={`This permanently removes ${count} marked ${
+        count === 1 ? 'entry' : 'entries'
+      }. This cannot be undone.`}
+      confirmLabel={clearingAll ? 'Clear All' : 'Clear'}
+      onConfirm={onConfirm}
+    />
   );
 }
 

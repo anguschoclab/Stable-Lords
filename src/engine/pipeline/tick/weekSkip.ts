@@ -70,8 +70,9 @@ function drainTournamentRounds(
 
 /**
  * Append the single batched recap newsletter for a skipped tournament week.
- * The id is seeded by week — intentionally different from the per-day seeds
- * used by resolveTournamentDay. No-op when no rounds produced items.
+ * The id is seeded by absoluteWeek — intentionally different from the per-day
+ * seeds used by resolveTournamentDay, and unique across years (in-year week
+ * numbers repeat). No-op when no rounds produced items.
  */
 function appendTournamentRecap(
   state: GameState,
@@ -82,7 +83,7 @@ function appendTournamentRecap(
   state.newsletter = [
     ...(state.newsletter || []),
     {
-      id: new SeededRNG(week).uuid(),
+      id: new SeededRNG(state.absoluteWeek ?? week).uuid(),
       week,
       title: `Empire News: Tournament Week ${week} Recap`,
       items: weeklyNewsItems,

@@ -45,16 +45,16 @@ determinism suite (`determinism`, `parallelDeterminism`) will catch drift.
 
 | Consumer                      | Seed expression                                                          | Location                                                                         |
 | ----------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Week root rng                 | `nextYear * 52 + nextWeek * 7919 + 101`                                  | `pipeline/services/weekPipelineService.ts` (`prepareWeekContext`)                |
-| Tournament day                | `tournamentDaySeed(year, week, day)` = `year * 10000 + week * 100 + day` | `pipeline/tick/TickOrchestrator.ts` — shared by `advanceDay` and `skipToWeekEnd` |
+| Week root rng                 | `nextYear * 52 + nextWeek * 7919 + 101`                                  | `pipeline/services/weekPipeline/context.ts` (`prepareWeekContext`)               |
+| Tournament day                | `tournamentDaySeed(year, week, day)` = `year * 10000 + week * 100 + day` | `pipeline/tick/tournamentDay.ts` — shared by `advanceDay` and `skipToWeekEnd`    |
 | Bout resolution               | `hashStr(`${absoluteWeek}                                                | ${aId}                                                                           | ${dId}`)` | `bout/services/boutResolution.ts` |
-| Rival strategy (shard-safe)   | `absoluteWeek * 31 + index * 997 + owner.id.length`                      | `pipeline/passes/rivalStableShard.ts`                                            |
-| Rival shard intel rng         | `strategySeed + 123`                                                     | `pipeline/passes/rivalStableShard.ts`                                            |
-| Rival succession (bankruptcy) | `absoluteWeek + index * 1000`                                            | `pipeline/passes/rivalStableShard.ts`                                            |
-| Rival roster mgmt             | `absoluteWeek * 13 + 7`                                                  | `pipeline/passes/RivalStrategyPass.ts`                                           |
+| Rival strategy (shard-safe)   | `absoluteWeek * 31 + index * 997 + owner.id.length`                      | `pipeline/passes/rivalStableShard/processStable.ts`                              |
+| Rival shard intel rng         | `strategySeed + 123`                                                     | `pipeline/passes/rivalStableShard/processStable.ts`                              |
+| Rival succession (bankruptcy) | `absoluteWeek + index * 1000`                                            | `pipeline/passes/rivalStableShard/successorMint.ts`                              |
+| Rival roster mgmt             | `absoluteWeek * 13 + 7`                                                  | `pipeline/passes/RivalStrategyPass/roster.ts`                                    |
 | Week gazette flavor           | `absoluteWeek * 9973 + 123`                                              | `bout/services/WeekFinalizationService.ts`                                       |
 | Week side-effects rng         | `absoluteWeek * 13`                                                      | `bout/services/WeekFinalizationService.ts`                                       |
-| System-pass floor rng         | `state.week * 6151 + 29`                                                 | `pipeline/passes/SystemPass.ts`                                                  |
+| System-pass floor rng         | `absoluteWeek * 6151 + 29`                                               | `pipeline/passes/SystemPass.ts`                                                  |
 | Tier progression fallback     | `hashStr(createdAt) + state.week`                                        | `pipeline/core/tierProgression.ts`                                               |
 
 ### Identity-dependent seeds

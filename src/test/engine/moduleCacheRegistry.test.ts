@@ -60,6 +60,10 @@ const REGISTRY: Record<string, string> = {
     'WeakMap keyed on the arenaHistory array identity; a new history rebuilds the index fresh.',
   'core/historyUtils.ts:fightsByWarrior':
     'WeakMap keyed on the arenaHistory array identity; history is append-only-by-replacement, so a new array rebuilds the index fresh.',
+  'warrior/warriorStatus.ts:deadIdSetCache':
+    'WeakMap keyed on the (deadWarriorIds, graveyard) array identities; both are append-only-by-replacement, so new arrays rebuild fresh.',
+  'matchmaking/tournamentSelection/resolution/bouts.ts:inactiveSetCache':
+    'WeakMap keyed on the shared deadIdSet instance + retired array identity; all append-only-by-replacement.',
   'storage/archiveService.ts:archiveService':
     'Environment-selected service singleton; assigned once at module init.',
 

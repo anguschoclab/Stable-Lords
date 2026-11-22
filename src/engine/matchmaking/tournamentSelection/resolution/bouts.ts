@@ -10,6 +10,18 @@ import { selectArenaForTournamentBout } from '../../tournament/tournamentArenaSe
 import { isActive, deadIdSet } from '@/engine/warrior/warriorStatus';
 import { applyBoutResults } from './results';
 
+// ⚡ Bolt: deadIdSet returns one shared memoized instance per
+// (deadWarriorIds, graveyard) array pair, so that instance's identity
+// doubles as this union set's cache key — `retired` is likewise
+// append-only-by-replacement. Between bouts the set only rebuilds when a
+// kill or retirement produced fresh arrays (mid-round writes go through
+// resolveImpacts' concat-append). Shared instance — read-only for callers.
+const inactiveSetCache = new WeakMap<
+  ReadonlySet<string>,
+  WeakMap<readonly unknown[], Set<string>>
+>();
+const NO_RETIRED: readonly unknown[] = Object.freeze([]);
+
 /**
  * Ids that can never fight again: the persistent death registry, the
  * (truncating) graveyard, and retirees. Participant snapshots inside
@@ -17,9 +29,16 @@ import { applyBoutResults } from './results';
  * forever — membership in this set is the liveness authority, not the
  * snapshot's status field.
  */
-function inactiveIdSet(state: GameState): Set<string> {
-  const ids = deadIdSet(state);
+function inactiveIdSet(state: GameState): ReadonlySet<string> {
+  const dead = deadIdSet(state);
+  const retiredKey = (state.retired ?? NO_RETIRED) as readonly unknown[];
+  const hit = inactiveSetCache.get(dead)?.get(retiredKey);
+  if (hit) return hit;
+  const ids = new Set<string>(dead);
   for (const w of state.retired ?? []) ids.add(w.id as string);
+  let inner = inactiveSetCache.get(dead);
+  if (!inner) inactiveSetCache.set(dead, (inner = new WeakMap()));
+  inner.set(retiredKey, ids);
   return ids;
 }
 

@@ -23,21 +23,52 @@ export function isActive(w: Pick<Warrior, 'status'>): boolean {
   return w.status === 'Active';
 }
 
+// ⚡ Bolt: `deadWarriorIds` is deliberately NEVER truncated (TRUNCATION_CAPS —
+// it is the save-lifetime liveness registry) and both it and `graveyard` are
+// append-only-by-replacement: every writer assigns a new array rather than
+// pushing in place (same invariant as arenaHistory's fightsByWarrior index in
+// historyUtils.ts). The built set is therefore memoized on the two array
+// identities — deadIdSet ran ~3× per resolved tournament bout (findWarriorById
+// overlay + inactiveIdSet) plus once per weekly bout validation, each build
+// re-hashing the entire unbounded registry (~80µs at 3.2k ids → ~15ms/bracket).
+const deadIdSetCache = new WeakMap<readonly unknown[], WeakMap<readonly unknown[], Set<string>>>();
+const NO_LIST: readonly unknown[] = Object.freeze([]);
+
 /**
  * Every warrior id that has ever died under `state` — the persistent
  * `deadWarriorIds` registry ∪ the (truncating) `graveyard`. Stale snapshots
  * (tournament participants, cached maps) keep their selection-time 'Active'
  * status forever, so set membership is the liveness authority wherever a
  * warrior object might be stale.
+ *
+ * Returns a memoized set SHARED by all callers seeing the same array
+ * references — treat it as read-only (clone before mutating; the
+ * `ReadonlySet` return type makes mutation a compile error). Inputs that
+ * are not arrays-or-absent (defensive: malformed data) skip the cache and
+ * build exactly as before.
  */
 export function deadIdSet(state: {
   deadWarriorIds?: string[];
   graveyard?: { id: string }[];
-}): Set<string> {
-  return new Set<string>([
-    ...(state.deadWarriorIds ?? []),
-    ...(state.graveyard ?? []).map((w) => w.id as string),
-  ]);
+}): ReadonlySet<string> {
+  const ids = state.deadWarriorIds;
+  const graves = state.graveyard;
+  const cacheable =
+    (ids === undefined || Array.isArray(ids)) && (graves === undefined || Array.isArray(graves));
+  if (cacheable) {
+    const hit = deadIdSetCache
+      .get((ids ?? NO_LIST) as readonly unknown[])
+      ?.get((graves ?? NO_LIST) as readonly unknown[]);
+    if (hit) return hit;
+  }
+  const built = new Set<string>([...(ids ?? []), ...(graves ?? []).map((w) => w.id as string)]);
+  if (cacheable) {
+    const idsKey = (ids ?? NO_LIST) as readonly unknown[];
+    let inner = deadIdSetCache.get(idsKey);
+    if (!inner) deadIdSetCache.set(idsKey, (inner = new WeakMap()));
+    inner.set((graves ?? NO_LIST) as readonly unknown[], built);
+  }
+  return built;
 }
 
 /**

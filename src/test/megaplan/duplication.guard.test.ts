@@ -57,9 +57,6 @@ const EXEMPT_PAIRS = new Set([
   'src/engine/combat/resolution/offenseDefense/index.ts|src/engine/combat/resolution/offenseDefense/prepare.ts',
   'src/engine/combat/resolution/offenseDefense/prepare.ts|src/engine/combat/resolution/offenseDefense/types.ts',
   'src/engine/simulate/simulationLoop/index.ts|src/engine/simulate/simulationLoop/types.ts',
-  // Data barrel adjacency — items.ts is the per-item shard, weapons.ts the
-  // curated registry; overlap is re-export/import preamble only.
-  'src/data/equipment/weapons.ts|src/data/equipment/weapons/items.ts',
 
   // ─── Intentional parallel implementations / ordered design data.
   // crestGenerator↔enumSources: post-V12-D4 the generator's per-tier lists are
@@ -275,7 +272,6 @@ const MIXED_EXEMPT_PAIRS = new Set([
   'src/components/layout/MobileNav.tsx|src/test/_mocks/routerLink.tsx',
   'src/components/world/WarriorLeaderboardFilters.tsx|src/test/components/FilterToggleButton.test.tsx',
   'src/data/equipment/weaponStyles.ts|src/test/data/equipment/weaponStyles.test.ts',
-  'src/data/equipment/weapons.ts|src/test/data/equipment/weaponStyles.test.ts',
   'src/data/equipment/weapons/items.ts|src/test/data/equipment/weaponStyles.test.ts',
   'src/engine/combat/resolution/resolution.ts|src/test/engine/combat/enduranceCosts.test.ts',
   // tacticCounter spec re-states the resolveInitiativePhase arg-bag call

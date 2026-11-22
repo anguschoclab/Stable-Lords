@@ -6,5 +6,4 @@ export {
   useArenaPreferences,
   useBookmarks,
   useWarriorNameState,
-  useReputationState,
 } from './selectors';

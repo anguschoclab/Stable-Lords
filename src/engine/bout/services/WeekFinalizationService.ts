@@ -31,8 +31,8 @@ export function finalizeWeekSideEffectsToImpact(
   const seen = new Set<number>();
   const window: { week: number; mood: CrowdMoodType }[] = [];
   for (let i = (state.moodHistory?.length ?? 0) - 1; i >= 0 && window.length < 19; i--) {
-    const entry = state.moodHistory![i]!;
-    if (seen.has(entry.week)) continue;
+    const entry = state.moodHistory?.[i];
+    if (!entry || seen.has(entry.week)) continue;
     seen.add(entry.week);
     window.unshift(entry);
   }

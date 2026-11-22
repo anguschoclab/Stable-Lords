@@ -1,17 +1,17 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
-/**
- * Scripted rng — every `next()` draw returns the same value, so draw-order
- * differences between two paths can't be masked by the stub. Use `0.0` to make
- * every probability check succeed (gains + injury rolls land) and `0.99` to
- * make them all miss.
- */
 /** Deterministic pick-first stub — matches SeededRNG.pick's empty-array contract. */
 export const pickFirst = <T>(arr: T[]): T => {
   if (arr.length === 0) throw new Error('Cannot pick from empty array');
   return arr[0]!;
 };
 
+/**
+ * Scripted rng — every `next()` draw returns the same value, so draw-order
+ * differences between two paths can't be masked by the stub. Use `0.0` to make
+ * every probability check succeed (gains + injury rolls land) and `0.99` to
+ * make them all miss.
+ */
 export const scriptRng = (nextVal: number): IRNGService =>
   ({
     next: () => nextVal,

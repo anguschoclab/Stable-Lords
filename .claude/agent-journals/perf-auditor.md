@@ -16,14 +16,14 @@ checks. Fixed by hoisting the rival-invariant "last 10 player fights" set to
 
 **Rule:** `resolveWarriorOwner` is O(1) ONLY where `warriorToStableMap`
 survives. Inside week-pipeline passes the map is stripped on clone (and
-rebuilt by `buildWeekCaches` on the *resolved* state between boundaries —
+rebuilt by `buildWeekCaches` on the _resolved_ state between boundaries —
 check whether your site runs before or after a rebuild). Treat any
 per-fight/per-offer resolver call inside a pipeline pass as an O(total
 rosters) scan until proven otherwise.
 
 **Rule:** exact `resolveWarriorOwner(...)?.isPlayer === true` equivalence is
-`map.has(id) ? map.get(id).isPlayer : rosterIds.has(id)` — a map *hit* early-
-returns (roster never consulted), a map *miss* scans live rosters. A bare
+`map.has(id) ? map.get(id).isPlayer : rosterIds.has(id)` — a map _hit_ early-
+returns (roster never consulted), a map _miss_ scans live rosters. A bare
 `playerIds` union of map+roster is NOT equivalent when fixtures inject a
 synthetic map (ownerRoster.test.ts does exactly that).
 

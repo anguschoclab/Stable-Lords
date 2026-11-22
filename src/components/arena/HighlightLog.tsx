@@ -15,15 +15,7 @@ interface Props {
 }
 
 type Kind =
-  | 'kill'
-  | 'ko'
-  | 'fatigue'
-  | 'bighit'
-  | 'armor'
-  | 'momentum'
-  | 'disarm'
-  | 'break'
-  | 'fumble';
+  'kill' | 'ko' | 'fatigue' | 'bighit' | 'armor' | 'momentum' | 'disarm' | 'break' | 'fumble';
 
 interface Highlight {
   minute: number;

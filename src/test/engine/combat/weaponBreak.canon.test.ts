@@ -22,7 +22,12 @@ const ATTRS = { ST: 17, CN: 14, SZ: 12, WT: 13, WL: 13, SP: 12, DF: 13 };
 const loadout = (weapon: string, armor: string, backup?: string): EquipmentLoadout =>
   ({ weapon, armor, shield: 'none_shield', helm: 'none_helm', backup }) as EquipmentLoadout;
 
-function makeW(weapon: string, armor = 'none_armor', backup?: string, style = FightingStyle.BashingAttack) {
+function makeW(
+  weapon: string,
+  armor = 'none_armor',
+  backup?: string,
+  style = FightingStyle.BashingAttack
+) {
   const w = makeWarrior({
     id: undefined,
     name: 'W',
@@ -36,7 +41,11 @@ function makeW(weapon: string, armor = 'none_armor', backup?: string, style = Fi
 
 // exchangeLog populates under telemetry (!headless) — the structured
 // per-exchange record is the observable surface for the break channel.
-const fightOnce = (attacker: ReturnType<typeof makeW>, defender: ReturnType<typeof makeW>, seed: number) =>
+const fightOnce = (
+  attacker: ReturnType<typeof makeW>,
+  defender: ReturnType<typeof makeW>,
+  seed: number
+) =>
   simulateFight({
     warriorA: attacker,
     warriorD: defender,

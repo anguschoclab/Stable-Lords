@@ -29,14 +29,14 @@ Full table lives in FINDINGS §0. Key corrections vs the draft:
 
 ## Verified backlog couplings
 
-| Item | Status | V31 relationship |
-|---|---|---|
-| **V24-F4** TV challenge priority | Open — design decision + missing `victor`/`tournamentVictor` state | DECISION-NEEDED; blocks V24-F1's TV leg |
-| **V24-F1** Ordered challenge resolution | Open — bloodfeud fast-path landed; strict ordering unbuilt. Entries: `promoters/offerMatchmaking.ts`, `matchmaking/bloodfeud.ts` | Prime implementation candidate pending F4 |
-| **V22-D3** Pagan literal damage model | Open — own campaign (V29 NO-GO) | Evidence fold only: HP `3.75·CN+SZ+WL/2`, endurance `CN·WL+ST/10` / `ST+CN+WT/2+WL`, coordination `SP+DF` bands |
-| **V22-D4** ADM/graduation tier | Open — own campaign | Evidence fold only; `ATTRIBUTE_MAX` at `types/shared/attributes.ts:40` |
-| **V24-D5** Game modes | Standing deferral — no engine surface | Evidence fold only |
-| **V27-§5** Knack/`luckfactor`/`bloodlust` surface | Design deferral — revisit on canon push | Canon push delivered → DECISION-NEEDED |
+| Item                                              | Status                                                                                                                           | V31 relationship                                                                                                |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **V24-F4** TV challenge priority                  | Open — design decision + missing `victor`/`tournamentVictor` state                                                               | DECISION-NEEDED; blocks V24-F1's TV leg                                                                         |
+| **V24-F1** Ordered challenge resolution           | Open — bloodfeud fast-path landed; strict ordering unbuilt. Entries: `promoters/offerMatchmaking.ts`, `matchmaking/bloodfeud.ts` | Prime implementation candidate pending F4                                                                       |
+| **V22-D3** Pagan literal damage model             | Open — own campaign (V29 NO-GO)                                                                                                  | Evidence fold only: HP `3.75·CN+SZ+WL/2`, endurance `CN·WL+ST/10` / `ST+CN+WT/2+WL`, coordination `SP+DF` bands |
+| **V22-D4** ADM/graduation tier                    | Open — own campaign                                                                                                              | Evidence fold only; `ATTRIBUTE_MAX` at `types/shared/attributes.ts:40`                                          |
+| **V24-D5** Game modes                             | Standing deferral — no engine surface                                                                                            | Evidence fold only                                                                                              |
+| **V27-§5** Knack/`luckfactor`/`bloodlust` surface | Design deferral — revisit on canon push                                                                                          | Canon push delivered → DECISION-NEEDED                                                                          |
 
 ## Phases
 

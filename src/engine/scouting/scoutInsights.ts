@@ -133,10 +133,7 @@ export function createKnackInsights(
   if (quality !== 'Expert' || !warrior.luckfactor) return [];
 
   const tokens: InsightToken[] = [];
-  for (const [key, value] of Object.entries(warrior.luckfactor) as [
-    keyof BaseSkills,
-    number,
-  ][]) {
+  for (const [key, value] of Object.entries(warrior.luckfactor) as [keyof BaseSkills, number][]) {
     if (Math.abs(value) < KNACK_THRESHOLD) continue;
     const labels = KNACK_CHANNEL_LABEL[key];
     if (!labels) continue;

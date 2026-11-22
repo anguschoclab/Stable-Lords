@@ -209,9 +209,7 @@ function applyAbExhaustTemplate(plan: FightPlan, w: Warrior): void {
   if (!hybridFit || topScore - hybridFit.score > 10) return;
   const planned = plan.defensiveTactic;
   plan.phases.opening.defensiveTactic =
-    planned === 'Parry' || planned === 'Dodge' || planned === 'Riposte'
-      ? planned
-      : 'Dodge';
+    planned === 'Parry' || planned === 'Dodge' || planned === 'Riposte' ? planned : 'Dodge';
 }
 
 /**

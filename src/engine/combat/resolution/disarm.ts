@@ -241,13 +241,7 @@ export function tryWeaponBreak(args: TryWeaponBreakArgs): boolean {
   const held = attacker.weaponId;
   const chance = weaponBreakChance(held);
   // The clang gate: a landed hit against real armor — no armor, no snap.
-  if (
-    chance <= 0 ||
-    !held ||
-    !defArmorId ||
-    defArmorId === 'none_armor' ||
-    rng() >= chance
-  ) {
+  if (chance <= 0 || !held || !defArmorId || defArmorId === 'none_armor' || rng() >= chance) {
     return false;
   }
 

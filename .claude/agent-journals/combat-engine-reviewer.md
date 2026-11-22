@@ -3,8 +3,9 @@
 ## 2026-02 sweep — exchange-resolution audit (main @ f6c44c141)
 
 ### Scope model vs. spec
+
 The agent's invariant sheet (`hp < 0.3*maxHp AND endurance < 20` kill gate,
-parry-only riposte) is the *original* Duel2 simplification. The current canon
+parry-only riposte) is the _original_ Duel2 simplification. The current canon
 is richer and **documented in-code** — treat these as deliberate, not bugs:
 
 - Kill window = vital-loc gate + per-style `killWindowHpMult` (0.35–0.8) HP
@@ -23,6 +24,7 @@ is richer and **documented in-code** — treat these as deliberate, not bugs:
   exchange tail with a caller-supplied cause.
 
 ### Findings this pass
+
 - **Riposte / off-hand KO cause misattribution** (reported, not fixed):
   `executeRiposte` and `tryOffhandAttack` can drop hp≤0 with no BOUT_END;
   the exchange-tail `emitDownedBoutEnd(fA,fD,events,'BLEED')` catches it, so
@@ -38,6 +40,7 @@ is richer and **documented in-code** — treat these as deliberate, not bugs:
   `boutSeed` via `handleInjuries` — no action.
 
 ### Verified clean
+
 - Exchange order: approach → initiative (contestCheck, opening-clash loop on
   ex 0) → feint → commit → attack check → dodge/parry → damage (armor+flat
   mitigation+protect/shield) → endurance drain both fighters (each fighter's

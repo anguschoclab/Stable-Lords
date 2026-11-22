@@ -7,7 +7,7 @@ auto-adds `aria-current="page"` (`link.js` sets it when `isActive`), lucide
 icons ship `aria-hidden="true"` by default, icon-only buttons have
 `aria-label`s, toggles use `aria-pressed`/`aria-expanded`, inputs have labels,
 and `motion-reduce:` coverage is guard-tested (`accessibilityMotionReduce`,
-`UIPolishDedup`). The real wins are *feature discoverability*: five global
+`UIPolishDedup`). The real wins are _feature discoverability_: five global
 keyboard shortcuts lived only in `useKeyboardShortcuts` + a cryptic
 `( / )` placeholder — now documented as a Codex accordion section.
 

@@ -15,7 +15,10 @@ const moods = (entries: [number, CrowdMoodType][]) =>
 describe('buildMoodTrail', () => {
   it('returns the tail oldest→newest, capped at the limit', () => {
     const history = moods(
-      Array.from({ length: 25 }, (_, i) => [i + 1, 'Calm' as CrowdMoodType] as [number, CrowdMoodType])
+      Array.from(
+        { length: 25 },
+        (_, i) => [i + 1, 'Calm' as CrowdMoodType] as [number, CrowdMoodType]
+      )
     );
     const trail = buildMoodTrail(history, 20);
     expect(trail).toHaveLength(20);
@@ -66,10 +69,12 @@ describe('buildMoodTrail', () => {
       null as unknown as { week: number; mood: CrowdMoodType },
       { week: 3, mood: 'Bloodthirsty' as CrowdMoodType },
     ]);
-    expect(trail).toEqual(moods([
-      [1, 'Festive'],
-      [3, 'Bloodthirsty'],
-    ]));
+    expect(trail).toEqual(
+      moods([
+        [1, 'Festive'],
+        [3, 'Bloodthirsty'],
+      ])
+    );
   });
 
   it('handles empty/undefined history', () => {

@@ -1,4 +1,13 @@
-import { Swords, RotateCw, Zap, TrendingUp, Brain, Fingerprint, BookOpen, Clover } from 'lucide-react';
+import {
+  Swords,
+  RotateCw,
+  Zap,
+  TrendingUp,
+  Brain,
+  Fingerprint,
+  BookOpen,
+  Clover,
+} from 'lucide-react';
 import type { InsightTokenType } from '@/types/state.types';
 
 const TOKEN_CFG: Record<

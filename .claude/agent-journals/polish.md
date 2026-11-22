@@ -5,7 +5,7 @@
 **Issue:** A small dialog addition to `src/pages/Bookmarks.tsx` pushed the `Bookmarks` page
 component over 80 lines, failing `src/test/megaplan/fileBudget.test.ts`
 ("functions >80" baseline of 19 became 20).
-**Learning:** The repo enforces a *ratcheted* budget: the count of functions >80 lines may only
+**Learning:** The repo enforces a _ratcheted_ budget: the count of functions >80 lines may only
 go down. Any JSX addition to an already-long page component can trip it — the guard is global,
 not per-file, so the failure surfaces far from the diff.
 **Rule:** Before editing a page-level component, check its current length (~70+ lines means no

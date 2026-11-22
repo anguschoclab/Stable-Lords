@@ -27,9 +27,7 @@ import type { GameState } from '@/types/state.types';
 describe('skipToWeekEnd recap newsletter seeding', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(
-      async (s: GameState) => s
-    );
+    vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation(async (s: GameState) => s);
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -45,9 +43,7 @@ describe('skipToWeekEnd recap newsletter seeding', () => {
       state.absoluteWeek = absoluteWeek;
     }
     state.isTournamentWeek = true;
-    state.tournaments = [
-      { id: 'cup', completed: false } as GameState['tournaments'][number],
-    ];
+    state.tournaments = [{ id: 'cup', completed: false } as GameState['tournaments'][number]];
     return skipToWeekEnd(state);
   }
 

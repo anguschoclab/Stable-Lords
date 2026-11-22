@@ -16,26 +16,26 @@
 
 Flagged by the latest scan with no curated entry in `orphan-report.mjs` `ANNOTATIONS`. Triage these first, then record the verdict there.
 
-| Symbol | File | Evidence |
-| --- | --- | --- |
-| `isPlayerOwnedWarrior` | src/engine/core/warriorOwnership.ts | test-only symbol with no internal use — lifecycle hook? |
-| `RunTrainingAttemptArgs` | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export |
-| `RunSkillDrillAttemptArgs` | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export |
-| `TickStableHealthArgs` | src/engine/warrior/stableHealth.ts | zero external refs — likely over-export |
-| `TickStableHealthResult` | src/engine/warrior/stableHealth.ts | zero external refs — likely over-export |
+| Symbol                     | File                                   | Evidence                                                |
+| -------------------------- | -------------------------------------- | ------------------------------------------------------- |
+| `isPlayerOwnedWarrior`     | src/engine/core/warriorOwnership.ts    | test-only symbol with no internal use — lifecycle hook? |
+| `RunTrainingAttemptArgs`   | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export                 |
+| `RunSkillDrillAttemptArgs` | src/engine/training/trainingAttempt.ts | zero external refs — likely over-export                 |
+| `TickStableHealthArgs`     | src/engine/warrior/stableHealth.ts     | zero external refs — likely over-export                 |
+| `TickStableHealthResult`   | src/engine/warrior/stableHealth.ts     | zero external refs — likely over-export                 |
 
 ## Duplication — alternate flows sharing an orphan's name
 
 The same symbol name is declared in other production files. `@score` is token-level body similarity: **identical** ≥0.9 (true duplicate — delete loses nothing), **divergent** 0.3–0.9 (alternate flow — the orphan carries its own semantics), **distinct** <0.3 (name collision only).
 
-| Symbol | Orphan file | Class | Alternate flow(s) |
-| --- | --- | --- | --- |
-| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` | D-lazy | `src/components/WarriorDossier.tsx` @0.19 **distinct**<br>`src/components/warrior/BiometricsTab.tsx` @0.19 **distinct** |
-| `RhythmBand` | `src/engine/ai/plan/strategyLab.ts` | B | `src/components/warrior/favorites/FavoritesCharting.tsx` @0.08 **distinct** |
-| `TOURNAMENT_TIERS` | `src/engine/matchmaking/tournamentSelection.ts` | A | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct** |
-| `ArchiveConflictError` | `src/engine/storage/electronArchive.ts` | keep | `src/engine/storage/ArchiveConflictError.ts` @0 **distinct** |
-| `computeHP` | `src/engine/warrior/skillCalc.ts` | C | `src/data/terrabloodCharts.ts` @0.13 **distinct** |
-| `stableStats` | `src/hooks/useScoutingStableComparison.ts` | C | `src/pages/arenaHub/useArenaHubData.ts` @0.2 **distinct** |
+| Symbol                 | Orphan file                                     | Class  | Alternate flow(s)                                                                                                       |
+| ---------------------- | ----------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `WarriorRadarChart`    | `src/components/charts/WarriorRadarChart.tsx`   | D-lazy | `src/components/WarriorDossier.tsx` @0.19 **distinct**<br>`src/components/warrior/BiometricsTab.tsx` @0.19 **distinct** |
+| `RhythmBand`           | `src/engine/ai/plan/strategyLab.ts`             | B      | `src/components/warrior/favorites/FavoritesCharting.tsx` @0.08 **distinct**                                             |
+| `TOURNAMENT_TIERS`     | `src/engine/matchmaking/tournamentSelection.ts` | A      | `src/engine/matchmaking/tournamentSelection/core.ts` @0 **distinct**                                                    |
+| `ArchiveConflictError` | `src/engine/storage/electronArchive.ts`         | keep   | `src/engine/storage/ArchiveConflictError.ts` @0 **distinct**                                                            |
+| `computeHP`            | `src/engine/warrior/skillCalc.ts`               | C      | `src/data/terrabloodCharts.ts` @0.13 **distinct**                                                                       |
+| `stableStats`          | `src/hooks/useScoutingStableComparison.ts`      | C      | `src/pages/arenaHub/useArenaHubData.ts` @0.2 **distinct**                                                               |
 
 ## Section A — Genuine orphans: integrate or delete
 
@@ -48,66 +48,66 @@ The same symbol name is declared in other production files. `@score` is token-le
   **Recommendation:** **delete the re-export** (1 line) or route the
   advisor through it — either direction is cheap.
 
-### `clamp01` — unused clamp-to-[0,1] helper 🟣 **UNIQUE** *(trivial)*
+### `clamp01` — unused clamp-to-[0,1] helper 🟣 **UNIQUE** _(trivial)_
 
 - **File:** `src/utils/math.ts`
-- **Uniqueness:** sole *shared* implementation, but the behavior already
+- **Uniqueness:** sole _shared_ implementation, but the behavior already
   exists inline at 3 production sites (`AudioManager.ts` ×2,
   `economy/weeklyBreakdown.ts`) using `Math.min(1, Math.max(0, …))`.
   **Recommendation:** **delete or integrate** — either drop it or migrate
   the 3 inline sites so it stops flagging.
 
-### `lerp` — unused linear-interpolation helper 🟣 **UNIQUE** *(trivial)*
+### `lerp` — unused linear-interpolation helper 🟣 **UNIQUE** _(trivial)_
 
 - **File:** `src/utils/math.ts`
 - **Uniqueness:** the only `lerp` implementation — called solely by
   `mapRange` (also orphaned) and tests. **Recommendation:** **delete**
   (~15 lines + spec).
 
-### `mapRange` — unused range-remap helper 🟣 **UNIQUE** *(trivial)*
+### `mapRange` — unused range-remap helper 🟣 **UNIQUE** _(trivial)_
 
 - **File:** `src/utils/math.ts`
 - **Uniqueness:** the only `mapRange` implementation — called solely by
   tests. **Recommendation:** **delete** (~15 lines + spec).
 
-### Test-only lifecycle hooks 🟣 **UNIQUE** *(test infra — keep)*
+### Test-only lifecycle hooks 🟣 **UNIQUE** _(test infra — keep)_
 
 The only reset paths for module-level state between tests — product-dead but test-alive; deleting them breaks test isolation.
 
-| Symbol | File | Verdict |
-| --- | --- | --- |
-| `resetArenaRegistry` | `src/data/arenas/index.ts` | The only reset path for the arena data-registry singleton — product-dead
-  but test-alive; deleting it breaks test isolation. **Recommendation:**
-  **keep** (a `_test` suffix convention would document intent). |
-| `planTournamentEntries` | `src/engine/ai/workers/tournamentWorker.ts` | The AI-stable tournament-declaration entry point — product-dead
-  (tournamentWorker is exercised via the pipeline, not this export) but
-  test-alive: `tournamentMetagame.test.ts` drives AI declarations through
-  it. **Recommendation:** **keep** — deleting breaks the metagame spec. |
-| `clearDeathHandlers` | `src/engine/core/deathNotifier.ts` | The only reset path for the `onWarriorDeath` listener registry —
-  product-dead but test-alive. **Recommendation:** **keep**. |
-| `clearHistoryResolverCaches` | `src/engine/core/historyResolver.ts` | The only reset path for the name/stable resolution caches —
-  product-dead but test-alive. **Recommendation:** **keep**. |
-| `ArchiveConflictError` | `src/engine/storage/electronArchive.ts` | Re-export of `ArchiveConflictError` (declared in `./ArchiveConflictError`)
-  — the thrown conflict type for the save-archive service, consumed by
-  `scripts/nodeArchiveService.ts` and archive tests. The class itself is
-  unique; this line is just its public doorway. **Recommendation:** **keep**
-  — deleting forces consumers onto a deep import. |
-| `updateWarriorFromBoutOutcome` | `src/engine/warrior/careerUpdate.ts` | Post-bout career-update convenience wrapper — no production importer
-  (the bout path uses `warriorStateUpdater.ts` via `recordHandler.ts`)
-  but `careerUpdate.test.ts` exercises it directly. **Recommendation:**
-  **keep** — deleting breaks the career-update spec. |
+| Symbol                                                                     | File                                        | Verdict                                                                    |
+| -------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------- |
+| `resetArenaRegistry`                                                       | `src/data/arenas/index.ts`                  | The only reset path for the arena data-registry singleton — product-dead   |
+| but test-alive; deleting it breaks test isolation. **Recommendation:**     |
+| **keep** (a `_test` suffix convention would document intent).              |
+| `planTournamentEntries`                                                    | `src/engine/ai/workers/tournamentWorker.ts` | The AI-stable tournament-declaration entry point — product-dead            |
+| (tournamentWorker is exercised via the pipeline, not this export) but      |
+| test-alive: `tournamentMetagame.test.ts` drives AI declarations through    |
+| it. **Recommendation:** **keep** — deleting breaks the metagame spec.      |
+| `clearDeathHandlers`                                                       | `src/engine/core/deathNotifier.ts`          | The only reset path for the `onWarriorDeath` listener registry —           |
+| product-dead but test-alive. **Recommendation:** **keep**.                 |
+| `clearHistoryResolverCaches`                                               | `src/engine/core/historyResolver.ts`        | The only reset path for the name/stable resolution caches —                |
+| product-dead but test-alive. **Recommendation:** **keep**.                 |
+| `ArchiveConflictError`                                                     | `src/engine/storage/electronArchive.ts`     | Re-export of `ArchiveConflictError` (declared in `./ArchiveConflictError`) |
+| — the thrown conflict type for the save-archive service, consumed by       |
+| `scripts/nodeArchiveService.ts` and archive tests. The class itself is     |
+| unique; this line is just its public doorway. **Recommendation:** **keep** |
+| — deleting forces consumers onto a deep import.                            |
+| `updateWarriorFromBoutOutcome`                                             | `src/engine/warrior/careerUpdate.ts`        | Post-bout career-update convenience wrapper — no production importer       |
+| (the bout path uses `warriorStateUpdater.ts` via `recordHandler.ts`)       |
+| but `careerUpdate.test.ts` exercises it directly. **Recommendation:**      |
+| **keep** — deleting breaks the career-update spec.                         |
 
 ## Section B — Over-exports: zero external references (unexport candidates)
 
 All 🟣 **unique code that is already live** — used inside its own module by live siblings — but no file outside references it, not even tests. The code stays; only the `export` keyword goes. (Typecheck after; TS4058 may force a keep on types in live signatures.)
 
-| Symbol(s) | File | Notes |
-| --- | --- | --- |
-| `RhythmBand` | `src/engine/ai/plan/strategyLab.ts` | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
-| `bandOf` | `src/engine/ai/plan/strategyLab.ts` | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
-| `cellKey` | `src/engine/ai/plan/strategyLab.ts` | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
-| `StrategyTarget` | `src/engine/ai/plan/strategyLab.ts` | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
-| `DesignReviewItem` | `src/engine/warrior/designReview.ts` | internal row type — used by `reviewWarriorDesign` (~22 uses) |
+| Symbol(s)          | File                                 | Notes                                                                                            |
+| ------------------ | ------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| `RhythmBand`       | `src/engine/ai/plan/strategyLab.ts`  | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
+| `bandOf`           | `src/engine/ai/plan/strategyLab.ts`  | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
+| `cellKey`          | `src/engine/ai/plan/strategyLab.ts`  | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
+| `StrategyTarget`   | `src/engine/ai/plan/strategyLab.ts`  | banding helpers for the strategy-memory grid — used by `recordPlanOutcome`, `pickStrategyTarget` |
+| `DesignReviewItem` | `src/engine/warrior/designReview.ts` | internal row type — used by `reviewWarriorDesign` (~22 uses)                                     |
 
 ## Section C — Test-visible exports: live code, no action needed
 
@@ -115,165 +115,165 @@ Every symbol below **runs in production** — called inside its own module by a 
 
 ### UI, hooks & state (9)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `PRIMARY_CTA_BY_ROUTE` | `src/components/layout/primaryCta.ts` | resolvePrimaryCta, resolvePrimaryCtaKey | — |
-| `buildFavoritesChart` | `src/components/warrior/favorites/FavoritesCharting.tsx` | FavoritesCharting | — |
-| `stableStats` | `src/hooks/useScoutingStableComparison.ts` | useStableComparison | distinct |
-| `A11Y_KEY` | `src/lib/a11yPrefs.ts` | loadA11yPrefs, saveA11yPrefs | — |
-| `SfxType *(type)*` | `src/lib/AudioManager.ts` | AudioManager | — |
-| `AudioManager` | `src/lib/AudioManager.ts` | module scope | — |
-| `BIBLE_DOCS` | `src/lib/bibleIndex.ts` | BIBLE_SECTIONS | — |
-| `BookmarkRow *(type)*` | `src/pages/bookmarks/groupBookmarks.ts` | BookmarkGroups, resolveBookmarkRow | — |
-| `bookmarkKeySet` | `src/state/slices/bookmarksSlice.ts` | createBookmarksSlice | — |
+| Symbol(s)              | File                                                     | Live via (internal caller)              | Alt-flow |
+| ---------------------- | -------------------------------------------------------- | --------------------------------------- | -------- |
+| `PRIMARY_CTA_BY_ROUTE` | `src/components/layout/primaryCta.ts`                    | resolvePrimaryCta, resolvePrimaryCtaKey | —        |
+| `buildFavoritesChart`  | `src/components/warrior/favorites/FavoritesCharting.tsx` | FavoritesCharting                       | —        |
+| `stableStats`          | `src/hooks/useScoutingStableComparison.ts`               | useStableComparison                     | distinct |
+| `A11Y_KEY`             | `src/lib/a11yPrefs.ts`                                   | loadA11yPrefs, saveA11yPrefs            | —        |
+| `SfxType *(type)*`     | `src/lib/AudioManager.ts`                                | AudioManager                            | —        |
+| `AudioManager`         | `src/lib/AudioManager.ts`                                | module scope                            | —        |
+| `BIBLE_DOCS`           | `src/lib/bibleIndex.ts`                                  | BIBLE_SECTIONS                          | —        |
+| `BookmarkRow *(type)*` | `src/pages/bookmarks/groupBookmarks.ts`                  | BookmarkGroups, resolveBookmarkRow      | —        |
+| `bookmarkKeySet`       | `src/state/slices/bookmarksSlice.ts`                     | createBookmarksSlice                    | —        |
 
 ### Data & schemas (16)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `STYLE_CLASSIC_WEAPONS` | `src/data/equipment/equipment.utils.ts` | getStyleDefaultLoadout, getClassicWeaponBonus | — |
-| `ALL_STYLES` | `src/data/equipment/weaponStyles.ts` | without | — |
-| `scaleToAttributeBudget` | `src/data/fighterConcepts.ts` | concept | — |
-| `WinningFamily *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide | — |
-| `ArchetypeDesignBars *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide, barRatio | — |
-| `ArchetypeStrategy *(type)*` | `src/data/warriorArchetypes.ts` | ArchetypeGuide | — |
-| `ArchetypeGuide *(type)*` | `src/data/warriorArchetypes.ts` | styleFit, classifyArchetype | — |
-| `ArchetypeFit *(type)*` | `src/data/warriorArchetypes.ts` | module scope | — |
-| `AIStrategySchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
-| `AIEventSchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
-| `AIAgentMemorySchema` | `src/schemas/economySchemas.ts` | RivalStableDataSchema | — |
-| `AttributesSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema, PoolWarriorSchema | — |
-| `BaseSkillsSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema, PoolWarriorSchema | — |
-| `InjuryDataSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema | — |
-| `PlanConditionSchema` | `src/schemas/warriorSchemas.ts` | FightPlanSchema | — |
-| `FightPlanSchema` | `src/schemas/warriorSchemas.ts` | WarriorSchema | — |
+| Symbol(s)                      | File                                    | Live via (internal caller)                    | Alt-flow |
+| ------------------------------ | --------------------------------------- | --------------------------------------------- | -------- |
+| `STYLE_CLASSIC_WEAPONS`        | `src/data/equipment/equipment.utils.ts` | getStyleDefaultLoadout, getClassicWeaponBonus | —        |
+| `ALL_STYLES`                   | `src/data/equipment/weaponStyles.ts`    | without                                       | —        |
+| `scaleToAttributeBudget`       | `src/data/fighterConcepts.ts`           | concept                                       | —        |
+| `WinningFamily *(type)*`       | `src/data/warriorArchetypes.ts`         | ArchetypeGuide                                | —        |
+| `ArchetypeDesignBars *(type)*` | `src/data/warriorArchetypes.ts`         | ArchetypeGuide, barRatio                      | —        |
+| `ArchetypeStrategy *(type)*`   | `src/data/warriorArchetypes.ts`         | ArchetypeGuide                                | —        |
+| `ArchetypeGuide *(type)*`      | `src/data/warriorArchetypes.ts`         | styleFit, classifyArchetype                   | —        |
+| `ArchetypeFit *(type)*`        | `src/data/warriorArchetypes.ts`         | module scope                                  | —        |
+| `AIStrategySchema`             | `src/schemas/economySchemas.ts`         | RivalStableDataSchema                         | —        |
+| `AIEventSchema`                | `src/schemas/economySchemas.ts`         | RivalStableDataSchema                         | —        |
+| `AIAgentMemorySchema`          | `src/schemas/economySchemas.ts`         | RivalStableDataSchema                         | —        |
+| `AttributesSchema`             | `src/schemas/warriorSchemas.ts`         | WarriorSchema, PoolWarriorSchema              | —        |
+| `BaseSkillsSchema`             | `src/schemas/warriorSchemas.ts`         | WarriorSchema, PoolWarriorSchema              | —        |
+| `InjuryDataSchema`             | `src/schemas/warriorSchemas.ts`         | WarriorSchema                                 | —        |
+| `PlanConditionSchema`          | `src/schemas/warriorSchemas.ts`         | FightPlanSchema                               | —        |
+| `FightPlanSchema`              | `src/schemas/warriorSchemas.ts`         | WarriorSchema                                 | —        |
 
 ### AI decisioning (22)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `COMPETENCE_QUALITY` | `src/engine/ai/competence.ts` | competenceQuality | — |
-| `competenceOf` | `src/engine/ai/competence.ts` | competenceQuality | — |
-| `pickWeeklyIntent` | `src/engine/ai/intentEngine/index.ts` | updateAIStrategy | — |
-| `BoutIntentInput *(type)*` | `src/engine/ai/intentStates.ts` | module scope | — |
-| `deriveBoutIntent` | `src/engine/ai/intentStates.ts` | BoutIntent, evaluateBoutIntent | — |
-| `isPoachingEnabled` | `src/engine/ai/market/poachBid.ts` | computePoachBid, processPoachMarket | — |
-| `seasonIndexFor` | `src/engine/ai/market/poachBid.ts` | processPoachMarket | — |
-| `computePoachBid` | `src/engine/ai/market/poachBid.ts` | processPoachMarket, SettleAIPoachArgs | — |
-| `DOSSIER_CAP` | `src/engine/ai/memory/intelDossier.ts` | pruneDossiers | — |
-| `decayDossiers` | `src/engine/ai/memory/intelDossier.ts` | updateDossiers | — |
-| `agentPlanForWarrior` | `src/engine/ai/plan/agentPlan.ts` | persistNPCPlans | — |
-| `retireChanceFor` | `src/engine/ai/seasonalRetirementService.ts` | SeasonalRetirementService | — |
-| `TRAIT_POLICY` | `src/engine/ai/traitPolicy.ts` | policyFor | — |
-| `WEATHER_AI_DISPOSITION` | `src/engine/ai/weatherSuitability.ts` | HAZARDOUS_WEATHER, acceptanceWeatherBlock, offerWeatherDecline, committeeWeatherSkip, weatherBidModifier | — |
-| `projectCashFlow` | `src/engine/ai/workers/budgetWorker.ts` | checkBudget | — |
-| `learningSeekBonus` | `src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts` | pickBestCandidate | — |
-| `NegotiationOutcome *(type)*` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
-| `walkAwayTolerance` | `src/engine/ai/workers/competitionWorker/negotiation.ts` | resolveSecondRound | — |
-| `assessCrownOpportunity` | `src/engine/ai/workers/crownWorker.ts` | processCrownPosture | — |
-| `tourneyDraftBonus` | `src/engine/ai/workers/recruitmentWorker.ts` | module scope | — |
-| `ProcessRosterArgs *(type)*` | `src/engine/ai/workers/rosterWorker.ts` | module scope | — |
-| `preferredTrainerFocus` | `src/engine/ai/workers/staffWorker.ts` | tryHireTrainer | — |
+| Symbol(s)                     | File                                                                | Live via (internal caller)                                                                               | Alt-flow |
+| ----------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------- |
+| `COMPETENCE_QUALITY`          | `src/engine/ai/competence.ts`                                       | competenceQuality                                                                                        | —        |
+| `competenceOf`                | `src/engine/ai/competence.ts`                                       | competenceQuality                                                                                        | —        |
+| `pickWeeklyIntent`            | `src/engine/ai/intentEngine/index.ts`                               | updateAIStrategy                                                                                         | —        |
+| `BoutIntentInput *(type)*`    | `src/engine/ai/intentStates.ts`                                     | module scope                                                                                             | —        |
+| `deriveBoutIntent`            | `src/engine/ai/intentStates.ts`                                     | BoutIntent, evaluateBoutIntent                                                                           | —        |
+| `isPoachingEnabled`           | `src/engine/ai/market/poachBid.ts`                                  | computePoachBid, processPoachMarket                                                                      | —        |
+| `seasonIndexFor`              | `src/engine/ai/market/poachBid.ts`                                  | processPoachMarket                                                                                       | —        |
+| `computePoachBid`             | `src/engine/ai/market/poachBid.ts`                                  | processPoachMarket, SettleAIPoachArgs                                                                    | —        |
+| `DOSSIER_CAP`                 | `src/engine/ai/memory/intelDossier.ts`                              | pruneDossiers                                                                                            | —        |
+| `decayDossiers`               | `src/engine/ai/memory/intelDossier.ts`                              | updateDossiers                                                                                           | —        |
+| `agentPlanForWarrior`         | `src/engine/ai/plan/agentPlan.ts`                                   | persistNPCPlans                                                                                          | —        |
+| `retireChanceFor`             | `src/engine/ai/seasonalRetirementService.ts`                        | SeasonalRetirementService                                                                                | —        |
+| `TRAIT_POLICY`                | `src/engine/ai/traitPolicy.ts`                                      | policyFor                                                                                                | —        |
+| `WEATHER_AI_DISPOSITION`      | `src/engine/ai/weatherSuitability.ts`                               | HAZARDOUS_WEATHER, acceptanceWeatherBlock, offerWeatherDecline, committeeWeatherSkip, weatherBidModifier | —        |
+| `projectCashFlow`             | `src/engine/ai/workers/budgetWorker.ts`                             | checkBudget                                                                                              | —        |
+| `learningSeekBonus`           | `src/engine/ai/workers/competitionWorker/boutBidding/conversion.ts` | pickBestCandidate                                                                                        | —        |
+| `NegotiationOutcome *(type)*` | `src/engine/ai/workers/competitionWorker/negotiation.ts`            | resolveSecondRound                                                                                       | —        |
+| `walkAwayTolerance`           | `src/engine/ai/workers/competitionWorker/negotiation.ts`            | resolveSecondRound                                                                                       | —        |
+| `assessCrownOpportunity`      | `src/engine/ai/workers/crownWorker.ts`                              | processCrownPosture                                                                                      | —        |
+| `tourneyDraftBonus`           | `src/engine/ai/workers/recruitmentWorker.ts`                        | module scope                                                                                             | —        |
+| `ProcessRosterArgs *(type)*`  | `src/engine/ai/workers/rosterWorker.ts`                             | module scope                                                                                             | —        |
+| `preferredTrainerFocus`       | `src/engine/ai/workers/staffWorker.ts`                              | tryHireTrainer                                                                                           | —        |
 
 ### Engine core & services (36)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `processPlayerOffers` | `src/engine/autosim/autosim.ts` | runAutosim | — |
-| `extractAutosimWeekSummary` | `src/engine/autosim/autosim.ts` | runAutosim | — |
-| `seedForEntity` | `src/engine/avatar/avatarGenerator.ts` | generateAvatar | — |
-| `wearScore` | `src/engine/avatar/avatarGenerator.ts` | avatarDescription, generateAvatarFromCatalog | — |
-| `avatarDescription` | `src/engine/avatar/avatarGenerator.ts` | generateAvatarFromCatalog | — |
-| `clothingCategoryForStyle` | `src/engine/avatar/avatarGenerator.ts` | generateAvatarFromCatalog | — |
-| `resolveAbsoluteWeek` | `src/engine/core/absoluteWeek.ts` | boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek | — |
-| `FATIGUE_FRESH` | `src/engine/core/fatigueUtils.ts` | getFatigueBand, isFatigued | — |
-| `FATIGUE_ELEVATED` | `src/engine/core/fatigueUtils.ts` | getFatigueBand, isExhausted | — |
-| `ArenaLeaderboardEntry *(type)*` | `src/engine/core/leaderboards.ts` | collectActiveWarriorEntries, calculateGlobalFameLeaderboard | — |
-| `ArenaWarriorEntry *(type)*` | `src/engine/core/leaderboards.ts` | ArenaLeaderboardData, cmpWarriors, cmpKillers, buildEntry, buildArenaLeaderboard, calculateArenaStyleLeaders | — |
-| `ArenaLeaderboardData *(type)*` | `src/engine/core/leaderboards.ts` | buildArenaLeaderboard, calculateArenaLeaderboard | — |
-| `ArenaStableEntry *(type)*` | `src/engine/core/leaderboards.ts` | calculateArenaStableStandings | — |
-| `WarriorOwner *(type)*` | `src/engine/core/warriorOwnership.ts` | resolveWarriorOwner | — |
-| `BEAST_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `WEAPON_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `SYMBOL_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `NATURE_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `CELESTIAL_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `MYTHICAL_PATHS` | `src/engine/crest/chargePaths.ts` | getChargePathsByType | — |
-| `getCrestColor` | `src/engine/crest/crestGenerator.ts` | selectColors | — |
-| `GearRecommendation *(type)*` | `src/engine/equipment/equipmentOptimizer.ts` | generateRecommendations | — |
-| `weaponFitScore` | `src/engine/equipment/loadoutFitting.ts` | fitWeapon | — |
-| `fitWeapon` | `src/engine/equipment/loadoutFitting.ts` | getFittedLoadout, refitWeapon | — |
-| `WEAPON_STYLE_SUITABILITY` | `src/engine/equipment/weaponSuitability.ts` | getWeaponSuitability | — |
-| `FightAnalysisContext *(type)*` | `src/engine/gazette/gazetteDetections.ts` | computeFightAnalysis, detectRivalryMatchup, detectHotStreakers | — |
-| `DEFAULT_CROWD_MOOD` | `src/engine/gazette/gazetteTemplateHelpers.ts` | resolveCrowdMood | — |
-| `BoutEndContext *(type)*` | `src/engine/narrative/narrativePostBout.ts` | NarrateBoutEndArgs | — |
-| `addStat` | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome | — |
-| `StatGrantOutcomeOpts *(type)*` | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome | — |
-| `HONOR_DOWN_CHALLENGE_MARGIN` | `src/engine/politics/honorCulture.ts` | isDownChallenge | — |
-| `SyncTarget *(type)*` | `src/engine/pool/syncCoordinator.ts` | SyncCoordinator, CoordCtx, coordHash, heal, ensureStage, createSyncCoordinator | — |
-| `SyncedShardStore *(type)*` | `src/engine/pool/syncedShardState.ts` | forceShardState, requireWork, advanceShardTo, runSyncedBoutShardChunk, runSyncedRivalShardChunk | — |
-| `defaultSpecialtyMods` | `src/engine/trainers/trainerSpecialties.ts` | getSpecialtyMods | — |
-| `validateArenaChampions` | `src/engine/validate/stateInvariants.ts` | validateStateInvariants | — |
-| `SEASONAL_WEATHER` | `src/engine/weather/seasonalWeather.ts` | rollWeather | — |
+| Symbol(s)                        | File                                             | Live via (internal caller)                                                                                   | Alt-flow |
+| -------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | -------- |
+| `processPlayerOffers`            | `src/engine/autosim/autosim.ts`                  | runAutosim                                                                                                   | —        |
+| `extractAutosimWeekSummary`      | `src/engine/autosim/autosim.ts`                  | runAutosim                                                                                                   | —        |
+| `seedForEntity`                  | `src/engine/avatar/avatarGenerator.ts`           | generateAvatar                                                                                               | —        |
+| `wearScore`                      | `src/engine/avatar/avatarGenerator.ts`           | avatarDescription, generateAvatarFromCatalog                                                                 | —        |
+| `avatarDescription`              | `src/engine/avatar/avatarGenerator.ts`           | generateAvatarFromCatalog                                                                                    | —        |
+| `clothingCategoryForStyle`       | `src/engine/avatar/avatarGenerator.ts`           | generateAvatarFromCatalog                                                                                    | —        |
+| `resolveAbsoluteWeek`            | `src/engine/core/absoluteWeek.ts`                | boutOfferAbsoluteWeek, boutOfferExpirationAbsoluteWeek                                                       | —        |
+| `FATIGUE_FRESH`                  | `src/engine/core/fatigueUtils.ts`                | getFatigueBand, isFatigued                                                                                   | —        |
+| `FATIGUE_ELEVATED`               | `src/engine/core/fatigueUtils.ts`                | getFatigueBand, isExhausted                                                                                  | —        |
+| `ArenaLeaderboardEntry *(type)*` | `src/engine/core/leaderboards.ts`                | collectActiveWarriorEntries, calculateGlobalFameLeaderboard                                                  | —        |
+| `ArenaWarriorEntry *(type)*`     | `src/engine/core/leaderboards.ts`                | ArenaLeaderboardData, cmpWarriors, cmpKillers, buildEntry, buildArenaLeaderboard, calculateArenaStyleLeaders | —        |
+| `ArenaLeaderboardData *(type)*`  | `src/engine/core/leaderboards.ts`                | buildArenaLeaderboard, calculateArenaLeaderboard                                                             | —        |
+| `ArenaStableEntry *(type)*`      | `src/engine/core/leaderboards.ts`                | calculateArenaStableStandings                                                                                | —        |
+| `WarriorOwner *(type)*`          | `src/engine/core/warriorOwnership.ts`            | resolveWarriorOwner                                                                                          | —        |
+| `BEAST_PATHS`                    | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `WEAPON_PATHS`                   | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `SYMBOL_PATHS`                   | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `NATURE_PATHS`                   | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `CELESTIAL_PATHS`                | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `MYTHICAL_PATHS`                 | `src/engine/crest/chargePaths.ts`                | getChargePathsByType                                                                                         | —        |
+| `getCrestColor`                  | `src/engine/crest/crestGenerator.ts`             | selectColors                                                                                                 | —        |
+| `GearRecommendation *(type)*`    | `src/engine/equipment/equipmentOptimizer.ts`     | generateRecommendations                                                                                      | —        |
+| `weaponFitScore`                 | `src/engine/equipment/loadoutFitting.ts`         | fitWeapon                                                                                                    | —        |
+| `fitWeapon`                      | `src/engine/equipment/loadoutFitting.ts`         | getFittedLoadout, refitWeapon                                                                                | —        |
+| `WEAPON_STYLE_SUITABILITY`       | `src/engine/equipment/weaponSuitability.ts`      | getWeaponSuitability                                                                                         | —        |
+| `FightAnalysisContext *(type)*`  | `src/engine/gazette/gazetteDetections.ts`        | computeFightAnalysis, detectRivalryMatchup, detectHotStreakers                                               | —        |
+| `DEFAULT_CROWD_MOOD`             | `src/engine/gazette/gazetteTemplateHelpers.ts`   | resolveCrowdMood                                                                                             | —        |
+| `BoutEndContext *(type)*`        | `src/engine/narrative/narrativePostBout.ts`      | NarrateBoutEndArgs                                                                                           | —        |
+| `addStat`                        | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome                                                                                             | —        |
+| `StatGrantOutcomeOpts *(type)*`  | `src/engine/pipeline/offseasonEvents/helpers.ts` | statGrantOutcome                                                                                             | —        |
+| `HONOR_DOWN_CHALLENGE_MARGIN`    | `src/engine/politics/honorCulture.ts`            | isDownChallenge                                                                                              | —        |
+| `SyncTarget *(type)*`            | `src/engine/pool/syncCoordinator.ts`             | SyncCoordinator, CoordCtx, coordHash, heal, ensureStage, createSyncCoordinator                               | —        |
+| `SyncedShardStore *(type)*`      | `src/engine/pool/syncedShardState.ts`            | forceShardState, requireWork, advanceShardTo, runSyncedBoutShardChunk, runSyncedRivalShardChunk              | —        |
+| `defaultSpecialtyMods`           | `src/engine/trainers/trainerSpecialties.ts`      | getSpecialtyMods                                                                                             | —        |
+| `validateArenaChampions`         | `src/engine/validate/stateInvariants.ts`         | validateStateInvariants                                                                                      | —        |
+| `SEASONAL_WEATHER`               | `src/engine/weather/seasonalWeather.ts`          | rollWeather                                                                                                  | —        |
 
 ### Combat & bout (17)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `ContractPayoutArgs *(type)*` | `src/engine/bout/core/resolveHelpers.ts` | module scope | — |
-| `getNPCPlan` | `src/engine/bout/services/boutResolution.ts` | runBoutSimulation | — |
-| `STYLE_PRESETS` | `src/engine/bout/stylePresets.ts` | getStylePresets, defaultStylePreset | — |
-| `derivePsychState` | `src/engine/combat/mechanics/conditionEngine.ts` | conditionMet, evaluateConditions | — |
-| `ArenaSizeProfile *(type)*` | `src/engine/combat/mechanics/distanceResolution.ts` | ContestDistanceArgs | — |
-| `WEAPON_PREFERRED_RANGE` | `src/engine/combat/mechanics/distanceResolution.ts` | getWeaponPreferredRange | — |
-| `WEAPON_RANGE_MODIFIERS` | `src/engine/combat/mechanics/distanceResolution.ts` | getWeaponRangeMod | — |
-| `computeReachScore` | `src/engine/combat/mechanics/distanceResolution.ts` | contestDistance | — |
-| `clampRangeToMax` | `src/engine/combat/mechanics/distanceResolution.ts` | contestDistance | — |
-| `willCheckChance` | `src/engine/combat/mechanics/willChecks.ts` | rollWillCheck | — |
-| `applyDecoyMask` | `src/engine/combat/resolution/decoyShift.ts` | resolveDecoyMasks | — |
-| `emitDecoyReveal` | `src/engine/combat/resolution/decoyShift.ts` | resolveDecoyMasks | — |
-| `rollDisarmChance` | `src/engine/combat/resolution/disarm.ts` | tryDisarm | — |
-| `isArmLocation` | `src/engine/combat/resolution/disarm.ts` | tryDisarm | — |
-| `RECOVERY_ACTIVITY_CAP` | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery | — |
-| `RECOVERY_PER_BEAT` | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery | — |
-| `isVeryHighlyCoordinated` | `src/engine/combat/resolution/offhandAttack.ts` | tryOffhandAttack | — |
+| Symbol(s)                     | File                                                                          | Live via (internal caller)          | Alt-flow |
+| ----------------------------- | ----------------------------------------------------------------------------- | ----------------------------------- | -------- |
+| `ContractPayoutArgs *(type)*` | `src/engine/bout/core/resolveHelpers.ts`                                      | module scope                        | —        |
+| `getNPCPlan`                  | `src/engine/bout/services/boutResolution.ts`                                  | runBoutSimulation                   | —        |
+| `STYLE_PRESETS`               | `src/engine/bout/stylePresets.ts`                                             | getStylePresets, defaultStylePreset | —        |
+| `derivePsychState`            | `src/engine/combat/mechanics/conditionEngine.ts`                              | conditionMet, evaluateConditions    | —        |
+| `ArenaSizeProfile *(type)*`   | `src/engine/combat/mechanics/distanceResolution.ts`                           | ContestDistanceArgs                 | —        |
+| `WEAPON_PREFERRED_RANGE`      | `src/engine/combat/mechanics/distanceResolution.ts`                           | getWeaponPreferredRange             | —        |
+| `WEAPON_RANGE_MODIFIERS`      | `src/engine/combat/mechanics/distanceResolution.ts`                           | getWeaponRangeMod                   | —        |
+| `computeReachScore`           | `src/engine/combat/mechanics/distanceResolution.ts`                           | contestDistance                     | —        |
+| `clampRangeToMax`             | `src/engine/combat/mechanics/distanceResolution.ts`                           | contestDistance                     | —        |
+| `willCheckChance`             | `src/engine/combat/mechanics/willChecks.ts`                                   | rollWillCheck                       | —        |
+| `applyDecoyMask`              | `src/engine/combat/resolution/decoyShift.ts`                                  | resolveDecoyMasks                   | —        |
+| `emitDecoyReveal`             | `src/engine/combat/resolution/decoyShift.ts`                                  | resolveDecoyMasks                   | —        |
+| `rollDisarmChance`            | `src/engine/combat/resolution/disarm.ts`                                      | tryDisarm                           | —        |
+| `isArmLocation`               | `src/engine/combat/resolution/disarm.ts`                                      | tryDisarm                           | —        |
+| `RECOVERY_ACTIVITY_CAP`       | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery              | —        |
+| `RECOVERY_PER_BEAT`           | `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceRecovery.ts` | applyEnduranceRecovery              | —        |
+| `isVeryHighlyCoordinated`     | `src/engine/combat/resolution/offhandAttack.ts`                               | tryOffhandAttack                    | —        |
 
 ### Matchmaking, scouting & reputation (15)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `selectGrandChampionshipField` | `src/engine/championship/championsTournament.ts` | buildChampionsTournament | — |
-| `scoreArenaFitForWarrior` | `src/engine/matchmaking/arenaFit.ts` | selectArenaForMatchup | — |
-| `eligibleArenasFor` | `src/engine/matchmaking/arenaFit.ts` | matchupArenas | — |
-| `BLOODFEUD_TURNS` | `src/engine/matchmaking/bloodfeud.ts` | bloodfeudMarksFromOutcome | — |
-| `getEligibleArenasForTournament` | `src/engine/matchmaking/tournament/tournamentArenaSelection.ts` | selectArenaForTournamentBout | — |
-| `lowerBound` | `src/engine/promoters/offerMatchmaking.ts` | findBestOpponent | — |
-| `upperBound` | `src/engine/promoters/offerMatchmaking.ts` | findBestOpponent | — |
-| `createStyleInsight` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
-| `createAttributeInsights` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
-| `createTacticInsight` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
-| `createTraitInsights` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
-| `createKnackInsights` | `src/engine/scouting/scoutInsights.ts` | generateScoutInsights | — |
-| `StableReputation *(type)*` | `src/engine/stable/stableReputation.ts` | module scope | — |
-| `getTopFameWarriors` | `src/engine/stable/stableReputation.ts` | calculateFame, computeRivalReputation | — |
-| `computeFameScore` | `src/engine/stable/stableReputation.ts` | calculateFame | — |
+| Symbol(s)                        | File                                                            | Live via (internal caller)            | Alt-flow |
+| -------------------------------- | --------------------------------------------------------------- | ------------------------------------- | -------- |
+| `selectGrandChampionshipField`   | `src/engine/championship/championsTournament.ts`                | buildChampionsTournament              | —        |
+| `scoreArenaFitForWarrior`        | `src/engine/matchmaking/arenaFit.ts`                            | selectArenaForMatchup                 | —        |
+| `eligibleArenasFor`              | `src/engine/matchmaking/arenaFit.ts`                            | matchupArenas                         | —        |
+| `BLOODFEUD_TURNS`                | `src/engine/matchmaking/bloodfeud.ts`                           | bloodfeudMarksFromOutcome             | —        |
+| `getEligibleArenasForTournament` | `src/engine/matchmaking/tournament/tournamentArenaSelection.ts` | selectArenaForTournamentBout          | —        |
+| `lowerBound`                     | `src/engine/promoters/offerMatchmaking.ts`                      | findBestOpponent                      | —        |
+| `upperBound`                     | `src/engine/promoters/offerMatchmaking.ts`                      | findBestOpponent                      | —        |
+| `createStyleInsight`             | `src/engine/scouting/scoutInsights.ts`                          | generateScoutInsights                 | —        |
+| `createAttributeInsights`        | `src/engine/scouting/scoutInsights.ts`                          | generateScoutInsights                 | —        |
+| `createTacticInsight`            | `src/engine/scouting/scoutInsights.ts`                          | generateScoutInsights                 | —        |
+| `createTraitInsights`            | `src/engine/scouting/scoutInsights.ts`                          | generateScoutInsights                 | —        |
+| `createKnackInsights`            | `src/engine/scouting/scoutInsights.ts`                          | generateScoutInsights                 | —        |
+| `StableReputation *(type)*`      | `src/engine/stable/stableReputation.ts`                         | module scope                          | —        |
+| `getTopFameWarriors`             | `src/engine/stable/stableReputation.ts`                         | calculateFame, computeRivalReputation | —        |
+| `computeFameScore`               | `src/engine/stable/stableReputation.ts`                         | calculateFame                         | —        |
 
 ### Warrior & training (12)
 
-| Symbol(s) | File | Live via (internal caller) | Alt-flow |
-| --- | --- | --- | --- |
-| `generateRecruitAttrs` | `src/engine/owner/roster/recruitGenerator.ts` | generateAIRecruit | — |
-| `TrainingAttemptOutcome *(type)*` | `src/engine/training/trainingAttempt.ts` | runTrainingAttempt | — |
-| `SkillDrillAttemptOutcome *(type)*` | `src/engine/training/trainingAttempt.ts` | runSkillDrillAttempt | — |
-| `CareerUpdateInput *(type)*` | `src/engine/warrior/careerUpdate.ts` | calculateCareerUpdate, updateWarriorFromBoutOutcome | — |
-| `calculateCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorFromBoutOutcome | — |
-| `applyCareerUpdate` | `src/engine/warrior/careerUpdate.ts` | updateWarriorFromBoutOutcome | — |
-| `DesignAxis *(type)*` | `src/engine/warrior/designReview.ts` | DesignReviewItem | — |
-| `Handedness *(type)*` | `src/engine/warrior/skillCalc.ts` | computeBaseSkills | — |
-| `computeHP` | `src/engine/warrior/skillCalc.ts` | computeDerivedStats | distinct |
-| `computeEndurance` | `src/engine/warrior/skillCalc.ts` | computeDerivedStats | — |
-| `computeDamage` | `src/engine/warrior/skillCalc.ts` | computeDerivedStats | — |
-| `computeDerivedStats` | `src/engine/warrior/skillCalc.ts` | computeWarriorStats | — |
+| Symbol(s)                           | File                                          | Live via (internal caller)                          | Alt-flow |
+| ----------------------------------- | --------------------------------------------- | --------------------------------------------------- | -------- |
+| `generateRecruitAttrs`              | `src/engine/owner/roster/recruitGenerator.ts` | generateAIRecruit                                   | —        |
+| `TrainingAttemptOutcome *(type)*`   | `src/engine/training/trainingAttempt.ts`      | runTrainingAttempt                                  | —        |
+| `SkillDrillAttemptOutcome *(type)*` | `src/engine/training/trainingAttempt.ts`      | runSkillDrillAttempt                                | —        |
+| `CareerUpdateInput *(type)*`        | `src/engine/warrior/careerUpdate.ts`          | calculateCareerUpdate, updateWarriorFromBoutOutcome | —        |
+| `calculateCareerUpdate`             | `src/engine/warrior/careerUpdate.ts`          | updateWarriorFromBoutOutcome                        | —        |
+| `applyCareerUpdate`                 | `src/engine/warrior/careerUpdate.ts`          | updateWarriorFromBoutOutcome                        | —        |
+| `DesignAxis *(type)*`               | `src/engine/warrior/designReview.ts`          | DesignReviewItem                                    | —        |
+| `Handedness *(type)*`               | `src/engine/warrior/skillCalc.ts`             | computeBaseSkills                                   | —        |
+| `computeHP`                         | `src/engine/warrior/skillCalc.ts`             | computeDerivedStats                                 | distinct |
+| `computeEndurance`                  | `src/engine/warrior/skillCalc.ts`             | computeDerivedStats                                 | —        |
+| `computeDamage`                     | `src/engine/warrior/skillCalc.ts`             | computeDerivedStats                                 | —        |
+| `computeDerivedStats`               | `src/engine/warrior/skillCalc.ts`             | computeWarriorStats                                 | —        |
 
 ## Section D — Scanner blind spots: live, no action
 
@@ -281,56 +281,56 @@ Every symbol below **runs in production** — called inside its own module by a 
 
 Consumed via `React.lazy(() => import(...))`; the scanner sees the file edge but cannot attribute a named consumer.
 
-| Export | File |
-| --- | --- |
-| `WEATHER_VISUALS` | `src/components/arena/weather/index.tsx` |
-| `WarriorRadarChart` | `src/components/charts/WarriorRadarChart.tsx` |
-| `default` | `src/components/ResolutionReveal.tsx` |
-| `BACKSTORIES` | `src/data/backstories.ts` |
-| `OrphanWarrior` | `src/data/orphanPool.ts` |
-| `SEASON_OBJECTIVE_WEEKS` | `src/engine/ai/plan/seasonPlan.ts` |
-| `pickSeasonObjective` | `src/engine/ai/plan/seasonPlan.ts` |
-| `createDefaultMeta` | `src/engine/analytics/metaDrift.ts` |
-| `EVENT_HANDLERS` | `src/engine/pipeline/seasonal.ts` |
-| `ShardWorkerApi` | `src/engine/pool/enginePool.ts` |
-| `createEnginePool` | `src/engine/pool/enginePool.ts` |
-| `traitTrainingCeiling` | `src/engine/training/trainingGains/traitTraining.ts` |
-| `conflictsWith` | `src/engine/training/trainingGains/traitTraining.ts` |
-| `default` | `src/pages/StartGame.tsx` |
+| Export                   | File                                                 |
+| ------------------------ | ---------------------------------------------------- |
+| `WEATHER_VISUALS`        | `src/components/arena/weather/index.tsx`             |
+| `WarriorRadarChart`      | `src/components/charts/WarriorRadarChart.tsx`        |
+| `default`                | `src/components/ResolutionReveal.tsx`                |
+| `BACKSTORIES`            | `src/data/backstories.ts`                            |
+| `OrphanWarrior`          | `src/data/orphanPool.ts`                             |
+| `SEASON_OBJECTIVE_WEEKS` | `src/engine/ai/plan/seasonPlan.ts`                   |
+| `pickSeasonObjective`    | `src/engine/ai/plan/seasonPlan.ts`                   |
+| `createDefaultMeta`      | `src/engine/analytics/metaDrift.ts`                  |
+| `EVENT_HANDLERS`         | `src/engine/pipeline/seasonal.ts`                    |
+| `ShardWorkerApi`         | `src/engine/pool/enginePool.ts`                      |
+| `createEnginePool`       | `src/engine/pool/enginePool.ts`                      |
+| `traitTrainingCeiling`   | `src/engine/training/trainingGains/traitTraining.ts` |
+| `conflictsWith`          | `src/engine/training/trainingGains/traitTraining.ts` |
+| `default`                | `src/pages/StartGame.tsx`                            |
 
 ### D2. Ambient declaration files
 
-- `src/types/global.d.ts` — global/ambient types; never imported *by design* (allowlisted in the guard).
-- `src/vite-env.d.ts` — global/ambient types; never imported *by design* (allowlisted in the guard).
+- `src/types/global.d.ts` — global/ambient types; never imported _by design_ (allowlisted in the guard).
+- `src/vite-env.d.ts` — global/ambient types; never imported _by design_ (allowlisted in the guard).
 
 ### D3. shadcn/ui component-library surface
 
 Generated-library exports — the components ship their full part API even when parts are unused. Not product features.
 
-| Export | File |
-| --- | --- |
-| `AlertDialogPortal` | `src/components/ui/alert-dialog.tsx` |
-| `AlertDialogOverlay` | `src/components/ui/alert-dialog.tsx` |
-| `AlertDialogTrigger` | `src/components/ui/alert-dialog.tsx` |
-| `ChartLegend` | `src/components/ui/chart.tsx` |
-| `ChartLegendContent` | `src/components/ui/chart.tsx` |
-| `DialogPortal` | `src/components/ui/dialog.tsx` |
-| `DialogOverlay` | `src/components/ui/dialog.tsx` |
-| `DialogClose` | `src/components/ui/dialog.tsx` |
-| `DialogTrigger` | `src/components/ui/dialog.tsx` |
-| `DialogHeader` | `src/components/ui/dialog.tsx` |
-| `DialogFooter` | `src/components/ui/dialog.tsx` |
-| `ScrollBar` | `src/components/ui/scroll-area.tsx` |
-| `SelectGroup` | `src/components/ui/select.tsx` |
-| `SelectLabel` | `src/components/ui/select.tsx` |
-| `SelectSeparator` | `src/components/ui/select.tsx` |
-| `SelectScrollUpButton` | `src/components/ui/select.tsx` |
-| `SelectScrollDownButton` | `src/components/ui/select.tsx` |
-| `SheetPortal` | `src/components/ui/sheet.tsx` |
-| `SheetOverlay` | `src/components/ui/sheet.tsx` |
-| `SheetFooter` | `src/components/ui/sheet.tsx` |
-| `TableFooter` | `src/components/ui/table.tsx` |
-| `TableCaption` | `src/components/ui/table.tsx` |
+| Export                   | File                                 |
+| ------------------------ | ------------------------------------ |
+| `AlertDialogPortal`      | `src/components/ui/alert-dialog.tsx` |
+| `AlertDialogOverlay`     | `src/components/ui/alert-dialog.tsx` |
+| `AlertDialogTrigger`     | `src/components/ui/alert-dialog.tsx` |
+| `ChartLegend`            | `src/components/ui/chart.tsx`        |
+| `ChartLegendContent`     | `src/components/ui/chart.tsx`        |
+| `DialogPortal`           | `src/components/ui/dialog.tsx`       |
+| `DialogOverlay`          | `src/components/ui/dialog.tsx`       |
+| `DialogClose`            | `src/components/ui/dialog.tsx`       |
+| `DialogTrigger`          | `src/components/ui/dialog.tsx`       |
+| `DialogHeader`           | `src/components/ui/dialog.tsx`       |
+| `DialogFooter`           | `src/components/ui/dialog.tsx`       |
+| `ScrollBar`              | `src/components/ui/scroll-area.tsx`  |
+| `SelectGroup`            | `src/components/ui/select.tsx`       |
+| `SelectLabel`            | `src/components/ui/select.tsx`       |
+| `SelectSeparator`        | `src/components/ui/select.tsx`       |
+| `SelectScrollUpButton`   | `src/components/ui/select.tsx`       |
+| `SelectScrollDownButton` | `src/components/ui/select.tsx`       |
+| `SheetPortal`            | `src/components/ui/sheet.tsx`        |
+| `SheetOverlay`           | `src/components/ui/sheet.tsx`        |
+| `SheetFooter`            | `src/components/ui/sheet.tsx`        |
+| `TableFooter`            | `src/components/ui/table.tsx`        |
+| `TableCaption`           | `src/components/ui/table.tsx`        |
 
 ### D4. Nav-hidden routes — intentional deep links
 
@@ -342,12 +342,12 @@ Generated-library exports — the components ship their full part API even when 
 
 ## Decision summary
 
-| Decision | Items | Unique code at stake |
-| --- | --- | --- |
-| **Delete / integrate** | 4 curated item(s) + **5 UNTRIAGED** | see per-item tags above |
-| **Unexport** | 5 export(s) | 🟣 stays — code is live, only `export` goes |
-| **Keep** | 6 test-reset hook(s); 127 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra |
-| **Guard hygiene** | ratchet: 183 / 180 | — |
-| **Duplication** | 6 orphan(s) with same-name alternate flow(s) | 0 identical · 0 divergent · 6 distinct |
+| Decision               | Items                                                            | Unique code at stake                        |
+| ---------------------- | ---------------------------------------------------------------- | ------------------------------------------- |
+| **Delete / integrate** | 4 curated item(s) + **5 UNTRIAGED**                              | see per-item tags above                     |
+| **Unexport**           | 5 export(s)                                                      | 🟣 stays — code is live, only `export` goes |
+| **Keep**               | 6 test-reset hook(s); 127 test-visible export(s); 36 blind spots | all unique, all live-or-test-infra          |
+| **Guard hygiene**      | ratchet: 183 / 180                                               | —                                           |
+| **Duplication**        | 6 orphan(s) with same-name alternate flow(s)                     | 0 identical · 0 divergent · 6 distinct      |
 
-*Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`.*
+_Regenerate with `node scripts/orphan-scan.mjs` (or `node scripts/orphan-report.mjs` against the last JSON). Curated verdicts live in `ANNOTATIONS` at the top of `scripts/orphan-report.mjs`._

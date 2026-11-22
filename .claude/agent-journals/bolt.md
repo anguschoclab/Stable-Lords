@@ -3,7 +3,7 @@
 ## 2026-05-14 - Identity-keyed WeakMap memoization + the moduleCacheRegistry trap
 
 **Learning:** This codebase's canonical memoization pattern is a WeakMap keyed on
-*array identity* (not state-object identity): hot state arrays
+_array identity_ (not state-object identity): hot state arrays
 (`arenaHistory`, `graveyard`, `deadWarriorIds`, `retired`) are
 **append-only-by-replacement** — every writer assigns a new array (impact
 'append' strategy concats; truncation slices; `state.x = [...]`). Verify with
@@ -20,6 +20,6 @@ so identity-keyed WeakMaps are per-context by construction (safe).
 collections — mutation becomes a compile error instead of cache corruption
 (bouts.ts `inactiveIdSet` was the sole mutator; downstream `deadIds` params
 were already `ReadonlySet`). When a second derived set shares input identity,
-key its cache on the *first cache's returned instance* — deadIdSet's shared
+key its cache on the _first cache's returned instance_ — deadIdSet's shared
 set doubles as inactiveIdSet's outer key, so a mid-round kill (new arrays →
 new dead set) chains the invalidation for free.

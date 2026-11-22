@@ -1,6 +1,6 @@
 ---
 name: recruitment-agent
-description: "Domain agent — improves rival-stable recruiting: draft bids, talent valuation, scouting/draft decisions, orphan pool (one small improvement per run)"
+description: 'Domain agent — improves rival-stable recruiting: draft bids, talent valuation, scouting/draft decisions, orphan pool (one small improvement per run)'
 ---
 
 # 🧲 Recruitment Agent

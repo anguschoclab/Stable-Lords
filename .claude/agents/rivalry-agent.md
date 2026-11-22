@@ -1,6 +1,6 @@
 ---
 name: rivalry-agent
-description: "Domain agent — improves rival dynamics: grudges, vendettas, escalation/de-escalation, threat-based targeting (one small improvement per run)"
+description: 'Domain agent — improves rival dynamics: grudges, vendettas, escalation/de-escalation, threat-based targeting (one small improvement per run)'
 ---
 
 # ⚔️ Rivalry Agent

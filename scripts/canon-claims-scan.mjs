@@ -28,7 +28,10 @@ function parseRows(md) {
   for (const [i, line] of md.split('\n').entries()) {
     const trimmed = line.trim();
     if (!trimmed.startsWith('|')) continue;
-    const cells = trimmed.split('|').slice(1, -1).map((c) => c.trim());
+    const cells = trimmed
+      .split('|')
+      .slice(1, -1)
+      .map((c) => c.trim());
     if (cells.length < 5) continue;
     const [id, claim, verdict, evidence, status] = cells;
     if (id === 'ID' || /^-+$/.test(id)) continue; // header + separator
@@ -77,7 +80,9 @@ const report = {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.writeFileSync(OUT_FILE, JSON.stringify(report, null, 2));
 
-console.log(`canon-claims-scan: ${rows.length} claims · ${violations.length} violations · ${warnings.length} warnings`);
+console.log(
+  `canon-claims-scan: ${rows.length} claims · ${violations.length} violations · ${warnings.length} warnings`
+);
 for (const v of violations) console.log(`  VIOLATION ${v}`);
 for (const w of warnings) console.log(`  warn      ${w}`);
 process.exit(violations.length ? 1 : 0);

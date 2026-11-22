@@ -613,19 +613,13 @@ describe('V22 canon notes — remaining styles', () => {
 describe('composite evaluation thresholds (V31 canon, Hoser #15; DN-D3)', () => {
   // WT+WL+DF ≥ 49 = "Primus-bound"; ≥ 35 = basic/ADM-viable.
   it('marks a WT+WL+DF ≥ 49 build as Primus-bound', () => {
-    const items = reviewWarriorDesign(
-      A({ WT: 17, WL: 17, DF: 17 }),
-      FightingStyle.AimedBlow
-    );
+    const items = reviewWarriorDesign(A({ WT: 17, WL: 17, DF: 17 }), FightingStyle.AimedBlow);
     expect(items.find((i) => i.title === 'Primus-bound')).toBeDefined();
   });
 
   it('marks a WT+WL+DF ≥ 35 (but < 49) build as viable', () => {
     // 12+12+12 = 36 — above the viability line, below Primus-bound.
-    const items = reviewWarriorDesign(
-      A({ WT: 12, WL: 12, DF: 12 }),
-      FightingStyle.AimedBlow
-    );
+    const items = reviewWarriorDesign(A({ WT: 12, WL: 12, DF: 12 }), FightingStyle.AimedBlow);
     expect(items.find((i) => i.title === 'Primus-bound')).toBeUndefined();
     expect(items.find((i) => i.title === 'Viable frame')).toBeDefined();
   });

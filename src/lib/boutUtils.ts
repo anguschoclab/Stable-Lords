@@ -74,10 +74,7 @@ const TEXT_RULES: readonly (readonly [EventClass, readonly string[]])[] = [
       'fractures',
     ],
   ],
-  [
-    'fumble',
-    ['fumble', 'stays sheathed', 'drops it', 'won’t come free', "won't come free"],
-  ],
+  ['fumble', ['fumble', 'stays sheathed', 'drops it', 'won’t come free', "won't come free"]],
   ['hit', ['damage', 'strikes', 'hits', 'lands', 'striking']],
   ['miss', ['miss', 'parr', 'dodge', 'turns', 'no opening', 'blocks']],
 ];

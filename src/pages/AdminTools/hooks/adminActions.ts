@@ -7,6 +7,7 @@ import { engineProxy } from '@/engine/runtime/workerProxy';
 import { engineSession } from '@/engine/runtime/session';
 import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
 import { stripNonSerializable } from '@/state/serialization';
+import { MAX_FILE_INPUT_BYTES } from '@/utils/fileInput';
 
 import { logger } from '@/utils/logger';
 
@@ -35,6 +36,12 @@ export function importSaveFile(
 ): void {
   const file = e.target.files?.[0];
   if (!file) return;
+  // Picked files are untrusted — reject oversize reads before readAsText so a
+  // hostile file can't be loaded+parsed wholesale and hang the renderer.
+  if (file.size > MAX_FILE_INPUT_BYTES) {
+    toast.error('Save file exceeds the 10 MB size limit.');
+    return;
+  }
   const reader = new FileReader();
   reader.onload = (event) => {
     try {

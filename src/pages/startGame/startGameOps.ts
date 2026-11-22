@@ -11,6 +11,7 @@ import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNG } from '@/utils/random';
 import { sanitizeEntityName } from '@/utils/entityName';
+import { MAX_FILE_INPUT_BYTES } from '@/utils/fileInput';
 
 /** The store's loadGame action — activates a save slot's state. */
 export type LoadGame = ReturnType<typeof useGameStore.getState>['loadGame'];
@@ -24,6 +25,12 @@ export function importSaveFile(
   loadGame: LoadGame,
   refreshSlots: () => Promise<void>
 ): void {
+  // Picked files are untrusted — reject oversize reads before readAsText so a
+  // hostile file can't be loaded+parsed wholesale and hang the renderer.
+  if (file.size > MAX_FILE_INPUT_BYTES) {
+    toast.error('Save file exceeds the 10 MB size limit.');
+    return;
+  }
   const reader = new FileReader();
   reader.onload = async (ev) => {
     try {

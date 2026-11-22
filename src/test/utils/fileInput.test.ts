@@ -5,7 +5,7 @@
  * so callers keep one error channel.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFileInput } from '@/utils/fileInput';
+import { readFileInput, MAX_FILE_INPUT_BYTES } from '@/utils/fileInput';
 import { mockFileReader } from '@/test/_helpers/mockFileReader';
 
 const changeEvent = (file: File | null) =>
@@ -68,6 +68,22 @@ describe('readFileInput', () => {
     readFileInput(changeEvent(new File(['x'], 'pack.json')), onText, onError);
 
     expect(onError).toHaveBeenCalledWith(boom);
+  });
+
+  it('rejects an oversize file via onError without ever constructing a FileReader', () => {
+    mockFileReader('should not be read');
+    const onText = vi.fn();
+    const onError = vi.fn();
+    const file = new File(['x'], 'huge.json');
+    Object.defineProperty(file, 'size', { value: MAX_FILE_INPUT_BYTES + 1 });
+
+    readFileInput(changeEvent(file), onText, onError);
+
+    expect(window.FileReader).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'File exceeds the 10 MB size limit.' })
+    );
+    expect(onText).not.toHaveBeenCalled();
   });
 
   it('clears the input and does nothing when no file is selected', () => {

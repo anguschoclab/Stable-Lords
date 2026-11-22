@@ -6,6 +6,7 @@ import { HubHeader } from './arenaHub/HubHeader';
 import { useArenaHubData } from './arenaHub/useArenaHubData';
 import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 import { PreAdvanceChecklist } from '@/components/widgets/PreAdvanceChecklist';
+import { BloodfeudStrip } from './arenaHub/BloodfeudStrip';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
@@ -49,6 +50,9 @@ export default function ArenaHub() {
 
       {/* Arena Status Strip */}
       <ArenaStatusStrip gameState={gameState} roster={roster} lifetimeKills={lifetimeKills} />
+
+      {/* ── Bloodfeud Ledger — live feud entitlements (renders null when none) ── */}
+      <BloodfeudStrip />
 
       {/* ── Fight Card Preview ── */}
       <FightCardPreview matchCard={matchCard} crowdMood={gameState.crowdMood} />

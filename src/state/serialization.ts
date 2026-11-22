@@ -113,6 +113,7 @@ type GameStateValues = {
   playerChallenges: GameState['playerChallenges'];
   playerAvoids: GameState['playerAvoids'];
   playerStableAvoids: GameState['playerStableAvoids'];
+  bloodfeudMarks: GameState['bloodfeudMarks'];
   playerAds: GameState['playerAds'];
   playerSpotlights: GameState['playerSpotlights'];
   stewardReport: import('@/types/state.types').StewardReport | undefined;
@@ -194,6 +195,7 @@ function collectStoreValues(store: GameStore): GameStateValues {
     playerChallenges: store.playerChallenges,
     playerAvoids: store.playerAvoids,
     playerStableAvoids: store.playerStableAvoids,
+    bloodfeudMarks: store.bloodfeudMarks,
     playerAds: store.playerAds,
     playerSpotlights: store.playerSpotlights,
     stewardReport: store.stewardReport,

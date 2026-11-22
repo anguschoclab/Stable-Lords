@@ -128,6 +128,7 @@ function hydrateDraft(draft: GameStore, state: GameState, slotId: string) {
   draft.playerChallenges = state.playerChallenges || [];
   draft.playerAvoids = state.playerAvoids || [];
   draft.playerStableAvoids = state.playerStableAvoids || [];
+  draft.bloodfeudMarks = state.bloodfeudMarks || [];
   draft.playerAds = state.playerAds || [];
   draft.playerSpotlights = state.playerSpotlights || [];
   draft.bookmarks = state.bookmarks || [];

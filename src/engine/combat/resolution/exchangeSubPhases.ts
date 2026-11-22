@@ -165,7 +165,7 @@ export interface CommitResult {
  * Determines CommitLevel for one fighter.
  * - Cautious (OE≤3 or HP<30%): 0 ATT, +1 DEF penalty, 0 debt
  * - Standard (default):          0 ATT,  0 DEF,          0 debt
- * - Full (OE≥7 or momentum≥2): +2 ATT, −1 DEF penalty,  1 debt
+ * - Full (OE≥7 or momentum≥2): +1 ATT, −1 DEF penalty,  1 debt
  *   Note: the `committed` flag separately adds +10 ATT / +15 defender bonus
  *   when HP<35% and killDesire≥7 (the all-or-nothing desperate commit).
  */

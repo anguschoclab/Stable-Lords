@@ -300,6 +300,11 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     initiativeMod: WEATHER_PENALTIES.CRYSTAL_SPIRE_INITIATIVE,
     description: 'The shifting lights of the spire distract and delay even the sharpest reflexes',
   },
+  'elevated:Thunderstorm': {
+    initiativeMod: WEATHER_PENALTIES.ELEVATED_THUNDERSTORM_INITIATIVE,
+    description:
+      'Lightning seeks the high ground — thunderclaps rattle fighters on the exposed peaks',
+  },
   'premium:Dense Fog': {
     riposteMod: WEATHER_PENALTIES.BATHHOUSE_STEAM_RIPOSTE,
     description:

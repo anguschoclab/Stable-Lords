@@ -55,6 +55,21 @@ describe('Arena Architect Verification', () => {
     expect(modJagged.descriptions.some((d) => d.includes('jagged peaks'))).toBe(true);
   });
 
+  it('elevated arenas + Thunderstorm slow initiative', () => {
+    // Thunderstorm is the heaviest un-interacted Summer weather (weight 10);
+    // every outdoor 'elevated' venue now pays an initiative toll in the storm.
+    const mod = getStyleWeatherModifier(FightingStyle.StrikingAttack, 'Thunderstorm', [
+      'outdoor',
+      'elevated',
+    ]);
+    expect(mod.initiativeMod).toBeLessThan(0);
+    expect(mod.descriptions.some((d) => d.includes('high ground'))).toBe(true);
+
+    // The tag toll does not leak into non-elevated venues.
+    const flat = getStyleWeatherModifier(FightingStyle.StrikingAttack, 'Thunderstorm', ['outdoor']);
+    expect(flat.initiativeMod).toBe(0);
+  });
+
   describe('V10 arena union (#1018 Bathhouse/Heath + #1019 Crumbling Spire/Misty Pit)', () => {
     it('registers all four new arenas', () => {
       for (const id of [

@@ -38,7 +38,8 @@
     "narrative-validate": "bun run scripts/narrative_validate.ts",
     "dead-code": "knip",
     "dead-code:report": "knip --reporter json > scripts/out/knip-report.json; exit 0",
-    "dupes": "jscpd src scripts e2e electron --exit-code 0"
+    "dupes": "jscpd src scripts e2e electron --exit-code 0",
+    "agents": "bun scripts/run-agents.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.3.0",

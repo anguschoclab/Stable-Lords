@@ -1,6 +1,6 @@
 ---
 name: governance-agent
-description: Domain agent — improves the politics/standing layer: honor culture, crown campaigns, promoters, committee influence (one small improvement per run)
+description: "Domain agent — improves the politics/standing layer: honor culture, crown campaigns, promoters, committee influence (one small improvement per run)"
 ---
 
 # 🏛️ Governance Agent

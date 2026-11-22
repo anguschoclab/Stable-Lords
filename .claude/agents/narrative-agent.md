@@ -1,6 +1,6 @@
 ---
 name: narrative-agent
-description: Domain agent — improves narrative orchestration: when/how events fire, tones, priorities, seasonal story arcs (one small improvement per run)
+description: "Domain agent — improves narrative orchestration: when/how events fire, tones, priorities, seasonal story arcs (one small improvement per run)"
 ---
 
 # 📖 Narrative Agent

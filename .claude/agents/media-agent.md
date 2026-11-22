@@ -1,6 +1,6 @@
 ---
 name: media-agent
-description: Domain agent — improves media surfaces: gazette/newsletter event selection, announcer voice, owner media-facing responses (one small improvement per run)
+description: "Domain agent — improves media surfaces: gazette/newsletter event selection, announcer voice, owner media-facing responses (one small improvement per run)"
 ---
 
 # 📰 Media Agent

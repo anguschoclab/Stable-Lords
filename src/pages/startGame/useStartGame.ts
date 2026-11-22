@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generateCrest } from '@/engine/crest/crestGenerator';
 import type { CrestData } from '@/types/crest.types';
 import type { WorldDifficulty } from '@/types/state.types';

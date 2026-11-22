@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useArenaCircuitData } from '@/hooks/useArenaCircuitData';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { championsHeldByStable } from '@/engine/championship/arenaChampionship';
 import { ArenaAnalyticsSurface, type ArenaAnalyticsProps } from './sections';
 import { Trophy } from 'lucide-react';

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 export const SEASON_NAMES: Record<string, string> = {

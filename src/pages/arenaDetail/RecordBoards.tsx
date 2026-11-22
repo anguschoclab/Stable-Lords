@@ -1,6 +1,7 @@
 import { Crown, Skull, Swords, Trophy, Building2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { WarriorId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type {
   calculateArenaLeaderboard,
   calculateArenaStyleLeaders,

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAITS, type TraitTier } from '@/engine/traits';
 import { STYLE_DISPLAY_NAMES, type FightingStyle } from '@/types/shared.types';
 

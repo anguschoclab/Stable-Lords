@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { RecruitTier } from '@/engine/recruitment/recruitment';
 
 export const TIER_CONFIG: Record<

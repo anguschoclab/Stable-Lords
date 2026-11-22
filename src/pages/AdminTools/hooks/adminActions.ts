@@ -3,8 +3,11 @@ import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { toast } from 'sonner';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { engineProxy } from '@/engine/runtime/workerProxy';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { engineSession } from '@/engine/runtime/session';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { archiveBoutLogs } from '@/engine/pipeline/adapters/opfsArchiver';
 import { stripNonSerializable } from '@/state/serialization';
 import { MAX_FILE_INPUT_BYTES } from '@/utils/fileInput';

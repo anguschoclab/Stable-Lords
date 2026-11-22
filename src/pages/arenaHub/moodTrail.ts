@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { CrowdMood } from '@/engine/bout/crowdMood';
 
 /** Weeks of recorded temperament shown in the ledger strip. */

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { X, Skull, Swords, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutResult } from '@/engine/bout';
 
 interface ResultsBannerProps {

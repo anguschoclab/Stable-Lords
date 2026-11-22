@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { collectAllKnownWarriors } from '@/engine/core/warriorCollection';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ensureEntityIndex } from '@/engine/core/entityIndex';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeAlmanac, type AlmanacData, type AlmanacInput } from '@/engine/analytics/almanac';
 
 /**

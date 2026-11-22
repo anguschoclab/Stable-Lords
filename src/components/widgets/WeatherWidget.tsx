@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getWeatherConfig } from '@/constants/arena/weather';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getWeatherSeason } from '@/engine/weather/seasonalWeather';
 import { WEATHER_STATS } from '@/constants/arena/weatherStats';
 import type { WeatherType } from '@/types/shared.types';

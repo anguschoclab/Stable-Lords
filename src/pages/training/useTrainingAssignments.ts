@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { ATTRIBUTE_LABELS, type TrainingAssignment, type Attributes } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
 
 /** Derived lookup maps: assignment, seasonal gains, and roster names. */

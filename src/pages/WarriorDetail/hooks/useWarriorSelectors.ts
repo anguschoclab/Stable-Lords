@@ -2,11 +2,13 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior } from '@/engine/core/historyResolver';
 import { obfuscateWarrior } from '@/lib/obfuscation';
 import { type FightPlan } from '@/types/game';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { EquipmentLoadout } from '@/data/equipment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getCurrentArenaTitles, getPastArenaTitles } from '@/engine/championship/arenaChampionship';
 import { tryGetArenaById } from '@/data/arenas';
 import { warriorDisplayName } from '@/utils/warriorDisplay';

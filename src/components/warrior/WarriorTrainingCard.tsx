@@ -7,6 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Heart, X, Gauge, ShieldCheck } from 'lucide-react';
 import { ATTRIBUTE_TOTAL_CAP } from '@/constants/training';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries } from '@/engine/injuries/utils';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
@@ -14,6 +15,7 @@ import { TrainingCardHeader } from './TrainingCardHeader';
 import { AttributeRow } from './AttributeRow';
 import { TraitTrainingSection } from './TraitTrainingSection';
 import type { Trainer } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { WarriorTrainingAdvice } from '@/engine/advisor/types';
 
 /** Recovery toggle for an injured warrior; highlighted when the council recommends rest. */

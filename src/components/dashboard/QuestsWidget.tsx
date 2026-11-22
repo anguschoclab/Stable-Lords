@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import React from 'react';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ONBOARDING_QUESTS, QUESTS_DISMISSED } from '@/engine/onboarding/quests';
 import { useShallow } from 'zustand/react/shallow';
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getAvatarCatalog, loadAvatarCatalog } from '@/engine/avatar/avatarCatalog';
 
 /**

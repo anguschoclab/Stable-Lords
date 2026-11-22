@@ -3,7 +3,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
 import { filterActive } from '@/utils/roster';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { REFRESH_COST } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { canTransact } from '@/engine/economy/utils';
 import { useRecruitFilters } from './useRecruitFilters';
 import { useRecruitActions } from './useRecruitActions';

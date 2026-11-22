@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { ShieldCheck, Swords, Heart, Trophy, Dumbbell, Sparkles } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { StableAdvisorSummary } from '@/engine/advisor/types';
 
 interface CouncilHeaderProps {

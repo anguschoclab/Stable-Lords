@@ -3,6 +3,7 @@ import { Swords, Activity, Eye, Crosshair } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { getItemById } from '@/data/equipment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { Warrior } from '@/types/game';
 

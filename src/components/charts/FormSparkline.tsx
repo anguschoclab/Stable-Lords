@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 

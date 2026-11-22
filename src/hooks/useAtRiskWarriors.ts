@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isExhausted } from '@/engine/core/fatigueUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /** Minimal projection of a warrior flagged at-risk (fatigue/injury). */

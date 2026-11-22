@@ -1,5 +1,6 @@
 import type { PlanCondition, ConditionTriggerType } from '@/types/game';
 import { TRIGGER_OPTIONS, PSYCH_OPTIONS } from '@/constants/combat/planConditions';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 
 interface ConditionTriggerSectionProps {

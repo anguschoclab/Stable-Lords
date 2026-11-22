@@ -3,8 +3,10 @@ import { cn } from '@/lib/utils';
 import type { BoutOffer, PromoterPersonality } from '@/types/state.types';
 import type { Warrior } from '@/types/state.types';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isExhausted } from '@/engine/core/fatigueUtils';
 import { getFatigueStatus, getInjuryBadge, type RivalWarriorMap } from '../hooks/useBookingOffice';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { buildFightForecast } from '@/engine/narrative/fightForecast';
 import { FightForecastPanel } from '@/components/bout-viewer/FightForecastPanel';
 import { OfferCardHeader } from './OfferCardHeader';

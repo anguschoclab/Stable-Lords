@@ -8,12 +8,14 @@ import { useWorldState, useGameStore } from '@/state/useGameStore';
 import type { GameStore } from '@/state/store.types';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   buildStableCouncilReport,
   type StableCouncilReport,
   type CampaignFocus,
   type WarriorActionPayload,
 } from '@/engine/advisor';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { applyWarriorPayload } from '@/engine/advisor/applyCouncilPlan';
 import { toast } from 'sonner';
 

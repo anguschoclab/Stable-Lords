@@ -27,6 +27,7 @@ import {
 } from '@/components/ledger';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import { cn } from '@/lib/utils';
 

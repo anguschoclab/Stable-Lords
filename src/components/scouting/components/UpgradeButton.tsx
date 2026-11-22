@@ -1,6 +1,7 @@
 import { ArrowUp, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ScoutQuality } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getScoutCost } from '@/engine/scouting/scouting';
 
 interface UpgradeButtonProps {

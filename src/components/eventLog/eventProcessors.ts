@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior } from '@/engine/core/historyResolver';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries } from '@/engine/injuries/utils';
 import { EVENT_ICONS } from './constants';
 import type { GameEvent, EventType } from '@/types/eventLog';

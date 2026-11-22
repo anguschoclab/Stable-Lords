@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior } from '@/engine/core/historyResolver';
 import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';

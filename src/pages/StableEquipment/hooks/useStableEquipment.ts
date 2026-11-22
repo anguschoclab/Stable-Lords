@@ -2,11 +2,13 @@ import { useState, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   generateRecommendations,
   getStyleEquipmentTips,
 } from '@/engine/equipment/equipmentOptimizer';
 import { toast } from 'sonner';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { checkWeaponRequirements, validateLoadout, type EquipmentLoadout } from '@/data/equipment';
 

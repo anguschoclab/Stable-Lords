@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { reviewWarriorDesign, type DesignVerdict } from '@/engine/warrior/designReview';
 import type { Attributes, FightingStyle } from '@/types/game';
 

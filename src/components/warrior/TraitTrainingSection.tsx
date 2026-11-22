@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
 import { type Warrior, type TrainingAssignment } from '@/types/game';
 import type { Trainer } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   traitTrainingPool,
   canAcquireTrait,

@@ -3,7 +3,9 @@
  * Deep dive into a single warrior's stats, history, and equipment.
  */
 import { Target, ScrollText, User } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import { type SubNavTab } from '@/components/layout/SubNav';

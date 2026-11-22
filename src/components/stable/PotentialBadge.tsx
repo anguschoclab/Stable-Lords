@@ -1,4 +1,5 @@
 import { TooltipBadge } from '@/components/ui/TooltipBadge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { potentialRating, potentialGrade } from '@/engine/warrior/potential';
 import type { AttributePotential } from '@/types/warrior.types';
 

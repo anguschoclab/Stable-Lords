@@ -3,6 +3,7 @@ import { VitalityRing } from '@/components/ui/VitalityRing';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorLink } from '@/components/EntityLink';
 import type { AtRiskWarrior } from '@/hooks/useAtRiskWarriors';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries } from '@/engine/injuries/utils';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 

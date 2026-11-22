@@ -1,6 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 import { TRAIT_DATA } from '@/data/orphanPool';
 

@@ -1,13 +1,17 @@
 import { useMemo } from 'react';
 import { tryGetArenaById, getArenaLore } from '@/data/arenas';
 import { getPackArenaLore } from '@/lib/contentPacks';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { describeArenaEffects } from '@/engine/narrative/arenaNarrative';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   CHAMPIONSHIP_EXCLUDED_ARENAS,
   owningStableOf,
   topContenders,
 } from '@/engine/championship/arenaChampionship';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarriorById } from '@/engine/core/warriorLookup';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getFightsForArena } from '@/engine/core/historyUtils';
 import type { GameState } from '@/types/state.types';
 import { statusBadge, useArenaDetailStore, useArenaBoards } from './useArenaSelectors';

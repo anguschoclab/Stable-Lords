@@ -7,7 +7,9 @@ import { SAVE_STATE_VERSION } from '@/constants/core';
 import { generateId } from '@/utils/idUtils';
 import { SeededRNG } from '@/utils/random';
 import { generateOrphanPool } from '@/data/orphanPool';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { poolWarriorToWarrior } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { createBoutSummary } from '@/engine/core/fightSummaryFactory';
 import { buildFTUEInitialState } from '@/components/orphanage/ftueStateBuilder';
 

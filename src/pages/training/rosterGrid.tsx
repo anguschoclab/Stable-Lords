@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Heart, Activity } from 'lucide-react';
 import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';
 import { Surface } from '@/components/ui/Surface';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import type { useStableAdvisor } from '@/hooks/useStableAdvisor';
 import type { useTrainingAssignments } from './useTrainingAssignments';

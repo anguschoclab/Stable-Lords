@@ -3,6 +3,7 @@ import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { LethalityBadge } from './LethalityBadge';
 import { StableLink } from '@/components/EntityLink';
 import { Badge } from '@/components/ui/badge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutPairing as MatchPairing } from '@/engine/bout';
 import { Surface } from '@/components/ui/Surface';
 

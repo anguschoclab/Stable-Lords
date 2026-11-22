@@ -1,8 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { resolveWarriorName, type NameResolutionState } from '@/engine/core/historyResolver';
 import type { TournamentBout } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isByeMatch, isBronzeMatch } from '@/engine/matchmaking/tournamentHelpers';
 
 interface TournamentBoutRowProps {

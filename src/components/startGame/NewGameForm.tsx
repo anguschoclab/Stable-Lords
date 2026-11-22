@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dices, ArrowRight } from 'lucide-react';
 import { randomOwnerName, randomStableName } from '@/data/names';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generateCrest } from '@/engine/crest/crestGenerator';
 import type { CrestData } from '@/types/crest.types';
 import BackstoryPicker from '@/components/startGame/BackstoryPicker';

@@ -10,7 +10,9 @@ import {
   ATTRIBUTE_TOTAL,
   type Attributes,
 } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeWarriorStats } from '@/engine/warrior/skillCalc';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import type { FighterConcept } from '@/data/fighterConcepts';
 import { clamp } from '@/utils/math';

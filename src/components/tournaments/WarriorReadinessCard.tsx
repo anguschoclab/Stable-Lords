@@ -1,6 +1,8 @@
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries, countInjuries } from '@/engine/injuries/utils';
 import type { Warrior } from '@/types/game';
 import { warriorDisplayName } from '@/utils/warriorDisplay';

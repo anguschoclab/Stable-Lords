@@ -2,6 +2,7 @@
  * Player-facing "why did this happen" panel. Renders the ranked decisive
  * factors from a FightAnalysis. Purely presentational — no store access.
  */
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { FightAnalysis } from '@/engine/narrative/fightAnalysis';
 import { Surface } from '@/components/ui/Surface';
 import { favoredName } from './favoredName';

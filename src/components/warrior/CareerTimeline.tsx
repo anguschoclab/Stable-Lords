@@ -2,7 +2,9 @@ import React, { useMemo } from 'react';
 import { History, Swords, Trophy, Skull, Star, Armchair } from 'lucide-react';
 import { type Warrior, type FightSummary } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isDead, isRetired } from '@/engine/warrior/warriorStatus';
 
 /**

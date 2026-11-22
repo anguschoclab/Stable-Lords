@@ -4,6 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils';
 import type { FightPlan, Warrior } from '@/types/game';
 import type { DistanceRange } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   getWeaponPreferredRange,
   getWeaponRangeMod,

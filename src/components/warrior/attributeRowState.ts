@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeGainChance } from '@/engine/training';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { canGrow } from '@/engine/warrior/potential';
 import {
   ATTRIBUTE_TRAINING,

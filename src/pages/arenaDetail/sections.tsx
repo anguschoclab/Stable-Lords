@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { MapPin } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { displayWeek } from '@/engine/core/absoluteWeek';
 import type { ArenaTitle } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';

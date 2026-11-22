@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import type { Trainer as TrainerData, TrainerFocus, TrainerTier } from '@/types/state.types';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { FOCUS_DESCRIPTIONS, TIER_BONUS } from '@/engine/trainers/trainers';
 
 interface TrainerCardProps {

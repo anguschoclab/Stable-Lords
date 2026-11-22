@@ -3,8 +3,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { NameResolutionState } from '@/engine/core/historyResolver';
 import type { TournamentBout } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getRoundName, getEstimatedWeek } from '@/engine/matchmaking/tournamentHelpers';
 import { TournamentBoutRow } from './TournamentBoutRow';
 

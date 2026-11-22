@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import type { RivalStableData } from '@/types/state.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { StableReputationInput } from '@/engine/stable/stableReputation';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStableReputation, computeRivalReputation } from '@/engine/stable/stableReputation';
 
 /** One dot on the reputation quadrant chart — fame vs notoriety. */

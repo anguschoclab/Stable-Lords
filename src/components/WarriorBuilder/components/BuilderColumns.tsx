@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { DAMAGE_LABELS } from '@/engine/warrior/skillCalc';
 import { IdentitySection } from './IdentitySection';
 import { AttributeSliders } from './AttributeSliders';

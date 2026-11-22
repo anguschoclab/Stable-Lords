@@ -8,6 +8,7 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { ODDS_THRESHOLDS } from '@/constants/core/ui';
 import { ATTRIBUTE_KEYS } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { resolveWarriorName, resolveStableName, findWarrior } from '@/engine/core/historyResolver';
 import type { GameState } from '@/types/state.types';
 

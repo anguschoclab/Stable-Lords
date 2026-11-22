@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { collectAllKnownWarriors } from '@/engine/core/warriorCollection';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getWarriorIndex } from '@/engine/core/entityIndex';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { AnnualAward } from '@/types/game';
 import type { UpsetEntry } from '@/components/awards/UpsetsList';

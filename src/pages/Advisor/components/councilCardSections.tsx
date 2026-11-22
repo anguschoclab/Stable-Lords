@@ -14,6 +14,7 @@ import {
   Activity,
   Crown,
 } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { WarriorAdvisorCard, CampaignFocus } from '@/engine/advisor/types';
 import type { WarriorId } from '@/types/shared.types';
 import { getArenaById } from '@/data/arenas';

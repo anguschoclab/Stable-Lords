@@ -1,5 +1,7 @@
 import { Crown } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { displayWeek } from '@/engine/core/absoluteWeek';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { owningStableOf, topContenders } from '@/engine/championship/arenaChampionship';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';

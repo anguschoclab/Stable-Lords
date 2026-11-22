@@ -1,5 +1,6 @@
 import { Timer, Heart } from 'lucide-react';
 import type { FightPlan } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getTempoBonus, getEnduranceMult } from '@/engine/stylePassives';
 
 interface TempoSectionProps {

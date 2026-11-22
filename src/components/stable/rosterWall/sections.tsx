@@ -7,6 +7,7 @@ import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggl
 import { RosterWarriorRow } from '../RosterWarriorRow';
 import { StyleCompositionDonut } from '../StyleCompositionDonut';
 import type { FightingStyle } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { buildContenderIndex } from '@/engine/championship/arenaChampionship';
 import { getArenaById } from '@/data/arenas';
 import type { GameState } from '@/types/state.types';

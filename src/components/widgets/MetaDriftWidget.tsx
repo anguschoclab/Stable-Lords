@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeMetaDrift } from '@/engine/analytics/metaDrift';
 import { getMetaLabel, getMetaColor } from '@/lib/metaDriftDisplay';
 import { Surface } from '@/components/ui/Surface';

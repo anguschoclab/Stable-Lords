@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';

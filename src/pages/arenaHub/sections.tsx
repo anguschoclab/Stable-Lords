@@ -5,6 +5,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { MatchCard } from '@/components/run-round/MatchCard';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 
 /** Shared props for the arena analytics strip — renown, lifetime kills, win velocity. */

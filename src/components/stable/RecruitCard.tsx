@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { type PoolWarrior, type RecruitTier, TIER_STARS } from '@/engine/recruitment/recruitment';
 import { TIER_CONFIG } from './recruitTierConfig';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { type PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/game';
 import { Badge } from '@/components/ui/badge';

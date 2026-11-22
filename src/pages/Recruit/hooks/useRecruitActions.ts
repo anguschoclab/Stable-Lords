@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { type GameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { type PoolWarrior } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   revealRecruitPotential,
   type PotentialScoutReport,

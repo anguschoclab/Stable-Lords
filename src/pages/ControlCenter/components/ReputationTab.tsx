@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { useReputationState } from '@/state/selectors';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStableReputation } from '@/engine/stable/stableReputation';
 import { Star, Skull, Shield, Zap } from 'lucide-react';
 

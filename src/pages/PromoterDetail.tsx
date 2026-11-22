@@ -8,6 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, History, Target } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { PERSONALITY_CONFIG, TIER_COLORS, calculateStats } from './promoterDetail/config';
 import { OverviewTab, HistoryTab, OffersTab } from './promoterDetail/tabs';

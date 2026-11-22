@@ -1,7 +1,9 @@
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Activity } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getEngineEpoch, engineQueueDepth } from '@/engine/runtime/session';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getPendingArchiveRetries } from '@/engine/pipeline/adapters/opfsArchiver';
 
 interface TelemetryPanelProps {

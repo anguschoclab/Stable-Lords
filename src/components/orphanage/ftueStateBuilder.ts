@@ -1,14 +1,21 @@
 import { SeededRNG } from '@/utils/random';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generateRivalStables } from '@/engine/rivals';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   generateRecruitPool,
   poolWarriorToWarrior,
   type PoolWarrior,
 } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Promoter } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine';

@@ -1,7 +1,9 @@
 import { Gauge } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { Warrior } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getMastery } from '@/engine/stylePassives';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 interface MasterySectionProps {

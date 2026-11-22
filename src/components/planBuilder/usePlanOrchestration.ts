@@ -2,17 +2,24 @@ import { useMemo } from 'react';
 import type { FightPlan, Warrior } from '@/types/game';
 import type { FightingStyle } from '@/types/game';
 import { getMatchupBonus } from '@/constants/combat';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStrategyScore } from '@/engine/strategy/strategyAnalysis';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { autoTuneFromBias, type Bias } from '@/engine/strategy/planBias';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getStylePresets } from '@/engine/bout/stylePresets';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { defaultPlanForWarrior } from '@/engine/simulate';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   validateStrategy,
   estimateStaminaCurve,
   predictedCollapseMinute,
 } from '@/engine/strategy/strategyValidator';
 import { BOUT_DURATION_MINUTES } from '@/constants/combat';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { evaluateTacticsAdvice } from '@/engine/advisor/tacticsAdvisorBridge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { evaluateCampaignFocus } from '@/engine/advisor';
 import { reconstructGameState } from '@/state/serialization';
 import { useGameStore } from '@/state/useGameStore';

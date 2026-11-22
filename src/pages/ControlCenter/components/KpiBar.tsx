@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';

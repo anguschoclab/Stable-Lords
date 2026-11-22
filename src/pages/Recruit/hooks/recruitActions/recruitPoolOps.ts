@@ -1,10 +1,16 @@
 import type { GameStore } from '@/state/useGameStore';
 import { SeededRNG, hashStr } from '@/utils/random';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { fullRefreshPool, REFRESH_COST } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeMetaDrift } from '@/engine/analytics/metaDrift';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { collectUsedWarriorNames } from '@/engine/core/warriorCollection';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { makeWarrior } from '@/engine/factories/warriorFactory';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game';
 import { toast } from 'sonner';

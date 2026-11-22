@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import type { BoutOfferId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getFightsForWeek } from '@/engine/core/historyUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 interface DigestSummary {

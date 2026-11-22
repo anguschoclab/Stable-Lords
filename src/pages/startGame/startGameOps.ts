@@ -1,13 +1,17 @@
 import { toast } from 'sonner';
 import { useGameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { loadFromSlot, saveToSlot, newSlotId, importSaveToNewSlot } from '@/state/saveSlots';
 import type { CrestData } from '@/types/crest.types';
 import type { WorldDifficulty } from '@/types/state.types';
 import { applyBackstoryToPlayer, type BackstoryId } from '@/data/backstories';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { resolveImpacts } from '@/engine/impacts';
 import { SeededRNG } from '@/utils/random';
 import { sanitizeEntityName } from '@/utils/entityName';

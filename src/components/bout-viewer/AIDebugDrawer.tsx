@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isAIDebugEnabled } from '@/engine/ai/debug';
 import type { ExchangeLogEntry } from '@/types/combat.types';
 import type { RivalStableData, ScoutReportData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { matchesScoutTarget } from '@/engine/scouting/scouting';
 import { useGameStore } from '@/state/useGameStore';
 

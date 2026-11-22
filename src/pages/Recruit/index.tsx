@@ -6,10 +6,12 @@ import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Shield, Hammer } from 'lucide-react';
 import WarriorBuilder from '@/components/WarriorBuilder';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { canTransact } from '@/engine/economy/utils';
 import { useRecruit } from './hooks/useRecruit';
 import { ScoutMarket } from './components/ScoutMarket';
 import { useRegisterCtaAction } from '@/components/layout/useRegisterCtaAction';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 
 const TAB_TRIGGER_CLASS =

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useWorldState, type GameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isExhausted, getFatigueBand } from '@/engine/core/fatigueUtils';
 import { toast } from 'sonner';
 import type { InjuryData, Warrior } from '@/types/warrior.types';

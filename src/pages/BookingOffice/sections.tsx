@@ -2,6 +2,7 @@ import { Award, Briefcase, Target } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { BoutOffer, Warrior } from '@/types/state.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { WarriorAdvisorCard } from '@/engine/advisor/types';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';

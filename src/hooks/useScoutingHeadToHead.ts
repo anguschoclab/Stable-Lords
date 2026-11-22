@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { Warrior } from '@/types/game';
 import type { FightSummary } from '@/types/combat.types';

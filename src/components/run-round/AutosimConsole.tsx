@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
 import { FastForward, Activity, AlertCircle, CheckCircle2 } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { AutosimResult, AutosimWeekSummary as WeekSummary } from '@/engine/autosim/autosim';
 
 interface AutosimConsoleProps {

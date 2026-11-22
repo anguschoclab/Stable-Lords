@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Skull, Crosshair, Activity, Crown } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeKillAnalytics } from '@/engine/analytics/killAnalytics';
 import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';

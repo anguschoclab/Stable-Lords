@@ -2,7 +2,9 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import BoutViewer from '@/components/BoutViewer';
 import { Badge } from '@/components/ui/badge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutResult } from '@/engine/bout';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAINER_MAX_PER_STABLE } from '@/engine/trainers/trainers';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GraduationCap, UserPlus, Users, Award, Skull } from 'lucide-react';

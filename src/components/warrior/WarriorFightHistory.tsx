@@ -3,7 +3,9 @@ import { Swords } from 'lucide-react';
 import { type FightSummary } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import BoutViewer from '@/components/BoutViewer';

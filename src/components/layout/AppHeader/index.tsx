@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Swords } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { ImperialRing } from '@/components/ui/ImperialRing';

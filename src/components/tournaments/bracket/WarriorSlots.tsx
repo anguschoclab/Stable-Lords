@@ -1,11 +1,13 @@
 import { Trophy, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   findWarrior,
   resolveWarriorName,
   type NameResolutionState,
 } from '@/engine/core/historyResolver';
 import type { TournamentBout, WarriorId } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
 import { AvatarForEntity } from '@/components/avatar';
 

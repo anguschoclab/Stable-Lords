@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useReputationState } from '@/state/selectors';
 import { useShallow } from 'zustand/react/shallow';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateStableStats } from '@/engine/stats/stableStats';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStableReputation } from '@/engine/stable/stableReputation';
 
 /** Control-center tab identifiers. */

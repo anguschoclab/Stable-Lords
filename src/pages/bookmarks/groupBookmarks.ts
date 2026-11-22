@@ -1,4 +1,5 @@
 import type { useNavigate } from '@tanstack/react-router';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getWarriorIndex } from '@/engine/core/entityIndex';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/store.types';

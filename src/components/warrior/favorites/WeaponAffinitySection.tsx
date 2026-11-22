@@ -4,12 +4,15 @@ import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/game';
 import type { UseFavoritesActionsResult } from '@/hooks/useFavoritesActions';
 import { getItemById, getAvailableItems } from '@/data/equipment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { CHART_MIN_SWINGS, CHART_SIGNAL_CRIT_RATE } from '@/engine/favorites';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   getWeaponSuitability,
   WEAPON_SUITABILITY_LABELS,
   WEAPON_SUITABILITY_COLORS,
 } from '@/engine/equipment/weaponSuitability';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { weaponDamageBonus } from '@/engine/combat/mechanics/weaponStats';
 
 interface WeaponAffinitySectionProps {

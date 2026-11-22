@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useReputationState } from '@/state/selectors';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeStableReputation } from '@/engine/stable/stableReputation';
 import { Surface } from '@/components/ui/Surface';
 import { StatBattery } from '@/components/ui/StatBattery';

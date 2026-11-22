@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useWorldState, useBookmarks } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getStableTemplates } from '@/engine/rivals';
 import type { StableRow, WarriorRow } from '@/types/leaderboard';
 import {

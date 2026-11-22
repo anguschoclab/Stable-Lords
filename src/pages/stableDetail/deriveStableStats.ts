@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive, isDead } from '@/engine/warrior/warriorStatus';
 import type { FightSummary, RivalStableData } from '@/types/game';
 import type { TierConfig } from './sections';

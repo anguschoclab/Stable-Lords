@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { TACTIC_BANK } from './tacticBankData';
 import { withPlanTactic, isPlanTactic, tacticButtonClasses } from './planTactics';
 import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   getOffensiveSuitability,
   getDefensiveSuitability,

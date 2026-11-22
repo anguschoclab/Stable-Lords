@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { STYLE_ABBREV } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { Swords, ChevronRight } from 'lucide-react';
 import { warriorDisplayName } from '@/utils/warriorDisplay';

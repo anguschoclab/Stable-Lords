@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { buildMatchCard } from '@/components/run-round/buildMatchCard';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
 

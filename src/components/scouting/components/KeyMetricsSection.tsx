@@ -2,6 +2,7 @@ import { Trophy, Swords, Star, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { StableStats } from '@/engine/stats/stableStats';
 
 interface KeyMetricsSectionProps {

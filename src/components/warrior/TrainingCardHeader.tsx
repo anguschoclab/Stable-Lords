@@ -2,6 +2,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { STYLE_DISPLAY_NAMES, type Warrior } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeTrainability, assessBurnRisks } from '@/engine/training/burnAnalysis';
 import type { Trainer } from '@/types/shared.types';
 

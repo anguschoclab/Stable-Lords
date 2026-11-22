@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior, type NameResolutionState } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import { AvatarForEntity } from './AvatarForEntity';

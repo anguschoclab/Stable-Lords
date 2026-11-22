@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   MOOD_DESCRIPTIONS,
   MOOD_ICONS,

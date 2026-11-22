@@ -1,7 +1,9 @@
 import { MapPin, Swords } from 'lucide-react';
 import type { BoutOffer, Warrior } from '@/types/state.types';
 import { getArenaById } from '@/data/arenas';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { describeArenaFit } from '@/engine/matchmaking/arenaFit';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { COUNTERED_VENUE_CONDITION } from '@/engine/bout/mutations/contractMutations';
 
 interface OfferDetailsGridProps {

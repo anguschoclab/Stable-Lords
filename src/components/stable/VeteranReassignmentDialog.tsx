@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { GraduationCap } from 'lucide-react';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { convertRetiredToTrainer } from '@/engine/trainers/trainers';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightingStyle } from '@/types/shared.types';

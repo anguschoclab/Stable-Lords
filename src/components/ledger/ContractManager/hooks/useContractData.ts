@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers/trainers';
 import { TRAINER_SALARY_FALLBACK } from '@/constants/economy';
 import type { Trainer } from '@/types/game';

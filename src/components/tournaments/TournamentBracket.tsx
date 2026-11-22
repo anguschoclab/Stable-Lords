@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Medal, Crown } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior, resolveWarriorName } from '@/engine/core/historyResolver';
 import { useWarriorNameState } from '@/state/useGameStore';
 import type { TournamentBout, FightSummary } from '@/types/game';

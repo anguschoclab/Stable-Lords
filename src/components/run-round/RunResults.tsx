@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutResult } from '@/engine/bout';
 import { RunResultsSummary } from './RunResultsSummary';
 import { BoutRow } from './BoutRow';

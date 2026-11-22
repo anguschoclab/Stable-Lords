@@ -2,9 +2,12 @@ import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Target, Search } from 'lucide-react';
 import { RecruitCard } from '@/components/stable/RecruitCard';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { canTransact } from '@/engine/economy/utils';
 import { RecruitFilters } from './RecruitFilters';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { PoolWarrior, RecruitTier } from '@/engine/recruitment/recruitment';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { PotentialScoutReport } from '@/engine/recruitment/recruitScouting';
 import type { FightingStyle } from '@/types/game';
 

@@ -5,6 +5,7 @@ import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { StatCard } from '@/components/ui/StatCard';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { cn } from '@/lib/utils';

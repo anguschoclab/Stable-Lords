@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils';
 import { Activity, Coins, Crown } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { MOOD_ICONS, type CrowdMood } from '@/engine/bout/crowdMood';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { WeatherType } from '@/types/state.types';

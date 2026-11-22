@@ -184,13 +184,16 @@ export function PrepNotice() {
 }
 
 import { Button } from '@/components/ui/button';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   TOURNAMENT_CLASSES,
   classAtFreeze,
   type TournamentClassId,
 } from '@/engine/matchmaking/tournamentSelection/classes';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { WINNING_ARCHETYPES, classifyArchetype } from '@/data/warriorArchetypes';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { suspectedFavoriteWeapon } from '@/engine/favorites';
 import { getItemById } from '@/data/equipment';
 import type { TournamentCycle } from '@/types/state.types';

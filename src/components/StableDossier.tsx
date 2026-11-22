@@ -8,7 +8,9 @@ import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { StatCard } from '@/components/ui/StatCard';
 import { StableCrest } from '@/components/crest';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getChargeDescription } from '@/engine/crest/crestGenerator';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { AvatarForEntity } from '@/components/avatar';

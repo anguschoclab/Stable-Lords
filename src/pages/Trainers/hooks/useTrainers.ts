@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { bookmarkIdsByType } from '@/state/slices/bookmarksSlice';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAINER_MAX_PER_STABLE } from '@/engine/trainers/trainers';
 import { useHiringPool } from './useHiringPool';
 import { useTrainerActions } from './useTrainerActions';

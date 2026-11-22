@@ -1,4 +1,5 @@
 import { Armchair, GraduationCap, RefreshCw, UserPlus, Zap } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   TRAINER_FOCUSES,
   FOCUS_ICONS,
@@ -14,6 +15,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { TrainerCard } from '@/components/stable/TrainerCard';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { canTransact } from '@/engine/economy/utils';
 
 /** Empty-state surface shown when the stable has no trainers. */

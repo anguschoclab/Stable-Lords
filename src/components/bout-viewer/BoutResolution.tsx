@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { FightOutcomeBy } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getOutcomeStyles } from '@/engine/combat/utils/outcomeStyles';
 import { Skull, Swords, Zap, Shield, Activity, Crosshair } from 'lucide-react';
 import { WarriorNameAvatar } from '@/components/avatar';

@@ -98,19 +98,29 @@ export default tseslint.config(
   },
   {
     /* ARCHITECTURAL BOUNDARY: UI/PAGES */
-    files: ['src/components/**/*.{ts,tsx}', 'src/pages/**/*.{ts,tsx}'],
+    files: ['src/components/**/*.{ts,tsx}', 'src/pages/**/*.{ts,tsx}', 'src/hooks/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
           patterns: [
             {
-              group: ['**/engine/types/world', '**/engine/tick/*', '**/engine/storage/*'],
+              group: [
+                '**/engine/types/world',
+                '**/engine/types/world/**',
+                '**/engine/tick/**',
+                '**/engine/storage/**',
+              ],
               message:
                 'UI components should only consume processed UIDigest. Direct access to raw engine state or systems is forbidden.',
             },
             {
-              group: ['**/engine/!(types/common|worker/*)'],
+              group: [
+                '**/engine/**',
+                '!**/engine/types/common',
+                '!**/engine/types/common/**',
+                '!**/engine/worker/**',
+              ],
               message:
                 'Importing logic from src/engine/ is forbidden. Use src/presenters/ or src/engine/types/common.',
             },

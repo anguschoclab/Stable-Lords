@@ -12,6 +12,7 @@ import {
 import { Dices } from 'lucide-react';
 import { randomWarriorName } from '@/data/names';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { FIGHTER_CONCEPTS, type FighterConcept } from '@/data/fighterConcepts';
 

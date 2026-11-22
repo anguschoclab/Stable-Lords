@@ -1,9 +1,14 @@
 import { type WeatherType } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries, countInjuries } from '@/engine/injuries/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getFatigueBand } from '@/engine/core/fatigueUtils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { committeeWeatherSkip } from '@/engine/ai/weatherSuitability';
 import type { Warrior } from '@/types/state.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 
 /** Fight experience — the Duel2 fight-equivalents counter (arena + odd tourney rounds). */

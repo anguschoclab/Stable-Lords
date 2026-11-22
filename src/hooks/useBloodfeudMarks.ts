@@ -8,6 +8,7 @@
  */
 import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior, resolveStableName } from '@/engine/core/historyResolver';
 import type { BloodfeudMark } from '@/types/state.types';
 

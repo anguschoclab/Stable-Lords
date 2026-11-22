@@ -2,6 +2,7 @@ import { Dices } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { IconMedallion } from '@/components/ui/IconMedallion';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getCrestDescription, getChargeDescription } from '@/engine/crest/crestGenerator';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { hexToRgba } from '@/lib/utils';

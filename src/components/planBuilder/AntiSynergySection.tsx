@@ -1,5 +1,6 @@
 import { Activity } from 'lucide-react';
 import type { FightPlan } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getStyleAntiSynergy } from '@/engine/stylePassives';
 
 interface AntiSynergySectionProps {

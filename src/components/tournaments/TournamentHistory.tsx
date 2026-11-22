@@ -3,6 +3,7 @@ import { Trophy, ChevronDown, ChevronRight, Swords, Flame } from 'lucide-react';
 import type { TournamentEntry } from '@/types/game';
 import type { Season, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getFightsForTournament } from '@/engine/core/historyUtils';
 import { Surface } from '@/components/ui/Surface';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';

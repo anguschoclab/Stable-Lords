@@ -1,4 +1,5 @@
 import { TooltipBadge } from '@/components/ui/TooltipBadge';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeWarriorLiability } from '@/engine/warrior/warriorValue';
 import type { Warrior } from '@/types/warrior.types';
 

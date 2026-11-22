@@ -14,6 +14,7 @@ import { FIGHTER_CONCEPTS } from '@/data/fighterConcepts';
 import { STYLE_FAMILY, FAMILY_GUIDE } from '@/data/designDoctrine';
 import { STYLE_ARCHETYPE_FIT, WINNING_ARCHETYPES } from '@/data/warriorArchetypes';
 import { getMatchupBonus, STYLE_ORDER } from '@/constants/combat/combat/matchup';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getWeaponSuitability } from '@/engine/equipment/weaponSuitability';
 import { WEAPONS } from '@/data/equipment';
 

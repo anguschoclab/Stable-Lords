@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { TournamentBout, FightSummary } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
 import {
   ConnectionLines,
@@ -8,6 +9,7 @@ import {
   MatchActions,
   MatchViewer,
 } from './bracket';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { NameResolutionState } from '@/engine/core/historyResolver';
 
 interface BracketMatchNodeProps {

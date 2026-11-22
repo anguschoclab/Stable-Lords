@@ -2,6 +2,7 @@ import { Users, Flame } from 'lucide-react';
 import type { RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { AvatarForEntity } from '@/components/avatar';
 

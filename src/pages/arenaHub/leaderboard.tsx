@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { StandingsTable, type StandingsColumn } from '@/components/ui/StandingsTable';

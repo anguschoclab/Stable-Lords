@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import type { Warrior } from '@/types/state.types';
 import { useWeekReset, useOfferActions } from './useOfferActions';

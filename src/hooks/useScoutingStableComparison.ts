@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import type { RivalStableData } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { useGameStore } from '@/state/useGameStore';
 import { PERSONALITY_CLASH, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';

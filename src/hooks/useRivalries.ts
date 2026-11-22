@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { GameState } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getRecentFights } from '@/engine/core/historyUtils';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 import { clamp } from '@/utils/math';

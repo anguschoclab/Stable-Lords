@@ -1,5 +1,6 @@
 import { Sparkles, Building2, DollarSign, Award, AlertTriangle } from 'lucide-react';
 import type { Promoter, PromoterPersonality, BoutOffer } from '@/types/state.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 
 /** Personality display configuration keyed by promoter personality. */

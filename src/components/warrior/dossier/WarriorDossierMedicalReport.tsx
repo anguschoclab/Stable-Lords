@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Activity, Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { hasInjuries, getInjurySeverityCounts } from '@/engine/injuries/utils';
 
 interface WarriorDossierMedicalReportProps {

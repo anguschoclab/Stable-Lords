@@ -1,5 +1,6 @@
 import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { intensityLabel, intensityColor, intensityBgColor } from '@/engine/rivals/rivalryDisplay';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 

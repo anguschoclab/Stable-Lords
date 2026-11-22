@@ -3,9 +3,13 @@ import * as Comlink from 'comlink';
 import { toast } from 'sonner';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutResult } from '@/engine/bout';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { engineProxy } from '@/engine/runtime/workerProxy';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { engineSession } from '@/engine/runtime/session';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { AutosimResult } from '@/engine/autosim/autosim';
 
 import { logger } from '@/utils/logger';

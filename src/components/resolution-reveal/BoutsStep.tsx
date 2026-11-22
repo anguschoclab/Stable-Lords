@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Swords } from 'lucide-react';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { BoutResult } from '@/engine/bout';
 import { RunResults } from '@/components/run-round/RunResults';
 import uiMeta from '@/data/narrative/uiMeta.json';

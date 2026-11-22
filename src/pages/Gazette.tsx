@@ -6,6 +6,7 @@
  */
 import { useMemo, useState, useCallback } from 'react';
 import { useWorldState } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import { Radio } from 'lucide-react';
 import { GazetteSectionHeader } from './gazette/GazetteSectionHeader';

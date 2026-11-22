@@ -8,6 +8,7 @@ import { useGameStore } from '@/state/useGameStore';
 import type { Warrior } from '@/types/warrior.types';
 import { warriorDisplayName } from '@/utils/warriorDisplay';
 import { AvatarForEntity } from '@/components/avatar';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isWarriorListed } from '@/engine/matchmaking/schedulingAssistant/matchups';
 
 interface WarriorDossierHeaderProps {

@@ -5,8 +5,10 @@
 import { useMemo } from 'react';
 import type { FightPlan } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { estimateStaminaCurve, predictedCollapseMinute } from '@/engine/strategy/strategyValidator';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, BOUT_DURATION_MINUTES } from '@/constants/combat';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getPhaseByMinute } from '@/engine/combat/phase';
 
 interface Props {

@@ -2,11 +2,13 @@ import { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useArenaCircuitData } from '@/hooks/useArenaCircuitData';
 import { getAllArenas } from '@/data/arenas';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   CHAMPIONSHIP_EXCLUDED_ARENAS,
   getArenaChampion,
   owningStableOf,
 } from '@/engine/championship/arenaChampionship';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarriorById } from '@/engine/core/warriorLookup';
 import type { GameState, ArenaTitle } from '@/types/state.types';
 import { Surface } from '@/components/ui/Surface';

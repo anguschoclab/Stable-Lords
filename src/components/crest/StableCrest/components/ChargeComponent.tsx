@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { getChargePathsByType, type ChargePath } from '@/engine/crest/chargePaths';
 import type { CrestData } from '@/types/crest.types';
 

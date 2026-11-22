@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { type Warrior, STYLE_DISPLAY_NAMES } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   getRecommendedChallenges,
   getMatchupsToAvoid,

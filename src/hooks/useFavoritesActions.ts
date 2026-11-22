@@ -1,4 +1,5 @@
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { applyInsightToken } from '@/engine/favorites';
 import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { toast } from 'sonner';

@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { defaultStylePreset } from '@/engine/bout/stylePresets';
 import type { FightPlan, Warrior } from '@/types/game';
 

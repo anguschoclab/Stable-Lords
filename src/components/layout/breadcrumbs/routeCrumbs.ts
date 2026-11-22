@@ -5,6 +5,7 @@
  * Breadcrumbs handles the actual-history case.
  */
 import { tryGetArenaById } from '@/data/arenas';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ensureEntityIndex, type EntityIndexState } from '@/engine/core/entityIndex';
 import { HUBS, UTILITY_LINKS } from '@/components/layout/navigationHubs';
 

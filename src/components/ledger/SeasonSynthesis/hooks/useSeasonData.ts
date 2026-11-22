@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { calculateStableStats } from '@/engine/stats/stableStats';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { computeMetaDrift } from '@/engine/analytics/metaDrift';
 
 /** Per-rival season rollup — record and kill totals. */

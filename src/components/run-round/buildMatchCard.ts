@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generatePairings } from '@/engine/bout/core/pairings';
 import type { GameState } from '@/types/state.types';
 import type { RivalStableData } from '@/types/game';

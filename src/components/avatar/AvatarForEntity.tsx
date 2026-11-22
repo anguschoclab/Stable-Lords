@@ -8,6 +8,7 @@ import type { AvatarConfig, AvatarData, AvatarEntityType } from '@/types/avatar.
 import type { Warrior } from '@/types/warrior.types';
 import type { Trainer } from '@/types/shared.types';
 import type { Owner, Promoter, RivalStableData } from '@/types/state.types';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { PoolWarrior } from '@/engine/recruitment/recruitment';
 import { FightingStyle } from '@/types/shared.types';
 

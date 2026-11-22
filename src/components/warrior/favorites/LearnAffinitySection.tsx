@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/game';
 import type { UseFavoritesActionsResult } from '@/hooks/useFavoritesActions';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   LEARN_SKILL_KEYS,
   favoriteLearnOf,

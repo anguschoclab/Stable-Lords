@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import { WarriorAuditCard } from './WarriorAuditCard';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { countInjuries } from '@/engine/injuries/utils';
 
 /** At-risk warriors widget — fatigue and injury audit for the roster. */

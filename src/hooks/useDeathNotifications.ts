@@ -9,6 +9,7 @@
  */
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { onWarriorDeath } from '@/engine/core/deathNotifier';
 
 /**

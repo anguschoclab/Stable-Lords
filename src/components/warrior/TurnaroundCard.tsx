@@ -2,7 +2,9 @@ import { Wrench } from 'lucide-react';
 import type { Warrior } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { diagnoseTurnaround } from '@/engine/advisor/turnaroundAdvisor';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { TurnaroundAction, TurnaroundReport } from '@/engine/advisor/turnaroundAdvisor';
 
 /**

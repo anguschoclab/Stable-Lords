@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
 import { indexBy } from '@/utils/collections';
 import type { Warrior, RivalStableData } from '@/types/game';
 import type { StableRow, WarriorRow } from '@/types/leaderboard';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { getStableTemplates } from '@/engine/rivals';
 
 /** Sortable fields on the stable leaderboard rows. */

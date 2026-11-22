@@ -11,6 +11,7 @@ import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { getCanonicalCrumbs } from './routeCrumbs';
 import { getReferrer, getNavTrailSnapshot, subscribeNavTrail } from './navTrail';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { EntityIndexState } from '@/engine/core/entityIndex';
 
 const CRUMB_TEXT = 'text-[10px] font-black uppercase tracking-[0.15em]';

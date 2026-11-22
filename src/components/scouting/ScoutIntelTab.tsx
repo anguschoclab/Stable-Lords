@@ -5,7 +5,9 @@ import { RivalStableList } from './RivalStableList';
 import { RivalWarriorList } from './RivalWarriorList';
 import { ScoutReportDetails } from './ScoutReportDetails';
 import { Surface } from '@/components/ui/Surface';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isActive } from '@/engine/warrior/warriorStatus';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { matchesScoutTarget } from '@/engine/scouting/scouting';
 
 interface ScoutIntelTabProps {

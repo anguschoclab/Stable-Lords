@@ -1,5 +1,6 @@
 import { type GameStore, useGameStore } from '@/state/useGameStore';
 import { SeededRNG, hashStr } from '@/utils/random';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   signWarrior,
   type PoolWarrior,
@@ -8,7 +9,9 @@ import {
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { Warrior } from '@/types/game';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { deadIdSet, isActive } from '@/engine/warrior/warriorStatus';
 import { toast } from 'sonner';
 

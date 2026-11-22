@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { TournamentBout, TournamentEntry } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { isByeMatch } from '@/engine/matchmaking/tournamentHelpers';
 import type { FilterStatus } from '@/components/tournaments/schedule';
 

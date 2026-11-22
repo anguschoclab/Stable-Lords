@@ -2,6 +2,7 @@
  * Pre-fight "predicted edge" panel. Presentational — renders the ranked
  * factors from a FightForecast. Mirrors FightAnalysisPanel in style.
  */
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { FightForecast } from '@/engine/narrative/fightForecast';
 import { favoredName } from './favoredName';
 

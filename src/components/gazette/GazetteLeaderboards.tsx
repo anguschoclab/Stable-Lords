@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { WarriorLink } from '@/components/EntityLink';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   calculateLeaderboardData,
   calculateBestByStyle,

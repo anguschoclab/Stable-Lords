@@ -3,6 +3,7 @@ import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { ShieldCheck, FileSignature, Dumbbell, Swords, CheckCircle2 } from 'lucide-react';
 import { useStableAdvisor } from '@/hooks/useStableAdvisor';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { CouncilDirective } from '@/engine/advisor';
 
 const KIND_ICON = {

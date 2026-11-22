@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Swords, History, Zap, Target } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { Warrior } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior, resolveWarriorName } from '@/engine/core/historyResolver';
 import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';

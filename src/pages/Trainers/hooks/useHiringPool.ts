@@ -1,5 +1,6 @@
 import { useMemo, useCallback, useEffect } from 'react';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { generateHiringPool } from '@/engine/trainers/trainers';
 import { toast } from 'sonner';
 import type { GameStore } from '@/state/store.types';

@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import type { FightPlan, Warrior, OffensiveTactic, DefensiveTactic } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import {
   getOffensiveSuitability,
   getDefensiveSuitability,
@@ -11,12 +12,15 @@ import {
   SUITABILITY_COLORS,
 } from '@/engine/strategy/tacticSuitability';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { StylePreset } from '@/engine/bout/stylePresets';
 import { getScoreColor } from '@/lib/scoreDisplay';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { StrategyWarning } from '@/engine/strategy/strategyValidator';
 import { ShieldCheck } from 'lucide-react';
 import StaminaCurve from './StaminaCurve';
 import { BIAS_PRESETS } from './usePlanOrchestration';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { Bias } from '@/engine/strategy/planBias';
 
 /** Card header: style subtitle, matchup-edge badge, strategy score. */

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import type { CampaignFocus } from '@/engine/advisor/types';
 
 /** Display label and badge classes per campaign-focus directive. */

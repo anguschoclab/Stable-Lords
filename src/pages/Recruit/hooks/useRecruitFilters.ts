@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { shuffled, SeededRNG } from '@/utils/random';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { type PoolWarrior, type RecruitTier } from '@/engine/recruitment/recruitment';
 import type { FightingStyle } from '@/types/game';
 

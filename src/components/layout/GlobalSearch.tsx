@@ -12,6 +12,7 @@ import { Search, User, Landmark, Building2, GraduationCap } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
+// eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { searchEntities, type SearchEntry } from '@/engine/core/entityIndex';
 
 const EMPTY: SearchEntry[] = [];

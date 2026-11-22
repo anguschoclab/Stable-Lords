@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
+import { coolQuietRivalries, updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import type { FightSummary } from '@/types/combat.types';
 import type { Rivalry } from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
@@ -218,5 +218,48 @@ describe('updateRivalriesFromBouts', () => {
     const result = updateRivalriesFromBouts(existing, fights, 2, makeRng());
     expect(result).toHaveLength(1);
     expect(result[0]!.intensity).toBeLessThanOrEqual(5);
+  });
+});
+
+describe('coolQuietRivalries', () => {
+  it('drops intensity by 1 for a pair that fought no bout this week', () => {
+    const existing: Rivalry[] = [makeRivalry({ intensity: 3, reason: 'Old blood' })];
+    const { rivalries, cooledOff } = coolQuietRivalries(existing, []);
+    expect(rivalries).toHaveLength(1);
+    expect(rivalries[0]!.intensity).toBe(2);
+    expect(cooledOff).toHaveLength(0);
+  });
+
+  it('keeps heat on a pair that fought this week', () => {
+    const existing: Rivalry[] = [makeRivalry({ intensity: 3 })];
+    const fights: FightSummary[] = [makeFight({ week: 9 })];
+    const { rivalries, cooledOff } = coolQuietRivalries(existing, fights);
+    expect(rivalries).toHaveLength(1);
+    expect(rivalries[0]!.intensity).toBe(3);
+    expect(cooledOff).toHaveLength(0);
+  });
+
+  it('matches fought pairs regardless of A/D stable order', () => {
+    const existing: Rivalry[] = [makeRivalry({ intensity: 2 })];
+    const fights: FightSummary[] = [
+      makeFight({ stableIdA: 'StableB' as StableId, stableIdD: 'StableA' as StableId }),
+    ];
+    const { rivalries } = coolQuietRivalries(existing, fights);
+    expect(rivalries[0]!.intensity).toBe(2);
+  });
+
+  it('dissolves a rivalry that cools to zero and reports it in cooledOff', () => {
+    const existing: Rivalry[] = [makeRivalry({ intensity: 1, reason: 'Faded clash' })];
+    const { rivalries, cooledOff } = coolQuietRivalries(existing, []);
+    expect(rivalries).toHaveLength(0);
+    expect(cooledOff).toHaveLength(1);
+    expect(cooledOff[0]!.reason).toBe('Faded clash');
+  });
+
+  it('ignores fights missing stable ids when deciding who stays hot', () => {
+    const existing: Rivalry[] = [makeRivalry({ intensity: 2 })];
+    const fights: FightSummary[] = [makeFight({ stableIdA: undefined as any })];
+    const { rivalries } = coolQuietRivalries(existing, fights);
+    expect(rivalries[0]!.intensity).toBe(1);
   });
 });

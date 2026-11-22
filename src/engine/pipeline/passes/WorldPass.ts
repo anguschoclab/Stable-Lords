@@ -3,7 +3,7 @@ import { resolveRng } from '@/utils/random';
 import type { GameState, Season } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 import { processOwnerGrudges } from '@/engine/owner/grudges';
-import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
+import { coolQuietRivalries, updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { rollWeather } from '@/engine/weather/seasonalWeather';
 import { SEASONS } from '@/types/enumSources';
@@ -39,12 +39,24 @@ export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGServ
   // they must keep updating in headless mode and when the player is stopped.
   const weekFights = getFightsForWeek(_state.arenaHistory, _state.absoluteWeek);
   const { grudges, gazetteItems } = processOwnerGrudges(_state, _state.ownerGrudges || []);
-  const rivalries = updateRivalriesFromBouts(
+  const heated = updateRivalriesFromBouts(
     _state.rivalries || [],
     weekFights,
     _state.absoluteWeek,
     rngService
   );
+  // Feuds the stables stopped fighting must eventually end — one cooling pass
+  // per week, here and not in bout finalization, so the cadence stays weekly.
+  const { rivalries, cooledOff } = coolQuietRivalries(heated, weekFights);
+  const stableLabel = (id: string) =>
+    _state.rivalMap?.get(id)?.owner.stableName ??
+    _state.rivals?.find((r) => r.id === id)?.owner.stableName ??
+    (_state.player?.id === id ? "the player's stable" : id);
+  for (const rv of cooledOff) {
+    gazetteItems.push(
+      `❄️ FEUD COOLED: The rivalry between ${stableLabel(rv.stableIdA)} and ${stableLabel(rv.stableIdB)} has run its course.`
+    );
+  }
 
   const impact: StateImpact = {
     week: nextWeek,

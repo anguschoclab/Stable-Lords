@@ -122,6 +122,33 @@ function processRivalryUpdates(
 }
 
 /**
+ * Weekly cooling — the release valve {@link updateRivalriesFromBouts} lacks:
+ * it only ever adds heat, so a pair that never fights again would keep its
+ * matchmaking bias (+50/intensity) forever. Any rivalry whose stable pair
+ * fought no bout this week loses 1 intensity; a feud that reaches 0 has run
+ * its course and dissolves. Run once per week (WorldPass) — this is a
+ * cooling cadence, not a per-call tax.
+ * @returns surviving rivalries plus the ones that fully cooled (for gazette).
+ */
+export function coolQuietRivalries(
+  rivalries: Rivalry[],
+  weekFights: FightSummary[]
+): { rivalries: Rivalry[]; cooledOff: Rivalry[] } {
+  const foughtPairs = new Set<string>();
+  for (const f of weekFights) {
+    if (f.stableIdA && f.stableIdD) foughtPairs.add(getPairKey(f.stableIdA, f.stableIdD));
+  }
+  const kept: Rivalry[] = [];
+  const cooledOff: Rivalry[] = [];
+  for (const rv of rivalries) {
+    if (!foughtPairs.has(getPairKey(rv.stableIdA, rv.stableIdB))) rv.intensity -= 1;
+    if (rv.intensity > 0) kept.push(rv);
+    else cooledOff.push(rv);
+  }
+  return { rivalries: kept, cooledOff };
+}
+
+/**
  * Detects and updates rivalries based on recent bouts, deaths, and upsets.
  */
 export function updateRivalriesFromBouts(

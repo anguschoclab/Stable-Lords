@@ -606,3 +606,54 @@ export function ProgressionSection() {
     </AccordionItem>
   );
 }
+
+const KBD =
+  'inline-flex h-5 min-w-5 items-center justify-center border border-white/10 bg-white/5 px-1.5 font-mono text-[10px] font-bold text-foreground rounded-none';
+
+/** Codex section: global keyboard shortcuts (see `useKeyboardShortcuts`). */
+export function KeyboardShortcutsSection() {
+  const jumps: [string, string][] = [
+    ['1', 'Command Hub'],
+    ['2', 'Arena'],
+    ['3', 'Roster'],
+    ['4', 'Training'],
+    ['5', 'Scouting'],
+    ['6', 'Equipment'],
+    ['7', 'Tournaments'],
+    ['8', 'Chronicle'],
+    ['9', 'Finance'],
+  ];
+  return (
+    <AccordionItem value="shortcuts">
+      <AccordionTrigger className="font-display text-lg">Keyboard Shortcuts</AccordionTrigger>
+      <AccordionContent className="space-y-3 text-sm text-muted-foreground">
+        <ul className="space-y-2">
+          <li className="flex items-center gap-2">
+            <kbd className={KBD}>Space</kbd> Jump to the Arena to advance time
+          </li>
+          <li className="flex items-center gap-2">
+            <kbd className={KBD}>E</kbd> Toggle the event log sidebar
+          </li>
+          <li className="flex items-center gap-2">
+            <kbd className={KBD}>/</kbd> Focus the global entity search
+          </li>
+          <li className="flex items-center gap-2">
+            <kbd className={KBD}>?</kbd> Open this Codex
+          </li>
+        </ul>
+        <p>Number keys jump straight to a workspace:</p>
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-3">
+          {jumps.map(([key, label]) => (
+            <li key={key} className="flex items-center gap-2">
+              <kbd className={KBD}>{key}</kbd>
+              <span>{label}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="text-[10px] text-muted-foreground/60">
+          Shortcuts pause while typing in a field and ignore held modifier keys.
+        </p>
+      </AccordionContent>
+    </AccordionItem>
+  );
+}

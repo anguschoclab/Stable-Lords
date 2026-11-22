@@ -24,6 +24,7 @@ import {
   FighterConceptsSection,
   FightingStylesSection,
   InsightTokensSection,
+  KeyboardShortcutsSection,
   LearningSection,
   ProgressionSection,
   StrategyBasicsSection,
@@ -167,6 +168,7 @@ export default function Help() {
           'trainers',
           'combat',
           'moods',
+          'shortcuts',
           'accessibility',
         ]}
       >
@@ -182,6 +184,7 @@ export default function Help() {
         <LearningSection />
         <InsightTokensSection />
         <ProgressionSection />
+        <KeyboardShortcutsSection />
         <AccordionItem value="accessibility">
           <AccordionTrigger className="font-display text-lg">Accessibility</AccordionTrigger>
           <AccordionContent>

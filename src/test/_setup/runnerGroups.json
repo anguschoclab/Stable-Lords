@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T10:21:10.652Z",
+  "generatedAt": "2026-11-22T10:48:05.738Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -314,6 +314,7 @@
     "src/test/pages/WarriorDetail/hooks/useWarriorSelectors.test.ts",
     "src/test/pages/WorldOverview.test.tsx",
     "src/test/pages/crowdMoodWidget.test.tsx",
+    "src/test/pages/help/shortcuts.test.tsx",
     "src/test/pages/help/winningTypes.test.tsx",
     "src/test/pages/scouting/useScouting.test.ts",
     "src/test/pages/startGameAsync.test.tsx",

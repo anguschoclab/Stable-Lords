@@ -87,6 +87,10 @@ export interface FighterState {
   doomed?: boolean;
   /** Which side inflicted the doom ('A' | 'D') — attribution for the kill. */
   doomedBy?: 'A' | 'D';
+  /** Set when hp hits ≤0 outside the kill-window (riposte, off-hand) —
+   *  emitDownedBoutEnd reads it to stamp the true cause/fatal location
+   *  instead of falling back to the catch-all cause. */
+  downedBy?: { cause: string; location?: string; weaponId?: string };
   /** Hidden −1..+1 bloodlust copied from the warrior at fighter build —
    *  feeds this fighter's vitals-roll lethality when attacking. */
   bloodlust?: number;

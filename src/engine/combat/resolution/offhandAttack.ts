@@ -68,7 +68,10 @@ export function tryOffhandAttack(args: {
   const damage = hit
     ? Math.max(1, Math.round(attacker.derived.damage * DUAL_OFFHAND_DAMAGE_MULT))
     : 0;
-  if (hit) defender.hp = Math.max(0, defender.hp - damage);
+  if (hit) {
+    defender.hp = Math.max(0, defender.hp - damage);
+    if (defender.hp <= 0) defender.downedBy = { cause: 'OFFHAND', weaponId: offId };
+  }
 
   events.push({
     type: 'OFFHAND_ATTACK',

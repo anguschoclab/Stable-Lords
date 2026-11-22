@@ -160,6 +160,9 @@ function checkExhaustionStoppage(
   if (!(collapsedA || collapsedD) || events.some((e) => e.result === 'Kill' || e.result === 'KO')) {
     return;
   }
+  // A downed fighter (hp ≤ 0) is a KO/Kill for emitDownedBoutEnd, not a
+  // stoppage candidate — evaluating the collapse here would mask the down.
+  if (fA.hp <= 0 || fD.hp <= 0) return;
   // Canon will check: a collapsed, hurt fighter rolls once per bout against
   // will + killDesire — passing grants the reprieve and they fight on.
   const willHolds = (f: FighterState) => {

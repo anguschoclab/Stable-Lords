@@ -43,7 +43,10 @@ export type DeathCauseBucket =
   | 'RIVALRY_FINISH'
   | 'ARENA_HAZARD'
   | 'BLEED'
-  | 'DIED_OF_WOUNDS';
+  | 'DIED_OF_WOUNDS'
+  | 'RIPOSTE'
+  | 'OFFHAND'
+  | 'SURVIVAL_STRIKE';
 
 /**
  * Fight outcome by type.

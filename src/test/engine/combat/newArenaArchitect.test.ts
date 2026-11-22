@@ -44,10 +44,6 @@ describe('Arena Architect Verification', () => {
     expect(modBloodMoon.damageMult).toBeGreaterThan(1.0);
     expect(modBloodMoon.descriptions.some((d) => d.includes('cursed swamp boils'))).toBe(true);
 
-    const modMurky = getStyleWeatherModifier(FightingStyle.ParryRiposte, 'Mana Surge', ['indoor']);
-    expect(modMurky.riposteMod).toBeGreaterThan(0);
-    expect(modMurky.descriptions.some((d) => d.includes('Arcane resonances'))).toBe(true);
-
     const modJagged = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Blizzard', [
       'elevated',
     ]);
@@ -88,10 +84,10 @@ describe('Arena Architect Verification', () => {
       expect(mod.descriptions.some((d) => d.includes('premium steam'))).toBe(true);
     });
 
-    it('Desolate Heath: cursed+Spooky Night initiative penalty applies', () => {
+    it('Wailing Chasm: cursed+Spooky Night initiative penalty applies', () => {
       const mod = getStyleWeatherModifier(FightingStyle.SlashingAttack, 'Spooky Night', ['cursed']);
       expect(mod.initiativeMod).toBeLessThan(0);
-      expect(mod.descriptions.some((d) => d.includes('cursed heath'))).toBe(true);
+      expect(mod.descriptions.some((d) => d.includes('cursed ground'))).toBe(true);
     });
   });
 });

@@ -54,6 +54,9 @@ export function executeRiposte(args: ExecuteRiposteArgs) {
   events.push({ type: 'HIT', actor: defLabel, target: attLabel, location: ripLoc, value: ripDmg });
 
   attacker.hp -= ripDmg;
+  if (attacker.hp <= 0) {
+    attacker.downedBy = { cause: 'RIPOSTE', location: ripLoc, weaponId: defender.weaponId };
+  }
   attacker.hitsTaken++;
   defender.hitsLanded++;
   defender.ripostes++;

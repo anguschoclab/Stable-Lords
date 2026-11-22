@@ -220,6 +220,11 @@ export const DEATH_CAUSE_BUCKETS = [
   // Infirmary death — the victim's hit points ran out (in or after combat)
   // without a death intent, and they failed the infirmary + death rolls.
   'DIED_OF_WOUNDS',
+  // Free-swing KOs outside the attack kill-window — riposte, off-hand shot,
+  // and the doomed fighter's survival strike.
+  'RIPOSTE',
+  'OFFHAND',
+  'SURVIVAL_STRIKE',
 ] as const;
 
 export const AI_INTENTS = [

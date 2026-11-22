@@ -31,15 +31,31 @@ export function emitDownedBoutEnd(
 ): void {
   if (fA.hp > 0 && fD.hp > 0) return;
   if (events.some((e) => e.type === 'BOUT_END')) return;
+  // A fighter dropped by a tagged source (riposte, off-hand) carries its own
+  // attribution — it outranks the catch-all caller cause.
+  const meta = (f: FighterState, fallback: string) => ({
+    cause: f.downedBy?.cause ?? fallback,
+    ...(f.downedBy?.location ? { location: f.downedBy.location } : {}),
+    ...(f.downedBy?.weaponId ? { weaponId: f.downedBy.weaponId } : {}),
+  });
+  const deadMeta = (f: FighterState) => ({
+    ...meta(f, 'DIED_OF_WOUNDS'),
+    cause: 'DIED_OF_WOUNDS',
+  });
   if (fA.hp <= 0 && fD.hp <= 0) {
-    events.push({ type: 'BOUT_END', actor: 'A', result: 'Exhaustion', metadata: { cause } });
+    events.push({
+      type: 'BOUT_END',
+      actor: 'A',
+      result: 'Exhaustion',
+      metadata: { cause: fA.downedBy?.cause ?? fD.downedBy?.cause ?? cause },
+    });
   } else if (fA.hp <= 0) {
     const dead = diedOfWounds?.(fA) ?? false;
     events.push({
       type: 'BOUT_END',
       actor: 'D',
       result: dead ? 'Kill' : 'KO',
-      metadata: { cause: dead ? 'DIED_OF_WOUNDS' : cause },
+      metadata: dead ? deadMeta(fA) : meta(fA, cause),
     });
   } else {
     const dead = diedOfWounds?.(fD) ?? false;
@@ -47,7 +63,7 @@ export function emitDownedBoutEnd(
       type: 'BOUT_END',
       actor: 'A',
       result: dead ? 'Kill' : 'KO',
-      metadata: { cause: dead ? 'DIED_OF_WOUNDS' : cause },
+      metadata: dead ? deadMeta(fD) : meta(fD, cause),
     });
   }
 }

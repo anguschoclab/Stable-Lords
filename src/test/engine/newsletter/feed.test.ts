@@ -123,6 +123,56 @@ describe('NewsletterFeed', () => {
     expect(issue.highlights.fightOfTheWeekId).toBe('epic-comeback-kill');
   });
 
+  it('should crown a title bout Fight of the Week over routine flash', () => {
+    const cards = [
+      createMockCard({
+        id: 'flashy-ko-fight',
+        by: 'KO',
+        flashyTags: ['Flashy'],
+      }), // 4 points
+      createMockCard({
+        id: 'title-decision',
+        by: 'Decision' as any,
+        titleArenaId: 'iron_forge',
+      }), // 5 (title) — championship stakes outrank routine flash
+    ];
+
+    const issue = NewsletterFeed.generateIssue(1, cards);
+    expect(issue.highlights.fightOfTheWeekId).toBe('title-decision');
+  });
+
+  it('should let an exceptional non-title bout outrank a flat title bout', () => {
+    const cards = [
+      createMockCard({
+        id: 'title-decision',
+        by: 'Decision' as any,
+        titleArenaId: 'iron_forge',
+      }), // 5 points
+      createMockCard({
+        id: 'epic-comeback-kill',
+        by: 'Kill',
+        flashyTags: ['Comeback', 'Flashy', 'Epic'],
+      }), // 3 + 3 + 2 + 2 = 10 points
+    ];
+
+    const issue = NewsletterFeed.generateIssue(1, cards);
+    expect(issue.highlights.fightOfTheWeekId).toBe('epic-comeback-kill');
+  });
+
+  it('should score Epic and Dominance tags the sim emits', () => {
+    const cards = [
+      createMockCard({ id: 'plain-decision', by: 'Decision' as any }), // 0
+      createMockCard({
+        id: 'epic-war',
+        by: 'Decision' as any,
+        flashyTags: ['Epic', 'Dominance'],
+      }), // 2 + 1 = 3
+    ];
+
+    const issue = NewsletterFeed.generateIssue(1, cards);
+    expect(issue.highlights.fightOfTheWeekId).toBe('epic-war');
+  });
+
   it('should create issue with correct week and empty state if no fights', () => {
     const issue = NewsletterFeed.generateIssue(42, []);
 

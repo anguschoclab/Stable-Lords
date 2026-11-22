@@ -30,8 +30,14 @@ interface NewsletterIssue {
 
 function scoreFight(f: FightSummary): number {
   let s = 0;
+  // Championship stakes are inherently marquee — a title bout must outrank
+  // routine fare (an exceptional non-title bout can still top a flat one).
+  if (f.titleArenaId) s += 5;
   if (f.flashyTags?.includes('Comeback')) s += 3;
   if (f.flashyTags?.includes('Flashy')) s += 2;
+  // The sim already stamps these — the press should read them.
+  if (f.flashyTags?.includes('Epic')) s += 2;
+  if (f.flashyTags?.includes('Dominance')) s += 1;
   if (f.by === 'KO') s += 2;
   if (f.by === 'Kill') s += 3;
   if (f.by === 'Draw') s += 1;

@@ -108,6 +108,7 @@ export const SPECIAL_ARENA_IDS: readonly string[] = ['bloodsands_arena', 'the_ir
  * (union: misty_pit t1, desolate_heath t2, bathhouse + crumbling_spire t3).
  * Cap revision: total 54→52 + normal 50 (arena curation; normal-pool t2
  * count is now 21 — TIER_CAPS deliberately unchanged).
+ * Curation: desolate_heath ↔ wailing_chasm (1-for-1 t2 swap, caps unchanged).
  */
 export const ARENA_ROSTER_LIMITS = {
   TOTAL_CAP: 52, // 50 normal + 2 special

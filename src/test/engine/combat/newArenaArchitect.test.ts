@@ -74,7 +74,7 @@ describe('Arena Architect Verification', () => {
     it('registers all four new arenas', () => {
       for (const id of [
         'the_bathhouse_arena',
-        'the_desolate_heath',
+        'the_wailing_chasm',
         'the_crumbling_spire',
         'misty_pit',
       ]) {

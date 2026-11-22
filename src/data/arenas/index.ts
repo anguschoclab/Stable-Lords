@@ -63,7 +63,7 @@ import {
   THE_CRUMBLING_SPIRE,
   MISTY_PIT,
   THE_BATHHOUSE_ARENA,
-  THE_DESOLATE_HEATH,
+  THE_WAILING_CHASM,
 } from './venues/late';
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ import {
   THE_CRUMBLING_SPIRE,
   MISTY_PIT,
   THE_BATHHOUSE_ARENA,
-  THE_DESOLATE_HEATH,
+  THE_WAILING_CHASM,
 ].forEach(registerArena);
 
 setDefaultArena(STANDARD_ARENA);

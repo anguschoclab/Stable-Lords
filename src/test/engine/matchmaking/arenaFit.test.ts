@@ -1051,7 +1051,7 @@ describe('new arena configs', () => {
     expect(ids).toContain('the_crumbling_spire');
     expect(ids).toContain('misty_pit');
     expect(ids).toContain('the_bathhouse_arena');
-    expect(ids).toContain('the_desolate_heath');
+    expect(ids).toContain('the_wailing_chasm');
   });
 });
 

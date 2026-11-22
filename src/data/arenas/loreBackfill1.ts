@@ -560,12 +560,12 @@ export const ARENA_LORE_BACKFILL_1: ArenaLoreEntry[] = [
       'The Bathhouse tide games saw a veteran hold the same footing for six bouts while the water rose around them.',
   },
   {
-    id: 'the_desolate_heath_famous_death_1',
-    arenaId: 'the_desolate_heath',
+    id: 'the_wailing_chasm_famous_death_1',
+    arenaId: 'the_wailing_chasm',
     type: 'famous_death',
-    title: 'The Death at Desolate Heath',
+    title: 'The Widow of the Chasm',
     narrative:
-      "The Desolate Heath crowd calls a certain corner 'the widow's seat' — three partners have died watching their spouse fight there.",
+      "A widow's wail rose from the crowd and never quite died — regulars swear the chasm keeps her grief on permanent loan.",
   },
   {
     id: 'glacial_rift_extra_0',

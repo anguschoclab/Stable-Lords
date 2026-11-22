@@ -66,8 +66,9 @@ describe('dataIntegrityArenas', () => {
     expect(getAllArenas().length - normal.length).toBe(SPECIAL_ARENA_IDS.length);
   });
 
-  it('the_wailing_chasm is removed from the roster', () => {
-    expect(getAllArenas().some((a) => a.id === 'the_wailing_chasm')).toBe(false);
+  it('the_desolate_heath is removed from the roster (wailing_chasm restored)', () => {
+    expect(getAllArenas().some((a) => a.id === 'the_desolate_heath')).toBe(false);
+    expect(getAllArenas().some((a) => a.id === 'the_wailing_chasm')).toBe(true);
   });
 
   it('arena surfaceMod values are finite numbers', () => {

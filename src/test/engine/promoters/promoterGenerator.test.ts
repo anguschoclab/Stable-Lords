@@ -93,7 +93,7 @@ describe('Promoter Generator', () => {
       'the_crumbling_spire',
       'misty_pit',
       'the_bathhouse_arena',
-      'the_desolate_heath',
+      'the_wailing_chasm',
     ]) {
       expect(allPools, `no promoter can book ${id}`).toContain(id);
     }

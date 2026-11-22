@@ -257,14 +257,14 @@ export const THE_BATHHOUSE_ARENA: ArenaConfig = {
   surfaceMod: { initiativeMod: -1, riposteMod: 1, enduranceMult: 1.2 },
 };
 
-export const THE_DESOLATE_HEATH: ArenaConfig = {
-  id: 'the_desolate_heath',
-  name: 'The Desolate Heath',
-  tags: ['outdoor', 'cursed', 'open', 'uneven'],
+export const THE_WAILING_CHASM: ArenaConfig = {
+  id: 'the_wailing_chasm',
+  name: 'The Wailing Chasm',
+  tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
   tier: 2,
-  size: 'open',
+  size: 'cramped',
   description:
-    'A sprawling, cursed heath where the dead are said to walk. Uneven ground and a chilling aura sap the strength of all who fight here.',
-  zoneDef: { Edge: -2, Corner: -4 },
-  surfaceMod: { initiativeMod: -2, riposteMod: 0, enduranceMult: 1.15 },
+    'A cursed, narrow chasm filled with wailing winds that distract the mind. The walls press in and the air itself seems to mourn.',
+  zoneDef: { Edge: -2, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, riposteMod: 0, enduranceMult: 1.1 },
 };

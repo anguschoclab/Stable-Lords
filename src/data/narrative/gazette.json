@@ -134,7 +134,7 @@
       ],
       "LegacyRivalry": [
         "Week {{week}}: BAD BLOOD BOILS OVER! {{a}} Meets {{b}} in Chapter {{count}} of Their Vicious Feud!",
-        "Week {{week}}: THE ARENA DIVIDED! Fans Riot as {{a}} Faces {{b}} for the {{count}}{{suffix}} Time!",
+        "Week {{week}}: THE ARENA DIVIDED! Fans Riot as {{a}} Faces {{b}} for the {{count}}th Time!",
         "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
         "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})",
         "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!"
@@ -187,12 +187,12 @@
         "Week {{week}}: THE REAPER SMILES: {{killer}} MASSACRES {{loser}}",
         "Week {{week}}: BLOOD ON THE SANDS! A Brutal Kill By {{killer}}!",
         "No Mercy: {{killer}} executes {{loser}} with absolute brutality",
-        "A Fatal Encounter: {{winner}} stands over {{loser}}'s corpse",
+        "A Fatal Encounter: {{killer}} stands over {{loser}}'s corpse",
         "Week {{week}}: DEATH IN THE PIT! {{killer}} claims a life!",
         "Carnage in the Sands! {{killer}} Butchers {{loser}}",
         "A Gruesome End: The Life of {{loser}} Snuffed Out",
-        "Death in the Dust: {{loser}} Falls to {{winner}}",
-        "No Mercy: {{winner}} Claims Another Skull"
+        "Death in the Dust: {{loser}} Falls to {{killer}}",
+        "No Mercy: {{killer}} Claims Another Skull"
       ],
       "MultipleKOs": [
         "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",

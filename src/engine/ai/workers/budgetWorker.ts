@@ -64,7 +64,9 @@ interface CashFlowProjection {
 
 /**
  * Deterministic cash-flow projection over the next `weeks`: recurring
- * upkeep plus already-committed purses vs treasury and projected income.
+ * upkeep plus already-committed purses charged against the current
+ * treasury. Income is deliberately not projected — purses are uncertain,
+ * so the floor stays conservative.
  */
 export function projectCashFlow(
   rival: RivalStableData,
@@ -102,7 +104,11 @@ export function checkBudget(
   opts?: { state?: GameState; horizonWeeks?: number }
 ): BudgetReport {
   const personality = rival.owner.personality ?? 'Pragmatic';
-  const burnRate = rival.agentMemory?.burnRate || 0;
+  // burnRate is a signed one-week treasury delta: a profitable week stores a
+  // negative value, which would *inflate* the allowance below — spending a
+  // windfall twice, since the gain is already inside the treasury. Only
+  // observed burn tightens the reserve; income never loosens it.
+  const burnRate = Math.max(0, rival.agentMemory?.burnRate || 0);
   // Reserve scales with real projected upkeep — a bloated roster must keep
   // far more cash liquid than the old flat 300. Competence scales
   // discipline: Novices under-reserve, Masters over-reserve.

@@ -159,6 +159,22 @@ describe('checkBudget — burn rate', () => {
     });
     expect(checkBudget(rival, 700, 'OTHER').isAffordable).toBe(true);
   });
+
+  it('negative burnRate (windfall week) is clamped — the gain is already in treasury', () => {
+    const rival = createMockRival({
+      agentMemory: {
+        lastTreasury: 1000,
+        burnRate: -400, // banked 400g last week — already inside treasury=1000
+        metaAwareness: {},
+        knownRivals: [],
+        opponentDossiers: {},
+      },
+    });
+    // Unclamped, available would be 700 + 400 = 1100 — double-counting the
+    // windfall. Clamped, the allowance stays 700.
+    expect(checkBudget(rival, 700, 'OTHER').isAffordable).toBe(true);
+    expect(checkBudget(rival, 701, 'OTHER').isAffordable).toBe(false);
+  });
 });
 
 // ─── Treasury Edge Cases ───────────────────────────────────────────────────

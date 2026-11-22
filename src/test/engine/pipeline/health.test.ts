@@ -3,6 +3,7 @@ import { computeHealthImpact } from '@/engine/warrior/health';
 import { type GameState, type InjuryData } from '@/types/game';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId } from '@/types/shared.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 function makeInjury(
   name: string,
@@ -24,7 +25,7 @@ function makeMockRNG(uuidValue: string = 'test-uuid'): IRNGService {
   return {
     next: () => 0.5,
     uuid: () => uuidValue,
-    pick: <T>(arr: T[]): T => arr[0]!,
+    pick: pickFirst,
     roll: (min: number): number => min,
     shuffle: <T>(arr: T[]): T[] => arr,
     chance: (): boolean => true,

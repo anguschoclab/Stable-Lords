@@ -6,13 +6,16 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
  * every probability check succeed (gains + injury rolls land) and `0.99` to
  * make them all miss.
  */
+/** Deterministic pick-first stub — matches SeededRNG.pick's empty-array contract. */
+export const pickFirst = <T>(arr: T[]): T => {
+  if (arr.length === 0) throw new Error('Cannot pick from empty array');
+  return arr[0]!;
+};
+
 export const scriptRng = (nextVal: number): IRNGService =>
   ({
     next: () => nextVal,
-    pick: <T>(arr: T[]): T => {
-      if (arr.length === 0) throw new Error('Cannot pick from empty array');
-      return arr[0]!;
-    },
+    pick: pickFirst,
     roll: () => 1,
     uuid: (p?: string) => (p ? `${p}-u` : 'u'),
     shuffle: <T>(arr: T[]): T[] => arr,

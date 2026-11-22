@@ -8,7 +8,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeOutcome } from '@/test/_fixtures/factories';
-import { scriptRng } from '@/test/_fixtures/rngStub';
+import { pickFirst, scriptRng } from '@/test/_fixtures/rngStub';
 
 describe('reportingHandler', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior =>
@@ -123,7 +123,7 @@ describe('reportingHandler', () => {
       const rng = {
         next: () => 0.5,
         uuid: () => 'uuid',
-        pick: <T>(arr: T[]) => arr[0]!,
+        pick: pickFirst,
         roll: (min: number) => min,
         shuffle: <T>(arr: T[]) => arr,
         chance: () => false,

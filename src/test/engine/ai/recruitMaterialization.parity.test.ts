@@ -16,6 +16,7 @@ import { checkWeaponRequirements } from '@/data/equipment';
 import { makeRival } from '@/test/_fixtures/factories';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
 import type { PoolWarrior } from '@/engine/recruitment/recruitment/types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 const rival = () => makeRival();
 const recruit = () =>
@@ -64,7 +65,7 @@ describe('generateAIRecruit — funnel-shaped output', () => {
     const alwaysYes = {
       next: () => 0,
       uuid: () => 'u',
-      pick: <T>(arr: T[]): T => arr[0] as T,
+      pick: pickFirst,
       roll: (min: number) => min,
       shuffle: <T>(arr: T[]) => arr,
       rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K =>

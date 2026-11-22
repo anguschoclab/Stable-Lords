@@ -8,6 +8,7 @@ import { LEGACY_FOUNDER_FAME_MIN, LEGACY_FOUNDER_TRAINER_CHANCE } from '@/consta
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { makeGameState } from '@/test/_fixtures/factories';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 const mockComputeTrainingImpact = vi.hoisted(() => vi.fn());
 const mockTrainingImpactToStateImpact = vi.hoisted(() => vi.fn());
@@ -31,7 +32,7 @@ function makeMockRNG(nextValue: number = 0.5): IRNGService {
   return {
     next: () => nextValue,
     uuid: () => 'test-uuid',
-    pick: <T>(arr: T[]) => arr[0],
+    pick: pickFirst,
     shuffle: <T>(arr: T[]) => arr,
     int: (min: number, _max: number) => min,
   } as any;

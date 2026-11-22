@@ -5,6 +5,7 @@ import type { GameState, Promoter } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { runPromoterLifecyclePass } from '@/engine/pipeline/passes/PromoterLifecyclePass';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 function makeMockRng(retireNext: boolean): IRNGService {
   let callCount = 0;
@@ -18,7 +19,7 @@ function makeMockRng(retireNext: boolean): IRNGService {
       callCount++;
       return 0.5;
     },
-    pick: <T>(arr: T[]): T => arr[0]!,
+    pick: pickFirst,
     uuid: () => `mock-uuid-${idCounter++}`,
     roll: () => 5,
     shuffle: <T>(arr: T[]): T[] => arr,
@@ -185,7 +186,7 @@ describe('PromoterLifecyclePass', () => {
       let uuidCount = 0;
       const rng: IRNGService = {
         next: () => 0.0,
-        pick: <T>(arr: T[]): T => arr[0]!,
+        pick: pickFirst,
         uuid: () => `successor-${++uuidCount}`,
         roll: () => 5,
         shuffle: <T>(arr: T[]): T[] => arr,

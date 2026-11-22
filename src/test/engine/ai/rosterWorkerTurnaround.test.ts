@@ -11,11 +11,12 @@ import { makeWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 const passRng: IRNGService = {
   next: () => 0.0, // every chance roll succeeds
   uuid: () => 'u',
-  pick: <T>(arr: T[]) => arr[0] as T,
+  pick: pickFirst,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
   rollWeighted: <K extends string>(w: Partial<Record<K, number>>): K => Object.keys(w)[0] as K,

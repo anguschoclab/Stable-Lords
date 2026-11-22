@@ -13,6 +13,7 @@ import { vi } from 'vitest';
 import { SeededRNG } from '@/utils/random';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 import {
   makeInjury,
@@ -139,7 +140,7 @@ describe('Training System', () => {
       const midRollRng = {
         next: () => 0.5,
         uuid: () => 'x',
-        pick: <T>(a: T[]) => a[0]!,
+        pick: pickFirst,
         roll: () => 1,
         shuffle: <T>(a: T[]) => a,
         rollWeighted: () => 'x',
@@ -167,7 +168,7 @@ describe('Training System', () => {
       const midRollRng = {
         next: () => 0.5,
         uuid: () => 'x',
-        pick: <T>(a: T[]) => a[0]!,
+        pick: pickFirst,
         roll: () => 1,
         shuffle: <T>(a: T[]) => a,
         rollWeighted: () => 'x',

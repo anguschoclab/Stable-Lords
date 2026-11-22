@@ -4,6 +4,7 @@ import type { GameState, InsightToken, InsightTokenType } from '@/types/state.ty
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/warrior.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 describe('PatronTokenService', () => {
   let mockState: GameState;
@@ -14,7 +15,7 @@ describe('PatronTokenService', () => {
 
     mockRng = {
       uuid: vi.fn().mockImplementation((prefix) => (prefix ? `${prefix}-uuid` : 'mock-uuid')),
-      pick: vi.fn().mockImplementation((arr) => arr[0]),
+      pick: vi.fn().mockImplementation(pickFirst),
     } as unknown as IRNGService;
 
     mockState = {

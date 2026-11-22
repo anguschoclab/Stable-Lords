@@ -3,6 +3,7 @@ import { narrativeContent } from '@/data/narrative';
 import offseasonData from '@/data/narrative/offseason.json';
 import { EVENT_HANDLERS } from '@/engine/pipeline/seasonal';
 import { OFFSEASON_EFFECT_TYPES } from '@/engine/pipeline/offseasonEvents';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 /**
  * V20 wiring guards — event registration parity.
@@ -119,7 +120,7 @@ describe('MEGAPLAN-V3: chaos_squall_exposure offseason event (PR #1066)', () => 
     };
     const rng = {
       next: () => 0.5,
-      pick: (arr: unknown[]) => arr[0],
+      pick: pickFirst,
       uuid: () => 'uuid-1',
       roll: () => 1,
       chance: () => true,

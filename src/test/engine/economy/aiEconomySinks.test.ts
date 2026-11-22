@@ -7,12 +7,13 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { AI_TRAIT_DEV_COST, AI_TRAIT_DEV_RESERVE, AI_PRESTIGE_FREE_TREASURY } from '@/constants/ai';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 /** Deterministic RNG that always takes the "develop" branch. */
 const alwaysRoll: IRNGService = {
   next: () => 0,
   uuid: () => 'rng-uuid',
-  pick: <T>(arr: T[]) => arr[0]!,
+  pick: pickFirst,
   int: () => 0,
   bool: () => true,
 } as unknown as IRNGService;

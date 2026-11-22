@@ -14,7 +14,7 @@ const alwaysTrainRng = {
   next: () => 0,
   roll: (min: number) => min,
   chance: () => true,
-  pick: <T>(arr: T[]) => arr[0] as T,
+  pick: pickFirst,
   shuffle: <T>(arr: T[]) => arr,
   uuid: () => 'test-uuid',
   rollWeighted: <K extends string>(weights: Partial<Record<K, number>>) =>
@@ -24,6 +24,7 @@ import type { RivalStableData } from '@/types/state.types';
 import type { Warrior, Attributes } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle, ATTRIBUTE_MAX } from '@/types/shared.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 import {
   makeComputedWarrior as fixtureComputedWarrior,
   makeRival as fixtureRival,

@@ -5,6 +5,7 @@ import { TRAINER_AGING } from '@/constants/aging';
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 import {
   makeRival as fixtureRival,
   makeGameState as fixtureGameState,
@@ -16,7 +17,7 @@ function makeMockRng(nextValue: number): IRNGService {
   return {
     next: () => nextValue,
     uuid: () => 'test-uuid',
-    pick: <T>(arr: T[]) => arr[0]!,
+    pick: pickFirst,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]) => arr,
     rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>

@@ -5,6 +5,7 @@ import { describe, it, expect } from 'vitest';
 import { handleProgressions } from '@/engine/bout/progressionHandler';
 import type { RivalStableData } from '@/types/state.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 import {
   mkBoutWarrior as createMockWarrior,
   mkBoutState as createMockState,
@@ -14,7 +15,7 @@ import {
 const STUB_RNG = {
   next: () => 0.5,
   uuid: () => 'uuid',
-  pick: <T>(arr: T[]) => arr[0]!,
+  pick: pickFirst,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
   rollWeighted: <K extends string>(weights: Partial<Record<K, number>>): K =>

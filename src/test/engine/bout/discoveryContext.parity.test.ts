@@ -14,12 +14,13 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightOutcome } from '@/types/combat.types';
 import type { WarriorFavorites } from '@/types/warrior.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 /** 0.1 < symmetry 0.25, ≥ base 0.02 and ≥ hint 0.1 — reveals only on symmetry. */
 const midRng: IRNGService = {
   next: () => 0.1,
   uuid: () => 'u',
-  pick: <T>(arr: T[]): T => arr[0] as T,
+  pick: pickFirst,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
   rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K => Object.keys(wts)[0] as K,

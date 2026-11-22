@@ -19,11 +19,12 @@ import { makeWarrior } from '@/test/_fixtures/factories';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 const flatRng = (v: number): IRNGService => ({
   next: () => v,
   uuid: () => 'u',
-  pick: <T>(arr: T[]): T => arr[0] as T,
+  pick: pickFirst,
   roll: (min: number) => min,
   shuffle: <T>(arr: T[]) => arr,
   rollWeighted: <K extends string>(wts: Partial<Record<K, number>>): K => Object.keys(wts)[0] as K,

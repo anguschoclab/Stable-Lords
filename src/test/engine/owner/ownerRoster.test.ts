@@ -4,6 +4,7 @@ import { aiDraftFromPool } from '@/engine/recruitment/draftService';
 import type { GameState, PoolWarrior, RivalStableData } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { makeRival as fixtureRival } from '@/test/_fixtures/factories';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 describe('Owner Roster Worker', () => {
   let mockState: GameState;
@@ -138,7 +139,7 @@ describe('Owner Roster Worker', () => {
       // Force RNG to trigger retirement (< 0.15)
       const mockRng = {
         next: vi.fn(() => 0.1), // This makes retirement chance hit
-        pick: vi.fn((a) => a[0]),
+        pick: vi.fn(pickFirst),
         uuid: vi.fn(() => 'id'),
       } as any;
 

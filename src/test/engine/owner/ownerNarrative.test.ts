@@ -2,10 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightSummary } from '@/types/combat.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 const mockRng: IRNGService = {
   next: () => 0,
-  pick: <T>(arr: T[]) => arr[0] as T,
+  pick: pickFirst,
   uuid: () => 'mock-uuid',
   roll: () => 0,
   shuffle: <T>(arr: T[]) => [...arr],

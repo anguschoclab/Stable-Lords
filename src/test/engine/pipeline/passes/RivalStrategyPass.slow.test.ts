@@ -18,6 +18,7 @@ import {
   makeBoutOffer as fixtureBoutOffer,
 } from '@/test/_fixtures/factories';
 import { makeBidRival as makeRival } from '@/test/_fixtures/bidRoster';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -40,7 +41,7 @@ function makeMockRng(returns: number[]): IRNGServiceLike {
   let idCounter = 0;
   return {
     next: () => returns[i++] ?? returns[returns.length - 1] ?? 0,
-    pick: <T>(arr: T[]): T => arr[0]!,
+    pick: pickFirst,
     uuid: (p?: string) => `${p ?? 'id'}-${idCounter++}`,
     roll: (min: number, _max: number) => min,
     shuffle: <T>(arr: T[]): T[] => arr,

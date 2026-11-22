@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { LedgerEntry } from '@/types/state.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 function makeMockRng(): IRNGService {
   return {
@@ -9,7 +10,7 @@ function makeMockRng(): IRNGService {
       .fn()
       .mockImplementation((prefix?: string) => (prefix ? `${prefix}-mock-id` : 'mock-id')),
     next: vi.fn().mockReturnValue(0),
-    pick: vi.fn().mockImplementation(<T>(arr: T[]) => arr[0] as T),
+    pick: vi.fn().mockImplementation(pickFirst),
     roll: vi.fn().mockReturnValue(0),
     shuffle: vi.fn().mockImplementation(<T>(arr: T[]) => [...arr]),
     chance: vi.fn().mockReturnValue(false),

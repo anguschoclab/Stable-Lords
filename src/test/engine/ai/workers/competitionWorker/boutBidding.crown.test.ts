@@ -15,13 +15,14 @@ import {
 } from '@/test/_fixtures/factories';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId } from '@/types/shared.types';
+import { pickFirst } from '@/test/_fixtures/rngStub';
 
 beforeEach(() => resetFixtureIds());
 
 const rng = {
   uuid: (p = 'id') => `${p}-t`,
   next: () => 0.5,
-  pick: <T>(arr: T[]) => arr[0],
+  pick: pickFirst,
 } as unknown as IRNGService;
 
 function crownRival(warriorId = 'w1', arenaId = 'arena_a') {

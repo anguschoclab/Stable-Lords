@@ -88,6 +88,10 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>): string {
       return 'SPT';
     case 'disarm':
       return 'DIS';
+    case 'break':
+      return 'BRK';
+    case 'fumble':
+      return 'FUM';
     default:
       return '•';
   }

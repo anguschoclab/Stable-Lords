@@ -28,6 +28,7 @@ import {
   narrateBackupDraw,
   narrateRearm,
   narrateWeaponBreak,
+  narrateFumble,
 } from '../../../narrative/combatNarrators';
 import { peekArchive, interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { CRIT_EXTRA_VALUE_MIN_DAMAGE } from '@/constants/combat';
@@ -182,6 +183,19 @@ const narrateRearmEvent: EventNarrator = (event, h, minute) => [
   {
     minute,
     text: narrateRearm(
+      h.rng,
+      h.getName(event.actor),
+      event.metadata?.weaponId as string | undefined
+    ),
+    events: [event],
+  },
+];
+
+/** Fumble — the backup draw went wrong and the weapon stays sheathed. */
+const narrateFumbleEvent: EventNarrator = (event, h, minute) => [
+  {
+    minute,
+    text: narrateFumble(
       h.rng,
       h.getName(event.actor),
       event.metadata?.weaponId as string | undefined
@@ -640,6 +654,7 @@ export const EVENT_NARRATORS: Partial<Record<CombatEvent['type'], EventNarrator>
   DISARM: narrateDisarmEvent,
   REARM: narrateRearmEvent,
   WEAPON_BREAK: narrateWeaponBreakEvent,
+  FUMBLE: narrateFumbleEvent,
   DEFENSE: narrateDefenseEvent,
   HIT: narrateHitEvent,
   FATIGUE: narrateFatigueEvent,

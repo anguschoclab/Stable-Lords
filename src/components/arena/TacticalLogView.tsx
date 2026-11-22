@@ -12,6 +12,8 @@ import {
   Activity,
   MoveHorizontal,
   Hand,
+  Hammer,
+  Grab,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -51,6 +53,10 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>) {
       return <MoveHorizontal className="h-3 w-3 text-accent" />;
     case 'disarm':
       return <Hand className="h-3 w-3 text-arena-fame" />;
+    case 'break':
+      return <Hammer className="h-3 w-3 text-destructive" />;
+    case 'fumble':
+      return <Grab className="h-3 w-3 text-muted-foreground" />;
     default:
       return <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />;
   }
@@ -80,6 +86,10 @@ function getEventColor(type: ReturnType<typeof classifyEvent>) {
       return 'border-accent/20 bg-accent/5';
     case 'disarm':
       return 'border-arena-fame/30 bg-arena-fame/5';
+    case 'break':
+      return 'border-destructive/30 bg-destructive/5';
+    case 'fumble':
+      return 'border-white/10 bg-white/5';
     default:
       return 'border-white/5 bg-transparent';
   }

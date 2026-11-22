@@ -111,6 +111,18 @@ const KNACK_CHANNEL_LABEL: Record<keyof BaseSkills, { good: string; bad: string 
   DEC: { good: 'the decisive moment', bad: 'decisive moments' },
 };
 
+/** Vague rumor phrasings — never name the modifier or its size. */
+const KNACK_DETAIL_GOOD = [
+  'Reports whisper of an uncanny knack for',
+  'Handlers murmur about unusual fortune in',
+  'Scouts suspect a natural gift for',
+];
+const KNACK_DETAIL_BAD = [
+  'Reports whisper of a jinxed',
+  'Something seems cursed about their',
+  'Repeated bad luck plagues their',
+];
+
 /** Vague rumor-grade knack tokens for Expert scouting (0 otherwise). */
 export function createKnackInsights(
   warrior: Warrior,
@@ -130,8 +142,8 @@ export function createKnackInsights(
     if (!labels) continue;
     const detail =
       value > 0
-        ? `Reports whisper of an uncanny knack for ${labels.good}`
-        : `Reports whisper of a jinxed ${labels.bad}`;
+        ? `${rng.pick(KNACK_DETAIL_GOOD)} ${labels.good}`
+        : `${rng.pick(KNACK_DETAIL_BAD)} ${labels.bad}`;
     tokens.push({
       id: rng.uuid() as InsightId,
       type: 'Knack',

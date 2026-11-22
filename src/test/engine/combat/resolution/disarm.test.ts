@@ -362,6 +362,37 @@ describe('narration — disarm/rearm', () => {
     expect(log).toHaveLength(2);
     for (const line of log) expect(line.text).not.toContain('{{');
   });
+
+  it('FUMBLE events narrate the botched draw naming the fighter', () => {
+    const ctx = makeNarrationContext();
+    const { log } = narrateEvents(
+      [{ type: 'FUMBLE', actor: 'D', metadata: { weaponId: 'dagger' } }],
+      ctx,
+      1
+    );
+    expect(log).toHaveLength(1);
+    expect(log[0]?.text).not.toContain('{{');
+    expect(log[0]?.text).toContain('Lightning');
+    expect(log[0]?.events).toContainEqual(expect.objectContaining({ type: 'FUMBLE' }));
+  });
+
+  it('WEAPON_BREAK narrates an emphatic beat plus the backup draw', () => {
+    const ctx = makeNarrationContext();
+    const { log } = narrateEvents(
+      [
+        {
+          type: 'WEAPON_BREAK',
+          actor: 'A',
+          metadata: { weaponId: 'quarterstaff', toWeapon: 'dagger', backup: true },
+        },
+      ],
+      ctx,
+      1
+    );
+    expect(log).toHaveLength(2);
+    expect(log[0]?.text).not.toContain('{{');
+    expect(log[0]?.events).toContainEqual(expect.objectContaining({ type: 'WEAPON_BREAK' }));
+  });
 });
 
 // ── Integration: full simulateFight pipeline ───────────────────────────────

@@ -165,6 +165,18 @@ export function narrateWeaponBreak(rng: IRNGService, name: string, weaponId?: st
 }
 
 /**
+ * Narrates a fumbled backup draw — the fighter reached for their reserve
+ * weapon and botched it; it stays sheathed for the bout.
+ */
+export function narrateFumble(rng: IRNGService, name: string, weaponId?: string): string {
+  const pool = peekArchive(['pbp', 'fumble']);
+  const template = pool
+    ? rng.pick(pool)
+    : '{{name}} fumbles the draw — the {{weapon}} stays sheathed!';
+  return interpolateTemplate(template, { name, weapon: getWeaponDisplayName(weaponId) });
+}
+
+/**
  * Narrates a rearm — the fighter retrieves their dropped weapon off the sand.
  */
 export function narrateRearm(rng: IRNGService, name: string, weaponId?: string): string {

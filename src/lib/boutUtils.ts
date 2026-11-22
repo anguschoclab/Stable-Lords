@@ -12,7 +12,9 @@ type EventClass =
   | 'initiative'
   | 'phase'
   | 'spatial'
-  | 'disarm';
+  | 'disarm'
+  | 'break'
+  | 'fumble';
 
 /**
  * Ordered keyword rules — first match wins, so lethal/exhaust/crit patterns
@@ -58,6 +60,24 @@ const TEXT_RULES: readonly (readonly [EventClass, readonly string[]])[] = [
       'in hand once more',
     ],
   ],
+  [
+    'break',
+    [
+      'shatter',
+      'snaps',
+      'snapped',
+      'breaks',
+      'broken',
+      'splinters',
+      'two pieces',
+      'disintegrates',
+      'fractures',
+    ],
+  ],
+  [
+    'fumble',
+    ['fumble', 'stays sheathed', 'drops it', 'won’t come free', "won't come free"],
+  ],
   ['hit', ['damage', 'strikes', 'hits', 'lands', 'striking']],
   ['miss', ['miss', 'parr', 'dodge', 'turns', 'no opening', 'blocks']],
 ];
@@ -80,6 +100,8 @@ export function classifyEvent(event: MinuteEvent | string): EventClass {
     // Disarm/rearm lines carry their CombatEvent — classify on the event
     // type, not the prose (weapon-drop verbs would land as generic hits).
     if (event.events?.some((e) => e.type === 'DISARM' || e.type === 'REARM')) return 'disarm';
+    if (event.events?.some((e) => e.type === 'WEAPON_BREAK')) return 'break';
+    if (event.events?.some((e) => e.type === 'FUMBLE')) return 'fumble';
   }
 
   const t = text.toLowerCase();

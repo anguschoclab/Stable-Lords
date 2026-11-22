@@ -9,7 +9,10 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 export const scriptRng = (nextVal: number): IRNGService =>
   ({
     next: () => nextVal,
-    pick: <T>(arr: T[]): T => arr[0]!,
+    pick: <T>(arr: T[]): T => {
+      if (arr.length === 0) throw new Error('Cannot pick from empty array');
+      return arr[0]!;
+    },
     roll: () => 1,
     uuid: (p?: string) => (p ? `${p}-u` : 'u'),
     shuffle: <T>(arr: T[]): T[] => arr,

@@ -9,7 +9,10 @@ import type { GameState } from '@/types/state.types';
 /** Deterministic stub RNG for offseason handler tests (pick→first, next→0.5, roll→min). */
 export const makeStubRng = (over: Record<string, unknown> = {}): IRNGService =>
   ({
-    pick: vi.fn((arr: readonly any[]) => arr[0]),
+    pick: vi.fn((arr: readonly any[]) => {
+      if (arr.length === 0) throw new Error('Cannot pick from empty array');
+      return arr[0];
+    }),
     next: () => 0.5,
     uuid: () => 'uuid-1',
     roll: (min: number) => min,

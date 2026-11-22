@@ -82,6 +82,27 @@ interface GenerateGazetteHeadlineArgs {
 }
 
 /**
+ * Headline for a decided championship bout (titleArenaId + a winner), or null
+ * when none ran this week. Undecided title bouts (draws) fall through to the
+ * standard detection chain.
+ */
+function titleBoutHeadline(
+  fights: FightSummary[],
+  week: number,
+  gh: NarrativeContent['gazette']['headlines'],
+  rngService: IRNGService
+): string | null {
+  const titleBout = fights.find((f) => f.titleArenaId && f.winner);
+  if (!titleBout) return null;
+  const tn = getNamesFromTitle(titleBout.title);
+  return t(rngService.pick(gh.TitleBout), {
+    week,
+    winner: titleBout.winner === 'A' ? tn.a : tn.d,
+    loser: titleBout.winner === 'A' ? tn.d : tn.a,
+  });
+}
+
+/**
  * Generates gazette headline based on detections.
  */
 export function generateGazetteHeadline(args: GenerateGazetteHeadlineArgs): string {
@@ -96,6 +117,11 @@ export function generateGazetteHeadline(args: GenerateGazetteHeadlineArgs): stri
     },
     { kills: [] as typeof fights, knockouts: [] as typeof fights }
   );
+
+  // A decided championship bout is the week's apex milestone — top billing over
+  // streaks and rivalries (mirrors the newsletter FOTW title-bout bonus).
+  const championship = titleBoutHeadline(fights, week, gh, rngService);
+  if (championship) return championship;
 
   if (detections.hotStreakers.length > 0) {
     const top = detections.hotStreakers.reduce(

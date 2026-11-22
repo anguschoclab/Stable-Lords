@@ -189,6 +189,7 @@ export function detectGazetteTags(fights: FightSummary[], detections: GazetteDet
   const kills = fights.filter((f) => f.by === 'Kill');
   const knockouts = fights.filter((f) => f.by === 'KO');
 
+  if (fights.some((f) => f.titleArenaId)) tags.push('Title Bout');
   if (kills.length >= 2) tags.push('Bloodbath');
   if (fights.some((f) => f.flashyTags?.includes('Comeback'))) tags.push('Comeback');
   if (fights.some((f) => f.flashyTags?.includes('Dominance'))) tags.push('Dominance');

@@ -14,6 +14,7 @@ interface GazetteFights {
  * Defines the shape of gazette headlines.
  */
 interface GazetteHeadlines {
+  TitleBout: string[];
   LegendaryStreak: string[];
   HotStreak: string[];
   Streak: string[];

@@ -111,6 +111,12 @@
       ]
     },
     "headlines": {
+      "TitleBout": [
+        "Week {{week}}: GOLD ON THE LINE! {{winner}} Triumphs in the Championship Clash Over {{loser}}!",
+        "Week {{week}}: THE CROWN DECIDED! {{winner}} Prevails in the Title Bout Against {{loser}}!",
+        "Week {{week}}: ARENA GLORY! {{winner}} Stands Tall in the Championship Duel With {{loser}}!",
+        "Week {{week}}: THRONE OF BLOOD! {{winner}} Emerges Victorious From the Title Fight With {{loser}}!"
+      ],
       "LegendaryStreak": [
         "Week {{week}}: BLOOD GOD ASCENDANT! {{name}} Claims {{streak}} Wins Without Breaking a Sweat!",
         "Week {{week}}: THE ARENA WEEPS! {{name}}'s Blood-Soaked {{streak}}-Win Streak Continues!",

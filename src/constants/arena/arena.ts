@@ -211,10 +211,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     riposteMod: WEATHER_PENALTIES.ASYLUM_CURSE_RIPOSTE,
     description: 'Cursed fog heavily favors ripostes',
   },
-  'indoor:Blood Moon': {
-    damageMult: WEATHER_PENALTIES.ASYLUM_CURSE_DRAIN,
-    description: 'Blood Moon echoes in closed cursed spaces',
-  },
   'living:Ashfall': {
     initiativeMod: WEATHER_PENALTIES.VOLCANIC_HEAT_INITIATIVE,
     damageMult: WEATHER_PENALTIES.VOLCANIC_HEAT_DAMAGE,
@@ -245,10 +241,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     description: 'The living forest writhes in the gale',
   },
 
-  'indoor:Acid Rain': {
-    damageMult: WEATHER_PENALTIES.ACID_RAIN_LUNGE_DAMAGE,
-    description: 'Acid rain leaking through the roof burns the skin',
-  },
   'premium:Ember Rain': {
     riposteMod: WEATHER_PENALTIES.SPARK_FORGE_RIPOSTE,
     description: 'The forge sparks blind the attacker, aiding a counter',
@@ -288,10 +280,6 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     damageMult: 1 - WEATHER_PENALTIES.JAGGED_PEAK_LUNGE_PENALTY,
     description: 'The jagged peaks become completely impassable for forward lunges',
   },
-  'indoor:Mana Surge': {
-    riposteMod: WEATHER_PENALTIES.MURKY_DEPTHS_RIPOSTE_BONUS,
-    description: 'Arcane resonances within the depths sharply improve counter-attack anticipation',
-  },
   'living:Wildfire Smoke': {
     damageMult: WEATHER_PENALTIES.SMOLDERING_PITS_DAMAGE,
     description:
@@ -313,7 +301,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
   'cursed:Spooky Night': {
     initiativeMod: WEATHER_PENALTIES.HEATH_APPARITION_INITIATIVE,
-    description: 'Ghostly apparitions and chilling winds on the cursed heath paralyze initiative.',
+    description: 'Ghostly apparitions and chilling winds on cursed ground paralyze initiative.',
   },
 };
 

@@ -25,11 +25,4 @@ describe('New Arenas and Modifiers', () => {
     expect(THE_SUNKEN_VAULT.tags).toContain('water');
     expect(IRON_FORGE.tags).toContain('premium');
   });
-
-  it('should apply new acid rain style weather modifier', () => {
-    const modAcidRain = getStyleWeatherModifier(FightingStyle.LungingAttack, 'Acid Rain', [
-      'indoor',
-    ]);
-    expect(modAcidRain.damageMult).toBe(1.1); // Testing our updated ACID_RAIN_LUNGE_DAMAGE
-  });
 });

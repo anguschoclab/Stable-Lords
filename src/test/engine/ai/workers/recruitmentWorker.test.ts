@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
 import { SeededRNG } from '@/utils/random';
 import { makeTestRecruit, makeMinimalRival, makeWarrior } from '@/test/_fixtures/factories';
-import { aiRosterMax } from '@/constants/ai';
+import { aiRosterMax, aiRosterMin } from '@/constants/ai';
 import { AI_GENERATED_RECRUIT_COST } from '@/constants/world';
 
 const makePoolWarrior = makeTestRecruit;
@@ -180,5 +180,83 @@ describe('processRecruitment — cap and funnel invariants', () => {
     expect(updatedRival.needsRecruit).toBe(false);
     expect(updatedPool.map((w) => w.id)).toEqual(['pw-pricey']);
     expect(AI_GENERATED_RECRUIT_COST).toBe(60);
+  });
+});
+
+describe('processRecruitment — vacancy-pressure valuation', () => {
+  // A depleted stable bids with urgency, not leisurely valuation: under
+  // roster-vacancy pressure the price penalty is quartered
+  // (AI_DRAFT_URGENT_PRICE_SCALE), so the premium prospect outranks the
+  // thrift pick it would lose to on price alone. Identical style/age/attrs
+  // keep tier + price the only score inputs that differ.
+  const premium = () =>
+    makePoolWarrior({
+      id: 'pw-premium',
+      name: 'Premium Prospect',
+      tier: 'Exceptional',
+      cost: 200,
+    });
+  const thrift = () =>
+    makePoolWarrior({ id: 'pw-thrift', name: 'Thrift Prospect', tier: 'Common', cost: 40 });
+
+  it('a needsRecruit stable pays nearer asking and takes the premium prospect first', () => {
+    const rival = makeMinimalRival({ treasury: 5000, needsRecruit: true, roster: [] });
+    const rng = new SeededRNG(42);
+
+    const { updatedRival, updatedPool } = processRecruitment({
+      rival,
+      pool: [thrift(), premium()],
+      week: 2,
+      rng,
+      isMajorDraftWeek: false,
+    });
+
+    // Both slots fill — but the premium body is the FIRST signing, not the
+    // cheap one leisurely Pragmatic valuation would have preferred.
+    expect(updatedRival.roster.map((w) => w.name)).toEqual(['Premium Prospect', 'Thrift Prospect']);
+    expect(updatedRival.treasury).toBe(5000 - 200 - 40);
+    expect(updatedPool).toEqual([]);
+  });
+
+  it('below-min roster triggers urgency even without the needsRecruit flag', () => {
+    const rival = makeMinimalRival({ treasury: 5000, roster: [] });
+    const rng = new SeededRNG(42);
+
+    const { updatedRival } = processRecruitment({
+      rival,
+      pool: [thrift(), premium()],
+      week: 2,
+      rng,
+      isMajorDraftWeek: false,
+    });
+
+    expect(updatedRival.roster[0]?.name).toBe('Premium Prospect');
+  });
+
+  it('a comfortable stable still haggles (control — takes the thrift prospect)', () => {
+    const personality = 'Pragmatic';
+    const rival = makeMinimalRival({
+      treasury: 5000,
+      needsRecruit: false,
+      roster: Array.from({ length: aiRosterMin(personality) }, (_, i) =>
+        makeWarrior({ id: `wr-c${i}` as never })
+      ),
+    });
+    const rng = new SeededRNG(42);
+
+    const { updatedRival, updatedPool } = processRecruitment({
+      rival,
+      pool: [thrift(), premium()],
+      week: 2,
+      rng,
+      isMajorDraftWeek: false,
+    });
+
+    // Full price sensitivity keeps the cheap Common ahead (and the premium
+    // recruit's negative score fails the non-desperate gate), so exactly one
+    // signing lands and the premium recruit stays on the shelf.
+    expect(updatedRival.roster).toHaveLength(aiRosterMin(personality) + 1);
+    expect(updatedRival.roster.at(-1)?.name).toBe('Thrift Prospect');
+    expect(updatedPool.map((w) => w.id)).toEqual(['pw-premium']);
   });
 });

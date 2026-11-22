@@ -8,6 +8,7 @@ import {
   aiRosterMax,
   aiRosterMin,
   AI_GENERATED_RECRUIT_COST,
+  AI_DRAFT_URGENT_PRICE_SCALE,
   PERSONALITY_DRAFT_WEIGHTS,
   DEFAULT_DRAFT_WEIGHTS,
 } from '@/constants/ai';
@@ -112,6 +113,9 @@ interface ScoreCandidatesArgs {
   favoredStyles?: FightingStyle[];
   owner?: Pick<RivalStableData['owner'], 'id' | 'competence'>;
   intent?: string;
+  /** Roster-vacancy pressure (needsRecruit or below the roster floor) —
+   *  relaxes the price penalty so an urgent stable stops haggling. */
+  urgent: boolean;
 }
 
 /**
@@ -134,6 +138,18 @@ export function tourneyDraftBonus(w: PoolWarrior, intent: string | undefined): n
   return Math.round(best * 0.4);
 }
 
+/**
+ * Price appetite — thrifty personalities discount expensive recruits; a
+ * vacancy-pressed stable stops haggling and pays nearer the asking price
+ * (solvency stays checkBudget's job — urgency only reorders preference).
+ */
+function pricePenalty(cost: number, weights: DraftWeights, urgent: boolean): number {
+  const sensitivity = urgent
+    ? weights.priceSensitivity * AI_DRAFT_URGENT_PRICE_SCALE
+    : weights.priceSensitivity;
+  return (cost * sensitivity) / 100;
+}
+
 /** Scores one pool candidate against the personality weights table. */
 function scoreCandidate(
   w: PoolWarrior,
@@ -145,6 +161,7 @@ function scoreCandidate(
     owner: Pick<RivalStableData['owner'], 'id' | 'competence'> | undefined;
     week: number;
     intent?: string;
+    urgent: boolean;
   }
 ): number {
   const { prefsSet, activeStyleCounts, meta, owner, week } = ctx;
@@ -179,8 +196,7 @@ function scoreCandidate(
     score += Math.max(0, attrTotal - 70) * weights.readyBonusPerPoint;
   }
 
-  // Price appetite — thrifty personalities discount expensive recruits.
-  score -= (w.cost * weights.priceSensitivity) / 100;
+  score -= pricePenalty(w.cost, weights, ctx.urgent);
 
   // Competence noise — a Novice front office misevaluates candidates while
   // a Master nearly always spots the best value. Deterministic
@@ -221,6 +237,7 @@ function scoreCandidates(args: ScoreCandidatesArgs): { bestIdx: number; bestScor
       owner: args.owner,
       week,
       intent: args.intent,
+      urgent: args.urgent,
     });
     if (score > bestScore) {
       bestScore = score;
@@ -252,9 +269,36 @@ interface DraftPoolSigningsArgs {
 }
 
 /**
+ * Score the visible shelf for one draft slot. Vacancy pressure (declared
+ * needsRecruit or a roster below its floor) marks the pick urgent so the
+ * scorer relaxes its price penalty — urgency decays as signings refill the
+ * roster, so only the first pick(s) under pressure pay nearer asking.
+ */
+function scoreSlot(
+  args: DraftPoolSigningsArgs,
+  visible: PoolWarrior[],
+  activeCount: number
+): { bestIdx: number; bestScore: number; urgent: boolean } {
+  const urgent = args.ctx.needsRecruit || activeCount < args.ctx.minRoster;
+  const { bestIdx, bestScore } = scoreCandidates({
+    pool: visible,
+    roster: args.updatedRival.roster,
+    personality: args.personality,
+    week: args.week,
+    meta: args.meta,
+    favoredStyles: args.favoredStyles,
+    owner: args.updatedRival.owner,
+    intent: args.updatedRival.strategy?.intent,
+    urgent: urgent,
+  });
+  return { bestIdx, bestScore, urgent };
+}
+
+/**
  * Weekly draft loop: up to `slotsAvailable` signings, best-scored candidate
- * first, with the quality gate dropped for desperate stables and a skip-to-
- * next-best path when the top candidate is unaffordable.
+ * first, with the quality gate dropped for desperate stables, price haggling
+ * relaxed under roster-vacancy pressure, and a skip-to-next-best path when
+ * the top candidate is unaffordable.
  */
 function draftPoolSignings(args: DraftPoolSigningsArgs): {
   updatedRival: RivalStableData;
@@ -262,29 +306,20 @@ function draftPoolSignings(args: DraftPoolSigningsArgs): {
 } {
   const { remainingPool, visible, week, rng } = args;
   let { updatedRival } = args;
-  const { meta, personality, favoredStyles, ctx } = args;
+  const { ctx } = args;
   let signings = 0;
   let activeCount = updatedRival.roster.reduce((n, w) => n + (isActive(w) ? 1 : 0), 0);
   // Membership tracker for remainingPool — removals are deferred and the
   // array compacted in place once after the loop (order preserved).
   const remainingIds = keySet(remainingPool, (p) => p.id);
   for (let slot = 0; slot < ctx.slotsAvailable; slot++) {
-    const { bestIdx, bestScore } = scoreCandidates({
-      pool: visible,
-      roster: updatedRival.roster,
-      personality: personality,
-      week: week,
-      meta: meta,
-      favoredStyles: favoredStyles,
-      owner: updatedRival.owner,
-      intent: updatedRival.strategy?.intent,
-    });
+    const { bestIdx, bestScore, urgent } = scoreSlot(args, visible, activeCount);
     if (bestIdx < 0) break;
     const recruit = visible[bestIdx];
     if (!recruit) break;
 
     const qualityGate = bestScore > 0;
-    const desperation = ctx.needsRecruit || activeCount < ctx.minRoster || ctx.isMajorDraftWeek;
+    const desperation = urgent || ctx.isMajorDraftWeek;
     if (!qualityGate && !desperation) break;
 
     const signed = signPoolRecruit({

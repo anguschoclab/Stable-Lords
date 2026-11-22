@@ -168,3 +168,10 @@ export const PERSONALITY_DRAFT_WEIGHTS: Record<OwnerPersonality, PersonalityDraf
 
 /** Fallback weights when the owner's personality is unset. */
 export const DEFAULT_DRAFT_WEIGHTS: PersonalityDraftWeights = PERSONALITY_DRAFT_WEIGHTS.Pragmatic;
+
+/** Fraction of normal price sensitivity applied while a stable is at
+ *  roster-vacancy pressure (needsRecruit or below its roster floor): the
+ *  haggling instinct is quartered, not erased — solvency stays checkBudget's
+ *  job, so a desperate stable takes the best body it can afford rather than
+ *  the thrift pick. */
+export const AI_DRAFT_URGENT_PRICE_SCALE = 0.25;

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import {
   MOOD_DESCRIPTIONS,
@@ -5,6 +6,7 @@ import {
   getMoodModifiers,
   type CrowdMood,
 } from '@/engine/bout/crowdMood';
+import { MOOD_CELL_CLASS, MOOD_TRAIL_MIN, buildMoodTrail } from './moodTrail';
 import { Badge } from '@/components/ui/badge';
 import { Eye } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -58,6 +60,8 @@ export function CrowdMoodWidget() {
         />
       </div>
 
+      <MoodTrail />
+
       <Badge
         variant="outline"
         className="ml-auto border-accent/40 bg-accent/5 text-accent text-[9px] font-black tracking-widest shrink-0"
@@ -65,6 +69,67 @@ export function CrowdMoodWidget() {
         {mood.toUpperCase()}
       </Badge>
     </Surface>
+  );
+}
+
+/**
+ * Temperament ledger — one cell per resolved week (oldest → newest; the
+ * rightmost, ringed cell is the current mood). Answers "is this week's
+ * crowd a streak or a blip?" — a Bloodthirsty run sustains elevated kill
+ * chance, a Festive run is a fame window. Thin-data weeks render an
+ * honest forming cue rather than a one-cell fake trend.
+ */
+function MoodTrail() {
+  const moodHistory = useGameStore((s) => s.moodHistory);
+  const trail = useMemo(() => buildMoodTrail(moodHistory), [moodHistory]);
+
+  return (
+    <div className="flex items-center gap-6 shrink-0">
+      <div className="h-10 w-px bg-white/5 shrink-0" />
+      <div>
+        <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1.5">
+          Temperament Ledger
+        </div>
+        {trail.length >= MOOD_TRAIL_MIN ? (
+          <div
+            className="flex items-center gap-[3px]"
+            role="list"
+            aria-label="Crowd mood by week, oldest to newest"
+          >
+            {trail.map((e, i) => (
+              <Tooltip key={`${e.week}-${i}`}>
+                <TooltipTrigger asChild>
+                  <div
+                    tabIndex={0}
+                    role="listitem"
+                    aria-label={`Week ${e.week}: ${e.mood}`}
+                    className={cn(
+                      'w-2.5 h-4 transition-transform hover:scale-125 motion-reduce:transition-none motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary',
+                      MOOD_CELL_CLASS[e.mood],
+                      i === trail.length - 1 && 'ring-1 ring-foreground/50'
+                    )}
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <div className="text-[11px]">
+                    <p className="font-bold">
+                      Week {e.week}: {e.mood}
+                    </p>
+                    {i === trail.length - 1 && (
+                      <p className="text-muted-foreground">Current temperament</p>
+                    )}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        ) : (
+          <p className="text-[9px] text-muted-foreground/30 font-black uppercase tracking-widest">
+            Ledger forms after two resolved weeks
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 

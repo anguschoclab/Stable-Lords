@@ -39,10 +39,61 @@ interface MatchupContext {
   targetIsPlayer: boolean;
   targetRival?: RivalStableData;
   playerTargets: Warrior[];
-  nonVendettaByStyle: Map<FightingStyle, Warrior[]>;
+  /** Style-bucketed opponent pools. Entries carry their stable id because a
+   *  shared (all-rivals) bucket must let each proposer skip its own roster —
+   *  `Warrior.stableId` is optional so it can't carry that check alone. */
+  nonVendettaByStyle: Map<FightingStyle, { warrior: Warrior; rivalId: string }[]>;
   lockedIds: Set<string>;
   state?: GameState;
   rivalId: string;
+}
+
+/**
+ * Once-per-tick bid inputs identical for every proposer — built once in
+ * buildWeekOffers instead of per-rival inside generateBoutBids. All three
+ * fields are pure f(state | currentRivals); every consumer falls back to its
+ * inline rebuild so test-lite call paths behave exactly as before.
+ */
+export interface SharedBidCtx {
+  /** bookingLockedChampionIds(state) — bulk form of isChampionBookingLocked. */
+  lockedIds: Set<string>;
+  /** Warriors signed to a strictly-future bout — bookableRoster exclusion. */
+  signedFutureIds: Set<string>;
+  /** Warriors signed for absoluteWeek+2 — collectBookedWarriorIds target. */
+  bookedForWeek2Ids: Set<string>;
+  /** Active, unlocked warriors across every rival, bucketed by style. */
+  nonVendettaByStyle: Map<FightingStyle, { warrior: Warrior; rivalId: string }[]>;
+}
+
+/** Builds the shared bid context over the post-update rival list. */
+export function buildSharedBidCtx(state: GameState, rivals: RivalStableData[]): SharedBidCtx {
+  const lockedIds = bookingLockedChampionIds(state);
+  const signedFutureIds = new Set<string>();
+  const bookedForWeek2Ids = new Set<string>();
+  const now = state.absoluteWeek ?? state.week;
+  const week2 = now + 2;
+  for (const offer of Object.values(state.boutOffers ?? {})) {
+    if (!offer || offer.status !== 'Signed') continue;
+    const boutAbsWeek = boutOfferAbsoluteWeek(offer);
+    if (boutAbsWeek > now) {
+      for (const wId of offer.warriorIds) signedFutureIds.add(wId as string);
+    }
+    if (boutAbsWeek === week2) {
+      for (const wId of offer.warriorIds || []) bookedForWeek2Ids.add(wId as string);
+    }
+  }
+  const nonVendettaByStyle = new Map<FightingStyle, { warrior: Warrior; rivalId: string }[]>();
+  for (const r of rivals) {
+    for (const w of r.roster) {
+      if (isActive(w) && !lockedIds.has(w.id)) {
+        const entry = { warrior: w, rivalId: r.id as string };
+        const bucket = nonVendettaByStyle.get(w.style);
+        if (bucket) bucket.push(entry);
+        else nonVendettaByStyle.set(w.style, [entry]);
+      }
+    }
+  }
+  return { lockedIds, signedFutureIds, bookedForWeek2Ids, nonVendettaByStyle };
 }
 
 /**
@@ -84,23 +135,12 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
     // (attacker, foe-style). A bucket whose bound can't beat the running max
     // contributes nothing; the result is a scalar max, so evaluation order
     // cannot affect it.
-    const buckets = [...ctx.nonVendettaByStyle.entries()]
-      .map(([style, members]) => ({
-        members,
-        bound:
-          clamp(
-            (getMatchupBonus(warrior.style, style) * 25 + 10 + aWinRate * 20) / 20,
-            -5,
-            5
-          ) +
-          canonTargetingBias(warrior.style, style, attFights) +
-          turnaroundMatchupBias(warrior, style),
-      }))
-      .sort((a, b) => b.bound - a.bound);
-    foundOpponent = buckets.length > 0;
-    for (const { members, bound } of buckets) {
+    for (const { members, bound } of rankedStyleBuckets(warrior, ctx, aWinRate, attFights)) {
       if (bound <= matchupModifier) break;
-      for (const opponent of members) {
+      for (const entry of members) {
+        // Shared buckets span every rival — skip the proposer's own stable.
+        if (entry.rivalId === ctx.rivalId) continue;
+        const opponent = entry.warrior;
         const matchupScore = scorePairwiseMatchup(warrior, opponent, {
           aStableId,
           bStableId: opponent.stableId as string,
@@ -112,10 +152,29 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
           canonTargetingBias(warrior.style, opponent.style, attFights) +
           turnaroundMatchupBias(warrior, opponent.style);
         matchupModifier = Math.max(matchupModifier, score);
+        foundOpponent = true;
       }
     }
   }
   return foundOpponent ? matchupModifier : 0;
+}
+
+/** Style buckets sorted by their upper-bound score contribution (desc). */
+function rankedStyleBuckets(
+  warrior: Warrior,
+  ctx: MatchupContext,
+  aWinRate: number,
+  attFights: number
+): { members: { warrior: Warrior; rivalId: string }[]; bound: number }[] {
+  return [...ctx.nonVendettaByStyle.entries()]
+    .map(([style, members]) => ({
+      members,
+      bound:
+        clamp((getMatchupBonus(warrior.style, style) * 25 + 10 + aWinRate * 20) / 20, -5, 5) +
+        canonTargetingBias(warrior.style, style, attFights) +
+        turnaroundMatchupBias(warrior, style),
+    }))
+    .sort((a, b) => b.bound - a.bound);
 }
 
 interface GenerateBoutBidsArgs {
@@ -125,6 +184,7 @@ interface GenerateBoutBidsArgs {
   crowdMood?: CrowdMood;
   rivals?: RivalStableData[];
   state?: GameState;
+  shared?: SharedBidCtx;
 }
 
 /**
@@ -138,13 +198,14 @@ export function generateBoutBids(args: GenerateBoutBidsArgs): {
   updatedRival: RivalStableData;
 } {
   const { rival, weather = 'Clear', crowdMood = 'Calm', rivals = [] } = args;
-  const { state } = args;
+  const { state, shared } = args;
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
-  const lockedIds = state ? bookingLockedChampionIds(state) : new Set<string>();
-  const activeRoster = bookableRoster(rival, state, lockedIds);
+  const lockedIds =
+    shared?.lockedIds ?? (state ? bookingLockedChampionIds(state) : new Set<string>());
+  const activeRoster = bookableRoster(rival, state, lockedIds, shared?.signedFutureIds);
   const bids: BoutBid[] = [];
 
-  const matchupCtx = buildMatchupCtx(rival, intent, rivals, state, lockedIds);
+  const matchupCtx = buildMatchupCtx({ rival, intent, rivals, state, lockedIds, shared });
   const personality = rival.owner.personality ?? 'Pragmatic';
 
   for (const warrior of activeRoster) {
@@ -165,18 +226,22 @@ export function generateBoutBids(args: GenerateBoutBidsArgs): {
 function bookableRoster(
   rival: RivalStableData,
   state: GameState | undefined,
-  lockedIds: Set<string>
+  lockedIds: Set<string>,
+  sharedSignedIds?: Set<string>
 ): Warrior[] {
   const assignedIds = new Set((rival.trainingAssignments ?? []).map((a) => a.warriorId));
   // Warriors already committed to a signed upcoming bout don't re-enter the
   // pool — a signed title shot (or any booked fight) shouldn't double-book.
-  const signedIds = new Set<string>();
-  if (state) {
-    const now = state.absoluteWeek ?? state.week;
-    for (const offer of Object.values(state.boutOffers ?? {})) {
-      if (offer.status !== 'Signed') continue;
-      if (boutOfferAbsoluteWeek(offer) <= now) continue;
-      for (const wId of offer.warriorIds) signedIds.add(wId as string);
+  let signedIds = sharedSignedIds;
+  if (!signedIds) {
+    signedIds = new Set<string>();
+    if (state) {
+      const now = state.absoluteWeek ?? state.week;
+      for (const offer of Object.values(state.boutOffers ?? {})) {
+        if (offer.status !== 'Signed') continue;
+        if (boutOfferAbsoluteWeek(offer) <= now) continue;
+        for (const wId of offer.warriorIds) signedIds.add(wId as string);
+      }
     }
   }
   return rival.roster.filter(
@@ -190,13 +255,17 @@ function bookableRoster(
 }
 
 /** Pre-computed vendetta targets and opponent pools for matchup scoring. */
-function buildMatchupCtx(
-  rival: RivalStableData,
-  intent: string,
-  rivals: RivalStableData[],
-  state: GameState | undefined,
-  lockedIds: Set<string>
-): MatchupContext {
+interface MatchupCtxArgs {
+  rival: RivalStableData;
+  intent: string;
+  rivals: RivalStableData[];
+  state?: GameState;
+  lockedIds: Set<string>;
+  shared?: SharedBidCtx;
+}
+
+function buildMatchupCtx(args: MatchupCtxArgs): MatchupContext {
+  const { rival, intent, rivals, state, lockedIds, shared } = args;
   // Pre-calculate vendetta target once outside the loop to prevent O(W * R) lookups
   const targetStableId = rival.strategy?.targetStableId;
   const targetIsPlayer =
@@ -214,16 +283,23 @@ function buildMatchupCtx(
 
   // Pre-calculate active opponents for non-vendetta intents, bucketed by
   // style so bestMatchupModifier can bound-prune whole buckets — booking-
-  // locked champions are excluded as bid targets as well as proposers.
-  const nonVendettaByStyle = new Map<FightingStyle, Warrior[]>();
-  if (intent !== 'VENDETTA') {
-    for (const r of rivals) {
-      if (r.id === rival.id) continue;
-      for (const w of r.roster) {
-        if (isActive(w) && !lockedIds.has(w.id)) {
-          const bucket = nonVendettaByStyle.get(w.style);
-          if (bucket) bucket.push(w);
-          else nonVendettaByStyle.set(w.style, [w]);
+  // locked champions are excluded as bid targets as well as proposers. The
+  // shared map (when supplied) spans every rival; the per-rival fallback
+  // excludes the proposer's stable at build time. Both paths skip own-stable
+  // entries at evaluation via the entry's rivalId.
+  let nonVendettaByStyle = shared?.nonVendettaByStyle;
+  if (!nonVendettaByStyle) {
+    nonVendettaByStyle = new Map<FightingStyle, { warrior: Warrior; rivalId: string }[]>();
+    if (intent !== 'VENDETTA') {
+      for (const r of rivals) {
+        if (r.id === rival.id) continue;
+        for (const w of r.roster) {
+          if (isActive(w) && !lockedIds.has(w.id)) {
+            const entry = { warrior: w, rivalId: r.id as string };
+            const bucket = nonVendettaByStyle.get(w.style);
+            if (bucket) bucket.push(entry);
+            else nonVendettaByStyle.set(w.style, [entry]);
+          }
         }
       }
     }

@@ -17,7 +17,7 @@ import { displayWeek } from '@/engine/core/absoluteWeek';
 import { computeRivalReputation } from '@/engine/stable/stableReputation';
 import { isActive } from '@/engine/warrior/warriorStatus';
 import {
-  isChampionBookingLocked,
+  bookingLockedChampionIds,
   CHAMPIONSHIP_EXCLUDED_ARENAS,
 } from '@/engine/championship/arenaChampionship';
 import { ARENA_TITLE } from '@/constants/arena';
@@ -66,6 +66,8 @@ interface BidConversionCtx {
   h2hCache: Map<string, PairwiseHeadToHead>;
   playerOffersByStable: Map<string, number>;
   playerOfferTotal: number;
+  /** Bulk bookingLockedChampionIds — one titles scan per conversion call. */
+  lockedIds: Set<string>;
   isBookableMemo: (w: Warrior, assignments: TrainingAssignment[] | undefined) => boolean;
 }
 
@@ -121,9 +123,14 @@ function buildConversionCtx(
     h2hCache: new Map<string, PairwiseHeadToHead>(),
     playerOffersByStable: new Map<string, number>(),
     playerOfferTotal: 0,
+    lockedIds: bookingLockedChampionIds(state),
     isBookableMemo,
   };
 }
+
+/** bookingLockedChampionIds(state).has(id) ≡ isChampionBookingLocked(state, id). */
+const bookingLocked = (cx: BidConversionCtx, warriorId: string): boolean =>
+  cx.lockedIds.has(warriorId);
 
 /** Collects candidate opponent warriors matching the bid's target scope. */
 function collectCandidates(
@@ -138,7 +145,7 @@ function collectCandidates(
   if (bid.targetStableId === cx.playerStableId) {
     for (const w of state.roster) {
       if (!isActive(w)) continue;
-      if (isChampionBookingLocked(state, w.id)) continue;
+      if (bookingLocked(cx, w.id)) continue;
       if (!cx.isBookableMemo(w, state.trainingAssignments)) continue;
       candidates.push({ warrior: w, stableId: cx.playerStableId });
     }
@@ -149,7 +156,7 @@ function collectCandidates(
       candidates = [];
       for (const w of targetRival.roster) {
         if (!isActive(w)) continue;
-        if (isChampionBookingLocked(state, w.id)) continue;
+        if (bookingLocked(cx, w.id)) continue;
         if (!cx.isBookableMemo(w, targetRival.trainingAssignments)) continue;
         candidates.push({ warrior: w, stableId: targetRival.id as string });
       }
@@ -164,7 +171,7 @@ function collectCandidates(
       if (stableIsAvoided(proposerRival, rival, state.ownerGrudges)) continue;
       for (const w of rival.roster) {
         if (!isActive(w)) continue;
-        if (isChampionBookingLocked(state, w.id)) continue;
+        if (bookingLocked(cx, w.id)) continue;
         if (!cx.isBookableMemo(w, rival.trainingAssignments)) continue;
         candidates.push({ warrior: w, stableId: rival.id as string });
       }
@@ -358,7 +365,7 @@ export function convertBidsToOffers(
     if (!proposer) continue;
     // Booking-locked arena champions only fight title bouts — a stale bid
     // generated before a title went pending must not produce an offer.
-    if (isChampionBookingLocked(state, proposer.id)) continue;
+    if (bookingLocked(cx, proposer.id)) continue;
 
     // The stable that generated the bid owns the proposer; the cache map is
     // a hot-path fast lookup, with the bid's rivalId as the ground truth.

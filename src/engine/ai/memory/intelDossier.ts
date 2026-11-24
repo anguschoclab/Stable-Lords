@@ -12,7 +12,7 @@ import type {
   OpponentDossier,
   FightSummary,
 } from '@/types/state.types';
-import type { FightingStyle, StableId } from '@/types/shared.types';
+import type { FightingStyle, StableId, WarriorId } from '@/types/shared.types';
 import { resolveWarriorOwner } from '@/engine/core/warriorOwnership';
 import { hashStr } from '@/utils/random';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
@@ -35,15 +35,20 @@ const MAX_KNOWN_STYLES = 6;
  * Current rival owner ids excluding self. Existing consumers (intentEngine)
  * index knownRivals by owner.id — keep that identifier stable.
  */
-export function refreshKnownRivals(rival: RivalStableData, state: GameState): StableId[] {
-  return (state.rivals ?? []).filter((r) => r.owner.id !== rival.owner.id).map((r) => r.owner.id);
+export function refreshKnownRivals(
+  rival: RivalStableData,
+  state: GameState,
+  knownOwnerIds?: readonly StableId[]
+): StableId[] {
+  const all = knownOwnerIds ?? (state.rivals ?? []).map((r) => r.owner.id);
+  return all.filter((id) => id !== rival.owner.id);
 }
 
 /**
  * Deterministic fame-based threat estimate with per-stable jitter so two
  * observers rate the same stable slightly differently (but reproducibly).
  */
-function estimateThreat(stableId: string, fame: number, week: number): number {
+export function estimateThreat(stableId: string, fame: number, week: number): number {
   const base = clamp(fame / 500, 0, 1);
   const jitter = ((hashStr(`${stableId}|threat|${week}`) % 1000) / 1000) * 0.2 - 0.1;
   return clamp(base + jitter, 0, 1);
@@ -168,10 +173,26 @@ function foldFight(args: FoldFightArgs): void {
  * 3. fold this week's fights into recordVs / knownStyles / lastSeenWeek,
  * 4. prune to DOSSIER_CAP.
  */
+/**
+ * Once-per-tick shared lookups carried on the perception snapshot — the
+ * dossier loop consults these instead of recomputing threat/ownership per
+ * observing rival. Each consumer keeps an inline fallback so call sites
+ * without a snapshot behave exactly as before.
+ */
+export interface DossierSharedContext {
+  threatByStableId?: Map<StableId, number>;
+  weekFightStableOf?: Map<WarriorId, StableId | undefined>;
+}
+
+/**
+ * Fold public fame/threat inference and this week's fight observations into
+ * the stable's dossier map. `shared` carries the snapshot-hoisted lookups.
+ */
 export function updateDossiers(
   rival: RivalStableData,
   state: GameState,
-  weekFights?: FightSummary[]
+  weekFights?: FightSummary[],
+  shared?: DossierSharedContext
 ): Record<string, OpponentDossier> {
   const week = state.absoluteWeek ?? state.week;
   const dossiers: Record<string, OpponentDossier> = decayDossiers(
@@ -184,13 +205,16 @@ export function updateDossiers(
     if (other.id === rival.id) continue;
     const d = dossiers[other.id] ?? (dossiers[other.id] = blankDossier(week));
     d.lastSeenWeek = week;
-    d.estimatedThreat = estimateThreat(other.id, other.fame ?? other.owner.fame ?? 0, week);
+    d.estimatedThreat =
+      shared?.threatByStableId?.get(other.id) ??
+      estimateThreat(other.id, other.fame ?? other.owner.fame ?? 0, week);
   }
   const playerId = state.player.id;
   if (playerId !== rival.id) {
     const d = dossiers[playerId] ?? (dossiers[playerId] = blankDossier(week));
     d.lastSeenWeek = week;
-    d.estimatedThreat = estimateThreat(playerId, state.fame ?? 0, week);
+    d.estimatedThreat =
+      shared?.threatByStableId?.get(playerId) ?? estimateThreat(playerId, state.fame ?? 0, week);
   }
 
   // Fold this week's fights into observed facts (snapshot-precomputed when
@@ -198,21 +222,50 @@ export function updateDossiers(
   const fights = weekFights ?? getFightsForWeek(state.arenaHistory ?? [], week);
   const selfIds = new Set(rival.roster.map((w) => w.id));
   // Memoized per invocation: fights repeat warriors, and a resolve miss falls
-  // back to a full roster scan — state doesn't mutate inside the fold.
+  // back to a full roster scan — state doesn't mutate inside the fold. The
+  // shared map already covers every fight participant (misses included).
+  const sharedStableOf = shared?.weekFightStableOf;
   const stableMemo = new Map<string, string | undefined>();
   const stableOf = (wid: FightSummary['warriorIdA']): string | undefined => {
     if (selfIds.has(wid)) return rival.id;
+    if (sharedStableOf?.has(wid)) return sharedStableOf.get(wid);
     if (!stableMemo.has(wid)) {
       stableMemo.set(wid, resolveWarriorOwner(state, wid)?.stableId);
     }
     return stableMemo.get(wid);
   };
 
-  // Witnessed tells: a stable that watched this fight reads the participants'
-  // committed plans — persisted as a capped running mean. Masked stables leak
-  // their decoy here, which is exactly the counter-intel trade-off.
-  const observeTells = (wid: FightSummary['warriorIdA'], stableId: string | undefined): void => {
-    if (!stableId || stableId === rival.id) return;
+  const observeTells = makeObserveTells(state, rival.id, dossiers, week);
+
+  for (const fight of fights) {
+    foldFight({
+      dossiers: dossiers,
+      fight: fight,
+      rival: rival,
+      selfIds: selfIds,
+      stableOf: stableOf,
+      observeTells: observeTells,
+      week: week,
+    });
+  }
+
+  return pruneDossiers(dossiers);
+}
+
+/**
+ * Witnessed-tells observer factory: a stable that watched this fight reads
+ * the participants' committed plans — persisted as a capped running mean.
+ * Masked stables leak their decoy here, which is exactly the counter-intel
+ * trade-off.
+ */
+function makeObserveTells(
+  state: GameState,
+  observerStableId: StableId,
+  dossiers: Record<string, OpponentDossier>,
+  week: number
+): (wid: FightSummary['warriorIdA'], stableId: string | undefined) => void {
+  return (wid, stableId) => {
+    if (!stableId || stableId === observerStableId) return;
     const fighter = findWarriorById(state, wid);
     if (!fighter) return;
     const oe = fighter.plan?.OE;
@@ -233,18 +286,4 @@ export function updateDossiers(
       lastSeenWeek: week,
     };
   };
-
-  for (const fight of fights) {
-    foldFight({
-      dossiers: dossiers,
-      fight: fight,
-      rival: rival,
-      selfIds: selfIds,
-      stableOf: stableOf,
-      observeTells: observeTells,
-      week: week,
-    });
-  }
-
-  return pruneDossiers(dossiers);
 }

@@ -44,7 +44,7 @@ export function recoveryApplies(ctx: IntentContext): boolean {
 export function vendettaApplies(ctx: IntentContext, rngService: IRNGService): boolean {
   const hasGrudge = findGrudge(ctx.state.grudgeMap, ctx.rival.owner.id) !== undefined;
 
-  const playerThreat = computePlayerThreatLevel(ctx.state);
+  const playerThreat = ctx.playerThreatLevel ?? computePlayerThreatLevel(ctx.state);
   const playerThreatVendettaChance =
     playerThreat === 'Dominant' &&
     (ctx.personality === 'Aggressive' ||

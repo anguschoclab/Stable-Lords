@@ -88,12 +88,19 @@ function* titleOpponents(
   }
 }
 
+/** Lazily materialized title-opponent list, shared by the two pickers. */
+type TitleOpponents = () => { otherId: string; oppStableId: string | undefined }[];
+
 /**
  * Pick the dossier most worth scouting: the vendetta target if there is one,
  * else the highest-threat observed stable, else the stable we meet in an
  * upcoming title bout, else the most famous rival, else the player.
  */
-function pickScoutTarget(rival: RivalStableData, state: GameState): string | undefined {
+function pickScoutTarget(
+  rival: RivalStableData,
+  state: GameState,
+  titleOpps: TitleOpponents
+): string | undefined {
   const vendettaTarget =
     rival.strategy?.intent === 'VENDETTA' ? rival.strategy.targetStableId : undefined;
   const dossiers = rival.agentMemory?.opponentDossiers ?? {};
@@ -111,7 +118,7 @@ function pickScoutTarget(rival: RivalStableData, state: GameState): string | und
 
   // Upcoming title opponent — a pending/signed title bout involving one of
   // our warriors makes the other side's stable the most relevant read.
-  for (const { oppStableId } of titleOpponents(rival, state)) {
+  for (const { oppStableId } of titleOpps()) {
     if (oppStableId) return oppStableId;
   }
 
@@ -170,12 +177,12 @@ const PLAN_BAND_VALUE: Record<string, number> = { High: 0.75, Medium: 0.5, Low: 
  * stable's most accomplished active warrior — deterministic tiebreak on id.
  */
 function pickReportWarrior(
-  rival: RivalStableData,
   targetId: string,
   targetRival: RivalStableData | undefined,
-  state: GameState
+  state: GameState,
+  titleOpps: TitleOpponents
 ): Warrior | undefined {
-  for (const { otherId, oppStableId } of titleOpponents(rival, state)) {
+  for (const { otherId, oppStableId } of titleOpps()) {
     if (oppStableId === targetId) return findWarriorById(state, otherId);
   }
 
@@ -255,6 +262,7 @@ interface DossierRefreshArgs {
   week: number;
   quality: number;
   memory: NonNullable<RivalStableData['agentMemory']>;
+  titleOpps: TitleOpponents;
 }
 
 /**
@@ -266,7 +274,7 @@ function refreshDossier(args: DossierRefreshArgs): {
   dossier: OpponentDossier;
   scoutReports: ScoutReportData[] | undefined;
 } {
-  const { rival, targetId, targetRival, state, week, quality, memory } = args;
+  const { rival, targetId, targetRival, state, week, quality, memory, titleOpps } = args;
   const dossiers = memory.opponentDossiers;
   const effectiveBias = effectivePlanBias(
     targetRival,
@@ -292,7 +300,7 @@ function refreshDossier(args: DossierRefreshArgs): {
     },
   };
 
-  const reportWarrior = pickReportWarrior(rival, targetId, targetRival, state);
+  const reportWarrior = pickReportWarrior(targetId, targetRival, state, titleOpps);
   if (!reportWarrior) return { dossier, scoutReports: memory.scoutReports };
 
   const filed = fileScoutReport({
@@ -323,7 +331,11 @@ export function processIntel(
   if (!memory?.opponentDossiers) return { updatedRival: rival, gazetteItems };
 
   const week = state.absoluteWeek ?? state.week;
-  const targetId = pickScoutTarget(rival, state);
+  // Both pickers walk the same title-bout scan — materialize it lazily once
+  // per rival so the second consumer reuses the first's result.
+  let titleOppCache: ReturnType<TitleOpponents> | undefined;
+  const titleOpps: TitleOpponents = () => (titleOppCache ??= [...titleOpponents(rival, state)]);
+  const targetId = pickScoutTarget(rival, state, titleOpps);
   if (!targetId) return { updatedRival: rival, gazetteItems };
 
   const quality = blendQuality(
@@ -342,6 +354,7 @@ export function processIntel(
     week,
     quality,
     memory,
+    titleOpps,
   });
 
   let updatedRival: RivalStableData = {

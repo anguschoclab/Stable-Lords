@@ -164,7 +164,7 @@ function buildCrownScanContext(
   titles: NonNullable<GameState['arenaChampions']>,
   perception?: PerceptionSnapshot
 ): CrownScanContext {
-  const signed = signedTitleBoutIds(state);
+  const signed = perception?.signedUpcomingTitleIds ?? signedTitleBoutIds(state);
   // Prefer the week cache: buildWeekCaches maintains warriorMap over exactly
   // roster ∪ rival rosters — rebuilding it per rival cost O(rivals × world).
   const warriorById =
@@ -179,7 +179,7 @@ function buildCrownScanContext(
   // Dominant-player pressure: when the player stable tops the realm, a throne
   // they hold becomes a prestige target — rivals would rather dethrone the
   // dominant stable than pick off a weaker rival crown of equal difficulty.
-  const playerThreat = computePlayerThreatLevel(state);
+  const playerThreat = perception?.playerThreatLevel ?? computePlayerThreatLevel(state);
   const dethroneBonus =
     playerThreat === 'Dominant'
       ? DETHRONE_BONUS.Dominant
@@ -357,9 +357,10 @@ function applyProtectionRests(
   updatedRival: RivalStableData,
   state: GameState,
   crownsHeld: (readonly [string, string | undefined])[],
-  week: number
+  week: number,
+  perception?: PerceptionSnapshot
 ): RivalStableData {
-  const signed = signedTitleBoutIds(state);
+  const signed = perception?.signedUpcomingTitleIds ?? signedTitleBoutIds(state);
   const inGrandChampPrep =
     weeksUntilChampionsTournament(state.week) <= GRAND_CHAMP_PREP_WEEKS &&
     weeksUntilChampionsTournament(state.week) > 0;
@@ -442,7 +443,7 @@ export function processCrownPosture(
       );
 
   updatedRival = markCrownsForRelinquish(updatedRival, crownsHeld, memory, week, gazetteItems);
-  updatedRival = applyProtectionRests(updatedRival, state, crownsHeld, week);
+  updatedRival = applyProtectionRests(updatedRival, state, crownsHeld, week, perception);
 
   return { updatedRival, gazetteItems };
 }

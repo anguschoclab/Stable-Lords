@@ -22,13 +22,14 @@ import type { RivalShardInput, RivalShardContext, RivalShardOutput } from './sha
 function applyStrategyUpdate(
   rival: RivalStableData,
   state: GameState,
-  strategySeed: number
+  strategySeed: number,
+  perception?: RivalShardContext['perception']
 ): RivalStableData {
   const planIssued =
     !rival.strategy ||
     rival.strategy.planWeeksRemaining <= 0 ||
     verifyIntentSkepticism(rival, state);
-  const strategy = updateAIStrategy(rival, state, strategySeed);
+  const strategy = updateAIStrategy(rival, state, strategySeed, perception);
   return planIssued
     ? logAgentAction({
         rival: { ...rival, strategy },
@@ -75,7 +76,12 @@ export function processRivalStable(
   // Season plan-of-record: tick or re-pick the objective BEFORE
   // the weekly intent pick so the cascade can service it.
   const rivalWithObjective = applySeasonPlan(rival, state);
-  const rivalWithStrategy = applyStrategyUpdate(rivalWithObjective, state, strategySeed);
+  const rivalWithStrategy = applyStrategyUpdate(
+    rivalWithObjective,
+    state,
+    strategySeed,
+    perception
+  );
 
   // 🎂 1.0 Hardening: Handle Aging & Succession
   const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(

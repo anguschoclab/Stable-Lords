@@ -14,14 +14,18 @@ import { TRUNCATION_CAPS } from '@/engine/storage/truncation';
 import { truncateArray } from '@/utils/stateUtils';
 import { computeMetaDrift } from '../analytics/metaDrift';
 import { refreshKnownRivals, updateDossiers } from './memory/intelDossier';
-import type { PerceptionSnapshot } from './memory/perceptionSnapshot';
+import {
+  computePlayerThreatLevel,
+  type PerceptionSnapshot,
+  type PlayerThreatLevel,
+} from './memory/perceptionSnapshot';
 
 /**
  * LeadAgent Orchestrator
  * Encapsulates the turn logic for a single rival stable.
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
-export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';
+export { computePlayerThreatLevel, type PlayerThreatLevel } from './memory/perceptionSnapshot';
 
 /**
  * Defines the shape of agent context.
@@ -48,12 +52,22 @@ function metaLagWeeks(rival: RivalStableData): number {
  * The meta this agent *perceives* — lagged arena history for non-Methodical
  * owners so meta-awareness is a belief, not omniscience.
  */
-function perceivedMeta(rival: RivalStableData, state: GameState): Record<string, number> {
+function perceivedMeta(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: PerceptionSnapshot
+): Record<string, number> {
   const lag = metaLagWeeks(rival);
-  if (lag === 0) return state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
+  if (lag === 0) {
+    return (
+      perception?.meta ?? (state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []))
+    );
+  }
+  const lagged = perception?.laggedMetaByLag?.get(lag);
+  if (lagged) return lagged;
   const cutoff = (state.absoluteWeek ?? state.week) - lag;
-  const lagged = (state.arenaHistory || []).filter((f) => (f.absoluteWeek ?? f.week) <= cutoff);
-  return computeMetaDrift(lagged);
+  const history = (state.arenaHistory || []).filter((f) => (f.absoluteWeek ?? f.week) <= cutoff);
+  return computeMetaDrift(history);
 }
 
 /**
@@ -76,20 +90,27 @@ export function createAgentContext(
 
   const agentMemory: AIAgentMemory = {
     ...prior,
-    knownRivals: refreshKnownRivals(rival, state),
+    knownRivals: refreshKnownRivals(rival, state, perception?.knownRivalOwnerIds),
     opponentDossiers: updateDossiers(
       { ...rival, agentMemory: prior },
       state,
-      perception?.weekFights
+      perception?.weekFights,
+      perception
+        ? {
+            threatByStableId: perception.threatByStableId,
+            weekFightStableOf: perception.weekFightStableOf,
+          }
+        : undefined
     ),
-    metaAwareness: perceivedMeta(rival, state),
+    metaAwareness: perceivedMeta(rival, state, perception),
   };
 
   // ⚡ Continuous Alignment: full-fidelity meta for plan generation
-  const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
+  const meta =
+    perception?.meta ?? (state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []));
 
   // Player threat level from realm rankings — rivals use this to decide VENDETTA targets
-  const playerThreatLevel = computePlayerThreatLevel(state);
+  const playerThreatLevel = perception?.playerThreatLevel ?? computePlayerThreatLevel(state);
 
   return {
     rival: { ...rival, agentMemory },
@@ -206,39 +227,4 @@ export function consolidateAgentMemory(
       burnRate,
     },
   };
-}
-
-/**
- * Computes how threatening the player is relative to the world,
- * based on their best warrior's realm ranking vs the world median.
- */
-export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
-  const rankings = state.realmRankings;
-  // Count without allocating a key array — called per rival/offer/intent.
-  let totalRanked = 0;
-  if (rankings) for (const _k in rankings) totalRanked++;
-  if (totalRanked === 0) return 'Neutral';
-
-  let playerBestRank: number | null = null;
-  const roster = state.roster || [];
-
-  // ⚡ Bolt: Replaced Object.entries(rankings) loop with a targeted iteration over the roster
-  // This changes complexity from O(total realm rankings) to O(player roster size)
-  // and avoids allocating a large array of key-value pairs per tick.
-  for (let i = 0; i < roster.length; i++) {
-    const warrior = roster[i];
-    if (!warrior) continue;
-    const entry = rankings[warrior.id];
-    if (entry && (playerBestRank === null || entry.overallRank < playerBestRank)) {
-      playerBestRank = entry.overallRank;
-    }
-  }
-
-  if (playerBestRank === null) return 'Neutral';
-
-  const percentile = playerBestRank / totalRanked;
-
-  if (percentile <= 0.15) return 'Dominant';
-  if (percentile <= 0.4) return 'Moderate';
-  return 'Neutral';
 }

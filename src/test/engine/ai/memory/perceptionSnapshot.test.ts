@@ -114,3 +114,95 @@ describe('buildPerceptionSnapshot — field parity', () => {
     expect(buildPerceptionSnapshot(state)).toEqual(buildPerceptionSnapshot(state));
   });
 });
+
+describe('buildPerceptionSnapshot — B5 shared fields (equivalence pins)', () => {
+  it('playerThreatLevel equals computePlayerThreatLevel(state)', async () => {
+    const { computePlayerThreatLevel } = await import('@/engine/ai/agentCore');
+    const state = populatedState();
+    expect(buildPerceptionSnapshot(state).playerThreatLevel).toBe(
+      computePlayerThreatLevel(state)
+    );
+  });
+
+  it('threatByStableId holds the estimateThreat value for every rival id + player id', async () => {
+    const { estimateThreat } = await import('@/engine/ai/memory/intelDossier');
+    const state = populatedState();
+    const snap = buildPerceptionSnapshot(state);
+    const week = state.absoluteWeek ?? state.week;
+    for (const r of state.rivals ?? []) {
+      expect(snap.threatByStableId.get(r.id)).toBe(
+        estimateThreat(r.id, r.fame ?? r.owner.fame ?? 0, week)
+      );
+    }
+    expect(snap.threatByStableId.get(state.player.id)).toBe(
+      estimateThreat(state.player.id, state.fame ?? 0, week)
+    );
+  });
+
+  it('weekFightStableOf resolves every weekFights participant incl. misses to undefined', async () => {
+    const { resolveWarriorOwner } = await import('@/engine/core/warriorOwnership');
+    const state = populatedState();
+    const snap = buildPerceptionSnapshot(state);
+    for (const f of snap.weekFights) {
+      for (const wid of [f.warriorIdA, f.warriorIdD]) {
+        expect(snap.weekFightStableOf.has(wid), `missing key ${wid}`).toBe(true);
+        expect(snap.weekFightStableOf.get(wid)).toBe(
+          resolveWarriorOwner(state, wid)?.stableId
+        );
+      }
+    }
+  });
+
+  it('knownRivalOwnerIds lists every rival owner.id in declaration order', () => {
+    const state = populatedState();
+    expect(buildPerceptionSnapshot(state).knownRivalOwnerIds).toEqual(
+      (state.rivals ?? []).map((r) => r.owner.id)
+    );
+  });
+
+  it('laggedMetaByLag.get(1|2) equals filter+computeMetaDrift at the cutoff', () => {
+    const state = populatedState();
+    const snap = buildPerceptionSnapshot(state);
+    for (const lag of [1, 2]) {
+      const cutoff = (state.absoluteWeek ?? state.week) - lag;
+      const expected = computeMetaDrift(
+        (state.arenaHistory ?? []).filter((f) => (f.absoluteWeek ?? f.week) <= cutoff)
+      );
+      expect(snap.laggedMetaByLag.get(lag), `lag ${lag}`).toEqual(expected);
+    }
+  });
+
+  it('signedUpcomingTitleIds holds warriors of signed upcoming title bouts only', () => {
+    const state = populatedState();
+    state.boutOffers = {
+      t1: {
+        id: 't1',
+        titleArenaId: 'arena_1',
+        status: 'Signed',
+        warriorIds: ['wA', 'wP'],
+        boutWeek: 9,
+        createdAbsoluteWeek: 7,
+      },
+      t2: {
+        id: 't2',
+        titleArenaId: 'arena_1',
+        status: 'Proposed',
+        warriorIds: ['wB', 'wP'],
+        boutWeek: 9,
+        createdAbsoluteWeek: 7,
+      },
+      t3: {
+        id: 't3',
+        titleArenaId: 'arena_2',
+        status: 'Signed',
+        warriorIds: ['wB', 'wQ'],
+        boutWeek: 6,
+        createdAbsoluteWeek: 4,
+      },
+    } as never;
+    const ids = buildPerceptionSnapshot(state).signedUpcomingTitleIds;
+    // t1: signed title bout upcoming → both warriors. t2: Proposed → out.
+    // t3: signed but past (boutWeek 6 < now 7 → createdAbsoluteWeek 4) → out.
+    expect([...ids].sort()).toEqual(['wA', 'wP']);
+  });
+});

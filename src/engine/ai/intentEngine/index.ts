@@ -1,5 +1,6 @@
 import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { PerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 import { SeededRNG, resolveRng } from '@/utils/random';
 import { buildIntentContext } from './context';
 import {
@@ -32,10 +33,11 @@ export function pickWeeklyIntent(
   rival: RivalStableData,
   state: GameState,
   seed?: number,
-  rng?: IRNGService
+  rng?: IRNGService,
+  perception?: PerceptionSnapshot
 ): AIIntent {
   const rngService = resolveRng(rng, seed ?? state.week * 131 + rival.owner.id.length);
-  const ctx = buildIntentContext(rival, state);
+  const ctx = buildIntentContext(rival, state, perception);
 
   if (weatherPivotApplies(ctx)) return 'RECOVERY';
   // Vendetta precedes recovery: a fresh blood feud outranks belt-tightening —
@@ -71,7 +73,8 @@ export function pickWeeklyIntent(
 export function updateAIStrategy(
   rival: RivalStableData,
   state: GameState,
-  seed?: number
+  seed?: number,
+  perception?: PerceptionSnapshot
 ): AIStrategy {
   const current = rival.strategy;
 
@@ -82,7 +85,7 @@ export function updateAIStrategy(
   if (!current || current.planWeeksRemaining <= 0 || planDisproved) {
     const s = seed ?? state.week * 7919 + rival.owner.id.length * 13;
     const rng = new SeededRNG(s);
-    const picked = pickWeeklyIntent(rival, state, s, rng);
+    const picked = pickWeeklyIntent(rival, state, s, rng, perception);
 
     // Hysteresis: a merely-expired (not disproved) plan whose condition still
     // ~applies is renewed rather than churned into a neighboring intent.

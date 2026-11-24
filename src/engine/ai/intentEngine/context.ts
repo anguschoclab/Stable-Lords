@@ -1,4 +1,5 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
+import type { PerceptionSnapshot, PlayerThreatLevel } from '@/engine/ai/memory/perceptionSnapshot';
 import { computeMetaDrift } from '../../analytics/metaDrift';
 import { hasInjuries } from '@/engine/injuries/utils';
 import { isActive } from '@/engine/warrior/warriorStatus';
@@ -40,10 +41,16 @@ export interface IntentContext {
   meta: Record<string, number>;
   metaIsHostile: boolean;
   seasonWinRate: number | null;
+  /** Snapshot-hoisted player threat; predicates fall back to computing it. */
+  playerThreatLevel?: PlayerThreatLevel;
 }
 
 /** Computes the per-pick fact bundle every intent predicate reasons over. */
-export function buildIntentContext(rival: RivalStableData, state: GameState): IntentContext {
+export function buildIntentContext(
+  rival: RivalStableData,
+  state: GameState,
+  perception?: PerceptionSnapshot
+): IntentContext {
   const personality = rival.owner.personality ?? 'Pragmatic';
   const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
     (acc, w) => {
@@ -85,5 +92,6 @@ export function buildIntentContext(rival: RivalStableData, state: GameState): In
     meta,
     metaIsHostile,
     seasonWinRate,
+    playerThreatLevel: perception?.playerThreatLevel,
   };
 }

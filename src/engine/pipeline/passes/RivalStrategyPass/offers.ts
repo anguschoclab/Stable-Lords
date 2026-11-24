@@ -7,6 +7,7 @@ import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import {
   generateBoutBids,
   convertBidsToOffers,
+  buildSharedBidCtx,
 } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { pruneBoutOffers } from '@/engine/bout/offerCleanup';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
@@ -21,8 +22,16 @@ export function buildWeekOffers(
   currentRivals: RivalStableData[],
   rng: IRNGService
 ): Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]> {
+  // Once-per-tick shared bid inputs: locked champions, signed-future ids, and
+  // the style-bucketed opponent pools every proposer scans. Built over
+  // `currentRivals` (post-update) so buckets reflect this tick's rosters.
+  const sharedBids = buildSharedBidCtx(state, currentRivals);
+
   // 1.5. World Matchmaking: NPCs propose bouts to each other
-  const worldBouts = planWorldBouts(state, rng);
+  const worldBouts = planWorldBouts(state, rng, {
+    lockedIds: sharedBids.lockedIds,
+    bookedIds: sharedBids.bookedForWeek2Ids,
+  });
   let boutOffersWithWorld: Record<BoutOfferId, (typeof state.boutOffers)[BoutOfferId]> = {
     ...(state.boutOffers || {}),
   };
@@ -55,6 +64,7 @@ export function buildWeekOffers(
       crowdMood: state.crowdMood ?? 'Calm',
       rivals: currentRivals,
       state: state,
+      shared: sharedBids,
     });
     for (const bid of bids) {
       allBids.push({ bid, rivalId: rival.id as string });

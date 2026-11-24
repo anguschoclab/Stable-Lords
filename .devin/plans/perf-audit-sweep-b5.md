@@ -2,6 +2,13 @@
 
 Validated perf-audit plan: every finding re-checked against source (narrowed-state field preservation, predicate equivalence, Warrior.stableId optionality, registry caching); Phase 0 mandates characterization/equivalence tests written and green BEFORE any refactor lands; then shared once-per-tick structures + pure-function micro-opts, verified byte-identical by A/B soak.
 
+## Status
+
+- ✅ **Phase 0** — committed `f6cd62c7a` (T1–T16 characterization specs, green on unmodified source)
+- ✅ **Tranche 1** — perception fields + SharedBidCtx landed; all specs + megaplan guards green
+- ⬜ Tranche 2, 3, 4 — pending
+- Notes: `duplication.guard` pre-existing failure (720bd04ce pair unregistered on main) fixed by registration → baseline 42. `planWorldBouts`/`bookableRoster`/`crownWorker` consume shared id-sets; `convertBidsToOffers` computes `lockedIds` once per call (kept 5-param signature — 14 test callers); `IntentContext.playerThreatLevel` threads perception into `vendettaApplies` too.
+
 ## Validation record (this review)
 
 Every plan claim was re-verified against the codebase. Verdicts inline per item; corrections applied:

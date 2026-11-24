@@ -146,7 +146,9 @@ const DEBT_PAIRS = new Set<string>([]);
 // playerPressure↔styleMatchupGate (rivalOffer/evalBoutOffer call shape),
 // electronArchive↔electronIPCBounds (archiveServiceEach preamble) — all
 // registered exempt → 41.
-const TEST_TO_TEST_BASELINE = 41;
+// 720bd04ce killShare.canon re-states the matchupMatrix canon fixture shape —
+// literal pin, registered exempt → 42.
+const TEST_TO_TEST_BASELINE = 42;
 const TEST_DEBT_BUDGET = 0;
 
 const TEST_EXEMPT_PAIRS = new Set([
@@ -243,6 +245,10 @@ const TEST_EXEMPT_PAIRS = new Set([
   // electronArchive↔electronIPCBounds: sibling storage specs share the
   // archiveServiceEach harness preamble only.
   'src/test/engine/storage/electronArchive.test.ts|src/test/engine/storage/electronIPCBounds.test.ts',
+  // killShare.canon re-states the matchupMatrix canon fixture warriors as
+  // kill-share assertion data — same literal-pin category as the combat
+  // canon pairs above (720bd04ce).
+  'src/test/engine/combat/killShare.canon.test.ts|src/test/engine/combat/matchupMatrix.canon.test.ts',
 ]);
 
 // V19 close-out: all registered debt pairs drained — set stays empty and the

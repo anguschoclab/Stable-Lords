@@ -27,14 +27,16 @@ type EligibleWarrior = { warrior: Warrior; stable: RivalStableData };
 function collectEligibleWarriors(
   state: GameState,
   bookedIds: Set<string>,
-  targetWeek: number
+  targetWeek: number,
+  lockedIds?: Set<string>
 ): EligibleWarrior[] {
   const eligibleWarriors: EligibleWarrior[] = [];
 
   (state.rivals || []).forEach((rival) => {
     for (const warrior of rival.roster) {
       if (bookedIds.has(warrior.id)) continue;
-      if (isChampionBookingLocked(state, warrior.id)) continue;
+      if (lockedIds ? lockedIds.has(warrior.id) : isChampionBookingLocked(state, warrior.id))
+        continue;
       if (
         isBookable(warrior, {
           // restStates is global (injuryHandler writes it for any warrior);
@@ -145,12 +147,16 @@ function buildWorldBoutOffer(
  * @param state - The current game state.
  * @param rng - RNG service.
  */
-export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
+export function planWorldBouts(
+  state: GameState,
+  rng: IRNGService,
+  shared?: { lockedIds?: Set<string>; bookedIds?: Set<string> }
+): BoutOffer[] {
   const targetWeek = state.absoluteWeek + 1;
   // World bouts are scheduled for absoluteWeek + 2 (see offer.boutWeek below);
   // exclude warriors already signed for that week to prevent double-booking.
-  const bookedIds = collectBookedWarriorIds(state, state.absoluteWeek + 2);
-  const eligibleWarriors = collectEligibleWarriors(state, bookedIds, targetWeek);
+  const bookedIds = shared?.bookedIds ?? collectBookedWarriorIds(state, state.absoluteWeek + 2);
+  const eligibleWarriors = collectEligibleWarriors(state, bookedIds, targetWeek, shared?.lockedIds);
 
   if (eligibleWarriors.length < 2) return [];
 

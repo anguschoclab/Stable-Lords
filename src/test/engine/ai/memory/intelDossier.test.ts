@@ -5,6 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { updateDossiers, decayDossiers, DOSSIER_CAP } from '@/engine/ai/memory/intelDossier';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { makeRival, makeGameState } from '@/test/_fixtures/factories';
 import { selfVsOppState } from '@/test/_fixtures/intelDossier';
 import type { OpponentDossier } from '@/types/state.types';
@@ -58,6 +59,16 @@ describe('updateDossiers — fight observation', () => {
     const opp = makeRival({ id: 'opp-1' as StableId, fame: 300 });
     const state = makeGameState({ rivals: [self, opp], absoluteWeek: 4 });
     expect(updateDossiers(self, state)).toEqual(updateDossiers(self, state));
+  });
+
+  it('an explicit weekFights snapshot equals the internal history scan', () => {
+    // The shared snapshot path must fold exactly the same fights as the
+    // inline getFightsForWeek call it replaces.
+    const { self, state } = selfVsOppState({
+      fight: { winner: 'A', by: 'Kill', styleD: 'LungingAttack' },
+    });
+    const fights = getFightsForWeek(state.arenaHistory ?? [], state.absoluteWeek ?? state.week);
+    expect(updateDossiers(self, state, fights)).toEqual(updateDossiers(self, state));
   });
 });
 

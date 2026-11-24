@@ -147,3 +147,28 @@ describe('generateDynasticWarriorName', () => {
     }
   });
 });
+
+describe('generateWarriorName — culture-pool determinism (pool cache pin)', () => {
+  it('every culture yields an identical name stream for the same seed', () => {
+    // The deduped+sanitized culture pool is keyed only by culture — a cached
+    // pool must draw the identical rng.pick index stream as a fresh build.
+    for (const culture of Object.keys(CULTURE_SEEDS) as NamingCulture[]) {
+      const stream = (seed: number) => {
+        const rng = new SeededRNG(seed);
+        return Array.from({ length: 12 }, () => generateWarriorName({ culture, rng }));
+      };
+      expect(stream(99), `culture ${culture}`).toEqual(stream(99));
+    }
+  });
+
+  it('a seedPool merge preserves the seeded draw stream', () => {
+    const seedPool = ['CUSTOM ALPHA', 'CUSTOM BETA', 'CUSTOM GAMMA'];
+    const stream = (seed: number) => {
+      const rng = new SeededRNG(seed);
+      return Array.from({ length: 12 }, () =>
+        generateWarriorName({ culture: 'norse', seedPool, rng })
+      );
+    };
+    expect(stream(7)).toEqual(stream(7));
+  });
+});

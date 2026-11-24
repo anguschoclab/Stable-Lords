@@ -155,6 +155,35 @@ describe('intelWorker', () => {
     expect(updatedRival.agentMemory!.opponentDossiers['famous']?.planIntel).toBeUndefined();
   });
 
+  it('a merely-Proposed title bout also steers the scout target', () => {
+    // titleOpponents accepts Signed AND Proposed — a pending title offer is
+    // already the most relevant read.
+    const challenger = makeWarrior({ id: 'sw1' as never });
+    const champWarrior = makeWarrior({ id: 'cw1' as never });
+    const champStable = makeRival({
+      id: 'champ-stable' as never,
+      roster: [champWarrior],
+    });
+    const scout = makeRival({
+      id: 's1' as never,
+      roster: [challenger],
+      strategy: { intent: 'CROWN_CAMPAIGN', planWeeksRemaining: 4 },
+      agentMemory: makeAgentMemory(),
+    });
+    const titleOffer = makeBoutOffer({
+      warriorIds: [champWarrior.id, challenger.id],
+      titleArenaId: 'arena_a',
+      status: 'Proposed',
+      responses: { [champWarrior.id]: 'Accepted', [challenger.id]: 'Pending' } as never,
+    });
+    const state = makeGameState({
+      rivals: [scout, champStable],
+      boutOffers: { [titleOffer.id]: titleOffer },
+    });
+    const { updatedRival } = processIntel(scout, state, buildPerceptionSnapshot(state));
+    expect(updatedRival.agentMemory!.opponentDossiers['champ-stable']!.planIntel).toBeDefined();
+  });
+
   it('blends persisted dossier observedTells into the plan estimate', () => {
     // An Aggressive owner's reputation says high-OE, but witnessed fights say
     // the stable actually plans cautiously — the estimate follows what was seen.

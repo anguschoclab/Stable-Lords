@@ -362,3 +362,101 @@ describe('createBoutOffer', () => {
     expect(o1).toEqual(o2);
   });
 });
+
+describe('findBestOpponent — window boundaries & early-exit pin', () => {
+  const sorted = (entries: [Warrior, number][]) => ({
+    warriors: entries.map(([w]) => w),
+    scores: entries.map(([, s]) => s),
+  });
+
+  it('includes candidates exactly at the gap-threshold edges', () => {
+    // scoreA=100, gapThreshold 0.25 → window [75,125] inclusive on both ends.
+    const a = w('a');
+    const lo = w('lo');
+    const hi = w('hi');
+    const { warriors, scores } = sorted([
+      [lo, 75],
+      [a, 100],
+      [hi, 125],
+    ]);
+    const ctx = makeCtx({ promoter: makePromoter({ personality: 'Corporate' }) });
+    // Corporate personality score is a constant 5 → nearest score wins; both
+    // edge candidates are eligible, the first-seen (lower index) takes ties.
+    const best = findBestOpponent(a, 100, warriors, scores, ctx);
+    expect(best).not.toBeNull();
+    expect([lo.id, hi.id]).toContain(best!.id);
+  });
+
+  it('excludes candidates strictly outside the gap window', () => {
+    const a = w('a');
+    const inside = w('inside');
+    const outside = w('outside');
+    const { warriors, scores } = sorted([
+      [outside, 50],
+      [inside, 90],
+      [a, 100],
+    ]);
+    const ctx = makeCtx({ promoter: makePromoter({ personality: 'Corporate' }) });
+    expect(findBestOpponent(a, 100, warriors, scores, ctx)!.id).toBe('inside');
+  });
+
+  it('returns null when every in-window candidate is already matched', () => {
+    const a = w('a');
+    const b = w('b');
+    const { warriors, scores } = sorted([
+      [b, 95],
+      [a, 100],
+    ]);
+    const ctx = makeCtx({
+      promoter: makePromoter({ personality: 'Corporate' }),
+      matchedIds: new Set<string>(['b']),
+    });
+    expect(findBestOpponent(a, 100, warriors, scores, ctx)).toBeNull();
+  });
+
+  it('ties resolve to the first-scanned (lowest-index) candidate', () => {
+    // Equal scoreBs → identical candidateScore; the earlier index keeps it.
+    const a = w('a');
+    const first = w('first');
+    const second = w('second');
+    const { warriors, scores } = sorted([
+      [first, 100],
+      [a, 100],
+      [second, 100],
+    ]);
+    const ctx = makeCtx({ promoter: makePromoter({ personality: 'Corporate' }) });
+    expect(findBestOpponent(a, 100, warriors, scores, ctx)!.id).toBe('first');
+  });
+
+  it('a feud target outside the score window still wins', () => {
+    const a = w('a');
+    a.stableId = 'stable_a' as never;
+    const feud = w('feud');
+    const near = w('near');
+    const { warriors, scores } = sorted([
+      [near, 99],
+      [a, 100],
+      [feud, 30],
+    ]);
+    const ctx = makeCtx({
+      promoter: makePromoter({ personality: 'Corporate' }),
+      feudTargetsByStable: new Map([['stable_a', new Set(['feud'])]]),
+    });
+    expect(findBestOpponent(a, 100, warriors, scores, ctx)!.id).toBe('feud');
+  });
+
+  it('is deterministic for identical inputs', () => {
+    const a = w('a');
+    const pool = [w('x'), w('y'), w('z')];
+    const { warriors, scores } = sorted([
+      [pool[0]!, 80],
+      [a, 100],
+      [pool[1]!, 110],
+      [pool[2]!, 120],
+    ]);
+    const ctx = makeCtx({ promoter: makePromoter({ personality: 'Sadistic' }) });
+    expect(findBestOpponent(a, 100, warriors, scores, ctx)?.id).toBe(
+      findBestOpponent(a, 100, warriors, scores, ctx)?.id
+    );
+  });
+});

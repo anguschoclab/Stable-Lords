@@ -17,6 +17,7 @@ import type {
   RankingEntry,
 } from '@/types/state.types';
 import { makeAiTestRival, makeAiTestState } from '@/test/_fixtures/aiTestState';
+import { buildPerceptionSnapshot } from '@/engine/ai/memory/perceptionSnapshot';
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return makeAiTestRival(overrides);
@@ -246,6 +247,31 @@ describe('agentCore — computePlayerThreatLevel', () => {
     });
     // Best player rank = 1, total = 2, percentile = 1/2 = 0.5 > 0.4 → Neutral
     expect(computePlayerThreatLevel(state)).toBe('Neutral');
+  });
+});
+
+describe('agentCore — perception-snapshot equivalence', () => {
+  it('context built with a snapshot equals context built without one', () => {
+    // The shared once-per-tick snapshot must yield the same perception fields
+    // as the inline per-rival computations it replaces.
+    const rival = createMockRival({ agentMemory: undefined });
+    const other = createMockRival({
+      owner: { ...createMockRival().owner, id: 'owner_2' as any },
+    });
+    const state = createMockState({ rivals: [rival, other] });
+    const withPerception = createAgentContext(rival, state, buildPerceptionSnapshot(state));
+    const withoutPerception = createAgentContext(rival, state);
+    expect(withPerception.rival.agentMemory!.opponentDossiers).toEqual(
+      withoutPerception.rival.agentMemory!.opponentDossiers
+    );
+    expect(withPerception.rival.agentMemory!.metaAwareness).toEqual(
+      withoutPerception.rival.agentMemory!.metaAwareness
+    );
+    expect(withPerception.rival.agentMemory!.knownRivals).toEqual(
+      withoutPerception.rival.agentMemory!.knownRivals
+    );
+    expect(withPerception.playerThreatLevel).toBe(withoutPerception.playerThreatLevel);
+    expect(withPerception.meta).toEqual(withoutPerception.meta);
   });
 });
 

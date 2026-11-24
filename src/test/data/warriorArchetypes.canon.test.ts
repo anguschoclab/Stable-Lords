@@ -117,3 +117,59 @@ describe('classifyArchetype — fit scoring', () => {
     expect(ATTRIBUTE_KEYS).toHaveLength(7);
   });
 });
+
+describe('classifyArchetype — corpus equivalence (micro-opt pin)', () => {
+  // Re-derives the full sorted fit vector from first principles: any change
+  // to bar weighting, style fit, rounding, or sort order breaks this pin.
+  const bar = (v: number, floor: number) => Math.min(v / floor, 1);
+  const cap = (v: number, ceil: number) => Math.min(ceil / v, 1);
+  const refRatio = (
+    attrs: Record<string, number>,
+    bars: (typeof WINNING_ARCHETYPES)[WinningArchetype]['designBars']
+  ) => {
+    const r: number[] = [];
+    if (bars.stMin !== undefined) r.push(bar(attrs.ST ?? 0, bars.stMin));
+    if (bars.cnMin !== undefined) r.push(bar(attrs.CN ?? 0, bars.cnMin));
+    if (bars.szMax !== undefined) r.push(cap(attrs.SZ ?? 0, bars.szMax));
+    if (bars.wtMin !== undefined) r.push(bar(attrs.WT ?? 0, bars.wtMin));
+    if (bars.wlMin !== undefined) r.push(bar(attrs.WL ?? 0, bars.wlMin));
+    if (bars.wlMax !== undefined) r.push(cap(attrs.WL ?? 0, bars.wlMax));
+    if (bars.spMax !== undefined) r.push(cap(attrs.SP ?? 0, bars.spMax));
+    if (bars.dfMin !== undefined) r.push(bar(attrs.DF ?? 0, bars.dfMin));
+    if (bars.minRipBase !== undefined)
+      r.push(bar((attrs.SP ?? 0) + (attrs.DF ?? 0), bars.minRipBase));
+    return r.length === 0 ? 0 : r.reduce((a, b) => a + b, 0) / r.length;
+  };
+  const refStyleFit = (
+    style: FightingStyle,
+    guide: (typeof WINNING_ARCHETYPES)[WinningArchetype]
+  ) =>
+    guide.recommendedStyles.includes(style) ? 1 : guide.cautionStyles.includes(style) ? 0.6 : 0.3;
+  const expected = (attrs: Record<string, number>, style: FightingStyle) =>
+    (
+      Object.entries(WINNING_ARCHETYPES) as [
+        WinningArchetype,
+        (typeof WINNING_ARCHETYPES)[WinningArchetype],
+      ][]
+    )
+      .map(([archetype, guide]) => ({
+        archetype,
+        score:
+          Math.round(
+            (0.7 * refRatio(attrs, guide.designBars) + 0.3 * refStyleFit(style, guide)) * 100
+          ) / 1,
+      }))
+      .sort((a, b) => b.score - a.score);
+
+  const corpus: [Record<string, number>, FightingStyle][] = [
+    [{ ST: 15, CN: 8, SZ: 12, WT: 15, WL: 13, SP: 9, DF: 11 }, FightingStyle.StrikingAttack],
+    [{ ST: 3, CN: 21, SZ: 21, WT: 21, WL: 21, SP: 3, DF: 21 }, FightingStyle.WallOfSteel],
+    [{ ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, FightingStyle.AimedBlow],
+    [{ ST: 21, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 21, DF: 3 }, FightingStyle.LungingAttack],
+    [{ ST: 0, CN: 0, SZ: 0, WT: 0, WL: 0, SP: 0, DF: 0 }, FightingStyle.BashingAttack],
+  ];
+
+  it.each(corpus)('full sorted fit vector matches reference for %j / %s', (attrs, style) => {
+    expect(classifyArchetype(attrs as never, style)).toEqual(expected(attrs, style));
+  });
+});

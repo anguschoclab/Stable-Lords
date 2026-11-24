@@ -87,3 +87,43 @@ describe('topContenders', () => {
     expect(topContenders(state, ARENA, 2)).toHaveLength(2);
   });
 });
+
+describe('buildContenderIndex — equivalence with rankContenders (single-pass pin)', () => {
+  it('every arena entry equals the rankContenders ladder it replaces', async () => {
+    const { buildContenderIndex, rankContenders } =
+      await import('@/engine/championship/arenaChampionship');
+    const state = makeGameState({
+      week: 5,
+      absoluteWeek: 5,
+      roster: [
+        venueWarrior('a', 8),
+        venueWarrior('b', 6),
+        venueWarrior('c', 5),
+        venueWarrior('d', 4),
+        venueWarrior('e', 3),
+        venueWarrior('f', 2),
+        venueWarrior('g', 1),
+      ],
+      arenaChampions: { [ARENA]: titleAt('champ_x') },
+    });
+    const index = buildContenderIndex(state);
+    const expected = rankContenders(state, ARENA, undefined, { includeUnready: true })
+      .slice(0, 5)
+      .map((r) => r.warrior.id);
+    expect(index.get(ARENA)).toEqual(expected);
+    // depth=5 default: exactly five contenders surface.
+    expect(index.get(ARENA)).toHaveLength(5);
+  });
+
+  it('excluded arenas and empty ladders produce no entries', async () => {
+    const { buildContenderIndex } = await import('@/engine/championship/arenaChampionship');
+    const state = makeGameState({
+      week: 5,
+      absoluteWeek: 5,
+      roster: [makeWarrior({ id: 'green' as WarriorId })],
+      arenaChampions: {},
+    });
+    const index = buildContenderIndex(state);
+    for (const ids of index.values()) expect(ids.length).toBeGreaterThan(0);
+  });
+});

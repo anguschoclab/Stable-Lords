@@ -555,3 +555,46 @@ describe('planWorldBouts — eligibility gating', () => {
     expect(offers.flatMap((o) => o.warriorIds)).toContain('w1');
   });
 });
+
+describe('planWorldBouts — champion booking lock', () => {
+  let rng: IRNGService;
+
+  beforeEach(() => {
+    rng = new SeededRNG(42);
+  });
+
+  it('excludes a champion whose title is active (booking-locked)', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100), makeTestWarrior('champ', 200)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100), makeTestWarrior('w3', 100)]),
+    ]);
+    state.arenaChampions = {
+      arena_a: {
+        champion: { warriorId: 'champ' },
+        status: 'active',
+        history: [],
+        declinedContenders: {},
+      },
+    } as any;
+    const offers = planWorldBouts(state, rng);
+    expect(offers.flatMap((o) => o.warriorIds)).not.toContain('champ');
+  });
+
+  it('still books a champion whose title is dormant', () => {
+    const state = makeTestState([
+      makeTestRival('r1', [makeTestWarrior('w1', 100), makeTestWarrior('dormantChamp', 200)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 100), makeTestWarrior('w3', 100)]),
+    ]);
+    state.arenaChampions = {
+      arena_a: {
+        champion: { warriorId: 'dormantChamp' },
+        status: 'dormant',
+        history: [],
+        declinedContenders: {},
+      },
+    } as any;
+    const offers = planWorldBouts(state, rng);
+    // Eligible pool is large enough that the dormant champion must pair.
+    expect(offers.flatMap((o) => o.warriorIds)).toContain('dormantChamp');
+  });
+});

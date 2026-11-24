@@ -260,3 +260,57 @@ describe('processRecruitment — vacancy-pressure valuation', () => {
     expect(updatedPool.map((w) => w.id)).toEqual(['pw-premium']);
   });
 });
+
+describe('draft scoring — characterization (scoreCandidate pin)', () => {
+  it('tourneyDraftBonus is zero outside TOURNAMENT_CAMPAIGN', async () => {
+    const { tourneyDraftBonus } = await import('@/engine/ai/workers/recruitmentWorker');
+    const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
+    const recruit = makePoolWarrior({ attributes: attrs as never });
+    expect(tourneyDraftBonus(recruit, 'CONSOLIDATION')).toBe(0);
+    expect(tourneyDraftBonus(recruit, undefined)).toBe(0);
+    expect(tourneyDraftBonus(recruit, 'TOURNAMENT_CAMPAIGN')).toBeGreaterThan(0);
+  });
+
+  it('attrTotal ready-bonus decides between otherwise-identical recruits', () => {
+    // Competence is unset on the fixture owner → competenceJitter is inert
+    // (0) — the only score delta is (attrTotal - 70) * readyBonusPerPoint.
+    // Aggressive owners carry readyBonusPerPoint = 2.
+    const rival = makeMinimalRival();
+    rival.owner = { ...rival.owner, personality: 'Aggressive' };
+    const attrs70 = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+    const attrs84 = { ST: 24, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
+    const weak = makePoolWarrior({
+      id: 'pw-weak' as never,
+      name: 'Weak Twin',
+      attributes: attrs70 as never,
+    });
+    const strong = makePoolWarrior({
+      id: 'pw-strong' as never,
+      name: 'Strong Twin',
+      attributes: attrs84 as never,
+    });
+    const { updatedRival } = processRecruitment({
+      rival,
+      pool: [weak, strong],
+      week: 2,
+      rng: new SeededRNG(42),
+      isMajorDraftWeek: true,
+    });
+    // slotsAvailable > 1 signs both — the FIRST signing is the argmax.
+    expect(updatedRival.roster[0]?.name).toBe('Strong Twin');
+  });
+
+  it('the draft pick is deterministic for identical inputs', () => {
+    const rival = makeMinimalRival();
+    const pool = [makePoolWarrior({ name: 'A' }), makePoolWarrior({ name: 'B' })];
+    const run = () =>
+      processRecruitment({
+        rival,
+        pool: pool.map((w) => ({ ...w })),
+        week: 2,
+        rng: new SeededRNG(42),
+        isMajorDraftWeek: true,
+      }).updatedRival;
+    expect(run().roster.map((w) => w.name)).toEqual(run().roster.map((w) => w.name));
+  });
+});

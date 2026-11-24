@@ -20,32 +20,39 @@ Output of running the `perf-audit` skill over the codebase. Mechanical surface i
 ## Improvement items
 
 ### P1 — `bestMatchupModifier`: O(bidders × world-warriors) weekly scan (tier 1)
+
 - **Evidence:** `src/engine/ai/workers/competitionWorker/boutBidding/generation.ts:50-92` — per bookable bidder, full `ctx.nonVendettaOpponents` scan (every active rival warrior world-wide, ~450-1,200 at the 90-160 band) → ~0.5-1.2M lite `scorePairwiseMatchup` calls/week. `pipeline-baseline.md` §B3 names this the known residual hotspot.
 - **Measure first:** `bun --cpu-prof` on `soak.mjs` to confirm `scorePairwiseMatchup`/`bestMatchupModifier` self-time share vs `RivalStrategyPass/{churn,offers,roster,finish}` modules.
 - **Fix levers (pick by profile):** (a) feasibility pre-filter — build a per-week coarse bucket index on `nonVendettaOpponents` (fame band × style) once per stable instead of a flat scan — most pairs can never produce a winning bid; (b) early-exit when score hits the clamp ceiling (+5 post-clamp is unreachable past a bound); (c) per-week WeakMap memo keyed on the opponent-pool identity for repeated (warrior, pool) scans across intents.
 - **Determinism:** pure scoring, no RNG — safe, but assert byte-identical anyway (max-pick must reproduce tie order exactly → keep the first-max-wins semantics of `Math.max` iteration order).
 
 ### P2 — `promoter` pass: unprofiled #2 (tier 1)
+
 - **Evidence:** ~9-19% of week time (`baseline.json`, `pipeline-baseline.md`); `PromoterPass.ts`/`offerMatchmaking.ts` do per-offer sorting + candidate scans (`sortedBy` hits at offerMatchmaking.ts:168-205).
 - **Measure first:** same `bun --cpu-prof` run — decompose promoter internals before choosing a lever (likely: per-week venue/candidate index or top-k pruning replacing full sorts).
 
 ### P3 — `useWorldState` broad subscription (tier 4, UI re-render fan-out)
+
 - **Evidence:** `src/state/selectors.ts:7` — `useGameStore(reconstructGameState)` returns a single global-memo object; ANY of ~70 tracked fields changing re-renders all ~20+ subscribers (widgets, pages, hooks: `SchedulingWidget`, `NextBoutWidget`, `useBookingOffice`, `useTrainingAssignments`, `useWeekExecution`, `HeadToHead`, `Gazette`, `StableLedger`, `useRivalryAlerts`, `useStableAdvisor`, `useCoachTip`, `useBloodfeudMarks`, `useWorldOverview`, `useArenaHubData`, `TournamentSchedule`, `useFtueBout`…).
 - **Fix:** migrate the highest-render-cost consumers to narrow `useShallow` selectors (precedents already in `selectors.ts`: `useReputationState`, `useWarriorNameState`, `useArenaPreferences`, `useBookmarks`). Start with always-mounted widgets.
 - **Measure first:** React Profiler render counts during (a) week advance, (b) bout animation ticks — target the subscribers that re-render most.
 
 ### P4 — Decompose the ~48% non-pass harness overhead (measurement item)
+
 - **Evidence:** 5-wk `baseline.json` totals 815 ms/wk vs ~422 ms/wk inside passes. Doc warns harness ms/wk ≠ `advanceWeek` (archive drain, pulse logging, tracker) — don't assume; decompose it.
 - **Check:** `WEEK_CACHE_REBUILDS` telemetry — `CACHE_TOUCHING_KEYS` is deliberately conservative (`weekPipeline/caches.ts:20`); if rebuilds fire multiple times/week over ~1,000 warriors, narrowing the key set or the rebuild trigger is a real lever. Plus `structuredCloneCost` re-check at populated-state size (gate only pins fresh-state <50 ms).
 
 ### P5 — `GlobalSearch` corpus rescan per store change (tier 4, minor)
+
 - **Evidence:** `src/components/layout/GlobalSearch.tsx:251` — `useGameStore(useShallow(s => searchEntities(s, q, 12)))` reruns the O(corpus) score+sort on EVERY store change while search is open (useShallow only dedupes the result).
 - **Fix:** WeakMap memo on (state, q) inside `searchEntities`, or compute inside `useMemo` on [state, query] — trivial, low priority since the modal is open briefly.
 
 ### P6 — Skill-doc correction (housekeeping)
+
 - `perf-audit` SKILL.md says `arenaHistory` is "hundreds→thousands, never shrinks" — wrong: `TRUNCATION_CAPS.arenaHistory = 500`. Update the cardinality rubric line to cite the caps (arenaHistory/matchHistory/killEvents/ledger 500; graveyard/retired 200; newsletter 100) so future audits triage against the true bounds.
 
 ### Checked & dismissed
+
 - `WeekFinalizationService.ts:44` `[...window, entry]` — bounded mood window (~≤50).
 - `tournamentWorker.ts:127` `.filter().map()` — per-rival roster, small-N.
 - `ProgressionPass.ts:142` `structuredClone(state.progression)` — small object, weekly.

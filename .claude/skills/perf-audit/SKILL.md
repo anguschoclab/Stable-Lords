@@ -29,7 +29,7 @@ Secondary censuses (module/function size, not speed per se):
 in `KNOWN_EXCEPTIONS` inside `src/test/megaplan/scanInLoop.guard.test.ts` /
 `entriesInLoop.guard.test.ts` — keyed on file + code substring, `why` must be a
 concrete reason >20 chars (no pending/todo/fixme/baseline). The ratchet is
-bidirectional: unlisted violations fail, *and* stale entries that no longer
+bidirectional: unlisted violations fail, _and_ stale entries that no longer
 match a live violation fail — fix the code or justify it, then delete the
 entry when the scan goes clean.
 
@@ -113,22 +113,22 @@ script exists).
 
 ## Phase 4 — Fix recipes
 
-| Smell | Fix |
-|-------|-----|
-| `arr.includes(x)` / `indexOf` in a loop | `keySet(arr, k)` hoisted above the loop |
-| `arr.find(x => x.id === id)` in a loop | `indexBy(arr, x => x.id)` — or the existing `state.warriorMap` / `rivalMap` / `rivalryMap` / `grudgeMap` / `warriorToStableMap` week caches in pipeline code |
-| `.filter(pred)` per key in a loop | `groupBy(arr, keyFn)` once before the loop |
-| warrior/stable by id or name, anywhere | `findWarriorById`, `getWarriorIndex`, `searchEntities` (`src/engine/core/entityIndex.ts`) |
-| `[...acc, x]` / `{...acc, k}` in reduce/loop | `acc.push` / `acc[k] =` on a mutable local, or `Set`/`Map` accumulation |
-| `.filter().map()` chains | single `for`/`reduce` pass |
-| loop-invariant `Object.entries`/sort/index rebuilt per iteration | hoist above the loop (`entries-in-loop.mjs` flags these) |
-| same derivation recomputed by several passes/weeks | identity-keyed WeakMap memo — precedents in the module-cache registry: `entityIndex.indexCache`, `arenaFit.underservedByHistory`, `headToHead.h2hByHistory`, `historyUtils.fightsByWarrior`, `warriorStatus.deadIdSetCache`, `stableCouncilService.reportCache` |
-| `EnumOrder.indexOf(x)` in a hot path | module-scope `Map` — `STYLE_INDEX` precedent (`src/constants/combat/combat/matchup.ts`) |
-| expensive derived data in render | `useShallow` selector in `src/state/selectors.ts`; `useMemo`/`useCallback`/`memo` are legitimate — **no React Compiler** — but verify a re-render problem is real first |
-| hundreds-row list (rivals, arenaHistory, newsletter, graveyard) | `useVirtualizer` (`@tanstack/react-virtual` is installed — precedents: `WarriorLeaderboard`, `StableRankings`, `RivalVirtualRows`, `VirtualizedFallenGrid`); needs the `react-hooks/incompatible-library` disable comment |
-| search/sort list UX | `useListShell` — the established `useMemo` + `pageSize` window + "show all" pattern; `useDeferredValue`/`startTransition` have **no local precedent** — measured cases only |
-| bundle weight | `autoCodeSplitting` is already on (TanStackRouterVite); heavy deps go through `manualChunks` in `vite.config.ts`; `React.lazy` for one-off heavy components (3 precedents in `src/routes/__root.tsx`) |
-| heavy data needed only on some paths | lazy-init — `loadCombatNarrative` precedent (`src/data/narrative/index.ts`) |
+| Smell                                                            | Fix                                                                                                                                                                                                                                                             |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `arr.includes(x)` / `indexOf` in a loop                          | `keySet(arr, k)` hoisted above the loop                                                                                                                                                                                                                         |
+| `arr.find(x => x.id === id)` in a loop                           | `indexBy(arr, x => x.id)` — or the existing `state.warriorMap` / `rivalMap` / `rivalryMap` / `grudgeMap` / `warriorToStableMap` week caches in pipeline code                                                                                                    |
+| `.filter(pred)` per key in a loop                                | `groupBy(arr, keyFn)` once before the loop                                                                                                                                                                                                                      |
+| warrior/stable by id or name, anywhere                           | `findWarriorById`, `getWarriorIndex`, `searchEntities` (`src/engine/core/entityIndex.ts`)                                                                                                                                                                       |
+| `[...acc, x]` / `{...acc, k}` in reduce/loop                     | `acc.push` / `acc[k] =` on a mutable local, or `Set`/`Map` accumulation                                                                                                                                                                                         |
+| `.filter().map()` chains                                         | single `for`/`reduce` pass                                                                                                                                                                                                                                      |
+| loop-invariant `Object.entries`/sort/index rebuilt per iteration | hoist above the loop (`entries-in-loop.mjs` flags these)                                                                                                                                                                                                        |
+| same derivation recomputed by several passes/weeks               | identity-keyed WeakMap memo — precedents in the module-cache registry: `entityIndex.indexCache`, `arenaFit.underservedByHistory`, `headToHead.h2hByHistory`, `historyUtils.fightsByWarrior`, `warriorStatus.deadIdSetCache`, `stableCouncilService.reportCache` |
+| `EnumOrder.indexOf(x)` in a hot path                             | module-scope `Map` — `STYLE_INDEX` precedent (`src/constants/combat/combat/matchup.ts`)                                                                                                                                                                         |
+| expensive derived data in render                                 | `useShallow` selector in `src/state/selectors.ts`; `useMemo`/`useCallback`/`memo` are legitimate — **no React Compiler** — but verify a re-render problem is real first                                                                                         |
+| hundreds-row list (rivals, arenaHistory, newsletter, graveyard)  | `useVirtualizer` (`@tanstack/react-virtual` is installed — precedents: `WarriorLeaderboard`, `StableRankings`, `RivalVirtualRows`, `VirtualizedFallenGrid`); needs the `react-hooks/incompatible-library` disable comment                                       |
+| search/sort list UX                                              | `useListShell` — the established `useMemo` + `pageSize` window + "show all" pattern; `useDeferredValue`/`startTransition` have **no local precedent** — measured cases only                                                                                     |
+| bundle weight                                                    | `autoCodeSplitting` is already on (TanStackRouterVite); heavy deps go through `manualChunks` in `vite.config.ts`; `React.lazy` for one-off heavy components (3 precedents in `src/routes/__root.tsx`)                                                           |
+| heavy data needed only on some paths                             | lazy-init — `loadCombatNarrative` precedent (`src/data/narrative/index.ts`)                                                                                                                                                                                     |
 
 ### The caching discipline — read before adding ANY cache
 

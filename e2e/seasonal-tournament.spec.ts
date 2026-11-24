@@ -676,41 +676,56 @@ test(
       // A late-appearing blocking overlay (resolution modal, death modal) can
       // still be up when we navigate — a single actionability wait would stall
       // for the whole test timeout. Dismiss first, then retry the click.
+      // Sub-page links render only under their hub — when the target is absent
+      // (e.g. 'Tournaments' while the Stable hub is active), switch hubs so the
+      // link surfaces on the next attempt. Alternate so a transient miss under
+      // either hub still converges.
+      const hubHrefs = ['/world', '/stable'];
+      const navScope = () => (isMobile ? page.getByRole('dialog') : page.locator('nav'));
+      const targetLink = () => navScope().getByRole('link', { name, exact: opts.exact }).first();
+      const openNav = async () => {
+        if (
+          isMobile &&
+          !(await navScope()
+            .isVisible()
+            .catch(() => false))
+        )
+          await page
+            .getByRole('button', { name: 'Open navigation menu' })
+            .click({ timeout: 5_000 });
+      };
+      const tryClick = async (timeout: number) => {
+        await openNav();
+        await targetLink().click({ timeout });
+      };
+      const switchHub = async (href: string) => {
+        await openNav();
+        await navScope().locator(`a[href="${href}"]`).first().click({ timeout: 3_000 });
+        await page.waitForTimeout(300);
+      };
       for (let attempt = 0; attempt < 6; attempt++) {
         await dismissBlockingOverlays(page);
         try {
-          if (isMobile) {
-            await page
-              .getByRole('button', { name: 'Open navigation menu' })
-              .click({ timeout: 5_000 });
-            await page
-              .getByRole('dialog')
-              .getByRole('link', { name, exact: opts.exact })
-              .first()
-              .click({ timeout: 5_000 });
-          } else {
-            await page
-              .locator('nav')
-              .getByRole('link', { name, exact: opts.exact })
-              .first()
-              .click({ timeout: 5_000 });
-          }
+          await tryClick(5_000);
           return;
         } catch {
-          /* covered by an overlay — retry */
+          await switchHub(hubHrefs[attempt % 2]).catch(() => undefined);
         }
       }
-      // Final attempt without a catch so the real Playwright error surfaces.
-      if (isMobile) {
-        await page.getByRole('button', { name: 'Open navigation menu' }).click();
-        await page
-          .getByRole('dialog')
-          .getByRole('link', { name, exact: opts.exact })
-          .first()
-          .click();
-      } else {
-        await page.locator('nav').getByRole('link', { name, exact: opts.exact }).first().click();
+      // Final attempts without a catch so the real Playwright error surfaces:
+      // direct, then once after switching to each hub — covers either hub's
+      // pages regardless of where the loop left the rail.
+      let lastErr: unknown;
+      for (const href of [null, ...hubHrefs]) {
+        if (href) await switchHub(href).catch(() => undefined);
+        try {
+          await tryClick(10_000);
+          return;
+        } catch (e) {
+          lastErr = e;
+        }
       }
+      throw lastErr;
     };
 
     // ── 1–3. Title → New Game → Orphanage FTUE → App Shell ─────────────────

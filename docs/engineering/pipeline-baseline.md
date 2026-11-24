@@ -175,6 +175,19 @@ Pass-level: `rivalStrategy` 282.5→213.7 ms avg (-24%), `promoter` 45.7→37.2
 ms avg. Vs the older recorded baseline (603.6 ms/wk, different session):
 -23.7%.
 
+### B6 follow-up (findings-doc residuals)
+
+- `bestMatchupModifier` (P1) — per-member bound prune + bucket-bound
+  early-exit; exact because the minimal-ctx pairwise score is
+  `100 + bonus*25 + fameTerm + (aWR-bWR)*20`. Soak: `rivalStrategy`
+  213.7→174.7 ms, `promoter` 37.2→31.0 ms, **377.7 ms/wk total** (summary
+  still byte-identical).
+- P2/P4/P5/P6 measured and documented in
+  `.devin/plans/perf-audit-sweep-b6.md` — promoter internals flat (no
+  lever); the ~150 ms/wk non-pass delta is bout resolution
+  (`runBoutSimulationPass` isn't a telemetry pass) + harness bookkeeping;
+  GlobalSearch rescan already bounded by index `searchCache`.
+
 Parallelism gate re-run (40 wk, pool=4): 13,955 vs 42,968 ms → **0.32×,
 still FAIL** — the deficit is structural (per-week GameState clone
 round-trips), not spawn-dominated. `poolSize = 1` remains shipped.

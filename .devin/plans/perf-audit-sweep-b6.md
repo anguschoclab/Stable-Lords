@@ -8,9 +8,23 @@ only, byte-identical A/B soak, commit per item.
 
 - ✅ P1 `bestMatchupModifier` per-member bound + early-exit — landed, soak
   byte-identical; `rivalStrategy` 213.7→174.7 ms avg, `promoter` 37.2→31.0
-- ⬜ P2 promoter pass internals (measure → act or document)
-- ⬜ P4 non-pass harness overhead decomposition (measure → document)
-- ⬜ P5 GlobalSearch rescan memo (trivial)
+- ✅ P2 promoter pass internals — DOCUMENTED, no lever. Post-P1 profile
+  (40wk cpu-prof): `evalOpponentCandidate` ~2.4% self (guard checks +
+  `getPairKey` alloc), `collectCandidates` 0.72%, `findOpponent` 0.43% —
+  flat, no dominant site. A nested-map pair-key refactor touches ~6 sites
+  for ~1% wk — poor trade. Promoter now 31 ms avg.
+- ✅ P4 non-pass harness overhead — DOCUMENTED. 377.7 total vs ~224 ms in
+  instrumented passes ≈ 154 ms/wk delta = **bout resolution**
+  (`runBoutSimulationPass` runs inside the world stage but isn't a
+  telemetry pass — combat fns are flat <1% each: resolveExchange,
+  runAttackExchange, resolveOEAL/StylePassives, rollBoutLearns,
+  tickArenaEvents, narrateHitEvent) + harness bookkeeping (pulse logs,
+  archive drain, trackers). Not a hidden hotspot.
+- ✅ P5 GlobalSearch rescan — DOCUMENTED, already bounded. `searchEntities`
+  has a per-index `searchCache` keyed `q|limit` and the corpus is
+  WeakMap-cached on state identity — a store change while the modal is open
+  costs one ~1-2 ms corpus pass; closed modal costs nothing (`enabled`
+  guard). Real but trivial; modal-open-only.
 - ✅ P6 perf-audit SKILL.md cardinality correction — already correct in doc
   (lines 68-73 cite TRUNCATION_CAPS); findings item stale
 

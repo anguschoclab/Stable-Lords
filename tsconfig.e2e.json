@@ -50,6 +50,7 @@
     "scripts/nodeArchiveService.ts",
     "scripts/probe-*.ts",
     "scripts/simulation-harness.ts",
-    "scripts/tournament-dominance.ts"
+    "scripts/tournament-dominance.ts",
+    "scripts/avatar-pool"
   ]
 }

@@ -221,11 +221,6 @@ describe('PhysicalsPreview', () => {
 });
 
 describe('useWarriorBuilderState — presentation picker (V32)', () => {
-  const hook = () =>
-    renderHook(() =>
-      useWarriorBuilderState({ onCreateWarrior: vi.fn(), maxRoster: 10, currentRosterSize: 0 })
-    );
-
   it('defaults to auto and omits gender from the create payload', () => {
     const onCreate = vi.fn();
     const { result } = renderHook(() =>

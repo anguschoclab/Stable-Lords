@@ -19,7 +19,7 @@ const trainer: Trainer = {
 };
 
 const promoter: Promoter = {
-  id: 'pr-1',
+  id: 'pr-1' as Promoter['id'],
   name: 'Circus Maximus',
   age: 50,
   personality: 'Flashy',

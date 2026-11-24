@@ -15,7 +15,7 @@ import { customCreate, refreshPool } from './recruitActions/recruitPoolOps';
 
 const SCOUT_COST = 25;
 
-interface CustomCreateData {
+export interface CustomCreateData {
   name: string;
   style: FightingStyle;
   attributes: Attributes;

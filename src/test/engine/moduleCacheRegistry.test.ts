@@ -53,6 +53,8 @@ const REGISTRY: Record<string, string> = {
     'Module-level avatar catalog cache; loaded once per context from the public manifest, resettable via setAvatarCatalog/clearAvatarCatalog.',
   'matchmaking/arenaFit.ts:underservedByHistory':
     'WeakMap keyed on arenaHistory identity; caches per-week underserved weights.',
+  'matchmaking/arenaFit.ts:indoorArenaIdSet':
+    'Lazy read-only singleton over static arena-registry tag data; never reassigned after first build.',
   'advisor/stableCouncilService.ts:reportCache': 'WeakMap keyed on GameState identity.',
   'advisor/campaignFocusEvaluator.ts:contenderSetCache':
     'WeakMap keyed on the roster-map identity it derives from.',

@@ -373,19 +373,24 @@ export interface ArchetypeFit {
 
 /** How much a single bar is satisfied: 1 when met, partial credit below. */
 function barRatio(attrs: Attributes, bars: ArchetypeDesignBars): number {
-  const ratios: number[] = [];
+  let sum = 0;
+  let count = 0;
   const min = (v: number, floor: number) => Math.min(v / floor, 1);
   const max = (v: number, ceil: number) => Math.min(ceil / v, 1);
-  if (bars.stMin !== undefined) ratios.push(min(attrs.ST, bars.stMin));
-  if (bars.cnMin !== undefined) ratios.push(min(attrs.CN, bars.cnMin));
-  if (bars.szMax !== undefined) ratios.push(max(attrs.SZ, bars.szMax));
-  if (bars.wtMin !== undefined) ratios.push(min(attrs.WT, bars.wtMin));
-  if (bars.wlMin !== undefined) ratios.push(min(attrs.WL, bars.wlMin));
-  if (bars.wlMax !== undefined) ratios.push(max(attrs.WL, bars.wlMax));
-  if (bars.spMax !== undefined) ratios.push(max(attrs.SP, bars.spMax));
-  if (bars.dfMin !== undefined) ratios.push(min(attrs.DF, bars.dfMin));
-  if (bars.minRipBase !== undefined) ratios.push(min(attrs.SP + attrs.DF, bars.minRipBase));
-  return ratios.length === 0 ? 0 : ratios.reduce((a, b) => a + b, 0) / ratios.length;
+  const acc = (r: number) => {
+    sum += r;
+    count += 1;
+  };
+  if (bars.stMin !== undefined) acc(min(attrs.ST, bars.stMin));
+  if (bars.cnMin !== undefined) acc(min(attrs.CN, bars.cnMin));
+  if (bars.szMax !== undefined) acc(max(attrs.SZ, bars.szMax));
+  if (bars.wtMin !== undefined) acc(min(attrs.WT, bars.wtMin));
+  if (bars.wlMin !== undefined) acc(min(attrs.WL, bars.wlMin));
+  if (bars.wlMax !== undefined) acc(max(attrs.WL, bars.wlMax));
+  if (bars.spMax !== undefined) acc(max(attrs.SP, bars.spMax));
+  if (bars.dfMin !== undefined) acc(min(attrs.DF, bars.dfMin));
+  if (bars.minRipBase !== undefined) acc(min(attrs.SP + attrs.DF, bars.minRipBase));
+  return count === 0 ? 0 : sum / count;
 }
 
 /** Style-fit weight: recommended styles express the archetype fully. */
@@ -395,19 +400,23 @@ function styleFit(style: FightingStyle, guide: ArchetypeGuide): number {
   return 0.3;
 }
 
+/** Hoisted entries — Object.entries order is stable over a static literal. */
+const ARCHETYPE_ENTRIES = Object.entries(WINNING_ARCHETYPES) as [
+  WinningArchetype,
+  ArchetypeGuide,
+][];
+
 /**
  * Score a build's fit against each winning archetype — returns all six
  * fits ranked best-first. Pure and deterministic; consumed by Design
  * Review, Style Archives, and AI doctrine.
  */
 export function classifyArchetype(attrs: Attributes, style: FightingStyle): ArchetypeFit[] {
-  const fits = (Object.entries(WINNING_ARCHETYPES) as [WinningArchetype, ArchetypeGuide][]).map(
-    ([archetype, guide]) => ({
-      archetype,
-      score:
-        Math.round((0.7 * barRatio(attrs, guide.designBars) + 0.3 * styleFit(style, guide)) * 100) /
-        1,
-    })
-  );
+  const fits = ARCHETYPE_ENTRIES.map(([archetype, guide]) => ({
+    archetype,
+    score:
+      Math.round((0.7 * barRatio(attrs, guide.designBars) + 0.3 * styleFit(style, guide)) * 100) /
+      1,
+  }));
   return fits.sort((a, b) => b.score - a.score);
 }

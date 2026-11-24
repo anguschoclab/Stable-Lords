@@ -189,10 +189,13 @@ function scoreCandidate(
 
   // Ready-now appetite — Aggressive wants attribute totals today.
   if (weights.readyBonusPerPoint > 0) {
-    const attrTotal = Object.values(w.attributes ?? {}).reduce<number>(
-      (acc, v) => acc + (typeof v === 'number' ? v : 0),
-      0
-    );
+    // for…in + typeof ≡ Object.values().reduce(+(typeof number ? v : 0)) —
+    // same enumerable keys, same numeric-only sum, no array allocation.
+    let attrTotal = 0;
+    for (const k in w.attributes ?? {}) {
+      const v = w.attributes[k as keyof typeof w.attributes];
+      if (typeof v === 'number') attrTotal += v;
+    }
     score += Math.max(0, attrTotal - 70) * weights.readyBonusPerPoint;
   }
 

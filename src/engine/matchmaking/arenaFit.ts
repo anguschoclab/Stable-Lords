@@ -187,14 +187,26 @@ function tagFitScore(
  *  venue. Ties resolve to the earliest-fought venue (insertion order).
  *  Tournament-only grounds (Bloodsands) are ineligible — a record there can
  *  never be defended, so it must not become "home". */
+/** Static tournament-ground exclusion — identical membership every call. */
+const EXCLUDED_ARENA_SET = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
+
+/**
+ * Indoor venue ids — registry content is static post-boot; laziness avoids
+ * any init-order dependency on the arena registry being populated.
+ */
+let indoorArenaIdSet: Set<string> | undefined;
+
+function indoorArenaIds(): Set<string> {
+  return (indoorArenaIdSet ??= new Set(getArenasByTag('indoor').map((a) => a.id)));
+}
+
 function homeVenueOf(warrior: Warrior): { arenaId: string; bouts: number } | undefined {
   const recs = warrior.career?.byArena;
   if (!recs) return undefined;
-  const excluded = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
   let best: string | undefined;
   let bestBouts = 0;
   for (const [arenaId, rec] of Object.entries(recs)) {
-    if (excluded.has(arenaId)) continue;
+    if (EXCLUDED_ARENA_SET.has(arenaId)) continue;
     const bouts = (rec.wins ?? 0) + (rec.losses ?? 0);
     if (bouts > bestBouts) {
       best = arenaId;
@@ -223,8 +235,9 @@ interface ArenaEligibilityOpts {
  * - Hazardous weather restricts the set to indoor venues when one exists.
  */
 export function eligibleArenasFor(warrior: Warrior, opts?: ArenaEligibilityOpts): ArenaConfig[] {
-  const excluded = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
-  for (const id of opts?.bannedArenaIds ?? []) excluded.add(id);
+  const excluded = opts?.bannedArenaIds?.length
+    ? new Set<string>([...EXCLUDED_ARENA_SET, ...opts.bannedArenaIds])
+    : EXCLUDED_ARENA_SET;
 
   const fame = warrior.fame ?? 0;
   const elite =
@@ -238,7 +251,7 @@ export function eligibleArenasFor(warrior: Warrior, opts?: ArenaEligibilityOpts)
   );
 
   if (opts?.weather && HAZARDOUS_WEATHER.includes(opts.weather)) {
-    const indoorIds = new Set(getArenasByTag('indoor').map((a) => a.id));
+    const indoorIds = indoorArenaIds();
     const indoor = eligible.filter((a) => indoorIds.has(a.id));
     if (indoor.length > 0) eligible = indoor;
   }

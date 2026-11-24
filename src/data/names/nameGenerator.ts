@@ -100,6 +100,23 @@ function resolveCulture(opts: WarriorNameOptions, rng: IRNGService): NamingCultu
 // ─── Public API ───────────────────────────────────────────────────────────
 
 /**
+ * Deduped+sanitized CULTURE_SEEDS per culture — pure f(culture) over static
+ * data, so the empty-seedPool path (nearly every caller) skips the per-call
+ * spread/dedupe/sanitize rebuild. Pool order = dedupe insertion order, so
+ * rng.pick sees the identical index stream.
+ */
+const SANITIZED_POOL_CACHE = new Map<NamingCulture, string[]>();
+
+function sanitizedCulturePool(culture: NamingCulture): string[] {
+  let pool = SANITIZED_POOL_CACHE.get(culture);
+  if (!pool) {
+    pool = [...new Set(CULTURE_SEEDS[culture])].map(sanitize);
+    SANITIZED_POOL_CACHE.set(culture, pool);
+  }
+  return pool;
+}
+
+/**
  * Generates a unique warrior name for the given culture/context.
  * Respects `usedNames`; guarantees a non-colliding return.
  */
@@ -107,7 +124,9 @@ export function generateWarriorName(opts: WarriorNameOptions = {}): string {
   const rng = opts.rng ?? entropyRng();
   const culture = resolveCulture(opts, rng);
   const seedPool = opts.seedPool ?? [];
-  const pool = [...new Set([...seedPool, ...CULTURE_SEEDS[culture]])].map(sanitize);
+  const pool = seedPool.length
+    ? [...new Set([...seedPool, ...CULTURE_SEEDS[culture]])].map(sanitize)
+    : sanitizedCulturePool(culture);
 
   let lastCandidate = '';
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {

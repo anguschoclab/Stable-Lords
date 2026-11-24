@@ -127,26 +127,37 @@ function contenderComparator(a: RankedContender, b: RankedContender): number {
  * `opts.bookedIds` additionally filters warriors already signed for the
  * target week — used by scheduling only, never by dormancy accounting.
  */
+/** Reigning-champion ids under the delta overlay — rankContenders' per-arena invariant. */
+export function crownedWarriorIds(state: GameState, delta?: ChampionshipDelta): Set<WarriorId> {
+  const mergedTitles = { ...(state.arenaChampions ?? {}), ...(delta?.arenaChampions ?? {}) };
+  return new Set(
+    Object.values(mergedTitles)
+      .map((t) => t.champion?.warriorId)
+      .filter((id): id is WarriorId => id != null)
+  );
+}
+
 export function rankContenders(
   state: GameState,
   arenaId: string,
   delta?: ChampionshipDelta,
-  opts?: { bookedIds?: Set<string>; includeUnready?: boolean }
+  opts?: {
+    bookedIds?: Set<string>;
+    includeUnready?: boolean;
+    /** Precomputed arena-invariants — seeding loops arenas over one delta. */
+    crownedIds?: Set<WarriorId>;
+    allWarriors?: Warrior[];
+  }
 ): RankedContender[] {
   const now = state.absoluteWeek;
   const title = titleOf(state, delta, arenaId);
   const declined = title?.declinedContenders ?? {};
 
   // Crowned ids — state titles overlaid with delta writes (delta wins per key).
-  const mergedTitles = { ...(state.arenaChampions ?? {}), ...(delta?.arenaChampions ?? {}) };
-  const crownedIds = new Set(
-    Object.values(mergedTitles)
-      .map((t) => t.champion?.warriorId)
-      .filter((id): id is WarriorId => id != null)
-  );
+  const crownedIds = opts?.crownedIds ?? crownedWarriorIds(state, delta);
 
   const rows: RankedContender[] = [];
-  for (const w of collectAllWarriors(state)) {
+  for (const w of opts?.allWarriors ?? collectAllWarriors(state)) {
     const rec = w.career?.byArena?.[arenaId];
     if (!rec) continue;
     if (rec.wins + rec.losses < ARENA_TITLE.MIN_BOUTS) continue;

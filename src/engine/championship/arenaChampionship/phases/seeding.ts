@@ -4,7 +4,8 @@ import { getAllArenas } from '@/data/arenas';
 import type { ChampionshipDelta } from '../core';
 import { titleOf, ensureTitle, crown, awardEpithet, CHAMPIONSHIP_EXCLUDED_ARENAS } from '../core';
 import type { RankedContender } from '../queries';
-import { rankContenders } from '../queries';
+import { rankContenders, crownedWarriorIds } from '../queries';
+import { collectAllWarriors } from '@/engine/core/warriorCollection';
 
 // ─── 1. Seeding ─────────────────────────────────────────────────────────────
 
@@ -21,10 +22,15 @@ export function seedChampions(state: GameState, delta: ChampionshipDelta): void 
     .sort();
 
   // Ranked contenders per arena, computed once against state (not delta) —
-  // seeding evaluates the pre-existing record book.
+  // seeding evaluates the pre-existing record book. crownedIds + the warrior
+  // list are arena-invariant across the loop — hoist them.
+  const seedOpts = {
+    crownedIds: crownedWarriorIds(state, delta),
+    allWarriors: collectAllWarriors(state),
+  };
   const rankedByArena = new Map<string, RankedContender[]>();
   for (const arenaId of arenas) {
-    rankedByArena.set(arenaId, rankContenders(state, arenaId, delta));
+    rankedByArena.set(arenaId, rankContenders(state, arenaId, delta, seedOpts));
   }
 
   // claimed: warriorId → { arenaId, margin }

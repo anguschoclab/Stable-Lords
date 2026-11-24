@@ -1,5 +1,5 @@
 import { GameState, Warrior, BoutOffer } from '@/types/state.types';
-import type { StableId, FightId, LedgerEntryId } from '@/types/shared.types';
+import type { FightId, LedgerEntryId } from '@/types/shared.types';
 import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/bout/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
@@ -74,13 +74,21 @@ interface BuildPurseImpactsArgs {
  * Player payouts go via treasuryDelta. Rival payouts are handled in
  * stableManager.weeklyIncome (which iterates arenaHistory and adds
  * FIGHT_PURSE / WIN_BONUS per bout) — paying them twice causes treasuries
- * to balloon into the millions, so when the winner fights for a rival stable
- * these impacts are skipped entirely.
+ * to balloon into the millions, so impacts only emit when a combatant fights
+ * for the player. The player can sit on EITHER side: rival-proposed bouts,
+ * title defenses vs a rival champion, and grudge matches all place the
+ * contract warrior on side A with the player on side D — gating on side A
+ * alone left those bouts paying the player nothing.
  */
 function buildPurseImpacts(args: BuildPurseImpactsArgs): StateImpact[] {
   const { state, contract, purse, showFee, winnerId } = args;
   const { currentWId, currentOId, isRivalBout, rng } = args;
-  if (isRivalBout) return [];
+  const playerId = !isRivalBout
+    ? currentWId
+    : state.warriorToStableMap?.get(currentOId)?.isPlayer
+      ? currentOId
+      : undefined;
+  if (!playerId) return [];
   const idRng = resolveRng(rng, state.week * 7919 + 11 + currentWId.length);
   const ledgerEntry = (label: string, amount: number) => ({
     id: idRng.uuid() as LedgerEntryId,
@@ -89,13 +97,13 @@ function buildPurseImpacts(args: BuildPurseImpactsArgs): StateImpact[] {
     amount,
     category: 'fight' as const,
   });
-  if (winnerId === currentWId) {
+  if (winnerId === playerId) {
     return [
       { treasuryDelta: purse },
       { ledgerEntries: [ledgerEntry(`Purse — ${contract.id}`, purse)] },
     ];
   }
-  if (winnerId === currentOId) {
+  if (winnerId === (playerId === currentWId ? currentOId : currentWId)) {
     return [
       { treasuryDelta: showFee },
       { ledgerEntries: [ledgerEntry(`Show fee — ${contract.id}`, showFee)] },
@@ -154,7 +162,6 @@ export function processContractPayouts(args: ContractPayoutArgs): StateImpact[] 
   if (!contract) return [];
 
   const impacts: StateImpact[] = [];
-  const rivalsUpdates = new Map<StableId, Partial<import('@/types/state.types').RivalStableData>>();
 
   const purse = contract.purse;
   const showFee = Math.floor(purse * 0.2);
@@ -177,10 +184,6 @@ export function processContractPayouts(args: ContractPayoutArgs): StateImpact[] 
       rng,
     })
   );
-
-  if (rivalsUpdates.size > 0) {
-    impacts.push({ rivalsUpdates });
-  }
 
   // Promoter history only when the promoter exists — the impact replaces the
   // whole record, so an unknown promoterId would emit an unchanged map.

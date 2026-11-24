@@ -209,6 +209,72 @@ describe('resolveHelpers', () => {
       expect(result).toEqual([]);
     });
 
+    const payoutState = (wIsPlayer: boolean, oIsPlayer: boolean) =>
+      ({
+        week: 5,
+        promoters: {},
+        boutOffers: {},
+        warriorToStableMap: new Map([
+          ['warrior-a', { stableId: wIsPlayer ? 'player' : 'rival-1', isPlayer: wIsPlayer }],
+          ['warrior-d', { stableId: oIsPlayer ? 'player' : 'rival-2', isPlayer: oIsPlayer }],
+        ]),
+        rivalMap: new Map([
+          ['rival-1', { id: 'rival-1' }],
+          ['rival-2', { id: 'rival-2' }],
+        ]),
+      }) as unknown as GameState;
+
+    const contract = { id: 'c1', promoterId: 'p1', purse: 500 } as unknown as BoutOffer;
+
+    it('pays the player when their warrior fights on side D of a rival-signed contract (win)', () => {
+      const impacts = processContractPayouts({
+        state: payoutState(false, true),
+        contract,
+        winnerId: 'warrior-d',
+        currentWId: 'warrior-a',
+        currentOId: 'warrior-d',
+      });
+      const treasury = impacts.find((i) => i.treasuryDelta != null);
+      expect(treasury?.treasuryDelta).toBe(500);
+    });
+
+    it('pays the player a show fee when their side-D warrior loses or draws', () => {
+      for (const winnerId of ['warrior-a', null]) {
+        const impacts = processContractPayouts({
+          state: payoutState(false, true),
+          contract,
+          winnerId,
+          currentWId: 'warrior-a',
+          currentOId: 'warrior-d',
+        });
+        const treasury = impacts.find((i) => i.treasuryDelta != null);
+        expect(treasury?.treasuryDelta).toBe(100);
+      }
+    });
+
+    it('pays nothing for rival-vs-rival contracts', () => {
+      const impacts = processContractPayouts({
+        state: payoutState(false, false),
+        contract,
+        winnerId: 'warrior-a',
+        currentWId: 'warrior-a',
+        currentOId: 'warrior-d',
+      });
+      expect(impacts.find((i) => i.treasuryDelta != null)).toBeUndefined();
+    });
+
+    it('keeps paying the player on side A (baseline)', () => {
+      const impacts = processContractPayouts({
+        state: payoutState(true, false),
+        contract,
+        winnerId: 'warrior-a',
+        currentWId: 'warrior-a',
+        currentOId: 'warrior-d',
+      });
+      const treasury = impacts.find((i) => i.treasuryDelta != null);
+      expect(treasury?.treasuryDelta).toBe(500);
+    });
+
     it('caps notableBouts at 10 (matching updatePromoterHistory)', () => {
       const state = {
         week: 5,

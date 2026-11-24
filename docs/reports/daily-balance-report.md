@@ -1,27 +1,25 @@
 # Daily Balance Report
 
 ## Simulation Results
-
 - **Weeks Simulated:** 1000
-- **Total Bouts:** 138235 (118383 weekly / 19852 tournament)
-- **Kill Outcomes:** 15650 (13109 weekly / 2541 tournament)
-- **Unique Deaths:** 15650
-- **Weekly Kill Rate:** 11.07% (design target 8–15%)
-- **Rival Stable Gold:** mean 21889 / median 17821 (final week)
+- **Total Bouts:** 131401 (125046 weekly / 6355 tournament)
+- **Kill Outcomes:** 6181 (5855 weekly / 326 tournament)
+- **Unique Deaths:** 6181
+- **Weekly Kill Rate:** 4.68% (design target 8–15%)
+- **Rival Stable Gold:** mean 15406 / median 3579 (final week)
 
 ## Style Win Rates
-
-- **TOTAL PARRY:** 55.69%
-- **PARRY-RIPOSTE:** 52.99%
-- **STRIKING ATTACK:** 50.40%
-- **AIMED BLOW:** 49.65%
-- **PARRY-STRIKE:** 49.40%
-- **BASHING ATTACK:** 48.90%
-- **LUNGING ATTACK:** 48.04%
-- **WALL OF STEEL:** 48.03%
-- **SLASHING ATTACK:** 47.37%
-- **PARRY-LUNGE:** 46.77%
+- **TOTAL PARRY:** 62.99%
+- **PARRY-RIPOSTE:** 59.38%
+- **SLASHING ATTACK:** 48.96%
+- **PARRY-STRIKE:** 48.55%
+- **PARRY-LUNGE:** 48.42%
+- **WALL OF STEEL:** 47.21%
+- **STRIKING ATTACK:** 46.80%
+- **AIMED BLOW:** 45.13%
+- **BASHING ATTACK:** 44.36%
+- **LUNGING ATTACK:** 43.66%
 
 ## Suggested Variable Tweaks (For Product Owner Approval)
+- **Lethality Low**: Weekly kill rate is 4.68% (Target: 8% - 15%). Lever: raise KILL_WINDOW.SCALE. If it collapsed suddenly, check first that rival max HP is not inflating (derivedStats.hp is a stat, not a health percentage).
 
-- No mathematical anomalies detected. Meta is stable.

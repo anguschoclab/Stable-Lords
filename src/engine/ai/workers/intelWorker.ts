@@ -16,6 +16,7 @@ import type {
   ScoutReportData,
   Warrior,
 } from '@/types/state.types';
+import type { BoutOffer } from '@/types/state/rankings';
 import type { PerceptionSnapshot } from '../memory/perceptionSnapshot';
 import { logAgentAction } from '../agentCore';
 import { hashStr, SeededRNG } from '@/utils/random';
@@ -74,10 +75,11 @@ const PLAN_TELL_WINDOW = 8;
  */
 function* titleOpponents(
   rival: RivalStableData,
-  state: GameState
+  state: GameState,
+  titleOffers?: BoutOffer[]
 ): Generator<{ otherId: string; oppStableId: string | undefined }> {
   const selfIds = new Set(rival.roster.map((w) => w.id));
-  for (const offer of Object.values(state.boutOffers ?? {})) {
+  for (const offer of titleOffers ?? Object.values(state.boutOffers ?? {})) {
     if (!offer.titleArenaId) continue;
     if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
     const mine = offer.warriorIds.find((id) => selfIds.has(id));
@@ -324,7 +326,7 @@ function refreshDossier(args: DossierRefreshArgs): {
 export function processIntel(
   rival: RivalStableData,
   state: GameState,
-  _perception?: PerceptionSnapshot
+  perception?: PerceptionSnapshot
 ): { updatedRival: RivalStableData; gazetteItems: string[] } {
   const gazetteItems: string[] = [];
   const memory = rival.agentMemory;
@@ -334,7 +336,8 @@ export function processIntel(
   // Both pickers walk the same title-bout scan — materialize it lazily once
   // per rival so the second consumer reuses the first's result.
   let titleOppCache: ReturnType<TitleOpponents> | undefined;
-  const titleOpps: TitleOpponents = () => (titleOppCache ??= [...titleOpponents(rival, state)]);
+  const titleOpps: TitleOpponents = () =>
+    (titleOppCache ??= [...titleOpponents(rival, state, perception?.titleOffers)]);
   const targetId = pickScoutTarget(rival, state, titleOpps);
   if (!targetId) return { updatedRival: rival, gazetteItems };
 

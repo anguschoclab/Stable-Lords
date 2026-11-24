@@ -4,6 +4,7 @@
  * so per-rival perception work never re-scans arenaHistory or rankings.
  */
 import type { GameState, FightSummary, RankingEntry } from '@/types/state.types';
+import type { BoutOffer } from '@/types/state/rankings';
 import type { StableId, WarriorId } from '@/types/shared.types';
 import { computeMetaDrift, type StyleMeta } from '@/engine/analytics/metaDrift';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
@@ -94,6 +95,10 @@ export interface PerceptionSnapshot {
   /** Warriors signed to an upcoming title bout (titleArenaId + Signed +
    *  boutOfferAbsoluteWeek >= now) — they rest until the bout resolves. */
   signedUpcomingTitleIds: Set<string>;
+  /** Live title offers (titleArenaId + Signed|Proposed) in boutOffers order —
+   *  intelWorker's per-rival opponent picks iterate this pre-filtered list
+   *  instead of rescanning the whole offers map. */
+  titleOffers: BoutOffer[];
 }
 
 /**
@@ -166,15 +171,23 @@ function indexWeekFights(
   return { foughtThisWeek, weekFightStableOf };
 }
 
-/** Warriors signed to an upcoming title bout — they rest until it resolves. */
-function signedUpcomingTitleWarriorIds(state: GameState, now: number): Set<string> {
+/** One offers pass → signed-upcoming-title warrior ids + the ordered list
+ *  of live title offers (Signed|Proposed) the intel pickers rescan per rival. */
+function titleOfferIndex(
+  state: GameState,
+  now: number
+): { signedUpcomingTitleIds: Set<string>; titleOffers: BoutOffer[] } {
   const ids = new Set<string>();
+  const titleOffers: BoutOffer[] = [];
   for (const offer of Object.values(state.boutOffers ?? {})) {
-    if (!offer.titleArenaId || offer.status !== 'Signed') continue;
-    if (boutOfferAbsoluteWeek(offer) < now) continue;
-    for (const wId of offer.warriorIds) ids.add(wId as string);
+    if (!offer.titleArenaId) continue;
+    if (offer.status !== 'Signed' && offer.status !== 'Proposed') continue;
+    titleOffers.push(offer);
+    if (offer.status === 'Signed' && boutOfferAbsoluteWeek(offer) >= now) {
+      for (const wId of offer.warriorIds) ids.add(wId as string);
+    }
   }
-  return ids;
+  return { signedUpcomingTitleIds: ids, titleOffers };
 }
 
 /** Metas for the two non-Methodical perception delays — one history pass. */
@@ -246,6 +259,6 @@ export function buildPerceptionSnapshot(state: GameState): PerceptionSnapshot {
     weekFightStableOf,
     knownRivalOwnerIds,
     laggedMetaByLag: laggedMetaMap(state, absoluteWeek),
-    signedUpcomingTitleIds: signedUpcomingTitleWarriorIds(state, absoluteWeek),
+    ...titleOfferIndex(state, absoluteWeek),
   };
 }

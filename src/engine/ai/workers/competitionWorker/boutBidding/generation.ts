@@ -125,35 +125,64 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
       foundOpponent = true;
     }
   } else if (ctx.intent !== 'VENDETTA') {
-    const attFights = fightEquivalentsOf(warrior);
-    const aWinRate =
-      (warrior.career?.wins ?? 0) /
-      Math.max(1, (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0));
-    // Style-bucket bound pruning: in this minimal-ctx call shape the pairwise
-    // score is 100 + bonus*25 + fameTerm + (aWR-bWR)*20, where fameTerm ≤ +10
-    // and the win-rate term ≤ aWR*20 — and both bias terms are constant per
-    // (attacker, foe-style). A bucket whose bound can't beat the running max
-    // contributes nothing; the result is a scalar max, so evaluation order
-    // cannot affect it.
-    for (const { members, bound } of rankedStyleBuckets(warrior, ctx, aWinRate, attFights)) {
-      if (bound <= matchupModifier) break;
-      for (const entry of members) {
-        // Shared buckets span every rival — skip the proposer's own stable.
-        if (entry.rivalId === ctx.rivalId) continue;
-        const opponent = entry.warrior;
-        const matchupScore = scorePairwiseMatchup(warrior, opponent, {
-          aStableId,
-          bStableId: opponent.stableId as string,
-        });
-        // V26 turnaround steer: a losing warrior seeks the matrix's winnable
-        // foes — the same matchup doctrine the player's advisor teaches.
-        const score =
-          clamp((matchupScore - 100) / 20, -5, 5) +
-          canonTargetingBias(warrior.style, opponent.style, attFights) +
-          turnaroundMatchupBias(warrior, opponent.style);
-        matchupModifier = Math.max(matchupModifier, score);
+    return bestNonVendettaModifier(warrior, ctx, aStableId);
+  }
+  return foundOpponent ? matchupModifier : 0;
+}
+
+/**
+ * Max matchup modifier over the style-bucketed shared pool. Bound pruning
+ * at two levels — buckets (bound ≤ max → break) and members (per-pairing
+ * bound ≤ max → skip) — is exact because in this minimal-ctx call shape the
+ * pairwise score is `100 + bonus*25 + fameTerm + (aWR-bWR)*20` with fameTerm
+ * ≤ +10, wrTerm ≤ aWR*20, and the bias terms constant per (attacker,
+ * foe-style). The result is a scalar max, so evaluation order cannot affect
+ * it.
+ */
+function bestNonVendettaModifier(warrior: Warrior, ctx: MatchupContext, aStableId: string): number {
+  const attFights = fightEquivalentsOf(warrior);
+  const aWinRate =
+    (warrior.career?.wins ?? 0) /
+    Math.max(1, (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0));
+  let matchupModifier = -Infinity;
+  let foundOpponent = false;
+  for (const { members, bound, styleTerm, biases } of rankedStyleBuckets(
+    warrior,
+    ctx,
+    aWinRate,
+    attFights
+  )) {
+    if (bound <= matchupModifier) break;
+    for (const entry of members) {
+      // Shared buckets span every rival — skip the proposer's own stable.
+      if (entry.rivalId === ctx.rivalId) continue;
+      const opponent = entry.warrior;
+      // Per-member bound: the fame term is exact for this pairing and the
+      // win-rate term can only shrink from aWR*20 — a member whose bound
+      // can't beat the running max contributes nothing.
+      const fameDiff = (warrior.fame ?? 0) - (opponent.fame ?? 0);
+      const absFameDiff = Math.abs(fameDiff);
+      const fameTerm =
+        absFameDiff > 20 ? 20 - absFameDiff : fameDiff > 10 ? -5 : fameDiff < -10 ? 10 : 0;
+      if (clamp((styleTerm + fameTerm + aWinRate * 20) / 20, -5, 5) + biases <= matchupModifier) {
         foundOpponent = true;
+        continue;
       }
+      const matchupScore = scorePairwiseMatchup(warrior, opponent, {
+        aStableId,
+        bStableId: opponent.stableId as string,
+      });
+      // V26 turnaround steer: a losing warrior seeks the matrix's winnable
+      // foes — the same matchup doctrine the player's advisor teaches.
+      const score =
+        clamp((matchupScore - 100) / 20, -5, 5) +
+        canonTargetingBias(warrior.style, opponent.style, attFights) +
+        turnaroundMatchupBias(warrior, opponent.style);
+      matchupModifier = Math.max(matchupModifier, score);
+      foundOpponent = true;
+      // Buckets are bound-sorted descending — a max at this bucket's bound
+      // cannot be beaten by any later member or bucket.
+      if (matchupModifier >= bound) return matchupModifier;
     }
   }
   return foundOpponent ? matchupModifier : 0;
@@ -165,15 +194,24 @@ function rankedStyleBuckets(
   ctx: MatchupContext,
   aWinRate: number,
   attFights: number
-): { members: { warrior: Warrior; rivalId: string }[]; bound: number }[] {
+): {
+  members: { warrior: Warrior; rivalId: string }[];
+  bound: number;
+  styleTerm: number;
+  biases: number;
+}[] {
   return [...ctx.nonVendettaByStyle.entries()]
-    .map(([style, members]) => ({
-      members,
-      bound:
-        clamp((getMatchupBonus(warrior.style, style) * 25 + 10 + aWinRate * 20) / 20, -5, 5) +
-        canonTargetingBias(warrior.style, style, attFights) +
-        turnaroundMatchupBias(warrior, style),
-    }))
+    .map(([style, members]) => {
+      const styleTerm = getMatchupBonus(warrior.style, style) * 25;
+      const biases =
+        canonTargetingBias(warrior.style, style, attFights) + turnaroundMatchupBias(warrior, style);
+      return {
+        members,
+        styleTerm,
+        biases,
+        bound: clamp((styleTerm + 10 + aWinRate * 20) / 20, -5, 5) + biases,
+      };
+    })
     .sort((a, b) => b.bound - a.bound);
 }
 

@@ -42,7 +42,14 @@ interface EntityIndex {
   warriorByName: Map<string, Warrior>;
   stableIdByName: Map<string, string>;
   stableNameById: Map<string, string>;
-  corpus: SearchEntry[];
+  /** Materialized on first access (getter → ensureCorpus) so lookup-only
+   *  states — the engine hot path — never pay entry construction. */
+  readonly corpus: SearchEntry[];
+  /** Backing store behind the `corpus` getter. */
+  _corpus?: SearchEntry[];
+  /** Per-(query,limit) memo — the store identity can change while a search
+   *  is open, and re-scoring the whole corpus per change was measurable. */
+  searchCache?: Map<string, SearchEntry[]>;
 }
 
 /** Minimal structural input — anything state-shaped (or a Pick of it). */
@@ -178,19 +185,29 @@ function indexWarriors(state: EntityIndexState, add: AddWarrior): void {
   for (let i = roster.length - 1; i >= 0; i--) add(roster[i], 'Yours', playerStable);
 }
 
-/** Stables — rival id is the canonical route param (findStableId contract). */
-function indexStables(
+/** Stable lookup maps — rival id is the canonical route param (findStableId contract). */
+function indexStableMaps(
   state: EntityIndexState,
-  corpusById: Map<string, SearchEntry>,
   stableIdByName: Map<string, string>,
   stableNameById: Map<string, string>
 ): void {
+  for (const rival of state.rivals ?? []) {
+    if (!rival?.owner || !rival.id) continue;
+    stableIdByName.set(rival.owner.stableName, rival.id);
+    stableNameById.set(rival.id, rival.owner.stableName);
+  }
+  if (state.player) {
+    stableIdByName.set(state.player.stableName, state.player.id);
+    stableNameById.set(state.player.id, state.player.stableName);
+  }
+}
+
+/** Stable corpus entries — same ordering as indexStableMaps. */
+function indexStableCorpus(state: EntityIndexState, corpusById: Map<string, SearchEntry>): void {
   const rivals = state.rivals ?? [];
   for (let i = rivals.length - 1; i >= 0; i--) {
     const rival = rivals[i];
     if (!rival?.owner || !rival.id) continue;
-    stableIdByName.set(rival.owner.stableName, rival.id);
-    stableNameById.set(rival.id, rival.owner.stableName);
     corpusById.set(
       `stable:${rival.id}`,
       stableEntry({
@@ -204,8 +221,6 @@ function indexStables(
     );
   }
   if (state.player) {
-    stableIdByName.set(state.player.stableName, state.player.id);
-    stableNameById.set(state.player.id, state.player.stableName);
     corpusById.set(
       `stable:${state.player.id}`,
       stableEntry({
@@ -251,24 +266,20 @@ function buildIndex(state: EntityIndexState): EntityIndex {
   const warriorById = new Map<string, Warrior>();
   const livingWarriorById = new Map<string, Warrior>();
   const warriorByName = new Map<string, Warrior>();
-  const corpusById = new Map<string, SearchEntry>();
   const stableIdByName = new Map<string, string>();
   const stableNameById = new Map<string, string>();
 
   // Last-write-wins precedence for the maps: rivals < retired < graveyard <
-  // roster. Corpus entries dedupe by id through the same ordering, so the
-  // highest-precedence bucket also owns the search result.
-  indexWarriors(state, (w, bucket, stable) => {
+  // roster. The corpus uses the same ordering when built lazily.
+  indexWarriors(state, (w, bucket) => {
     if (!w) return;
     warriorById.set(w.id as string, w as Warrior);
     if (bucket === 'Yours' || bucket === 'Rival') {
       livingWarriorById.set(w.id as string, w as Warrior);
     }
     warriorByName.set(w.name, w as Warrior);
-    corpusById.set(`warrior:${w.id}`, warriorEntry(w, bucket, stable));
   });
-  indexStables(state, corpusById, stableIdByName, stableNameById);
-  indexPeople(state, corpusById);
+  indexStableMaps(state, stableIdByName, stableNameById);
 
   return {
     warriorById,
@@ -276,8 +287,24 @@ function buildIndex(state: EntityIndexState): EntityIndex {
     warriorByName,
     stableIdByName,
     stableNameById,
-    corpus: [...corpusById.values()],
+    get corpus() {
+      return ensureCorpus(state, this);
+    },
   };
+}
+
+/** Build the search corpus on first use — entry construction is the bulk of
+ *  index cost and lookup-only states never need it. */
+function ensureCorpus(state: EntityIndexState, index: EntityIndex): SearchEntry[] {
+  if (index._corpus) return index._corpus;
+  const corpusById = new Map<string, SearchEntry>();
+  indexWarriors(state, (w, bucket, stable) => {
+    if (w) corpusById.set(`warrior:${w.id}`, warriorEntry(w, bucket, stable));
+  });
+  indexStableCorpus(state, corpusById);
+  indexPeople(state, corpusById);
+  index._corpus = [...corpusById.values()];
+  return index._corpus;
 }
 
 // ─── Public API ────────────────────────────────────────────────────────────
@@ -313,7 +340,12 @@ export function searchEntities(
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  const { corpus } = ensureEntityIndex(state);
+  const index = ensureEntityIndex(state);
+  const cacheKey = `${q}|${limit}`;
+  const memoized = index.searchCache?.get(cacheKey);
+  if (memoized) return memoized;
+
+  const corpus = index.corpus;
   const scored: { entry: SearchEntry; score: number }[] = [];
   for (const entry of corpus) {
     const name = entry.name.toLowerCase();
@@ -325,5 +357,7 @@ export function searchEntities(
     if (score >= 0) scored.push({ entry, score });
   }
   scored.sort((a, b) => a.score - b.score || a.entry.name.localeCompare(b.entry.name));
-  return scored.slice(0, limit).map((s) => s.entry);
+  const out = scored.slice(0, limit).map((s) => s.entry);
+  (index.searchCache ??= new Map()).set(cacheKey, out);
+  return out;
 }

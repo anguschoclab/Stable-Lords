@@ -81,6 +81,41 @@ longer shows `getHeadToHeadRecord` or `underservedWeights`; the remaining
 `scorePairwiseMatchup` self-time is the inherent O(roster × world) opponent
 scan in `bestMatchupModifier`.
 
+### B4 scan-elimination outcome (perf-audit follow-up)
+
+Follow-up `bun --cpu-prof` (40-wk soak) decomposed the residual:
+`scorePairwiseMatchup`/`bestMatchupModifier`/`getMatchupBonus`/`buildMatchupCtx`
+≈11% self-time (the B3-named O(bidders × world) scan), `resolveWarriorOwner`'s
+roster-scan fallback ≈4%, `findBestOpponent`+PromoterPass ≈4%, entityIndex
+rebuilds ≈2%. Fixes shipped (all output-preserving):
+
+- `boutBidding/generation.ts` — `nonVendettaOpponents` is now bucketed by
+  `FightingStyle`; `bestMatchupModifier` evaluates buckets in descending
+  upper-bound order and skips any bucket whose bound can't beat the running
+  scalar max. Exact because the minimal-ctx pairwise score is
+  `100 + bonus*25 + fameTerm + wrTerm` with `fameTerm ≤ +10` and
+  `wrTerm ≤ aWR*20`, and both bias terms are constant per (attacker, style).
+  `isChampionBookingLocked` scans (`arenaChampions` per member per rival)
+  collapsed into one `bookingLockedChampionIds` Set per call.
+- `intelDossier.ts` — per-invocation `stableOf` memo ends repeat
+  `resolveWarriorOwner` roster-scan misses for non-roster warrior ids.
+- `entityIndex.ts` — search corpus + per-query results are now lazy/memoized
+  inside the existing per-state index, so lookup-only state identities skip
+  entry construction.
+
+A/B soak, same seed, `--weeks 40`:
+
+| Code    | ms/week | final world-state summary          |
+| ------- | ------- | ---------------------------------- |
+| pre-B4  | 657.6   | reference                          |
+| post-B4 | 597.3   | **identical (full-summary diff)**  |
+
+Pass-level: `rivalStrategy` 328→303 ms avg, `promoter` 82→52 ms avg.
+Next candidates (measured, not yet worked): `findBestOpponent` window scan,
+`buildCrownScanContext`, `computePlayerThreatLevel`, the ~9%
+`cloneObject`/`copyDataProperties` boundary-clone cost (inherent to the
+non-`mutableInput` path).
+
 Heap check (40-wk soak, `Bun.gc(true)` samples every 5 wk): heap grows
 ~1.5 MB/wk tracking `arenaHistory` accumulation (append-only by design);
 post-run full GC returns to ~43 MB — no leak signature.

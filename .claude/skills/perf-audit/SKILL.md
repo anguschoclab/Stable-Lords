@@ -62,11 +62,15 @@ per stable, bout `warriorIds` (≤2), style/severity/`PERSONALITY_CLASH` constan
 tables, per-iteration collections (each item's own `tags`/`injuries`/
 `seasonalGrowth`/`analysis.factors`), string `.includes("substr")` substring
 checks, mutation-during-iteration scans, early-exit scans. **Real:** anything
-iterating `state.rivals` (up to ~160 stables), `state.arenaHistory`
-(append-only `FightSummary[]` — hundreds→thousands, never shrinks),
+iterating `state.rivals` (up to ~160 stables), `state.arenaHistory`,
 `deadWarriorIds`, `killEvents`, `ledger`, `matchHistory` — especially
 per-rival-per-week. The expensive signature is `rivals × arenaHistory` or
-`rivals × roster` inside a weekly pass.
+`rivals × roster` inside a weekly pass. NB: the big collections are
+append-only but bounded — `TRUNCATION_CAPS`
+(`src/engine/storage/truncation.ts`) caps arenaHistory / matchHistory /
+killEvents / ledger / seasonalGrowth at 500, graveyard / retired at 200,
+newsletter at 100 — so "rows × weeks" scans plateau rather than diverge;
+weight findings against these caps, not against imagined unbounded growth.
 
 **Hot-path tiers** (fix top-down):
 

@@ -197,9 +197,15 @@ export function updateDossiers(
   // available so all rivals share one arenaHistory scan per tick).
   const fights = weekFights ?? getFightsForWeek(state.arenaHistory ?? [], week);
   const selfIds = new Set(rival.roster.map((w) => w.id));
+  // Memoized per invocation: fights repeat warriors, and a resolve miss falls
+  // back to a full roster scan — state doesn't mutate inside the fold.
+  const stableMemo = new Map<string, string | undefined>();
   const stableOf = (wid: FightSummary['warriorIdA']): string | undefined => {
     if (selfIds.has(wid)) return rival.id;
-    return resolveWarriorOwner(state, wid)?.stableId;
+    if (!stableMemo.has(wid)) {
+      stableMemo.set(wid, resolveWarriorOwner(state, wid)?.stableId);
+    }
+    return stableMemo.get(wid);
   };
 
   // Witnessed tells: a stable that watched this fight reads the participants'

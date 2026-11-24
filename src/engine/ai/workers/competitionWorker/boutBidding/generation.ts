@@ -5,9 +5,10 @@ import type {
   WeatherType,
   Warrior,
 } from '@/types/state.types';
-import type { PromoterId } from '@/types/shared.types';
+import type { FightingStyle, PromoterId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/bout/crowdMood';
 import { scorePairwiseMatchup } from '@/engine/matchmaking/schedulingAssistant';
+import { getMatchupBonus } from '@/constants/combat';
 import { canonTargetingBias } from '@/engine/ai/matchup/canonTargeting';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import { weatherBidModifier } from '@/engine/ai/weatherSuitability';
@@ -16,7 +17,7 @@ import type { BoutBid } from '../types';
 import { boutOfferAbsoluteWeek } from '@/engine/core/absoluteWeek';
 import { clamp } from '@/utils/math';
 import { isActive } from '@/engine/warrior/warriorStatus';
-import { isChampionBookingLocked } from '@/engine/championship/arenaChampionship';
+import { bookingLockedChampionIds } from '@/engine/championship/arenaChampionship';
 import { isWarriorListed } from '@/engine/matchmaking/schedulingAssistant/matchups';
 import {
   AI_GRUDGE_AVOID_MIN_INTENSITY,
@@ -38,7 +39,8 @@ interface MatchupContext {
   targetIsPlayer: boolean;
   targetRival?: RivalStableData;
   playerTargets: Warrior[];
-  nonVendettaOpponents: Warrior[];
+  nonVendettaByStyle: Map<FightingStyle, Warrior[]>;
+  lockedIds: Set<string>;
   state?: GameState;
   rivalId: string;
 }
@@ -56,7 +58,7 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
     const targetPool = ctx.targetIsPlayer ? ctx.playerTargets : (ctx.targetRival?.roster ?? []);
     for (const opponent of targetPool) {
       if (!isActive(opponent)) continue;
-      if (ctx.state && isChampionBookingLocked(ctx.state, opponent.id)) continue;
+      if (ctx.lockedIds.has(opponent.id)) continue;
       const matchupScore = scorePairwiseMatchup(warrior, opponent, {
         aStableId,
         bStableId:
@@ -73,19 +75,44 @@ function bestMatchupModifier(warrior: Warrior, ctx: MatchupContext): number {
     }
   } else if (ctx.intent !== 'VENDETTA') {
     const attFights = fightEquivalentsOf(warrior);
-    for (const opponent of ctx.nonVendettaOpponents) {
-      const matchupScore = scorePairwiseMatchup(warrior, opponent, {
-        aStableId,
-        bStableId: opponent.stableId as string,
-      });
-      // V26 turnaround steer: a losing warrior seeks the matrix's winnable
-      // foes — the same matchup doctrine the player's advisor teaches.
-      const score =
-        clamp((matchupScore - 100) / 20, -5, 5) +
-        canonTargetingBias(warrior.style, opponent.style, attFights) +
-        turnaroundMatchupBias(warrior, opponent.style);
-      matchupModifier = Math.max(matchupModifier, score);
-      foundOpponent = true;
+    const aWinRate =
+      (warrior.career?.wins ?? 0) /
+      Math.max(1, (warrior.career?.wins ?? 0) + (warrior.career?.losses ?? 0));
+    // Style-bucket bound pruning: in this minimal-ctx call shape the pairwise
+    // score is 100 + bonus*25 + fameTerm + (aWR-bWR)*20, where fameTerm ≤ +10
+    // and the win-rate term ≤ aWR*20 — and both bias terms are constant per
+    // (attacker, foe-style). A bucket whose bound can't beat the running max
+    // contributes nothing; the result is a scalar max, so evaluation order
+    // cannot affect it.
+    const buckets = [...ctx.nonVendettaByStyle.entries()]
+      .map(([style, members]) => ({
+        members,
+        bound:
+          clamp(
+            (getMatchupBonus(warrior.style, style) * 25 + 10 + aWinRate * 20) / 20,
+            -5,
+            5
+          ) +
+          canonTargetingBias(warrior.style, style, attFights) +
+          turnaroundMatchupBias(warrior, style),
+      }))
+      .sort((a, b) => b.bound - a.bound);
+    foundOpponent = buckets.length > 0;
+    for (const { members, bound } of buckets) {
+      if (bound <= matchupModifier) break;
+      for (const opponent of members) {
+        const matchupScore = scorePairwiseMatchup(warrior, opponent, {
+          aStableId,
+          bStableId: opponent.stableId as string,
+        });
+        // V26 turnaround steer: a losing warrior seeks the matrix's winnable
+        // foes — the same matchup doctrine the player's advisor teaches.
+        const score =
+          clamp((matchupScore - 100) / 20, -5, 5) +
+          canonTargetingBias(warrior.style, opponent.style, attFights) +
+          turnaroundMatchupBias(warrior, opponent.style);
+        matchupModifier = Math.max(matchupModifier, score);
+      }
     }
   }
   return foundOpponent ? matchupModifier : 0;
@@ -113,10 +140,11 @@ export function generateBoutBids(args: GenerateBoutBidsArgs): {
   const { rival, weather = 'Clear', crowdMood = 'Calm', rivals = [] } = args;
   const { state } = args;
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
-  const activeRoster = bookableRoster(rival, state);
+  const lockedIds = state ? bookingLockedChampionIds(state) : new Set<string>();
+  const activeRoster = bookableRoster(rival, state, lockedIds);
   const bids: BoutBid[] = [];
 
-  const matchupCtx = buildMatchupCtx(rival, intent, rivals, state);
+  const matchupCtx = buildMatchupCtx(rival, intent, rivals, state, lockedIds);
   const personality = rival.owner.personality ?? 'Pragmatic';
 
   for (const warrior of activeRoster) {
@@ -134,7 +162,11 @@ export function generateBoutBids(args: GenerateBoutBidsArgs): {
 }
 
 /** Warriors free to propose bouts: active, unassigned, unsigned, not title-locked. */
-function bookableRoster(rival: RivalStableData, state?: GameState): Warrior[] {
+function bookableRoster(
+  rival: RivalStableData,
+  state: GameState | undefined,
+  lockedIds: Set<string>
+): Warrior[] {
   const assignedIds = new Set((rival.trainingAssignments ?? []).map((a) => a.warriorId));
   // Warriors already committed to a signed upcoming bout don't re-enter the
   // pool — a signed title shot (or any booked fight) shouldn't double-book.
@@ -153,7 +185,7 @@ function bookableRoster(rival: RivalStableData, state?: GameState): Warrior[] {
       !assignedIds.has(w.id) &&
       !signedIds.has(w.id) &&
       // Booking-locked arena champions only fight title bouts.
-      !(state && isChampionBookingLocked(state, w.id))
+      !lockedIds.has(w.id)
   );
 }
 
@@ -162,7 +194,8 @@ function buildMatchupCtx(
   rival: RivalStableData,
   intent: string,
   rivals: RivalStableData[],
-  state?: GameState
+  state: GameState | undefined,
+  lockedIds: Set<string>
 ): MatchupContext {
   // Pre-calculate vendetta target once outside the loop to prevent O(W * R) lookups
   const targetStableId = rival.strategy?.targetStableId;
@@ -176,18 +209,22 @@ function buildMatchupCtx(
   // Player warriors the vendetta may target (active only; booking filtered at conversion)
   const playerTargets: Warrior[] =
     intent === 'VENDETTA' && targetIsPlayer && state
-      ? state.roster.filter((w) => isActive(w) && !isChampionBookingLocked(state, w.id))
+      ? state.roster.filter((w) => isActive(w) && !lockedIds.has(w.id))
       : [];
 
-  // Pre-calculate active opponents for non-vendetta intents — booking-locked
-  // champions are excluded as bid targets as well as proposers.
-  const nonVendettaOpponents: Warrior[] = [];
+  // Pre-calculate active opponents for non-vendetta intents, bucketed by
+  // style so bestMatchupModifier can bound-prune whole buckets — booking-
+  // locked champions are excluded as bid targets as well as proposers.
+  const nonVendettaByStyle = new Map<FightingStyle, Warrior[]>();
   if (intent !== 'VENDETTA') {
     for (const r of rivals) {
       if (r.id === rival.id) continue;
       for (const w of r.roster) {
-        if (isActive(w) && !(state && isChampionBookingLocked(state, w.id)))
-          nonVendettaOpponents.push(w);
+        if (isActive(w) && !lockedIds.has(w.id)) {
+          const bucket = nonVendettaByStyle.get(w.style);
+          if (bucket) bucket.push(w);
+          else nonVendettaByStyle.set(w.style, [w]);
+        }
       }
     }
   }
@@ -198,7 +235,8 @@ function buildMatchupCtx(
     targetIsPlayer,
     targetRival,
     playerTargets,
-    nonVendettaOpponents,
+    nonVendettaByStyle,
+    lockedIds,
     state,
     rivalId: rival.id,
   };

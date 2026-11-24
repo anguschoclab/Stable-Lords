@@ -50,6 +50,22 @@ export function isChampionBookingLocked(state: GameState, warriorId: string): bo
   return false;
 }
 
+/**
+ * Ids of every warrior holding a non-dormant crown — the bulk form of
+ * `isChampionBookingLocked` for callers that screen whole pools; scanning
+ * the titles map once beats the per-warrior scan by roster×arena factor.
+ */
+export function bookingLockedChampionIds(state: GameState): Set<string> {
+  const out = new Set<string>();
+  const titles = state.arenaChampions;
+  if (!titles) return out;
+  for (const arenaId in titles) {
+    const t = titles[arenaId];
+    if (t?.champion?.warriorId && t.status !== 'dormant') out.add(t.champion.warriorId);
+  }
+  return out;
+}
+
 /** Arena ids where the warrior is the reigning champion (derived titles). */
 export function getCurrentArenaTitles(state: GameState, warriorId: string): string[] {
   return Object.entries(state.arenaChampions ?? {})

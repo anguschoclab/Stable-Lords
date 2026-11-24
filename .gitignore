@@ -78,3 +78,4 @@ scripts/.build/
 # Local secrets
 .env
 
+!scripts/avatar-pool/out/

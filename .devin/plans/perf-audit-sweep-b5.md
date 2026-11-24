@@ -2,13 +2,14 @@
 
 Validated perf-audit plan: every finding re-checked against source (narrowed-state field preservation, predicate equivalence, Warrior.stableId optionality, registry caching); Phase 0 mandates characterization/equivalence tests written and green BEFORE any refactor lands; then shared once-per-tick structures + pure-function micro-opts, verified byte-identical by A/B soak.
 
-## Status
+## Status — **COMPLETE**
 
 - ✅ **Phase 0** — committed `f6cd62c7a` (T1–T16 characterization specs, green on unmodified source)
 - ✅ **Tranche 1** — committed `5c9d40b03` (perception fields + SharedBidCtx; all specs + megaplan guards green)
 - ✅ **Tranche 2** — committed `3f1d6af5a` (escapeHtml/nameGen/archetype/arenaFit/hasInjuryRisk micro-opts; specs green)
 - ✅ **Tranche 3** — committed `f321175db` (contender-index single pass + findBestOpponent two-region early-exit; guards green)
-- ⏳ **Tranche 4** — 4A ✅ committed `5bcba81cb` (partial boutOffers impacts + dictMerge in-place accumulate — root cause of the ~9% "boundary clone" was per-call whole-map spreads, not transport); 4B ✅ committed `9c85a1b87`; 4C ❌ documented (0.32× at steady state — structural marshal deficit, not shipped); 4D/4E ✅ documented (resolved-by-4A / healthy)
+- ✅ **Tranche 4** — 4A committed `5bcba81cb` (partial boutOffers impacts + dictMerge in-place accumulate); 4B committed `9c85a1b87` (8 narrow consumers → scoped `useShallow` selectors); 4C/4D/4E documented `5d2a46319`
+- ✅ **Verification** — A/B soak same-seed `--weeks 40`: pre-B5 546.8 → post-B5 **460.3 ms/wk (-15.8%)**, final world-state summary **byte-identical every field**; `rivalStrategy` 282.5→213.7 ms, `promoter` 45.7→37.2 ms. Full fast suite green (runnerGroups regen'd for new specs). test:slow failures all proven **pre-existing at f6cd62c7a**: balance 80/20 (2 matchups, identical), worldLiveness coherence 0.11604781550830424 (bit-identical), advanceWeek 545ms (load flake — passed standalone), jscpd `spawnSync bun ENOENT` + orphanScan hook timeout (env). Parallelism gate re-confirmed **0.32× FAIL** — pool stays off.
 - Notes: `duplication.guard` pre-existing failure (720bd04ce pair unregistered on main) fixed by registration → baseline 42. `planWorldBouts`/`bookableRoster`/`crownWorker` consume shared id-sets; `convertBidsToOffers` computes `lockedIds` once per call (kept 5-param signature — 14 test callers); `IntentContext.playerThreatLevel` threads perception into `vendettaApplies` too.
 
 ## Validation record (this review)

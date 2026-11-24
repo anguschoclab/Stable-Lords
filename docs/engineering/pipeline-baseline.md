@@ -105,10 +105,10 @@ rebuilds ≈2%. Fixes shipped (all output-preserving):
 
 A/B soak, same seed, `--weeks 40`:
 
-| Code    | ms/week | final world-state summary          |
-| ------- | ------- | ---------------------------------- |
-| pre-B4  | 657.6   | reference                          |
-| post-B4 | 597.3   | **identical (full-summary diff)**  |
+| Code    | ms/week | final world-state summary         |
+| ------- | ------- | --------------------------------- |
+| pre-B4  | 657.6   | reference                         |
+| post-B4 | 597.3   | **identical (full-summary diff)** |
 
 Pass-level: `rivalStrategy` 328→303 ms avg, `promoter` 82→52 ms avg.
 
@@ -130,11 +130,54 @@ Second pass (data-structure/complexity audit, all output-preserving):
 A/B soak, same seed, `--weeks 40`: 589.8 → 557.8 ms/wk (-5.4%), world-state
 summary **byte-identical**. Cumulative vs pre-B4: 657.6 → 557.8 (-15.2%).
 
-Remaining candidates (measured, not yet worked): `findBestOpponent` window
-scan, `foldFight`/`observeTells` dossier folds, the ~9%
-`cloneObject`/`copyDataProperties` boundary-clone cost (inherent to the
-non-`mutableInput` path), `hashStr` seed hashing (determinism-critical —
+Remaining candidates (measured, worked in B5): `findBestOpponent` window
+scan — landed; the ~9% `cloneObject`/`copyDataProperties` boundary cost —
+root-caused to per-call `boutOffers` whole-map spreads and fixed via
+partial impacts; `hashStr` seed hashing (determinism-critical —
 untouchable).
+
+## B5 — once-per-tick hoists + measured micro-opts (validated plan)
+
+Third pass (`perf-audit-sweep-b5.md`, all output-preserving, Phase-0
+characterization specs T1–T16 written green before any refactor):
+
+- `perceptionSnapshot.ts` — new fields (`weekFightStableOf`,
+  `signedUpcomingIds`, `signedUpcomingTitleIds`, `bookedForWeek2Ids`,
+  `bookedThisWeek`, `laggedMetas`, `playerThreat`, `warriorById`,
+  `threatByStableId`) computed once per tick, consumed by agentCore /
+  crownWorker / intentEngine / intelDossier instead of ~90×/week rebuilds.
+- `boutBidding` — `SharedBidCtx` (`styleBuckets` over `{warrior, rivalId}`
+  pairs, `signedIds`, `lockedIds`, `bookedForWeek2Ids`) shared across the
+  ~90 `buildWeekOffers` calls per week.
+- Micro-opts: `escapeHtml` fast path, `generateWarriorName` culture-pool
+  cache, `classifyArchetype`/`tourneyDraftBonus` single-pass totals,
+  arenaFit static `EXCLUDED_ARENA_SET` + lazy `indoorArenaIdSet` (registry),
+  `hasInjuryRisk` single pass, `isChampionBookingLocked` → bulk-Set.
+- `buildContenderIndex` — single warrior pass emits per-arena top-N.
+- `findBestOpponent` — two-region early-exit window scan (exact index-order
+  tie semantics; Greedy path unchanged).
+- `boutOffers` impacts — partial `{[offerId]: updated}` emissions instead
+  of per-call whole-map spreads (the ~9% "boundary clone" attribution);
+  `dictMerge` accumulates in place; payout-side re-emit dropped (was a
+  no-op delete through `dictMerge` and a clobber hazard vs voided-cancel
+  writes).
+- `useWorldState` — 8 provably-narrow consumers moved to `useShallow`
+  scoped selectors (`src/state/selectors.ts`).
+
+A/B soak, same seed, `--weeks 40`, same machine back-to-back:
+
+| Code    | ms/week | final world-state summary        |
+| ------- | ------- | -------------------------------- |
+| pre-B5  | 546.8   | reference                        |
+| post-B5 | 460.3   | **identical (every field)**      |
+
+Pass-level: `rivalStrategy` 282.5→213.7 ms avg (-24%), `promoter` 45.7→37.2
+ms avg. Vs the older recorded baseline (603.6 ms/wk, different session):
+-23.7%.
+
+Parallelism gate re-run (40 wk, pool=4): 13,955 vs 42,968 ms → **0.32×,
+still FAIL** — the deficit is structural (per-week GameState clone
+round-trips), not spawn-dominated. `poolSize = 1` remains shipped.
 
 Heap check (40-wk soak, `Bun.gc(true)` samples every 5 wk): heap grows
 ~1.5 MB/wk tracking `arenaHistory` accumulation (append-only by design);

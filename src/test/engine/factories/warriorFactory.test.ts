@@ -521,3 +521,46 @@ describe('warriorFactory — all fighting styles', () => {
     expect(w1.baseSkills).not.toEqual(w2.baseSkills);
   });
 });
+
+describe('warriorFactory — gender (V32)', () => {
+  it('derives gender from avatarSeed deterministically', () => {
+    const w = makeWarrior({
+      id: 'w1' as any,
+      name: 'Seeded',
+      style: FightingStyle.StrikingAttack,
+      attrs: baseAttrs,
+      overrides: { avatarSeed: 95 },
+    });
+    expect(w.gender).toBe('neutral');
+    const same = makeWarrior({
+      id: 'w2' as any,
+      name: 'Seeded',
+      style: FightingStyle.StrikingAttack,
+      attrs: baseAttrs,
+      overrides: { avatarSeed: 95 },
+    });
+    expect(same.gender).toBe(w.gender);
+  });
+
+  it('lets an explicit gender override win over the seed derivation', () => {
+    const w = makeWarrior({
+      id: 'w1' as any,
+      name: 'Chosen',
+      style: FightingStyle.StrikingAttack,
+      attrs: baseAttrs,
+      overrides: { avatarSeed: 95, gender: 'fem' },
+    });
+    expect(w.gender).toBe('fem');
+  });
+
+  it('assigns a valid gender on the rng path without extra draws changing it', () => {
+    const w = makeWarrior({
+      id: 'w1' as any,
+      name: 'RngWarrior',
+      style: FightingStyle.StrikingAttack,
+      attrs: baseAttrs,
+      rng: new SeededRNG(7),
+    });
+    expect(['masc', 'fem', 'neutral']).toContain(w.gender);
+  });
+});

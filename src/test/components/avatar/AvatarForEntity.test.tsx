@@ -82,3 +82,16 @@ describe('AvatarForEntity', () => {
     expect(useGameStore.getState().avatarCache['w-fallen']?.primaryColor).toBe('#112233');
   });
 });
+
+describe('AvatarForEntity — gender wiring (V32)', () => {
+  beforeEach(() => {
+    const fresh = createFreshState('test');
+    useGameStore.getState().loadGame('autosave', fresh);
+  });
+
+  it('passes source.gender into the generated avatar', () => {
+    const fem = makeTestWarrior('w-fem', 'Valeria', { avatarSeed: 42, gender: 'fem' } as never);
+    render(<AvatarForEntity entityId="w-fem" entityType="warrior" source={fem} size="md" />);
+    expect(useGameStore.getState().avatarCache['w-fem']?.gender).toBe('fem');
+  });
+});

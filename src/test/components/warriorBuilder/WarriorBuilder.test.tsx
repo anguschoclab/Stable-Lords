@@ -219,3 +219,46 @@ describe('PhysicalsPreview', () => {
     expect(container.firstChild).toBeInTheDocument();
   });
 });
+
+describe('useWarriorBuilderState — presentation picker (V32)', () => {
+  const hook = () =>
+    renderHook(() =>
+      useWarriorBuilderState({ onCreateWarrior: vi.fn(), maxRoster: 10, currentRosterSize: 0 })
+    );
+
+  it('defaults to auto and omits gender from the create payload', () => {
+    const onCreate = vi.fn();
+    const { result } = renderHook(() =>
+      useWarriorBuilderState({ onCreateWarrior: onCreate, maxRoster: 10, currentRosterSize: 0 })
+    );
+    act(() => result.current.setName('Payload Warrior'));
+    act(() => result.current.applyConcept(FightingStyle.AimedBlow, FIGHTER_CONCEPTS[FightingStyle.AimedBlow].concepts[0]!));
+    act(() => result.current.handleCreate());
+    expect(onCreate).toHaveBeenCalledOnce();
+    expect((onCreate.mock.calls[0]![0] as { gender?: string }).gender).toBeUndefined();
+  });
+
+  it('includes the chosen gender in the create payload', () => {
+    const onCreate = vi.fn();
+    const { result } = renderHook(() =>
+      useWarriorBuilderState({ onCreateWarrior: onCreate, maxRoster: 10, currentRosterSize: 0 })
+    );
+    act(() => result.current.setName('Chosen Warrior'));
+    act(() => result.current.setGender('fem'));
+    act(() => result.current.applyConcept(FightingStyle.AimedBlow, FIGHTER_CONCEPTS[FightingStyle.AimedBlow].concepts[0]!));
+    act(() => result.current.handleCreate());
+    expect((onCreate.mock.calls[0]![0] as { gender?: string }).gender).toBe('fem');
+  });
+
+  it('renders the Presentation picker in the identity section', () => {
+    const { getByText } = render(
+      <IdentitySection
+        name="Test"
+        style={FightingStyle.AimedBlow}
+        gender="auto"
+        actions={{ setName: vi.fn(), setStyle: vi.fn(), setGender: vi.fn() }}
+      />
+    );
+    expect(getByText('Presentation')).toBeInTheDocument();
+  });
+});

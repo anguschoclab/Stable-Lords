@@ -8,6 +8,7 @@ import {
   computeFreeAgentCost,
   warriorToPoolWarrior,
   partitionAgedFreeAgents,
+  veteranSigningPatch,
 } from '@/engine/recruitment/recruitment';
 import { runRecruitmentPass } from '@/engine/pipeline/passes/RecruitmentPass';
 import { SeededRNG } from '@/utils/random';
@@ -48,6 +49,21 @@ describe('warriorToPoolWarrior', () => {
     expect(pool.cost).toBe(computeFreeAgentCost(w));
     expect(pool.shelfWeeksRemaining).toBe(FREE_AGENT_SHELF_WEEKS);
     expect(pool.source).toBe('freeAgent');
+  });
+
+  it('carries the warrior avatar identity (seed + gender) onto the shelf', () => {
+    const w = makeWarrior({ fame: 35, avatarSeed: 777, gender: 'fem' });
+    const pool = warriorToPoolWarrior(w, 10, new SeededRNG(1));
+    expect(pool.avatarSeed).toBe(777);
+    expect(pool.gender).toBe('fem');
+  });
+
+  it('restores gender for veterans through veteranSigningPatch', () => {
+    const w = makeWarrior({ fame: 35, avatarSeed: 777, gender: 'masc' });
+    const pool = warriorToPoolWarrior(w, 10, new SeededRNG(1));
+    const patch = veteranSigningPatch(pool);
+    expect(patch.avatarSeed).toBe(777);
+    expect(patch.gender).toBe('masc');
     expect(pool.id).toBe(w.id); // veterans keep their identity
   });
 

@@ -54,6 +54,14 @@ describe('poolWarriorToWarrior', () => {
     expect(w.favorites).toEqual(r.favorites);
     expect(w.lineage).toEqual(r.lineage);
     expect(w.avatarSeed).toBe(r.avatarSeed);
+    expect(w.gender).toBe(r.gender);
+  });
+
+  it('propagates gender untouched — signing never re-rolls the portrait', () => {
+    const fem = poolWarriorToWarrior(recruit({ gender: 'fem', avatarSeed: 95 }), {});
+    expect(fem.gender).toBe('fem');
+    const masc = poolWarriorToWarrior(recruit({ gender: 'masc', avatarSeed: 1 }), {});
+    expect(masc.gender).toBe('masc');
   });
 
   it('flags star investment only for Prodigy recruits', () => {

@@ -15,10 +15,10 @@ every non-archive doc must appear here.
 ## Megaplan (protocol)
 
 - [`MEGAPLAN_BACKLOG.md`](MEGAPLAN_BACKLOG.md) — living register of open deferred items, watch items, and house divergences
-- [`MEGAPLAN_V31_PLAN.md`](MEGAPLAN_V31_PLAN.md) — Terrablood canon harvest campaign plan
-- [`MEGAPLAN_V31_FINDINGS.md`](MEGAPLAN_V31_FINDINGS.md) — validation audit + canon-claims findings
-- [`MEGAPLAN_V31_LEDGER.md`](MEGAPLAN_V31_LEDGER.md) — phase commits & baseline/final gates
-- [`MEGAPLAN_V31_DEFERRED.md`](MEGAPLAN_V31_DEFERRED.md) — deferred scope & watch items folded to the backlog
+- [`MEGAPLAN_V32_PLAN.md`](MEGAPLAN_V32_PLAN.md) — painterly avatar art upgrade campaign plan
+- [`MEGAPLAN_V32_FINDINGS.md`](MEGAPLAN_V32_FINDINGS.md) — validation audit + avatar-system findings
+- [`MEGAPLAN_V32_LEDGER.md`](MEGAPLAN_V32_LEDGER.md) — phase commits & baseline/final gates
+- [`MEGAPLAN_V32_DEFERRED.md`](MEGAPLAN_V32_DEFERRED.md) — deferred scope & watch items folded to the backlog
 
 ## Design — the bible corpus
 

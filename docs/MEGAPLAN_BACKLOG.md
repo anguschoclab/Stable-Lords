@@ -10,7 +10,7 @@ archive to `docs/archive/megaplans/` when a newer megaplan lands. Only the
 latest version's `MEGAPLAN_V<N>_{PLAN,FINDINGS,LEDGER,DEFERRED}.md` set stays
 at docs/ root.
 
-**Current latest:** MEGAPLAN V31 (Terrablood canon-claims campaign).
+**Current latest:** MEGAPLAN V32 (painterly avatar art upgrade).
 **Compiled:** 2026-11-22 — V31 fold: `MEGAPLAN_V31_DEFERRED.md`'s two
 unregistered rows folded below (S6 probe-reject → §D, S6 guardrail-block
 → §C); V30's set archived to `docs/archive/megaplans/` and indexed in §6.
@@ -297,5 +297,6 @@ trail.
 | MEGAPLAN_V28        | Docs taxonomy, bible-corpus boundary & convention ratchet                     | DEFERRED, FINDINGS, LEDGER, PLAN   | untagged                                      |
 | MEGAPLAN_V29        | Exhaustive review & full branch consolidation                                 | DEFERRED, FINDINGS, LEDGER, PLAN   | `pre-megaplan-v29`                            |
 | MEGAPLAN_V30        | Harmonization & deduplication campaign                                        | DEFERRED, FINDINGS, LEDGER, PLAN   | `pre-megaplan-v30`                            |
+| MEGAPLAN_V31        | Terrablood canon-claims campaign                                              | DEFERRED, FINDINGS, LEDGER, PLAN   | `pre-megaplan-v31`                            |
 | CONSOLIDATION_V5–V7 | PR consolidation waves                                                        | FINDINGS×3, LEDGER×2               | `pre-consolidation-*`, `pre-v7-consolidation` |
 | TEST_SUITE_AUDIT    | Test-suite audit & reorganization (Waves 1–2)                                 | PLAN, LEDGER + TEST_AUDIT_FINDINGS | `pre-test-audit-v2`                           |

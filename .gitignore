@@ -74,3 +74,6 @@ archives/
 
 # Bundled output of scripts/build-fight.ts (Bun.build artifact)
 scripts/.build/
+
+# Local secrets
+.env

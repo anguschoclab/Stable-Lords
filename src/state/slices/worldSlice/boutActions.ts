@@ -30,15 +30,20 @@ export function createBoutActions(
       warriorId: WarriorId,
       response: 'Accepted' | 'Declined'
     ) => {
-      set(
-        (state) =>
-          engineRespondToBoutOffer(
-            state as unknown as GameState,
-            offerId,
-            warriorId,
-            response
-          ) as unknown as Partial<GameStore>
-      );
+      set((state) => {
+        const impact = engineRespondToBoutOffer(
+          state as unknown as GameState,
+          offerId,
+          warriorId,
+          response
+        );
+        // The impact carries a partial offer dict (dictMerge channel) — fold
+        // it into the store map rather than handing it to zustand's shallow
+        // merge, which would replace every other offer.
+        return impact.boutOffers
+          ? ({ boutOffers: { ...state.boutOffers, ...impact.boutOffers } } as Partial<GameStore>)
+          : (impact as unknown as Partial<GameStore>);
+      });
     },
 
     clearExpiredOffers: () => {

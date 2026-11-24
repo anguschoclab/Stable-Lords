@@ -189,10 +189,11 @@ const mergeStrategies: Record<
   dictMerge: (merged, key, value) => {
     const m = merged as Record<keyof StateImpact, unknown>;
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      m[key] = {
-        ...((m[key] as Record<string, unknown> | undefined) ?? {}),
-        ...(value as Record<string, unknown>),
-      };
+      // Accumulate into the merged-owned dict — same result as a spread
+      // without allocating a fresh map per impact.
+      const target = (m[key] as Record<string, unknown> | undefined) ?? {};
+      Object.assign(target, value);
+      m[key] = target;
     }
   },
   replace: (merged, key, value) => {

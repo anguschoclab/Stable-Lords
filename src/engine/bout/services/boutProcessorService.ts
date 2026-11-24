@@ -44,11 +44,6 @@ interface WeekBoutsOutput {
  * Shared post-resolution tail: voided-contract cancels, side-effect impact +
  * player match-history records, applied in pairing order. Identical for
  * sequential and sharded execution.
- *
- * The voided-cancel impact must come AFTER per-bout impacts: each resolved
- * contract's payout step re-emits `boutOffers` with every surviving offer's
- * pre-bout object (resolveHelpers.ts), which would otherwise overwrite our
- * 'Canceled' write back to 'Signed' via dictMerge.
  */
 function finalizeBoutResults(
   state: GameState,

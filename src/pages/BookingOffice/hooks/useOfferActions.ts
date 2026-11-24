@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useWorldState, type GameStore } from '@/state/useGameStore';
+import { type GameStore } from '@/state/useGameStore';
+import type { GameState } from '@/types/state.types';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
@@ -97,7 +98,7 @@ export function useWeekReset(
 
 /** Accept/decline mutations + the accept-all-honorable batch action. */
 export function useOfferActions(
-  state: ReturnType<typeof useWorldState>,
+  state: Pick<GameState, 'promoters' | 'roster' | 'boutOffers'>,
   setState: GameStore['setState'],
   setSignedOfferIds: React.Dispatch<React.SetStateAction<Set<string>>>,
   thisWeekOffers: ReturnType<typeof filterAndSortOffers>['thisWeekOffers']
@@ -121,7 +122,8 @@ export function useOfferActions(
         response
       );
       if (next.boutOffers) {
-        s.boutOffers = next.boutOffers;
+        // Partial offer dict — merge the touched offer into the store map.
+        s.boutOffers = { ...s.boutOffers, ...next.boutOffers };
       }
     });
     toast.success(`Bout ${response === 'Accepted' ? 'accepted' : 'declined'}.`);

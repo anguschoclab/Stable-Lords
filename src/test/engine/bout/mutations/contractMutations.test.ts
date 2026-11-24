@@ -127,12 +127,14 @@ describe('contractMutations', () => {
       expect(impact.boutOffers![offerId]!.status).toBe('Proposed');
     });
 
-    it('returns boutOffers as a complete Record, not just the modified entry', () => {
+    it('returns boutOffers as a partial dict — only the touched offer', () => {
       (state.boutOffers as any)['other'] = makeOffer([w1, w2]);
       (state.boutOffers as any)[offerId] = makeOffer([w1, w2]);
 
+      // dictMerge channel: the impact carries just the touched offer and the
+      // merge folds it into the full map — sibling offers are unaffected.
       const impact = respondToBoutOffer(state, offerId, w1, 'Accepted');
-      expect(impact.boutOffers!['other' as BoutOfferId]).toBeDefined();
+      expect(Object.keys(impact.boutOffers!)).toEqual([offerId]);
       expect(impact.boutOffers![offerId]).toBeDefined();
     });
 

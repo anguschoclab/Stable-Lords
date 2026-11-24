@@ -35,7 +35,7 @@ export function isVoidDeclineReason(note: string | undefined): boolean {
  * Respond to bout offer.
  */
 export function respondToBoutOffer(
-  state: GameState,
+  state: Pick<GameState, 'boutOffers'>,
   offerId: BoutOfferId,
   warriorId: WarriorId,
   response: 'Accepted' | 'Declined'
@@ -64,15 +64,17 @@ export function respondToBoutOffer(
     newStatus = anyDeclined ? 'Rejected' : 'Signed';
   }
 
+  // Partial offer dict — the boutOffers channel merges via dictMerge, so
+  // emitting only the touched offer applies identically without spreading
+  // the whole map once per response.
   return {
     boutOffers: {
-      ...state.boutOffers,
       [offerId]: {
         ...offer,
         responses: newResponses as typeof offer.responses,
         status: newStatus,
       },
-    },
+    } as StateImpact['boutOffers'],
   };
 }
 
@@ -85,7 +87,7 @@ export function respondToBoutOffer(
  * COUNTERED_PURSE.
  */
 export function counterBoutOffer(
-  state: GameState,
+  state: Pick<GameState, 'boutOffers'>,
   offerId: BoutOfferId,
   counteringWarriorId: WarriorId
 ): StateImpact {
@@ -103,7 +105,6 @@ export function counterBoutOffer(
 
   return {
     boutOffers: {
-      ...state.boutOffers,
       [offerId]: {
         ...offer,
         purse: newPurse,
@@ -112,7 +113,7 @@ export function counterBoutOffer(
         responses: newResponses as typeof offer.responses,
         status: 'Proposed',
       },
-    },
+    } as StateImpact['boutOffers'],
   };
 }
 
@@ -125,7 +126,7 @@ export function counterBoutOffer(
  * COUNTERED_VENUE or COUNTERED_PURSE.
  */
 export function counterBoutVenue(
-  state: GameState,
+  state: Pick<GameState, 'boutOffers'>,
   offerId: BoutOfferId,
   counteringWarriorId: WarriorId,
   newArenaId: string
@@ -148,7 +149,6 @@ export function counterBoutVenue(
 
   return {
     boutOffers: {
-      ...state.boutOffers,
       [offerId]: {
         ...offer,
         arenaId: newArenaId,
@@ -156,6 +156,6 @@ export function counterBoutVenue(
         responses: newResponses as typeof offer.responses,
         status: 'Proposed',
       },
-    },
+    } as StateImpact['boutOffers'],
   };
 }

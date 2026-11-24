@@ -182,14 +182,19 @@ export function processContractPayouts(args: ContractPayoutArgs): StateImpact[] 
     impacts.push({ rivalsUpdates });
   }
 
-  impacts.push({
-    promoters: updatePromoterHistory(state, contract, purse, currentWId, currentOId),
-  });
+  // Promoter history only when the promoter exists — the impact replaces the
+  // whole record, so an unknown promoterId would emit an unchanged map.
+  if (state.promoters?.[contract.promoterId]) {
+    impacts.push({
+      promoters: updatePromoterHistory(state, contract, purse, currentWId, currentOId),
+    });
+  }
 
-  // Close the contract
-  const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers;
-  impacts.push({ boutOffers: remainingBoutOffers });
-
+  // No boutOffers close-out impact: dictMerge can't delete keys (a rest-map
+  // without the id merges state back in anyway), and re-emitting every
+  // surviving offer's stale object just clobbers fresher writes — the
+  // voided-cancel cancel write had to be ordered around exactly that. The
+  // contract lingers as Signed until pruneStaleBoutOffers drops it next week.
   return impacts;
 }
 

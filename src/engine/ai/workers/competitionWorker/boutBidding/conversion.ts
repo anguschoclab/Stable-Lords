@@ -69,6 +69,9 @@ interface BidConversionCtx {
   /** Bulk bookingLockedChampionIds — one titles scan per conversion call. */
   lockedIds: Set<string>;
   isBookableMemo: (w: Warrior, assignments: TrainingAssignment[] | undefined) => boolean;
+  /** Active, unlocked, bookable warriors per rival — precomputed once so
+   *  per-bid collectCandidates only applies the proposer-dependent filters. */
+  bookableByRival: Map<string, { warrior: Warrior; stableId: string }[]>;
 }
 
 /** Builds the per-call conversion context: lookup maps + bookable memo. */
@@ -111,6 +114,22 @@ function buildConversionCtx(
     return v;
   };
 
+  const lockedIds = bookingLockedChampionIds(state);
+  // Same predicate set collectCandidates applies — isActive + locked +
+  // bookable — which is proposer-independent, so it is computed once here
+  // and per-bid collection just concats the per-rival lists in order.
+  const bookableByRival = new Map<string, { warrior: Warrior; stableId: string }[]>();
+  for (const rival of rivals) {
+    const list: { warrior: Warrior; stableId: string }[] = [];
+    for (const w of rival.roster) {
+      if (!isActive(w)) continue;
+      if (lockedIds.has(w.id)) continue;
+      if (!isBookableMemo(w, rival.trainingAssignments)) continue;
+      list.push({ warrior: w, stableId: rival.id as string });
+    }
+    bookableByRival.set(rival.id as string, list);
+  }
+
   return {
     state,
     rng,
@@ -123,8 +142,9 @@ function buildConversionCtx(
     h2hCache: new Map<string, PairwiseHeadToHead>(),
     playerOffersByStable: new Map<string, number>(),
     playerOfferTotal: 0,
-    lockedIds: bookingLockedChampionIds(state),
+    lockedIds,
     isBookableMemo,
+    bookableByRival,
   };
 }
 
@@ -153,13 +173,7 @@ function collectCandidates(
     // VENDETTA: target a specific rival stable
     const targetRival = cx.rivalMap.get(bid.targetStableId);
     if (targetRival) {
-      candidates = [];
-      for (const w of targetRival.roster) {
-        if (!isActive(w)) continue;
-        if (bookingLocked(cx, w.id)) continue;
-        if (!cx.isBookableMemo(w, targetRival.trainingAssignments)) continue;
-        candidates.push({ warrior: w, stableId: targetRival.id as string });
-      }
+      candidates = [...(cx.bookableByRival.get(targetRival.id as string) ?? [])];
     }
   } else {
     // All other intents: search all rival stables — minus stables the
@@ -169,12 +183,8 @@ function collectCandidates(
       if (rival.id === proposerStable.stableId || rival.owner.id === proposerStable.stableId)
         continue;
       if (stableIsAvoided(proposerRival, rival, state.ownerGrudges)) continue;
-      for (const w of rival.roster) {
-        if (!isActive(w)) continue;
-        if (bookingLocked(cx, w.id)) continue;
-        if (!cx.isBookableMemo(w, rival.trainingAssignments)) continue;
-        candidates.push({ warrior: w, stableId: rival.id as string });
-      }
+      const list = cx.bookableByRival.get(rival.id as string);
+      if (list) candidates.push(...list);
     }
   }
   // V26: a warrior-pinned bid (bloodfeud) binds to that warrior only.

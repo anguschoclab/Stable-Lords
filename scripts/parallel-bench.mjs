@@ -5,6 +5,7 @@
  * Run: bun run scripts/parallel-bench.mjs [--weeks N] [--seed N] [--pool N]
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { runSimulation } from './simulation-harness.ts';
 import {
   configureEnginePool,
@@ -55,8 +56,8 @@ const out = {
   shipGate: gate ? 'PASS (>=1.30x)' : 'FAIL (<1.30x)',
   generatedAt: new Date().toISOString(),
 };
-mkdirSync(new URL('./out', import.meta.url).pathname, { recursive: true });
-const path = new URL('./out/parallel-bench.json', import.meta.url).pathname;
+mkdirSync(fileURLToPath(new URL('./out', import.meta.url)), { recursive: true });
+const path = fileURLToPath(new URL('./out/parallel-bench.json', import.meta.url));
 writeFileSync(path, JSON.stringify(out, null, 2));
 
 console.log(`  pool=1             : ${seq.ms.toFixed(0)} ms`);

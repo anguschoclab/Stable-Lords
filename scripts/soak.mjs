@@ -13,6 +13,7 @@
  *                   (per-day tournament rounds, day-7 weekly pipeline).
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { runSimulation } from './simulation-harness.ts';
 import { formatPulseTable } from '../src/engine/stats/simulationMetrics.ts';
 import { validateStateInvariants } from '../src/engine/validate/stateInvariants.ts';
@@ -97,7 +98,7 @@ console.log(
 );
 
 if (PROFILE && profile) {
-  mkdirSync(new URL('./out', import.meta.url).pathname, { recursive: true });
+  mkdirSync(fileURLToPath(new URL('./out', import.meta.url)), { recursive: true });
   const out = {
     seed: SEED,
     weeks: WEEKS,
@@ -106,7 +107,7 @@ if (PROFILE && profile) {
     passes: profile,
     generatedAt: new Date().toISOString(),
   };
-  const path = new URL('./out/baseline.json', import.meta.url).pathname;
+  const path = fileURLToPath(new URL('./out/baseline.json', import.meta.url));
   writeFileSync(path, JSON.stringify(out, null, 2));
   console.log(`\n=== PER-PASS PROFILE (total ms, ${WEEKS} weeks) ===`);
   for (const p of profile) {

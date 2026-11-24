@@ -172,6 +172,7 @@ export function poolWarriorToWarrior(recruit: PoolWarrior, opts: PoolToWarriorOp
     lore: recruit.lore,
     origin: recruit.origin,
     avatarSeed: recruit.avatarSeed,
+    gender: recruit.gender,
     flair,
   };
 

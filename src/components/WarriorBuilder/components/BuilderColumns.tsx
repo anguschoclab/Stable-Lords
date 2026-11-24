@@ -21,6 +21,8 @@ export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
     personality,
     style,
     setStyle,
+    gender,
+    setGender,
     applyConcept,
     attrs,
     total,
@@ -37,8 +39,9 @@ export function BuilderColumns({ builder, buttonStatus }: BuilderColumnsProps) {
         <IdentitySection
           name={name}
           style={style}
+          gender={gender}
           personality={personality}
-          actions={{ setName, setStyle, applyConcept }}
+          actions={{ setName, setStyle, setGender, applyConcept }}
         />
         <AttributeSliders
           attrs={attrs}

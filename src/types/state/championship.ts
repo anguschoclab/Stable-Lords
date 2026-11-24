@@ -1,6 +1,7 @@
 import type { FightId, PromoterId, WarriorId } from '../shared.types';
 import type { FightingStyle } from '../warrior.types';
 import type { PromoterPersonality } from './rankings';
+import type { AvatarGender } from '../avatar.types';
 
 /**
  * Lifecycle status of an arena title.
@@ -90,6 +91,8 @@ export interface Promoter {
   arenaPool?: string[];
   /** Deterministic seed for the promoter's portrait. */
   avatarSeed?: number;
+  /** Portrait gender — derived from avatarSeed at creation unless chosen. */
+  gender?: AvatarGender;
   history: {
     totalPursePaid: number;
     notableBouts: FightId[];

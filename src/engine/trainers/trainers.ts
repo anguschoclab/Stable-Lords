@@ -9,6 +9,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { fightEquivalentsOf } from '@/engine/warrior/careerUpdate';
 import type { Trainer } from '@/types/state.types';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 export type { TrainerTier, TrainerFocus };
 
 /**
@@ -110,15 +111,19 @@ export function generateHiringPool(count: number, seed: number): Trainer[] {
       (TRAINER_FOCUSES[0] as TrainerFocus);
     const tierRoll = rng();
     const tier: TrainerTier = tierRoll < 0.5 ? 'Novice' : tierRoll < 0.85 ? 'Seasoned' : 'Master';
+    const name = generateTrainerName(rng, focus);
+    const age = 30 + Math.floor(rng() * 25); // Diverse ages from 30 to 55
+    const avatarSeed = Math.floor(rng() * 1000000);
     pool.push({
       id: `tr_${seed}_${i}`,
-      name: generateTrainerName(rng, focus),
+      name,
       tier,
       focus,
       fame: tier === 'Master' ? 5 : tier === 'Seasoned' ? 3 : 1,
-      age: 30 + Math.floor(rng() * 25), // Diverse ages from 30 to 55
+      age,
       contractWeeksLeft: 52, // 1 year
-      avatarSeed: Math.floor(rng() * 1000000),
+      avatarSeed,
+      gender: genderFromAvatarSeed(avatarSeed),
     });
   }
   return pool;
@@ -163,6 +168,7 @@ export function convertRetiredToTrainer(warrior: Warrior): Trainer {
     legacyWins: warrior.career.wins,
     legacyKills: warrior.career.kills,
     avatarSeed: warrior.avatarSeed,
+    gender: warrior.gender,
   };
 }
 

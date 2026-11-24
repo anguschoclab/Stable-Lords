@@ -80,6 +80,7 @@ export function createTestPortraitCatalog(): AvatarCatalog {
         portrait('p-adult-masc-heavy', ['masc', 'adult', 'heavy', 'brown', 'short', 'beard', 'warrior']),
         portrait('p-adult-fem-light', ['fem', 'adult', 'light', 'blonde', 'braids', 'warrior']),
         portrait('p-adult-neutral-def', ['neutral', 'adult', 'defensive', 'bald', 'warrior']),
+        portrait('p-adult-neutral-trainer', ['neutral', 'adult', 'light', 'brown', 'short', 'trainer']),
         portrait('p-middle-masc-scar', ['masc', 'middle', 'heavy', 'black', 'short', 'beard', 'scar', 'warrior']),
         portrait('p-middle-fem-warpaint', ['fem', 'middle', 'light', 'red', 'long', 'warpaint', 'warrior']),
         portrait('p-elder-masc-gray', ['masc', 'elder', 'defensive', 'gray', 'balding', 'wrinkles', 'beard', 'trainer']),

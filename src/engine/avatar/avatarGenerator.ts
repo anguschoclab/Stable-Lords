@@ -61,6 +61,7 @@ export function avatarDescription(config: AvatarConfig): string | undefined {
 
 function pickGender(config: AvatarConfig, rng: SeededRNG): AvatarGender {
   if (config.forcedGender) return config.forcedGender;
+  if (config.gender) return config.gender;
   // Deterministic from seed but evenly distributed.
   const roll = rng.next();
   if (roll < 0.45) return 'masc';
@@ -248,22 +249,29 @@ function portraitScore(tags: Set<string>, ctx: PortraitContext): number {
 }
 
 /**
- * Pick a whole-portrait catalog entry: hard-filter on forced demographics,
- * then a seeded pick among entries within one point of the max score so
- * identical profiles still spread across a few faces.
+ * Pick a whole-portrait catalog entry: hard-filter on role + forced
+ * demographics, then a seeded pick among entries within one point of the
+ * max score so identical profiles still spread across a few faces.
  */
 function pickPortraitEntry(
   ctx: PortraitContext,
   rng: SeededRNG,
   entries: AvatarCatalogEntry[]
 ): AvatarCatalogEntry {
-  const eligible = entries.filter((entry) => {
+  const role = ctx.config.entityType === 'poolWarrior' ? 'warrior' : ctx.config.entityType;
+  const rolePool = entries.filter((entry) => new Set(entry.tags).has(role));
+  const roleEligible = rolePool.length > 0 ? rolePool : entries;
+  const matchesForced = (entry: AvatarCatalogEntry) => {
     const tags = new Set(entry.tags);
-    if (ctx.config.forcedGender && !tags.has(ctx.config.forcedGender)) return false;
+    if (!tags.has(ctx.gender)) return false;
     if (ctx.config.forcedAgeGroup && !tags.has(ctx.config.forcedAgeGroup)) return false;
     return true;
-  });
-  const pool = eligible.length > 0 ? eligible : entries;
+  };
+  // Forced demographics outrank role: an elder portrait tagged for another
+  // role still beats dropping the forced age group.
+  const forcedPool = entries.filter(matchesForced);
+  const eligible = roleEligible.filter(matchesForced);
+  const pool = eligible.length > 0 ? eligible : forcedPool.length > 0 ? forcedPool : roleEligible;
   const scored = pool
     .map((entry) => ({ entry, score: portraitScore(new Set(entry.tags), ctx) }))
     .sort((a, b) => b.score - a.score || a.entry.src.localeCompare(b.entry.src));

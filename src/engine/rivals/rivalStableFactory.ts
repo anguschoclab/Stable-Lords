@@ -27,6 +27,7 @@ import { cultureForOwner } from '@/data/names/cultures';
 import { rollCompetence } from '@/engine/ai/competence';
 import { aiRosterMax } from '@/constants/ai';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 /**
  * Gets stable templates.
  */
@@ -147,7 +148,7 @@ interface BuildOwnerArgs {
 /** Build the stable's owner — procedural name/fame/titles for duplicates. */
 function buildOwner(args: BuildOwnerArgs): Owner {
   const { tmpl, stableId, iteration, stableName, rng, difficulty } = args;
-  return {
+  const owner: Owner = {
     id: stableId,
     name:
       iteration > 0
@@ -169,6 +170,8 @@ function buildOwner(args: BuildOwnerArgs): Owner {
     backstoryId: tmpl.backstoryId,
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
+  owner.gender = genderFromAvatarSeed(owner.avatarSeed ?? 0);
+  return owner;
 }
 
 interface BuildRivalStableArgs {

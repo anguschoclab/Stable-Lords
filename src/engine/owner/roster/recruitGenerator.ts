@@ -23,6 +23,7 @@ import { generatePotential } from '@/engine/warrior/potential';
 import { generateFavorites } from '@/engine/favorites';
 import { AI_GENERATED_RECRUIT_COST } from '@/constants/world';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 /** Function type for meta-adaptation recruit style pickers. */
 type AdaptationStyleFn = (
   philosophyStyles: FightingStyle[],
@@ -206,7 +207,7 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): PoolWarrior | nu
   while (usedIds?.has(id)) id = rng.uuid('warrior') as typeof id;
   usedIds?.add(id);
 
-  return {
+  const recruit: PoolWarrior = {
     id: id as string,
     name,
     style,
@@ -228,4 +229,6 @@ export function generateAIRecruit(args: GenerateAIRecruitArgs): PoolWarrior | nu
     source: 'generated',
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
+  recruit.gender = genderFromAvatarSeed(recruit.avatarSeed ?? 0);
+  return recruit;
 }

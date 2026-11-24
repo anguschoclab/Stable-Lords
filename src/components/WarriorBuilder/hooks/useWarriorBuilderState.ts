@@ -15,6 +15,7 @@ import { computeWarriorStats } from '@/engine/warrior/skillCalc';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import type { FighterConcept } from '@/data/fighterConcepts';
+import type { AvatarGender } from '@/types/avatar.types';
 import { clamp } from '@/utils/math';
 import { sanitizeEntityName } from '@/utils/entityName';
 
@@ -24,6 +25,7 @@ interface UseWarriorBuilderStateDeps {
     style: FightingStyle;
     attributes: Attributes;
     avatarSeed: number;
+    gender?: AvatarGender;
   }) => void;
   maxRoster: number;
   currentRosterSize: number;
@@ -62,6 +64,7 @@ export function useWarriorBuilderState({
   const [style, setStyle] = useState<FightingStyle>(FightingStyle.StrikingAttack);
   const [attrs, setAttrs] = useState<Attributes>({ ...DEFAULT_ATTRS });
   const [avatarSeed, setAvatarSeed] = useState(() => cryptoRandomInt(0, 999999));
+  const [gender, setGender] = useState<AvatarGender | 'auto'>('auto');
 
   const total = useMemo(() => ATTRIBUTE_KEYS.reduce((s, k) => s + attrs[k], 0), [attrs]);
   const remaining = ATTRIBUTE_TOTAL - total;
@@ -102,15 +105,18 @@ export function useWarriorBuilderState({
       style,
       attributes: attrs,
       avatarSeed,
+      gender: gender === 'auto' ? undefined : gender,
     });
     setName('');
     setAttrs({ ...DEFAULT_ATTRS });
     setAvatarSeed(cryptoRandomInt(0, 999999));
-  }, [isValid, rosterFull, name, style, attrs, avatarSeed, onCreateWarrior]);
+  }, [isValid, rosterFull, name, style, attrs, avatarSeed, gender, onCreateWarrior]);
 
   return {
     name,
     setName,
+    gender,
+    setGender,
     personality,
     style,
     setStyle,

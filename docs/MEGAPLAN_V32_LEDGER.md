@@ -43,3 +43,15 @@
 ## §4 Close-out gate
 
 _Pending._
+
+## Post-gate: role/gender curation pass
+
+- Entities gained an optional `gender` field (Warrior, PoolWarrior, Trainer,
+  Owner, Promoter + schemas), derived from `avatarSeed` at creation via
+  `genderFromAvatarSeed` — zero extra RNG draws, draw order preserved.
+- `generateAvatar` honors `config.gender`; portrait picks hard-filter on
+  role tag, then resolved gender, then forced age group (forced
+  demographics outrank role on fallback).
+- `AvatarForEntity` passes `source.gender`; WarriorBuilder gained a
+  Presentation picker (Auto/Masculine/Feminine/Ambiguous) wired to the
+  live preview and the custom-create payload.

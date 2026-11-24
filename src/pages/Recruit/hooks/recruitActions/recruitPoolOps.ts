@@ -13,6 +13,7 @@ import { collectUsedWarriorIds } from '@/engine/core/warriorCollection';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { deadIdSet } from '@/engine/warrior/warriorStatus';
 import type { FightingStyle, Attributes, WarriorId, Warrior } from '@/types/game';
+import type { AvatarGender } from '@/types/avatar.types';
 import { toast } from 'sonner';
 import { draftRosterIsFull } from './recruitSigning';
 
@@ -40,7 +41,7 @@ function applyPoolRefreshDraft(draft: GameStore) {
 /** Draft mutation for a custom-built recruit; navigates to the new warrior. */
 function applyCustomCreateDraft(
   draft: GameStore,
-  data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number },
+  data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number; gender?: AvatarGender },
   navigate: (opts: { to: string }) => void
 ) {
   // In-draft cap enforcement — the authoritative roster may have grown since
@@ -64,6 +65,7 @@ function applyCustomCreateDraft(
     attrs: data.attributes,
     overrides: {
       avatarSeed: data.avatarSeed ?? hashStr(`avatar:${data.name}`),
+      gender: data.gender,
       stableId: draft.player?.id,
     },
   });
@@ -98,7 +100,7 @@ interface CustomCreateDeps {
 /** Custom-build flow: cap gate, funds check, then the minting draft write. */
 export function customCreate(
   deps: CustomCreateDeps,
-  data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number }
+  data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number; gender?: AvatarGender }
 ): void {
   const { rosterFull, setState, deductFunds, navigate } = deps;
   if (rosterFull) {

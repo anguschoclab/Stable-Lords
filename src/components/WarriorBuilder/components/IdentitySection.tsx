@@ -15,14 +15,17 @@ import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { FIGHTER_CONCEPTS, type FighterConcept } from '@/data/fighterConcepts';
+import type { AvatarGender } from '@/types/avatar.types';
 
 interface IdentitySectionProps {
   name: string;
   style: FightingStyle;
+  gender: AvatarGender | 'auto';
   personality?: string;
   actions: {
     setName: (n: string) => void;
     setStyle: (s: FightingStyle) => void;
+    setGender: (g: AvatarGender | 'auto') => void;
     applyConcept?: (style: FightingStyle, concept: FighterConcept) => void;
   };
 }
@@ -38,8 +41,8 @@ const CONCEPT_OPTIONS = Object.values(FightingStyle).flatMap((s) =>
 );
 
 /** Name/style/personality pickers plus the concept-build shortcuts. */
-export function IdentitySection({ name, style, personality, actions }: IdentitySectionProps) {
-  const { setName, setStyle, applyConcept } = actions;
+export function IdentitySection({ name, style, gender, personality, actions }: IdentitySectionProps) {
+  const { setName, setStyle, setGender, applyConcept } = actions;
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -84,6 +87,23 @@ export function IdentitySection({ name, style, personality, actions }: IdentityS
                   {STYLE_DISPLAY_NAMES[s]}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="warrior-gender">Presentation</Label>
+          <Select
+            value={gender}
+            onValueChange={(v) => setGender(v as AvatarGender | 'auto')}
+          >
+            <SelectTrigger id="warrior-gender" aria-label="Presentation">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="auto">Auto (from portrait seed)</SelectItem>
+              <SelectItem value="masc">Masculine</SelectItem>
+              <SelectItem value="fem">Feminine</SelectItem>
+              <SelectItem value="neutral">Ambiguous</SelectItem>
             </SelectContent>
           </Select>
         </div>

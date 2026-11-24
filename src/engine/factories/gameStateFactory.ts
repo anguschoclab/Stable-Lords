@@ -25,6 +25,7 @@ import { weekToTimestamp } from '@/constants/core/dates';
 import { INITIAL_RIVAL_COUNT } from '@/constants/economy';
 import { OWNER_PERSONALITIES_WITH_POLICY } from '@/engine/ai/traitPolicy';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 /** The empty-but-complete GameState literal every fresh save starts from. */
 function baseFreshState(createdAt: string): GameState {
   return {
@@ -44,6 +45,7 @@ function baseFreshState(createdAt: string): GameState {
       renown: 0,
       titles: 0,
       avatarSeed: 1,
+      gender: genderFromAvatarSeed(1),
     },
     fame: 0,
     popularity: 0,

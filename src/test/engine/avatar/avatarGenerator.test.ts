@@ -199,6 +199,23 @@ describe('avatarGenerator — portraits path (V32)', () => {
     expect(tagsOf(heavy)).toContain('heavy');
   });
 
+  it('restricts picks to the entity role when same-role portraits exist', () => {
+    const picks = new Set(
+      Array.from({ length: 20 }, (_, i) =>
+        generateAvatar(baseConfig({ entityType: 'trainer', seed: 6000 + i })).layers[0]?.src
+      )
+    );
+    for (const src of picks) {
+      expect(entryBySrc(src ?? '')?.tags).toContain('trainer');
+    }
+  });
+
+  it('uses the entity gender field when present, no forcedGender needed', () => {
+    const avatar = generateAvatar(baseConfig({ gender: 'fem', seed: 4 }));
+    expect(avatar.gender).toBe('fem');
+    expect(tagsOf(avatar)).toContain('fem');
+  });
+
   it('falls back to layered generation when the catalog has no portraits', () => {
     setAvatarCatalog(createTestAvatarCatalog());
     const avatar = generateAvatar(baseConfig());

@@ -181,7 +181,8 @@ describe('IdentitySection', () => {
       <IdentitySection
         name="TestWarrior"
         style={FightingStyle.BashingAttack}
-        actions={{ setName: vi.fn(), setStyle: vi.fn() }}
+        gender="auto"
+        actions={{ setName: vi.fn(), setStyle: vi.fn(), setGender: vi.fn() }}
       />
     );
     expect(container.firstChild).toBeInTheDocument();
@@ -194,7 +195,8 @@ describe('IdentitySection', () => {
       <IdentitySection
         name="TestWarrior"
         style={style}
-        actions={{ setName: vi.fn(), setStyle: vi.fn(), applyConcept: vi.fn() }}
+        gender="auto"
+        actions={{ setName: vi.fn(), setStyle: vi.fn(), setGender: vi.fn(), applyConcept: vi.fn() }}
       />
     );
     expect(getByText('Fighter Concept')).toBeInTheDocument();

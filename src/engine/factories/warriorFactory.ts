@@ -17,6 +17,7 @@ import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
 import { getFittedLoadout } from '@/engine/equipment/loadoutFitting';
 import { generateId } from '@/utils/idUtils';
 import { entropyRng } from '@/utils/random';
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 import { newWarriorDefaults } from '@/engine/factories/warriorDefaults';
 import { generatePotential, rollPotentialTier } from '@/engine/warrior/potential';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -63,8 +64,7 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
   const potential =
     overrides?.potential ??
     (rng ? generatePotential(attrs, rollPotentialTier(rng), rng) : undefined);
-
-  return {
+  const warrior: Warrior = {
     id: id ?? (rng ? (rng.uuid() as WarriorId) : (generateId(undefined, 'warrior') as WarriorId)),
     name,
     style,
@@ -88,4 +88,6 @@ export function makeWarrior(args: MakeWarriorArgs): Warrior {
     avatarSeed: overrides?.avatarSeed ?? (rng ? Math.floor(rng.next() * 1000000) : 0),
     ...overrides,
   };
+  warrior.gender = overrides?.gender ?? genderFromAvatarSeed(warrior.avatarSeed ?? 0);
+  return warrior;
 }

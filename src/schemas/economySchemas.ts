@@ -71,6 +71,7 @@ export const OwnerSchema = z.object({
   age: z.number().optional(),
   ageRetired: z.number().optional(),
   avatarSeed: z.number().optional(),
+  gender: z.enum(['masc', 'fem', 'neutral']).optional(),
 });
 
 /**
@@ -91,6 +92,7 @@ export const PromoterSchema = z.object({
     legacyFame: z.number(),
   }),
   avatarSeed: z.number().optional(),
+  gender: z.enum(['masc', 'fem', 'neutral']).optional(),
 });
 
 /**
@@ -369,4 +371,5 @@ export const TrainerSchema = z.object({
   legacyKills: z.number().optional(),
   specialty: TrainerSpecialtySchema.optional(),
   avatarSeed: z.number().optional(),
+  gender: z.enum(['masc', 'fem', 'neutral']).optional(),
 });

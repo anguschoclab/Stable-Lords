@@ -15,6 +15,14 @@ import { customCreate, refreshPool } from './recruitActions/recruitPoolOps';
 
 const SCOUT_COST = 25;
 
+interface CustomCreateData {
+  name: string;
+  style: FightingStyle;
+  attributes: Attributes;
+  avatarSeed?: number;
+  gender?: import('@/types/avatar.types').AvatarGender;
+}
+
 interface UseRecruitActionsParams {
   rosterFull: boolean;
   setState: (fn: (draft: GameStore) => void) => void;
@@ -79,7 +87,7 @@ export function useRecruitActions({
   );
 
   const handleCustomCreate = useCallback(
-    (data: { name: string; style: FightingStyle; attributes: Attributes; avatarSeed?: number }) =>
+    (data: CustomCreateData) =>
       customCreate({ rosterFull, setState, deductFunds, navigate }, data),
     [setState, navigate, rosterFull, deductFunds]
   );

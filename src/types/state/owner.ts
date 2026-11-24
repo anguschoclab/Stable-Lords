@@ -5,6 +5,7 @@ import {
   WORLD_DIFFICULTIES,
 } from '../enumSources';
 import type { CrestData } from '../crest.types';
+import type { AvatarGender } from '../avatar.types';
 import type { StableId, WarriorId } from '../shared.types';
 import type { FightingStyle } from '../warrior.types';
 
@@ -64,4 +65,6 @@ export interface Owner {
   competence?: OwnerCompetence;
   /** Deterministic seed for the owner's portrait. */
   avatarSeed?: number;
+  /** Portrait gender — derived from avatarSeed at creation unless chosen. */
+  gender?: AvatarGender;
 }

@@ -352,6 +352,7 @@ export const WarriorSchema = z.object({
   lineage: WarriorLineageSchema.optional(),
   isStarInvestment: z.boolean().optional(),
   avatarSeed: z.number().optional(),
+  gender: z.enum(['masc', 'fem', 'neutral']).optional(),
 });
 
 /**
@@ -402,6 +403,7 @@ export const PoolWarriorSchema = z.object({
     .enum(['orphanage', 'academy', 'freeAgent', 'released', 'apprentice', 'generated'])
     .optional(),
   avatarSeed: z.number().optional(),
+  gender: z.enum(['masc', 'fem', 'neutral']).optional(),
 });
 
 /**

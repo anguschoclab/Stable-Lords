@@ -19,6 +19,7 @@ import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { ATTRIBUTE_MIN } from '@/types/shared.types';
 import { TIER_COST, type PoolWarrior, type RecruitTier } from './types';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 // Names come from the procedural generator (src/data/names/nameGenerator.ts);
 // the narrative recruitment corpus is folded into the 'common' culture.
 
@@ -125,7 +126,7 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
   const originStr = generateOrigin(rng);
   const loreStr = generateLore(name, rng);
 
-  return {
+  const recruit: PoolWarrior = {
     id: rng.uuid(),
     name,
     style,
@@ -148,6 +149,8 @@ export function generateRecruit(args: GenerateRecruitArgs): PoolWarrior {
     source: 'orphanage',
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
+  recruit.gender = genderFromAvatarSeed(recruit.avatarSeed ?? 0);
+  return recruit;
 }
 
 /**
@@ -184,7 +187,7 @@ export function generateApprentice(args: GenerateRecruitArgs): PoolWarrior {
   const originStr = generateOrigin(rng);
   const loreStr = generateLore(name, rng);
 
-  return {
+  const recruit: PoolWarrior = {
     id: rng.uuid(),
     name,
     style,
@@ -207,4 +210,6 @@ export function generateApprentice(args: GenerateRecruitArgs): PoolWarrior {
     source: 'apprentice',
     avatarSeed: Math.floor(rng.next() * 1000000),
   };
+  recruit.gender = genderFromAvatarSeed(recruit.avatarSeed ?? 0);
+  return recruit;
 }

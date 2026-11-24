@@ -70,6 +70,7 @@ export function warriorToPoolWarrior(
     shelfWeeksRemaining: FREE_AGENT_SHELF_WEEKS,
     source,
     avatarSeed: w.avatarSeed,
+    gender: w.gender,
     veteran: {
       fame: w.fame ?? 0,
       popularity: w.popularity ?? 0,
@@ -93,6 +94,7 @@ export function veteranSigningPatch(recruit: PoolWarrior): Partial<Warrior> {
     career: { ...recruit.veteran.career },
     titles: [...recruit.veteran.titles],
     avatarSeed: recruit.avatarSeed,
+    gender: recruit.gender,
   };
 }
 

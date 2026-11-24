@@ -1,5 +1,6 @@
 import { FightingStyle } from './fightingStyles';
 import type { TrainerFocus, TrainerSpecialty, TrainerTier } from './trainerTypes';
+import type { AvatarGender } from '../avatar.types';
 
 /**
  * Defines the shape of trainer.
@@ -20,4 +21,6 @@ export interface Trainer {
   specialty?: TrainerSpecialty;
   /** Deterministic seed for the trainer's portrait. */
   avatarSeed?: number;
+  /** Portrait gender — derived from avatarSeed at creation unless chosen. */
+  gender?: AvatarGender;
 }

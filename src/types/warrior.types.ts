@@ -18,6 +18,7 @@ import {
 } from './shared.types';
 import { WARRIOR_STATUSES, INJURY_SEVERITIES, INJURY_LOCATIONS } from './enumSources';
 import type { AnnualAward } from './state.types';
+import type { AvatarGender } from '@/types/avatar.types';
 import type { EquipmentLoadout } from '@/data/equipment';
 
 // ─── UI Prop Types ──────────────────────────────────────────────────────────
@@ -270,6 +271,8 @@ export interface Warrior {
   campaignFocus?: import('@/engine/advisor/types').CampaignFocus;
   /** Deterministic seed for the warrior's portrait. */
   avatarSeed?: number;
+  /** Portrait gender — derived from avatarSeed at creation unless chosen. */
+  gender?: AvatarGender;
 }
 
 // Re-exports for convenience

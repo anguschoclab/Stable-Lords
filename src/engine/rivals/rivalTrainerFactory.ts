@@ -14,6 +14,7 @@
 import type { Trainer, TrainerTier } from '@/types/shared.types';
 import { TRAINER_FIRST_NAMES, PHILOSOPHY_TO_FOCUS } from './rivalNamePool';
 
+import { genderFromAvatarSeed } from '@/utils/avatarGender';
 /**
  * Generates trainers for a stable based on philosophy and tier.
  */
@@ -43,15 +44,18 @@ export function generateStableTrainers(
           ? 'Master'
           : 'Novice';
 
+    const age = 30 + Math.floor(rng() * 35);
+    const avatarSeed = Math.floor(rng() * 1000000);
     trainers.push({
       id: `trainer_${stableId}_${i}`,
       name: `${firstName}`,
       tier: trainerTier,
       focus,
       fame: trainerTier === 'Master' ? 5 : 1,
-      age: 30 + Math.floor(rng() * 35),
+      age,
       contractWeeksLeft: 52,
-      avatarSeed: Math.floor(rng() * 1000000),
+      avatarSeed,
+      gender: genderFromAvatarSeed(avatarSeed),
     });
   }
 

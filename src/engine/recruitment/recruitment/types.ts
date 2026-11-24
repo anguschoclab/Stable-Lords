@@ -4,6 +4,7 @@ import {
   type BaseSkills,
   type DerivedStats,
 } from '@/types/shared.types';
+import type { AvatarGender } from '@/types/avatar.types';
 import {
   type AttributePotential,
   type CareerRecord,
@@ -94,6 +95,8 @@ export interface PoolWarrior {
   source?: 'orphanage' | 'academy' | 'freeAgent' | 'released' | 'apprentice' | 'generated';
   /** Deterministic seed for the recruit's portrait. */
   avatarSeed?: number;
+  /** Portrait gender — derived from avatarSeed at creation unless chosen. */
+  gender?: AvatarGender;
 }
 
 // TIER data is now fetched from narrative domain files — the literals are

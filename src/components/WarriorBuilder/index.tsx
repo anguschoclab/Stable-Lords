@@ -14,6 +14,7 @@ interface WarriorBuilderProps {
     style: import('@/types/game').FightingStyle;
     attributes: import('@/types/game').Attributes;
     avatarSeed: number;
+    gender?: import('@/types/avatar.types').AvatarGender;
   }) => void;
   maxRoster?: number;
   currentRosterSize?: number;
@@ -26,8 +27,8 @@ export default function WarriorBuilder({
   currentRosterSize = 0,
 }: WarriorBuilderProps) {
   const builder = useWarriorBuilderState({ onCreateWarrior, maxRoster, currentRosterSize });
-  const { avatarSeed, name, style, isValid, rosterFull, randomize } = builder;
-  const preview = useBuilderAvatar(avatarSeed, name, style);
+  const { avatarSeed, name, style, gender, isValid, rosterFull, randomize } = builder;
+  const preview = useBuilderAvatar(avatarSeed, name, style, gender);
 
   const buttonStatus: 'roster-full' | 'invalid' | 'valid' = rosterFull
     ? 'roster-full'

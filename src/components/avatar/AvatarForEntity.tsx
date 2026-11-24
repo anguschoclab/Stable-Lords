@@ -73,6 +73,7 @@ function buildAvatarConfig(
     entityType,
     seed: (source as { avatarSeed?: number }).avatarSeed,
     name: (source as { name: string }).name ?? 'Unknown',
+    gender: (source as { gender?: AvatarConfig['gender'] }).gender,
     age: (source as { age?: number }).age,
     style: warriorLike ? source.style : undefined,
     primaryColor: colors.primary,

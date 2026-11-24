@@ -5,7 +5,7 @@ description: Recipe for adding a new offseason event to the seasonal pipeline. U
 
 # offseason-event
 
-61 offseason events already exist — follow the established 4-step chain. The
+Read the current event registry rather than copying a fixed count — follow the established 4-step chain. The
 wiring is compile-enforced end to end: a handler keyed on a non-canonical
 `effectType`, or a canonical `effectType` with no handler, **fails to compile**.
 

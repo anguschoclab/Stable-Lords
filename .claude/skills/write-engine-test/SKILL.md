@@ -66,8 +66,9 @@ it's named, what it imports, or how it mocks. Get the placement right first.
   sentinel to `src/test/_setup/stateReset.test.ts` when you introduce a new
   one — and reset via dynamic `await import()` inside `afterEach`, never a
   static import (it defeats `vi.mock`).
-- Default timeout is 30s. A test that needs more is a misplaced test — move it
-  to `.slow`, don't raise its timeout.
+- `vitest.config.ts` currently sets `testTimeout: 120000` and
+  `hookTimeout: 30000`. These ceilings are not tier budgets: multi-week sims,
+  subprocess tests, and tests taking >~2s still belong in `.slow`.
 
 ## 5. Determinism & assertions
 

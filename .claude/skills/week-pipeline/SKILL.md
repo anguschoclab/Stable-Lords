@@ -45,7 +45,9 @@ another same-stage pass's writes. Impacts merge in declaration order.
 1. Write a pure-ish pass module in `src/engine/pipeline/passes/` (precedent:
    `TrainerPass.ts`, `EconomyPass.ts`). Return a `StateImpact`; merge helpers
    live in `src/engine/impacts`.
-2. Register a `WeekPassSpec` in `pipelineStages.ts` — pick the right stage:
+2. Register a `WeekPassSpec` in `src/engine/pipeline/services/weekPipeline/passes.ts`
+   (`WEEK_PIPELINE_PASSES`); `pipelineStages.ts` defines the contract and validator,
+   not the live pass table. Pick the right stage:
    `core` = mechanical state first, `world` = world/AI that depends on it,
    `content` = player-facing output last.
 3. Declare `writes` honestly — the validator and `passPurity` check them.

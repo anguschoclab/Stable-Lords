@@ -68,9 +68,11 @@ output back into the domain files per `DOMAIN_FILES`, and writes
 
 ## Determinism caveat
 
-Narrative pools feed seeded picks. **Adding or removing an entry shifts every
-downstream draw** — `offseasonDeterminism`/characterization tests will flag
-it, and that's the suite working as designed (see `determinism-debug` §1).
+Narrative pools feed seeded picks. Adding or removing an entry can change
+which value a draw selects; it does not necessarily change the number of draws.
+Event selection can change mechanical branches, whereas isolated combat text
+must not change fight outcomes. Review characterization changes against the
+actual consumer before re-baselining (see `determinism-debug` §1).
 What must stay true: narrators draw from the **isolated narration rng** so
 narrated === headless outcomes hold — never let a narrator share the
 mechanical stream.

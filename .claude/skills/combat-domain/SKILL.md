@@ -63,9 +63,10 @@ mechanical stream (`determinism-debug` §4).
 ## Weather
 
 `src/engine/combat/mechanics/weatherEffects/` (`table.ts`) driven by
-`src/constants/arena/weatherStats.ts`. Known trap: display-token vs
-`staminaMult` semantics inconsistency on 'Chaos Storm' (V21-B3,
-`docs/MEGAPLAN_BACKLOG.md`) — check conventions before adding a stat line.
+`src/constants/arena/weatherStats.ts`. The V21-B3 inconsistency was resolved in V29:
+`DRAIN N%` means `staminaMult = N / 100` (endurance-cost rate), not stamina
+remaining. Preserve `src/test/megaplan/v29WeatherStamina.guard.test.ts` and
+check the live effect table before adding a display stat.
 
 ## The boundary
 

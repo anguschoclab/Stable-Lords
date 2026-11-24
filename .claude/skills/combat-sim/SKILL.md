@@ -69,8 +69,7 @@ bun run test --reporter=verbose src/test/engine/determinismAudit.test.ts src/tes
 
 ## Notes
 
-- Test timeout is 30s (set in vitest.config.ts)
 - `*.slow.test.ts` files are excluded from `bun run test` — use `bun run test:slow <path>` (vitest.config.slow.ts) for simulation_hardening, styleWinConditions, traitBalance, and economy/balance
-- All tests run in jsdom environment with `@/` aliased to `src/`
+- Default environment is `node` (two projects: shared fast + isolated) — DOM tests carry `// @vitest-environment jsdom`; `@/` aliases `src/`; timeouts live in `vitest.config.ts` (120s ceiling — see `run-all-tests`)
 - If a test involves RNG, check determinismAudit.test.ts first — non-deterministic failures there indicate a seeding regression
 - Combat mechanics live under src/test/engine/combat/mechanics/; bout lifecycle under src/test/engine/bout/

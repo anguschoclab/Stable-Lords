@@ -1,68 +1,24 @@
 ---
 name: ai-agent
-description: Run AI/agent system tests for rival stable intelligence, intent recognition, budget management, and strategic decision-making.
+description: Run focused rival-AI tests for intent, memory, budgets, staffing, recruitment, competition, and tournament decisions. For implementation use rival-ai.
 disable-model-invocation: true
 ---
 
-# ai-agent
+# AI test runner
 
-Tests the Stable Lords AI agent system including intent recognition, skepticism logic, budget management, and worker subsystems.
-
-## Usage
-
-```
-/ai-agent [filter]
-```
-
-## Test Groups
-
-| Filter keyword | What it targets                                      |
-| -------------- | ---------------------------------------------------- |
-| (none)         | All AI agent tests                                   |
-| intent         | src/test/engine/ai/intentEngine.test.ts              |
-| bankruptcy     | src/test/engine/ai/bankruptcyService.test.ts         |
-| expansion      | src/test/engine/ai/expansionService.test.ts          |
-| retirement     | src/test/engine/ai/seasonalRetirementService.test.ts |
-| workers        | src/test/engine/ai/workers/\*.test.ts                |
-| architecture   | src/test/engine/ai/agentArchitecture.test.ts         |
-
-## Commands
-
-**Run all AI agent tests:**
+This is the test entry point, not an autonomous improvement agent. For the
+implementation map and shared perception/cache rules, read `rival-ai`.
+`run-all-tests` owns runner/environment conventions; `run-domain-tests` owns
+path/title filtering. Resolve a supplied keyword to a real path before running.
 
 ```bash
-bun run test --reporter=verbose src/test/engine/ai/
+bun run test --reporter=verbose "src/test/engine/ai/"
+bun run test --reporter=verbose "src/test/engine/ai/workers/"
+bun run test --reporter=verbose "src/test/engine/ai/intentEngine.test.ts"
+bun run test --reporter=verbose "src/test/engine/ai/bankruptcyService.test.ts"
 ```
 
-**Run with a filter (e.g. /ai-agent intent):**
-
-```bash
-bun run test --reporter=verbose -- <filter>
-```
-
-**Run intent recognition and skepticism tests:**
-
-```bash
-bun run test --reporter=verbose src/test/engine/ai/intentEngine.test.ts
-```
-
-**Run bankruptcy service tests:**
-
-```bash
-bun run test --reporter=verbose src/test/engine/ai/bankruptcyService.test.ts
-```
-
-**Run all worker tests:**
-
-```bash
-bun run test --reporter=verbose src/test/engine/ai/workers/
-```
-
-## Notes
-
-- AI system implements "Skeptical Memory" and "Hierarchical Delegation" patterns
-- Intent engine recognizes 7 intents: RECOVERY, VENDETTA, WEALTH_ACCUMULATION, AGGRESSIVE_EXPANSION, ROSTER_DIVERSITY, EXPANSION, CONSOLIDATION
-- Skepticism verification checks financial crisis, roster depletion, meta hostility, and environmental hazards
-- Workers handle budget, staff, roster, recruitment, and competition decisions
-- Agent context includes meta-awareness from arena history and budget reports
-- Test timeout is 30s (set in vitest.config.ts)
+Use `-t "pattern"` in the selected directory for a test-title filter, not a
+fictional keyword-to-file mapping. Add owner/recruitment/pipeline tests when the
+change crosses those boundaries. Never launch specialist agents or commit their
+changes merely because this runner was invoked.

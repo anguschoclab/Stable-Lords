@@ -21,16 +21,20 @@ bugs: something changed the number, order, or shape of RNG draws.
 
 ## The usual suspects, in order
 
-1. **Pool/array length changed.** `randomPick` draws one index — removing or
-   adding an entry shifts every downstream draw. Deduping narrative strings,
+1. **Pool/array length changed.** A pick maps a draw to an index — removing or
+   adding an entry can change the selected value without changing draw count.
+   Downstream mechanical draws shift only if selection changes control flow or
+   consumes the mechanical stream; isolated narration must not affect outcomes. Deduping narrative strings,
    adding an offseason event, or growing a name pool will _legitimately_
    change seeded picks; characterization tests flag it, it's usually fine.
 2. **New unconditional draw.** A `rng.next()` added on a hot path consumes a
    value every other consumer expected. Gate new draws behind the same
    condition shape as neighbors, or draw from a dedicated sub-RNG.
 3. **Iteration-order dependence.** `Object.keys`, `Map`, `Set` ordering —
-   object key order is insertion order. Sort before iterating in sim code
-   (precedent: `selectGrandChampionshipField` sorts arenaIds pre-shuffle).
+   non-integer string keys follow insertion order; integer-index keys sort numerically.
+   Preserve the production order when optimizing. Sort only where the contract
+   explicitly defines canonical order (e.g. arenaIds before championship shuffle);
+   adding a sort to an existing seeded loop changes outcomes.
 4. **Narration leaking into mechanics.** Any `rng` call inside a narrator that
    shares the mechanical stream. Narrators get their own rng — check the call.
 5. **Environment leak.** `Math.random()`, `Date.now()`, `crypto.randomUUID()`

@@ -1,5 +1,30 @@
 # Stable Lords — Agent Conventions
 
+## Skills
+
+Repo skills live in `.claude/skills/<name>/SKILL.md` and are discovered
+automatically (`.claude`, `.devin`, `.agents`, `.windsurf` dirs all index).
+Invoke the matching skill **before** starting the work it covers:
+
+- **Domain maps:** `combat-domain`, `combat-balance`, `week-pipeline`,
+  `rival-ai`, `stable-management`, `warrior-development`, `tournament-cycle`,
+  `engine-pool`, `avatar-pipeline`, `add-player-action`, `offseason-event`,
+  `narrative-templates`
+- **Workflow:** `write-engine-test`, `guard-ratchet`, `verify-implementation`,
+  `determinism-debug`, `perf-audit`, `safe-codemod`, `honest-assessment`,
+  `sim-diagnostics`, `ui-honesty-audit`
+- **Test/task runners** (focused commands, `disable-model-invocation`):
+  `run-all-tests`, `run-domain-tests`, `run-e2e-tests`, `run-electron`,
+  `run-headless-sim`, `test-coverage`, `type-check`, `lint-code`,
+  `format-code`, `build-app`, plus per-domain: `combat-sim`, `ai-agent`,
+  `training-coach`, `recruitment-scout`, `tournament-bracket`,
+  `pipeline-seasonal`, `integration-autosim`, `economy-balance`,
+  `narrative-validate`, `orchestrate-narrative`
+
+Runners only run commands — authoring/mechanic guidance always lives in the
+domain or workflow skill they delegate to. `scripts/skill-path-scan.mjs`
+guards path drift; keep doc paths real or the CI gate fails.
+
 ## Plan files
 
 All session plans and MEGAPLAN drafts live **in the repo** at `.devin/plans/`.

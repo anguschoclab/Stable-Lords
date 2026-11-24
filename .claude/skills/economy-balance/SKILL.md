@@ -1,68 +1,24 @@
 ---
 name: economy-balance
-description: Run economic balance simulations to detect inflation, deflation, lethality rates, and meta-drift patterns.
+description: Run economy tests and long-horizon balance diagnostics. Delegates harness selection to sim-diagnostics and implementation to stable-management.
 disable-model-invocation: true
 ---
 
-# economy-balance
+# Economy balance runner
 
-Runs economic balance simulations to track treasury health, lethality rates, and fighting style meta-drift over time.
-
-## Usage
-
-```
-/economy-balance [filter]
-```
-
-## Test Groups
-
-| Filter keyword | What it targets                                                      |
-| -------------- | -------------------------------------------------------------------- |
-| (none)         | Full 100-week balance simulation via daily oracle                    |
-| quick          | Quick 50-week balance check                                          |
-| meta           | src/test/engine/metaDrift.test.ts                                    |
-| economy        | src/test/engine/economy/                                             |
-| balance        | src/test/engine/economy/balance.slow.test.ts (SLOW tier)             |
-| hardening      | src/test/engine/combat/simulation_hardening.slow.test.ts (SLOW tier) |
-
-## Commands
-
-**Run full balance report (100 weeks):**
+`sim-diagnostics` owns the harness catalog; `stable-management` owns money-flow
+implementation; `combat-balance` owns combat tuning and its fixture/world gates.
+Do not infer a balance fix from a single treasury threshold or snapshot.
 
 ```bash
-bun scripts/daily_oracle.ts
+bun run test --reporter=verbose "src/test/engine/economy/" "src/test/engine/metaDrift.test.ts"
+bun run test:slow "src/test/engine/economy/balance.slow.test.ts" "src/test/engine/economy/worldBalance.slow.test.ts"
+bun run oracle:daily
 ```
 
-**Run with a filter (e.g. /economy-balance economy):**
-
-```bash
-bun run test --reporter=verbose -- <filter>
-```
-
-**Run balance tests (slow tier):**
-
-```bash
-bun run test:slow src/test/engine/economy/balance.slow.test.ts src/test/engine/combat/simulation_hardening.slow.test.ts
-```
-
-**Run economy tests:**
-
-```bash
-bun run test --reporter=verbose src/test/engine/economy/
-```
-
-**Run meta-drift analysis:**
-
-```bash
-bun run test --reporter=verbose src/test/engine/metaDrift.test.ts
-```
-
-## Notes
-
-- Daily oracle runs 100-week simulation and generates docs/reports/daily-balance-report.md
-- Report includes: treasury tracking, lethality rate, meta-drift by style, economic recommendations
-- Meta-drift range: -10 (Struggling) to +10 (Dominant)
-- Lethality rate should stay below 10% to prevent rapid roster depletion
-- Economic constants tracked: FIGHT_PURSE, WIN_BONUS, WARRIOR_UPKEEP_BASE, FAME_DIVIDEND
-- If treasury inflates >100k, consider increasing WARRIOR_UPKEEP_BASE or reducing FIGHT_PURSE
-- Test timeout is 30s (set in vitest.config.ts) — balance and simulation_hardening are `*.slow.test.ts`, excluded from `bun run test`; run them via `bun run test:slow`
+The oracle runs **1,000 weeks**, not 100 or 50, and overwrites
+`docs/reports/daily-balance-report.md`. The slow command deliberately opts into
+simulation gates; it is not a routine check for docs or UI changes. For a shorter run use the
+harness options documented in `sim-diagnostics`, not an unsupported `quick`
+keyword. Read current constants and the backlog before proposing economy or
+lethality changes; a report recommendation is not permission to alter canon.

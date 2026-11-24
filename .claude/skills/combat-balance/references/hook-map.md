@@ -66,16 +66,18 @@ Pure helpers used here live in `src/engine/combat/resolution/`: `tempoMechanics.
 
 ## Riposte bonuses — `styleRiposteBonus`
 
-`src/engine/combat/resolution/resolution.ts`, **exported** `styleRiposteBonus(def,
+`src/engine/combat/resolution/styleRiposteBonus.ts` (extracted from
+`resolution.ts`, which re-exports it), **exported** `styleRiposteBonus(def,
 att, opts?)` returns `{ ripBonus, dmgBonus }`. It centralises per-style riposte
-math (unit-test it directly):
+math (unit-test it directly). Called from
+`src/engine/combat/resolution/offenseDefense/defense.ts`:
 
 - **TP** fatigue-exploit: scales with `att.endurance / att.maxEndurance`.
 - **PL** momentum-riposte: `def.momentum`, **negated when `att.style === WallOfSteel`**.
 - **PR** riposte-master: `opts.afterParry` (counter-on-parry), `opts.attCommitLevel`
   (punish-commitment ladder), `opts.riposteStreak` (light chain).
 
-Called at two sites in `resolution.ts`: the **whiff** path (`resolveWhiffRiposte`,
+Called at two sites in `defense.ts`: the **whiff** path (`resolveWhiffRiposte`,
 `afterParry:false`) and the **parry** path (`resolveContestedDefense`,
 `afterParry:true`). `def.riposteStreak` is updated (PR-gated) at both.
 

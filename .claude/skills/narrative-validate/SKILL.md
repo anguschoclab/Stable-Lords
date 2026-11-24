@@ -1,62 +1,24 @@
 ---
 name: narrative-validate
-description: Validate narrative system integrity including tag references, template structure, and generation across mood tones.
+description: Run narrative JSON validation and focused narration/gazette tests. Authoring contracts live in narrative-templates.
 disable-model-invocation: true
 ---
 
-# narrative-validate
+# Narrative validation runner
 
-Validates the Stable Lords narrative system for integrity, tag reference resolution, and template structure.
-
-## Usage
-
-```
-/narrative-validate [filter]
-```
-
-## Test Groups
-
-| Filter keyword | What it targets                                                              |
-| -------------- | ---------------------------------------------------------------------------- |
-| (none)         | All narrative validation tests                                               |
-| combat         | src/test/engine/narrative/combatNarrators.test.ts + combat/narrator.test.ts  |
-| gazette        | src/test/engine/gazette/gazetteNarrative.test.ts + gazetteDetections.test.ts |
-| status         | src/test/engine/narrative/narrativeStatus.test.ts                            |
-| bout           | src/test/engine/narrative/narrativePostBout.test.ts                          |
-| template       | src/test/engine/narrative/templateHelpers.test.ts                            |
-| archive        | scripts/narrative_validate.ts (tag reference validation)                     |
-
-## Commands
-
-**Run all narrative tests:**
+Read `narrative-templates` for domain files, both token systems, production
+context requirements, and isolated narration RNG. There is no monolithic
+96KB narrativeContent.json archive to edit. The validator checks JSON structure,
+bracket balance, exact duplicates, contamination, and required keys; it does
+not prove every token is supplied by every production caller.
 
 ```bash
-bun run test --reporter=verbose src/test/engine/narrative/ src/test/engine/gazette/
+bun run narrative-validate
+bun run test --reporter=verbose "src/test/engine/narrative/" "src/test/engine/gazette/"
 ```
 
-**Run with a filter (e.g. /narrative-validate combat):**
-
-```bash
-bun run test --reporter=verbose -- <filter>
-```
-
-**Run narrative archive validation (tag reference check):**
-
-```bash
-bun scripts/narrative_validate.ts
-```
-
-**Run specific mood tone validation:**
-
-```bash
-bun run test --reporter=verbose -t "Calm"
-bun run test --reporter=verbose -t "Bloodthirsty"
-```
-
-## Notes
-
-- Narrative archive (narrativeContent.json) is 96KB with complex template structure
-- Tag references use {{TAG}} syntax that must resolve to dictionary entries
-- Mood tones affect narrative voice: Calm, Bloodthirsty, Theatrical, Solemn, Festive
-- The narrative_validate script exits non-zero on failure for CI/CD gating
-- Narrative generation tests cover combat narration, gazette stories, status updates, and bout summaries
+For a supplied keyword, select a real file/directory first; `-t "pattern"`
+filters test titles, not JSON tokens or event IDs. Verify token resolution at
+its actual call site and assert rendered text contains no unresolved tokens.
+See `offseason-event` for events and `orchestrate-narrative` for opt-in API
+expansion; validation must never launch the paid expansion job.

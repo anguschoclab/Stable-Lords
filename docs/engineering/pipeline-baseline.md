@@ -187,6 +187,16 @@ ms avg. Vs the older recorded baseline (603.6 ms/wk, different session):
   lever); the ~150 ms/wk non-pass delta is bout resolution
   (`runBoutSimulationPass` isn't a telemetry pass) + harness bookkeeping;
   GlobalSearch rescan already bounded by index `searchCache`.
+- B6+ post-plan harvest (post-P1 re-profile, all byte-identical):
+  `bookableByRival` precompute in bid conversion (collectCandidates was
+  re-checking proposer-independent predicates per bid);
+  `perception.titleOffers` pre-filters intelWorker's per-rival offer scan;
+  `bestArchetypeScore` drops the map+sort under `tourneyDraftBonus`;
+  seeding's arena loop shares `crownedIds` + `collectAllWarriors` via new
+  `rankContenders` opts. Remaining profile is flat — `hashStr` (seeded
+  determinism), dossier folds, narration, and per-exchange combat evals
+  are inherent; `getArenaById`/`interpolateTemplate` already Map /
+  single-pass optimized.
 
 Parallelism gate re-run (40 wk, pool=4): 13,955 vs 42,968 ms → **0.32×,
 still FAIL** — the deficit is structural (per-week GameState clone

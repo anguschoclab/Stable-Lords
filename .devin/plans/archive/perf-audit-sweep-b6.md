@@ -4,7 +4,7 @@ Continuation of the archived B5 sweep: work the remaining open items in
 `.devin/plans/perf-audit-findings.md`. Same discipline — output-preserving
 only, byte-identical A/B soak, commit per item.
 
-## Status
+## Status — **COMPLETE**
 
 - ✅ P1 `bestMatchupModifier` per-member bound + early-exit — landed, soak
   byte-identical; `rivalStrategy` 213.7→174.7 ms avg, `promoter` 37.2→31.0

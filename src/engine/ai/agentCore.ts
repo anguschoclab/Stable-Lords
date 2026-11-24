@@ -214,7 +214,10 @@ export function consolidateAgentMemory(
  */
 export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
   const rankings = state.realmRankings;
-  if (!rankings || Object.keys(rankings).length === 0) return 'Neutral';
+  // Count without allocating a key array — called per rival/offer/intent.
+  let totalRanked = 0;
+  if (rankings) for (const _k in rankings) totalRanked++;
+  if (totalRanked === 0) return 'Neutral';
 
   let playerBestRank: number | null = null;
   const roster = state.roster || [];
@@ -233,8 +236,7 @@ export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
 
   if (playerBestRank === null) return 'Neutral';
 
-  const totalRanked = Object.keys(rankings).length;
-  const percentile = playerBestRank / Math.max(1, totalRanked);
+  const percentile = playerBestRank / totalRanked;
 
   if (percentile <= 0.15) return 'Dominant';
   if (percentile <= 0.4) return 'Moderate';

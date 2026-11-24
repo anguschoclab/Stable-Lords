@@ -26,7 +26,8 @@ export function resolveWarriorOwner(
   if (mapped) {
     const stableName = mapped.isPlayer
       ? state.player.stableName
-      : ((state.rivals ?? []).find((r) => r.id === mapped.stableId)?.owner.stableName ?? '');
+      : ((state.rivalMap?.get(mapped.stableId) ??
+        (state.rivals ?? []).find((r) => r.id === mapped.stableId))?.owner.stableName ?? '');
     return { stableId: mapped.stableId as StableId, stableName, isPlayer: mapped.isPlayer };
   }
 

@@ -111,10 +111,30 @@ A/B soak, same seed, `--weeks 40`:
 | post-B4 | 597.3   | **identical (full-summary diff)**  |
 
 Pass-level: `rivalStrategy` 328→303 ms avg, `promoter` 82→52 ms avg.
-Next candidates (measured, not yet worked): `findBestOpponent` window scan,
-`buildCrownScanContext`, `computePlayerThreatLevel`, the ~9%
+
+Second pass (data-structure/complexity audit, all output-preserving):
+
+- `warriorOwnership.ts` — the O(rivals) `.find` for the stable name on every
+  `warriorToStableMap` hit now uses `rivalMap` (`.find` retained as the
+  uncached-state fallback).
+- `agentCore.ts` — `computePlayerThreatLevel` counted `rankings` via two
+  `Object.keys` array allocations per call (called per rival/offer/intent);
+  now a single `for-in` count.
+- `crownWorker.ts` — `buildCrownScanContext` rebuilt a ~world-sized
+  `warriorById` per rival; reuses `state.warriorMap` when the week caches
+  built it. `Object.keys(titles)` emptiness probe → `for-in` break.
+- `PromoterPass.ts` — decorated sort: one `rankings[w.id]` lookup per
+  warrior instead of one per sort comparison.
+- `decisionLogic.ts` — collapsed a double `indexOf` on the same value.
+
+A/B soak, same seed, `--weeks 40`: 589.8 → 557.8 ms/wk (-5.4%), world-state
+summary **byte-identical**. Cumulative vs pre-B4: 657.6 → 557.8 (-15.2%).
+
+Remaining candidates (measured, not yet worked): `findBestOpponent` window
+scan, `foldFight`/`observeTells` dossier folds, the ~9%
 `cloneObject`/`copyDataProperties` boundary-clone cost (inherent to the
-non-`mutableInput` path).
+non-`mutableInput` path), `hashStr` seed hashing (determinism-critical —
+untouchable).
 
 Heap check (40-wk soak, `Bun.gc(true)` samples every 5 wk): heap grows
 ~1.5 MB/wk tracking `arenaHistory` accumulation (append-only by design);

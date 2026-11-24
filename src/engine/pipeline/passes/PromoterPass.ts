@@ -70,13 +70,19 @@ function generatePromoterOffers(
   // Get personality-specific gap threshold
   const gapThreshold = PERSONALITY_GAP_THRESHOLDS[promoter.personality] ?? 0.25;
 
-  // Build score-sorted array for binary-search windowing
+  // Build score-sorted array for binary-search windowing — decorated sort so
+  // the rankings lookup runs once per warrior, not once per comparison.
   const scoreOf = (w: Warrior) => rankings[w.id]?.compositeScore ?? 0;
-  const sortedByScore = [...shuffledEligible].sort((a, b) => scoreOf(a) - scoreOf(b));
-  const sortedScores: number[] = new Array(sortedByScore.length);
-  for (let i = 0; i < sortedByScore.length; i++) {
-    const w = sortedByScore[i];
-    if (w) sortedScores[i] = scoreOf(w);
+  const decorated = shuffledEligible.map((w) => [w, scoreOf(w)] as const);
+  decorated.sort((a, b) => a[1] - b[1]);
+  const sortedByScore: Warrior[] = new Array(decorated.length);
+  const sortedScores: number[] = new Array(decorated.length);
+  for (let i = 0; i < decorated.length; i++) {
+    const d = decorated[i];
+    if (d) {
+      sortedByScore[i] = d[0];
+      sortedScores[i] = d[1];
+    }
   }
 
   // Track matched warriors to prevent reuse within this promoter's pass

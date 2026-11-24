@@ -229,7 +229,8 @@ function majorityDecision(args: MajorityDecisionArgs): {
   let dissenter: string | undefined;
   if (voteType === 'split') {
     const other = isA ? 'D' : 'A';
-    const dissentIdx = votes.indexOf(other) >= 0 ? votes.indexOf(other) : votes.indexOf(null);
+    const otherIdx = votes.indexOf(other);
+    const dissentIdx = otherIdx >= 0 ? otherIdx : votes.indexOf(null);
     dissenter = dissentIdx >= 0 ? archetypes[dissentIdx] : 'Blood';
   }
   return {

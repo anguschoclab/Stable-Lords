@@ -165,9 +165,16 @@ function buildCrownScanContext(
   perception?: PerceptionSnapshot
 ): CrownScanContext {
   const signed = signedTitleBoutIds(state);
-  const warriorById = new Map<WarriorId, Warrior>();
-  for (const w of state.roster ?? []) warriorById.set(w.id, w);
-  for (const r of state.rivals ?? []) for (const w of r.roster) warriorById.set(w.id, w);
+  // Prefer the week cache: buildWeekCaches maintains warriorMap over exactly
+  // roster ∪ rival rosters — rebuilding it per rival cost O(rivals × world).
+  const warriorById =
+    state.warriorMap ??
+    (() => {
+      const m = new Map<WarriorId, Warrior>();
+      for (const w of state.roster ?? []) m.set(w.id, w);
+      for (const r of state.rivals ?? []) for (const w of r.roster) m.set(w.id, w);
+      return m;
+    })();
 
   // Dominant-player pressure: when the player stable tops the realm, a throne
   // they hold becomes a prestige target — rivals would rather dethrone the
@@ -211,7 +218,12 @@ export function assessCrownOpportunity(
   perception?: PerceptionSnapshot
 ): CrownAssessment | undefined {
   const titles = state.arenaChampions ?? {};
-  if (Object.keys(titles).length === 0) return undefined;
+  let anyTitle = false;
+  for (const _k in titles) {
+    anyTitle = true;
+    break;
+  }
+  if (!anyTitle) return undefined;
   const ctx = buildCrownScanContext(state, titles, perception);
 
   let best: CrownCandidate | undefined;

@@ -420,3 +420,19 @@ export function classifyArchetype(attrs: Attributes, style: FightingStyle): Arch
   }));
   return fits.sort((a, b) => b.score - a.score);
 }
+
+/**
+ * Best archetype fit score only — `classifyArchetype()[0].score` without
+ * building or sorting the ranked array (scores are non-negative, so 0 is
+ * the correct floor when no fit is found).
+ */
+export function bestArchetypeScore(attrs: Attributes, style: FightingStyle): number {
+  let best = 0;
+  for (const [, guide] of ARCHETYPE_ENTRIES) {
+    const score =
+      Math.round((0.7 * barRatio(attrs, guide.designBars) + 0.3 * styleFit(style, guide)) * 100) /
+      1;
+    if (score > best) best = score;
+  }
+  return best;
+}

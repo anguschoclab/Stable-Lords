@@ -16,7 +16,7 @@ import { AI_RECRUITS_PER_WEEK_MAX } from '@/constants/world';
 import { generateAIRecruit } from '@/engine/owner/roster/recruitGenerator';
 import { signWarrior } from '@/engine/recruitment/recruitment';
 import { competenceJitter } from '../competence';
-import { classifyArchetype } from '@/data/warriorArchetypes';
+import { bestArchetypeScore } from '@/data/warriorArchetypes';
 import type { StyleMeta } from '@/engine/analytics/metaDrift';
 import type { FightingStyle } from '@/types/shared.types';
 import { keySet } from '@/utils/collections';
@@ -134,7 +134,7 @@ type DraftWeights = typeof DEFAULT_DRAFT_WEIGHTS;
  */
 export function tourneyDraftBonus(w: PoolWarrior, intent: string | undefined): number {
   if (intent !== 'TOURNAMENT_CAMPAIGN') return 0;
-  const best = classifyArchetype(w.attributes ?? {}, w.style)[0]?.score ?? 0;
+  const best = bestArchetypeScore(w.attributes ?? {}, w.style);
   return Math.round(best * 0.4);
 }
 

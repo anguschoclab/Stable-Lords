@@ -27,7 +27,8 @@ const COUNT = Number(process.env.AVATAR_POOL_COUNT ?? 600);
 const SEED = Number(process.env.AVATAR_POOL_SEED ?? 20261124);
 const MODEL = process.env.AVATAR_IMAGE_MODEL ?? 'gemini-2.5-flash-image';
 const LIMIT = Number(process.env.AVATAR_POOL_LIMIT ?? 0); // 0 = no cap (pilot runs)
-const MAX_RETRIES = 4;
+const MAX_RETRIES = 6;
+const INTER_REQUEST_MS = 350;
 
 /** Minimal .env loader — one key, no dependency. */
 function loadDotEnv(): void {
@@ -74,7 +75,8 @@ async function generateOne(key: string, spec: PortraitSpec): Promise<Buffer> {
       body: JSON.stringify(body),
     });
     if (res.status === 429 || res.status >= 500) {
-      const backoff = 1000 * 2 ** attempt;
+      // Paid-tier RPM limits need real backoff, not the free-tier 1-8s ladder.
+      const backoff = Math.min(90_000, 5000 * 2 ** attempt) + Math.floor(Math.random() * 1000);
       logger.warn(`${spec.id}: HTTP ${res.status} — retry in ${backoff}ms`);
       await new Promise((r) => setTimeout(r, backoff));
       continue;
@@ -107,12 +109,22 @@ async function main(): Promise<void> {
   logger.log(`${pending.length}/${specs.length} portraits to generate (${MODEL}).`);
 
   let done = 0;
+  const failed: string[] = [];
   for (const spec of pending) {
-    const png = await generateOne(key, spec);
-    writeFileSync(path.join(RAW_DIR, `${spec.id}.png`), png);
+    try {
+      const png = await generateOne(key, spec);
+      writeFileSync(path.join(RAW_DIR, `${spec.id}.png`), png);
+    } catch (err) {
+      logger.error(`${spec.id}: ${err instanceof Error ? err.message : err} — skipped, rerun resumes`);
+      failed.push(spec.id);
+    }
     if (++done % 25 === 0) logger.log(`  ${done}/${pending.length}`);
+    await new Promise((r) => setTimeout(r, INTER_REQUEST_MS));
   }
-  logger.log(`Portrait generation complete: ${done} new images in ${RAW_DIR}`);
+  logger.log(
+    `Portrait generation complete: ${done - failed.length} new images in ${RAW_DIR}` +
+      (failed.length ? ` (${failed.length} failed: ${failed.join(', ')})` : '')
+  );
 }
 
 main().catch((err) => {

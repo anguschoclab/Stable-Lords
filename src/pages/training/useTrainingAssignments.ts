@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { toast } from 'sonner';
-import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
+import { useGameStore, useTrainingAssignmentState, type GameStore } from '@/state/useGameStore';
 import { ATTRIBUTE_LABELS, type TrainingAssignment, type Attributes } from '@/types/game';
 import type { WarriorId } from '@/types/shared.types';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining';
 
 /** Derived lookup maps: assignment, seasonal gains, and roster names. */
-function useAssignmentMaps(state: ReturnType<typeof useWorldState>) {
+function useAssignmentMaps(state: ReturnType<typeof useTrainingAssignmentState>) {
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();
     for (const a of state.trainingAssignments ?? []) map.set(a.warriorId, a);
@@ -102,7 +102,7 @@ function useAssignmentMutations(
  * seasonal-gain map, and the assign/clear mutations with their toasts.
  */
 export function useTrainingAssignments() {
-  const state = useWorldState();
+  const state = useTrainingAssignmentState();
   const setState = useGameStore((s) => s.setState);
 
   const { assignmentMap, seasonalGainsMap, rosterNameMap } = useAssignmentMaps(state);

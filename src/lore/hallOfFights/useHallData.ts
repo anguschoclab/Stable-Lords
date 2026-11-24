@@ -8,7 +8,7 @@ import type { FightSummary } from '@/types/state.types';
 import type { GameState } from '@/types/state.types';
 
 /** Derives hall entries, fight lookups, week groups, and style stats from state. */
-export function useHallData(state: GameState) {
+export function useHallData(state: Pick<GameState, 'arenaHistory' | 'week'>) {
   // Hall entries from LoreArchive
   const hallEntries = useMemo(() => {
     // state.week is used as a dependency to ensure hall entries are refreshed when time advances

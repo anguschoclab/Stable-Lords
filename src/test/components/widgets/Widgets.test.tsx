@@ -36,6 +36,15 @@ vi.mock('@/state/useGameStore', () => ({
     playerChallenges: mockPlayerChallenges,
     playerAvoids: mockPlayerAvoids,
   }),
+  useNextBoutState: () => ({
+    activeTournamentId: undefined,
+    tournaments: [],
+    rivals: [],
+    roster: [],
+    graveyard: [],
+    retired: [],
+    player: { id: 'p1', stableName: 'MyStable' },
+  }),
 }));
 
 vi.mock('framer-motion', () => ({ ...__SHARED_MOCKS.framerMotion }));

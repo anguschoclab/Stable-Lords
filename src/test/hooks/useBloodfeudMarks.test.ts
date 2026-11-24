@@ -16,6 +16,7 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: (state: any) => unknown) =>
     selector ? selector(mockState) : mockState,
   useWorldState: () => mockState,
+  useBloodfeudState: () => mockState,
 }));
 
 const base = (over: Record<string, any> = {}) => ({

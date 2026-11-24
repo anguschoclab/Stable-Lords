@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useNextBoutState } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Swords, Trophy, Target, ChevronRight } from 'lucide-react';
@@ -25,8 +25,14 @@ interface NextBout {
   stableIdD: string | undefined;
 }
 
+/** The widget's read surface: next-bout inputs + entity-index fields. */
+type NextBoutWorldState = Pick<
+  GameState,
+  'activeTournamentId' | 'tournaments' | 'rivals' | 'roster' | 'player' | 'graveyard' | 'retired'
+>;
+
 /** The player's next actionable bout: live tournament match, else a scrimmage preview. */
-function resolveNextBout(state: GameState): NextBout | null {
+function resolveNextBout(state: NextBoutWorldState): NextBout | null {
   // Check tournaments first — only the engine-marked live tournament can
   // have a player-actionable next bout; leftover/generated tiers don't.
   const activeTourney = state.tournaments.find(
@@ -70,7 +76,7 @@ function resolveNextBout(state: GameState): NextBout | null {
 }
 
 /** Attribute-sum estimate of side A's win share (0–100). */
-function estimateOdds(state: GameState, nextBout: NextBout): number {
+function estimateOdds(state: NextBoutWorldState, nextBout: NextBout): number {
   // ⚡ Bolt: Use O(1) cache lookup for warriors rather than array .find scans
   const warriorA = findWarrior(state, nextBout.warriorIdA);
   const warriorD = findWarrior(state, nextBout.warriorIdD);
@@ -88,7 +94,7 @@ function BoutCard({
   nextBout,
   odds,
 }: {
-  state: GameState;
+  state: NextBoutWorldState;
   nextBout: NextBout;
   odds: number;
 }) {
@@ -152,7 +158,7 @@ function BoutCard({
  * Next bout widget.
  */
 export function NextBoutWidget() {
-  const state = useWorldState();
+  const state = useNextBoutState();
 
   const nextBout = useMemo(() => resolveNextBout(state), [state]);
 

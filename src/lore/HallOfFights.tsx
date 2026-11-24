@@ -3,7 +3,7 @@
  * Uses the main game state arenaHistory and LoreArchive for hall entries.
  */
 import React from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useHallOfFightsState } from '@/state/useGameStore';
 import type { LifetimeStats } from '@/types/state/simulation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -18,7 +18,7 @@ import Graveyard from '@/pages/Graveyard';
  * Hall of fights.
  */
 export const HallOfFights: React.FC = () => {
-  const state = useWorldState();
+  const state = useHallOfFightsState();
   const { hallEntries, fightMap, fightsByWeek, styleStats } = useHallData(state);
 
   const lifetime = state.lifetimeStats;

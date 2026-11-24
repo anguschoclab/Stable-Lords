@@ -7,7 +7,7 @@
  * state (bloodfeudMarks + killEvents + the entity index).
  */
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useBloodfeudState } from '@/state/useGameStore';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { findWarrior, resolveStableName } from '@/engine/core/historyResolver';
 import type { BloodfeudMark } from '@/types/state.types';
@@ -31,7 +31,7 @@ export interface PlayerBloodfeud {
  * Returns [] on fresh games and once every mark has lapsed.
  */
 export function useBloodfeudMarks(): PlayerBloodfeud[] {
-  const state = useWorldState();
+  const state = useBloodfeudState();
 
   return useMemo(() => {
     const now = state.absoluteWeek ?? state.week;

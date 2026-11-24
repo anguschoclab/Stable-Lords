@@ -18,6 +18,7 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: (state: any) => unknown) =>
     selector ? selector(mockState) : mockState,
   useWorldState: () => mockState,
+  useRivalryAlertState: () => mockState,
 }));
 
 const bout = (by: 'Kill' | 'KO') => ({

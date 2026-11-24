@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useMemo } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
-import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useRivalryAlertState, useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import type { WarriorId } from '@/types/shared.types';
 import { toast } from 'sonner';
@@ -116,7 +116,7 @@ function triggerScreenShake(intensity: number) {
  * Blood Feud level (4-5) triggers screen shake + impact SFX via Web Audio API.
  */
 export function useRivalryAlerts() {
-  const state = useWorldState();
+  const state = useRivalryAlertState();
 
   const rosterRawIds = useGameStore(useShallow((s) => (s.roster ?? []).map((w) => w.id)));
   const rosterIds = useMemo(() => new Set<WarriorId>(rosterRawIds), [rosterRawIds]);
@@ -163,7 +163,7 @@ export function useRivalryAlerts() {
  * intensity snapshot (1-5 scale).
  */
 function computeRivalrySnapshots(
-  arenaHistory: NonNullable<ReturnType<typeof useWorldState>>['arenaHistory'],
+  arenaHistory: NonNullable<ReturnType<typeof useRivalryAlertState>>['arenaHistory'],
   allRosterIds: Set<WarriorId>,
   rivalWarriorStable: Record<WarriorId, string>
 ): RivalrySnapshot[] {

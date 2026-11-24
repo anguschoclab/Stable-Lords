@@ -7,8 +7,8 @@ Validated perf-audit plan: every finding re-checked against source (narrowed-sta
 - ✅ **Phase 0** — committed `f6cd62c7a` (T1–T16 characterization specs, green on unmodified source)
 - ✅ **Tranche 1** — committed `5c9d40b03` (perception fields + SharedBidCtx; all specs + megaplan guards green)
 - ✅ **Tranche 2** — committed `3f1d6af5a` (escapeHtml/nameGen/archetype/arenaFit/hasInjuryRisk micro-opts; specs green)
-- ✅ **Tranche 3** — contender-index single pass + findBestOpponent two-region early-exit landed; guards green
-- ⬜ Tranche 4 — pending
+- ✅ **Tranche 3** — committed `f321175db` (contender-index single pass + findBestOpponent two-region early-exit; guards green)
+- ⏳ **Tranche 4** — 4A ✅ committed `5bcba81cb` (partial boutOffers impacts + dictMerge in-place accumulate — root cause of the ~9% "boundary clone" was per-call whole-map spreads, not transport); 4B implemented, commit pending; 4C–4E pending
 - Notes: `duplication.guard` pre-existing failure (720bd04ce pair unregistered on main) fixed by registration → baseline 42. `planWorldBouts`/`bookableRoster`/`crownWorker` consume shared id-sets; `convertBidsToOffers` computes `lockedIds` once per call (kept 5-param signature — 14 test callers); `IntentContext.playerThreatLevel` threads perception into `vendettaApplies` too.
 
 ## Validation record (this review)
@@ -151,19 +151,28 @@ the same gates — output-preserving, byte-identical A/B soak, determinism tier
 green. If an item cannot land without a determinism/behavior change, document
 the measurement and the blocker rather than shipping a regression.
 
-- **4A. Boundary `structuredClone` (~9%)** — `copyDataProperties`/`cloneObject`
-  is the vitest worker_threads marshal cost on shard in/out payloads.
-  Investigate: (a) shrink the narrowed payload further (drop fields the shard
-  doesn't read — check `shardContract.ts` + `shardInputSize.test.ts` pinning);
-  (b) hoist shared read-only structures (perception snapshot) out of the
-  per-shard payload if it is being re-cloned per job; (c) batch multiple
-  rivals per shard job to amortize the boundary crossing. Verify which of
-  these preserves `shardInputSize` + `parallelDeterminism` byte-identity.
-- **4B. `useWorldState` broad subscription** — audit the hook's selector
-  granularity; components subscribing to the whole world state re-render on
-  every tick. Add scoped selectors / `useSyncExternalStore` slice hooks where
-  the audit shows broad subscription. Proof: render-count instrumentation or
-  React Profiler; at minimum code-level audit + a targeted spec.
+- **4A. Boundary `structuredClone` (~9%)** — ✅ **LANDED** `5bcba81cb`.
+  Profile attribution disproved the transport theory: `structuredClone`
+  proper is ~0.24%; the ~9% was V8 spread internals cloning the whole
+  `boutOffers` map **per response call** — `respondToBoutOffer` (2.9%),
+  `dictMerge` (2.46%), `processContractPayouts` (2.23%). Fix: partial
+  `{[offerId]: updated}` impacts (byte-identical under `dictMerge`),
+  `dictMerge` accumulates in place, payout-side `boutOffers` re-emit
+  dropped (was a no-op delete — `dictMerge` resurrects state keys — AND
+  a clobber hazard vs voided-cancel writes; `pruneStaleBoutOffers` owns
+  cleanup). Replace-semantics consumers (`useOfferActions`, `boutActions`)
+  converted to merge. Spec: `offerImpactEquivalence.test.ts`.
+- **4B. `useWorldState` broad subscription** — ✅ implemented (commit
+  pending). `reconstructGameState` is already memoized, so the real cost
+  was per-field-change re-renders across 16 subscribers. 8 provably-narrow
+  consumers converted to `useShallow` scoped selectors in
+  `src/state/selectors.ts`: `useRivalryAlerts`, `HallOfFights`,
+  `useHallData`, `Gazette`, `useTrainingAssignments`, `useBloodfeudMarks`,
+  `useBookingOffice`, `NextBoutWidget`. Skipped whole-state-helper users
+  (HeadToHead, useCoachTip, useStableAdvisor). `entityIndex` WeakMap-keying
+  preserved — name-state pick keeps {player, roster, graveyard, retired,
+  rivals}. Spec: `scopedSelectors.test.ts` pins subset fields + referential
+  stability across unrelated writes.
 - **4C. Worker-pool parallelism (gate failed 0.33×)** — revisit: if the prior
   failure was thread-spawn per week rather than steady-state pool work, a
   persistent pool or larger shard granularity (fewer, fatter jobs) may flip

@@ -5,7 +5,7 @@
  * a standard PageHeader above it would duplicate the masthead title.
  */
 import { useMemo, useState, useCallback } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGazetteState } from '@/state/useGameStore';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import { Radio } from 'lucide-react';
@@ -19,7 +19,7 @@ import { GazetteMasthead, GazetteEmptyState } from './gazette/GazetteMasthead';
  * Gazette.
  */
 export default function Gazette() {
-  const state = useWorldState();
+  const state = useGazetteState();
   const { week, season, gazettes } = state;
 
   const allFights = useMemo(() => ArenaHistory.all(), []);

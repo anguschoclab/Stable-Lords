@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore, useBookingOfficeState } from '@/state/useGameStore';
 // eslint-disable-next-line no-restricted-imports -- grandfathered pre-boundary-fix import
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import type { Warrior } from '@/types/state.types';
@@ -14,7 +14,7 @@ export interface RivalWarriorMap {
 
 /** Booking-office state — offers buckets, selection, response handlers. */
 export function useBookingOffice() {
-  const state = useWorldState();
+  const state = useBookingOfficeState();
   const setState = useGameStore((s) => s.setState);
   const { promoters, boutOffers, roster, week, absoluteWeek, rivals } = state;
   const [activeTab, setActiveTab] = useState('this-week');

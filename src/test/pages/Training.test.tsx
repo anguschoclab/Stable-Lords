@@ -22,6 +22,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 vi.mock('@/state/useGameStore', () => ({
   useWorldState: () => mockState,
+  useTrainingAssignmentState: () => mockState,
   useGameStore: (selector?: (state: any) => any) => (selector ? selector(mockState) : mockState),
 }));
 

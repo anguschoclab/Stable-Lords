@@ -52,6 +52,11 @@ export function Avatar({ portrait, size = 'md', className, animate = false }: Av
     [portrait.layers]
   );
 
+  // V32: a single 'portraits' layer is a painterly whole image — smooth
+  // scaling, and the stable's primary color becomes a thin frame ring
+  // instead of a hue-rotate tint over the art.
+  const isPortrait = sortedLayers.length === 1 && sortedLayers[0]?.category === 'portraits';
+
   return (
     <div
       className={cn(
@@ -62,7 +67,8 @@ export function Avatar({ portrait, size = 'md', className, animate = false }: Av
       style={{
         width: pixelSize,
         height: pixelSize,
-        imageRendering: 'pixelated',
+        imageRendering: isPortrait ? undefined : 'pixelated',
+        boxShadow: isPortrait ? `inset 0 0 0 2px ${portrait.primaryColor}` : undefined,
       }}
       role="img"
       aria-label={`Portrait of ${portrait.entityType}`}

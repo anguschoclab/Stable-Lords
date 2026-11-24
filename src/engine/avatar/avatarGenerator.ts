@@ -201,6 +201,79 @@ function addMarkingLayers(ctx: MarkingContext): number {
   return ctx.z;
 }
 
+const MARKING_MARR_TAGS = ['scar', 'eyepatch'] as const;
+const FACIAL_HAIR_TAGS = ['stubble', 'beard', 'mustache', 'goatee'] as const;
+const GRAY_HAIR_TAGS = ['gray', 'balding'] as const;
+
+function hasAny(tags: Set<string>, wanted: readonly string[]): boolean {
+  return wanted.some((tag) => tags.has(tag));
+}
+
+interface PortraitContext {
+  config: AvatarConfig;
+  gender: AvatarGender;
+  ageGroup: AvatarAgeGroup;
+  wear: number;
+}
+
+/**
+ * Score a portrait-pool entry against the entity profile (V32). Set-based tag
+ * lookups keep this out of scanInLoop's per-iteration-collection list.
+ */
+function portraitScore(tags: Set<string>, ctx: PortraitContext): number {
+  let score = 0;
+  if (tags.has(ctx.gender)) score += 4;
+  if (tags.has(ctx.ageGroup)) score += 3;
+
+  const build = clothingCategoryForStyle(ctx.config.style);
+  if (build && tags.has(build)) score += 2;
+
+  const marred = hasAny(tags, MARKING_MARR_TAGS);
+  score += ctx.wear > 15 ? (marred ? 2 : 0) : marred ? -4 : 0;
+
+  if (((ctx.config.fame ?? 0) > 300 || (ctx.config.kills ?? 0) > 1) && tags.has('warpaint')) {
+    score += 1;
+  }
+  if ((ctx.ageGroup === 'middle' || ctx.ageGroup === 'elder') && tags.has('wrinkles')) {
+    score += 1;
+  }
+  if (ctx.ageGroup === 'elder' && hasAny(tags, GRAY_HAIR_TAGS)) score += 1;
+  if (ctx.gender === 'masc' && ctx.ageGroup !== 'young' && hasAny(tags, FACIAL_HAIR_TAGS)) {
+    score += 1;
+  }
+
+  const role = ctx.config.entityType === 'poolWarrior' ? 'warrior' : ctx.config.entityType;
+  if (tags.has(role)) score += 1;
+  return score;
+}
+
+/**
+ * Pick a whole-portrait catalog entry: hard-filter on forced demographics,
+ * then a seeded pick among entries within one point of the max score so
+ * identical profiles still spread across a few faces.
+ */
+function pickPortraitEntry(
+  ctx: PortraitContext,
+  rng: SeededRNG,
+  entries: AvatarCatalogEntry[]
+): AvatarCatalogEntry {
+  const eligible = entries.filter((entry) => {
+    const tags = new Set(entry.tags);
+    if (ctx.config.forcedGender && !tags.has(ctx.config.forcedGender)) return false;
+    if (ctx.config.forcedAgeGroup && !tags.has(ctx.config.forcedAgeGroup)) return false;
+    return true;
+  });
+  const pool = eligible.length > 0 ? eligible : entries;
+  const scored = pool
+    .map((entry) => ({ entry, score: portraitScore(new Set(entry.tags), ctx) }))
+    .sort((a, b) => b.score - a.score || a.entry.src.localeCompare(b.entry.src));
+
+  const max = scored[0]?.score ?? 0;
+  const top = scored.filter((s) => s.score >= max - 1);
+  const candidates = top.length >= 2 ? top : scored.slice(0, 2);
+  return rng.pick(candidates).entry;
+}
+
 function generateAvatarFromCatalog(
   config: AvatarConfig & { seed: number },
   catalog: AvatarCatalog
@@ -209,6 +282,26 @@ function generateAvatarFromCatalog(
   const gender = pickGender(config, rng);
   const ageGroup = pickAgeGroup(config, rng);
   const wear = wearScore(config);
+
+  const shared = {
+    seed: config.seed,
+    entityType: config.entityType,
+    gender,
+    ageGroup,
+    primaryColor: config.primaryColor ?? DEFAULT_PRIMARY,
+    secondaryColor: config.secondaryColor,
+    description: avatarDescription(config),
+  };
+
+  // V32: whole-portrait path — one painterly image selected by tag scoring.
+  const portraits = getCatalogEntries(catalog, 'portraits');
+  if (portraits.length > 0) {
+    const entry = pickPortraitEntry({ config, gender, ageGroup, wear }, rng, portraits);
+    return {
+      ...shared,
+      layers: [{ category: 'portraits', src: entry.src, z: 0 }],
+    };
+  }
 
   const layers: AvatarLayer[] = [];
   let z = 0;
@@ -242,14 +335,5 @@ function generateAvatarFromCatalog(
     layers.push(makeLayer(pickEntry(rng, accessoryEntries), z));
   }
 
-  return {
-    seed: config.seed,
-    entityType: config.entityType,
-    gender,
-    ageGroup,
-    primaryColor: config.primaryColor ?? DEFAULT_PRIMARY,
-    secondaryColor: config.secondaryColor,
-    layers,
-    description: avatarDescription(config),
-  };
+  return { ...shared, layers };
 }

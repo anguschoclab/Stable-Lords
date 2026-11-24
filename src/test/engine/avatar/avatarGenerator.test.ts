@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   ageGroupForAge,
   avatarDescription,
@@ -7,8 +7,13 @@ import {
   seedForEntity,
   wearScore,
 } from '@/engine/avatar/avatarGenerator';
+import { setAvatarCatalog } from '@/engine/avatar/avatarCatalog';
+import {
+  createTestAvatarCatalog,
+  createTestPortraitCatalog,
+} from '@/test/_fixtures/avatarCatalog';
 import { FightingStyle } from '@/types/shared.types';
-import type { AvatarConfig } from '@/types/avatar.types';
+import type { AvatarCatalogEntry, AvatarConfig } from '@/types/avatar.types';
 
 function baseConfig(overrides?: Partial<AvatarConfig>): AvatarConfig {
   return {
@@ -98,5 +103,106 @@ describe('avatarGenerator', () => {
     const avatar = generateAvatar(baseConfig());
     const zs = avatar.layers.map((l) => l.z);
     expect(zs).toEqual([...zs].sort((a, b) => a - b));
+  });
+});
+
+describe('avatarGenerator — portraits path (V32)', () => {
+  const pool = createTestPortraitCatalog();
+  const entryBySrc = (src: string): AvatarCatalogEntry | undefined =>
+    (pool.categories.portraits ?? []).find((e) => e.src === src);
+  const tagsOf = (avatar: ReturnType<typeof generateAvatar>): string[] =>
+    entryBySrc(avatar.layers[0]?.src ?? '')?.tags ?? [];
+
+  beforeEach(() => {
+    setAvatarCatalog(pool);
+  });
+
+  it('emits exactly one portraits layer at z=0', () => {
+    const avatar = generateAvatar(baseConfig());
+    expect(avatar.layers).toHaveLength(1);
+    expect(avatar.layers[0]?.category).toBe('portraits');
+    expect(avatar.layers[0]?.z).toBe(0);
+    expect(avatar.layers[0]?.src).toContain('/avatars/portraits/');
+  });
+
+  it('is deterministic for the same seed and varies across seeds', () => {
+    const a = generateAvatar(baseConfig({ seed: 111 }));
+    const b = generateAvatar(baseConfig({ seed: 111 }));
+    expect(a.layers[0]?.src).toBe(b.layers[0]?.src);
+
+    const picks = new Set(
+      Array.from({ length: 20 }, (_, i) => generateAvatar(baseConfig({ seed: 5000 + i })).layers[0]?.src)
+    );
+    expect(picks.size).toBeGreaterThan(1);
+  });
+
+  it('hard-filters on forcedGender', () => {
+    const fem = generateAvatar(baseConfig({ forcedGender: 'fem', seed: 1 }));
+    expect(tagsOf(fem)).toContain('fem');
+    const masc = generateAvatar(baseConfig({ forcedGender: 'masc', seed: 2 }));
+    expect(tagsOf(masc)).toContain('masc');
+  });
+
+  it('hard-filters on forcedAgeGroup', () => {
+    const elder = generateAvatar(baseConfig({ forcedAgeGroup: 'elder', seed: 3 }));
+    expect(tagsOf(elder)).toContain('elder');
+  });
+
+  it('prefers entries whose tags match gender and age group', () => {
+    const avatar = generateAvatar(
+      baseConfig({ forcedGender: 'masc', forcedAgeGroup: 'middle', seed: 9 })
+    );
+    expect(tagsOf(avatar)).toEqual(expect.arrayContaining(['masc', 'middle']));
+  });
+
+  it('only allows scar/eyepatch portraits when wear exceeds the threshold', () => {
+    const clean = new Set(
+      Array.from(
+        { length: 20 },
+        (_, i) =>
+          generateAvatar(baseConfig({ age: 18, kills: 0, injuries: [], seed: 7000 + i }))
+            .layers[0]?.src
+      )
+    );
+    for (const src of clean) {
+      const tags = entryBySrc(src ?? '')?.tags ?? [];
+      expect(tags).not.toContain('scar');
+      expect(tags).not.toContain('eyepatch');
+    }
+
+    const veteranPicks = new Set(
+      Array.from(
+        { length: 30 },
+        (_, i) =>
+          generateAvatar(
+            baseConfig({ age: 45, kills: 10, injuries: ['a', 'b', 'c', 'd'], seed: 8000 + i })
+          ).layers[0]?.src
+      )
+    );
+    const scarred = [...veteranPicks].filter((src) =>
+      entryBySrc(src ?? '')?.tags.includes('scar')
+    );
+    expect(scarred.length).toBeGreaterThan(0);
+  });
+
+  it('prefers gray/balding hair for elders', () => {
+    const avatar = generateAvatar(
+      baseConfig({ forcedGender: 'masc', forcedAgeGroup: 'elder', seed: 11 })
+    );
+    expect(tagsOf(avatar)).toEqual(expect.arrayContaining(['gray']));
+  });
+
+  it('prefers the build tag matching the fighting style', () => {
+    const heavy = generateAvatar(
+      baseConfig({ style: FightingStyle.BashingAttack, forcedGender: 'masc', seed: 13 })
+    );
+    expect(tagsOf(heavy)).toContain('heavy');
+  });
+
+  it('falls back to layered generation when the catalog has no portraits', () => {
+    setAvatarCatalog(createTestAvatarCatalog());
+    const avatar = generateAvatar(baseConfig());
+    expect(avatar.layers.length).toBeGreaterThan(1);
+    expect(avatar.layers.some((l) => l.category === 'base')).toBe(true);
   });
 });

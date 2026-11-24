@@ -28,7 +28,9 @@ export type AvatarLayerCategory =
   | 'facialHair'
   | 'hair'
   | 'markings'
-  | 'accessories';
+  | 'accessories'
+  /** Whole generated portrait (V32) — single-layer AvatarData. */
+  | 'portraits';
 
 /**
  * Defines one composited sprite layer.
@@ -99,8 +101,9 @@ export interface AvatarCatalogEntry {
 }
 
 /**
- * Full avatar asset catalog.
+ * Full avatar asset catalog. Categories are optional — a V32 portraits-only
+ * catalog legitimately omits the legacy layer categories entirely.
  */
 export interface AvatarCatalog {
-  categories: Record<AvatarLayerCategory, AvatarCatalogEntry[]>;
+  categories: Partial<Record<AvatarLayerCategory, AvatarCatalogEntry[]>>;
 }

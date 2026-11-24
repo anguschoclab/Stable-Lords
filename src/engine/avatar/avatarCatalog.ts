@@ -13,6 +13,9 @@ const REQUIRED_CATEGORIES: AvatarLayerCategory[] = [
 ];
 
 function validateAvatarCatalog(catalog: AvatarCatalog): AvatarLayerCategory[] {
+  // V32: a populated portrait pool satisfies the catalog on its own; the
+  // legacy layer categories are only required when no portraits exist.
+  if ((catalog.categories.portraits?.length ?? 0) > 0) return [];
   return REQUIRED_CATEGORIES.filter(
     (category) => (catalog.categories[category]?.length ?? 0) === 0
   );
@@ -40,6 +43,16 @@ export async function loadAvatarCatalog(): Promise<AvatarCatalog> {
 /** Return the currently cached catalog, if any. */
 export function getAvatarCatalog(): AvatarCatalog | null {
   return cachedCatalog;
+}
+
+/** Inject a catalog directly (tests, offline tooling). */
+export function setAvatarCatalog(catalog: AvatarCatalog): void {
+  cachedCatalog = catalog;
+}
+
+/** Drop the cached catalog so the next loadAvatarCatalog refetches. */
+export function clearAvatarCatalog(): void {
+  cachedCatalog = null;
 }
 
 /**

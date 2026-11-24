@@ -11,6 +11,7 @@ const AvatarLayerCategorySchema = z.enum([
   'facialHair',
   'markings',
   'accessories',
+  'portraits',
 ]);
 
 const AvatarLayerSchema = z.object({

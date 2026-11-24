@@ -46,3 +46,23 @@ describe('Avatar', () => {
     expect(images[2]?.getAttribute('src')).toBe('/hair.png');
   });
 });
+
+describe('Avatar — portrait mode (V32)', () => {
+  const portraitData = () =>
+    createTestAvatarData({
+      layers: [{ category: 'portraits', src: '/avatars/portraits/p-1.webp', z: 0 }],
+    });
+
+  it('renders a single img and drops pixelated scaling', () => {
+    const { container } = render(<Avatar portrait={portraitData()} size="md" />);
+    expect(container.querySelectorAll('img').length).toBe(1);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.style.imageRendering).not.toBe('pixelated');
+  });
+
+  it('frames the portrait in the entity primary color', () => {
+    const { container } = render(<Avatar portrait={portraitData()} size="md" />);
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.style.boxShadow).toContain('#6b7280');
+  });
+});

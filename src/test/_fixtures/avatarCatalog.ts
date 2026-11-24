@@ -61,3 +61,38 @@ export function createTestAvatarCatalog(): AvatarCatalog {
     },
   };
 }
+
+function portrait(id: string, tags: string[]): { src: string; category: 'portraits'; tags: string[] } {
+  return { src: `/avatars/portraits/${id}.webp`, category: 'portraits', tags };
+}
+
+/**
+ * Portrait-pool catalog for the V32 whole-portrait path. One entry per
+ * gender×age row plus marking/headgear variants so scoring specs can assert
+ * deterministic tag preferences. Entries live under `categories.portraits`.
+ */
+export function createTestPortraitCatalog(): AvatarCatalog {
+  return {
+    categories: {
+      portraits: [
+        portrait('p-young-masc-clean', ['masc', 'young', 'light', 'black', 'short', 'warrior']),
+        portrait('p-young-fem-clean', ['fem', 'young', 'light', 'brown', 'long', 'warrior']),
+        portrait('p-adult-masc-heavy', ['masc', 'adult', 'heavy', 'brown', 'short', 'beard', 'warrior']),
+        portrait('p-adult-fem-light', ['fem', 'adult', 'light', 'blonde', 'braids', 'warrior']),
+        portrait('p-adult-neutral-def', ['neutral', 'adult', 'defensive', 'bald', 'warrior']),
+        portrait('p-middle-masc-scar', ['masc', 'middle', 'heavy', 'black', 'short', 'beard', 'scar', 'warrior']),
+        portrait('p-middle-fem-warpaint', ['fem', 'middle', 'light', 'red', 'long', 'warpaint', 'warrior']),
+        portrait('p-elder-masc-gray', ['masc', 'elder', 'defensive', 'gray', 'balding', 'wrinkles', 'beard', 'trainer']),
+        portrait('p-elder-fem-gray', ['fem', 'elder', 'light', 'gray', 'long', 'wrinkles', 'trainer']),
+        portrait('p-adult-masc-scar2', ['masc', 'adult', 'heavy', 'bald', 'scar', 'eyepatch', 'warrior']),
+      ],
+    },
+  };
+}
+
+/** Legacy categories plus the portrait pool — exercises the both-modes catalog. */
+export function createMixedAvatarCatalog(): AvatarCatalog {
+  const legacy = createTestAvatarCatalog();
+  const pool = createTestPortraitCatalog();
+  return { categories: { ...legacy.categories, ...pool.categories } };
+}

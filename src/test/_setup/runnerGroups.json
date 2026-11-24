@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T17:54:29.961Z",
+  "generatedAt": "2026-11-24T15:38:55.244Z",
   "isolated": [
     "src/test/_setup/bunViCompat.test.ts",
     "src/test/_setup/setup.regression.test.ts",
@@ -181,6 +181,7 @@
     "src/test/engine/analytics/almanac.test.ts",
     "src/test/engine/autosim/autosim.unit.test.ts",
     "src/test/engine/autosim/councilAutoPilot.test.ts",
+    "src/test/engine/avatar/avatarCatalog.test.ts",
     "src/test/engine/bout/services/weekFinalizationRollover.test.ts",
     "src/test/engine/boutSimulationTimestamp.test.ts",
     "src/test/engine/combat/aimedBlow.test.ts",
@@ -331,6 +332,7 @@
     "src/test/scripts/killDeathDivergence.slow.test.ts",
     "src/test/scripts/simulation.slow.test.ts",
     "src/test/state/saveSlots.test.ts",
+    "src/test/state/scopedSelectors.test.ts",
     "src/test/state/selectors.test.ts",
     "src/test/state/setStateCacheInvalidation.test.ts",
     "src/test/state/slices/economySlice.test.ts",

@@ -77,3 +77,6 @@ scripts/.build/
 
 # Local secrets
 .env
+
+# avatar-pool raw intermediates (committed WebP lives in public/avatars/portraits)
+scripts/avatar-pool/out/

@@ -41,6 +41,10 @@
     "scripts/roundtrip-check.ts",
     "scripts/run-fight.ts",
     "scripts/style-probe.ts",
-    "scripts/world-diag.ts"
+    "scripts/world-diag.ts",
+    "scripts/avatar-pool/planMatrix.ts",
+    "scripts/avatar-pool/generate.ts",
+    "scripts/avatar-pool/ingest.ts",
+    "scripts/avatar-pool/contactSheet.ts"
   ]
 }

@@ -6,8 +6,9 @@ Validated perf-audit plan: every finding re-checked against source (narrowed-sta
 
 - ✅ **Phase 0** — committed `f6cd62c7a` (T1–T16 characterization specs, green on unmodified source)
 - ✅ **Tranche 1** — committed `5c9d40b03` (perception fields + SharedBidCtx; all specs + megaplan guards green)
-- ✅ **Tranche 2** — micro-opts landed; specs green
-- ⬜ Tranche 3, 4 — pending
+- ✅ **Tranche 2** — committed `3f1d6af5a` (escapeHtml/nameGen/archetype/arenaFit/hasInjuryRisk micro-opts; specs green)
+- ✅ **Tranche 3** — contender-index single pass + findBestOpponent two-region early-exit landed; guards green
+- ⬜ Tranche 4 — pending
 - Notes: `duplication.guard` pre-existing failure (720bd04ce pair unregistered on main) fixed by registration → baseline 42. `planWorldBouts`/`bookableRoster`/`crownWorker` consume shared id-sets; `convertBidsToOffers` computes `lockedIds` once per call (kept 5-param signature — 14 test callers); `IntentContext.playerThreatLevel` threads perception into `vendettaApplies` too.
 
 ## Validation record (this review)

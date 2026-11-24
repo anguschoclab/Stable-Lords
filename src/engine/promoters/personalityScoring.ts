@@ -46,6 +46,20 @@ const PERSONALITY_MATCH_SCORE: Record<PromoterPersonality, MatchScoreFn> = {
   Corporate: () => 5,
 };
 
+/**
+ * Max possible PERSONALITY_MATCH_SCORE × 100 per personality — mirrors the
+ * strategy map above (Honorable 15, Sadistic 45, Flashy 40, Corporate 5,
+ * Greedy 10). Matchmaking uses it as the score ceiling for its early-exit
+ * bound. Keep in sync with PERSONALITY_MATCH_SCORE.
+ */
+export const PERSONALITY_MATCH_SCORE_MAX_X100: Record<PromoterPersonality, number> = {
+  Greedy: 1000,
+  Honorable: 1500,
+  Sadistic: 4500,
+  Flashy: 4000,
+  Corporate: 500,
+};
+
 /** Calculate personality-based matching score (higher = better match) */
 export function calculatePersonalityMatchScore(
   warriorA: Warrior,

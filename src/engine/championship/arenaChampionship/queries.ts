@@ -205,14 +205,63 @@ export function contenderRankAtArena(
  * never re-ranks the ladder per stable.
  */
 export function buildContenderIndex(state: GameState, depth = 5): Map<string, WarriorId[]> {
+  const now = state.absoluteWeek;
+  // Shared across every arena — rankContenders rebuilt this set per call.
+  const crownedIds = new Set(
+    Object.values(state.arenaChampions ?? {})
+      .map((t) => t.champion?.warriorId)
+      .filter((id): id is WarriorId => id != null)
+  );
+  // Per-arena declined-cooldown maps for registry arenas only — a warrior's
+  // byArena key outside the championship set is skipped exactly as
+  // rankContenders' per-arena loop never visiting it.
+  const declinedByArena = new Map<string, Record<string, number>>();
+  for (const arena of getAllArenas()) {
+    if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(arena.id)) continue;
+    declinedByArena.set(arena.id, state.arenaChampions?.[arena.id]?.declinedContenders ?? {});
+  }
+
+  // One warrior pass fans out to every eligible venue — identical rows per
+  // arena as rankContenders(..., { includeUnready: true }) produces: venue
+  // rec ≥ MIN_BOUTS, active, not crowned, not inside a declined cooldown.
+  const rowsByArena = new Map<string, RankedContender[]>();
+  for (const w of collectAllWarriors(state)) {
+    if (!isActive(w)) continue;
+    if (crownedIds.has(w.id)) continue;
+    const recs = w.career?.byArena;
+    if (!recs) continue;
+    for (const arenaId in recs) {
+      const declined = declinedByArena.get(arenaId);
+      if (declined === undefined) continue;
+      const rec = recs[arenaId];
+      if (!rec) continue;
+      if (rec.wins + rec.losses < ARENA_TITLE.MIN_BOUTS) continue;
+      const cooldownUntil = declined[w.id];
+      if (cooldownUntil != null && cooldownUntil > now) continue;
+      const total = rec.wins + rec.losses;
+      let rows = rowsByArena.get(arenaId);
+      if (!rows) rowsByArena.set(arenaId, (rows = []));
+      rows.push({
+        warrior: w,
+        wins: rec.wins,
+        losses: rec.losses,
+        kills: rec.kills,
+        winRate: total > 0 ? rec.wins / total : 0,
+      });
+    }
+  }
+
   const index = new Map<string, WarriorId[]>();
   for (const arena of getAllArenas()) {
     if (CHAMPIONSHIP_EXCLUDED_ARENAS.has(arena.id)) continue;
-    const ranked = rankContenders(state, arena.id, undefined, { includeUnready: true });
-    if (ranked.length === 0) continue;
+    const rows = rowsByArena.get(arena.id);
+    if (!rows || rows.length === 0) continue;
     index.set(
       arena.id,
-      ranked.slice(0, depth).map((r) => r.warrior.id)
+      rows
+        .sort(contenderComparator)
+        .slice(0, depth)
+        .map((r) => r.warrior.id)
     );
   }
   return index;

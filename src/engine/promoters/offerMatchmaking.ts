@@ -11,6 +11,7 @@ import { FIGHT_PURSE, MATCHMAKING_SCORE_CONSTANTS } from '@/constants/economy';
 import { getPairKey } from '@/utils/keyUtils';
 import { TIER_MULTIPLIERS } from '@/engine/promoters/promoterConfig';
 import {
+  PERSONALITY_MATCH_SCORE_MAX_X100,
   calculatePersonalityMatchScore,
   calculatePersonalityPurseModifier,
 } from '@/engine/promoters/personalityScoring';
@@ -198,57 +199,154 @@ export function findBestOpponent(
     }
   }
 
+  if (ctx.promoter.personality === 'Greedy') {
+    let bestCandidate: Warrior | null = null;
+    let bestScore = -Infinity;
+    for (let i = lo; i < hi; i++) {
+      const candidate = sortedByScore[i];
+      const scoreB = sortedScores[i];
+      if (!candidate || scoreB === undefined) continue;
+      const gap = Math.abs(scoreA - scoreB) / maxScoreA;
+      const s = evalOpponentCandidate(warriorA, candidate, gap, ctx);
+      if (s !== null && s > bestScore) {
+        bestScore = s;
+        bestCandidate = candidate;
+      }
+    }
+    return bestCandidate;
+  }
+
+  return bestNonGreedyOpponent({
+    warriorA,
+    scoreA,
+    maxScoreA,
+    sortedByScore,
+    sortedScores,
+    lo,
+    ins: Math.min(lowerBound(sortedScores, scoreA), hi),
+    hi,
+    ctx,
+  });
+}
+
+/** Eligibility + candidate score for one window slot; null when ineligible. */
+function evalOpponentCandidate(
+  warriorA: Warrior,
+  candidate: Warrior,
+  gap: number,
+  ctx: OpponentSearchContext
+): number | null {
+  if (candidate.id === warriorA.id) return null;
+  if (ctx.matchedIds.has(candidate.id)) return null;
+  if (ctx.recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) return null;
+
+  // Player avoid — skip avoided warriors when a player warrior is in the matchup
+  if (ctx.playerWarriorIds.has(warriorA.id) && ctx.avoidSet.has(candidate.id)) return null;
+  if (ctx.playerWarriorIds.has(candidate.id) && ctx.avoidSet.has(warriorA.id)) return null;
+
+  const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, ctx.promoter);
+
+  let candidateScore: number;
+  if (ctx.promoter.personality === 'Greedy') {
+    candidateScore = gap * 100 + personalityScore;
+  } else {
+    candidateScore = personalityScore * 100 - gap;
+  }
+
+  // Player challenge — boost challenged warriors when a player warrior is
+  // in the matchup. V24 canon (Consortium Q&A): a double challenge
+  // "appx doubles" the odds — the bonus scales with listing count.
+  if (ctx.playerWarriorIds.has(warriorA.id) && ctx.challengeSet.has(candidate.id)) {
+    const n = ctx.challengeCounts?.get(candidate.id) ?? 1;
+    candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
+  }
+  if (ctx.playerWarriorIds.has(candidate.id) && ctx.challengeSet.has(warriorA.id)) {
+    const n = ctx.challengeCounts?.get(warriorA.id) ?? 1;
+    candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
+  }
+
+  // V24 canon: stable-level avoids penalise (~50% rejection) — they
+  // deprioritise, they never make a candidate invisible.
+  if (candidate.stableId && ctx.stableAvoidSet?.has(candidate.stableId)) {
+    candidateScore += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
+  }
+
+  return candidateScore;
+}
+
+/**
+ * Non-Greedy window scan with an early-exit bound. candidateScore is
+ * personality×100 − gap + bonuses, so any candidate's ceiling at gap g is
+ * pMax×100 − g + maxBonus. gap grows monotonically away from scoreA's
+ * insertion point in both directions — once a side's ceiling can no longer
+ * displace bestScore, the rest of that side is dead. Winner semantics are
+ * identical to the plain ascending scan (smallest index among maxima): the
+ * left side scans descending and lets ties replace (later = smaller index),
+ * the right side scans ascending and requires a strict beat.
+ */
+interface NonGreedySearchArgs {
+  warriorA: Warrior;
+  scoreA: number;
+  maxScoreA: number;
+  sortedByScore: Warrior[];
+  sortedScores: number[];
+  lo: number;
+  ins: number;
+  hi: number;
+  ctx: OpponentSearchContext;
+}
+
+function bestNonGreedyOpponent(args: NonGreedySearchArgs): Warrior | null {
+  const { warriorA, scoreA, maxScoreA, sortedByScore, sortedScores, lo, ins, hi, ctx } = args;
+  const pMax100 = PERSONALITY_MATCH_SCORE_MAX_X100[ctx.promoter.personality];
+
+  // Exact additive ceiling: the first challenge clause fires only when
+  // warriorA is a player warrior (n = candidate's count); the second only
+  // when warriorA itself is challenged and some candidate is a player
+  // warrior (n = warriorA's count — constant per call).
+  let maxChallengeN = 1;
+  if (ctx.challengeCounts) {
+    for (const n of ctx.challengeCounts.values()) if (n > maxChallengeN) maxChallengeN = n;
+  }
+  const maxBonus =
+    (ctx.playerWarriorIds.has(warriorA.id) && ctx.challengeSet.size > 0
+      ? MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * maxChallengeN
+      : 0) +
+    (ctx.playerWarriorIds.size > 0 && ctx.challengeSet.has(warriorA.id)
+      ? MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * (ctx.challengeCounts?.get(warriorA.id) ?? 1)
+      : 0);
+
   let bestCandidate: Warrior | null = null;
   let bestScore = -Infinity;
 
-  for (let i = lo; i < hi; i++) {
+  for (let i = ins - 1; i >= lo; i--) {
     const candidate = sortedByScore[i];
-    if (!candidate) continue;
-    if (candidate.id === warriorA.id) continue;
-    if (ctx.matchedIds.has(candidate.id)) continue;
-    if (ctx.recentFightPairs.has(getPairKey(warriorA.id, candidate.id))) continue;
-
-    // Player avoid — skip avoided warriors when a player warrior is in the matchup
-    if (ctx.playerWarriorIds.has(warriorA.id) && ctx.avoidSet.has(candidate.id)) continue;
-    if (ctx.playerWarriorIds.has(candidate.id) && ctx.avoidSet.has(warriorA.id)) continue;
-
     const scoreB = sortedScores[i];
-    if (scoreB === undefined) continue;
-    const gap = Math.abs(scoreA - scoreB) / maxScoreA;
-
-    const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, ctx.promoter);
-
-    let candidateScore: number;
-    if (ctx.promoter.personality === 'Greedy') {
-      candidateScore = gap * 100 + personalityScore;
-    } else {
-      candidateScore = personalityScore * 100 - gap;
-    }
-
-    // Player challenge — boost challenged warriors when a player warrior is
-    // in the matchup. V24 canon (Consortium Q&A): a double challenge
-    // "appx doubles" the odds — the bonus scales with listing count.
-    if (ctx.playerWarriorIds.has(warriorA.id) && ctx.challengeSet.has(candidate.id)) {
-      const n = ctx.challengeCounts?.get(candidate.id) ?? 1;
-      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
-    }
-    if (ctx.playerWarriorIds.has(candidate.id) && ctx.challengeSet.has(warriorA.id)) {
-      const n = ctx.challengeCounts?.get(warriorA.id) ?? 1;
-      candidateScore += MATCHMAKING_SCORE_CONSTANTS.CHALLENGE_BONUS * n;
-    }
-
-    // V24 canon: stable-level avoids penalise (~50% rejection) — they
-    // deprioritise, they never make a candidate invisible.
-    if (candidate.stableId && ctx.stableAvoidSet?.has(candidate.stableId)) {
-      candidateScore += MATCHMAKING_SCORE_CONSTANTS.AVOID_PENALTY;
-    }
-
-    if (candidateScore > bestScore) {
-      bestScore = candidateScore;
+    if (!candidate || scoreB === undefined) continue;
+    const gap = (scoreA - scoreB) / maxScoreA;
+    // Remaining (smaller) indices have gap >= this one — break only when
+    // they can't even tie bestScore, since a tie at a smaller index wins.
+    if (pMax100 - gap + maxBonus < bestScore) break;
+    const s = evalOpponentCandidate(warriorA, candidate, gap, ctx);
+    if (s !== null && s >= bestScore) {
+      bestScore = s;
       bestCandidate = candidate;
     }
   }
-
+  for (let i = ins; i < hi; i++) {
+    const candidate = sortedByScore[i];
+    const scoreB = sortedScores[i];
+    if (!candidate || scoreB === undefined) continue;
+    const gap = (scoreB - scoreA) / maxScoreA;
+    // Ascending winner needs a strict beat; equal scores lose to the
+    // lower-index candidate, so the ceiling must exceed bestScore.
+    if (pMax100 - gap + maxBonus <= bestScore) break;
+    const s = evalOpponentCandidate(warriorA, candidate, gap, ctx);
+    if (s !== null && s > bestScore) {
+      bestScore = s;
+      bestCandidate = candidate;
+    }
+  }
   return bestCandidate;
 }
 

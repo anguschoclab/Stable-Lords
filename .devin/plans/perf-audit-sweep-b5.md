@@ -8,7 +8,7 @@ Validated perf-audit plan: every finding re-checked against source (narrowed-sta
 - ✅ **Tranche 1** — committed `5c9d40b03` (perception fields + SharedBidCtx; all specs + megaplan guards green)
 - ✅ **Tranche 2** — committed `3f1d6af5a` (escapeHtml/nameGen/archetype/arenaFit/hasInjuryRisk micro-opts; specs green)
 - ✅ **Tranche 3** — committed `f321175db` (contender-index single pass + findBestOpponent two-region early-exit; guards green)
-- ⏳ **Tranche 4** — 4A ✅ committed `5bcba81cb` (partial boutOffers impacts + dictMerge in-place accumulate — root cause of the ~9% "boundary clone" was per-call whole-map spreads, not transport); 4B implemented, commit pending; 4C–4E pending
+- ⏳ **Tranche 4** — 4A ✅ committed `5bcba81cb` (partial boutOffers impacts + dictMerge in-place accumulate — root cause of the ~9% "boundary clone" was per-call whole-map spreads, not transport); 4B ✅ committed `9c85a1b87`; 4C ❌ documented (0.32× at steady state — structural marshal deficit, not shipped); 4D/4E ✅ documented (resolved-by-4A / healthy)
 - Notes: `duplication.guard` pre-existing failure (720bd04ce pair unregistered on main) fixed by registration → baseline 42. `planWorldBouts`/`bookableRoster`/`crownWorker` consume shared id-sets; `convertBidsToOffers` computes `lockedIds` once per call (kept 5-param signature — 14 test callers); `IntentContext.playerThreatLevel` threads perception into `vendettaApplies` too.
 
 ## Validation record (this review)
@@ -162,8 +162,8 @@ the measurement and the blocker rather than shipping a regression.
   a clobber hazard vs voided-cancel writes; `pruneStaleBoutOffers` owns
   cleanup). Replace-semantics consumers (`useOfferActions`, `boutActions`)
   converted to merge. Spec: `offerImpactEquivalence.test.ts`.
-- **4B. `useWorldState` broad subscription** — ✅ implemented (commit
-  pending). `reconstructGameState` is already memoized, so the real cost
+- **4B. `useWorldState` broad subscription** — ✅ **LANDED** `9c85a1b87`.
+  `reconstructGameState` is already memoized, so the real cost
   was per-field-change re-renders across 16 subscribers. 8 provably-narrow
   consumers converted to `useShallow` scoped selectors in
   `src/state/selectors.ts`: `useRivalryAlerts`, `HallOfFights`,
@@ -173,17 +173,24 @@ the measurement and the blocker rather than shipping a regression.
   preserved — name-state pick keeps {player, roster, graveyard, retired,
   rivals}. Spec: `scopedSelectors.test.ts` pins subset fields + referential
   stability across unrelated writes.
-- **4C. Worker-pool parallelism (gate failed 0.33×)** — revisit: if the prior
-  failure was thread-spawn per week rather than steady-state pool work, a
-  persistent pool or larger shard granularity (fewer, fatter jobs) may flip
-  the sign. Only lands if `parallelDeterminism` stays byte-identical AND the
-  soak ms/wk actually improves; otherwise document the measured result.
-- **4D. `applyOfferImpact` (268 ms, `Object.assign`)** — inherent merge cost,
-  but call frequency is the lever: audit call sites for redundant invocations
-  (no-op impact merges, repeated merges over the same offer) and elide only
-  provably no-op calls. If none found, document.
-- **4E. Bundle weight** — verified healthy in the audit; re-confirm with a
-  size snapshot and document. No code change expected.
+- **4C. Worker-pool parallelism (gate failed 0.33×)** — ❌ **DOCUMENTED,
+  not landed.** Re-measured at steady state: `parallel-bench.mjs --weeks
+  40 --seed 20260919 --pool 4` → sequential 13,955 ms vs parallel 42,968 ms
+  = **0.32×** (gate needs ≥1.30×). The prior 0.33× was not spawn-dominated —
+  the deficit is structural: the synced-shard protocol round-trips a cloned
+  GameState to every worker each week plus impact deltas back, and
+  serialization+marshal exceeds the shard compute it displaces. Not shipped.
+- **4D. `applyOfferImpact` (268 ms, `Object.assign`)** — ✅ **DOCUMENTED,
+  resolved by 4A.** Audited all 6 call sites (counters.ts:147, index.ts:43,
+  slate.ts:50/89/101/244): every call merges a real respond/counter impact —
+  no redundant invocations to elide. The cost driver was per-call `Object.assign`
+  over whole-map `boutOffers` impacts; 4A's partial-impact contract makes each
+  call O(1). No further code change warranted.
+- **4E. Bundle weight** — ✅ **DOCUMENTED, healthy.** `vite build` 6.52s,
+  188 precache entries ≈6.9 MiB (bulk = avatar/audio assets). Largest JS
+  chunks: help 524 KB (164 gzip, lazy route), useGameStore 384 KB (124 gzip),
+  vendor-core 345 KB (109 gzip), WarriorRadarChart 338 KB, combatPbp 318 KB —
+  all lazy/manualChunks-boundary appropriate. No change needed.
 
 ## Out of scope (hard)
 

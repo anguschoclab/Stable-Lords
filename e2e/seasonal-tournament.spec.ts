@@ -771,7 +771,7 @@ test(
 
       // The active manifest must be present with a live bracket.
       await expect(page.getByText('Tournament Active')).toBeVisible({ timeout: 10_000 });
-      await expect(page.getByText('LIVE PHASE')).toBeVisible();
+      await expect(page.getByText('IN PROGRESS').first()).toBeVisible();
 
       const executeBoutBtn = page.getByRole('button', { name: /EXECUTE NEXT BOUT/ });
       await expect(executeBoutBtn).toBeVisible({ timeout: 10_000 });
